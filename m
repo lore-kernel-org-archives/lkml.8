@@ -2,203 +2,81 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F14C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7622076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:17:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dsR9qUeQ"
+	by mail.kernel.org (Postfix) with ESMTP id C661F2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbgHUERo (ORCPT
+        id S1725968AbgHUEZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 00:17:44 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:54415 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbgHUERo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 00:17:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597983462; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=dp3nIlYMWIpEqxxYOG00yGTEXD2AmqqdUiwBKlzCCso=;
- b=dsR9qUeQguO08VjNL1ddZkCynvJrHGGGDKa2g1sPv/WgImqYXgAgDocgNtVITwKxaVvvtmvn
- e/v0aBA6pEa11oDiom40Z/tk5EMkRZqiGJgx79eenD3/laglopSkxinBS1BXM0ud9NmT8a1m
- dq9l5h6pU8jecWF8WPGPweEVeEg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5f3f4ada108e5ef85ac306f0 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 Aug 2020 04:17:30
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4F3BBC433C6; Fri, 21 Aug 2020 04:17:30 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cgoldswo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A3BFC433CA;
-        Fri, 21 Aug 2020 04:17:28 +0000 (UTC)
+        Fri, 21 Aug 2020 00:25:07 -0400
+Received: from smtprelay0149.hostedemail.com ([216.40.44.149]:49976 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725270AbgHUEZH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 00:25:07 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 9DBFB173086C;
+        Fri, 21 Aug 2020 04:25:05 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sheet48_5e1546627036
+X-Filterd-Recvd-Size: 1931
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 21 Aug 2020 04:25:04 +0000 (UTC)
+Message-ID: <9230a7f0b80b4a984f18c979ca3c703edd7d6f98.camel@perches.com>
+Subject: Re: [PATCH v2] checkpatch: Fix the usage of capture group ( ... )
+From:   Joe Perches <joe@perches.com>
+To:     Mrinal Pandey <mrinalmni@gmail.com>, apw@canonical.com,
+        linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com,
+        skhan@linuxfoundation.org,
+        Linux-kernel-mentees@lists.linuxfoundation.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Thu, 20 Aug 2020 21:25:03 -0700
+In-Reply-To: <20200820045232.tmun7jlppeeesg4p@mrinalpandey>
+References: <20200714032352.f476hanaj2dlmiot@mrinalpandey>
+         <alpine.DEB.2.21.2007300746330.13710@felia>
+         <a2773089a844047407855f2da7bd72c2970d2e6b.camel@perches.com>
+         <20200820045232.tmun7jlppeeesg4p@mrinalpandey>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 20 Aug 2020 21:17:28 -0700
-From:   cgoldswo@codeaurora.org
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pratikp@codeaurora.org,
-        pdaly@codeaurora.org, sudraja@codeaurora.org,
-        iamjoonsoo.kim@lge.com, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: cma_alloc(), add sleep-and-retry for temporary page pinning
-In-Reply-To: <896f92e8c37936e7cb2914e79273e9e8@codeaurora.org>
-References: <896f92e8c37936e7cb2914e79273e9e8@codeaurora.org>
-Message-ID: <896458e8daf87a274ba1ce8ced30ac8e@codeaurora.org>
-X-Sender: cgoldswo@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-11 15:20, cgoldswo@codeaurora.org wrote:
-> On 2020-08-06 18:31, Andrew Morton wrote:
->> On Wed,  5 Aug 2020 19:56:21 -0700 Chris Goldsworthy
->> <cgoldswo@codeaurora.org> wrote:
->> 
->>> On mobile devices, failure to allocate from a CMA area constitutes a
->>> functional failure.  Sometimes during CMA allocations, we have 
->>> observed
->>> that pages in a CMA area allocated through alloc_pages(), that we're 
->>> trying
->>> to migrate away to make room for a CMA allocation, are temporarily 
->>> pinned.
->>> This temporary pinning can occur when a process that owns the pinned 
->>> page
->>> is being forked (the example is explained further in the commit 
->>> text).
->>> This patch addresses this issue by adding a sleep-and-retry loop in
->>> cma_alloc() . There's another example we know of similar to the above 
->>> that
->>> occurs during exit_mmap() (in zap_pte_range() specifically), but I 
->>> need to
->>> determine if this is still relevant today.
->> 
-> 
->> Sounds fairly serious but boy, we're late for 5.9.
->> 
->> I can queue it for 5.10 with a cc:stable so that it gets backported
->> into earlier kernels a couple of months from now, if we think the
->> seriousness justifies backporting(?).
->> 
-> 
-> Queuing this seems like the best way to proceed, if we were to pick up
-> this patch.
-> I think we can forgo back-porting this, as this is something that will 
-> only be
-> needed as vendors such as our selves start using Google's Generic 
-> Kernel Image
-> (we've carried this patch in our tree for over four years).
-> 
->> 
->> And...  it really is a sad little patch, isn't it?  Instead of fixing
->> the problem, it reduces the problem's probability by 5x.  Can't we do
->> better than this?
-> 
-> I have one alternative in mind.  I have been able to review the 
-> exit_mmap()
-> case, so before proceeding, let's do a breakdown of the problem: we can
-> categorize the pinning issue we're trying to address here as being one 
-> of
-> (1) incrementing _refcount and getting context-switched out before
-> incrementing _mapcount (applies to forking a process / copy_one_pte()), 
-> and
-> (2) decrementing _mapcount and getting context-switched out before
-> decrementing _refcount (applies to tearing down a process / 
-> exit_mmap()).
-> So, one alternative would be to insert preempt_disable/enable() calls 
-> at
-> affected sites. So, for the copy_one_pte() pinning case, we could do 
-> the
-> following inside of copy_one_pte():
-> 
->         if (page) {
-> +               preempt_disable();
->                 get_page(page);
->                 page_dup_rmap(page, false);
-> +               preempt_enable();
->                 rss[mm_counter(page)]++;
->         }
-> 
-> I'm not sure if this approach would be acceptable for the exit_mmap()
-> pinning case (applicable when CONFIG_MMU_GATHER_NO_GATHER=y).  For the
-> purposes of this discussion, we can look at two function calls inside 
-> of
-> exit_mmap(), in the order they're called in, to show how the pinning is
-> occuring:
-> 
->     1. Calling unmap_vmas(): this unmaps the pages in each VMA for an
->     exiting task, using zap_pte_range() - zap_pte_range() reduces the
->     _mapcount for each page in a VMA, using page_remove_rmap().  After
->     calling page_remove_rmap(), the page is placed into a list in
->     __tlb_remove_page().  This list of pages will be used when flushing
->     TLB entries later on during the process teardown.
-> 
->     2. Calling tlb_finish_mmu(): This is will flush the TLB entries
->     associated with pages, before calling put_page() on them, using the
->     previously collected pages from __tlb_remove_page() - the call flow 
-> is
->     tlb_flush_mmu() > tlb_flush_mmu() > tlb_flush_mmu_free()
->     > tlb_batch_pages_flush() > free_pages_and_swap_cache() >
->     release_pages(), where release_pages() is described as a "batched
->     put_page()"
-> 
-> The preempt_disable/enable() approach would entail doing the following
-> inside of exit_mmap():
-> 
-> +       preempt_disable();
->         unmap_vmas(&tlb, vma, 0, -1);
->         free_pgtables(&tlb, vma, FIRST_USER_ADDRESS, 
-> USER_PGTABLES_CEILING);
->         tlb_finish_mmu(&tlb, 0, -1);
-> +       preempt_enable();
-> 
-> I'm not sure doing this is feasible, given how long it could take to do 
-> the
-> process teardown.
-> 
-> The good thing about this patch is that it has been stable in our 
-> kernel
-> for four years (though for some SoCs we increased the retry counts).  
-> One
-> thing to stress is that there are other instances of CMA page pinning, 
-> that
-> this patch isn't attempting to address. Please let me know if you're 
-> okay
-> with queuing this for the 5.10 merge window - if you are, I can add an
-> option to configure the number of retries, and will resend the patch 
-> once
-> the 5.9 merge window closes.
-> 
-> Thanks,
-> 
-> Chris.
+On Thu, 2020-08-20 at 10:22 +0530, Mrinal Pandey wrote:
+> On 20/07/30 12:31AM, Joe Perches wrote:
+> > On Thu, 2020-07-30 at 07:58 +0200, Lukas Bulwahn wrote:
+> > > Hi Joe,
+> > > 
+> > > did you see this quick fix to checkpatch.pl? Can you comment on the 
+> > > commit and can we get a quick ack on that fix, please?
+> > 
+> > Yes, in a bit.
+> > 
+> > > General question on patches for ./scripts/checkpatch.pl:
+> > > How do they travel to Linus?
+> > 
+> > Generally via Andrew Morton.
+> > 
+> > > Do you pick those patches and provide them to Andrew Morton?
+> > > Or do you just ack them and we need to send them to Andrew Morton to get 
+> > > them into mainline?
+> > 
+> > Generally, ack and forward.
 
-Hi Andrew,
+https://lore.kernel.org/lkml/20200714032352.f476hanaj2dlmiot@mrinalpandey/
 
-Have you been able to give the patch any further consideration?
+Andrew, can you pick up this patch please.
 
-Thanks,
+Thanks
 
-Chris.
-
--- 
-The Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum,
-a Linux Foundation Collaborative Project
