@@ -7,80 +7,80 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF29DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80ADBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB5B207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F159207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="amMeqn6M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MsAQRhu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgHUNEc (ORCPT
+        id S1728770AbgHUNEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:04:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59234 "EHLO
+        Fri, 21 Aug 2020 09:04:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728595AbgHUNEC (ORCPT
+        with ESMTP id S1726345AbgHUNEF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:04:02 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC4DC061387
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:04:02 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id e20so511259uav.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:04:02 -0700 (PDT)
+        Fri, 21 Aug 2020 09:04:05 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4146C061385
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:04:04 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id j7so387556vkk.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:04:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KnDW6llQiq63EFCJkVzXUzpg/vhNfgZSeuWupJPba2k=;
-        b=amMeqn6McxsW9H4NO/zZ0Pb6Eri6A3hNoEchjDZnuAUewx5ku9PhXwwnoQth9vHp1f
-         TMkmg7I90iD79l1oHaYDV6QvA6oZE4PAZF2h7NljHZ0tGjkOMlG1AMFdoQkqzfVWj1Zx
-         eaa/JoPXiBcKKJ81CpQxYwwhKiI/lL6/MhRhK3wjGrrevWMyowenQyVMF7GXFHJIV0HS
-         E5i2Jo1aR1RQHyiHsT8C3ImbQXLKI4Yn0xssjWKCcVEN9lZlFwAL+FuZqPQDECySk+5H
-         qXxyN82zE415KM+azojrn33wRmo54AoRQ5RzgIdOB6Z/3BViWqJETPAXxIhGfIXKiXh+
-         J+0Q==
+        bh=Of8B1JdNddjVmiolpjV5fIdtTFXK4mNZ1WJPME585rI=;
+        b=MsAQRhu3Yz/2CxCDMuK8lKA+6IRovanKanJ+xkv2q+6NkbAawmZpclkCicAmFD/GCn
+         LptyFlY1QNEZQQsXN+H9dDLRT4LBFDnWDJrOnwxLywkRMDS+y19GE8mt8p6MDEyHomi3
+         PFnKlUCyzg0eXSq7GzvqfoZXMFdHwEaMcn6/BoqVc/tZEQWIZMIrQZYAZpNpAoNWL5aY
+         uEMNLITtGGWZqH/4462D4EtFgtvMyRCanOIp3j+6P1azskPtkwwEgAeEiYnQyRUjuOro
+         zJOhRTVrnIiLVm7oWrK0GeYEDIzSDLV5oSxTEb1GfnRw/o4yqzjwpZJ2MntLh2eC175o
+         4rTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KnDW6llQiq63EFCJkVzXUzpg/vhNfgZSeuWupJPba2k=;
-        b=fFAOqZabPMJQsz4uRTxx2R4FfTjNJ2cdqP9J3d0g8LC3d+yXGCfsl0xLNGGzo82ieF
-         Os96Ru6i/ey7UQyREiD7NsiruZ4AlDJQvrPdv6dSHAfNHw5tASLRTxEZQpuy/wo/BuMJ
-         t1fWexi7lntcndcdmq16v3tABpCL8sFu0BjGCgDdG84y6FN3en4PyyIn1BHlXUqjNBXz
-         EMrLO2vFJBWE4io9Rpf9hw9+6YojFAAD4tbKXfGoavpTnewO1TGdD2UwugQEdrMcKu9I
-         y789/2aliQTmDB3W10NQ8zApgQWC1qQYYzAMnrElBbpcrRbGVeOKbGVW5XiBAjuTcMNA
-         9mdA==
-X-Gm-Message-State: AOAM5326TInE1z1O6uP2yh0QcsykBi//ImB9Ig6kV+sS1rbRfWGJiuhJ
-        VdtEijcRbhZZBMpv44xY8Idutx39wQfCcb5C1vOYpg==
-X-Google-Smtp-Source: ABdhPJxYz1Bdm75WVJtCJBiqXNkdHyyC+9S/ilWhmuwkmkOMDXcKiZPrxqZmT9vVbW6PxuHSOTTLxtnagEQRkiuWcps=
-X-Received: by 2002:ab0:2ea2:: with SMTP id y2mr1306910uay.15.1598015041353;
- Fri, 21 Aug 2020 06:04:01 -0700 (PDT)
+        bh=Of8B1JdNddjVmiolpjV5fIdtTFXK4mNZ1WJPME585rI=;
+        b=Djl3oncNBSXDvtLjZ0vkYp3fHyRouw/mzgMCjTJvznwe/RrFgMq81ywcgpVRzgVRC3
+         tuj0VHynTbCqmdHP5dIGo5nEWI0g+YLCRD+B6ShVR4rDWuetiiULBKDu3pgBZ+sZNvAm
+         TdOuO9TlBOwOLklQLEpEUmf0feS0oALRqISzIb1EAuGZKzrIeUYoMc9jB10AJSNQXBCz
+         aas0yjSuxbFrw7Rb65qC10YkfRMhn0Z7gIcUnYVN8TzBXLtaXxjmFMI1xvygcWhdwNll
+         x0l7ZUOuK8uuvQ3BZywPLoIX0V/ARHDwLHqbsIV0JK/GrcQtt2YST1ZS4tqGFhE2P472
+         BNJQ==
+X-Gm-Message-State: AOAM530JTst0jxRZSFdMf2EXCRkDl5orcKgOSDdgq4mDZSefDKEnzZ7O
+        6dJ7z29DaC1CmZo/YmbHV/8AkV9WJGWHeTuNhEAk3BBxEfa5zA==
+X-Google-Smtp-Source: ABdhPJxexRNpnHIAvgnOO637NaC3Fo+35Ifzsik1b/A6iDZxGrmVTZ55K47fA64XUTB0JSJ5J9MQb/JS1o/wJWEBAJI=
+X-Received: by 2002:ac5:ccdb:: with SMTP id j27mr1509317vkn.43.1598015043981;
+ Fri, 21 Aug 2020 06:04:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200804151345.28005-1-krzk@kernel.org>
-In-Reply-To: <20200804151345.28005-1-krzk@kernel.org>
+References: <1596887102-9743-1-git-send-email-guoren@kernel.org>
+In-Reply-To: <1596887102-9743-1-git-send-email-guoren@kernel.org>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 21 Aug 2020 15:03:22 +0200
-Message-ID: <CAPDyKFqRq9u_w0AwhKELK11yetGj5nc9-bM9+-AOsQZVpVmZig@mail.gmail.com>
-Subject: Re: [PATCH] mmc: s3cmci: remove empty kerneldoc comment
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Ben Dooks <ben-linux@fluff.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 21 Aug 2020 15:03:27 +0200
+Message-ID: <CAPDyKFoAonef5daQy0rZFdQeUhKwryYDM0k-aiWXKZG8XBxQxw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: Kconfig: Add RISCV and CSKY for MMC_DW
+To:     guoren@kernel.org
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Aug 2020 at 17:14, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Sat, 8 Aug 2020 at 13:45, <guoren@kernel.org> wrote:
 >
-> Remove empty comment to fix W=1 compile warning:
+> From: Guo Ren <guoren@linux.alibaba.com>
 >
->     drivers/mmc/host/s3cmci.c:400: warning: Cannot understand  *
->      on line 400 - I thought it was a doc line
+> Synopsys DesignWare MMC controller could be used in RISC-V and
+> C-SKY architectures.
 >
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
 
 Applied for next, thanks!
 
@@ -89,23 +89,22 @@ Uffe
 
 
 > ---
->  drivers/mmc/host/s3cmci.c | 3 ---
->  1 file changed, 3 deletions(-)
+>  drivers/mmc/host/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/mmc/host/s3cmci.c b/drivers/mmc/host/s3cmci.c
-> index 444b2769ae2c..b5df948f8155 100644
-> --- a/drivers/mmc/host/s3cmci.c
-> +++ b/drivers/mmc/host/s3cmci.c
-> @@ -396,9 +396,6 @@ static void s3cmci_enable_irq(struct s3cmci_host *host, bool more)
->         local_irq_restore(flags);
->  }
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 3b706af..119adab 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -777,7 +777,7 @@ config MMC_CAVIUM_THUNDERX
 >
-> -/**
-> - *
-> - */
->  static void s3cmci_disable_irq(struct s3cmci_host *host, bool transfer)
->  {
->         unsigned long flags;
+>  config MMC_DW
+>         tristate "Synopsys DesignWare Memory Card Interface"
+> -       depends on ARC || ARM || ARM64 || MIPS || COMPILE_TEST
+> +       depends on ARC || ARM || ARM64 || MIPS || RISCV || CSKY || COMPILE_TEST
+>         help
+>           This selects support for the Synopsys DesignWare Mobile Storage IP
+>           block, this provides host support for SD and MMC interfaces, in both
 > --
-> 2.17.1
+> 2.7.4
 >
