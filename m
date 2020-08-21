@@ -2,168 +2,117 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF7AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC0EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53CF52075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:36:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597991794;
-	bh=cKAozKcOdIVr2RmSywSEdjiqOTHDZHUVc293ooDnI5w=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=hP34K2rzxa57mQNBFN6j6zze1FtU2dq6NOZ4nPLLK3vfySfmOltuv/CsNfV0mBmUy
-	 VyzAIbsbIa2NZLq93T4Zove10MKT8o/H5/EOKxvn4GNkJTxGDM/N4g0NxClQ/Z1ncT
-	 dyF6QUax6sneLdKXelvY4PVGdLrimQ+dSe5mHCMI=
+	by mail.kernel.org (Postfix) with ESMTP id D72C220732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:37:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=foundries-io.20150623.gappssmtp.com header.i=@foundries-io.20150623.gappssmtp.com header.b="o+lduEZX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgHUGgd (ORCPT
+        id S1727125AbgHUGhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:36:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbgHUGgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 02:36:31 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DD3F20732;
-        Fri, 21 Aug 2020 06:36:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597991790;
-        bh=cKAozKcOdIVr2RmSywSEdjiqOTHDZHUVc293ooDnI5w=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VLSdtENflm7m6ML1JRA2DxVgucBHtAIegcPwj050K0epPXQ814TjDHApN/ZG+dKzE
-         yYBBea+WN6ZobQuv9cCcjnkFVYPLThQvSa/BdijnXddIDHqt1iw1WiKaKHp1AI/Fbu
-         KNcwIFOJLhuOhsrcXWE0nQ3V03/hGNNImawzVLp8=
-Date:   Fri, 21 Aug 2020 01:42:18 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] b43: Use fallthrough pseudo-keyword
-Message-ID: <20200821064218.GA19502@embeddedor>
+        Fri, 21 Aug 2020 02:37:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgHUGhD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 02:37:03 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B40D4C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 23:37:02 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a5so923301wrm.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 23:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=foundries-io.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=skZa9gs2C+QBUYUqWQg7XBlQIg3Lke8/gakwm3y/JJA=;
+        b=o+lduEZXzkFzTtm6Ava8WMK+NmvOzXsUluoVn8Q7oaUjnEQK/QwRaEND2VIkBOhgaU
+         H+aF3TUkeHLkuLyu8DAKeU8zeJT7XSKUIHmYzxZu2EWjPjYjnBK1780vQCwBVK5Cb5nh
+         t1TXRiYpsrAKSvHqetH1F99ZY669Pc4LTkuNnRaIEGkdqysfhuJzdXH58ZWJTtAFonmv
+         XgeUTWD8CyU2zllj6Oda76zuPAyDOPR/1BhMv2ldhzIX+hr/ube09wJ418HLVuhByI0o
+         bOIGyqya/tXJCF5rEfQXMk2+kHEei8thRLceAenb2jKEULfZS153FDfU3tZJsq5bskmy
+         Y8Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=skZa9gs2C+QBUYUqWQg7XBlQIg3Lke8/gakwm3y/JJA=;
+        b=sJ3+wqbUPnuZ92mcQGaR/ljsDUhVT9PYjA7q/AAxp/PMyon46y3H128K6GJ1XRc1gD
+         x4mbGzZtvY3KB+qsvsvrUvwDdUyULCtoynAADmo6qkgh4UaFIhEpF37/Uc0H/rx/CiuS
+         ao8zP2Q3PudRyZGG9l6+OahhfWx6+SS+9baalUyB2vFMB/xEInqBCvRxV9E4vtfOdEpf
+         bZCSXP1SVejAuOzXkNWu/N5to//RRi6e3xjrTEiHRrrxb7Ga/uZqDfC5Ov2/Y3TwHaWk
+         dHTVKsS43XvFs+58i7MrL8UONUVLGij+VxXm/OpWZ+kY/y/isuPZeJitoWtcdB2Pov3U
+         fSrQ==
+X-Gm-Message-State: AOAM532GrDfxDn3KEMd9ByzX1eX/d2zl6OxjwQ8df17KV4z6Y4FFylwz
+        fXXe9Sx0NexnAD6HG2myaEDZYA==
+X-Google-Smtp-Source: ABdhPJzeZe27zDcSX98qh8ygngArDlRW7ojneExjH1Br0oBNK5GJue9Q9pFJFlTiS/xO3Lidepvk5g==
+X-Received: by 2002:adf:ab05:: with SMTP id q5mr1216136wrc.46.1597991821391;
+        Thu, 20 Aug 2020 23:37:01 -0700 (PDT)
+Received: from trex (239.red-83-34-184.dynamicip.rima-tde.net. [83.34.184.239])
+        by smtp.gmail.com with ESMTPSA id g18sm2441618wru.27.2020.08.20.23.36.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Aug 2020 23:37:00 -0700 (PDT)
+From:   "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
+X-Google-Original-From: "Jorge Ramirez-Ortiz, Foundries" <JorgeRamirez-Ortiz>
+Date:   Fri, 21 Aug 2020 08:36:57 +0200
+To:     Jens Wiklander <jens.wiklander@linaro.org>
+Cc:     Jorge Ramirez-Ortiz <jorge@foundries.io>, sumit.garg@linaro.org,
+        ricardo@foundries.io, mike@foundries.io, tee-dev@lists.linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv9] drivers: optee: allow op-tee to access devices on the
+ i2c bus
+Message-ID: <20200821063657.GA20356@trex>
+References: <20200814111221.5813-1-jorge@foundries.io>
+ <20200821062121.GA1020247@jade>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200821062121.GA1020247@jade>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1].
+On 21/08/20, Jens Wiklander wrote:
+> On Fri, Aug 14, 2020 at 01:12:21PM +0200, Jorge Ramirez-Ortiz wrote:
+> > Some secure elements like NXP's SE050 sit on I2C buses. For OP-TEE to
+> > control this type of cryptographic devices it needs coordinated access
+> > to the bus, so collisions and RUNTIME_PM dont get in the way.
+> > 
+> > This trampoline driver allow OP-TEE to access them.
+> > 
+> > Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+> > ---
+> > v9: params return value must be written before optee_msg_to_param is called
+> > v8: review fixes:
+> >     fix types and add TEEC_ERROR_NOT_SUPPORTED to GP errors
+> > v7: add support for ten bit i2c slave addressing
+> > v6: compile out if CONFIG_I2C not enabled
+> > v5: alphabetic order of includes
+> > v4: remove unnecessary extra line in optee_msg.h
+> > v3: use from/to msg param to support all types of memory
+> >     modify OPTEE_MSG_RPC_CMD_I2C_TRANSFER message id
+> > 
+> >  drivers/tee/optee/optee_msg.h     | 21 +++++++
+> >  drivers/tee/optee/optee_private.h |  1 +
+> >  drivers/tee/optee/rpc.c           | 95 +++++++++++++++++++++++++++++++
+> >  3 files changed, 117 insertions(+)
+> 
+> Looks good. Did you test this with the recently merged
+> https://github.com/OP-TEE/optee_os/pull/4033 ?
+>
 
-[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+yes, I did retest and it is good.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/wireless/broadcom/b43/dma.c         | 2 +-
- drivers/net/wireless/broadcom/b43/main.c        | 8 ++++----
- drivers/net/wireless/broadcom/b43/phy_n.c       | 2 +-
- drivers/net/wireless/broadcom/b43/pio.c         | 2 +-
- drivers/net/wireless/broadcom/b43/tables_nphy.c | 2 +-
- 5 files changed, 8 insertions(+), 8 deletions(-)
+thanks!
 
-diff --git a/drivers/net/wireless/broadcom/b43/dma.c b/drivers/net/wireless/broadcom/b43/dma.c
-index ca671fc13116..9a7c62bd5e43 100644
---- a/drivers/net/wireless/broadcom/b43/dma.c
-+++ b/drivers/net/wireless/broadcom/b43/dma.c
-@@ -1317,7 +1317,7 @@ static struct b43_dmaring *select_ring_by_priority(struct b43_wldev *dev,
- 		switch (queue_prio) {
- 		default:
- 			B43_WARN_ON(1);
--			/* fallthrough */
-+			fallthrough;
- 		case 0:
- 			ring = dev->dma.tx_ring_AC_VO;
- 			break;
-diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
-index a54dd4f7fa54..88def6fa267b 100644
---- a/drivers/net/wireless/broadcom/b43/main.c
-+++ b/drivers/net/wireless/broadcom/b43/main.c
-@@ -1873,7 +1873,7 @@ static void b43_handle_firmware_panic(struct b43_wldev *dev)
- 	switch (reason) {
- 	default:
- 		b43dbg(dev->wl, "The panic reason is unknown.\n");
--		/* fallthrough */
-+		fallthrough;
- 	case B43_FWPANIC_DIE:
- 		/* Do not restart the controller or firmware.
- 		 * The device is nonfunctional from now on.
-@@ -2266,7 +2266,7 @@ int b43_do_request_fw(struct b43_request_fw_context *ctx,
- 		size = be32_to_cpu(hdr->size);
- 		if (size != ctx->blob->size - sizeof(struct b43_fw_header))
- 			goto err_format;
--		/* fallthrough */
-+		fallthrough;
- 	case B43_FW_TYPE_IV:
- 		if (hdr->ver != 1)
- 			goto err_format;
-@@ -3178,7 +3178,7 @@ static void b43_rate_memory_init(struct b43_wldev *dev)
- 		b43_rate_memory_write(dev, B43_OFDM_RATE_36MB, 1);
- 		b43_rate_memory_write(dev, B43_OFDM_RATE_48MB, 1);
- 		b43_rate_memory_write(dev, B43_OFDM_RATE_54MB, 1);
--		/* fallthrough */
-+		fallthrough;
- 	case B43_PHYTYPE_B:
- 		b43_rate_memory_write(dev, B43_CCK_RATE_1MB, 0);
- 		b43_rate_memory_write(dev, B43_CCK_RATE_2MB, 0);
-@@ -5329,7 +5329,7 @@ static void b43_supported_bands(struct b43_wldev *dev, bool *have_2ghz_phy,
- 		/* There are 14e4:4321 PCI devs with 2.4 GHz BCM4321 (N-PHY) */
- 		if (dev->phy.type != B43_PHYTYPE_G)
- 			break;
--		/* fall through */
-+		fallthrough;
- 	case 0x4313: /* BCM4311 */
- 	case 0x431a: /* BCM4318 */
- 	case 0x432a: /* BCM4321 */
-diff --git a/drivers/net/wireless/broadcom/b43/phy_n.c b/drivers/net/wireless/broadcom/b43/phy_n.c
-index ca2018da9753..0fe09b3989da 100644
---- a/drivers/net/wireless/broadcom/b43/phy_n.c
-+++ b/drivers/net/wireless/broadcom/b43/phy_n.c
-@@ -3239,7 +3239,7 @@ static void b43_nphy_workarounds_rev3plus(struct b43_wldev *dev)
- 		if (!(dev->phy.rev >= 4 &&
- 		      b43_current_band(dev->wl) == NL80211_BAND_2GHZ))
- 			break;
--		/* FALL THROUGH */
-+		fallthrough;
- 	case 0:
- 	case 1:
- 		b43_ntab_write_bulk(dev, B43_NTAB16(8, 0x08), 4, vmid);
-diff --git a/drivers/net/wireless/broadcom/b43/pio.c b/drivers/net/wireless/broadcom/b43/pio.c
-index 1a11c5dfb8d9..8c28a9250cd1 100644
---- a/drivers/net/wireless/broadcom/b43/pio.c
-+++ b/drivers/net/wireless/broadcom/b43/pio.c
-@@ -294,7 +294,7 @@ static struct b43_pio_txqueue *select_queue_by_priority(struct b43_wldev *dev,
- 		switch (queue_prio) {
- 		default:
- 			B43_WARN_ON(1);
--			/* fallthrough */
-+			fallthrough;
- 		case 0:
- 			q = dev->pio.tx_queue_AC_VO;
- 			break;
-diff --git a/drivers/net/wireless/broadcom/b43/tables_nphy.c b/drivers/net/wireless/broadcom/b43/tables_nphy.c
-index 7957db94e84c..41a25d909d0d 100644
---- a/drivers/net/wireless/broadcom/b43/tables_nphy.c
-+++ b/drivers/net/wireless/broadcom/b43/tables_nphy.c
-@@ -3717,7 +3717,7 @@ const u32 *b43_nphy_get_tx_gain_table(struct b43_wldev *dev)
- 		case 5:
- 			if (sprom->fem.ghz2.extpa_gain == 3)
- 				return b43_ntab_tx_gain_epa_rev3_hi_pwr_2g;
--			/* fall through */
-+			fallthrough;
- 		case 4:
- 		case 3:
- 			return b43_ntab_tx_gain_epa_rev3_2g;
--- 
-2.27.0
-
+> Cheers,
+> Jens
