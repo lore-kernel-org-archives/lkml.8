@@ -2,104 +2,108 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACB9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A08E420732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B3620732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:22:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L8/i1aFP"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="rkZem/xP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgHUCWf (ORCPT
+        id S1727903AbgHUCWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44378 "EHLO
+        Thu, 20 Aug 2020 22:22:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727086AbgHUCW3 (ORCPT
+        with ESMTP id S1727106AbgHUCWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:22:29 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8E97C061388
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:22:28 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id g19so543586ejc.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:22:28 -0700 (PDT)
+        Thu, 20 Aug 2020 22:22:44 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9E55C061386
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:22:43 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id f24so560661ejx.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:22:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nsUdliivJtp5Q6+//ViL/TxskEesc9x2uBqaTetkCW4=;
-        b=L8/i1aFPC1LxPUXg1D2GZxUkWHDtGd90ELK9RK2LLZ/IoGIS77V8+gaXk+Q4UT9HLS
-         9ODRRXaHvdWMFdIps9AiYjyN6aMLDmXWvcBqbDcZoqRdCBZG46ZBJ2SEJW7q/aZXZEw6
-         Btcif9qvwviSGgM1R5lxRHiavoVAapIMBHrbzhhl5eicCKkUrjk+N1xi9imjVoaShxj0
-         O81wLvdNL3pcmfbn9Y1kXAgRT9uu2r3azu025AM5CBkRFXHLsyjQqooRtostkuEczfdT
-         L18Pmoa7tAOrjkPTGS3HnB4NAmu7SDZ4rvinOLaRHgFWlC92KRMG9edwE39Wnnw86Ob8
-         ZTrw==
+        bh=b1QCc14GPT5F3fBeMa9aJ6/+QjqukYcGYpP98XcieAM=;
+        b=rkZem/xP//Yw5RcfZCb8d0EXj6/DVgghiIYX4ouKUYXL4ERL6uT3z9/PYcwXrBpuLc
+         eWLEEvEkCH2oNtkT+d6wgthUF8PW9ENjWXnmCj01NAX5IdAF6ZBYl4JEMcjb0dXAHve8
+         +E4+9H1EXNQLcmcuqoHYIUvx+Z1pxM8IM7Ugrw7HMSd3fjEhW6UWVQzb0a3ye4G/QoBR
+         ncjW0WD4h1qyLnCNayIlH6/adY3RT1mR9iGVUiFyPjsx/TZSavmNgZol65w8ZJxjcK8y
+         fd7t3uiZBtGH0ySTH6qg5DBbQqCxHTpBJ/x5WUsf3tdcBh+u7NUGh+RQLkIoemQotdyX
+         Yvbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nsUdliivJtp5Q6+//ViL/TxskEesc9x2uBqaTetkCW4=;
-        b=ekbaCNtfpTNrKSQPedbjuH85/Kb6tanrXvR4VMXZ12NI5om295FETniMGqRyhv2kL9
-         5IqqMz2As0OjhKd1pVib54PDjIHgvugSlntYEaPZm80NNpMIF6izRP6q9+r9jIo6GKWB
-         n47yMSP9yaxgQFULWlHEM+yHnGZ4vBJoEOykFgzucHywc3a27CYgDaCpTChE1ahD0DY8
-         XpuEvD8zkyjZBnZTz+2rA7tai/m0UP66ndLig3WzUojk8FH3G/+JYXyTzaxxGkVmIxbR
-         GS0xGn03fwF8StEkMxtuHW/Zr2+QiJZanwuKCl9UTrBva7xzjkI46bDC7zORMWMiGIjf
-         tA3Q==
-X-Gm-Message-State: AOAM530ecC4FLN438nIc1RonqYjvNU+FotQyzS/l7UW1cCHDJLhljVIA
-        DGRDr2iYvdhqZd/hI3fos200emEINBUUT7AdZnBAvQ==
-X-Google-Smtp-Source: ABdhPJxPa2BAinWcuRWziYxt33mJwF+y04RBKXB9gCPjrMmz1mDiblORWW7FKZhTjJKjGzr2w/qzpE7L/GbxmhpT5nA=
-X-Received: by 2002:a17:906:3b45:: with SMTP id h5mr804466ejf.136.1597976547157;
- Thu, 20 Aug 2020 19:22:27 -0700 (PDT)
+        bh=b1QCc14GPT5F3fBeMa9aJ6/+QjqukYcGYpP98XcieAM=;
+        b=UJCgzveW8uixmhth37KmQBDHOA1GVLJSflmyHlR/x0C7QGjG+2rZ+1fZNgRya2v4u0
+         J+fp8jLwy+KbsHfbOHkjLpsEOIDARr6RDbfevmexbywVBUWyecdMKqwdMwbxHlKjuupx
+         pX/RywoRqMmmM4KITxQRpXhc5onMz+t6fKZb84RLfDCJCuiqZ8uzMhVg0ly0MDrb7EL/
+         OVVU4eB/fdilwSraG6xB9vxI5DQxcs9DT1pbCt2uTtoEQhNplKSb7NJ9/UVw0Exn7fPi
+         jTAVAuE5U36o+ZWSMP898dK35JuOYoPexElMYAk9IARCj68ik3WKwhacVkz4c0CvkUms
+         nEVw==
+X-Gm-Message-State: AOAM533ksG73t7rXzYBBtYwocZNORbE1F8DkFM4CQX6qXe9tcD8a2MJV
+        v+Cm6rxTHl0wsBwki2ok6mYlq57RKeFetb6ZHuwd
+X-Google-Smtp-Source: ABdhPJxDoNqUGswwKhuSmyyuHeuGX8npxTUSizhNwYUXP9URQ7CAZQPQ5Go9M0OJ/H6WfRFApNa0sCSv9uFlANluKwY=
+X-Received: by 2002:a17:906:1911:: with SMTP id a17mr623897eje.431.1597976562364;
+ Thu, 20 Aug 2020 19:22:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-2-haoluo@google.com>
- <20200820215327.jsvjbsvv6ts3x4wn@ast-mbp.dhcp.thefacebook.com>
-In-Reply-To: <20200820215327.jsvjbsvv6ts3x4wn@ast-mbp.dhcp.thefacebook.com>
-From:   Hao Luo <haoluo@google.com>
-Date:   Thu, 20 Aug 2020 19:22:15 -0700
-Message-ID: <CA+khW7hGGCWkjqb_TNSQvpN-=4K==dtjF4fwUOf3zd8eoON5nw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 1/8] bpf: Introduce pseudo_btf_id
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Quentin Monnet <quentin@isovalent.com>,
+References: <20200817170729.2605279-1-tweek@google.com> <20200817170729.2605279-4-tweek@google.com>
+ <d8b1d7a2-2b8e-c714-77b6-d4e7f3fedf08@gmail.com> <6730ec4a-d11b-5c05-b64f-380104a86dab@sony.com>
+ <CAEjxPJ7k648nQxCDzcHc0h1vEfNhAJShG5iKmD52nuO5s9phsQ@mail.gmail.com>
+In-Reply-To: <CAEjxPJ7k648nQxCDzcHc0h1vEfNhAJShG5iKmD52nuO5s9phsQ@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 20 Aug 2020 22:22:30 -0400
+Message-ID: <CAHC9VhSYJUAacvzp1hR4RMChTctJ2sFb5+oy_wbsigaWMGTYHg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] selinux: add permission names to trace event
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     peter enderborg <peter.enderborg@sony.com>,
+        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>,
+        Nick Kralevich <nnk@google.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 2:53 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
+On Tue, Aug 18, 2020 at 8:14 AM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+> On Tue, Aug 18, 2020 at 4:11 AM peter enderborg <peter.enderborg@sony.com> wrote:
+
+...
+
+> > Is there any other things we need to fix? A part 1&2 now OK?
 >
-> Why did you choose to do it during main do_check() walk instead of this pre-pass ?
-> check_ld_imm() can be called multiple times for the same insn,
-> so it's faster and less surprising to do it during replace_map_fd_with_map_ptr().
-> BTF needs to be parsed first, of course.
-> You can either move check_btf_info() before replace_map_fd_with_map_ptr() or
-> move replace_map_fd_with_map_ptr() after check_btf_info().
-> The latter is probably cleaner.
+> They looked ok to me, but Paul should review them.
 
-Ah, that does make more sense. I can move
-replace_map_fd_with_map_ptr() after check_btf_info() (or
-check_attach_btf_id()) and rename it to better reflect the fact that
-it's not just for maps now.
+Patches 1 and 2 look fine to me with the small nits that Stephen
+pointed out corrected.  I'm glad to see the information in string form
+now, I think that will be a big help for people making use of this.
 
-Thanks for the insights!
-Hao
+Unfortunately, I'm a little concerned about patch 3 for the reason
+Stephen already mentioned.  While changes to the class mapping are
+infrequent, they do happen, and I'm not very excited about adding it
+to the userspace kAPI via a header.  Considering that the tracing
+tools are going to be running on the same system that is being
+inspected, perhaps the tracing tools could inspect
+/sys/fs/selinux/class at runtime to query the permission mappings?
+Stephen, is there a libselinux API which does this already?
+
+-- 
+paul moore
+www.paul-moore.com
