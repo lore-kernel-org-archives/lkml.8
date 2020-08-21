@@ -7,67 +7,69 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EACC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A779FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE4C92072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D7F21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:21:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kt+Oz5/G"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yZCyYlGZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgHUHUr (ORCPT
+        id S1728139AbgHUHU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:20:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33496 "EHLO
+        Fri, 21 Aug 2020 03:20:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728226AbgHUHSJ (ORCPT
+        with ESMTP id S1728006AbgHUHR5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:18:09 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 401F1C061379
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:17:18 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id 88so1013900wrh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:17:18 -0700 (PDT)
+        Fri, 21 Aug 2020 03:17:57 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0382BC061374
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:17:16 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 3so835408wmi.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:17:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DhbLFeeUnXIVGU1eOiDrbU+gQsxY/cBKEYP7/4MCrLk=;
-        b=kt+Oz5/Guc0OMiYL/RbMLd1EoMi3UUjUjxjDZQtiTu6rCXqTKBVUUAyXYnSOZLXBr2
-         iwe5d7opEM+HeFviPE2v2KjOXExGVdCb4ijqAPjZ8qRhZD+zvhtZd1aDnJktap99nYpU
-         ciMApTG7JXjQKc8gFVQJMnxPt4pkCVAGiSQCkYr0PKiF+tLuFSuqxrCb/M5OYUqLFK4Y
-         omOaqgI/rsUwW5XlsTXslblhc+ig3ucvYUgvSy/CcFO9g8Kk8fMw/lg9RR0Y6neLfdzI
-         sP5rCTx+yQkKsnD5Q0dehsHKxpOyKxT0hz3Y8G+4zlNahztdFGsEy2vwuLbrFb/f8Ozv
-         YPPQ==
+        bh=QBwZYByjjh942d4ggJkaITmm4qS6KFDbT+209YIFm2k=;
+        b=yZCyYlGZPQ1MpWsar88f0Kj65T7DKm8G0Wa7HonVhN5aQGd+Vq+7PVb/SFeOGmi92G
+         hHV44x78U8WMcfXbgh2b8JwCdhbc/Rsijg6D5HWjJmXliAPJzLye/S8TORjUjoCeFwMO
+         9QYGIsJ4bcQpLqYQlW8G5D5N4o3s6GqVxd7s3Uscz8qkSrRi6ejw0vXhM6XOAcHR+DJg
+         yVncHBseIPKm73fGZ6+F84E6/X66kZVos1vJdfVHRFKXKdjEyQFduxXqTYmZMbPeRHj6
+         2NEwqfOv3PkdCdCWWD7BeX9s7IzW7Kuk00mGlyy7gNAWeOH0WwD7lN/mg0o01WyekcYb
+         dOmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DhbLFeeUnXIVGU1eOiDrbU+gQsxY/cBKEYP7/4MCrLk=;
-        b=sEbHscKukNcaeNx0gCZiFK17qFxEwkftHUMJp6oA2B9P+b57iAH54JWfk+XXM13vw9
-         txNw6VZ43jkUC11/AEKtG++gu9giZN8mr5kTH0pk/jBjENXkoS+15BnVlWviduTzrqXU
-         wQrkPpoJli6NE4zoCf05oeScnbAHj1uWkdoQahmO2Mqjn0FkOykXJvIvAGFW0BxEY0se
-         fEJcr0O6LO4nAX+VMq4CLJ602es7di3j9jPbD0jFIc3m1VwDz4/ujoglG/3we5nR4ykS
-         WtR3aaaL0rh6py2RtvHVyCgZXTh0BIf5mUxBnxy9h42mxCpuAEKutZ60AxpGnrvdd77t
-         PKGA==
-X-Gm-Message-State: AOAM532BPPhnHCI79uy6/v3Vfd7wWtD/3SflHnSnqx9MLqRcb73+dfqr
-        BXKFYQv8ZwqTT8zY1GfelYQCNw==
-X-Google-Smtp-Source: ABdhPJyHOVv55ct2DNh1mX90E5Ko+y+vDMR+i42zeCzP9KM++B/cTXhA8BYuAkK7d9HIbCVX+YRVRQ==
-X-Received: by 2002:a5d:490c:: with SMTP id x12mr1346304wrq.238.1597994236949;
-        Fri, 21 Aug 2020 00:17:16 -0700 (PDT)
+        bh=QBwZYByjjh942d4ggJkaITmm4qS6KFDbT+209YIFm2k=;
+        b=Gjn02dQ6Kis3IHnq2MaAaHD6iVHoAzTe6XcRGI9Szp8JDgfn0K1er/WJNYJmKbQrcY
+         CbNgdT5WwMmUp41KYj7dAOl7xeWmFbPBq7FFqKoI2ZLO3E2ChxEfSVpFyH38yoTaMn0w
+         eRTypSGaTrSCIyIAE6vdGQhCGr8VF64l3rN9a+yTi0LJ3HBeLpRTNDJu3JeWBMYrKLCQ
+         o4/HlVXbclXpJ+gmzwNOnDfq89Xl9g2HJ86gQL6xNrZ2htLBRqGYi6BbtD7jOQkqGXX2
+         DosJb6ottDh3B1El/gfpSRkIS26dEBMs6NBHArUxepE4tciVEAiCXQnh/Di0EG6ngcJG
+         5A1A==
+X-Gm-Message-State: AOAM531DWuG9vvStLPx57OY5jBovM11i1mg1TAQNasnxAgOjzTsdy+vj
+        PgkcRHQAlKWM0k5/0urOBd19bw==
+X-Google-Smtp-Source: ABdhPJzEikq6XpGtpcWzp71avWyyFdi9ckss9ceBu+daG5QjQTOHDdhnluXUKmFNjNCwxgkBDH31tg==
+X-Received: by 2002:a1c:7702:: with SMTP id t2mr1630905wmi.169.1597994234474;
+        Fri, 21 Aug 2020 00:17:14 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id y24sm2667957wmi.17.2020.08.21.00.17.16
+        by smtp.gmail.com with ESMTPSA id y24sm2667957wmi.17.2020.08.21.00.17.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 00:17:16 -0700 (PDT)
+        Fri, 21 Aug 2020 00:17:13 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Stanislaw Gruszka <stf_xl@wp.pl>,
-        Linux Wireless <ilw@linux.intel.com>
-Subject: [PATCH 23/32] wireless: intel: iwlegacy: 4965-calib: Demote seemingly accidental kernel-doc header
-Date:   Fri, 21 Aug 2020 08:16:35 +0100
-Message-Id: <20200821071644.109970-24-lee.jones@linaro.org>
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>
+Subject: [PATCH 21/32] wireless: intel: iwlwifi: iwl-drv: Provide descriptions debugfs dentries
+Date:   Fri, 21 Aug 2020 08:16:33 +0100
+Message-Id: <20200821071644.109970-22-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821071644.109970-1-lee.jones@linaro.org>
 References: <20200821071644.109970-1-lee.jones@linaro.org>
@@ -78,39 +80,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No parameters were documented and it's the only one in the file.
+Also demote a non-conforming kernel-doc function header.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wireless/intel/iwlegacy/4965-calib.c:608: warning: Function parameter or member 'il' not described in 'il4965_find_disconn_antenna'
- drivers/net/wireless/intel/iwlegacy/4965-calib.c:608: warning: Function parameter or member 'average_sig' not described in 'il4965_find_disconn_antenna'
- drivers/net/wireless/intel/iwlegacy/4965-calib.c:608: warning: Function parameter or member 'data' not described in 'il4965_find_disconn_antenna'
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c:124: warning: Function parameter or member 'dbgfs_drv' not described in 'iwl_drv'
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c:124: warning: Function parameter or member 'dbgfs_trans' not described in 'iwl_drv'
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c:124: warning: Function parameter or member 'dbgfs_op_mode' not described in 'iwl_drv'
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c:1329: warning: Function parameter or member 'ucode_raw' not described in 'iwl_req_fw_callback'
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c:1329: warning: Function parameter or member 'context' not described in 'iwl_req_fw_callback'
 
-Cc: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Cc: Luca Coelho <luciano.coelho@intel.com>
+Cc: Intel Linux Wireless <linuxwifi@intel.com>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Linux Wireless <ilw@linux.intel.com>
 Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/intel/iwlegacy/4965-calib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/4965-calib.c b/drivers/net/wireless/intel/iwlegacy/4965-calib.c
-index e78bdefb8952c..2f97cbd423202 100644
---- a/drivers/net/wireless/intel/iwlegacy/4965-calib.c
-+++ b/drivers/net/wireless/intel/iwlegacy/4965-calib.c
-@@ -598,7 +598,7 @@ il4965_find_first_chain(u8 mask)
- 	return CHAIN_C;
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+index 04f14bfdd0914..2a9075b1b3747 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+@@ -102,6 +102,9 @@ static struct dentry *iwl_dbgfs_root;
+  * @fw_index: firmware revision to try loading
+  * @firmware_name: composite filename of ucode file to load
+  * @request_firmware_complete: the firmware has been obtained from user space
++ * @dbgfs_drv: debugfs root directory entry
++ * @dbgfs_trans: debugfs transport directory entry
++ * @dbgfs_op_mode: debugfs op_mode directory entry
+  */
+ struct iwl_drv {
+ 	struct list_head list;
+@@ -1319,7 +1322,7 @@ static void _iwl_op_mode_stop(struct iwl_drv *drv)
+ 	}
  }
  
 -/**
 +/*
-  * Run disconnected antenna algorithm to find out which antennas are
-  * disconnected.
-  */
+  * iwl_req_fw_callback - callback when firmware was loaded
+  *
+  * If loaded successfully, copies the firmware into buffers
 -- 
 2.25.1
 
