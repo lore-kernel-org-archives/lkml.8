@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED2EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12A7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2BA2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7232075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030952;
-	bh=G7Bxe3htfLyEMy8okKHuhNIpEbesWGNFyZOsNYvkWzo=;
+	s=default; t=1598030961;
+	bh=HoRWHVr2nxkcyHpWx7uSIErrJ+zEm+ycisSWs6Uvf6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aP1JHPGmk5gw32YktGeWJ88R6Ul4U3RTBwcs6P481Bi+IgVEB+H7aETrRvgOxNpIm
-	 ZHfQcdQPNhcYo9VwiDsFjM25NI7hw01rbLX5BIse0t3pz8pIzpIQLoFRh6oz9WdUiQ
-	 g/zOZK8q19cwQ1WOMcqZI1wjc/Mq+D9oeGqmBjYg=
+	b=G6Hd0Qgha70hJb/ZIAh86a1HjD1zf/fbyad5yg7YmF8FiiuOGqvCkgfJgk1RsUzGY
+	 JI1YmbBSbtIJEvkndiSehNSBVKFfz41AZQPUsYrd1je6CFbSmfnReypndBNkz+ZP+8
+	 8LIeUEFWnzL37xwc4bSnAezL8p6JhoI3aj1z+bZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgHUR3J (ORCPT
+        id S1728881AbgHUR3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:29:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46552 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:29:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbgHUQOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:14:41 -0400
+        id S1726862AbgHUQOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:14:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89AD62224D;
-        Fri, 21 Aug 2020 16:14:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B71722B43;
+        Fri, 21 Aug 2020 16:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026473;
-        bh=G7Bxe3htfLyEMy8okKHuhNIpEbesWGNFyZOsNYvkWzo=;
+        s=default; t=1598026472;
+        bh=HoRWHVr2nxkcyHpWx7uSIErrJ+zEm+ycisSWs6Uvf6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DiJ8AsxhFt693FsnMMHtLU/1FdZKpp9E4e6v2qkm1hfXSVsYL0U6k8ubOgoYK0cz0
-         fVuvvGJGiVV1lB0pTuIPXaFla2UOdYU+WA9UW6agoyyarl6iRq91fLc1KlRkbR0IyJ
-         MQhIoKlGuW8v4H1slSomda/EnIdaQj5WBjNKK8S0=
+        b=JUqpTZKWQa0R90nJzo/xZhfmR/BYnbjmwGPYmRkiFpBADDwWxnd/yhyT89JvZdEXn
+         LN0O2WjWmZR6KEkqfjqOQ7TKDN8hqtgpqglKeQttt6esD5J/EeSZGqMgJAD/2ioOFp
+         81p0rzvt56vo4w2TfB7L9WN7xA3uajHt1k7P14uM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.8 07/62] ASoC: img: Fix a reference count leak in img_i2s_in_set_fmt
-Date:   Fri, 21 Aug 2020 12:13:28 -0400
-Message-Id: <20200821161423.347071-7-sashal@kernel.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 06/62] EDAC/mc: Call edac_inc_ue_error() before panic
+Date:   Fri, 21 Aug 2020 12:13:27 -0400
+Message-Id: <20200821161423.347071-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -58,39 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit c4c59b95b7f7d4cef5071b151be2dadb33f3287b ]
+[ Upstream commit e9ff6636d3f97a764487999754c0bfee9d2c231e ]
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code, causing incorrect ref count if
-pm_runtime_put_noidle() is not called in error handling paths.
-Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
+By calling edac_inc_ue_error() before panic, we get a correct UE error
+count for core dump analysis.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200614033749.2975-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/r/20200610065846.3626-2-zhenzhong.duan@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/img/img-i2s-in.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/edac/edac_mc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
-index e30b66b94bf67..0843235d73c91 100644
---- a/sound/soc/img/img-i2s-in.c
-+++ b/sound/soc/img/img-i2s-in.c
-@@ -343,8 +343,10 @@ static int img_i2s_in_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	chan_control_mask = IMG_I2S_IN_CH_CTL_CLK_TRANS_MASK;
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index 5813e931f2f00..01ff71f7b6456 100644
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -950,6 +950,8 @@ static void edac_ue_error(struct edac_raw_error_desc *e)
+ 			e->other_detail);
+ 	}
  
- 	ret = pm_runtime_get_sync(i2s->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(i2s->dev);
- 		return ret;
-+	}
++	edac_inc_ue_error(e);
++
+ 	if (edac_mc_get_panic_on_ue()) {
+ 		panic("UE %s%son %s (%s page:0x%lx offset:0x%lx grain:%ld%s%s)\n",
+ 			e->msg,
+@@ -959,8 +961,6 @@ static void edac_ue_error(struct edac_raw_error_desc *e)
+ 			*e->other_detail ? " - " : "",
+ 			e->other_detail);
+ 	}
+-
+-	edac_inc_ue_error(e);
+ }
  
- 	for (i = 0; i < i2s->active_channels; i++)
- 		img_i2s_in_ch_disable(i2s, i);
+ static void edac_inc_csrow(struct edac_raw_error_desc *e, int row, int chan)
 -- 
 2.25.1
 
