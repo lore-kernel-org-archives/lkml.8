@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8485CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C08F206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96CDE206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028336;
-	bh=cUGyqRoLKLvxQhBGrRQhHCN2eGOlJljyoYCfi1tGecU=;
+	s=default; t=1598028342;
+	bh=NZVOiuzSBZakKmTHz5OjTIZ8cTQyyV3gE5QGmIXA1B4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OIL3fQieEWHaSRt3+bNJzY4LgugCli/1mLbMyqzsci2J01nHrEo820nhEYrZsl/TM
-	 Rq1fRJYl9F4ukF/PRK5eSi4rVlerEUVConX5wD26DxoUMhvZUxgH6+c3WcdukWO9FR
-	 oAG/pJRoSGYLwdkmwGdgmaVxpgzCriF24vdh6PNM=
+	b=JATBHCvKFLxisLuIbLj+9O/IcFdhFJB6Yw+lopPawOqDC+CWJhXC3MFLx7AFsv5OZ
+	 toJONMrEksg7afdQwZ9wdODkgyoxedW/fjkyd3DHxVGOJygYx1o9nh9jO4G5TBwKSg
+	 qicigaX8LImDXAuZILDcxGw0i6TxJmQXPoNqR2Pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgHUQpY (ORCPT
+        id S1728492AbgHUQpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:45:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbgHUQUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:20:42 -0400
+        id S1728388AbgHUQUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:20:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 449A1208DB;
-        Fri, 21 Aug 2020 16:19:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27A6122CAF;
+        Fri, 21 Aug 2020 16:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026784;
-        bh=cUGyqRoLKLvxQhBGrRQhHCN2eGOlJljyoYCfi1tGecU=;
+        s=default; t=1598026788;
+        bh=NZVOiuzSBZakKmTHz5OjTIZ8cTQyyV3gE5QGmIXA1B4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kI+uK8+KV8nr2/z1EGQtlhO+XYgfl+rrTZmneNup7CvL/yVV4u7C2TyfzG9xEemH5
-         rAVPLOTiVT8Ye3N0H56/ECaMXs/eoCjkRs6uz/VLUszIg6cp7xa5r+9sexrtzpDI2D
-         kbI8HBuJ7GVoMzGoQerD4yerH+xqBOzJVDGfheR8=
+        b=bLEvweEAXDgvhTFeZutDgvwA3zt+tjli61eDDxFomz15VX+wTWbzaXtNoaEZi3iu2
+         ROqBdwJPJQYIa9Eyq0JYjHaHwjq8krZAtQjTKuRmf/dASJhvTLFCByGHIOyOG7rhFy
+         ZPaQCFBXpYhRPIt95BwcTYqp2vlQ+an9fpVWz+H8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju@tsinghua.edu.cn>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/26] media: pci: ttpci: av7110: fix possible buffer overflow caused by bad DMA value in debiirq()
-Date:   Fri, 21 Aug 2020 12:19:15 -0400
-Message-Id: <20200821161938.349246-4-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 07/26] drm/amdkfd: Fix reference count leaks.
+Date:   Fri, 21 Aug 2020 12:19:18 -0400
+Message-Id: <20200821161938.349246-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161938.349246-1-sashal@kernel.org>
 References: <20200821161938.349246-1-sashal@kernel.org>
@@ -59,49 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 6499a0db9b0f1e903d52f8244eacc1d4be00eea2 ]
+[ Upstream commit 20eca0123a35305e38b344d571cf32768854168c ]
 
-The value av7110->debi_virt is stored in DMA memory, and it is assigned
-to data, and thus data[0] can be modified at any time by malicious
-hardware. In this case, "if (data[0] < 2)" can be passed, but then
-data[0] can be changed into a large number, which may cause buffer
-overflow when the code "av7110->ci_slot[data[0]]" is used.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object.
 
-To fix this possible bug, data[0] is assigned to a local variable, which
-replaces the use of data[0].
-
-Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/ttpci/av7110.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdkfd/kfd_topology.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/pci/ttpci/av7110.c b/drivers/media/pci/ttpci/av7110.c
-index 382caf200ba16..c313f51688f44 100644
---- a/drivers/media/pci/ttpci/av7110.c
-+++ b/drivers/media/pci/ttpci/av7110.c
-@@ -426,14 +426,15 @@ static void debiirq(unsigned long cookie)
- 	case DATA_CI_GET:
- 	{
- 		u8 *data = av7110->debi_virt;
-+		u8 data_0 = data[0];
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+index 8c6e47c5507fb..74221e096855d 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+@@ -841,8 +841,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
  
--		if ((data[0] < 2) && data[2] == 0xff) {
-+		if (data_0 < 2 && data[2] == 0xff) {
- 			int flags = 0;
- 			if (data[5] > 0)
- 				flags |= CA_CI_MODULE_PRESENT;
- 			if (data[5] > 5)
- 				flags |= CA_CI_MODULE_READY;
--			av7110->ci_slot[data[0]].flags = flags;
-+			av7110->ci_slot[data_0].flags = flags;
- 		} else
- 			ci_get_data(&av7110->ci_rbuffer,
- 				    av7110->debi_virt,
+ 	ret = kobject_init_and_add(dev->kobj_node, &node_type,
+ 			sys_props.kobj_nodes, "%d", id);
+-	if (ret < 0)
++	if (ret < 0) {
++		kobject_put(dev->kobj_node);
+ 		return ret;
++	}
+ 
+ 	dev->kobj_mem = kobject_create_and_add("mem_banks", dev->kobj_node);
+ 	if (!dev->kobj_mem)
+@@ -885,8 +887,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+ 			return -ENOMEM;
+ 		ret = kobject_init_and_add(mem->kobj, &mem_type,
+ 				dev->kobj_mem, "%d", i);
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(mem->kobj);
+ 			return ret;
++		}
+ 
+ 		mem->attr.name = "properties";
+ 		mem->attr.mode = KFD_SYSFS_FILE_MODE;
+@@ -904,8 +908,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+ 			return -ENOMEM;
+ 		ret = kobject_init_and_add(cache->kobj, &cache_type,
+ 				dev->kobj_cache, "%d", i);
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(cache->kobj);
+ 			return ret;
++		}
+ 
+ 		cache->attr.name = "properties";
+ 		cache->attr.mode = KFD_SYSFS_FILE_MODE;
+@@ -923,8 +929,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+ 			return -ENOMEM;
+ 		ret = kobject_init_and_add(iolink->kobj, &iolink_type,
+ 				dev->kobj_iolink, "%d", i);
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(iolink->kobj);
+ 			return ret;
++		}
+ 
+ 		iolink->attr.name = "properties";
+ 		iolink->attr.mode = KFD_SYSFS_FILE_MODE;
+@@ -976,8 +984,10 @@ static int kfd_topology_update_sysfs(void)
+ 		ret = kobject_init_and_add(sys_props.kobj_topology,
+ 				&sysprops_type,  &kfd_device->kobj,
+ 				"topology");
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(sys_props.kobj_topology);
+ 			return ret;
++		}
+ 
+ 		sys_props.kobj_nodes = kobject_create_and_add("nodes",
+ 				sys_props.kobj_topology);
 -- 
 2.25.1
 
