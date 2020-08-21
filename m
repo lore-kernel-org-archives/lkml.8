@@ -2,59 +2,113 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF6BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE0F42075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D192075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:44:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VupcTfHv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbgHUNnQ (ORCPT
+        id S1728825AbgHUNoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:43:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47124 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727843AbgHUNnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:43:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 342BFACB8;
-        Fri, 21 Aug 2020 13:43:30 +0000 (UTC)
-Date:   Fri, 21 Aug 2020 15:43:00 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     iommu@lists.linux-foundation.org,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [Regression] "iommu/amd: Relax locking in dma_ops path" makes
- tg3 ethernet transmit queue timeout
-Message-ID: <20200821134300.GM3354@suse.de>
-References: <4E9B03FB-9DA5-4831-B4CE-A0AA645D3F22@canonical.com>
- <20200518133209.GM8135@suse.de>
- <381D21C9-C913-4C33-A6F4-0440B5D11670@canonical.com>
- <8D375E06-A763-4B5E-9C6D-DA5EBC62530E@canonical.com>
- <CFC22DE4-E342-4F32-B758-6A690755C498@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CFC22DE4-E342-4F32-B758-6A690755C498@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 21 Aug 2020 09:44:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728736AbgHUNnq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 09:43:46 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D4DC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:43:45 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id c15so1961704wrs.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:43:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=an/ZItpIvdsXZ+dkCGTRBp4WyvhqN2ZXif9hZg0TSV0=;
+        b=VupcTfHvtOM3OqYqFKTzWoJX6b0VQKA/XU+uQbm++069aCLbi5DJj0dk82uanW01lL
+         N5AzLXKz69tzblUHvIByN4Sybc6lxZOY6s4zz4LVZIV7GKTQwT680oaAmhrsiExqQsT0
+         pt7/4Vf5zUoahz8FsEV6e7ixBc35Ur6erUqifHvnhQTFiIrxeiba6VacQQ+1OysEkYau
+         W0cEzV391BlTlhd0HjV4OApkPsRiklKBosJTD2SEqQyay1SSENtQzy0ItYtrGb3fQvFW
+         Hpt3vKCtofcR2a9jCC5W14LbNmqXNh9IYLqs725tHNSiDdcq9HvbDOeIzo1El1TTvZ4+
+         Bv+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=an/ZItpIvdsXZ+dkCGTRBp4WyvhqN2ZXif9hZg0TSV0=;
+        b=Q8tUMxYxZJxT+r97eAMgCpgY4g0AKdowzWyvgqZ0mdSYFke0uiSK9ra0cUrrlmRXgS
+         hPQWvzcjcfep35JUUvV3R4nick5+Bf8EpKIIBmr5mx0J0ytNb36H9tkJfptAw0cX64TP
+         ip2w2FUzsY+MPHkVzgX1OQC212WmTzfW+AqjRp10Y3My8JMsJP9F2G/vrDh+hZ1seFsq
+         5JHbH6N4ptRNkkBykjQuDVYzPWIm7w1taHCYijt1fsRX0R29TwiVaeRj7FJcdrU1I37/
+         fUQM7v3sfzy3CdAzCg/KcnMxgfTVLZ5Y/49McdDjSMu5IzGjBYuRJUbcjZyo1GHpISOt
+         MiAw==
+X-Gm-Message-State: AOAM531wbV07P7aDu2nbAMWMlokLIeZHqPxPbcelg4NafXDyow7rT+Vd
+        ThKYZB5FAOu8O8HzhckJNtQoDA==
+X-Google-Smtp-Source: ABdhPJw6tis5ZR2fR5im6CyO9RyII+xiyyyVuOWW8nErWFZhdZ2AurjWD9xmeY8mAvJx8ACVUr6LVQ==
+X-Received: by 2002:adf:ec10:: with SMTP id x16mr2704963wrn.74.1598017424244;
+        Fri, 21 Aug 2020 06:43:44 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id 202sm5971179wmb.10.2020.08.21.06.43.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Aug 2020 06:43:43 -0700 (PDT)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH v5 01/18] crypto: sun8i-ss: Add SS_START define
+Date:   Fri, 21 Aug 2020 13:43:18 +0000
+Message-Id: <1598017415-39059-2-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1598017415-39059-1-git-send-email-clabbe@baylibre.com>
+References: <1598017415-39059-1-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kai,
+Instead of using an hardcoded value, let's use a defined value for
+SS_START.
 
-On Mon, Jun 29, 2020 at 08:33:22PM +0800, Kai-Heng Feng wrote:
-> I am still seeing the issue on v5.8-rc3. The issue goes away as soon
-> as "iommu=off" is added.
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 2 +-
+ drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h      | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Can you probably help with debugging this issue? I've had no luck so far
-getting my hands on a machine with tg3 hardware and an AMD IOMMU.
+diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
+index 9a23515783a6..97012128385f 100644
+--- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
++++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
+@@ -61,7 +61,7 @@ int sun8i_ss_run_task(struct sun8i_ss_dev *ss, struct sun8i_cipher_req_ctx *rctx
+ 		      const char *name)
+ {
+ 	int flow = rctx->flow;
+-	u32 v = 1;
++	u32 v = SS_START;
+ 	int i;
+ 
+ #ifdef CONFIG_CRYPTO_DEV_SUN8I_SS_DEBUG
+diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
+index 0405767f1f7e..f3ffaea3a59f 100644
+--- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
++++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
+@@ -13,6 +13,8 @@
+ #include <linux/debugfs.h>
+ #include <linux/crypto.h>
+ 
++#define SS_START	1
++
+ #define SS_ENCRYPTION		0
+ #define SS_DECRYPTION		BIT(6)
+ 
+-- 
+2.26.2
 
-Regards,
-
-	Joerg
