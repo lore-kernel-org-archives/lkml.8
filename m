@@ -2,154 +2,170 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717F6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9974DC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53CD8207DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 805D0207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:59:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgHUCvF (ORCPT
+        id S1727090AbgHUC7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:51:05 -0400
-Received: from mga11.intel.com ([192.55.52.93]:54690 "EHLO mga11.intel.com"
+        Thu, 20 Aug 2020 22:59:16 -0400
+Received: from mga05.intel.com ([192.55.52.43]:15865 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726975AbgHUCvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:51:04 -0400
-IronPort-SDR: 9Uc10Ob7R9FsPpKarIjdIuuxfXhNp6CcWtxjfaaXzEHFeHjjwvB8begXQv/CE/vbVBwQk1z/NP
- /kjA59XcBG9g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="153051709"
+        id S1725852AbgHUC7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 22:59:14 -0400
+IronPort-SDR: fRFhhQgm34nxBgQegBM22Mcwm29cCgLJliPh6V13jrBYFaEhhtTTTUUNJ/y3Sy4xApDZ3Fnyep
+ sVfkunuU1VDg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="240268650"
 X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="153051709"
+   d="scan'208";a="240268650"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 19:51:04 -0700
-IronPort-SDR: QaK6LNpXa1ocVtIBAx1I+9UT+UaUgCzWAQaqs+chC4eT3+5mLHuK46MVaPy6psrJhb4UpnanRb
- f21Mov7iOfLQ==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 19:59:13 -0700
+IronPort-SDR: HsHkPk12FpU091H67hyVGHN+fyXnU1tcswRmp+L1e70WC0Lg2cctbfTvjmT+Ak6sDZ/MBN7emc
+ G75NVWkkyjmA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="278797794"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.160])
-  by fmsmga007.fm.intel.com with ESMTP; 20 Aug 2020 19:51:03 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Chang Seok Bae <chang.seok.bae@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH] x86/entry/64: Disallow RDPID in paranoid entry if KVM is enabled
-Date:   Thu, 20 Aug 2020 19:50:50 -0700
-Message-Id: <20200821025050.32573-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.28.0
+   d="scan'208";a="293693132"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.164])
+  by orsmga003.jf.intel.com with ESMTP; 20 Aug 2020 19:59:09 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Gao Xiang <hsiangkao@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Eric Sandeen <esandeen@redhat.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by mistake
+References: <20200820045323.7809-1-hsiangkao@redhat.com>
+        <20200820233446.GB7728@dread.disaster.area>
+        <20200821002145.GA28298@xiangao.remote.csb>
+        <20200821010330.GC7728@dread.disaster.area>
+Date:   Fri, 21 Aug 2020 10:59:08 +0800
+In-Reply-To: <20200821010330.GC7728@dread.disaster.area> (Dave Chinner's
+        message of "Fri, 21 Aug 2020 11:03:30 +1000")
+Message-ID: <87mu2ovh4z.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't use RDPID in the paranoid entry flow if KVM is enabled as doing so
-can consume a KVM guest's MSR_TSC_AUX value if an NMI arrives in KVM's
-run loop.
+Dave Chinner <david@fromorbit.com> writes:
 
-As a performance optimization, KVM loads the guest's TSC_AUX when a CPU
-first enters its run loop, and on AMD's SVM doesn't restore the host's
-value until the CPU exits the run loop.  VMX is even more aggressive and
-defers restoring the host's value until the CPU returns to userspace.
-This optimization obviously relies on the kernel not consuming TSC_AUX,
-which falls apart if an NMI arrives in the run loop.
+> On Fri, Aug 21, 2020 at 08:21:45AM +0800, Gao Xiang wrote:
+>> Hi Dave,
+>> 
+>> On Fri, Aug 21, 2020 at 09:34:46AM +1000, Dave Chinner wrote:
+>> > On Thu, Aug 20, 2020 at 12:53:23PM +0800, Gao Xiang wrote:
+>> > > SWP_FS is used to make swap_{read,write}page() go through
+>> > > the filesystem, and it's only used for swap files over
+>> > > NFS. So, !SWP_FS means non NFS for now, it could be either
+>> > > file backed or device backed. Something similar goes with
+>> > > legacy SWP_FILE.
+>> > > 
+>> > > So in order to achieve the goal of the original patch,
+>> > > SWP_BLKDEV should be used instead.
+>> > > 
+>> > > FS corruption can be observed with SSD device + XFS +
+>> > > fragmented swapfile due to CONFIG_THP_SWAP=y.
+>> > > 
+>> > > I reproduced the issue with the following details:
+>> > > 
+>> > > Environment:
+>> > > QEMU + upstream kernel + buildroot + NVMe (2 GB)
+>> > > 
+>> > > Kernel config:
+>> > > CONFIG_BLK_DEV_NVME=y
+>> > > CONFIG_THP_SWAP=y
+>> > 
+>> > Ok, so at it's core this is a swap file extent versus THP swap
+>> > cluster alignment issue?
+>> 
+>> I think yes.
+>> 
+>> > 
+>> > > diff --git a/mm/swapfile.c b/mm/swapfile.c
+>> > > index 6c26916e95fd..2937daf3ca02 100644
+>> > > --- a/mm/swapfile.c
+>> > > +++ b/mm/swapfile.c
+>> > > @@ -1074,7 +1074,7 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
+>> > >  			goto nextsi;
+>> > >  		}
+>> > >  		if (size == SWAPFILE_CLUSTER) {
+>> > > -			if (!(si->flags & SWP_FS))
+>> > > +			if (si->flags & SWP_BLKDEV)
+>> > >  				n_ret = swap_alloc_cluster(si, swp_entries);
+>> > >  		} else
+>> > >  			n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
+>> > 
+>> > IOWs, if you don't make this change, does the corruption problem go
+>> > away if you align swap extents in iomap_swapfile_add_extent() to
+>> > (SWAPFILE_CLUSTER * PAGE_SIZE) instead of just PAGE_SIZE?
+>> > 
+>> > I.e. if the swapfile extents are aligned correctly to huge page swap
+>> > cluster size and alignment, does the swap clustering optimisations
+>> > for swapping THP pages work correctly? And, if so, is there any
+>> > performance benefit we get from enabling proper THP swap clustering
+>> > on swapfiles?
+>> > 
+>> 
+>> Yeah, I once think about some similiar thing as well. My thought for now is
+>> 
+>>  - First, SWAP THP doesn't claim to support such swapfile for now.
+>>    And the original author tried to explicitly avoid the whole thing in
+>> 
+>>    f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
+>> 
+>>    So such thing would be considered as some new feature and need
+>>    more testing at least. But for now I think we just need a quick
+>>    fix to fix the commit f0eea189e8e9 to avoid regression and for
+>>    backport use.
+>
+> Sure, a quick fix is fine for the current issue. I'm asking
+> questions about the design/architecture of how THP_SWAP is supposed
+> to work and whether swapfiles are violating some other undocumented
+> assumption about swapping THP files...
 
-Removing KVM's optimizaton would be painful, as both SVM and VMX would
-need to context switch the MSR on every VM-Enter (2x WRMSR + 1x RDMSR),
-whereas using LSL instead RDPID is a minor blip.
+The main requirement for THP_SWAP is that the swap cluster need to be
+mapped to the continuous block device space.
 
-Fixes: eaad981291ee3 ("x86/entry/64: Introduce the FIND_PERCPU_BASE macro")
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Chang Seok Bae <chang.seok.bae@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org
-Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
-Debugged-by: Tom Lendacky <thomas.lendacky@amd.com>
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
+So Yes.  In theory, it's possible to support THP_SWAP for swapfile.  But
+I don't know whether people need it or not.
 
-Andy, I know you said "unconditionally", but it felt weird adding a
-comment way down in GET_PERCPU_BASE without plumbing a param in to help
-provide context.  But, paranoid_entry is the only user so adding a param
-that is unconditional also felt weird.  That being said, I definitely
-don't have a strong opinion one way or the other.
+Best Regards,
+Huang, Ying
 
- arch/x86/entry/calling.h  | 10 +++++++---
- arch/x86/entry/entry_64.S |  7 ++++++-
- 2 files changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-index 98e4d8886f11c..a925c0cf89c1a 100644
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -342,9 +342,9 @@ For 32-bit we have the following conventions - kernel is built with
- #endif
- .endm
- 
--.macro SAVE_AND_SET_GSBASE scratch_reg:req save_reg:req
-+.macro SAVE_AND_SET_GSBASE scratch_reg:req save_reg:req no_rdpid=0
- 	rdgsbase \save_reg
--	GET_PERCPU_BASE \scratch_reg
-+	GET_PERCPU_BASE \scratch_reg \no_rdpid
- 	wrgsbase \scratch_reg
- .endm
- 
-@@ -375,11 +375,15 @@ For 32-bit we have the following conventions - kernel is built with
-  * We normally use %gs for accessing per-CPU data, but we are setting up
-  * %gs here and obviously can not use %gs itself to access per-CPU data.
-  */
--.macro GET_PERCPU_BASE reg:req
-+.macro GET_PERCPU_BASE reg:req no_rdpid=0
-+	.if \no_rdpid
-+	LOAD_CPU_AND_NODE_SEG_LIMIT \reg
-+	.else
- 	ALTERNATIVE \
- 		"LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
- 		"RDPID	\reg", \
- 		X86_FEATURE_RDPID
-+	.endif
- 	andq	$VDSO_CPUNODE_MASK, \reg
- 	movq	__per_cpu_offset(, \reg, 8), \reg
- .endm
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 70dea93378162..fd915c46297c5 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -842,8 +842,13 @@ SYM_CODE_START_LOCAL(paranoid_entry)
- 	 *
- 	 * The MSR write ensures that no subsequent load is based on a
- 	 * mispredicted GSBASE. No extra FENCE required.
-+	 *
-+	 * Disallow RDPID if KVM is enabled as it may consume a guest's TSC_AUX
-+	 * if an NMI arrives in KVM's run loop.  KVM loads guest's TSC_AUX on
-+	 * VM-Enter and may not restore the host's value until the CPU returns
-+	 * to userspace, i.e. KVM depends on the kernel not using TSC_AUX.
- 	 */
--	SAVE_AND_SET_GSBASE scratch_reg=%rax save_reg=%rbx
-+	SAVE_AND_SET_GSBASE scratch_reg=%rax save_reg=%rbx no_rdpid=IS_ENABLED(CONFIG_KVM)
- 	ret
- 
- .Lparanoid_entry_checkgs:
--- 
-2.28.0
-
+>>  - It is hard for users to control swapfile in
+>>    SWAPFILE_CLUSTER * PAGE_SIZE extents, especially users'
+>>    disk are fragmented or have some on-disk metadata limitation or
+>>    something. It's very hard for users to utilize this and arrange
+>>    their swapfile physical addr alignment and fragments for now.
+>
+> This isn't something users control. The swapfile extent mapping code
+> rounds the swap extents inwards so that the parts of the on-disk
+> extents that are not aligned or cannot hold a full page are
+> omitted from the ranges of the file that can be swapped to.
+>
+> i.e. a file that extents aligned to 4kB is fine for a 4KB page size
+> machine, but needs additional alignment to allow swapping to work on
+> a 64kB page size machine. Hence the swap code rounds the file
+> extents inwards to PAGE_SIZE to align them correctly. We really
+> should be doing this for THP page size rather than PAGE_SIZE if
+> THP_SWAP is enabled, regardless of whether swap clustering is
+> enabled or not...
+>
+> Cheers,
+>
+> Dave.
