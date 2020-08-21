@@ -6,109 +6,98 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6554C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE56C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80DB5207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C222207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:05:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sYSpOdn5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qQAt4ncN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgHUNFB (ORCPT
+        id S1728784AbgHUNFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59402 "EHLO
+        Fri, 21 Aug 2020 09:05:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgHUNFA (ORCPT
+        with ESMTP id S1727123AbgHUNFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:05:00 -0400
+        Fri, 21 Aug 2020 09:05:36 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26539C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:05:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09365C061385;
+        Fri, 21 Aug 2020 06:05:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/SNqsOUXmq1TmuBGZ8c3k7Bk2+J5mSEE9Ddwg1n/X/Y=; b=sYSpOdn5pZJondZQNuoWdp/ZQ/
-        +bImFzDHoPYWbQmcNHdrwS+m2ZUbhxtp+eqMlCMZN0xR6Bx6IgENEMjr/vv2c+rcnX5P7fWn5awme
-        YXSc032K8mX+TEcsfRhu8+XRkzlmKu3rvPvchMzwfW5H9spVOb2FnwqC8I5rSQwmzxNOunf3UnBY7
-        /WArC20A3vjswKjzJY4Q/ztm+oQ2c2xs5n7GegpRXvwWJeHGCg2sxVDzmyUyOpuZIiGx1zhItmzOb
-        4PDFIlrplJWIscydTsjYSbqyWEt2nok3oZZ77GV76fcmxi4jfOVfPLx6mPJmzsjJ7HNDZ/po07aaN
-        M3NNqYHA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k96is-000491-39; Fri, 21 Aug 2020 13:04:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 42297301324;
-        Fri, 21 Aug 2020 15:04:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2D0012C912D84; Fri, 21 Aug 2020 15:04:45 +0200 (CEST)
-Date:   Fri, 21 Aug 2020 15:04:45 +0200
-From:   peterz@infradead.org
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, luto@amacapital.net, axboe@kernel.dk,
-        keescook@chromium.org, torvalds@linux-foundation.org,
-        jannh@google.com, will@kernel.org, hch@lst.de, npiggin@gmail.com,
-        mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v3] mm: Fix kthread_use_mm() vs TLB invalidate
-Message-ID: <20200821130445.GP1362448@hirez.programming.kicks-ass.net>
-References: <20200721154106.GE10769@hirez.programming.kicks-ass.net>
- <87y2m8muag.fsf@linux.ibm.com>
+        bh=/frFlWk/DH7UmMNwwzKlH5Kh+sKeUOmfANQte5CZqRw=; b=qQAt4ncNWg2XdtrVsuzWeJNF5E
+        R3ocFyZH0LZFQvn2d1ZM0b6OQpWbxO8rKqfkeyFbrDG8AT8Zd0rgqetjCzRMK3ikDiWviFiN4g6K6
+        3vk+xTo/vrN5jTwQ5AniTfQisHA7dKEWc4FFhSlxjEA5/dHIInmA0fknQwBW1cn870uq9DU//1KeT
+        SmGICfk/UDZ40Nc1NlSmeU+w9YprzKKDecp5eoyDo6M5HczQOHG9IgMHEqLiiStPkf1tosTleslTS
+        pp/BefGKDT6dKzH7Jc5mNuIrbAWU8pVODLdCBcxLyrHdvw2gzrAO0GUJhXjA4xso0mnnGb4JMfYN5
+        hLdH9MvQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k96jS-0004Fr-Ef; Fri, 21 Aug 2020 13:05:23 +0000
+Date:   Fri, 21 Aug 2020 14:05:22 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Yu Kuai <yukuai3@huawei.com>, david@fromorbit.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [RFC PATCH V2] iomap: add support to track dirty state of sub
+ pages
+Message-ID: <20200821130522.GS17456@casper.infradead.org>
+References: <20200818134618.2345884-1-yukuai3@huawei.com>
+ <20200818155305.GR17456@casper.infradead.org>
+ <20200818161229.GK6107@magnolia>
+ <20200818165019.GT17456@casper.infradead.org>
+ <20200821061019.GD31091@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87y2m8muag.fsf@linux.ibm.com>
+In-Reply-To: <20200821061019.GD31091@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 11:09:51AM +0530, Aneesh Kumar K.V wrote:
-> Peter Zijlstra <peterz@infradead.org> writes:
+On Fri, Aug 21, 2020 at 07:10:19AM +0100, Christoph Hellwig wrote:
+> On Tue, Aug 18, 2020 at 05:50:19PM +0100, Matthew Wilcox wrote:
+> > Looks like Christoph changed his mind sometime between that message
+> > and the first commit: 9dc55f1389f9569acf9659e58dd836a9c70df217
 > 
-> > For SMP systems using IPI based TLB invalidation, looking at
-> > current->active_mm is entirely reasonable. This then presents the
-> > following race condition:
-> >
-> >
-> >   CPU0			CPU1
-> >
-> >   flush_tlb_mm(mm)	use_mm(mm)
-> >     <send-IPI>
-> > 			  tsk->active_mm = mm;
-> > 			  <IPI>
-> > 			    if (tsk->active_mm == mm)
-> > 			      // flush TLBs
-> > 			  </IPI>
-> > 			  switch_mm(old_mm,mm,tsk);
-> >
-> >
-> > Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
-> > because the IPI lands before we actually switched.
-> >
-> > Avoid this by disabling IRQs across changing ->active_mm and
-> > switch_mm().
-> >
-> > [ There are all sorts of reasons this might be harmless for various
-> > architecture specific reasons, but best not leave the door open at
-> > all. ]
+> No, as Darrick pointed out it was all about the header dependency.
 > 
+> > My THP patches convert the bit array to be per-block rather than
+> > per-sector, so this is all going to go away soon ;-)
 > 
-> Do we have similar race with exec_mmap()? I am looking at exec_mmap()
-> runnning parallel to do_exit_flush_lazy_tlb(). We can get
-> 
-> 	if (current->active_mm == mm) {
-> 
-> true and if we don't disable irq around updating tsk->mm/active_mm we
-> can end up doing mmdrop on wrong mm?
+> I've asked a while ago, but let me repeat:  Can you split out all the
+> useful iomap bits that are not directly dependent on the new THP
+> infrastructure and send them out ASAP?  I'd like to pre-load this
+> work at least a merge window before the actual THP bits.
 
-exec_mmap() is called after de_thread(), there should not be any mm
-specific invalidations around I think.
+I've been working on that the past couple of days.  As always when
+reviewing a patch series, I find things that need to be done differently.
+And spot bugs (one pre-existing, one that I introduced).
 
-Then again, CLONE_VM without CLONE_THREAD might still be possible, so
-yeah, we probably want IRQs disabled there too, just for consistency and
-general paranoia if nothing else.
+You may not have noticed; I've sent out a couple of patch series to
+linux-mm already this week:
 
+https://lore.kernel.org/linux-mm/20200819150555.31669-1-willy@infradead.org/
+https://lore.kernel.org/linux-mm/20200819184850.24779-1-willy@infradead.org/
+
+plus this to linux-block:
+https://lore.kernel.org/linux-block/20200817195206.15172-1-willy@infradead.org/
+
+this patch series inadvertently breaks DAX and I need to debug that:
+https://lore.kernel.org/linux-mm/20200804161755.10100-1-willy@infradead.org/
+
+i also need to figure out what breaks for Hugh here (I may already have
+fixed it, but I need to do more testing):
+https://lore.kernel.org/linux-mm/20200629152033.16175-1-willy@infradead.org/
+
+So the iomap chunks are next, and then I have another mm series in mind.
+After all that is done, I'll have almost all the prep work merged for
+5.10 and we can do the actual THP patchset in 5.11.  I'm sitting on
+around 80 patches at this point although it varies from day to day
+depending how I resplit things.
