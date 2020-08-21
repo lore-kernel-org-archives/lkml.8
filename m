@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C79FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D7EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03F4922D6D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C84FA20FC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598026825;
-	bh=q80865g4cKNeUhpRJl0wdHIIh4zKgCeHakfCqEH55pw=;
+	s=default; t=1598026847;
+	bh=iAVDoijhRVMr+7fAJMTi0vz8YjdzK7xutKC2AZ3bmjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ufz1U8sHu6s/r8Ah6Gr9HJcHNkCmjlcPxI+kyr5g0Ogdx0NhIktwxA7IgUvM0+SKK
-	 hoHDLRBbqYUQyWyqSWHidSCEFg8v6tc4Drrk6rsn2EJLFHQna86sR111a6vCDjdihB
-	 59n4OX1W+HbgwocOrq/t07+JjH0jvIZfAXm9pQCg=
+	b=D66adGJKsurRm4BQWMD1U3ImaSxcLbqHpBcFdEzmdpKL6+fS3KE7ViWhSYgJ8EoQm
+	 TVYXPxT7fd1zXonRnyepsQiPsaOJH9LTYfcdPidSjncO9zvpFG1jfyEWhZLUuK9nx0
+	 uvBDP6KlkMiUga8x5xf6bj8Cd4UF1/O8ncWs0hWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgHUQUV (ORCPT
+        id S1728402AbgHUQUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:20:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48370 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:20:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727955AbgHUQPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:15:36 -0400
+        id S1727995AbgHUQPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:15:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B22D82063A;
-        Fri, 21 Aug 2020 16:15:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A61B2063A;
+        Fri, 21 Aug 2020 16:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026535;
-        bh=q80865g4cKNeUhpRJl0wdHIIh4zKgCeHakfCqEH55pw=;
+        s=default; t=1598026552;
+        bh=iAVDoijhRVMr+7fAJMTi0vz8YjdzK7xutKC2AZ3bmjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L5XzyozaZ4SQCxwd5cQYOXGo/WVQrANw47f9ZPD9jc20j0eRqCO7pwQv3Ly0vb8px
-         MBKg1PBuSVV7eTB460FfX4h2NB/fwqb//SyStxeg+RC2qktVPed+9cj87A22j0+qwe
-         wKX9wnxnapshNPi61//ncJgguG//ygwVnnHz2sxw=
+        b=bspemOsENRqdLD1Ss7xiofHujMPqeD3myR6z04R2dBcmRrg464CjiWPBG0cfb7t6O
+         DE36FumiwKYj8mCZk8wJbugUs0Uhr+bYaRCOTi37cqRZOY5/zBQcvhilqf7fFvAV+V
+         Zs70W/DVZmm+GtNmsGJqXICjpmjWsqTHncQCus+s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 56/62] netfilter: nf_tables: report EEXIST on overlaps
-Date:   Fri, 21 Aug 2020 12:14:17 -0400
-Message-Id: <20200821161423.347071-56-sashal@kernel.org>
+Cc:     Guchun Chen <guchun.chen@amd.com>, Tao Zhou <tao.zhou1@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 05/61] drm/amdgpu: fix RAS memory leak in error case
+Date:   Fri, 21 Aug 2020 12:14:49 -0400
+Message-Id: <20200821161545.347622-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
-References: <20200821161423.347071-1-sashal@kernel.org>
+In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
+References: <20200821161545.347622-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,101 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Guchun Chen <guchun.chen@amd.com>
 
-[ Upstream commit 77a92189ecfd061616ad531d386639aab7baaad9 ]
+[ Upstream commit 5e91160ac0b5cfbbaeb62cbff8b069262095f744 ]
 
-Replace EBUSY by EEXIST in the following cases:
+RAS context memory needs to freed in failure case.
 
-- If the user adds a chain with a different configuration such as different
-  type, hook and priority.
-
-- If the user adds a non-base chain that clashes with an existing basechain.
-
-- If the user adds a { key : value } mapping element and the key exists
-  but the value differs.
-
-- If the device already belongs to an existing flowtable.
-
-User describe that this error reporting is confusing:
-
-- https://bugzilla.netfilter.org/show_bug.cgi?id=1176
-- https://bugzilla.netfilter.org/show_bug.cgi?id=1413
-
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Guchun Chen <guchun.chen@amd.com>
+Reviewed-by: Tao Zhou <tao.zhou1@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 88325b264737f..d31832d32e028 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -2037,7 +2037,7 @@ static int nf_tables_updchain(struct nft_ctx *ctx, u8 genmask, u8 policy,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+index cd18596b47d33..78b378867b97a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+@@ -1843,9 +1843,8 @@ int amdgpu_ras_init(struct amdgpu_device *adev)
+ 	amdgpu_ras_check_supported(adev, &con->hw_supported,
+ 			&con->supported);
+ 	if (!con->hw_supported) {
+-		amdgpu_ras_set_context(adev, NULL);
+-		kfree(con);
+-		return 0;
++		r = 0;
++		goto err_out;
+ 	}
  
- 	if (nla[NFTA_CHAIN_HOOK]) {
- 		if (!nft_is_base_chain(chain))
--			return -EBUSY;
-+			return -EEXIST;
+ 	con->features = 0;
+@@ -1856,29 +1855,31 @@ int amdgpu_ras_init(struct amdgpu_device *adev)
+ 	if (adev->nbio.funcs->init_ras_controller_interrupt) {
+ 		r = adev->nbio.funcs->init_ras_controller_interrupt(adev);
+ 		if (r)
+-			return r;
++			goto err_out;
+ 	}
  
- 		err = nft_chain_parse_hook(ctx->net, nla, &hook, ctx->family,
- 					   false);
-@@ -2047,21 +2047,21 @@ static int nf_tables_updchain(struct nft_ctx *ctx, u8 genmask, u8 policy,
- 		basechain = nft_base_chain(chain);
- 		if (basechain->type != hook.type) {
- 			nft_chain_release_hook(&hook);
--			return -EBUSY;
-+			return -EEXIST;
- 		}
+ 	if (adev->nbio.funcs->init_ras_err_event_athub_interrupt) {
+ 		r = adev->nbio.funcs->init_ras_err_event_athub_interrupt(adev);
+ 		if (r)
+-			return r;
++			goto err_out;
+ 	}
  
- 		if (ctx->family == NFPROTO_NETDEV) {
- 			if (!nft_hook_list_equal(&basechain->hook_list,
- 						 &hook.list)) {
- 				nft_chain_release_hook(&hook);
--				return -EBUSY;
-+				return -EEXIST;
- 			}
- 		} else {
- 			ops = &basechain->ops;
- 			if (ops->hooknum != hook.num ||
- 			    ops->priority != hook.priority) {
- 				nft_chain_release_hook(&hook);
--				return -EBUSY;
-+				return -EEXIST;
- 			}
- 		}
- 		nft_chain_release_hook(&hook);
-@@ -5160,10 +5160,8 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
- 			if (nft_set_ext_exists(ext, NFT_SET_EXT_DATA) ^
- 			    nft_set_ext_exists(ext2, NFT_SET_EXT_DATA) ||
- 			    nft_set_ext_exists(ext, NFT_SET_EXT_OBJREF) ^
--			    nft_set_ext_exists(ext2, NFT_SET_EXT_OBJREF)) {
--				err = -EBUSY;
-+			    nft_set_ext_exists(ext2, NFT_SET_EXT_OBJREF))
- 				goto err_element_clash;
--			}
- 			if ((nft_set_ext_exists(ext, NFT_SET_EXT_DATA) &&
- 			     nft_set_ext_exists(ext2, NFT_SET_EXT_DATA) &&
- 			     memcmp(nft_set_ext_data(ext),
-@@ -5171,7 +5169,7 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
- 			    (nft_set_ext_exists(ext, NFT_SET_EXT_OBJREF) &&
- 			     nft_set_ext_exists(ext2, NFT_SET_EXT_OBJREF) &&
- 			     *nft_set_ext_obj(ext) != *nft_set_ext_obj(ext2)))
--				err = -EBUSY;
-+				goto err_element_clash;
- 			else if (!(nlmsg_flags & NLM_F_EXCL))
- 				err = 0;
- 		} else if (err == -ENOTEMPTY) {
-@@ -6308,7 +6306,7 @@ static int nft_register_flowtable_net_hooks(struct net *net,
- 			list_for_each_entry(hook2, &ft->hook_list, list) {
- 				if (hook->ops.dev == hook2->ops.dev &&
- 				    hook->ops.pf == hook2->ops.pf) {
--					err = -EBUSY;
-+					err = -EEXIST;
- 					goto err_unregister_net_hooks;
- 				}
- 			}
+ 	amdgpu_ras_mask &= AMDGPU_RAS_BLOCK_MASK;
+ 
+-	if (amdgpu_ras_fs_init(adev))
+-		goto fs_out;
++	if (amdgpu_ras_fs_init(adev)) {
++		r = -EINVAL;
++		goto err_out;
++	}
+ 
+ 	DRM_INFO("RAS INFO: ras initialized successfully, "
+ 			"hardware ability[%x] ras_mask[%x]\n",
+ 			con->hw_supported, con->supported);
+ 	return 0;
+-fs_out:
++err_out:
+ 	amdgpu_ras_set_context(adev, NULL);
+ 	kfree(con);
+ 
+-	return -EINVAL;
++	return r;
+ }
+ 
+ /* helper function to handle common stuff in ip late init phase */
 -- 
 2.25.1
 
