@@ -2,203 +2,104 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D13C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EBE52075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08E420732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:22:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hduGjMZb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="54vZUbSC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L8/i1aFP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgHUCUN (ORCPT
+        id S1727854AbgHUCWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:20:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43466 "EHLO
+        Thu, 20 Aug 2020 22:22:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbgHUCQq (ORCPT
+        with ESMTP id S1727086AbgHUCW3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:16:46 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1DE0C061386;
-        Thu, 20 Aug 2020 19:16:44 -0700 (PDT)
-Message-Id: <20200821002945.695825784@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597976203;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=n+9JzjgCW829xt57cBjdIpc/3IF3JudgknsVK2IiGtk=;
-        b=hduGjMZbM0/qwLquCj86fWVEcSBPc0Iv1xA1asxyvWI+3WaJk/FZv3obiS9pdKi2N4Xi55
-        g2B24e5RBCG7WKFAQnorS3FWxwuVXn4z6S30wQ9GCVD8rtp+77IWCQCGVnhsf3znLjLhSM
-        aQmZw2lG8elAmC//IGUjNVWAb+xaLL0KKz9IZ14ZS5Czuz7wC08nu5Y+pBKinVQ49JiyCU
-        CXbMGhzaoeBIvlaaHMr23nvutvRUEOUuFrM649Lo5JGWcrMEOw972tIYLaoecwN/uLHyl2
-        R6g+Wh1VCvbaQYIhXKJhJnK8aiSLIDvD0enema4nF0KLI5Yj7n1BELeKwzCgbA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597976203;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=n+9JzjgCW829xt57cBjdIpc/3IF3JudgknsVK2IiGtk=;
-        b=54vZUbSCVLbmLl/kEHzdwLB30JzHXmmLwe5GfkEeAMeKUbcsXnsiboZQzVlzf/vQeQ28JW
-        WkKbSmHVLKTXoHDw==
-Date:   Fri, 21 Aug 2020 02:24:28 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        linux-hyperv@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [patch RFC 04/38] x86/irq: Add allocation type for parent domain retrieval
-References: <20200821002424.119492231@linutronix.de>
+        Thu, 20 Aug 2020 22:22:29 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8E97C061388
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:22:28 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id g19so543586ejc.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:22:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nsUdliivJtp5Q6+//ViL/TxskEesc9x2uBqaTetkCW4=;
+        b=L8/i1aFPC1LxPUXg1D2GZxUkWHDtGd90ELK9RK2LLZ/IoGIS77V8+gaXk+Q4UT9HLS
+         9ODRRXaHvdWMFdIps9AiYjyN6aMLDmXWvcBqbDcZoqRdCBZG46ZBJ2SEJW7q/aZXZEw6
+         Btcif9qvwviSGgM1R5lxRHiavoVAapIMBHrbzhhl5eicCKkUrjk+N1xi9imjVoaShxj0
+         O81wLvdNL3pcmfbn9Y1kXAgRT9uu2r3azu025AM5CBkRFXHLsyjQqooRtostkuEczfdT
+         L18Pmoa7tAOrjkPTGS3HnB4NAmu7SDZ4rvinOLaRHgFWlC92KRMG9edwE39Wnnw86Ob8
+         ZTrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nsUdliivJtp5Q6+//ViL/TxskEesc9x2uBqaTetkCW4=;
+        b=ekbaCNtfpTNrKSQPedbjuH85/Kb6tanrXvR4VMXZ12NI5om295FETniMGqRyhv2kL9
+         5IqqMz2As0OjhKd1pVib54PDjIHgvugSlntYEaPZm80NNpMIF6izRP6q9+r9jIo6GKWB
+         n47yMSP9yaxgQFULWlHEM+yHnGZ4vBJoEOykFgzucHywc3a27CYgDaCpTChE1ahD0DY8
+         XpuEvD8zkyjZBnZTz+2rA7tai/m0UP66ndLig3WzUojk8FH3G/+JYXyTzaxxGkVmIxbR
+         GS0xGn03fwF8StEkMxtuHW/Zr2+QiJZanwuKCl9UTrBva7xzjkI46bDC7zORMWMiGIjf
+         tA3Q==
+X-Gm-Message-State: AOAM530ecC4FLN438nIc1RonqYjvNU+FotQyzS/l7UW1cCHDJLhljVIA
+        DGRDr2iYvdhqZd/hI3fos200emEINBUUT7AdZnBAvQ==
+X-Google-Smtp-Source: ABdhPJxPa2BAinWcuRWziYxt33mJwF+y04RBKXB9gCPjrMmz1mDiblORWW7FKZhTjJKjGzr2w/qzpE7L/GbxmhpT5nA=
+X-Received: by 2002:a17:906:3b45:: with SMTP id h5mr804466ejf.136.1597976547157;
+ Thu, 20 Aug 2020 19:22:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline;
- filename="x86-irq--Add-allocation-flag-for-domain-retrieval.patch"
-Content-transfer-encoding: 8-bit
+References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-2-haoluo@google.com>
+ <20200820215327.jsvjbsvv6ts3x4wn@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20200820215327.jsvjbsvv6ts3x4wn@ast-mbp.dhcp.thefacebook.com>
+From:   Hao Luo <haoluo@google.com>
+Date:   Thu, 20 Aug 2020 19:22:15 -0700
+Message-ID: <CA+khW7hGGCWkjqb_TNSQvpN-=4K==dtjF4fwUOf3zd8eoON5nw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 1/8] bpf: Introduce pseudo_btf_id
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-irq_remapping_ir_irq_domain() is used to retrieve the remapping parent
-domain for an allocation type. irq_remapping_irq_domain() is for retrieving
-the actual device domain for allocating interrupts for a device.
+On Thu, Aug 20, 2020 at 2:53 PM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> Why did you choose to do it during main do_check() walk instead of this pre-pass ?
+> check_ld_imm() can be called multiple times for the same insn,
+> so it's faster and less surprising to do it during replace_map_fd_with_map_ptr().
+> BTF needs to be parsed first, of course.
+> You can either move check_btf_info() before replace_map_fd_with_map_ptr() or
+> move replace_map_fd_with_map_ptr() after check_btf_info().
+> The latter is probably cleaner.
 
-The two functions are similar and can be unified by using explicit modes
-for parent irq domain retrieval.
+Ah, that does make more sense. I can move
+replace_map_fd_with_map_ptr() after check_btf_info() (or
+check_attach_btf_id()) and rename it to better reflect the fact that
+it's not just for maps now.
 
-Add X86_IRQ_ALLOC_TYPE_IOAPIC/HPET_GET_PARENT and use it in the iommu
-implementations. Drop the parent domain retrieval for PCI_MSI/X as that is
-unused.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: x86@kernel.org
-Cc: linux-hyperv@vger.kernel.org
-Cc: iommu@lists.linux-foundation.org
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Jon Derrick <jonathan.derrick@intel.com>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>
----
- arch/x86/include/asm/hw_irq.h       |    2 ++
- arch/x86/kernel/apic/io_apic.c      |    2 +-
- arch/x86/kernel/apic/msi.c          |    2 +-
- drivers/iommu/amd/iommu.c           |    8 ++++++++
- drivers/iommu/hyperv-iommu.c        |    2 +-
- drivers/iommu/intel/irq_remapping.c |    8 ++------
- 6 files changed, 15 insertions(+), 9 deletions(-)
-
---- a/arch/x86/include/asm/hw_irq.h
-+++ b/arch/x86/include/asm/hw_irq.h
-@@ -40,6 +40,8 @@ enum irq_alloc_type {
- 	X86_IRQ_ALLOC_TYPE_PCI_MSIX,
- 	X86_IRQ_ALLOC_TYPE_DMAR,
- 	X86_IRQ_ALLOC_TYPE_UV,
-+	X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT,
-+	X86_IRQ_ALLOC_TYPE_HPET_GET_PARENT,
- };
- 
- struct irq_alloc_info {
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2296,7 +2296,7 @@ static int mp_irqdomain_create(int ioapi
- 		return 0;
- 
- 	init_irq_alloc_info(&info, NULL);
--	info.type = X86_IRQ_ALLOC_TYPE_IOAPIC;
-+	info.type = X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT;
- 	info.ioapic_id = mpc_ioapic_id(ioapic);
- 	parent = irq_remapping_get_ir_irq_domain(&info);
- 	if (!parent)
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -476,7 +476,7 @@ struct irq_domain *hpet_create_irq_domai
- 	domain_info->data = (void *)(long)hpet_id;
- 
- 	init_irq_alloc_info(&info, NULL);
--	info.type = X86_IRQ_ALLOC_TYPE_HPET;
-+	info.type = X86_IRQ_ALLOC_TYPE_HPET_GET_PARENT;
- 	info.hpet_id = hpet_id;
- 	parent = irq_remapping_get_ir_irq_domain(&info);
- 	if (parent == NULL)
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -3534,6 +3534,14 @@ static struct irq_domain *get_ir_irq_dom
- 	if (!info)
- 		return NULL;
- 
-+	switch (info->type) {
-+	case X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT:
-+	case X86_IRQ_ALLOC_TYPE_HPET_GET_PARENT:
-+		break;
-+	default:
-+		return NULL;
-+	}
-+
- 	devid = get_devid(info);
- 	if (devid >= 0) {
- 		iommu = amd_iommu_rlookup_table[devid];
---- a/drivers/iommu/hyperv-iommu.c
-+++ b/drivers/iommu/hyperv-iommu.c
-@@ -184,7 +184,7 @@ static int __init hyperv_enable_irq_rema
- 
- static struct irq_domain *hyperv_get_ir_irq_domain(struct irq_alloc_info *info)
- {
--	if (info->type == X86_IRQ_ALLOC_TYPE_IOAPIC)
-+	if (info->type == X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT)
- 		return ioapic_ir_domain;
- 	else
- 		return NULL;
---- a/drivers/iommu/intel/irq_remapping.c
-+++ b/drivers/iommu/intel/irq_remapping.c
-@@ -1109,16 +1109,12 @@ static struct irq_domain *intel_get_ir_i
- 		return NULL;
- 
- 	switch (info->type) {
--	case X86_IRQ_ALLOC_TYPE_IOAPIC:
-+	case X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT:
- 		iommu = map_ioapic_to_ir(info->ioapic_id);
- 		break;
--	case X86_IRQ_ALLOC_TYPE_HPET:
-+	case X86_IRQ_ALLOC_TYPE_HPET_GET_PARENT:
- 		iommu = map_hpet_to_ir(info->hpet_id);
- 		break;
--	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
--	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
--		iommu = map_dev_to_ir(info->msi_dev);
--		break;
- 	default:
- 		BUG_ON(1);
- 		break;
-
+Thanks for the insights!
+Hao
