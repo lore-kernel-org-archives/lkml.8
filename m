@@ -2,128 +2,122 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F86BC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99D9A20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:49:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nf3gJW5w"
+	by mail.kernel.org (Postfix) with ESMTP id EACBE2177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:51:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgHUJt6 (ORCPT
+        id S1728435AbgHUJve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:49:58 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43964 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgHUJt5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:49:57 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07L9gMlm082026;
-        Fri, 21 Aug 2020 09:49:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=orjAXZiNJh1MaoNFDKY8bEIm3QOf3FaECDDCfTCafAA=;
- b=nf3gJW5wWhdtOqFrWIJBzI1j8cwnInu1ZZnwJ0QrlK6Lx/tjSwGOXgNfOnuxsphgN7QG
- Ml7LRwxDjHaQ5FKUAMj6H2ZWST0U6Uoe0mjBLJ/7lYpC5ue+UaV7c/5S0ZXXHj9EGwDa
- ZRV7Ap0OS3YYiiDFK+l32hC1S4OngfOj/274jR5hbID26wXE5YG29x5VvGsK64QPD6EI
- f38BgdtnXfn5kRMLtrKgNUYPrWwLoH009sbTWdg1MACyn8GWfLe5gs+ELfoi7ZthoIO8
- KhQOC2sxjWu9U6jR5YeSeOeyv2/6RdK5c08P3l8dBp1OQrHnGWEIMJuM8snfzRZG+mMY aQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 32x74rnaux-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Aug 2020 09:49:46 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07L9iYoF028593;
-        Fri, 21 Aug 2020 09:47:45 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 331b2ejg71-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 09:47:45 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07L9laAQ000738;
-        Fri, 21 Aug 2020 09:47:36 GMT
-Received: from dhcp-10-175-160-47.vpn.oracle.com (/10.175.160.47)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Aug 2020 09:47:35 +0000
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] IB/uverbs: Fix memleak in ib_uverbs_add_one
-From:   =?utf-8?Q?H=C3=A5kon_Bugge?= <haakon.bugge@oracle.com>
-In-Reply-To: <20200821081013.4762-1-dinghao.liu@zju.edu.cn>
-Date:   Fri, 21 Aug 2020 11:47:32 +0200
-Cc:     kjlu@umn.edu, Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Michel Lespinasse <walken@google.com>,
-        Ariel Elior <ariel.elior@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        OFED mailing list <linux-rdma@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E59593D2-E7F5-4D41-B6DC-B8B8C55241CE@oracle.com>
-References: <20200821081013.4762-1-dinghao.liu@zju.edu.cn>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9719 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- mlxlogscore=999 adultscore=0 suspectscore=62 phishscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210089
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9719 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=62 lowpriorityscore=0 bulkscore=0 malwarescore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210089
+        Fri, 21 Aug 2020 05:51:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34666 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725855AbgHUJvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 05:51:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id A0C2CAB9F;
+        Fri, 21 Aug 2020 09:51:59 +0000 (UTC)
+Date:   Fri, 21 Aug 2020 11:51:29 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mm@kvack.org, Pavel Machek <pavel@ucw.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Airlie <airlied@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Vrabel <david.vrabel@citrix.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/4] mm: Export flush_vm_area() to sync the PTEs upon
+ construction
+Message-ID: <20200821095129.GF3354@suse.de>
+References: <20200821085011.28878-1-chris@chris-wilson.co.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821085011.28878-1-chris@chris-wilson.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On 21 Aug 2020, at 10:10, Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
->=20
-> When ida_alloc_max() fails, uverbs_dev should be freed
-> just like when init_srcu_struct() fails. It's the same
-> for the error paths after this call.
->=20
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+On Fri, Aug 21, 2020 at 09:50:08AM +0100, Chris Wilson wrote:
+> The alloc_vm_area() is another method for drivers to
+> vmap/map_kernel_range that uses apply_to_page_range() rather than the
+> direct vmalloc walkers. This is missing the page table modification
+> tracking, and the ability to synchronize the PTE updates afterwards.
+> Provide flush_vm_area() for the users of alloc_vm_area() that assumes
+> the worst and ensures that the page directories are correctly flushed
+> upon construction.
+> 
+> The impact is most pronounced on x86_32 due to the delayed set_pmd().
+> 
+> Reported-by: Pavel Machek <pavel@ucw.cz>
+> References: 2ba3e6947aed ("mm/vmalloc: track which page-table levels were modified")
+> References: 86cf69f1d893 ("x86/mm/32: implement arch_sync_kernel_mappings()")
+> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Joerg Roedel <jroedel@suse.de>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Dave Airlie <airlied@redhat.com>
+> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: David Vrabel <david.vrabel@citrix.com>
+> Cc: <stable@vger.kernel.org> # v5.8+
 > ---
-> drivers/infiniband/core/uverbs_main.c | 1 +
-> 1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/infiniband/core/uverbs_main.c =
-b/drivers/infiniband/core/uverbs_main.c
-> index 37794d88b1f3..c6b4e3e2aff6 100644
-> --- a/drivers/infiniband/core/uverbs_main.c
-> +++ b/drivers/infiniband/core/uverbs_main.c
-> @@ -1170,6 +1170,7 @@ static int ib_uverbs_add_one(struct ib_device =
-*device)
-> 		ib_uverbs_comp_dev(uverbs_dev);
-> 	wait_for_completion(&uverbs_dev->comp);
-> 	put_device(&uverbs_dev->dev);
-> +	kfree(uverbs_dev);
+>  include/linux/vmalloc.h |  1 +
+>  mm/vmalloc.c            | 16 ++++++++++++++++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> index 0221f852a7e1..a253b27df0ac 100644
+> --- a/include/linux/vmalloc.h
+> +++ b/include/linux/vmalloc.h
+> @@ -204,6 +204,7 @@ static inline void set_vm_flush_reset_perms(void *addr)
+>  
+>  /* Allocate/destroy a 'vmalloc' VM area. */
+>  extern struct vm_struct *alloc_vm_area(size_t size, pte_t **ptes);
+> +extern void flush_vm_area(struct vm_struct *area);
+>  extern void free_vm_area(struct vm_struct *area);
+>  
+>  /* for /dev/kmem */
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index b482d240f9a2..c41934486031 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -3078,6 +3078,22 @@ struct vm_struct *alloc_vm_area(size_t size, pte_t **ptes)
+>  }
+>  EXPORT_SYMBOL_GPL(alloc_vm_area);
+>  
+> +void flush_vm_area(struct vm_struct *area)
+> +{
+> +	unsigned long addr = (unsigned long)area->addr;
+> +
+> +	/* apply_to_page_range() doesn't track the damage, assume the worst */
+> +	if (ARCH_PAGE_TABLE_SYNC_MASK & (PGTBL_PTE_MODIFIED |
+> +					 PGTBL_PMD_MODIFIED |
+> +					 PGTBL_PUD_MODIFIED |
+> +					 PGTBL_P4D_MODIFIED |
+> +					 PGTBL_PGD_MODIFIED))
+> +		arch_sync_kernel_mappings(addr, addr + area->size);
 
-Isn't this taken care of by the *release* function pointer, which =
-happens to be ib_uverbs_release_dev() ?
+This should happen in __apply_to_page_range() directly and look like
+this:
 
+	if (ARCH_PAGE_TABLE_SYNC_MASK && create)
+		arch_sync_kernel_mappings(addr, addr + size);
 
-Thxs, H=C3=A5kon
+Or even better, track whether something had to be allocated in the
+__apply_to_page_range() path and check for:
 
-> 	return ret;
-> }
->=20
-> --=20
-> 2.17.1
->=20
+	if (ARCH_PAGE_TABLE_SYNC_MASK & mask)
 
