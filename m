@@ -2,230 +2,198 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4929EC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB18C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B21920738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27F6207C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:06:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DMqOHCoT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuJitGHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgHUOGT (ORCPT
+        id S1727885AbgHUOGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 10:06:19 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7842 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgHUOGR (ORCPT
+        Fri, 21 Aug 2020 10:06:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727845AbgHUOGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 10:06:17 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f3fd4ca0001>; Fri, 21 Aug 2020 07:06:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 21 Aug 2020 07:06:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 21 Aug 2020 07:06:16 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Aug
- 2020 14:06:16 +0000
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.107)
- by HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 21 Aug 2020 14:06:16 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iPBmCm5sPL6M9LYuvhyG+Y2Y+nNmNDPX/HGE+bK75wop9iLTObBH7QSHamxsYVyTNAQmWkSaR1/D+3oWkKpnqCyyY1PXqbEOlES/q/cmzsQ+LPoqazWD76kMkLLaHEJw8uOZ81kYRg8trX13QnRdguUXBpBVh4uNBQA7nWfig+gf/HyeUj8Jxy5ZjEXEfOpZ7mCoY1guXoeGFLboo2xMOips0AVJS64uHf7yp7KY7NUDH+Fkd41wl6Okc1Xb8jbflMNUKdkcrUHLOIEbmpt1xSByka4/LuNZt+ETBUGXrwUihpUK9k9I5D1o6++iYT9gfMcBvjxHKHkLhlAItQM9tw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gqDYb91BMdDkJ+gmkxiAp2gFYUV1XUxF6FersnWqlQ8=;
- b=gF3KjFm3FhEdMn3WddxEUOos25fE980yT10oL17bJneUt4oTvSBv9ZXkP9p42/MI729WpmML/zRGeOe/sUqudy45FzXvMLZSNMFvEGJBemvVd6UP3B8aSqwoCuRx/tPQKXke4FhonDAp4bwnJx/Wib6IRbkjfOedbUz99TWIzQfB47VpGlJJbmPxsgnOfw+N2+Lg00Nc5jxBO5wNrFFFO1y0ifjbB+2ceLjlR2A2avIuWXqmDcwMiI9bGRvf+k00DdtJac0OPQR7K/otkOvf7V/aMWp1MVFLBTBGsqeEBkg7u2EUAuRPFOFssOzD9WIuxPwOGF8ggnII0j5qJSYx/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: linux-foundation.org; dkim=none (message not signed)
- header.d=none;linux-foundation.org; dmarc=none action=none
- header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB3210.namprd12.prod.outlook.com (2603:10b6:5:185::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Fri, 21 Aug
- 2020 14:06:15 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3305.025; Fri, 21 Aug 2020
- 14:06:14 +0000
-Date:   Fri, 21 Aug 2020 11:06:12 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>
-CC:     <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull RDMA subsystem changes
-Message-ID: <20200821140612.GA2665062@nvidia.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
-Content-Disposition: inline
-X-ClientProxiedBy: MN2PR07CA0003.namprd07.prod.outlook.com
- (2603:10b6:208:1a0::13) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Fri, 21 Aug 2020 10:06:18 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62668C061573;
+        Fri, 21 Aug 2020 07:06:17 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id i129so874965vsi.3;
+        Fri, 21 Aug 2020 07:06:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=tzsAX6Gcfon7AdapRu244uwbgo4S+HdYR+eziW7H+ws=;
+        b=XuJitGHqRnjedHT2nmxGm4CZQDUnUjoFmGGrc3U+11Bafes+c4sdIOojRmOBxc6qqZ
+         cdq4vg2bjiZ/ozgZV1O/OhQvl+mQGwWX8fWw/ku+Y5GTVJEcVNmw77NBpoh6OhDENVLY
+         TOH3m/EzHKnSIEhP+n20Fof6UyGCnkhqNQxTqnLd2QWJbOj5h0zNUzy8MoXP3wblQmS3
+         d+bvDxaAiMFVYYhAWQ0zvKeME4i7xWDIyO5JDyBuKPwJuRwrnEAPjlrsz3TAYrZHKPn/
+         MXalnF/WCeMVYGWZjEn0fzfyFxrDMuDG8OsE/4kB/7+JQxVjv2k8cqTDrMJpmtp0qYMY
+         Mycw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=tzsAX6Gcfon7AdapRu244uwbgo4S+HdYR+eziW7H+ws=;
+        b=H8U8s8D3jj8aUi4KLLyiRufQsnx6zxaOK9szqkDlkp3O+c3JISJrmIw2DTMOfu8Sun
+         6IaUAfn0IIpV4ryFZkNIr/sforgNyzoMm5vdIT+KWptYyBockyoidcdcLUswGOlbrYQT
+         2KH4Z2XKAG3LEx6lUwZThvo82rXrHV27jtK0iibltUBWtBqc7GWdJmtOAGRe5hNGqwap
+         Cjo2BNgDVvUIVeZPd6STTW8nBFT1fVWSAani945u/rBugE+NZMqlKF9CO2MbEasRdfr0
+         vTRpx6v4+yPw1IyYkq36YB+/GePOCPDdBucjTTaFB7vdYF/N8WuK40sMFZgSBNM+OPRH
+         n/7g==
+X-Gm-Message-State: AOAM532WOjSlRsLlWRL5GOmNjlcXncCOhICaB600Wskps9WMAYGSvubp
+        TKUtbtQt+JnKas4J6G/PVz2rKJblsNdGbWhDUbr+ofWe
+X-Google-Smtp-Source: ABdhPJzebiWJIOZoRKdMlKFMtU/bWwVzAPl6F1o01V42EtcC1JxeFyisWsTg48slbfGzrthLzptQzyi3L7cMx7dmB5g=
+X-Received: by 2002:a67:89ca:: with SMTP id l193mr1906642vsd.206.1598018775379;
+ Fri, 21 Aug 2020 07:06:15 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by MN2PR07CA0003.namprd07.prod.outlook.com (2603:10b6:208:1a0::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Fri, 21 Aug 2020 14:06:13 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k97gK-00BBOX-Rw; Fri, 21 Aug 2020 11:06:12 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 202c3628-a469-437e-552e-08d845db5d62
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3210:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB321044531EB3FC6F90B59D32C25B0@DM6PR12MB3210.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: l4Tx1u3M7aQnuiKDmXopXIvu0xpfYtvhgpDRz4HK1tzTDZpD+ywuBM9D0rxHc9tsnydphkW6EsXMpNaVsP1uMmc4OkEU0jk42rR6SrQeYaZai2ghDjavVdK29/mFAdQ1YrLP+MDy5b8M8yRnOkpEZXEezFSGmFTs+ABGs5mvAbYrocGejBWc73NDNc0G6zxcFTmmALbiRrLv3yjbrs+yHVCydItCNLka3sNX8Jo2gabb0H5D6z81S2IFo/7WLpD35AXsbSIHksw8r5+KXYJFI3kNNTP7VP4Bgyuaei2Zn0tiMRbdRH8SMR0vu4SIivLfMdwp0FJOV+fMuhhubnHLTlw/NbgqUGvLab7EaDTfVtzU1VHpZuSu3UjfnJLgVLYw
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(44144004)(110136005)(26005)(316002)(9786002)(21480400003)(9746002)(83380400001)(36756003)(186003)(426003)(8936002)(8676002)(478600001)(66946007)(2906002)(86362001)(4326008)(33656002)(1076003)(2616005)(66476007)(5660300002)(66556008)(2700100001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: t5rwdiUy6w+zyzS/F6zma38yq98mt2y2+nlg7Gm4Eiu7Gusfy0iq74Q6UvT1z137HIgJDFT7QL6X10mHXC2xcW4xw+O4Glk82j7+I6cBaMgEPIpeJM3e+3JldPW0L60rL1c7n8PdqUjccMexho9ICPNtklsYJakIipDXYgd2qFx9vKf7GTH85eGCLo7QJF7ndan9IyS9Zdh99hz7Bl587SgkA62TGRQzDWEtac4priu60mehQKphb58dKNhFeu9fYf0rS2t+28MJTvWANhtWVMRU7RIxqvvM7DnoBQDWRiamT8u/u1Ng13shTZ7vCU6YrYiRiyM7v+lxneMvHTmk53PXfMRyD/1htgXs2gEPHqg1vXQ6Twk0AMtCGOOdoywF+K91+zAYl2reAaC0601UvOZtA9L1RQuwpjdkrVHIrPcTg9MlFE2WgUkotTB09cctNvEPIoov4L/He+805846PQSIm/QFe4vR5mp7UzqmmHGw1rXaVEng7ydJ9x9I5yTTOWGpekHsdcv5L/SSdr1dYfbkJyMmmL8MyjGs29knHcYBEv8aufLQbwutd0vM83MUTaXhv0hXicyk9GrhrDZAAY6yDTl7O6cqbj5X/LKUt3Hk5kuPQfgMyfTSmbNMpOzkZwv2pxDIsXY+bq3Vkdzlhg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 202c3628-a469-437e-552e-08d845db5d62
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 14:06:14.7040
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9cnJucWA9iZc87hDEz++5X9+waMbb/fbSylHrQIHbF0wzlRB8YVWuIDKRlDxrdU3
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3210
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598018762; bh=gqDYb91BMdDkJ+gmkxiAp2gFYUV1XUxF6FersnWqlQ8=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:Content-Type:Content-Disposition:
-         X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
-         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=DMqOHCoTyN7Dm2iwcN5Wrgd0h+PYrY9zjvqa1wIXuLUuqAyrYxhr36AZ9gf3LKolt
-         7ZLHBQZiwkMhPxhY9Zgpk0jXBuuS9waapNFSEKHbK+HXksdTxXIr/b8q4siFbvHlmP
-         i6sDWTnAJPR6G/2bVSv6MHV4uQH+OdiUcoXGDRWXErjlBYBkoZJ2wY68np7DHg+MA7
-         9mYK+RIo4e3B0x/uem7gPLUBIyzsLgbJMsJ9V42YrbbteXbQVunCDJg6g43gIyh1I4
-         /yvUdJ+kpCMIFkxmNRmzghMpyo6nWlm5BsytBf1qKRph1utRIEoCIA/KcvxHpbDKAl
-         3GO+5WIkh0VoA==
+References: <20200821131727.6883-1-marcos@mpdesouza.com>
+In-Reply-To: <20200821131727.6883-1-marcos@mpdesouza.com>
+Reply-To: fdmanana@gmail.com
+From:   Filipe Manana <fdmanana@gmail.com>
+Date:   Fri, 21 Aug 2020 15:06:04 +0100
+Message-ID: <CAL3q7H5CYsRZLT+JAf9pGsrTyXVfyO_KAC6Xhc5X=t4VVtkRog@mail.gmail.com>
+Subject: Re: [PATCH v2] btrfs: block-group: Fix free-space bitmap threshould
+To:     Marcos Paulo de Souza <marcos@mpdesouza.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>, Qu Wenruo <wqu@suse.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Marcos Paulo de Souza <mpdesouza@suse.com>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, Aug 21, 2020 at 2:43 PM Marcos Paulo de Souza
+<marcos@mpdesouza.com> wrote:
+>
+> From: Marcos Paulo de Souza <mpdesouza@suse.com>
+>
+> [BUG]
+> After commit 9afc66498a0b ("btrfs: block-group: refactor how we read one
+> block group item"), cache->length is being assigned after calling
+> btrfs_create_block_group_cache. This causes a problem since
+> set_free_space_tree_thresholds is calculate the free-space threshould to
+> decide is the free-space tree should convert from extents to bitmaps.
+>
+> The current code calls set_free_space_tree_thresholds with cache->length
+> being 0, which then makes cache->bitmap_high_thresh being zero. This
+> implies the system will always use bitmap instead of extents, which is
+> not desired if the block group is not fragmented.
+>
+> This behavior can be seen by a test that expects to repair systems
+> with FREE_SPACE_EXTENT and FREE_SPACE_BITMAP, but the current code only
+> created FREE_SPACE_BITMAP.
+>
+> [FIX]
+> Call set_free_space_tree_thresholds after setting cache->length.
+>
+> Link: https://github.com/kdave/btrfs-progs/issues/251
+> Fixes: 9afc66498a0b ("btrfs: block-group: refactor how we read one block =
+group item")
+> CC: stable@vger.kernel.org # 5.8+
+> Reviewed-by: Qu Wenruo <wqu@suse.com>
+> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> ---
+>
+>  Changes from v1:
+>  * Add a warning in set_free_space_tree_thresholds when bg->length is zer=
+o (Qu)
+>
+>  fs/btrfs/block-group.c     | 4 +++-
+>  fs/btrfs/free-space-tree.c | 3 +++
+>  2 files changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+> index 44fdfa2eeb2e..01e8ba1da1d3 100644
+> --- a/fs/btrfs/block-group.c
+> +++ b/fs/btrfs/block-group.c
+> @@ -1798,7 +1798,6 @@ static struct btrfs_block_group *btrfs_create_block=
+_group_cache(
+>
+>         cache->fs_info =3D fs_info;
+>         cache->full_stripe_len =3D btrfs_full_stripe_len(fs_info, start);
+> -       set_free_space_tree_thresholds(cache);
+>
+>         cache->discard_index =3D BTRFS_DISCARD_INDEX_UNUSED;
+>
+> @@ -1908,6 +1907,8 @@ static int read_one_block_group(struct btrfs_fs_inf=
+o *info,
+>
+>         read_block_group_item(cache, path, key);
+>
+> +       set_free_space_tree_thresholds(cache);
+> +
+>         if (need_clear) {
+>                 /*
+>                  * When we mount with old space cache, we need to
+> @@ -2128,6 +2129,7 @@ int btrfs_make_block_group(struct btrfs_trans_handl=
+e *trans, u64 bytes_used,
+>                 return -ENOMEM;
+>
+>         cache->length =3D size;
+> +       set_free_space_tree_thresholds(cache);
+>         cache->used =3D bytes_used;
+>         cache->flags =3D type;
+>         cache->last_byte_to_unpin =3D (u64)-1;
+> diff --git a/fs/btrfs/free-space-tree.c b/fs/btrfs/free-space-tree.c
+> index 8b1f5c8897b7..1d191fbc754b 100644
+> --- a/fs/btrfs/free-space-tree.c
+> +++ b/fs/btrfs/free-space-tree.c
+> @@ -22,6 +22,9 @@ void set_free_space_tree_thresholds(struct btrfs_block_=
+group *cache)
+>         size_t bitmap_size;
+>         u64 num_bitmaps, total_bitmap_size;
+>
+> +       if (cache->length =3D=3D 0)
+> +               btrfs_warn(cache->fs_info, "block group length is zero");
 
-Hi Linus,
+This alone is not very useful.
+With something like:
 
-First rc pull request
+if (WARN_ON(cache->length) =3D=3D 0)
+  .... (and the message including the block group's logical address
+too, the ->start field)
 
-Nothing exciting, just a few bug fixes and a MAINTAINERS file update.
+Such a bug is much easier to spot. If a test case from fstests
+triggers it, it will be reported as a test failure.
 
-There is a small merge conflict in the .mailmap, it has been sorted in your
-tree and Leon's entry was moved.
+Why not an ASSERT() instead? Though I don't have a strong preference
+between the two for this case.
+Either option will make it easy to spot with fstests.
 
-It should be resolved by adding the new line at the new sorted position:
+As for the rest, the fix itself looks good to me.
+You can later add,
 
-  Leon Romanovsky <leon@kernel.org> <leon@leon.nu>
-  Leon Romanovsky <leon@kernel.org> <leonro@mellanox.com>
- +Leon Romanovsky <leon@kernel.org> <leonro@nvidia.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
 
-Thanks,
-Jason
+Thanks.
 
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+> +
+>         /*
+>          * We convert to bitmaps when the disk space required for using e=
+xtents
+>          * exceeds that required for using bitmaps.
+> --
+> 2.28.0
+>
 
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
 
-are available in the Git repository at:
+--=20
+Filipe David Manana,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-
-for you to fetch changes up to f6da70d99c96256f8be0cbb4dd72d45d622c7823:
-
-  MAINTAINERS: Update Mellanox and Cumulus Network addresses to new domain (2020-08-21 10:48:48 -0300)
-
-----------------------------------------------------------------
-RDMA first 5.9rc pull request
-
-One regression from 5.8 and a few bugs from earlier kernels.
-
-- Various spelling corrections in kernel prints
-
-- Bug fixes in hfi1 and bntx_re
-
-- Revert a 5.8 patch in hns
-
-- Batch update for Mellanox and Cumulus maintainers emails
-
-----------------------------------------------------------------
-Colin Ian King (3):
-      RDMA/hns: Fix spelling mistake "epmty" -> "empty"
-      RDMA/usnic: Fix spelling mistake "transistion" -> "transition"
-      RDMA/core: Fix spelling mistake "Could't" -> "Couldn't"
-
-Kaike Wan (1):
-      RDMA/hfi1: Correct an interlock issue for TID RDMA WRITE request
-
-Leon Romanovsky (1):
-      MAINTAINERS: Update Mellanox and Cumulus Network addresses to new domain
-
-Selvin Xavier (1):
-      RDMA/bnxt_re: Do not add user qps to flushlist
-
-Weihang Li (1):
-      Revert "RDMA/hns: Reserve one sge in order to avoid local length error"
-
- .mailmap                                    |  2 +
- MAINTAINERS                                 | 58 ++++++++++++++---------------
- drivers/infiniband/core/device.c            |  2 +-
- drivers/infiniband/hw/bnxt_re/main.c        |  3 +-
- drivers/infiniband/hw/hfi1/tid_rdma.c       |  1 +
- drivers/infiniband/hw/hns/hns_roce_device.h |  2 -
- drivers/infiniband/hw/hns/hns_roce_hw_v1.c  |  2 +-
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c  |  9 ++---
- drivers/infiniband/hw/hns/hns_roce_hw_v2.h  |  4 +-
- drivers/infiniband/hw/hns/hns_roce_qp.c     |  5 +--
- drivers/infiniband/hw/hns/hns_roce_srq.c    |  2 +-
- drivers/infiniband/hw/usnic/usnic_ib_main.c |  2 +-
- 12 files changed, 45 insertions(+), 47 deletions(-)
-
---nFreZHaLTZJo0R7j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAl8/1NIACgkQOG33FX4g
-mxqUHA/+JgxuCtadYqHefBGkaAsjpIrq+YcuUx0S31EmjA2XxKA1C0ZoE71Sblw+
-77w0ftWrtQ1v7gXH5i/DmyqJ3HAqUOoFe+9y05KSHi0t+MMmD2C023T4hU+AlyRI
-pP+Dp/XJuw12UnD7LR8bU5JJMt9MZqqfqR1oLbr1Xir6U6OkxnnerXcK7/pYi/Jc
-k75v3OeZhGzlwOffQHEGWCLZjthjnMRZ6vG7TOwBgGi92qoKZRZ0+m6DpmF+/8XU
-YKG450TUlZYqwTxcdQikfQUosO2VZHHj/5pXQv1xsftbyJ0QjPP/aFqRBdxjS9N8
-x/E2jl8+udVJqp5gk7D8DumFbGorcMJ4CmZLUWOnedMipOYcJRQCFeCWBsxwdOwr
-fj19WIOd0vHKU3f9RsrMN5iHv86hpQeIUiS3assntVDyYjAsZI6DQ8D+oe34V8jU
-CgHB0qbzUaR94/NLbKo12haNHW/8I4ApbzBB1YL+WAzphgEskPQEUuQ206f1/18O
-Phndmw0wHUZrqUfSt/HGkZvwNpErYF6xCZwhTWwxqXcjgAxIZI8vZOtqDziyZeqm
-b7onGAk2QQjs3XbPqqSGlJ+5PZ06xT6UcupuMJWwE0fyFHqNBim5lUnUSIahb1li
-pQdtpykVgrJyTAfy7W2qM5BAg31JrPCmKTT9g3JZdTPfv3RFS3c=
-=TUBA
------END PGP SIGNATURE-----
-
---nFreZHaLTZJo0R7j--
+=E2=80=9CWhether you think you can, or you think you can't =E2=80=94 you're=
+ right.=E2=80=9D
