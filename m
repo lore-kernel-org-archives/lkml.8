@@ -2,135 +2,123 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63723C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEBCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDDB207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0447920724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:19:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="NU0Mcks7"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="DC/fjH5u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgHUNSY (ORCPT
+        id S1728750AbgHUNT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33264 "EHLO
+        Fri, 21 Aug 2020 09:19:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727879AbgHUNSQ (ORCPT
+        with ESMTP id S1727925AbgHUNT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:18:16 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE47C061388
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:18:14 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id g19so2219658ejc.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:18:14 -0700 (PDT)
+        Fri, 21 Aug 2020 09:19:26 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C0CC061575
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:19:26 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id b2so1396355edw.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:19:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9Ewq1eqi128tS/YtHe1Hdp0zK/pkzPgQy1G+gIZ86vk=;
-        b=NU0Mcks72tdUBoRxTtGff5uEDLvy5q+04uOXS/JLA0SJHrmqdiP6jaEKtTvuhKsMgU
-         lDfci7M0dnl3iqCTEKGFvbcUksW7F5hk3a91SmK7L3wWBKVmDsI9uP/rUVnGbwAsuDli
-         PjLRD2P5KK/Uqcps5LzpvzKRXm9f6EQs1OMtc=
+        bh=cVL+YBSTW0gTGAsJy7eQf6mIthH46kkGl4RlwWjQRJQ=;
+        b=DC/fjH5uZhwsjMMnPsqy+Jzu9rgTcgAcImUv+ERIfaEdocpnRMpQq9pzp7JiZOxnC6
+         fyJ6crrJO0uxSv4D3YFWY6jmxhCEpV1yJ4H8U//Ic4uP8piMXL460DJw/YP9s8zrBXTg
+         OyW4HfFUXAMHbqukuHlvcqIE46xNX4dWinKEfpefDrfNQnHDJ/xz+EQyMmNcz0stVtm6
+         Y3G8ZWQJQKUDn8vBvGMRQ2vxkDpxbcLC1tg29Rt1WCt/+FEYUoKZMdYQ4BHnsIGai+9+
+         MlY/+ehzJhto9kj6DICRKPfSQEeV3ZbN0YVOPmKVklhr4ugn1lbnvqrrEAIzjwoZ8+Eb
+         4lYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9Ewq1eqi128tS/YtHe1Hdp0zK/pkzPgQy1G+gIZ86vk=;
-        b=ZT5sZYBeFW8ACBOHj3EF7GwjjC+k3oWwYPPGcmsrWkcapL0InQ9yRJQItTYxMbkjex
-         6imoGVcDbukhC7WqKkoYET69n6Xcr3U89TaCJlV0ixeL3CVCkYq9NdOBh4mYek61n5aQ
-         oYWVCnbX9UydOSJmky7hez5y8dllxKK5jXLQf/cZiW4nZxkLL09oG675kfHgj0Rge8Sz
-         NaFPcB6QUlCpHsPysQiNZyeB9DoeWsqmLsTybN8XmX3nxT2gq/TXXRNmx4lmLGT34m7h
-         VVzrHpUEzkz37ObuAFlPGqLYAzG3gdK81I9FEslqwr6xITPjM8sU8ubjXqeEPdcHqXmZ
-         fAkg==
-X-Gm-Message-State: AOAM532hh6WoYIfDHjNw1QmlPLgO3cVxQUEYIA5BM1Ikzi2Eq25eM1VT
-        wE+AMAJUSFgggzZeDvnXzyE2xWPwXESKGlPXJA+OVA==
-X-Google-Smtp-Source: ABdhPJx3TSW7MukTCaIid5gIoeUYGZLVJD0O+yZ7UPk2PTQBJG9g/hYdPVKEFV4KdfwhkvYvNtwBHnp0gKnoaXGmvjM=
-X-Received: by 2002:a17:906:b2d7:: with SMTP id cf23mr2811015ejb.113.1598015890534;
- Fri, 21 Aug 2020 06:18:10 -0700 (PDT)
+        bh=cVL+YBSTW0gTGAsJy7eQf6mIthH46kkGl4RlwWjQRJQ=;
+        b=UIYUgJr1yzhWKGix5pTBv6lu0uu3TxmI57vhvQ0X+9L09xN+nE7MyZyCjdKmaUgjwd
+         TLbJSFu+tMD+USTXmKPKcxSVT+PDlnwxlWP88AElBqZtn0sxbIwh2sSu+pHyHQqyOiPH
+         Chpfj4S6LAjXc+3nXS5rIKltSeiINVKWfXa6feh7+l+M+tb7TrRwIn4Hkavsca5CZFjs
+         HlWpb5Jz4yTp2VGsU16ZPvVNAbFIdB8ZF0/la0bUsYDdvQetgPVOx3O0EiEPnQcV5lpd
+         jb+/Jo90EULoXEjuqEBGkzom0sCmmZc5IUxFEjGM452WBe3PLYuzr6GxEKDCcMyOGqAV
+         ARnQ==
+X-Gm-Message-State: AOAM531nczdQUfb1zQyX0s2eKoHTp2HDxoSi39NzHnLOKVsE7QFSr40H
+        eqTmILo6H1XF376zMRFlCJGf+Be4CLn/Bo9dZoZyaJw8Whxo
+X-Google-Smtp-Source: ABdhPJzG03pebCY0niDV20+IKZGbnL7dEkRnJ6bTurjAX+jgrwZs7v+tAcTHRYjwUJHe4/r8DTWAqykpByUe6WpYbpc=
+X-Received: by 2002:aa7:c383:: with SMTP id k3mr2713274edq.164.1598015964731;
+ Fri, 21 Aug 2020 06:19:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
- <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
- <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
- <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
- <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
- <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
- <52483.1597190733@warthog.procyon.org.uk> <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
- <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com> <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
- <94f907f0-996e-0456-db8a-7823e2ef3d3f@redhat.com> <CAHk-=wig0ZqWxgWtD9F1xZzE7jEmgLmXRWABhss0+er3ZRtb9g@mail.gmail.com>
- <CAHk-=wh4qaj6iFTrbHy8TPfmM3fj+msYC5X_KE0rCdStJKH2NA@mail.gmail.com>
- <CAJfpegsr8URJHoFunnGShB-=jqypvtrmLV-BcWajkHux2H4x2w@mail.gmail.com>
- <CAHk-=wh5YifP7hzKSbwJj94+DZ2czjrZsczy6GBimiogZws=rg@mail.gmail.com>
- <CAJfpegt9yEHX3C-sF9UyOXJcRa1cfDnf450OEJ47Xk=FmyEs8A@mail.gmail.com> <CAHk-=wiUcfgC1PdbS_4mfAj2+VTacOwD_uUu6krSxjpvh42T7A@mail.gmail.com>
-In-Reply-To: <CAHk-=wiUcfgC1PdbS_4mfAj2+VTacOwD_uUu6krSxjpvh42T7A@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Fri, 21 Aug 2020 15:17:59 +0200
-Message-ID: <CAJfpegsBSsMkSXReN6Sheye1cksCO2pcqcx_3VwY4C1J9kDhaw@mail.gmail.com>
-Subject: Re: file metadata via fs API
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>,
-        Lennart Poettering <lennart@poettering.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200817170729.2605279-1-tweek@google.com> <20200817170729.2605279-4-tweek@google.com>
+ <0bb62de9-1020-a7c4-3a7f-48ae2f78e3b7@gmail.com> <20200817162933.79f69c66@oasis.local.home>
+ <20200818120948.1a428da9@oasis.local.home> <66e6d84e-20b5-1bd3-e107-322f42ce35d3@gmail.com>
+ <20200820223136.162850ce@oasis.local.home> <CAEjxPJ7-6PaHjPzB7vN=nh+VMNV-T2bnKM-YrXdQwOzNtG+9zg@mail.gmail.com>
+In-Reply-To: <CAEjxPJ7-6PaHjPzB7vN=nh+VMNV-T2bnKM-YrXdQwOzNtG+9zg@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 21 Aug 2020 09:19:13 -0400
+Message-ID: <CAHC9VhTLOWsD9LbVGBj=o3N3SPe-uJDvrdQAySy6MmE4uyuzng@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] selinux: add permission names to trace event
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Peter Enderborg <peter.enderborg@sony.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 10:53 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-
-> Basically, I think a rough rule of thumb can and should be:
+On Fri, Aug 21, 2020 at 8:29 AM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+> On Thu, Aug 20, 2020 at 10:31 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > On Wed, 19 Aug 2020 09:11:08 -0400
+> > Stephen Smalley <stephen.smalley.work@gmail.com> wrote:
+> >
+> > > So we'll need to update this plugin whenever we modify
+> > > security/selinux/include/classmap.h to keep them in sync.  Is that a
+> > > concern?  I don't suppose the plugin could directly include classmap.h?
+> > > I guess we'd have to export it as a public header. It isn't considered
+> > > to be part of the kernel API/ABI and can change anytime (but in practice
+> > > changes are not that frequent, and usually just additive in nature).
+> >
+> > Yes, it would require some stability between userspace and the plugin.
+> > If the value indexes don't change then that would work fine. If you add
+> > new ones, that too should be OK, just have a way to state "unknown" in
+> > the plugin.
 >
->  - stuff that the VFS knows about natively and fully is clearly pretty
-> mount-agnostic and generic, and can be represented in whatever
-> extended "struct statfs_x" directly.
->
->  - anything that is variable-format and per-fs should be expressed in
-> the ASCII buffer
->
-> Look at our fancy new fs_context - that's pretty much what it does
-> even inside the kernel. Sure, we have "binary" fields there for core
-> basic information ("struct dentry *root", but also things like flags
-> with MNT_NOSUID), but the configuration stuff is ASCII that the
-> filesystem can parse itself.
->
-> Exactly because some things are very much specific to some
-> filesystems, not generic things.
->
-> So we fundamentally already have a mix of "standard FS data" and
-> "filesystem-specific options", and it's already basically split that
-> way: binary flag fields for the generic stuff, and ASCII text for the
-> odd options.
+> Since we introduced the dynamic class/perm mapping support, it has
+> been possible for the values of existing classes/permissions to
+> change, and that has happened at time, e.g. when we added watch
+> permissions to the common file perms, that shifted the values of the
+> class file perms like entrypoint, when we added the process2 class
+> right after the process class, it shifted the values of all the
+> subsequent classes in the classmap.h.  So you can't rely on those
+> values remaining stable across kernel versions.
 
-Okay.
+I think it is becoming increasingly clear that generating the
+permission set string in userspace isn't really workable without
+breaking the dynamic class/permission mapping to some degree.
+Unfortunately I don't see these perf changes as a big enough "win" to
+offset the loss of the dynamic mapping loss.
 
-Something else:  do we want a separate statmount(2) or is it okay to
-mix per-mount and per-sb attributes in the same syscall?
+I'm okay with merging patches 1/3 and 2/3 wth the changes Stephen
+suggested, but I think we will need to leave patch 3/3 out of this for
+now.
 
-/proc/mounts concatenates mount and sb options (since it copies the
-/etc/mtab format)
-
-/proc/self/mountinfo separates per-mount and per-sb data into
-different fields at least, but the fields themselves are mixed
-
-If we are introducing completely new interfaces, I think it would make
-sense to separate per-mount and per-sb attributes somehow.  Atomicity
-arguments don't apply since they have separate locking.  And we
-already have separate interfaces for configuring them...
-
-Thanks,
-Miklos
+-- 
+paul moore
+www.paul-moore.com
