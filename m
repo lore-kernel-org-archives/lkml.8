@@ -2,256 +2,86 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F422AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C286207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:02:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="X9UBRfaZ"
+	by mail.kernel.org (Postfix) with ESMTP id DBE84207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgHUPCr (ORCPT
+        id S1728185AbgHUPCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:02:47 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:29150 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728068AbgHUPBo (ORCPT
+        Fri, 21 Aug 2020 11:02:49 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:49089 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727982AbgHUPAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:01:44 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LF1Xau013578
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:01:44 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=Ul+xf1TI54FnPjFpxc3Ihst3TQMepDvmciNWWocFk1Q=;
- b=X9UBRfaZyQqWzJ9tvDuKhWjfiKeHCzV8LSU6YcfZQqOEyfgA1Iu7cmymBDHunq6oDngT
- qPnd/sfDuIbLthIrW0mC6czuKOVvFwjEXSqZpgBg2RnQBmb03ZZy/yusAU9zlsfskQmW
- qNbD42wqrAo7zWO0iiRwsRsLBllgeViIPPE= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 331d50t1dc-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:01:43 -0700
-Received: from intmgw004.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 21 Aug 2020 08:01:41 -0700
-Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id 3163A344104B; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
-To:     <bpf@vger.kernel.org>
-CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next v4 03/30] bpf: memcg-based memory accounting for bpf maps
-Date:   Fri, 21 Aug 2020 08:01:07 -0700
-Message-ID: <20200821150134.2581465-4-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
-References: <20200821150134.2581465-1-guro@fb.com>
+        Fri, 21 Aug 2020 11:00:39 -0400
+Received: from lhopital-XPS-13-9360.home (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
+        (Authenticated sender: kevin.lhopital@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPA id D42EF100011;
+        Fri, 21 Aug 2020 15:00:35 +0000 (UTC)
+From:   =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= 
+        <kevin.lhopital@bootlin.com>
+To:     linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mripard@kernel.org, wens@csie.org, yong.deng@magewell.com,
+        p.zabel@pengutronix.de, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com,
+        =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= 
+        <kevin.lhopital@bootlin.com>
+Subject: [PATCH 6/7] ARM: dts: sun8i: a83t: Add support for the MIPI CSI-2 in CSI node
+Date:   Fri, 21 Aug 2020 16:59:34 +0200
+Message-Id: <20200821145935.20346-7-kevin.lhopital@bootlin.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
- malwarescore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
- clxscore=1015 phishscore=0 suspectscore=38 adultscore=0 bulkscore=0
- mlxscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008210141
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables memcg-based memory accounting for memory allocated
-by __bpf_map_area_alloc(), which is used by most map types for
-large allocations.
+Add in the CSI device node the MIPI CSI2 clocks, interrupt and
+increase the memory size in order to add the support of the
+MIPI CSI-2 for A83T
 
-If a map is updated from an interrupt context, and the update
-results in memory allocation, the memory cgroup can't be determined
-from the context of the current process. To address this case,
-bpf map preserves a pointer to the memory cgroup of the process,
-which created the map. This memory cgroup is charged for allocations
-from interrupt context.
-
-Following patches in the series will refine the accounting for
-some map types.
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
+Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>
 ---
- include/linux/bpf.h  |  4 ++++
- kernel/bpf/helpers.c | 37 ++++++++++++++++++++++++++++++++++++-
- kernel/bpf/syscall.c | 27 ++++++++++++++++++++++++++-
- 3 files changed, 66 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index a9b7185a6b37..b5f178afde94 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -34,6 +34,7 @@ struct btf_type;
- struct exception_table_entry;
- struct seq_operations;
- struct bpf_iter_aux_info;
-+struct mem_cgroup;
-=20
- extern struct idr btf_idr;
- extern spinlock_t btf_idr_lock;
-@@ -138,6 +139,9 @@ struct bpf_map {
- 	u32 btf_value_type_id;
- 	struct btf *btf;
- 	struct bpf_map_memory memory;
-+#ifdef CONFIG_MEMCG_KMEM
-+	struct mem_cgroup *memcg;
-+#endif
- 	char name[BPF_OBJ_NAME_LEN];
- 	u32 btf_vmlinux_value_type_id;
- 	bool bypass_spec_v1;
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index be43ab3e619f..f8ce7bc7003f 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -14,6 +14,7 @@
- #include <linux/jiffies.h>
- #include <linux/pid_namespace.h>
- #include <linux/proc_ns.h>
-+#include <linux/sched/mm.h>
-=20
- #include "../../lib/kstrtox.h"
-=20
-@@ -41,11 +42,45 @@ const struct bpf_func_proto bpf_map_lookup_elem_proto=
- =3D {
- 	.arg2_type	=3D ARG_PTR_TO_MAP_KEY,
- };
-=20
-+#ifdef CONFIG_MEMCG_KMEM
-+static __always_inline int __bpf_map_update_elem(struct bpf_map *map, vo=
-id *key,
-+						 void *value, u64 flags)
-+{
-+	struct mem_cgroup *old_memcg;
-+	bool in_interrupt;
-+	int ret;
-+
-+	/*
-+	 * If update from an interrupt context results in a memory allocation,
-+	 * the memory cgroup to charge can't be determined from the context
-+	 * of the current task. Instead, we charge the memory cgroup, which
-+	 * contained a process created the map.
-+	 */
-+	in_interrupt =3D in_interrupt();
-+	if (in_interrupt)
-+		old_memcg =3D memalloc_use_memcg(map->memcg);
-+
-+	ret =3D map->ops->map_update_elem(map, key, value, flags);
-+
-+	if (in_interrupt)
-+		memalloc_use_memcg(old_memcg);
-+
-+	return ret;
-+}
-+#else
-+static __always_inline int __bpf_map_update_elem(struct bpf_map *map, vo=
-id *key,
-+						 void *value, u64 flags)
-+{
-+	return map->ops->map_update_elem(map, key, value, flags);
-+}
-+#endif
-+
- BPF_CALL_4(bpf_map_update_elem, struct bpf_map *, map, void *, key,
- 	   void *, value, u64, flags)
- {
- 	WARN_ON_ONCE(!rcu_read_lock_held());
--	return map->ops->map_update_elem(map, key, value, flags);
-+
-+	return __bpf_map_update_elem(map, key, value, flags);
- }
-=20
- const struct bpf_func_proto bpf_map_update_elem_proto =3D {
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 689d736b6904..683614c17a95 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -29,6 +29,7 @@
- #include <linux/bpf_lsm.h>
- #include <linux/poll.h>
- #include <linux/bpf-netns.h>
-+#include <linux/memcontrol.h>
-=20
- #define IS_FD_ARRAY(map) ((map)->map_type =3D=3D BPF_MAP_TYPE_PERF_EVENT=
-_ARRAY || \
- 			  (map)->map_type =3D=3D BPF_MAP_TYPE_CGROUP_ARRAY || \
-@@ -275,7 +276,7 @@ static void *__bpf_map_area_alloc(u64 size, int numa_=
-node, bool mmapable)
- 	 * __GFP_RETRY_MAYFAIL to avoid such situations.
- 	 */
-=20
--	const gfp_t gfp =3D __GFP_NOWARN | __GFP_ZERO;
-+	const gfp_t gfp =3D __GFP_NOWARN | __GFP_ZERO | __GFP_ACCOUNT;
- 	unsigned int flags =3D 0;
- 	unsigned long align =3D 1;
- 	void *area;
-@@ -452,6 +453,27 @@ void bpf_map_free_id(struct bpf_map *map, bool do_id=
-r_lock)
- 		__release(&map_idr_lock);
- }
-=20
-+#ifdef CONFIG_MEMCG_KMEM
-+static void bpf_map_save_memcg(struct bpf_map *map)
-+{
-+	map->memcg =3D get_mem_cgroup_from_mm(current->mm);
-+}
-+
-+static void bpf_map_release_memcg(struct bpf_map *map)
-+{
-+	mem_cgroup_put(map->memcg);
-+}
-+
-+#else
-+static void bpf_map_save_memcg(struct bpf_map *map)
-+{
-+}
-+
-+static void bpf_map_release_memcg(struct bpf_map *map)
-+{
-+}
-+#endif
-+
- /* called from workqueue */
- static void bpf_map_free_deferred(struct work_struct *work)
- {
-@@ -463,6 +485,7 @@ static void bpf_map_free_deferred(struct work_struct =
-*work)
- 	/* implementation dependent freeing */
- 	map->ops->map_free(map);
- 	bpf_map_charge_finish(&mem);
-+	bpf_map_release_memcg(map);
- }
-=20
- static void bpf_map_put_uref(struct bpf_map *map)
-@@ -869,6 +892,8 @@ static int map_create(union bpf_attr *attr)
- 	if (err)
- 		goto free_map_sec;
-=20
-+	bpf_map_save_memcg(map);
-+
- 	err =3D bpf_map_new_fd(map, f_flags);
- 	if (err < 0) {
- 		/* failed to allocate fd.
---=20
-2.26.2
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 53c38deb8a08..5e6421eb8e28 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -1025,12 +1025,15 @@
+ 
+ 		csi: camera@1cb0000 {
+ 			compatible = "allwinner,sun8i-a83t-csi";
+-			reg = <0x01cb0000 0x1000>;
+-			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x01cb0000 0x2000>;
++			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&ccu CLK_BUS_CSI>,
+ 				 <&ccu CLK_CSI_SCLK>,
+-				 <&ccu CLK_DRAM_CSI>;
+-			clock-names = "bus", "mod", "ram";
++				 <&ccu CLK_DRAM_CSI>,
++				 <&ccu CLK_MIPI_CSI>,
++				 <&ccu CLK_CSI_MISC>;
++			clock-names = "bus", "mod", "ram", "mipi", "misc";
+ 			resets = <&ccu RST_BUS_CSI>;
+ 			status = "disabled";
+ 
+-- 
+2.17.1
 
