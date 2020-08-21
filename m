@@ -2,101 +2,122 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CF7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E004C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5984D207CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8DDD207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:14:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d3/WygYO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TODm4aFR"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="j1MIxYG+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgHUUNg (ORCPT
+        id S1726798AbgHUUOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 16:13:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41392 "EHLO
+        Fri, 21 Aug 2020 16:14:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725831AbgHUUNe (ORCPT
+        with ESMTP id S1726495AbgHUUOA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 16:13:34 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2EB4C061573;
-        Fri, 21 Aug 2020 13:13:33 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598040806;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cd01+IYTmMwy+WorGdOB9Ygq1tYc3Vhe72+j6zoROj8=;
-        b=d3/WygYO8E18Gdtt35+3GOSK0B3ENJI1vQTg+o0EbaalOkbRSoITg4n4AuLfMZq8cQ/Tjx
-        04DGJ7Qmh94/hqzIExQ+bxP9CMHvB+1dkB/qdiSggm+Rl/md+8uLAIQRbC5bO4NgnzEVeN
-        sUvYgVJS09dYJylBYpiOB+ffEPv9LGue3vgRVFipZSjCEaJwlXRa6KZAXcmbt823gaQDCl
-        WktaAHksNbDyeyxn1D3ohdnsWe+5xyv2TTmIpJJ9GfnRCpAvqAGTuyajQR8sS1GtzzvwQ5
-        5OIB58Wsw4LgSk6K3/YEc+gEYgCEKY7vlk0OeKYQOTZRf4xeG6fJMwsn85CRRA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598040806;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cd01+IYTmMwy+WorGdOB9Ygq1tYc3Vhe72+j6zoROj8=;
-        b=TODm4aFRVKSXfRFD/U0SaSllWDlZowJk0CVRFBYDIhwbc0uewEAwlOMiOCq+ZToAR1J9jZ
-        K60i51vccu8STCBg==
-To:     Adam Borowski <kilobyte@angband.pl>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <len.brown@intel.com>
-Subject: Re: [PATCH] x86/pci: don't set acpi stuff if !CONFIG_ACPI
-In-Reply-To: <20200820125320.9967-1-kilobyte@angband.pl>
-References: <20200820125320.9967-1-kilobyte@angband.pl>
-Date:   Fri, 21 Aug 2020 22:13:25 +0200
-Message-ID: <87y2m7rc4a.fsf@nanos.tec.linutronix.de>
+        Fri, 21 Aug 2020 16:14:00 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA016C0613ED
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 13:13:59 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id d11so3621209ejt.13
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 13:13:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4BtYd9/pAyG1sqGYcTy0rM8tdo0b9K0n3vpfXHvN2DE=;
+        b=j1MIxYG+ikKdio/J7EEBu7O+TNel4fKx2ssCXBwf1QibUwKRpqucOcuBx8WB9+MiBp
+         yWrpVaS2g4Or8Vsgeq38loMK2o7Ehei2ZhGdshzTafjfyQPoSREWCiy0QXYZYfRIFhsT
+         rTX73zkaUPpfX9PRT8k7hafwBU0/ZL0kTf0UUf4nCTb6d68XXCqd64OJIKfV2JWombm8
+         WTvRKC3G/CXx75X6/3nsms/N8S8lVzAnUwH06hP72mPQZLr6XxUyXRvWSt0dEEaBoIAL
+         5jICYw/OQX1fLwvVhaTNQEe18HTXI5YoEY/jhuo+AvRywFaNHSFUfJHBfv8LqQl2sIo2
+         vCyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4BtYd9/pAyG1sqGYcTy0rM8tdo0b9K0n3vpfXHvN2DE=;
+        b=afpiJx8E8YIbiUvhB0XSJZNh8rsEX97nXyO2wsbkbcSD/+3kHr59FBKvI8gljZA4xV
+         v2huD5xaiA1BHkB63p6HT/JYdNdFPbk1miM7XNjATFFqC+4NsFazizLNO8f45Ai3KNjt
+         P1My5axPAZyaps6iugRrjSah40q/6XgT0OWAssiDKTrEBBQpVyCLtXsBeLNqQ/Jb5KU6
+         4TMuwb6qbssR6VST1JqFkNV4PlPfYjn4oClq/tKuGFlk095ChnWjE+Xbr2MoYYeH9GJK
+         0SpBm9yE76S0uNK/KSL0KklMXjt7/5ZfBFXP4ecWuJjNHDbuYaMzNT//OjVRKtLAq5kR
+         xEqQ==
+X-Gm-Message-State: AOAM531NH9sTN4dpAFT+8LS1WsQe0TE8XZlHuealsBAUEBK4iWSEM2GY
+        dyFyjPeFjEYk3HmHNsk5ajRC7m6dCk7bUx1ojwSg
+X-Google-Smtp-Source: ABdhPJyd88CfX7VJaFvZK1tKg0a4ztk8lkZlg+SopdBDlMcFpbfuejWoSXXNsA00gY0qnev4OvuNLAl+o4ySJ/3jueM=
+X-Received: by 2002:a17:906:43c9:: with SMTP id j9mr4526810ejn.542.1598040837725;
+ Fri, 21 Aug 2020 13:13:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <cover.1593198710.git.rgb@redhat.com> <01229b93733d9baf6ac9bb0cc243eeb08ad579cd.1593198710.git.rgb@redhat.com>
+ <CAHC9VhT6cLxxws_pYWcL=mWe786xPoTTFfPZ1=P4hx4V3nytXA@mail.gmail.com> <20200807171025.523i2sxfyfl7dfjy@madcap2.tricolour.ca>
+In-Reply-To: <20200807171025.523i2sxfyfl7dfjy@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 21 Aug 2020 16:13:45 -0400
+Message-ID: <CAHC9VhQ3MVUY8Zs4GNXdaqhiPJBzHW_YcCe=DghAgo7g6yrNBw@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V9 11/13] audit: contid check descendancy and nesting
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>, aris@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20 2020 at 14:53, Adam Borowski wrote:
-> Not that x86 without ACPI sees any real use...
->
-> Signed-off-by: Adam Borowski <kilobyte@angband.pl>
-> ---
-> Found by randconfig builds.
->
->  arch/x86/pci/intel_mid_pci.c | 2 ++
->  arch/x86/pci/xen.c           | 2 ++
->  2 files changed, 4 insertions(+)
->
-> diff --git a/arch/x86/pci/intel_mid_pci.c b/arch/x86/pci/intel_mid_pci.c
-> index 00c62115f39c..f14a911f0d06 100644
-> --- a/arch/x86/pci/intel_mid_pci.c
-> +++ b/arch/x86/pci/intel_mid_pci.c
-> @@ -299,8 +299,10 @@ int __init intel_mid_pci_init(void)
->  	pcibios_disable_irq = intel_mid_pci_irq_disable;
->  	pci_root_ops = intel_mid_pci_ops;
->  	pci_soc_mode = 1;
-> +#ifdef CONFIG_ACPI
->  	/* Continue with standard init */
->  	acpi_noirq_set();
-> +#endif
+On Fri, Aug 7, 2020 at 1:10 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-07-05 11:11, Paul Moore wrote:
+> > On Sat, Jun 27, 2020 at 9:23 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > Require the target task to be a descendant of the container
+> > > orchestrator/engine.
 
-If CONFIG_ACPI=n then acpi_noirq_set() is an empty stub inline. So I'm
-not sure what you are trying to solve here.
+If you want to get formal about this, you need to define "target" in
+the sentence above.  Target of what?
 
-Ah, I see with CONFIG_ACPI=n linux/acpi.h does not include asm/acpi.h so
-the stubs are unreachable. So that needs to be fixed and not papered
-over with #ifdeffery
+FWIW, I read the above to basically mean that a task can only set the
+audit container ID of processes which are beneath it in the "process
+tree" where the "process tree" is defined as the relationship between
+a parent and children processes such that the children processes are
+branches below the parent process.
 
-Thanks,
+I have no problem with that, with the understanding that nesting
+complicates it somewhat.  For example, this isn't true when one of the
+children is a nested orchestrator, is it?
 
-        tglx
+> > > You would only change the audit container ID from one set or inherited
+> > > value to another if you were nesting containers.
+
+I thought we decided we were going to allow an orchestrator to move a
+process between audit container IDs, yes?  no?
+
+> > > If changing the contid, the container orchestrator/engine must be a
+> > > descendant and not same orchestrator as the one that set it so it is not
+> > > possible to change the contid of another orchestrator's container.
+
+Try rephrasing the above please, it isn't clear to me what you are
+trying to say.
+
+> Are we able to agree on the premises above?  Is anything asserted that
+> should not be and is there anything missing?
+
+See above.
+
+If you want to go back to the definitions/assumptions stage, it
+probably isn't worth worrying about the other comments until we get
+the above sorted.
+
+-- 
+paul moore
+www.paul-moore.com
