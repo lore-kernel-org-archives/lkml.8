@@ -2,184 +2,161 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F06C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDE6C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1E822087D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:55:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AhdZrJ6A"
+	by mail.kernel.org (Postfix) with ESMTP id C9DB4207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgHUIz3 (ORCPT
+        id S1728177AbgHUIzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728058AbgHUIz0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:55:26 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED9CC061385
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 01:55:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=VcyR/VxLSyCgmopbeUQbiqkO8Slw+8t/Cj6b0hl4cKw=; b=AhdZrJ6AFgCHLtzS6nOb6KGJ3i
-        IrEt7AbkXssHO3An1ycJ9v/zCIrBBs7xd9hYBOKw7DRvfWBHflADi6EIa8FQe4PA8Fz2dahwCCpV5
-        GFIVCZnW61o4V7e6MDmYxMoMCYMBBVeccnBNBxt0OP+kyuIs6N2q4JdX+X4RpGyLYu7x7egkkY3nq
-        ckbXKIP4ukp+6WdLhi+hsrLxwtoWwxjXLtVnoGH/Gdf3dCrFgGvVB59HjqjI7jxynnZQagtfcfbHH
-        p++/Tcf91slxgCxw/qov5t88366YTPP8/kVM5wfbHucuovmw9U71I6K+urU0gMLO9+lkfVD5U3U5K
-        VO3rk2VQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k92p3-0008UF-7U; Fri, 21 Aug 2020 08:54:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EE77C3028C8;
-        Fri, 21 Aug 2020 10:54:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id D932F2B64990E; Fri, 21 Aug 2020 10:54:49 +0200 (CEST)
-Message-ID: <20200821085348.192346882@infradead.org>
-User-Agent: quilt/0.66
-Date:   Fri, 21 Aug 2020 10:47:39 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org
-Cc:     npiggin@gmail.com, elver@google.com, jgross@suse.com,
-        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
-        joel@joelfernandes.org, svens@linux.ibm.com, tglx@linutronix.de,
-        peterz@infradead.org
-Subject: [PATCH v2 01/11] lockdep: Use raw_cpu_*() for per-cpu variables
-References: <20200821084738.508092956@infradead.org>
+        Fri, 21 Aug 2020 04:55:51 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2681 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726243AbgHUIzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 04:55:50 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id E386C4B18AC1B04972AA;
+        Fri, 21 Aug 2020 09:55:48 +0100 (IST)
+Received: from localhost (10.52.123.86) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Fri, 21 Aug
+ 2020 09:55:47 +0100
+Date:   Fri, 21 Aug 2020 09:54:14 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Brice Goglin" <Brice.Goglin@inria.fr>,
+        Sean V Kelley <sean.v.kelley@linux.intel.com>,
+        <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v9 2/6] x86: Support Generic Initiator only proximity
+ domains
+Message-ID: <20200821095414.00004559@Huawei.com>
+In-Reply-To: <20200820222433.GA1571517@bjorn-Precision-5520>
+References: <20200819145111.1715026-3-Jonathan.Cameron@huawei.com>
+        <20200820222433.GA1571517@bjorn-Precision-5520>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.123.86]
+X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sven reported that commit a21ee6055c30 ("lockdep: Change
-hardirq{s_enabled,_context} to per-cpu variables") caused trouble on
-s390 because their this_cpu_*() primitives disable preemption which
-then lands back tracing.
+On Thu, 20 Aug 2020 17:24:33 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-On the one hand, per-cpu ops should use preempt_*able_notrace() and
-raw_local_irq_*(), on the other hand, we can trivialy use raw_cpu_*()
-ops for this.
+> On Wed, Aug 19, 2020 at 10:51:07PM +0800, Jonathan Cameron wrote:
+> > In common with memoryless domains we only register GI domains
+> > if the proximity node is not online. If a domain is already
+> > a memory containing domain, or a memoryless domain there is
+> > nothing to do just because it also contains a Generic Initiator.
+> > 
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  arch/x86/include/asm/numa.h |  2 ++
+> >  arch/x86/kernel/setup.c     |  1 +
+> >  arch/x86/mm/numa.c          | 14 ++++++++++++++
+> >  3 files changed, 17 insertions(+)
+> > 
+> > diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
+> > index bbfde3d2662f..f631467272a3 100644
+> > --- a/arch/x86/include/asm/numa.h
+> > +++ b/arch/x86/include/asm/numa.h
+> > @@ -62,12 +62,14 @@ extern void numa_clear_node(int cpu);
+> >  extern void __init init_cpu_to_node(void);
+> >  extern void numa_add_cpu(int cpu);
+> >  extern void numa_remove_cpu(int cpu);
+> > +extern void init_gi_nodes(void);
+> >  #else	/* CONFIG_NUMA */
+> >  static inline void numa_set_node(int cpu, int node)	{ }
+> >  static inline void numa_clear_node(int cpu)		{ }
+> >  static inline void init_cpu_to_node(void)		{ }
+> >  static inline void numa_add_cpu(int cpu)		{ }
+> >  static inline void numa_remove_cpu(int cpu)		{ }
+> > +static inline void init_gi_nodes(void)			{ }
+> >  #endif	/* CONFIG_NUMA */
+> >  
+> >  #ifdef CONFIG_DEBUG_PER_CPU_MAPS
+> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > index 3511736fbc74..9062c146f03a 100644
+> > --- a/arch/x86/kernel/setup.c
+> > +++ b/arch/x86/kernel/setup.c
+> > @@ -1218,6 +1218,7 @@ void __init setup_arch(char **cmdline_p)
+> >  	prefill_possible_map();
+> >  
+> >  	init_cpu_to_node();
+> > +	init_gi_nodes();
+> >  
+> >  	io_apic_init_mappings();
+> >  
+> > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> > index aa76ec2d359b..fc630dc6764e 100644
+> > --- a/arch/x86/mm/numa.c
+> > +++ b/arch/x86/mm/numa.c
+> > @@ -747,6 +747,20 @@ static void __init init_memory_less_node(int nid)
+> >  	 */
+> >  }
+> >  
+> > +/*
+> > + * Generic Initiator Nodes may have neither CPU nor Memory.
+> > + * At this stage if either of the others were present we would
+> > + * already be online.
+> > + */
+> > +void __init init_gi_nodes(void)
+> > +{
+> > +	int nid;
+> > +
+> > +	for_each_node_state(nid, N_GENERIC_INITIATOR)
+> > +		if (!node_online(nid))
+> > +			init_memory_less_node(nid);
+> > +}  
+> 
+> This doesn't *look* very x86-specific, and apparently you don't need
+> any arm64-specific changes?  Too bad this can't be unified a little
+> bit to remove the arch #ifdefs completely.
 
-Fixes: a21ee6055c30 ("lockdep: Change hardirq{s_enabled,_context} to per-cpu variables")
-Reported-by: Sven Schnelle <svens@linux.ibm.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Tested-by: Marco Elver <elver@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- include/linux/irqflags.h |    6 +++---
- include/linux/lockdep.h  |   18 +++++++++++++-----
- kernel/locking/lockdep.c |    4 ++--
- 3 files changed, 18 insertions(+), 10 deletions(-)
+The only ifdefs in the set aren't actually about this (which is entirely
+contained in arch code) they are to avoid ia64 issues as has an entirely
+different implementation that I doubt anyone wants to touch!
 
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -53,13 +53,13 @@ DECLARE_PER_CPU(int, hardirq_context);
-   extern void trace_hardirqs_off_finish(void);
-   extern void trace_hardirqs_on(void);
-   extern void trace_hardirqs_off(void);
--# define lockdep_hardirq_context()	(this_cpu_read(hardirq_context))
-+# define lockdep_hardirq_context()	(raw_cpu_read(hardirq_context))
- # define lockdep_softirq_context(p)	((p)->softirq_context)
- # define lockdep_hardirqs_enabled()	(this_cpu_read(hardirqs_enabled))
- # define lockdep_softirqs_enabled(p)	((p)->softirqs_enabled)
- # define lockdep_hardirq_enter()			\
- do {							\
--	if (this_cpu_inc_return(hardirq_context) == 1)	\
-+	if (__this_cpu_inc_return(hardirq_context) == 1)\
- 		current->hardirq_threaded = 0;		\
- } while (0)
- # define lockdep_hardirq_threaded()		\
-@@ -68,7 +68,7 @@ do {						\
- } while (0)
- # define lockdep_hardirq_exit()			\
- do {						\
--	this_cpu_dec(hardirq_context);		\
-+	__this_cpu_dec(hardirq_context);	\
- } while (0)
- # define lockdep_softirq_enter()		\
- do {						\
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -535,19 +535,27 @@ do {									\
- DECLARE_PER_CPU(int, hardirqs_enabled);
- DECLARE_PER_CPU(int, hardirq_context);
- 
-+/*
-+ * The below lockdep_assert_*() macros use raw_cpu_read() to access the above
-+ * per-cpu variables. This is required because this_cpu_read() will potentially
-+ * call into preempt/irq-disable and that obviously isn't right. This is also
-+ * correct because when IRQs are enabled, it doesn't matter if we accidentally
-+ * read the value from our previous CPU.
-+ */
-+
- #define lockdep_assert_irqs_enabled()					\
- do {									\
--	WARN_ON_ONCE(debug_locks && !this_cpu_read(hardirqs_enabled));	\
-+	WARN_ON_ONCE(debug_locks && !raw_cpu_read(hardirqs_enabled));	\
- } while (0)
- 
- #define lockdep_assert_irqs_disabled()					\
- do {									\
--	WARN_ON_ONCE(debug_locks && this_cpu_read(hardirqs_enabled));	\
-+	WARN_ON_ONCE(debug_locks && raw_cpu_read(hardirqs_enabled));	\
- } while (0)
- 
- #define lockdep_assert_in_irq()						\
- do {									\
--	WARN_ON_ONCE(debug_locks && !this_cpu_read(hardirq_context));	\
-+	WARN_ON_ONCE(debug_locks && !raw_cpu_read(hardirq_context));	\
- } while (0)
- 
- #define lockdep_assert_preemption_enabled()				\
-@@ -555,7 +563,7 @@ do {									\
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_COUNT)	&&		\
- 		     debug_locks			&&		\
- 		     (preempt_count() != 0		||		\
--		      !this_cpu_read(hardirqs_enabled)));		\
-+		      !raw_cpu_read(hardirqs_enabled)));		\
- } while (0)
- 
- #define lockdep_assert_preemption_disabled()				\
-@@ -563,7 +571,7 @@ do {									\
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_COUNT)	&&		\
- 		     debug_locks			&&		\
- 		     (preempt_count() == 0		&&		\
--		      this_cpu_read(hardirqs_enabled)));		\
-+		      raw_cpu_read(hardirqs_enabled)));			\
- } while (0)
- 
- #else
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3756,7 +3756,7 @@ void noinstr lockdep_hardirqs_on(unsigne
- 
- skip_checks:
- 	/* we'll do an OFF -> ON transition: */
--	this_cpu_write(hardirqs_enabled, 1);
-+	__this_cpu_write(hardirqs_enabled, 1);
- 	trace->hardirq_enable_ip = ip;
- 	trace->hardirq_enable_event = ++trace->irq_events;
- 	debug_atomic_inc(hardirqs_on_events);
-@@ -3795,7 +3795,7 @@ void noinstr lockdep_hardirqs_off(unsign
- 		/*
- 		 * We have done an ON -> OFF transition:
- 		 */
--		this_cpu_write(hardirqs_enabled, 0);
-+		__this_cpu_write(hardirqs_enabled, 0);
- 		trace->hardirq_disable_ip = ip;
- 		trace->hardirq_disable_event = ++trace->irq_events;
- 		debug_atomic_inc(hardirqs_off_events);
+> 
+> I do see that init_memory_less_node() is only implemented on x86, but
+> it just seems like all this might not be inherently be arch-specific.
+
+I absolutely agree with a long term aim to unify the numa setup code
+across architectures.
+
+The x86 code is rather more involved than what we have for arm64. On arm64,
+memoryless nodes are handled in the same pass as those with memory (and
+we get GI nodes for free).
+
+There are some separate patches under discussion that take a few steps
+in that direction.
+
+https://lore.kernel.org/linux-arm-kernel/20200814214725.28818-3-atish.patra@wdc.com/T/
+https://patchwork.kernel.org/patch/11651437/ (this one is mostly by coincidence rather
+than intent!)
+
+Jonathan
+
+
 
 
