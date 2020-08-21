@@ -2,106 +2,114 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF36C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B978DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7DC206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EAE620658
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598027005;
+	bh=ySY7r+XvByWG/h02YkSpizvqYnRnOEsqEYmyDA8cBmk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PfyqlZ7pwaaa56axRE37ZoJB66YY09YXf494Tyynwr3ZPIBNViRc93pFIJ5ZER5/w
+	 3PiM38V9lDbMgoHTiG/ScDtIAyepChWzwiav7C7YjOsnoM3UeItkoR4YUnVC2E0Ewr
+	 /x3Brg17WLtzJF5mSswhf1BjihpnJYPvqUr+hh88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgHUQXO (ORCPT
+        id S1728368AbgHUQXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:23:14 -0400
-Received: from 4.mo177.mail-out.ovh.net ([46.105.37.72]:57047 "EHLO
-        4.mo177.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728334AbgHUQTz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:19:55 -0400
-X-Greylist: delayed 599 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Aug 2020 12:19:54 EDT
-Received: from player696.ha.ovh.net (unknown [10.108.57.72])
-        by mo177.mail-out.ovh.net (Postfix) with ESMTP id 42C3013E1EF
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 18:02:09 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player696.ha.ovh.net (Postfix) with ESMTPSA id 6A9CF1576BCF9;
-        Fri, 21 Aug 2020 16:02:03 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-105G00637181793-cf53-479e-a21c-e4e735c6a36c,
-                    20EB7F6BE0168D07063FB82D5C23839419BBC220) smtp.auth=steve@sk2.org
-From:   Stephen Kitt <steve@sk2.org>
-To:     Riku Voipio <riku.voipio@iki.fi>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH] hwmon: (f75375s) use simple i2c probe
-Date:   Fri, 21 Aug 2020 18:01:59 +0200
-Message-Id: <20200821160159.591293-1-steve@sk2.org>
-X-Mailer: git-send-email 2.25.4
+        Fri, 21 Aug 2020 12:23:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728341AbgHUQTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:19:54 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2221022BEA;
+        Fri, 21 Aug 2020 16:19:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598026741;
+        bh=ySY7r+XvByWG/h02YkSpizvqYnRnOEsqEYmyDA8cBmk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MH80z+BUrYiVrtuCtqcLt5U+sulMfEB51hcwifwMisy9+maW94zdyh3gxkCb4I5qS
+         MLLNgfFPC6uFUzm3ags9S9redT7GwwhUvPBamN+TPNMUm4ihhJMB0JI7ZsgU5vAFu8
+         CqUPkH/oxx4QgtlzSdmV5HlF6lTywpdP3oTfTTJ4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Qiushi Wu <wu000273@umn.edu>, Jon Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 02/30] ASoC: tegra: Fix reference count leaks.
+Date:   Fri, 21 Aug 2020 12:18:29 -0400
+Message-Id: <20200821161857.348955-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821161857.348955-1-sashal@kernel.org>
+References: <20200821161857.348955-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 17294104045806177561
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrudduvddgkeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeetgedugfelkeeikeetgeegteevfeeufeetuefgudeiiedthfehtdeffeekvdeffeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrieeliedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of the ongoing i2c transition to the simple probe
-("probe_new"), this patch uses i2c_match_id to retrieve the
-driver_data for the probed device. The id parameter is thus no longer
-necessary and the simple probe can be used instead.
+From: Qiushi Wu <wu000273@umn.edu>
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
+[ Upstream commit deca195383a6085be62cb453079e03e04d618d6e ]
+
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count if pm_runtime_put is not called in
+error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20200613204422.24484-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/f75375s.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ sound/soc/tegra/tegra30_ahub.c | 4 +++-
+ sound/soc/tegra/tegra30_i2s.c  | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwmon/f75375s.c b/drivers/hwmon/f75375s.c
-index eb847a7d6b83..3e567be60fb1 100644
---- a/drivers/hwmon/f75375s.c
-+++ b/drivers/hwmon/f75375s.c
-@@ -113,8 +113,7 @@ struct f75375_data {
+diff --git a/sound/soc/tegra/tegra30_ahub.c b/sound/soc/tegra/tegra30_ahub.c
+index 43679aeeb12be..88e838ac937dc 100644
+--- a/sound/soc/tegra/tegra30_ahub.c
++++ b/sound/soc/tegra/tegra30_ahub.c
+@@ -655,8 +655,10 @@ static int tegra30_ahub_resume(struct device *dev)
+ 	int ret;
  
- static int f75375_detect(struct i2c_client *client,
- 			 struct i2c_board_info *info);
--static int f75375_probe(struct i2c_client *client,
--			const struct i2c_device_id *id);
-+static int f75375_probe(struct i2c_client *client);
- static int f75375_remove(struct i2c_client *client);
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 	ret = regcache_sync(ahub->regmap_ahub);
+ 	ret |= regcache_sync(ahub->regmap_apbif);
+ 	pm_runtime_put(dev);
+diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
+index 0b176ea24914b..bf155c5092f06 100644
+--- a/sound/soc/tegra/tegra30_i2s.c
++++ b/sound/soc/tegra/tegra30_i2s.c
+@@ -551,8 +551,10 @@ static int tegra30_i2s_resume(struct device *dev)
+ 	int ret;
  
- static const struct i2c_device_id f75375_id[] = {
-@@ -130,7 +129,7 @@ static struct i2c_driver f75375_driver = {
- 	.driver = {
- 		.name = "f75375",
- 	},
--	.probe = f75375_probe,
-+	.probe_new = f75375_probe,
- 	.remove = f75375_remove,
- 	.id_table = f75375_id,
- 	.detect = f75375_detect,
-@@ -814,8 +813,7 @@ static void f75375_init(struct i2c_client *client, struct f75375_data *data,
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 	ret = regcache_sync(i2s->regmap);
+ 	pm_runtime_put(dev);
  
- }
- 
--static int f75375_probe(struct i2c_client *client,
--		const struct i2c_device_id *id)
-+static int f75375_probe(struct i2c_client *client)
- {
- 	struct f75375_data *data;
- 	struct f75375s_platform_data *f75375s_pdata =
-@@ -832,7 +830,7 @@ static int f75375_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, data);
- 	mutex_init(&data->update_lock);
--	data->kind = id->driver_data;
-+	data->kind = i2c_match_id(f75375_id, client)->driver_data;
- 
- 	err = sysfs_create_group(&client->dev.kobj, &f75375_group);
- 	if (err)
 -- 
-2.25.4
+2.25.1
 
