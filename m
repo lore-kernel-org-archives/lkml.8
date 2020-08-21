@@ -2,109 +2,201 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F59C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31D8C20735
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:53:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xjD0YNa5"
+	by mail.kernel.org (Postfix) with ESMTP id 4D2F420702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:55:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598032522;
+	bh=q8e3Np+yjKnNHDOucad5mHhdvyPAWTHMr9WIxaxpXC8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=knQ3/Unw/o075vOj2Ws+5Xp41rfrAWZBCsiRRml7UI6BouxIgQRtrdL6Vb2W1uQlf
+	 dRmU11RCkqp5XZ9EDW74+Sct+dTJg2V2GjqDF5U3+eaDXQ9Y8DRD6h145pPgiqYsmF
+	 WNS9tZdTW2ROvrMZArOk5nICYp3XcbzmANkTZ2dU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgHURxr (ORCPT
+        id S1727786AbgHURzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:53:47 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:43040 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbgHURxk (ORCPT
+        Fri, 21 Aug 2020 13:55:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgHURzS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 13:53:40 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07LHpnhR122754;
-        Fri, 21 Aug 2020 17:52:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=QXawLVP6mU6d0n9H5D3i3kKivyf++OjS6AL4G5gYPVg=;
- b=xjD0YNa5YhxJPt0WJTpjk+LadbNo2d7FMenSTrPuETPZd7f/r/IrdEUTYMB6zjBoZPR2
- u0Gbt5dQsnBGRBHppUYMOtOLiNoG5diikc8EI5niRU5dGlMPhvjziRQpZSNErz1u9upU
- Wq8p7dpX4CoNxOvIx21kuNKLBAOOwPNcMzi2bnjJZQwzbDNznyPiT3oL2BAOfgaMMIN6
- Wll2kJGkWltQLjboVupRBBbXpcwJ/nVPH25WgFpRlaPV/q6tC1ok7TspzzN6qWnRrg5U
- 6veJeGoLX+90LLkoIxl7SKSYaWcB3CZgDSGo8/2z5d5760+HuElRQHW99SZq6AH74yMQ Jg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 3322bjkud5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Aug 2020 17:52:57 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07LHluAE016656;
-        Fri, 21 Aug 2020 17:52:56 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 330pvsa5cy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 17:52:56 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07LHqp6b011145;
-        Fri, 21 Aug 2020 17:52:51 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Aug 2020 17:52:51 +0000
-Subject: Re: [PATCH v7 0/3] make dma_alloc_coherent NUMA-aware by per-NUMA CMA
-To:     Barry Song <song.bao.hua@hisilicon.com>, hch@lst.de,
-        m.szyprowski@samsung.com, robin.murphy@arm.com, will@kernel.org,
-        ganapatrao.kulkarni@cavium.com, catalin.marinas@arm.com,
-        akpm@linux-foundation.org
-Cc:     iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        prime.zeng@hisilicon.com, huangdaode@huawei.com,
-        linuxarm@huawei.com
-References: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <e47f4bfd-3af7-f682-23a1-51800f992d35@oracle.com>
-Date:   Fri, 21 Aug 2020 10:52:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 21 Aug 2020 13:55:18 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1BB7C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:55:17 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c15so1329328lfi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:55:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m4V8fZt1LIyKWUpK//pHmx+UE2cyQI+1k+0DpARcdKs=;
+        b=UCXANsHTDuglcuMoaPQrO2SPcgEY6vG1EKV1rTav9qeDhjuPUXwzOzAWO97GPtjQDH
+         vnro5pnl96FGhRTeEBpt/OEZjQu48BweLMmP5gUzvXiHcfKKCnzSqCp8rihnevc6AQ5B
+         Ceo5/n8nq9tRTr1tnI08EiIZY6bxL404FbH6M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m4V8fZt1LIyKWUpK//pHmx+UE2cyQI+1k+0DpARcdKs=;
+        b=nPmsr5/N2kmO+NzJpmJ/bvNwLWYidC20EYWLv4kNNgC9Akg43XDCm5bBJc2LFW1/eu
+         Mz8HGaAkaoyBNYh3SDi88iZqtZde6RRr/eCCMBLxxDWmG50IVK9VKO3ykF8FABGnYzCh
+         acLykC52mgDginik79N4lpflF4WuRMpnUtLzKwgD8JEnBMkKdk5qft5m2ZQ9y89AAjGb
+         FGuUNrKJM/bPtmIpUa/UiRBgsN+G0PYPzHH0cdHFm1T1QJHMzzldChlq6kLNwsa+nTng
+         uccNcx9uk92B174MjmI75xCwcff/VcQOVB2+Wy9NEwWp77hNlbtf7lZr0VlM4IdbSUoC
+         GKbQ==
+X-Gm-Message-State: AOAM531Ls99Ps18oRmLtzR89xxATJ33jFEn5nclAhT3I3eKTTHY99Cj6
+        b99WRH2Rbaz/qTc18oqTjjLv8SNFN33vzA==
+X-Google-Smtp-Source: ABdhPJy3mDGyARiSV3L9V/mBjZOA9cHGHgZUa0hNIyPy9sZuzUjIDP8+PE7hr+AyaECV9UNt369kcg==
+X-Received: by 2002:ac2:5e2c:: with SMTP id o12mr1894921lfg.71.1598032515439;
+        Fri, 21 Aug 2020 10:55:15 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id y26sm508804ljm.132.2020.08.21.10.55.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 10:55:14 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id w14so2786166ljj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:55:13 -0700 (PDT)
+X-Received: by 2002:a05:651c:503:: with SMTP id o3mr2203972ljp.312.1598032513384;
+ Fri, 21 Aug 2020 10:55:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9720 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 phishscore=0
- malwarescore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210168
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9720 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- adultscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- lowpriorityscore=0 spamscore=0 impostorscore=0 clxscore=1011 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210169
+References: <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
+ <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com> <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
+ <20200818202407.GA3143683@rani.riverdale.lan> <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
+ <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
+ <20200818214146.GA3196105@rani.riverdale.lan> <df6c1da4-b910-ecb8-0de2-6156dd651be6@rasmusvillemoes.dk>
+ <20200820175617.GA604994@rani.riverdale.lan> <CAHk-=whn91ar+EbcBXQb9UXad00Q5WjU-TCB6UBzVba682a4ew@mail.gmail.com>
+ <20200821172935.GA1411923@rani.riverdale.lan>
+In-Reply-To: <20200821172935.GA1411923@rani.riverdale.lan>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 21 Aug 2020 10:54:57 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi8vdb+wo-DACDpSijYfAbCs135YcnnAbRhGJcU+A=-+Q@mail.gmail.com>
+Message-ID: <CAHk-=wi8vdb+wo-DACDpSijYfAbCs135YcnnAbRhGJcU+A=-+Q@mail.gmail.com>
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Barry,
-Sorry for jumping in so late.
+On Fri, Aug 21, 2020 at 10:29 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> The no-builtin- options _don't_ disable
+> __builtin_ functions. They remove the default definition of foo() as
+> __builtin_foo().
 
-On 8/21/20 4:33 AM, Barry Song wrote:
-> 
-> with per-numa CMA, smmu will get memory from local numa node to save command
-> queues and page tables. that means dma_unmap latency will be shrunk much.
+Oh, ok, then it's fine.
 
-Since per-node CMA areas for hugetlb was introduced, I have been thinking
-about the limited number of CMA areas.  In most configurations, I believe
-it is limited to 7.  And, IIRC it is not something that can be changed at
-runtime, you need to reconfig and rebuild to increase the number.  In contrast
-some configs have NODES_SHIFT set to 10.  I wasn't too worried because of
-the limited hugetlb use case.  However, this series is adding another user
-of per-node CMA areas.
+> Take the problem that instigated this thread. __builtin_stpcpy() doesn't
+> work in the kernel because the fallback, stpcpy(), isn't implemented.
 
-With more users, should try to sync up number of CMA areas and number of
-nodes?  Or, perhaps I am worrying about nothing?
--- 
-Mike Kravetz
+Right.
+
+The only problem is the - bogus - recognition of (or rewriting of)
+code patterns that the compiler recohnmizes.
+
+__builtin_stpcpy() itself is fine if somebody wants to use it - and
+has the fallback.
+
+But implicitly recognizing some code sequence and turning it into
+something else is the problem.
+
+> This is why I'm saying clang's no-builtin-foo option is useful for
+> embedded: it doesn't prevent the programmer using __builtin_foo(), it
+> prevents the _compiler_ using __builtin_foo() on its own.
+
+And that's fine. But it's apparently not what gcc does.
+
+> > So this is things like the compiler silently seeing "oh, you called
+> > your function 'free()', so we know that the stores you did to it are
+> > dead and we'll remove them".
+> >
+> > Or this is the compiler doing "Oh, you did four stores of zero in a
+> > row, and and you asked for size optimizations, so we'll turn those
+> > into a 'bzero()' call".
+>
+> This one is slightly different from the previous one. The first case is
+> really a call to __builtin_free().
+
+No, the first case is a disgrace and a compiler bug.
+
+We've had a situation where gcc complained about a static function
+called "free()", without any header file inclusion, and then
+complained about it not matching its idea of what "free()" is.
+
+Which is pure and utter garbage.
+
+It's like you have a local variable "int free", and the compiler says
+"hey, this doesn't match the prototype that I know this name should
+have". It's BS. You just saw the user not just *use* that name, but
+*define* it, and do it in a scope where the complaint is irrelevant
+and stupid, and when we hadn't even included the header that would
+have resulted in conflicts.
+
+IOW, it's an example of a compiler that thinks "it knows better".
+
+It's a broken compiler. And it's an example of the kind of breakage
+that compilers absolutely shouldn't do.
+
+The second example is from clang doesn't something horribly horribly stupid.
+
+> This one is turning something that wasn't a function call into
+> __builtin_bzero(), and I would hope that no-builtin-bzero would stop it
+> as well. OTOH, the compiler is free to turn it into memset(), just like
+> it could for structure/array initializers.
+
+The whole "the compiler is free to do X" argument is pure BS. Stop
+repeating that bogus argument.
+
+Of COURSE a compiler can do whatever the hell it wants.
+
+That doesn't change the fact that certain things are broken beyond
+words and utterly stupid, and a compiler that does them is a *BAD*
+compiler.
+
+Turning four stores into a memset() is garbage. Just admit it, instead
+of trying to say that it's allowed.
+
+Technically a compiler can decode to simply not compile the kernel at
+all, because we do things that are outside a lot of standards.
+
+So the "technically allowed" is not an argument.
+
+             Linus
