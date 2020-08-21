@@ -2,315 +2,328 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D409AC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE83C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26B8207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1DD4207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Y/6ZGn7F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJGprFs+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728510AbgHUJbW (ORCPT
+        id S1728439AbgHUJcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:31:22 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:13938 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728183AbgHUJbT (ORCPT
+        Fri, 21 Aug 2020 05:32:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727901AbgHUJcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:31:19 -0400
-X-UUID: 626ae51aeba74277803e6874ca859e38-20200821
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=haCYnoHCPkglnHc4N5LtZZz1NiOL98ENM7S1VazhVSg=;
-        b=Y/6ZGn7FdmLti5GqqdYZT6b0f+6N7pWts6l6P2UKgR/UPGGv65Uy4xOSZLyMJuOftI9zkjbUPEWhMSMn0GQYN3oOT0AdxSmworrnDxmaWs9+1z/jE56qekpkNaVVRftRP5UYu5gupwW/fw1Qu8dees7HddCSfuY/xbIYXFgofxI=;
-X-UUID: 626ae51aeba74277803e6874ca859e38-20200821
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 364629569; Fri, 21 Aug 2020 17:31:05 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 21 Aug 2020 17:31:02 +0800
-Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 21 Aug 2020 17:31:02 +0800
-From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH 2/2] spmi: mediatek: Add support for MT6873/8192
-Date:   Fri, 21 Aug 2020 17:31:00 +0800
-Message-ID: <1598002260-12724-3-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-Mailer: git-send-email 2.6.4
-In-Reply-To: <1598002260-12724-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1598002260-12724-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Fri, 21 Aug 2020 05:32:05 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D374EC061385
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 02:32:04 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id z17so1091745ioi.6
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 02:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=t/dOT06mtmAkpr62q36LrtTLTbCfrNjbIvjPkFwu130=;
+        b=SJGprFs+iTzV4vAlzWLsr7tgEfJYQSHvLKX41flVqOcq1CxCjlzb6j44d6uwkVSdqt
+         CiV4InzmEj6o/CVXyN7zP8C3oVVUFKvZav//i1fhYbQhMiROYC+iICu0JPcrCInzZQW4
+         nLHIkAwLgdEKbq42suND7a07f1lAnwSTpbUPExzbYCQ5ezryyzQmfPdiy0UlHPr5MRb9
+         MX8Dg2E9H4nHIybtlXUmFwSO5W+SNQCvQEYUramiYKOr7ySfE7R4yShk8fJAR7RLBHIZ
+         6PipXvQyScdFaKUACThegb29DnCb1HUmVgfmscdvZBtqAZk0HiEF8Rx1Rd4DkJL2cXli
+         9HPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=t/dOT06mtmAkpr62q36LrtTLTbCfrNjbIvjPkFwu130=;
+        b=bpo9wkFX43rXQLFvdGplLiZnlwJtAJ00zV2bHx2Ae8gilJShYdCe6Ff0o2JRo0g05C
+         yHmTkTvoDNJF7J4zxJMf+zCC92L4eWXikQJF2XB/OEmFd7aZywDWZL8MpVv7aY8YavA2
+         JQ5jyX/8SL+tz3NGpOxE0+1Uh1Wo/0Dpd9s3rlEuPMJ6an2vLIGKQIK8EPtZeaN0WCoR
+         FsP38rD73aprxjKR8s1Srte1s8RFPmGvKO9hZpjURE7QP4kRVPA7RpcwZIMcECGCmhCP
+         Osq1SqxdCJc7mWTbnjKKiBl6GGVkqJHuxXbhNnjSOmw5ABDrqZAP/lVLFw8UhmZM5un8
+         XBBw==
+X-Gm-Message-State: AOAM533p/8SHFTQNtr9H98eF+bLDF9hu+WrRESz9mECdkiFc5m4wXRv/
+        1JJ4WzSdWj4XMh6uLNB9wOYtQAJGr1G0lvWhDYY=
+X-Google-Smtp-Source: ABdhPJx5nd4429RGbJ6Ckrb6Tb7NxN8NJJVhyZXmXKlG2EFydiyNFBuc5jwZxxWp31Rl9cQ7gMZMOZIJfCsIUzwX26I=
+X-Received: by 2002:a02:e4a:: with SMTP id 71mr1751898jae.133.1598002323795;
+ Fri, 21 Aug 2020 02:32:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1598001864-6123-1-git-send-email-zhaoyang.huang@unisoc.com>
+In-Reply-To: <1598001864-6123-1-git-send-email-zhaoyang.huang@unisoc.com>
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date:   Fri, 21 Aug 2020 17:31:52 +0800
+Message-ID: <CAGWkznGfc8g3SRd5vBq7sQGFLuc__98c7t21-3j4T1oAViHvgg@mail.gmail.com>
+Subject: Re: [PATCH v2] mm : sync ra->ra_pages with bdi->ra_pages
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, chunyan.zhang@unisoc.com,
+        Baolin Wang <baolin.wang7@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-YWRkIHNwbWkgc3VwcG9ydCBmb3IgTVQ2ODczLzgxOTIuDQoNClNpZ25lZC1vZmYtYnk6IEhzaW4t
-SHNpdW5nIFdhbmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVy
-cy9zcG1pL0tjb25maWcgICAgICAgICB8ICAgOSArDQogZHJpdmVycy9zcG1pL01ha2VmaWxlICAg
-ICAgICB8ICAgMSArDQogZHJpdmVycy9zcG1pL3NwbWktbXRrLXBtaWYuYyB8IDQ3OSArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQogMyBmaWxlcyBjaGFuZ2VkLCA0
-ODkgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3NwbWkvc3BtaS1t
-dGstcG1pZi5jDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3NwbWkvS2NvbmZpZyBiL2RyaXZlcnMv
-c3BtaS9LY29uZmlnDQppbmRleCBhNTNiYWQ1Li40MTg4NDg4IDEwMDY0NA0KLS0tIGEvZHJpdmVy
-cy9zcG1pL0tjb25maWcNCisrKyBiL2RyaXZlcnMvc3BtaS9LY29uZmlnDQpAQCAtMjUsNCArMjUs
-MTMgQEAgY29uZmlnIFNQTUlfTVNNX1BNSUNfQVJCDQogCSAgVGhpcyBpcyByZXF1aXJlZCBmb3Ig
-Y29tbXVuaWNhdGluZyB3aXRoIFF1YWxjb21tIFBNSUNzIGFuZA0KIAkgIG90aGVyIGRldmljZXMg
-dGhhdCBoYXZlIHRoZSBTUE1JIGludGVyZmFjZS4NCiANCitjb25maWcgU1BNSV9NVEtfUE1JRg0K
-Kwl0cmlzdGF0ZSAiTWVkaWF0ZWsgU1BNSSBDb250cm9sbGVyIChQTUlDIEFyYml0ZXIpIg0KKwlo
-ZWxwDQorCSAgSWYgeW91IHNheSB5ZXMgdG8gdGhpcyBvcHRpb24sIHN1cHBvcnQgd2lsbCBiZSBp
-bmNsdWRlZCBmb3IgdGhlDQorCSAgYnVpbHQtaW4gU1BNSSBQTUlDIEFyYml0ZXIgaW50ZXJmYWNl
-IG9uIE1lZGlhdGVrIGZhbWlseQ0KKwkgIHByb2Nlc3NvcnMuDQorDQorCSAgVGhpcyBpcyByZXF1
-aXJlZCBmb3IgY29tbXVuaWNhdGluZyB3aXRoIE1lZGlhdGVrIFBNSUNzIGFuZA0KKwkgIG90aGVy
-IGRldmljZXMgdGhhdCBoYXZlIHRoZSBTUE1JIGludGVyZmFjZS4NCiBlbmRpZg0KZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvc3BtaS9NYWtlZmlsZSBiL2RyaXZlcnMvc3BtaS9NYWtlZmlsZQ0KaW5kZXgg
-NTVhOTRjYS4uOTFmMzAzYjkgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3NwbWkvTWFrZWZpbGUNCisr
-KyBiL2RyaXZlcnMvc3BtaS9NYWtlZmlsZQ0KQEAgLTUsMyArNSw0IEBADQogb2JqLSQoQ09ORklH
-X1NQTUkpCSs9IHNwbWkubw0KIA0KIG9iai0kKENPTkZJR19TUE1JX01TTV9QTUlDX0FSQikJKz0g
-c3BtaS1wbWljLWFyYi5vDQorb2JqLSQoQ09ORklHX1NQTUlfTVRLX1BNSUYpCSs9IHNwbWktbXRr
-LXBtaWYubw0KXCBObyBuZXdsaW5lIGF0IGVuZCBvZiBmaWxlDQpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9zcG1pL3NwbWktbXRrLXBtaWYuYyBiL2RyaXZlcnMvc3BtaS9zcG1pLW10ay1wbWlmLmMNCm5l
-dyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwLi43ZTkwMzkwDQotLS0gL2Rldi9udWxs
-DQorKysgYi9kcml2ZXJzL3NwbWkvc3BtaS1tdGstcG1pZi5jDQpAQCAtMCwwICsxLDQ3OSBAQA0K
-Ky8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQorLy8NCisvLyBDb3B5cmlnaHQg
-KGMpIDIwMjAgTWVkaWFUZWsgSW5jLg0KKw0KKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4NCisjaW5j
-bHVkZSA8bGludXgvaW9wb2xsLmg+DQorI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KKyNpbmNs
-dWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+DQorI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPg0K
-KyNpbmNsdWRlIDxsaW51eC9zcG1pLmg+DQorDQorI2RlZmluZSBTV0lORl9JRExFCTB4MDANCisj
-ZGVmaW5lIFNXSU5GX1dGVkxEQ0xSCTB4MDYNCisNCisjZGVmaW5lIEdFVF9TV0lORih4KQkoKCh4
-KSA+PiAxKSAmIDB4NykNCisNCisjZGVmaW5lIFBNSUZfQ01EX1JFR18wCQkwDQorI2RlZmluZSBQ
-TUlGX0NNRF9SRUcJCTENCisjZGVmaW5lIFBNSUZfQ01EX0VYVF9SRUcJMg0KKyNkZWZpbmUgUE1J
-Rl9DTURfRVhUX1JFR19MT05HCTMNCisNCisjZGVmaW5lIFBNSUZfREVMQVlfVVMgICAxMA0KKyNk
-ZWZpbmUgUE1JRl9USU1FT1VUICAgICgxMCAqIDEwMDApDQorDQorI2RlZmluZSBQTUlGX0NIQU5f
-T0ZGU0VUIDB4NQ0KKw0KKyNkZWZpbmUgU1BNSV9PUF9TVF9CVVNZIDENCisNCitzdHJ1Y3QgY2hf
-cmVnIHsNCisJdTMyIGNoX3N0YTsNCisJdTMyIHdkYXRhOw0KKwl1MzIgcmRhdGE7DQorCXUzMiBj
-aF9zZW5kOw0KKwl1MzIgY2hfcmR5Ow0KK307DQorDQorc3RydWN0IHBtaWYgew0KKwl2b2lkIF9f
-aW9tZW0JKmJhc2U7DQorCWNvbnN0IHUzMgkqcmVnczsNCisJdm9pZCBfX2lvbWVtCSpzcG1pbXN0
-X2Jhc2U7DQorCWNvbnN0IHUzMgkqc3BtaW1zdF9yZWdzOw0KKwl1MzIJCXNvY19jaGFuOw0KKwlp
-bnQJCWdycGlkOw0KKwlyYXdfc3BpbmxvY2tfdAlsb2NrOw0KKwlzdHJ1Y3QgY2xrCSpwbWlmX3N5
-c19jazsNCisJc3RydWN0IGNsawkqcG1pZl90bXJfY2s7DQorCXN0cnVjdCBjbGsJKnNwbWltc3Rf
-Y2xrX211eDsNCisJc3RydWN0IGNoX3JlZyBjaGFuOw0KK307DQorDQorZW51bSBwbWlmX3JlZ3Mg
-ew0KKwlQTUlGX0lOSVRfRE9ORSwNCisJUE1JRl9JTkZfRU4sDQorCVBNSUZfQVJCX0VOLA0KKwlQ
-TUlGX0NNRElTU1VFX0VOLA0KKwlQTUlGX1RJTUVSX0NUUkwsDQorCVBNSUZfU1BJX01PREVfQ1RS
-TCwNCisJUE1JRl9JUlFfRVZFTlRfRU5fMCwNCisJUE1JRl9JUlFfRkxBR18wLA0KKwlQTUlGX0lS
-UV9DTFJfMCwNCisJUE1JRl9JUlFfRVZFTlRfRU5fMSwNCisJUE1JRl9JUlFfRkxBR18xLA0KKwlQ
-TUlGX0lSUV9DTFJfMSwNCisJUE1JRl9JUlFfRVZFTlRfRU5fMiwNCisJUE1JRl9JUlFfRkxBR18y
-LA0KKwlQTUlGX0lSUV9DTFJfMiwNCisJUE1JRl9JUlFfRVZFTlRfRU5fMywNCisJUE1JRl9JUlFf
-RkxBR18zLA0KKwlQTUlGX0lSUV9DTFJfMywNCisJUE1JRl9JUlFfRVZFTlRfRU5fNCwNCisJUE1J
-Rl9JUlFfRkxBR180LA0KKwlQTUlGX0lSUV9DTFJfNCwNCisJUE1JRl9XRFRfRVZFTlRfRU5fMCwN
-CisJUE1JRl9XRFRfRkxBR18wLA0KKwlQTUlGX1dEVF9FVkVOVF9FTl8xLA0KKwlQTUlGX1dEVF9G
-TEFHXzEsDQorCVBNSUZfU1dJTkZfMF9TVEEsDQorCVBNSUZfU1dJTkZfMF9XREFUQV8zMV8wLA0K
-KwlQTUlGX1NXSU5GXzBfUkRBVEFfMzFfMCwNCisJUE1JRl9TV0lORl8wX0FDQywNCisJUE1JRl9T
-V0lORl8wX1ZMRF9DTFIsDQorCVBNSUZfU1dJTkZfMV9TVEEsDQorCVBNSUZfU1dJTkZfMV9XREFU
-QV8zMV8wLA0KKwlQTUlGX1NXSU5GXzFfUkRBVEFfMzFfMCwNCisJUE1JRl9TV0lORl8xX0FDQywN
-CisJUE1JRl9TV0lORl8xX1ZMRF9DTFIsDQorCVBNSUZfU1dJTkZfMl9TVEEsDQorCVBNSUZfU1dJ
-TkZfMl9XREFUQV8zMV8wLA0KKwlQTUlGX1NXSU5GXzJfUkRBVEFfMzFfMCwNCisJUE1JRl9TV0lO
-Rl8yX0FDQywNCisJUE1JRl9TV0lORl8yX1ZMRF9DTFIsDQorCVBNSUZfU1dJTkZfM19TVEEsDQor
-CVBNSUZfU1dJTkZfM19XREFUQV8zMV8wLA0KKwlQTUlGX1NXSU5GXzNfUkRBVEFfMzFfMCwNCisJ
-UE1JRl9TV0lORl8zX0FDQywNCisJUE1JRl9TV0lORl8zX1ZMRF9DTFIsDQorfTsNCisNCitzdGF0
-aWMgY29uc3QgdTMyIG10Njg3M19yZWdzW10gPSB7DQorCVtQTUlGX0lOSVRfRE9ORV0gPQkweDAw
-MDAsDQorCVtQTUlGX0lORl9FTl0gPQkJMHgwMDI0LA0KKwlbUE1JRl9BUkJfRU5dID0JCTB4MDE1
-MCwNCisJW1BNSUZfQ01ESVNTVUVfRU5dID0JMHgwM0I0LA0KKwlbUE1JRl9USU1FUl9DVFJMXSA9
-CTB4MDNFMCwNCisJW1BNSUZfU1BJX01PREVfQ1RSTF0gPQkweDA0MDAsDQorCVtQTUlGX0lSUV9F
-VkVOVF9FTl8wXSA9CTB4MDQxOCwNCisJW1BNSUZfSVJRX0ZMQUdfMF0gPQkweDA0MjAsDQorCVtQ
-TUlGX0lSUV9DTFJfMF0gPQkweDA0MjQsDQorCVtQTUlGX0lSUV9FVkVOVF9FTl8xXSA9CTB4MDQy
-OCwNCisJW1BNSUZfSVJRX0ZMQUdfMV0gPQkweDA0MzAsDQorCVtQTUlGX0lSUV9DTFJfMV0gPQkw
-eDA0MzQsDQorCVtQTUlGX0lSUV9FVkVOVF9FTl8yXSA9CTB4MDQzOCwNCisJW1BNSUZfSVJRX0ZM
-QUdfMl0gPQkweDA0NDAsDQorCVtQTUlGX0lSUV9DTFJfMl0gPQkweDA0NDQsDQorCVtQTUlGX0lS
-UV9FVkVOVF9FTl8zXSA9CTB4MDQ0OCwNCisJW1BNSUZfSVJRX0ZMQUdfM10gPQkweDA0NTAsDQor
-CVtQTUlGX0lSUV9DTFJfM10gPQkweDA0NTQsDQorCVtQTUlGX0lSUV9FVkVOVF9FTl80XSA9CTB4
-MDQ1OCwNCisJW1BNSUZfSVJRX0ZMQUdfNF0gPQkweDA0NjAsDQorCVtQTUlGX0lSUV9DTFJfNF0g
-PQkweDA0NjQsDQorCVtQTUlGX1dEVF9FVkVOVF9FTl8wXSA9CTB4MDQ2QywNCisJW1BNSUZfV0RU
-X0ZMQUdfMF0gPQkweDA0NzAsDQorCVtQTUlGX1dEVF9FVkVOVF9FTl8xXSA9CTB4MDQ3NCwNCisJ
-W1BNSUZfV0RUX0ZMQUdfMV0gPQkweDA0NzgsDQorCVtQTUlGX1NXSU5GXzBfQUNDXSA9CTB4MEMw
-MCwNCisJW1BNSUZfU1dJTkZfMF9XREFUQV8zMV8wXSA9CTB4MEMwNCwNCisJW1BNSUZfU1dJTkZf
-MF9SREFUQV8zMV8wXSA9CTB4MEMxNCwNCisJW1BNSUZfU1dJTkZfMF9WTERfQ0xSXSA9CTB4MEMy
-NCwNCisJW1BNSUZfU1dJTkZfMF9TVEFdID0JMHgwQzI4LA0KKwlbUE1JRl9TV0lORl8xX0FDQ10g
-PQkweDBDNDAsDQorCVtQTUlGX1NXSU5GXzFfV0RBVEFfMzFfMF0gPQkweDBDNDQsDQorCVtQTUlG
-X1NXSU5GXzFfUkRBVEFfMzFfMF0gPQkweDBDNTQsDQorCVtQTUlGX1NXSU5GXzFfVkxEX0NMUl0g
-PQkweDBDNjQsDQorCVtQTUlGX1NXSU5GXzFfU1RBXSA9CTB4MEM2OCwNCisJW1BNSUZfU1dJTkZf
-Ml9BQ0NdID0JMHgwQzgwLA0KKwlbUE1JRl9TV0lORl8yX1dEQVRBXzMxXzBdID0JMHgwQzg0LA0K
-KwlbUE1JRl9TV0lORl8yX1JEQVRBXzMxXzBdID0JMHgwQzk0LA0KKwlbUE1JRl9TV0lORl8yX1ZM
-RF9DTFJdID0JMHgwQ0E0LA0KKwlbUE1JRl9TV0lORl8yX1NUQV0gPQkweDBDQTgsDQorCVtQTUlG
-X1NXSU5GXzNfQUNDXSA9CTB4MENDMCwNCisJW1BNSUZfU1dJTkZfM19XREFUQV8zMV8wXSA9CTB4
-MENDNCwNCisJW1BNSUZfU1dJTkZfM19SREFUQV8zMV8wXSA9CTB4MENENCwNCisJW1BNSUZfU1dJ
-TkZfM19WTERfQ0xSXSA9CTB4MENFNCwNCisJW1BNSUZfU1dJTkZfM19TVEFdID0JMHgwQ0U4LA0K
-K307DQorDQorZW51bSBzcG1pX3JlZ3Mgew0KKwlTUE1JX09QX1NUX0NUUkwsDQorCVNQTUlfR1JQ
-X0lEX0VOLA0KKwlTUE1JX09QX1NUX1NUQSwNCisJU1BNSV9NU1RfU0FNUEwsDQorCVNQTUlfTVNU
-X1JFUV9FTiwNCisJU1BNSV9SRUNfQ1RSTCwNCisJU1BNSV9SRUMwLA0KKwlTUE1JX1JFQzEsDQor
-CVNQTUlfUkVDMiwNCisJU1BNSV9SRUMzLA0KKwlTUE1JX1JFQzQsDQorCVNQTUlfTVNUX0RCRywN
-Cit9Ow0KKw0KK3N0YXRpYyBjb25zdCB1MzIgbXQ2ODczX3NwbWlfcmVnc1tdID0gew0KKwlbU1BN
-SV9PUF9TVF9DVFJMXSA9CTB4MDAwMCwNCisJW1NQTUlfR1JQX0lEX0VOXSA9CTB4MDAwNCwNCisJ
-W1NQTUlfT1BfU1RfU1RBXSA9CTB4MDAwOCwNCisJW1NQTUlfTVNUX1NBTVBMXSA9CTB4MDAwYywN
-CisJW1NQTUlfTVNUX1JFUV9FTl0gPQkweDAwMTAsDQorCVtTUE1JX1JFQ19DVFJMXSA9CTB4MDA0
-MCwNCisJW1NQTUlfUkVDMF0gPQkJMHgwMDQ0LA0KKwlbU1BNSV9SRUMxXSA9CQkweDAwNDgsDQor
-CVtTUE1JX1JFQzJdID0JCTB4MDA0YywNCisJW1NQTUlfUkVDM10gPQkJMHgwMDUwLA0KKwlbU1BN
-SV9SRUM0XSA9CQkweDAwNTQsDQorCVtTUE1JX01TVF9EQkddID0JMHgwMGZjLA0KK307DQorDQor
-c3RhdGljIHUzMiBwbWlmX3JlYWRsKHN0cnVjdCBwbWlmICphcmIsIGVudW0gcG1pZl9yZWdzIHJl
-ZykNCit7DQorCXJldHVybiByZWFkbChhcmItPmJhc2UgKyBhcmItPnJlZ3NbcmVnXSk7DQorfQ0K
-Kw0KK3N0YXRpYyB2b2lkIHBtaWZfd3JpdGVsKHN0cnVjdCBwbWlmICphcmIsIHUzMiB2YWwsIGVu
-dW0gcG1pZl9yZWdzIHJlZykNCit7DQorCXdyaXRlbCh2YWwsIGFyYi0+YmFzZSArIGFyYi0+cmVn
-c1tyZWddKTsNCit9DQorDQorc3RhdGljIHUzMiBtdGtfc3BtaV9yZWFkbChzdHJ1Y3QgcG1pZiAq
-YXJiLCBlbnVtIHNwbWlfcmVncyByZWcpDQorew0KKwlyZXR1cm4gcmVhZGwoYXJiLT5zcG1pbXN0
-X2Jhc2UgKyBhcmItPnNwbWltc3RfcmVnc1tyZWddKTsNCit9DQorDQorc3RhdGljIHZvaWQgbXRr
-X3NwbWlfd3JpdGVsKHN0cnVjdCBwbWlmICphcmIsIHUzMiB2YWwsIGVudW0gc3BtaV9yZWdzIHJl
-ZykNCit7DQorCXdyaXRlbCh2YWwsIGFyYi0+c3BtaW1zdF9iYXNlICsgYXJiLT5zcG1pbXN0X3Jl
-Z3NbcmVnXSk7DQorfQ0KKw0KK3N0YXRpYyBib29sIHBtaWZfaXNfZnNtX3ZsZGNscihzdHJ1Y3Qg
-cG1pZiAqYXJiKQ0KK3sNCisJdTMyIHJlZ19yZGF0YTsNCisNCisJcmVnX3JkYXRhID0gcG1pZl9y
-ZWFkbChhcmIsIGFyYi0+Y2hhbi5jaF9zdGEpOw0KKwlyZXR1cm4gR0VUX1NXSU5GKHJlZ19yZGF0
-YSkgPT0gU1dJTkZfV0ZWTERDTFI7DQorfQ0KKw0KK3N0YXRpYyBpbnQgcG1pZl9hcmJfY21kKHN0
-cnVjdCBzcG1pX2NvbnRyb2xsZXIgKmN0cmwsIHU4IG9wYywgdTggc2lkKQ0KK3sNCisJc3RydWN0
-IHBtaWYgKmFyYiA9IHNwbWlfY29udHJvbGxlcl9nZXRfZHJ2ZGF0YShjdHJsKTsNCisJdTMyIHJk
-YXRhOw0KKwl1OCBjbWQ7DQorCWludCByZXQ7DQorDQorCS8qIENoZWNrIHRoZSBvcGNvZGUgKi8N
-CisJaWYgKG9wYyA9PSBTUE1JX0NNRF9SRVNFVCkNCisJCWNtZCA9IDA7DQorCWVsc2UgaWYgKG9w
-YyA9PSBTUE1JX0NNRF9TTEVFUCkNCisJCWNtZCA9IDE7DQorCWVsc2UgaWYgKG9wYyA9PSBTUE1J
-X0NNRF9TSFVURE9XTikNCisJCWNtZCA9IDI7DQorCWVsc2UgaWYgKG9wYyA9PSBTUE1JX0NNRF9X
-QUtFVVApDQorCQljbWQgPSAzOw0KKwllbHNlDQorCQlyZXR1cm4gLUVJTlZBTDsNCisNCisJbXRr
-X3NwbWlfd3JpdGVsKGFyYiwgKGNtZCA8PCAweDQpIHwgc2lkLCBTUE1JX09QX1NUX0NUUkwpOw0K
-KwlyZXQgPSByZWFkbF9wb2xsX3RpbWVvdXRfYXRvbWljKGFyYi0+c3BtaW1zdF9iYXNlICsgYXJi
-LT5zcG1pbXN0X3JlZ3NbU1BNSV9PUF9TVF9TVEFdLA0KKwkJCQkJcmRhdGEsIChyZGF0YSAmIFNQ
-TUlfT1BfU1RfQlVTWSkgPT0gU1BNSV9PUF9TVF9CVVNZLA0KKwkJCQkJUE1JRl9ERUxBWV9VUywg
-UE1JRl9USU1FT1VUKTsNCisJaWYgKHJldCA8IDApDQorCQlkZXZfbm90aWNlKCZjdHJsLT5kZXYs
-ICJbJXNdOnRpbWVvdXQsIGVyciA9ICVkXHJcbiIsIHJldCk7DQorDQorCXJldHVybiByZXQ7DQor
-fQ0KKw0KK3N0YXRpYyBpbnQgcG1pZl9zcG1pX3JlYWRfY21kKHN0cnVjdCBzcG1pX2NvbnRyb2xs
-ZXIgKmN0cmwsIHU4IG9wYywgdTggc2lkLA0KKwkJCSAgICAgIHUxNiBhZGRyLCB1OCAqYnVmLCBz
-aXplX3QgbGVuKQ0KK3sNCisJc3RydWN0IHBtaWYgKmFyYiA9IHNwbWlfY29udHJvbGxlcl9nZXRf
-ZHJ2ZGF0YShjdHJsKTsNCisJc3RydWN0IGNoX3JlZyAqaW5mX3JlZyA9IE5VTEw7DQorCWludCBy
-ZXQ7DQorCXUzMiBkYXRhID0gMDsNCisJdTggYmMgPSBsZW4gLSAxOw0KKwl1bnNpZ25lZCBsb25n
-IGZsYWdzOw0KKw0KKwkvKiBDaGVjayBmb3IgYXJndW1lbnQgdmFsaWRhdGlvbi4gKi8NCisJaWYg
-KHNpZCAmIH4oMHhmKSkNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlpZiAoIWFyYikNCisJCXJl
-dHVybiAtRUlOVkFMOw0KKw0KKwlpbmZfcmVnID0gJmFyYi0+Y2hhbjsNCisJLyogQ2hlY2sgdGhl
-IG9wY29kZSAqLw0KKwlpZiAob3BjID49IDB4NjAgJiYgb3BjIDw9IDB4N2YpDQorCQlvcGMgPSBQ
-TUlGX0NNRF9SRUc7DQorCWVsc2UgaWYgKG9wYyA+PSAweDIwICYmIG9wYyA8PSAweDJmKQ0KKwkJ
-b3BjID0gUE1JRl9DTURfRVhUX1JFR19MT05HOw0KKwllbHNlIGlmIChvcGMgPj0gMHgzOCAmJiBv
-cGMgPD0gMHgzZikNCisJCW9wYyA9IFBNSUZfQ01EX0VYVF9SRUdfTE9ORzsNCisJZWxzZQ0KKwkJ
-cmV0dXJuIC1FSU5WQUw7DQorDQorCXJhd19zcGluX2xvY2tfaXJxc2F2ZSgmYXJiLT5sb2NrLCBm
-bGFncyk7DQorCS8qIFdhaXQgZm9yIFNvZnR3YXJlIEludGVyZmFjZSBGU00gc3RhdGUgdG8gYmUg
-SURMRS4gKi8NCisJcmV0ID0gcmVhZGxfcG9sbF90aW1lb3V0X2F0b21pYyhhcmItPmJhc2UgKyBh
-cmItPnJlZ3NbaW5mX3JlZy0+Y2hfc3RhXSwNCisJCQkJCWRhdGEsIEdFVF9TV0lORihkYXRhKSA9
-PSBTV0lORl9JRExFLA0KKwkJCQkJUE1JRl9ERUxBWV9VUywgUE1JRl9USU1FT1VUKTsNCisJaWYg
-KHJldCA8IDApIHsNCisJCS8qIHNldCBjaGFubmVsIHJlYWR5IGlmIHRoZSBkYXRhIGhhcyB0cmFu
-c2ZlcnJlZCAqLw0KKwkJaWYgKHBtaWZfaXNfZnNtX3ZsZGNscihhcmIpKQ0KKwkJCXBtaWZfd3Jp
-dGVsKGFyYiwgMSwgaW5mX3JlZy0+Y2hfcmR5KTsNCisJCXJhd19zcGluX3VubG9ja19pcnFyZXN0
-b3JlKCZhcmItPmxvY2ssIGZsYWdzKTsNCisJCXJldHVybiByZXQ7DQorCX0NCisNCisJLyogU2Vu
-ZCB0aGUgY29tbWFuZC4gKi8NCisJcG1pZl93cml0ZWwoYXJiLA0KKwkJICAgIChvcGMgPDwgMzAp
-IHwgKHNpZCA8PCAyNCkgfCAoYmMgPDwgMTYpIHwgYWRkciwNCisJCSAgICBpbmZfcmVnLT5jaF9z
-ZW5kKTsNCisNCisJLyogV2FpdCBmb3IgU29mdHdhcmUgSW50ZXJmYWNlIEZTTSBzdGF0ZSB0byBi
-ZSBXRlZMRENMUiwNCisJICoNCisJICogcmVhZCB0aGUgZGF0YSBhbmQgY2xlYXIgdGhlIHZhbGlk
-IGZsYWcuDQorCSAqLw0KKwlyZXQgPSByZWFkbF9wb2xsX3RpbWVvdXRfYXRvbWljKGFyYi0+YmFz
-ZSArIGFyYi0+cmVnc1tpbmZfcmVnLT5jaF9zdGFdLA0KKwkJCQkJZGF0YSwgR0VUX1NXSU5GKGRh
-dGEpID09IFNXSU5GX1dGVkxEQ0xSLA0KKwkJCQkJUE1JRl9ERUxBWV9VUywgUE1JRl9USU1FT1VU
-KTsNCisJaWYgKHJldCA8IDApIHsNCisJCXJhd19zcGluX3VubG9ja19pcnFyZXN0b3JlKCZhcmIt
-PmxvY2ssIGZsYWdzKTsNCisJCXJldHVybiByZXQ7DQorCX0NCisNCisJZGF0YSA9IHBtaWZfcmVh
-ZGwoYXJiLCBpbmZfcmVnLT5yZGF0YSk7DQorCW1lbWNweShidWYsICZkYXRhLCAoYmMgJiAzKSAr
-IDEpOw0KKwlwbWlmX3dyaXRlbChhcmIsIDEsIGluZl9yZWctPmNoX3JkeSk7DQorCXJhd19zcGlu
-X3VubG9ja19pcnFyZXN0b3JlKCZhcmItPmxvY2ssIGZsYWdzKTsNCisNCisJcmV0dXJuIDA7DQor
-fQ0KKw0KK3N0YXRpYyBpbnQgcG1pZl9zcG1pX3dyaXRlX2NtZChzdHJ1Y3Qgc3BtaV9jb250cm9s
-bGVyICpjdHJsLCB1OCBvcGMsIHU4IHNpZCwNCisJCQkgICAgICAgdTE2IGFkZHIsIGNvbnN0IHU4
-ICpidWYsIHNpemVfdCBsZW4pDQorew0KKwlzdHJ1Y3QgcG1pZiAqYXJiID0gc3BtaV9jb250cm9s
-bGVyX2dldF9kcnZkYXRhKGN0cmwpOw0KKwlzdHJ1Y3QgY2hfcmVnICppbmZfcmVnID0gTlVMTDsN
-CisJaW50IHJldDsNCisJdTMyIGRhdGEgPSAwOw0KKwl1OCBiYyA9IGxlbiAtIDE7DQorCXVuc2ln
-bmVkIGxvbmcgZmxhZ3MgPSAwOw0KKw0KKwkvKiBDaGVjayBmb3IgYXJndW1lbnQgdmFsaWRhdGlv
-bi4gKi8NCisJaWYgKHNpZCAmIH4oMHhmKSkNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlpZiAo
-IWFyYikNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlpbmZfcmVnID0gJmFyYi0+Y2hhbjsNCisN
-CisJLyogQ2hlY2sgdGhlIG9wY29kZSAqLw0KKwlpZiAob3BjID49IDB4NDAgJiYgb3BjIDw9IDB4
-NUYpDQorCQlvcGMgPSBQTUlGX0NNRF9SRUc7DQorCWVsc2UgaWYgKG9wYyA8PSAweDBGKQ0KKwkJ
-b3BjID0gUE1JRl9DTURfRVhUX1JFR19MT05HOw0KKwllbHNlIGlmIChvcGMgPj0gMHgzMCAmJiBv
-cGMgPD0gMHgzNykNCisJCW9wYyA9IFBNSUZfQ01EX0VYVF9SRUdfTE9ORzsNCisJZWxzZSBpZiAo
-b3BjID49IDB4ODApDQorCQlvcGMgPSBQTUlGX0NNRF9SRUdfMDsNCisJZWxzZQ0KKwkJcmV0dXJu
-IC1FSU5WQUw7DQorDQorCXJhd19zcGluX2xvY2tfaXJxc2F2ZSgmYXJiLT5sb2NrLCBmbGFncyk7
-DQorCS8qIFdhaXQgZm9yIFNvZnR3YXJlIEludGVyZmFjZSBGU00gc3RhdGUgdG8gYmUgSURMRS4g
-Ki8NCisJcmV0ID0gcmVhZGxfcG9sbF90aW1lb3V0X2F0b21pYyhhcmItPmJhc2UgKyBhcmItPnJl
-Z3NbaW5mX3JlZy0+Y2hfc3RhXSwNCisJCQkJCWRhdGEsIEdFVF9TV0lORihkYXRhKSA9PSBTV0lO
-Rl9JRExFLA0KKwkJCQkJUE1JRl9ERUxBWV9VUywgUE1JRl9USU1FT1VUKTsNCisJaWYgKHJldCA8
-IDApIHsNCisJCS8qIHNldCBjaGFubmVsIHJlYWR5IGlmIHRoZSBkYXRhIGhhcyB0cmFuc2ZlcnJl
-ZCAqLw0KKwkJaWYgKHBtaWZfaXNfZnNtX3ZsZGNscihhcmIpKQ0KKwkJCXBtaWZfd3JpdGVsKGFy
-YiwgMSwgaW5mX3JlZy0+Y2hfcmR5KTsNCisJCXJhd19zcGluX3VubG9ja19pcnFyZXN0b3JlKCZh
-cmItPmxvY2ssIGZsYWdzKTsNCisJCXJldHVybiByZXQ7DQorCX0NCisNCisJLyogU2V0IHRoZSB3
-cml0ZSBkYXRhLiAqLw0KKwltZW1jcHkoJmRhdGEsIGJ1ZiwgKGJjICYgMykgKyAxKTsNCisJcG1p
-Zl93cml0ZWwoYXJiLCBkYXRhLCBpbmZfcmVnLT53ZGF0YSk7DQorDQorCS8qIFNlbmQgdGhlIGNv
-bW1hbmQuICovDQorCXBtaWZfd3JpdGVsKGFyYiwNCisJCSAgICAob3BjIDw8IDMwKSB8IEJJVCgy
-OSkgfCAoc2lkIDw8IDI0KSB8IChiYyA8PCAxNikgfCBhZGRyLA0KKwkJICAgIGluZl9yZWctPmNo
-X3NlbmQpOw0KKwlyYXdfc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmYXJiLT5sb2NrLCBmbGFncyk7
-DQorDQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMgc3RydWN0IHBtaWYgbXQ2ODczX3BtaWZf
-YXJiW10gPSB7DQorCXsNCisJCS5yZWdzID0gbXQ2ODczX3JlZ3MsDQorCQkuc3BtaW1zdF9yZWdz
-ID0gbXQ2ODczX3NwbWlfcmVncywNCisJCS5zb2NfY2hhbiA9IDIsDQorCX0sDQorfTsNCisNCitz
-dGF0aWMgaW50IG10a19zcG1pX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQor
-ew0KKwlzdHJ1Y3QgcG1pZiAqYXJiOw0KKwlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCisJc3RydWN0
-IHNwbWlfY29udHJvbGxlciAqY3RybDsNCisJaW50IGVyciA9IDA7DQorDQorCWN0cmwgPSBzcG1p
-X2NvbnRyb2xsZXJfYWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCphcmIpKTsNCisJaWYgKCFjdHJs
-KQ0KKwkJcmV0dXJuIC1FTk9NRU07DQorDQorCWN0cmwtPmNtZCA9IHBtaWZfYXJiX2NtZDsNCisJ
-Y3RybC0+cmVhZF9jbWQgPSBwbWlmX3NwbWlfcmVhZF9jbWQ7DQorCWN0cmwtPndyaXRlX2NtZCA9
-IHBtaWZfc3BtaV93cml0ZV9jbWQ7DQorDQorCS8qIHJlLWFzc2lnbiBvZl9pZC0+ZGF0YSAqLw0K
-KwlzcG1pX2NvbnRyb2xsZXJfc2V0X2RydmRhdGEoY3RybCwgKHZvaWQgKilvZl9kZXZpY2VfZ2V0
-X21hdGNoX2RhdGEoJnBkZXYtPmRldikpOw0KKwlhcmIgPSBzcG1pX2NvbnRyb2xsZXJfZ2V0X2Ry
-dmRhdGEoY3RybCk7DQorDQorCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRl
-diwgSU9SRVNPVVJDRV9NRU0sICJwbWlmIik7DQorCWFyYi0+YmFzZSA9IGRldm1faW9yZW1hcF9y
-ZXNvdXJjZSgmcGRldi0+ZGV2LCByZXMpOw0KKwlpZiAoSVNfRVJSKGFyYi0+YmFzZSkpIHsNCisJ
-CWVyciA9IFBUUl9FUlIoYXJiLT5iYXNlKTsNCisJCWdvdG8gZXJyX3B1dF9jdHJsOw0KKwl9DQor
-DQorCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRldiwgSU9SRVNPVVJDRV9N
-RU0sICJzcG1pbXN0Iik7DQorCWFyYi0+c3BtaW1zdF9iYXNlID0gZGV2bV9pb3JlbWFwX3Jlc291
-cmNlKCZwZGV2LT5kZXYsIHJlcyk7DQorCWlmIChJU19FUlIoYXJiLT5zcG1pbXN0X2Jhc2UpKSB7
-DQorCQllcnIgPSBQVFJfRVJSKGFyYi0+c3BtaW1zdF9iYXNlKTsNCisJCXJldHVybiBlcnJfcHV0
-X2N0cmw7DQorCX0NCisNCisJYXJiLT5wbWlmX3N5c19jayA9IGRldm1fY2xrX2dldCgmcGRldi0+
-ZGV2LCAicG1pZl9zeXNfY2siKTsNCisJaWYgKElTX0VSUihhcmItPnBtaWZfc3lzX2NrKSkgew0K
-KwkJZGV2X2VycigmcGRldi0+ZGV2LCAiW1BNSUZdOmZhaWxlZCB0byBnZXQgYXAgY2xvY2s6ICVs
-ZFxuIiwNCisJCQlQVFJfRVJSKGFyYi0+cG1pZl9zeXNfY2spKTsNCisJCWdvdG8gZXJyX3B1dF9j
-dHJsOw0KKwl9DQorDQorCWFyYi0+cG1pZl90bXJfY2sgPSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRl
-diwgInBtaWZfdG1yX2NrIik7DQorCWlmIChJU19FUlIoYXJiLT5wbWlmX3Rtcl9jaykpIHsNCisJ
-CWRldl9lcnIoJnBkZXYtPmRldiwgIltQTUlGXTpmYWlsZWQgdG8gZ2V0IHRtciBjbG9jazogJWxk
-XG4iLA0KKwkJCVBUUl9FUlIoYXJiLT5wbWlmX3Rtcl9jaykpOw0KKwkJZ290byBlcnJfcHV0X2N0
-cmw7DQorCX0NCisNCisJYXJiLT5zcG1pbXN0X2Nsa19tdXggPSBkZXZtX2Nsa19nZXQoJnBkZXYt
-PmRldiwgInNwbWltc3RfY2xrX211eCIpOw0KKwlpZiAoSVNfRVJSKGFyYi0+c3BtaW1zdF9jbGtf
-bXV4KSkgew0KKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiW1NQTUlNU1RdOmZhaWxlZCB0byBnZXQg
-Y2xvY2s6ICVsZFxuIiwNCisJCQlQVFJfRVJSKGFyYi0+c3BtaW1zdF9jbGtfbXV4KSk7DQorCQln
-b3RvIGVycl9wdXRfY3RybDsNCisJfQ0KKw0KKwllcnIgPSBjbGtfcHJlcGFyZV9lbmFibGUoYXJi
-LT5zcG1pbXN0X2Nsa19tdXgpOw0KKwlpZiAoZXJyKSB7DQorCQlkZXZfZXJyKCZwZGV2LT5kZXYs
-ICJbUE1JRl06ZmFpbGVkIHRvIGVuYWJsZSBzcG1pIG1hc3RlciBjbGsuXG4iKTsNCisJCWdvdG8g
-ZXJyX3B1dF9jdHJsOw0KKwl9DQorDQorCWFyYi0+Y2hhbi5jaF9zdGEgPSBQTUlGX1NXSU5GXzBf
-U1RBICsgKFBNSUZfQ0hBTl9PRkZTRVQgKiBhcmItPnNvY19jaGFuKTsNCisJYXJiLT5jaGFuLndk
-YXRhID0gUE1JRl9TV0lORl8wX1dEQVRBXzMxXzAgKyAoUE1JRl9DSEFOX09GRlNFVCAqIGFyYi0+
-c29jX2NoYW4pOw0KKwlhcmItPmNoYW4ucmRhdGEgPSBQTUlGX1NXSU5GXzBfUkRBVEFfMzFfMCAr
-IChQTUlGX0NIQU5fT0ZGU0VUICogYXJiLT5zb2NfY2hhbik7DQorCWFyYi0+Y2hhbi5jaF9zZW5k
-ID0gUE1JRl9TV0lORl8wX0FDQyArIChQTUlGX0NIQU5fT0ZGU0VUICogYXJiLT5zb2NfY2hhbik7
-DQorCWFyYi0+Y2hhbi5jaF9yZHkgPSBQTUlGX1NXSU5GXzBfVkxEX0NMUiArIChQTUlGX0NIQU5f
-T0ZGU0VUICogYXJiLT5zb2NfY2hhbik7DQorDQorCXJhd19zcGluX2xvY2tfaW5pdCgmYXJiLT5s
-b2NrKTsNCisNCisJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgY3RybCk7DQorDQorCWVyciA9
-IHNwbWlfY29udHJvbGxlcl9hZGQoY3RybCk7DQorCWlmIChlcnIpDQorCQlnb3RvIGVycl9kb21h
-aW5fcmVtb3ZlOw0KKw0KKwlyZXR1cm4gMDsNCisNCitlcnJfZG9tYWluX3JlbW92ZToNCisJY2xr
-X2Rpc2FibGVfdW5wcmVwYXJlKGFyYi0+c3BtaW1zdF9jbGtfbXV4KTsNCitlcnJfcHV0X2N0cmw6
-DQorCXNwbWlfY29udHJvbGxlcl9wdXQoY3RybCk7DQorCXJldHVybiBlcnI7DQorfQ0KKw0KK3N0
-YXRpYyBpbnQgbXRrX3NwbWlfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQor
-ew0KKwlzdHJ1Y3Qgc3BtaV9jb250cm9sbGVyICpjdHJsID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEo
-cGRldik7DQorDQorCXNwbWlfY29udHJvbGxlcl9yZW1vdmUoY3RybCk7DQorCXNwbWlfY29udHJv
-bGxlcl9wdXQoY3RybCk7DQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMgY29uc3Qgc3RydWN0
-IG9mX2RldmljZV9pZCBtdGtfc3BtaV9tYXRjaF90YWJsZVtdID0gew0KKwl7DQorCQkuY29tcGF0
-aWJsZSA9ICJtZWRpYXRlayxtdDY4NzMtc3BtaSIsDQorCQkuZGF0YSA9ICZtdDY4NzNfcG1pZl9h
-cmIsDQorCX0sIHsNCisJCS8qIHNlbnRpbmVsICovDQorCX0sDQorfTsNCitNT0RVTEVfREVWSUNF
-X1RBQkxFKG9mLCBtdGtfc3BtaV9tYXRjaF90YWJsZSk7DQorDQorc3RhdGljIHN0cnVjdCBwbGF0
-Zm9ybV9kcml2ZXIgbXRrX3NwbWlfZHJpdmVyID0gew0KKwkuZHJpdmVyCQk9IHsNCisJCS5uYW1l
-CT0gInNwbWktbXRrIiwNCisJCS5vZl9tYXRjaF90YWJsZSA9IG9mX21hdGNoX3B0cihtdGtfc3Bt
-aV9tYXRjaF90YWJsZSksDQorCX0sDQorCS5wcm9iZQkJPSBtdGtfc3BtaV9wcm9iZSwNCisJLnJl
-bW92ZQkJPSBtdGtfc3BtaV9yZW1vdmUsDQorfTsNCittb2R1bGVfcGxhdGZvcm1fZHJpdmVyKG10
-a19zcG1pX2RyaXZlcik7DQorDQorTU9EVUxFX0FVVEhPUigiSHNpbi1Ic2l1bmcgV2FuZyA8aHNp
-bi1oc2l1bmcud2FuZ0BtZWRpYXRlay5jb20+Iik7DQorTU9EVUxFX0RFU0NSSVBUSU9OKCJNZWRp
-YVRlayBTUE1JIERyaXZlciIpOw0KK01PRFVMRV9MSUNFTlNFKCJHUEwiKTsNCi0tIA0KMi42LjQN
-Cg==
-
+On Fri, Aug 21, 2020 at 5:24 PM Zhaoyang Huang <huangzhaoyang@gmail.com> wrote:
+>
+> Some system(like android) will turbo read during startup via expanding the
+> readahead window and then set it back to normal(128kb as usual). However, some
+> files in the system process context will keep to be opened since it is opened
+> up and has no chance to sync with the updated value as it is almost impossible
+> to change the files attached to the inode(processes are unaware of these things)
+>
+> We sync ra->ra_pages with bdi->ra_pages when read. Furthermore, in consideration
+> of the scenario of eio and fadvise(...,POSIX_FADV_SEQUENTIAL).We introduce a
+> seq_read_fact to record the factors of above two cases.
+>
+> Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> ---
+> change from v2:
+> fix checkpatch error
+> ---
+> ---
+>  include/linux/fs.h | 17 +++++++++++++++++
+>  mm/fadvise.c       |  4 +++-
+>  mm/filemap.c       | 19 +++++++++++++------
+>  mm/readahead.c     | 37 +++++++++++++++++++++++++++++++++----
+>  4 files changed, 66 insertions(+), 11 deletions(-)
+>
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index dd28e76..e3cdc5a 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -66,6 +66,7 @@
+>  struct fscrypt_operations;
+>  struct fs_context;
+>  struct fs_parameter_description;
+> +struct file_ra_state;
+>
+>  extern void __init inode_init(void);
+>  extern void __init inode_init_early(void);
+> @@ -81,6 +82,7 @@
+>  extern int sysctl_protected_hardlinks;
+>  extern int sysctl_protected_fifos;
+>  extern int sysctl_protected_regular;
+> +extern void ra_pages_sync(struct file_ra_state *ra, struct address_space *mapping);
+>
+>  typedef __kernel_rwf_t rwf_t;
+>
+> @@ -900,11 +902,26 @@ struct file_ra_state {
+>                                            there are only # of pages ahead */
+>
+>         unsigned int ra_pages;          /* Maximum readahead window */
+> +       int seq_read_fact;              /* turbo factor of sequential read */
+>         unsigned int mmap_miss;         /* Cache miss stat for mmap accesses */
+>         loff_t prev_pos;                /* Cache last read() position */
+>  };
+>
+>  /*
+> + * ra->seq_read_fact == -1 indicates eio happens
+> + */
+> +#define RA_PAGES(ra)                                   \
+> +({                                             \
+> +       unsigned int ra_pages;                  \
+> +       if (ra->seq_read_fact != -1)            \
+> +               ra_pages = ra->ra_pages * ra->seq_read_fact;    \
+> +       else                                    \
+> +               ra_pages = ra->ra_pages;        \
+> +       ra_pages;                               \
+> +})
+> +
+> +
+> +/*
+>   * Check if @index falls in the readahead windows.
+>   */
+>  static inline int ra_has_index(struct file_ra_state *ra, pgoff_t index)
+> diff --git a/mm/fadvise.c b/mm/fadvise.c
+> index 467bcd0..b06e3ca 100644
+> --- a/mm/fadvise.c
+> +++ b/mm/fadvise.c
+> @@ -78,6 +78,7 @@ static int generic_fadvise(struct file *file, loff_t offset, loff_t len,
+>         switch (advice) {
+>         case POSIX_FADV_NORMAL:
+>                 file->f_ra.ra_pages = bdi->ra_pages;
+> +               file->f_ra.seq_read_fact = 1;
+>                 spin_lock(&file->f_lock);
+>                 file->f_mode &= ~FMODE_RANDOM;
+>                 spin_unlock(&file->f_lock);
+> @@ -88,7 +89,8 @@ static int generic_fadvise(struct file *file, loff_t offset, loff_t len,
+>                 spin_unlock(&file->f_lock);
+>                 break;
+>         case POSIX_FADV_SEQUENTIAL:
+> -               file->f_ra.ra_pages = bdi->ra_pages * 2;
+> +               file->f_ra.ra_pages = bdi->ra_pages;
+> +               file->f_ra.seq_read_fact = 2;
+>                 spin_lock(&file->f_lock);
+>                 file->f_mode &= ~FMODE_RANDOM;
+>                 spin_unlock(&file->f_lock);
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index d78f577..425d2a2 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -2048,6 +2048,7 @@ unsigned find_get_entries_tag(struct address_space *mapping, pgoff_t start,
+>  static void shrink_readahead_size_eio(struct file *filp,
+>                                         struct file_ra_state *ra)
+>  {
+> +       ra->seq_read_fact = -1;
+>         ra->ra_pages /= 4;
+>  }
+>
+> @@ -2473,13 +2474,16 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
+>         /* If we don't want any read-ahead, don't bother */
+>         if (vmf->vma->vm_flags & VM_RAND_READ)
+>                 return fpin;
+> -       if (!ra->ra_pages)
+> +       if (!RA_PAGES(ra))
+>                 return fpin;
+>
+> +       /* sync ra->ra_pages with bdi->ra_pages*/
+> +       ra_pages_sync(ra, mapping);
+> +
+>         if (vmf->vma->vm_flags & VM_SEQ_READ) {
+>                 fpin = maybe_unlock_mmap_for_io(vmf, fpin);
+>                 page_cache_sync_readahead(mapping, ra, file, offset,
+> -                                         ra->ra_pages);
+> +                                         RA_PAGES(ra));
+>                 return fpin;
+>         }
+>
+> @@ -2498,9 +2502,9 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
+>          * mmap read-around
+>          */
+>         fpin = maybe_unlock_mmap_for_io(vmf, fpin);
+> -       ra->start = max_t(long, 0, offset - ra->ra_pages / 2);
+> -       ra->size = ra->ra_pages;
+> -       ra->async_size = ra->ra_pages / 4;
+> +       ra->start = max_t(long, 0, offset - RA_PAGES(ra) / 2);
+> +       ra->size = RA_PAGES(ra);
+> +       ra->async_size = RA_PAGES(ra) / 4;
+>         ra_submit(ra, mapping, file);
+>         return fpin;
+>  }
+> @@ -2519,6 +2523,9 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
+>         struct file *fpin = NULL;
+>         pgoff_t offset = vmf->pgoff;
+>
+> +       /* sync ra->ra_pages with bdi->ra_pages*/
+> +       ra_pages_sync(ra, mapping);
+> +
+>         /* If we don't want any read-ahead, don't bother */
+>         if (vmf->vma->vm_flags & VM_RAND_READ)
+>                 return fpin;
+> @@ -2527,7 +2534,7 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
+>         if (PageReadahead(page)) {
+>                 fpin = maybe_unlock_mmap_for_io(vmf, fpin);
+>                 page_cache_async_readahead(mapping, ra, file,
+> -                                          page, offset, ra->ra_pages);
+> +                                          page, offset, RA_PAGES(ra));
+>         }
+>         return fpin;
+>  }
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index a459365..50fdf1d 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -32,10 +32,26 @@
+>  file_ra_state_init(struct file_ra_state *ra, struct address_space *mapping)
+>  {
+>         ra->ra_pages = inode_to_bdi(mapping->host)->ra_pages;
+> +       ra->seq_read_fact = 1;
+>         ra->prev_pos = -1;
+>  }
+>  EXPORT_SYMBOL_GPL(file_ra_state_init);
+>
+> +/*sync ra->ra_pages with bdi->ra_pages*/
+> +void ra_pages_sync(struct file_ra_state *ra,
+> +               struct address_space *mapping)
+> +{
+> +       unsigned int ra_pages = ra->ra_pages;
+> +
+> +       if (ra->seq_read_fact == -1)
+> +               return;
+> +
+> +       ra_pages = inode_to_bdi(mapping->host)->ra_pages * ra->seq_read_fact;
+> +       if (RA_PAGES(ra) != ra_pages)
+> +               ra->ra_pages = inode_to_bdi(mapping->host)->ra_pages;
+> +}
+> +EXPORT_SYMBOL_GPL(ra_pages_sync);
+> +
+>  /*
+>   * see if a page needs releasing upon read_cache_pages() failure
+>   * - the caller of read_cache_pages() may have set PG_private or PG_fscache
+> @@ -228,11 +244,14 @@ int force_page_cache_readahead(struct address_space *mapping, struct file *filp,
+>         if (unlikely(!mapping->a_ops->readpage && !mapping->a_ops->readpages))
+>                 return -EINVAL;
+>
+> +       /* sync ra->ra_pages with bdi->ra_pages*/
+> +       ra_pages_sync(ra, mapping);
+> +
+>         /*
+>          * If the request exceeds the readahead window, allow the read to
+>          * be up to the optimal hardware IO size
+>          */
+> -       max_pages = max_t(unsigned long, bdi->io_pages, ra->ra_pages);
+> +       max_pages = max_t(unsigned long, bdi->io_pages, RA_PAGES(ra));
+>         nr_to_read = min(nr_to_read, max_pages);
+>         while (nr_to_read) {
+>                 unsigned long this_chunk = (2 * 1024 * 1024) / PAGE_SIZE;
+> @@ -384,10 +403,14 @@ static int try_context_readahead(struct address_space *mapping,
+>                    unsigned long req_size)
+>  {
+>         struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
+> -       unsigned long max_pages = ra->ra_pages;
+> +       unsigned long max_pages;
+>         unsigned long add_pages;
+>         pgoff_t prev_offset;
+>
+> +       /* sync ra->ra_pages with bdi->ra_pages*/
+> +       ra_pages_sync(ra, mapping);
+> +
+> +       max_pages = RA_PAGES(ra);
+>         /*
+>          * If the request exceeds the readahead window, allow the read to
+>          * be up to the optimal hardware IO size
+> @@ -510,9 +533,12 @@ void page_cache_sync_readahead(struct address_space *mapping,
+>                                pgoff_t offset, unsigned long req_size)
+>  {
+>         /* no read-ahead */
+> -       if (!ra->ra_pages)
+> +       if (!RA_PAGES(ra))
+>                 return;
+>
+> +       /* sync ra->ra_pages with bdi->ra_pages*/
+> +       ra_pages_sync(ra, mapping);
+> +
+>         if (blk_cgroup_congested())
+>                 return;
+>
+> @@ -549,9 +575,12 @@ void page_cache_sync_readahead(struct address_space *mapping,
+>                            unsigned long req_size)
+>  {
+>         /* no read-ahead */
+> -       if (!ra->ra_pages)
+> +       if (!RA_PAGES(ra))
+>                 return;
+>
+> +       /* sync ra->ra_pages with bdi->ra_pages*/
+> +       ra_pages_sync(ra, mapping);
+> +
+>         /*
+>          * Same bit is used for PG_readahead and PG_reclaim.
+>          */
+> --
+> 1.9.1
+>
+This patch has been verified on an android system and reduces 15% of
+UNITERRUPTIBLE_SLEEP_BLOCKIO which was used to be caused by wrong
+ra->ra_pages.
