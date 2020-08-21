@@ -2,115 +2,228 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C640FC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A167AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2DB02054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A1420738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:53:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="n8NzQ8Xe";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="e7T/equ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgHUUu2 convert rfc822-to-8bit (ORCPT
+        id S1726711AbgHUUxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 16:50:28 -0400
-Received: from mail.fireflyinternet.com ([77.68.26.236]:56961 "EHLO
-        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725767AbgHUUu0 (ORCPT
+        Fri, 21 Aug 2020 16:53:17 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:64076 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725767AbgHUUxP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 16:50:26 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 22203271-1500050 
-        for multiple; Fri, 21 Aug 2020 21:50:19 +0100
-Content-Type: text/plain; charset="utf-8"
+        Fri, 21 Aug 2020 16:53:15 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LKjniC032100;
+        Fri, 21 Aug 2020 13:53:13 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=h3sGQ4baB5CFEZqQ1skGN17fVmBRgSy3IrOHQ/2KEB4=;
+ b=n8NzQ8XeBQV3W4eIGeFNhZ9UxATT7bVBaU9VUEPAhxeGLhRJmhQhk76EidrkCq3iwe+r
+ UJtiga6u3XqYkrCw42vB6WbB1B1gSs/1zswAazkUy6/8td03tv0KKswoExCzNGTNO0ad
+ bbLuESapJyJoJAuzEHZPSZImoeEDf9sjU2U= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 3304m3f6aq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 21 Aug 2020 13:53:13 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 21 Aug 2020 13:53:12 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q1ry1Ahsb1d2WTrSZX6czNHVDQvvQJ+RXj0CfkrKkeml/f18FRbcqtLfI49OBai5liCTAsyFx9vDwtP7RMojRbFVu4+n82gLyQT1bcf1tM+6BZmXg11SXAlBhVTikcyvqipHEw4Wyu1pVxh0YwHjSsVZJthxloz0efKxP0rdGKBpmS7ulhUBsiHl8XbRb9+33/9sQIuev7gGli5O2bDP6GlYBPs4BHEfdGPYS3Z3oI9KjmCBbrHvDOEypqS9m1G1HdfmfjdE8KpLKZ6uco1UQMEdXHsiUOfx+bhgG4yCDmaPYq++dYJcz5aSECGR1Yw5GsEdlXVb2dlVYxkGbmD/Jg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h3sGQ4baB5CFEZqQ1skGN17fVmBRgSy3IrOHQ/2KEB4=;
+ b=UjOwuCMH4qK/jZ6xmlAGAjLacLyk2ThVn0wTCYLeyYGccEVngmafErWGjYlcQZ8C3KFaSX4x5De1jofoixAmijAFkObtTVEI//DJudVh+6uBr+4dl6rTTvdL8Iu4REj55+cqJGBBfmuRfBS5C2dPODPOF+wnTGyvVSbYvdNBMBnyW+JVUzByONvXDQq07XADZaoaKET54uA+4/0ldykumEnP2Md8FZ1cQ4Hw3Ts3xetuwq6LNPVrCTMF8e6+P4/O0OyiVFT6aXX1hfojuZMNFvPOmlbb4/dxTUVMcnibjA5JR6QCEa09196P9SFJ8cdsDW9luxk+KYuoUZ/BUWbBzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h3sGQ4baB5CFEZqQ1skGN17fVmBRgSy3IrOHQ/2KEB4=;
+ b=e7T/equ8Csbn57yC131+VgVucz249RSEbXWEXrWDJqiVjzlFX7QPvjOd9WHVWxHF3kHPvs3CxPrdGr/Fj3qXlE2dm8Xlvk2zsyKLOVoH6GtSlgPjznIMSv3hohylHmtUFUMyO2KYKccCIJyMHVExPDUM12WtV5Lft6WeExJukJU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB2408.namprd15.prod.outlook.com (2603:10b6:a02:85::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Fri, 21 Aug
+ 2020 20:53:10 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3305.026; Fri, 21 Aug 2020
+ 20:53:10 +0000
+Subject: Re: [PATCH v2 bpf 1/2] bpf: verifier: check for packet data access
+ based on target prog
+To:     Udip Pant <udippant@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200821002804.546826-1-udippant@fb.com>
+ <9e829756-e943-e9a8-82f2-1a27a55afeec@fb.com>
+ <d9df934c-4b64-1e28-cc7e-fb03939d687d@fb.com>
+ <F6EEEFF4-F749-4D51-9366-1B1845EF0526@fb.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <732c9be0-cccd-c180-1c18-e7cfce24ac88@fb.com>
+Date:   Fri, 21 Aug 2020 13:53:05 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
+In-Reply-To: <F6EEEFF4-F749-4D51-9366-1B1845EF0526@fb.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MN2PR20CA0037.namprd20.prod.outlook.com
+ (2603:10b6:208:235::6) To BYAPR15MB4088.namprd15.prod.outlook.com
+ (2603:10b6:a02:c3::18)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200821133548.be58a3b0881b41a32759fa04@linux-foundation.org>
-References: <20200821123746.16904-1-joro@8bytes.org> <20200821133548.be58a3b0881b41a32759fa04@linux-foundation.org>
-Subject: Re: [PATCH v2] mm: Track page table modifications in __apply_to_page_range()
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, Pavel Machek <pavel@ucw.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Airlie <airlied@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Vrabel <david.vrabel@citrix.com>,
-        Joerg Roedel <jroedel@suse.de>, stable@vger.kernel.org
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Joerg Roedel <joro@8bytes.org>
-Date:   Fri, 21 Aug 2020 21:50:18 +0100
-Message-ID: <159804301810.32652.14249776487575415877@build.alporthouse.com>
-User-Agent: alot/0.9
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by MN2PR20CA0037.namprd20.prod.outlook.com (2603:10b6:208:235::6) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Fri, 21 Aug 2020 20:53:08 +0000
+X-Originating-IP: [2620:10d:c091:480::1:8457]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 802e99f0-935f-4fab-894f-08d8461436a0
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2408:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB24089BE21296A819EBA6AC0DD35B0@BYAPR15MB2408.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: n4t3YsIx/P6uNqvMb6f4I1rdF1cxOuTFRFt8UTvnNI8plCBqoVKtdULczcrfMeJWtV4zE5A/k4C/QR5oRbOK2D8ogTN8pdYJOMIqVOIz//IlAsu1SazdgVYppyRxh44ooxJY8OTxpB2WxquP/Rs33anH2TP+A5+i0Ad2kOQ5tdzzIWMzIZjFCDfRayJzYCJc4WaNspL8xExb1TAepRKIbPBQ27X10EQwPSd2ZP3TTlg2ht2eqvCmVQLdg3ROi5GcZNChRWzD6nxPJDCsthFSwisYrmTBTF5WEghSBriGO5ki89y2rl/PDuay9qMEbBPjQ4xgtA49fdmj6RXZANS5IYofY3WxYe35fqTgAKRP76AF816Q3Twl6hGpUVEEpsts4dF3sSYWtxi4luImFxTVueQqjwErcSty25S/Y55VKZg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(396003)(366004)(346002)(136003)(39860400002)(186003)(316002)(16576012)(31696002)(2906002)(478600001)(53546011)(8936002)(54906003)(110136005)(6666004)(8676002)(52116002)(2616005)(4326008)(31686004)(956004)(86362001)(6486002)(36756003)(110011004)(5660300002)(66946007)(66556008)(83380400001)(66476007)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: sI/Xr3vpImmNbPSwjc50EF+SZyMFmBVBVrN9V6Mlr6YWQxgBkAt4+vKZvWO8nFTRdkciX2z2Chc/RSdJ58YmpnH9DjBm6WmBUO2002fzDi+mXF0x9bpejkUvQ7URfzA2o+CkyuzddxYAnyV1ZIIoK1POLtFmy6y/sdFSx4Iz5iyUoRBZeZhNmgji8bEDi6XS/fpQJmyd2q9n3VeeV0kbSZihUIeaRaRo6Mh2mZF/tCvUVQe/DP9TsZVr8horbd0i1jmgvPLMhfAF7g5ZumC3cUTW4P7ityARwZfDJmx5oXYqQYLh++VvSExLWTq2D6kOJekiTUzYv6PPtKun45fPCzJNdFIG/70nntQTSHdojE2kwPU3m1PtoQbs7k5BVERwhgVUY2t2ENFyvTJ3mzLEEdV8ginYrT8Nj6AEw9cUaeqmKP5CcKRmnD3/M8LoUuVDB4v68AQJOLtVsVbG5jYCGTdUDjYIIMnu4AX3c+ookNNuzrvUBHNrAV2uQjMJ+lQLobRxoLD//IlYu7xExMMna7AXG6loHRhOXBu9hTvvYxf2p/p8sIWM8cBZh+jLV8Oa89y2S3qpHlxrPGCRg9Tl/9MJ21RABdo3sWY9R6rw1JtOIdndieMdYGVNab0ZfqWEqY3f4uhU0vNNSohWQO49MmLIHUS7VDCPhGkrsCnfVBKaBGDIHjuD0VoMbnR4oHeB
+X-MS-Exchange-CrossTenant-Network-Message-Id: 802e99f0-935f-4fab-894f-08d8461436a0
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 20:53:10.4774
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: voOdLEYRnWadcevgdbqZ926zwkL/wOpoEKalPkkU8bkUkOr26FK9jAxs51ICC6/Y
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2408
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_10:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
+ impostorscore=0 mlxscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ phishscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210194
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Andrew Morton (2020-08-21 21:35:48)
-> On Fri, 21 Aug 2020 14:37:46 +0200 Joerg Roedel <joro@8bytes.org> wrote:
+
+
+On 8/21/20 12:07 PM, Udip Pant wrote:
 > 
-> > The __apply_to_page_range() function is also used to change and/or
-> > allocate page-table pages in the vmalloc area of the address space.
-> > Make sure these changes get synchronized to other page-tables in the
-> > system by calling arch_sync_kernel_mappings() when necessary.
 > 
-> There's no description here of the user-visible effects of the bug. 
-> Please always provide this, especially when proposing a -stable
-> backport.  Take pity upon all the downstream kernel maintainers who are
-> staring at this wondering whether they should risk adding it to their
-> kernels.
+> ﻿> On 8/20/20, 11:17 PM, "Yonghong Song" <yhs@fb.com> wrote:
+>>
+>>
+>>
+>> On 8/20/20 11:13 PM, Yonghong Song wrote:
+>>>
+>>>
+>>> On 8/20/20 5:28 PM, Udip Pant wrote:
+>>>> While using dynamic program extension (of type BPF_PROG_TYPE_EXT), we
+>>>> need to check the program type of the target program to grant the read /
+>>>> write access to the packet data.
+>>>>
+>>>> The BPF_PROG_TYPE_EXT type can be used to extend types such as XDP, SKB
+>>>> and others. Since the BPF_PROG_TYPE_EXT program type on itself is just a
+>>>> placeholder for those, we need this extended check for those target
+>>>> programs to actually work while using this option.
+>>>>
+>>>> Tested this with a freplace xdp program. Without this patch, the
+>>>> verifier fails with error 'cannot write into packet'.
+>>>>
+>>>> Signed-off-by: Udip Pant <udippant@fb.com>
+>>>> ---
+>>>>    kernel/bpf/verifier.c | 6 +++++-
+>>>>    1 file changed, 5 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+>>>> index ef938f17b944..4d7604430994 100644
+>>>> --- a/kernel/bpf/verifier.c
+>>>> +++ b/kernel/bpf/verifier.c
+>>>> @@ -2629,7 +2629,11 @@ static bool may_access_direct_pkt_data(struct
+>>>> bpf_verifier_env *env,
+>>>>                           const struct bpf_call_arg_meta *meta,
+>>>>                           enum bpf_access_type t)
+>>>>    {
+>>>> -    switch (env->prog->type) {
+>>>> +    struct bpf_prog *prog = env->prog;
+>>>> +    enum bpf_prog_type prog_type = prog->aux->linked_prog ?
+>>>> +          prog->aux->linked_prog->type : prog->type;
+>>>
+>>> I checked the verifier code. There are several places where
+>>> prog->type is checked and EXT program type will behave differently
+>>> from the linked program.
+>>>
+>>> Maybe abstract the the above logic to one static function like
+>>>
+>>> static enum bpf_prog_type resolved_prog_type(struct bpf_prog *prog)
+>>> {
+>>>       return prog->aux->linked_prog ? prog->aux->linked_prog->type
+>>>                         : prog->type;
+>>> }
+>>>
+> 
+> Sure.
+> 
+>>> This function can then be used in different places to give the resolved
+>>> prog type.
+>>>
+>>> Besides here checking pkt access permission,
+>>> another possible places to consider is return value
+>>> in function check_return_code(). Currently,
+>>> for EXT program, the result value can be anything. This may need to
+>>> be enforced. Could you take a look? It could be others as well.
+>>> You can take a look at verifier.c by searching "prog->type".
+>>
+> 
+> Yeah there are few other places in the verifier where it decides without resolving for the 'extended' type. But I am not too sure if it makes sense to extend this logic as part of this commit. For example, as you mentioned, in the check_return_code() it explicitly ignores the return type for the EXT prog (kernel/bpf/verifier.c#L7446).  Likewise, I noticed similar issue inside the check_ld_abs(), where it checks for may_access_skb(env->prog->type).
+> 
+> I'm happy to extend this logic there as well if deemed appropriate.
 
-The impact appears limited to x86-32, where apply_to_page_range may miss
-updating the PMD. That leads to explosions in drivers like
+Thanks. I would like to see the verifier parity between original program 
+and replace program. That is, if the original program and the replace
+program are the same, they should be both either accepted or rejected
+by verifier. Yes, this may imply more changes e.g., check_return_code()
+or check_ld_abs() than your original patch.
+Alexei or Daniel, what is your opinion on this?
 
-[   24.227844] BUG: unable to handle page fault for address: fe036000
-[   24.228076] #PF: supervisor write access in kernel mode
-[   24.228294] #PF: error_code(0x0002) - not-present page
-[   24.228494] *pde = 00000000
-[   24.228640] Oops: 0002 [#1] SMP
-[   24.228788] CPU: 3 PID: 1300 Comm: gem_concurrent_ Not tainted 5.9.0-rc1+ #16
-[   24.228957] Hardware name:  /NUC6i3SYB, BIOS SYSKLi35.86A.0024.2015.1027.2142 10/27/2015
-[   24.229297] EIP: __execlists_context_alloc+0x132/0x2d0 [i915]
-[   24.229462] Code: 31 d2 89 f0 e8 2f 55 02 00 89 45 e8 3d 00 f0 ff ff 0f 87 11 01 00 00 8b 4d e8 03 4b 30 b8 5a 5a 5a 5a ba 01 00 00 00 8d 79 04 <c7> 01 5a 5a 5a 5a c7 81 fc 0f 00 00 5a 5a 5a 5a 83 e7 fc 29 f9 81
-[   24.229759] EAX: 5a5a5a5a EBX: f60ca000 ECX: fe036000 EDX: 00000001
-[   24.229915] ESI: f43b7340 EDI: fe036004 EBP: f6389cb8 ESP: f6389c9c
-[   24.230072] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010286
-[   24.230229] CR0: 80050033 CR2: fe036000 CR3: 2d361000 CR4: 001506d0
-[   24.230385] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-[   24.230539] DR6: fffe0ff0 DR7: 00000400
-[   24.230675] Call Trace:
-[   24.230957]  execlists_context_alloc+0x10/0x20 [i915]
-[   24.231266]  intel_context_alloc_state+0x3f/0x70 [i915]
-[   24.231547]  __intel_context_do_pin+0x117/0x170 [i915]
-[   24.231850]  i915_gem_do_execbuffer+0xcc7/0x2500 [i915]
-[   24.232024]  ? __kmalloc_track_caller+0x54/0x230
-[   24.232181]  ? ktime_get+0x3e/0x120
-[   24.232333]  ? dma_fence_signal+0x34/0x50
-[   24.232617]  i915_gem_execbuffer2_ioctl+0xcd/0x1f0 [i915]
-[   24.232912]  ? i915_gem_execbuffer_ioctl+0x2e0/0x2e0 [i915]
-[   24.233084]  drm_ioctl_kernel+0x8f/0xd0
-[   24.233236]  drm_ioctl+0x223/0x3d0
-[   24.233505]  ? i915_gem_execbuffer_ioctl+0x2e0/0x2e0 [i915]
-[   24.233684]  ? pick_next_task_fair+0x1b5/0x3d0
-[   24.233873]  ? __switch_to_asm+0x36/0x50
-[   24.234021]  ? drm_ioctl_kernel+0xd0/0xd0
-[   24.234167]  __ia32_sys_ioctl+0x1ab/0x760
-[   24.234313]  ? exit_to_user_mode_prepare+0xe5/0x110
-[   24.234453]  ? syscall_exit_to_user_mode+0x23/0x130
-[   24.234601]  __do_fast_syscall_32+0x3f/0x70
-[   24.234744]  do_fast_syscall_32+0x29/0x60
-[   24.234885]  do_SYSENTER_32+0x15/0x20
-[   24.235021]  entry_SYSENTER_32+0x9f/0xf2
-[   24.235157] EIP: 0xb7f28559
-[   24.235288] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
-[   24.235576] EAX: ffffffda EBX: 00000005 ECX: c0406469 EDX: bf95556c
-[   24.235722] ESI: b7e68000 EDI: c0406469 EBP: 00000005 ESP: bf9554d8
-[   24.235869] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000296
-[   24.236018] Modules linked in: i915 x86_pkg_temp_thermal intel_powerclamp crc32_pclmul crc32c_intel intel_cstate intel_uncore intel_gtt drm_kms_helper intel_pch_thermal video button autofs4 i2c_i801 i2c_smbus fan
-[   24.236336] CR2: 00000000fe036000
-
-It looks like kasan, xen and i915 are vulnerable.
--Chris
+> 
+>> Note that if the EXT program tries to replace a global subprogram,
+>> then return value cannot be enforced, just as what Patch #2 example shows.
+>>
+>>>
+>>>> +
+>>>> +    switch (prog_type) {
+>>>>        /* Program types only with direct read access go here! */
+>>>>        case BPF_PROG_TYPE_LWT_IN:
+>>>>        case BPF_PROG_TYPE_LWT_OUT:
+>>>>
+> 
