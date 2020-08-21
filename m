@@ -2,109 +2,99 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A582C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C26C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 503E320658
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACCCD20702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:36:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AYjYxCoZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgHURfo (ORCPT
+        id S1727950AbgHURgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:35:44 -0400
-Received: from mga14.intel.com ([192.55.52.115]:20504 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbgHURfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 13:35:43 -0400
-IronPort-SDR: Kkic0r1b5R9DXC2Mk/tZEdyOGlR+SXYbjWoW4O6+OuX0bpFORn37NHlm/z/3r/VwGMqPniiIPC
- MCbDrTttlWCQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="154864475"
-X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
-   d="scan'208";a="154864475"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 10:35:43 -0700
-IronPort-SDR: klasee6OdksvB3oQshH7S42SYdgGJyZOZcnid5EhxrrFgpCjxmu6F3r4chrX0urt4OvFm5yp7Y
- +TFHumC6YiSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
-   d="scan'208";a="498598235"
-Received: from jjakacki-mobl.ger.corp.intel.com (HELO localhost) ([10.252.52.112])
-  by fmsmga005.fm.intel.com with ESMTP; 21 Aug 2020 10:35:37 -0700
-Date:   Fri, 21 Aug 2020 20:35:36 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v36 03/24] x86/mm: x86/sgx: Signal SIGSEGV with PF_SGX
-Message-ID: <20200821173536.GA3559@linux.intel.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-4-jarkko.sakkinen@linux.intel.com>
- <20200820153114.GA17271@zn.tnic>
+        Fri, 21 Aug 2020 13:36:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727013AbgHURgB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 13:36:01 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89FBAC061573;
+        Fri, 21 Aug 2020 10:36:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=e63rRxO9kfazS7TPx03ZgoZJYy1y5jMIfjZp9EP1Dsc=; b=AYjYxCoZWk7C4vEnleT5ktRrsX
+        GzHvPFZRRJ1DuErfBPOV2dbieu8MXOGuqnqwwCHJcB+OKbkhcDdLlUJe99eiePMbwDuqLIK7oPuFj
+        xDbPHRoim3d1VNCmxOtYRNmh7tyogRIAEltEvjj4tGC/d6yO2YTvoKpr5vLonMJmcx2J089HY0Tel
+        NOsd9AafZ+xz+wE6IEJ3MBa2or4i+OlQoIg2C+Bkp1P1n+1zQr6hVHRAgSboqXYkkIRfZ9dTspyLt
+        ujb1wsI2I8TQmmTUn/VtLy1nJ4TPQmoUy34NwtOLFKpkvJA9f/vRBVQqe0OdpVu08b5q6LSC4BENJ
+        eJ3JNVGQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9AxL-0005nm-Cv; Fri, 21 Aug 2020 17:36:00 +0000
+Subject: Re: [PATCH v2 02/10] fs/ntfs3: Add initialization of super block
+To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+References: <caddbe41eaef4622aab8bac24934eed1@paragon-software.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <5dfec6f4-0688-217d-587b-ec26f0bb9727@infradead.org>
+Date:   Fri, 21 Aug 2020 10:35:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820153114.GA17271@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <caddbe41eaef4622aab8bac24934eed1@paragon-software.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 05:31:14PM +0200, Borislav Petkov wrote:
-> On Thu, Jul 16, 2020 at 04:52:42PM +0300, Jarkko Sakkinen wrote:
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > Include SGX bit to the PF error codes and throw SIGSEGV with PF_SGX when
-> > a #PF with SGX set happens.
-> > 
-> > CPU throws a #PF with the SGX set in the event of Enclave Page Cache Map
-> > (EPCM) conflict. The EPCM is a CPU-internal table, which describes the
-> > properties for a enclave page. Enclaves are measured and signed software
-> > entities, which SGX hosts. [1]
-> > 
-> > Although the primary purpose of the EPCM conflict checks  is to prevent
-> > malicious accesses to an enclave, an illegit access can happen also for
-> > legit reasons.
-> > 
-> > All SGX reserved memory, including EPCM is encrypted with a transient key
-> > that does not survive from the power transition. Throwing a SIGSEGV allows
-> > user space software to react when this happens (e.g. recreate the enclave,
-> > which was invalidated).
-> > 
-> > [1] Intel SDM: 36.5.1 Enclave Page Cache Map (EPCM)
-> > 
-> > Acked-by: Jethro Beekman <jethro@fortanix.com>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  arch/x86/include/asm/traps.h | 14 ++++++++------
-> >  arch/x86/mm/fault.c          | 13 +++++++++++++
-> >  2 files changed, 21 insertions(+), 6 deletions(-)
-> 
-> Reviewed-by: Borislav Petkov <bp@suse.de>
+On 8/21/20 9:25 AM, Konstantin Komarov wrote:
 
-Thank you. Appended to the commit.
 
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+> +/* O:BAG:BAD:(A;OICI;FA;;;WD) */
 
-/Jarkko
+What is that notation, please?
+
+> +const u8 s_dir_security[] __aligned(8) = {
+> +	0x01, 0x00, 0x04, 0x80, 0x30, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00,
+> +	0x00, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x02, 0x00, 0x1C, 0x00,
+> +	0x01, 0x00, 0x00, 0x00, 0x00, 0x03, 0x14, 0x00, 0xFF, 0x01, 0x1F, 0x00,
+> +	0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00,
+> +	0x01, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x20, 0x00, 0x00, 0x00,
+> +	0x20, 0x02, 0x00, 0x00, 0x01, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05,
+> +	0x20, 0x00, 0x00, 0x00, 0x20, 0x02, 0x00, 0x00,
+> +};
+
+
+
+> +
+> +	if (0x10000 * sizeof(short) != inode->i_size) {
+> +		err = -EINVAL;
+> +		goto out;
+> +	}
+
+Please put constants on the right side of compares.
+
+
+> +MODULE_AUTHOR("Konstantin   Komarov");
+
+Drop one space in the name.
+
+
+thanks.
+-- 
+~Randy
+
