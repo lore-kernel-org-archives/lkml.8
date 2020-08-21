@@ -2,122 +2,185 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F86BC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5039EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EACBE2177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2163D20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:52:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VDT1FBeO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbgHUJve (ORCPT
+        id S1728461AbgHUJwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:51:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34666 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbgHUJvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:51:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A0C2CAB9F;
-        Fri, 21 Aug 2020 09:51:59 +0000 (UTC)
-Date:   Fri, 21 Aug 2020 11:51:29 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-mm@kvack.org, Pavel Machek <pavel@ucw.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Airlie <airlied@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Vrabel <david.vrabel@citrix.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 1/4] mm: Export flush_vm_area() to sync the PTEs upon
- construction
-Message-ID: <20200821095129.GF3354@suse.de>
-References: <20200821085011.28878-1-chris@chris-wilson.co.uk>
+        Fri, 21 Aug 2020 05:52:15 -0400
+Received: from mail-eopbgr130058.outbound.protection.outlook.com ([40.107.13.58]:56486
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725855AbgHUJwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 05:52:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jB3gFVYqEg4rMs6VvmQ84+2+sb0QDIUAkQflzFT7JDzRGXzC8queVMFXnOxNKlin1nP/mwLrpp8QpswYXbj9cRDMhtsItbq3CYaCf4+9xObeeMhuxSRFWD4OejXBzVi4S7MmUoH+tHcz8YN1Mn1+34EPWD6XgnsbWpEPrSr5FJATwRGHY5poFI8KzuFhoySAv+weuDEjzjUaVA1yTAT0L1bclsxiX+fJhUtaG11l9S4F8zAbgq5aOlpKsZJW1Eh2TodO26jorDm2st/P/OrgVUMKJrMbuBjDtzh7n36LR3hDlTlT8VufWudfyMQk473pUGKm6hVwXIaWkjr7A3khcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6y40jIdXqSjeJyX4PsUQ9ODdn5bUlDTpJNYivUJSuXI=;
+ b=JVMfsm3SRs/Izqk1gIPS1e4jMzSK1yfNSvrTAZLju6phLsSVwNnrgTxI7S9mS+03yvo119dNOAIgVbzR4jFbjR1S8TRkxkOUjzeUCaii1g7gNoxlOIaeoyGypMCD85H9TyFwFhuSUsVZFUoB8seIn8hU5dCHi/O8buElF5xM2H0rJerTqXYsp//TWOGsV2fXGocSjvNnwgGplllMkCKb6uhfs2cVBn8AVgK558oBs/onLLVCgYdhhyIKo/DJBNNgZoC3/qePH+oq2R6tu/eHR8WnvsXIu6/aadD/B8otehMzE702HqqTRrULkOwHVSE0QgnX5w/FqTKmYzS0hH2J0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6y40jIdXqSjeJyX4PsUQ9ODdn5bUlDTpJNYivUJSuXI=;
+ b=VDT1FBeOURzIfGzWZtYbITCrgRArGgVdFsT8fHc1iyYWLpHv8aq8KD0TlVIJW+eVQSxZFAnaZx8jU+CNQWwi+/0j6nsnKfrZ49zu2t8qdVasmqbVQw1MW7Y82Odp/wAC5VMxraAZkqfPCnNt9LICS/ts+OhraaXm911dAYwMcPc=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VI1PR0402MB3711.eurprd04.prod.outlook.com (2603:10a6:803:18::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.20; Fri, 21 Aug
+ 2020 09:52:00 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::ad7f:d95a:5413:a950]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::ad7f:d95a:5413:a950%3]) with mapi id 15.20.3283.027; Fri, 21 Aug 2020
+ 09:52:00 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Lars-Peter Clausen <lars@metafoo.de>
+CC:     Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Richard Leitner - SKIDATA <Richard.Leitner@skidata.com>
+Subject: RE: pcm|dmaengine|imx-sdma race condition on i.MX6
+Thread-Topic: pcm|dmaengine|imx-sdma race condition on i.MX6
+Thread-Index: AQHWcWQbD9eqMlwY2U27XyctTVPmVak3Rd/wgASnXICAA2IfgIABSsWAgAFIBOA=
+Date:   Fri, 21 Aug 2020 09:52:00 +0000
+Message-ID: <VE1PR04MB66386A43E2BCC5B758D1A71A895B0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20200813112258.GA327172@pcleri>
+ <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <61498763c60e488a825e8dd270732b62@skidata.com>
+ <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
+ <20200820065221.GF19745@pengutronix.de>
+In-Reply-To: <20200820065221.GF19745@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 097eb0c9-f049-4500-28cd-08d845b7d9b6
+x-ms-traffictypediagnostic: VI1PR0402MB3711:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB371166538E756AEADF38C128895B0@VI1PR0402MB3711.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: m6hn9tmks7/tkOwxMbBBNzb8gPsV/7Yiqc3nxENZUkmYccM9jnFboAXjspVYH8oKu0gKdlCdq8k5EpRuTr49UAXq1yBsuYXy2WEa4U2g9zBwK+kRtZGUwgD4TmxRNVXIdDf3PPxaDzM7YZOSCcULarC1EXEaBwOcW5g9CzCTapRF2fjAE6/EZuz03TaABzUcXPO3Dy5jVqqZI6xHNt0b3AiRNZqJbrRGf1nGhEQ+FnmE4n0VQnGxFm68yzotyD/uXUskxsIG2gEicfPrZLlHWdELN9YYr3SaMMGRvDBXpLqUHCXCFFKKYHKxvdiMqJ6p2/QVDgS/7riiyleMvOwTkH6TdLPNWtrrxwpdyJfL74BLqELxERTE8i0TN9FEe4wHDvZQDOWZIVJXzsjtQJijtA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(9686003)(71200400001)(966005)(8676002)(8936002)(86362001)(478600001)(54906003)(66946007)(4326008)(110136005)(7696005)(5660300002)(316002)(66556008)(66476007)(7416002)(66446008)(64756008)(83380400001)(2906002)(55016002)(186003)(52536014)(76116006)(33656002)(26005)(53546011)(6506007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 9m9kvxJP/MKG3SqF7SYW/hf1CHuUtprmGV+IfeJATDqWwSX3PlyUBvn8WOqYTxUUhdEIXl0Dciyp9dd5sdlz7v384QZwrmofA2Z3Pzassy1o23E3PHS4FdP2fcI4mPSpfaIzGZOYMNkLFxswouqPOyP3z0KmFTQfJzgATcBfWKlv4MUfCrOhLNUEmR5T5IO74elDmLzMmqrlcI9pgCqwNYBzNEjnE4nX2dfng4n1HHT05miEoNPZQbS06z0AJxllDl2n/5+hlFQUjLPVq6U/IBLvcJRxtrTKZ2dTf4U66HgVfyF7H85jRSjFlI22tdk5VCLH7jMizQ7di7QtdusJbmjKCTetKi1RRR7xXq3Mcy4Qx3YSGgd0FmdpmChD3WxdU/baVpC255O6iuBFxFAN8NegOJ7tis12NmhPTsC/Z1AdjE2ouyCkSCi02Hvn4te7YdLHMm8k6U926K6RmXI5OauJXvybKPRpeIGJvpl1Sdb1W4KeQaKZZRsXma13uMh/vze/lgw2nwg0IjkcTrvdtRpICLkc1UaXszsNp8JwzoODIKpluS39aSLwTfB1JGuzOggUkjZZBWFecaZkZ8I162p8pJSVE5IWM96WMFgot7BbHWgitcfG1OtnJwK+vJfEQQVhH6FpQfWkQvdBHrwWGQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821085011.28878-1-chris@chris-wilson.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 097eb0c9-f049-4500-28cd-08d845b7d9b6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2020 09:52:00.4542
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8ZU/iO6CvjQ+2nP/PrMxq5fVccSiMqsbS1EVsTGlrpkFfZYbVyl6VHikPNqZNwAy40K1Xpus8X0HphcsnZozew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3711
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 09:50:08AM +0100, Chris Wilson wrote:
-> The alloc_vm_area() is another method for drivers to
-> vmap/map_kernel_range that uses apply_to_page_range() rather than the
-> direct vmalloc walkers. This is missing the page table modification
-> tracking, and the ability to synchronize the PTE updates afterwards.
-> Provide flush_vm_area() for the users of alloc_vm_area() that assumes
-> the worst and ensures that the page directories are correctly flushed
-> upon construction.
-> 
-> The impact is most pronounced on x86_32 due to the delayed set_pmd().
-> 
-> Reported-by: Pavel Machek <pavel@ucw.cz>
-> References: 2ba3e6947aed ("mm/vmalloc: track which page-table levels were modified")
-> References: 86cf69f1d893 ("x86/mm/32: implement arch_sync_kernel_mappings()")
-> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Joerg Roedel <jroedel@suse.de>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Dave Airlie <airlied@redhat.com>
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: David Vrabel <david.vrabel@citrix.com>
-> Cc: <stable@vger.kernel.org> # v5.8+
-> ---
->  include/linux/vmalloc.h |  1 +
->  mm/vmalloc.c            | 16 ++++++++++++++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-> index 0221f852a7e1..a253b27df0ac 100644
-> --- a/include/linux/vmalloc.h
-> +++ b/include/linux/vmalloc.h
-> @@ -204,6 +204,7 @@ static inline void set_vm_flush_reset_perms(void *addr)
->  
->  /* Allocate/destroy a 'vmalloc' VM area. */
->  extern struct vm_struct *alloc_vm_area(size_t size, pte_t **ptes);
-> +extern void flush_vm_area(struct vm_struct *area);
->  extern void free_vm_area(struct vm_struct *area);
->  
->  /* for /dev/kmem */
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index b482d240f9a2..c41934486031 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -3078,6 +3078,22 @@ struct vm_struct *alloc_vm_area(size_t size, pte_t **ptes)
->  }
->  EXPORT_SYMBOL_GPL(alloc_vm_area);
->  
-> +void flush_vm_area(struct vm_struct *area)
-> +{
-> +	unsigned long addr = (unsigned long)area->addr;
-> +
-> +	/* apply_to_page_range() doesn't track the damage, assume the worst */
-> +	if (ARCH_PAGE_TABLE_SYNC_MASK & (PGTBL_PTE_MODIFIED |
-> +					 PGTBL_PMD_MODIFIED |
-> +					 PGTBL_PUD_MODIFIED |
-> +					 PGTBL_P4D_MODIFIED |
-> +					 PGTBL_PGD_MODIFIED))
-> +		arch_sync_kernel_mappings(addr, addr + area->size);
+On 2020/08/20 14:52 Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> On Wed, Aug 19, 2020 at 01:08:29PM +0200, Lars-Peter Clausen wrote:
+> > > For the first option, which is potentially more performant, we have
+> > > to leave the atomic PCM context and we are not sure if we are allowed=
+ to.
+> > > For the second option, we would have to divide the dma_device
+> > > terminate_all into an atomic sync and an async one, which would
+> > > align with the dmaengine API, giving it the option to ensure terminat=
+ion in
+> an atomic context.
+> > > Based on my understanding, most of them are synchronous anyways, for
+> > > the currently async ones we would have to implement busy waits.
+> > > However, with this approach, we reach the WARN_ON [6] inside of an
+> > > atomic context, indicating we might not do the right thing.
+> >
+> > I don't know how feasible this is to implement in the SDMA dmaengine
+> driver.
+> > But I think what is should do is to have some flag to indicate if a
+> > terminate is in progress. If a new transfer is issued while terminate
+> > is in progress the transfer should go on a list. Once terminate
+> > finishes it should check the list and start the transfer if there are a=
+ny on the
+> list.
+>=20
+> The list is already there in form of the vchan helpers the driver uses.
+Seems Lars major concern is on the race condition between next descriptor
+and sdma_channel_terminate_work which free the last terminated descriptor,
+not the ability of vchan to support multi descriptors. But anyway, I think =
+we
+should take care vchan_get_all_descriptors to free descriptors during termi=
+nate
+phase in case it's done in worker like sdma_channel_terminate_work, since t=
+hat
+may free the next descriptor wrongly. That's what my patch attached in
+0001-dmaengine-imx-sdma-add-terminated-list-for-freed-des.patch
+https://www.spinics.net/lists/arm-kernel/msg829972.html
 
-This should happen in __apply_to_page_range() directly and look like
-this:
+>=20
+> I think the big mistake the driver makes is to configure fields in struct
+> sdma_channel and also the hardware directly in sdma_prep_memcpy(),
+> sdma_prep_slave_sg() and sdma_prep_dma_cyclic(). All information should b=
+e
+> stored in the struct sdma_desc allocated in the prep functions and only b=
+e used
+> when it's time to fire that specific descriptor.
+Sorry Sascha, seems that's another topic and your intention is to make sure=
+ only
+software involved in sdma_prep_* and all HW moved into one function inside
+sdma_start_desc. I agree that will make code more clean but my concern is=20
+sdma_start_desc is protect by spin_lock which should be short as possible w=
+hile
+some HW touch as context_load may cost some time. Anyway, that's another to=
+pic,
+maybe we can refine it in the future.
 
-	if (ARCH_PAGE_TABLE_SYNC_MASK && create)
-		arch_sync_kernel_mappings(addr, addr + size);
-
-Or even better, track whether something had to be allocated in the
-__apply_to_page_range() path and check for:
-
-	if (ARCH_PAGE_TABLE_SYNC_MASK & mask)
+>=20
+> More specifically sdma_config_write() may not be called from
+> sdma_prep_slave_sg() or sdma_prep_dma_cyclic(), but instead must be calle=
+d
+> from sdma_start_desc().  sdma_config_ownership() also must be called late=
+r
+> in sdma_start_desc(). 'direction' must be a member of struct sdma_desc, n=
+ot of
+> struct sdma_channel.
+>=20
+> Overall this sounds like a fair amount of work to do, but should be feasi=
+ble and
+> IMO is a step in the right direction.
+>=20
+> Sascha
+>=20
+> --
 
