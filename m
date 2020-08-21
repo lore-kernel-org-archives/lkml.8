@@ -2,152 +2,232 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,
+	DATE_IN_FUTURE_06_12,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74278C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0992078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:36:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oG3H/4qg"
+	by mail.kernel.org (Postfix) with ESMTP id 09B462063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgHUPgZ (ORCPT
+        id S1728355AbgHUPhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgHUPgJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:36:09 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C211C061573;
-        Fri, 21 Aug 2020 08:36:09 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id g14so2145496iom.0;
-        Fri, 21 Aug 2020 08:36:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dTsdEvmeR7/8ARBPzPDo5H4/RL/HljTYjHOoJ2D+HGk=;
-        b=oG3H/4qgY6IZeh11qQCNeaOyHtavKEMR464ybkKS9cibi3xG6UiYZmHGSxprqoeKZx
-         30qLE+paOBcBV6sGjUUx+ZmfjBIm1uFKSughgeRlfmwNpycy7r27utMOzY5z9LnVTPhg
-         MYNQFCDeltwbaRNXh3WgmACm9hLemnauKbxaK5+06YZsGuRkiX31H8W1SNLrSg7KPxKs
-         2Lg8QE5GpJ+9iznDvRuhrf7egkMRLyZyYAdRhUgg27xW+r2/BZCiurF3bUjYUeOwfIBL
-         PosLFU3dezoIHJEnGujK3dYDsEi0ulTKnMSrOBL41xPp0//84XYxMhWKjkd3RnTtMWkZ
-         ln+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dTsdEvmeR7/8ARBPzPDo5H4/RL/HljTYjHOoJ2D+HGk=;
-        b=G5sIOXzjbpF+p3tgjl7yS53Ab8wDuyDTEkH0SX7Ga49o8NZP7K6O4r/vUa1CSy60hq
-         coNv8LUbiuFlP5S45WXFS/MdPMK8M5cdYljarFNOIxOhzNPCk6gWMKAlcmmBUZ0ERzkT
-         xuFqCexfma3GevcgMBLGkT84f8OmOsQpwgX+JfNiwjxcx1efzFfuyheU9Oxvp5OklTOs
-         oxECqNswjUt+ItFArouHUHaHhT1s95pzfwj4ARSmTHbCxRG3HazqhBcsSwSzjYpO/xXM
-         zhHidxXax/W7sgICLC9CsIQjTTnuu2rsQdu7fjeU+kPnmccIqBKtyCNbfHCcDW+FZXpI
-         bmlg==
-X-Gm-Message-State: AOAM532FXLFxIkieijBphE9Mebg3g+vrp/kSSIjdZ3csRCDQnHhMNkCb
-        GTAO5lwJdehhHKiRxnsOkrNLjEXA4F9vXS8cpA==
-X-Google-Smtp-Source: ABdhPJw4zUY2nPRkcrI1iVgkAlff3Y8KRk0bZpGsMIrVoKZ6EshwlsivnB6CcpyYk4rmRXNlUneDcikzsDIJQXjIIao=
-X-Received: by 2002:a5d:841a:: with SMTP id i26mr2754197ion.144.1598024168875;
- Fri, 21 Aug 2020 08:36:08 -0700 (PDT)
+        Fri, 21 Aug 2020 11:37:35 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10252 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728020AbgHUPha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 11:37:30 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A82DCE63793C753BE110;
+        Fri, 21 Aug 2020 23:37:20 +0800 (CST)
+Received: from huawei.com (10.151.151.249) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 21 Aug 2020
+ 23:37:11 +0800
+From:   Dongjiu Geng <gengdongjiu@huawei.com>
+To:     <mingo@redhat.com>, <peterz@infradead.org>,
+        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
+        <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>,
+        <bsegall@google.com>, <mgorman@suse.de>,
+        <thara.gopinath@linaro.org>, <pauld@redhat.com>,
+        <vincent.donnefort@arm.com>, <rdunlap@infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: [PATCH] sched: Add trace for task wake up latency and leave running time
+Date:   Fri, 21 Aug 2020 23:59:28 +0000
+Message-ID: <20200821235928.32727-1-gengdongjiu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200821105229.18938-1-pbonzini@redhat.com> <20200821142152.GA6330@sjchrist-ice>
-In-Reply-To: <20200821142152.GA6330@sjchrist-ice>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Fri, 21 Aug 2020 11:35:57 -0400
-Message-ID: <CAMzpN2h79bi5dd7PxjY45xYy71UdYomKa1t2gNxLtRpDkMs+Lw@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/entry/64: Do not use RDPID in paranoid entry to
- accomodate KVM
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Chang Seok Bae <chang.seok.bae@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.151.151.249]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:22 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Fri, Aug 21, 2020 at 06:52:29AM -0400, Paolo Bonzini wrote:
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> >
-> > Don't use RDPID in the paranoid entry flow, as it can consume a KVM
-> > guest's MSR_TSC_AUX value if an NMI arrives during KVM's run loop.
-> >
-> > In general, the kernel does not need TSC_AUX because it can just use
-> > __this_cpu_read(cpu_number) to read the current processor id.  It can
-> > also just block preemption and thread migration at its will, therefore
-> > it has no need for the atomic rdtsc+vgetcpu provided by RDTSCP.  For this
-> > reason, as a performance optimization, KVM loads the guest's TSC_AUX when
-> > a CPU first enters its run loop.  On AMD's SVM, it doesn't restore the
-> > host's value until the CPU exits the run loop; VMX is even more aggressive
-> > and defers restoring the host's value until the CPU returns to userspace.
-> >
-> > This optimization obviously relies on the kernel not consuming TSC_AUX,
-> > which falls apart if an NMI arrives during the run loop and uses RDPID.
-> > Removing it would be painful, as both SVM and VMX would need to context
-> > switch the MSR on every VM-Enter (for a cost of 2x WRMSR), whereas using
-> > LSL instead RDPID is a minor blip.
-> >
-> > Both SAVE_AND_SET_GSBASE and GET_PERCPU_BASE are only used in paranoid entry,
-> > therefore the patch can just remove the RDPID alternative.
-> >
-> > Fixes: eaad981291ee3 ("x86/entry/64: Introduce the FIND_PERCPU_BASE macro")
-> > Cc: Dave Hansen <dave.hansen@intel.com>
-> > Cc: Chang Seok Bae <chang.seok.bae@intel.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Sasha Levin <sashal@kernel.org>
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: kvm@vger.kernel.org
-> > Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
-> > Debugged-by: Tom Lendacky <thomas.lendacky@amd.com>
-> > Suggested-by: Andy Lutomirski <luto@kernel.org>
-> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> > ---
-> >  arch/x86/entry/calling.h | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-> > index 98e4d8886f11..ae9b0d4615b3 100644
-> > --- a/arch/x86/entry/calling.h
-> > +++ b/arch/x86/entry/calling.h
-> > @@ -374,12 +374,14 @@ For 32-bit we have the following conventions - kernel is built with
-> >   * Fetch the per-CPU GSBASE value for this processor and put it in @reg.
-> >   * We normally use %gs for accessing per-CPU data, but we are setting up
-> >   * %gs here and obviously can not use %gs itself to access per-CPU data.
-> > + *
-> > + * Do not use RDPID, because KVM loads guest's TSC_AUX on vm-entry and
-> > + * may not restore the host's value until the CPU returns to userspace.
-> > + * Thus the kernel would consume a guest's TSC_AUX if an NMI arrives
-> > + * while running KVM's run loop.
-> >   */
-> >  .macro GET_PERCPU_BASE reg:req
-> > -     ALTERNATIVE \
-> > -             "LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
-> > -             "RDPID  \reg", \
->
-> This was the only user of the RDPID macro, I assume we want to yank that out
-> as well?
+1) The perf event sched_switch is used to record scheduling tracks,
+   which consumes a large amount of CPU resources and disk space.
+   Therefore, a mechanism is required to record only the scheduling
+   delay greater than a certain threshold. This patch supports this
+   feature. For example, if the threshold is 10 ms, you can run the
+   following command to only record the scheduling track with the
+   scheduling delay greater than 10 ms.
 
-No.  That one should be kept until the minimum binutils version is
-raised to one that supports the RDPID opcode.
+   echo 'time > 10000000' > /sys/kernel/debug/tracing/events/sched/sched_wakeup_latency/filter
+   echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wakeup_latency/enable
 
---
-Brian Gerst
+2) Similarly, when tune performance, we usually want to know which
+   tasks are not running for a long time, Use the following methods
+   to save CPU overhead and storage space.
+
+   echo 'time > 10000000' > /sys/kernel/debug/tracing/events/sched/sched_leave_running_time/filter
+   echo 1 > /sys/kernel/debug/tracing/events/sched/sched_leave_running_time/enable
+
+Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
+---
+ include/linux/sched.h        |  7 ++++
+ include/trace/events/sched.h | 66 ++++++++++++++++++++++++++++++++++++
+ kernel/sched/core.c          | 20 +++++++++++
+ 3 files changed, 93 insertions(+)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 93ecd930efd3..edb622c40a90 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1324,6 +1324,13 @@ struct task_struct {
+ 	/* CPU-specific state of this task: */
+ 	struct thread_struct		thread;
+ 
++	/* Task wake up time stamp */
++	u64				ts_wakeup;
++	/* Previous task switch out time stamp */
++	u64				pre_ts_end;
++	/* Next task switch in time stamp */
++	u64				next_ts_start;
++	bool				wakeup_state;
+ 	/*
+ 	 * WARNING: on x86, 'thread_struct' contains a variable-sized
+ 	 * structure.  It *MUST* be at the end of 'task_struct'.
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index fec25b9cfbaf..e99c6d573a42 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -183,6 +183,72 @@ TRACE_EVENT(sched_switch,
+ 		__entry->next_comm, __entry->next_pid, __entry->next_prio)
+ );
+ 
++DECLARE_EVENT_CLASS(sched_latency_template,
++
++	TP_PROTO(bool preempt,
++		 struct task_struct *prev,
++		 struct task_struct *next,
++		 u64 time),
++
++	TP_ARGS(preempt, prev, next, time),
++
++	TP_STRUCT__entry(
++		__array(	char,	prev_comm,	TASK_COMM_LEN	)
++		__field(	pid_t,	prev_pid			)
++		__field(	int,	prev_prio			)
++		__field(	long,	prev_state			)
++		__array(	char,	next_comm,	TASK_COMM_LEN	)
++		__field(	pid_t,	next_pid			)
++		__field(	int,	next_prio			)
++		__field(	u64,	time				)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
++		__entry->prev_pid	= prev->pid;
++		__entry->prev_prio	= prev->prio;
++		__entry->prev_state	= __trace_sched_switch_state(preempt, prev);
++		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
++		__entry->next_pid	= next->pid;
++		__entry->next_prio	= next->prio;
++		__entry->time		= time;
++		/* XXX SCHED_DEADLINE */
++	),
++
++	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d passed time=%llu (ns)",
++		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
++
++		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
++		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
++				{ TASK_INTERRUPTIBLE, "S" },
++				{ TASK_UNINTERRUPTIBLE, "D" },
++				{ __TASK_STOPPED, "T" },
++				{ __TASK_TRACED, "t" },
++				{ EXIT_DEAD, "X" },
++				{ EXIT_ZOMBIE, "Z" },
++				{ TASK_PARKED, "P" },
++				{ TASK_DEAD, "I" }) :
++		  "R",
++
++		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
++		__entry->next_comm, __entry->next_pid, __entry->next_prio,
++		__entry->time)
++);
++
++DEFINE_EVENT(sched_latency_template, sched_wakeup_latency,
++	TP_PROTO(bool preempt,
++		 struct task_struct *prev,
++		 struct task_struct *next,
++		 u64 time),
++	TP_ARGS(preempt, prev, next, time));
++
++DEFINE_EVENT(sched_latency_template, sched_leave_running_time,
++	TP_PROTO(bool preempt,
++		 struct task_struct *prev,
++		 struct task_struct *next,
++		 u64 time),
++	TP_ARGS(preempt, prev, next, time));
++
+ /*
+  * Tracepoint for a task being migrated:
+  */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8471a0f7eb32..b5a1928dc948 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2464,6 +2464,8 @@ static void ttwu_do_wakeup(struct rq *rq, struct task_struct *p, int wake_flags,
+ {
+ 	check_preempt_curr(rq, p, wake_flags);
+ 	p->state = TASK_RUNNING;
++	p->ts_wakeup = local_clock();
++	p->wakeup_state = true;
+ 	trace_sched_wakeup(p);
+ 
+ #ifdef CONFIG_SMP
+@@ -2846,6 +2848,8 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 		success = 1;
+ 		trace_sched_waking(p);
+ 		p->state = TASK_RUNNING;
++		p->ts_wakeup = local_clock();
++		p->wakeup_state = true;
+ 		trace_sched_wakeup(p);
+ 		goto out;
+ 	}
+@@ -3299,6 +3303,9 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
+ 	plist_node_init(&p->pushable_tasks, MAX_PRIO);
+ 	RB_CLEAR_NODE(&p->pushable_dl_tasks);
+ #endif
++	p->ts_wakeup = 0;
++	p->wakeup_state = false;
++	p->pre_ts_end = p->next_ts_start = 0;
+ 	return 0;
+ }
+ 
+@@ -3355,6 +3362,8 @@ void wake_up_new_task(struct task_struct *p)
+ 	post_init_entity_util_avg(p);
+ 
+ 	activate_task(rq, p, ENQUEUE_NOCLOCK);
++	p->ts_wakeup = local_clock();
++	p->wakeup_state = true;
+ 	trace_sched_wakeup_new(p);
+ 	check_preempt_curr(rq, p, WF_FORK);
+ #ifdef CONFIG_SMP
+@@ -4521,8 +4530,19 @@ static void __sched notrace __schedule(bool preempt)
+ 
+ 		psi_sched_switch(prev, next, !task_on_rq_queued(prev));
+ 
++		next->next_ts_start = prev->pre_ts_end = local_clock();
++
+ 		trace_sched_switch(preempt, prev, next);
+ 
++		if (next->ts_wakeup && next->wakeup_state) {
++			trace_sched_wakeup_latency(preempt, prev, next,
++				next->next_ts_start - next->ts_wakeup);
++			next->wakeup_state = false;
++		}
++
++		trace_sched_leave_running_time(preempt, prev,
++			next, next->next_ts_start - next->pre_ts_end);
++
+ 		/* Also unlocks the rq: */
+ 		rq = context_switch(rq, prev, next, &rf);
+ 	} else {
+-- 
+2.17.1
+
