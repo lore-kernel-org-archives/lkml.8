@@ -2,190 +2,419 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAFAC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9940BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0235720738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:07:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="TEDmbthn";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="JKbvn4cV"
+	by mail.kernel.org (Postfix) with ESMTP id 7A58F20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:15:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725804AbgHUTHf (ORCPT
+        id S1726578AbgHUTPE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:07:35 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:60048 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725801AbgHUTHd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:07:33 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LIoMOP019373;
-        Fri, 21 Aug 2020 12:07:28 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=B0Uxx+/1JyuDeoerl08QdW2gEDWrfAUJb/t3vSHGCLU=;
- b=TEDmbthnOQvDjbOuMMpsUrPucS8PSBN302H5VSTcBW4G9kKWMuVzk4NE9mZHja+31a4R
- c3D9ruucoYAeAChlpy3zDRda0bleWCj0i73OI0WSBRrMcRwshe/yQEAhCUz16HnY4aHS
- NUHTNHK4x4qyvvrSU0EMD7EtOFpXn2SLjpk= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 332ehft1he-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 21 Aug 2020 12:07:28 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 21 Aug 2020 12:07:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b17TPkDAl5DYdzFR3OCvpaduZA/fVBY072BvkPJgxnedkGC2VyfkJs3briGys1gt92QZ7r8+ngOMugJ6xXkqU3UbbUS/NKVvPnDk1ISRH1NLZ9VoVNeB5u2h9GLbUsCLBediblk92OutVMC/gt8NHSDyNX99qYVWO6OZdk3Ae+gqC5OTrmPbrDcLRq3a5w9SczaxMK3EfW5eeSaSnPsRQFf48K1vBUXPHC/AhT9IYLlD8UZsTespHvSPVxVaqssDH4zGTdizl8TatDT0EO9i+rlHg/Rixt0pBP2b2v7TF5rfubJrjl9SpexD+0Optt6e+CwTdX5pH5VaQVwdMw/B6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B0Uxx+/1JyuDeoerl08QdW2gEDWrfAUJb/t3vSHGCLU=;
- b=Wew4pUUjzN0z+4KTeaXLgSw0PfRZ0OXg1yCnhx1v3QERtGMMbbF6U/GSL7kVhoi+BLoCdL6xJdAKP27HPDBv22uZwXmeDqITtIN2znCiWhSFsP0ZoM9AJRHN8ausjS6Rw+JfkSdGhhquotgEUo3EIKcxA6WYJqo3oRVAfHKDcR9w1yLGWIOrRKEJi+Kt+oVFjqxxmFQP8Q39fJwNRElUpm5GGwBolGhA1GRG0D3p6bFFJVBN7Avtvh7vtd0145biYnzdUaLaeuR9+CHJQ2nnWUOZDXuytcbBdngrxuOXDSXfv+WpgqB47MdNNRWLYZy/27xZOKzXNdfrrzhn+B4cBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B0Uxx+/1JyuDeoerl08QdW2gEDWrfAUJb/t3vSHGCLU=;
- b=JKbvn4cVMCmbnbSKK6ZxKzCQlyB+ez+eANH29QPUU7zGFQTPq8WIokyhL80k8bD9xM2Fz93rhx2YLt9omlS5zMARGtbzE3AX666PhoOgU0XQDiL7d6hkVTD6V61AlOt+BWvHOYbkhWcBBnKrcc+EW5/jjlvIoqOaJ66O7/ZbrXU=
-Received: from BY5PR15MB3651.namprd15.prod.outlook.com (2603:10b6:a03:1f7::15)
- by BYAPR15MB2439.namprd15.prod.outlook.com (2603:10b6:a02:8e::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.22; Fri, 21 Aug
- 2020 19:07:26 +0000
-Received: from BY5PR15MB3651.namprd15.prod.outlook.com
- ([fe80::1d8b:83da:9f05:311a]) by BY5PR15MB3651.namprd15.prod.outlook.com
- ([fe80::1d8b:83da:9f05:311a%7]) with mapi id 15.20.3283.028; Fri, 21 Aug 2020
- 19:07:26 +0000
-From:   Udip Pant <udippant@fb.com>
-To:     Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        "Martin Lau" <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 bpf 1/2] bpf: verifier: check for packet data access
- based on target prog
-Thread-Topic: [PATCH v2 bpf 1/2] bpf: verifier: check for packet data access
- based on target prog
-Thread-Index: AQHWd1H520gA6D8MckCc8BJ9Efc9i6lCFZ+AgAABToCAAGGxAA==
-Date:   Fri, 21 Aug 2020 19:07:26 +0000
-Message-ID: <F6EEEFF4-F749-4D51-9366-1B1845EF0526@fb.com>
-References: <20200821002804.546826-1-udippant@fb.com>
- <9e829756-e943-e9a8-82f2-1a27a55afeec@fb.com>
- <d9df934c-4b64-1e28-cc7e-fb03939d687d@fb.com>
-In-Reply-To: <d9df934c-4b64-1e28-cc7e-fb03939d687d@fb.com>
-Accept-Language: en-US
+        Fri, 21 Aug 2020 15:15:04 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:47166 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725801AbgHUTPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 15:15:02 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 392079F5048610EB87B2;
+        Sat, 22 Aug 2020 03:14:57 +0800 (CST)
+Received: from dggema721-chm.china.huawei.com (10.3.20.85) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Sat, 22 Aug 2020 03:14:56 +0800
+Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
+ dggema721-chm.china.huawei.com (10.3.20.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Sat, 22 Aug 2020 03:14:56 +0800
+Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
+ dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.1913.007;
+ Sat, 22 Aug 2020 03:14:56 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+CC:     "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "ganapatrao.kulkarni@cavium.com" <ganapatrao.kulkarni@cavium.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        huangdaode <huangdaode@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Jonathan Cameron" <jonathan.cameron@huawei.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Steve Capper <steve.capper@arm.com>
+Subject: RE: [PATCH v7 1/3] dma-contiguous: provide the ability to reserve
+ per-numa CMA
+Thread-Topic: [PATCH v7 1/3] dma-contiguous: provide the ability to reserve
+ per-numa CMA
+Thread-Index: AQHWd69ix8OgXlSJiUCOYl4oKg5K9qlCGRQAgADS8MA=
+Date:   Fri, 21 Aug 2020 19:14:56 +0000
+Message-ID: <d442db3bd2094078a4e50b1c6ffe63b8@hisilicon.com>
+References: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
+ <20200821113355.6140-2-song.bao.hua@hisilicon.com>
+ <20200821142804.GR969206@linux.ibm.com>
+In-Reply-To: <20200821142804.GR969206@linux.ibm.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:400::5:540e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4830ee68-5191-49a5-2f20-08d846057193
-x-ms-traffictypediagnostic: BYAPR15MB2439:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB2439B9412CE6F9A7310D963CB25B0@BYAPR15MB2439.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lsuDma/goV6APBXLC+JJLeepCuEThzq+0plaskqbUVaI4ekoQfor+kZfX2B0WVLtShLT7I0lKZWYFW4PQ6o+BrAi5AWAbkhqrAnTGeSG6G9uaVbtKzEOvuOT4nPsUMgADUZ6T4dO5GV12iXcuCmvBFcqvDWtJ4BVuO6uXmTs2KVI8j+ZN3Cu4sbucEO9rC+4Pt3W3nmKSlnFYGb7zYLgeoxUffGeK7wA8PqqhshU9DUTGaolFtLLmhODVSdE0ZnpcyJpIHH8fRF4oMbtaY+UD6alU7LUjGJoOxxSjxSo4n6IeDptaKK5N37kQNVRAHgY6B72Dm0QLMCoHU7R6q2GCw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3651.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(366004)(396003)(376002)(346002)(39860400002)(86362001)(66476007)(71200400001)(110136005)(64756008)(6512007)(66556008)(66946007)(54906003)(8936002)(66446008)(6486002)(316002)(478600001)(8676002)(2906002)(76116006)(53546011)(33656002)(36756003)(2616005)(6506007)(5660300002)(186003)(83380400001)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: K2Owf8JnifSho5hp/MnARcvmKzkkX0DwNTKWa4VWLWLuELCukwbVw1fLe9LJhCDWg1Wan3riXtMr2vD0pNFkvnyH9no693QeoCLEnn8okLbcG0BpK2FhnCfALGoaSL+wugIjZN4BGWAHDcSkX47lW/FzkZExSDLuz2G+HmdJ/rt0tQi+VKTiSY/QvTAnSZc2V967pbrOTWiKlHP7p1OPREDHJ35dJ/tOz34EdSfw1oHmA1e0k/jKoQm0a3Vo7qfVyvGEWfaP8h3rjCO2f5W4J+gTILIzyFqdSEgvb19wtZ7plXGKiciocRId54vhANsOuenv00irbsJn6/moflmYSpeyUfn/mGDu5jj5Ev6aEgCDKB9A5TISqRvuc6a49NFZGqCG7FQMq+zeTSOCXWoUyYmjyl7GPskxgw61znGgmX5Tecp7E/ploExROo8+5QHqQgFNz/bEKKUr3lI4HchQsQvEiULX/LwqdHqyC6gpJYSQ0J4go74Xkfkbnh+GPB75E5/lAUSLG4gOJKx9052IJJ8IBR4bIDfZwMAag5agh5GKdvOThk7G7RRa8BRU5hQyti1UnVkq0ghYosDCzHoo1sG8BRx42qtRQrWOIA5XMUOQ2RZFV3J/+cgaLRYlwSj8r1VESNmnoPfqwGZjjwbR2YJpgUL3JmWX0tyrEN1sdGNvZMo37Wsx/X1mSoBa7VHP
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AEE614584870D743B8834309E549F005@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-originating-ip: [10.126.201.113]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3651.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4830ee68-5191-49a5-2f20-08d846057193
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2020 19:07:26.5868
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XRGGY5YT7FPY7/bfUfdhl+xQCR9hPGmI2eOCAH/rJklC5rhwG22nykh3WIC9QECJ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2439
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_09:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- priorityscore=1501 spamscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- phishscore=0 malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210178
-X-FB-Internal: deliver
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCu+7vz4gT24gOC8yMC8yMCwgMTE6MTcgUE0sICJZb25naG9uZyBTb25nIiA8eWhzQGZiLmNv
-bT4gd3JvdGU6DQo+DQo+DQo+DQo+IE9uIDgvMjAvMjAgMTE6MTMgUE0sIFlvbmdob25nIFNvbmcg
-d3JvdGU6DQo+PiANCj4+IA0KPj4gT24gOC8yMC8yMCA1OjI4IFBNLCBVZGlwIFBhbnQgd3JvdGU6
-DQo+Pj4gV2hpbGUgdXNpbmcgZHluYW1pYyBwcm9ncmFtIGV4dGVuc2lvbiAob2YgdHlwZSBCUEZf
-UFJPR19UWVBFX0VYVCksIHdlDQo+Pj4gbmVlZCB0byBjaGVjayB0aGUgcHJvZ3JhbSB0eXBlIG9m
-IHRoZSB0YXJnZXQgcHJvZ3JhbSB0byBncmFudCB0aGUgcmVhZCAvDQo+Pj4gd3JpdGUgYWNjZXNz
-IHRvIHRoZSBwYWNrZXQgZGF0YS4NCj4+Pg0KPj4+IFRoZSBCUEZfUFJPR19UWVBFX0VYVCB0eXBl
-IGNhbiBiZSB1c2VkIHRvIGV4dGVuZCB0eXBlcyBzdWNoIGFzIFhEUCwgU0tCDQo+Pj4gYW5kIG90
-aGVycy4gU2luY2UgdGhlIEJQRl9QUk9HX1RZUEVfRVhUIHByb2dyYW0gdHlwZSBvbiBpdHNlbGYg
-aXMganVzdCBhDQo+Pj4gcGxhY2Vob2xkZXIgZm9yIHRob3NlLCB3ZSBuZWVkIHRoaXMgZXh0ZW5k
-ZWQgY2hlY2sgZm9yIHRob3NlIHRhcmdldA0KPj4+IHByb2dyYW1zIHRvIGFjdHVhbGx5IHdvcmsg
-d2hpbGUgdXNpbmcgdGhpcyBvcHRpb24uDQo+Pj4NCj4+PiBUZXN0ZWQgdGhpcyB3aXRoIGEgZnJl
-cGxhY2UgeGRwIHByb2dyYW0uIFdpdGhvdXQgdGhpcyBwYXRjaCwgdGhlDQo+Pj4gdmVyaWZpZXIg
-ZmFpbHMgd2l0aCBlcnJvciAnY2Fubm90IHdyaXRlIGludG8gcGFja2V0Jy4NCj4+Pg0KPj4+IFNp
-Z25lZC1vZmYtYnk6IFVkaXAgUGFudCA8dWRpcHBhbnRAZmIuY29tPg0KPj4+IC0tLQ0KPj4+ICAg
-a2VybmVsL2JwZi92ZXJpZmllci5jIHwgNiArKysrKy0NCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCA1
-IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+Pg0KPj4+IGRpZmYgLS1naXQgYS9rZXJu
-ZWwvYnBmL3ZlcmlmaWVyLmMgYi9rZXJuZWwvYnBmL3ZlcmlmaWVyLmMNCj4+PiBpbmRleCBlZjkz
-OGYxN2I5NDQuLjRkNzYwNDQzMDk5NCAxMDA2NDQNCj4+PiAtLS0gYS9rZXJuZWwvYnBmL3Zlcmlm
-aWVyLmMNCj4+PiArKysgYi9rZXJuZWwvYnBmL3ZlcmlmaWVyLmMNCj4+PiBAQCAtMjYyOSw3ICsy
-NjI5LDExIEBAIHN0YXRpYyBib29sIG1heV9hY2Nlc3NfZGlyZWN0X3BrdF9kYXRhKHN0cnVjdCAN
-Cj4+PiBicGZfdmVyaWZpZXJfZW52ICplbnYsDQo+Pj4gICAgICAgICAgICAgICAgICAgICAgICAg
-IGNvbnN0IHN0cnVjdCBicGZfY2FsbF9hcmdfbWV0YSAqbWV0YSwNCj4+PiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgZW51bSBicGZfYWNjZXNzX3R5cGUgdCkNCj4+PiAgIHsNCj4+PiAtICAgIHN3
-aXRjaCAoZW52LT5wcm9nLT50eXBlKSB7DQo+Pj4gKyAgICBzdHJ1Y3QgYnBmX3Byb2cgKnByb2cg
-PSBlbnYtPnByb2c7DQo+Pj4gKyAgICBlbnVtIGJwZl9wcm9nX3R5cGUgcHJvZ190eXBlID0gcHJv
-Zy0+YXV4LT5saW5rZWRfcHJvZyA/DQo+Pj4gKyAgICAgICAgICBwcm9nLT5hdXgtPmxpbmtlZF9w
-cm9nLT50eXBlIDogcHJvZy0+dHlwZTsNCj4+IA0KPj4gSSBjaGVja2VkIHRoZSB2ZXJpZmllciBj
-b2RlLiBUaGVyZSBhcmUgc2V2ZXJhbCBwbGFjZXMgd2hlcmUNCj4+IHByb2ctPnR5cGUgaXMgY2hl
-Y2tlZCBhbmQgRVhUIHByb2dyYW0gdHlwZSB3aWxsIGJlaGF2ZSBkaWZmZXJlbnRseQ0KPj4gZnJv
-bSB0aGUgbGlua2VkIHByb2dyYW0uDQo+PiANCj4+IE1heWJlIGFic3RyYWN0IHRoZSB0aGUgYWJv
-dmUgbG9naWMgdG8gb25lIHN0YXRpYyBmdW5jdGlvbiBsaWtlDQo+PiANCj4+IHN0YXRpYyBlbnVt
-IGJwZl9wcm9nX3R5cGUgcmVzb2x2ZWRfcHJvZ190eXBlKHN0cnVjdCBicGZfcHJvZyAqcHJvZykN
-Cj4+IHsNCj4+ICAgICAgcmV0dXJuIHByb2ctPmF1eC0+bGlua2VkX3Byb2cgPyBwcm9nLT5hdXgt
-PmxpbmtlZF9wcm9nLT50eXBlDQo+PiAgICAgICAgICAgICAgICAgICAgICAgIDogcHJvZy0+dHlw
-ZTsNCj4+IH0NCj4+IA0KDQpTdXJlLg0KDQo+PiBUaGlzIGZ1bmN0aW9uIGNhbiB0aGVuIGJlIHVz
-ZWQgaW4gZGlmZmVyZW50IHBsYWNlcyB0byBnaXZlIHRoZSByZXNvbHZlZA0KPj4gcHJvZyB0eXBl
-Lg0KPj4gDQo+PiBCZXNpZGVzIGhlcmUgY2hlY2tpbmcgcGt0IGFjY2VzcyBwZXJtaXNzaW9uLA0K
-Pj4gYW5vdGhlciBwb3NzaWJsZSBwbGFjZXMgdG8gY29uc2lkZXIgaXMgcmV0dXJuIHZhbHVlDQo+
-PiBpbiBmdW5jdGlvbiBjaGVja19yZXR1cm5fY29kZSgpLiBDdXJyZW50bHksDQo+PiBmb3IgRVhU
-IHByb2dyYW0sIHRoZSByZXN1bHQgdmFsdWUgY2FuIGJlIGFueXRoaW5nLiBUaGlzIG1heSBuZWVk
-IHRvDQo+PiBiZSBlbmZvcmNlZC4gQ291bGQgeW91IHRha2UgYSBsb29rPyBJdCBjb3VsZCBiZSBv
-dGhlcnMgYXMgd2VsbC4NCj4+IFlvdSBjYW4gdGFrZSBhIGxvb2sgYXQgdmVyaWZpZXIuYyBieSBz
-ZWFyY2hpbmcgInByb2ctPnR5cGUiLg0KPg0KDQpZZWFoIHRoZXJlIGFyZSBmZXcgb3RoZXIgcGxh
-Y2VzIGluIHRoZSB2ZXJpZmllciB3aGVyZSBpdCBkZWNpZGVzIHdpdGhvdXQgcmVzb2x2aW5nIGZv
-ciB0aGUgJ2V4dGVuZGVkJyB0eXBlLiBCdXQgSSBhbSBub3QgdG9vIHN1cmUgaWYgaXQgbWFrZXMg
-c2Vuc2UgdG8gZXh0ZW5kIHRoaXMgbG9naWMgYXMgcGFydCBvZiB0aGlzIGNvbW1pdC4gRm9yIGV4
-YW1wbGUsIGFzIHlvdSBtZW50aW9uZWQsIGluIHRoZSBjaGVja19yZXR1cm5fY29kZSgpIGl0IGV4
-cGxpY2l0bHkgaWdub3JlcyB0aGUgcmV0dXJuIHR5cGUgZm9yIHRoZSBFWFQgcHJvZyAoa2VybmVs
-L2JwZi92ZXJpZmllci5jI0w3NDQ2KS4gIExpa2V3aXNlLCBJIG5vdGljZWQgc2ltaWxhciBpc3N1
-ZSBpbnNpZGUgdGhlIGNoZWNrX2xkX2FicygpLCB3aGVyZSBpdCBjaGVja3MgZm9yIG1heV9hY2Nl
-c3Nfc2tiKGVudi0+cHJvZy0+dHlwZSkuICAgDQoNCkknbSBoYXBweSB0byBleHRlbmQgdGhpcyBs
-b2dpYyB0aGVyZSBhcyB3ZWxsIGlmIGRlZW1lZCBhcHByb3ByaWF0ZS4gDQoNCj4gTm90ZSB0aGF0
-IGlmIHRoZSBFWFQgcHJvZ3JhbSB0cmllcyB0byByZXBsYWNlIGEgZ2xvYmFsIHN1YnByb2dyYW0s
-DQo+IHRoZW4gcmV0dXJuIHZhbHVlIGNhbm5vdCBiZSBlbmZvcmNlZCwganVzdCBhcyB3aGF0IFBh
-dGNoICMyIGV4YW1wbGUgc2hvd3MuDQo+DQo+PiANCj4+PiArDQo+Pj4gKyAgICBzd2l0Y2ggKHBy
-b2dfdHlwZSkgew0KPj4+ICAgICAgIC8qIFByb2dyYW0gdHlwZXMgb25seSB3aXRoIGRpcmVjdCBy
-ZWFkIGFjY2VzcyBnbyBoZXJlISAqLw0KPj4+ICAgICAgIGNhc2UgQlBGX1BST0dfVFlQRV9MV1Rf
-SU46DQo+Pj4gICAgICAgY2FzZSBCUEZfUFJPR19UWVBFX0xXVF9PVVQ6DQo+Pj4NCg0K
+
+
+> -----Original Message-----
+> From: Mike Rapoport [mailto:rppt@linux.ibm.com]
+> Sent: Saturday, August 22, 2020 2:28 AM
+> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
+> Cc: hch@lst.de; m.szyprowski@samsung.com; robin.murphy@arm.com;
+> will@kernel.org; ganapatrao.kulkarni@cavium.com;
+> catalin.marinas@arm.com; akpm@linux-foundation.org;
+> iommu@lists.linux-foundation.org; linux-arm-kernel@lists.infradead.org;
+> linux-kernel@vger.kernel.org; Zengtao (B) <prime.zeng@hisilicon.com>;
+> huangdaode <huangdaode@huawei.com>; Linuxarm <linuxarm@huawei.com>;
+> Jonathan Cameron <jonathan.cameron@huawei.com>; Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de>; Steve Capper <steve.capper@arm.com>
+> Subject: Re: [PATCH v7 1/3] dma-contiguous: provide the ability to reserve
+> per-numa CMA
+> 
+> On Fri, Aug 21, 2020 at 11:33:53PM +1200, Barry Song wrote:
+> > Right now, drivers like ARM SMMU are using dma_alloc_coherent() to get
+> > coherent DMA buffers to save their command queues and page tables. As
+> > there is only one default CMA in the whole system, SMMUs on nodes other
+> > than node0 will get remote memory. This leads to significant latency.
+> >
+> > This patch provides per-numa CMA so that drivers like SMMU can get local
+> > memory. Tests show localizing CMA can decrease dma_unmap latency much.
+> > For instance, before this patch, SMMU on node2  has to wait for more than
+> > 560ns for the completion of CMD_SYNC in an empty command queue; with
+> this
+> > patch, it needs 240ns only.
+> >
+> > A positive side effect of this patch would be improving performance even
+> > further for those users who are worried about performance more than DMA
+> > security and use iommu.passthrough=1 to skip IOMMU. With local CMA, all
+> > drivers can get local coherent DMA buffers.
+> >
+> > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Robin Murphy <robin.murphy@arm.com>
+> > Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Cc: Steve Capper <steve.capper@arm.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Mike Rapoport <rppt@linux.ibm.com>
+> > Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+> > ---
+> >  -v7: with respect to Will's comments
+> >  * move to use for_each_online_node
+> >  * add description if users don't specify pernuma_cma
+> >  * provide default value for CONFIG_DMA_PERNUMA_CMA
+> >
+> >  .../admin-guide/kernel-parameters.txt         |  11 ++
+> >  include/linux/dma-contiguous.h                |   6 ++
+> >  kernel/dma/Kconfig                            |  11 ++
+> >  kernel/dma/contiguous.c                       | 100
+> ++++++++++++++++--
+> >  4 files changed, 118 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt
+> b/Documentation/admin-guide/kernel-parameters.txt
+> > index bdc1f33fd3d1..c609527fc35a 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -599,6 +599,17 @@
+> >  			altogether. For more information, see
+> >  			include/linux/dma-contiguous.h
+> >
+> > +	pernuma_cma=nn[MG]
+> 
+> Maybe cma_pernuma or cma_pernode?
+
+Sounds good.
+
+> 
+> > +			[ARM64,KNL]
+> > +			Sets the size of kernel per-numa memory area for
+> > +			contiguous memory allocations. A value of 0 disables
+> > +			per-numa CMA altogether. And If this option is not
+> > +			specificed, the default value is 0.
+> > +			With per-numa CMA enabled, DMA users on node nid will
+> > +			first try to allocate buffer from the pernuma area
+> > +			which is located in node nid, if the allocation fails,
+> > +			they will fallback to the global default memory area.
+> > +
+> >  	cmo_free_hint=	[PPC] Format: { yes | no }
+> >  			Specify whether pages are marked as being inactive
+> >  			when they are freed.  This is used in CMO environments
+> > diff --git a/include/linux/dma-contiguous.h
+> b/include/linux/dma-contiguous.h
+> > index 03f8e98e3bcc..fe55e004f1f4 100644
+> > --- a/include/linux/dma-contiguous.h
+> > +++ b/include/linux/dma-contiguous.h
+> > @@ -171,6 +171,12 @@ static inline void dma_free_contiguous(struct
+> device *dev, struct page *page,
+> >
+> >  #endif
+> >
+> > +#ifdef CONFIG_DMA_PERNUMA_CMA
+> > +void dma_pernuma_cma_reserve(void);
+> > +#else
+> > +static inline void dma_pernuma_cma_reserve(void) { }
+> > +#endif
+> > +
+> >  #endif
+> >
+> >  #endif
+> > diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+> > index 847a9d1fa634..c38979d45b13 100644
+> > --- a/kernel/dma/Kconfig
+> > +++ b/kernel/dma/Kconfig
+> > @@ -118,6 +118,17 @@ config DMA_CMA
+> >  	  If unsure, say "n".
+> >
+> >  if  DMA_CMA
+> > +
+> > +config DMA_PERNUMA_CMA
+> > +	bool "Enable separate DMA Contiguous Memory Area for each NUMA
+> Node"
+> > +	default NUMA && ARM64
+> > +	help
+> > +	  Enable this option to get pernuma CMA areas so that devices like
+> > +	  ARM64 SMMU can get local memory by DMA coherent APIs.
+> > +
+> > +	  You can set the size of pernuma CMA by specifying
+> "pernuma_cma=size"
+> > +	  on the kernel's command line.
+> > +
+> >  comment "Default contiguous memory area size:"
+> >
+> >  config CMA_SIZE_MBYTES
+> > diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+> > index cff7e60968b9..0383c9b86715 100644
+> > --- a/kernel/dma/contiguous.c
+> > +++ b/kernel/dma/contiguous.c
+> > @@ -69,6 +69,19 @@ static int __init early_cma(char *p)
+> >  }
+> >  early_param("cma", early_cma);
+> >
+> > +#ifdef CONFIG_DMA_PERNUMA_CMA
+> > +
+> > +static struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
+> > +static phys_addr_t pernuma_size_bytes __initdata;
+> > +
+> > +static int __init early_pernuma_cma(char *p)
+> > +{
+> > +	pernuma_size_bytes = memparse(p, &p);
+> > +	return 0;
+> > +}
+> > +early_param("pernuma_cma", early_pernuma_cma);
+> > +#endif
+> > +
+> >  #ifdef CONFIG_CMA_SIZE_PERCENTAGE
+> >
+> >  static phys_addr_t __init __maybe_unused
+> cma_early_percent_memory(void)
+> > @@ -96,6 +109,34 @@ static inline __maybe_unused phys_addr_t
+> cma_early_percent_memory(void)
+> >
+> >  #endif
+> >
+> > +#ifdef CONFIG_DMA_PERNUMA_CMA
+> > +void __init dma_pernuma_cma_reserve(void)
+> > +{
+> > +	int nid;
+> > +
+> > +	if (!pernuma_size_bytes)
+> > +		return;
+> > +
+> > +	for_each_online_node(nid) {
+> > +		int ret;
+> > +		char name[20];
+> > +		struct cma **cma = &dma_contiguous_pernuma_area[nid];
+> > +
+> > +		snprintf(name, sizeof(name), "pernuma%d", nid);
+> > +		ret = cma_declare_contiguous_nid(0, pernuma_size_bytes, 0, 0,
+> > +						 0, false, name, cma, nid);
+> > +		if (ret) {
+> > +			pr_warn("%s: reservation failed: err %d, node %d", __func__,
+> > +				ret, nid);
+> > +			continue;
+> > +		}
+> > +
+> > +		pr_debug("%s: reserved %llu MiB on node %d\n", __func__,
+> > +			(unsigned long long)pernuma_size_bytes / SZ_1M, nid);
+> > +	}
+> > +}
+> > +#endif
+> > +
+> >  /**
+> >   * dma_contiguous_reserve() - reserve area(s) for contiguous memory
+> handling
+> >   * @limit: End address of the reserved memory (optional, 0 for any).
+> > @@ -228,23 +269,44 @@ static struct page *cma_alloc_aligned(struct cma
+> *cma, size_t size, gfp_t gfp)
+> >   * @size:  Requested allocation size.
+> >   * @gfp:   Allocation flags.
+> >   *
+> > - * This function allocates contiguous memory buffer for specified device. It
+> > - * tries to use device specific contiguous memory area if available, or the
+> > - * default global one.
+> > + * tries to use device specific contiguous memory area if available, or it
+> > + * tries to use per-numa cma, if the allocation fails, it will fallback to
+> > + * try default global one.
+> >   *
+> > - * Note that it byapss one-page size of allocations from the global area as
+> > - * the addresses within one page are always contiguous, so there is no need
+> > - * to waste CMA pages for that kind; it also helps reduce fragmentations.
+> > + * Note that it bypass one-page size of allocations from the per-numa and
+> > + * global area as the addresses within one page are always contiguous, so
+> > + * there is no need to waste CMA pages for that kind; it also helps reduce
+> > + * fragmentations.
+> >   */
+> >  struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t
+> gfp)
+> >  {
+> > +#ifdef CONFIG_DMA_PERNUMA_CMA
+> > +	int nid = dev_to_node(dev);
+> > +#endif
+> > +
+> >  	/* CMA can be used only in the context which permits sleeping */
+> >  	if (!gfpflags_allow_blocking(gfp))
+> >  		return NULL;
+> >  	if (dev->cma_area)
+> >  		return cma_alloc_aligned(dev->cma_area, size, gfp);
+> > -	if (size <= PAGE_SIZE || !dma_contiguous_default_area)
+> > +	if (size <= PAGE_SIZE)
+> > +		return NULL;
+> > +
+> > +#ifdef CONFIG_DMA_PERNUMA_CMA
+> > +	if (nid != NUMA_NO_NODE && !(gfp & (GFP_DMA | GFP_DMA32))) {
+> > +		struct cma *cma = dma_contiguous_pernuma_area[nid];
+> 
+> It could be that for some node reservation failedm than
+> dma_contiguous_pernuma_area[nid] would be NULL.
+> I'd add a fallback to another node here.
+
+This has been done.
+If dma_contiguous_pernuma_area[nid] is null, it will fallback to the default global cma.
+
+> 
+> > +		struct page *page;
+> > +
+> > +		if (cma) {
+> > +			page = cma_alloc_aligned(cma, size, gfp);
+> > +			if (page)
+> > +				return page;
+> > +		}
+> > +	}
+> > +#endif
+> 
+> I think the selection of the area can be put in a helper funciton and
+> then here we just try to allocate from the selected area. E.g.
+> 
+> static struct cma* dma_get_cma_area(struct device *dev)
+> {
+> #ifdef CONFIG_DMA_PERNUMA_CMA
+> 	int nid = dev_to_node(dev);
+> 	struct cma *cma = dma_contiguous_pernuma_area[nid];
+> 
+> 	if (!cma)
+> 		/* select cma from another node */ ;
+> 
+> 	return cma;
+> #else
+> 	return dma_contiguous_default_area;
+> #endif
+> }
+> 
+
+It is possible dma_contiguous_pernuma_area[nid] is not null, but we fail to get memory
+from it due to it is either full or has no GFP_DMA(32) support. In this case, we still need
+to fallback to the default global cma. So the code is trying pernuma_cma, then trying
+default global cma. It is not picking one from the two areas. It is trying both.
+
+> struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+> {
+> 	struct cma *cma;
+> 	...
+> 
+> 
+> 	cma = dma_get_cma_area(dev);
+> 	if (!cma)
+> 		return NULL;
+> 
+> 	return cma_alloc_aligned(cma, size, gfp);
+> }
+> 
+> > +	if (!dma_contiguous_default_area)
+> >  		return NULL;
+> > +
+> >  	return cma_alloc_aligned(dma_contiguous_default_area, size, gfp);
+> >  }
+> >
+> > @@ -261,9 +323,27 @@ struct page *dma_alloc_contiguous(struct device
+> *dev, size_t size, gfp_t gfp)
+> >   */
+> >  void dma_free_contiguous(struct device *dev, struct page *page, size_t
+> size)
+> >  {
+> > -	if (!cma_release(dev_get_cma_area(dev), page,
+> > -			 PAGE_ALIGN(size) >> PAGE_SHIFT))
+> > -		__free_pages(page, get_order(size));
+> 
+> Here as well, dev_get_cma_area() can be replaced with, say
+> dma_get_dev_cma_area(dev, page) that will hide the below logic.
+
+As explained above, this won't work.
+
+> 
+> > +	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> > +
+> > +	/* if dev has its own cma, free page from there */
+> > +	if (dev->cma_area) {
+> > +		if (cma_release(dev->cma_area, page, count))
+> > +			return;
+> > +	} else {
+> > +		/*
+> > +		 * otherwise, page is from either per-numa cma or default cma
+> > +		 */
+> > +#ifdef CONFIG_DMA_PERNUMA_CMA
+> > +		if (cma_release(dma_contiguous_pernuma_area[page_to_nid(page)],
+> > +					page, count))
+> > +			return;
+> > +#endif
+> > +		if (cma_release(dma_contiguous_default_area, page, count))
+> > +			return;
+> > +	}
+> > +
+> > +	/* not in any cma, free from buddy */
+> > +	__free_pages(page, get_order(size));
+> >  }
+> >
+> >  /*
+> > --
+> > 2.27.0
+> >
+> >
+
+Thanks
+Barry
