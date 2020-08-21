@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F53C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6788AC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8E1020855
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45AB22087D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:07:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MYsbjoCf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D1boRI8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgHUWHw (ORCPT
+        id S1726985AbgHUWH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:07:52 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56393 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbgHUWHw (ORCPT
+        Fri, 21 Aug 2020 18:07:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:57700 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726766AbgHUWHx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:07:52 -0400
+        Fri, 21 Aug 2020 18:07:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598047668;
+        s=mimecast20190719; t=1598047670;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6/wi0Nw+OScWqjXUa7deT7et3gd07Go77zu0NJl9auw=;
-        b=MYsbjoCfKxYBrBIEcPdxD/va7d/RYaj+d8dqRP+nWwLbfibxlme1jFrhSEUy+N78oIvECu
-        xoshhUuptQT7npNuMrILO80V2Iao74OQeMYAJZdjZJUCbzjfNZTvwGpcjAlVIYn8gXor3r
-        yq0wPEv6VYjcRMMzDLqgfvPUn3aKWe8=
+        bh=DkSg3luBHRm0cvkVLNBpsnCZK9HVFB0m9kyx8QwK1QI=;
+        b=D1boRI8f1KQoX0JCm2r9cyKTuCaenilBvXSEGa0O9Rwz6ikzFweyi3ytHipSP9Mr/XEYj7
+        /eDZnEM0ON2XCrd8XAVWynvEnuUGTXWE4IPp8RuLFw26m66QEpw/gvS4pEWvfiu2Cq9RCs
+        2ITMpxNkQkKUTa6XjzWR375c+SKCdHM=
 Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
  [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-13-n3sGfE_4NnK3PcTgLvMa6A-1; Fri, 21 Aug 2020 18:07:47 -0400
-X-MC-Unique: n3sGfE_4NnK3PcTgLvMa6A-1
-Received: by mail-ej1-f72.google.com with SMTP id n12so1280259ejz.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 15:07:46 -0700 (PDT)
+ us-mta-523-uir71xXmPLm8O565bg76fg-1; Fri, 21 Aug 2020 18:07:48 -0400
+X-MC-Unique: uir71xXmPLm8O565bg76fg-1
+Received: by mail-ej1-f72.google.com with SMTP id u13so1273517ejr.19
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 15:07:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:content-transfer-encoding:from:mime-version
          :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=6/wi0Nw+OScWqjXUa7deT7et3gd07Go77zu0NJl9auw=;
-        b=IO30JZM3MkqLVFxKbiPZ/Htn5+nVlMBY9ANtaIj91wbLn3I35GaLdiongWubO3BLTT
-         Qk3zQv+LU85sAEqkFu7HNWvkWEsk7FRSvIfc4E4l2UsV8Zb7OBQEKlT7TVYSjXMkhYP7
-         tBOGDHj3mmw06waLn3kWQKbYZ00t0LBQnPQUhU1N0D1mqbwXsiv7T+90DTMU4L4H3Bct
-         3dM1yFWFIi2NJw0E1nQKpHhFX9eL0yjnelEj8JucfN9ZLaUdSdtYx66ZnIHwW6XW6rUb
-         /dO9Z00b5vzWSTtgXmUpJnv37HvXFze0oO8ZfhfnMUD2MdnUWjw51u2x4SqsQ7sE16cF
-         DiGg==
-X-Gm-Message-State: AOAM531yXiapHe6tHVfihCp4cTji2ahKIkF9bkLvGIUHtWgNYsZg8Otr
-        JMc4mF84iTF/1R42Wr3pgrmvUH2K0pDqOy1pyUkapDH+PfN+xZJk+PPcl7ar9yNRKSM8/Gwge3m
-        MaeEfjQ56luinNc8gJg8DPdbT
-X-Received: by 2002:a17:906:6d91:: with SMTP id h17mr4593068ejt.531.1598047665800;
-        Fri, 21 Aug 2020 15:07:45 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz2fGCDlUrSC0ozVrUImslz75nvdXz6gshUl15sF6TxX4V9+R9BHsd6i/JypP0Cf8+w6d3+oA==
-X-Received: by 2002:a17:906:6d91:: with SMTP id h17mr4593016ejt.531.1598047665540;
-        Fri, 21 Aug 2020 15:07:45 -0700 (PDT)
+        bh=DkSg3luBHRm0cvkVLNBpsnCZK9HVFB0m9kyx8QwK1QI=;
+        b=WfaROjWkGpHeLcwuAypzsf3DbtWn5aQegCTb+E2ZHENX5EZ9Pn4YxY0Jo4xvY3cSOw
+         bzpKpACaCG+fxWWLaGuDQwpsB2AJIRTPsHnWJZRqdsJY7e3nLMNTlR1w5JtRJLT88mp/
+         1RJdsH4/U6ZAAqOVsT/FF7tWmu8lxti734WxlQY6thhVPH0DAEpW/tjhszAw7KwjlArt
+         yZoQr5kMYEexTFtfIw28BBx3ZEm8cKj6yFOoE40k0ZShA+B+53u0DPW5uPesHsgc7pKI
+         dm0sJfm0ZemRwfz5E/AEw6z6zKP9V1UGski3HX8kHKtwAy8cVp/Kt4OhWCkL5UHCX3fG
+         y8zA==
+X-Gm-Message-State: AOAM531ldimKkS4YYoLB9BUNcSWXZIbbIciJkna1WDyD1CYCGvUzbJH8
+        HeTYRINju0Q0/6ZM6TxkSXltNF6ifCU8kf2+etmKpNeApXbd7kuQiIEd87oI3/+46gdavKM2HYZ
+        UHba7y+gKZAexlrQ3P4mER+0r
+X-Received: by 2002:a17:906:2a04:: with SMTP id j4mr5244904eje.440.1598047667322;
+        Fri, 21 Aug 2020 15:07:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwhvJaQ8AyV/ONfuc3qKwQ/zzerkQ6ZDcGPqYKrvzzg0K+cbZJ1cq8ZccJ0IrDrvfkZ/kgetQ==
+X-Received: by 2002:a17:906:2a04:: with SMTP id j4mr5244849eje.440.1598047667115;
+        Fri, 21 Aug 2020 15:07:47 -0700 (PDT)
 Received: from [192.168.3.122] (p5b0c6231.dip0.t-ipconnect.de. [91.12.98.49])
-        by smtp.gmail.com with ESMTPSA id n10sm1810467edo.43.2020.08.21.15.07.44
+        by smtp.gmail.com with ESMTPSA id zc8sm181245ejb.103.2020.08.21.15.07.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 15:07:45 -0700 (PDT)
+        Fri, 21 Aug 2020 15:07:46 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 From:   David Hildenbrand <david@redhat.com>
 Mime-Version: 1.0 (1.0)
 Subject: Re: [PATCH v4 00/23] device-dax: Support sub-dividing soft-reserved ranges
-Date:   Fri, 21 Aug 2020 23:42:49 +0200
-Message-Id: <1FB395E7-633D-4F3E-82F5-12E2FDAF33EC@redhat.com>
+Date:   Fri, 21 Aug 2020 23:43:50 +0200
+Message-Id: <D0A25288-C72D-47C1-BD8F-C1C1A6BFA0BF@redhat.com>
 References: <646DDE9B-90C2-493A-958C-90EFA1CCA475@redhat.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -199,5 +199,7 @@ t-reserved=E2=80=9C is and I could bet most people have no clue what that is=
 e memory=E2=80=9C in /proc/iomem is something normal (Linux using) human bei=
 ngs can understand.
 
-s/normal/most/ of course :)=
+Obviously s/normal/most/
+
+Cheers!=
 
