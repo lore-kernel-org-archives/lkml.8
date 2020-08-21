@@ -7,55 +7,45 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D53C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4306CC433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA1A92224D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 214E1208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030775;
-	bh=nPjr62iDyDw76cIsvSNQAF6YytqSbALHux2+KtPnUTc=;
+	s=default; t=1598030782;
+	bh=cAA9DlpTrMCDJIGEUfaf/cn0vOGig3xNSRqqtLuzOrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j3G+eDVm3jjzEPcVPMMNH8K9N0MYjwsewBYSj/6jrxBZtMD5wqz7ARP/TwpdXHX+c
-	 SVCxl5DANO5qb+Q55vyUFhgl1L+EQYTkDZVnvH/22Z12Dl5QlN+0+69QRNZVJN0pFa
-	 0namRgYKShg3G9P8pLL/HSJ1clSgf/hW8QF/IS4Y=
+	b=Am4gxx4FK+EggR6wucQ742E/XxFarDSuxD7seFpukiiQkplPajpf/JaZt0kz528wY
+	 x0OUm7i+CMGPWsxk/QL+GkUkP0mzfiMi13zc0I5yLwZSbLp5QPL8STfkALIU4sS6A0
+	 +18AL4V2qEuajWgfYpRhj4XwK+cjP/GeRq5Xaxk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgHUR0N (ORCPT
+        id S1727835AbgHUQPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:26:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47566 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727863AbgHUQPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:15:12 -0400
+        id S1726977AbgHUQO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:14:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2201D2063A;
-        Fri, 21 Aug 2020 16:15:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B080F20FC3;
+        Fri, 21 Aug 2020 16:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026512;
-        bh=nPjr62iDyDw76cIsvSNQAF6YytqSbALHux2+KtPnUTc=;
+        s=default; t=1598026467;
+        bh=cAA9DlpTrMCDJIGEUfaf/cn0vOGig3xNSRqqtLuzOrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zUs3C9ofeYEC8BtS3oxWU+zUALIimBffkSPbn+ZhlDDZoSacZz+2FVdqEhAHx98w7
-         X4s1gU8ei4ynszYtNFsCn6Trjei272qW3pCsd65KbivJgy16tb2DZ1SqknRDATpMbR
-         UcG2oYDj/X5/ASHwD0gRy0izKzq0e1WWjOQ0leXM=
+        b=gqZoTbqmHnmWf3P8egcLnf02Ilzyi8eyHCPK+8myUC2OK3dJjfNv7jU5vW4dmHEKi
+         SJsdGCG2GzOlQ2hLf7e+5UCHnbbRMQjDMBSm19+QhpC5Rss2aS9xwfOaAHp1vtcMXW
+         AEkD3dE6thmRzPL4cJPLnsfmjO0U3R+GJG27SdMU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, kjlu@umn.edu, wu000273@umn.edu,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 37/62] omapfb: fix multiple reference count leaks due to pm_runtime_get_sync
-Date:   Fri, 21 Aug 2020 12:13:58 -0400
-Message-Id: <20200821161423.347071-37-sashal@kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.8 02/62] ALSA: pci: delete repeated words in comments
+Date:   Fri, 21 Aug 2020 12:13:23 -0400
+Message-Id: <20200821161423.347071-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -68,143 +58,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 78c2ce9bde70be5be7e3615a2ae7024ed8173087 ]
+[ Upstream commit c7fabbc51352f50cc58242a6dc3b9c1a3599849b ]
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
+Drop duplicated words in sound/pci/.
+{and, the, at}
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Cc: kjlu@umn.edu
-Cc: wu000273@umn.edu
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Enrico Weigelt <info@metux.net>
-cc: "Andrew F. Davis" <afd@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200614030528.128064-1-pakki001@umn.edu
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lore.kernel.org/r/20200806021926.32418-1-rdunlap@infradead.org
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/omap2/omapfb/dss/dispc.c | 7 +++++--
- drivers/video/fbdev/omap2/omapfb/dss/dsi.c   | 7 +++++--
- drivers/video/fbdev/omap2/omapfb/dss/dss.c   | 7 +++++--
- drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c | 5 +++--
- drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c | 5 +++--
- drivers/video/fbdev/omap2/omapfb/dss/venc.c  | 7 +++++--
- 6 files changed, 26 insertions(+), 12 deletions(-)
+ sound/pci/cs46xx/cs46xx_lib.c       | 2 +-
+ sound/pci/cs46xx/dsp_spos_scb_lib.c | 2 +-
+ sound/pci/hda/hda_codec.c           | 2 +-
+ sound/pci/hda/hda_generic.c         | 2 +-
+ sound/pci/hda/patch_sigmatel.c      | 2 +-
+ sound/pci/ice1712/prodigy192.c      | 2 +-
+ sound/pci/oxygen/xonar_dg.c         | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-index 4a16798b2ecd8..e2b572761bf61 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-@@ -520,8 +520,11 @@ int dispc_runtime_get(void)
- 	DSSDBG("dispc_runtime_get\n");
+diff --git a/sound/pci/cs46xx/cs46xx_lib.c b/sound/pci/cs46xx/cs46xx_lib.c
+index a080d63a9b456..4490dd7469d99 100644
+--- a/sound/pci/cs46xx/cs46xx_lib.c
++++ b/sound/pci/cs46xx/cs46xx_lib.c
+@@ -766,7 +766,7 @@ static void snd_cs46xx_set_capture_sample_rate(struct snd_cs46xx *chip, unsigned
+ 		rate = 48000 / 9;
  
- 	r = pm_runtime_get_sync(&dispc.pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&dispc.pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
- EXPORT_SYMBOL(dispc_runtime_get);
+ 	/*
+-	 *  We can not capture at at rate greater than the Input Rate (48000).
++	 *  We can not capture at a rate greater than the Input Rate (48000).
+ 	 *  Return an error if an attempt is made to stray outside that limit.
+ 	 */
+ 	if (rate > 48000)
+diff --git a/sound/pci/cs46xx/dsp_spos_scb_lib.c b/sound/pci/cs46xx/dsp_spos_scb_lib.c
+index 6b536fc23ca62..1f90ca723f4df 100644
+--- a/sound/pci/cs46xx/dsp_spos_scb_lib.c
++++ b/sound/pci/cs46xx/dsp_spos_scb_lib.c
+@@ -1716,7 +1716,7 @@ int cs46xx_iec958_pre_open (struct snd_cs46xx *chip)
+ 	struct dsp_spos_instance * ins = chip->dsp_spos_instance;
  
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-index d620376216e1d..6f9c25fec9946 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-@@ -1137,8 +1137,11 @@ static int dsi_runtime_get(struct platform_device *dsidev)
- 	DSSDBG("dsi_runtime_get\n");
+ 	if ( ins->spdif_status_out & DSP_SPDIF_STATUS_OUTPUT_ENABLED ) {
+-		/* remove AsynchFGTxSCB and and PCMSerialInput_II */
++		/* remove AsynchFGTxSCB and PCMSerialInput_II */
+ 		cs46xx_dsp_disable_spdif_out (chip);
  
- 	r = pm_runtime_get_sync(&dsi->pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&dsi->pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
- 
- static void dsi_runtime_put(struct platform_device *dsidev)
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-index bfc5c4c5a26ad..a6b1c1598040d 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-@@ -768,8 +768,11 @@ int dss_runtime_get(void)
- 	DSSDBG("dss_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&dss.pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&dss.pdev->dev);
-+		return r;
-+	}
-+	return 0;
+ 		/* save state */
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index 803978d69e3c4..ea7f16dd1f73c 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -3427,7 +3427,7 @@ EXPORT_SYMBOL_GPL(snd_hda_set_power_save);
+  * @nid: NID to check / update
+  *
+  * Check whether the given NID is in the amp list.  If it's in the list,
+- * check the current AMP status, and update the the power-status according
++ * check the current AMP status, and update the power-status according
+  * to the mute status.
+  *
+  * This function is supposed to be set or called from the check_power_status
+diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
+index f4e9d9445e18f..201a3b6b0b0f6 100644
+--- a/sound/pci/hda/hda_generic.c
++++ b/sound/pci/hda/hda_generic.c
+@@ -813,7 +813,7 @@ static void activate_amp_in(struct hda_codec *codec, struct nid_path *path,
+ 	}
  }
  
- void dss_runtime_put(void)
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
-index 7060ae56c062c..4804aab342981 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
-@@ -39,9 +39,10 @@ static int hdmi_runtime_get(void)
- 	DSSDBG("hdmi_runtime_get\n");
+-/* sync power of each widget in the the given path */
++/* sync power of each widget in the given path */
+ static hda_nid_t path_power_update(struct hda_codec *codec,
+ 				   struct nid_path *path,
+ 				   bool allow_powerdown)
+diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
+index a608d0486ae49..2bea11d62d3e9 100644
+--- a/sound/pci/hda/patch_sigmatel.c
++++ b/sound/pci/hda/patch_sigmatel.c
+@@ -832,7 +832,7 @@ static int stac_auto_create_beep_ctls(struct hda_codec *codec,
+ 	static const struct snd_kcontrol_new beep_vol_ctl =
+ 		HDA_CODEC_VOLUME(NULL, 0, 0, 0);
  
- 	r = pm_runtime_get_sync(&hdmi.pdev->dev);
--	WARN_ON(r < 0);
--	if (r < 0)
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&hdmi.pdev->dev);
- 		return r;
-+	}
- 
- 	return 0;
- }
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
-index ac49531e47327..a06b6f1355bdb 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
-@@ -43,9 +43,10 @@ static int hdmi_runtime_get(void)
- 	DSSDBG("hdmi_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&hdmi.pdev->dev);
--	WARN_ON(r < 0);
--	if (r < 0)
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&hdmi.pdev->dev);
- 		return r;
-+	}
- 
- 	return 0;
- }
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/venc.c b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-index d5404d56c922f..0b0ad20afd630 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-@@ -348,8 +348,11 @@ static int venc_runtime_get(void)
- 	DSSDBG("venc_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&venc.pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&venc.pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
- 
- static void venc_runtime_put(void)
+-	/* check for mute support for the the amp */
++	/* check for mute support for the amp */
+ 	if ((caps & AC_AMPCAP_MUTE) >> AC_AMPCAP_MUTE_SHIFT) {
+ 		const struct snd_kcontrol_new *temp;
+ 		if (spec->anabeep_nid == nid)
+diff --git a/sound/pci/ice1712/prodigy192.c b/sound/pci/ice1712/prodigy192.c
+index 8df14f63b10df..096ec76f53046 100644
+--- a/sound/pci/ice1712/prodigy192.c
++++ b/sound/pci/ice1712/prodigy192.c
+@@ -32,7 +32,7 @@
+  *		  Experimentally I found out that only a combination of
+  *		  OCKS0=1, OCKS1=1 (128fs, 64fs output) and ice1724 -
+  *		  VT1724_MT_I2S_MCLK_128X=0 (256fs input) yields correct
+- *		  sampling rate. That means the the FPGA doubles the
++ *		  sampling rate. That means that the FPGA doubles the
+  *		  MCK01 rate.
+  *
+  *	Copyright (c) 2003 Takashi Iwai <tiwai@suse.de>
+diff --git a/sound/pci/oxygen/xonar_dg.c b/sound/pci/oxygen/xonar_dg.c
+index c3f8721624cd4..b90421a1d909a 100644
+--- a/sound/pci/oxygen/xonar_dg.c
++++ b/sound/pci/oxygen/xonar_dg.c
+@@ -29,7 +29,7 @@
+  *   GPIO 4 <- headphone detect
+  *   GPIO 5 -> enable ADC analog circuit for the left channel
+  *   GPIO 6 -> enable ADC analog circuit for the right channel
+- *   GPIO 7 -> switch green rear output jack between CS4245 and and the first
++ *   GPIO 7 -> switch green rear output jack between CS4245 and the first
+  *             channel of CS4361 (mechanical relay)
+  *   GPIO 8 -> enable output to speakers
+  *
 -- 
 2.25.1
 
