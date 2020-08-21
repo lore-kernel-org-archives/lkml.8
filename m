@@ -2,157 +2,154 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29146C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02F0D207DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:05:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ox6lZUEy"
+	by mail.kernel.org (Postfix) with ESMTP id E39BD20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgHUBFJ (ORCPT
+        id S1726846AbgHUBHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 21:05:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgHUBFF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 21:05:05 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5FAC061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 18:05:05 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id b2so130415edw.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 18:05:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JSXxxVxBZt5qj3H+1yv/ZiFeWKO2vqSUz4tnuOVfh9U=;
-        b=Ox6lZUEybubjhfdPiOKWRZG4qfFEecYwQvufT8kMPiwpTg8/545YywiMSwSKdQaFYQ
-         8yTK33s5XJHGaIh16ow88NuFxVBZGDqNfHwhECe1FeiLkw1V9pzS7KCBEv4JMM/Dl6t+
-         RmyCaLAagpkumwFoeHNEK99TcKaEkoCH8sEBo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JSXxxVxBZt5qj3H+1yv/ZiFeWKO2vqSUz4tnuOVfh9U=;
-        b=rXcpnNkulatF43oprH8qW/IYH6cBL4vdkGxhP/hHxnFj4w6200vlU5zyqoSeIiSlLq
-         y5JR0urLM8C7HHkv1phCvKUToYgesChJcnfqYj3aqX2Y8wjcT54Ppjq5mz/fEUu0tT8l
-         fWv8HmMiCGnguAzn/Bj+Fu8SYP0dx/LECBjwFapsyphjrkFSjlPuWVmByRFicJSJy7W6
-         +T7Gn/V8MzhQ4Ba6BXkifT0XmavnETAmca9v1qktJ2Z0YR4sMdzaxA7aB8keUFu3jY8K
-         Uhw2QSItxiVcuPEgbkjqMetaK61kWa50V/+c200sB3phY8/1Th3lek92xbshhXq1w2XA
-         d/9Q==
-X-Gm-Message-State: AOAM531BmW3YNcwXwczXvXXpl+TJL6eQrrtpsNs0R9alQecvZJgkRJIk
-        dmqI6znyCdxJ5Yg6LkdBs3scZoesaQVB83RhkcYkeA==
-X-Google-Smtp-Source: ABdhPJxa+kT00QMBpxe7cjYDje4O13Gp9nSHrcctmkTLHSGiplMHCPalfyONwyQUnB1/nBpstBnLbOK58VZi7MY/GGA=
-X-Received: by 2002:a05:6402:297:: with SMTP id l23mr528464edv.145.1597971903431;
- Thu, 20 Aug 2020 18:05:03 -0700 (PDT)
+        Thu, 20 Aug 2020 21:07:21 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3491 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726309AbgHUBHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 21:07:20 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 79EFA8312E2E22CFD7F4;
+        Fri, 21 Aug 2020 09:07:18 +0800 (CST)
+Received: from dggemi710-chm.china.huawei.com (10.3.20.109) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Fri, 21 Aug 2020 09:07:17 +0800
+Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
+ dggemi710-chm.china.huawei.com (10.3.20.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Fri, 21 Aug 2020 09:07:18 +0800
+Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
+ dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.1913.007;
+ Fri, 21 Aug 2020 09:07:18 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+CC:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Michal Hocko" <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
+Subject: =?utf-8?B?UkU6IG1tL2d1cC5jOjE5MjI6NzogZXJyb3I6IGltcGxpY2l0IGRlY2xhcmF0?=
+ =?utf-8?B?aW9uIG9mIGZ1bmN0aW9uIOKAmGlzX3ZhbGlkX2d1cF9mbGFnc+KAmQ==?=
+Thread-Topic: =?utf-8?B?bW0vZ3VwLmM6MTkyMjo3OiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24g?=
+ =?utf-8?B?b2YgZnVuY3Rpb24g4oCYaXNfdmFsaWRfZ3VwX2ZsYWdz4oCZ?=
+Thread-Index: AQHWdtSC73u9hMvyMkWJoaaW4e6o2alA9KKAgADK0FA=
+Date:   Fri, 21 Aug 2020 01:07:18 +0000
+Message-ID: <f45f6a5ebacf4c11880f6288bbf50a31@hisilicon.com>
+References: <CA+G9fYuNS3k0DVT62twfV746pfNhCSrk5sVMcOcQ1PGGnEseyw@mail.gmail.com>
+ <20200820135515.c36b35449143c723f0800f5b@linux-foundation.org>
+In-Reply-To: <20200820135515.c36b35449143c723f0800f5b@linux-foundation.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.202.2]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <38d00022-730c-948a-917c-d86382df8cb9@canonical.com>
- <4acc34c4-9c17-41f7-2e39-7eda16792572@gmail.com> <CAGt4E5s_=Tai=fTB37VibaCF=2F69vO3ZbVAsBCZXLK2CNiVAQ@mail.gmail.com>
-In-Reply-To: <CAGt4E5s_=Tai=fTB37VibaCF=2F69vO3ZbVAsBCZXLK2CNiVAQ@mail.gmail.com>
-From:   Markus Mayer <mmayer@broadcom.com>
-Date:   Thu, 20 Aug 2020 18:04:52 -0700
-Message-ID: <CAGt4E5vBNz6kdXTPLZv1cU=sVKPGvxH75aSLSNe9UqFXUBXxrQ@mail.gmail.com>
-Subject: Re: out of bounds access on array error_text[] because of -ETIMEDOUT
- return from __send_command()
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 10:23, Markus Mayer <mmayer@broadcom.com> wrote:
->
-> On Wed, 19 Aug 2020 at 11:34, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >
-> > On 8/18/20 5:21 AM, Colin Ian King wrote:
-> > > Hi,
-> > >
-> > > static analysis with coverity has found a buffer overflow issue with the
-> > > brcmstb driver, I believe it may have been introduced with the following
-> > > commit:
-> > >
-> > > commit a7c25759d8d84b64c437a78f05df7314b02934e5
-> > > Author: Markus Mayer <mmayer@broadcom.com>
-> > > Date:   Tue Apr 2 16:01:00 2019 -0700
-> > >
-> > >     memory: brcmstb: dpfe: wait for DCPU to be ready
-> > >
-> > > The static analysis is as follows for the source file
-> > > /drivers/memory/brcmstb_dpfe.c :
-> > >
-> > > 684 static ssize_t generic_show(unsigned int command, u32 response[],
-> > > 685                            struct brcmstb_dpfe_priv *priv, char *buf)
-> > > 686 {
-> > > 687        int ret;
-> > > 688
-> > >    1. Condition !priv, taking false branch.
-> > >
-> > > 689        if (!priv)
-> > > 690                return sprintf(buf, "ERROR: driver private data not
-> > > set\n");
-> > > 691
-> > >    2. return_constant: Function call __send_command(priv, command,
-> > > response) may return -110.
-> > >    3. assignment: Assigning: ret = __send_command(priv, command,
-> > > response). The value of ret is now -110.
-> > >
-> > > 692        ret = __send_command(priv, command, response);
-> > >    4. Condition ret < 0, taking true branch.
-> > >
-> > > 693        if (ret < 0)
-> > >
-> > > Out-of-bounds read (OVERRUN)
-> > >    5. overrun-local: Overrunning array error_text of 6 8-byte elements
-> > > at element index 110 (byte offset 887) using index -ret (which evaluates
-> > > to 110).
-> > > 694                return sprintf(buf, "ERROR: %s\n", error_text[-ret]);
-> > > 695
-> > > 696        return 0;
-> > > 697 }
-> > >
-> > >
-> > > Function __send_command() can return -ETIMEDOUT and this causes an
-> > > out-of-bounds access on error_text[].
-> >
-> > Markus, what do you think of this:
-> >
-> > diff --git a/drivers/memory/brcmstb_dpfe.c b/drivers/memory/brcmstb_dpfe.c
-> > index 60e8633b1175..b41c6251ddc3 100644
-> > --- a/drivers/memory/brcmstb_dpfe.c
-> > +++ b/drivers/memory/brcmstb_dpfe.c
-> > @@ -445,7 +445,7 @@ static int __send_command(struct brcmstb_dpfe_priv
-> > *priv, unsigned int cmd,
-> >         }
-> >         if (resp != 0) {
-> >                 mutex_unlock(&priv->lock);
-> > -               return -ETIMEDOUT;
-> > +               return -ffs(DCPU_RET_ERR_TIMEDOUT);
-> >         }
-> >
-> >         /* Compute checksum over the message */
-> >
-> > That way we only return DCPU-style error code from __send_command and we
-> > de-reference error_text accordingly? Or we could just introduce a proper
-> > lookup with a function instead of a direct array de-reference.
->
-> Let me do some experiments. What you are proposing should work and is
-> in line with the current code. A lookup function might be cleaner,
-> though.
-
-I submitted a patch for review. See https://lkml.org/lkml/2020/8/20/2291.
-
-Regards,
--Markus
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogb3duZXItbGludXgtbW1A
+a3ZhY2sub3JnIFttYWlsdG86b3duZXItbGludXgtbW1Aa3ZhY2sub3JnXSBPbg0KPiBCZWhhbGYg
+T2YgQW5kcmV3IE1vcnRvbg0KPiBTZW50OiBGcmlkYXksIEF1Z3VzdCAyMSwgMjAyMCA4OjU1IEFN
+DQo+IFRvOiBOYXJlc2ggS2FtYm9qdSA8bmFyZXNoLmthbWJvanVAbGluYXJvLm9yZz4NCj4gQ2M6
+IExpbnV4LU5leHQgTWFpbGluZyBMaXN0IDxsaW51eC1uZXh0QHZnZXIua2VybmVsLm9yZz47IG9w
+ZW4gbGlzdA0KPiA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LW1tIDxsaW51
+eC1tbUBrdmFjay5vcmc+Ow0KPiBsa2Z0LXRyaWFnZUBsaXN0cy5saW5hcm8ub3JnOyBMaW51eGFy
+bSA8bGludXhhcm1AaHVhd2VpLmNvbT47IFNvbmcgQmFvIEh1YQ0KPiAoQmFycnkgU29uZykgPHNv
+bmcuYmFvLmh1YUBoaXNpbGljb24uY29tPjsgSm9obiBIdWJiYXJkDQo+IDxqaHViYmFyZEBudmlk
+aWEuY29tPjsgSmFuIEthcmEgPGphY2tAc3VzZS5jej47IErDqXLDtG1lIEdsaXNzZQ0KPiA8amds
+aXNzZUByZWRoYXQuY29tPjsgTWF0dGhldyBXaWxjb3ggKE9yYWNsZSkgPHdpbGx5QGluZnJhZGVh
+ZC5vcmc+OyBBbA0KPiBWaXJvIDx2aXJvQHplbml2LmxpbnV4Lm9yZy51az47IENocmlzdG9waCBI
+ZWxsd2lnIDxoY2hAaW5mcmFkZWFkLm9yZz47IERhbg0KPiBXaWxsaWFtcyA8ZGFuLmoud2lsbGlh
+bXNAaW50ZWwuY29tPjsgRGF2ZSBDaGlubmVyIDxkYXZpZEBmcm9tb3JiaXQuY29tPjsNCj4gSmFz
+b24gR3VudGhvcnBlIDxqZ2dAemllcGUuY2E+OyBKb25hdGhhbiBDb3JiZXQgPGNvcmJldEBsd24u
+bmV0PjsgTWljaGFsDQo+IEhvY2tvIDxtaG9ja29Ac3VzZS5jb20+OyBNaWtlIEtyYXZldHogPG1p
+a2Uua3JhdmV0ekBvcmFjbGUuY29tPjsNCj4gU2h1YWggS2hhbiA8c2h1YWhAa2VybmVsLm9yZz47
+IFZsYXN0aW1pbCBCYWJrYSA8dmJhYmthQHN1c2UuY3o+DQo+IFN1YmplY3Q6IFJlOiBtbS9ndXAu
+YzoxOTIyOjc6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbg0KPiDigJhp
+c192YWxpZF9ndXBfZmxhZ3PigJkNCj4gDQo+IE9uIFRodSwgMjAgQXVnIDIwMjAgMTQ6NTk6NTIg
+KzA1MzAgTmFyZXNoIEthbWJvanUNCj4gPG5hcmVzaC5rYW1ib2p1QGxpbmFyby5vcmc+IHdyb3Rl
+Og0KPiANCj4gPiBhcm0gYW5kIHJpc2N2IGFyY2hpdGVjdHVyZSBidWlsZCBmYWlsZWQgb24gbGlu
+dXggbmV4dCAyMDIwMDgyMCB0YWcuDQo+ID4NCj4gPiBtYWtlIC1zayBLQlVJTERfQlVJTERfVVNF
+Uj1UdXhCdWlsZCAtQy9saW51eCAtajE2IEFSQ0g9YXJtDQo+ID4gQ1JPU1NfQ09NUElMRT1hcm0t
+bGludXgtZ251ZWFiaWhmLSBIT1NUQ0M9Z2NjIENDPSJzY2NhY2hlDQo+ID4gYXJtLWxpbnV4LWdu
+dWVhYmloZi1nY2MiIE89YnVpbGQgekltYWdlDQo+ID4NCj4gPiAzNDgjDQo+ID4gMzQ5Li4vbW0v
+Z3VwLmM6IEluIGZ1bmN0aW9uIOKAmGdldF91c2VyX3BhZ2Vz4oCZOg0KPiA+IDM1MC4uL21tL2d1
+cC5jOjE5MjI6NzogZXJyb3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uDQo+ID4g
+4oCYaXNfdmFsaWRfZ3VwX2ZsYWdz4oCZIFstV2Vycm9yPWltcGxpY2l0LWZ1bmN0aW9uLWRlY2xh
+cmF0aW9uXQ0KPiA+IDM1MSAxOTIyIHwgaWYgKCFpc192YWxpZF9ndXBfZmxhZ3MoZ3VwX2ZsYWdz
+KSkNCj4gPiAzNTIgfCBefn5+fn5+fn5+fn5+fn5+fn4NCj4gPiAzNTNjYzE6IHNvbWUgd2Fybmlu
+Z3MgYmVpbmcgdHJlYXRlZCBhcyBlcnJvcnMNCj4gPg0KPiANCj4gWWVzLCB0aGFua3MuDQo+IA0K
+PiBGcm9tOiBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPg0KPiBTdWJq
+ZWN0Og0KPiBtbS1ndXAtZG9udC1wZXJtaXQtdXNlcnMtdG8tY2FsbC1nZXRfdXNlcl9wYWdlcy13
+aXRoLWZvbGxfbG9uZ3Rlcm0tZml4DQo+IA0KPiBmaXggQ09ORklHX01NVT1uIGJ1aWxkDQo+IA0K
+PiBMaW5rOg0KPiBodHRwczovL2xrbWwua2VybmVsLm9yZy9yL0NBK0c5Zll1TlMzazBEVlQ2MnR3
+ZlY3NDZwZk5oQ1NyazVzVk1jT2NRMQ0KPiBQR0duRXNleXdAbWFpbC5nbWFpbC5jb20NCj4gUmVw
+b3J0ZWQtYnk6IE5hcmVzaCBLYW1ib2p1IDxuYXJlc2gua2FtYm9qdUBsaW5hcm8ub3JnPg0KPiBD
+YzogQmFycnkgU29uZyA8c29uZy5iYW8uaHVhQGhpc2lsaWNvbi5jb20+DQo+IENjOiBTdGVwaGVu
+IFJvdGh3ZWxsIDxzZnJAY2FuYi5hdXVnLm9yZy5hdT4NCj4gU2lnbmVkLW9mZi1ieTogQW5kcmV3
+IE1vcnRvbiA8YWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZz4NCg0KQW5kcmV3LA0KVGhhbmtzIGZv
+ciB0YWtpbmcgY2FyZSBvZiB0aGlzIGJ1aWxkIGlzc3VlLg0KQWNrZWQtYnk6IEJhcnJ5IFNvbmcg
+PHNvbmcuYmFvLmh1YUBoaXNpbGljb24uY29tPg0KDQo+IC0tLQ0KPiANCj4gIG1tL2d1cC5jIHwg
+ICAzOCArKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNo
+YW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQ0KPiANCj4gLS0tDQo+IGEv
+bW0vZ3VwLmN+bW0tZ3VwLWRvbnQtcGVybWl0LXVzZXJzLXRvLWNhbGwtZ2V0X3VzZXJfcGFnZXMt
+d2l0aC1mb2xsX2xvbmcNCj4gdGVybS1maXgNCj4gKysrIGEvbW0vZ3VwLmMNCj4gQEAgLTE3NTks
+NiArMTc1OSwyNSBAQCBzdGF0aWMgX19hbHdheXNfaW5saW5lIGxvbmcgX19ndXBfbG9uZ3RlICB9
+DQo+ICNlbmRpZiAvKiBDT05GSUdfRlNfREFYIHx8IENPTkZJR19DTUEgKi8NCj4gDQo+ICtzdGF0
+aWMgYm9vbCBpc192YWxpZF9ndXBfZmxhZ3ModW5zaWduZWQgaW50IGd1cF9mbGFncykgew0KPiAr
+CS8qDQo+ICsJICogRk9MTF9QSU4gbXVzdCBvbmx5IGJlIHNldCBpbnRlcm5hbGx5IGJ5IHRoZSBw
+aW5fdXNlcl9wYWdlcyooKSBBUElzLA0KPiArCSAqIG5ldmVyIGRpcmVjdGx5IGJ5IHRoZSBjYWxs
+ZXIsIHNvIGVuZm9yY2UgdGhhdCB3aXRoIGFuIGFzc2VydGlvbjoNCj4gKwkgKi8NCj4gKwlpZiAo
+V0FSTl9PTl9PTkNFKGd1cF9mbGFncyAmIEZPTExfUElOKSkNCj4gKwkJcmV0dXJuIGZhbHNlOw0K
+PiArCS8qDQo+ICsJICogRk9MTF9QSU4gaXMgYSBwcmVyZXF1aXNpdGUgdG8gRk9MTF9MT05HVEVS
+TS4gQW5vdGhlciB3YXkgb2Ygc2F5aW5nDQo+ICsJICogdGhhdCBpcywgRk9MTF9MT05HVEVSTSBp
+cyBhIHNwZWNpZmljIGNhc2UsIG1vcmUgcmVzdHJpY3RpdmUgY2FzZSBvZg0KPiArCSAqIEZPTExf
+UElOLg0KPiArCSAqLw0KPiArCWlmIChXQVJOX09OX09OQ0UoZ3VwX2ZsYWdzICYgRk9MTF9MT05H
+VEVSTSkpDQo+ICsJCXJldHVybiBmYWxzZTsNCj4gKw0KPiArCXJldHVybiB0cnVlOw0KPiArfQ0K
+PiArDQo+ICAjaWZkZWYgQ09ORklHX01NVQ0KPiAgc3RhdGljIGxvbmcgX19nZXRfdXNlcl9wYWdl
+c19yZW1vdGUoc3RydWN0IG1tX3N0cnVjdCAqbW0sDQo+ICAJCQkJICAgIHVuc2lnbmVkIGxvbmcg
+c3RhcnQsIHVuc2lnbmVkIGxvbmcgbnJfcGFnZXMsIEBADQo+IC0xNzg5LDI1ICsxODA4LDYgQEAg
+c3RhdGljIGxvbmcgX19nZXRfdXNlcl9wYWdlc19yZW1vdGUoc3RydQ0KPiAgCQkJCSAgICAgICBn
+dXBfZmxhZ3MgfCBGT0xMX1RPVUNIIHwgRk9MTF9SRU1PVEUpOyAgfQ0KPiANCj4gLXN0YXRpYyBi
+b29sIGlzX3ZhbGlkX2d1cF9mbGFncyh1bnNpZ25lZCBpbnQgZ3VwX2ZsYWdzKSAtew0KPiAtCS8q
+DQo+IC0JICogRk9MTF9QSU4gbXVzdCBvbmx5IGJlIHNldCBpbnRlcm5hbGx5IGJ5IHRoZSBwaW5f
+dXNlcl9wYWdlcyooKSBBUElzLA0KPiAtCSAqIG5ldmVyIGRpcmVjdGx5IGJ5IHRoZSBjYWxsZXIs
+IHNvIGVuZm9yY2UgdGhhdCB3aXRoIGFuIGFzc2VydGlvbjoNCj4gLQkgKi8NCj4gLQlpZiAoV0FS
+Tl9PTl9PTkNFKGd1cF9mbGFncyAmIEZPTExfUElOKSkNCj4gLQkJcmV0dXJuIGZhbHNlOw0KPiAt
+CS8qDQo+IC0JICogRk9MTF9QSU4gaXMgYSBwcmVyZXF1aXNpdGUgdG8gRk9MTF9MT05HVEVSTS4g
+QW5vdGhlciB3YXkgb2Ygc2F5aW5nDQo+IC0JICogdGhhdCBpcywgRk9MTF9MT05HVEVSTSBpcyBh
+IHNwZWNpZmljIGNhc2UsIG1vcmUgcmVzdHJpY3RpdmUgY2FzZSBvZg0KPiAtCSAqIEZPTExfUElO
+Lg0KPiAtCSAqLw0KPiAtCWlmIChXQVJOX09OX09OQ0UoZ3VwX2ZsYWdzICYgRk9MTF9MT05HVEVS
+TSkpDQo+IC0JCXJldHVybiBmYWxzZTsNCj4gLQ0KPiAtCXJldHVybiB0cnVlOw0KPiAtfQ0KPiAt
+DQo+ICAvKioNCj4gICAqIGdldF91c2VyX3BhZ2VzX3JlbW90ZSgpIC0gcGluIHVzZXIgcGFnZXMg
+aW4gbWVtb3J5DQo+ICAgKiBAbW06CQltbV9zdHJ1Y3Qgb2YgdGFyZ2V0IG1tDQo+IF8NCj4gDQoN
+CkJlc3QgUmVnYXJkcw0KQmFycnkNCg0K
