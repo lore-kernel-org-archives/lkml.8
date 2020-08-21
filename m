@@ -2,111 +2,131 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CEE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64F7220735
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC4E420735
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598038207;
+	bh=LTPmOmBLp+1AG8Ld4SI0DnX2r2lOQRpt3LOaX8ef46c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NUWmuHOdbBdAY7mPMWvnU3bvIVgOIdguLgLYGk28y9BoJY1zIdD8g/6l5vr/LXVS9
+	 aFyrEJFPH2tlgXaX9/213w126ccg1ELxLsQgL6C8s71e8e9RHHD/DsbWctKmO+MHaZ
+	 VO0yhZKGDR188hRDkZN5b7GayMdNNcweLoNvNZ6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHUT36 (ORCPT
+        id S1726610AbgHUTaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:29:58 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3493 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725801AbgHUT35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:29:57 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id AED36C3FAF846FD56BCF;
-        Sat, 22 Aug 2020 03:29:55 +0800 (CST)
-Received: from dggema722-chm.china.huawei.com (10.3.20.86) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Sat, 22 Aug 2020 03:29:55 +0800
-Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
- dggema722-chm.china.huawei.com (10.3.20.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Sat, 22 Aug 2020 03:29:55 +0800
-Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
- dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.1913.007;
- Sat, 22 Aug 2020 03:29:55 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "ganapatrao.kulkarni@cavium.com" <ganapatrao.kulkarni@cavium.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        huangdaode <huangdaode@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v7 0/3] make dma_alloc_coherent NUMA-aware by per-NUMA CMA
-Thread-Topic: [PATCH v7 0/3] make dma_alloc_coherent NUMA-aware by per-NUMA
- CMA
-Thread-Index: AQHWd+P3Cxxhv5+npUG1WD6UP12kNalC7yyQ
-Date:   Fri, 21 Aug 2020 19:29:55 +0000
-Message-ID: <328438204e9e4afba84b20c6b778c504@hisilicon.com>
-References: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
- <e47f4bfd-3af7-f682-23a1-51800f992d35@oracle.com>
-In-Reply-To: <e47f4bfd-3af7-f682-23a1-51800f992d35@oracle.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.201.113]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 21 Aug 2020 15:30:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbgHUTaB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 15:30:01 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E69BC061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:30:00 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m22so3071522ljj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:30:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9gB440Ze4ZBHaiJd3Tg8xGm277dDUwBE5I6gf2Si2z0=;
+        b=WOJ24K7m95T6qyq7uMw1ZdUwa/ZY4iGih7G5ZretzrJOrNpRBizAWpzqXrw1KWVWpc
+         9TkDhakIq2vNEGCc92t86ZIgDgIbr11x7Ktk8FlZyRm+v8heqUVRBJ7OMmGX9+L9XQtV
+         J5Et6X/zWbSvpX6upyCYcudXQqtPQNKhJtMC0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9gB440Ze4ZBHaiJd3Tg8xGm277dDUwBE5I6gf2Si2z0=;
+        b=iRz6bSuPa9AJoJy68KxVTg0hc061h2zZwxDKVNsbGsYT2sl2aNEqcl4Aa5nIwWo/so
+         KXB7JET2VIzWLmDuh+/m65ZJiQ4dBCF+K6no6FUCwOqFXSBisAxMozWvCQyI/2rzUfKK
+         h7uXSePk8oAjolTR6QW7yWmUAe0NWT+01e9U2AkYRQjTsH/OwhM+0rKBhFmZKUDMuYxo
+         BPc0zHOia00uBhGYH7Sk4SjNht/eLHKfNSLD5xwkiDXf7JgQsV0NyqJW4LX8Spk8XxVl
+         6KAZO6wQfKgwJ/LmrLn8T+fWxPQZ1iKgJ5XFeZ+GJnJ7x7+QJQy/qp9XBs9cHCbnpSxa
+         fPpQ==
+X-Gm-Message-State: AOAM533x7k3UIN8iwN1QSEqSQIYoB71jEFts9xsWPh/nTm+ASyl9/xA3
+        cN8exwF8xsQb3sDaNb0mWXnMg5yCAo3nmw==
+X-Google-Smtp-Source: ABdhPJyOwIvAGo88yZqJ6ZS1ta9NQJpzdG+F8ASBsfInlBQ1hQBSNJsq0+ALuTwSQqNLcMX82ubfIA==
+X-Received: by 2002:a05:651c:1343:: with SMTP id j3mr2016036ljb.112.1598038198025;
+        Fri, 21 Aug 2020 12:29:58 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id 20sm570387ljj.51.2020.08.21.12.29.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 12:29:57 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id v9so3074394ljk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:29:57 -0700 (PDT)
+X-Received: by 2002:ac2:58d5:: with SMTP id u21mr2053187lfo.31.1598037806053;
+ Fri, 21 Aug 2020 12:23:26 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20200818202407.GA3143683@rani.riverdale.lan> <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
+ <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
+ <20200818214146.GA3196105@rani.riverdale.lan> <df6c1da4-b910-ecb8-0de2-6156dd651be6@rasmusvillemoes.dk>
+ <20200820175617.GA604994@rani.riverdale.lan> <CAHk-=whn91ar+EbcBXQb9UXad00Q5WjU-TCB6UBzVba682a4ew@mail.gmail.com>
+ <20200821172935.GA1411923@rani.riverdale.lan> <CAHk-=wi8vdb+wo-DACDpSijYfAbCs135YcnnAbRhGJcU+A=-+Q@mail.gmail.com>
+ <CAHk-=whjVCTjZG0Y88WhJruLdbxF=7q3mmFThD+N5WK0P5giSw@mail.gmail.com> <20200821191458.GA1475504@rani.riverdale.lan>
+In-Reply-To: <20200821191458.GA1475504@rani.riverdale.lan>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 21 Aug 2020 12:23:10 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjX6jaRH+yozTh3kV3ocF2Qv0v96o8JofvbV6=U_K2mXw@mail.gmail.com>
+Message-ID: <CAHk-=wjX6jaRH+yozTh3kV3ocF2Qv0v96o8JofvbV6=U_K2mXw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWlrZSBLcmF2ZXR6IFtt
-YWlsdG86bWlrZS5rcmF2ZXR6QG9yYWNsZS5jb21dDQo+IFNlbnQ6IFNhdHVyZGF5LCBBdWd1c3Qg
-MjIsIDIwMjAgNTo1MyBBTQ0KPiBUbzogU29uZyBCYW8gSHVhIChCYXJyeSBTb25nKSA8c29uZy5i
-YW8uaHVhQGhpc2lsaWNvbi5jb20+OyBoY2hAbHN0LmRlOw0KPiBtLnN6eXByb3dza2lAc2Ftc3Vu
-Zy5jb207IHJvYmluLm11cnBoeUBhcm0uY29tOyB3aWxsQGtlcm5lbC5vcmc7DQo+IGdhbmFwYXRy
-YW8ua3Vsa2FybmlAY2F2aXVtLmNvbTsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207DQo+IGFrcG1A
-bGludXgtZm91bmRhdGlvbi5vcmcNCj4gQ2M6IGlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24u
-b3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IFplbmd0YW8gKEIpIDxwcmltZS56ZW5nQGhpc2lsaWNvbi5jb20+
-Ow0KPiBodWFuZ2Rhb2RlIDxodWFuZ2Rhb2RlQGh1YXdlaS5jb20+OyBMaW51eGFybSA8bGludXhh
-cm1AaHVhd2VpLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NyAwLzNdIG1ha2UgZG1hX2Fs
-bG9jX2NvaGVyZW50IE5VTUEtYXdhcmUgYnkNCj4gcGVyLU5VTUEgQ01BDQo+IA0KPiBIaSBCYXJy
-eSwNCj4gU29ycnkgZm9yIGp1bXBpbmcgaW4gc28gbGF0ZS4NCj4gDQo+IE9uIDgvMjEvMjAgNDoz
-MyBBTSwgQmFycnkgU29uZyB3cm90ZToNCj4gPg0KPiA+IHdpdGggcGVyLW51bWEgQ01BLCBzbW11
-IHdpbGwgZ2V0IG1lbW9yeSBmcm9tIGxvY2FsIG51bWEgbm9kZSB0byBzYXZlDQo+IGNvbW1hbmQN
-Cj4gPiBxdWV1ZXMgYW5kIHBhZ2UgdGFibGVzLiB0aGF0IG1lYW5zIGRtYV91bm1hcCBsYXRlbmN5
-IHdpbGwgYmUgc2hydW5rDQo+IG11Y2guDQo+IA0KPiBTaW5jZSBwZXItbm9kZSBDTUEgYXJlYXMg
-Zm9yIGh1Z2V0bGIgd2FzIGludHJvZHVjZWQsIEkgaGF2ZSBiZWVuIHRoaW5raW5nDQo+IGFib3V0
-IHRoZSBsaW1pdGVkIG51bWJlciBvZiBDTUEgYXJlYXMuICBJbiBtb3N0IGNvbmZpZ3VyYXRpb25z
-LCBJIGJlbGlldmUNCj4gaXQgaXMgbGltaXRlZCB0byA3LiAgQW5kLCBJSVJDIGl0IGlzIG5vdCBz
-b21ldGhpbmcgdGhhdCBjYW4gYmUgY2hhbmdlZCBhdA0KPiBydW50aW1lLCB5b3UgbmVlZCB0byBy
-ZWNvbmZpZyBhbmQgcmVidWlsZCB0byBpbmNyZWFzZSB0aGUgbnVtYmVyLiAgSW4gY29udHJhc3QN
-Cj4gc29tZSBjb25maWdzIGhhdmUgTk9ERVNfU0hJRlQgc2V0IHRvIDEwLiAgSSB3YXNuJ3QgdG9v
-IHdvcnJpZWQgYmVjYXVzZSBvZg0KPiB0aGUgbGltaXRlZCBodWdldGxiIHVzZSBjYXNlLiAgSG93
-ZXZlciwgdGhpcyBzZXJpZXMgaXMgYWRkaW5nIGFub3RoZXIgdXNlcg0KPiBvZiBwZXItbm9kZSBD
-TUEgYXJlYXMuDQo+IA0KPiBXaXRoIG1vcmUgdXNlcnMsIHNob3VsZCB0cnkgdG8gc3luYyB1cCBu
-dW1iZXIgb2YgQ01BIGFyZWFzIGFuZCBudW1iZXIgb2YNCj4gbm9kZXM/ICBPciwgcGVyaGFwcyBJ
-IGFtIHdvcnJ5aW5nIGFib3V0IG5vdGhpbmc/DQoNCkhpIE1pa2UsDQpUaGUgY3VycmVudCBsaW1p
-dGF0aW9uIGlzIDguIElmIHRoZSBzZXJ2ZXIgaGFzIDQgbm9kZXMgYW5kIHdlIGVuYWJsZSBib3Ro
-IHBlcm51bWENCkNNQSBhbmQgaHVnZXRsYiwgdGhlIGxhc3Qgbm9kZSB3aWxsIGZhaWwgdG8gZ2V0
-IG9uZSBjbWEgYXJlYSBhcyB0aGUgZGVmYXVsdA0KZ2xvYmFsIGNtYSBhcmVhIHdpbGwgdGFrZSAx
-IG9mIDguIFNvIHVzZXJzIG5lZWQgdG8gY2hhbmdlIG1lbnVjb25maWcuDQpJZiB0aGUgc2VydmVy
-IGhhcyA4IG5vZGVzLCB3ZSBlbmFibGUgb25lIG9mIHBlcm51bWEgY21hIGFuZCBodWdldGxiLCBv
-bmUgbm9kZQ0Kd2lsbCBmYWlsIHRvIGdldCBjbWEuDQoNCldlIG1heSBzZXQgdGhlIGRlZmF1bHQg
-bnVtYmVyIG9mIENNQSBhcmVhcyBhcyA4K01BWF9OT0RFUyhpZiBodWdldGxiIGVuYWJsZWQpICsN
-Ck1BWF9OT0RFUyhpZiBwZXJudW1hIGNtYSBlbmFibGVkKSBpZiB3ZSBkb24ndCBleHBlY3QgdXNl
-cnMgdG8gY2hhbmdlIGNvbmZpZywgYnV0DQpyaWdodCBub3cgaHVnZXRsYiBoYXMgbm90IGFuIG9w
-dGlvbiBpbiBLY29uZmlnIHRvIGVuYWJsZSBvciBkaXNhYmxlIGxpa2UgcGVybnVtYSBjbWENCmhh
-cyBETUFfUEVSTlVNQV9DTUEuDQoNCj4gLS0NCj4gTWlrZSBLcmF2ZXR6DQoNClRoYW5rcw0KQmFy
-cnkNCg==
+On Fri, Aug 21, 2020 at 12:15 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> How are you testing it?
+>
+> https://godbolt.org/z/eahdGn
+
+Ugh. I tested the reverse thing - that the builtin is still available
+for manual use despite the -fno-builtin.
+
+Because I - stupidly - assumed that fno-builtin would do *something*.
+
+But if it's available for manual use _and_ it's used implicitly by the
+compiler, then that was clearly very naive of me.
+
+                     Linus
