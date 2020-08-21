@@ -2,160 +2,82 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 993F3207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301E9207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgHUNAt (ORCPT
+        id S1727975AbgHUNBt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:00:49 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2683 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727123AbgHUNAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:00:36 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id EE9029E83CF50866E9B6;
-        Fri, 21 Aug 2020 14:00:33 +0100 (IST)
-Received: from localhost (10.52.123.86) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Fri, 21 Aug
- 2020 14:00:33 +0100
-Date:   Fri, 21 Aug 2020 13:59:01 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <rafael@kernel.org>,
-        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Brice Goglin" <Brice.Goglin@inria.fr>,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>,
-        <linux-api@vger.kernel.org>, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH v9 4/6] ACPI: HMAT: Fix handling of changes from ACPI
- 6.2 to ACPI 6.3
-Message-ID: <20200821135901.0000260b@Huawei.com>
-In-Reply-To: <20200821121356.GA1616281@bjorn-Precision-5520>
-References: <20200821094258.00007925@Huawei.com>
-        <20200821121356.GA1616281@bjorn-Precision-5520>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 21 Aug 2020 09:01:49 -0400
+Received: from mail.fireflyinternet.com ([77.68.26.236]:62309 "EHLO
+        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727123AbgHUNBs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 09:01:48 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 22198351-1500050 
+        for multiple; Fri, 21 Aug 2020 14:01:43 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.123.86]
-X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <CAHk-=wiu1WHD0x0VXKoLQGy43S7KLCY=Yd-TPDh=7tDW08554w@mail.gmail.com>
+References: <20200821085011.28878-1-chris@chris-wilson.co.uk> <20200821085011.28878-2-chris@chris-wilson.co.uk> <CAHk-=wiu1WHD0x0VXKoLQGy43S7KLCY=Yd-TPDh=7tDW08554w@mail.gmail.com>
+Subject: Re: [PATCH 2/4] drm/i915/gem: Sync the vmap PTEs upon construction
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        Linux-MM <linux-mm@kvack.org>, Pavel Machek <pavel@ucw.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Dave Airlie <airlied@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        stable <stable@vger.kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 21 Aug 2020 14:01:41 +0100
+Message-ID: <159801490171.29194.13892566081151243171@build.alporthouse.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 07:13:56 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> [+cc Keith, author of 3accf7ae37a9 ("acpi/hmat: Parse and report
-> heterogeneous memory")]
+Quoting Linus Torvalds (2020-08-21 13:41:03)
+> On Fri, Aug 21, 2020 at 1:50 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
+> >
+> > Since synchronising the PTE after assignment is a manual step, use the
+> > newly exported interface to flush the PTE after assigning via
+> > alloc_vm_area().
 > 
-> On Fri, Aug 21, 2020 at 09:42:58AM +0100, Jonathan Cameron wrote:
-> > On Thu, 20 Aug 2020 17:21:29 -0500
-> > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >   
-> > > On Wed, Aug 19, 2020 at 10:51:09PM +0800, Jonathan Cameron wrote:  
-> > > > In ACPI 6.3, the Memory Proximity Domain Attributes Structure
-> > > > changed substantially.  One of those changes was that the flag
-> > > > for "Memory Proximity Domain field is valid" was deprecated.
-> > > > 
-> > > > This was because the field "Proximity Domain for the Memory"
-> > > > became a required field and hence having a validity flag makes
-> > > > no sense.
-> > > > 
-> > > > So the correct logic is to always assume the field is there.
-> > > > Current code assumes it never is.
-> > > > 
-> > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > ---
-> > > >  drivers/acpi/numa/hmat.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> > > > index 2c32cfb72370..07cfe50136e0 100644
-> > > > --- a/drivers/acpi/numa/hmat.c
-> > > > +++ b/drivers/acpi/numa/hmat.c
-> > > > @@ -424,7 +424,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
-> > > >  		pr_info("HMAT: Memory Flags:%04x Processor Domain:%u Memory Domain:%u\n",
-> > > >  			p->flags, p->processor_PD, p->memory_PD);
-> > > >  
-> > > > -	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) {
-> > > > +	if ((p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) || hmat_revision == 2) {    
-> > > 
-> > > I hope/assume the spec is written in such a way that p->memory_PD is
-> > > required for any revision > 1?  So maybe this should be:
-> > > 
-> > >   if ((p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) ||
-> > >       hmat_revision > 1) {  
+> This commit message doesn't make much sense to me.
 > 
-> I should have said simply:
+> Are you talking about synchronizing the page directory structure
+> across processes after possibly creating new kernel page tables?
 > 
->   if (hmat_revision == 1 && p->flags & ACPI_HMAT_MEMORY_PD_VALID)
+> Because that has nothing to do with the PTE. It's all about making
+> sure the _upper_ layers of the page directories are populated
+> everywhere..
 > 
-> We shouldn't even test p->flags for ACPI_HMAT_MEMORY_PD_VALID unless
-> we already know it's revision 1.
-> 
-> And unless there was a revision 0 of HMAT, there's no need to look for
-> hmat_revison > 1.
+> The name seems off to me too - what are you "flushing"? (And yes, I
+> know about the flush_cache_vmap(), but that looks just bogus, since
+> any non-mapped area shouldn't have any virtual caches to begin with,
+> so I suspect that is just the crazy architectures being confused -
+> flush_cache_vmap() is a no-op on any sane architecture - and powerpc
+> that mis-uses it for other things).
 
-It needs to stay as an or statement as you had the first time.
-The field is always valid for hmat_revision > 1, and valid for
-hmat_revision == 1 with the flag set.  You could express it as
+I was trying to mimic map_kernel_range() which does the
+arch_sync_kernel_mappings and flush_cache_vmap on top of the
+apply_to_page_range performed by alloc_vm_area, because buried away in
+there, on x86-32, is a set_pmd(). Since map_kernel_range() wrapped
+map_kernel_range_noflush(), flush seemed like the right verb.
 
-if ((p->flags & ACPI_HMAT_MEMORY_PD_VALID) || (hmat_revision != 1))
-
-but that seems more confusing to me.
-
-> 
-> > Good point.  We have existing protections elsewhere against
-> > hmat_revision being anything other than 1 or 2, so we should aim to
-> > keep that in only one place.  
-> 
-> I think the "Ignoring HMAT: Unknown revision" test in hmat_init(),
-> added by 3accf7ae37a9 ("acpi/hmat: Parse and report heterogeneous
-> memory"), is a mistake.
-> 
-> And I think hmat_normalize() has a similar mistake in that it tests
-> explicitly for hmat_revision == 2 when it should accept 2 AND anything
-> later.
-> 
-> We should assume that future spec revisions will be backwards
-> compatible.  Otherwise we're forced to make kernel changes when we
-> otherwise would not have to.
-
-I disagree with this. There is no rule in ACPI about maintaining
-backwards compatibility. The assumption is that the version number
-will always be checked.  The meaning of fields changed between
-version 1 and version 2 so it would be bold to assume that won't
-happen in the future!
-
-HMAT is an optional table, so if someone boots up an old kernel
-they are probably better off failing to use it at all than
-misinterpreting it. 
-
-Having the sanity check in one place makes sense, but removing it
-entirely is a bad idea.
-
-Jonathan
-
-
-> 
-> Bjorn
-
-
+Joerg pointed out that the sync belonged to __apply_to_page_range and
+fixed it in situ.
+-Chris
