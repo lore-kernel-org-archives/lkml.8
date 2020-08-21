@@ -2,108 +2,119 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0334C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 23:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77371C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 23:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C481B2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 23:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F6F2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 23:39:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l07jmwfv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="m5SmGIhz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgHUXgc (ORCPT
+        id S1726830AbgHUXjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 19:36:32 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47314 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbgHUXga (ORCPT
+        Fri, 21 Aug 2020 19:39:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726688AbgHUXix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 19:36:30 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07LNWML8180628;
-        Fri, 21 Aug 2020 23:36:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=eG1DGNfwcUES8MdO+v6w04I3v53RR6Tb+fhbzPafdmk=;
- b=l07jmwfviTqLfoNB40c+jxDl1RmF0u9R5rVbpwmYgbZuXV1SqmJPePTSTu3rDa0cB9fK
- 25NCyPnKroBR38mSbstPtqc1ib7139ee///ahlvT3bn07mn7VOdjiNmqZu6uCa1UV7uj
- 8PCEp8NpbnfPwDdWCiqILAfaTZtiEOkMVlr9MYUUne7X2kVkVPXkspOlgJbVahXyYxB7
- J+o+i9VNaoLwQkXZyg3zq2Tw+xGcqvshHpC1YjcwOFCmwBCEJJe73DsIPglefQrUem5+
- XxfWTlRESKR5l5iUT2apuzSBe6xUcY+Z8gY3RrunQK5WX7T5Q3418gCSVB5fyswDiInO TQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 32x74rrdyf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Aug 2020 23:36:16 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07LNYPP6187152;
-        Fri, 21 Aug 2020 23:36:15 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 3325377uc6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 23:36:15 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07LNaD2m011347;
-        Fri, 21 Aug 2020 23:36:13 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Aug 2020 23:36:13 +0000
-Subject: Re: [LKP] Re: [hugetlbfs] c0d0381ade: vm-scalability.throughput
- -33.4% regression
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        kernel test robot <rong.a.chen@intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Fri, 21 Aug 2020 19:38:53 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55677C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 16:38:53 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id w11so3748583ybi.23
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 16:38:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=AIeTG1aOto6QWgzjIJ7H0uGNsioq4yEktBb08O5yHtY=;
+        b=m5SmGIhzd05a7usVFpx1WGCmCRqFe0EP+v3QLGfMdweg1+TjucvJm7w9yxElHiA7KT
+         XA+Ju20DOAzsQ+m+y0F9VZPmT5MdlXRyuHY3qpw/GQqeMEYTxITwSPYXkKvhRaDTQ6vW
+         4yT9s+FUaYsOp7muv2lAQIQRsoIQkWrC/vT9hPoZ6+1ai51LCES5f2cmJ8m0FYg2HUwj
+         2Q4i6lEQLUZctl2qRkSAtGo9g31jabDk+2x88RZUznEHkdpAcdMfy3YQYniw++q17rgK
+         VohREQw64MKUZU1Fd+zlzqEmCNcoXiHBxHkhNRLylIALkWkd1IIRTm8j/EKOav7EGGPq
+         FS6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=AIeTG1aOto6QWgzjIJ7H0uGNsioq4yEktBb08O5yHtY=;
+        b=qVYnOfFanvqQ3k8fQTicOW58zP3QPd/4WX6zGnmcLqSGV9/01fGWJgVHZstzagGr98
+         Wvjc7IcNPENbIUOQV5d21qtkLfOUS8RWQCW4guRpaWPc9udrUrpNxDCY/fj7Pu+nMPs9
+         ayzx3QED/7nyUY4kuo9WjRq4ywtvbA8YlWhXJDtuY14U2KavVcJoqAVatw8oqIaD6Q2M
+         TBDoDSjukzR9IzQA2x/ai8ylNH8d/srbvPMlTSaWLHLUR5TVR42nX8frI62/uRSS6koK
+         cYBOeTX6DqWWKC1Q+D5Cro0DP3ltuCLzNSPkK35nDArpuJV1tp4HzCdgr4fUy05/EtDD
+         uTew==
+X-Gm-Message-State: AOAM531uurzx6fAcBHrWYU6MQ30FkFUZBhzmAWczyP1ECSsVKHqAuCej
+        ejU2wukqNeBASIlcHB7P/tjosmPMyw+i0Fg=
+X-Google-Smtp-Source: ABdhPJxzWhuKaZWd7UdTjEpC3MrtsB7oSdznkzYO8NxREmTlTFJCKmi8a7hKrxUtQoP0NYhbQ52/aq9uy5Dz2Hk=
+X-Received: from ckennelly28.nyc.corp.google.com ([2620:0:1003:1003:3e52:82ff:fe5a:a91a])
+ (user=ckennelly job=sendgmr) by 2002:a25:2489:: with SMTP id
+ k131mr7431236ybk.221.1598053131440; Fri, 21 Aug 2020 16:38:51 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 19:38:46 -0400
+Message-Id: <20200821233848.3904680-1-ckennelly@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH v4 0/2] Selecting Load Addresses According to p_align
+From:   Chris Kennelly <ckennelly@google.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Song Liu <songliubraving@fb.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Hugh Dickens <hughd@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Prakash Sangappa <prakash.sangappa@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-References: <20200622005551.GK5535@shao2-debian>
- <e140ec78-1fbd-73e2-7a11-7db3b714874d@oracle.com>
- <718e1653-b273-096b-0ee3-f720cf794612@oracle.com>
- <d945497d-0edb-f540-33e1-8b1ba1e20f62@linux.intel.com>
- <691152ef-6787-9598-4445-fd2a0164f70f@oracle.com>
-Message-ID: <1f6d321e-96b4-18c3-2991-d6a2e94c9e60@oracle.com>
-Date:   Fri, 21 Aug 2020 16:36:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <691152ef-6787-9598-4445-fd2a0164f70f@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9720 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 spamscore=0
- phishscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210216
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9720 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210216
+        Suren Baghdasaryan <surenb@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chris Kennelly <ckennelly@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/20 2:02 PM, Mike Kravetz wrote:
-> Would you be willing to test this series on top of 34ae204f1851?  I will need
-> to rebase the series to take the changes made by 34ae204f1851 into account.
+The current ELF loading mechancism provides page-aligned mappings.  This
+can lead to the program being loaded in a way unsuitable for
+file-backed, transparent huge pages when handling PIE executables.
 
-Actually, the series in this thread will apply/run cleanly on top of
-34ae204f1851.  No need to rebase or port.  If we decide to move forward more
-work is required.  See a few FIXME's in the patches.
+While specifying -z,max-page-size=0x200000 to the linker will generate
+suitably aligned segments for huge pages on x86_64, the executable needs
+to be loaded at a suitably aligned address as well.  This alignment
+requires the binary's cooperation, as distinct segments need to be
+appropriately paddded to be eligible for THP.
+
+For binaries built with increased alignment, this limits the number of
+bits usable for ASLR, but provides some randomization over using fixed
+load addresses/non-PIE binaries.
+
+Changes V3 -> V4:
+* Code tweaks based on on-thread feedback
+* Addressed compiler warning
+
+Changes V2 -> V3:
+* Minor code tweaks based on off-thread feedback
+
+Changes V1 -> V2:
+* Added test
+
+Chris Kennelly (2):
+  fs/binfmt_elf: Use PT_LOAD p_align values for suitable start address.
+  Add self-test for verifying load alignment.
+
+ fs/binfmt_elf.c                             | 25 ++++++++
+ tools/testing/selftests/exec/.gitignore     |  1 +
+ tools/testing/selftests/exec/Makefile       |  9 ++-
+ tools/testing/selftests/exec/load_address.c | 68 +++++++++++++++++++++
+ 4 files changed, 101 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/exec/load_address.c
+
 -- 
-Mike Kravetz
+2.28.0.297.g1956fa8f8d-goog
+
