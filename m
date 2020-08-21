@@ -2,192 +2,113 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE20BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31947C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD88B20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HC8fJQDj"
+	by mail.kernel.org (Postfix) with ESMTP id 154B020748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598030620;
+	bh=DdoQvatDqTZIoDRIfxcl76Ibbop5/KP36qPswZ8z1P8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bYWOKKXNDd6ViuPkFumbk8jMaIaqP7ynJdim5ThJQEpyoVi/Gbn1rxECyuGX/+xFL
+	 g+ZbSw+dCMierS4n583V/t4jyA9EWT7ciYsNnzXXJDSGNbEwAYjcRoSuZ+SqOflNfC
+	 +IkgxDf3Dp8WlzmNyD8GGygP16fuunEJT/9sYUqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgHURX1 (ORCPT
+        id S1729155AbgHURXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728887AbgHURXU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 13:23:20 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E14C061573;
-        Fri, 21 Aug 2020 10:23:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=bAt7ua5tnS/ugttXa8syUdUtImCbHpozqT/YgY2E6VQ=; b=HC8fJQDjtjQ3Dn0KB/nl8zm9G5
-        OLgrSW3g6OaQ9uai7u+zZmZJfqgSnYnOR2POzC4borlXdhU4uanc69FkLkcMK01ljOM4VsD9evszx
-        b8TgshtNVP+0p7U0OyVHyP7m8tgw5IcHbfs4er/rdYYg4vrq3cZK2Hmu4MK8GmJvuzN7HBP3444S+
-        udMNGiSWaZyZAoH2u3M0lxijNC51owYxV13GfERmGF6W220M7G7CrwFan+/tYueVE8OuVXhhSnqaS
-        BklX4calxAGYqosbBsaY8kFvqDv2dFGwb2QF/h8qja0iAa8pIPv3X7o/G6VbIE2YJgAnMwet+E/U0
-        2PuvU1Vw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k9Al3-0004jP-5u; Fri, 21 Aug 2020 17:23:17 +0000
-Subject: Re: [PATCH v2 08/10] fs/ntfs3: Add Kconfig, Makefile and doc
-To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-References: <74de75d537ac486e9fcfe7931181a9b9@paragon-software.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <63ae69b5-ee05-053d-feb6-6c9b5ed04499@infradead.org>
-Date:   Fri, 21 Aug 2020 10:23:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 21 Aug 2020 13:23:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727959AbgHUQPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:15:41 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 101DC20FC3;
+        Fri, 21 Aug 2020 16:15:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598026540;
+        bh=DdoQvatDqTZIoDRIfxcl76Ibbop5/KP36qPswZ8z1P8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=e4RWoaWChSbPOQr/UzsTaLNnKfAGzcvdyQ+l20kCfd8jlqQ/YWHFhADLEQFPYqwkg
+         whDBrrFvtKccc2fmCB3akc520DTltQTHikz50UdsK7HOzgOAJ9qaokd5LW0OybzegN
+         hRKfecVwIcBtrgGBUmc30E7jl6ohFJ7YnbWkh3l4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Jean Delvare <jdelvare@suse.de>, Wolfram Sang <wsa@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 60/62] i2c: i801: Add support for Intel Tiger Lake PCH-H
+Date:   Fri, 21 Aug 2020 12:14:21 -0400
+Message-Id: <20200821161423.347071-60-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
+References: <20200821161423.347071-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <74de75d537ac486e9fcfe7931181a9b9@paragon-software.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/20 9:25 AM, Konstantin Komarov wrote:
-> This adds fs/ntfs3 Kconfig, Makefile and Documentation file
-> 
-> Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-> ---
->  Documentation/filesystems/ntfs3.rst | 93 +++++++++++++++++++++++++++++
->  fs/ntfs3/Kconfig                    | 23 +++++++
->  fs/ntfs3/Makefile                   | 11 ++++
->  3 files changed, 127 insertions(+)
->  create mode 100644 Documentation/filesystems/ntfs3.rst
->  create mode 100644 fs/ntfs3/Kconfig
->  create mode 100644 fs/ntfs3/Makefile
-> 
-> diff --git a/Documentation/filesystems/ntfs3.rst b/Documentation/filesystems/ntfs3.rst
-> new file mode 100644
-> index 000000000000..4a510a6cdaee
-> --- /dev/null
-> +++ b/Documentation/filesystems/ntfs3.rst
-> @@ -0,0 +1,93 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=====
-> +NTFS3
-> +=====
-> +
-> +
-> +Summary and Features
-> +====================
-> +
-> +NTFS3 is fully functional NTFS Read-Write driver. The driver works with
-> +NTFS versions up to 3.1, normal/compressed/sparse files
-> +and journal replaying. File system type to use on mount is 'ntfs3'.
-> +
-> +- This driver implements NTFS read/write support for normal, sparsed and
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 
-                                                                sparse
+[ Upstream commit f46efbcad97bfb2caded0397eccce7c71402868c ]
 
-> +  compressed files.
-> +  NOTE: Operations with compressed files require increased memory consumption;
-> +- Supports native journal replaying;
-> +- Supports extended attributes;
-> +- Supports NFS export of mounted NTFS volumes.
-> +
-> +Mount Options
-> +=============
-> +
-> +The list below describes mount options supported by NTFS3 driver in addtion to
+Add SMBus PCI ID on Intel Tiger Lake PCH-H.
 
-                                                                       addition
+Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/i2c/busses/i2c-i801.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> +generic ones.
-> +
-> +===============================================================================
-> +
-> +nls=name		These options inform the driver how to interpret path
-> +			strings and translate them to Unicode and back. In case
-> +			none of these options are set, or if specified codepage
-> +			doesn't exist on the system, the default codepage will be
-> +			used (CONFIG_NLS_DEFAULT).
-> +			Examples:
-> +				'nls=utf8'
-> +
-> +uid=
-> +gid=
-> +umask=			Controls the default permissions for files/directories created
-> +			after the NTFS volume is mounted.
-> +
-> +fmask=
-> +dmask=			Instead of specifying umask which applies both to
-> +			files and directories, fmask applies only to files and
-> +			dmask only to directories.
-> +
-> +nohidden		Files with the Windows-specific HIDDEN (FILE_ATTRIBUTE_HIDDEN)
-> +			attribute will not be shown under Linux.
-
-Without this mount option, will HIDDEN files be shown by default?
-
-> +
-> +sys_immutable		Files with the Windows-specific SYSTEM
-> +			(FILE_ATTRIBUTE_SYSTEM) attribute will be marked as system
-> +			immutable files.
-> +
-> +discard			Enable support of the TRIM command for improved performance
-> +			on delete operations, which is recommended for use with the
-> +			solid-state drives (SSD).
-> +
-> +force			Forces the driver to mount partitions even if 'dirty' flag
-> +			(volume dirty) is set. Not recommended for use.
-> +
-> +sparse			Create new files as "sparse".
-> +
-> +showmeta		Use this parameter to show all meta-files (System Files) on
-> +			a mounted NTFS partition.
-> +			By default, all meta-files are hidden.
-> +
-> +no_acs_rules		"No access rules" mount option sets access rights for
-> +			files/folders to 777 and owner/group to root. This mount
-> +			option absorbs all other permissions:
-> +			- permissions change for files/folders will be reported
-> +				as successful, but they will remain 777;
-> +			- owner/group change will be reported as successful, but
-> +				they will stay as root
-> +
-> +===============================================================================
-> +
-> +
-> +ToDo list
-> +=========
-> +
-> +- Full journaling support (currently journal replaying is supported) over JBD.
-
-          journalling
-seems to be preferred.
-
-> +
-> +
-> +References
-> +==========
-> +https://www.paragon-software.com/home/ntfs-linux-professional/
-> +	- Commercial version of the NTFS driver for Linux.
-> +
-> +almaz.alexandrovich@paragon-software.com
-> +	- Direct e-mail address for feedback and requests on the NTFS3 implementation.
-> +
-> +
-
-thanks.
+diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+index fea644921a768..f206e28af5831 100644
+--- a/drivers/i2c/busses/i2c-i801.c
++++ b/drivers/i2c/busses/i2c-i801.c
+@@ -67,6 +67,7 @@
+  * Comet Lake-H (PCH)		0x06a3	32	hard	yes	yes	yes
+  * Elkhart Lake (PCH)		0x4b23	32	hard	yes	yes	yes
+  * Tiger Lake-LP (PCH)		0xa0a3	32	hard	yes	yes	yes
++ * Tiger Lake-H (PCH)		0x43a3	32	hard	yes	yes	yes
+  * Jasper Lake (SOC)		0x4da3	32	hard	yes	yes	yes
+  * Comet Lake-V (PCH)		0xa3a3	32	hard	yes	yes	yes
+  *
+@@ -221,6 +222,7 @@
+ #define PCI_DEVICE_ID_INTEL_GEMINILAKE_SMBUS		0x31d4
+ #define PCI_DEVICE_ID_INTEL_ICELAKE_LP_SMBUS		0x34a3
+ #define PCI_DEVICE_ID_INTEL_5_3400_SERIES_SMBUS		0x3b30
++#define PCI_DEVICE_ID_INTEL_TIGERLAKE_H_SMBUS		0x43a3
+ #define PCI_DEVICE_ID_INTEL_ELKHART_LAKE_SMBUS		0x4b23
+ #define PCI_DEVICE_ID_INTEL_JASPER_LAKE_SMBUS		0x4da3
+ #define PCI_DEVICE_ID_INTEL_BROXTON_SMBUS		0x5ad4
+@@ -1074,6 +1076,7 @@ static const struct pci_device_id i801_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_COMETLAKE_V_SMBUS) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ELKHART_LAKE_SMBUS) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TIGERLAKE_LP_SMBUS) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TIGERLAKE_H_SMBUS) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_JASPER_LAKE_SMBUS) },
+ 	{ 0, }
+ };
+@@ -1748,6 +1751,7 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	case PCI_DEVICE_ID_INTEL_COMETLAKE_H_SMBUS:
+ 	case PCI_DEVICE_ID_INTEL_ELKHART_LAKE_SMBUS:
+ 	case PCI_DEVICE_ID_INTEL_TIGERLAKE_LP_SMBUS:
++	case PCI_DEVICE_ID_INTEL_TIGERLAKE_H_SMBUS:
+ 	case PCI_DEVICE_ID_INTEL_JASPER_LAKE_SMBUS:
+ 		priv->features |= FEATURE_BLOCK_PROC;
+ 		priv->features |= FEATURE_I2C_BLOCK_READ;
 -- 
-~Randy
+2.25.1
 
