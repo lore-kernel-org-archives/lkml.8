@@ -2,80 +2,141 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC758C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B44662078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D406320738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgHUHv3 (ORCPT
+        id S1728034AbgHUHyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:51:29 -0400
-Received: from mga18.intel.com ([134.134.136.126]:59609 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727846AbgHUHv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:51:26 -0400
-IronPort-SDR: 9Tx6wnEmslE4sFm2fZnnK0nk+wn04qZD8YI1ncCVbF9Xu0H5KueAxQ3vTT8LLfduPBY4ewCWDf
- GpnCWS51r/Jg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="143119158"
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="143119158"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 00:51:25 -0700
-IronPort-SDR: If98b8/s7kduG3CE2pUTKpwUC5swudFLNuRksqTdhyWOu3sn3Fd5p/3pXjY6v0hqTi7ttCy+Su
- e0g0fUOZOpdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="280210579"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Aug 2020 00:51:25 -0700
-Received: from [10.226.38.22] (unknown [10.226.38.22])
-        by linux.intel.com (Postfix) with ESMTP id 998D258045A;
-        Fri, 21 Aug 2020 00:51:22 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v8 0/2] phy: Add USB PHY support on Intel LGM SoC
-To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, p.zabel@pengutronix.de,
-        andriy.shevchenko@intel.com, balbi@kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
-References: <20200817031249.36795-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <bf2301f3-7c70-06b1-898c-f18284babe75@linux.intel.com>
-Date:   Fri, 21 Aug 2020 15:51:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 21 Aug 2020 03:54:15 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:13624 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgHUHyP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 03:54:15 -0400
+IronPort-SDR: yzNhsuSSV0B8OK3RkOANU3f40vNgU8caL20gxHd8zoP74ZxDMMwefx1f/r56fkHdpfCrb7PI3z
+ wXuPnbYDKg2+ri603NXYKyfK1DHl7ovURSMfefdg5KkamWofq3rwRTmjssPmvnkQNGgiyIjCwl
+ HVcMK3cJLzRYcUAZxHqH78an5I1Rl3ZPzi4LK3YlWNnfPQVytZjV1Qo4/VSGrzU/8JJ3ZCH9f0
+ kxPtE0u/1vTZKWKlcoruMXnxhF53kQ0z+fIkxcthWlET2eDY47bfuUoy0it8PtfcfXAAoXF9W/
+ scI=
+X-IronPort-AV: E=Sophos;i="5.76,335,1592899200"; 
+   d="scan'208";a="54312160"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa1.mentor.iphmx.com with ESMTP; 20 Aug 2020 23:54:14 -0800
+IronPort-SDR: qaDJMqQQKyTH7cROx7wpVxlJglhg+ml5ejMoE4dTm1nAzm8/Yoqbfzlj8wSmDQaaNvvQlWR1O3
+ tHiz4GED1XbgeL9yOv+HSJnfeerUzz4j65jReP5xqp58WUvGpayErabGAz+3HRTytwVbiW9vBp
+ qaOGSm5TuSpqnhFYCQoPGKOciiS6KPXEL93sHeCPxVwSjOyVrJgnWlrtZATztgCLL9fyVoKL2f
+ umjndRe5N0szpDanBKFC4Tq+IdWEOeaqqcsnFwLG0MLqpKGGglRduBsfsPN/GBI9L997onXN9s
+ uKI=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
+        <digetx@gmail.com>, <jiada_wang@mentor.com>
+Subject: [PATCH v2 1/1] Input: atmel_mxt_ts - allow specification of firmware file name
+Date:   Fri, 21 Aug 2020 16:54:10 +0900
+Message-ID: <20200821075410.8250-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200817031249.36795-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon, Vinod,
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-Gentle reminder!, kindly can you please merge this series of patches, as 
-those patches got Reviewed-By Philipp Zabel and Rob Herring, Thanks!
+On platforms which have multiple device instances using this driver, the
+firmware may be different on each device. This patch makes the user give
+the name of the firmware file when flashing.
 
-Please do the needful.
+If user specified firmware file can't be found, then driver will try to
+flash default firmware "maxtouch.fw".
 
-Regards
-Vadivel
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+Acked-by: Benson Leung <bleung@chromium.org>
+Acked-by: Yufeng Shen <miletus@chromium.org>
+(cherry picked from ndyer/linux/for-upstream commit 76ebb7cee971cb42dfb0a3a9224403b8b09abcf1)
+[gdavis: Forward port and fix conflicts.]
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+[jiada: change to flash default firmware file, when user specified firmware can't be found]
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 33 +++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
 
-On 17/8/2020 11:12 am, Ramuthevar,Vadivel MuruganX wrote:
-> The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
-> Requires minimal external components, a single resistor, for best operation.
-> Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
-> ---
-> v8:
->    - Rebase to V5.9-rc1
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index a2189739e30f..a20bc1bf8d52 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -34,6 +34,7 @@
+ #define MXT_FW_NAME		"maxtouch.fw"
+ #define MXT_CFG_NAME		"maxtouch.cfg"
+ #define MXT_CFG_MAGIC		"OBP_RAW V1"
++#define MAX_FILENAME_SIZE	64
+ 
+ /* Registers */
+ #define MXT_OBJECT_START	0x07
+@@ -308,6 +309,7 @@ struct mxt_data {
+ 	struct t7_config t7_cfg;
+ 	struct mxt_dbg dbg;
+ 	struct gpio_desc *reset_gpio;
++	char fw_name[MAX_FILENAME_SIZE];
+ 
+ 	/* Cached parameters from object table */
+ 	u16 T5_address;
+@@ -2887,6 +2889,26 @@ static int mxt_load_fw(struct device *dev, const char *fn)
+ 	return ret;
+ }
+ 
++static int mxt_update_file_name(struct device *dev, char *file_name,
++				const char *buf, size_t count)
++{
++	size_t len = count;
++
++	/* Echo into the sysfs entry may append newline at the end of buf */
++	if (buf[count - 1] == '\n')
++		len = count - 1;
++
++	/* Simple sanity check */
++	if (len > MAX_FILENAME_SIZE - 1) {
++		dev_warn(dev, "File name too long\n");
++		return -EINVAL;
++	}
++
++	strscpy(file_name, buf, len + 1);
++
++	return 0;
++}
++
+ static ssize_t mxt_update_fw_store(struct device *dev,
+ 					struct device_attribute *attr,
+ 					const char *buf, size_t count)
+@@ -2894,7 +2916,16 @@ static ssize_t mxt_update_fw_store(struct device *dev,
+ 	struct mxt_data *data = dev_get_drvdata(dev);
+ 	int error;
+ 
+-	error = mxt_load_fw(dev, MXT_FW_NAME);
++	error = mxt_update_file_name(dev, data->fw_name, buf, count);
++	if (error)
++		return error;
++
++	error = mxt_load_fw(dev, data->fw_name);
++	if (error) {
++		dev_warn(dev, "try %s instead\n", MXT_FW_NAME);
++		error = mxt_load_fw(dev, MXT_FW_NAME);
++	}
++
+ 	if (error) {
+ 		dev_err(dev, "The firmware update failed(%d)\n", error);
+ 		count = error;
+-- 
+2.17.1
+
