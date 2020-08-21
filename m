@@ -2,167 +2,115 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E176C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B52EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04F96207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76696207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:37:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PeS8ObJC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GN4xvvVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgHUJgo (ORCPT
+        id S1728146AbgHUJhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:36:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgHUJgn (ORCPT
+        Fri, 21 Aug 2020 05:37:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:25405 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725855AbgHUJhT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:36:43 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 727B2C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 02:36:43 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id v16so642918plo.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 02:36:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HnZXM8XOnRw3EyhQGuLTicUwiSSuNeJMLzprIDO7NXw=;
-        b=PeS8ObJCcwZEGgfznTBsrVSezMqW4Gb0fKStJLyCe53r801ikPbXeKCVVRQZ9aStcE
-         /mylhuh7W2sPnj8wyLQwkmQMJtg7PrtA1gtRFw+tnw3AsMBkAGyZNS0VZR7KXgpLJ1XF
-         O9aU3Bv4sNdD0Ax/tf/eSCgQt/Y96zr/zArNqkwR73VEsyuJs2jRG3Ke2QGaBDXU4lwU
-         IXAPk8zngb0qn2QzfMBjhwPoofgbiPMcMDfHYr0m3PdLEOw9B8VF6tTYpIzi+wL7iY82
-         ++HTYnN0Vyg7LIO2lQZ/bNuzB+JX8LD6I7Prw8VFH9gcKvSPqF8xkUQv+NzbnJN9Ffxv
-         FXvQ==
+        Fri, 21 Aug 2020 05:37:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598002637;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HM8iWB8SC7hD7f4RpIcbL31EFLRVSaFi+Uelkb/Y1jg=;
+        b=GN4xvvVcrDFt8SsA18jSqlvoZPv5leekixRS85MRZX8R12qXC9Rg55QibYefAMuGxn9eCf
+        DEwv3SAy2Zfyujeb2J/7sROEVGwjiXuLJ43yc65oVRB7KN0673m1umsHdA3Ju+Gn5/V3k9
+        7GUmU04Mj6st0AXswCwBJDQwuANRlJU=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-132-1sQGRsjSMwqD4JRBF8grow-1; Fri, 21 Aug 2020 05:37:16 -0400
+X-MC-Unique: 1sQGRsjSMwqD4JRBF8grow-1
+Received: by mail-wm1-f70.google.com with SMTP id q23so327962wmj.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 02:37:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HnZXM8XOnRw3EyhQGuLTicUwiSSuNeJMLzprIDO7NXw=;
-        b=Fps6I8uEjNRSHfg+d6ALU1ygSfAaMg48hHwE2lX6iQzkyZi7bDkA6k/lcRTA6Q5Eot
-         3j++lVT7jMr2Imdp9Pfa9MaQxx24o6EwaOIz6A9vTmtyJLpHyqht+t/JRUe5V+qumMB5
-         QD6rw7Ez/YtuotXhVrk5K6E7sqiFR1DgBiCD/14YnjsnQiQSsuVtwUkSMawOBzj8L7X/
-         WCbROAicOANWhrwTuCC5hlmeiyYUlPLROE3W3HeGbUONh0Ea2fPWscSR75ZtZthxUnra
-         SbYrX4LIfMfS9RNDvKXm/eak1j9gKNWsVuSDZ3tDsnRH1aPrC4StCUpbIzEO8ux5KzmO
-         PyAw==
-X-Gm-Message-State: AOAM531aE9e2ug0b4EyC+1HHj3UpbeEjZMdHY3SBS2XMZMnizMdI3hAV
-        vXT1Se7vjR/Bhf/Jg0EQSq9hUA==
-X-Google-Smtp-Source: ABdhPJylj9eRj8V9uKB44pf5NOj4natO5nO3lvOWEjkNwhLdD/LGaXrciFtGCOefcZmPPwL8wj0MqA==
-X-Received: by 2002:a17:902:a9cb:: with SMTP id b11mr1724652plr.1.1598002602851;
-        Fri, 21 Aug 2020 02:36:42 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id w16sm1585855pjd.50.2020.08.21.02.36.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Aug 2020 02:36:42 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 17:36:32 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     "liwei (GF)" <liwei391@huawei.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HM8iWB8SC7hD7f4RpIcbL31EFLRVSaFi+Uelkb/Y1jg=;
+        b=Qb7Om7PRcJ/dnLzFcbkWnxhxPB1tMQenuy84NzTYPyZdJkk6ZYcLld03U60B/E5+jb
+         GKMDVpeCefqivc8PoDNCsWLcz01zciOgFtq5Xl6iL/dn/skdu+HOXtSU+6YztrFI6tF9
+         jAkOX40SikK4/6e4w3UUthEkZcbIzy5yNRepK0DcZCjVcDSJrkIDVBaz+gbQnWqtktCK
+         MOq9kpOq3eO6fUlGBAhb9j3VZdfN5Tg7dU3qSJB+1P75jQCPVJTQLdggFaJNgmWM5Y2A
+         891VxHhocHtI+Hmjmo3brc23j79bib+Yw5y0WSSD0AZ76LZn9lJWd3nJr35DubXvXWPX
+         oQkQ==
+X-Gm-Message-State: AOAM533qeHhb977KitJQFloqutRDKFndxRHMhGxENHIYI/dziuU5DMYc
+        tKD5KUz1ICXCUsaaFgB+ahn2etj9TOi9a7YgOsZg/Rl0GsG6o9lUsDqaxQqECHUxHhqHfobUwVP
+        UOTdQNqhchpI4xnnwKKHTiKKf
+X-Received: by 2002:a7b:c84e:: with SMTP id c14mr3074368wml.51.1598002635063;
+        Fri, 21 Aug 2020 02:37:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwwC4R8JV8L5mLEba4NKsTdVDCxAA6Mt6rRW2RutzRg5Vy9Fkhbug+fOmXTIeN9cV11aJiiDA==
+X-Received: by 2002:a7b:c84e:: with SMTP id c14mr3074345wml.51.1598002634800;
+        Fri, 21 Aug 2020 02:37:14 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:1cc0:4e4e:f1a9:1745? ([2001:b07:6468:f312:1cc0:4e4e:f1a9:1745])
+        by smtp.gmail.com with ESMTPSA id c10sm2887323wrn.24.2020.08.21.02.37.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 02:37:14 -0700 (PDT)
+Subject: Re: [PATCH] x86/entry/64: Disallow RDPID in paranoid entry if KVM is
+ enabled
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>,
+        Chang Seok Bae <chang.seok.bae@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] perf tools: Support Arm arch timer counter
-Message-ID: <20200821093632.GA22365@leoy-ThinkPad-X240s>
-References: <20200807071620.11907-1-leo.yan@linaro.org>
- <20200807071620.11907-2-leo.yan@linaro.org>
- <27ed6ebf-d9e6-e0ea-1577-2bba3d6f35c1@huawei.com>
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>
+References: <20200821025050.32573-1-sean.j.christopherson@intel.com>
+ <20200821074743.GB12181@zn.tnic>
+ <3eb94913-662d-5423-21b1-eaf75635142a@redhat.com>
+ <87r1s0gxfj.fsf@nanos.tec.linutronix.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <f8597183-5a14-de7c-330b-46b9bf015d0c@redhat.com>
+Date:   Fri, 21 Aug 2020 11:37:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <27ed6ebf-d9e6-e0ea-1577-2bba3d6f35c1@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87r1s0gxfj.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wei,
+On 21/08/20 11:28, Thomas Gleixner wrote:
+> We all know that MSRs are slow, but as a general rule I have to make it
+> entirely clear that the kernel has precedence over KVM.
 
-On Thu, Aug 20, 2020 at 10:56:46AM +0800, liwei (GF) wrote:
+I totally agree.  I just don't think that it matters _in this case_,
+because the kernel hardly has any reason to use TSC_AUX while in ring0.
 
-[...]
+Paolo
 
-> > +int perf_read_arch_timer_conversion(const struct perf_event_mmap_page *pc,
-> > +				    struct perf_arch_timer_conversion *tc)
-> > +{
-> > +	bool cap_user_time_zero, cap_user_time_short;
-> > +	u32 seq;
-> > +	int i = 0;
-> > +
-> > +	while (1) {
-> > +		seq = pc->lock;
-> > +		/* Add barrier between the sequence lock and data accessing */
-> > +		rmb();
-> > +
-> > +		tc->time_mult = pc->time_mult;
-> > +		tc->time_shift = pc->time_shift;
-> > +		tc->time_zero = pc->time_zero;
-> > +		tc->time_cycles = pc->time_cycles;
-> > +		tc->time_mask = pc->time_mask;
-> > +		cap_user_time_zero = pc->cap_user_time_zero;
-> > +		cap_user_time_short = pc->cap_user_time_short;
-> > +
-> > +		/* Add barrier between the data accessing and sequence lock */
-> > +		rmb();
-> > +		if (pc->lock == seq && !(seq & 1))
-> > +			break;
-> > +		if (++i > 10000) {
-> > +			pr_debug("%s: failed to get perf_event_mmap_page lock\n",
-> > +				 __func__);
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> > +
-> > +	if (!cap_user_time_zero || !cap_user_time_short)
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	return 0;
-> > +}
+> If the kernel wants to use an MSR for it's own purposes then KVM has to
+> deal with that and not the other way round. Preventing the kernel from
+> using a facility freely is not an option ever.
 > 
-> Should we implement the perf_event__synth_time_conv() method? As it can be supported
-> on arm64 arch now.
+> The insanities of KVM performance optimizations have bitten us more than
+> once.
+> 
+> For this particular case at hand I don't care much and we should just
+> rip the whole RDPID thing out unconditionally. We still have zero
+> numbers about the performance difference vs. LSL.
 
-Thanks a lot for pointing out, agree that we should implement
-perf_event__synth_time_conv() for Arm64.  Will do it in next spin.
-
-> These is also a tsc get method called rdtsc(), weak implementation in 'tools/perf/util/tsc.c',
-> maybe we should rename it to an arch independent name, and implement the arm64 version
-> (read_cntvct_el0 in patch 3) here.
-
-If connect with your comment in patch 02, I think you are asking to
-consolidate for TSC common APIs and operations.  I took time to review
-the codes for conversion between timer counter and time stamp, your
-suggestion is reasonable and feasible for me.
-
-But the consolidation will impact the existed x86 implementation, before
-proceed to this direction for the next patch set, I'd like to get some
-review from x86's developers.
-
-@PeterZ, could you take a look for this and let me know if you have any
-concern for the consolidation?
-
-> Thus we can also make the testcase generic,
-> instead of adding a new one for arm64 :).
-
-Exactly.  Will do this if we get agreement for consolidation.
-
-Thanks for the reviewing,
-Leo
