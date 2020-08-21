@@ -2,45 +2,42 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F56C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A95C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0414C208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039CE20FC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598039237;
-	bh=f3yVDNBJvnGh5Iokm9/PFcobvsO5ALwAD6QUltmqU44=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=2G/z9Xstqz46glEvcvpjmNrgLzx4Tlhj9WLTIgGnK6kJMr4RFYunQDIGJGfPlieLU
-	 UepxC80MJTYeehkxdVAqtSPPsKgZixU2ZbrCkv14jQiZ/c9hScoT3iM2+oFWVFrKjw
-	 sI7nJbtGOJKfa8P1PxoRd4JpTfIcDQOZiSJYGohw=
+	s=default; t=1598039239;
+	bh=xfxCYHtN0RaWBl/IDfF8sZMluajDPRGUu0bXN51kmok=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=B9VnMbWEhVCsBIuAzmJur3qs0bPyDo4uHIGiOxh5AKjNZGzzNq0eycxhLnYKm6b9I
+	 sh3cRoY7ZH9vdaGZbmLRPNQ5w9we52DIoFNAHFKauWaDQQSEBu8yUVwFl45pqV6WrL
+	 T+gv3+Gwgeho8yat3SMgIuRsfQCaS/agwBJ5jZOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgHUTrM (ORCPT
+        id S1726370AbgHUTrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:47:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 15:47:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726431AbgHUTrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:47:07 -0400
+        id S1726215AbgHUTrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 15:47:08 -0400
 Received: from localhost.localdomain (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 751F9207CD;
-        Fri, 21 Aug 2020 19:47:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AFA620738;
+        Fri, 21 Aug 2020 19:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598039227;
-        bh=f3yVDNBJvnGh5Iokm9/PFcobvsO5ALwAD6QUltmqU44=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=ROw4/dA9/I7gR7iBcQaILUsDT3BjeLbI0NaqMjjSuJ6Hp1tnzfH43aW232ggfONWu
-         klj1gm3NJFLaEepo/RXDEUtf9ERdfs/InGgqpGDxRsv4bjgQUVxLSxkSsIv6oArWuh
-         8Zzr/3p8R7ywfPqL57iwZyHzya1i2lHYrbZRhIDE=
+        s=default; t=1598039226;
+        bh=xfxCYHtN0RaWBl/IDfF8sZMluajDPRGUu0bXN51kmok=;
+        h=From:To:Subject:Date:From;
+        b=Pn2Pi4K6KzYbbkJQ1T0SinM6dZR1yg7qUaWuyoT1OorzoQ1rC+Z9mFLfF0H+fXg0q
+         707nJ/bVCb0pPDhK5BNQN6Ye/C2gyzOCZEgNAQULGHWKXeiggbmhiVt5j8/C+kFvwP
+         WxcC/sWxBhKLVuUwcchMzd0ee0TBuwaOcZ1BjSc4=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -52,74 +49,74 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Daniel Wagner <wagi@monom.org>,
         Clark Williams <williams@redhat.com>,
         Pavel Machek <pavel@denx.de>, Tom Zanussi <zanussi@kernel.org>
-Cc:     Matt Fleming <matt@codeblueprint.co.uk>
-Subject: [PATCH RT 1/5] signal: Prevent double-free of user struct
-Date:   Fri, 21 Aug 2020 14:47:00 -0500
-Message-Id: <544fad9036a21c60dc68278fa302cc5cdf477098.1598039186.git.zanussi@kernel.org>
+Subject: [PATCH RT 0/5] Linux v4.19.135-rt61-rc1
+Date:   Fri, 21 Aug 2020 14:46:59 -0500
+Message-Id: <cover.1598039186.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1598039186.git.zanussi@kernel.org>
-References: <cover.1598039186.git.zanussi@kernel.org>
-In-Reply-To: <cover.1598039186.git.zanussi@kernel.org>
-References: <cover.1598039186.git.zanussi@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Fleming <matt@codeblueprint.co.uk>
+From: Tom Zanussi <zanussi@kernel.org>
 
-v4.19.135-rt61-rc1 stable review patch.
-If anyone has any objections, please let me know.
+Dear RT Folks,
 
------------
+This is the RT stable review cycle of patch 4.19.135-rt61-rc1.
+
+Please scream at me if I messed something up. Please test the patches
+too.
+
+The -rc release will be uploaded to kernel.org and will be deleted
+when the final release is out. This is just a review release (or
+release candidate).
+
+The pre-releases will not be pushed to the git repository, only the
+final release is.
+
+If all goes well, this patch will be converted to the next main
+release on 2020-08-28.
+
+To build 4.19.135-rt61-rc1 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.135.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/patch-4.19.135-rt61-rc1.patch.xz
+
+You can also build from 4.19.135-rt60 by applying the incremental patch:
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/incr/patch-4.19.135-rt60-rt61-rc1.patch.xz
 
 
-[ Upsteam commit 9567db2ebe566a93485e1a27d8759969d0002d7a ]
+Enjoy,
 
-The way user struct reference counting works changed significantly with,
+-- Tom
 
-  fda31c50292a ("signal: avoid double atomic counter increments for user accounting")
 
-Now user structs are only freed once the last pending signal is
-dequeued. Make sigqueue_free_current() follow this new convention to
-avoid freeing the user struct multiple times and triggering this
-warning:
+Ahmed S. Darwish (1):
+  net: phy: fixed_phy: Remove unused seqcount
 
- refcount_t: underflow; use-after-free.
- WARNING: CPU: 0 PID: 6794 at lib/refcount.c:288 refcount_dec_not_one+0x45/0x50
- Call Trace:
-  refcount_dec_and_lock_irqsave+0x16/0x60
-  free_uid+0x31/0xa0
-  __dequeue_signal+0x17c/0x190
-  dequeue_signal+0x5a/0x1b0
-  do_sigtimedwait+0x208/0x250
-  __x64_sys_rt_sigtimedwait+0x6f/0xd0
-  do_syscall_64+0x72/0x200
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Davidlohr Bueso (1):
+  net: xfrm: fix compress vs decompress serialization
 
-Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
-Reported-by: Daniel Wagner <wagi@monom.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- kernel/signal.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Matt Fleming (1):
+  signal: Prevent double-free of user struct
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 45748993f777..05c9b5a6b3ae 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -488,8 +488,8 @@ static void sigqueue_free_current(struct sigqueue *q)
- 
- 	up = q->user;
- 	if (rt_prio(current->normal_prio) && !put_task_cache(current, q)) {
--		atomic_dec(&up->sigpending);
--		free_uid(up);
-+		if (atomic_dec_and_test(&up->sigpending))
-+			free_uid(up);
- 	} else
- 		  __sigqueue_free(q);
- }
+Sebastian Andrzej Siewior (1):
+  Bluetooth: Acquire sk_lock.slock without disabling interrupts
+
+Tom Zanussi (1):
+  Linux 4.19.135-rt61-rc1
+
+ drivers/net/phy/fixed_phy.c | 25 +++++++++----------------
+ kernel/signal.c             |  4 ++--
+ localversion-rt             |  2 +-
+ net/bluetooth/rfcomm/sock.c |  7 ++-----
+ net/xfrm/xfrm_ipcomp.c      | 21 +++++++++++++++------
+ 5 files changed, 29 insertions(+), 30 deletions(-)
+
 -- 
 2.17.1
 
