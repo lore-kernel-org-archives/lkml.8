@@ -2,140 +2,167 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5DBC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E176C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16E0207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F96207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:36:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PeS8ObJC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgHUJcX (ORCPT
+        id S1727898AbgHUJgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:32:23 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7297 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgHUJcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:32:19 -0400
-IronPort-SDR: fgRQID+h9pfvbwTsHWnvMnunWunmjszIdXpPgNK5Z9TdICbzim7SS3wSJdjnmBAZtOeZ14A95k
- RZbVymq/XAsw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="143288990"
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="143288990"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 02:32:18 -0700
-IronPort-SDR: hvmJUp9IKl+Oil+/Rvte3tIZsqcosPkwVZiubcF0qfk5y9MsFabQxcgpNbw1RalMOxcBKFHASP
- WAHeoYDVkVNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="321202090"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Aug 2020 02:32:14 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v9 0/2] pwm: intel: Add PWM driver for a new SoC
-Date:   Fri, 21 Aug 2020 17:32:09 +0800
-Message-Id: <cover.1598001442.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 21 Aug 2020 05:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgHUJgn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 05:36:43 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 727B2C061385
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 02:36:43 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id v16so642918plo.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 02:36:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HnZXM8XOnRw3EyhQGuLTicUwiSSuNeJMLzprIDO7NXw=;
+        b=PeS8ObJCcwZEGgfznTBsrVSezMqW4Gb0fKStJLyCe53r801ikPbXeKCVVRQZ9aStcE
+         /mylhuh7W2sPnj8wyLQwkmQMJtg7PrtA1gtRFw+tnw3AsMBkAGyZNS0VZR7KXgpLJ1XF
+         O9aU3Bv4sNdD0Ax/tf/eSCgQt/Y96zr/zArNqkwR73VEsyuJs2jRG3Ke2QGaBDXU4lwU
+         IXAPk8zngb0qn2QzfMBjhwPoofgbiPMcMDfHYr0m3PdLEOw9B8VF6tTYpIzi+wL7iY82
+         ++HTYnN0Vyg7LIO2lQZ/bNuzB+JX8LD6I7Prw8VFH9gcKvSPqF8xkUQv+NzbnJN9Ffxv
+         FXvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HnZXM8XOnRw3EyhQGuLTicUwiSSuNeJMLzprIDO7NXw=;
+        b=Fps6I8uEjNRSHfg+d6ALU1ygSfAaMg48hHwE2lX6iQzkyZi7bDkA6k/lcRTA6Q5Eot
+         3j++lVT7jMr2Imdp9Pfa9MaQxx24o6EwaOIz6A9vTmtyJLpHyqht+t/JRUe5V+qumMB5
+         QD6rw7Ez/YtuotXhVrk5K6E7sqiFR1DgBiCD/14YnjsnQiQSsuVtwUkSMawOBzj8L7X/
+         WCbROAicOANWhrwTuCC5hlmeiyYUlPLROE3W3HeGbUONh0Ea2fPWscSR75ZtZthxUnra
+         SbYrX4LIfMfS9RNDvKXm/eak1j9gKNWsVuSDZ3tDsnRH1aPrC4StCUpbIzEO8ux5KzmO
+         PyAw==
+X-Gm-Message-State: AOAM531aE9e2ug0b4EyC+1HHj3UpbeEjZMdHY3SBS2XMZMnizMdI3hAV
+        vXT1Se7vjR/Bhf/Jg0EQSq9hUA==
+X-Google-Smtp-Source: ABdhPJylj9eRj8V9uKB44pf5NOj4natO5nO3lvOWEjkNwhLdD/LGaXrciFtGCOefcZmPPwL8wj0MqA==
+X-Received: by 2002:a17:902:a9cb:: with SMTP id b11mr1724652plr.1.1598002602851;
+        Fri, 21 Aug 2020 02:36:42 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
+        by smtp.gmail.com with ESMTPSA id w16sm1585855pjd.50.2020.08.21.02.36.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Aug 2020 02:36:42 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 17:36:32 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     "liwei (GF)" <liwei391@huawei.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kemeng Shi <shikemeng@huawei.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] perf tools: Support Arm arch timer counter
+Message-ID: <20200821093632.GA22365@leoy-ThinkPad-X240s>
+References: <20200807071620.11907-1-leo.yan@linaro.org>
+ <20200807071620.11907-2-leo.yan@linaro.org>
+ <27ed6ebf-d9e6-e0ea-1577-2bba3d6f35c1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <27ed6ebf-d9e6-e0ea-1577-2bba3d6f35c1@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch 1 adds dt binding document in YAML format.
-Patch 2 add PWM fan controller driver for LGM SoC.
+Hi Wei,
 
-v9:
-- Address code quality related review concerns (Andy Shevchenko)
-- Use devm_add_action_or_reset() instead of explicit unwind calls.
+On Thu, Aug 20, 2020 at 10:56:46AM +0800, liwei (GF) wrote:
 
-v8:
-- Remove fan related optional properties usage, keep
-  them as default. If needed, change pwm-fan driver
-  separately in future to add them as generic properties.
+[...]
 
-v7:
-- Address code quality related review concerns.
-- Rename fan related property to pwm-*.
-- Fix one make dt_binding_check reported error.
+> > +int perf_read_arch_timer_conversion(const struct perf_event_mmap_page *pc,
+> > +				    struct perf_arch_timer_conversion *tc)
+> > +{
+> > +	bool cap_user_time_zero, cap_user_time_short;
+> > +	u32 seq;
+> > +	int i = 0;
+> > +
+> > +	while (1) {
+> > +		seq = pc->lock;
+> > +		/* Add barrier between the sequence lock and data accessing */
+> > +		rmb();
+> > +
+> > +		tc->time_mult = pc->time_mult;
+> > +		tc->time_shift = pc->time_shift;
+> > +		tc->time_zero = pc->time_zero;
+> > +		tc->time_cycles = pc->time_cycles;
+> > +		tc->time_mask = pc->time_mask;
+> > +		cap_user_time_zero = pc->cap_user_time_zero;
+> > +		cap_user_time_short = pc->cap_user_time_short;
+> > +
+> > +		/* Add barrier between the data accessing and sequence lock */
+> > +		rmb();
+> > +		if (pc->lock == seq && !(seq & 1))
+> > +			break;
+> > +		if (++i > 10000) {
+> > +			pr_debug("%s: failed to get perf_event_mmap_page lock\n",
+> > +				 __func__);
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +	if (!cap_user_time_zero || !cap_user_time_short)
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	return 0;
+> > +}
+> 
+> Should we implement the perf_event__synth_time_conv() method? As it can be supported
+> on arm64 arch now.
 
-v6:
-- Readjust .apply op as per review feedback.
-- Add back pwm-cells property to resolve make dt_binding_check error.
-  pwm-cells is a required property for PWM driver.
-- Add back fan related optional properties.
+Thanks a lot for pointing out, agree that we should implement
+perf_event__synth_time_conv() for Arm64.  Will do it in next spin.
 
-v5:
-- Address below review concerns from Uwe Kleine-König.
-  * Improve comments about Limitations.
-  * Use return value of regmap_update_bits if container function returns
-    error code.
-  * Modify .apply op to have strict checking for fixed period supported
-    by PWM HW.
-  * Use u64 as type when use min_t for duty_cycle.
-  * Add reset_control_assert() in failure case in probe where it was missing
-    earlier.
-- Remove fan specific optional properties from pwm dt binding document (Rob Herring)
+> These is also a tsc get method called rdtsc(), weak implementation in 'tools/perf/util/tsc.c',
+> maybe we should rename it to an arch independent name, and implement the arm64 version
+> (read_cntvct_el0 in patch 3) here.
 
-v4:
-- Address below review concerns from Uwe Kleine-König.
-  * Improve notes and limitations comments.
-  * Add common prefixes for all #defines.
-  * Modify/Improve logic in .apply & .get_state ops as advised.
-  * Skip error messages in probe when error is -EPROBE_DEFER.
-  * Add dependencies in Kconfig (OF & HAS_IOMEM) and add select REGMAP_MMIO.
-  * Address other code quality related review concerns.
-- Fix make dt_binding_check reported error in YAML file.
+If connect with your comment in patch 02, I think you are asking to
+consolidate for TSC common APIs and operations.  I took time to review
+the codes for conversion between timer counter and time stamp, your
+suggestion is reasonable and feasible for me.
 
-v3:
-- Address below review concerns from Uwe Kleine-König.
-  * Remove fan rpm calibration task from the driver.
-  * Modify apply op as per the review feedback.
-  * Add roundup & round down where necessary.
-  * Address other misc code quality related review concerns.
-  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
-  * Improve dt binding document.
+But the consolidation will impact the existed x86 implementation, before
+proceed to this direction for the next patch set, I'd like to get some
+review from x86's developers.
 
-v2:
-- Address below review concerns from Uwe Kleine-König.
-  * Add notes and limitations about PWM HW.
-  * Rename all functions and structure to lgm_pwm_* 
-  * Readjust space aligninment in structure fields to single space.
-  * Switch to using apply instead of config/enable/disable.
-  * Address other code quality related concerns.
-  * Rebase to 5.8-rc1.
-- Address review concerns in dt binding YAML from Rob Herring.
+@PeterZ, could you take a look for this and let me know if you have any
+concern for the consolidation?
 
-v1:
-- Initial version.
+> Thus we can also make the testcase generic,
+> instead of adding a new one for arm64 :).
 
+Exactly.  Will do this if we get agreement for consolidation.
 
-Rahul Tanwar (2):
-  Add DT bindings YAML schema for PWM fan controller of LGM SoC
-  Add PWM fan controller driver for LGM SoC
-
- .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  44 ++++
- drivers/pwm/Kconfig                                |  11 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-intel-lgm.c                        | 241 +++++++++++++++++++++
- 4 files changed, 297 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
- create mode 100644 drivers/pwm/pwm-intel-lgm.c
-
--- 
-2.11.0
-
+Thanks for the reviewing,
+Leo
