@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 831A020578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D984620578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598027026;
-	bh=yKqhpIt2E7otdBYwhnTyQ4kLewxec0P6sMq8BMGFrfk=;
+	s=default; t=1598027031;
+	bh=MFA31vlUz/wgJDKoSVzaaPhDNaXOMuJ6Cmer3jlUlVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QIW4kYlYfcFIYmJnmT/d4BBX99KvQzyI0JlSTJmuu+LnNE8cJ8Jo65KziAZGsodgQ
-	 t5j0W9rxt8v1cRax2xr33iIDhpl+ATuQ8zp4ULcmOwG/EfLdiB8peXm/0SVRI2ceAO
-	 kqqZZaUv0XM0kZPIHacc1pa9oZWmfRpvAGYVHWaI=
+	b=pRZPiU31nR53IQUWanZR3eixg6NALy+2semh5i33G1UjHt9nm/twpf1LrQWRZ13B7
+	 sPgN0dn+BfGXdiJjSr6qk4bP/oGMazsMBf8qvjJU++zx/UFvr+8PzCQgEbQFdj2UD6
+	 H31Iu5dkSrK0QbMcWWQWZ/owfY/dFisU4E89xpG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgHUQXn (ORCPT
+        id S1728573AbgHUQXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:23:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728356AbgHUQUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:20:07 -0400
+        id S1728376AbgHUQUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:20:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21A7022E03;
-        Fri, 21 Aug 2020 16:19:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26D5822BF3;
+        Fri, 21 Aug 2020 16:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026760;
-        bh=yKqhpIt2E7otdBYwhnTyQ4kLewxec0P6sMq8BMGFrfk=;
+        s=default; t=1598026777;
+        bh=MFA31vlUz/wgJDKoSVzaaPhDNaXOMuJ6Cmer3jlUlVY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Wr50MoJZjs7rxRdcanhI7oiPNhKIw8m3838ij528kwN8x2U+IoSKWsbYRMm1sscp
-         +qcLiOM7FlPWC7ueXRabZ4ricjuWq3S74fxezSfytR3s8pgVydmkzpCsaTf0K+x2Wl
-         bHHoNRXJf3y0NjlaXaJMR4KH0plW0Wk/6ybgLGN8=
+        b=rL8z82wU0F4Bc4cW5yCZjO5sfJ8cG45XsZqSjxsY7k5M0cAu0dcA4xhwx1P/BLjfQ
+         uNjtWxNfu6yshlpJcMfJnO/ojP2AfA9j5YGkZeVsJL/GuyQPYuPnesCrgERDwEuU83
+         VtJ74XUnH4AFTYu0EaapQbg2fADtcMia53zISKJU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Desnes A. Nunes do Rosario" <desnesn@linux.ibm.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/30] selftests/powerpc: Purge extra count_pmc() calls of ebb selftests
-Date:   Fri, 21 Aug 2020 12:18:44 -0400
-Message-Id: <20200821161857.348955-17-sashal@kernel.org>
+Cc:     Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@suse.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 30/30] EDAC/ie31200: Fallback if host bridge device is already initialized
+Date:   Fri, 21 Aug 2020 12:18:57 -0400
+Message-Id: <20200821161857.348955-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161857.348955-1-sashal@kernel.org>
 References: <20200821161857.348955-1-sashal@kernel.org>
@@ -61,202 +61,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Desnes A. Nunes do Rosario" <desnesn@linux.ibm.com>
+From: Jason Baron <jbaron@akamai.com>
 
-[ Upstream commit 3337bf41e0dd70b4064cdf60acdfcdc2d050066c ]
+[ Upstream commit 709ed1bcef12398ac1a35c149f3e582db04456c2 ]
 
-An extra count on ebb_state.stats.pmc_count[PMC_INDEX(pmc)] is being per-
-formed when count_pmc() is used to reset PMCs on a few selftests. This
-extra pmc_count can occasionally invalidate results, such as the ones from
-cycles_test shown hereafter. The ebb_check_count() failed with an above
-the upper limit error due to the extra value on ebb_state.stats.pmc_count.
+The Intel uncore driver may claim some of the pci ids from ie31200 which
+means that the ie31200 edac driver will not initialize them as part of
+pci_register_driver().
 
-Furthermore, this extra count is also indicated by extra PMC1 trace_log on
-the output of the cycle test (as well as on pmc56_overflow_test):
+Let's add a fallback for this case to 'pci_get_device()' to get a
+reference on the device such that it can still be configured. This is
+similar in approach to other edac drivers.
 
-==========
-   ...
-   [21]: counter = 8
-   [22]: register SPRN_MMCR0 = 0x0000000080000080
-   [23]: register SPRN_PMC1  = 0x0000000080000004
-   [24]: counter = 9
-   [25]: register SPRN_MMCR0 = 0x0000000080000080
-   [26]: register SPRN_PMC1  = 0x0000000080000004
-   [27]: counter = 10
-   [28]: register SPRN_MMCR0 = 0x0000000080000080
-   [29]: register SPRN_PMC1  = 0x0000000080000004
->> [30]: register SPRN_PMC1  = 0x000000004000051e
-PMC1 count (0x280000546) above upper limit 0x2800003e8 (+0x15e)
-[FAIL] Test FAILED on line 52
-failure: cycles
-==========
-
-Signed-off-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200626164737.21943-1-desnesn@linux.ibm.com
+Signed-off-by: Jason Baron <jbaron@akamai.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/r/1594923911-10885-1-git-send-email-jbaron@akamai.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c     | 2 --
- tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c      | 2 --
- .../selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c    | 2 --
- .../selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c     | 2 --
- tools/testing/selftests/powerpc/pmu/ebb/ebb.c              | 2 --
- .../selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c  | 2 --
- .../selftests/powerpc/pmu/ebb/lost_exception_test.c        | 1 -
- .../testing/selftests/powerpc/pmu/ebb/multi_counter_test.c | 7 -------
- .../selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c       | 2 --
- .../testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c | 2 --
- .../selftests/powerpc/pmu/ebb/pmc56_overflow_test.c        | 2 --
- 11 files changed, 26 deletions(-)
+ drivers/edac/ie31200_edac.c | 50 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 47 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c b/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
-index 94110b1dcd3d8..031baa43646fb 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
-@@ -91,8 +91,6 @@ int back_to_back_ebbs(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
+diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
+index aac9b9b360b80..9e4781a807cfa 100644
+--- a/drivers/edac/ie31200_edac.c
++++ b/drivers/edac/ie31200_edac.c
+@@ -147,6 +147,8 @@
+ 	(n << (28 + (2 * skl) - PAGE_SHIFT))
  
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
+ static int nr_channels;
++static struct pci_dev *mci_pdev;
++static int ie31200_registered = 1;
  
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
-index 7c57a8d79535d..361e0be9df9ae 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
-@@ -42,8 +42,6 @@ int cycles(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
+ struct ie31200_priv {
+ 	void __iomem *window;
+@@ -518,12 +520,16 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ static int ie31200_init_one(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
+ {
+-	edac_dbg(0, "MC:\n");
++	int rc;
  
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
++	edac_dbg(0, "MC:\n");
+ 	if (pci_enable_device(pdev) < 0)
+ 		return -EIO;
++	rc = ie31200_probe1(pdev, ent->driver_data);
++	if (rc == 0 && !mci_pdev)
++		mci_pdev = pci_dev_get(pdev);
  
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
-index ecf5ee3283a3e..fe7d0dc2a1a26 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
-@@ -99,8 +99,6 @@ int cycles_with_freeze(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
+-	return ie31200_probe1(pdev, ent->driver_data);
++	return rc;
+ }
  
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
+ static void ie31200_remove_one(struct pci_dev *pdev)
+@@ -532,6 +538,8 @@ static void ie31200_remove_one(struct pci_dev *pdev)
+ 	struct ie31200_priv *priv;
  
- 	printf("EBBs while frozen %d\n", ebbs_while_frozen);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
-index c0faba520b35c..b9b30f974b5ea 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
-@@ -71,8 +71,6 @@ int cycles_with_mmcr2(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
+ 	edac_dbg(0, "\n");
++	pci_dev_put(mci_pdev);
++	mci_pdev = NULL;
+ 	mci = edac_mc_del_mc(&pdev->dev);
+ 	if (!mci)
+ 		return;
+@@ -583,17 +591,53 @@ static struct pci_driver ie31200_driver = {
  
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
+ static int __init ie31200_init(void)
+ {
++	int pci_rc, i;
++
+ 	edac_dbg(3, "MC:\n");
+ 	/* Ensure that the OPSTATE is set correctly for POLL or NMI */
+ 	opstate_init();
  
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/ebb.c b/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
-index 46681fec549b8..2694ae161a84a 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
-@@ -396,8 +396,6 @@ int ebb_child(union pipe read_pipe, union pipe write_pipe)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
+-	return pci_register_driver(&ie31200_driver);
++	pci_rc = pci_register_driver(&ie31200_driver);
++	if (pci_rc < 0)
++		goto fail0;
++
++	if (!mci_pdev) {
++		ie31200_registered = 0;
++		for (i = 0; ie31200_pci_tbl[i].vendor != 0; i++) {
++			mci_pdev = pci_get_device(ie31200_pci_tbl[i].vendor,
++						  ie31200_pci_tbl[i].device,
++						  NULL);
++			if (mci_pdev)
++				break;
++		}
++		if (!mci_pdev) {
++			edac_dbg(0, "ie31200 pci_get_device fail\n");
++			pci_rc = -ENODEV;
++			goto fail1;
++		}
++		pci_rc = ie31200_init_one(mci_pdev, &ie31200_pci_tbl[i]);
++		if (pci_rc < 0) {
++			edac_dbg(0, "ie31200 init fail\n");
++			pci_rc = -ENODEV;
++			goto fail1;
++		}
++	}
++	return 0;
++
++fail1:
++	pci_unregister_driver(&ie31200_driver);
++fail0:
++	pci_dev_put(mci_pdev);
++
++	return pci_rc;
+ }
  
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
+ static void __exit ie31200_exit(void)
+ {
+ 	edac_dbg(3, "MC:\n");
+ 	pci_unregister_driver(&ie31200_driver);
++	if (!ie31200_registered)
++		ie31200_remove_one(mci_pdev);
+ }
  
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c b/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
-index a991d2ea8d0a1..174e4f4dae6c0 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
-@@ -38,8 +38,6 @@ static int victim_child(union pipe read_pipe, union pipe write_pipe)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	FAIL_IF(ebb_state.stats.ebb_count == 0);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c b/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
-index eb8acb78bc6c1..531083accfcad 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
-@@ -75,7 +75,6 @@ static int test_body(void)
- 	ebb_freeze_pmcs();
- 	ebb_global_disable();
- 
--	count_pmc(4, sample_period);
- 	mtspr(SPRN_PMC4, 0xdead);
- 
- 	dump_summary_ebb_state();
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c b/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
-index 6ff8c8ff27d66..035c02273cd49 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
-@@ -70,13 +70,6 @@ int multi_counter(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--	count_pmc(2, sample_period);
--	count_pmc(3, sample_period);
--	count_pmc(4, sample_period);
--	count_pmc(5, sample_period);
--	count_pmc(6, sample_period);
--
- 	dump_ebb_state();
- 
- 	for (i = 0; i < 6; i++)
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c b/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
-index 037cb6154f360..3e9d4ac965c85 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
-@@ -61,8 +61,6 @@ static int cycles_child(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_summary_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c b/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
-index c5fa64790c22e..d90891fe96a32 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
-@@ -82,8 +82,6 @@ static int test_body(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	if (mmcr0_mismatch)
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c b/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
-index 30e1ac62e8cb4..8ca92b9ee5b01 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
-@@ -76,8 +76,6 @@ int pmc56_overflow(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(2, sample_period);
--
- 	dump_ebb_state();
- 
- 	printf("PMC5/6 overflow %d\n", pmc56_overflowed);
+ module_init(ie31200_init);
 -- 
 2.25.1
 
