@@ -2,118 +2,116 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66845C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FACC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC1D207DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D994220732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:54:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="kRb96QOO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbgHUJyd convert rfc822-to-8bit (ORCPT
+        id S1728450AbgHUJyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:54:33 -0400
-Received: from mail.fireflyinternet.com ([77.68.26.236]:57708 "EHLO
-        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727046AbgHUJya (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:54:30 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 22195973-1500050 
-        for multiple; Fri, 21 Aug 2020 10:54:23 +0100
-Content-Type: text/plain; charset="utf-8"
+        Fri, 21 Aug 2020 05:54:39 -0400
+Received: from mail1.skidata.com ([91.230.2.99]:49057 "EHLO mail1.skidata.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727791AbgHUJye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 05:54:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
+  t=1598003673; x=1629539673;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NstbtL4h85xlZs4+XVTJ2ZVNFbQJtI/QKJuqZTJ2ZeQ=;
+  b=kRb96QOOc5MO+LFrktYiLSRs7IwA3NGeTLusUmzGrVJVRDVGjmHF6ENc
+   sCInO7yfgGH/0SEgvxXaMM0rBBcOfuXYV3IxAciCai+KKnNPulICBS8sx
+   PRN+/oAAQG5pYdJhVUtWss9AZoS0ObYmkD0dJ678Fdmk9xcNodSQNAQLr
+   1EZerV/8QvohyhxTehcUhKtloM9TE9ngfd9YSFbK2eH7tnrWOMJnhHvTJ
+   19DnSr0R37yswQYzcwJ/m75bo7Bf5fwWzvb1d93I5tOG+S0EXk9oFioM2
+   8DsZEacsecj5a7Q211dhOqX7rv2UpS4le+yWf1rgMpNsuciJ/OxVEunrT
+   Q==;
+IronPort-SDR: 3YRGmzjJwFhLM47ZZA2avh0ZdlsTTCQs/vrDyCckW8v4KIO9OYH5mDxDlRHi6DXdj0zw0l3grt
+ zFumAJ3NT23lh0uS6wZWMxdgSpk1Xr0dBlNPCRmJ5lztPu3KFzyKJJxVV0PHvDrpHz4uKeJ14S
+ y7+o1plvPyokFmzMttD3BtEOSYoQPPNKqa3w0vtJRhur8kqBqGxHvyCB5JVemSvoArcwHvWDf0
+ YPYQZgTBK+99J3q2ew3/FXG378z1H6pj4Y+XNESw2CcHD/V83drLWg6/hjN4wq/bNyCX19Qt/E
+ N04=
+X-IronPort-AV: E=Sophos;i="5.76,335,1592863200"; 
+   d="scan'208";a="26271758"
+Date:   Fri, 21 Aug 2020 11:54:30 +0200
+From:   Richard Leitner <richard.leitner@skidata.com>
+To:     Robin Gong <yibin.gong@nxp.com>
+CC:     Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: Re: pcm|dmaengine|imx-sdma race condition on i.MX6
+Message-ID: <20200821095430.GB65616@pcleri>
+References: <20200813112258.GA327172@pcleri>
+ <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <61498763c60e488a825e8dd270732b62@skidata.com>
+ <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
+ <6b5799a567d14cfb9ce34d278a33017d@skidata.com>
+ <VE1PR04MB6638A7AC625B6771F9A69F0D895A0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200821043418.GA65616@pcleri>
+ <VE1PR04MB6638271FA459E4068391ABF8895B0@VE1PR04MB6638.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200821095129.GF3354@suse.de>
-References: <20200821085011.28878-1-chris@chris-wilson.co.uk> <20200821095129.GF3354@suse.de>
-Subject: Re: [PATCH 1/4] mm: Export flush_vm_area() to sync the PTEs upon construction
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-mm@kvack.org, Pavel Machek <pavel@ucw.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Airlie <airlied@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Vrabel <david.vrabel@citrix.com>, stable@vger.kernel.org
-To:     Joerg Roedel <jroedel@suse.de>
-Date:   Fri, 21 Aug 2020 10:54:22 +0100
-Message-ID: <159800366215.29194.8455636122843151159@build.alporthouse.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB6638271FA459E4068391ABF8895B0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+X-Originating-IP: [192.168.111.252]
+X-ClientProxiedBy: sdex6srv.skidata.net (192.168.111.84) To
+ sdex5srv.skidata.net (192.168.111.83)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Joerg Roedel (2020-08-21 10:51:29)
-> On Fri, Aug 21, 2020 at 09:50:08AM +0100, Chris Wilson wrote:
-> > The alloc_vm_area() is another method for drivers to
-> > vmap/map_kernel_range that uses apply_to_page_range() rather than the
-> > direct vmalloc walkers. This is missing the page table modification
-> > tracking, and the ability to synchronize the PTE updates afterwards.
-> > Provide flush_vm_area() for the users of alloc_vm_area() that assumes
-> > the worst and ensures that the page directories are correctly flushed
-> > upon construction.
+On Fri, Aug 21, 2020 at 09:21:37AM +0000, Robin Gong wrote:
+> On 2020/08/21 12:34 Richard Leitner <richard.leitner@skidata.com> wrote: 
+> > On Thu, Aug 20, 2020 at 03:01:44PM +0000, Robin Gong wrote:
+> > > On 2020/08/19 22:26 Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>
+> > wrote:
+> > > >
+> > > > @Robin:
+> > > > Is it possible to tag the commits for the stable-tree
+> > > > Cc: stable@vger.kernel.org?
+> > > Could my patch work in your side? If yes, I will add
+> > > Cc: stable@vger.kernel.org
 > > 
-> > The impact is most pronounced on x86_32 due to the delayed set_pmd().
+> > I've tested the patches 3 & 4 (removing sdmac->context_loaded) of the series
+> > you mentioned and sent Tested-by tags for them [1,2], as they fix the EIO
+> > problems for our use case.
 > > 
-> > Reported-by: Pavel Machek <pavel@ucw.cz>
-> > References: 2ba3e6947aed ("mm/vmalloc: track which page-table levels were modified")
-> > References: 86cf69f1d893 ("x86/mm/32: implement arch_sync_kernel_mappings()")
-> > Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Joerg Roedel <jroedel@suse.de>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Dave Airlie <airlied@redhat.com>
-> > Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> > Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: David Vrabel <david.vrabel@citrix.com>
-> > Cc: <stable@vger.kernel.org> # v5.8+
-> > ---
-> >  include/linux/vmalloc.h |  1 +
-> >  mm/vmalloc.c            | 16 ++++++++++++++++
-> >  2 files changed, 17 insertions(+)
+> > So from our side they are fine for stable.
 > > 
-> > diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-> > index 0221f852a7e1..a253b27df0ac 100644
-> > --- a/include/linux/vmalloc.h
-> > +++ b/include/linux/vmalloc.h
-> > @@ -204,6 +204,7 @@ static inline void set_vm_flush_reset_perms(void *addr)
-> >  
-> >  /* Allocate/destroy a 'vmalloc' VM area. */
-> >  extern struct vm_struct *alloc_vm_area(size_t size, pte_t **ptes);
-> > +extern void flush_vm_area(struct vm_struct *area);
-> >  extern void free_vm_area(struct vm_struct *area);
-> >  
-> >  /* for /dev/kmem */
-> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > index b482d240f9a2..c41934486031 100644
-> > --- a/mm/vmalloc.c
-> > +++ b/mm/vmalloc.c
-> > @@ -3078,6 +3078,22 @@ struct vm_struct *alloc_vm_area(size_t size, pte_t **ptes)
-> >  }
-> >  EXPORT_SYMBOL_GPL(alloc_vm_area);
-> >  
-> > +void flush_vm_area(struct vm_struct *area)
-> > +{
-> > +     unsigned long addr = (unsigned long)area->addr;
-> > +
-> > +     /* apply_to_page_range() doesn't track the damage, assume the worst */
-> > +     if (ARCH_PAGE_TABLE_SYNC_MASK & (PGTBL_PTE_MODIFIED |
-> > +                                      PGTBL_PMD_MODIFIED |
-> > +                                      PGTBL_PUD_MODIFIED |
-> > +                                      PGTBL_P4D_MODIFIED |
-> > +                                      PGTBL_PGD_MODIFIED))
-> > +             arch_sync_kernel_mappings(addr, addr + area->size);
-> 
-> This should happen in __apply_to_page_range() directly and look like
-> this:
+> Okay, I thought that's just decrease the issue in your side not totally fix, and the patch
 
-Ok. I thought it had to be after assigning the *ptep. If we apply the
-sync first, do not have to worry about PGTBL_PTE_MODIFIED from the
-*ptep?
--Chris
+As Benjamin mentioned the issue isn't "fixed" for us from the logical/
+technical side.
+Nonetheless the EIO error won't occur anymore with the patches applied.
+Therefore the issue is for me "fixed from a userspace point of view", as
+they don't get/see the error anymore.
+
+> I post in https://www.spinics.net/lists/arm-kernel/msg829972.html
+> could resolve the potential next descriptor wrongly freed by vchan_get_all_descriptors
+> in sdma_channel_terminate_work. Anyway, I'll add ' Cc: stable@vger.kernel.org' and
+> your Tested-by tags in 3&4, then resend it again, thanks.
+
+Great. Thank you!
+
+regards;rl
+
