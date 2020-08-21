@@ -2,120 +2,145 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB082C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 499BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2F64207DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 286BB207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="o5eKQ6Lb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZUnJ6jz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgHUPMe (ORCPT
+        id S1728106AbgHUPMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:12:34 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:27090 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727849AbgHUPLq (ORCPT
+        Fri, 21 Aug 2020 11:12:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727833AbgHUPMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:11:46 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LFACdZ016918
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:11:45 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=++GOQs6OyBg0NRpfI9Y2G3lb6tt1keWKXcgXu1XREmo=;
- b=o5eKQ6Lbbf/P4In+sD6DDLnf5ddh/Gmf4We3NLmtc0oqAOKiRBgi+zsYH32NR3NmvmIg
- NuBPviRg3YDfiL9TqIixduaWgekfUSeGnk4kVhzuGfkKFwEqk82SBnORJCmJa4D9hs1X
- fh4bSw/Y0WMAfVpKAx794PxMn9sRd6k+8SI= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 3318g0ucwj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:11:45 -0700
-Received: from intmgw002.41.prn1.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:11d::6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 21 Aug 2020 08:11:44 -0700
-Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id 36D10344104D; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
-To:     <bpf@vger.kernel.org>
-CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
-        Roman Gushchin <guro@fb.com>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next v4 04/30] bpf: refine memcg-based memory accounting for arraymap maps
-Date:   Fri, 21 Aug 2020 08:01:08 -0700
-Message-ID: <20200821150134.2581465-5-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
-References: <20200821150134.2581465-1-guro@fb.com>
+        Fri, 21 Aug 2020 11:12:30 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EC48C061573;
+        Fri, 21 Aug 2020 08:12:28 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o13so1148685pgf.0;
+        Fri, 21 Aug 2020 08:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lRxrDToJB/xPOxG5kGdgUWQPtXDsSaGWKdRXIKBnLww=;
+        b=kZUnJ6jz2FEkjkC4B07sDG1MjmzhjlUML84kGzNbhSDyDdfVyIkBqQ1JVaKnlcpnsW
+         O4/rnCdzXc5wLDuh66q0rTTJxxarsRrbbSJ3CBzYgOl2Kiph/wZYJr1Qvco+GQ7avZZF
+         Dbs74MOkriYYn3Uv1eGMGWPeNA1bNr83Aa+YHScAmKLmebvgMrUyej9FYoVnkrCPjtE3
+         /d9DU7qLsc96xQiWL8n/lPwiBLfzsLbk3ZLdsUeHAbC9H8xLy9KN7b5omTiIo5lCszfb
+         4BIvgj0FwaU6x9/I2bYSDZEgvwAguArcSIW9qjKYuZ90qn8CQH/xh3SQ44OCN04qHdb/
+         qz8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lRxrDToJB/xPOxG5kGdgUWQPtXDsSaGWKdRXIKBnLww=;
+        b=EA68r7e7JOxQzC089+nNHH9Kj1n1ZhweTRlVYDRRfkbCMMoERm2JwwNxgRvd6KpEc5
+         ea6H8E/y6CJ3Aeix0tJVBPcxUm+BvyC9p44hg1PO4HjOij7e33AEhTxr28auEaMt5x9D
+         nkdR9H5XfmjLLDcLWylnz5fYzKWHP40Pa8JNaWuWe/px8cxTQzLm+EX7uyWagOiLy4v7
+         b80pi7dm8tTXGpyjPjTeSJRl4aLWdovWIdwiXL1Qap6byiU+DVzaeMZHThvmoP8bHtlI
+         2t1oLCaV+BVkOOMkXyy06MbfXv2M4VI2IvEoBFsyblpjudnindX8A18di6JG28FZU98u
+         y56g==
+X-Gm-Message-State: AOAM532Gx1MvVzhoP6NRbe41YT+BvvnoK+kcCVTgc5zRSEEVvrxnFSsr
+        i9zjSjxyiHgBkB/Bi65YwXjaYB1uPZM=
+X-Google-Smtp-Source: ABdhPJxt6gfGs7RCQ4HiMUqjAvNGZuzKIyZP+qM+HUnYFTtKpiyJhyFCAA1UxFk4xgMqZ7BnAojcJw==
+X-Received: by 2002:aa7:8757:: with SMTP id g23mr2825194pfo.283.1598022748057;
+        Fri, 21 Aug 2020 08:12:28 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id s8sm3126985pfc.122.2020.08.21.08.12.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 08:12:27 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Zefan Li <lizefan@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v6 00/12] huge vmalloc mappings
+Date:   Sat, 22 Aug 2020 01:12:04 +1000
+Message-Id: <20200821151216.1005117-1-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0 spamscore=0
- lowpriorityscore=0 clxscore=1015 bulkscore=0 priorityscore=1501
- mlxlogscore=892 suspectscore=38 mlxscore=0 adultscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210143
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include percpu arrays and auxiliary data into the memcg-based memory
-accounting.
+Thanks Christophe and Christoph for reviews.
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Song Liu <songliubraving@fb.com>
----
- kernel/bpf/arraymap.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thanks,
+Nick
 
-diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
-index 8ff419b632a6..9597fecff8da 100644
---- a/kernel/bpf/arraymap.c
-+++ b/kernel/bpf/arraymap.c
-@@ -28,12 +28,12 @@ static void bpf_array_free_percpu(struct bpf_array *a=
-rray)
-=20
- static int bpf_array_alloc_percpu(struct bpf_array *array)
- {
-+	const gfp_t gfp =3D GFP_USER | __GFP_NOWARN | __GFP_ACCOUNT;
- 	void __percpu *ptr;
- 	int i;
-=20
- 	for (i =3D 0; i < array->map.max_entries; i++) {
--		ptr =3D __alloc_percpu_gfp(array->elem_size, 8,
--					 GFP_USER | __GFP_NOWARN);
-+		ptr =3D __alloc_percpu_gfp(array->elem_size, 8, gfp);
- 		if (!ptr) {
- 			bpf_array_free_percpu(array);
- 			return -ENOMEM;
-@@ -969,7 +969,7 @@ static struct bpf_map *prog_array_map_alloc(union bpf=
-_attr *attr)
- 	struct bpf_array_aux *aux;
- 	struct bpf_map *map;
-=20
--	aux =3D kzalloc(sizeof(*aux), GFP_KERNEL);
-+	aux =3D kzalloc(sizeof(*aux), GFP_KERNEL_ACCOUNT);
- 	if (!aux)
- 		return ERR_PTR(-ENOMEM);
-=20
---=20
-2.26.2
+Since v5:
+- Split arch changes out better and make the constant folding work
+- Avoid most of the 80 column wrap, fix a reference to lib/ioremap.c
+- Fix compile error on some archs
+
+Since v4:
+- Fixed an off-by-page-order bug in v4
+- Several minor cleanups.
+- Added page order to /proc/vmallocinfo
+- Added hugepage to alloc_large_system_hage output.
+- Made an architecture config option, powerpc only for now.
+
+Since v3:
+- Fixed an off-by-one bug in a loop
+- Fix !CONFIG_HAVE_ARCH_HUGE_VMAP build fail
+- Hopefully this time fix the arm64 vmap stack bug, thanks Jonathan
+  Cameron for debugging the cause of this (hopefully).
+
+Since v2:
+- Rebased on vmalloc cleanups, split series into simpler pieces.
+- Fixed several compile errors and warnings
+- Keep the page array and accounting in small page units because
+  struct vm_struct is an interface (this should fix x86 vmap stack debug
+  assert). [Thanks Zefan]
+
+Nicholas Piggin (12):
+  mm/vmalloc: fix vmalloc_to_page for huge vmap mappings
+  mm: apply_to_pte_range warn and fail if a large pte is encountered
+  mm/vmalloc: rename vmap_*_range vmap_pages_*_range
+  lib/ioremap: rename ioremap_*_range to vmap_*_range
+  mm: HUGE_VMAP arch support cleanup
+  powerpc: inline huge vmap supported functions
+  arm64: inline huge vmap supported functions
+  x86: inline huge vmap supported functions
+  mm: Move vmap_range from mm/ioremap.c to mm/vmalloc.c
+  mm/vmalloc: add vmap_range_noflush variant
+  mm/vmalloc: Hugepage vmalloc mappings
+  powerpc/64s/radix: Enable huge vmalloc mappings
+
+ .../admin-guide/kernel-parameters.txt         |   2 +
+ arch/Kconfig                                  |   4 +
+ arch/arm64/include/asm/vmalloc.h              |  25 +
+ arch/arm64/mm/mmu.c                           |  26 -
+ arch/powerpc/Kconfig                          |   1 +
+ arch/powerpc/include/asm/vmalloc.h            |  21 +
+ arch/powerpc/mm/book3s64/radix_pgtable.c      |  21 -
+ arch/x86/include/asm/vmalloc.h                |  23 +
+ arch/x86/mm/ioremap.c                         |  19 -
+ arch/x86/mm/pgtable.c                         |  13 -
+ include/linux/io.h                            |   9 -
+ include/linux/vmalloc.h                       |  10 +
+ init/main.c                                   |   1 -
+ mm/ioremap.c                                  | 225 +--------
+ mm/memory.c                                   |  60 ++-
+ mm/page_alloc.c                               |   5 +-
+ mm/vmalloc.c                                  | 443 +++++++++++++++---
+ 17 files changed, 515 insertions(+), 393 deletions(-)
+
+-- 
+2.23.0
 
