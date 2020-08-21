@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7076C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD775C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98C8C20702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59A020702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029470;
-	bh=QWOGaXnMi9tVxvefm+GLsgAaLy1fnmwknssikhptLsE=;
+	s=default; t=1598029475;
+	bh=ySY7r+XvByWG/h02YkSpizvqYnRnOEsqEYmyDA8cBmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kg84SyoBpVbVhw5xnUnlh4mGEY/+mnn7co38WmjZu2ZZmNLVX4G9r0qZ59RUSWkgz
-	 kJepMqsADggYnZT74AO9kqLlg6n1vvZX0QDGuhZh4iY88syT/nql4HA+E3oCWC8gFU
-	 TpEx2sMoioPNpPWbEXuIT1d6gh0KqDzh8FTPft3c=
+	b=Fnnl3VxBo89mVdH9GTysIB72xrk/6QlArfWW8G4nfThEI5mX89jv2LhwaMu61ZV5C
+	 ziptpdCjNgEN/CXFYjtti1H6tGn/38NlH6BvyBnVB4Gjdor7K1zBU7CDfu3E02agZZ
+	 ekvI61NSsj9yRBHE7SlJUsgPSjchavBqNjwj06uM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgHURE0 (ORCPT
+        id S1728580AbgHUREe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:04:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:04:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbgHUQSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727087AbgHUQSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:18:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C617022CAF;
-        Fri, 21 Aug 2020 16:18:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18D0C22CA0;
+        Fri, 21 Aug 2020 16:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026697;
-        bh=QWOGaXnMi9tVxvefm+GLsgAaLy1fnmwknssikhptLsE=;
+        s=default; t=1598026693;
+        bh=ySY7r+XvByWG/h02YkSpizvqYnRnOEsqEYmyDA8cBmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HUXaTiSECigHCdMRuPL56DjoOngDRqswACKz8iuDYb7Pmn5zrY6QWZhtwQuz1VXnn
-         Cd8j2NOzHA9f0Cnhh5XiOTs7AGOS61mjAK1yWGKVQiXaU0aXOUxbya2l2v/bIT9q+c
-         TvGgXwn7xcjaMDbH8xRcjffAnWlgwUWMaLYX4O8A=
+        b=Fn38HLXnmjse0s8SeiKmcQBQ/sZAKUQeZqkztCPAtbQkI4F3G4bdPpVbxiQI0n3eK
+         D6+8u39kL4t1p8T3dvuLornndIKYPrAjPRV+S26/BoSHKsIgW0e3Ix1pLgMO00wUma
+         sO9pmsLS3w4yZHQeTNmJQXDohV6zuYMOh7B1rlpA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju@tsinghua.edu.cn>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 08/38] media: pci: ttpci: av7110: fix possible buffer overflow caused by bad DMA value in debiirq()
-Date:   Fri, 21 Aug 2020 12:17:37 -0400
-Message-Id: <20200821161807.348600-8-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Jon Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 04/38] ASoC: tegra: Fix reference count leaks.
+Date:   Fri, 21 Aug 2020 12:17:33 -0400
+Message-Id: <20200821161807.348600-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
 References: <20200821161807.348600-1-sashal@kernel.org>
@@ -59,49 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 6499a0db9b0f1e903d52f8244eacc1d4be00eea2 ]
+[ Upstream commit deca195383a6085be62cb453079e03e04d618d6e ]
 
-The value av7110->debi_virt is stored in DMA memory, and it is assigned
-to data, and thus data[0] can be modified at any time by malicious
-hardware. In this case, "if (data[0] < 2)" can be passed, but then
-data[0] can be changed into a large number, which may cause buffer
-overflow when the code "av7110->ci_slot[data[0]]" is used.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count if pm_runtime_put is not called in
+error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
 
-To fix this possible bug, data[0] is assigned to a local variable, which
-replaces the use of data[0].
-
-Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20200613204422.24484-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/ttpci/av7110.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ sound/soc/tegra/tegra30_ahub.c | 4 +++-
+ sound/soc/tegra/tegra30_i2s.c  | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/pci/ttpci/av7110.c b/drivers/media/pci/ttpci/av7110.c
-index d6816effb8786..d02b5fd940c12 100644
---- a/drivers/media/pci/ttpci/av7110.c
-+++ b/drivers/media/pci/ttpci/av7110.c
-@@ -424,14 +424,15 @@ static void debiirq(unsigned long cookie)
- 	case DATA_CI_GET:
- 	{
- 		u8 *data = av7110->debi_virt;
-+		u8 data_0 = data[0];
+diff --git a/sound/soc/tegra/tegra30_ahub.c b/sound/soc/tegra/tegra30_ahub.c
+index 43679aeeb12be..88e838ac937dc 100644
+--- a/sound/soc/tegra/tegra30_ahub.c
++++ b/sound/soc/tegra/tegra30_ahub.c
+@@ -655,8 +655,10 @@ static int tegra30_ahub_resume(struct device *dev)
+ 	int ret;
  
--		if ((data[0] < 2) && data[2] == 0xff) {
-+		if (data_0 < 2 && data[2] == 0xff) {
- 			int flags = 0;
- 			if (data[5] > 0)
- 				flags |= CA_CI_MODULE_PRESENT;
- 			if (data[5] > 5)
- 				flags |= CA_CI_MODULE_READY;
--			av7110->ci_slot[data[0]].flags = flags;
-+			av7110->ci_slot[data_0].flags = flags;
- 		} else
- 			ci_get_data(&av7110->ci_rbuffer,
- 				    av7110->debi_virt,
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 	ret = regcache_sync(ahub->regmap_ahub);
+ 	ret |= regcache_sync(ahub->regmap_apbif);
+ 	pm_runtime_put(dev);
+diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
+index 0b176ea24914b..bf155c5092f06 100644
+--- a/sound/soc/tegra/tegra30_i2s.c
++++ b/sound/soc/tegra/tegra30_i2s.c
+@@ -551,8 +551,10 @@ static int tegra30_i2s_resume(struct device *dev)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 	ret = regcache_sync(i2s->regmap);
+ 	pm_runtime_put(dev);
+ 
 -- 
 2.25.1
 
