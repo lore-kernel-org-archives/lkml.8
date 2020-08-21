@@ -2,89 +2,114 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A690DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF0F20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E01120656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:51:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Ic7CLE8C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQQaBmsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgHUKtU (ORCPT
+        id S1728068AbgHUKu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:49:20 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38051 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726975AbgHUKtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:49:17 -0400
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4BXyty4jRtz9sTF; Fri, 21 Aug 2020 20:49:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1598006954;
-        bh=JjpyRpHNHrdiIzB9HKYK2tJlfybxA7SBXGzOln4SAMw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ic7CLE8CPil48dGMD59EwPqX1s8aafqB7yJvTRAPHkKoPZ7HLlxoyS0nMl7zdulkj
-         ExYnaonEXl3hzV0BTmnOb2Ry5nlfoPtDrmfSFE9RbKjyJBIYcVColR+aOk0UNk9sKG
-         b084LseD3EL+ywDMxlZrwJagpafnb3wEguhoBrUcQO4BfdiZXlrQIXCgHlTcV/FSE7
-         MjbzyYJgdHhUMwTGK0fuTIKxThwXnKxzPURLTeDp+f0Qdvb7UBF8y+Y8jzlCBc/SNP
-         wm4Bsqs7ksBNF7fXmUV3a2bBq6RUUFIbB+s39oMVvjMa2Uu90436E5VCa6JNwOtecE
-         BheYKTYIX0DhQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     linuxppc-dev@ozlabs.org
-Cc:     b.zolnierkie@samsung.com, sam@ravnborg.org, daniel.vetter@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] video: fbdev: controlfb: Fix build for COMPILE_TEST=y && PPC_PMAC=n
-Date:   Fri, 21 Aug 2020 20:49:10 +1000
-Message-Id: <20200821104910.3363818-1-mpe@ellerman.id.au>
-X-Mailer: git-send-email 2.25.1
+        Fri, 21 Aug 2020 06:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbgHUKus (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 06:50:48 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 051A8C061385;
+        Fri, 21 Aug 2020 03:50:47 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id w13so1201276wrk.5;
+        Fri, 21 Aug 2020 03:50:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FtGTI20ikpo9yrdbtnPeFApzutOhVS8mtXYK+BL9WVU=;
+        b=kQQaBmsc8NAj7eee85q/KB7MQrzJhEsxPIgl0oc2lCV9PlaQWsQRMlDNgnbscpFM0Q
+         R9PzWtmELthOksGDErUQP3TGYQsdYQ9RGsv63nM4h+iPw5XihXUlHxsgLD6ofrmkJahO
+         Zw35o1qmJ/tk2Nomd4lz4CjcAXWMTEzg5hFbJNyUHrVZwVOoU7WRFoCuQdWnCkfylasN
+         +SlgojrMgfU7+5eCY5KojU/kLjkXEEPmS9A7Y00T4svQKBFpoYdGpPlxOFYUrt8zTA5C
+         6KCFx1yX01hlIbMEqKRZs2u0K1RYYW5spxDUH5y+RyIsAw+f27JjT5QLeh9kC3O1hc1X
+         3ZCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FtGTI20ikpo9yrdbtnPeFApzutOhVS8mtXYK+BL9WVU=;
+        b=Cxmmbx52EI7dJnYqbMQgWKSK0SEbKm8PaV9LSwOOt4Plf9Gg33WiWx6qQ4+ya8kCmk
+         Cug9iUFdGPnP0mSKB46QgGynl9CnGQ7E2+63WuBfcHhJoTgC9GKkYIIHK6dvm0TwBqaT
+         un5KRVHXC8kzc1cqEZluMssxn7ylpjJZETOZKbllRR3i79aBUwxQING7KACQHqY0s3gH
+         pEydTx7XoXZx37D5VzRD9tN9hfS/e/D/mSIABsDBXpwW3QW//o8OT0iEywnzxWUXQkG2
+         rMuRaVuE+N1/Hubwug7Cm+VTGSfT2pNRkyqni8iYq6EiABk7h45IhdG3aeEpFy0u/Zqx
+         kZaw==
+X-Gm-Message-State: AOAM530hHBwiOxh9KkV7d0tQpDfUxMC18UOsor8WIjiTwvGOvr90Kitc
+        dp/2xKjPF2hm8W5CYLJSbXk=
+X-Google-Smtp-Source: ABdhPJxRZEHVCFhq/bl553CGJr+hfpGZJdr1FSZRp2OSH3emca/uk8vmFmW3MtQXPUmRZ5adVHc0qg==
+X-Received: by 2002:adf:c981:: with SMTP id f1mr2204767wrh.14.1598007046482;
+        Fri, 21 Aug 2020 03:50:46 -0700 (PDT)
+Received: from alinde.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
+        by smtp.gmail.com with ESMTPSA id 8sm3784911wrl.7.2020.08.21.03.50.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 03:50:45 -0700 (PDT)
+From:   albert.linde@gmail.com
+X-Google-Original-From: alinde@google.com
+To:     akpm@linux-foundation.org, bp@alien8.de, mingo@redhat.com,
+        corbet@lwn.net, tglx@linutronix.de, arnd@arndb.de
+Cc:     akinobu.mita@gmail.com, hpa@zytor.com, viro@zeniv.linux.org.uk,
+        glider@google.com, andreyknvl@google.com, dvyukov@google.com,
+        elver@google.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        x86@kernel.org, Albert van der Linde <alinde@google.com>
+Subject: [PATCH 0/3] add fault injection to user memory access functions
+Date:   Fri, 21 Aug 2020 10:49:22 +0000
+Message-Id: <20200821104926.828511-1-alinde@google.com>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The build is currently broken, if COMPILE_TEST=y and PPC_PMAC=n:
+From: Albert van der Linde <alinde@google.com>
 
-  linux/drivers/video/fbdev/controlfb.c: In function ‘control_set_hardware’:
-  linux/drivers/video/fbdev/controlfb.c:276:2: error: implicit declaration of function ‘btext_update_display’
-    276 |  btext_update_display(p->frame_buffer_phys + CTRLFB_OFF,
-        |  ^~~~~~~~~~~~~~~~~~~~
+The goal of this series is to improve testing of fault-tolerance in
+usages of user memory access functions, by adding support for fault
+injection.
 
-Fix it by including btext.h whenever CONFIG_BOOTX_TEXT is enabled.
+The first patch adds failure injection capability for usercopy
+functions. The second changes usercopy functions to use this new failure
+capability (copy_from_user, ...). The third patch adds
+get/put/clear_user failures to x86.
 
-Fixes: a07a63b0e24d ("video: fbdev: controlfb: add COMPILE_TEST support")
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
----
- drivers/video/fbdev/controlfb.c | 2 ++
- 1 file changed, 2 insertions(+)
+Albert van der Linde (3):
+  lib, include/linux: add usercopy failure capability
+  lib, uaccess: add failure injection to usercopy functions
+  x86: add failure injection to get/put/clear_user
 
-Does anyone mind if I apply this via the powerpc tree for v5.9?
+ .../fault-injection/fault-injection.rst       | 64 +++++++++++++++++
+ arch/x86/include/asm/uaccess.h                | 70 +++++++++++--------
+ arch/x86/lib/usercopy_64.c                    |  9 ++-
+ include/linux/fault-inject-usercopy.h         | 20 ++++++
+ include/linux/uaccess.h                       | 31 ++++++--
+ lib/Kconfig.debug                             |  7 ++
+ lib/Makefile                                  |  1 +
+ lib/fault-inject-usercopy.c                   | 66 +++++++++++++++++
+ lib/iov_iter.c                                | 20 +++++-
+ lib/strncpy_from_user.c                       |  3 +
+ lib/usercopy.c                                | 13 +++-
+ 11 files changed, 263 insertions(+), 41 deletions(-)
+ create mode 100644 include/linux/fault-inject-usercopy.h
+ create mode 100644 lib/fault-inject-usercopy.c
 
-It would be nice to get the build clean.
-
-cheers
-
-diff --git a/drivers/video/fbdev/controlfb.c b/drivers/video/fbdev/controlfb.c
-index 9c4f1be856ec..547abeb39f87 100644
---- a/drivers/video/fbdev/controlfb.c
-+++ b/drivers/video/fbdev/controlfb.c
-@@ -49,6 +49,8 @@
- #include <linux/cuda.h>
- #ifdef CONFIG_PPC_PMAC
- #include <asm/prom.h>
-+#endif
-+#ifdef CONFIG_BOOTX_TEXT
- #include <asm/btext.h>
- #endif
- 
 -- 
-2.25.1
+2.28.0.297.g1956fa8f8d-goog
 
