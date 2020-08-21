@@ -2,73 +2,57 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DF5C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0D020758
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:44:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C12/NdmX"
+	by mail.kernel.org (Postfix) with ESMTP id A62C620758
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:44:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597977868;
+	bh=PSBZsG49m+1il9g4SVTaYVI+/MuD86ehxQbgurit/lg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TEKU/X/79FbiBSjsMpvbdtFqqB8xqS+w7XPYZAor8E74dCaZ54zY9TnZbeKxNO9H6
+	 4UXLTwcQsmCV8DDv8esIXZ061tJXuW5TCoaz/PNCsE68sxp7hJfPfjQaI1L0KIW6fb
+	 dXL35i/tgH8PUKHA+gW3x1bW1CCdmzEyQu0s/Y/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgHUCoM (ORCPT
+        id S1727112AbgHUCo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:44:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbgHUCoJ (ORCPT
+        Thu, 20 Aug 2020 22:44:27 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:20716 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgHUCo0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:44:09 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33C3C061385;
-        Thu, 20 Aug 2020 19:44:09 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 128so306445pgd.5;
-        Thu, 20 Aug 2020 19:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dx/BZ20WfKAvV2mkdGmQP8JhT0k8HCX9a2G2fUQx028=;
-        b=C12/NdmXdhnbdKHg8xF7oTky+TCJsSwEfi5y9F2Pe2/zQuDXSkXhxqiLaNOsoIDP8i
-         fpqtL6jeGV+UG3KpPecJAASHJ2vlexrmDeVDASoRqBqproQZOGG1gdQBLNR4otRNqR9p
-         FlusfAt+7sNZBBhpnCj5RSG/CBpOLj8czZo3J3sh+aUF5svkTbN6TnzqzJstlT5mTL3O
-         EuCvOrk+NPahFXMxrRS1WvysmlpnezRzvZqmYMKCQIYICnnvTQww/erlQlwE+A/4Alb7
-         hqw55wQy1bAjxwy3YVcjMvkLQ6DtaxPhQlJMIZjI3zjlWvzEW2FGMbxQDK2ZCCmKoAUe
-         4ePw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dx/BZ20WfKAvV2mkdGmQP8JhT0k8HCX9a2G2fUQx028=;
-        b=WJ9bfUPKApfD6hFsZa6edQUFfVHzN6MpPdjvt/nIKLhDkc4O1GyxcJpVEUQ7+PjYFn
-         59h7xpl2OHLfJRO92OqF75lzLyf5muk5UC30oKQ23EjE8aTq70xGW1CwyPNglhAl9hrb
-         Pa5l+XYaCUzSYW0LwC8LQmRury8l9fhKAqxSc2jbGkNrVaaLi4xItn7td01nVbrsoIPL
-         wU9n8+MUYykFs/2FGYxxDlX6AsnPYeOtzsr3lid/6rZ7W7EQ/pOiWbxhjbnLwOODtpev
-         MUdSwndtPfm1xvNs62+kPQn54vxFw6odIudPzYvB6FJS7wwzPezuM2NftiBwlvwkNvzD
-         Lk3w==
-X-Gm-Message-State: AOAM530Ii3VZUqxe+kIDFtMngH2bSJ9jM3PrYcPOoDBxHiJvSLQz0lnX
-        3AjfQPA5DwFKwf5ecS0D22flVuE2Q+k=
-X-Google-Smtp-Source: ABdhPJwGxKScz30n1Eztir9iL2Up6EZINDBhMijtDsi5IgTsqfMcsV19lPtyASDWWGyrW7dThwN3pQ==
-X-Received: by 2002:aa7:84d4:: with SMTP id x20mr725600pfn.96.1597977849269;
-        Thu, 20 Aug 2020 19:44:09 -0700 (PDT)
-Received: from huyue2.ccdomain.com ([124.156.176.71])
-        by smtp.gmail.com with ESMTPSA id b20sm486109pfp.140.2020.08.20.19.44.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Aug 2020 19:44:08 -0700 (PDT)
-From:   Yue Hu <zbestahu@gmail.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, viresh.kumar@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        huyue2@yulong.com, zhangwen@yulong.com
-Subject: [PATCH] thermal: sysfs: Fall back to vmalloc() for cooling device's statistics
-Date:   Fri, 21 Aug 2020 10:44:05 +0800
-Message-Id: <20200821024406.10404-1-zbestahu@gmail.com>
-X-Mailer: git-send-email 2.19.1.windows.1
+        Thu, 20 Aug 2020 22:44:26 -0400
+Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id 07L2i0YL020183;
+        Fri, 21 Aug 2020 11:44:01 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 07L2i0YL020183
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1597977841;
+        bh=WlGygibzUZpm/729meq5HruVG8ZYIIqB07d7CuZFwm0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mOL5rVhjBiK3dGckBV0DKsNOYs4g3J6ECQ1xoW6dTKmZbEAmVIgtO5zZH/h5H7ntW
+         5ACc3H4simMYjYzmOGtlSTb4/dqLxkVQMW3YpJLVcNGWPfIoJ1C0FtuGojMyP0+kvn
+         6RCgVk+7R5rpVBhLX82EHu5aKXSh7G5PasSPloYSwf/Iu6xhRwmgUONEPFgGgYtOrU
+         Dcbc/5b+xKXC8j5qo8ckEUoycJVJBKYIJZnzB2W0EF8l5bkMHcFwWruCJ95X8LLuQi
+         UjHn9bScVx0lBmyS5mN59pdwfg/V/52UFKAWM4lAHXF9EFCUVgx4fXtWsuSQs4+lSA
+         dMsirmCJnTbeQ==
+X-Nifty-SrcIP: [126.90.211.135]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: hide commands to run Kconfig, and show short log for syncconfig
+Date:   Fri, 21 Aug 2020 11:43:58 +0900
+Message-Id: <20200821024358.616384-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,54 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Hu <huyue2@yulong.com>
+Some targets (localyesconfig, localmodconfig, defconfig) hide the
+command running, but the others do not.
 
-We observed warning about kzalloc() when register thermal cooling device
-in backlight_device_register(). backlight display can be a cooling device
-since reducing screen brightness will can help reduce temperature.
+Users know which Kconfig flavor they are running, so it is OK to hide
+the command. Add $(Q) to all commands consistently. If you want to see
+the full command running, pass V=1 from the command line.
 
-However, ->get_max_state of backlight will assign max brightness of 1024
-to states. The memory size can be getting 1MB+ due to states * states.
-That is so large to trigger kmalloc() warning.
+syncconfig is the exceptional case, which occurs without explicit
+command invocation by the user. Display the Kbuild-style log for it.
+The ugly bare log will go away.
 
-So, let's use kvzalloc() to avoid the issue, also change kfree -> kvfree.
+[Before]
 
-Suggested-by: Amit Kucheria <amitk@kernel.org>
-Signed-off-by: Yue Hu <huyue2@yulong.com>
+scripts/kconfig/conf  --syncconfig Kconfig
+
+[After]
+
+  SYNC    include/config/auto.conf
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- drivers/thermal/thermal_sysfs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-index aa99edb..d1703ee 100644
---- a/drivers/thermal/thermal_sysfs.c
-+++ b/drivers/thermal/thermal_sysfs.c
-@@ -16,6 +16,7 @@
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/slab.h>
-+#include <linux/mm.h>
- #include <linux/string.h>
- #include <linux/jiffies.h>
+ Makefile                 |  5 ++++-
+ scripts/kconfig/Makefile | 16 ++++++++--------
+ 2 files changed, 12 insertions(+), 9 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 9cac6fde3479..0693314d51c3 100644
+--- a/Makefile
++++ b/Makefile
+@@ -708,8 +708,11 @@ $(KCONFIG_CONFIG):
+ # This exploits the 'multi-target pattern rule' trick.
+ # The syncconfig should be executed only once to make all the targets.
+ # (Note: use the grouped target '&:' when we bump to GNU Make 4.3)
++quiet_cmd_syncconfig = SYNC    $@
++      cmd_syncconfig = $(MAKE) -f $(srctree)/Makefile syncconfig
++
+ %/config/auto.conf %/config/auto.conf.cmd %/generated/autoconf.h: $(KCONFIG_CONFIG)
+-	$(Q)$(MAKE) -f $(srctree)/Makefile syncconfig
++	+$(call cmd,syncconfig)
+ else # !may-sync-config
+ # External modules and some install targets need include/generated/autoconf.h
+ # and include/config/auto.conf but do not care if they are up-to-date.
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index 52b59bf9efe4..e46df0a2d4f9 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -20,19 +20,19 @@ endif
+ unexport CONFIG_
  
-@@ -919,7 +920,7 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
- 	var += sizeof(*stats->time_in_state) * states;
- 	var += sizeof(*stats->trans_table) * states * states;
+ xconfig: $(obj)/qconf
+-	$< $(silent) $(Kconfig)
++	$(Q)$< $(silent) $(Kconfig)
  
--	stats = kzalloc(var, GFP_KERNEL);
-+	stats = kvzalloc(var, GFP_KERNEL);
- 	if (!stats)
- 		return;
+ gconfig: $(obj)/gconf
+-	$< $(silent) $(Kconfig)
++	$(Q)$< $(silent) $(Kconfig)
  
-@@ -938,7 +939,7 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
+ menuconfig: $(obj)/mconf
+-	$< $(silent) $(Kconfig)
++	$(Q)$< $(silent) $(Kconfig)
  
- static void cooling_device_stats_destroy(struct thermal_cooling_device *cdev)
- {
--	kfree(cdev->stats);
-+	kvfree(cdev->stats);
- 	cdev->stats = NULL;
- }
+ config: $(obj)/conf
+-	$< $(silent) --oldaskconfig $(Kconfig)
++	$(Q)$< $(silent) --oldaskconfig $(Kconfig)
  
+ nconfig: $(obj)/nconf
+-	$< $(silent) $(Kconfig)
++	$(Q)$< $(silent) $(Kconfig)
+ 
+ build_menuconfig: $(obj)/mconf
+ 
+@@ -68,12 +68,12 @@ simple-targets := oldconfig allnoconfig allyesconfig allmodconfig \
+ PHONY += $(simple-targets)
+ 
+ $(simple-targets): $(obj)/conf
+-	$< $(silent) --$@ $(Kconfig)
++	$(Q)$< $(silent) --$@ $(Kconfig)
+ 
+ PHONY += savedefconfig defconfig
+ 
+ savedefconfig: $(obj)/conf
+-	$< $(silent) --$@=defconfig $(Kconfig)
++	$(Q)$< $(silent) --$@=defconfig $(Kconfig)
+ 
+ defconfig: $(obj)/conf
+ ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)),)
+@@ -111,7 +111,7 @@ tinyconfig:
+ # CHECK: -o cache_dir=<path> working?
+ PHONY += testconfig
+ testconfig: $(obj)/conf
+-	$(PYTHON3) -B -m pytest $(srctree)/$(src)/tests \
++	$(Q)$(PYTHON3) -B -m pytest $(srctree)/$(src)/tests \
+ 	-o cache_dir=$(abspath $(obj)/tests/.cache) \
+ 	$(if $(findstring 1,$(KBUILD_VERBOSE)),--capture=no)
+ clean-files += tests/.cache
 -- 
-1.9.1
+2.25.1
 
