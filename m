@@ -2,102 +2,296 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A21C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED98C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C37A20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A1120748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Y53ysHDi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JbjBCB+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgHUBxd (ORCPT
+        id S1727046AbgHUBzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 21:53:33 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:33572 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725859AbgHUBxc (ORCPT
+        Thu, 20 Aug 2020 21:55:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbgHUBzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 21:53:32 -0400
-X-UUID: fda6d9ce0bbe4b7a92ed9bd87c58ef39-20200821
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=DNATBZmya/r8+01Q+rXYCbAj9lKFVgdL+QN+XzMD0nY=;
-        b=Y53ysHDiVT91reZQ3uvOky6WNRgUX4jXYcPKPACSJ/MyzaoT5j4BnEa8d/N3RCaVtq0wKEXvZ7A3LzNhwIevE6So5Z2Xblt/F30WzqEA+Q4Ml4L3EPblzplX7OiASu8CUxHQXumpbERawI5l5jWetpmbaVpvV1YFooFeOppMuOI=;
-X-UUID: fda6d9ce0bbe4b7a92ed9bd87c58ef39-20200821
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1128992780; Fri, 21 Aug 2020 09:53:24 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 21 Aug
- 2020 09:53:23 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 21 Aug 2020 09:53:22 +0800
-Message-ID: <1597974730.21253.4.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 09/11] usb: phy: phy-mv-usb: convert to
- readl_poll_timeout_atomic()
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Lee Jones <lee.jones@linaro.org>
-Date:   Fri, 21 Aug 2020 09:52:10 +0800
-In-Reply-To: <c28a906c-ed1a-8884-3016-b8664a313331@gmail.com>
-References: <1597902349-8998-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1597902349-8998-9-git-send-email-chunfeng.yun@mediatek.com>
-         <c28a906c-ed1a-8884-3016-b8664a313331@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 20 Aug 2020 21:55:31 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E12C061387
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 18:55:31 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id f24so507812ejx.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 18:55:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=tBM3q7pJW12rMVs5WoJdio4yMiy6OecKyj2ArnqpUdI=;
+        b=JbjBCB+oVBkLzCXFX0ovj5Ky3e0k3pLE7Pamo+KXVUN59aDz9NQBo588H8i0DAhBAx
+         4qoHijvxS07t+3Bq4GeQacn126hi3F3dGeJXx7osXjOggLqMkZG+12UqmudRDiAcWLvU
+         yxS8F1VEjaAssRvXRjiqkXVzZyANcaVkYl4JxcGrwye0PaL9DmV8tDcz1mAYJ/ooy9iU
+         9BgikwLk/wYMJejmTElmgESEiIhjYfJPJc+p1RdDSJSM/2qjXeQUDZgT2KQ43HD5oENS
+         SsaHfrotz7dpxdA8YRrMW98DTGuDp5KDqYFeCQlm8CEilHMElxf2RVxmrAQyN8rzqGui
+         GHEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=tBM3q7pJW12rMVs5WoJdio4yMiy6OecKyj2ArnqpUdI=;
+        b=PeHsFEFTVdcagc3Tdh8a4q8RWDxVl2Lcm4GdkKrMUZwvHW9ZPtgehOSD4PqCJKSCLB
+         T84nCWxaKv24GNrFu9vWUy+1SYPbz00CkqI3o2XkcEEhvkBELxYGSTMel7z2omRiSFCG
+         Il1A4aD6Hx1PwVCPmYDRMhUTGShoh2ZWTD1uiWh4hoJEHebqZt/9yYGWw13JX/Vwk+Md
+         SuMb4wgm2QjgVN79PRmynK4lz8iKmlZu7l35iLyAJ68HD0kWj8MsaBnWO6oSinWpxnXb
+         c0d9J0Xh0S/b0SSMcb3g6DQ95OZDveWX6gN37sdKUMj1JLmePKxxjshtRnxFkTruxCqw
+         Ik4Q==
+X-Gm-Message-State: AOAM531Iko9odecfgyVJV1Mpzcfx+ZsFfAeHG0NauRZwwTsTRViuaZDn
+        JzWsa3Dhz6pPFF3tl9nkTokyIKaHloPIDTA4Q14=
+X-Google-Smtp-Source: ABdhPJxcHu4BA5A29oHWSmXCSFJILf7bh5tG1VQndqIWcfD4BkqmPpCzgpE9Byu4v0BvTexYrzAT5LXeUmdGzZZ2f18=
+X-Received: by 2002:a17:906:9591:: with SMTP id r17mr721865ejx.456.1597974927611;
+ Thu, 20 Aug 2020 18:55:27 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: BFAD47B2BB6678131E731A333C4AC4201A6540906581AA4BE044CDB55F7722AC2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 21 Aug 2020 11:55:16 +1000
+Message-ID: <CAPM=9tzpqLjG31xd0nPmGaYs7NXiWEQTtYaZ=vQZedyWU+yjfQ@mail.gmail.com>
+Subject: [git pull] drm fixes for 5.9-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA4LTIwIGF0IDEzOjE3ICswMzAwLCBTZXJnZWkgU2h0eWx5b3Ygd3JvdGU6
-DQo+IE9uIDIwLjA4LjIwMjAgODo0NSwgQ2h1bmZlbmcgWXVuIHdyb3RlOg0KPiANCj4gPiBVc2Ug
-cmVhZGxfcG9sbF90aW1lb3V0X2F0b21pYygpIHRvIHNpbXBsaWZ5IGNvZGUNCj4gPiANCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQo+
-ID4gLS0tDQo+ID4gdjI6IHVkZWxheSAxMHVzIGluc3RlYWQgb2YgMjB1cyBhY2NvcmRpbmcgdG8g
-a2VybmVsZG9jDQo+ID4gLS0tDQo+ID4gICBkcml2ZXJzL3VzYi9waHkvcGh5LW12LXVzYi5jIHwg
-MTYgKysrKysrKy0tLS0tLS0tLQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygr
-KSwgOSBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvcGh5
-L3BoeS1tdi11c2IuYyBiL2RyaXZlcnMvdXNiL3BoeS9waHktbXYtdXNiLmMNCj4gPiBpbmRleCBj
-ZTc2N2VjLi5lODAxNTY5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvdXNiL3BoeS9waHktbXYt
-dXNiLmMNCj4gPiArKysgYi9kcml2ZXJzL3VzYi9waHkvcGh5LW12LXVzYi5jDQo+ID4gQEAgLTgs
-NiArOCw3IEBADQo+ID4gICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gICAjaW5jbHVk
-ZSA8bGludXgva2VybmVsLmg+DQo+ID4gICAjaW5jbHVkZSA8bGludXgvaW8uaD4NCj4gPiArI2lu
-Y2x1ZGUgPGxpbnV4L2lvcG9sbC5oPg0KPiA+ICAgI2luY2x1ZGUgPGxpbnV4L3VhY2Nlc3MuaD4N
-Cj4gPiAgICNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCj4gPiAgICNpbmNsdWRlIDxsaW51eC9w
-cm9jX2ZzLmg+DQo+ID4gQEAgLTEzNSw4ICsxMzYsOCBAQCBzdGF0aWMgaW50IG12X290Z19zZXRf
-dGltZXIoc3RydWN0IG12X290ZyAqbXZvdGcsIHVuc2lnbmVkIGludCBpZCwNCj4gPiAgIA0KPiA+
-ICAgc3RhdGljIGludCBtdl9vdGdfcmVzZXQoc3RydWN0IG12X290ZyAqbXZvdGcpDQo+ID4gICB7
-DQo+ID4gLQl1bnNpZ25lZCBpbnQgbG9vcHM7DQo+ID4gICAJdTMyIHRtcDsNCj4gPiArCWludCBy
-ZXQ7DQo+ID4gICANCj4gPiAgIAkvKiBTdG9wIHRoZSBjb250cm9sbGVyICovDQo+ID4gICAJdG1w
-ID0gcmVhZGwoJm12b3RnLT5vcF9yZWdzLT51c2JjbWQpOw0KPiA+IEBAIC0xNDYsMTUgKzE0Nywx
-MiBAQCBzdGF0aWMgaW50IG12X290Z19yZXNldChzdHJ1Y3QgbXZfb3RnICptdm90ZykNCj4gPiAg
-IAkvKiBSZXNldCB0aGUgY29udHJvbGxlciB0byBnZXQgZGVmYXVsdCB2YWx1ZXMgKi8NCj4gPiAg
-IAl3cml0ZWwoVVNCQ01EX0NUUkxfUkVTRVQsICZtdm90Zy0+b3BfcmVncy0+dXNiY21kKTsNCj4g
-PiAgIA0KPiA+IC0JbG9vcHMgPSA1MDA7DQo+ID4gLQl3aGlsZSAocmVhZGwoJm12b3RnLT5vcF9y
-ZWdzLT51c2JjbWQpICYgVVNCQ01EX0NUUkxfUkVTRVQpIHsNCj4gPiAtCQlpZiAobG9vcHMgPT0g
-MCkgew0KPiA+IC0JCQlkZXZfZXJyKCZtdm90Zy0+cGRldi0+ZGV2LA0KPiA+ICsJcmV0ID0gcmVh
-ZGxfcG9sbF90aW1lb3V0X2F0b21pYygmbXZvdGctPm9wX3JlZ3MtPnVzYmNtZCwgdG1wLA0KPiA+
-ICsJCQkJKHRtcCAmIFVTQkNNRF9DVFJMX1JFU0VUKSwgMTAsIDEwMDAwKTsNCj4gPiArCWlmIChy
-ZXQgPCAwKSB7DQo+ID4gKwkJZGV2X2VycigmbXZvdGctPnBkZXYtPmRldiwNCj4gPiAgIAkJCQki
-V2FpdCBmb3IgUkVTRVQgY29tcGxldGVkIFRJTUVPVVRcbiIpOw0KPiANCj4gICAgIFlvdSBmb3Jn
-b3QgdG8gcmUtYWxpZ24gdGhpcyBhcmd1bWVudCwgaXQgc2hvdWxkIHN0YXJ0IHVuZGVyICYgb24g
-dGhlIA0KPiBwcmV2aW91cyBsaW5lLi4uDQpZZXMsIHdpbGwgZml4IGl0LCB0aGFua3MNCg0KPiAN
-Cj4gWy4uLl0NCj4gDQo+IE1CUiwgU2VyZ2VpDQoNCg==
+Hi Linus,
 
+Regular fixes pull for rc2. Usual rc2 doesn't seem too busy, mainly
+i915 and amdgpu. I'd expect the usual uptick for rc3.
+
+Dave.
+
+drm-fixes-2020-08-21:
+drm fixes for 5.9-rc2
+
+amdgpu:
+- Fix allocation size
+- SR-IOV fixes
+- Vega20 SMU feature state caching fix
+- Fix custom pptable handling
+- Arcturus golden settings update
+- Several display fixes
+- Fixes for Navy Flounder
+- Misc display fixes
+- RAS fix
+
+amdkfd:
+- SDMA fix for renoir
+
+i915:
+- Fix device parameter usage for selftest mock i915 device
+- Fix LPSP capability debugfs NULL dereference
+- Fix buddy register pagemask table
+- Fix intel_atomic_check() non-negative return value
+- Fix selftests passing a random 0 into ilog2()
+- Fix TGL power well enable/disable ordering
+- Switch to PMU module refcounting
+- GVT fixes
+
+virtio:
+- Add missing dma_fence_put() in virtio_gpu_execbuffer_ioctl().
+- Fix memory leak in virtio_gpu_cleanup_object().
+The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+
+  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+
+are available in the Git repository at:
+
+  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-08-21
+
+for you to fetch changes up to 0790e63f58f22a68696667102be03efb92a4da5f:
+
+  Merge tag 'drm-intel-fixes-2020-08-20' of
+git://anongit.freedesktop.org/drm/drm-intel into drm-fixes (2020-08-21
+11:03:52 +1000)
+
+----------------------------------------------------------------
+drm fixes for 5.9-rc2
+
+amdgpu:
+- Fix allocation size
+- SR-IOV fixes
+- Vega20 SMU feature state caching fix
+- Fix custom pptable handling
+- Arcturus golden settings update
+- Several display fixes
+- Fixes for Navy Flounder
+- Misc display fixes
+- RAS fix
+
+amdkfd:
+- SDMA fix for renoir
+
+i915:
+- Fix device parameter usage for selftest mock i915 device
+- Fix LPSP capability debugfs NULL dereference
+- Fix buddy register pagemask table
+- Fix intel_atomic_check() non-negative return value
+- Fix selftests passing a random 0 into ilog2()
+- Fix TGL power well enable/disable ordering
+- Switch to PMU module refcounting
+- GVT fixes
+
+virtio:
+- Add missing dma_fence_put() in virtio_gpu_execbuffer_ioctl().
+- Fix memory leak in virtio_gpu_cleanup_object().
+
+----------------------------------------------------------------
+Anthony Koo (2):
+      drm/amd/display: Fix LFC multiplier changing erratically
+      drm/amd/display: Switch to immediate mode for updating infopackets
+
+Aric Cyr (1):
+      drm/amd/display: Fix incorrect backlight register offset for DCN
+
+Bhawanpreet Lakha (1):
+      drm/amdgpu: parse ta firmware for navy_flounder
+
+Chris Park (3):
+      drm/amd/display: Call DMUB for eDP power control
+      drm/amd/display: Assign correct left shift
+      drm/amd/display: Reset scrambling on Test Pattern
+
+Chris Wilson (3):
+      drm/i915: Provide the perf pmu.module
+      drm/i915: Copy default modparams to mock i915_device
+      drm/i915/display: Check for an LPSP encoder before dereferencing
+
+Christophe JAILLET (1):
+      drm: amdgpu: Use the correct size when allocating memory
+
+Colin Xu (2):
+      drm/i915/gvt: Do not destroy ppgtt_mm during vGPU D3->D0.
+      drm/i915/gvt: Do not reset pv_notified when vGPU transit from D3->D0
+
+Daniel Kolesa (1):
+      drm/amdgpu/display: use GFP_ATOMIC in dcn20_validate_bandwidth_internal
+
+Dave Airlie (4):
+      Merge tag 'drm-misc-fixes-2020-08-12' of
+git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
+      Merge tag 'amd-drm-fixes-5.9-2020-08-12' of
+git://people.freedesktop.org/~agd5f/linux into drm-fixes
+      Merge tag 'amd-drm-fixes-5.9-2020-08-20' of
+git://people.freedesktop.org/~agd5f/linux into drm-fixes
+      Merge tag 'drm-intel-fixes-2020-08-20' of
+git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
+
+Dmytro Laktyushkin (1):
+      drm/amd/display: fix dcn3 wide timing dsc validation
+
+Evan Quan (2):
+      drm/amd/powerplay: correct Vega20 cached smu feature state
+      drm/amd/powerplay: correct UVD/VCE PG state on custom pptable uploading
+
+George Spelvin (1):
+      drm/i915/selftests: Avoid passing a random 0 into ilog2
+
+Guchun Chen (1):
+      drm/amdgpu: fix NULL pointer access issue when unloading driver
+
+Huang Rui (1):
+      drm/amdkfd: fix the wrong sdma instance query for renoir
+
+Imre Deak (1):
+      drm/i915/tgl: Make sure TC-cold is blocked before enabling TC
+AUX power wells
+
+Jaehyun Chung (1):
+      drm/amd/display: Blank stream before destroying HDCP session
+
+Jani Nikula (1):
+      Merge tag 'gvt-next-fixes-2020-08-05' of
+https://github.com/intel/gvt-linux into drm-intel-fixes
+
+Jiansong Chen (2):
+      drm/amdgpu: disable gfxoff for navy_flounder
+      Revert "drm/amdgpu: disable gfxoff for navy_flounder"
+
+Kevin Wang (1):
+      drm/amdgpu: fix uninit-value in arcturus_log_thermal_throttling_event()
+
+Krunoslav Kovac (1):
+      drm/amd/display: fix pow() crashing when given base 0
+
+Liu ChengZhe (1):
+      drm/amdgpu: Skip some registers config for SRIOV
+
+Matt Roper (1):
+      drm/i915: Update bw_buddy pagemask table
+
+Paul Hsieh (1):
+      drm/amd/display: Fix DFPstate hang due to view port changed
+
+Qi Liu (1):
+      drm/virtio: fix missing dma_fence_put() in virtio_gpu_execbuffer_ioctl()
+
+Stylon Wang (1):
+      drm/amd/display: Fix EDID parsing after resume from suspend
+
+Tianjia Zhang (1):
+      drm/i915: Fix wrong return value in intel_atomic_check()
+
+Xin He (1):
+      drm/virtio: fix memory leak in virtio_gpu_cleanup_object()
+
+shiwu.zhang (1):
+      drm/amdgpu: update gc golden register for arcturus
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c  | 31 ++++++++++-----
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c            |  2 -
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c       |  2 +-
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c              |  1 +
+ drivers/gpu/drm/amd/amdgpu/gfxhub_v2_1.c           | 19 ++++++++++
+ drivers/gpu/drm/amd/amdgpu/mmhub_v2_0.c            | 19 ++++++++++
+ drivers/gpu/drm/amd/amdgpu/psp_v11_0.c             |  3 +-
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |  1 +
+ drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c | 16 +++++++-
+ .../gpu/drm/amd/display/dc/bios/command_table2.c   | 28 ++++++++++++++
+ .../gpu/drm/amd/display/dc/bios/command_table2.h   |  3 +-
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c      |  3 +-
+ drivers/gpu/drm/amd/display/dc/dc_bios_types.h     |  4 ++
+ .../gpu/drm/amd/display/dc/dce/dce_panel_cntl.h    |  2 +-
+ .../amd/display/dc/dce110/dce110_hw_sequencer.c    | 24 ++++++++++++
+ .../amd/display/dc/dcn10/dcn10_stream_encoder.c    | 16 ++++----
+ .../amd/display/dc/dcn10/dcn10_stream_encoder.h    | 14 +++++++
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c |  4 +-
+ .../drm/amd/display/dc/dcn20/dcn20_link_encoder.h  |  4 +-
+ .../gpu/drm/amd/display/dc/dcn20/dcn20_resource.c  |  2 +-
+ .../amd/display/dc/dcn30/dcn30_dio_link_encoder.h  |  5 ++-
+ .../gpu/drm/amd/display/dc/dcn30/dcn30_resource.c  |  1 +
+ .../amd/display/dc/dml/dcn30/display_mode_vba_30.c |  4 ++
+ .../drm/amd/display/include/bios_parser_types.h    |  7 ++++
+ drivers/gpu/drm/amd/display/include/fixed31_32.h   |  3 ++
+ .../drm/amd/display/modules/freesync/freesync.c    | 36 ++++++++++++++----
+ drivers/gpu/drm/amd/powerplay/arcturus_ppt.c       |  9 +++--
+ drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c | 44 ++++++++++------------
+ drivers/gpu/drm/i915/display/intel_display.c       |  2 +-
+ .../gpu/drm/i915/display/intel_display_debugfs.c   |  7 +++-
+ drivers/gpu/drm/i915/display/intel_display_power.c | 14 +++----
+ drivers/gpu/drm/i915/gvt/cfg_space.c               | 24 ++++++++++++
+ drivers/gpu/drm/i915/gvt/gtt.c                     |  2 +-
+ drivers/gpu/drm/i915/gvt/gtt.h                     |  2 +
+ drivers/gpu/drm/i915/gvt/gvt.h                     |  3 ++
+ drivers/gpu/drm/i915/gvt/vgpu.c                    | 20 ++++++++--
+ drivers/gpu/drm/i915/i915_pmu.c                    |  7 +---
+ drivers/gpu/drm/i915/selftests/i915_buddy.c        | 18 +++++----
+ drivers/gpu/drm/i915/selftests/mock_gem_device.c   |  3 ++
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c             |  1 +
+ drivers/gpu/drm/virtio/virtgpu_object.c            |  1 +
+ 41 files changed, 317 insertions(+), 94 deletions(-)
