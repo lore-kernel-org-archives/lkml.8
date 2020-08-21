@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F757C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D91C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5ED7206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92620206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028443;
-	bh=ngB6DdBiJuvmnLavUkZSbxNw6b3Hq4QduT3Hww3mo2E=;
+	s=default; t=1598028448;
+	bh=1yPzK9t3GFlkQwdBVi7C7ZW6wopToJk1Y05XWH4ziTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e5QtwmHFMlZHk587Yxy+UTPcI2Jj31cNj49mS+WA+O9DiRJtjVAoGR/2yiWDvEoEP
-	 fLMb6m3uw1qpevMXlP26pfZzgfwWrh03r9+V3y9NT+IYKIRziB7vKDV4HI2xN2AMCw
-	 dxCur3JIHDSyQZ4AAg3G6kjrulh/7HTX5taHDMHc=
+	b=uD0z6pR+py+K+aVbM9o1eLBM9/e8lREYuyfVDGzKjsjzL4sXq1c7WpOTxnWoPZBTA
+	 CZ6yq9NYr5OPWFJkM9dXU4SUd1/bijrs0nqQHxPc6MD8Y81uMbR02C/eAupO0Rexgj
+	 Y+SnL9jN62/oS14YyEjtO/jDFEt4MUzS60mZM2+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgHUQrU (ORCPT
+        id S1728622AbgHUQr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50096 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:47:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728378AbgHUQUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:20:39 -0400
+        id S1727123AbgHUQUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:20:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FA8722B4E;
-        Fri, 21 Aug 2020 16:19:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 687C222CBB;
+        Fri, 21 Aug 2020 16:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026781;
-        bh=ngB6DdBiJuvmnLavUkZSbxNw6b3Hq4QduT3Hww3mo2E=;
+        s=default; t=1598026774;
+        bh=1yPzK9t3GFlkQwdBVi7C7ZW6wopToJk1Y05XWH4ziTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=woRazyhH3QHLTv90KUPI/aVANXjzjRloKaucqJuJkWMYmx65fX0H532q/JdIHCD9/
-         YNqtw7luKnWVI0PVhtUgGVMqWMseqdQZm38sqDz6r7yxQQOSVeCrKGl3VVnAvyYxkI
-         1N9HjfA+Gkk/LIgEKrGA8FrGJikouXN8TBF8CI5s=
+        b=PdQQJRUd1DTgjm4UukzaVUwcttnvH+w72edgG95+B80WkaMrjlXFN+qMF3V00cyXK
+         dlTW34MUxa3FuKdrqZU9mSTv9Wp06XqO6D3StITwmLoyAwaGyFKXK0M93KZbv9KJul
+         7Lqd7K+uqktVPBZrygTufbmceuKkp5Q7gnDOFVaQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Jon Hunter <jonathanh@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/26] ASoC: tegra: Fix reference count leaks.
-Date:   Fri, 21 Aug 2020 12:19:13 -0400
-Message-Id: <20200821161938.349246-2-sashal@kernel.org>
+Cc:     Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 28/30] ceph: fix potential mdsc use-after-free crash
+Date:   Fri, 21 Aug 2020 12:18:55 -0400
+Message-Id: <20200821161857.348955-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161938.349246-1-sashal@kernel.org>
-References: <20200821161938.349246-1-sashal@kernel.org>
+In-Reply-To: <20200821161857.348955-1-sashal@kernel.org>
+References: <20200821161857.348955-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,56 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit deca195383a6085be62cb453079e03e04d618d6e ]
+[ Upstream commit fa9967734227b44acb1b6918033f9122dc7825b9 ]
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count if pm_runtime_put is not called in
-error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+Make sure the delayed work stopped before releasing the resources.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20200613204422.24484-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+cancel_delayed_work_sync() will only guarantee that the work finishes
+executing if the work is already in the ->worklist.  That means after
+the cancel_delayed_work_sync() returns, it will leave the work requeued
+if it was rearmed at the end. That can lead to a use after free once the
+work struct is freed.
+
+Fix it by flushing the delayed work instead of trying to cancel it, and
+ensure that the work doesn't rearm if the mdsc is stopping.
+
+URL: https://tracker.ceph.com/issues/46293
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/tegra/tegra30_ahub.c | 4 +++-
- sound/soc/tegra/tegra30_i2s.c  | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ fs/ceph/mds_client.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/tegra/tegra30_ahub.c b/sound/soc/tegra/tegra30_ahub.c
-index fef3b9a21a667..e441e23a37e4f 100644
---- a/sound/soc/tegra/tegra30_ahub.c
-+++ b/sound/soc/tegra/tegra30_ahub.c
-@@ -656,8 +656,10 @@ static int tegra30_ahub_resume(struct device *dev)
- 	int ret;
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index f36ddfea4997e..06109314d93c8 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3518,6 +3518,9 @@ static void delayed_work(struct work_struct *work)
+ 	dout("mdsc delayed_work\n");
+ 	ceph_check_delayed_caps(mdsc);
  
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 	ret = regcache_sync(ahub->regmap_ahub);
- 	ret |= regcache_sync(ahub->regmap_apbif);
- 	pm_runtime_put(dev);
-diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
-index 8e55583aa104e..516f37896092c 100644
---- a/sound/soc/tegra/tegra30_i2s.c
-+++ b/sound/soc/tegra/tegra30_i2s.c
-@@ -552,8 +552,10 @@ static int tegra30_i2s_resume(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 	ret = regcache_sync(i2s->regmap);
- 	pm_runtime_put(dev);
- 
++	if (mdsc->stopping)
++		return;
++
+ 	mutex_lock(&mdsc->mutex);
+ 	renew_interval = mdsc->mdsmap->m_session_timeout >> 2;
+ 	renew_caps = time_after_eq(jiffies, HZ*renew_interval +
+@@ -3851,7 +3854,16 @@ void ceph_mdsc_force_umount(struct ceph_mds_client *mdsc)
+ static void ceph_mdsc_stop(struct ceph_mds_client *mdsc)
+ {
+ 	dout("stop\n");
+-	cancel_delayed_work_sync(&mdsc->delayed_work); /* cancel timer */
++	/*
++	 * Make sure the delayed work stopped before releasing
++	 * the resources.
++	 *
++	 * Because the cancel_delayed_work_sync() will only
++	 * guarantee that the work finishes executing. But the
++	 * delayed work will re-arm itself again after that.
++	 */
++	flush_delayed_work(&mdsc->delayed_work);
++
+ 	if (mdsc->mdsmap)
+ 		ceph_mdsmap_destroy(mdsc->mdsmap);
+ 	kfree(mdsc->sessions);
 -- 
 2.25.1
 
