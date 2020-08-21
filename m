@@ -2,92 +2,254 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF0EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DB6C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60E2B20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD6F20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="WkSyOneg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XRZxiSKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgHUKyF (ORCPT
+        id S1728591AbgHUKyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:54:05 -0400
-Received: from mga01.intel.com ([192.55.52.88]:2596 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728058AbgHUKwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:52:54 -0400
-IronPort-SDR: 8aNO/msoBSpTqqCklOoI2JacQjPjJQO7YCLjMr1I3OOZV3lZ1AUJ5pD9elmREgbCIopPhUm8HQ
- sEH1QZIVz28w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="173557967"
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="173557967"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 03:52:53 -0700
-IronPort-SDR: O7Lz0ZnWt71v2rhcFMeN/ax6FCKFYVTkccb1vrG1j5ztBa9wkip6kUaRQ1nMEuIOPKHxS+3k0z
- lLexMjyeq4Ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="327731116"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 03:52:50 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1k94fA-00AK5B-Ke; Fri, 21 Aug 2020 13:52:48 +0300
-Date:   Fri, 21 Aug 2020 13:52:48 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        rtanwar@maxlinear.com
-Subject: Re: [PATCH v8 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200821105248.GM1891694@smile.fi.intel.com>
-References: <cover.1597898872.git.rahul.tanwar@linux.intel.com>
- <b6d0a65625a2bc231c649c970c0a1af1ff3a5dd5.1597898872.git.rahul.tanwar@linux.intel.com>
- <20200820105255.GB1891694@smile.fi.intel.com>
- <56c2a40d-6872-8ae7-7214-420b8bb9f027@linux.intel.com>
+        Fri, 21 Aug 2020 06:54:08 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:38045 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728471AbgHUKxg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 06:53:36 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.west.internal (Postfix) with ESMTP id 67A65B5D;
+        Fri, 21 Aug 2020 06:53:19 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Fri, 21 Aug 2020 06:53:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=4w5aaSxnH7WDfq4kjSzfbsI5N/z
+        p0ZWkHRv0ThroaAs=; b=WkSyOnegVM5YahV565joYP05oOpfuBUeBRvgnXXJ4jb
+        0xGWisZFnEl/gw7fiHRfcs8j/aoaaeSeyiLW0/EdX1a+2YStDkZgQqb7QPq7hDHg
+        HX7tgyY2WKjrsbiZBIYnGwOWcld7on5b7xOfdgUhVkDRoyUorcl3+22ieLGkpC9/
+        KGRqSQJe6fUeL8m2k5tVyRUU2pYuwD4soGpsEEEWIo2ZI80BU/y5SRa4bmJU0tLV
+        /CQ3xP0Y+aFeruslkF1bajkgo0NOxRZ1xz6i1AfQIrNxXgFK85iXjzwG+xvZfeZa
+        fFWsC1X+jJaR6UY/KJQssUQFrvqbQeppnUqmjRLlYuA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=4w5aaS
+        xnH7WDfq4kjSzfbsI5N/zp0ZWkHRv0ThroaAs=; b=XRZxiSKZ3i62nYcgD5JJIC
+        pZozybeXHAzH0R4SA/nLjeZdxHyYiK441EgN5LB1kCZsWwAPpUynHdH84ORQs0x4
+        NVfODJYdwrjuNOSmXZJzokx1FjcusWkL7aj7mNqnlgWqFu4AkgDciIyPqjwJ7aiL
+        5GayzENN59ffOq4xdQOzGzns/4TNRaoYONc2Egc6wn9mzwq1kEv9jgHGmzYKywek
+        GQXX8GpUiPdgaisThL2c3NA3yZNBocInL3x+ZqNRYTxT4944ENoo+oM0Zj2oR8uZ
+        +Fj34xlcNNK13fqA0HIla2VnSg9pNeZxX7MKISJQ3D3M31JyhXMDuXQC5IVsuRzg
+        ==
+X-ME-Sender: <xms:nac_XzH7jO54wG6o2aWJdgmhOEGx0ehvzJOXuGx9QLs5AZ3SB5HGxQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudduvddgvdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeeuleeltd
+    ehkeeltefhleduuddvhfffuedvffduveegheekgeeiffevheegfeetgfenucffohhmrghi
+    nhepkhgvrhhnvghlrdhorhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgr
+    hhdrtghomh
+X-ME-Proxy: <xmx:nac_XwUW15JsV4nRgiz4g_QxIN4qUBCfLwOMjSLE_8fySJraENOa7A>
+    <xmx:nac_X1I2WV00Qo--zwt7UfLhuyB7xEtA3lm5IGefpabwO1ToTskf9w>
+    <xmx:nac_XxE5RVpZz-tEdROTxkd6OVy56SYqYnZ2I0Q9UgfQtEzGh_YDGQ>
+    <xmx:n6c_XxTAzs571VgL8bpj8ackiJw53ZKGRIEe5fNeMh3z4CubGgPus6Lpvlk>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5327230600B1;
+        Fri, 21 Aug 2020 06:53:17 -0400 (EDT)
+Date:   Fri, 21 Aug 2020 12:53:37 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mm@kvack.org, Pavel Machek <pavel@ucw.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Airlie <airlied@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Vrabel <david.vrabel@citrix.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] mm: Track page table modifications in
+ __apply_to_page_range() construction
+Message-ID: <20200821105337.GA1915660@kroah.com>
+References: <20200821085011.28878-1-chris@chris-wilson.co.uk>
+ <20200821100902.GG3354@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <56c2a40d-6872-8ae7-7214-420b8bb9f027@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200821100902.GG3354@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 05:14:29PM +0800, Tanwar, Rahul wrote:
-> On 20/8/2020 6:52 pm, Andy Shevchenko wrote:
-> > On Thu, Aug 20, 2020 at 12:50:46PM +0800, Rahul Tanwar wrote:
-> >> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-> >> This PWM controller does not have any other consumer, it is a
-> >> dedicated PWM controller for fan attached to the system. Add
-> >> driver for this PWM fan controller.
-> > ...
-> > +#include <linux/bitfield.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/module.h>
-> >> +#include <linux/of_device.h>
-> > This should be mod_devicetable.h.
+On Fri, Aug 21, 2020 at 12:09:02PM +0200, Joerg Roedel wrote:
+> The __apply_to_page_range() function is also used to change and/or
+> allocate page-table pages in the vmalloc area of the address space.
+> Make sure these changes get synchronized to other page-tables in the
+> system by calling arch_sync_kernel_mappings() when necessary.
 > 
-> Inlcuding mod_devicetable.h instead of of_device.h results in
-> build failure related to all platform calls. Build is ok if
-> i remove it. Just FYI..
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+> (Only compile tested on x86-64 so far)
+> 
+>  mm/memory.c | 32 +++++++++++++++++++++-----------
+>  1 file changed, 21 insertions(+), 11 deletions(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 3a7779d9891d..fd845991f14a 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -83,6 +83,7 @@
+>  #include <asm/tlb.h>
+>  #include <asm/tlbflush.h>
+>  
+> +#include "pgalloc-track.h"
+>  #include "internal.h"
+>  
+>  #if defined(LAST_CPUPID_NOT_IN_PAGE_FLAGS) && !defined(CONFIG_COMPILE_TEST)
+> @@ -2206,7 +2207,8 @@ EXPORT_SYMBOL(vm_iomap_memory);
+>  
+>  static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+>  				     unsigned long addr, unsigned long end,
+> -				     pte_fn_t fn, void *data, bool create)
+> +				     pte_fn_t fn, void *data, bool create,
+> +				     pgtbl_mod_mask *mask)
+>  {
+>  	pte_t *pte;
+>  	int err = 0;
+> @@ -2235,6 +2237,7 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+>  				break;
+>  		}
+>  	} while (addr += PAGE_SIZE, addr != end);
+> +	*mask |= PGTBL_PTE_MODIFIED;
+>  
+>  	arch_leave_lazy_mmu_mode();
+>  
+> @@ -2245,7 +2248,8 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+>  
+>  static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+>  				     unsigned long addr, unsigned long end,
+> -				     pte_fn_t fn, void *data, bool create)
+> +				     pte_fn_t fn, void *data, bool create,
+> +				     pgtbl_mod_mask *mask)
+>  {
+>  	pmd_t *pmd;
+>  	unsigned long next;
+> @@ -2254,7 +2258,7 @@ static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+>  	BUG_ON(pud_huge(*pud));
+>  
+>  	if (create) {
+> -		pmd = pmd_alloc(mm, pud, addr);
+> +		pmd = pmd_alloc_track(mm, pud, addr, mask);
+>  		if (!pmd)
+>  			return -ENOMEM;
+>  	} else {
+> @@ -2264,7 +2268,7 @@ static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+>  		next = pmd_addr_end(addr, end);
+>  		if (create || !pmd_none_or_clear_bad(pmd)) {
+>  			err = apply_to_pte_range(mm, pmd, addr, next, fn, data,
+> -						 create);
+> +						 create, mask);
+>  			if (err)
+>  				break;
+>  		}
+> @@ -2274,14 +2278,15 @@ static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+>  
+>  static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
+>  				     unsigned long addr, unsigned long end,
+> -				     pte_fn_t fn, void *data, bool create)
+> +				     pte_fn_t fn, void *data, bool create,
+> +				     pgtbl_mod_mask *mask)
+>  {
+>  	pud_t *pud;
+>  	unsigned long next;
+>  	int err = 0;
+>  
+>  	if (create) {
+> -		pud = pud_alloc(mm, p4d, addr);
+> +		pud = pud_alloc_track(mm, p4d, addr, mask);
+>  		if (!pud)
+>  			return -ENOMEM;
+>  	} else {
+> @@ -2291,7 +2296,7 @@ static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
+>  		next = pud_addr_end(addr, end);
+>  		if (create || !pud_none_or_clear_bad(pud)) {
+>  			err = apply_to_pmd_range(mm, pud, addr, next, fn, data,
+> -						 create);
+> +						 create, mask);
+>  			if (err)
+>  				break;
+>  		}
+> @@ -2301,14 +2306,15 @@ static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
+>  
+>  static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
+>  				     unsigned long addr, unsigned long end,
+> -				     pte_fn_t fn, void *data, bool create)
+> +				     pte_fn_t fn, void *data, bool create,
+> +				     pgtbl_mod_mask *mask)
+>  {
+>  	p4d_t *p4d;
+>  	unsigned long next;
+>  	int err = 0;
+>  
+>  	if (create) {
+> -		p4d = p4d_alloc(mm, pgd, addr);
+> +		p4d = p4d_alloc_track(mm, pgd, addr, mask);
+>  		if (!p4d)
+>  			return -ENOMEM;
+>  	} else {
+> @@ -2318,7 +2324,7 @@ static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
+>  		next = p4d_addr_end(addr, end);
+>  		if (create || !p4d_none_or_clear_bad(p4d)) {
+>  			err = apply_to_pud_range(mm, p4d, addr, next, fn, data,
+> -						 create);
+> +						 create, mask);
+>  			if (err)
+>  				break;
+>  		}
+> @@ -2333,6 +2339,7 @@ static int __apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+>  	pgd_t *pgd;
+>  	unsigned long next;
+>  	unsigned long end = addr + size;
+> +	pgtbl_mod_mask mask = 0;
+>  	int err = 0;
+>  
+>  	if (WARN_ON(addr >= end))
+> @@ -2343,11 +2350,14 @@ static int __apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+>  		next = pgd_addr_end(addr, end);
+>  		if (!create && pgd_none_or_clear_bad(pgd))
+>  			continue;
+> -		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, create);
+> +		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, create, &mask);
+>  		if (err)
+>  			break;
+>  	} while (pgd++, addr = next, addr != end);
+>  
+> +	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
+> +		arch_sync_kernel_mappings(addr, addr + size);
+> +
+>  	return err;
+>  }
+>  
+> -- 
+> 2.28.0
+> 
 
-I didn't get what the change you performed, by there is no users of of_device.h
-in your code. If build fails it means you need to figure out proper list of
-what has to be included.
+<formletter>
 
--- 
-With Best Regards,
-Andy Shevchenko
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
-
+</formletter>
