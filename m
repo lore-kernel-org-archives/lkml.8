@@ -2,106 +2,116 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 799A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E72C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44E8820732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:30:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="N6pGa6uU"
+	by mail.kernel.org (Postfix) with ESMTP id 046112075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597991504;
+	bh=nlYLizszK9f9v583kG2r3NUZircSq8a0b7ncAj+8nCE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fsI9FYY7h7LNfue+LougPFiYrLUSlPGn/2kfpusxxmKRR4EyTz7SL79k8Z6PhA+Ng
+	 ge8Rr9KnUryqLgFY97vlTNFkym5JlFzcDld7ps8t1PFPOKnjC7dkGpW2gd+/p5DA/G
+	 JOIwcA9JggyhoVmB64Qjh7kyXEuaEejXvj5ScaUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725935AbgHUGa5 (ORCPT
+        id S1726809AbgHUGbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:30:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbgHUGa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 02:30:56 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDF51C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 23:30:55 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id h6so654437qvz.14
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 23:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=t1ahybeSocYxG75mFEOjBUStE3/N8dMepfEKhYa+PgY=;
-        b=N6pGa6uUQfVSX6lSk34Ndz7XM0iWnAthacC9zfJHhg/RhcgDq78jz6dqetSkTKI8fx
-         1hjmd6co/CwJ++gl9kTgBFWAMjnwcbgnYkbI2cyxAcD/tOI3cokeyiTplznwH5EF8Fh2
-         Flc1zjcQl60kc4U/8hLFi9Lc3mpJ7EqfUwhju48qmeRKu7Vvh925E/8LtI5obSVdxufd
-         p9zH3W4hCESmZNo7VZqFvpLClT2QuqeBAvgdRBem51KT3iteCYaUMP8fYDREaNs2oLHI
-         eLszLstRVI/KUH5G90O7VC2OSEXubYO/tro6JEI/flcTve+pMVzeube0jURHG+m5HTxY
-         1YJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=t1ahybeSocYxG75mFEOjBUStE3/N8dMepfEKhYa+PgY=;
-        b=Z6axBnSBuUrz3wBr+Q/lrZNhulWdh91YLQkMQCl+GQBEgoOay3R5aXJI8+Kj4k/W3h
-         kMiCQAs2SmoSk/gf5RcyfzVbS3tZRuNABcnE50N8xgiKMl13Es/kxVl6voy7gZnGMI50
-         iJ3N6PUPWjhqquf+/YJI4V9CZFA9p5LSs8y9F7TKIh3EPWSjk/8VYxwiI0FudkBizcxd
-         eqQrTDSi4Ot41BNUS0MC+DzBJKbTBNiHiYt+hLWIPz8gOtGyWKJqRgk+bSP8Si2M8R/v
-         A895sUJUKdkb5v2iG++7kxgKzTWFbBROmfMnXVbmea8sw0a9aXMx8H5wK0t4PIMvHulZ
-         vr7Q==
-X-Gm-Message-State: AOAM531A1LcN2DUZ5k8wmQA95IFrCOPjz4O8xzEcV8qqK6eWazW43wG0
-        grxtF/DGDak1z9guayukZofLoEKr1w==
-X-Google-Smtp-Source: ABdhPJysfSt3QWU2JgWJDoarnQbxJp0A96gYx030HqTPN0Gj4l6c13UQz9JiYt1rigEkHWmjo+sJNNwG3Q==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:15:13:f693:9fff:fef4:2449])
- (user=elver job=sendgmr) by 2002:a05:6214:140d:: with SMTP id
- n13mr1254243qvx.69.1597991452992; Thu, 20 Aug 2020 23:30:52 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 08:30:43 +0200
-Message-Id: <20200821063043.1949509-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH] random32: Use rcuidle variant for tracepoint
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     linux-kernel@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
+        Fri, 21 Aug 2020 02:31:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725951AbgHUGbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 02:31:42 -0400
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D848B20732;
+        Fri, 21 Aug 2020 06:31:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597991501;
+        bh=nlYLizszK9f9v583kG2r3NUZircSq8a0b7ncAj+8nCE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=icHK5nj5ReIwEwsVtVm7zKaYGoNmULev+0nWZpsolGw0fskgZbyej0dJjTasvCJSl
+         dyVIbbFqKdtRskezltcj/zCCcfZtT8K9Q6wL39HyrObOtZ2QmFy5ZvDRlDs24PSRB4
+         OuHhul5XgUWTX5ZquBlRv7fRWehPVzRQGg81x9TI=
+Received: by mail-ej1-f52.google.com with SMTP id bo3so1004135ejb.11;
+        Thu, 20 Aug 2020 23:31:40 -0700 (PDT)
+X-Gm-Message-State: AOAM530bQ0KMHn63PX+jdczb14N/tE4X2urd7fx6GNrBQoVI/+OVC7/a
+        Ca0YB2LGtJYljHP/ouXDT1xUkn2NtPXijx/uRAI=
+X-Google-Smtp-Source: ABdhPJzmsRwacUgF9wp7sh4Uo7RCl0p0/BWQy6sNA1lK7shnUeEfA2XLjnyNUqiOPykidWM5/kQR7817vJYiPMs1QXw=
+X-Received: by 2002:a17:906:9989:: with SMTP id af9mr1305560ejc.385.1597991499427;
+ Thu, 20 Aug 2020 23:31:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200708153420.29484-1-lukasz.luba@arm.com> <20200708153420.29484-3-lukasz.luba@arm.com>
+ <20200817155021.GC15887@kozik-lap> <2099aea9-5a63-6e5b-d7f9-4e6476584461@arm.com>
+In-Reply-To: <2099aea9-5a63-6e5b-d7f9-4e6476584461@arm.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 21 Aug 2020 08:31:28 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPc063m_YcouAO2Q9piJ_GV1Fh9XeS3ZZ3KR=ZyMxPKZ5w@mail.gmail.com>
+Message-ID: <CAJKOXPc063m_YcouAO2Q9piJ_GV1Fh9XeS3ZZ3KR=ZyMxPKZ5w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: Remove interrupts from DMC
+ controller in Exynos5422
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, willy.mh.wolff.ml@gmail.com,
+        k.konieczny@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        s.nawrocki@samsung.com, kgene@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With KCSAN enabled, prandom_u32() may be called from any context,
-including idle CPUs.
+On Mon, 17 Aug 2020 at 19:17, Lukasz Luba <lukasz.luba@arm.com> wrote:
+>
+> Hi Krzysztof,
+>
+> On 8/17/20 4:50 PM, Krzysztof Kozlowski wrote:
+> > On Wed, Jul 08, 2020 at 04:34:20PM +0100, Lukasz Luba wrote:
+> >> The interrupts in Dynamic Memory Controller in Exynos5422 and Odroid
+> >> XU3-family boards are no longer needed. They have been used in order
+> >> to workaround some issues in scheduled work in devfreq. Now when the
+> >> devfreq framework design is improved, remove the interrupt driven
+> >> approach and rely on devfreq monitoring mechanism with fixed intervals.
+> >>
+> >> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+> >> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> >> ---
+> >>   arch/arm/boot/dts/exynos5420.dtsi | 3 ---
+> >>   1 file changed, 3 deletions(-)
+> >
+> > I think the dependencies were merged so this can be safely applied
+> > without bisectability problems?
+>
+> I have created v2 of that fix and it got merged
+> via Chanwoo's tree, the commit 4fc9a0470d2dc37028
+> https://lkml.org/lkml/2020/7/10/1048
+>
+> That commit switched the driver default mode from 'irq driven' to
+> new devfreq monitoring mechanism. Furthermore, when the driver is
+> built as a module, you can try to use the 'irq mode', but for this
+> you would need the DT IRQs description (this $subject tries to remove).
+>
+> I would like to keep this IRQ mode for experimentation, as I
+> described in answers to Bartek's questions:
+> https://lkml.org/lkml/2020/7/14/315
+>
+> Unfortunately, I am quite busy and won't make any progress before the
+> LPC.
 
-Therefore, switch to using trace_prandom_u32_rcuidle(), to avoid various
-issues due to recursion and lockdep warnings when KCSAN and tracing is
-enabled.
+None of these were the actual answer to my question, unless by "v2 of
+that fix and it got merged" means the dependencies?
 
-Fixes: 94c7eb54c4b8 ("random32: add a tracepoint for prandom_u32()")
-Link: https://lkml.kernel.org/r/20200820155923.3d5c4873@oasis.local.home
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Marco Elver <elver@google.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- lib/random32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'll drop it from the queue. Please resend if it is valid.
 
-diff --git a/lib/random32.c b/lib/random32.c
-index 932345323af0..1c5607a411d4 100644
---- a/lib/random32.c
-+++ b/lib/random32.c
-@@ -83,7 +83,7 @@ u32 prandom_u32(void)
- 	u32 res;
- 
- 	res = prandom_u32_state(state);
--	trace_prandom_u32(res);
-+	trace_prandom_u32_rcuidle(res);
- 	put_cpu_var(net_rand_state);
- 
- 	return res;
--- 
-2.28.0.297.g1956fa8f8d-goog
-
+Best regards,
+Krzysztof
