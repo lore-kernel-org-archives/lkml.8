@@ -2,83 +2,119 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10190C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F131C2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4F22087D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:06:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eYPOpaot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgHUIGC (ORCPT
+        id S1726988AbgHUIGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:06:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgHUIFk (ORCPT
+        Fri, 21 Aug 2020 04:06:09 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54288 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725965AbgHUIFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:05:40 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19349C061385;
-        Fri, 21 Aug 2020 01:05:39 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 744CF2AC; Fri, 21 Aug 2020 10:05:34 +0200 (CEST)
-Date:   Fri, 21 Aug 2020 10:05:31 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Mike Stunes <mstunes@vmware.com>
-Cc:     "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH v5 00/75] x86: SEV-ES Guest Support
-Message-ID: <20200821080531.GC3319@8bytes.org>
-References: <20200724160336.5435-1-joro@8bytes.org>
- <B65392F4-FD42-4AA3-8AA8-6C0C0D1FF007@vmware.com>
- <20200730122645.GA3257@8bytes.org>
- <F5603CBB-31FB-4EE8-B67A-A1F2DBEE28D8@vmware.com>
- <20200818150746.GA3319@8bytes.org>
- <6F9275F4-D5A4-4D30-8729-A57989568CA7@vmware.com>
+        Fri, 21 Aug 2020 04:05:41 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07L82M8Y002909;
+        Fri, 21 Aug 2020 10:05:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=mEEFGwxCR0LLzSzT8N8HBawMHqEEzWXO7414JAV6Gqg=;
+ b=eYPOpaotWPQ4f7pbwo3lzzRAHL9gJ56LxFpuIA7vitShstnf99AMesLYK1sXmMGj/Kt2
+ bBCxV5KgtkMg0X9xo0FN4bPkE5S5KtfzMPpfBoilBcOiK/ljUVnxz/mGV3ya/OOAVhH7
+ rGofCoqqfd+XpWN4ikYKTdell/ML0x6/ro4sxUHBAI4QeWBse9thJNWaohSYgwtozo1/
+ 4sunJcWcCUUJNMlYMO38jj9TZWvepJU/yKbdC9IMSFPsiqEUpEfks79Uivx6BZ6cp78e
+ gY9ONdq1bPVS1uTsFuG55lCrxYhpak8wh3TRj7Qa7u4t9dRL9E/okTsxWFD6Jj4OxA0D Pg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 330jg7nrr1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 10:05:21 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DF69B10002A;
+        Fri, 21 Aug 2020 10:05:20 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C439321FE90;
+        Fri, 21 Aug 2020 10:05:20 +0200 (CEST)
+Received: from [10.48.1.149] (10.75.127.47) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Aug
+ 2020 10:05:19 +0200
+Subject: Re: [PATCH v2 11/15] regulator: stm32-vrefbuf: Fix W=1 build warning
+ when CONFIG_OF=n
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Icenowy Zheng <icenowy@aosc.io>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20200821111135.0b958d3a@xhacker.debian>
+ <20200821111755.4c461039@xhacker.debian>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <fc1035fe-b90f-59d5-cb4c-aff31136459a@st.com>
+Date:   Fri, 21 Aug 2020 10:05:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20200821111755.4c461039@xhacker.debian>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6F9275F4-D5A4-4D30-8729-A57989568CA7@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_06:2020-08-19,2020-08-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+On 8/21/20 5:17 AM, Jisheng Zhang wrote:
+> Fix below warning when CONFIG_OF=n:
+> 
+> drivers/regulator/stm32-vrefbuf.c:287:34: warning: ‘stm32_vrefbuf_of_match’ defined but not used [-Wunused-const-variable=]
+>   287 | static const struct of_device_id stm32_vrefbuf_of_match[] = {
+>       |                                  ^~~~~~~~~~~~~~~~~~~~~~
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-On Thu, Aug 20, 2020 at 12:58:13AM +0000, Mike Stunes wrote:
-> Yes, I still see the issue — APs are offline after boot. I’ll spend
-> some time seeing if I can figure out what the problem is. Thanks!
+Hi Jisheng,
 
-Tom and a few others debugged another FSGSBASE issue yesterday, which I
-think might also be the cause for the AP startup problems you are
-seeing (if you test on Rome).
+Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-Can you try to disable support for RDPID in the guest, but keep fsgsbase
-enabled?
-
-Thanks,
-
-	Joerg
+Thanks for the patch,
+Fabrice
+> ---
+>  drivers/regulator/stm32-vrefbuf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/regulator/stm32-vrefbuf.c b/drivers/regulator/stm32-vrefbuf.c
+> index 992bc18101ef..161622ea7259 100644
+> --- a/drivers/regulator/stm32-vrefbuf.c
+> +++ b/drivers/regulator/stm32-vrefbuf.c
+> @@ -284,7 +284,7 @@ static const struct dev_pm_ops stm32_vrefbuf_pm_ops = {
+>  			   NULL)
+>  };
+>  
+> -static const struct of_device_id stm32_vrefbuf_of_match[] = {
+> +static const struct of_device_id __maybe_unused stm32_vrefbuf_of_match[] = {
+>  	{ .compatible = "st,stm32-vrefbuf", },
+>  	{},
+>  };
+> 
