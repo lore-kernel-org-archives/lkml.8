@@ -2,198 +2,152 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F84FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74278C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5233F2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0992078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:36:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M79Keox0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oG3H/4qg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgHUPgJ (ORCPT
+        id S1727884AbgHUPgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:36:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54666 "EHLO
+        Fri, 21 Aug 2020 11:36:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgHUPfl (ORCPT
+        with ESMTP id S1725873AbgHUPgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:35:41 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 763B3C0613ED
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:35:40 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id b66so6300wmb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:35:40 -0700 (PDT)
+        Fri, 21 Aug 2020 11:36:09 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C211C061573;
+        Fri, 21 Aug 2020 08:36:09 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id g14so2145496iom.0;
+        Fri, 21 Aug 2020 08:36:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wkZaf2fS0TRbgqB1TvCp3uNQXxIjOYG9m293JxctoWI=;
-        b=M79Keox0M4DbWW10mmvqE4V+GwcyxPgb1gp3cA/S7VY6ho6+oPYVy8OZBO17qHQa8H
-         VX8g9OFy1C0UMfHmXQNE2yrRdXMdWi6RWHp6d5tSsN6lx2ImQnqDkdpg1PEIpdNdrMkz
-         JeEz6IkumP+dMetNUbRP4YrM7PZAh/sG0LUWsDDz0+Hz3RRne17s8kIAZCZC9J2d/r4c
-         Cw0qNpGBB4YkUxUz0NhcWYSSGpkrZRzGEJIvINTBAbbKfjby8JghJCbvmZMyHECSYg0U
-         cAsVZ+ONi8N8HAO6WYWQ5D7JvorJ4ShueUPBYdF/n/wWIRWCKe1ZOToy0r5JnfK77zP8
-         DXbg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dTsdEvmeR7/8ARBPzPDo5H4/RL/HljTYjHOoJ2D+HGk=;
+        b=oG3H/4qgY6IZeh11qQCNeaOyHtavKEMR464ybkKS9cibi3xG6UiYZmHGSxprqoeKZx
+         30qLE+paOBcBV6sGjUUx+ZmfjBIm1uFKSughgeRlfmwNpycy7r27utMOzY5z9LnVTPhg
+         MYNQFCDeltwbaRNXh3WgmACm9hLemnauKbxaK5+06YZsGuRkiX31H8W1SNLrSg7KPxKs
+         2Lg8QE5GpJ+9iznDvRuhrf7egkMRLyZyYAdRhUgg27xW+r2/BZCiurF3bUjYUeOwfIBL
+         PosLFU3dezoIHJEnGujK3dYDsEi0ulTKnMSrOBL41xPp0//84XYxMhWKjkd3RnTtMWkZ
+         ln+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wkZaf2fS0TRbgqB1TvCp3uNQXxIjOYG9m293JxctoWI=;
-        b=B1JRtukMkb/YP6aymoltvgjhEWVCdz8IcCa3WKeGb0hbnyKKhxneKnUTQvfmWLZmBt
-         /mSuo2/KFBuSGXs2g9aQ7pnBmIKcDTQp88zKAqWXoO9CbtO10Eld128aDw2IxS2OPkV9
-         zZlNW+YgzwxYKsCnT5za9GYDPvJRyxgrQfVY7ATQnPpVjw/ZVlI7G3iqVy8CqZIX4z3/
-         qO2qp/uAWXvJMpZVeSnDhRrLi/iu/mhYZZlSiaUkHUiT81m5Ua1fVaxsyS+ixTcAFZvA
-         x61jIZrxVU72S/i1sPz4IbnWGtAiTuKiL/nKbjgmeMw9GC2VTnd7bENjNXyl7Whf0YDo
-         91NA==
-X-Gm-Message-State: AOAM5309GZN5UnLt7vP6BQiL5/2uWOpbHsNA0hNBcpXoFc7IN5mPU0tf
-        ETD76ZHCLy7nQTJC61JNJQmsww==
-X-Google-Smtp-Source: ABdhPJwnwfcSVkUcMmU60mX6rj4bISfP4uRgTzwRJSmV2IqzEpKh+dN3bnEq9KMPvzkwkh+oR+dIhA==
-X-Received: by 2002:a1c:6446:: with SMTP id y67mr3797277wmb.49.1598024138744;
-        Fri, 21 Aug 2020 08:35:38 -0700 (PDT)
-Received: from elver.google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id 31sm4611928wrj.94.2020.08.21.08.35.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 08:35:38 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 17:35:32 +0200
-From:   Marco Elver <elver@google.com>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] random32: Use rcuidle variant for tracepoint
-Message-ID: <20200821153532.GA3205540@elver.google.com>
-References: <20200821063043.1949509-1-elver@google.com>
- <20200821085907.GJ1362448@hirez.programming.kicks-ass.net>
- <CANn89i+1MQRCSRVg-af758en5e9nwQBes3aBSjQ6BY1pV5+HdQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dTsdEvmeR7/8ARBPzPDo5H4/RL/HljTYjHOoJ2D+HGk=;
+        b=G5sIOXzjbpF+p3tgjl7yS53Ab8wDuyDTEkH0SX7Ga49o8NZP7K6O4r/vUa1CSy60hq
+         coNv8LUbiuFlP5S45WXFS/MdPMK8M5cdYljarFNOIxOhzNPCk6gWMKAlcmmBUZ0ERzkT
+         xuFqCexfma3GevcgMBLGkT84f8OmOsQpwgX+JfNiwjxcx1efzFfuyheU9Oxvp5OklTOs
+         oxECqNswjUt+ItFArouHUHaHhT1s95pzfwj4ARSmTHbCxRG3HazqhBcsSwSzjYpO/xXM
+         zhHidxXax/W7sgICLC9CsIQjTTnuu2rsQdu7fjeU+kPnmccIqBKtyCNbfHCcDW+FZXpI
+         bmlg==
+X-Gm-Message-State: AOAM532FXLFxIkieijBphE9Mebg3g+vrp/kSSIjdZ3csRCDQnHhMNkCb
+        GTAO5lwJdehhHKiRxnsOkrNLjEXA4F9vXS8cpA==
+X-Google-Smtp-Source: ABdhPJw4zUY2nPRkcrI1iVgkAlff3Y8KRk0bZpGsMIrVoKZ6EshwlsivnB6CcpyYk4rmRXNlUneDcikzsDIJQXjIIao=
+X-Received: by 2002:a5d:841a:: with SMTP id i26mr2754197ion.144.1598024168875;
+ Fri, 21 Aug 2020 08:36:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANn89i+1MQRCSRVg-af758en5e9nwQBes3aBSjQ6BY1pV5+HdQ@mail.gmail.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+References: <20200821105229.18938-1-pbonzini@redhat.com> <20200821142152.GA6330@sjchrist-ice>
+In-Reply-To: <20200821142152.GA6330@sjchrist-ice>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Fri, 21 Aug 2020 11:35:57 -0400
+Message-ID: <CAMzpN2h79bi5dd7PxjY45xYy71UdYomKa1t2gNxLtRpDkMs+Lw@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/entry/64: Do not use RDPID in paranoid entry to
+ accomodate KVM
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Chang Seok Bae <chang.seok.bae@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Andy Lutomirski <luto@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 08:06AM -0700, Eric Dumazet wrote:
-> On Fri, Aug 21, 2020 at 1:59 AM <peterz@infradead.org> wrote:
-> >
-> > On Fri, Aug 21, 2020 at 08:30:43AM +0200, Marco Elver wrote:
-> > > With KCSAN enabled, prandom_u32() may be called from any context,
-> > > including idle CPUs.
-> > >
-> > > Therefore, switch to using trace_prandom_u32_rcuidle(), to avoid various
-> > > issues due to recursion and lockdep warnings when KCSAN and tracing is
-> > > enabled.
-> >
-> > At some point we're going to have to introduce noinstr to idle as well.
-> > But until that time this should indeed cure things.
-> 
-> I do not understand what the issue is.  This _rcuidle() is kind of opaque ;)
+On Fri, Aug 21, 2020 at 10:22 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
 >
-> Would this alternative patch work, or is it something more fundamental ?
+> On Fri, Aug 21, 2020 at 06:52:29AM -0400, Paolo Bonzini wrote:
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> >
+> > Don't use RDPID in the paranoid entry flow, as it can consume a KVM
+> > guest's MSR_TSC_AUX value if an NMI arrives during KVM's run loop.
+> >
+> > In general, the kernel does not need TSC_AUX because it can just use
+> > __this_cpu_read(cpu_number) to read the current processor id.  It can
+> > also just block preemption and thread migration at its will, therefore
+> > it has no need for the atomic rdtsc+vgetcpu provided by RDTSCP.  For this
+> > reason, as a performance optimization, KVM loads the guest's TSC_AUX when
+> > a CPU first enters its run loop.  On AMD's SVM, it doesn't restore the
+> > host's value until the CPU exits the run loop; VMX is even more aggressive
+> > and defers restoring the host's value until the CPU returns to userspace.
+> >
+> > This optimization obviously relies on the kernel not consuming TSC_AUX,
+> > which falls apart if an NMI arrives during the run loop and uses RDPID.
+> > Removing it would be painful, as both SVM and VMX would need to context
+> > switch the MSR on every VM-Enter (for a cost of 2x WRMSR), whereas using
+> > LSL instead RDPID is a minor blip.
+> >
+> > Both SAVE_AND_SET_GSBASE and GET_PERCPU_BASE are only used in paranoid entry,
+> > therefore the patch can just remove the RDPID alternative.
+> >
+> > Fixes: eaad981291ee3 ("x86/entry/64: Introduce the FIND_PERCPU_BASE macro")
+> > Cc: Dave Hansen <dave.hansen@intel.com>
+> > Cc: Chang Seok Bae <chang.seok.bae@intel.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Sasha Levin <sashal@kernel.org>
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: kvm@vger.kernel.org
+> > Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
+> > Debugged-by: Tom Lendacky <thomas.lendacky@amd.com>
+> > Suggested-by: Andy Lutomirski <luto@kernel.org>
+> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > ---
+> >  arch/x86/entry/calling.h | 10 ++++++----
+> >  1 file changed, 6 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+> > index 98e4d8886f11..ae9b0d4615b3 100644
+> > --- a/arch/x86/entry/calling.h
+> > +++ b/arch/x86/entry/calling.h
+> > @@ -374,12 +374,14 @@ For 32-bit we have the following conventions - kernel is built with
+> >   * Fetch the per-CPU GSBASE value for this processor and put it in @reg.
+> >   * We normally use %gs for accessing per-CPU data, but we are setting up
+> >   * %gs here and obviously can not use %gs itself to access per-CPU data.
+> > + *
+> > + * Do not use RDPID, because KVM loads guest's TSC_AUX on vm-entry and
+> > + * may not restore the host's value until the CPU returns to userspace.
+> > + * Thus the kernel would consume a guest's TSC_AUX if an NMI arrives
+> > + * while running KVM's run loop.
+> >   */
+> >  .macro GET_PERCPU_BASE reg:req
+> > -     ALTERNATIVE \
+> > -             "LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
+> > -             "RDPID  \reg", \
+>
+> This was the only user of the RDPID macro, I assume we want to yank that out
+> as well?
 
-There are 2 problems:
+No.  That one should be kept until the minimum binutils version is
+raised to one that supports the RDPID opcode.
 
-1. Recursion due to ending up in lockdep from the tracepoint. I need to
-solve this either way. One way is to use _rcuidle() variant, which
-doesn't call into lockdep.
-
-2. Somehow running into trouble because we use tracing from an idle CPU.
-At least that's what I gathered from the documentation -- but you'd have
-to wait for Peter or Steven to get a better explanation.
-
-> Thanks !
-> 
-> diff --git a/lib/random32.c b/lib/random32.c
-> index 932345323af092a93fc2690b0ebbf4f7485ae4f3..17af2d1631e5ab6e02ad1e9288af7e007bed6d5f
-> 100644
-> --- a/lib/random32.c
-> +++ b/lib/random32.c
-> @@ -83,9 +83,10 @@ u32 prandom_u32(void)
->         u32 res;
-> 
->         res = prandom_u32_state(state);
-> -       trace_prandom_u32(res);
->         put_cpu_var(net_rand_state);
-> 
-> +       trace_prandom_u32(res);
-> +
->         return res;
->  }
->  EXPORT_SYMBOL(prandom_u32);
-
-That unfortunately still gets me the same warning:
-
-| ------------[ cut here ]------------
-| DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())
-| WARNING: CPU: 4 PID: 1861 at kernel/locking/lockdep.c:4875 check_flags.part.0+0x157/0x160 kernel/locking/lockdep.c:4875
-| Modules linked in:
-| CPU: 4 PID: 1861 Comm: kworker/u16:4 Not tainted 5.9.0-rc1+ #24
-| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-| RIP: 0010:check_flags.part.0+0x157/0x160 kernel/locking/lockdep.c:4875
-| Code: c0 0f 84 70 5d 00 00 44 8b 0d fd 11 5f 06 45 85 c9 0f 85 60 5d 00 00 48 c7 c6 3e d0 f4 86 48 c7 c7 b2 49 f3 86 e8 8d 49 f6 ff <0f> 0b e9 46 5d 00 00 66 90 41 57 41 56 49 89 fe 41 55 41 89 d5 41
-| RSP: 0000:ffffc900034bfcb0 EFLAGS: 00010082
-| RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff8136161c
-| RDX: ffff88881a9dcb00 RSI: ffffffff81363835 RDI: 0000000000000006
-| RBP: ffffc900034bfd00 R08: 0000000000000000 R09: 0000ffffffffffff
-| R10: 0000000000000104 R11: 0000ffff874efd6b R12: ffffffff874f26c0
-| R13: 0000000000000244 R14: 0000000000000000 R15: 0000000000000046
-| FS:  0000000000000000(0000) GS:ffff88881fc00000(0000) knlGS:0000000000000000
-| CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-| CR2: 0000000000000000 CR3: 0000000007489001 CR4: 0000000000770ee0
-| DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-| DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-| PKRU: 55555554
-| Call Trace:
-|  check_flags kernel/locking/lockdep.c:4871 [inline]
-|  lock_is_held_type+0x42/0x100 kernel/locking/lockdep.c:5042
-|  lock_is_held include/linux/lockdep.h:267 [inline]
-|  rcu_read_lock_sched_held+0x41/0x80 kernel/rcu/update.c:136
-|  trace_prandom_u32 include/trace/events/random.h:310 [inline]
-|  prandom_u32+0x1bb/0x200 lib/random32.c:86
-|  prandom_u32_max include/linux/prandom.h:46 [inline]
-|  reset_kcsan_skip kernel/kcsan/core.c:277 [inline]
-|  kcsan_setup_watchpoint+0x9b/0x600 kernel/kcsan/core.c:424
-|  perf_lock_task_context+0x5e3/0x6e0 kernel/events/core.c:1491
-|  perf_pin_task_context kernel/events/core.c:1506 [inline]
-|  perf_event_exit_task_context kernel/events/core.c:12284 [inline]
-|  perf_event_exit_task+0x1e2/0x910 kernel/events/core.c:12364
-|  do_exit+0x70e/0x18b0 kernel/exit.c:815
-|  call_usermodehelper_exec_async+0x2e2/0x2f0 kernel/umh.c:114
-|  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-| irq event stamp: 107
-| hardirqs last  enabled at (107): [<ffffffff815532ab>] perf_lock_task_context+0x5db/0x6e0 kernel/events/core.c:1491
-| hardirqs last disabled at (106): [<ffffffff81552f12>] perf_lock_task_context+0x242/0x6e0 kernel/events/core.c:1459
-| softirqs last  enabled at (0): [<ffffffff8129b95e>] copy_process+0xe9e/0x3970 kernel/fork.c:2004
-| softirqs last disabled at (0): [<0000000000000000>] 0x0
-| ---[ end trace a3058d9b157af5c4 ]---
-| possible reason: unannotated irqs-off.
-| irq event stamp: 107
-| hardirqs last  enabled at (107): [<ffffffff815532ab>] perf_lock_task_context+0x5db/0x6e0 kernel/events/core.c:1491
-| hardirqs last disabled at (106): [<ffffffff81552f12>] perf_lock_task_context+0x242/0x6e0 kernel/events/core.c:1459
-| softirqs last  enabled at (0): [<ffffffff8129b95e>] copy_process+0xe9e/0x3970 kernel/fork.c:2004
-| softirqs last disabled at (0): [<0000000000000000>] 0x0
-
-I also have a patch which avoids the problem entirely by not using
-prandom_u32(): https://lkml.kernel.org/r/20200821123126.3121494-1-elver@google.com
-But that patch will likely only make it into the next merge window
-(because of other conflicts).
-
-So, if the _rcuidle() variant here doesn't break your usecase, there
-should be no harm in using the _rcuidle() variant. This also lifts the
-restriction on where prandom_u32() is usable to what it was before,
-which should be any context.
-
-Steven, Peter: What's the downside to of _rcuidle()?
-
-Thanks,
--- Marco
+--
+Brian Gerst
