@@ -2,69 +2,124 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E051320735
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D033E20735
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgHUSlS (ORCPT
+        id S1726682AbgHUSpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:41:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgHUSlS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:41:18 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC8DC061573;
-        Fri, 21 Aug 2020 11:41:17 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 16F451287CB8E;
-        Fri, 21 Aug 2020 11:24:30 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 11:41:15 -0700 (PDT)
-Message-Id: <20200821.114115.118706831249226561.davem@davemloft.net>
-To:     Jianlin.Lv@arm.com
-Cc:     netdev@vger.kernel.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: remove redundant variable in
- vxlan_xmit_one
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200821055636.59937-1-Jianlin.Lv@arm.com>
-References: <20200821055636.59937-1-Jianlin.Lv@arm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 21 Aug 2020 11:24:30 -0700 (PDT)
+        Fri, 21 Aug 2020 14:45:17 -0400
+Received: from l2mail1.panix.com ([166.84.1.75]:56142 "EHLO l2mail1.panix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbgHUSpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 14:45:09 -0400
+X-Greylist: delayed 970 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Aug 2020 14:45:09 EDT
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+        by l2mail1.panix.com (Postfix) with ESMTPS id 4BY95W0HJszDdc;
+        Fri, 21 Aug 2020 14:29:02 -0400 (EDT)
+Received: from xps-7390 (cpe-23-242-39-94.socal.res.rr.com [23.242.39.94])
+        by mailbackend.panix.com (Postfix) with ESMTPSA id 4BY95Q1Z1Lz1XCR;
+        Fri, 21 Aug 2020 14:28:58 -0400 (EDT)
+Date:   Fri, 21 Aug 2020 11:28:57 -0700 (PDT)
+From:   "Kenneth R. Crudup" <kenny@panix.com>
+Reply-To: "Kenneth R. Crudup" <kenny@panix.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH] ACPI: OSL: Prevent acpi_release_memory() from returning
+ too early
+In-Reply-To: <6142241.0H6QnnlUA7@kreacher>
+Message-ID: <alpine.DEB.2.23.453.2008211126550.3596@xps-7390>
+References: <6142241.0H6QnnlUA7@kreacher>
+User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jianlin Lv <Jianlin.Lv@arm.com>
-Date: Fri, 21 Aug 2020 13:56:36 +0800
 
-> @@ -2614,8 +2613,8 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
->  	info = skb_tunnel_info(skb);
->  
->  	if (rdst) {
-> -		dst = &rdst->remote_ip;
-> -		if (vxlan_addr_any(dst)) {
-> +		remote_ip = rdst->remote_ip;
-> +		if (vxlan_addr_any(&remote_ip)) {
->  			if (did_rsc) {
+Works here for me:
 
-Now we are making a copy of the remote_ip object on the stack, and
-passing a reference to the stack copy to the vxlan_addr_any()
-function.  The existing code is passing a reference to the
-original object, no copies.
+----
+$ l /sys/class/typec
+total 0
+10012 0 drwxr-xr-x  2 root root 0 Aug 21 11:25 ./
+   10 0 drwxr-xr-x 67 root root 0 Aug 21 11:25 ../
+27771 0 lrwxrwxrwx  1 root root 0 Aug 21 11:25 port0 -> ../../devices/platform/USBC000:00/typec/port0/
+35601 0 lrwxrwxrwx  1 root root 0 Aug 21 11:25 port0-partner -> ../../devices/platform/USBC000:00/typec/port0/port0-partner/
+36686 0 lrwxrwxrwx  1 root root 0 Aug 21 11:25 port1 -> ../../devices/platform/USBC000:00/typec/port1/
+$
+----
 
-This is not an improvement.
+On Fri, 21 Aug 2020, Rafael J. Wysocki wrote:
+
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> After commit 1757659d022b ("ACPI: OSL: Implement deferred unmapping
+> of ACPI memory") in some cases acpi_release_memory() may return
+> before the target memory mappings actually go away, because they
+> are released asynchronously now.
+>
+> Prevent it from returning prematurely by making it wait for the next
+> RCU grace period to elapse, for all of the RCU callbacks to complete
+> and for all of the scheduled work items to be flushed before
+> returning.
+>
+> Fixes: 1757659d022b ("ACPI: OSL: Implement deferred unmapping of ACPI memory")
+> Reported-by: Kenneth R. Crudup <kenny@panix.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/acpi/osl.c |   19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
+>
+> Index: linux-pm/drivers/acpi/osl.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/osl.c
+> +++ linux-pm/drivers/acpi/osl.c
+> @@ -1575,11 +1575,26 @@ static acpi_status acpi_deactivate_mem_r
+>  acpi_status acpi_release_memory(acpi_handle handle, struct resource *res,
+>  				u32 level)
+>  {
+> +	acpi_status status;
+> +
+>  	if (!(res->flags & IORESOURCE_MEM))
+>  		return AE_TYPE;
+>
+> -	return acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
+> -				   acpi_deactivate_mem_region, NULL, res, NULL);
+> +	status = acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
+> +				     acpi_deactivate_mem_region, NULL,
+> +				     res, NULL);
+> +	if (ACPI_FAILURE(status))
+> +		return status;
+> +
+> +	/*
+> +	 * Wait for all of the mappings queued up for removal by
+> +	 * acpi_deactivate_mem_region() to actually go away.
+> +	 */
+> +	synchronize_rcu();
+> +	rcu_barrier();
+> +	flush_scheduled_work();
+> +
+> +	return AE_OK;
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_release_memory);
+>
+>
+>
+>
+>
+
+-- 
+Kenneth R. Crudup  Sr. SW Engineer, Scott County Consulting, Orange County CA
