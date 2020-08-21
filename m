@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD03CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E51C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4FF220732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBFAB20702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028793;
-	bh=MFA31vlUz/wgJDKoSVzaaPhDNaXOMuJ6Cmer3jlUlVY=;
+	s=default; t=1598028854;
+	bh=1v4KHE1+YA41Db40668v7f3dhI/gEuZHXs9BUxbBK0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=elR9K9aWnkfLVb6X6DXVDtEf9rmpTUiFzaQRiF6yhIPxBY8hNy4yWPUWBdVQVkeUQ
-	 4dZ6CmLKLyBEa5+5hXtHRpuTvKuUchDYIiPiYP2k6zJwClsFkpMOi8FkI+XBNtXn/u
-	 NyYT/5mjJ3Kwd3Tp5S9sgrmui1BqK6jvrSEDp7bs=
+	b=OL1BzR6m9p7nKbx598T12+yvoTsCdlh8Qa6ycaAV4hXnTIwA3hL/iOQ69zFI1CuGG
+	 bs1frUIAEYEHnIFceeAOOGMwjtEmDImPwX4BJmpYXQL750Kjm9JV4rAArWlp7HloXD
+	 sBo4E1w6zPsBHVozngTob3dPydoNm4GvNi6Yq1To=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbgHUQxH (ORCPT
+        id S1728084AbgHUQyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:53:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50060 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbgHUQTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:19:47 -0400
+        id S1728312AbgHUQTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:19:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81C2B22B40;
-        Fri, 21 Aug 2020 16:18:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C95CD22D6E;
+        Fri, 21 Aug 2020 16:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026736;
-        bh=MFA31vlUz/wgJDKoSVzaaPhDNaXOMuJ6Cmer3jlUlVY=;
+        s=default; t=1598026733;
+        bh=1v4KHE1+YA41Db40668v7f3dhI/gEuZHXs9BUxbBK0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kTa3La6Ve09bn8hDgTusQkp7Q8yJ8/e2v0nXTZWA15BZX37U66GePVdar5uKJDbpw
-         70ofezOjOlRXlYrLbaVBe4CuoFrbPlzrMUlq2sHcG+Of2GzWRqxRR5V28cd4bPIlz6
-         qSUyrATVZyS4pxVx2eYdtOSip55wXM3787kiZ7jo=
+        b=IIbhi5t7GAxSlIW9deowyFcOn0xJAlU8i6kOxh2vySfP+Velrx0Q8B2sba2hQq1hP
+         CB5Qbw2B24LWAUNTR6aYVK3hLzXtf2B7ly9p5ps8Nz403v37pHZGO743UxAAuFTQ2o
+         gooaqq/2o8p/5Y1hKhAJ/ulbcxnkxmcU5KlW3CDc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@suse.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 38/38] EDAC/ie31200: Fallback if host bridge device is already initialized
-Date:   Fri, 21 Aug 2020 12:18:07 -0400
-Message-Id: <20200821161807.348600-38-sashal@kernel.org>
+Cc:     Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 36/38] ceph: fix potential mdsc use-after-free crash
+Date:   Fri, 21 Aug 2020 12:18:05 -0400
+Message-Id: <20200821161807.348600-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
 References: <20200821161807.348600-1-sashal@kernel.org>
@@ -61,125 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Baron <jbaron@akamai.com>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit 709ed1bcef12398ac1a35c149f3e582db04456c2 ]
+[ Upstream commit fa9967734227b44acb1b6918033f9122dc7825b9 ]
 
-The Intel uncore driver may claim some of the pci ids from ie31200 which
-means that the ie31200 edac driver will not initialize them as part of
-pci_register_driver().
+Make sure the delayed work stopped before releasing the resources.
 
-Let's add a fallback for this case to 'pci_get_device()' to get a
-reference on the device such that it can still be configured. This is
-similar in approach to other edac drivers.
+cancel_delayed_work_sync() will only guarantee that the work finishes
+executing if the work is already in the ->worklist.  That means after
+the cancel_delayed_work_sync() returns, it will leave the work requeued
+if it was rearmed at the end. That can lead to a use after free once the
+work struct is freed.
 
-Signed-off-by: Jason Baron <jbaron@akamai.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/r/1594923911-10885-1-git-send-email-jbaron@akamai.com
+Fix it by flushing the delayed work instead of trying to cancel it, and
+ensure that the work doesn't rearm if the mdsc is stopping.
+
+URL: https://tracker.ceph.com/issues/46293
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/ie31200_edac.c | 50 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 47 insertions(+), 3 deletions(-)
+ fs/ceph/mds_client.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-index aac9b9b360b80..9e4781a807cfa 100644
---- a/drivers/edac/ie31200_edac.c
-+++ b/drivers/edac/ie31200_edac.c
-@@ -147,6 +147,8 @@
- 	(n << (28 + (2 * skl) - PAGE_SHIFT))
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index a2e903203bf9f..ff2022b07d1de 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3615,6 +3615,9 @@ static void delayed_work(struct work_struct *work)
+ 	dout("mdsc delayed_work\n");
+ 	ceph_check_delayed_caps(mdsc);
  
- static int nr_channels;
-+static struct pci_dev *mci_pdev;
-+static int ie31200_registered = 1;
- 
- struct ie31200_priv {
- 	void __iomem *window;
-@@ -518,12 +520,16 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
- static int ie31200_init_one(struct pci_dev *pdev,
- 			    const struct pci_device_id *ent)
++	if (mdsc->stopping)
++		return;
++
+ 	mutex_lock(&mdsc->mutex);
+ 	renew_interval = mdsc->mdsmap->m_session_timeout >> 2;
+ 	renew_caps = time_after_eq(jiffies, HZ*renew_interval +
+@@ -3949,7 +3952,16 @@ void ceph_mdsc_force_umount(struct ceph_mds_client *mdsc)
+ static void ceph_mdsc_stop(struct ceph_mds_client *mdsc)
  {
--	edac_dbg(0, "MC:\n");
-+	int rc;
- 
-+	edac_dbg(0, "MC:\n");
- 	if (pci_enable_device(pdev) < 0)
- 		return -EIO;
-+	rc = ie31200_probe1(pdev, ent->driver_data);
-+	if (rc == 0 && !mci_pdev)
-+		mci_pdev = pci_dev_get(pdev);
- 
--	return ie31200_probe1(pdev, ent->driver_data);
-+	return rc;
- }
- 
- static void ie31200_remove_one(struct pci_dev *pdev)
-@@ -532,6 +538,8 @@ static void ie31200_remove_one(struct pci_dev *pdev)
- 	struct ie31200_priv *priv;
- 
- 	edac_dbg(0, "\n");
-+	pci_dev_put(mci_pdev);
-+	mci_pdev = NULL;
- 	mci = edac_mc_del_mc(&pdev->dev);
- 	if (!mci)
- 		return;
-@@ -583,17 +591,53 @@ static struct pci_driver ie31200_driver = {
- 
- static int __init ie31200_init(void)
- {
-+	int pci_rc, i;
+ 	dout("stop\n");
+-	cancel_delayed_work_sync(&mdsc->delayed_work); /* cancel timer */
++	/*
++	 * Make sure the delayed work stopped before releasing
++	 * the resources.
++	 *
++	 * Because the cancel_delayed_work_sync() will only
++	 * guarantee that the work finishes executing. But the
++	 * delayed work will re-arm itself again after that.
++	 */
++	flush_delayed_work(&mdsc->delayed_work);
 +
- 	edac_dbg(3, "MC:\n");
- 	/* Ensure that the OPSTATE is set correctly for POLL or NMI */
- 	opstate_init();
- 
--	return pci_register_driver(&ie31200_driver);
-+	pci_rc = pci_register_driver(&ie31200_driver);
-+	if (pci_rc < 0)
-+		goto fail0;
-+
-+	if (!mci_pdev) {
-+		ie31200_registered = 0;
-+		for (i = 0; ie31200_pci_tbl[i].vendor != 0; i++) {
-+			mci_pdev = pci_get_device(ie31200_pci_tbl[i].vendor,
-+						  ie31200_pci_tbl[i].device,
-+						  NULL);
-+			if (mci_pdev)
-+				break;
-+		}
-+		if (!mci_pdev) {
-+			edac_dbg(0, "ie31200 pci_get_device fail\n");
-+			pci_rc = -ENODEV;
-+			goto fail1;
-+		}
-+		pci_rc = ie31200_init_one(mci_pdev, &ie31200_pci_tbl[i]);
-+		if (pci_rc < 0) {
-+			edac_dbg(0, "ie31200 init fail\n");
-+			pci_rc = -ENODEV;
-+			goto fail1;
-+		}
-+	}
-+	return 0;
-+
-+fail1:
-+	pci_unregister_driver(&ie31200_driver);
-+fail0:
-+	pci_dev_put(mci_pdev);
-+
-+	return pci_rc;
- }
- 
- static void __exit ie31200_exit(void)
- {
- 	edac_dbg(3, "MC:\n");
- 	pci_unregister_driver(&ie31200_driver);
-+	if (!ie31200_registered)
-+		ie31200_remove_one(mci_pdev);
- }
- 
- module_init(ie31200_init);
+ 	if (mdsc->mdsmap)
+ 		ceph_mdsmap_destroy(mdsc->mdsmap);
+ 	kfree(mdsc->sessions);
 -- 
 2.25.1
 
