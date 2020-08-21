@@ -2,118 +2,140 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UPPERCASE_75_100 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3138C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 23:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ECAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 23:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C78422076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 23:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598052100;
-	bh=QzsBSM5u7JGxRu/ciLFY8y7akMNJdP69NV9xh2R8jvc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pmvRAjQMxCe8xqlYOudcIU+QqI9lQNxdD/dGbHXfXO8loKJhijf8D9UxC5ZBX7wK8
-	 Yl+LoozxCy1LKYEBL6FY5VWgls3Ztn3+r8ikdiKYfGAQ8fPk8vLK4/Ta0mJDUhk0SB
-	 I/YlTTXB8CFfRHNAY+opKxinQPpKx6O0MMYeOGK8=
+	by mail.kernel.org (Postfix) with ESMTP id 121DF207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 23:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgHUXVj (ORCPT
+        id S1726871AbgHUXYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 19:21:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbgHUXVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 19:21:37 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FBDB20738;
-        Fri, 21 Aug 2020 23:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598052096;
-        bh=QzsBSM5u7JGxRu/ciLFY8y7akMNJdP69NV9xh2R8jvc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=D3PNG0sdPSD3mPcp20plSlrktFCtDBHymfxjoAkCJTF0xWbhYdG9I8/LK5zKQmOfc
-         aVNBWa+C6CggUUGGV+olsDq6o9MmoD5h9q1OcDoDl3tuTi6/L4uwG/WzHeo5ThisZB
-         bgh7ZNG+YssW/9/xO4xyBm7lxev6px6GfWmnJzfw=
-Date:   Fri, 21 Aug 2020 16:21:34 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Jason Gunthorpe <jgg@mellanox.com>, Jia He <justin.he@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Zhen Lei <thunder.leizhen@huawei.com>
-Subject: Re: [PATCH v4 00/23] device-dax: Support sub-dividing soft-reserved
- ranges
-Message-Id: <20200821162134.97d551c6fe45b489992841a8@linux-foundation.org>
-In-Reply-To: <CAPcyv4j8-5nWU5GPDBoFicwR84qM=hWRtd78DkcCg4PW-8i6Vg@mail.gmail.com>
-References: <159643094279.4062302.17779410714418721328.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <c59111f9-7c94-8b9e-2b8c-4cb96b9aa848@redhat.com>
-        <CAPcyv4j8-5nWU5GPDBoFicwR84qM=hWRtd78DkcCg4PW-8i6Vg@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 21 Aug 2020 19:24:09 -0400
+Received: from smtprelay0023.hostedemail.com ([216.40.44.23]:40982 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726856AbgHUXYG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 19:24:06 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 0766F181D341E;
+        Fri, 21 Aug 2020 23:24:05 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: game49_02002042703d
+X-Filterd-Recvd-Size: 5177
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 21 Aug 2020 23:24:03 +0000 (UTC)
+Message-ID: <32801506f274e046e329da069839ff75443b2b78.camel@perches.com>
+Subject: Re: [PATCH] vdpa/mlx5: Avoid warnings about shifts on 32-bit
+ platforms
+From:   Joe Perches <joe@perches.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, Eli Cohen <eli@mellanox.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Date:   Fri, 21 Aug 2020 16:24:02 -0700
+In-Reply-To: <1975c0a0-c19a-c91e-dc10-2918061cc4e7@infradead.org>
+References: <20200821225018.940798-1-natechancellor@gmail.com>
+         <1975c0a0-c19a-c91e-dc10-2918061cc4e7@infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 18:53:57 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+On Fri, 2020-08-21 at 16:13 -0700, Randy Dunlap wrote:
+> On 8/21/20 3:50 PM, Nathan Chancellor wrote:
+> > Clang warns several times when building for 32-bit ARM along the lines
+> > of:
 
-> > I think I am missing some important pieces. Bear with me.
-> 
-> No worries, also bear with me, I'm going to be offline intermittently
-> until at least mid-September. Hopefully Joao and/or Vishal can jump in
-> on this discussion.
+The defines are quite horrible to read.
+Maybe:
+---
+ drivers/vdpa/mlx5/net/mlx5_vnet.c | 61 +++++++++++++++++++++++++++-----
+-------
+ 1 file changed, 43 insertions(+), 18 deletions(-)
 
-Ordinarily I'd prefer a refresh&resend for 2+ week-old series such as
-this.
+diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+index 9df69d5efe8c..62b6eec713b2 100644
+--- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
++++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+@@ -15,24 +15,49 @@
+ 
+ #define to_mvdev(__vdev) container_of((__vdev), struct mlx5_vdpa_dev, vdev)
+ 
+-#define VALID_FEATURES_MASK                                                                        \
+-	(BIT(VIRTIO_NET_F_CSUM) | BIT(VIRTIO_NET_F_GUEST_CSUM) |                                   \
+-	 BIT(VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) | BIT(VIRTIO_NET_F_MTU) | BIT(VIRTIO_NET_F_MAC) |   \
+-	 BIT(VIRTIO_NET_F_GUEST_TSO4) | BIT(VIRTIO_NET_F_GUEST_TSO6) |                             \
+-	 BIT(VIRTIO_NET_F_GUEST_ECN) | BIT(VIRTIO_NET_F_GUEST_UFO) | BIT(VIRTIO_NET_F_HOST_TSO4) | \
+-	 BIT(VIRTIO_NET_F_HOST_TSO6) | BIT(VIRTIO_NET_F_HOST_ECN) | BIT(VIRTIO_NET_F_HOST_UFO) |   \
+-	 BIT(VIRTIO_NET_F_MRG_RXBUF) | BIT(VIRTIO_NET_F_STATUS) | BIT(VIRTIO_NET_F_CTRL_VQ) |      \
+-	 BIT(VIRTIO_NET_F_CTRL_RX) | BIT(VIRTIO_NET_F_CTRL_VLAN) |                                 \
+-	 BIT(VIRTIO_NET_F_CTRL_RX_EXTRA) | BIT(VIRTIO_NET_F_GUEST_ANNOUNCE) |                      \
+-	 BIT(VIRTIO_NET_F_MQ) | BIT(VIRTIO_NET_F_CTRL_MAC_ADDR) | BIT(VIRTIO_NET_F_HASH_REPORT) |  \
+-	 BIT(VIRTIO_NET_F_RSS) | BIT(VIRTIO_NET_F_RSC_EXT) | BIT(VIRTIO_NET_F_STANDBY) |           \
+-	 BIT(VIRTIO_NET_F_SPEED_DUPLEX) | BIT(VIRTIO_F_NOTIFY_ON_EMPTY) |                          \
+-	 BIT(VIRTIO_F_ANY_LAYOUT) | BIT(VIRTIO_F_VERSION_1) | BIT(VIRTIO_F_ACCESS_PLATFORM) |      \
+-	 BIT(VIRTIO_F_RING_PACKED) | BIT(VIRTIO_F_ORDER_PLATFORM) | BIT(VIRTIO_F_SR_IOV))
+-
+-#define VALID_STATUS_MASK                                                                          \
+-	(VIRTIO_CONFIG_S_ACKNOWLEDGE | VIRTIO_CONFIG_S_DRIVER | VIRTIO_CONFIG_S_DRIVER_OK |        \
+-	 VIRTIO_CONFIG_S_FEATURES_OK | VIRTIO_CONFIG_S_NEEDS_RESET | VIRTIO_CONFIG_S_FAILED)
++#define VALID_FEATURES_MASK						\
++	(BIT_ULL(VIRTIO_NET_F_CSUM) |					\
++	 BIT_ULL(VIRTIO_NET_F_GUEST_CSUM) |				\
++	 BIT_ULL(VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) |			\
++	 BIT_ULL(VIRTIO_NET_F_MTU) |					\
++	 BIT_ULL(VIRTIO_NET_F_MAC) |					\
++	 BIT_ULL(VIRTIO_NET_F_GUEST_TSO4) |				\
++	 BIT_ULL(VIRTIO_NET_F_GUEST_TSO6) |				\
++	 BIT_ULL(VIRTIO_NET_F_GUEST_ECN) |				\
++	 BIT_ULL(VIRTIO_NET_F_GUEST_UFO) |				\
++	 BIT_ULL(VIRTIO_NET_F_HOST_TSO4) |				\
++	 BIT_ULL(VIRTIO_NET_F_HOST_TSO6) |				\
++	 BIT_ULL(VIRTIO_NET_F_HOST_ECN) |				\
++	 BIT_ULL(VIRTIO_NET_F_HOST_UFO) |				\
++	 BIT_ULL(VIRTIO_NET_F_MRG_RXBUF) |				\
++	 BIT_ULL(VIRTIO_NET_F_STATUS) |					\
++	 BIT_ULL(VIRTIO_NET_F_CTRL_VQ) |				\
++	 BIT_ULL(VIRTIO_NET_F_CTRL_RX) |				\
++	 BIT_ULL(VIRTIO_NET_F_CTRL_VLAN) |				\
++	 BIT_ULL(VIRTIO_NET_F_CTRL_RX_EXTRA) |				\
++	 BIT_ULL(VIRTIO_NET_F_GUEST_ANNOUNCE) |				\
++	 BIT_ULL(VIRTIO_NET_F_MQ) |					\
++	 BIT_ULL(VIRTIO_NET_F_CTRL_MAC_ADDR) |				\
++	 BIT_ULL(VIRTIO_NET_F_HASH_REPORT) |				\
++	 BIT_ULL(VIRTIO_NET_F_RSS) |					\
++	 BIT_ULL(VIRTIO_NET_F_RSC_EXT) |				\
++	 BIT_ULL(VIRTIO_NET_F_STANDBY) |				\
++	 BIT_ULL(VIRTIO_NET_F_SPEED_DUPLEX) |				\
++	 BIT_ULL(VIRTIO_F_NOTIFY_ON_EMPTY) |				\
++	 BIT_ULL(VIRTIO_F_ANY_LAYOUT) |					\
++	 BIT_ULL(VIRTIO_F_VERSION_1) |					\
++	 BIT_ULL(VIRTIO_F_ACCESS_PLATFORM) |				\
++	 BIT_ULL(VIRTIO_F_RING_PACKED) |				\
++	 BIT_ULL(VIRTIO_F_ORDER_PLATFORM) |				\
++	 BIT_ULL(VIRTIO_F_SR_IOV))
++
++#define VALID_STATUS_MASK						\
++	(VIRTIO_CONFIG_S_ACKNOWLEDGE |					\
++	 VIRTIO_CONFIG_S_DRIVER |					\
++	 VIRTIO_CONFIG_S_DRIVER_OK |					\
++	 VIRTIO_CONFIG_S_FEATURES_OK |					\
++	 VIRTIO_CONFIG_S_NEEDS_RESET |					\
++	 VIRTIO_CONFIG_S_FAILED)
+ 
+ struct mlx5_vdpa_net_resources {
+ 	u32 tisn;
 
-But given that v4 all applies OK and that Dan has pending outages, I'll
-scoop up this version, even though at least one change has been suggested.
-
-Also, this series has killed Zhen Lei's little cleanup
-(http://lkml.kernel.org/r/20200817065926.2239-1-thunder.leizhen@huawei.com).
-I don't think the affected code was moved elsewhere, so I'll drop that
-patch.
 
