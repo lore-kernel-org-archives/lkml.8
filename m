@@ -2,105 +2,93 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149D1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA5432078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598011454;
-	bh=29KlUcOwPwkaFaYaDe62OBwnN7uGZw8LVRWEmWhLjm0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EKMgEznvySiMlxPA3DPO+5jHf4mMwPYPzp2Uvzlvmqe5ddTxaXDPN4ThQ6n1wNGbl
-	 zDrrxe3HUZc6slx+VNWGFQbi8iJgUO2wDX5xtEzmY5yoLM5w+yPLUtkz17XEH5rUt8
-	 FVWDOeHg7/+X75E217Q/PXJhe0H9JrXfwJXt9zjw=
+	by mail.kernel.org (Postfix) with ESMTP id C39C92078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgHUMEM (ORCPT
+        id S1727891AbgHUMFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 08:04:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbgHUMEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 08:04:10 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAA6D2078D;
-        Fri, 21 Aug 2020 12:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598011449;
-        bh=29KlUcOwPwkaFaYaDe62OBwnN7uGZw8LVRWEmWhLjm0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uKuHVwuSbH1mCfDDdptxFyuccwyLT8Rg1oq5t0t27/IMoNcHkS+XcLaUf1yK1Mgpj
-         Z7Pstq2ESIAUHKVGHvl8j/Hs9n+shPgwxhzCTztkSXQkF2NPWFWVv1IIrOYzTVTsAV
-         AfUtchbpSwz4xc9mWdKCk/khZIPpS5fzwV32bJsQ=
-Date:   Fri, 21 Aug 2020 13:03:36 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, joel@jms.id.au,
-        bradleyb@fuzziesquirrel.com, robh+dt@kernel.org, arnd@arndb.de
-Subject: Re: [PATCH 4/7] dt-bindings: fsi: fsi2spi: Document new restricted
- property
-Message-ID: <20200821120336.GE4870@sirena.org.uk>
-References: <20200820170228.42053-1-eajames@linux.ibm.com>
- <20200820170228.42053-5-eajames@linux.ibm.com>
- <20200820171430.GH5854@sirena.org.uk>
- <b9fbd669-3573-a0c9-18d8-6c0c7926625a@linux.ibm.com>
+        Fri, 21 Aug 2020 08:05:04 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40712 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgHUMFA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 08:05:00 -0400
+Received: by mail-oi1-f194.google.com with SMTP id u24so1293931oic.7;
+        Fri, 21 Aug 2020 05:04:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P1HeEvz2wI1FOpRCVf2LfgURAoLuEdudBP1iVF0BOkU=;
+        b=SgyFr+usmSXelf51B2NkMUawWpK1exeGDPeyGt80VxsZgiQzVutCIkQpuOF8dCtELh
+         G/5pcxlpkGIrbeVcFg9tYoA9baqMeN0qkOzGVecLYs3cdvMyQTvphmx2/BlUB2BJ8zpc
+         J4HO4VjzwQ7Uu1sSIJUUa8iNRouGkjuH7cmwB8gjkLcZBZHu0a6fPp+HoIaPW4oQc1Kp
+         cX4szgw9ZZ1+MdfXJJ3z7qqU8Ycls6PpQzC6sWmcea+QoaZocDgptBosl4+7ZjBsLz/f
+         +Ftj4MhrVCBTs38Iq723R8jZFoNtVvgtqfGF8QXfWGeYsgNR6A3QGIb8Pkpx6K2+QgXN
+         q7hQ==
+X-Gm-Message-State: AOAM532P9eF/0EgPUpIjQkCJOTbkdCkVtOIWUXUnMu0TOUQ9HqP83gzt
+        kFwdMjXxFtM+cqukELDPaz65qGjuYVPr5pLQG/Dz3Ksa
+X-Google-Smtp-Source: ABdhPJw5Y6tFxNr/+/JFx28hKhjq7S4wmnRiKJapNiD/bD3qDlIgDmcckQH7DDOWMsrwer6Zd17bG01T/JVwo+X+V5Y=
+X-Received: by 2002:aca:adc4:: with SMTP id w187mr1331706oie.153.1598011499077;
+ Fri, 21 Aug 2020 05:04:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="CGDBiGfvSTbxKZlW"
-Content-Disposition: inline
-In-Reply-To: <b9fbd669-3573-a0c9-18d8-6c0c7926625a@linux.ibm.com>
-X-Cookie: divorce, n:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200814173037.17822-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200814173037.17822-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 21 Aug 2020 14:04:47 +0200
+Message-ID: <CAMuHMdVHOcPMPM4pWpTgzzDYWhgWnzPthcP5husNNEc_cjC2yA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: pci: rcar-pci-ep: Document r8a774a1 and r8a774b1
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 14, 2020 at 7:32 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document the support for R-Car PCIe EP on R8A774A1 and R8A774B1 SoC
+> devices.
+>
+> Also constify "renesas,rcar-gen3-pcie-ep" so that it can be used as
+> fallback compatible string for R-Car Gen3 and RZ/G2 devices as the
+> PCIe module is identical.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
---CGDBiGfvSTbxKZlW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Thu, Aug 20, 2020 at 04:07:41PM -0500, Eddie James wrote:
-> On 8/20/20 12:14 PM, Mark Brown wrote:
-> > On Thu, Aug 20, 2020 at 12:02:25PM -0500, Eddie James wrote:
+Gr{oetje,eeting}s,
 
-> > > Add documentation for the "fsi2spi,restricted" property which indicates
-> > > a controller shouldn't sequence loops and therefore has a smaller
-> > > transfer size.
+                        Geert
 
-> > In what situation might someone set this?  It sounds like a
-> > configuration option rather than a description of the hardware.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> It is a description of the configuration of the hardware. For controllers
-> that are configured to be restricted for security purposes, this property
-> will be set.
-
-The documentation needs to be a *lot* clearer - users need to be able to
-relate this to whatever system configuration this corresponds to.  Right
-now it says that the controller shouldn't sequence loops but there's no
-indication of why this might be.
-
---CGDBiGfvSTbxKZlW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8/uBcACgkQJNaLcl1U
-h9DI4AgAgJsVnzWSnS4PWV1kdy3NYIWrZ7v6ojfSo+askcLL+FZB/NiQPGb6dQDf
-RQtHg8Uk0dDx+hNaOH3WFJJIY/UGRgkppRNhhEf+i3yJzA+L8Xq7xckuEYQHtnPb
-vqliPcXM/Woixlm8dzOx2BzaN+k+HuMu3BDjmLYbNYMuYKoT9TP1Uxq8mqYfTLDt
-0J/9jA+d2sVbbsd7I77MYOuABaXGz1UeseiUMuj7/78ttzG0MTdlNrhpqkqThC3M
-VB8XDnwevNXWlFA4H8/ggf8NvxLHhzRK4Lr3brY+qWsVfzr7PpxT8nIOOuwDTAyg
-IRyDkLEIcQs+uVAqgKTxPyJpEjGlzg==
-=7OOQ
------END PGP SIGNATURE-----
-
---CGDBiGfvSTbxKZlW--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
