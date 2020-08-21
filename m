@@ -6,92 +6,99 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBD4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB14C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCC0A20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40ED220738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgHURnF (ORCPT
+        id S1727110AbgHURnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:43:05 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:48108 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbgHURm7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 13:42:59 -0400
-Received: from 89-64-88-37.dynamic.chello.pl (89.64.88.37) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.459)
- id ca2fab7cdb976c2f; Fri, 21 Aug 2020 19:42:56 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>,
-        "Kenneth R. Crudup" <kenny@panix.com>
-Subject: [PATCH] ACPI: OSL: Prevent acpi_release_memory() from returning too early
-Date:   Fri, 21 Aug 2020 19:42:55 +0200
-Message-ID: <6142241.0H6QnnlUA7@kreacher>
+        Fri, 21 Aug 2020 13:43:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:35186 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbgHURnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 13:43:40 -0400
+IronPort-SDR: vCFLoHLDoJkT2duxmM05cDEItPNMcaip8MbdINIY7rTRGxLZn1Fjhu1v65vTzeDomWE/7WCFRg
+ n7gnWAi+wTzw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="135656993"
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="135656993"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 10:43:39 -0700
+IronPort-SDR: 7SEMlRDQ/ABQdv+zxmFjOCitI74ax7knxTslSfe7ysIrdVygKow79rzQX+bCjIrk2yxlz7bmeP
+ qR1yRowG5uAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="330105848"
+Received: from jjakacki-mobl.ger.corp.intel.com (HELO localhost) ([10.252.52.112])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Aug 2020 10:43:38 -0700
+Date:   Fri, 21 Aug 2020 20:43:37 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Coly Li <colyli@suse.de>
+Cc:     keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: Re: [PATCH v3] docs: trusted-encrypted.rst: update parameters for
+ command examples
+Message-ID: <20200821174337.GC3559@linux.intel.com>
+References: <20200818170002.38145-1-colyli@suse.de>
+ <20200819210234.GB9942@linux.intel.com>
+ <20200819210457.GC9942@linux.intel.com>
+ <1a54fdde-6067-1dd1-8459-079023be9a82@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1a54fdde-6067-1dd1-8459-079023be9a82@suse.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Fri, Aug 21, 2020 at 09:50:16PM +0800, Coly Li wrote:
+> On 2020/8/20 05:04, Jarkko Sakkinen wrote:
+> > On Thu, Aug 20, 2020 at 12:02:38AM +0300, Jarkko Sakkinen wrote:
+> >> On Wed, Aug 19, 2020 at 01:00:02AM +0800, Coly Li wrote:
+> >>> The parameters in command examples for tpm2_createprimary and
+> >>> tpm2_evictcontrol are outdated, people (like me) are not able to create
+> >>> trusted key by these command examples.
+> >>>
+> >>> This patch updates the parameters of command example tpm2_createprimary
+> >>> and tpm2_evictcontrol in trusted-encrypted.rst. With Linux kernel v5.8
+> >>> and tpm2-tools-4.1, people can create a trusted key by following the
+> >>> examples in this document.
+> >>>
+> >>> Signed-off-by: Coly Li <colyli@suse.de>
+> >>> Cc: Dan Williams <dan.j.williams@intel.com>
+> >>> Cc: James Bottomley <jejb@linux.ibm.com>
+> >>> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> >>> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> >>> Cc: Stefan Berger <stefanb@linux.ibm.com>
+> >>
+> >> OK, now it is clear. Thank you.
+> >>
+> >> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > 
+> > There is one problem though.
+> > 
+> > You have missed to add linux-doc and linux-integrity maintainers and
+> > also their maintainers from the CC list. You need to resend this patch
+> > with that information. Use get_maintainers.pl or look from the file
+> > called MAINTAINERS.
+> 
+> Copied. Some of the maintainers are in Cc list already, I add rested in
+> v4 patch, and Cc linux-doc and linux-integrity mailing lists.
 
-After commit 1757659d022b ("ACPI: OSL: Implement deferred unmapping
-of ACPI memory") in some cases acpi_release_memory() may return
-before the target memory mappings actually go away, because they
-are released asynchronously now.
+Please do.
 
-Prevent it from returning prematurely by making it wait for the next
-RCU grace period to elapse, for all of the RCU callbacks to complete
-and for all of the scheduled work items to be flushed before
-returning.
+> Thanks.
+> 
+> Coly Li
 
-Fixes: 1757659d022b ("ACPI: OSL: Implement deferred unmapping of ACPI memory")
-Reported-by: Kenneth R. Crudup <kenny@panix.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/osl.c |   19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
-
-Index: linux-pm/drivers/acpi/osl.c
-===================================================================
---- linux-pm.orig/drivers/acpi/osl.c
-+++ linux-pm/drivers/acpi/osl.c
-@@ -1575,11 +1575,26 @@ static acpi_status acpi_deactivate_mem_r
- acpi_status acpi_release_memory(acpi_handle handle, struct resource *res,
- 				u32 level)
- {
-+	acpi_status status;
-+
- 	if (!(res->flags & IORESOURCE_MEM))
- 		return AE_TYPE;
- 
--	return acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
--				   acpi_deactivate_mem_region, NULL, res, NULL);
-+	status = acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
-+				     acpi_deactivate_mem_region, NULL,
-+				     res, NULL);
-+	if (ACPI_FAILURE(status))
-+		return status;
-+
-+	/*
-+	 * Wait for all of the mappings queued up for removal by
-+	 * acpi_deactivate_mem_region() to actually go away.
-+	 */
-+	synchronize_rcu();
-+	rcu_barrier();
-+	flush_scheduled_work();
-+
-+	return AE_OK;
- }
- EXPORT_SYMBOL_GPL(acpi_release_memory);
- 
-
-
-
+BR,
+/Jarkko
