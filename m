@@ -2,214 +2,183 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD87CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08944C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9E9F20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D303820724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="OLNZ2C+h"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ma8DyBTi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgHUMU6 (ORCPT
+        id S1727884AbgHUMVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 08:20:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52322 "EHLO
+        Fri, 21 Aug 2020 08:21:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728253AbgHUMUA (ORCPT
+        with ESMTP id S1728344AbgHUMUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 08:20:00 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 045AAC061386
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 05:19:57 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w14so1620390ljj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 05:19:57 -0700 (PDT)
+        Fri, 21 Aug 2020 08:20:07 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B76C061387
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 05:20:06 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id j188so718491vsd.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 05:20:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7lm7viw2YMUXjgsgP6el/CrtyEJ66fPWspB4g27Z+UE=;
-        b=OLNZ2C+hzQWkN05HvaTkNkBWtQBcEfyJDGRYk69lhSrQ0LO5xRhea1eMU+uFFFGfCo
-         QwFok4KZiwuilU/CnFNIz2ZeriSLhDMvF2SR9EjMqSuBx1OFNEAQ7CeaUbOauKutxSTI
-         R1t8RXyh02wQBHbCUM3GatxV04t6/RhjNXuIo=
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=52w1cJUaQ9YanpUGNy0nDzv1xTgiDNv65mHDcwVGT/k=;
+        b=ma8DyBTio5H7kC0GIQ2hYvDq/OC2i1mxC0vGTCsokkwIOce8mzt3dmwWQ2pc7uHqhw
+         GQjt7ejyzZqestweM11fLlNXDcO8dJAf767AZFt9DXZcnqF9FCaUBsu+nP3DBFbWA/8H
+         m9IprTGaVujoL/pcNzqE6hjgEPBKQmEx73Tck=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7lm7viw2YMUXjgsgP6el/CrtyEJ66fPWspB4g27Z+UE=;
-        b=rg1YM5Xgx2/vDHYnLKkeKVKxBong4gktQUpvh0BkxwZeb+4KTle/Iui9MA/kWCLg7J
-         unb5nGaZOZ1mLJRdHLV6Wl1nDim5dpCRqLD6/ZymyZhIrjnO9vWLDTp7whlLnHM4k6FR
-         BwY3ws28MBmHXgD2Wd5+993LKn4faL70fz/NgomRrG/9C2jGeNtebrdCBbmRIW8t5AIc
-         Vbi3LJPUCC1OyzRtP9SHLmjS11UNn5GZ2s2/y8zlEk7vJ9GP0trltp7U0GqKtrX0oZ13
-         UmOrUDiuxUc1uTk0QZHcDyxzQ1k7iH0t/wmjDSCv8iro6hRu99DN8YYidw2aZuFp+c25
-         To6g==
-X-Gm-Message-State: AOAM531Idy8JhySTPGqltaDXosllUoO/m9ceP4fF55abfVQrXkbziMoS
-        sOcDs1Ubp+u5BRm1UBbkHYy3Xw==
-X-Google-Smtp-Source: ABdhPJzRsKTLZwqYP+o27aYkSZiasOfSDYCiGBa3/ktDCA08ZIn/QZNgZm7fZnvFWrNFXtcbYmVu1g==
-X-Received: by 2002:a2e:9b4a:: with SMTP id o10mr1458304ljj.199.1598012393003;
-        Fri, 21 Aug 2020 05:19:53 -0700 (PDT)
-Received: from [172.16.11.132] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id s127sm350943lja.119.2020.08.21.05.19.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 05:19:52 -0700 (PDT)
-Subject: Re: [PATCH] lib: Convert test_printf.c to KUnit
-To:     Petr Mladek <pmladek@suse.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Arpitha Raghunandan <98.arpi@gmail.com>, brendanhiggins@google.com,
-        skhan@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-References: <20200817043028.76502-1-98.arpi@gmail.com>
- <f408efbd-10f7-f1dd-9baa-0f1233cafffc@rasmusvillemoes.dk>
- <20200821113710.GA26290@alley>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <4e26f696-3b50-d781-00fd-7fc6fdc2c3eb@rasmusvillemoes.dk>
-Date:   Fri, 21 Aug 2020 14:19:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=52w1cJUaQ9YanpUGNy0nDzv1xTgiDNv65mHDcwVGT/k=;
+        b=Y+yIgeuQLbqp44Xr2XJ3RFEdmZlbyTNno5ClbzfKZ4UvWh11aUxLGfX+cwJnfO4BRI
+         HUpVIVM8DUjKfvXNfnHVEmdZPhOARE4gnIc+kVykwebbc7Dqej38WtiF2zESqoj6X1rx
+         siEjCLf21A7wJ7svuaWBj9bzx7fAtshoA3N0heMnngmXLyZ0XiqDo7Gzs6PNoO3O0is6
+         q04o+7Rm/KHdSrRBxiwsu3MvXJlcxRsjCO/6+jBOTu3XEE3KUj/z4/StMknUpg+e9AAt
+         1yO4GOeetb4qWXtXHOLZg3heDPojpzbKgDRYjkuXBO59Su5HyR8nigKKLPwMbU8nYXjc
+         Rhjg==
+X-Gm-Message-State: AOAM530cau2j/mAqP8dMgwWTM+4zJlLbEIK+/t1o8yjamy09ebC5VkPG
+        PAmmrDIcGbzxmiNuWSJWIGOpV89Fgm+WXuw3LznTtQ==
+X-Google-Smtp-Source: ABdhPJx5f1sQLnbRNjOhBQQZgrQyMKznEcXj7NlHlGGfOAbWXzvtJyasjXRpR5CO9AqugLoE5SfHzGUP5k61w0/lFFA=
+X-Received: by 2002:a05:6102:1ca:: with SMTP id s10mr1289867vsq.14.1598012403767;
+ Fri, 21 Aug 2020 05:20:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200821113710.GA26290@alley>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
+ <20200820170951.v4.3.I066d89f39023956c47fb0a42edf196b3950ffbf7@changeid>
+ <20200820102347.15d2f610@oasis.local.home> <CANMq1KCoEZVj=sjxCqBhqLZKBab57+82=Rk_LN7fc3aCuNHMUw@mail.gmail.com>
+ <20200820203601.4f70bf98@oasis.local.home> <CANMq1KAAgXG9MKMZ_D9zYFV-j0oVreA_AeSw-8FoyJgZ9eWQpg@mail.gmail.com>
+ <20200820215701.667f02b2@oasis.local.home> <CANMq1KCpV+RKCqHsK-=Xeb+Vq28qdnBVF51rcga7m9-xjqNSCg@mail.gmail.com>
+ <20200820230105.1f9651b7@oasis.local.home>
+In-Reply-To: <20200820230105.1f9651b7@oasis.local.home>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 21 Aug 2020 20:19:52 +0800
+Message-ID: <CANMq1KAuB4fCg50=G9ed_ALaD7O8=3PWQQMZNit52As-r7to4Q@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/08/2020 13.37, Petr Mladek wrote:
-> On Mon 2020-08-17 09:06:32, Rasmus Villemoes wrote:
->> On 17/08/2020 06.30, Arpitha Raghunandan wrote:
->>> Converts test lib/test_printf.c to KUnit.
->>> More information about KUnit can be found at
->>> https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html.
->>> KUnit provides a common framework for unit tests in the kernel.
->>
->> So I can continue to build a kernel with some appropriate CONFIG set to
->> y, boot it under virt-me, run dmesg and see if I broke printf? That's
->> what I do now, and I don't want to have to start using some enterprisy
->> framework.
-> 
-> I had the same concern. I have tried it.
+On Fri, Aug 21, 2020 at 11:01 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Fri, 21 Aug 2020 10:39:02 +0800
+> Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> > I'm not sure how that helps? I mean, the use case you have in mind is
+> > somebody reusing a distro/random config and not being able to use
+> > trace_printk, right? If that config has CONFIG_DISABLE_TRACE_PRINTK=y,
+> > then the developer will still need to flip that back.
+> >
+> > Note that the option I'm added has default=y (_allow_ trace_printk),
+> > so I don't think default y or default n really matters?
+>
+> Ideally, the production system doesn't have it set. It only sets it to
+> make sure that it's clean before sending out. But then it can add it
+> back before production. Yeah, it's pretty much cutting hairs between
+> the two. I don't like either one.
+>
+> Really, if you are worried about this, just add your patch to your
+> local tree. I'm not sure this is something that can be fixed upstream.
+>
+> Another idea is to add something like below, and build with:
+>
+>  make CHECK_TRACE_PRINT=1
+>
+> This way it is a build command line option that causes the build to
+> fail if trace_printk() is added.
+>
+> This way production systems can add this to make sure their kernels are
+> free of trace_printk() but it doesn't affect the config that is used.
 
-Thanks for doing that and reporting the results.
+(for some reason I missed this reply in the thread ,-P)
 
->     #> modprobe printf_kunit
-> 
-> produced the following in dmesg:
-> 
-> [   60.931175] printf_kunit: module verification failed: signature and/or required key missing - tainting kernel
-> [   60.942209] TAP version 14
-> [   60.945197]     # Subtest: printf-kunit-test
-> [   60.945200]     1..1
-> [   60.951092]     ok 1 - selftest
-> [   60.953414] ok 1 - printf-kunit-test
-> 
-> I could live with the above. Then I tried to break a test by the following change:
-> 
-> 
-> diff --git a/lib/printf_kunit.c b/lib/printf_kunit.c
-> index 68ac5f9b8d28..1689dadd70a3 100644
-> --- a/lib/printf_kunit.c
-> +++ b/lib/printf_kunit.c
-> @@ -395,7 +395,7 @@ ip4(struct kunit *kunittest)
->         sa.sin_port = cpu_to_be16(12345);
->         sa.sin_addr.s_addr = cpu_to_be32(0x7f000001);
->  
-> -       test(kunittest, "127.000.000.001|127.0.0.1", "%pi4|%pI4", &sa.sin_addr, &sa.sin_addr);
-> +       test(kunittest, "127-000.000.001|127.0.0.1", "%pi4|%pI4", &sa.sin_addr, &sa.sin_addr);
->         test(kunittest, "127.000.000.001|127.0.0.1", "%piS|%pIS", &sa, &sa);
->         sa.sin_addr.s_addr = cpu_to_be32(0x01020304);
->         test(kunittest, "001.002.003.004:12345|1.2.3.4:12345", "%piSp|%pISp", &sa, &sa);
-> 
-> 
-> It produced::
-> 
-> [   56.786858] TAP version 14
-> [   56.787493]     # Subtest: printf-kunit-test
-> [   56.787494]     1..1
-> [   56.788612]     # selftest: EXPECTATION FAILED at lib/printf_kunit.c:76
->                    Expected memcmp(test_buffer, expect, written) == 0, but
->                        memcmp(test_buffer, expect, written) == 1
->                        0 == 0
->                vsnprintf(buf, 256, "%pi4|%pI4", ...) wrote '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
-> [   56.795433]     # selftest: EXPECTATION FAILED at lib/printf_kunit.c:76
->                    Expected memcmp(test_buffer, expect, written) == 0, but
->                        memcmp(test_buffer, expect, written) == 1
->                        0 == 0
->                vsnprintf(buf, 20, "%pi4|%pI4", ...) wrote '127.000.000.001|127', expected '127-000.000.001|127'
-> [   56.800909]     # selftest: EXPECTATION FAILED at lib/printf_kunit.c:108
->                    Expected memcmp(p, expect, elen+1) == 0, but
->                        memcmp(p, expect, elen+1) == 1
->                        0 == 0
->                kvasprintf(..., "%pi4|%pI4", ...) returned '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
-> [   56.806497]     not ok 1 - selftest
-> [   56.806497] not ok 1 - printf-kunit-test
-> 
-> while the original code would have written the following error messages:
-> 
-> [   95.859225] test_printf: loaded.
-> [   95.860031] test_printf: vsnprintf(buf, 256, "%pi4|%pI4", ...) wrote '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
-> [   95.862630] test_printf: vsnprintf(buf, 6, "%pi4|%pI4", ...) wrote '127.0', expected '127-0'
-> [   95.864118] test_printf: kvasprintf(..., "%pi4|%pI4", ...) returned '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
-> [   95.866589] test_printf: failed 3 out of 388 tests
-> 
-> 
-> Even the error output is acceptable for me.
+Thanks, that's quite a nice idea, I'll try it out (not sure if we
+still want that build_assert trick). We'd lose the automatic detection
+of issues through randconfig kernel test robot, but hopefully if
+enough distros enable it they'll start filing reports about issues.
 
-Urgh. Yeah, perhaps, but the original is much more readable; it really
-doesn't matter that a memcmp() fails to compare equal to 0, that's
-merely how we figured out that the output was wrong.
+And maybe we can use that in combination with a checkpatch.pl check.
 
+(it turns out I'm having a hard time finding a good spot for this test
+in our Chrome OS build infra, so an upstream-friendly solution would
+be much better ,-P)
 
-I am just curious why
-> the 2nd failure is different:
-> 
->    + original code: vsnprintf(buf, 6, "%pi4|%pI4", ...) wrote '127.0', expected '127-0'
->    + kunit code: vsnprintf(buf, 20, "%pi4|%pI4", ...) wrote '127.000.000.001|127', expected '127-000.000.001|127'   
-
-That's by design. If you read the code, there's a comment that says we
-do every test case four times: With a buffer that is large enough to do
-the whole output, with a 0 size buffer (that's essential to allowing
-kasprintf to know how much to allocate),  with kvasprintf - but also
-with a buffer size that's guaranteed to ensure the output gets truncated
-somewhere. And that size is chosen randomly - I guess one could test
-every single buffer size between 0 and elen+1, but that's overkill.
-
-Now I should probably have made the tests deterministic in the sense of
-getting a random seed for a PRNG, printing that seed and allowing a
-module parameter to set the seed in order to repeat the exact same
-tests. But so far I haven't really seen any bugs caught by test_printf
-which would have been easier to fix with that.
-
-The reason I added that "chop it off somewhere randomly" was, IIRC, due
-to some %p extensions that behaved rather weirdly depending on whether
-there was enough room left or not, but I fixed those bugs before
-creating test_printf (and they were in turn the reason for creating
-test_printf). See for example 41416f2330, where %pE at the beginning of
-the format string would work ok, but if anything preceded it and the
-buffer was too small we'd crash.
-
-> 
-> I am also a bit scared by the following note at
-> https://www.kernel.org/doc/html/latest/dev-tools/kunit/start.html#running-tests-without-the-kunit-wrapper
-> 
->    "KUnit is not designed for use in a production system, and it’s
->    possible that tests may reduce the stability or security of the
->    system."
-> 
-> What does it mean thay it might reduce stability or security?
-> Is it because the tests might cause problems?
-> Or because the kunit framework modifies functionality of the running
-> system all the time?
-
-Hm, yeah, that sounds a little frightening.
-
-Rasmus
+>
+> -- Steve
+>
+> [ Not even compiled tested! ]
+>
+> diff --git a/Makefile b/Makefile
+> index 2057c92a6205..5714a738879d 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -91,6 +91,13 @@ else
+>    Q = @
+>  endif
+>
+> +ifeq ("$(origin CHECK_TRACE_PRINTK)", "command line")
+> +  KBUILD_NO_TRACE_PRINTK = $(NO_TRACE_PRINTK)
+> +endif
+> +ifndef KBUILD_NO_TRACE_PRINTK
+> +  KBUILD_NO_TRACE_PRINTK = 0
+> +endif
+> +
+>  # If the user is running make -s (silent mode), suppress echoing of
+>  # commands
+>
+> @@ -839,6 +846,10 @@ KBUILD_AFLAGS      += -gz=zlib
+>  KBUILD_LDFLAGS += --compress-debug-sections=zlib
+>  endif
+>
+> +ifeq ($(KBUILD_NO_TRACE_PRINTK),1)
+> +KBUILD_CFLAGS += -DNO_TRACE_PRINTK
+> +endif
+> +
+>  KBUILD_CFLAGS += $(DEBUG_CFLAGS)
+>  export DEBUG_CFLAGS
+>
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 500def620d8f..bee432547d26 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -680,11 +680,14 @@ extern void tracing_stop(void);
+>  static inline __printf(1, 2)
+>  void ____trace_printk_check_format(const char *fmt, ...)
+>  {
+> +#ifdef NO_TRACE_PRINTK
+> +       extern void __no_trace_printk_on_build(void);
+> +       __no_trace_printk_on_build();
+> +#endif
+>  }
+>  #define __trace_printk_check_format(fmt, args...)                      \
+>  do {                                                                   \
+> -       if (0)                                                          \
+> -               ____trace_printk_check_format(fmt, ##args);             \
+> +       ____trace_printk_check_format(fmt, ##args);                     \
+>  } while (0)
+>
+>  /**
