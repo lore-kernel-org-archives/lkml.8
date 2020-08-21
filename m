@@ -4,157 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF5FC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B436C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3773A20639
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7290C20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:27:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgHUIXB (ORCPT
+        id S1726993AbgHUI13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:23:01 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:39326 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgHUIXA (ORCPT
+        Fri, 21 Aug 2020 04:27:29 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:65375 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgHUI12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:23:00 -0400
-IronPort-SDR: Sy5QkxelKPra9kgqZ6XyrSLWNWtERVhivdWM6P4neqKCf8S2SRGamuHainYqf1ULdFYLCidyue
- QJqrl4IC+9PDqn43v9azRtH2BwBstXqHryHvT81zoqNcD1ELPIlWhnrn9+8RgTf41cdSAoeUDU
- UdH5YiO9oWpoUl4L8319jzPwfigSIaAamLSysZdy/l/Y4mRGzqNYbCf0g6V8twMjoIpR56nZZG
- 02E5xwBmvj16kmWcIk67BC42X4nFgZp5sonF9q23xWivurxKuqdml5XwjhpVMN79wOPz5vzAsr
- X84=
-X-IronPort-AV: E=Sophos;i="5.76,335,1592899200"; 
-   d="scan'208";a="52116004"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 21 Aug 2020 00:22:59 -0800
-IronPort-SDR: mOYjkXWjHE3zR6aa97XmiX6DyhHEDhZ0360Yp/5HdCctKOsktkOSLw+c7FiUhmJwF2rHrOt8wL
- UWz6yJX11cUgvVZVkCaHcpeIsu12SVN85bXB5eGRSJvKR9pnxc9U4ZvQL4IO55C+08/kmAUvqb
- kWHi19Muxp7nGJAekQ2YrtFVVH2tx7YKlEaWY9Xb1Unk3bsfdcepw4ifgrJxE82ENd0eTV6WUX
- 841K3nfXNVd9zDEFyttQ6i5nLIyFyV3bDSWcc3hVQZqWdA+PlYzFSEA1vRYPBGr1XPqHRT8pn9
- GKY=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
-        <digetx@gmail.com>, <jiada_wang@mentor.com>
-Subject: [PATCH 1/1] Input: atmel_mxt_ts - implement I2C retries
-Date:   Fri, 21 Aug 2020 17:22:54 +0900
-Message-ID: <20200821082254.16661-1-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 21 Aug 2020 04:27:28 -0400
+Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07L8RP4f093330;
+        Fri, 21 Aug 2020 17:27:25 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp);
+ Fri, 21 Aug 2020 17:27:25 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp)
+Received: from localhost.localdomain (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07L8RILL093307
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 21 Aug 2020 17:27:25 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+To:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Brian Norris <briannorris@chromium.org>
+Cc:     amitkarwar@gmail.com, andreyknvl@google.com, davem@davemloft.net,
+        dvyukov@google.com, huxinming820@gmail.com, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        nishants@marvell.com, syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+373e6719b49912399d21@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>
+Subject: [PATCH v2] mwifiex: don't call del_timer_sync() on uninitialized timer
+Date:   Fri, 21 Aug 2020 17:27:19 +0900
+Message-Id: <20200821082720.7716-1-penguin-kernel@I-love.SAKURA.ne.jp>
+X-Mailer: git-send-email 2.18.4
+In-Reply-To: <MN2PR18MB2637D7C742BC235FE38367F0A09C0@MN2PR18MB2637.namprd18.prod.outlook.com>
+References: <MN2PR18MB2637D7C742BC235FE38367F0A09C0@MN2PR18MB2637.namprd18.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+syzbot is reporting that del_timer_sync() is called from
+mwifiex_usb_cleanup_tx_aggr() from mwifiex_unregister_dev() without
+checking timer_setup() from mwifiex_usb_tx_init() was called [1].
 
-Some maXTouch chips (eg mXT1386) will not respond on the first I2C request
-when they are in a sleep state. It must be retried after a delay for the
-chip to wake up.
+Ganapathi Bhat proposed a possibly cleaner fix, but it seems that
+that fix was forgotten [2].
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-Acked-by: Yufeng Shen <miletus@chromium.org>
-(cherry picked from ndyer/linux/for-upstream commit 63fd7a2cd03c3a572a5db39c52f4856819e1835d)
-[gdavis: Forward port and fix conflicts.]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+"grep -FrB1 'del_timer' drivers/ | grep -FA1 '.function)'" says that
+currently there are 28 locations which call del_timer[_sync]() only if
+that timer's function field was initialized (because timer_setup() sets
+that timer's function field). Therefore, let's use same approach here.
+
+[1] https://syzkaller.appspot.com/bug?id=26525f643f454dd7be0078423e3cdb0d57744959
+[2] https://lkml.kernel.org/r/CA+ASDXMHt2gq9Hy+iP_BYkWXsSreWdp3_bAfMkNcuqJ3K+-jbQ@mail.gmail.com
+
+Reported-by: syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>
+Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Cc: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 45 ++++++++++++++++--------
- 1 file changed, 30 insertions(+), 15 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/usb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index a2189739e30f..e93eda1f3d59 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -196,6 +196,7 @@ enum t100_type {
- #define MXT_CRC_TIMEOUT		1000	/* msec */
- #define MXT_FW_RESET_TIME	3000	/* msec */
- #define MXT_FW_CHG_TIMEOUT	300	/* msec */
-+#define MXT_WAKEUP_TIME		25	/* msec */
- 
- /* Command to unlock bootloader */
- #define MXT_UNLOCK_CMD_MSB	0xaa
-@@ -626,6 +627,7 @@ static int __mxt_read_reg(struct i2c_client *client,
- 	struct i2c_msg xfer[2];
- 	u8 buf[2];
- 	int ret;
-+	bool retry = false;
- 
- 	buf[0] = reg & 0xff;
- 	buf[1] = (reg >> 8) & 0xff;
-@@ -642,17 +644,22 @@ static int __mxt_read_reg(struct i2c_client *client,
- 	xfer[1].len = len;
- 	xfer[1].buf = val;
- 
--	ret = i2c_transfer(client->adapter, xfer, 2);
--	if (ret == 2) {
--		ret = 0;
--	} else {
--		if (ret >= 0)
--			ret = -EIO;
--		dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
--			__func__, ret);
-+retry_read:
-+	ret = i2c_transfer(client->adapter, xfer, ARRAY_SIZE(xfer));
-+	if (ret != ARRAY_SIZE(xfer)) {
-+		if (!retry) {
-+			dev_dbg(&client->dev, "%s: i2c retry\n", __func__);
-+			msleep(MXT_WAKEUP_TIME);
-+			retry = true;
-+			goto retry_read;
-+		} else {
-+			dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
-+				__func__, ret);
-+			return -EIO;
-+		}
+diff --git a/drivers/net/wireless/marvell/mwifiex/usb.c b/drivers/net/wireless/marvell/mwifiex/usb.c
+index 6f3cfde4654c..426e39d4ccf0 100644
+--- a/drivers/net/wireless/marvell/mwifiex/usb.c
++++ b/drivers/net/wireless/marvell/mwifiex/usb.c
+@@ -1353,7 +1353,8 @@ static void mwifiex_usb_cleanup_tx_aggr(struct mwifiex_adapter *adapter)
+ 				skb_dequeue(&port->tx_aggr.aggr_list)))
+ 				mwifiex_write_data_complete(adapter, skb_tmp,
+ 							    0, -1);
+-		del_timer_sync(&port->tx_aggr.timer_cnxt.hold_timer);
++		if (port->tx_aggr.timer_cnxt.hold_timer.function)
++			del_timer_sync(&port->tx_aggr.timer_cnxt.hold_timer);
+ 		port->tx_aggr.timer_cnxt.is_hold_timer_set = false;
+ 		port->tx_aggr.timer_cnxt.hold_tmo_msecs = 0;
  	}
- 
--	return ret;
-+	return 0;
- }
- 
- static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
-@@ -661,6 +668,7 @@ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
- 	u8 *buf;
- 	size_t count;
- 	int ret;
-+	bool retry = false;
- 
- 	count = len + 2;
- 	buf = kmalloc(count, GFP_KERNEL);
-@@ -671,14 +679,21 @@ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
- 	buf[1] = (reg >> 8) & 0xff;
- 	memcpy(&buf[2], val, len);
- 
-+retry_write:
- 	ret = i2c_master_send(client, buf, count);
--	if (ret == count) {
--		ret = 0;
--	} else {
--		if (ret >= 0)
-+	if (ret != count) {
-+		if (!retry) {
-+			dev_dbg(&client->dev, "%s: i2c retry\n", __func__);
-+			msleep(MXT_WAKEUP_TIME);
-+			retry = true;
-+			goto retry_write;
-+		} else {
-+			dev_err(&client->dev, "%s: i2c send failed (%d)\n",
-+				__func__, ret);
- 			ret = -EIO;
--		dev_err(&client->dev, "%s: i2c send failed (%d)\n",
--			__func__, ret);
-+		}
-+	} else {
-+		ret = 0;
- 	}
- 
- 	kfree(buf);
 -- 
-2.17.1
+2.18.4
 
