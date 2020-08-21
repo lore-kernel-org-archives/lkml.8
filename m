@@ -2,826 +2,453 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D98C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEB15207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598010560;
-	bh=reLN+J7DKNAptLBI5JD8+Ne/qtcvjw8t987y8k94POY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=OyNdi2XB3lb0FHN7ZjCblHlLbAcqbvr6LJHMzS2By/l91Dxr3ks5PKH8bIgV14bek
-	 lccTJP3PXH1Gv187x7XL6eMB2377dErO0FmzT1U/lenNJxEPLx6oRD2aR+98N2/CLU
-	 BxgSToznse0MinOvwwFw8QkS+3aCQgob4PBOV7n0=
+	by mail.kernel.org (Postfix) with ESMTP id 096BC204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgHULtL (ORCPT
+        id S1728254AbgHULtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 07:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42612 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 07:49:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:58018 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728605AbgHULjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728577AbgHULjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 07:39:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E10F9207BB;
-        Fri, 21 Aug 2020 11:39:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598009968;
-        bh=reLN+J7DKNAptLBI5JD8+Ne/qtcvjw8t987y8k94POY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=aE/1JJcoE1pvPhO7XcxFKfeeqY+UZDybvx8AGyl59CVjKQcyL3rm7rYJbubJa0iH9
-         FQvduLtd+yYBrQq97PFs8x1TRbdm3joyLihGPMGF9g1M7o6BSOEUPc/uFsXmmtaG7U
-         Fj2bF9YlFZKQZLyThTDFc+4JlLecE9qaIqv1J+mU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, jslaby@suse.cz,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 5.8.3
-Date:   Fri, 21 Aug 2020 13:39:43 +0200
-Message-Id: <159800998314670@kroah.com>
-X-Mailer: git-send-email 2.28.0
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 915C41063;
+        Fri, 21 Aug 2020 04:38:58 -0700 (PDT)
+Received: from [172.16.1.113] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5919B3F6CF;
+        Fri, 21 Aug 2020 04:38:57 -0700 (PDT)
+Subject: Re: [PATCH] edac: nxp: Add L1 and L2 error detection for A53 and A72
+ cores
+To:     Alison Wang <alison.wang@nxp.com>, bp@alien8.de,
+        tony.luck@intel.com
+Cc:     mchehab@kernel.org, rrichter@marvell.com,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200709082215.12829-1-alison.wang@nxp.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <92811e33-2f57-244b-4b50-c2831b09b835@arm.com>
+Date:   Fri, 21 Aug 2020 12:38:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200709082215.12829-1-alison.wang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 5.8.3 kernel.
-
-All users of the 5.8 kernel series must upgrade.
-
-The updated 5.8.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.8.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-
-thanks,
-
-greg k-h
-
-------------
-
- Documentation/admin-guide/hw-vuln/multihit.rst                       |    4 
- Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt |    2 
- Makefile                                                             |    2 
- arch/arm64/boot/dts/qcom/sc7180-idp.dts                              |    2 
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi                           |    2 
- arch/arm64/kernel/perf_event.c                                       |   13 
- arch/mips/Kconfig                                                    |    1 
- arch/mips/boot/dts/ingenic/qi_lb60.dts                               |    2 
- arch/mips/kernel/topology.c                                          |    2 
- arch/openrisc/kernel/stacktrace.c                                    |   18 +
- arch/powerpc/include/asm/percpu.h                                    |    4 
- arch/powerpc/mm/fault.c                                              |    7 
- arch/powerpc/mm/ptdump/hashpagetable.c                               |    2 
- arch/powerpc/platforms/pseries/hotplug-memory.c                      |    2 
- arch/s390/Kconfig                                                    |    1 
- arch/s390/lib/test_unwind.c                                          |    1 
- arch/sh/boards/mach-landisk/setup.c                                  |    3 
- arch/sh/mm/fault.c                                                   |    1 
- arch/x86/events/rapl.c                                               |    2 
- arch/x86/kernel/apic/vector.c                                        |    4 
- arch/x86/kernel/cpu/bugs.c                                           |    8 
- arch/x86/kernel/tsc_msr.c                                            |    9 
- arch/xtensa/include/asm/thread_info.h                                |    4 
- arch/xtensa/kernel/asm-offsets.c                                     |    3 
- arch/xtensa/kernel/entry.S                                           |   11 
- arch/xtensa/kernel/perf_event.c                                      |    2 
- crypto/af_alg.c                                                      |   11 
- crypto/algif_aead.c                                                  |   10 
- crypto/algif_skcipher.c                                              |   11 
- drivers/acpi/nfit/core.c                                             |   11 
- drivers/acpi/nfit/nfit.h                                             |    1 
- drivers/base/dd.c                                                    |    4 
- drivers/clk/Kconfig                                                  |    2 
- drivers/clk/actions/owl-s500.c                                       |    2 
- drivers/clk/bcm/clk-bcm2835.c                                        |   25 +
- drivers/clk/qcom/clk-alpha-pll.c                                     |    2 
- drivers/clk/qcom/gcc-sdm660.c                                        |    3 
- drivers/clk/qcom/gcc-sm8150.c                                        |    8 
- drivers/clk/sirf/clk-atlas6.c                                        |    2 
- drivers/crypto/caam/caamalg.c                                        |   29 --
- drivers/crypto/caam/compat.h                                         |    1 
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c                          |   11 
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c                    |   23 +
- drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr.c           |   69 ++++
- drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c                     |    5 
- drivers/gpu/drm/drm_dp_mst_topology.c                                |   41 +-
- drivers/gpu/drm/drm_panel_orientation_quirks.c                       |    6 
- drivers/gpu/drm/i915/gt/intel_gt.c                                   |    5 
- drivers/gpu/drm/imx/imx-ldb.c                                        |    7 
- drivers/gpu/drm/ingenic/ingenic-drm.c                                |    2 
- drivers/gpu/drm/omapdrm/dss/dispc.c                                  |    1 
- drivers/gpu/drm/omapdrm/dss/dsi.c                                    |    1 
- drivers/gpu/drm/omapdrm/dss/dss.c                                    |    1 
- drivers/gpu/drm/omapdrm/dss/venc.c                                   |    1 
- drivers/gpu/drm/panfrost/panfrost_gem.c                              |    2 
- drivers/gpu/drm/panfrost/panfrost_mmu.c                              |    2 
- drivers/gpu/drm/tidss/tidss_kms.c                                    |    2 
- drivers/gpu/drm/vmwgfx/vmwgfx_kms.c                                  |    8 
- drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c                                  |    5 
- drivers/gpu/ipu-v3/ipu-image-convert.c                               |  145 ++++++----
- drivers/i2c/busses/i2c-bcm-iproc.c                                   |   13 
- drivers/i2c/busses/i2c-rcar.c                                        |   15 -
- drivers/iio/dac/ad5592r-base.c                                       |    4 
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h                              |    3 
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c                       |   23 +
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c                         |    2 
- drivers/infiniband/core/counters.c                                   |    4 
- drivers/infiniband/core/uverbs_cmd.c                                 |    4 
- drivers/infiniband/hw/cxgb4/mem.c                                    |    1 
- drivers/infiniband/hw/mlx4/mr.c                                      |    1 
- drivers/infiniband/ulp/ipoib/ipoib.h                                 |    2 
- drivers/infiniband/ulp/ipoib/ipoib_ib.c                              |   67 ++--
- drivers/infiniband/ulp/ipoib/ipoib_main.c                            |    2 
- drivers/input/mouse/sentelic.c                                       |    2 
- drivers/iommu/intel/dmar.c                                           |   21 +
- drivers/iommu/intel/iommu.c                                          |    7 
- drivers/iommu/intel/svm.c                                            |   22 -
- drivers/iommu/omap-iommu-debug.c                                     |    3 
- drivers/irqchip/irq-gic-v3-its.c                                     |   15 -
- drivers/irqchip/irq-loongson-liointc.c                               |   10 
- drivers/md/bcache/bcache.h                                           |    2 
- drivers/md/bcache/bset.c                                             |    2 
- drivers/md/bcache/btree.c                                            |    2 
- drivers/md/bcache/journal.c                                          |    4 
- drivers/md/bcache/request.c                                          |   14 
- drivers/md/bcache/super.c                                            |   14 
- drivers/md/bcache/writeback.c                                        |   14 
- drivers/md/bcache/writeback.h                                        |   19 +
- drivers/md/dm-ebs-target.c                                           |    2 
- drivers/md/dm-rq.c                                                   |    3 
- drivers/md/dm.c                                                      |    3 
- drivers/md/md-cluster.c                                              |    1 
- drivers/md/raid5.c                                                   |    3 
- drivers/media/platform/qcom/venus/pm_helpers.c                       |    4 
- drivers/media/platform/rockchip/rga/rga-hw.c                         |   29 +-
- drivers/media/platform/rockchip/rga/rga-hw.h                         |    5 
- drivers/media/platform/vsp1/vsp1_dl.c                                |    2 
- drivers/mfd/arizona-core.c                                           |   18 +
- drivers/mfd/dln2.c                                                   |    4 
- drivers/mmc/host/renesas_sdhi_internal_dmac.c                        |   18 -
- drivers/mtd/nand/raw/brcmnand/brcmnand.c                             |   26 +
- drivers/mtd/nand/raw/fsl_upm.c                                       |    1 
- drivers/mtd/ubi/fastmap-wl.c                                         |    5 
- drivers/mtd/ubi/wl.c                                                 |    3 
- drivers/net/ethernet/marvell/octeontx2/af/common.h                   |    2 
- drivers/net/ethernet/qualcomm/emac/emac.c                            |   17 -
- drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c                  |    1 
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c                 |    3 
- drivers/net/wireless/realtek/rtw88/pci.c                             |    9 
- drivers/nvdimm/bus.c                                                 |   16 +
- drivers/nvdimm/security.c                                            |   13 
- drivers/nvme/host/core.c                                             |   15 +
- drivers/nvme/host/fabrics.c                                          |    2 
- drivers/nvme/host/fabrics.h                                          |    3 
- drivers/nvme/host/fc.c                                               |    1 
- drivers/nvme/host/multipath.c                                        |   18 +
- drivers/nvme/host/nvme.h                                             |    1 
- drivers/nvme/host/rdma.c                                             |   10 
- drivers/nvme/host/tcp.c                                              |   15 -
- drivers/pci/ats.c                                                    |   15 +
- drivers/pci/bus.c                                                    |    6 
- drivers/pci/controller/dwc/pcie-qcom.c                               |   41 ++
- drivers/pci/hotplug/acpiphp_glue.c                                   |   14 
- drivers/pci/quirks.c                                                 |    5 
- drivers/pinctrl/pinctrl-ingenic.c                                    |    9 
- drivers/platform/chrome/cros_ec_ishtp.c                              |    4 
- drivers/pwm/pwm-bcm-iproc.c                                          |    9 
- drivers/remoteproc/qcom_q6v5.c                                       |    2 
- drivers/remoteproc/qcom_q6v5_mss.c                                   |   11 
- drivers/rtc/rtc-cpcap.c                                              |    2 
- drivers/rtc/rtc-pl031.c                                              |    1 
- drivers/scsi/lpfc/lpfc_nvmet.c                                       |    2 
- drivers/staging/media/rkisp1/rkisp1-common.h                         |    3 
- drivers/staging/media/rkisp1/rkisp1-isp.c                            |   46 +--
- drivers/staging/media/rkisp1/rkisp1-resizer.c                        |    2 
- drivers/usb/serial/ftdi_sio.c                                        |   37 +-
- drivers/vdpa/vdpa_sim/vdpa_sim.c                                     |    3 
- drivers/watchdog/f71808e_wdt.c                                       |   13 
- drivers/watchdog/rti_wdt.c                                           |    2 
- drivers/watchdog/watchdog_dev.c                                      |   18 -
- fs/btrfs/backref.c                                                   |    2 
- fs/btrfs/ctree.h                                                     |    4 
- fs/btrfs/disk-io.c                                                   |   78 ++++-
- fs/btrfs/disk-io.h                                                   |    2 
- fs/btrfs/extent-io-tree.h                                            |    2 
- fs/btrfs/extent-tree.c                                               |   23 +
- fs/btrfs/extent_io.c                                                 |   18 -
- fs/btrfs/free-space-cache.c                                          |    4 
- fs/btrfs/inode.c                                                     |   20 -
- fs/btrfs/ioctl.c                                                     |   67 +++-
- fs/btrfs/ref-verify.c                                                |    2 
- fs/btrfs/relocation.c                                                |   12 
- fs/btrfs/scrub.c                                                     |    2 
- fs/btrfs/super.c                                                     |   51 ++-
- fs/btrfs/sysfs.c                                                     |    3 
- fs/btrfs/transaction.c                                               |    7 
- fs/btrfs/transaction.h                                               |    2 
- fs/btrfs/tree-log.c                                                  |   43 --
- fs/btrfs/volumes.c                                                   |   48 ++-
- fs/ceph/dir.c                                                        |    4 
- fs/ceph/mds_client.c                                                 |    6 
- fs/cifs/smb2inode.c                                                  |    1 
- fs/cifs/smb2misc.c                                                   |   73 +++--
- fs/cifs/smb2pdu.c                                                    |    2 
- fs/ext2/ialloc.c                                                     |    3 
- fs/f2fs/compress.c                                                   |    2 
- fs/f2fs/data.c                                                       |    4 
- fs/gfs2/bmap.c                                                       |   69 ++--
- fs/gfs2/glock.c                                                      |    4 
- fs/minix/inode.c                                                     |   12 
- fs/minix/itree_v1.c                                                  |   12 
- fs/minix/itree_v2.c                                                  |   13 
- fs/minix/minix.h                                                     |    1 
- fs/nfs/file.c                                                        |   17 -
- fs/nfs/flexfilelayout/flexfilelayout.c                               |   50 ++-
- fs/nfs/nfs4file.c                                                    |    5 
- fs/nfs/nfs4proc.c                                                    |    2 
- fs/nfs/nfs4xdr.c                                                     |    6 
- fs/nfs/pnfs.c                                                        |    4 
- fs/nfs/pnfs.h                                                        |    2 
- fs/ocfs2/ocfs2.h                                                     |    4 
- fs/ocfs2/suballoc.c                                                  |    4 
- fs/ocfs2/super.c                                                     |    4 
- fs/ubifs/journal.c                                                   |   10 
- fs/ufs/super.c                                                       |    2 
- include/crypto/if_alg.h                                              |    4 
- include/linux/fs.h                                                   |   10 
- include/linux/hugetlb.h                                              |    8 
- include/linux/intel-iommu.h                                          |    4 
- include/linux/irq.h                                                  |   13 
- include/linux/libnvdimm.h                                            |    2 
- include/linux/pci-ats.h                                              |    4 
- include/net/sock.h                                                   |    4 
- include/uapi/linux/btrfs.h                                           |   14 
- include/uapi/linux/ndctl.h                                           |    4 
- init/main.c                                                          |   14 
- kernel/irq/manage.c                                                  |   13 
- kernel/irq/pm.c                                                      |    8 
- kernel/kprobes.c                                                     |   24 +
- kernel/kthread.c                                                     |    7 
- kernel/module.c                                                      |   22 +
- kernel/pid.c                                                         |    7 
- kernel/sched/core.c                                                  |   81 +++++
- kernel/sched/cpufreq_schedutil.c                                     |    2 
- kernel/sched/sched.h                                                 |   47 +++
- kernel/trace/ftrace.c                                                |   15 -
- kernel/trace/trace_events.c                                          |    4 
- kernel/trace/trace_hwlat.c                                           |    5 
- lib/devres.c                                                         |   11 
- lib/test_kmod.c                                                      |    2 
- lib/test_lockup.c                                                    |    4 
- mm/cma.c                                                             |   23 -
- mm/hugetlb.c                                                         |   39 +-
- mm/khugepaged.c                                                      |   70 ++--
- mm/memory_hotplug.c                                                  |    5 
- mm/page_counter.c                                                    |    6 
- mm/rmap.c                                                            |    2 
- mm/shuffle.c                                                         |   18 -
- net/appletalk/atalk_proc.c                                           |    2 
- net/compat.c                                                         |    1 
- net/core/sock.c                                                      |   21 +
- net/mac80211/sta_info.c                                              |    2 
- scripts/recordmcount.c                                               |    2 
- security/integrity/ima/ima_policy.c                                  |   15 -
- sound/pci/echoaudio/echoaudio.c                                      |    2 
- sound/pci/hda/patch_realtek.c                                        |    2 
- tools/build/Makefile.feature                                         |    2 
- tools/build/feature/Makefile                                         |    2 
- tools/perf/bench/mem-functions.c                                     |   21 -
- tools/perf/builtin-record.c                                          |    4 
- tools/perf/tests/parse-events.c                                      |   37 ++
- tools/perf/util/evsel.c                                              |    6 
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c                  |   29 --
- tools/perf/util/parse-events.c                                       |   28 +
- tools/perf/util/parse-events.h                                       |    2 
- tools/perf/util/parse-events.l                                       |   19 -
- tools/perf/util/probe-finder.c                                       |    5 
- tools/testing/selftests/bpf/Makefile                                 |   49 +--
- tools/testing/selftests/bpf/test_progs.c                             |   33 ++
- tools/testing/selftests/bpf/test_progs.h                             |    2 
- tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c                 |   55 +--
- tools/testing/selftests/seccomp/seccomp_bpf.c                        |    5 
- 242 files changed, 2041 insertions(+), 868 deletions(-)
-
-Adrian Hunter (2):
-      perf intel-pt: Fix FUP packet state
-      perf intel-pt: Fix duplicate branch after CBR
-
-Ahmad Fatoum (3):
-      watchdog: f71808e_wdt: indicate WDIOF_CARDRESET support in watchdog_info.options
-      watchdog: f71808e_wdt: remove use of wrong watchdog_info option
-      watchdog: f71808e_wdt: clear watchdog timeout occurred flag
-
-Alexandru Ardelean (1):
-      iio: dac: ad5592r: fix unbalanced mutex unlocks in ad5592r_read_raw()
-
-Anand Jain (1):
-      btrfs: don't traverse into the seed devices in show_devname
-
-Andreas Gruenbacher (1):
-      gfs2: Fix refcount leak in gfs2_glock_poke
-
-Andrii Nakryiko (2):
-      selftests/bpf: Prevent runqslower from racing on building bpftool
-      selftests/bpf: Fix silent Makefile output
-
-Andy Shevchenko (1):
-      mfd: dln2: Run event handler loop under spinlock
-
-Aneesh Kumar K.V (3):
-      selftests/powerpc: ptrace-pkey: Rename variables to make it easier to follow code
-      selftests/powerpc: ptrace-pkey: Update the test to mark an invalid pkey correctly
-      selftests/powerpc: ptrace-pkey: Don't update expected UAMOR value
-
-Ansuel Smith (2):
-      PCI: qcom: Define some PARF params needed for ipq8064 SoC
-      PCI: qcom: Add support for tx term offset for rev 2.1.0
-
-Anton Blanchard (1):
-      pseries: Fix 64 bit logical memory block panic
-
-Ashok Raj (1):
-      PCI/ATS: Add pci_pri_supported() to check device or associated PF
-
-Bob Peterson (1):
-      gfs2: Never call gfs2_block_zero_range with an open transaction
-
-Boleyn Su (1):
-      btrfs: check correct variable after allocation in btrfs_backref_iter_alloc
-
-Boris Brezillon (1):
-      mtd: rawnand: fsl_upm: Remove unused mtd var
-
-ChangSyun Peng (1):
-      md/raid5: Fix Force reconstruct-write io stuck in degraded raid5
-
-Chao Yu (2):
-      f2fs: compress: fix to avoid memory leak on cc->cpages
-      f2fs: compress: fix to update isize when overwriting compressed file
-
-Charles Keepax (1):
-      mfd: arizona: Ensure 32k clock is put on driver unbind and error
-
-Chen Tao (1):
-      drm/amdgpu/debugfs: fix memory leak when pm_runtime_get_sync failed
-
-Chengming Zhou (1):
-      ftrace: Setup correct FTRACE_FL_REGS flags for module
-
-Chris Wilson (1):
-      drm/i915/gt: Force the GT reset on shutdown
-
-Christian Eggers (1):
-      dt-bindings: iio: io-channel-mux: Fix compatible string in example code
-
-Christophe Leroy (2):
-      powerpc/ptdump: Fix build failure in hashpagetable.c
-      recordmcount: Fix build failure on non arm64
-
-Colin Ian King (3):
-      iommu/omap: Check for failure of a call to omap_iommu_dump_ctx
-      Input: sentelic - fix error return when fsp_reg_write fails
-      fs/ufs: avoid potential u32 multiplication overflow
-
-Coly Li (5):
-      bcache: allocate meta data pages as compound pages
-      bcache: fix overflow in offset_to_stripe()
-      bcache: avoid nr_stripes overflow in bcache_device_init()
-      bcache: fix bio_{start,end}_io_acct with proper device
-      bcache: use disk_{start,end}_io_acct() to count I/O for bcache device
-
-Cristian Ciocaltea (1):
-      clk: actions: Fix h_clk for Actions S500 SoC
-
-Dafna Hirschfeld (3):
-      media: staging: rkisp1: remove macro RKISP1_DIR_SINK_SRC
-      media: staging: rkisp1: rename macros 'RKISP1_DIR_*' to 'RKISP1_ISP_SD_*'
-      media: staging: rkisp1: rsz: set default format if the given format is not RKISP1_ISP_SD_SRC
-
-Dan Carpenter (4):
-      md-cluster: Fix potential error pointer dereference in resize_bitmaps()
-      vdpa: Fix pointer math bug in vdpasim_get_config()
-      drm/vmwgfx: Use correct vmw_legacy_display_unit pointer
-      drm/vmwgfx: Fix two list_for_each loop exit tests
-
-Dan Williams (1):
-      libnvdimm: Validate command family indices
-
-Daniel Díaz (1):
-      tools build feature: Quote CC and CXX for their arguments
-
-David Hildenbrand (1):
-      mm/shuffle: don't move pages between zones and don't read garbage memmaps
-
-David Sterba (3):
-      btrfs: allow use of global block reserve for balance item deletion
-      btrfs: add missing check for nocow and compression inode flags
-      btrfs: fix messages after changing compression level by remount
-
-Denis Efremov (1):
-      drm/panfrost: Use kvfree() to free bo->sgts
-
-Dhananjay Phadke (1):
-      i2c: iproc: fix race between client unreg and isr
-
-Dilip Kota (1):
-      x86/tsr: Fix tsc frequency enumeration bug on Lightning Mountain SoC
-
-Dinghao Liu (1):
-      ALSA: echoaudio: Fix potential Oops in snd_echo_resume()
-
-Eric Biggers (3):
-      fs/minix: set s_maxbytes correctly
-      fs/minix: fix block limit check for V1 filesystems
-      fs/minix: remove expected error message in block_to_path()
-
-Eric Dumazet (1):
-      octeontx2-af: change (struct qmem)->entry_sz from u8 to u16
-
-Eugeniu Rosca (1):
-      media: vsp1: dl: Fix NULL pointer dereference on unbind
-
-Ewan D. Milne (1):
-      scsi: lpfc: nvmet: Avoid hang / use-after-free again when destroying targetport
-
-Filipe Manana (6):
-      btrfs: only commit the delayed inode when doing a full fsync
-      btrfs: stop incremening log_batch for the log root tree when syncing log
-      btrfs: only commit delayed items at fsync if we are logging a directory
-      btrfs: remove no longer needed use of log_writers for the log root tree
-      btrfs: fix race between page release and a fast fsync
-      btrfs: fix memory leaks after failure to lookup checksums during inode logging
-
-Geert Uytterhoeven (3):
-      clk: hsdk: Fix bad dependency on IOMEM
-      sh: landisk: Add missing initialization of sh_io_port_base
-      sh: fault: Fix duplicate printing of "PC:"
-
-Greg Kroah-Hartman (1):
-      Linux 5.8.3
-
-Guenter Roeck (2):
-      genirq: Unlock irq descriptor after errors
-      genirq/PM: Always unlock IRQ descriptor in rearm_wake_irq()
-
-Herbert Xu (3):
-      crypto: algif_aead - Only wake up when ctx->more is zero
-      crypto: af_alg - Fix regression on empty requests
-      crypto: caam - Remove broken arc4 support
-
-Huacai Chen (2):
-      irqchip/loongson-liointc: Fix misuse of gc->mask_cache
-      MIPS: CPU#0 is not hotpluggable
-
-Hugh Dickins (3):
-      khugepaged: collapse_pte_mapped_thp() flush the right range
-      khugepaged: collapse_pte_mapped_thp() protect the pmd lock
-      khugepaged: retract_page_tables() remember to test exit
-
-Imre Deak (3):
-      drm/dp_mst: Fix the DDC I2C device registration of an MST port
-      drm/dp_mst: Fix timeout handling of MST down messages
-      drm/dp_mst: Fix the DDC I2C device unregistration of an MST port
-
-Jacob Pan (2):
-      iommu/vt-d: Warn on out-of-range invalidation address
-      iommu/vt-d: Disable multiple GPASID-dev bind
-
-Jane Chu (2):
-      libnvdimm/security: fix a typo
-      libnvdimm/security: ensure sysfs poll thread woke up and fetch updated attr
-
-Jason Gunthorpe (1):
-      RDMA/ipoib: Fix ABBA deadlock with ipoib_reap_ah()
-
-Jeff Layton (2):
-      ceph: set sec_context xattr on symlink creation
-      ceph: handle zero-length feature mask in session messages
-
-Jeffrey Mitchell (1):
-      nfs: Fix getxattr kernel panic and memory overflow
-
-Jesper Dangaard Brouer (3):
-      selftests/bpf: Test_progs indicate to shell on non-actions
-      selftests/bpf: test_progs use another shell exit on non-actions
-      selftests/bpf: test_progs avoid minus shell exit codes
-
-Jia He (1):
-      mm/memory_hotplug: fix unpaired mem_hotplug_begin/done
-
-Jin Yao (2):
-      perf evsel: Don't set sample_regs_intr/sample_regs_user for dummy event
-      perf record: Skip side-band event setup if HAVE_LIBBPF_SUPPORT is not set
-
-Jiri Olsa (1):
-      perf tools: Fix term parsing for raw syntax
-
-Johan Hovold (2):
-      USB: serial: ftdi_sio: make process-packet buffer unsigned
-      USB: serial: ftdi_sio: clean up receive processing
-
-Johannes Berg (1):
-      mac80211: fix misplaced while instead of if
-
-Johannes Thumshirn (2):
-      btrfs: pass checksum type via BTRFS_IOC_FS_INFO ioctl
-      dm: don't call report zones for more than the user requested
-
-John Dorminy (1):
-      dm ebs: Fix incorrect checking for REQ_OP_FLUSH
-
-Jonathan Marek (2):
-      clk: qcom: gcc: fix sm8150 GPU and NPU clocks
-      clk: qcom: clk-alpha-pll: remove unused/incorrect PLL_CAL_VAL
-
-Jonathan McDowell (2):
-      net: ethernet: stmmac: Disable hardware multicast filter
-      net: stmmac: dwmac1000: provide multicast filter fallback
-
-Josef Bacik (8):
-      btrfs: open device without device_list_mutex
-      btrfs: move the chunk_mutex in btrfs_read_chunk_tree
-      btrfs: return EROFS for BTRFS_FS_STATE_ERROR cases
-      btrfs: sysfs: use NOFS for device creation
-      btrfs: don't WARN if we abort a transaction with EROFS
-      btrfs: don't show full path of bind mounts in subvol=
-      btrfs: only search for left_info if there is no right_info in try_merge_free_space
-      btrfs: make sure SB_I_VERSION doesn't get unset by remount
-
-Junxiao Bi (1):
-      ocfs2: change slot number type s16 to u16
-
-Kai-Heng Feng (1):
-      PCI: Mark AMD Navi10 GPU rev 0x00 ATS as broken
-
-Kamal Dasu (1):
-      mtd: rawnand: brcmnand: ECC error handling on EDU transfers
-
-Kamal Heib (1):
-      RDMA/ipoib: Return void from ipoib_ib_dev_stop()
-
-Kees Cook (4):
-      pidfd: Add missing sock updates for pidfd_getfd()
-      net/compat: Add missing sock updates for SCM_RIGHTS
-      selftests/seccomp: Set NNP for TSYNC ESRCH flag test
-      module: Correctly truncate sysfs sections output
-
-Kevin Hao (1):
-      tracing/hwlat: Honor the tracing_cpumask
-
-Konrad Dybcio (1):
-      clk: qcom: gcc-sdm660: Fix up gcc_mss_mnoc_bimc_axi_clk
-
-Krzysztof Kozlowski (1):
-      s390/Kconfig: add missing ZCRYPT dependency to VFIO_AP
-
-Krzysztof Sobota (1):
-      watchdog: initialize device before misc_register
-
-Liu Yi L (2):
-      iommu/vt-d: Handle non-page aligned address
-      iommu/vt-d: Enforce PASID devTLB field mask
-
-Liu Ying (1):
-      drm/imx: imx-ldb: Disable both channels for split mode in enc->disable()
-
-Lorenzo Bianconi (1):
-      iio: imu: st_lsm6dsx: reset hw ts after resume
-
-Lukas Wunner (1):
-      driver core: Avoid binding drivers to dead devices
-
-Mansur Alisha Shaik (1):
-      media: venus: fix multiple encoder crash
-
-Marius Iacob (1):
-      drm: Added orientation quirk for ASUS tablet model T103HAF
-
-Mark Zhang (2):
-      RDMA/counter: Only bind user QPs in auto mode
-      RDMA/counter: Allow manually bind QPs with different pids to same counter
-
-Martin KaFai Lau (1):
-      bpf: selftests: Restore netns after each test
-
-Masami Hiramatsu (3):
-      bootconfig: Fix to find the initargs correctly
-      perf probe: Fix wrong variable warning when the probe point is not found
-      perf probe: Fix memory leakage when the probe point is not found
-
-Max Filippov (2):
-      xtensa: add missing exclusive access state management
-      xtensa: fix xtensa_pmu_setup prototype
-
-Michael Ellerman (2):
-      powerpc: Allow 4224 bytes of stack expansion for the signal frame
-      powerpc: Fix circular dependency between percpu.h and mmu.h
-
-Michael S. Tsirkin (1):
-      vdpa_sim: init iommu lock
-
-Michal Koutný (1):
-      mm/page_counter.c: fix protection usage propagation
-
-Mike Kravetz (2):
-      hugetlbfs: remove call to huge_pte_alloc without i_mmap_rwsem
-      cma: don't quit at first error when activating reserved areas
-
-Mike Rapoport (1):
-      MIPS: SGI-IP27: always enable NUMA in Kconfig
-
-Mikulas Patocka (1):
-      ext2: fix missing percpu_counter_inc
-
-Ming Lei (1):
-      dm rq: don't call blk_mq_queue_stopped() in dm_stop_queue()
-
-Muchun Song (2):
-      kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler
-      kprobes: Fix compiler warning for !CONFIG_KPROBES_ON_FTRACE
-
-Nicolas Saenz Julienne (1):
-      clk: bcm2835: Do not use prediv with bcm2711's PLLs
-
-Ondrej Mosnacek (1):
-      crypto: algif_aead - fix uninitialized ctx->init
-
-Paul Aurich (1):
-      cifs: Fix leak when handling lease break for cached root fid
-
-Paul Cercueil (4):
-      pinctrl: ingenic: Enhance support for IRQ_TYPE_EDGE_BOTH
-      pinctrl: ingenic: Properly detect GPIO direction when configured for IRQ
-      MIPS: qi_lb60: Fix routing to audio amplifier
-      drm/ingenic: Fix incorrect assumption about plane->index
-
-Paul Kocialkowski (2):
-      media: rockchip: rga: Introduce color fmt macros and refactor CSC mode logic
-      media: rockchip: rga: Only set output CSC mode for RGB input
-
-Pavel Machek (1):
-      btrfs: fix return value mixup in btrfs_get_extent
-
-Pawan Gupta (1):
-      x86/bugs/multihit: Fix mitigation reporting when VMX is not in use
-
-Peter Xu (1):
-      mm/hugetlb: fix calculation of adjust_range_if_pmd_sharing_possible
-
-Peter Zijlstra (1):
-      mm: fix kthread_use_mm() vs TLB invalidate
-
-Qais Yousef (2):
-      sched/uclamp: Protect uclamp fast path code with static key
-      sched/uclamp: Fix a deadlock when enabling uclamp static key
-
-Qiushi Wu (1):
-      platform/chrome: cros_ec_ishtp: Fix a double-unlock issue
-
-Qu Wenruo (7):
-      btrfs: free anon block device right after subvolume deletion
-      btrfs: don't allocate anonymous block device for user invisible roots
-      btrfs: preallocate anon block device at first phase of snapshot creation
-      btrfs: relocation: review the call sites which can be interrupted by signal
-      btrfs: avoid possible signal interruption of btrfs_drop_snapshot() on relocation tree
-      btrfs: inode: fix NULL pointer dereference if inode doesn't need compression
-      btrfs: trim: fix underflow in trim length to prevent access beyond device boundary
-
-Rafael J. Wysocki (1):
-      PCI: hotplug: ACPI: Fix context refcounting in acpiphp_grab_context()
-
-Rajat Jain (1):
-      PCI: Add device even if driver attach failed
-
-Rayagonda Kokatanur (1):
-      pwm: bcm-iproc: handle clk_get_rate() return
-
-Sagi Grimberg (1):
-      nvme: fix deadlock in disconnect during scan_work and/or ana_work
-
-Sandeep Raghuraman (1):
-      drm/amdgpu: Fix bug where DPM is not enabled after hibernate and resume
-
-Scott Mayhew (2):
-      nfs: ensure correct writeback errors are returned on close()
-      nfs: nfs_file_write() should check for writeback errors
-
-Sebastian Reichel (1):
-      rtc: cpcap: fix range
-
-Shaokun Zhang (1):
-      arm64: perf: Correct the event index in sysfs
-
-Sibi Sankar (4):
-      arm64: dts: qcom: sc7180: Drop the unused non-MSA SID
-      remoteproc: qcom: q6v5: Update running state before requesting stop
-      remoteproc: qcom_q6v5_mss: Validate MBA firmware size before load
-      remoteproc: qcom_q6v5_mss: Validate modem blob firmware size before load
-
-Stafford Horne (1):
-      openrisc: Fix oops caused when dumping stack
-
-Steve French (2):
-      smb3: warn on confusing error scenario with sec=krb5
-      SMB3: Fix mkdir when idsfromsid configured on mount
-
-Steve Longerbeam (2):
-      gpu: ipu-v3: image-convert: Combine rotate/no-rotate irq handlers
-      gpu: ipu-v3: image-convert: Wait for all EOFs before completing a tile
-
-Steven Rostedt (VMware) (1):
-      tracing: Use trace_sched_process_free() instead of exit() for pid tracing
-
-Stylon Wang (1):
-      drm/amd/display: Fix dmesg warning from setting abm level
-
-Sudeep Holla (1):
-      rtc: pl031: fix set_alarm by adding back call to alarm_irq_enable
-
-Takashi Iwai (1):
-      ALSA: hda/realtek - Fix unused variable warning
-
-Tero Kristo (1):
-      watchdog: rti-wdt: balance pm runtime enable calls
-
-Thomas Gleixner (1):
-      genirq/affinity: Make affinity setting if activated opt-in
-
-Thomas Hebb (1):
-      tools build feature: Use CC and CXX from parent
-
-Tiezhu Yang (2):
-      lib/test_lockup.c: fix return value of test_lockup_init()
-      test_kmod: avoid potential double free in trigger_config_run_type()
-
-Tom Rix (1):
-      btrfs: ref-verify: fix memory leak in add_block_entry
-
-Tomi Valkeinen (2):
-      drm/omap: force runtime PM suspend on system suspend
-      drm/tidss: fix modeset init for DPI panels
-
-Trond Myklebust (1):
-      NFS: Fix flexfiles read failover
-
-Tyler Hicks (1):
-      ima: Fail rule parsing when appraise_flag=blacklist is unsupportable
-
-Vincent Duvert (1):
-      appletalk: Fix atalk_proc_init() return path
-
-Vincent Whitchurch (1):
-      perf bench mem: Always memset source before memcpy
-
-Vladimir Oltean (1):
-      devres: keep both device name and resource name in pretty name
-
-Wang Hai (2):
-      s390/test_unwind: fix possible memleak in test_unwind()
-      net: qcom/emac: add missed clk_disable_unprepare in error path of emac_clks_phase1_init
-
-Wolfram Sang (2):
-      i2c: rcar: slave: only send STOP event when we have been addressed
-      i2c: rcar: avoid race when unregistering slave
-
-Xin Xiong (1):
-      drm: fix drm_dp_mst_port refcount leaks in drm_dp_mst_allocate_vcpi
-
-Xu Wang (1):
-      clk: clk-atlas6: fix return value check in atlas6_clk_init()
-
-Yan-Hsuan Chuang (1):
-      rtw88: pci: disable aspm for platform inter-op with module parameter
-
-Yishai Hadas (1):
-      IB/uverbs: Set IOVA on IB MR in uverbs layer
-
-Yoshihiro Shimoda (1):
-      mmc: renesas_sdhi_internal_dmac: clean up the code for dma complete
-
-Zenghui Yu (1):
-      irqchip/gic-v4.1: Ensure accessing the correct RD when writing INVALLR
-
-Zhang Rui (1):
-      perf/x86/rapl: Fix missing psys sysfs attributes
-
-Zhihao Cheng (3):
-      ubi: fastmap: Don't produce the initial next anchor PEB when fastmap is disabled
-      ubi: fastmap: Free fastmap next anchor peb during detach
-      ubifs: Fix wrong orphan node deletion in ubifs_jnl_update|rename
-
-hersen wu (1):
-      drm/amd/display: dchubbub p-state warning during surface planes switch
+Hi Alison,
+
+On 09/07/2020 09:22, Alison Wang wrote:
+> Add error detection for A53 and A72 cores. Hardware error injection is
+> supported on A53. Software error injection is supported on both.
+
+> For hardware error injection on A53 to work, proper access to
+> L2ACTLR_EL1, CPUACTLR_EL1 needs to be granted by EL3 firmware.
+
+Not just hardware error injection, any access to these registers needs to be granted by
+each higher exception level. If you run as a KVM guest, all access to these
+implementation-defined registers is disabled.
+
+This means your driver doesn't work on:
+| compatible = "arm,cortex-a53-edac" or "arm,cortex-a72-edac",
+
+as it also depends on firmware settings.
+
+
+Writing to CPUACTLR_EL1 isn't something we can do in linux. The TRM has this clanger:
+| The CPU Auxiliary Control Register can be written only when the system is idle. ARM
+| recommends that you write to this register after a powerup reset, before the MMU is
+| enabled, and before any ACE or ACP traffic begins.
+
+We can't make the system idle from linux. Only firmware can do this.
+
+The same goes for L2ACTLR.
+
+
+> This is
+> done by making an SMC call in the driver. Failure to enable access
+> disables hardware error injection. For error detection to work, another
+> SMC call enables access to L2ECTLR_EL1.
+
+Ewww. Surely this should either be enabled, or disabled. What is the point of letting the
+OS toggle it?
+
+Using these registers, you can do dangerous things like turn the L2 cache off. Does your
+platform have any resident secure-world software?
+
+
+> It is for NXP's Layerscape family LS1043A, LS1046A, LS2088A and LX2160A.
+
+Please ensure your driver probes from the top-level platform compatible. This is the only
+way to know the platform has your firmware, with the special settings and magic SMC call
+that the driver depends on.
+
+
+> Signed-off-by: York Sun <york.sun@nxp.com>
+> Signed-off-by: Alison Wang <alison.wang@nxp.com>
+
+Who is the author of this patch?
+
+If the first Signed-of-by tag isn't for the person posting the patch, there should be a
+'From:' line in the patch so that git picks up the author properly when the maintainer
+applies the patch.
+If you set the author of the patch correctly in git, git format-patch will do the right
+thing for you.
+
+
+> diff --git a/Documentation/devicetree/bindings/edac/cortex-arm64-edac.txt b/Documentation/devicetree/bindings/edac/cortex-arm64-edac.txt> new file mode 100644
+> index 000000000000..41c840993814
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/cortex-arm64-edac.txt
+
+Binding patches should be in a separate patch, that appears first in the series. The whole
+series should be copied to the devicetree mailing list: devicetree@vger.kernel.org
+
+You should also run get-maintainers.pl to ensure you copy the devicetree maintainers.
+
+
+> @@ -0,0 +1,40 @@
+> +ARM Cortex A53 and A72 L1/L2 cache error reporting
+> +
+> +CPU Memory Error Syndrome and L2 Memory Error Syndrome registers can be
+> +used for checking L1 and L2 memory errors. However, only A53 supports
+> +double-bit error injection to L1 and L2 memory. This driver uses the
+> +hardware error injection when available, but also provides a way to
+> +inject errors by software.
+> +
+> +To use hardware error injection and the interrupt, proper access needs
+> +to be granted in ACTLR_EL3 (and/or ACTLR_EL2) register by EL3 firmware SMC call.
+
+Please describe this as "on $platforms this is done by".
+On others it may be enabled already, or not possible to enable at all.
+
+
+> +Correctable errors do not trigger such interrupt.
+
+What interrupt?
+
+
+> This driver uses
+> +dynamic polling internal to check for errors. The more errors detected,
+> +the more frequently it polls. Combining with interrupt, this driver can
+> +detect correctable and uncorrectable errors. However, if the
+> +uncorrectable errors cause system abort exception, this driver is not able to
+> +report errors in time.
+
+The driver isn't involved in correct-ing the errors, this was already  done, or not-done,
+by the hardware.
+Please describe this as 'corrected and uncorrected', as the state is pretty final.
+
+
+> +The SIP-specific SMC calls are only for NXP's Layerscape family LS1043A,
+> +LS1046A, LS2088A and LX2160A.
+> +
+> +The following section describes the Cortex A53/A72 EDAC DT node binding.
+> +
+> +Required properties:
+> +- compatible: Should be "arm,cortex-a53-edac" or "arm,cortex-a72-edac"
+> +- cpus: Should be a list of compatible cores
+> +
+> +Optional properties:
+> +- interrupts: Interrupt number if supported
+> +
+> +Example:
+> +	edac {
+> +		compatible = "arm,cortex-a53-edac";
+> +		cpus = <&cpu0>,
+> +		       <&cpu1>,
+> +		       <&cpu2>,
+> +		       <&cpu3>;
+> +		interrupts = <0 108 0x4>;
+> +
+> +	};
+
+Because this depends on firmware, please make this depend on the top-level compatible for
+the whole platform.
+
+It might be worth describing the SMC calls in the binding if its likely anyone else will
+use the driver. (matching a platform, but no SMC defined would imply the access is always
+enabled).
+
+But the DT people will have the best view on what is best here.
+
+
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index 7b6ec3014ba2..6317cebf0a95 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -530,4 +530,11 @@ config EDAC_DMC520
+>  	  Support for error detection and correction on the
+>  	  SoCs with ARM DMC-520 DRAM controller.
+
+
+> +config EDAC_CORTEX_ARM64_L1_L2
+> +	tristate "ARM Cortex A53/A72"
+
+Please pick a name that indicates this driver is for layerscape socs.
+
+
+> +	depends on ARM64 && ARCH_LAYERSCAPE
+
+> +	help
+> +	  Support for error detection on ARM Cortex A53 and A72 with Layerscape
+> +	  SoC family LS1043A, LS1046A, LS2088A and LX2160A.
+> +
+>  endif # EDAC
+
+
+> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+> index 269e15118cea..3edba6bea350 100644
+> --- a/drivers/edac/Makefile
+> +++ b/drivers/edac/Makefile
+> @@ -88,3 +88,4 @@ obj-$(CONFIG_EDAC_QCOM)			+= qcom_edac.o
+>  obj-$(CONFIG_EDAC_ASPEED)		+= aspeed_edac.o
+>  obj-$(CONFIG_EDAC_BLUEFIELD)		+= bluefield_edac.o
+>  obj-$(CONFIG_EDAC_DMC520)		+= dmc520_edac.o
+
+> +obj-$(CONFIG_EDAC_CORTEX_ARM64_L1_L2)	+= cortex_arm64_l1_l2.o
+
+'cortex' is a large number of CPUs. There is no guarantee these implementation-defined
+registers behave in the same way on other versions. (we'd have to check each and every TRM)
+
+The driver depends on your platform firmare, and doesn't build unless you select
+ARCH_LAYERSCAPE.
+
+Can I suggest naming it a53a72, or layerscape_cpu... ?
+
+
+> diff --git a/drivers/edac/cortex_arm64_l1_l2.c b/drivers/edac/cortex_arm64_l1_l2.c
+> new file mode 100644
+> index 000000000000..0443384bd656
+> --- /dev/null
+> +++ b/drivers/edac/cortex_arm64_l1_l2.c
+> @@ -0,0 +1,738 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Cortex A53 and A72 EDAC L1 and L2 cache error detection
+> + *
+> + * Copyright 2018-2020 NXP
+> + * Author: York Sun <york.sun@nxp.com>
+> + *
+> + * Partially take from a similar driver by
+> + * Brijesh Singh <brijeshkumar.singh@amd.com>
+> + * Copyright (c) 2015, Advanced Micro Devices
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_device.h>
+> +#include <linux/arm-smccc.h>
+> +#include <asm/barrier.h>
+> +#include <asm/cacheflush.h>
+> +#include <asm/smp_plat.h>
+> +
+> +#include "edac_module.h"
+> +#include "cortex_arm64_l1_l2.h"
+> +
+> +static int poll_msec = 1024;
+> +static long l1_ce_sw_inject_count, l1_ue_sw_inject_count;
+> +static long l2_ce_sw_inject_count, l2_ue_sw_inject_count;
+> +static struct cpumask compat_mask;
+> +static struct cpumask l1_ce_cpu_mask, l1_ue_cpu_mask;
+> +static struct cpumask l2_ce_cpu_mask, l2_ue_cpu_mask;
+
+> +static DEFINE_PER_CPU(unsigned long, actlr_en);
+> +static DEFINE_PER_CPU(unsigned long, l2ectlr_en);
+> +static DEFINE_PER_CPU(u64, cpumerr);
+> +static DEFINE_PER_CPU(u64, cpuactlr);
+> +static DEFINE_PER_CPU(u64, l2actlr);
+> +static DEFINE_PER_CPU(u64, l2merr);
+
+There are already per-cpu copies of all these in the hardware. Why would you need to read
+it from another CPU?
+
+
+> +static DEFINE_PER_CPU(call_single_data_t, csd_check);
+> +static DEFINE_SPINLOCK(cortex_edac_lock);
+
+
+> +static inline void read_cpuactlr(void *info)
+> +{
+> +	u64 val;
+> +	int cpu = smp_processor_id();
+
+> +	asm volatile("mrs %0, S3_1_C15_C2_0" : "=r" (val));
+
+There are versions of binutils that choke on this. See 72c583951526 for the story.
+
+Please define a SYS_CPUACTLR_EL1 for this using the sys_reg() macro. It may as well be
+private in this file.
+Please use the read_sysreg() acessors as this makes for more readable code.
+
+
+> +	per_cpu(cpuactlr, cpu) = val;
+
+Why not return the value? We already have a per cpu copy of this register: in the register.
+
+
+> +}
+
+With the right macros, this is nothing more than:
+| return read_sysreg_s(SYS_CPUACTLR_EL1)
+
+
+> +static inline void write_cpuactlr(int *mem)
+
+We can't write to CPUACTLR_EL1 when the system is running.
+I don't think we can have this code.
+
+(and write_cpuactlr() is a terrible name! it does lots more than that!)
+
+> +{
+> +	u64 val;
+> +	int cpu;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&cortex_edac_lock, flags);
+> +	cpu = smp_processor_id();
+> +	__flush_dcache_area(mem, 8);
+> +	asm volatile("mrs %0, S3_1_C15_C2_0" : "=r" (val));
+
+> +	val |= L1_ERR_INJ_EN;
+
+The TRM calls this 'L1DEIEN', using the same name as the TRM makes it a lot easier to find
+what this does:
+| Double-bit errors are injected on all writes to the L1 D-cache data RAMs for the first
+| word of each 32-byte region.
+
+What happens if your firmware takes an interrupt? Now the CPU will report faults for the
+work firmware is doing.
+What happens if the compiler decides to write to the stack while you have this set?
+
+
+The TRM says not to write to this register unless the system is idle and the MMU is off.
+We really can't do this in Linux.
+
+
+> +	asm volatile("dsb sy");
+> +	asm volatile("msr S3_1_C15_C2_0, %0" :: "r" (val));
+> +	asm volatile("isb sy");
+
+> +	/* make cache dirty */
+> +	*mem = 0xDEADBEEF;	/* write to L1 data causes error right away */
+> +	__flush_dcache_area(mem, 8);
+> +	val &= ~L1_ERR_INJ_EN;
+> +	asm volatile("dsb sy");
+> +	asm volatile("msr S3_1_C15_C2_0, %0" :: "r" (val));
+> +	asm volatile("isb sy");
+> +	spin_unlock_irqrestore(&cortex_edac_lock, flags);
+> +}
+
+
+For where they appear elsewhere, please use the macros in asm/barrier.h.
+For DSB, please add a comment to describe what you need it for.
+
+
+
+> +static inline void read_l2actlr(void *info)
+> +{
+> +	u64 val;
+> +	int cpu = smp_processor_id();
+> +
+> +	asm volatile("mrs %0, S3_1_C15_C0_0" : "=r" (val));
+> +	per_cpu(l2actlr, cpu) = val;
+> +}
+
+return read_sysreg_s(SYS_L2ACTLR_EL1)
+
+
+> +
+> +static inline void write_l2actlr(int *mem)
+> +{
+> +	u64 val;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&cortex_edac_lock, flags);
+> +	__flush_dcache_area(mem, 8);
+> +	asm volatile("mrs %0, S3_1_C15_C0_0" : "=r" (val));
+> +	val |= L2D_ERR_INJ_EN;
+> +	asm volatile("dsb sy");
+> +	asm volatile("msr S3_1_C15_C0_0, %0" :: "r" (val));
+> +	asm volatile("isb sy");
+> +	/* make cache dirty */
+> +	*mem = 0xDEADBEEF;	/* Error will be reported when L2 is accessed. */
+> +	__flush_dcache_area(mem, 8);
+> +	val &= ~L2D_ERR_INJ_EN;
+> +	asm volatile("dsb sy");
+> +	asm volatile("msr S3_1_C15_C0_0, %0" :: "r" (val));
+> +	asm volatile("isb sy");
+> +	spin_unlock_irqrestore(&cortex_edac_lock, flags);
+> +}
+
+We can't do this in Linux.
+
+
+> +static inline void write_l2ectlr_el1(void *info)
+> +{
+> +	u64 val;
+> +	int cpu = smp_processor_id();
+> +
+> +	asm volatile("mrs %0, S3_1_C11_C0_3" : "=r" (val));
+> +	if (val & L2_ERR_INT) {
+> +		pr_debug("l2ectlr_el1 on cpu %d reads 0x%llx\n", cpu, val);
+> +		val &= ~L2_ERR_INT;
+> +		asm volatile("msr S3_1_C11_C0_3, %0" :: "r" (val));
+> +	}
+> +}
+> +
+> +static inline void write_cpumerrsr_el1(u64 val)
+> +{
+> +	asm volatile("msr s3_1_c15_c2_2, %0" :: "r" (val));
+> +}
+> +
+> +static void a53_allow_l1l2_err_inj(void *info)
+> +{
+> +	int cpu = smp_processor_id();
+> +	struct arm_smccc_res res;
+> +	unsigned long flags;
+> +
+> +	pr_debug("%s: cpu is %d\n", __func__, cpu);
+> +	spin_lock_irqsave(&cortex_edac_lock, flags);
+
+> +	arm_smccc_smc(NXP_SIP_SVC_ALLOW_L1L2_ERR, 0, 0, 0, 0, 0, 0, 0, &res);
+> +	per_cpu(actlr_en, cpu) = res.a0;
+> +	spin_unlock_irqrestore(&cortex_edac_lock, flags);
+
+How do you know firmware implements this SMC? Your driver compatible was jut for the CPU.
+
+This returns something. Please document what in the binding as someone else may implement
+it for their A53/A72.
+
+If you're returning a CPUACTLR_EL1 value, the OS can just read it from the register, which
+should make the SMC call (and its description) simpler.
+
+
+
+> +	pr_debug("%s: return is %ld\n", __func__, res.a0);
+> +}
+
+As we can't safely write to these registers from linux, so I think this means all the
+error injection and maybe SMC stuff can disappear.
+
+
+(I've not read past here..)
+
+
+
+Thanks,
+
+James
 
