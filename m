@@ -2,132 +2,134 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF5BC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8091E208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8112075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:44:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7SEuBm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgHUEnT (ORCPT
+        id S1726757AbgHUEol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 00:43:19 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:55030 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbgHUEnR (ORCPT
+        Fri, 21 Aug 2020 00:44:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgHUEoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 00:43:17 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k8ytK-008psA-Jl; Thu, 20 Aug 2020 22:43:02 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k8ytJ-00009U-Oh; Thu, 20 Aug 2020 22:43:02 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Tim Murray <timmurray@google.com>, mingo@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com,
-        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
-        Oleg Nesterov <oleg@redhat.com>, adobriyan@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de,
-        John Johansen <john.johansen@canonical.com>,
-        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
-References: <20200820124241.GJ5033@dhcp22.suse.cz>
-        <87lfi9xz7y.fsf@x220.int.ebiederm.org>
-        <87d03lxysr.fsf@x220.int.ebiederm.org>
-        <20200820132631.GK5033@dhcp22.suse.cz>
-        <20200820133454.ch24kewh42ax4ebl@wittgenstein>
-        <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
-        <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
-        <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
-        <87k0xtv0d4.fsf@x220.int.ebiederm.org>
-        <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
-        <20200820162645.GP5033@dhcp22.suse.cz>
-Date:   Thu, 20 Aug 2020 23:39:25 -0500
-In-Reply-To: <20200820162645.GP5033@dhcp22.suse.cz> (Michal Hocko's message of
-        "Thu, 20 Aug 2020 18:26:45 +0200")
-Message-ID: <87r1s0txxe.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 21 Aug 2020 00:44:38 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A74EC061385;
+        Thu, 20 Aug 2020 21:44:38 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id k18so463485pfp.7;
+        Thu, 20 Aug 2020 21:44:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2FijGblDddjp78CZtsuopymeT4GIAirJaILJzMaKauU=;
+        b=c7SEuBm9ZYiwMyDgcCjUP4zkcAqcJWkSnCZkOh9wB/Q1IQYWihz+hZnrfBEOh8YtOo
+         7oKYdorv5eBuZ6kfHQNFNprGFy29TgABA5JyE/oEjJ7SqNA9UsflqSpOSQH6A6F0HgO4
+         n1Ms4wHgOaegdSr9pxT+782mC2bPskftyVMT9UuR05WNlfA31jSh2BBdEfrIikfeKbGT
+         7XnmmP3RgtcKmGKSgn73d5a2tMgGTfWoCkCTZCWirqaujLImDZBUJHgejXJwHDcuqYsO
+         +931rfrU7AbK0Ggp/BlSjg9QxvFgq51FZw7CPgSBFVbsPK3EMHLVfEyg7WldxgZDwgzs
+         czVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2FijGblDddjp78CZtsuopymeT4GIAirJaILJzMaKauU=;
+        b=RLucviBJbgBMqzgVgVA9DFSnYR5GO3bQstPC8WlhgUkamXP/qEM/DwQAe68+E8F7Pf
+         h2EBjMo4bwlpecMzUQ+D008U0n60UQmb4OfSAY1VhKTOslwGKMBfI3iRCwyCMIcb4X+L
+         5SHAa9VR/UhMhZMzzmxb/arlsORLWeac34owHxVRGprjK4erVWMvApfQTvw9BJOIqidD
+         H5Y+0d8cBFvMmDKrc22IRlTsEug2Y5CoyIg054c8UQNr69Y5MpZ206BHjMN4DaOzz4RK
+         hcNohmlyMfQ3EIwKyxksS6/04xhWsBspCLOdmdkieiZSZwcbpTYAP+UMhwI7GRFzBWao
+         miow==
+X-Gm-Message-State: AOAM532tpmAZeFO156BGbISAJz23gGkcmFIfQKzlftXA35Jtqn3hHakl
+        16HwybZTfUY7ClGjkwVESWA=
+X-Google-Smtp-Source: ABdhPJw13X7rw0q4xbArvVS+WyTpffCFf61Owreem8v6Q4CEO1zlzy3RKePEZ/FsBQwm1kKEDBNCCQ==
+X-Received: by 2002:a63:cf03:: with SMTP id j3mr1043772pgg.198.1597985077991;
+        Thu, 20 Aug 2020 21:44:37 -0700 (PDT)
+Received: from bobo.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id l9sm683374pgg.29.2020.08.20.21.44.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 21:44:37 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Zefan Li <lizefan@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Subject: [PATCH v5 0/8] huge vmalloc mappings
+Date:   Fri, 21 Aug 2020 14:44:19 +1000
+Message-Id: <20200821044427.736424-1-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1k8ytJ-00009U-Oh;;;mid=<87r1s0txxe.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18uBSxl8pJIjuyaXaco3WG9+jz0MdU4UDc=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in __set_oom_adj when not necessary
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Hocko <mhocko@suse.com> writes:
+I made this powerpc-only for the time being. It shouldn't be too hard to
+add support for other archs that define HUGE_VMAP. I have booted x86
+with it enabled, just may not have audited everything.
 
-> On Thu 20-08-20 08:56:53, Suren Baghdasaryan wrote:
-> [...]
->> Catching up on the discussion which was going on while I was asleep...
->> So it sounds like there is a consensus that oom_adj should be moved to
->> mm_struct rather than trying to synchronize it among tasks sharing mm.
->> That sounds reasonable to me too. Michal answered all the earlier
->> questions about this patch, so I won't be reiterating them, thanks
->> Michal. If any questions are still lingering about the original patch
->> I'll be glad to answer them.
->
-> I think it still makes some sense to go with a simpler (aka less tricky)
-> solution which would be your original patch with an incremental fix for
-> vfork and the proper ordering (http://lkml.kernel.org/r/20200820124109.GI5033@dhcp22.suse.cz)
-> and then make a more complex shift to mm struct on top of that. The
-> former will be less tricky to backport to stable IMHO.
+Hi Andrew, would you care to put this in your tree?
 
-So I am confused.
+Thanks,
+Nick
 
-I don't know how a subtle dependency on something in clone
-is better than something flat footed in exec.
+Since v4:
+- Fixed an off-by-page-order bug in v4
+- Several minor cleanups.
+- Added page order to /proc/vmallocinfo
+- Added hugepage to alloc_large_system_hage output.
+- Made an architecture config option, powerpc only for now.
 
+Since v3:
+- Fixed an off-by-one bug in a loop
+- Fix !CONFIG_HAVE_ARCH_HUGE_VMAP build fail
+- Hopefully this time fix the arm64 vmap stack bug, thanks Jonathan
+  Cameron for debugging the cause of this (hopefully).
 
-That said if we are going for a small change why not:
+Since v2:
+- Rebased on vmalloc cleanups, split series into simpler pieces.
+- Fixed several compile errors and warnings
+- Keep the page array and accounting in small page units because
+  struct vm_struct is an interface (this should fix x86 vmap stack debug
+  assert). [Thanks Zefan]
 
-	/*
-	 * Make sure we will check other processes sharing the mm if this is
-	 * not vfrok which wants its own oom_score_adj.
-	 * pin the mm so it doesn't go away and get reused after task_unlock
-	 */
-	if (!task->vfork_done) {
-		struct task_struct *p = find_lock_task_mm(task);
+Nicholas Piggin (8):
+  mm/vmalloc: fix vmalloc_to_page for huge vmap mappings
+  mm: apply_to_pte_range warn and fail if a large pte is encountered
+  mm/vmalloc: rename vmap_*_range vmap_pages_*_range
+  lib/ioremap: rename ioremap_*_range to vmap_*_range
+  mm: HUGE_VMAP arch support cleanup
+  mm: Move vmap_range from lib/ioremap.c to mm/vmalloc.c
+  mm/vmalloc: add vmap_range_noflush variant
+  mm/vmalloc: Hugepage vmalloc mappings
 
-		if (p) {
--			if (atomic_read(&p->mm->mm_users) > 1) {
-+			if (atomic_read(&p->mm->mm_users) > p->signal->nr_threads) {
-				mm = p->mm;
-				mmgrab(mm);
-			}
-			task_unlock(p);
-		}
-	}
+ .../admin-guide/kernel-parameters.txt         |   2 +
+ arch/Kconfig                                  |   4 +
+ arch/arm64/mm/mmu.c                           |  12 +-
+ arch/powerpc/Kconfig                          |   1 +
+ arch/powerpc/mm/book3s64/radix_pgtable.c      |  10 +-
+ arch/x86/mm/ioremap.c                         |  12 +-
+ include/linux/io.h                            |   9 -
+ include/linux/vmalloc.h                       |  13 +
+ init/main.c                                   |   1 -
+ mm/ioremap.c                                  | 231 +--------
+ mm/memory.c                                   |  60 ++-
+ mm/page_alloc.c                               |   4 +-
+ mm/vmalloc.c                                  | 456 +++++++++++++++---
+ 13 files changed, 476 insertions(+), 339 deletions(-)
 
-That would seem to be the minimal change to make this happen.  That has
-the advantage that if a processes does vfork it won't always have to
-take the slow path.
+-- 
+2.23.0
 
-Moving to the mm_struct is much less racy but this is simple.
-
-Eric
