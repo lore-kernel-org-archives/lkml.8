@@ -2,171 +2,79 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F70DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB49C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE35208B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:44:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isZUrOqs"
+	by mail.kernel.org (Postfix) with ESMTP id DF7C0208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597981510;
+	bh=EurlpFZvEALku2yAmqdxOL64IyitGFPQ6qKy1OzRhHI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rjVY5t+n70Y0VTnU5d5oWm7k1KGbXuh+IortdTlY5QF7yNf/WkXq9iid7z0yPMXmG
+	 jILfTH47L8jLMPvUQHdA5t4dFgCp5hKL9VZfHBbzXlOCw2YJJxNhP1qLoBhbyPvI2U
+	 Cec9UccEeSdLuShy59Y2BUvBzyPCeNVzXMoesuYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgHUDop (ORCPT
+        id S1727854AbgHUDoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:44:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgHUDop (ORCPT
+        Thu, 20 Aug 2020 23:44:54 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:25396 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgHUDov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:44:45 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ABEDC061385;
-        Thu, 20 Aug 2020 20:44:45 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id v16so287530plo.1;
-        Thu, 20 Aug 2020 20:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wyIVjmGqTstjchVJqOQwrnaOjDzoFs+oUprn8zSTmnY=;
-        b=isZUrOqsG/63XB4tWP2IwaGUbFUurZ4oY18SSWClUtvGV1RD7DhBaPPGd/Ww2XLMAn
-         ZgT+SRonsJCO8fqqnRx098Y7ADJforV8DZeJcMylQH/R0cTn4yB2ORxxz0vEC99R6j1F
-         sExxtN/AFIrh947Q4vAjS5MJF4ZJAb42EqawgP1AJ+agcXB0Qjm5W2MGErw2KuZSr6Kl
-         o9qRaZtYiyYmmfzrX1jggDAHXaP6YM6CZqNBYZFKHGUnFHCz38w3BYc9wE8RoJyJ8418
-         VaNWPV0IYt0sR+zSBrzFzCmFczt0tVCUcc5c/u4LukCZQadKosm9JXT615rVih1iKokq
-         6qbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wyIVjmGqTstjchVJqOQwrnaOjDzoFs+oUprn8zSTmnY=;
-        b=ghUqZ6nsEbzjmVhOZ/3LyXn/Ln2e9TxQraRMnEHTeT+fsRZ3Uxm2DTO7rwE152PAbE
-         jPBNCeFiRcj4lrbmoXiHEqyzGQYR5Tz4vUShGMEL7FDwrytD8gVbAuLWrhA0kPhN42OW
-         zsELreozbN8ypjIeeMHVudI0eT7PC+/Lwwdkpgt+XBIycxwrI05bLljAIDgt9ABFrFtJ
-         jVKipY3DddcRRyUkVkpfUi91qPaShPdvImenn6AL0wDMWrGC7PEBxoOL4JnRVFOPUBbJ
-         5ohJDgaejptTLG73Enfv1pxykX17I7bb8MrGitoB7mTmhL1CWtaHszHAoIv01NRZLMDF
-         eiTA==
-X-Gm-Message-State: AOAM531UBIfdadJQHtwM2MzL+RcIXDdugCudh+KKZgBFkbi6t+6vqDA4
-        Nz5mYQbgLtz2Hl70y47hHw==
-X-Google-Smtp-Source: ABdhPJzvXgDyygUBAVsUvY687NV+FhoagdzjUUXE14qWdVGU3IGqA98UMadI38IkKipvJyvWBKAxbQ==
-X-Received: by 2002:a17:90a:e64b:: with SMTP id ep11mr925111pjb.86.1597981484578;
-        Thu, 20 Aug 2020 20:44:44 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:cfa:ca54:b051:6744:d734:a674])
-        by smtp.gmail.com with ESMTPSA id q17sm607755pfh.32.2020.08.20.20.44.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 20:44:43 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     paul@crapouillou.net, vkoul@kernel.org, dan.j.williams@intel.com,
-        lars@metafoo.de
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrianov@ispras.ru, ldv-project@linuxtesting.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH v2] drivers/dma/dma-jz4780: Fix race condition between probe and irq handler
-Date:   Fri, 21 Aug 2020 09:14:23 +0530
-Message-Id: <20200821034423.12713-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 20 Aug 2020 23:44:51 -0400
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 07L3iYNR006929;
+        Fri, 21 Aug 2020 12:44:35 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 07L3iYNR006929
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1597981475;
+        bh=NcTV0rU4lqUzCGeSvj+IhR2DmoMnjOnTSqkCOLXjihI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CnIvqsKvc0gf0dxrbxdAc+BzYbQk4qOqDIIFTsP4aGjhh+9mcR3pMU+Qpmx506QgA
+         bI3Wyk2Y1ClTvdt38adMcLST/8OJKx0UkBLvFEmGnCn+BV2Cx7/MrvqfOZXNg4+inC
+         +PofSWTJfNgvEwNczWxoW6om1BM3DFnZMdfY/f6U//78Tm2Tb4ZvYynONHFsklAzJ0
+         QF/n2XLyefgMFhAquUgmEAJeQQ2ITbvSlquE8BMvEQhNJmz7syrmGYPAIVrz8uAAWt
+         /3fErwUqcBsCD2l6jb4Rjq4G2ZnLsssPfVTkUj1jr6mkzQyFORUBL07YeQkE1yqlSV
+         9pvi0Rk0bJ2aQ==
+X-Nifty-SrcIP: [209.85.222.53]
+Received: by mail-ua1-f53.google.com with SMTP id d20so160159ual.13;
+        Thu, 20 Aug 2020 20:44:35 -0700 (PDT)
+X-Gm-Message-State: AOAM531AIdH1jVFcJhWkFrBUSei9Ltt90ia/FiU5/ROHjFNE3i/7VAXI
+        iwCUjy4oVsh14ECO70erLFOhORmY0aiwH8yp2os=
+X-Google-Smtp-Source: ABdhPJwyVtkEj0z6jbnZ/ZYmrdRit6XeU5c258QdTKoyURxGnPxMSmgPltgrdQ/tb1o3/w8aLnbUYHZgVFIi1z3jZz0=
+X-Received: by 2002:ab0:108:: with SMTP id 8mr452069uak.25.1597981474093; Thu,
+ 20 Aug 2020 20:44:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200820174328.490374-1-masahiroy@kernel.org> <20200820174328.490374-2-masahiroy@kernel.org>
+In-Reply-To: <20200820174328.490374-2-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 21 Aug 2020 12:43:57 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT=w6o7z-V57t0oXfN5swurWt1LtCVx_pst6=tR0C-m8Q@mail.gmail.com>
+Message-ID: <CAK7LNAT=w6o7z-V57t0oXfN5swurWt1LtCVx_pst6=tR0C-m8Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kconfig: qconf: replace depreacated
+ QString::sprintf() with QTextStream
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Robert Crawford <flacycads@cox.net>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+I will fix the typo in the subject.
 
-In probe, IRQ is requested before zchan->id is initialized which can be
-read in the irq handler. Hence, shift request irq after other initializations
-complete.
+"depreacated" -> "deprecated"
 
-Found by Linux Driver Verification project (linuxtesting.org).
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
----
-Changes since v1:
-Keep enable clock before request IRQ.
----
- drivers/dma/dma-jz4780.c | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 448f663da89c..8beed91428bd 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -879,24 +879,11 @@ static int jz4780_dma_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	ret = platform_get_irq(pdev, 0);
--	if (ret < 0)
--		return ret;
--
--	jzdma->irq = ret;
--
--	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
--			  jzdma);
--	if (ret) {
--		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
--		return ret;
--	}
--
- 	jzdma->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(jzdma->clk)) {
- 		dev_err(dev, "failed to get clock\n");
- 		ret = PTR_ERR(jzdma->clk);
--		goto err_free_irq;
-+		return ret;
- 	}
- 
- 	clk_prepare_enable(jzdma->clk);
-@@ -949,10 +936,23 @@ static int jz4780_dma_probe(struct platform_device *pdev)
- 		jzchan->vchan.desc_free = jz4780_dma_desc_free;
- 	}
- 
-+	ret = platform_get_irq(pdev, 0);
-+	if (ret < 0)
-+		goto err_disable_clk;
-+
-+	jzdma->irq = ret;
-+
-+	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
-+			  jzdma);
-+	if (ret) {
-+		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
-+		goto err_disable_clk;
-+	}
-+
- 	ret = dmaenginem_async_device_register(dd);
- 	if (ret) {
- 		dev_err(dev, "failed to register device\n");
--		goto err_disable_clk;
-+		goto err_free_irq;
- 	}
- 
- 	/* Register with OF DMA helpers. */
-@@ -960,17 +960,17 @@ static int jz4780_dma_probe(struct platform_device *pdev)
- 					 jzdma);
- 	if (ret) {
- 		dev_err(dev, "failed to register OF DMA controller\n");
--		goto err_disable_clk;
-+		goto err_free_irq;
- 	}
- 
- 	dev_info(dev, "JZ4780 DMA controller initialised\n");
- 	return 0;
- 
--err_disable_clk:
--	clk_disable_unprepare(jzdma->clk);
--
- err_free_irq:
- 	free_irq(jzdma->irq, jzdma);
-+
-+err_disable_clk:
-+	clk_disable_unprepare(jzdma->clk);
- 	return ret;
- }
- 
 -- 
-2.17.1
-
+Best Regards
+Masahiro Yamada
