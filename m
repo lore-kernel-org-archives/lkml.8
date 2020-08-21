@@ -2,126 +2,154 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0EAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6931C2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:30:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="nTR+Wjuz"
+	by mail.kernel.org (Postfix) with ESMTP id 18A222063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgHUPae (ORCPT
+        id S1728124AbgHUPbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:30:34 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:6476 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727993AbgHUP2r (ORCPT
+        Fri, 21 Aug 2020 11:31:36 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43212 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727882AbgHUPbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:28:47 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LFAR15028399
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:28:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=iKZyyMQdqjb721f824+HvXtzTc/696L14IN6lwMaMGA=;
- b=nTR+WjuzvECmDZdu9trhFmpelT8qPF2vM+JbSpQDztSbVs7QLNNZrLFAT1cgv7AeSHVJ
- C20Xf2X7O1UPVyEP9eLsHyGlK29C612Mck5a720dvDI0MaepZ6jTR1/EAGgYH2miVBIK
- o6IHHdBlZ6P67lMcbrEFQMSw2/2HJHqn6oY= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 332gp8031f-10
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:28:46 -0700
-Received: from intmgw003.06.prn3.facebook.com (2620:10d:c085:208::11) by
- mail.thefacebook.com (2620:10d:c085:11d::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 21 Aug 2020 08:28:43 -0700
-Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id 8DC22344106F; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
-To:     <bpf@vger.kernel.org>
-CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
-        Roman Gushchin <guro@fb.com>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next v4 20/30] bpf: eliminate rlimit-based memory accounting for lpm_trie maps
-Date:   Fri, 21 Aug 2020 08:01:24 -0700
-Message-ID: <20200821150134.2581465-21-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
-References: <20200821150134.2581465-1-guro@fb.com>
+        Fri, 21 Aug 2020 11:31:33 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v12so2281727ljc.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:31:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RiowHVIdXmdWQw4sb/h6lAEadFKHLzL7PqwIIimzsFs=;
+        b=N8LZfZy/tlqq0o1y729wdePWv3U9Dkqh8D1VZJdY40jOKCI7UCQ3c5srsjuRdQEcs2
+         C/nZEQ/8LJnANsS1cuJsvEh3pzZytlSeAzPHLHVbwc2eVBCpzGnmJtXaYGoVtFiat4tG
+         QrO4IwLLeLcNlF3tDDrqZn5+oyrJGayXf6dVTipQQTLCfpadGrGYmkSU0Y/WQb4yU5Vg
+         VVrVaTN2OOzKCJ+g2Z6zIUaRbCNUn9hdMbsxwlyDGPSEL+mMNh9PLQPCHcFAIfUfKsKP
+         T4puG4eOxDQN2EHva3bK1p3vrhKsfrus01pxD51fpDTQkK/xvE9uEvxBF8Bkd/cdlGYv
+         Vc9g==
+X-Gm-Message-State: AOAM532v/GQjoEVH9f54jqCKqkBMEs63mrjEiv9lkI/7Nq7TsDHJoj0Y
+        hJGsZzWiWpfgeE9WdjSv8d+pCGnOe4E=
+X-Google-Smtp-Source: ABdhPJzjz8FcMOgIuUhj09q0MInHjKvcAKGRb0sLsr90dgT5GOGFgFOstOCNXGo0SSKhlQF1TzthIw==
+X-Received: by 2002:a2e:9003:: with SMTP id h3mr1868250ljg.185.1598023890775;
+        Fri, 21 Aug 2020 08:31:30 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.151.123])
+        by smtp.googlemail.com with ESMTPSA id w11sm446050lff.62.2020.08.21.08.31.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 08:31:28 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] coccinelle: api: add kobj_to_dev.cocci script
+Date:   Fri, 21 Aug 2020 18:31:00 +0300
+Message-Id: <20200821153100.434332-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=742
- priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=38 spamscore=0
- clxscore=1015 bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008210143
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not use rlimit-based memory accounting for lpm_trie maps.
-It has been replaced with the memcg-based memory accounting.
+Use kobj_to_dev() instead of container_of().
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- kernel/bpf/lpm_trie.c | 13 -------------
- 1 file changed, 13 deletions(-)
+Examples of such patches:
+893c3d82b425 watchdog: Use kobj_to_dev() API
+23fd63a44460 hwmon: (nct6683) Replace container_of() with  kobj_to_dev()
+224941c9424f power: supply: use kobj_to_dev
+a9b9b2af40c7 backlight: lm3533_bl: Use kobj_to_dev() instead
+0acb47a3a093 qlcnic: Use kobj_to_dev() instead
+97cd738c44c8 gpiolib: sysfs: use kobj_to_dev
+d06f9e6c8960 hwmon: (nct7802) Replace container_of() API
+036855a4c3b3 hwmon : (nct6775) Use kobj_to_dev() API
+baf1d9c18293 driver/base/soc: Use kobj_to_dev() API
+ae243ef0afbc rtc: sysfs: use kobj_to_dev
+6b060d8a09e9 i2c: use kobj_to_dev() API
+9e7bd945b9a9 scsi: core: use kobj_to_dev
+0d730b57b95f s390/cio: use kobj_to_dev() API
+0616ca73fd35 usb: use kobj_to_dev() API
+8c9b839c0b80 alpha: use kobj_to_dev()
+016c0bbae1d1 netxen: Use kobj_to_dev()
+6908b45eafc4 GenWQE: use kobj_to_dev()
+85f4f39c80e9 pch_phub: use kobj_to_dev()
+47679cde604d misc: c2port: use kobj_to_dev()
+85016ff33f35 misc: cxl: use kobj_to_dev()
+092462c2b522 misc: eeprom: use kobj_to_dev()
+a9c9d9aca4e7 zorro: Use kobj_to_dev()
+a253f1eee6c4 rapidio: use kobj_to_dev()
+e3837b00b6bb drm/radeon: use kobj_to_dev()
+cc29ec874b37 drm/amdgpu: use kobj_to_dev()
+d122cbf1a310 drm/sysfs: use kobj_to_dev()
+657fb5fbadb3 drm/i915: use kobj_to_dev()
+554a60379aaa PCI: Use kobj_to_dev() instead of open-coding it
+2cf83833fc9c HID: use kobj_to_dev()
+aeb7ed14fe5d bridge: use kobj_to_dev instead of to_dev
+8e3829c61b48 staging:iio:adis16220: Use kobj_to_dev instead of open-coding it
+b0d1f807f340 driver-core: Use kobj_to_dev instead of re-implementing it
 
-diff --git a/kernel/bpf/lpm_trie.c b/kernel/bpf/lpm_trie.c
-index d85e0fc2cafc..c747f0835eb1 100644
---- a/kernel/bpf/lpm_trie.c
-+++ b/kernel/bpf/lpm_trie.c
-@@ -540,8 +540,6 @@ static int trie_delete_elem(struct bpf_map *map, void=
- *_key)
- static struct bpf_map *trie_alloc(union bpf_attr *attr)
- {
- 	struct lpm_trie *trie;
--	u64 cost =3D sizeof(*trie), cost_per_node;
--	int ret;
-=20
- 	if (!bpf_capable())
- 		return ERR_PTR(-EPERM);
-@@ -567,20 +565,9 @@ static struct bpf_map *trie_alloc(union bpf_attr *at=
-tr)
- 			  offsetof(struct bpf_lpm_trie_key, data);
- 	trie->max_prefixlen =3D trie->data_size * 8;
-=20
--	cost_per_node =3D sizeof(struct lpm_trie_node) +
--			attr->value_size + trie->data_size;
--	cost +=3D (u64) attr->max_entries * cost_per_node;
--
--	ret =3D bpf_map_charge_init(&trie->map.memory, cost);
--	if (ret)
--		goto out_err;
--
- 	spin_lock_init(&trie->lock);
-=20
- 	return &trie->map;
--out_err:
--	kfree(trie);
--	return ERR_PTR(ret);
- }
-=20
- static void trie_free(struct bpf_map *map)
---=20
+ scripts/coccinelle/api/kobj_to_dev.cocci | 44 ++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 scripts/coccinelle/api/kobj_to_dev.cocci
+
+diff --git a/scripts/coccinelle/api/kobj_to_dev.cocci b/scripts/coccinelle/api/kobj_to_dev.cocci
+new file mode 100644
+index 000000000000..e2cdd424aeca
+--- /dev/null
++++ b/scripts/coccinelle/api/kobj_to_dev.cocci
+@@ -0,0 +1,44 @@
++// SPDX-License-Identifier: GPL-2.0-only
++///
++/// Use kobj_to_dev() instead of container_of()
++///
++// Confidence: High
++// Copyright: (C) 2020 Denis Efremov ISPRAS
++// Options: --no-includes --include-headers
++//
++// Keywords: kobj_to_dev, container_of
++//
++
++virtual context
++virtual report
++virtual org
++virtual patch
++
++
++@r depends on !patch@
++expression ptr;
++position p;
++@@
++
++* container_of(ptr, struct device, kobj)@p
++
++
++@depends on patch@
++expression ptr;
++@@
++
++- container_of(ptr, struct device, kobj)
+++ kobj_to_dev(ptr)
++
++
++@script:python depends on report@
++p << r.p;
++@@
++
++coccilib.report.print_report(p[0], "WARNING opportunity for kobj_to_dev()")
++
++@script:python depends on org@
++p << r.p;
++@@
++
++coccilib.org.print_todo(p[0], "WARNING opportunity for kobj_to_dev()")
+-- 
 2.26.2
 
