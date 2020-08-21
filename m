@@ -2,137 +2,140 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBC9C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AC1C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D367C22EBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3624923100
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:30:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FHJhuIII"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MPICVs9/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgHUSaR (ORCPT
+        id S1726851AbgHUSaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:30:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgHUSaQ (ORCPT
+        Fri, 21 Aug 2020 14:30:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3790 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725821AbgHUSaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:30:16 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04371C06179B;
-        Fri, 21 Aug 2020 11:30:16 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id h12so1390317pgm.7;
-        Fri, 21 Aug 2020 11:30:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zP47110S/VhRjoKqw44D0J+M/2tpqI2WT8Gl3dFgMLU=;
-        b=FHJhuIIIl2pjvt5gC0n9ebYyiLz7oPCyOoZ204GanM2l+Dt/AZK351tSCFaXcetIgB
-         B0QuwgtbOLYh3yinGuPNmEMuTnVlomUiZvIknKW5OINsVq95f5P/8IfYpOvTztpQk7wj
-         5rKQx4S3UkuY6qUu7yzqikp5pMBrC0C27wlZZgHZ0vmAdgusHDxAyG5sy7EtJNqSH6Wl
-         OQ9tZfCKlVWZju4ne50ug0G12g6VyTIGBO2fmhyEgM8OAZohfuG6Zn2pIJdtYfRPmDME
-         ho6FzKYOww8DX4s00jUzULiSihELcvDbmTArHDtqj9RyazRKS6cbNpGU0eNKfS/zzlyr
-         dl2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zP47110S/VhRjoKqw44D0J+M/2tpqI2WT8Gl3dFgMLU=;
-        b=YDEg1cIfjTG4m+gm5YVQ7pZEt2GVuNbk4TlbNx9FXbo5qDz1aVaui1WD4KHp58iBNp
-         vXRVh9ktSHODWT9txJCt4VTECC23BjFhjTCKFa5+5t7TUEK104LamnXe3NTmYK7WKshw
-         wp33tg58VJm6/huMU3dgAIrkePAm+oPmXL/B8b54co2QZnzCrXZTMnO9RhP5N8n0SS01
-         k0XwBKXaEKPqpvy4fKWto3X/LWTe322gwc6bP40m2EpDLNKL3PGHOKBiygo5aQJHDHA4
-         t6ft3B7Fu2rwcy7ZiqtfvmbIzE4U1F3apgVVCf85+EjRp/ZfOu09DA/X70epAswKm2gF
-         xxyg==
-X-Gm-Message-State: AOAM531rZzvKfXFmXGHjsOTYo5agichd/C7YEdgMRTv9hcq82c0NbnG8
-        OJen07qGX3g4wqmnMbvVRVw=
-X-Google-Smtp-Source: ABdhPJxp1f9fXlscpv6Qe1ELd6qPs9/3TfsCbJWXquPOKCpMw0FIPwawnTMfQ9II/Phab4f9G10iHw==
-X-Received: by 2002:aa7:8b18:: with SMTP id f24mr3453731pfd.301.1598034615578;
-        Fri, 21 Aug 2020 11:30:15 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c207sm3072159pfc.64.2020.08.21.11.30.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Aug 2020 11:30:15 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 11:30:13 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Eric Tremblay <etremblay@distech-controls.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (tmp513) use simple i2c probe
-Message-ID: <20200821183013.GA61218@roeck-us.net>
-References: <20200821160231.592571-1-steve@sk2.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821160231.592571-1-steve@sk2.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 21 Aug 2020 14:30:19 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LI3UuM029711;
+        Fri, 21 Aug 2020 14:30:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=UdI+uESx+0ouwqK+UkkXRC5jVNonEHLLFlFBL4bsdZc=;
+ b=MPICVs9/96Ubrco6QijwGI2grU0C+tAwYz2xEMYb9dlpTCaC7bqlLEjCRl307R4aXvbm
+ wSRsCVVYICyLAEVMPaN2l8RHG6lvIMHrz+xMHhjY5YQNO4dCAN3Dq8aFTAfBSkBjaX63
+ RUckNaX2pirU9jf73ic+CE9ZTUu91DEPgcaQ/l86H+PE0f4myVUn1MmBlqWc2E6RD+bc
+ Zg6AplL/8rlL+Eecj4mzYrtXVBIeXwcw/Qq3i3I7AdiKld2W+ubG6lKnQ2TiW6jly1Ea
+ I3w+VMzkJnj8w5SHNkyjWdE9RD1K5SoPg2Y5rOcl/bgUzkhCBpd+n4eRGSBOLwFNyoDe Yg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3327mvc9pg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 14:30:09 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LIU9ZE143948;
+        Fri, 21 Aug 2020 14:30:09 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3327mvc9nc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 14:30:09 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LIG935021179;
+        Fri, 21 Aug 2020 18:30:06 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04fra.de.ibm.com with ESMTP id 3304ujtu51-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 18:30:06 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LIU4FP62128528
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 18:30:04 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B99852052;
+        Fri, 21 Aug 2020 18:30:04 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.65.240])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A8DBC5204E;
+        Fri, 21 Aug 2020 18:30:02 +0000 (GMT)
+Message-ID: <2b204e31d21e93c0167d154c2397cd5d11be6e7f.camel@linux.ibm.com>
+Subject: Re: [PATCH 01/11] evm: Execute evm_inode_init_security() only when
+ the HMAC key is loaded
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date:   Fri, 21 Aug 2020 14:30:01 -0400
+In-Reply-To: <20200618160133.937-1-roberto.sassu@huawei.com>
+References: <20200618160133.937-1-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ priorityscore=1501 spamscore=0 mlxlogscore=999 adultscore=0
+ impostorscore=0 lowpriorityscore=0 phishscore=0 clxscore=1011 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 06:02:31PM +0200, Stephen Kitt wrote:
-> As part of the ongoing i2c transition to the simple probe
-> ("probe_new"), this patch uses i2c_match_id to retrieve the
-> driver_data for the probed device. The id parameter is thus no longer
-> necessary and the simple probe can be used instead.
+Hi Roberto,
+
+Sorry for the delay in reviewing these patches.   Missing from this
+patch set is a cover letter with an explanation for grouping these
+patches into a patch set, other than for convenience.  In this case, it
+would be along the lines that the original use case for EVM portable
+and immutable keys support was for a few critical files, not combined
+with an EVM encrypted key type.   This patch set more fully integrates
+the initial EVM portable and immutable signature support.
+
+On Thu, 2020-06-18 at 18:01 +0200, Roberto Sassu wrote:
+> evm_inode_init_security() requires the HMAC key to calculate the HMAC on
+> initial xattrs provided by LSMs. Unfortunately, with the evm_key_loaded()
+> check, the function continues even if the HMAC key is not loaded
+> (evm_key_loaded() returns true also if EVM has been initialized only with a
+> public key). If the HMAC key is not loaded, evm_inode_init_security()
+> returns an error later when it calls evm_init_hmac().
 > 
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> Thus, this patch replaces the evm_key_loaded() check with a check of the
+> EVM_INIT_HMAC flag in evm_initialized, so that evm_inode_init_security()
+> returns 0 instead of an error.
+> 
+> Cc: stable@vger.kernel.org # 4.5.x
+> Fixes: 26ddabfe96b ("evm: enable EVM when X509 certificate is loaded")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 
-Applied.
-
-Thanks,
-Guenter
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
 > ---
->  drivers/hwmon/tmp513.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
+>  security/integrity/evm/evm_main.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/hwmon/tmp513.c b/drivers/hwmon/tmp513.c
-> index df66e0bc1253..9f5885b0eb74 100644
-> --- a/drivers/hwmon/tmp513.c
-> +++ b/drivers/hwmon/tmp513.c
-> @@ -709,8 +709,7 @@ static int tmp51x_configure(struct device *dev, struct tmp51x_data *data)
->  	return 0;
->  }
+> diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
+> index 0d36259b690d..744c105b48d1 100644
+> --- a/security/integrity/evm/evm_main.c
+> +++ b/security/integrity/evm/evm_main.c
+> @@ -521,7 +521,8 @@ int evm_inode_init_security(struct inode *inode,
+>  	struct evm_xattr *xattr_data;
+>  	int rc;
 >  
-> -static int tmp51x_probe(struct i2c_client *client,
-> -			const struct i2c_device_id *id)
-> +static int tmp51x_probe(struct i2c_client *client)
->  {
->  	struct device *dev = &client->dev;
->  	struct tmp51x_data *data;
-> @@ -724,7 +723,7 @@ static int tmp51x_probe(struct i2c_client *client,
->  	if (client->dev.of_node)
->  		data->id = (enum tmp51x_ids)device_get_match_data(&client->dev);
->  	else
-> -		data->id = id->driver_data;
-> +		data->id = i2c_match_id(tmp51x_id, client)->driver_data;
+> -	if (!evm_key_loaded() || !evm_protected_xattr(lsm_xattr->name))
+> +	if (!(evm_initialized & EVM_INIT_HMAC) ||
+> +	    !evm_protected_xattr(lsm_xattr->name))
+>  		return 0;
 >  
->  	ret = tmp51x_configure(dev, data);
->  	if (ret < 0) {
-> @@ -751,7 +750,7 @@ static int tmp51x_probe(struct i2c_client *client,
->  	if (IS_ERR(hwmon_dev))
->  		return PTR_ERR(hwmon_dev);
->  
-> -	dev_dbg(dev, "power monitor %s\n", id->name);
-> +	dev_dbg(dev, "power monitor %s\n", client->name);
->  
->  	return 0;
->  }
-> @@ -761,7 +760,7 @@ static struct i2c_driver tmp51x_driver = {
->  		.name	= "tmp51x",
->  		.of_match_table = of_match_ptr(tmp51x_of_match),
->  	},
-> -	.probe		= tmp51x_probe,
-> +	.probe_new	= tmp51x_probe,
->  	.id_table	= tmp51x_id,
->  };
->  
+>  	xattr_data = kzalloc(sizeof(*xattr_data), GFP_NOFS);
+
+
