@@ -2,120 +2,118 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1673C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70133C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 840862072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D582072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JhIrT7If"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFHRVbfk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgHUUBF (ORCPT
+        id S1726845AbgHUUCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 16:01:05 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:45731 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726772AbgHUT4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:56:35 -0400
-Received: from [IPv6:2601:646:8600:3281:31ed:317b:19eb:7465] ([IPv6:2601:646:8600:3281:31ed:317b:19eb:7465])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 07LJu1g2490486
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Fri, 21 Aug 2020 12:56:01 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 07LJu1g2490486
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020072401; t=1598039762;
-        bh=YhPQH5SfS558trRCShnnsO2tTvQs+aQ7LNSaONIhSVQ=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=JhIrT7IfAsETgop44uuwFTNUnMwupA0yzOfUgEhoBRrWZ+s1qh5LWta4eL4B6uuxf
-         QAyCo2COB2ZV7dIR2I2cEQ3Rve1ZuNwUMgUINAmd8p4qi/0hQd0Pwe3631KXUQZtT2
-         r5ODdcEls1s7kJt1fEiOEa29FqIkAqGUT7MNzvPUyMQliMzmu+IxEj0ELjydA/6fW0
-         YfYBnTjdD48WBubISraGGRNPKRXf2/nCf0kb9n44Lp8O4vwqhk+LRQwKJ5H1o+evHC
-         fcy+jtKalN/exSfRIRsJsk2/oaJhUeUDx884p33xMmmuBGdb4ka2kyhfq2Ur9ll1dR
-         1gTGLtKjy6GcA==
-Date:   Fri, 21 Aug 2020 12:55:53 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <87r1s0gxfj.fsf@nanos.tec.linutronix.de>
-References: <20200821025050.32573-1-sean.j.christopherson@intel.com> <20200821074743.GB12181@zn.tnic> <3eb94913-662d-5423-21b1-eaf75635142a@redhat.com> <87r1s0gxfj.fsf@nanos.tec.linutronix.de>
+        Fri, 21 Aug 2020 16:02:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725831AbgHUUCD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 16:02:03 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C65C061573;
+        Fri, 21 Aug 2020 13:02:03 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id d14so2429369qke.13;
+        Fri, 21 Aug 2020 13:02:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TPOt76AEuXIQt1E+8hC9FNGB9En2HYeoQvtbHdl/m1g=;
+        b=cFHRVbfk774qVr9x3mqS5vqcqh4uuZR3AktkRKIYSbrK/h6eTE8iTn3Eszc8EU5VU4
+         H2gBX0hwAajvgJkpnxJzEPZCh94gbkzOVt+ZveLrWKElY7x28RT/g51x+SukMSCeeINg
+         HZvWl4elaNCaYwDed/Z0Vi4QHqie2XI2XiXN35MWwFN1l394xqNEFKcchxE11pXAGn9m
+         nJ6X4fA4xIO+NOhv34wJ10ixswyFiVLdeml9cwaPWhfYsQ4zWLHmdRMhrsC5B1zdAvSO
+         vvdZ6jLj7HQCdxyGI4xYcdJwoIdN9f91NDDlkyL/QXjpshXpCtguxWzEgk1JvLMc5BiP
+         NorA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=TPOt76AEuXIQt1E+8hC9FNGB9En2HYeoQvtbHdl/m1g=;
+        b=By/lg7wN0OPsZXKYDQkjjrjmYT/iOeI9SGd1IRUCc/q8bLWoOnebWKVhwk1c0v37CW
+         IQqOVVFfWKqIAHLR6e7Vmz0j/0YtNxhABERvj9wgGanjN9iY+3d+dD0K3o15+NNtGCGG
+         dlNUXfBTNvywDdEEH9ixDCb5dsodGbJ9AwjFUX4r08DdxQ8ytjCp0QEF+1ZxipXP8nov
+         ItAmriXlgyfTMIp7uIIX5wM4rVWzEEC1kB9rGgsMi5Vfx6KyaIhGlJxPdj1OIDKIU/RV
+         JmlXWSULUl03o19ZD95UD3z+iG1efWZ5hcLmQfgHrvRTLPQLolAWxJDC0yaKpBBeGDeA
+         w9aA==
+X-Gm-Message-State: AOAM531xjAa6vgCassh5ItihqKL1Ss+1CPpz3k4pZ6p2+L40USghsSBP
+        ONnCNlYpGRYYu2kWm1Pr8o0=
+X-Google-Smtp-Source: ABdhPJzZMA2ESypf7UBk0PGzEz41wGwqm+M4H7u2kSTHaPem1ioXNXWIIvmjsMySROa1IgLhZylzMg==
+X-Received: by 2002:a05:620a:201a:: with SMTP id c26mr4160170qka.155.1598040121471;
+        Fri, 21 Aug 2020 13:02:01 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id c142sm2528839qkg.71.2020.08.21.13.02.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 13:02:01 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 21 Aug 2020 16:01:59 -0400
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 27/29] x86/boot/compressed: Remove, discard, or assert
+ for unwanted sections
+Message-ID: <20200821200159.GC1475504@rani.riverdale.lan>
+References: <20200821194310.3089815-1-keescook@chromium.org>
+ <20200821194310.3089815-28-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] x86/entry/64: Disallow RDPID in paranoid entry if KVM is enabled
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-CC:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Chang Seok Bae <chang.seok.bae@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>
-From:   hpa@zytor.com
-Message-ID: <5120CF63-12EB-4701-B303-C0A96201F5A2@zytor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200821194310.3089815-28-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On August 21, 2020 2:28:32 AM PDT, Thomas Gleixner <tglx@linutronix=2Ede> w=
-rote:
->On Fri, Aug 21 2020 at 10:09, Paolo Bonzini wrote:
->> On 21/08/20 09:47, Borislav Petkov wrote:
->>> On Thu, Aug 20, 2020 at 07:50:50PM -0700, Sean Christopherson wrote:
->>>> +	 * Disallow RDPID if KVM is enabled as it may consume a guest's
->TSC_AUX
->>>> +	 * if an NMI arrives in KVM's run loop=2E  KVM loads guest's
->TSC_AUX on
->>>> +	 * VM-Enter and may not restore the host's value until the CPU
->returns
->>>> +	 * to userspace, i=2Ee=2E KVM depends on the kernel not using
->TSC_AUX=2E
->>>>  	 */
->>> And frankly, this is really unfair=2E The kernel should be able to use
->any
->>> MSR=2E IOW, KVM needs to be fixed here=2E I'm sure it context-switches
->other
->>> MSRs so one more MSR is not a big deal=2E
->>
->> The only MSR that KVM needs to context-switch manually are XSS and
->> SPEC_CTRL=2E  They tend to be the same on host and guest in which case
->> they can be optimized away=2E
->>
->> All the other MSRs (EFER and PAT are those that come to mind) are
->> handled by the microcode and thus they don't have the slowness of
->> RDMSR/WRMSR
->>
->> One more MSR *is* a big deal: KVM's vmentry+vmexit cost is around
->1000
->> cycles, adding 100 clock cycles for 2 WRMSRs is a 10% increase=2E
->
->We all know that MSRs are slow, but as a general rule I have to make it
->entirely clear that the kernel has precedence over KVM=2E
->
->If the kernel wants to use an MSR for it's own purposes then KVM has to
->deal with that and not the other way round=2E Preventing the kernel from
->using a facility freely is not an option ever=2E
->
->The insanities of KVM performance optimizations have bitten us more
->than
->once=2E
->
->For this particular case at hand I don't care much and we should just
->rip the whole RDPID thing out unconditionally=2E We still have zero
->numbers about the performance difference vs=2E LSL=2E
->
->Thanks,
->
->        tglx
+On Fri, Aug 21, 2020 at 12:43:08PM -0700, Kees Cook wrote:
+> In preparation for warning on orphan sections, stop the linker from
+> generating the .eh_frame* sections, discard unwanted non-zero-sized
+> generated sections, and enforce other expected-to-be-zero-sized sections
+> (since discarding them might hide problems with them suddenly gaining
+> unexpected entries).
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+>  	.rel.dyn : {
+> -		*(.rel.*)
+> +		*(.rel.*) *(.rel_*)
+>  	}
+>  	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
+>  
+>  	.rela.dyn : {
+> -		*(.rela.*)
+> +		*(.rela.*) *(.rela_*)
+>  	}
+>  	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
+>  }
+> -- 
+> 2.25.1
+> 
 
-It is hardly going to be a performance difference for paranoid entry, whic=
-h is hopefully rare enough that it falls into the noise=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+When do you get .rela_?
