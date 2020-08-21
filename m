@@ -2,125 +2,156 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF94C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70297C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81EC1207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E4E207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="maOuUg+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgHUPRa (ORCPT
+        id S1728082AbgHUPRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:17:30 -0400
-Received: from mga06.intel.com ([134.134.136.31]:18349 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbgHUPR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:17:28 -0400
-IronPort-SDR: Hlsn19nD8YWku2/mcNy7uukn9FXxqY9O+s361/9OIAMNJSI85Qhjt7tdh9wbumSpgVHdgBGIJu
- fQeqkp/nwyBQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="217094652"
-X-IronPort-AV: E=Sophos;i="5.76,337,1592895600"; 
-   d="scan'208";a="217094652"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 08:17:27 -0700
-IronPort-SDR: X3WZs6CSMS+GgnkdfsfTbfDrbYXMtwd4QXENHMbQ/vkSmOsQgjxTnbAVin/D+ElXQ3Weo9quLC
- ipOKHUYXOXLg==
-X-IronPort-AV: E=Sophos;i="5.76,337,1592895600"; 
-   d="scan'208";a="442377166"
-Received: from pcmiller-mobl1.amr.corp.intel.com (HELO [10.209.120.121]) ([10.209.120.121])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 08:17:25 -0700
-Subject: Re: [PATCH] soundwire: cadence: fix race condition between suspend
- and Slave device alerts
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, mengdong.lin@intel.com, sanyog.r.kale@intel.com,
-        rander.wang@linux.intel.com, bard.liao@intel.com
-References: <20200817222340.18042-1-yung-chuan.liao@linux.intel.com>
- <20200819090637.GE2639@vkoul-mobl>
- <8d60fa6f-bb7f-daa8-5ae2-51386b87ccad@linux.intel.com>
- <20200821050758.GI2639@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <29ea5a44-b971-770a-519c-ae879557b63f@linux.intel.com>
-Date:   Fri, 21 Aug 2020 10:17:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 21 Aug 2020 11:17:51 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:37056 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727074AbgHUPRr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 11:17:47 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 07LFCXqL019622
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:17:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=gDCJCYdDlefx74bxB9EFW1EOsWnurY2saciXKkTWUC8=;
+ b=maOuUg+fQ3XxPyCY1HIWDAaTzS2+eYXHFTpA79lZ60zoPu1QKvL6e+bFZbVLjmLe66X5
+ BxxS8ciBULn2DyzdmpUULjZE1clM2W7n5JrL/v52SjvtmUqd46OQw7FMyv/ymYN9dYQF
+ 3Zhej1iRKzqBPuDrNcPWesRYFjME9lwf6GQ= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 3304jjn3sn-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:17:46 -0700
+Received: from intmgw002.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 21 Aug 2020 08:17:45 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id 6D4103441061; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     <bpf@vger.kernel.org>
+CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Roman Gushchin <guro@fb.com>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH bpf-next v4 14/30] bpf: eliminate rlimit-based memory accounting for arraymap maps
+Date:   Fri, 21 Aug 2020 08:01:18 -0700
+Message-ID: <20200821150134.2581465-15-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
+References: <20200821150134.2581465-1-guro@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20200821050758.GI2639@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=38
+ lowpriorityscore=0 priorityscore=1501 malwarescore=0 spamscore=0
+ impostorscore=0 bulkscore=0 mlxlogscore=845 phishscore=0 mlxscore=0
+ clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210143
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Do not use rlimit-based memory accounting for arraymap maps.
+It has been replaced with the memcg-based memory accounting.
 
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+---
+ kernel/bpf/arraymap.c | 24 ++++--------------------
+ 1 file changed, 4 insertions(+), 20 deletions(-)
 
->> cancel_work_sync() will either
->> a) wait until the current work completes, or
->> b) prevent a new one from starting.
->>
->> there's no way to really 'abort' a workqueue, 'cancel' means either complete
->> or don't start.
-> 
-> Quite right, as that is how everyone deals with it. Stop the irq from
-> firing first and then wait until work is cancelled or completed, hence
-> cancel_work_sync()
+diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
+index 9597fecff8da..41581c38b31d 100644
+--- a/kernel/bpf/arraymap.c
++++ b/kernel/bpf/arraymap.c
+@@ -75,11 +75,10 @@ int array_map_alloc_check(union bpf_attr *attr)
+ static struct bpf_map *array_map_alloc(union bpf_attr *attr)
+ {
+ 	bool percpu =3D attr->map_type =3D=3D BPF_MAP_TYPE_PERCPU_ARRAY;
+-	int ret, numa_node =3D bpf_map_attr_numa_node(attr);
++	int numa_node =3D bpf_map_attr_numa_node(attr);
+ 	u32 elem_size, index_mask, max_entries;
+ 	bool bypass_spec_v1 =3D bpf_bypass_spec_v1();
+-	u64 cost, array_size, mask64;
+-	struct bpf_map_memory mem;
++	u64 array_size, mask64;
+ 	struct bpf_array *array;
+=20
+ 	elem_size =3D round_up(attr->value_size, 8);
+@@ -120,44 +119,29 @@ static struct bpf_map *array_map_alloc(union bpf_at=
+tr *attr)
+ 		}
+ 	}
+=20
+-	/* make sure there is no u32 overflow later in round_up() */
+-	cost =3D array_size;
+-	if (percpu)
+-		cost +=3D (u64)attr->max_entries * elem_size * num_possible_cpus();
+-
+-	ret =3D bpf_map_charge_init(&mem, cost);
+-	if (ret < 0)
+-		return ERR_PTR(ret);
+-
+ 	/* allocate all map elements and zero-initialize them */
+ 	if (attr->map_flags & BPF_F_MMAPABLE) {
+ 		void *data;
+=20
+ 		/* kmalloc'ed memory can't be mmap'ed, use explicit vmalloc */
+ 		data =3D bpf_map_area_mmapable_alloc(array_size, numa_node);
+-		if (!data) {
+-			bpf_map_charge_finish(&mem);
++		if (!data)
+ 			return ERR_PTR(-ENOMEM);
+-		}
+ 		array =3D data + PAGE_ALIGN(sizeof(struct bpf_array))
+ 			- offsetof(struct bpf_array, value);
+ 	} else {
+ 		array =3D bpf_map_area_alloc(array_size, numa_node);
+ 	}
+-	if (!array) {
+-		bpf_map_charge_finish(&mem);
++	if (!array)
+ 		return ERR_PTR(-ENOMEM);
+-	}
+ 	array->index_mask =3D index_mask;
+ 	array->map.bypass_spec_v1 =3D bypass_spec_v1;
+=20
+ 	/* copy mandatory map attributes */
+ 	bpf_map_init_from_attr(&array->map, attr);
+-	bpf_map_charge_move(&array->map.memory, &mem);
+ 	array->elem_size =3D elem_size;
+=20
+ 	if (percpu && bpf_array_alloc_percpu(array)) {
+-		bpf_map_charge_finish(&array->map.memory);
+ 		bpf_map_area_free(array);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+--=20
+2.26.2
 
-No, this cannot work... The work queue in progress will initiate 
-transactions which would never complete because the interrupts are disabled.
-
->> if you disable the interrupts then cancel the work, you have a risk of not
->> letting the work complete if it already started (case a).
->>
->> The race is
->> a) the interrupt thread (this function) starts
->> b) the work is scheduled and starts
->> c) the suspend handler starts and disables interrupts in [1] below.
->> d) the work initiates transactions which will never complete since Cadence
->> interrupts have been disabled.
-> 
-> Would it not be better to let work handle the case of interrupts
-> disabled and not initiates transactions which wont complete here? That
-> sounds more reasonable to do rather than complete the work which anyone
-> doesn't matter as you are suspending
-
-A in-progress workqueue has no notion that interrupts are disabled, nor 
-that the device is in the process of suspending. It writes into a fifo 
-and blocks with wait_for_completion(). the complete() is done in an 
-interrupt thread, triggered when the RX Fifo reaches a watermark.
-
-So if you disable interrupts, the complete() never happens.
-
-The safe way to do things with the current code is to let the workqueue 
-complete, then disable interrupts.
-
-We only disable interrupts on suspend, we don't need to test if 
-interrupts are enabled for every single byte that's transmitted on the 
-bus. Not to mention that this additional test would be racy as hell and 
-require yet another synchronization primitive making the code more 
-complicated.
-
-So yes, the current transactions will complete and will be ignored, but 
-it's a lot better than trying to prevent these transactions from 
-happening with extra layers of complexity that will impact *every* 
-transaction.
-
-BTW I looked at another alternative based on the msg lock, so that 
-interrupts cannot be disabled while a message is being sent. However 
-because a workqueue may send multiple messages, e.g. to read registers 
-are non-contiguous locations, there is no way to guarantee what happens 
-how messages and interrupt disabling are scheduled, so there'd still be 
-a case of a workqueue not completing and being stuck on a mutex_lock(), 
-not so good either.
-
-In short, this is the simplest way to fix the timeout on resume.
