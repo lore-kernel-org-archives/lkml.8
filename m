@@ -2,114 +2,136 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD72C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED241C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9BAB207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F8F2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="hOOAhYdU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hzi2czJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgHUA21 (ORCPT
+        id S1727077AbgHUA2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 20:28:27 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:51302 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727030AbgHUA2Z (ORCPT
+        Thu, 20 Aug 2020 20:28:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53839 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727031AbgHUA20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 20:28:25 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 07L0Od3x005557
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:28:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=/uUFrz2pplyNeuzwjVTtdWHekCwyi/O0CKqPnUBAh2Y=;
- b=hOOAhYdUEg3OBsjRRyxwaFCjD/1f33nWqNGHwOPPwGn1LM6auWEGD2Q5necwVsEYsPO4
- q498YGj0CaRMsctVXPRxRJj0h7vfVR8I+1QavTnNHFq973PtO7eeTykkAizUNG+kLgo2
- TaOyb0keev+lbBQlY3GlyP1m6RZ0EdUzEw8= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 331hcbwgnc-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:28:23 -0700
-Received: from intmgw004.08.frc2.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 20 Aug 2020 17:28:14 -0700
-Received: by devbig218.frc2.facebook.com (Postfix, from userid 116055)
-        id 14363207539; Thu, 20 Aug 2020 17:28:14 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Udip Pant <udippant@fb.com>
-Smtp-Origin-Hostname: devbig218.frc2.facebook.com
-To:     Udip Pant <udippant@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Smtp-Origin-Cluster: frc2c02
-Subject: [PATCH v2 bpf 1/2] bpf: verifier: check for packet data access based on target prog
-Date:   Thu, 20 Aug 2020 17:28:03 -0700
-Message-ID: <20200821002804.546826-1-udippant@fb.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 20 Aug 2020 20:28:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597969704;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=L3JIlPvsMRwkM1mgCcR4mBSnOH7ubXhXyleqb1KzD8U=;
+        b=hzi2czJb/h7wsN3T9CCJrMYXiByc1oVK7P3bAU5mcwCCi0D1C1gQUc5vYN1zb0qYJuAGLJ
+        p2cZ35p2jTLsMRi4ph309hgKcQKiK4jpNRLLZsnEa7CpIg1U2qP7pBOHFOFCPQMgv1iVEI
+        EPSF3EHG9OwS6kEBG6HJ36fFZ61oaTs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-563-e07Wxl8qNreqFdkVdHJf3g-1; Thu, 20 Aug 2020 20:28:23 -0400
+X-MC-Unique: e07Wxl8qNreqFdkVdHJf3g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C95BA1074649;
+        Fri, 21 Aug 2020 00:28:21 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.3.128.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4ED4A10098A7;
+        Fri, 21 Aug 2020 00:28:12 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 20:28:10 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Gao Xiang <hsiangkao@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Eric Sandeen <esandeen@redhat.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by
+ mistake
+Message-ID: <20200821002810.GA3096383@optiplex-lnx>
+References: <20200820045323.7809-1-hsiangkao@redhat.com>
+ <20200820233446.GB7728@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-20_07:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
- priorityscore=1501 suspectscore=0 clxscore=1015 bulkscore=0
- mlxlogscore=956 lowpriorityscore=0 phishscore=0 impostorscore=0
- adultscore=0 mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008210002
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820233446.GB7728@dread.disaster.area>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While using dynamic program extension (of type BPF_PROG_TYPE_EXT), we
-need to check the program type of the target program to grant the read /
-write access to the packet data.
+On Fri, Aug 21, 2020 at 09:34:46AM +1000, Dave Chinner wrote:
+> On Thu, Aug 20, 2020 at 12:53:23PM +0800, Gao Xiang wrote:
+> > SWP_FS is used to make swap_{read,write}page() go through
+> > the filesystem, and it's only used for swap files over
+> > NFS. So, !SWP_FS means non NFS for now, it could be either
+> > file backed or device backed. Something similar goes with
+> > legacy SWP_FILE.
+> > 
+> > So in order to achieve the goal of the original patch,
+> > SWP_BLKDEV should be used instead.
+> > 
+> > FS corruption can be observed with SSD device + XFS +
+> > fragmented swapfile due to CONFIG_THP_SWAP=y.
+> > 
+> > I reproduced the issue with the following details:
+> > 
+> > Environment:
+> > QEMU + upstream kernel + buildroot + NVMe (2 GB)
+> > 
+> > Kernel config:
+> > CONFIG_BLK_DEV_NVME=y
+> > CONFIG_THP_SWAP=y
+> 
+> Ok, so at it's core this is a swap file extent versus THP swap
+> cluster alignment issue?
+> 
+> > diff --git a/mm/swapfile.c b/mm/swapfile.c
+> > index 6c26916e95fd..2937daf3ca02 100644
+> > --- a/mm/swapfile.c
+> > +++ b/mm/swapfile.c
+> > @@ -1074,7 +1074,7 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
+> >  			goto nextsi;
+> >  		}
+> >  		if (size == SWAPFILE_CLUSTER) {
+> > -			if (!(si->flags & SWP_FS))
+> > +			if (si->flags & SWP_BLKDEV)
+> >  				n_ret = swap_alloc_cluster(si, swp_entries);
+> >  		} else
+> >  			n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
+> 
+> IOWs, if you don't make this change, does the corruption problem go
+> away if you align swap extents in iomap_swapfile_add_extent() to
+> (SWAPFILE_CLUSTER * PAGE_SIZE) instead of just PAGE_SIZE?
+> 
 
-The BPF_PROG_TYPE_EXT type can be used to extend types such as XDP, SKB
-and others. Since the BPF_PROG_TYPE_EXT program type on itself is just a
-placeholder for those, we need this extended check for those target
-programs to actually work while using this option.
+I suspect that will have to come with the 3rd, and final, part of the THP_SWAP
+work Intel is doing. Right now, basically, all that's accomplished is deferring 
+the THP split step when swapping out, so this change is what we need to
+avoid stomping outside the file extent boundaries.
 
-Tested this with a freplace xdp program. Without this patch, the
-verifier fails with error 'cannot write into packet'.
 
-Signed-off-by: Udip Pant <udippant@fb.com>
----
- kernel/bpf/verifier.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index ef938f17b944..4d7604430994 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -2629,7 +2629,11 @@ static bool may_access_direct_pkt_data(struct bpf_=
-verifier_env *env,
- 				       const struct bpf_call_arg_meta *meta,
- 				       enum bpf_access_type t)
- {
--	switch (env->prog->type) {
-+	struct bpf_prog *prog =3D env->prog;
-+	enum bpf_prog_type prog_type =3D prog->aux->linked_prog ?
-+	      prog->aux->linked_prog->type : prog->type;
-+
-+	switch (prog_type) {
- 	/* Program types only with direct read access go here! */
- 	case BPF_PROG_TYPE_LWT_IN:
- 	case BPF_PROG_TYPE_LWT_OUT:
---=20
-2.24.1
+> I.e. if the swapfile extents are aligned correctly to huge page swap
+> cluster size and alignment, does the swap clustering optimisations
+> for swapping THP pages work correctly? And, if so, is there any
+> performance benefit we get from enabling proper THP swap clustering
+> on swapfiles?
+>
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
+> 
 
