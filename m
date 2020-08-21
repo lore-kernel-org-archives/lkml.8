@@ -2,75 +2,160 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C153C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8149DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2652075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:37:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PK+vJHHT"
+	by mail.kernel.org (Postfix) with ESMTP id 54BD5207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:38:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598017087;
+	bh=Ll99DIK1T8Lkx3D20DknnJzu5dcs03ue33YMpeTIyUU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=f30cBbNWHm6dUS9xGCVsYkt3j7r7K9ARWQqSr+NQJ++PCTwYYVVNaXiyVpbDxrCYE
+	 avNceVI3Gi8OEwldqcxGpwIyJ3aTK+prBXDIrVrX1DVh150DPRo1+XJvJ6PnEne+IN
+	 Ri4hTJ6gWHvsXlQumhG12OkdUoDr1Wk2DZQ50ovs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgHUNhU (ORCPT
+        id S1728787AbgHUNiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:37:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgHUNhN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:37:13 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6018C061573;
-        Fri, 21 Aug 2020 06:37:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=7cWjPG1+m96/p7EsFzUoRpFmcNyib+nqYEpG+MEwLFU=; b=PK+vJHHT2V5rhklvCQxBLFugX7
-        eCJLJC7Rugf2E+inW443z0mHRCIOy9Hqyg01Re+85vCzEx1Jra2z+jSoeIvuRlEVFdvxbyseRqFKd
-        ogu3LTLXkADnkouRz/PIc9cba+MZJ5naztugOpoIJK7/bbndASBH852gsE/zqrIW6/stYAtUSAVfB
-        WsHLQMlOEuEs/RaXCYiYF3xtXTNAAKap+GD7Dhv7Zjxy3CxiQkYO9eg0l3/h8aeBmAELAM5umbuaT
-        C4bvndo/kKTUJpEGM6BOG4QrgaFWy5BqvSX4k94trGPqxSmUvEdmZ7iWloAMeqDarbNCmK2OB4lCR
-        NtHQO+1g==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k97E1-000653-Lm; Fri, 21 Aug 2020 13:36:57 +0000
-Date:   Fri, 21 Aug 2020 14:36:57 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "yukuai (C)" <yukuai3@huawei.com>,
-        Gao Xiang <hsiangkao@redhat.com>, darrick.wong@oracle.com,
-        david@fromorbit.com, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com
-Subject: Re: [RFC PATCH V3] iomap: add support to track dirty state of sub
- pages
-Message-ID: <20200821133657.GU17456@casper.infradead.org>
-References: <20200819120542.3780727-1-yukuai3@huawei.com>
- <20200819125608.GA24051@xiangao.remote.csb>
- <43dc04bf-17bb-9f15-4f1c-dfd6c47c3fb1@huawei.com>
- <20200821061234.GE31091@infradead.org>
+        Fri, 21 Aug 2020 09:38:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727926AbgHUNiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 09:38:00 -0400
+Received: from coco.lan (ip5f5ad5bf.dynamic.kabel-deutschland.de [95.90.213.191])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FAEF2075E;
+        Fri, 21 Aug 2020 13:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598017079;
+        bh=Ll99DIK1T8Lkx3D20DknnJzu5dcs03ue33YMpeTIyUU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QKWBRvNeIHjsvJmXUSYSgHLegxdwzMcHXG3CQqzPDoRqSjvqfitMTxyInPncgbksc
+         ewEiJwcez1JSi0ZzL0lO//cdc1CPnS2j38p1s53qqHd5jMu8h8BpHwH5ueESJ3Y407
+         MQszV343fhRhN9y+MYrw7+n6dUHclNFDknk/lK6o=
+Date:   Fri, 21 Aug 2020 15:37:49 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
+        Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
+        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+Message-ID: <20200821153749.08afec86@coco.lan>
+In-Reply-To: <20200819173558.GA3733@ravnborg.org>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+        <20200819152120.GA106437@ravnborg.org>
+        <20200819174027.70b39ee9@coco.lan>
+        <20200819173558.GA3733@ravnborg.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821061234.GE31091@infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 07:12:34AM +0100, Christoph Hellwig wrote:
-> iomap sets PagePrivate if a iomap_page structure is allocated.  Right
-> now that means for all pages on a file system with a block size smaller
-> than the page size, although I hope we reduce that scope a little.
+Hi Sam,
 
-I was thinking about that.  Is there a problem where we initially allocate
-the page with a contiguous extent larger than the page, then later need
-to write the page to a pair of extents?
+Em Wed, 19 Aug 2020 19:35:58 +0200
+Sam Ravnborg <sam@ravnborg.org> escreveu:
 
-If we're doing an unshare operation, then we know our src and dest iomaps
-and can allocate the iop then.  But if we readahead, we don't necessarily
-know our eventual dest.  So the conditions for skipping allocating an
-iop are tricky to be sure we'll never need it.
+> > +	ret =3D drm_bridge_attach(encoder, bridge, NULL, 0); =20
+> The bridge should be attached with the falg that tell the bridge NOT to
+> create a connector.
+>=20
+> The display driver shall created the connector.
+>=20
+> Please see how other drivers do this (but most driver uses the old
+> pattern so so look for drm_bridge_attach() with the flag argument.
+
+Not sure if I got what should be done here.
+
+=46rom what I've seen at the DRM code, one of the differences between the=20
+display engine for the first Hikey board (Kirin 620 based) and 960/970
+is with regards to bridges. The first Hikey device doesn't use any
+external bridges: both panel and HDMI support are provided by the SoC.
+
+The Hikey 960 and 970 boards may either use an external bridge
+or not. They also have two output connectors:
+
+- The first one doesn't use an external bridge. It is used
+  only together with an external daughter display panel board.=20
+  It sounds that one such panels is this one:
+
+	https://www.96boards.org/blog/linksprite-hikey-aosp/
+
+  I don't have any such board. The OOT driver came with one
+  panel display, I didn't port such driver.=20
+
+- The second one uses an external bridge (adv7535) which is connected
+  to the HDMI board's connector.
+
+As there's just one bridge, the driver uses this to find its
+OF data:
+
+	struct device_node *bridge_node;
+
+	bridge_node =3D of_graph_get_remote_port_parent(endpoint);
+	dsi->bridge =3D of_drm_find_bridge(bridge_node);
+
+Basically, it doesn't call drm_bridge_add(), and doesn't
+declare any struct drm_bridge_funcs fops, as there's just one
+bridge that it is always there.
+
+-
+
+That's said, when I ported the code from Kernel 4.9, I fixed
+some broken things at the hotplug logic, trying to use other
+drivers with external bridges as examples. Yet, as you noticed,
+I ended using some older bridge model. =20
+
+The only other driver I found that doesn't use drm_bridge_add()
+and doesn't pass 0 as flags is this one:
+
+	drivers/gpu/drm/omapdrm/omap_drv.c
+
+Is it a good example?
+
+What I see different there there is that it calls drm_bridge_attach()
+with:
+
+	ret =3D drm_bridge_attach(pipe->encoder,
+				pipe->output->bridge, NULL,
+				DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+
+Is adding this enough? Or should I do something else?
+
+
+Thanks,
+Mauro
