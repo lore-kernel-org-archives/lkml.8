@@ -2,114 +2,206 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D28C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3CCC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 378CC20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97EE20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:29:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YJdpR1xV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qtoR1Xj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgHUQ2t (ORCPT
+        id S1728424AbgHUQ26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34268 "EHLO
+        Fri, 21 Aug 2020 12:28:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728540AbgHUQ0e (ORCPT
+        with ESMTP id S1728414AbgHUQ1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:26:34 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2B9C061755
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:26:33 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id v15so1232740pgh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:26:33 -0700 (PDT)
+        Fri, 21 Aug 2020 12:27:54 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1A7C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:27:50 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id n4so1103469vsl.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:27:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=B9AWbTbWPp7aT8cVV5y9qjtG9r2gj7nhh9YWaOKKiuk=;
-        b=YJdpR1xVWyhRcbML3ChNs3j4d3/YmKtUkn0siTwj4xe3D70EJaZ8TS6WroZCqXa4CC
-         AnyHG9WkVzh4jPWrC0JgsToWMta4CkhAEcL3Bxg/j6Bz7oLuQ2JbQ9BBisReA6HOMt+Y
-         nmkFUIg82wwwm9Z8YdSLGBXdSC+aEbG/U29jQ=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/GcDocfNWlsHOofca1lhYyAuuxEgmTJVpd3FlNUUBGs=;
+        b=qtoR1Xj5G0WZ8QL4GewEzAeautrks1sglx9h0y1XD/U/sV1H14gPJOVob+hAVyzuWi
+         vmSZLuposmeZGaqsYSXnbCZZysqUqiz05bYTPi0leLztW/ALZvnR9Ro6vlgoClc6uLfk
+         vTQIBihBwOXenWsbvw6wbQ3MSpzfut41VRbZGYr8KAaTdvWvz+dSeqlpC1y1ykWz4hyV
+         5O8hg0p2KUFKKpfbugL5hqI/cLnYE88sTQOBduVEYi3nkDS0jrg35dRaT3NbqaImX6yL
+         S5jQCU4gaoJJkLlye13gINEWui5oxga6Pfdg6Vaw13bKnF3SBn5Ap6sH95bOCC2MMFph
+         FDjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=B9AWbTbWPp7aT8cVV5y9qjtG9r2gj7nhh9YWaOKKiuk=;
-        b=LqfKrWwLF93Vhtcwb2kIK2xv9rssblXK+7FZcg5vWARdJ47iRY4zub8FffWKyTYpua
-         lPn3m+v0BwaqmEyoU8LeUmjPL+ONqW03mFrZlIKYHIv+r8uN4SuEcC+IFHKkEjvj3W+o
-         XKczE7KlBz/A/5vNAsK8EeWFfSokymEzK5x280XNUuXg5/VS76iNdd1rnoxldHBZPRLu
-         GZEWXry/a4t7xzkJ96AspBYEHpNhL1KZkH9u5QbSPbMtGxygffcL+xhKyAbA/2TaSVaF
-         tG6YZ5/aBXRw5rMKWbR675PU022hX/pQg8bUxApgM/YGeTuE5RTBfQcX9HFgvlwPhdjv
-         IyQg==
-X-Gm-Message-State: AOAM532z7wmdnPeLvXY0a2hd7GfF+xRZk8CsOQks8ZrPZM0KQq5VEvwB
-        kMZbIxJYQsqjkdPuDA9aIQlqwLWlgq/Ilw==
-X-Google-Smtp-Source: ABdhPJxA02Wr8aE7e7k0ORPqzYjpHeciFt5VagaVUucvu925wOq50WmJHhy05pdcud86/UKNZ+gUOQ==
-X-Received: by 2002:a05:6a00:78e:: with SMTP id g14mr3052283pfu.171.1598027192818;
-        Fri, 21 Aug 2020 09:26:32 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id m26sm2978275pfe.184.2020.08.21.09.26.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 09:26:31 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 09:26:30 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     satya priya <skakit@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V3 1/3] arm64: dts: sc7180: Add wakeup support over UART
- RX
-Message-ID: <20200821162630.GA486007@google.com>
-References: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
- <1597931467-24268-2-git-send-email-skakit@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/GcDocfNWlsHOofca1lhYyAuuxEgmTJVpd3FlNUUBGs=;
+        b=B9Q7/QmjDc9obslMMZxdhE85ISARf415t+maAJPRzrOZiLfEwY3Aw0tFjuMh22mPKp
+         j8Z/8N58aXKivcTJfSxemb2+wsEoE5SJiwJPd5XNHh1/PSQviwDYE8o/D8VMRwP3aMYz
+         6O0IicZRE4Z52c4VjM26NUMirN6mKONLa/8kjGAX7hJxNYv9h1wJLJjfw3vf+jbeabRt
+         0HxO6aO/kF1ZEnLmquaeq+IhLP2XVOXCyIxDZAFJFGGei2LGPmfMte5V69SyJMh/mieS
+         btmrMvQLDNBm6jAwwj9xZOR4RWhh8zkni8sAg9W2hVutCcFODj8/0b6sABtzz1vr82hh
+         r3vg==
+X-Gm-Message-State: AOAM533Xj+Uyk61LVXOxXDUjKOfNnOZqLGmt8NL1SSSKNA6J9OdjUncP
+        aWYf4OJO75BUWraQ/7LuHa2quP0xzgg+d/pazFE/6w==
+X-Google-Smtp-Source: ABdhPJxfZTzNeoUJqcWkiwBAUzjPgoHL9IdOu6JvriTmuJqzvXBgTdaCMrHdKieuP6epggVQamjMxhTGw9Dnd6+U8cw=
+X-Received: by 2002:a67:d84:: with SMTP id 126mr2497327vsn.69.1598027269072;
+ Fri, 21 Aug 2020 09:27:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1597931467-24268-2-git-send-email-skakit@codeaurora.org>
+References: <20200820091606.194320503@linuxfoundation.org> <CA+G9fYuCgzAOZw6iM6sLwJP9=0wrO0WcTHLCQtEHWQB9=WCuSw@mail.gmail.com>
+In-Reply-To: <CA+G9fYuCgzAOZw6iM6sLwJP9=0wrO0WcTHLCQtEHWQB9=WCuSw@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 21 Aug 2020 21:57:37 +0530
+Message-ID: <CA+G9fYtQcFnyKMF2uE5WP5Fhk1E1MjymrsM1ZpChk0OJP+56vA@mail.gmail.com>
+Subject: Re: [PATCH 5.7 000/204] 5.7.17-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 07:21:05PM +0530, satya priya wrote:
-> Add the necessary pinctrl and interrupts to make UART
-> wakeup capable.
-> 
-> Signed-off-by: satya priya <skakit@codeaurora.org>
-> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
-> ---
-> Changes in V2:
->  - As per Matthias's comment added wakeup support for all the UARTs
->    of SC7180.
-> 
-> Changes in V3:
->  - No change.
-> 
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 98 ++++++++++++++++++++++++++++++------
->  1 file changed, 84 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index d46b383..855b13e 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+On Thu, 20 Aug 2020 at 22:34, Naresh Kamboju <naresh.kamboju@linaro.org> wr=
+ote:
 >
-> ...
+> On Thu, 20 Aug 2020 at 15:06, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.7.17 release.
+> > There are 204 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patc=
+h-5.7.17-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git linux-5.7.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
 >
-> +			qup_uart0_sleep: qup-uart0-sleep {
-> +				pinmux {
-> +					pins = "gpio34", "gpio35",
-> +					       "gpio36", "gpio37";
-> +					function = "gpio";
+> > Herbert Xu <herbert@gondor.apana.org.au>
+> >     crypto: af_alg - Fix regression on empty requests
+>
+> Results from Linaro=E2=80=99s test farm.
+> Regressions detected.
+>
+> LTP crypto af_alg02 and cve-2017-17805 failed on stable-rc 5.7 and 5.8
+> branches on arm, arm64, i386 and x86_64.
 
-What is the reason that the GPIO function needs to be selected in sleep mode
-to support wakeup?
+Apart from the reported LTP crypto test case problem all other results
+look good to me.
 
-This should be explained in the commit message unless it is evident.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.7.17
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.7.y
+git commit: 3f45898cffc4e386952f3e4821810500adccea1f
+git describe: v5.7.17
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
+ld/v5.7.17
+
+No regressions (compared to build v5.7.16)
+
+No fixes (compared to build v5.7.16)
+
+Ran 32841 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* perf
+* ltp-containers-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* v4l2-compliance
+* libhugetlbfs
+* ltp-commands-tests
+* ltp-controllers-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-open-posix-tests
+* ltp-syscalls-tests
+* ltp-tracing-tests
+* network-basic-tests
+* igt-gpu-tools
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
