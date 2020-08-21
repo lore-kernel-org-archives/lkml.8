@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2CAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3BE20702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782E820702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029940;
-	bh=SHQsGLhTINATRUXZjr9wWKY8XwhSvsPPfJfThLF74Sw=;
+	s=default; t=1598029950;
+	bh=jUkxIfMy8Y73M1KRZQz6fQti+P06LWsHaph/CRw6DYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FFY4Ht7FttbZCXn7XhaeNcWf/PsQpU5I3EYWAfLADlg58DhvMltodZR6i/G9pLn0b
-	 8tUOIstAzZPTHrPczfPwlsWfYu6LMQyBluwyQ7D3hlFxd7f/mK12Zcte8IGhIdIHCS
-	 I+sqom5A3DdUAbuU+aAmRjBG+OXmMrmLvfjdEBrw=
+	b=gJzih8xWQ1b9SyfkBVlpfodGpSGwoqxOq1kg45SQhNe+ySAYpmuNq0xle2pylf0zk
+	 aXJv6DvpTivA6j8vXXkf8FH9Sue7BQL9IHnNQtw12fXN4L7NexSlJi8JNLk3h9I1hJ
+	 38STFdsgcuYQNiU0JtDz2p2vNbRSz4Fexf76Igsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgHURMT (ORCPT
+        id S1729067AbgHURMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:12:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48780 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:12:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbgHUQRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:17:02 -0400
+        id S1728133AbgHUQRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:17:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C69122CBB;
-        Fri, 21 Aug 2020 16:16:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FC4522CAD;
+        Fri, 21 Aug 2020 16:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026614;
-        bh=SHQsGLhTINATRUXZjr9wWKY8XwhSvsPPfJfThLF74Sw=;
+        s=default; t=1598026609;
+        bh=jUkxIfMy8Y73M1KRZQz6fQti+P06LWsHaph/CRw6DYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mh8pUq8vbejcqj9i3DxPouzohjRUAwrp7iokH1S9fRxaeKqoFZIL7NTOBIAclVvbC
-         NXTXe5HYggDYUEEI6SHLgfR/qm6Qn4lWx6amG1FK70sXsy37x6aE8+86vctGL97ONm
-         gh3oCOeu9GnEX7+1RvXSAYqTSTgxwC23eNPIurdQ=
+        b=EFKn1L6oWGp4nDaxBsaoJGhIYM6gRhTMLhtYGPs9xD3NwpUo+UHBaYAxwxAzZjcTF
+         Jdd8DS4vgCh05IbDTeiEbdaJve7eKnGq296bt58FLmKVPMQpBFmuivTg2zW+ha0qqT
+         Y9d6yK+G6YQvRwtCfV72hoJFLnl0NzVtMDscTsL8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 55/61] netfilter: nf_tables: report EEXIST on overlaps
-Date:   Fri, 21 Aug 2020 12:15:39 -0400
-Message-Id: <20200821161545.347622-55-sashal@kernel.org>
+Cc:     Qu Wenruo <wqu@suse.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 51/61] btrfs: file: reserve qgroup space after the hole punch range is locked
+Date:   Fri, 21 Aug 2020 12:15:35 -0400
+Message-Id: <20200821161545.347622-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
 References: <20200821161545.347622-1-sashal@kernel.org>
@@ -60,101 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit 77a92189ecfd061616ad531d386639aab7baaad9 ]
+[ Upstream commit a7f8b1c2ac21bf081b41264c9cfd6260dffa6246 ]
 
-Replace EBUSY by EEXIST in the following cases:
+The incoming qgroup reserved space timing will move the data reservation
+to ordered extent completely.
 
-- If the user adds a chain with a different configuration such as different
-  type, hook and priority.
+However in btrfs_punch_hole_lock_range() will call
+btrfs_invalidate_page(), which will clear QGROUP_RESERVED bit for the
+range.
 
-- If the user adds a non-base chain that clashes with an existing basechain.
+In current stage it's OK, but if we're making ordered extents handle the
+reserved space, then btrfs_punch_hole_lock_range() can clear the
+QGROUP_RESERVED bit before we submit ordered extent, leading to qgroup
+reserved space leakage.
 
-- If the user adds a { key : value } mapping element and the key exists
-  but the value differs.
+So here change the timing to make reserve data space after
+btrfs_punch_hole_lock_range().
+The new timing is fine for either current code or the new code.
 
-- If the device already belongs to an existing flowtable.
-
-User describe that this error reporting is confusing:
-
-- https://bugzilla.netfilter.org/show_bug.cgi?id=1176
-- https://bugzilla.netfilter.org/show_bug.cgi?id=1413
-
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ fs/btrfs/file.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index e1d678af8749b..4d6ed763e5dd4 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -2035,7 +2035,7 @@ static int nf_tables_updchain(struct nft_ctx *ctx, u8 genmask, u8 policy,
- 
- 	if (nla[NFTA_CHAIN_HOOK]) {
- 		if (!nft_is_base_chain(chain))
--			return -EBUSY;
-+			return -EEXIST;
- 
- 		err = nft_chain_parse_hook(ctx->net, nla, &hook, ctx->family,
- 					   false);
-@@ -2045,21 +2045,21 @@ static int nf_tables_updchain(struct nft_ctx *ctx, u8 genmask, u8 policy,
- 		basechain = nft_base_chain(chain);
- 		if (basechain->type != hook.type) {
- 			nft_chain_release_hook(&hook);
--			return -EBUSY;
-+			return -EEXIST;
- 		}
- 
- 		if (ctx->family == NFPROTO_NETDEV) {
- 			if (!nft_hook_list_equal(&basechain->hook_list,
- 						 &hook.list)) {
- 				nft_chain_release_hook(&hook);
--				return -EBUSY;
-+				return -EEXIST;
- 			}
- 		} else {
- 			ops = &basechain->ops;
- 			if (ops->hooknum != hook.num ||
- 			    ops->priority != hook.priority) {
- 				nft_chain_release_hook(&hook);
--				return -EBUSY;
-+				return -EEXIST;
- 			}
- 		}
- 		nft_chain_release_hook(&hook);
-@@ -5144,10 +5144,8 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
- 			if (nft_set_ext_exists(ext, NFT_SET_EXT_DATA) ^
- 			    nft_set_ext_exists(ext2, NFT_SET_EXT_DATA) ||
- 			    nft_set_ext_exists(ext, NFT_SET_EXT_OBJREF) ^
--			    nft_set_ext_exists(ext2, NFT_SET_EXT_OBJREF)) {
--				err = -EBUSY;
-+			    nft_set_ext_exists(ext2, NFT_SET_EXT_OBJREF))
- 				goto err_element_clash;
--			}
- 			if ((nft_set_ext_exists(ext, NFT_SET_EXT_DATA) &&
- 			     nft_set_ext_exists(ext2, NFT_SET_EXT_DATA) &&
- 			     memcmp(nft_set_ext_data(ext),
-@@ -5155,7 +5153,7 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
- 			    (nft_set_ext_exists(ext, NFT_SET_EXT_OBJREF) &&
- 			     nft_set_ext_exists(ext2, NFT_SET_EXT_OBJREF) &&
- 			     *nft_set_ext_obj(ext) != *nft_set_ext_obj(ext2)))
--				err = -EBUSY;
-+				goto err_element_clash;
- 			else if (!(nlmsg_flags & NLM_F_EXCL))
- 				err = 0;
- 		} else if (err == -ENOTEMPTY) {
-@@ -6264,7 +6262,7 @@ static int nft_register_flowtable_net_hooks(struct net *net,
- 			list_for_each_entry(hook2, &ft->hook_list, list) {
- 				if (hook->ops.dev == hook2->ops.dev &&
- 				    hook->ops.pf == hook2->ops.pf) {
--					err = -EBUSY;
-+					err = -EEXIST;
- 					goto err_unregister_net_hooks;
- 				}
- 			}
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index 1e1af0ce70771..5a8d93bf9b8b7 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -3184,14 +3184,14 @@ static int btrfs_zero_range(struct inode *inode,
+ 		if (ret < 0)
+ 			goto out;
+ 		space_reserved = true;
+-		ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
+-						alloc_start, bytes_to_reserve);
+-		if (ret)
+-			goto out;
+ 		ret = btrfs_punch_hole_lock_range(inode, lockstart, lockend,
+ 						  &cached_state);
+ 		if (ret)
+ 			goto out;
++		ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
++						alloc_start, bytes_to_reserve);
++		if (ret)
++			goto out;
+ 		ret = btrfs_prealloc_file_range(inode, mode, alloc_start,
+ 						alloc_end - alloc_start,
+ 						i_blocksize(inode),
 -- 
 2.25.1
 
