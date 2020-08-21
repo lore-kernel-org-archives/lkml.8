@@ -2,122 +2,228 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DA3C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC49214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597992254;
-	bh=4J4qz5B1NZzvGGMmZoiEQ54l//Vbmr1oMNWo4drmq5M=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=TL1D7XszQZBvrWdBxxZ4Rh+YupxcKJjJM3S6wkad+euEnA3N5fR8L7bjPGHEnzBoQ
-	 s9N9kjNmyLdKUmrKZAkKLmfpnG/ZwEIty7ZAmfvhUyLE4EbjXshWtQqRu54ipHznIs
-	 srtHFGaOh3Vn5g76JiTSiL5T82jEAtBcxvm2qEMw=
+	by mail.kernel.org (Postfix) with ESMTP id D038320748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:46:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="A3MGrtcz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgHUGoN (ORCPT
+        id S1727843AbgHUGqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:44:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbgHUGoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 02:44:12 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 636F420732;
-        Fri, 21 Aug 2020 06:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597992252;
-        bh=4J4qz5B1NZzvGGMmZoiEQ54l//Vbmr1oMNWo4drmq5M=;
-        h=Date:From:To:Cc:Subject:From;
-        b=rNw/IaiX0g8qJR8b/acDFu/3vybjZMedp75QZKn31toPhPyiIUyGltwhPZ/0AAyts
-         GheTV0ujR9JpCE5MjHAaVjo8Noz2eDV3/Ae8QcsKRSSFQfrW4PCLgA3Rf+gUfBKGg6
-         mFrUfcTXQ/jjcaxNg0drRi4ke3K0X53oDsj/5saA=
-Date:   Fri, 21 Aug 2020 01:49:59 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] rtw88: Use fallthrough pseudo-keyword
-Message-ID: <20200821064959.GA23693@embeddedor>
+        Fri, 21 Aug 2020 02:46:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbgHUGp6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 02:45:58 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901AAC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 23:45:57 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id v12so194993lfo.13
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 23:45:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5bPPep5bDg1VFzpkxRBbcmCJ2qD9Va8/3Ftdk6p2l/g=;
+        b=A3MGrtczd5NJ3P+Niu30oBzutZUKu0rHzDoXaIjo/qrbOFe/yeroAVI9Cjblbf7H/E
+         Vj9Zm7gLY6r4O/ebPn1mze861IoyluIYqxWiuLUQNFevSY2HizJzaTnua84xRnVaD8az
+         qSUKhhfOK+qPbYiGYEm0Ci1F/UhwmwNlUQ328=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5bPPep5bDg1VFzpkxRBbcmCJ2qD9Va8/3Ftdk6p2l/g=;
+        b=ATV82b49SEnhQ6zcyNvTMRL83GVdy2Kg1mhCrAbj+yJF4TTKoIgq6Q2LAryYmHxft9
+         3SnPaZ9au1JiiitS0skpugnJ9imkDLUZXu2X1sBFqMOnMegKiR3t5mpRngCRgxtoGp3a
+         g3SEMHyY5LEIo7vHFymm3qIxH+s0Q7vIPFWPRRH4bWP4UnnVTSD84SCpqjLGf3cOsUkh
+         6YfS884by3pkh1aGJrR4Fm6H/NXn8QX2iVGC+WRxlAeFXua89EyYGyWxR5toWzL7qPrG
+         pUCZaLWMU1O9ODHL54NQRBnc77VpLpQ0iYn3osTG7VsDNfXevJ1hj9EBKV5suXOhE86H
+         wPBw==
+X-Gm-Message-State: AOAM531sosHbrnEUZpIRp9AsFpE0b50T5JXno3KXiEFmQd+DH8CoSXwu
+        xjv2btDxWc2A/JD0kl/eZD3muA==
+X-Google-Smtp-Source: ABdhPJwOItL4qsnK0FWZmGbVV44MGEu8EXdcdrou8xJh+fE60Flz/ZSSVu6qUP5Ecr6kER+1ag9xNA==
+X-Received: by 2002:a19:a8f:: with SMTP id 137mr715383lfk.145.1597992355755;
+        Thu, 20 Aug 2020 23:45:55 -0700 (PDT)
+Received: from [172.16.11.132] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id p1sm188312lji.93.2020.08.20.23.45.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2020 23:45:54 -0700 (PDT)
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com>
+ <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
+ <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com>
+ <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
+ <20200818202407.GA3143683@rani.riverdale.lan>
+ <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
+ <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
+ <20200818214146.GA3196105@rani.riverdale.lan>
+ <df6c1da4-b910-ecb8-0de2-6156dd651be6@rasmusvillemoes.dk>
+ <20200820175617.GA604994@rani.riverdale.lan>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <721e6979-e83b-2238-4763-a8cf99b57631@rasmusvillemoes.dk>
+Date:   Fri, 21 Aug 2020 08:45:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200820175617.GA604994@rani.riverdale.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1].
+On 20/08/2020 19.56, Arvind Sankar wrote:
+> On Thu, Aug 20, 2020 at 04:56:02PM +0200, Rasmus Villemoes wrote:
+>> On 18/08/2020 23.41, Arvind Sankar wrote:
+>>>
+>>> Note that -fno-builtin-foo seems to mean slightly different things in
+>>> clang and gcc. From experimentation, clang will neither optimize a call
+>>> to foo, nor perform an optimization that introduces a call to foo. gcc
+>>> will avoid optimizing calls to foo, but it can still generate new calls
+>>> to foo while optimizing something else. Which means that
+>>> -fno-builtin-{bcmp,stpcpy} only solves things for clang, not gcc. It's
+>>> just that gcc doesn't seem to have implemented those optimizations.
+>>>
+>>
+>> I think it's more than that. I've always read gcc's documentation
+>>
+>> '-fno-builtin'
+>> '-fno-builtin-FUNCTION'
+>>      Don't recognize built-in functions that do not begin with
+>>      '__builtin_' as prefix. ...
+>>
+>>      GCC normally generates special code to handle certain built-in
+>>      functions more efficiently; for instance, calls to 'alloca' may
+>>      become single instructions which adjust the stack directly, and
+>>      calls to 'memcpy' may become inline copy loops.
+>>      ...
+>>
+>> to mean exactly that observed above and nothing more, i.e. that
+>> -fno-builtin-foo merely means that gcc stops treating a call of a
+>> function named foo to mean a call to a function implementing the
+>> standard function by that name (and hence allows it to e.g. replace a
+>> memcpy(d, s, 1) by byte load+store). It does not mean to prevent
+>> emitting calls to foo, and I don't think it ever will - it's a bit sad
+>> that clang has chosen to interpret these options differently.
+> 
+> That documentation is misleading, as it also goes on to say:
+> "...nor can you change the behavior of the functions by linking with a
+> different library"
+> which implies that you _can_ change the behavior if you use the option,
+> and which is what your "i.e." is saying as well.
+> 
+> My point is that this is not completely true: in gcc, foo by default is
+> defined to be __builtin_foo, and -fno-builtin-foo simply removes this
+> definition. So the effect is just that calls to foo in the original
+> source will be left alone.
 
-[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+Yes, this is a much better way of putting it. And with -fbuiltin-foo in
+effect, the compiler just needs to transform the code in some way as-if
+the standard function by that name was called, which it can of course
+decide to implement by emitting such a call, but it can also open-code
+it - or synthesize it using other std functions.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/wireless/realtek/rtw88/main.c | 4 ++--
- drivers/net/wireless/realtek/rtw88/phy.c  | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+> But in order for an optimization that introduces a new call to foo to be
+> valid, foo _must_ have standard semantics: strchr(s,'\0') is not s +
+> strlen(s) unless strlen has standard semantics.
 
-diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
-index 54044abf30d7..9d454f0004d2 100644
---- a/drivers/net/wireless/realtek/rtw88/main.c
-+++ b/drivers/net/wireless/realtek/rtw88/main.c
-@@ -474,10 +474,10 @@ static u8 hw_bw_cap_to_bitamp(u8 bw_cap)
- 	case EFUSE_HW_CAP_IGNORE:
- 	case EFUSE_HW_CAP_SUPP_BW80:
- 		bw |= BIT(RTW_CHANNEL_WIDTH_80);
--		/* fall through */
-+		fallthrough;
- 	case EFUSE_HW_CAP_SUPP_BW40:
- 		bw |= BIT(RTW_CHANNEL_WIDTH_40);
--		/* fall through */
-+		fallthrough;
- 	default:
- 		bw |= BIT(RTW_CHANNEL_WIDTH_20);
- 		break;
-diff --git a/drivers/net/wireless/realtek/rtw88/phy.c b/drivers/net/wireless/realtek/rtw88/phy.c
-index 8d93f3159746..a4a40372b1b0 100644
---- a/drivers/net/wireless/realtek/rtw88/phy.c
-+++ b/drivers/net/wireless/realtek/rtw88/phy.c
-@@ -1522,7 +1522,7 @@ static u8 rtw_get_channel_group(u8 channel)
- 	switch (channel) {
- 	default:
- 		WARN_ON(1);
--		/* fall through */
-+		fallthrough;
- 	case 1:
- 	case 2:
- 	case 36:
-@@ -1668,7 +1668,7 @@ static u8 rtw_phy_get_2g_tx_power_index(struct rtw_dev *rtwdev,
- 	switch (bandwidth) {
- 	default:
- 		WARN_ON(1);
--		/* fall through */
-+		fallthrough;
- 	case RTW_CHANNEL_WIDTH_20:
- 		tx_power += pwr_idx_2g->ht_1s_diff.bw20 * factor;
- 		if (above_2ss)
-@@ -1712,7 +1712,7 @@ static u8 rtw_phy_get_5g_tx_power_index(struct rtw_dev *rtwdev,
- 	switch (bandwidth) {
- 	default:
- 		WARN_ON(1);
--		/* fall through */
-+		fallthrough;
- 	case RTW_CHANNEL_WIDTH_20:
- 		tx_power += pwr_idx_5g->ht_1s_diff.bw20 * factor;
- 		if (above_2ss)
--- 
-2.27.0
+Correct. So I agree that -fno-builtin-strlen should prevent the compiler
+from generating calls to strlen() that don't appear in the code.
 
+This is an oversight in
+> gcc's optimizations: it converts to s + __builtin_strlen(s), which then
+> (normally) becomes s + strlen(s).
+> 
+> Check out this horror: https://godbolt.org/z/a1r9fK
+> 
+> Clang will disable this optimization if -fno-builtin-strlen is
+> specified.
+>
+> Clang's interpretation is more useful for embedded, since you can use
+> -fno-builtin-foo and avoid calling __builtin_foo directly, and be
+> guaranteed that there will be no calls to foo that you didn't write
+> explicitly (outside of memcpy/memset/memcmp). In this case you are free
+> to implement foo with non-standard semantics, or avoid implementing it
+> altogether, and be reasonably confident that it will all work.
+
+Yeah, except that the list of -fno-builtin-foo one would have to pass is
+enourmous, so for targets with a somewhat wonky libc, I'd much rather be
+able to do a blanket -fno-builtin, and then manually check their memcpy,
+memset and memcmp implementations and opt back in with
+-fbuiltin-mem{cpy,set,cmp} so that small constant-size memcpys do get
+properly open-coded.
+
+The advice in gcc's documentation of just #definining memcpy() to
+__builtin_memcpy() doesn't work in the real world (for example it breaks
+C++ code that uses std::memcpy(...)).
+
+>> Thinking out load, it would be useful if both compilers grew
+>>
+>>   -fassume-provided-std-foo
+>>
+>> and
+>>
+>>   -fno-assume-provided-std-foo
+>>
+>> options to tell the compiler that a function named foo with standard
+>> semantics can be assumed (or not) to be provided by the execution
+>> environment; i.e. one half of what -f(no-)builtin-foo apparently does
+>> for clang currently.
+> 
+> Not following: -fno-assume-provided-std-foo sounds like it would have
+> exactly the same semantics as Clang's -fno-builtin-foo, except maybe in
+> addition it should cause the compiler to error on seeing __builtin_foo
+> if it can't implement that without calling foo.
+
+Yeah, I think you've convinced me there's no use for a separate option
+to prevent inventing calls to foo() - I was mostly thinking of it as a
+way to avoid having to provide each and every libc function that may
+have been half-way standardized at some point. But if one doesn't
+provide, say, bcmp, the code base certainly doesn't use bcmp itself, so
+one doesn't lose anything by just using -fno-builtin-bcmp; there are no
+explicit bcmp() uses that fail to get optimized.
+
+Rasmus
