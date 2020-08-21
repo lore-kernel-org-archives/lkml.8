@@ -2,82 +2,75 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E20C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2B8E20639
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5228020639
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:16:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QteLqZZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgHUIPj (ORCPT
+        id S1727961AbgHUIQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:15:39 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:17530 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725965AbgHUIPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:15:38 -0400
-Received: by ajax-webmail-mail-app3 (Coremail) ; Fri, 21 Aug 2020 16:15:13
- +0800 (GMT+08:00)
-X-Originating-IP: [10.192.85.18]
-Date:   Fri, 21 Aug 2020 16:15:13 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     "Gilad Ben-Yossef" <gilad@benyossef.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: ccree - fix runtime PM imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.12 build 20200616(0f5d8152)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Fri, 21 Aug 2020 04:16:43 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60320 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725965AbgHUIQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 04:16:42 -0400
+Received: from zn.tnic (p200300ec2f0eda00b4e1d8975031aaf0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:da00:b4e1:d897:5031:aaf0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 149D81EC02B9;
+        Fri, 21 Aug 2020 10:16:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1597997797;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=kD3hyIqaY4rvqARoZXbDQgRT0FQcAV1g3bodMGGGRgI=;
+        b=QteLqZZnrFR+uLNgDqcLl10Ws5SanoiYCyEKKN8xuVymJs+qot81ZM7mUHiuSBxHFkkAvN
+        TkYIJ+ItbEUyyuk/LeuXu6YqdYfSL3EoQmYB5nQrIpoEsjaigm376cfFGrXi60+2RIvavu
+        A7WUkPygQPzvMURb7ApWMuAUPphPm3I=
+Date:   Fri, 21 Aug 2020 10:16:33 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@intel.com>,
+        Chang Seok Bae <chang.seok.bae@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH] x86/entry/64: Disallow RDPID in paranoid entry if KVM is
+ enabled
+Message-ID: <20200821081633.GD12181@zn.tnic>
+References: <20200821025050.32573-1-sean.j.christopherson@intel.com>
+ <20200821074743.GB12181@zn.tnic>
+ <3eb94913-662d-5423-21b1-eaf75635142a@redhat.com>
 MIME-Version: 1.0
-Message-ID: <5fe48e8a.e845.1741016074a.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cC_KCgBH_96Rgj9fyzj9Ag--.45498W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhAAns4
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbAIS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_JrI_JrylV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
-        6r4UMIAIbVACjI8F5VA0II8E6IAqYI8I648v4I1lV2xY6x02cVAKzwCS07vEc2IjII80xc
-        xEwVAKI48JMIAIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAI
-        bVCFx2IqxVCFs4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2
-        IqxVCjr7xvwVAFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE
-        2Ix0cI8IcVAFwI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCS07
-        vEIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-        V2xY6IIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3eb94913-662d-5423-21b1-eaf75635142a@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cG1fcnVudGltZV9nZXRfc3luYygpIGluY3JlbWVudHMgdGhlIHJ1bnRpbWUgUE0gdXNhZ2UgY291
-bnRlcgpldmVuIHdoZW4gaXQgcmV0dXJucyBhbiBlcnJvciBjb2RlLiBIb3dldmVyLCB1c2VycyBv
-ZiBjY19wbV9nZXQoKSwKYSBkaXJlY3Qgd3JhcHBlciBvZiBwbV9ydW50aW1lX2dldF9zeW5jKCks
-IGFzc3VtZSB0aGF0IFBNIHVzYWdlCmNvdW50ZXIgd2lsbCBub3QgY2hhbmdlIG9uIGVycm9yLiBU
-aHVzIGEgcGFpcmluZyBkZWNyZW1lbnQgaXMgbmVlZGVkCm9uIHRoZSBlcnJvciBoYW5kbGluZyBw
-YXRoIHRvIGtlZXAgdGhlIGNvdW50ZXIgYmFsYW5jZWQuCgpGaXhlczogOGM3ODQ5YTMwMjU1YyAo
-ImNyeXB0bzogY2NyZWUgLSBzaW1wbGlmeSBSdW50aW1lIFBNIGhhbmRsaW5nIikKU2lnbmVkLW9m
-Zi1ieTogRGluZ2hhbyBMaXUgPGRpbmdoYW8ubGl1QHpqdS5lZHUuY24+Ci0tLQogZHJpdmVycy9j
-cnlwdG8vY2NyZWUvY2NfcG0uYyB8IDYgKysrKystCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRp
-b25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jcnlwdG8vY2NyZWUv
-Y2NfcG0uYyBiL2RyaXZlcnMvY3J5cHRvL2NjcmVlL2NjX3BtLmMKaW5kZXggZDM5ZTE2NjRmYzdl
-Li4zYzY1YmYwNzBjOTAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY3J5cHRvL2NjcmVlL2NjX3BtLmMK
-KysrIGIvZHJpdmVycy9jcnlwdG8vY2NyZWUvY2NfcG0uYwpAQCAtNjUsOCArNjUsMTIgQEAgY29u
-c3Qgc3RydWN0IGRldl9wbV9vcHMgY2NyZWVfcG0gPSB7CiBpbnQgY2NfcG1fZ2V0KHN0cnVjdCBk
-ZXZpY2UgKmRldikKIHsKIAlpbnQgcmMgPSBwbV9ydW50aW1lX2dldF9zeW5jKGRldik7CisJaWYg
-KHJjIDwgMCkgeworCQlwbV9ydW50aW1lX3B1dF9ub2lkbGUoZGV2KTsKKwkJcmV0dXJuIHJjOwor
-CX0KIAotCXJldHVybiAocmMgPT0gMSA/IDAgOiByYyk7CisJcmV0dXJuIDA7CiB9CiAKIHZvaWQg
-Y2NfcG1fcHV0X3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQotLSAKMi4xNy4xCg==
+On Fri, Aug 21, 2020 at 10:09:01AM +0200, Paolo Bonzini wrote:
+> One more MSR *is* a big deal: KVM's vmentry+vmexit cost is around 1000
+> cycles, adding 100 clock cycles for 2 WRMSRs is a 10% increase.
+
+The kernel uses TSC_AUX so we can't reserve it to KVM either.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
