@@ -2,176 +2,105 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69391C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1809C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 418ED207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916D2207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:19:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="1yxK8FrA"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="BGSxFzTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgHUPTW (ORCPT
+        id S1727864AbgHUPTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:19:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727887AbgHUPSP (ORCPT
+        Fri, 21 Aug 2020 11:19:32 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:60590 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727074AbgHUPRv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:18:15 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7551C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:18:13 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id ba10so1735589edb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:18:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rQR67AqDgTFceM1GcH2o1VP0eXhNCBh9bwg17gfoTgU=;
-        b=1yxK8FrAf4JsUoVuTMaIeajsDp7BkyBW/nIt5zPEpq0A5jbvKscdEPur41ES+s4LjB
-         YzceM+KnfPfM0ob8s3SLA4DJz5LU2oDIc6HO0bh5W5xf1Gw9UeC7/XaFhXGaq4OLW2+n
-         4IDSN/klhWSlzfzWyN2TeMrYu+EUk5dtYqlkp4tZI4UFmSMJEgTMR/1J4iR/4A1Gv8ox
-         8G3+ez8CiW0u2ok6Ib3LW/QAfL6m9uguROWnrZuIUjMhqb9BrvHQO/CgTa7PY81DOBCh
-         9H7PoNj7mTzRcz4nHkV26CikoPkkdUFhFD2v7vX/dXYE8M/sBlKgane36KSzePtex7x0
-         3IAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rQR67AqDgTFceM1GcH2o1VP0eXhNCBh9bwg17gfoTgU=;
-        b=F23UVbCObw1KyqU5QPlsMlwLIBhVdQ4RsqBZyRPcYWzToNXV9F99PdL2s6HUOW4z9Q
-         gzq2JXGA1JX0i61QA0Kb7EYLD97DiNqlh5uIY4mgi8xaG0H/5+l8W0BPvEA63nL5+2Fp
-         NXCMUOlNMtI9YlLMWe7qYm9uoF7QPnDg3sOHSNiKQd2rS9yU3bcWm8R/wQP1JBC62A3t
-         x6JR+9J4YV/6HONkf6Te3DuWvoa/IRdnvtGxwyVt1e6u9p5EkqXGXVvdyTDmbFmQSTSb
-         A1p95fZBXyxho96z8qh2L0q6AN6vKbOz0xdOSwFMO03omVvhyH+Acz8MZfbsKur0X/AI
-         8gzg==
-X-Gm-Message-State: AOAM532yXjDi2g+mxq7Q+dKjJaebxxR28uB09LH0NpOjzE814pfpu16A
-        JFQi9niCgipVwViEulYpg9IQhw==
-X-Google-Smtp-Source: ABdhPJyi0tkiH5q/ltl//GjdPiGKtU+rjkFW0l048hREebCe9VF5uhvGKNPNQnNuLlWSRFI9KMG57g==
-X-Received: by 2002:a50:93a2:: with SMTP id o31mr3343896eda.203.1598023092403;
-        Fri, 21 Aug 2020 08:18:12 -0700 (PDT)
-Received: from localhost.localdomain (223.60-242-81.adsl-dyn.isp.belgacom.be. [81.242.60.223])
-        by smtp.gmail.com with ESMTPSA id qp16sm1482709ejb.89.2020.08.21.08.18.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 08:18:11 -0700 (PDT)
-From:   Nicolas Rybowski <nicolas.rybowski@tessares.net>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Nicolas Rybowski <nicolas.rybowski@tessares.net>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next 1/3] bpf: expose is_mptcp flag to bpf_tcp_sock
-Date:   Fri, 21 Aug 2020 17:15:39 +0200
-Message-Id: <20200821151544.1211989-2-nicolas.rybowski@tessares.net>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200821151544.1211989-1-nicolas.rybowski@tessares.net>
-References: <20200821151544.1211989-1-nicolas.rybowski@tessares.net>
+        Fri, 21 Aug 2020 11:17:51 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LFAaDr005744
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:17:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=jE0vXs+gQW10rH0feF6C0U96CAqBPpOSd/wymRApFnE=;
+ b=BGSxFzTdnbZouXRg0rNlsSzQUd/iwLHy2be5ZDLkhPUa1a3FY3VA1k33Q7talXKUmqC+
+ qXS+KBm03wEpcZb/Azxd4BPbN/q0qUVuiERcYxfUayhXCSoPsUFCHGtYkEV9Y9sdwdxI
+ NDxsb841hJVrWm/a2w4AjFLmXpBBVnTKucg= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 331cuea9g2-9
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:17:51 -0700
+Received: from intmgw002.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 21 Aug 2020 08:17:45 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id 67E5B344105F; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     <bpf@vger.kernel.org>
+CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Roman Gushchin <guro@fb.com>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH bpf-next v4 13/30] bpf: refine memcg-based memory accounting for xskmap maps
+Date:   Fri, 21 Aug 2020 08:01:17 -0700
+Message-ID: <20200821150134.2581465-14-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
+References: <20200821150134.2581465-1-guro@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1015
+ priorityscore=1501 suspectscore=13 spamscore=0 impostorscore=0 mlxscore=0
+ adultscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 mlxlogscore=778
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210143
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-is_mptcp is a field from struct tcp_sock used to indicate that the
-current tcp_sock is part of the MPTCP protocol.
+Extend xskmap memory accounting to include the memory taken by
+the xsk_map_node structure.
 
-In this protocol, a first socket (mptcp_sock) is created with
-sk_protocol set to IPPROTO_MPTCP (=262) for control purpose but it
-isn't directly on the wire. This is the role of the subflow (kernel)
-sockets which are classical tcp_sock with sk_protocol set to
-IPPROTO_TCP. The only way to differentiate such sockets from plain TCP
-sockets is the is_mptcp field from tcp_sock.
-
-Such an exposure in BPF is thus required to be able to differentiate
-plain TCP sockets from MPTCP subflow sockets in BPF_PROG_TYPE_SOCK_OPS
-programs.
-
-The choice has been made to silently pass the case when CONFIG_MPTCP is
-unset by defaulting is_mptcp to 0 in order to make BPF independent of
-the MPTCP configuration. Another solution is to make the verifier fail
-in 'bpf_tcp_sock_is_valid_ctx_access' but this will add an additional
-'#ifdef CONFIG_MPTCP' in the BPF code and a same injected BPF program
-will not run if MPTCP is not set.
-
-An example use-case is provided in
-https://github.com/multipath-tcp/mptcp_net-next/tree/scripts/bpf/examples
-
-Suggested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Nicolas Rybowski <nicolas.rybowski@tessares.net>
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Song Liu <songliubraving@fb.com>
 ---
- include/uapi/linux/bpf.h       | 1 +
- net/core/filter.c              | 9 ++++++++-
- tools/include/uapi/linux/bpf.h | 1 +
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ net/xdp/xskmap.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 0480f893facd..a9fccfdb3a62 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -3865,6 +3865,7 @@ struct bpf_tcp_sock {
- 	__u32 delivered;	/* Total data packets delivered incl. rexmits */
- 	__u32 delivered_ce;	/* Like the above but only ECE marked packets */
- 	__u32 icsk_retransmits;	/* Number of unrecovered [RTO] timeouts */
-+	__u32 is_mptcp;		/* Is MPTCP subflow? */
- };
- 
- struct bpf_sock_tuple {
-diff --git a/net/core/filter.c b/net/core/filter.c
-index b2df52086445..eb400aeea282 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -5742,7 +5742,7 @@ bool bpf_tcp_sock_is_valid_access(int off, int size, enum bpf_access_type type,
- 				  struct bpf_insn_access_aux *info)
- {
- 	if (off < 0 || off >= offsetofend(struct bpf_tcp_sock,
--					  icsk_retransmits))
-+					  is_mptcp))
- 		return false;
- 
- 	if (off % size != 0)
-@@ -5876,6 +5876,13 @@ u32 bpf_tcp_sock_convert_ctx_access(enum bpf_access_type type,
- 	case offsetof(struct bpf_tcp_sock, icsk_retransmits):
- 		BPF_INET_SOCK_GET_COMMON(icsk_retransmits);
- 		break;
-+	case offsetof(struct bpf_tcp_sock, is_mptcp):
-+#ifdef CONFIG_MPTCP
-+		BPF_TCP_SOCK_GET_COMMON(is_mptcp);
-+#else
-+		*insn++ = BPF_MOV32_IMM(si->dst_reg, 0);
-+#endif
-+		break;
- 	}
- 
- 	return insn - insn_buf;
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 0480f893facd..a9fccfdb3a62 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -3865,6 +3865,7 @@ struct bpf_tcp_sock {
- 	__u32 delivered;	/* Total data packets delivered incl. rexmits */
- 	__u32 delivered_ce;	/* Like the above but only ECE marked packets */
- 	__u32 icsk_retransmits;	/* Number of unrecovered [RTO] timeouts */
-+	__u32 is_mptcp;		/* Is MPTCP subflow? */
- };
- 
- struct bpf_sock_tuple {
--- 
-2.28.0
+diff --git a/net/xdp/xskmap.c b/net/xdp/xskmap.c
+index 8367adbbe9df..e574b22defe5 100644
+--- a/net/xdp/xskmap.c
++++ b/net/xdp/xskmap.c
+@@ -28,7 +28,8 @@ static struct xsk_map_node *xsk_map_node_alloc(struct x=
+sk_map *map,
+ 	struct xsk_map_node *node;
+ 	int err;
+=20
+-	node =3D kzalloc(sizeof(*node), GFP_ATOMIC | __GFP_NOWARN);
++	node =3D kzalloc(sizeof(*node),
++		       GFP_ATOMIC | __GFP_NOWARN | __GFP_ACCOUNT);
+ 	if (!node)
+ 		return ERR_PTR(-ENOMEM);
+=20
+--=20
+2.26.2
 
