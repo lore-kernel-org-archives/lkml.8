@@ -7,126 +7,133 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CEE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD26C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC4E420735
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:30:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598038207;
-	bh=LTPmOmBLp+1AG8Ld4SI0DnX2r2lOQRpt3LOaX8ef46c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NUWmuHOdbBdAY7mPMWvnU3bvIVgOIdguLgLYGk28y9BoJY1zIdD8g/6l5vr/LXVS9
-	 aFyrEJFPH2tlgXaX9/213w126ccg1ELxLsQgL6C8s71e8e9RHHD/DsbWctKmO+MHaZ
-	 VO0yhZKGDR188hRDkZN5b7GayMdNNcweLoNvNZ6s=
+	by mail.kernel.org (Postfix) with ESMTP id DAC1720714
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:31:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XpWyyqs/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgHUTaF (ORCPT
+        id S1726639AbgHUTbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:30:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgHUTaB (ORCPT
+        Fri, 21 Aug 2020 15:31:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47401 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725801AbgHUTbK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:30:01 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E69BC061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:30:00 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id m22so3071522ljj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9gB440Ze4ZBHaiJd3Tg8xGm277dDUwBE5I6gf2Si2z0=;
-        b=WOJ24K7m95T6qyq7uMw1ZdUwa/ZY4iGih7G5ZretzrJOrNpRBizAWpzqXrw1KWVWpc
-         9TkDhakIq2vNEGCc92t86ZIgDgIbr11x7Ktk8FlZyRm+v8heqUVRBJ7OMmGX9+L9XQtV
-         J5Et6X/zWbSvpX6upyCYcudXQqtPQNKhJtMC0=
+        Fri, 21 Aug 2020 15:31:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598038269;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MHf1EBkT1Dy1Sxom78LRrOH5QXXkCxI+ZwxWCHSIPnM=;
+        b=XpWyyqs/OU6JUfNfHPK36reHxJ1F00panReHGQhIncgb6UylwGdgFIq8yd2JoVczLwYqpN
+        STrO/cwqMY8Kz4q5Mw++s2WA9qj1BvVDsyogTBW3kqHIMMi/dfb6q/0aR6HBJOnHzAr6pJ
+        g41UStEo/KyrGMcfeixAQWc6fmhLIBg=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-567-ab475QYfPwyHfzLWQbEVXg-1; Fri, 21 Aug 2020 15:31:03 -0400
+X-MC-Unique: ab475QYfPwyHfzLWQbEVXg-1
+Received: by mail-qv1-f70.google.com with SMTP id i4so1923821qvv.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:31:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9gB440Ze4ZBHaiJd3Tg8xGm277dDUwBE5I6gf2Si2z0=;
-        b=iRz6bSuPa9AJoJy68KxVTg0hc061h2zZwxDKVNsbGsYT2sl2aNEqcl4Aa5nIwWo/so
-         KXB7JET2VIzWLmDuh+/m65ZJiQ4dBCF+K6no6FUCwOqFXSBisAxMozWvCQyI/2rzUfKK
-         h7uXSePk8oAjolTR6QW7yWmUAe0NWT+01e9U2AkYRQjTsH/OwhM+0rKBhFmZKUDMuYxo
-         BPc0zHOia00uBhGYH7Sk4SjNht/eLHKfNSLD5xwkiDXf7JgQsV0NyqJW4LX8Spk8XxVl
-         6KAZO6wQfKgwJ/LmrLn8T+fWxPQZ1iKgJ5XFeZ+GJnJ7x7+QJQy/qp9XBs9cHCbnpSxa
-         fPpQ==
-X-Gm-Message-State: AOAM533x7k3UIN8iwN1QSEqSQIYoB71jEFts9xsWPh/nTm+ASyl9/xA3
-        cN8exwF8xsQb3sDaNb0mWXnMg5yCAo3nmw==
-X-Google-Smtp-Source: ABdhPJyOwIvAGo88yZqJ6ZS1ta9NQJpzdG+F8ASBsfInlBQ1hQBSNJsq0+ALuTwSQqNLcMX82ubfIA==
-X-Received: by 2002:a05:651c:1343:: with SMTP id j3mr2016036ljb.112.1598038198025;
-        Fri, 21 Aug 2020 12:29:58 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id 20sm570387ljj.51.2020.08.21.12.29.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 12:29:57 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id v9so3074394ljk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:29:57 -0700 (PDT)
-X-Received: by 2002:ac2:58d5:: with SMTP id u21mr2053187lfo.31.1598037806053;
- Fri, 21 Aug 2020 12:23:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200818202407.GA3143683@rani.riverdale.lan> <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
- <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
- <20200818214146.GA3196105@rani.riverdale.lan> <df6c1da4-b910-ecb8-0de2-6156dd651be6@rasmusvillemoes.dk>
- <20200820175617.GA604994@rani.riverdale.lan> <CAHk-=whn91ar+EbcBXQb9UXad00Q5WjU-TCB6UBzVba682a4ew@mail.gmail.com>
- <20200821172935.GA1411923@rani.riverdale.lan> <CAHk-=wi8vdb+wo-DACDpSijYfAbCs135YcnnAbRhGJcU+A=-+Q@mail.gmail.com>
- <CAHk-=whjVCTjZG0Y88WhJruLdbxF=7q3mmFThD+N5WK0P5giSw@mail.gmail.com> <20200821191458.GA1475504@rani.riverdale.lan>
-In-Reply-To: <20200821191458.GA1475504@rani.riverdale.lan>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 21 Aug 2020 12:23:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjX6jaRH+yozTh3kV3ocF2Qv0v96o8JofvbV6=U_K2mXw@mail.gmail.com>
-Message-ID: <CAHk-=wjX6jaRH+yozTh3kV3ocF2Qv0v96o8JofvbV6=U_K2mXw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MHf1EBkT1Dy1Sxom78LRrOH5QXXkCxI+ZwxWCHSIPnM=;
+        b=CmcueUIMewMWBWE/ceKe4a2Qhj6s/VdBwWqJS6W165sdqHe/ynS0hx4O6nvvU7fEuG
+         8QtK7UolLTb2tFBSZCehTggSbPcsKU8y/gZeO9YsPwuY2BNhw2/fSILj6POPGZ/770s9
+         lNrXpvCWvtFWSsTRAIUNG51GM0FXA0puJ2O+f7+HnzmXfUvJNsZNKlpzqai2SyYgQvs1
+         03n5Y7qSbm72VD7kLySg5tEgLr21dKFfcvF1suNDyUJJRN96HKoZhrhDO04WDej2sMte
+         Fh3y8NvMHqfzpEDAJmL17MVtADxVLb42AxjwkMblE2diiZLTB6hMHMi08qckHmOn5Mfz
+         ferA==
+X-Gm-Message-State: AOAM530wZAtVq31Xk56ZFGDx9gGmGJb79kQSrle8U8wr/ZDqgtyqW6XV
+        D3bjHdf0RJuz8/2uHj7VHv6HagwE+hWPrFlvGHLrf6bbQj1wNTBNdVxNOXiwWfXnQFguRKJOFVW
+        imRz88039iiHpDB1ece0f9FI1
+X-Received: by 2002:a37:9a97:: with SMTP id c145mr4112674qke.385.1598038263093;
+        Fri, 21 Aug 2020 12:31:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyIDT+dfkV6MshPTrHOcz6MO3y6HAU3upZRyOOq+yPyHjO60OLZanIZiouXFJFyoqVR7pfbaw==
+X-Received: by 2002:a37:9a97:: with SMTP id c145mr4112646qke.385.1598038262741;
+        Fri, 21 Aug 2020 12:31:02 -0700 (PDT)
+Received: from xz-x1 (bras-vprn-toroon474qw-lp130-11-70-53-122-15.dsl.bell.ca. [70.53.122.15])
+        by smtp.gmail.com with ESMTPSA id o21sm2487226qkk.94.2020.08.21.12.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 12:31:01 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 15:31:00 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jan Kara <jack@suse.cz>, Andrea Arcangeli <aarcange@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        "Maya B . Gokhale" <gokhale2@llnl.gov>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>
+Subject: Re: [PATCH v3] mm/gup: Allow real explicit breaking of COW
+Message-ID: <20200821193100.GA38249@xz-x1>
+References: <20200811214255.GE6353@xz-x1>
+ <CAHk-=wiVN-+P1vOCSMyfGwYQD3hF7A18OJyXgpiMwGDfMaU+8w@mail.gmail.com>
+ <20200820215449.GB358043@xz-x1>
+ <CAHk-=wjGzOjsfmX1Dc=yz6o_+62w4wcTVXX_hia9sHLfsCoxjg@mail.gmail.com>
+ <20200821101333.GA3432@quack2.suse.cz>
+ <CAHk-=whXfL5DtinS42dgtNu6i+xchK_VP+XLprQbu_og2J5Dkw@mail.gmail.com>
+ <20200821154756.GC3432@quack2.suse.cz>
+ <CAHk-=wj-pfzKf3JDe9fr4o_nKYXJXfuYAMFCajwhy0YYYri4Fw@mail.gmail.com>
+ <20200821180848.GA11376@xz-x1>
+ <CAHk-=wj3fY2dch7Ah-MLbJcfU3buoXgJnwc1zWFSjVujSd39GA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj3fY2dch7Ah-MLbJcfU3buoXgJnwc1zWFSjVujSd39GA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 12:15 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> How are you testing it?
->
-> https://godbolt.org/z/eahdGn
+On Fri, Aug 21, 2020 at 11:23:31AM -0700, Linus Torvalds wrote:
+> On Fri, Aug 21, 2020 at 11:08 AM Peter Xu <peterx@redhat.com> wrote:
+> >
+> > IIUC, Jan wanted to point out the fact that KSM didn't increase page count for
+> > stable pages (reasons are above get_ksm_page()).
+> 
+> Ouch.
+> 
+> > Do we still at least need to check the swap count if PageSwapCache(page)?
+> 
+> No. Because a PageSwapCache() page should be a perfectly normal page
+> cache thing. It will increment the page count if it's active.
+> 
+> That PageKsm() thing that *doesn't* increment the page could does look
+> worrisome, but
+> 
+> > So we check page_count() (which covers KSM or normal pages) after we've got the
+> > page lock, while we keep all the rest.
+> 
+> Why would we keep the rest? I
+> 
+> The actual thing I would really want to get rid of is the page lock,
+> in fact. We shouldn't need it in this path, and it's the most
+> expensive part of it all. But that's also why I did the page count
+> test optimistically unlocked - because if page_count is 1, then we
+> really shouldn't contend with anything else, so hopefully the
+> (currently quite expensive) page locking is actually a non-issue once
+> you get there.
+> 
+> But the PageKsm() page_count() issue I didn't even realize. That worries me.
 
-Ugh. I tested the reverse thing - that the builtin is still available
-for manual use despite the -fno-builtin.
+That's definitely tricky.. Though IMHO that's another KSM topic that we might
+want to look into later besides the current effort to fix up the COW breaking
+issue for gup.  For now, it shouldn't be hard for us as long as we do cow
+always for KSM pages.  However, do we really want to revert the whole logic of
+52d1e606ee73?  Asking because it still seems to be an improvement to me (after
+all we'll need to look after KSM pages here).  So it seems still good to keep.
 
-Because I - stupidly - assumed that fno-builtin would do *something*.
+Thanks,
 
-But if it's available for manual use _and_ it's used implicitly by the
-compiler, then that was clearly very naive of me.
+-- 
+Peter Xu
 
-                     Linus
