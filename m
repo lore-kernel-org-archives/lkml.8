@@ -2,156 +2,137 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36258C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAADC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 037E5207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:46:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="P/axgW8N";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="C5OdQn0i"
+	by mail.kernel.org (Postfix) with ESMTP id 402F7207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:48:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgHUPqb (ORCPT
+        id S1727866AbgHUPsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:46:31 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:3996 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725828AbgHUPq0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:46:26 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LFjXdk009503;
-        Fri, 21 Aug 2020 08:46:12 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=qy8eyuKSDqRkkp6Siw8XdjEsivmY+/4nPZZ4JrzUznI=;
- b=P/axgW8NDTo8xQJ71UYaeHUaf/PNBRPzeYuWzL+gAXaaTB/iKCfjY5P4v9PHMuXQ7GC5
- qeE6tGCboUaUEoYQNDuWWxmOPF6B1ViYHJrj8u16HsMUgByrmS3RRefBasKSdph/w2oN
- 0SrBWuUOAB0O4Ii8HouCLw+suv601Qmumqw= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 331d50t96d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 21 Aug 2020 08:46:12 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 21 Aug 2020 08:46:10 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G6TKONwRGLKNr1dP/N4GcW15chJu+reBhPpD3t+1zymCl9mzEJ8GYKTYMEc0HW4slbIi+zapaiOAtsAofa1JoIXpEk2SGDsCG4YbVUoLEcyRzpmdz4xnX40zBFegRPfQgxARIfNdHUhTiyZc4Wdzjpq0FilBJSjbZDtYL7Qtxnroybqb3glJzIT5Gy4wFOn8nKJi7EjfarWreaFi3g092YeayfqwT80jEkh6+Ujv0Yn8uWduXV5PlOR4FCRlrhYS3wbA6vXZLzmB1aqwWWs8bvvu/g355bAAj28Q3wbj3cBpJVAWkrH4mA1aiH2tRR0IIgevWa+qnnG4yFuX3CXJEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qy8eyuKSDqRkkp6Siw8XdjEsivmY+/4nPZZ4JrzUznI=;
- b=Hdy87Sdp8vfAZ2EPIOrUN5z/linRNRc1dNdsZ6AhhmbOmEr6Xh3ORbY6ewR8g2T008YavR8mrVaqo4vt6/sKcEd5PKQScuFLKvmw8752JxYUiqJav8qW8/5IgvGRnYXjnTQRxRbjbGRFN8ZJPUFZ95mRUrFFPNwnX1xEzoJ1+RjHcH825op7FufUleY0D4PNpeWKfJQPsCHw+eqatSrlsDCy/JJc9+uMsluibgNra98a+FC8PK2C6Yt+WC4oN0n/FSiEGCL5SeT6yDaXHdo7uG+IrgYHfRUzlnMcQEv5sg2CwvafaOsQjPvzLVV+Oi06nfUyIKREWMvqt5zVw7ztbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qy8eyuKSDqRkkp6Siw8XdjEsivmY+/4nPZZ4JrzUznI=;
- b=C5OdQn0irLIiP4Pby+cUNriTsn3yo+JFpoYYtyVlNEU4shz/mfCGCYLWsJKBlWWKkeisTG1JG5jww7vMW7jHoHenskYkwT3+dnOSY5A53yt4QwmKmM94YNqdVaasI68W3EyZ1h8JOm6vFoMxaKKMox7R4CT5YIT6wekiMCVklXk=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
- by BYAPR15MB3046.namprd15.prod.outlook.com (2603:10b6:a03:fa::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Fri, 21 Aug
- 2020 15:46:09 +0000
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3305.026; Fri, 21 Aug 2020
- 15:46:09 +0000
-Subject: Re: [PATCH bpf-next v3 4/6] bpf: override the meaning of
- ARG_PTR_TO_MAP_VALUE for sockmap and sockhash
-To:     Lorenz Bauer <lmb@cloudflare.com>, <jakub@cloudflare.com>,
-        <john.fastabend@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-CC:     <kernel-team@cloudflare.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200821102948.21918-1-lmb@cloudflare.com>
- <20200821102948.21918-5-lmb@cloudflare.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <f140db9b-ed23-7e56-e5b9-d90caf6493cb@fb.com>
-Date:   Fri, 21 Aug 2020 08:46:05 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
-In-Reply-To: <20200821102948.21918-5-lmb@cloudflare.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BL1PR13CA0036.namprd13.prod.outlook.com
- (2603:10b6:208:257::11) To BYAPR15MB4088.namprd15.prod.outlook.com
- (2603:10b6:a02:c3::18)
+        Fri, 21 Aug 2020 11:48:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54330 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726610AbgHUPr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 11:47:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 5FE7DAC12;
+        Fri, 21 Aug 2020 15:48:25 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id F02CB1E1312; Fri, 21 Aug 2020 17:47:56 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 17:47:56 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jan Kara <jack@suse.cz>, Peter Xu <peterx@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        "Maya B . Gokhale" <gokhale2@llnl.gov>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>
+Subject: Re: [PATCH v3] mm/gup: Allow real explicit breaking of COW
+Message-ID: <20200821154756.GC3432@quack2.suse.cz>
+References: <20200811183950.10603-1-peterx@redhat.com>
+ <CAHk-=whQM=m5td5tfbuxh1f_Gxjsa74XV962BYkjrbeDMAhBpA@mail.gmail.com>
+ <CAHk-=wit7LDr0tA2eVn7yHHEH76oK=Lfm3tTs8_JxO8XEED4_g@mail.gmail.com>
+ <CAHk-=wifRg0pDhufQFasWa7G3sMHbG0nahnm5yRwvTKpKU9g4A@mail.gmail.com>
+ <20200811214255.GE6353@xz-x1>
+ <CAHk-=wiVN-+P1vOCSMyfGwYQD3hF7A18OJyXgpiMwGDfMaU+8w@mail.gmail.com>
+ <20200820215449.GB358043@xz-x1>
+ <CAHk-=wjGzOjsfmX1Dc=yz6o_+62w4wcTVXX_hia9sHLfsCoxjg@mail.gmail.com>
+ <20200821101333.GA3432@quack2.suse.cz>
+ <CAHk-=whXfL5DtinS42dgtNu6i+xchK_VP+XLprQbu_og2J5Dkw@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BL1PR13CA0036.namprd13.prod.outlook.com (2603:10b6:208:257::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.10 via Frontend Transport; Fri, 21 Aug 2020 15:46:07 +0000
-X-Originating-IP: [2620:10d:c091:480::1:8c09]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9afca455-4227-40ca-021a-08d845e952f5
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3046:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB3046E096E62B2AE9A9EE014ED35B0@BYAPR15MB3046.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7rTlbuhdhUxNjZWC43ECzLb1dOs2Fo9822q/hCODA2JkohEMrT7m/JYIO/GIXZZkjsrKDTeblVGTNwrUyKjOrMO+n47e+pDeTj/sQ6mI129vvdWalm/DEZ3Fe3KdMyoYj+44UVLkLkWP0075paSGdVz7c0GBYFUUXWMPcpjlzTJDVvMu8zmXvEPs3Qe9CJBRA7HirlIc6C84ci5SxFCguacY8bl4awjXycheipqeuS+UOCgB66rP4kwlTf7TU8/Ib/JB8nUuR0POCMGFWS/a7ZZflELjIZAE1fLon94rz1mipK1I9JQd8M6RnL0gGmPKS5PMKexGJPqI6p0xKWsbGSodcpMFgN+A1PYemXrYWsVBO59PAiwvkryD/FwnmkgZ9E51ii3/5Tz3k3j12W7uvU6fRffDa1FlPIh6h62MOWg=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(376002)(366004)(396003)(136003)(346002)(478600001)(66476007)(4326008)(186003)(36756003)(8936002)(16576012)(5660300002)(110136005)(8676002)(52116002)(2616005)(31686004)(956004)(110011004)(316002)(83380400001)(66946007)(31696002)(6486002)(2906002)(66556008)(86362001)(53546011)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: X8leT9dd/Ep/X7grllCxKIMKBJ6fRDDO1szTKhlXW6TbSJrXrPzWoyVUL+uP2AOirMO38C+QXveUMxPLGC4cDIp6k9Jw/BWpKghNEEu+i33Zlo+Oy5dXP6749iivyb08xBIbkSwGPT896RdpBw47A6xyLrhLSfv2M+k5MEkm0PvyVHxH5BvHUg8N3fU7tzwBtRcvV8TyE2tdqgN40UrrWd5qv+lApCmomVvMjJWINvGOAwM+JGmSP/nlMOIiENGulo+E5WrrkyK7h+USq/isLuc3IfQ6CrRoxyKcLNgWa4ZMJsDAFlZ8d50yXRvj+bzOkCw32SN4fmvG37q6AGXZRB1X7s3Y4uYdXCdVgc5TRGMmM7iQM9s6h368JP/aHvGG7L8TXtNSZc09K72O5cWU/k+IVURmmVJ834Zr0IfGPhYVkVA2pMgA47v2LlvDNT/h9cIAWP/DzoNFXR01VRhP5ueEndDJUCmRK8rpeSJ1G9WjpSDMWGwtMjTFhINq/NbWkYNr/C04TfgBis9xcimzjC4nq0O2V4xHRc4FvQVvKeH7LOfN/5b0LpNpuB9QmhboZfh00OOm50QfTGqVLLlp+KmlId3RLwMiUhX1IsPQxk9nAt/ZDvDwzM1D5y2TjJu6nOGuOCozDLXlXPPzlVOjGATHNTFpnYPsEqlaFstwfQRie9ESvS0UrcETA4Cfmr40
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9afca455-4227-40ca-021a-08d845e952f5
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 15:46:09.6978
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IS+mQUTi+bi7CVLndCtFptqOB8fnqDsCd7EQYyjLzZiTNkGRPyUDBhW/Y9E0a0Lq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3046
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
- malwarescore=0 mlxlogscore=545 priorityscore=1501 impostorscore=0
- clxscore=1015 phishscore=0 suspectscore=0 adultscore=0 bulkscore=0
- mlxscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008210147
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whXfL5DtinS42dgtNu6i+xchK_VP+XLprQbu_og2J5Dkw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/21/20 3:29 AM, Lorenz Bauer wrote:
-> The verifier assumes that map values are simple blobs of memory, and
-> therefore treats ARG_PTR_TO_MAP_VALUE, etc. as such. However, there are
-> map types where this isn't true. For example, sockmap and sockhash store
-> sockets. In general this isn't a big problem: we can just
-> write helpers that explicitly requests PTR_TO_SOCKET instead of
-> ARG_PTR_TO_MAP_VALUE.
+On Fri 21-08-20 05:27:40, Linus Torvalds wrote:
+> On Fri, Aug 21, 2020 at 3:13 AM Jan Kara <jack@suse.cz> wrote:
+> >
+> > > +             if (page_mapcount(page) != 1 && page_count(page) != 1) {
+> >
+> > So this condition looks strange to me... Did you mean:
+> >
+> >                 if (page_mapcount(page) != 1 || page_count(page) != 1)
 > 
-> The one exception are the standard map helpers like map_update_elem,
-> map_lookup_elem, etc. Here it would be nice we could overload the
-> function prototype for different kinds of maps. Unfortunately, this
-> isn't entirely straight forward:
-> We only know the type of the map once we have resolved meta->map_ptr
-> in check_func_arg. This means we can't swap out the prototype
-> in check_helper_call until we're half way through the function.
+> Duh. Yes.
 > 
-> Instead, modify check_func_arg to treat ARG_PTR_TO_MAP_VALUE to
-> mean "the native type for the map" instead of "pointer to memory"
-> for sockmap and sockhash. This means we don't have to modify the
-> function prototype at all
+> > > -             if (PageKsm(vmf->page)) {
+> >
+> > Also I know nothing about KSM but looking at reuse_ksm_page() I can see it
+> > plays some tricks with page index & mapping even for pages with page_count
+> > == 1 so you cannot just drop those bits AFAICT.
 > 
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> Yeah, I wasn't really sure what we want to do.
+> 
+> In an optimal world, I was thinking that we'd actually do exactly what
+> we do at munmap time.
+> 
+> Which is not to get the page lock at all. Just look at what
+> zap_pte_range() does for an a page when it unmaps it:
+> 
+>                         page_remove_rmap(page, false);
+> 
+> and that's it. No games.
+> 
+> And guess what? That "'page_remove_rmap()" is what wp_page_copy() already
+> does.
 
-Acked-by: Yonghong Song <yhs@fb.com>
+I was more concerned about the case where you decide to writeably map (i.e.
+wp_page_reuse() path) a PageKsm() page. That path does not touch
+page->mapping in your code AFAICS. And AFAIU the code in mm/ksm.c you are
+not supposed to writeably map PageKsm() pages without changing
+page->mapping (which also effectively makes PageKsm() return false) but I
+don't see anything in your code that would achieve that because KSM code
+references a page without being accounted in page_count() for $reasons (see
+comment before get_ksm_page()) and instead plays tricks with validating
+cookies in page->mapping...
+
+> So I really think *all* of these games we play are complete garbage
+> and completely wrong.
+> 
+> Because the zap_page_range() path is a *lot* more common than the WP
+> path, and triggers for every single page when we do munmap or exit or
+> whatever.
+> 
+> So why would WP need to do anything else for correctness? Absolutely
+> no reason I can see.
+> 
+> > Also I'm not sure if dropping this is safe for THP - reuse_swap_page()
+> > seems to be a misnomer and seems to do also some THP handling.
+> 
+> Again, I think that's a bogus argument.
+> 
+> Because this all is actually not the common path at all, and the thing
+> is, the common path does none of these odd games.
+> 
+> I really think this COW handling magic is just legacy garbage because
+> people have carried it along forever and everybody is worried about
+> it. The fact is, the "copy" case is always safe, because all it does
+> is basically the same as zap_page_range() does, with just adding a new
+> page instead.
+
+And also here I was more concerned that page_mapcount != 1 || page_count !=
+1 check could be actually a weaker check than what reuse_swap_page() does.
+So the old code could decide to copy while your new code would decide to go
+the wp_page_reuse() path. And for this case I don't see how your "but unmap
+path is simple" argument would apply...
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
