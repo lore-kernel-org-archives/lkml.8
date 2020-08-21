@@ -2,160 +2,239 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850FBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 036A5207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C571207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:10:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RG2wLagD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgHUGJZ (ORCPT
+        id S1727808AbgHUGKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:09:25 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:40671 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgHUGJW (ORCPT
+        Fri, 21 Aug 2020 02:10:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgHUGJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 02:09:22 -0400
-Received: by mail-il1-f200.google.com with SMTP id z5so756846ilp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 23:09:21 -0700 (PDT)
+        Fri, 21 Aug 2020 02:09:58 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084DEC061386
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 23:09:56 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id n25so294640vsq.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 23:09:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JW3ozXdShYYofb3XNyMiyoXtYwbQgNjFmTpyqQVrWrY=;
+        b=RG2wLagDKFi3HO0EQE0nsazch7qCSoA2b8iEkPWVJLkavPUKF4oX9jVgnY+tjFeTTP
+         vf/dUBx8o74YwjfStg+CZ2NgdNYy5OfrRNcK40Ah/nYd+0jpMOiAEW0ZK7hODdR+NS1G
+         ny3/z3E0EC6ImkP2HGojBtrpL07mCTnvUX1Quy+9NDKPhow6NReRb28keq1VGKwdGLjd
+         88h1btWlZoULcZqf1J9SQLXpE4PLyqWxV7hA2b1mItgZ3Ba0gEKy1zDRlBpKhTAwDJD4
+         xNw/LTsHv+SEUipwX4YiA/30XdQCdrx3mUQtOmSNwiQAap18eGKyRuUU6BoD7dapj0/C
+         YMQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=XsjeG8B0bLdPoJ/l3L9k6xJ8IluM+CnkVSyhaPmRmkE=;
-        b=tOygUANwxTE8jEWNdq5z0OF+elDDyh1AzPrp7ZTJcAk7zsM7+xkLeAzdk6cNQdGoSR
-         lEeNN0/FuKf36UrZuNGG3T4nvZg8sKbQpOaVSPAUSUHUA38Ux+P20MF4q7wyw8xLgUII
-         pqRku1xyaBGbbG7zeEUty4l9bJBAJs9LNYwevz0JR+6a6k7rpqx2OLL3wwpIuejW2V2z
-         WSWkcE0DHN8awQDhxO0DTQrhnqt0gF41TXXOM/n/Z7w07RZHYQYoGFnyNN+KaN3FncAl
-         4UM0gqdfp/QrtvQkRnQ31KhFwe8d/VJGBCapIfxFK7DxOVzr/N0V/IKE9uLSvBq66N4r
-         zesQ==
-X-Gm-Message-State: AOAM530xgjHhCkasWwB0QYeNSFaaWBW0PGGMqXVtJ9ue7ZYX3AD2afKl
-        dRYaUg0bFS+HdBhi0oXpz0RT3KIjRlGn22FXDE4AE8Q4RJAi
-X-Google-Smtp-Source: ABdhPJwDtKgU3dnjoil2snozHFn0iOOJIbjC8oBbaavnTjJDwkBcEOhFKNky0HTMps3hc4D10uxSwQqAY7gnQREZ9tKRDGwhwy1/
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JW3ozXdShYYofb3XNyMiyoXtYwbQgNjFmTpyqQVrWrY=;
+        b=U5O+AoFuzNPYIvtl0dgxELHIMonGNkKcRc2jyQWmmvTLQVzlK/fzkDL9Frb+lByrT7
+         O5vmlg9DNnFqHKqPmihjsoM1wOwYDr4LfYD/tvv+MgZKiyN+H4ADRZgvRxTigFYnhJNl
+         ZSF5QyygjR8tm5jcj18ACaGHG5dFhTKjIhQtX28Zd4kqtVQjb3VeIP1sBvDdayw3Up7n
+         5Lr+6F/I10d0lkY6RZ9VsdRTmvAV8oE86PrtDqSg8m4Fn4QEFKJWaekfN+N5h352cb7e
+         jCr08ckpvUo9/eKBiy9ysv17a4Y62F7yQ8qg4mlZp+FlaHujxuUmnlyGGDGd1yB0Y2cP
+         ErOA==
+X-Gm-Message-State: AOAM532F7Ur6IktGPcRFoGrm0gwd/bYJJqMTWJW+Bpv/veJ8ysDJjR9U
+        ufiWS0YNC4Viy1ORrEbAuAqB0PqFXIe5ptAfMe4SPQ==
+X-Google-Smtp-Source: ABdhPJx8xpveXw3qZj/zMsBfKzYf/TP3PHvI91tV7PQ6vsOKw6Y9uNBFCa+7Et6BYfxQxOWRGY0c0vDMVv/ChvLsmTI=
+X-Received: by 2002:a67:e40a:: with SMTP id d10mr769663vsf.95.1597990196050;
+ Thu, 20 Aug 2020 23:09:56 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:d4f:: with SMTP id d15mr1177740jak.119.1597990161149;
- Thu, 20 Aug 2020 23:09:21 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 23:09:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e8f42805ad5d136c@google.com>
-Subject: KASAN: use-after-free Write in vcs_read
-From:   syzbot <syzbot+ad1f53726c3bd11180cb@syzkaller.appspotmail.com>
-To:     gregkh@linuxfoundation.org, jirislaby@kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20200715064909.9161-1-andy.tang@nxp.com>
+In-Reply-To: <20200715064909.9161-1-andy.tang@nxp.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Fri, 21 Aug 2020 11:39:45 +0530
+Message-ID: <CAHLCerM6_1NW1c+y990Y052uzK39gGLgkj8wo76CF_YPaEszJA@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v2] arm64: dts: ls1088a: add more thermal zone support
+To:     Yuantian Tang <andy.tang@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Jul 15, 2020 at 12:25 PM <andy.tang@nxp.com> wrote:
+>
+> From: Yuantian Tang <andy.tang@nxp.com>
+>
+> There are 2 thermal zones in ls1088a soc. Add the other thermal zone
+> node to enable it.
+> Also update the values in calibration table to make the temperatures
+> monitored more precise.
+>
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 
-syzbot found the following issue on:
+Reviewed-by: Amit Kucheria <amitk@kernel.org>
 
-HEAD commit:    605cbf3d Add linux-next specific files for 20200820
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=157e75ce900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a61d44f28687f508
-dashboard link: https://syzkaller.appspot.com/bug?extid=ad1f53726c3bd11180cb
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ad1f53726c3bd11180cb@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in vcs_read_buf drivers/tty/vt/vc_screen.c:357 [inline]
-BUG: KASAN: use-after-free in vcs_read+0xaa7/0xb40 drivers/tty/vt/vc_screen.c:449
-Write of size 2 at addr ffff8880a8014000 by task syz-executor.5/16936
-
-CPU: 1 PID: 16936 Comm: syz-executor.5 Not tainted 5.9.0-rc1-next-20200820-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- vcs_read_buf drivers/tty/vt/vc_screen.c:357 [inline]
- vcs_read+0xaa7/0xb40 drivers/tty/vt/vc_screen.c:449
- vfs_read+0x1df/0x5a0 fs/read_write.c:479
- ksys_read+0x12d/0x250 fs/read_write.c:607
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d4d9
-Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fa15c60dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 0000000000025ec0 RCX: 000000000045d4d9
-RDX: 0000000000002020 RSI: 0000000020000340 RDI: 0000000000000003
-RBP: 000000000118cf80 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cf4c
-R13: 00007ffd27ec646f R14: 00007fa15c60e9c0 R15: 000000000118cf4c
-
-Allocated by task 5:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
- slab_post_alloc_hook mm/slab.h:517 [inline]
- slab_alloc_node mm/slab.c:3254 [inline]
- kmem_cache_alloc_node+0x136/0x3f0 mm/slab.c:3574
- __alloc_skb+0x71/0x550 net/core/skbuff.c:198
- alloc_skb include/linux/skbuff.h:1085 [inline]
- nsim_dev_trap_skb_build drivers/net/netdevsim/dev.c:501 [inline]
- nsim_dev_trap_report drivers/net/netdevsim/dev.c:558 [inline]
- nsim_dev_trap_report_work+0x2b2/0xbe0 drivers/net/netdevsim/dev.c:599
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-Freed by task 5:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
- kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
- __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
- __cache_free mm/slab.c:3418 [inline]
- kmem_cache_free.part.0+0x67/0x1f0 mm/slab.c:3693
- kfree_skbmem+0xef/0x1b0 net/core/skbuff.c:622
- __kfree_skb net/core/skbuff.c:679 [inline]
- consume_skb net/core/skbuff.c:837 [inline]
- consume_skb+0xcf/0x160 net/core/skbuff.c:831
- nsim_dev_trap_report drivers/net/netdevsim/dev.c:574 [inline]
- nsim_dev_trap_report_work+0x889/0xbe0 drivers/net/netdevsim/dev.c:599
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-The buggy address belongs to the object at ffff8880a8014000
- which belongs to the cache skbuff_head_cache of size 224
-The buggy address is located 0 bytes inside of
- 224-byte region [ffff8880a8014000, ffff8880a80140e0)
-The buggy address belongs to the page:
-page:00000000a263cd02 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xa8014
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000277a2c8 ffffea0002551888 ffff8880a9050d00
-raw: 0000000000000000 ffff8880a8014000 000000010000000c 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a8013f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8880a8013f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff8880a8014000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff8880a8014080: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
- ffff8880a8014100: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> ---
+> v2:
+>         - remove useless alert trip
+>
+>  .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 94 +++++++++++--------
+>  1 file changed, 56 insertions(+), 38 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index 169f4742ae3b..b961a896ede7 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -130,19 +130,19 @@
+>         };
+>
+>         thermal-zones {
+> -               cpu_thermal: cpu-thermal {
+> +               core-cluster {
+>                         polling-delay-passive = <1000>;
+>                         polling-delay = <5000>;
+>                         thermal-sensors = <&tmu 0>;
+>
+>                         trips {
+> -                               cpu_alert: cpu-alert {
+> +                               core_cluster_alert: core-cluster-alert {
+>                                         temperature = <85000>;
+>                                         hysteresis = <2000>;
+>                                         type = "passive";
+>                                 };
+>
+> -                               cpu_crit: cpu-crit {
+> +                               core-cluster-crit {
+>                                         temperature = <95000>;
+>                                         hysteresis = <2000>;
+>                                         type = "critical";
+> @@ -151,7 +151,7 @@
+>
+>                         cooling-maps {
+>                                 map0 {
+> -                                       trip = <&cpu_alert>;
+> +                                       trip = <&core_cluster_alert>;
+>                                         cooling-device =
+>                                                 <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>                                                 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> @@ -164,6 +164,20 @@
+>                                 };
+>                         };
+>                 };
+> +
+> +               soc {
+> +                       polling-delay-passive = <1000>;
+> +                       polling-delay = <5000>;
+> +                       thermal-sensors = <&tmu 1>;
+> +
+> +                       trips {
+> +                               soc-crit {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+>         };
+>
+>         timer {
+> @@ -210,45 +224,49 @@
+>                         compatible = "fsl,qoriq-tmu";
+>                         reg = <0x0 0x1f80000 0x0 0x10000>;
+>                         interrupts = <0 23 0x4>;
+> -                       fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
+> +                       fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x70062>;
+>                         fsl,tmu-calibration =
+>                                 /* Calibration data group 1 */
+> -                               <0x00000000 0x00000026
+> -                               0x00000001 0x0000002d
+> -                               0x00000002 0x00000032
+> -                               0x00000003 0x00000039
+> -                               0x00000004 0x0000003f
+> -                               0x00000005 0x00000046
+> -                               0x00000006 0x0000004d
+> -                               0x00000007 0x00000054
+> -                               0x00000008 0x0000005a
+> -                               0x00000009 0x00000061
+> -                               0x0000000a 0x0000006a
+> -                               0x0000000b 0x00000071
+> +                               <0x00000000 0x00000023
+> +                               0x00000001 0x0000002a
+> +                               0x00000002 0x00000030
+> +                               0x00000003 0x00000037
+> +                               0x00000004 0x0000003d
+> +                               0x00000005 0x00000044
+> +                               0x00000006 0x0000004a
+> +                               0x00000007 0x00000051
+> +                               0x00000008 0x00000057
+> +                               0x00000009 0x0000005e
+> +                               0x0000000a 0x00000064
+> +                               0x0000000b 0x0000006b
+>                                 /* Calibration data group 2 */
+> -                               0x00010000 0x00000025
+> -                               0x00010001 0x0000002c
+> -                               0x00010002 0x00000035
+> -                               0x00010003 0x0000003d
+> -                               0x00010004 0x00000045
+> -                               0x00010005 0x0000004e
+> -                               0x00010006 0x00000057
+> -                               0x00010007 0x00000061
+> -                               0x00010008 0x0000006b
+> -                               0x00010009 0x00000076
+> +                               0x00010000 0x00000022
+> +                               0x00010001 0x0000002a
+> +                               0x00010002 0x00000032
+> +                               0x00010003 0x0000003a
+> +                               0x00010004 0x00000042
+> +                               0x00010005 0x0000004a
+> +                               0x00010006 0x00000052
+> +                               0x00010007 0x0000005a
+> +                               0x00010008 0x00000062
+> +                               0x00010009 0x0000006a
+>                                 /* Calibration data group 3 */
+> -                               0x00020000 0x00000029
+> -                               0x00020001 0x00000033
+> -                               0x00020002 0x0000003d
+> -                               0x00020003 0x00000049
+> -                               0x00020004 0x00000056
+> -                               0x00020005 0x00000061
+> -                               0x00020006 0x0000006d
+> +                               0x00020000 0x00000021
+> +                               0x00020001 0x0000002b
+> +                               0x00020002 0x00000035
+> +                               0x00020003 0x00000040
+> +                               0x00020004 0x0000004a
+> +                               0x00020005 0x00000054
+> +                               0x00020006 0x0000005e
+>                                 /* Calibration data group 4 */
+> -                               0x00030000 0x00000021
+> -                               0x00030001 0x0000002a
+> -                               0x00030002 0x0000003c
+> -                               0x00030003 0x0000004e>;
+> +                               0x00030000 0x00000010
+> +                               0x00030001 0x0000001c
+> +                               0x00030002 0x00000027
+> +                               0x00030003 0x00000032
+> +                               0x00030004 0x0000003e
+> +                               0x00030005 0x00000049
+> +                               0x00030006 0x00000054
+> +                               0x00030007 0x00000060>;
+>                         little-endian;
+>                         #thermal-sensor-cells = <1>;
+>                 };
+> --
+> 2.17.1
+>
