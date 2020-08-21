@@ -2,342 +2,122 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDB8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B20AF207CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69684207CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:41:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eORjt5u6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aUIsyEnW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgHUWhy (ORCPT
+        id S1726945AbgHUWl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:37:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35456 "EHLO
+        Fri, 21 Aug 2020 18:41:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbgHUWhx (ORCPT
+        with ESMTP id S1725951AbgHUWlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:37:53 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACDF6C061573;
-        Fri, 21 Aug 2020 15:37:53 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id p191so1858347ybg.0;
-        Fri, 21 Aug 2020 15:37:53 -0700 (PDT)
+        Fri, 21 Aug 2020 18:41:55 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC2B3C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 15:41:54 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m22so3534115ljj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 15:41:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9TYu21x+NkTkha7Rr6K3nLnIrF+tDAxFrOu5jvoEinY=;
-        b=eORjt5u6WhstX2msPXGUf9NxV8iwS+0vudTQVTS2mnMmsDXf4o9LcK/NxP5qjYgQbB
-         KtgHiTSbwfpZMaoPerjufcFI7Gf2GitBcTgemM13mDbmHYFPCocHlzo4Hjs8MIB5DeG8
-         OyDGAoFjMBXM17XVg4Vw9mBQC1ZRre+XUMcE5tCIsYOk9ibNUrK+vsQxmCJhlkt69XwZ
-         eDk0La7k8P3pxUQuMPTtUJXZ77InBELfjjk5OHepTB4aCNt2K4dCRngZwXTwwd9WLWd3
-         Orub7U/r3Txk3qqbGxvLfAbY7sRg2NhjNM8fAMxpAxy7CMRpiHqHDT8ajdzO4eL1nYhC
-         6JCg==
+        bh=vCEF6wqc95cLrmB/oV3IZ67dACUQA3nyuwvULLWrblQ=;
+        b=aUIsyEnWZLGtrHakZpo3Adlpynv8NvMuJ9J+SnnjASvqTaGNKNTC54dDARpOBO7EKK
+         iggserf9ZQ3fDx/xDGLzPLlUuJDsjUg/IeDigqsrgXyoEQmPRRs/l7piUpHKO+4uwngm
+         CkojfKcXW0cWdMnqL+2CAVH+L2M446/Ohai73Q699XWlOuX63VudwM8sly3sFUkEZMLG
+         pusTDYlZcgX0u80JO32Cw1MnLSvQziEPS73Uv/OhqG9NqkPbMfmpiny5kb+kVNc0Hvjp
+         0IQTS2wZQWpJZQkHVl/hCmaY+Yo/OPXEE4qsUAW/7AdiV49fW6NEQW7jgXJc+FyiK29I
+         43Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9TYu21x+NkTkha7Rr6K3nLnIrF+tDAxFrOu5jvoEinY=;
-        b=Wo9/LiqIX68X9OPBqD4+lFxITQ9mzHa5afnZwau/EvVrTmxmlo9yNFcSJ7pifkQIt0
-         wenweRnDMEZ/4k9OnSsz/uWKDJy93Y+adQty3bYMTVB0AnOavlRdncGPMb8A072juKPN
-         xtF+CexMlOKF7nNIjvKDHnbf7WpHQyngNOZHCQk5Q4O64X/dmfo4i0/WnvVKGVKpMWli
-         3rVWNgiHcMM/xOHFZRDM/HX2J+/QHXcC7zY5eTG6wkJ9RQvhYvfywG2kDrczhQOmfLQs
-         5GVekmjSJ1ww8+HRfc7K/zYFoqpcNPbtlQvuFoPYabEhUGqejQ67bhWaKAHhP17YEo+s
-         vQ7w==
-X-Gm-Message-State: AOAM532Qba/uaOMDFTZSBd5jLnNrBVVHWHYgZpQQ1VP0/N/QlyJIVxTi
-        KYrzVNYjeNkvDfpo91fx5PNrVGwHr8DLIvQ40WI=
-X-Google-Smtp-Source: ABdhPJzdkTKGzSST8OEQBjzXWggg21HSbkkVMRyYlyRqqSF9snk/1cobojkx3aVqpJxQZC2GkykBiaRDdDMdF4clfbk=
-X-Received: by 2002:a25:ad5a:: with SMTP id l26mr6466125ybe.510.1598049472758;
- Fri, 21 Aug 2020 15:37:52 -0700 (PDT)
+        bh=vCEF6wqc95cLrmB/oV3IZ67dACUQA3nyuwvULLWrblQ=;
+        b=IqoI7p+9Ds51l9RBjov/y+16zT24pPGnpd83GuFOrpRz4WJbbVcA2Dmil6jhHpvTGj
+         ArybZrFsBpkMbX/CRIvWYyHRTVqKvovl5ZJ429Xy7uWppLBQd5t9jdLDQR7abYkM0zv9
+         SVKqrdIeHMQiKhxyiTtgW15YuBG2RyRW3ZIK+oPjTTVXsqhub0RF23saMjok2Ms9i/34
+         V6ZEs/Z9e8tuzyn8pawmPHF0miTKin16LUrpmtextFj5VSEVhedivGjhlRlmBp4XYq+t
+         B2J8qhkyxobQU7MWWkIIurbAUgfuLYiAEbxRYQOSQBZpKpkgiN28f8YUpDd78xpsYIEt
+         7VhQ==
+X-Gm-Message-State: AOAM5333DinLs6HyJlgN3AEn4huVmbAWhoemg4/IeROe3z0FoHhmnFqD
+        w2UA1wGOjBNKXwLbdZls1GfxRWlRUZrZygMkJuV8tw==
+X-Google-Smtp-Source: ABdhPJxAavBApZLnZJgIBEBEUhAPqDcRk1LqV3Ve1UUvn7RINl0zO9IW1qjmCcY+90sQgwoIJdCILpT6JoB2i1iB490=
+X-Received: by 2002:a2e:96c3:: with SMTP id d3mr2526801ljj.270.1598049712869;
+ Fri, 21 Aug 2020 15:41:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-5-haoluo@google.com>
-In-Reply-To: <20200819224030.1615203-5-haoluo@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 21 Aug 2020 15:37:41 -0700
-Message-ID: <CAEf4BzYhjUwYH_BBgtHz9-Ha-54AQ_8L3_N=cXsuud=kayk5-A@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 4/8] bpf/libbpf: BTF support for typed ksyms
-To:     Hao Luo <haoluo@google.com>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>
+References: <20200821212056.3769116-1-guro@fb.com>
+In-Reply-To: <20200821212056.3769116-1-guro@fb.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 21 Aug 2020 15:41:41 -0700
+Message-ID: <CALvZod79+g39SUbVA+=Z-e_6m7deE1QqA1p8ogKv+Qpn+SwuKg@mail.gmail.com>
+Subject: Re: [PATCH] mm: rework remote memcg charging API to support nesting
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dan Schatzberg <dschatzberg@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 3:42 PM Hao Luo <haoluo@google.com> wrote:
+On Fri, Aug 21, 2020 at 2:21 PM Roman Gushchin <guro@fb.com> wrote:
 >
-> If a ksym is defined with a type, libbpf will try to find the ksym's btf
-> information from kernel btf. If a valid btf entry for the ksym is found,
-> libbpf can pass in the found btf id to the verifier, which validates the
-> ksym's type and value.
+> Currently the remote memcg charging API consists of two functions:
+> memalloc_use_memcg() and memalloc_unuse_memcg(), which set and clear
+> the memcg value, which overwrites the memcg of the current task.
 >
-> Typeless ksyms (i.e. those defined as 'void') will not have such btf_id,
-> but it has the symbol's address (read from kallsyms) and its value is
-> treated as a raw pointer.
+>   memalloc_use_memcg(target_memcg);
+>   <...>
+>   memalloc_unuse_memcg();
 >
-> Signed-off-by: Hao Luo <haoluo@google.com>
-> ---
->  tools/lib/bpf/libbpf.c | 130 ++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 114 insertions(+), 16 deletions(-)
+> It works perfectly for allocations performed from a normal context,
+> however an attempt to call it from an interrupt context or just nest
+> two remote charging blocks will lead to an incorrect accounting.
+> On exit from the inner block the active memcg will be cleared
+> instead of being restored.
 >
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index 4a81c6b2d21b..94eff612c7c2 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -357,7 +357,16 @@ struct extern_desc {
->                         bool is_signed;
->                 } kcfg;
->                 struct {
-> -                       unsigned long long addr;
-> +                       /*
-> +                        *  1. If ksym is typeless, the field 'addr' is valid.
-> +                        *  2. If ksym is typed, the field 'vmlinux_btf_id' is
-> +                        *     valid.
-> +                        */
-> +                       bool is_typeless;
-> +                       union {
-> +                               unsigned long long addr;
-> +                               int vmlinux_btf_id;
-> +                       };
-
-ksym is 16 bytes anyways, union doesn't help to save space. I propose
-to encode all this with just two fields: vmlinux_btf_id and addr. If
-btf_id == 0, then extern is typeless.
-
->                 } ksym;
->         };
->  };
-> @@ -382,6 +391,7 @@ struct bpf_object {
+>   memalloc_use_memcg(target_memcg);
 >
->         bool loaded;
->         bool has_pseudo_calls;
-> +       bool has_typed_ksyms;
+>   memalloc_use_memcg(target_memcg_2);
+>     <...>
+>     memalloc_unuse_memcg();
 >
->         /*
->          * Information when doing elf related work. Only valid if fd
-> @@ -2521,6 +2531,10 @@ static int bpf_object__load_vmlinux_btf(struct bpf_object *obj)
->         if (obj->btf_ext && obj->btf_ext->core_relo_info.len)
->                 need_vmlinux_btf = true;
+>     Error: allocation here are charged to the memcg of the current
+>     process instead of target_memcg.
 >
-> +       /* Support for typed ksyms needs kernel BTF */
-> +       if (obj->has_typed_ksyms)
-> +               need_vmlinux_btf = true;
-
-On the second read, I don't think you really need `has_typed_ksyms` at
-all. Just iterate over ksym externs and see if you have a typed one.
-It's the only place that cares.
-
-> +
->         bpf_object__for_each_program(prog, obj) {
->                 if (!prog->load)
->                         continue;
-> @@ -2975,10 +2989,10 @@ static int bpf_object__collect_externs(struct bpf_object *obj)
->                         ext->type = EXT_KSYM;
+>   memalloc_unuse_memcg();
 >
->                         vt = skip_mods_and_typedefs(obj->btf, t->type, NULL);
-> -                       if (!btf_is_void(vt)) {
-> -                               pr_warn("extern (ksym) '%s' is not typeless (void)\n", ext_name);
-> -                               return -ENOTSUP;
-> -                       }
-> +                       ext->ksym.is_typeless = btf_is_void(vt);
-> +
-> +                       if (!obj->has_typed_ksyms && !ext->ksym.is_typeless)
-> +                               obj->has_typed_ksyms = true;
-
-nit: keep it simple:
-
-if (ext->ksym.is_typeless)
-  obj->has_typed_ksyms = true;
-
->                 } else {
->                         pr_warn("unrecognized extern section '%s'\n", sec_name);
->                         return -ENOTSUP;
-> @@ -2992,9 +3006,9 @@ static int bpf_object__collect_externs(struct bpf_object *obj)
->         /* sort externs by type, for kcfg ones also by (align, size, name) */
->         qsort(obj->externs, obj->nr_extern, sizeof(*ext), cmp_externs);
+> This patch extends the remote charging API by switching to a single
+> function: struct mem_cgroup *set_active_memcg(struct mem_cgroup *memcg),
+> which sets the new value and returns the old one. So a remote charging
+> block will look like:
 >
-> -       /* for .ksyms section, we need to turn all externs into allocated
-> -        * variables in BTF to pass kernel verification; we do this by
-> -        * pretending that each extern is a 8-byte variable
-> +       /* for .ksyms section, we need to turn all typeless externs into
-> +        * allocated variables in BTF to pass kernel verification; we do
-> +        * this by pretending that each typeless extern is a 8-byte variable
->          */
->         if (ksym_sec) {
->                 /* find existing 4-byte integer type in BTF to use for fake
-> @@ -3012,7 +3026,7 @@ static int bpf_object__collect_externs(struct bpf_object *obj)
+>   old_memcg = set_active_memcg(target_memcg);
+>   <...>
+>   set_active_memcg(old_memcg);
 >
->                 sec = ksym_sec;
->                 n = btf_vlen(sec);
-> -               for (i = 0, off = 0; i < n; i++, off += sizeof(int)) {
-> +               for (i = 0, off = 0; i < n; i++) {
->                         struct btf_var_secinfo *vs = btf_var_secinfos(sec) + i;
->                         struct btf_type *vt;
+> This patch is heavily based on the patch by Johannes Weiner,
+> which can be found here: https://lkml.org/lkml/2020/5/28/806 .
 >
-> @@ -3025,9 +3039,14 @@ static int bpf_object__collect_externs(struct bpf_object *obj)
->                                 return -ESRCH;
->                         }
->                         btf_var(vt)->linkage = BTF_VAR_GLOBAL_ALLOCATED;
-> -                       vt->type = int_btf_id;
-> +                       if (ext->ksym.is_typeless) {
-> +                               vt->type = int_btf_id;
-> +                               vs->size = sizeof(int);
-> +                       }
->                         vs->offset = off;
-> -                       vs->size = sizeof(int);
-> +                       off += vs->size;
-> +                       pr_debug("ksym var_secinfo: var '%s', type #%d, size %d, offset %d\n",
-> +                                ext->name, vt->type, vs->size, vs->offset);
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Shakeel Butt <shakeelb@google.com>
+> Cc: Dan Schatzberg <dschatzberg@fb.com>
 
-It's a bit of a waste that we still allocate memory for those typed
-ksym externs, as they don't really need space. But modifying BTF is a
-pain right now, so I think we'll have to do it, until we have a better
-BTF API. But let's make them integers for now to take a fixed and
-small amount of space.
-
->                 }
->                 sec->size = off;
->         }
-> @@ -5300,8 +5319,13 @@ bpf_program__relocate(struct bpf_program *prog, struct bpf_object *obj)
->                                 insn[0].imm = obj->maps[obj->kconfig_map_idx].fd;
->                                 insn[1].imm = ext->kcfg.data_off;
->                         } else /* EXT_KSYM */ {
-> -                               insn[0].imm = (__u32)ext->ksym.addr;
-> -                               insn[1].imm = ext->ksym.addr >> 32;
-> +                               if (ext->ksym.is_typeless) { /* typelss ksyms */
-
-typo: typeless
-
-> +                                       insn[0].imm = (__u32)ext->ksym.addr;
-> +                                       insn[1].imm = ext->ksym.addr >> 32;
-> +                               } else { /* typed ksyms */
-> +                                       insn[0].src_reg = BPF_PSEUDO_BTF_ID;
-> +                                       insn[0].imm = ext->ksym.vmlinux_btf_id;
-> +                               }
->                         }
->                         break;
->                 case RELO_CALL:
-> @@ -6019,6 +6043,10 @@ static int bpf_object__read_kallsyms_file(struct bpf_object *obj)
->                 if (!ext || ext->type != EXT_KSYM)
->                         continue;
->
-> +               /* Typed ksyms have the verifier to fill their addresses. */
-> +               if (!ext->ksym.is_typeless)
-> +                       continue;
-
-It might still be a good idea to try to find the symbol in kallsyms
-and emit nicer message if it's not there. Think about the user's
-experience when some global variable is removed from the kernel (or
-compiled out due to missing Kconfig). If libbpf can easily detect
-this, we should do it and provide a good error message.
-
-> +
->                 if (ext->is_set && ext->ksym.addr != sym_addr) {
->                         pr_warn("extern (ksym) '%s' resolution is ambiguous: 0x%llx or 0x%llx\n",
->                                 sym_name, ext->ksym.addr, sym_addr);
-> @@ -6037,10 +6065,72 @@ static int bpf_object__read_kallsyms_file(struct bpf_object *obj)
->         return err;
->  }
->
-> +static int bpf_object__resolve_ksyms_btf_id(struct bpf_object *obj)
-> +{
-> +       struct extern_desc *ext;
-> +       int i, id;
-> +
-> +       if (!obj->btf_vmlinux) {
-> +               pr_warn("support of typed ksyms needs kernel btf.\n");
-> +               return -ENOENT;
-> +       }
-> +
-> +       for (i = 0; i < obj->nr_extern; i++) {
-> +               const struct btf_type *v, *vx; /* VARs in object and vmlinux btf */
-> +               const struct btf_type *t, *tx; /* TYPEs in btf */
-> +               __u32 vt, vtx; /* btf_ids of TYPEs */
-
-I use targ_ and local_ prefixes with CO-RE to distinguish something
-that's coming from BPF object's BTF vs kernel's BTF, can you please
-adopt the same, as the process is essentially the same. "vx" vs "vtx"
-vs "v" are hard to distinguish and understand.
-
-> +
-> +               ext = &obj->externs[i];
-> +               if (ext->type != EXT_KSYM)
-> +                       continue;
-> +
-> +               if (ext->ksym.is_typeless)
-> +                       continue;
-
-nit: combine into a single filter condition (we need typed ksym,
-that's one check)
-
-> +
-> +               if (ext->is_set) {
-> +                       pr_warn("typed ksym '%s' resolved as typeless ksyms.\n",
-> +                               ext->name);
-> +                       return -EFAULT;
-
-this is a bug if that happens, that should be caught by test, please
-remove unnecessary check
-
-> +               }
-> +
-> +               id = btf__find_by_name_kind(obj->btf_vmlinux, ext->name,
-> +                                           BTF_KIND_VAR);
-> +               if (id <= 0) {
-> +                       pr_warn("no btf entry for ksym '%s' in vmlinux.\n",
-> +                               ext->name);
-> +                       return -ESRCH;
-> +               }
-> +
-> +               vx = btf__type_by_id(obj->btf_vmlinux, id);
-> +               tx = skip_mods_and_typedefs(obj->btf_vmlinux, vx->type, &vtx);
-> +
-> +               v = btf__type_by_id(obj->btf, ext->btf_id);
-> +               t = skip_mods_and_typedefs(obj->btf, v->type, &vt);
-> +
-> +               if (!btf_ksym_type_match(obj->btf_vmlinux, vtx, obj->btf, vt)) {
-> +                       const char *tname, *txname; /* names of TYPEs */
-> +
-> +                       txname = btf__name_by_offset(obj->btf_vmlinux, tx->name_off);
-> +                       tname = btf__name_by_offset(obj->btf, t->name_off);
-> +
-> +                       pr_warn("ksym '%s' expects type '%s' (vmlinux_btf_id: #%d), "
-> +                               "but got '%s' (btf_id: #%d)\n", ext->name,
-> +                               txname, vtx, tname, vt);
-> +                       return -EINVAL;
-> +               }
-
-yeah, definitely just use bpf_core_types_are_compat() here. You'll
-want to skip_mods_and_typedefs first, but everything else should work
-for your use case.
-
-> +
-> +               ext->is_set = true;
-> +               ext->ksym.vmlinux_btf_id = id;
-> +               pr_debug("extern (ksym) %s=vmlinux_btf_id(#%d)\n", ext->name, id);
-> +       }
-> +       return 0;
-> +}
-> +
-
-[...]
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
