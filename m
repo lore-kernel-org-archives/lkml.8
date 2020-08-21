@@ -2,107 +2,152 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A375C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1525720724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1117C20FC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:54:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="ob0DSsT4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UXMo0g81"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgHUTyt (ORCPT
+        id S1726909AbgHUTy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:54:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38350 "EHLO
+        Fri, 21 Aug 2020 15:54:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbgHUTyi (ORCPT
+        with ESMTP id S1726796AbgHUTyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:54:38 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2A63C0613ED
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:54:37 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v9so3143212ljk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:54:37 -0700 (PDT)
+        Fri, 21 Aug 2020 15:54:18 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21DECC061795
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:54:07 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id i13so669100pjv.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:54:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JXmwu9P/D+knwsCeno9ESPy91dSSF4OAlwClgxTnACM=;
-        b=ob0DSsT44/7x567v9uK91b3SmCLwG+sNCviIRwJ3sfFiUfGop+LssO/cehC29M7u2x
-         W7OaPIztIq+m6WrOOq++7Qpqbqoz6m9iBmeUESeqyL1UGxX2TmGQVNQQ595TfSGZVhVE
-         9uq0WPucSG9KV/8qsEwWKtwrv3pZRYu7/xUTIOxF8paOu0OBtFdEzROVnOTZfIRZH5+K
-         5BNwYHkToyQ4Xv6RJTKL9pgkHBRT9LmVg3ybRd+X+f1VnAUNOBneEEtHCp61FGtbf1r3
-         KlZmkf0B57ADsn1SHxuHVbaHemMMZQE/0woxKdO1PR580KcERa9uXXKTE1dyg4thOMp2
-         4O/A==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qYY4BGMZpEUoUw6pwB0rAYIo+TQmYGtCQDuwjk0rFfA=;
+        b=UXMo0g81IhuQadz0t0IT637YY3O6sDavMlgOlN8BROJi+h21xme8wQSpHfKN4VSjs0
+         0zvn+K7mSlGI5ABhdq61uvamMUHMZX9mI8BGcLCW0h1nwgeZH2CIU7gdquipMxGV/X/g
+         LkXmXYJdkoUSQ1wvEfsI5FA5lu5Z42khMLWbU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JXmwu9P/D+knwsCeno9ESPy91dSSF4OAlwClgxTnACM=;
-        b=L4oa3AP0kcwEovgVpoVqkwR6dlKMY5tSi2TxP3xZVbzLmmHzTL+ydnI1Zss/yafFbi
-         bVlEY1unIL42lV3f5jx4+m/JGmDZsgQTeN/98d+cB7ESqj/A9TnWOxOP61iZq/kZwCox
-         xDbXAe1oPoNmYZQXimCrc06TLCMUs5AkjCXcUnDUMeFIlvdMJQfnjJZ5Q4nVj4yLYnTs
-         jFkI3zEwjqGa6p+oWz1NGSygQClu/jT/DZYgDKhpmbKojNhhEDcFT5bOLH2A5dD5JRl7
-         kECartNqMMphmXuIuikZmKQbUZveDqB4xVQ1PXr+MmPVUHroPVN2qsXhG2EdY/T96bfW
-         Arkw==
-X-Gm-Message-State: AOAM533t6VEx4iAeyxFfeDtw1uOUG7grsSnUOSxkTCiIvADistfiNoOF
-        ErWAYMAknRdyXH+OR9ZbmktTrg==
-X-Google-Smtp-Source: ABdhPJxxFG7xLfrJKFZW1kB4VEo7fEoqDxxDcjYOPmRx4Z8yex/U8wHLSQr6ij8uIyQdQWtL4NcnbA==
-X-Received: by 2002:a05:651c:294:: with SMTP id b20mr2128384ljo.4.1598039676363;
-        Fri, 21 Aug 2020 12:54:36 -0700 (PDT)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id u21sm576779ljl.11.2020.08.21.12.54.34
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qYY4BGMZpEUoUw6pwB0rAYIo+TQmYGtCQDuwjk0rFfA=;
+        b=Ey0J65Ek4yqYP+Y10l0vAY0fgxvbVW4w+gE+G3hNX9mRXJcJU7voAMv5zIn5IXFWDN
+         yZ/+sEDBqid5vOpIbo6ybZyQDnor5TpqLV5JqDNeCeCzwI0gXGWPs+kpzYq55I/Rl5wT
+         hmqUqM2F+5xfCKSf41JH9aPBCArv0prN9mGz9/4mPo8aBSjZIO7y++l4Z1uIEaV5kBBt
+         dDKggqVsW/vpPNlCfDoRddFXh5rWTdG174IyiDOIR4nL0kekm0IjjU4oV62GapF31VjS
+         sCKtCFShbpMAGhRenx0cD2IhOQyxNCc/7WTUBm0p+S/CzHvtb6uwAZv7jQ6mtbWa7Pv3
+         F/uQ==
+X-Gm-Message-State: AOAM533Di7QqYiLJib6aqXn9Elik4XW1fvAa6XrnJQ/RJLuLVCBRnmE2
+        Q/0mO9Zj3UYeR3ZBVItaiKtCMA==
+X-Google-Smtp-Source: ABdhPJzdBaK0lQXKTsLBcoY+gieqzSTMIlMFnB1R1B39G09fhcKe/Ne3I8UbPt7DQq2SxYcgDyyTKA==
+X-Received: by 2002:a17:902:b402:: with SMTP id x2mr88446plr.97.1598039646692;
+        Fri, 21 Aug 2020 12:54:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x28sm3555441pfq.141.2020.08.21.12.54.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 12:54:35 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 11:49:10 -0700
-From:   Olof Johansson <olof@lixom.net>
-To:     Jens Wiklander <jens.wiklander@linaro.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     arm@kernel.org, soc@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        tee-dev@lists.linaro.org, John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [GIT PULL] tee subsystem pin_user_pages for v5.8
-Message-ID: <20200821184910.GB3407@lx2k>
-References: <20200526131259.GA97001@jade>
+        Fri, 21 Aug 2020 12:54:03 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 27/29] x86/boot/compressed: Remove, discard, or assert for unwanted sections
+Date:   Fri, 21 Aug 2020 12:43:08 -0700
+Message-Id: <20200821194310.3089815-28-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821194310.3089815-1-keescook@chromium.org>
+References: <20200821194310.3089815-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526131259.GA97001@jade>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 03:12:59PM +0200, Jens Wiklander wrote:
-> Hello arm-soc maintainers,
-> 
-> Please pull this small patch converting the tee subsystem to use
-> pin_user_pages() instead of get_user_pages().
-> 
-> Thanks,
-> Jens
-> 
-> The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
-> 
->   Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.linaro.org:/people/jens.wiklander/linux-tee.git tags/tee-pin-user-pages-for-5.8
-> 
-> for you to fetch changes up to 37f6b4d5f47b600ec4ab6682c005a44a1bfca530:
-> 
->   tee: convert get_user_pages() --> pin_user_pages() (2020-05-26 10:42:41 +0200)
+In preparation for warning on orphan sections, stop the linker from
+generating the .eh_frame* sections, discard unwanted non-zero-sized
+generated sections, and enforce other expected-to-be-zero-sized sections
+(since discarding them might hide problems with them suddenly gaining
+unexpected entries).
 
-Hi, I noticed this never got merged, but I don't see any follow-up here that
-retracts it. Is it still pending merge such that I should queue it for v5.10?
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/x86/boot/compressed/Makefile      |  1 +
+ arch/x86/boot/compressed/vmlinux.lds.S | 14 ++++++++++++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 753d57266757..5b7f6e175b03 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -50,6 +50,7 @@ GCOV_PROFILE := n
+ UBSAN_SANITIZE :=n
+ 
+ KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
++KBUILD_LDFLAGS += $(call ld-option,--no-ld-generated-unwind-info)
+ # Compressed kernel should be built as PIE since it may be loaded at any
+ # address by the bootloader.
+ LDFLAGS_vmlinux := -pie $(call ld-option, --no-dynamic-linker)
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index ca544a16724b..02f6feb0e55b 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -72,6 +72,11 @@ SECTIONS
+ 	ELF_DETAILS
+ 
+ 	DISCARDS
++	/DISCARD/ : {
++		*(.dynamic) *(.dynsym) *(.dynstr) *(.dynbss)
++		*(.hash) *(.gnu.hash)
++		*(.note.*)
++	}
+ 
+ 	.got.plt (INFO) : {
+ 		*(.got.plt)
+@@ -93,13 +98,18 @@ SECTIONS
+ 	}
+ 	ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
+ 
++	.plt : {
++		*(.plt) *(.plt.*)
++	}
++	ASSERT(SIZEOF(.plt) == 0, "Unexpected run-time procedure linkages detected!")
++
+ 	.rel.dyn : {
+-		*(.rel.*)
++		*(.rel.*) *(.rel_*)
+ 	}
+ 	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
+ 
+ 	.rela.dyn : {
+-		*(.rela.*)
++		*(.rela.*) *(.rela_*)
+ 	}
+ 	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
+ }
+-- 
+2.25.1
 
--Olof
