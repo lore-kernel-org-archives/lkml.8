@@ -2,95 +2,177 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83601C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6CF2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598038541;
-	bh=NMv4vnG60nEPCES3w4rZb3eZps1TWW80vKrVYEDmURg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JmIUmnQCR5LhaExZKaUWYmzWIyQdJNPyMSnbLgq8+gAQmxm5ZjZhnqqDbxWh3mQO+
-	 06t+iemBtDdyArvVJL1rchfVtE4wdmzxPgRI/cWteKC8XJRY3VTd2ckPepSrZZDTZM
-	 206qIFvoH7O91r25OlXFWV/s5QuSrbNlQ/T4N2wk=
+	by mail.kernel.org (Postfix) with ESMTP id 4FEE22072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:37:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="sD6uHtx5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgHUTfk (ORCPT
+        id S1726630AbgHUThH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:35:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35364 "EHLO
+        Fri, 21 Aug 2020 15:37:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725831AbgHUTfj (ORCPT
+        with ESMTP id S1726431AbgHUThE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:35:39 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD6EC061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:35:38 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id m22so3087887ljj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:35:38 -0700 (PDT)
+        Fri, 21 Aug 2020 15:37:04 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2958DC061755
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:37:04 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id qc22so3689210ejb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RpYvCfsbuFRsxqMSwlesgwmxN2eUawgX7RpVp5hfrDM=;
-        b=C295IkxUljYll1HbkYhxEMp3xp6hSjmv/Tdx8HJLRkcuK8a4r0PNmiha4PC7CGZvmd
-         9HClEXcf/+XX+P9j6WioxaJNVnsub/fX5hgMate/ImLkubHanJMhrCLhJNOOjbPNe+f+
-         JXCwa1tvJQLfSU9Wb2GcJnhYY6XYK3GsG62BM=
+        bh=jQURKxDjRWMiMTxRUVV2iQZ2ZeobDW7AH50DwoJj7f8=;
+        b=sD6uHtx5WmZbLrlelrAxJJlU8yrwBa7XdhUItXD/MUiuplcXnFHNbs0uCDwUQgzFtN
+         jurCNLEA/E4vr3a4yeIje3FqyDQI8sRF2c9YCo0QgyXFJuEqVPmkW2lS0/NsyrCgrxja
+         tHGI+6w07Ab8+AjC5II2mNiy2hdZ+3qmZyA6KHRLmlNmhG0wcFb6d/3S35p6poEvsoRd
+         vlwL/zS/4H3Jx2D9+lvUJjrS4TpaS1QO3eL2d4amih7Ujdzt9QbFU97rAayMqUXL50px
+         JXF3OtgHHiAAnV5emKHZq4o9IjgjW6eSdpoPKf4Z/6Md2pN6nt5uPCWgvaPZOR/vzBsW
+         mzSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RpYvCfsbuFRsxqMSwlesgwmxN2eUawgX7RpVp5hfrDM=;
-        b=D6c76Z6Ph9GqdmiESpYO/zHvHxPrsJB02xxZ4qogaKRSL+pYfOfvuIaUuRQg9DtcnZ
-         saS8YX6A1HSnuz7daLSrXpEIAJju79x/EyFE2UpWr/mWCs5oLRqXCJ5nd70A6/diwgd3
-         vIjWHqAcExruxjSvQPGLJ0BrSa3D+7IZJ5Hy3JIix+cl4kVvt9stQCh3RfVkkESV4t7T
-         tRVgJnek/il8TqL7pWV2LPCKI6On1NbmtAEJLGX+ailv253gZAkdtGyXTeqNV/TrGAKC
-         V2ykwhbC0iFjv1+VUG9eZ0LrtJHXpHCCF6Dyod/QxksgNEQDXKiGucH3ELWaIyfqG/HH
-         YbAA==
-X-Gm-Message-State: AOAM530GWChUllF6ZxbnUtaMKlc9BUTzl8zauWCRlWi9qsnYI4gGeXWD
-        S55MPHmOQwmdAMRRLfLuwZRAxOQ8occw2Q==
-X-Google-Smtp-Source: ABdhPJxEQZQfD2ZfZhg5nqIimxRCE4k8ZMqXQMEq5rgq3B63shrKiQUgJ+3kdZ7HCIu4m40di7KKWQ==
-X-Received: by 2002:a05:651c:1349:: with SMTP id j9mr2127884ljb.392.1598038537040;
-        Fri, 21 Aug 2020 12:35:37 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id h7sm555148ljc.75.2020.08.21.12.35.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 12:35:36 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id 185so3075594ljj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:35:36 -0700 (PDT)
-X-Received: by 2002:a2e:92d0:: with SMTP id k16mr2060856ljh.70.1598038535798;
- Fri, 21 Aug 2020 12:35:35 -0700 (PDT)
+        bh=jQURKxDjRWMiMTxRUVV2iQZ2ZeobDW7AH50DwoJj7f8=;
+        b=McjT6N5kVUtvA4qqGtU7M/zb3BUN6xdQQfYzhIdKM8pEGNsD+xdXG0wVMaEWcuuJc3
+         OGj33BZbXK10DgoYRGhx4dBvrfNtLVsaU09jmbA1VeBZP6SgjQhkHR6w64s/VXmPpvzW
+         vW90EFRTD71KwouPpiu7gzYRMHLseisC7eqC2z0vysDB5EwQlnlwKY+zQmLopuzNYr+n
+         JjVJnk4xAIwtiEDx01mnLYHKAwn6Fhi9Lr213wyoaaY+45XVJKZZwv74U98FZuJm9Bx1
+         UJHupFeORL7i5cXP3N8zQwlUrxm2WxWsJ+LYWVYrpLesO1eBKsuV3A1kbh1HQX+kSCcV
+         iiow==
+X-Gm-Message-State: AOAM5328cvUP01agvfhuQiXVUErb2g8cYx2qrpI+ZKcVNkwHoh613aQr
+        wKPoI2cVGACqk1f2If6ruuTo4Bf8F36FxrGEK61d
+X-Google-Smtp-Source: ABdhPJxv9ljf/EC5lZy/k36EEbz/l4zL+9SOFpsYjODOPjAFI0K0Ji1ACIURRzkOqqw0PrvW8Opqs3fti74vNH7Daus=
+X-Received: by 2002:a17:906:43c9:: with SMTP id j9mr4383574ejn.542.1598038620869;
+ Fri, 21 Aug 2020 12:37:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <mhng-32c8d053-acbd-4c72-b41d-8d6042ac639d@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-32c8d053-acbd-4c72-b41d-8d6042ac639d@palmerdabbelt-glaptop1>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 21 Aug 2020 12:35:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi_tf4qsiBj5UD0GG3wz8Hi5NrHzqdrx+CwtfAY+_UiGg@mail.gmail.com>
-Message-ID: <CAHk-=wi_tf4qsiBj5UD0GG3wz8Hi5NrHzqdrx+CwtfAY+_UiGg@mail.gmail.com>
-Subject: Re: [GIT PULL] RISC-V Fixes for 5.9-rc2
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     linux-riscv@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <cover.1593198710.git.rgb@redhat.com> <e5a1ab6955c565743372b392a93f7d1ac98478a2.1593198710.git.rgb@redhat.com>
+ <CAHC9VhSgcOS79spSuFDMukw2TnLZfBh2p4BWGfoV_CGUS8b77w@mail.gmail.com> <20200729200545.5apwc7fashwsnglj@madcap2.tricolour.ca>
+In-Reply-To: <20200729200545.5apwc7fashwsnglj@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 21 Aug 2020 15:36:49 -0400
+Message-ID: <CAHC9VhQTiu+yY6cY8tvBf-1ZtZrre3Ljs+Zd6Jf9ZM766bhUYQ@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V9 02/13] audit: add container id
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, Ondrej Mosnacek <omosnace@redhat.com>,
+        dhowells@redhat.com, simo@redhat.com,
+        Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 11:26 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+On Wed, Jul 29, 2020 at 4:06 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-07-05 11:09, Paul Moore wrote:
+> > On Sat, Jun 27, 2020 at 9:22 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+
+...
+
+> > > @@ -212,6 +219,33 @@ void __init audit_task_init(void)
+> > >                                              0, SLAB_PANIC, NULL);
+> > >  }
+> > >
+> > > +/* rcu_read_lock must be held by caller unless new */
+> > > +static struct audit_contobj *_audit_contobj_hold(struct audit_contobj *cont)
+> > > +{
+> > > +       if (cont)
+> > > +               refcount_inc(&cont->refcount);
+> > > +       return cont;
+> > > +}
+> > > +
+> > > +static struct audit_contobj *_audit_contobj_get(struct task_struct *tsk)
+> > > +{
+> > > +       if (!tsk->audit)
+> > > +               return NULL;
+> > > +       return _audit_contobj_hold(tsk->audit->cont);
+> > > +}
+> > > +
+> > > +/* rcu_read_lock must be held by caller */
+> > > +static void _audit_contobj_put(struct audit_contobj *cont)
+> > > +{
+> > > +       if (!cont)
+> > > +               return;
+> > > +       if (refcount_dec_and_test(&cont->refcount)) {
+> > > +               put_task_struct(cont->owner);
+> > > +               list_del_rcu(&cont->list);
+> >
+> > You should check your locking; I'm used to seeing exclusive locks
+> > (e.g. the spinlock) around list adds/removes, it just reads/traversals
+> > that can be done with just the RCU lock held.
 >
-> * The CLINT driver has been split in two: one to handle the M-mode CLINT
->   (memory mapped and used on NOMMU systems) and one to handle the S-mode CLINT
->   (via SBI).
+> Ok, I've redone the locking yet again.  I knew this on one level but
+> that didn't translate consistently to code...
+>
+> > > +               kfree_rcu(cont, rcu);
+> > > +       }
+> > > +}
+> >
+> > Another nitpick, but it might be nice to have similar arguments to the
+> > _get() and _put() functions, e.g. struct audit_contobj, but that is
+> > some serious bikeshedding (basically rename _hold() to _get() and
+> > rename _hold to audit_task_contid_hold() or similar).
+>
+> I have some idea what you are trying to say, but I think you misspoke.
+> Did you mean rename _hold to _get, rename _get to
+> audit_task_contobj_hold()?
 
-This looks more like development than fixes.
+It reads okay to me, but I know what I'm intending here :)  I agree it
+could be a bit confusing.  Let me try to put my suggestion into some
+quick pseudo-code function prototypes to make things a bit more
+concrete.
 
-I guess I don't care deeply enough about it, but please don't do this.
+The _audit_contobj_hold() function would become:
+   struct audit_contobj *_audit_contobj_hold(struct task_struct *tsk);
 
-            Linus
+The _audit_contobj_get() function would become:
+   struct audit_contobj *_audit_contobj_get(struct audit_contobj *cont);
+
+The _audit_contobj_put() function would become:
+   void _audit_contobj_put(struct audit_contobj *cont);
+
+Basically swap the _get() and _hold() function names so that the
+arguments are the same for both the _get() and _set() functions.  Does
+this make more sense?
+
+> > >  /**
+> > >   * audit_alloc - allocate an audit info block for a task
+> > >   * @tsk: task
+> > > @@ -232,6 +266,9 @@ int audit_alloc(struct task_struct *tsk)
+> > >         }
+> > >         info->loginuid = audit_get_loginuid(current);
+> > >         info->sessionid = audit_get_sessionid(current);
+> > > +       rcu_read_lock();
+> > > +       info->cont = _audit_contobj_get(current);
+> > > +       rcu_read_unlock();
+> >
+> > The RCU locks aren't strictly necessary here, are they?  In fact I
+> > suppose we could probably just replace the _get() call with a
+> > refcount_set(1) just as we do in audit_set_contid(), yes?
+>
+> I don't understand what you are getting at here.  It needs a *contobj,
+> along with bumping up the refcount of the existing contobj.
+
+Sorry, you can disregard.  My mental definition for audit_alloc() is
+permanently messed up; I usually double check myself before commenting
+on related code, but I must have forgotten here.
+
+-- 
+paul moore
+www.paul-moore.com
