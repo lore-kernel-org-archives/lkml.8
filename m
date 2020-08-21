@@ -2,132 +2,201 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9C3C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13640207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:07:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HknO05dS"
+	by mail.kernel.org (Postfix) with ESMTP id 7244421741
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgHUKH2 (ORCPT
+        id S1728467AbgHUKJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:07:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33873 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728004AbgHUKH0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:07:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598004443;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=t1P7azXYfV0jqkCDnkRHD/0D9waQRA2iINzYrxU+tRY=;
-        b=HknO05dSLdQldRj6tFofgE7jPI1EB5a8jZd88hiAgsrR4EKYfjf0qHRrBubwM3/akniIiN
-        Ppedl/iM1raRyZiqxtYgVgFRfgKR0LFZD9JklWRtemeyO9ZgiOXJRZmD/Hr13Iy2MR5i+T
-        4gaBGqIzsR8sZReAN3R5Skdgc/1Wz8U=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-453-9WlxZuNfNAW5qLWXEkBuog-1; Fri, 21 Aug 2020 06:07:22 -0400
-X-MC-Unique: 9WlxZuNfNAW5qLWXEkBuog-1
-Received: by mail-wm1-f71.google.com with SMTP id q23so361078wmj.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:07:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=t1P7azXYfV0jqkCDnkRHD/0D9waQRA2iINzYrxU+tRY=;
-        b=G1jaHI14AU1whoOJR0bpJSL0j4/DUF2cZRYAxnbXLNRycmSERG2IqIqwqh+VjOWqf+
-         1LmaNmFpiVChwdeVlFCDVdIJz4laEOsn38V6OP1EsewLjR/4oFB0fHgb7jtvLqkqWaVc
-         +LGqfCZV22CTeXj23SJs0GHnI450gZiD/rnAHfP7JvpVCweogKKSzGei/Wkn4KU/A9UN
-         KIUrRYciD9dwgaDMs2Jwbp7Z/sLmFovBZFyLOEG2X2FnrUazyJhZxfrDRHcYmqQjlWBj
-         c8k/QS2O5hPVfgc2Bcn1VZletjuVxxFru6HH8ss2DJF051owXwR1m2Z4SxSWqEXmITPT
-         3NSg==
-X-Gm-Message-State: AOAM5302hyBgd35J2vaQjGJ9pS8rDpX511kp4pbVjDtj3sUGrPcU6oxP
-        e1i1z9X0cZyZ7K/1MN3O+S6eH/B4hO5U1XtXhR8E0VABganmyfK4xX3wolvlb+nQ6onU1sy6aIg
-        ghfLj/Sf4f2LuPHhIpudQived
-X-Received: by 2002:adf:a1c6:: with SMTP id v6mr2014124wrv.197.1598004441007;
-        Fri, 21 Aug 2020 03:07:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyA7I+I679TgdT0CtRYE0nBissWAZ9ibzm/ankI+puja2IVFWbi9ACrxHMTwGvzeT2GN8gU3A==
-X-Received: by 2002:adf:a1c6:: with SMTP id v6mr2014105wrv.197.1598004440766;
-        Fri, 21 Aug 2020 03:07:20 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:1cc0:4e4e:f1a9:1745? ([2001:b07:6468:f312:1cc0:4e4e:f1a9:1745])
-        by smtp.gmail.com with ESMTPSA id f9sm3174815wrm.62.2020.08.21.03.07.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 03:07:20 -0700 (PDT)
-Subject: Re: [PATCH] x86/entry/64: Disallow RDPID in paranoid entry if KVM is
- enabled
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Chang Seok Bae <chang.seok.bae@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>
-References: <20200821025050.32573-1-sean.j.christopherson@intel.com>
- <20200821074743.GB12181@zn.tnic>
- <3eb94913-662d-5423-21b1-eaf75635142a@redhat.com>
- <20200821081633.GD12181@zn.tnic>
- <3b4ba9e9-dbf6-a094-0684-e68248050758@redhat.com>
- <20200821092237.GF12181@zn.tnic>
- <1442e559-dde4-70f6-85ac-58109cf81c16@redhat.com>
- <20200821094802.GG12181@zn.tnic>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <81985f69-190d-eea6-f1ff-206a43b06851@redhat.com>
-Date:   Fri, 21 Aug 2020 12:07:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 21 Aug 2020 06:09:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46848 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726983AbgHUKJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 06:09:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id AD749AE38;
+        Fri, 21 Aug 2020 10:09:31 +0000 (UTC)
+Date:   Fri, 21 Aug 2020 12:09:02 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mm@kvack.org, Pavel Machek <pavel@ucw.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Airlie <airlied@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Vrabel <david.vrabel@citrix.com>, stable@vger.kernel.org
+Subject: [PATCH] mm: Track page table modifications in
+ __apply_to_page_range() construction
+Message-ID: <20200821100902.GG3354@suse.de>
+References: <20200821085011.28878-1-chris@chris-wilson.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200821094802.GG12181@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821085011.28878-1-chris@chris-wilson.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/08/20 11:48, Borislav Petkov wrote:
->> It's not like we grab MSRs every day.  The user-return notifier restores
->> 6 MSRs (7 on very old processors).  The last two that were added were
->> MSR_TSC_AUX itself in 2009 (!) and MSR_IA32_TSX_CTRL last year.
-> What about "If it is a shared resource, there better be an agreement
-> about sharing it." is not clear?
-> 
-> It doesn't matter how many or which resources - there needs to be a
-> contract for shared use so that shared use is possible. It is that
-> simple.
+The __apply_to_page_range() function is also used to change and/or
+allocate page-table pages in the vmalloc area of the address space.
+Make sure these changes get synchronized to other page-tables in the
+system by calling arch_sync_kernel_mappings() when necessary.
 
-Sure, and I'll make sure to have that discussion the next time we add a
-shared MSR in 2029.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+(Only compile tested on x86-64 so far)
 
-In the meanwhile:
+ mm/memory.c | 32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
-* for the syscall MSRs, patches to share them were reviewed by hpa and
-peterz so I guess there's no problem.
-
-* for MSR_TSC_AUX, which is the one that is causing problems, everybody
-seems to agree with just using LSL (in the lack specific numbers on
-performance improvements from RDPID).
-
-* for MSR_IA32_TSX_CTRL.RTM_DISABLE, which is the only one that was
-added in the last 10 years, I'm pretty sure there are no plans for using
-the Trusty Sidechannel eXtension in the kernel.  So that should be fine
-too.  (The CPUID_CLEAR bit of the MSR is not shared).
-
-Thanks,
-
-Paolo
+diff --git a/mm/memory.c b/mm/memory.c
+index 3a7779d9891d..fd845991f14a 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -83,6 +83,7 @@
+ #include <asm/tlb.h>
+ #include <asm/tlbflush.h>
+ 
++#include "pgalloc-track.h"
+ #include "internal.h"
+ 
+ #if defined(LAST_CPUPID_NOT_IN_PAGE_FLAGS) && !defined(CONFIG_COMPILE_TEST)
+@@ -2206,7 +2207,8 @@ EXPORT_SYMBOL(vm_iomap_memory);
+ 
+ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+ 				     unsigned long addr, unsigned long end,
+-				     pte_fn_t fn, void *data, bool create)
++				     pte_fn_t fn, void *data, bool create,
++				     pgtbl_mod_mask *mask)
+ {
+ 	pte_t *pte;
+ 	int err = 0;
+@@ -2235,6 +2237,7 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+ 				break;
+ 		}
+ 	} while (addr += PAGE_SIZE, addr != end);
++	*mask |= PGTBL_PTE_MODIFIED;
+ 
+ 	arch_leave_lazy_mmu_mode();
+ 
+@@ -2245,7 +2248,8 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+ 
+ static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+ 				     unsigned long addr, unsigned long end,
+-				     pte_fn_t fn, void *data, bool create)
++				     pte_fn_t fn, void *data, bool create,
++				     pgtbl_mod_mask *mask)
+ {
+ 	pmd_t *pmd;
+ 	unsigned long next;
+@@ -2254,7 +2258,7 @@ static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+ 	BUG_ON(pud_huge(*pud));
+ 
+ 	if (create) {
+-		pmd = pmd_alloc(mm, pud, addr);
++		pmd = pmd_alloc_track(mm, pud, addr, mask);
+ 		if (!pmd)
+ 			return -ENOMEM;
+ 	} else {
+@@ -2264,7 +2268,7 @@ static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+ 		next = pmd_addr_end(addr, end);
+ 		if (create || !pmd_none_or_clear_bad(pmd)) {
+ 			err = apply_to_pte_range(mm, pmd, addr, next, fn, data,
+-						 create);
++						 create, mask);
+ 			if (err)
+ 				break;
+ 		}
+@@ -2274,14 +2278,15 @@ static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+ 
+ static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
+ 				     unsigned long addr, unsigned long end,
+-				     pte_fn_t fn, void *data, bool create)
++				     pte_fn_t fn, void *data, bool create,
++				     pgtbl_mod_mask *mask)
+ {
+ 	pud_t *pud;
+ 	unsigned long next;
+ 	int err = 0;
+ 
+ 	if (create) {
+-		pud = pud_alloc(mm, p4d, addr);
++		pud = pud_alloc_track(mm, p4d, addr, mask);
+ 		if (!pud)
+ 			return -ENOMEM;
+ 	} else {
+@@ -2291,7 +2296,7 @@ static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
+ 		next = pud_addr_end(addr, end);
+ 		if (create || !pud_none_or_clear_bad(pud)) {
+ 			err = apply_to_pmd_range(mm, pud, addr, next, fn, data,
+-						 create);
++						 create, mask);
+ 			if (err)
+ 				break;
+ 		}
+@@ -2301,14 +2306,15 @@ static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
+ 
+ static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
+ 				     unsigned long addr, unsigned long end,
+-				     pte_fn_t fn, void *data, bool create)
++				     pte_fn_t fn, void *data, bool create,
++				     pgtbl_mod_mask *mask)
+ {
+ 	p4d_t *p4d;
+ 	unsigned long next;
+ 	int err = 0;
+ 
+ 	if (create) {
+-		p4d = p4d_alloc(mm, pgd, addr);
++		p4d = p4d_alloc_track(mm, pgd, addr, mask);
+ 		if (!p4d)
+ 			return -ENOMEM;
+ 	} else {
+@@ -2318,7 +2324,7 @@ static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
+ 		next = p4d_addr_end(addr, end);
+ 		if (create || !p4d_none_or_clear_bad(p4d)) {
+ 			err = apply_to_pud_range(mm, p4d, addr, next, fn, data,
+-						 create);
++						 create, mask);
+ 			if (err)
+ 				break;
+ 		}
+@@ -2333,6 +2339,7 @@ static int __apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+ 	pgd_t *pgd;
+ 	unsigned long next;
+ 	unsigned long end = addr + size;
++	pgtbl_mod_mask mask = 0;
+ 	int err = 0;
+ 
+ 	if (WARN_ON(addr >= end))
+@@ -2343,11 +2350,14 @@ static int __apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+ 		next = pgd_addr_end(addr, end);
+ 		if (!create && pgd_none_or_clear_bad(pgd))
+ 			continue;
+-		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, create);
++		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, create, &mask);
+ 		if (err)
+ 			break;
+ 	} while (pgd++, addr = next, addr != end);
+ 
++	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
++		arch_sync_kernel_mappings(addr, addr + size);
++
+ 	return err;
+ }
+ 
+-- 
+2.28.0
 
