@@ -2,152 +2,97 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01530C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E41552075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:15:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KnVRt/vE"
+	by mail.kernel.org (Postfix) with ESMTP id CA36D2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598019652;
+	bh=ZXmVyx5QFVKAvqTqimNvpT9Bc6KMuQhIlD8OWpmp78E=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=VBQy0LB20Gu4ZIXeptXQvfIK2XD1PPa+Th+zaUTugvkDnkGGA60YA+2ku4jKTAleV
+	 RqixlpugLsy9G5gv4U6TMhBBZWBAu9C0mxIYbuvvve4QodHlJYOWHzorKkucOBLrIc
+	 uLXXMTAEeppOjJJen59RnJ+A6f8WWPW7NfaHcUFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbgHUOPS (ORCPT
+        id S1727087AbgHUOUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 10:15:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726993AbgHUOPR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 10:15:17 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0442CC061573;
-        Fri, 21 Aug 2020 07:15:16 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id f75so1213794ilh.3;
-        Fri, 21 Aug 2020 07:15:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xxeM5gPH8yu6tWCUWA1p+lgxDN3K/oRI20zeA1Ye/AM=;
-        b=KnVRt/vE7Gs2dug2IuD45cFSjkQWwTvYY56745j/humEhcsfWutRa14n9MbdjyRi16
-         mZZLqIG70csF2R8txo+gsW2/2WaMHQOI0THY6qEIBRaf0giypShRsTgqWXbaXfxtrqnS
-         fEEVCqfrZ/eFL5WcG4dHc5CPLIRV5ri6J0xN3vtRXlcr5gCbrMLP27ZHCZG3eLNK4/Eo
-         tWRwVWrVNBPQE7MOkz3fcC6slrgW3Yu47hfDJqiXAO73rhN6BDcYj9Ljg0oomPfxAfSu
-         oKAL1ivvSUW4RikdrSu/1IIt4brxlfJdk7xqim9Pp1+C5z0EuS8Y2JIBQ69idqiCNpy/
-         GQGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xxeM5gPH8yu6tWCUWA1p+lgxDN3K/oRI20zeA1Ye/AM=;
-        b=MC+TOoPhFXCXux77w0IKfNKNainSXUYIhOyGOZsdqTAj6vVHTYN0WfiAQlL2cPXNRz
-         ChMITcqg6MTM8F+F7UgYNOJCWKitTt3Fvxpjm204IuGbcrnun9i569OHkJRRheUUpc7h
-         C5DBE19Su5X9IVz56Ywm6Gko2Yhlselwwg6p478vwF0TCs/61/MheWKiDZU3sTkcnb+A
-         49wKfkd1kEIHhORK/WKmCSRcFEbBpQIHjAQs9gjmnckMS5Meh16ecVgry6SJIy3AjWez
-         26tyPQ+raYn5ph1tGzdpEsLGvWLZIr8ZGNYJNbmMd5fy7ouOWTGeOdVFktv5637NTDkf
-         Q5dg==
-X-Gm-Message-State: AOAM532ADP2bz0GGI7NVjeplD7cuGKcWctbgEccKAzSq7Vbcs72V5OKQ
-        J6AGmNy2bWpavG1LedpTWW4Js8878R1p6WCAVA==
-X-Google-Smtp-Source: ABdhPJyJUfcxBK680ROxAoGVyv9OizagGjY0D4DfMhVrIVx3Li6gsgsunS6nsQDGSkscpuaVtnT18ZdO0zasYN1N0vI=
-X-Received: by 2002:a92:4f:: with SMTP id 76mr2608119ila.11.1598019313716;
- Fri, 21 Aug 2020 07:15:13 -0700 (PDT)
+        Fri, 21 Aug 2020 10:20:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbgHUOUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 10:20:51 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24746204FD;
+        Fri, 21 Aug 2020 14:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598019651;
+        bh=ZXmVyx5QFVKAvqTqimNvpT9Bc6KMuQhIlD8OWpmp78E=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=uN0aoTmjSzo5LfQe5MgNHU/o7/Pwjf6OG+mPuaDoQ8CCSRvrLMkztKHrEnmz80xhP
+         kjqzTwo7h0DX46Itv6/MP/P7m4op1HNKDKHrqgYfcfzsWmdsZIxD2z9IDAmSZVdEJZ
+         JHRSF+ErvDmMbN59vSlKMoy59uBNQVVmDtZnDtnU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 020C235227D4; Fri, 21 Aug 2020 07:20:50 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 07:20:50 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH 2/2] docs: RCU: Remove stray ()
+Message-ID: <20200821142050.GE2855@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200821010900.6362-1-chris.packham@alliedtelesis.co.nz>
+ <20200821010900.6362-3-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-References: <20200821105229.18938-1-pbonzini@redhat.com>
-In-Reply-To: <20200821105229.18938-1-pbonzini@redhat.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Fri, 21 Aug 2020 10:15:02 -0400
-Message-ID: <CAMzpN2ixJ_nWMdgnLf9zuDpvuJFZOepWtyX3bxg7OgMTW0j4pA@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/entry/64: Do not use RDPID in paranoid entry to
- accomodate KVM
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Chang Seok Bae <chang.seok.bae@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821010900.6362-3-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 6:56 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
->
-> Don't use RDPID in the paranoid entry flow, as it can consume a KVM
-> guest's MSR_TSC_AUX value if an NMI arrives during KVM's run loop.
->
-> In general, the kernel does not need TSC_AUX because it can just use
-> __this_cpu_read(cpu_number) to read the current processor id.  It can
-> also just block preemption and thread migration at its will, therefore
-> it has no need for the atomic rdtsc+vgetcpu provided by RDTSCP.  For this
-> reason, as a performance optimization, KVM loads the guest's TSC_AUX when
-> a CPU first enters its run loop.  On AMD's SVM, it doesn't restore the
-> host's value until the CPU exits the run loop; VMX is even more aggressive
-> and defers restoring the host's value until the CPU returns to userspace.
->
-> This optimization obviously relies on the kernel not consuming TSC_AUX,
-> which falls apart if an NMI arrives during the run loop and uses RDPID.
-> Removing it would be painful, as both SVM and VMX would need to context
-> switch the MSR on every VM-Enter (for a cost of 2x WRMSR), whereas using
-> LSL instead RDPID is a minor blip.
->
-> Both SAVE_AND_SET_GSBASE and GET_PERCPU_BASE are only used in paranoid entry,
-> therefore the patch can just remove the RDPID alternative.
->
-> Fixes: eaad981291ee3 ("x86/entry/64: Introduce the FIND_PERCPU_BASE macro")
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Chang Seok Bae <chang.seok.bae@intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Sasha Levin <sashal@kernel.org>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: kvm@vger.kernel.org
-> Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Debugged-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+On Fri, Aug 21, 2020 at 01:09:00PM +1200, Chris Packham wrote:
+> A reference to srcu_read_lock_held() had an extra (). Remove it,
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+
+Good eyes, but someone beat you to this one.
+
+							Thanx, Paul
+
 > ---
->  arch/x86/entry/calling.h | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-> index 98e4d8886f11..ae9b0d4615b3 100644
-> --- a/arch/x86/entry/calling.h
-> +++ b/arch/x86/entry/calling.h
-> @@ -374,12 +374,14 @@ For 32-bit we have the following conventions - kernel is built with
->   * Fetch the per-CPU GSBASE value for this processor and put it in @reg.
->   * We normally use %gs for accessing per-CPU data, but we are setting up
->   * %gs here and obviously can not use %gs itself to access per-CPU data.
-> + *
-> + * Do not use RDPID, because KVM loads guest's TSC_AUX on vm-entry and
-> + * may not restore the host's value until the CPU returns to userspace.
-> + * Thus the kernel would consume a guest's TSC_AUX if an NMI arrives
-> + * while running KVM's run loop.
->   */
->  .macro GET_PERCPU_BASE reg:req
-> -       ALTERNATIVE \
-> -               "LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
-> -               "RDPID  \reg", \
-> -               X86_FEATURE_RDPID
-> +       LOAD_CPU_AND_NODE_SEG_LIMIT \reg
->         andq    $VDSO_CPUNODE_MASK, \reg
->         movq    __per_cpu_offset(, \reg, 8), \reg
->  .endm
-
-LOAD_CPU_AND_NODE_SEG_LIMIT can be merged into this, as its only
-purpose was to work around using CPP macros in an alternative.
-
---
-Brian Gerst
+>  Documentation/RCU/lockdep.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/RCU/lockdep.rst b/Documentation/RCU/lockdep.rst
+> index f1fc8ae3846a..cc860a0c296b 100644
+> --- a/Documentation/RCU/lockdep.rst
+> +++ b/Documentation/RCU/lockdep.rst
+> @@ -49,7 +49,7 @@ checking of rcu_dereference() primitives:
+>  		is invoked by both RCU-sched readers and updaters.
+>  	srcu_dereference_check(p, c):
+>  		Use explicit check expression "c" along with
+> -		srcu_read_lock_held()().  This is useful in code that
+> +		srcu_read_lock_held().  This is useful in code that
+>  		is invoked by both SRCU readers and updaters.
+>  	rcu_dereference_raw(p):
+>  		Don't check.  (Use sparingly, if at all.)
+> -- 
+> 2.28.0
+> 
