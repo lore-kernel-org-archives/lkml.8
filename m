@@ -2,196 +2,128 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4654FC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27FB720738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:09:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KPQmdM6t"
+	by mail.kernel.org (Postfix) with ESMTP id 24DC121741
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:10:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597993838;
+	bh=kP6S+GTnzj2U5cE2GuEwtUgvwvAkwdWUZC7g45JD9As=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kIVQAfbnkSGhqcl+liom36NBhqRM0a8dkQYidtBwDwBqixiqHoTmOQJiGOMPSW6HI
+	 67mMGlDl4L5XeCaJqPnd5iBxifeSgCDDE25MPQMInaqF+Cy0Pf/LVDrk9sFqlTWoiJ
+	 YwjYtODRCvg+Aqloj2J2bESaiU3KB4NBWcwE3e3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgHUHJW (ORCPT
+        id S1727889AbgHUHKh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:09:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbgHUHJU (ORCPT
+        Fri, 21 Aug 2020 03:10:37 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42623 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbgHUHKg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:09:20 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39335C061386
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:09:18 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id v20so272687ual.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:09:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qsRUqzEHz2hvX10s1CFevWBJNZnWuTdz/MNYc/0zA9s=;
-        b=KPQmdM6tkMN6Ep1FZeotANOOLSci5NOOGxEkF1HcuGUCH0aTX0g43BteJ055woCYUp
-         lQuOBR77BnqN+Orh6DR7DcDg+ybOSpeMvHc+suyh0d/AttAJipgnR1FjjZ9CEJKHeBLP
-         gJWKNkfye8KTdYMlYgPv03VBCim1VXDYtx0OkvHjMEuAWbhtA29AqbT/BZD1kXRroe05
-         MfsYg/yS32ZISAC1psotBFbEpooPAhDJpOjRxMMkY07fUFU23xzs+hacDIfi0qCEuk6e
-         6mG4gdkpbnqCETlJUzME9PzGa0sM9endCgHZs/eDL/AegTzzSlS3D32+N3wh/vcjGP0l
-         4kSw==
+        Fri, 21 Aug 2020 03:10:36 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d16so974961wrq.9;
+        Fri, 21 Aug 2020 00:10:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qsRUqzEHz2hvX10s1CFevWBJNZnWuTdz/MNYc/0zA9s=;
-        b=Bmk/XtGnwnEUVX9b/PjTtvctmLfRK+QcQA6pCrCFDvrNvWKlFDJ20ykZYX6AWrijSe
-         pPOU5mejQcvXUGM9lMExB4r/8b0yo1jZdIoRzEkb3dtKI8HaUDC8FTNPhILOcM/L9bbh
-         U2M+XF6cQYmJDFELrIWhhmUjFim200M30tf/XS/6S2OBXI/kqj3GlFHRQ7gdatZIwPY8
-         jf5w2sALwJ7PolpVFOE1ZtYQnYcxIjr8pJ2hYluYCKm507X79mkoa7xXFxTIrLvGs7gr
-         ZDhl7u0FDfwdy3HwKY6pxIfG7VmypW5dYfUVzRz80Jpx4IvbhcJvGB5Fne+NYILa8zG6
-         4Qzg==
-X-Gm-Message-State: AOAM5325lD3pEDn7KhW3NCeOVvU6OQ4IUT+7+HzBwBR0sPJGzsHJ4QJL
-        dSEuid4P+fRih2jQBjp7Ftw4q6Lasm8PQa/es8julw==
-X-Google-Smtp-Source: ABdhPJy7wu4Heg7705JtopAoAZHR1JI5IOZ9cyV+WUE9pxsUnoGhAkufrn8eY9LnpBDejLBXPLe8/Ac+q3xznWFvHs0=
-X-Received: by 2002:ab0:462:: with SMTP id 89mr771846uav.34.1597993756959;
- Fri, 21 Aug 2020 00:09:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jz5YmMUMv7fyLq3wiwjcdiqT8QN6h8dN46ufIK0XqjU=;
+        b=TdXL19WXJzmGbMno2fWq0ObyowvQMLoy6ue8pWYEE9NobwO0y+K3rnXYXWl3nH2hcE
+         uGbGjwcgzeKecfFRIbHqrkFz2VB7t7OQ4wqj74lUte9JJQQ7utM5kWOU9pbI04JhQHZ/
+         czkQC5RX8g2pI4TDbOaAHHFWeNHM0JToleeO+AFxDWDGz/EIMwlIYSfVQK7NweGfsxIf
+         EClw4b0HntwHCQ+FTIT45a5RGYPP5SYia1WlYKFD0n3iskKhLVlruJwdYLCG7ZA0JzBk
+         ZIZkjqupfaIz00vnq4r9x9lwMCFqdlyQ5r05pBfHsp4PoQBpgPg6PRgMdQlTq/RkZZVX
+         lPcg==
+X-Gm-Message-State: AOAM530xBl/7cm+j4TYeXXru2CAxnsJa4c/eKQJRptTRs/qQb+04MRSj
+        X8qUDKHlEfGzga7hjmTSV28=
+X-Google-Smtp-Source: ABdhPJwZdIK9j+sztRpjPkTystFIOkQ+5HeSyiTpAe/3quHWZDea6vpzykvVTCUJA8QZl8Gvd3OPmg==
+X-Received: by 2002:adf:9501:: with SMTP id 1mr1370184wrs.413.1597993833286;
+        Fri, 21 Aug 2020 00:10:33 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id p15sm2487017wrj.61.2020.08.21.00.10.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Aug 2020 00:10:32 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 09:10:30 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+Subject: Re: [PATCH 7/8] spi: spi-s3c64xx: Increase transfer timeout
+Message-ID: <20200821071030.GA8585@kozik-lap>
+References: <20200819124940.GG18122@kozik-lap>
+ <CGME20200819133957eucas1p293192baeabb9788ac9148068c1627a57@eucas1p2.samsung.com>
+ <dleftjblj621qr.fsf%l.stelmach@samsung.com>
 MIME-Version: 1.0
-References: <20200820091537.490965042@linuxfoundation.org>
-In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 21 Aug 2020 12:39:05 +0530
-Message-ID: <CA+G9fYt5xa1LT3NCoW7JW2Zz5mx_84Z_XTDzChiRL63apkquMg@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/92] 4.19.141-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <dleftjblj621qr.fsf%l.stelmach@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 15:22, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.141 release.
-> There are 92 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.141-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On Wed, Aug 19, 2020 at 03:39:56PM +0200, Lukasz Stelmach wrote:
+> It was <2020-08-19 śro 14:49>, when Krzysztof Kozlowski wrote:
+> > On Wed, Aug 19, 2020 at 02:32:07PM +0200, Łukasz Stelmach wrote:
+> >> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> >
+> > Why? Everything works fine and suddenly minimum timeout is 100 ms?
+> 
+> Actually I am not 100% sure the max() call is required, maybe +30 is
+> enough. Definitely some minimum value is required because for small
+> tranfers (100s of bytes) ms is 0 after the first assignment.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Sure, just please describe it all in commit msg. All these questions
+"why?" came because of lack of explanation in commit msg.
 
-Summary
-------------------------------------------------------------------------
+I guess minimum timeout 100 ms for each transfer is quite high, so maybe
+just bump the tolerance to 30 which also would be a minimum timeout.
 
-kernel: 4.19.141-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 294e46de3a1d3cb90ac476ac92ffc835a7a1e716
-git describe: v4.19.140-93-g294e46de3a1d
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.140-93-g294e46de3a1d
-
-No regressions (compared to build v4.19.140)
-
-No fixes (compared to build v4.19.140)
+Best regards,
+Krzysztof
 
 
-Ran 34142 total tests in the following environments and test suites.
+> 
+> >> ---
+> >>  drivers/spi/spi-s3c64xx.c | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+> >> index 27d77600a820..27db1e0f6f32 100644
+> >> --- a/drivers/spi/spi-s3c64xx.c
+> >> +++ b/drivers/spi/spi-s3c64xx.c
+> >> @@ -464,7 +464,8 @@ static int s3c64xx_wait_for_dma(struct s3c64xx_spi_driver_data *sdd,
+> >>  
+> >>  	/* millisecs to xfer 'len' bytes @ 'cur_speed' */
+> >>  	ms = xfer->len * 8 * 1000 / sdd->cur_speed;
+> >> -	ms += 10; /* some tolerance */
+> >> +	ms = (ms * 10) + 30;    /* some tolerance */
+> >> +	ms = max(ms, 100);      /* minimum timeout */
+> >>  
+> >>  	val = msecs_to_jiffies(ms) + 10;
+> >>  	val = wait_for_completion_timeout(&sdd->xfer_completion, val);
+> >> -- 
+> >> 2.26.2
+> >> 
+> >
+> >
+> 
+> -- 
+> Łukasz Stelmach
+> Samsung R&D Institute Poland
+> Samsung Electronics
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
 
-Test Suites
------------
-* build
-* igt-gpu-tools
-* install-android-platform-tools-r2600
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* kvm-unit-tests
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-sched-tests
-* ltp-tracing-tests
-* perf
-* libhugetlbfs
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* v4l2-compliance
-* ltp-open-posix-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
