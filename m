@@ -2,190 +2,154 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99470C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71F0820855
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TheepzJO"
+	by mail.kernel.org (Postfix) with ESMTP id 53CD8207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:51:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgHUCuP (ORCPT
+        id S1727783AbgHUCvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:50:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbgHUCuO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:50:14 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D17C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:50:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=o8FOD1P0Ywv5Vt6CEpvQmhpEk1fBVgUX3n+CuvA7v/c=; b=TheepzJO/krjJ5ZXXdUKl/s/Ui
-        5NwLqjcxka5lAsbKNOVpc2zD9wn4Z7Z3yI7Q6ht60Op2OglNliMaipeC6C8F8XBdp1jmpd0tYAPCr
-        /lx/Ho2sxJhmTn48VsUmhTr1mGgqurhzzoFGULF1Gr41VLeMc6mUdGqxt9G0QRYaQFRD0rrfWRSvw
-        tF5qXrLADexgpUUudDw9bTTajVzSItpePMMW4M9+hfK6DjJ+u9wNmAM88bEf7ItLSMhzxDCAI0Ukk
-        mA7PvLKa2k9Sne2JI+OjOVogH779r2EDdPkPiUIC+R4lUiXNJ+erfzDq7Vcm2ujVwXvF0jhAWtUq6
-        iy1Vm6Zw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8x7x-0006dh-6L; Fri, 21 Aug 2020 02:50:01 +0000
-Subject: Re: [PATCH v6 1/2] dma-contiguous: provide the ability to reserve
- per-numa CMA
-To:     Barry Song <song.bao.hua@hisilicon.com>, hch@lst.de,
-        m.szyprowski@samsung.com, robin.murphy@arm.com, will@kernel.org,
-        ganapatrao.kulkarni@cavium.com, catalin.marinas@arm.com
-Cc:     iommu@lists.linux-foundation.org, linuxarm@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        huangdaode@huawei.com,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Steve Capper <steve.capper@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-References: <20200821022615.28596-1-song.bao.hua@hisilicon.com>
- <20200821022615.28596-2-song.bao.hua@hisilicon.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <5dbe456d-d408-11ef-788e-63d996435fa8@infradead.org>
-Date:   Thu, 20 Aug 2020 19:49:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 20 Aug 2020 22:51:05 -0400
+Received: from mga11.intel.com ([192.55.52.93]:54690 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726975AbgHUCvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 22:51:04 -0400
+IronPort-SDR: 9Uc10Ob7R9FsPpKarIjdIuuxfXhNp6CcWtxjfaaXzEHFeHjjwvB8begXQv/CE/vbVBwQk1z/NP
+ /kjA59XcBG9g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="153051709"
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="153051709"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 19:51:04 -0700
+IronPort-SDR: QaK6LNpXa1ocVtIBAx1I+9UT+UaUgCzWAQaqs+chC4eT3+5mLHuK46MVaPy6psrJhb4UpnanRb
+ f21Mov7iOfLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="278797794"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.160])
+  by fmsmga007.fm.intel.com with ESMTP; 20 Aug 2020 19:51:03 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@intel.com>,
+        Chang Seok Bae <chang.seok.bae@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH] x86/entry/64: Disallow RDPID in paranoid entry if KVM is enabled
+Date:   Thu, 20 Aug 2020 19:50:50 -0700
+Message-Id: <20200821025050.32573-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20200821022615.28596-2-song.bao.hua@hisilicon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/20 7:26 PM, Barry Song wrote:
-> 
-> 
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Cc: Steve Capper <steve.capper@arm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> ---
->  v6: rebase on top of 5.9-rc1;
->      doc cleanup
-> 
->  .../admin-guide/kernel-parameters.txt         |   9 ++
->  include/linux/dma-contiguous.h                |   6 ++
->  kernel/dma/Kconfig                            |  10 ++
->  kernel/dma/contiguous.c                       | 100 ++++++++++++++++--
->  4 files changed, 115 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index bdc1f33fd3d1..3f33b89aeab5 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -599,6 +599,15 @@
->  			altogether. For more information, see
->  			include/linux/dma-contiguous.h
->  
-> +	pernuma_cma=nn[MG]
+Don't use RDPID in the paranoid entry flow if KVM is enabled as doing so
+can consume a KVM guest's MSR_TSC_AUX value if an NMI arrives in KVM's
+run loop.
 
-memparse() allows any one of these suffixes: K, M, G, T, P, E
-and nothing in the option parsing function cares what suffix is used...
+As a performance optimization, KVM loads the guest's TSC_AUX when a CPU
+first enters its run loop, and on AMD's SVM doesn't restore the host's
+value until the CPU exits the run loop.  VMX is even more aggressive and
+defers restoring the host's value until the CPU returns to userspace.
+This optimization obviously relies on the kernel not consuming TSC_AUX,
+which falls apart if an NMI arrives in the run loop.
 
-> +			[ARM64,KNL]
-> +			Sets the size of kernel per-numa memory area for
-> +			contiguous memory allocations. A value of 0 disables
-> +			per-numa CMA altogether. DMA users on node nid will
-> +			first try to allocate buffer from the pernuma area
-> +			which is located in node nid, if the allocation fails,
-> +			they will fallback to the global default memory area.
-> +
->  	cmo_free_hint=	[PPC] Format: { yes | no }
->  			Specify whether pages are marked as being inactive
->  			when they are freed.  This is used in CMO environments
+Removing KVM's optimizaton would be painful, as both SVM and VMX would
+need to context switch the MSR on every VM-Enter (2x WRMSR + 1x RDMSR),
+whereas using LSL instead RDPID is a minor blip.
 
-> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-> index cff7e60968b9..89b95f10e56d 100644
-> --- a/kernel/dma/contiguous.c
-> +++ b/kernel/dma/contiguous.c
-> @@ -69,6 +69,19 @@ static int __init early_cma(char *p)
->  }
->  early_param("cma", early_cma);
->  
-> +#ifdef CONFIG_DMA_PERNUMA_CMA
-> +
-> +static struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
-> +static phys_addr_t pernuma_size_bytes __initdata;
+Fixes: eaad981291ee3 ("x86/entry/64: Introduce the FIND_PERCPU_BASE macro")
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Chang Seok Bae <chang.seok.bae@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org
+Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
+Debugged-by: Tom Lendacky <thomas.lendacky@amd.com>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
 
-why phys_addr_t? couldn't it just be unsigned long long?
+Andy, I know you said "unconditionally", but it felt weird adding a
+comment way down in GET_PERCPU_BASE without plumbing a param in to help
+provide context.  But, paranoid_entry is the only user so adding a param
+that is unconditional also felt weird.  That being said, I definitely
+don't have a strong opinion one way or the other.
 
-OK, so cma_declare_contiguous_nid() uses phys_addr_t. Fine.
+ arch/x86/entry/calling.h  | 10 +++++++---
+ arch/x86/entry/entry_64.S |  7 ++++++-
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-> +
-> +static int __init early_pernuma_cma(char *p)
-> +{
-> +	pernuma_size_bytes = memparse(p, &p);
-> +	return 0;
-> +}
-> +early_param("pernuma_cma", early_pernuma_cma);
-> +#endif
-> +
->  #ifdef CONFIG_CMA_SIZE_PERCENTAGE
->  
->  static phys_addr_t __init __maybe_unused cma_early_percent_memory(void)
-> @@ -96,6 +109,34 @@ static inline __maybe_unused phys_addr_t cma_early_percent_memory(void)
->  
->  #endif
->  
-> +#ifdef CONFIG_DMA_PERNUMA_CMA
-> +void __init dma_pernuma_cma_reserve(void)
-> +{
-> +	int nid;
-> +
-> +	if (!pernuma_size_bytes)
-> +		return;
-> +
-> +	for_each_node_state(nid, N_ONLINE) {
-> +		int ret;
-> +		char name[20];
-> +		struct cma **cma = &dma_contiguous_pernuma_area[nid];
-> +
-> +		snprintf(name, sizeof(name), "pernuma%d", nid);
-> +		ret = cma_declare_contiguous_nid(0, pernuma_size_bytes, 0, 0,
-> +						 0, false, name, cma, nid);
-> +		if (ret) {
-> +			pr_warn("%s: reservation failed: err %d, node %d", __func__,
-> +				ret, nid);
-> +			continue;
-> +		}
-> +
-> +		pr_debug("%s: reserved %llu MiB on node %d\n", __func__,
-> +			(unsigned long long)pernuma_size_bytes / SZ_1M, nid);
-
-Conversely, if you want to leave pernuma_size_bytes as phys_addr_t,
-you should use %pa (or %pap) to print it.
-
-> +	}
-> +}
-> +#endif
-
-
-
+diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+index 98e4d8886f11c..a925c0cf89c1a 100644
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -342,9 +342,9 @@ For 32-bit we have the following conventions - kernel is built with
+ #endif
+ .endm
+ 
+-.macro SAVE_AND_SET_GSBASE scratch_reg:req save_reg:req
++.macro SAVE_AND_SET_GSBASE scratch_reg:req save_reg:req no_rdpid=0
+ 	rdgsbase \save_reg
+-	GET_PERCPU_BASE \scratch_reg
++	GET_PERCPU_BASE \scratch_reg \no_rdpid
+ 	wrgsbase \scratch_reg
+ .endm
+ 
+@@ -375,11 +375,15 @@ For 32-bit we have the following conventions - kernel is built with
+  * We normally use %gs for accessing per-CPU data, but we are setting up
+  * %gs here and obviously can not use %gs itself to access per-CPU data.
+  */
+-.macro GET_PERCPU_BASE reg:req
++.macro GET_PERCPU_BASE reg:req no_rdpid=0
++	.if \no_rdpid
++	LOAD_CPU_AND_NODE_SEG_LIMIT \reg
++	.else
+ 	ALTERNATIVE \
+ 		"LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
+ 		"RDPID	\reg", \
+ 		X86_FEATURE_RDPID
++	.endif
+ 	andq	$VDSO_CPUNODE_MASK, \reg
+ 	movq	__per_cpu_offset(, \reg, 8), \reg
+ .endm
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 70dea93378162..fd915c46297c5 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -842,8 +842,13 @@ SYM_CODE_START_LOCAL(paranoid_entry)
+ 	 *
+ 	 * The MSR write ensures that no subsequent load is based on a
+ 	 * mispredicted GSBASE. No extra FENCE required.
++	 *
++	 * Disallow RDPID if KVM is enabled as it may consume a guest's TSC_AUX
++	 * if an NMI arrives in KVM's run loop.  KVM loads guest's TSC_AUX on
++	 * VM-Enter and may not restore the host's value until the CPU returns
++	 * to userspace, i.e. KVM depends on the kernel not using TSC_AUX.
+ 	 */
+-	SAVE_AND_SET_GSBASE scratch_reg=%rax save_reg=%rbx
++	SAVE_AND_SET_GSBASE scratch_reg=%rax save_reg=%rbx no_rdpid=IS_ENABLED(CONFIG_KVM)
+ 	ret
+ 
+ .Lparanoid_entry_checkgs:
 -- 
-~Randy
+2.28.0
 
