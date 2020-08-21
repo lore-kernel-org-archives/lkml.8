@@ -2,285 +2,82 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC4CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB3AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 193F420724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EFDC2072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:58:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="N7BfQ02a"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gaPnkgpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgHUT6A (ORCPT
+        id S1726661AbgHUT6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:58:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48848 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727115AbgHUT4y (ORCPT
+        Fri, 21 Aug 2020 15:58:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbgHUT4u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:56:54 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LJV5u9160871;
-        Fri, 21 Aug 2020 15:56:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=cPZ05bXzaPw8Ei780BDr6olkJ4CuSCeO6RCm9ad9JHo=;
- b=N7BfQ02auMn4wWSliBjxLfyeH/qYn+yh/Gu82nBn6G6QzNxC/thzIVipZ04v+HXlSzQI
- EpzwM7T1M7Su1Kt/u6wM8UgMdOYBbh94dt9F8vYXmmPto10YYBnku60Swg0kaBGlO9WA
- eiZQ9VnpFUhdoGA8QsYGcZubDEG5IPrv1PWOJkPca5Pwi2dW67m7lIaoKIhhKes65Ytm
- 3BjQWrgO0c6Wqgqj8J5awxKvOLP0B8ZEukELVew3Q1wzdq5LVZXfbXieiHkXORYK/Wzn
- wy/tNMbV8qexujoA5RchUZ/RsLa112S9es4FduDWkS9FAcPF6GOhC1+aDSievrSIooV3 pw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 332j0vvbq5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 15:56:51 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LJVr0E163302;
-        Fri, 21 Aug 2020 15:56:51 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 332j0vvbps-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 15:56:51 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LJsr6L019738;
-        Fri, 21 Aug 2020 19:56:51 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma04wdc.us.ibm.com with ESMTP id 3304uf6ne2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 19:56:50 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LJulMu66716072
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 19:56:47 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9A8CE7805C;
-        Fri, 21 Aug 2020 19:56:47 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C03178064;
-        Fri, 21 Aug 2020 19:56:46 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com.com (unknown [9.85.191.76])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Aug 2020 19:56:45 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v10 14/16] s390/vfio-ap: handle AP bus scan completed notification
-Date:   Fri, 21 Aug 2020 15:56:14 -0400
-Message-Id: <20200821195616.13554-15-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200821195616.13554-1-akrowiak@linux.ibm.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+        Fri, 21 Aug 2020 15:56:50 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D85FBC061573;
+        Fri, 21 Aug 2020 12:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BN55ErogQ3phnIHH8Zm42eA6QwhldaEoRNqesYPn+jo=; b=gaPnkgprWrM0XYk7nb2X8+2I5l
+        c6ruzrsLrcyCHvA3gYAboWs4eynSBFR2tVCbQ3g3eGf8/IFLgseWVFxT7ucNFU2Ha0FKhz4ylDMyk
+        w97f7aDZebpCfDPl5e8LoPFQz6vWX8fSOhszxq2deYs81IHpCJ6LDfTXW43Ii+ILHHt4qpr/O7GRM
+        hOo08htFbP9UlbARFbLmVbl6icD1K7zOwPl4YhyueLQqU/ETuQqpHf8mMqD5ATdHUYm1iyMapVPbQ
+        nVkUnrojnAGvg6SX/QVcPetPdflPq9XygRHqkbtYfu6OpWe2isibGCwIEl/nT4yPEgK/PV9OLfBNC
+        2IwhKhiA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9D9W-0006ix-W7; Fri, 21 Aug 2020 19:56:45 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 99F90980DF7; Fri, 21 Aug 2020 21:56:41 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 21:56:41 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Waiman Long <longman@redhat.com>
+Subject: Re: [RFC v7 00/19] lockdep: Support deadlock detection for recursive
+ read locks
+Message-ID: <20200821195641.GV3982@worktop.programming.kicks-ass.net>
+References: <20200807074238.1632519-1-boqun.feng@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- mlxscore=0 clxscore=1015 suspectscore=3 impostorscore=0 adultscore=0
- mlxlogscore=999 lowpriorityscore=0 priorityscore=1501 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210178
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200807074238.1632519-1-boqun.feng@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implements the driver callback invoked by the AP bus when the AP bus
-scan has completed. Since this callback is invoked after binding the newly
-added devices to their respective device drivers, the vfio_ap driver will
-attempt to plug the adapters, domains and control domains into each guest
-using a matrix mdev to which they are assigned. Keep in mind that an
-adapter or domain can be plugged in only if each APQN with the APID of the
-adapter or the APQI of the domain references a queue device bound to the
-vfio_ap device driver. Consequently, not all newly added adapters and
-domains will necessarily get hot plugged.
+On Fri, Aug 07, 2020 at 03:42:19PM +0800, Boqun Feng wrote:
+> Hi Peter and Waiman,
+> 
+> As promised, this is the updated version of my previous lockdep patchset
+> for recursive read lock support. It's based on v5.8. Previous versions
+> can be found at:
 
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_drv.c     |   1 +
- drivers/s390/crypto/vfio_ap_ops.c     | 110 +++++++++++++++++++++++++-
- drivers/s390/crypto/vfio_ap_private.h |   2 +
- 3 files changed, 110 insertions(+), 3 deletions(-)
+OK, this all looks really nice.
 
-diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-index ea0a7603e886..21bfae928be5 100644
---- a/drivers/s390/crypto/vfio_ap_drv.c
-+++ b/drivers/s390/crypto/vfio_ap_drv.c
-@@ -180,6 +180,7 @@ static int __init vfio_ap_init(void)
- 	vfio_ap_drv.in_use = vfio_ap_mdev_resource_in_use;
- 	vfio_ap_drv.ids = ap_queue_ids;
- 	vfio_ap_drv.on_config_changed = vfio_ap_on_cfg_changed;
-+	vfio_ap_drv.on_scan_complete = vfio_ap_on_scan_complete;
- 
- 	ret = ap_driver_register(&vfio_ap_drv, THIS_MODULE, VFIO_AP_DRV_NAME);
- 	if (ret) {
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index e002d556abab..e6480f31a42b 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -616,14 +616,13 @@ static bool vfio_ap_mdev_config_shadow_apcb(struct ap_matrix_mdev *matrix_mdev)
- 		 * CRYCB after filtering, then try filtering the APQIs.
- 		 */
- 		if (napm == 0) {
--			naqm = vfio_ap_mdev_filter_matrix(matrix_mdev,
--							  &shadow_apcb, false);
--
- 			/*
- 			 * If there are no APQNs that can be assigned to the
- 			 * matrix mdev after filtering the APQIs, then no APQNs
- 			 * shall be assigned to the guest's CRYCB.
- 			 */
-+			naqm = vfio_ap_mdev_filter_matrix(matrix_mdev,
-+							  &shadow_apcb, false);
- 			if (naqm == 0) {
- 				bitmap_clear(shadow_apcb.apm, 0, AP_DEVICES);
- 				bitmap_clear(shadow_apcb.aqm, 0, AP_DOMAINS);
-@@ -1758,6 +1757,16 @@ static bool vfio_ap_mdev_unassign_apids(struct ap_matrix_mdev *matrix_mdev,
- 	for_each_set_bit_inv(apid, apm_unassign, AP_DEVICES) {
- 		unassigned |= vfio_ap_mdev_unassign_guest_apid(matrix_mdev,
- 							       apid);
-+		/*
-+		 * If the APID is not assigned to the matrix mdev's shadow
-+		 * CRYCB, continue with the next APID.
-+		 */
-+		if (!test_bit_inv(apid, matrix_mdev->shadow_apcb.apm))
-+			continue;
-+
-+		/* Unassign the APID from the matrix mdev's shadow CRYCB */
-+		clear_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
-+		unassigned = true;
- 	}
- 
- 	return unassigned;
-@@ -1791,6 +1800,17 @@ static bool vfio_ap_mdev_unassign_apqis(struct ap_matrix_mdev *matrix_mdev,
- 	for_each_set_bit_inv(apqi, aqm_unassign, AP_DOMAINS) {
- 		unassigned |= vfio_ap_mdev_unassign_guest_apqi(matrix_mdev,
- 							       apqi);
-+
-+		/*
-+		 * If the APQI is not assigned to the matrix mdev's shadow
-+		 * CRYCB, continue with the next APQI
-+		 */
-+		if (!test_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm))
-+			continue;
-+
-+		/* Unassign the APQI from the matrix mdev's shadow CRYCB */
-+		clear_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
-+		unassigned = true;
- 	}
- 
- 	return unassigned;
-@@ -1852,3 +1872,87 @@ void vfio_ap_on_cfg_changed(struct ap_config_info *new_config_info,
- 	}
- 	mutex_unlock(&matrix_dev->lock);
- }
-+
-+bool vfio_ap_mdev_assign_apids(struct ap_matrix_mdev *matrix_mdev,
-+			       unsigned long *apm_assign)
-+{
-+	unsigned long apid;
-+	bool assigned = false;
-+
-+	for_each_set_bit_inv(apid, apm_assign, AP_DEVICES)
-+		if (test_bit_inv(apid, matrix_mdev->matrix.apm))
-+			if (vfio_ap_mdev_assign_guest_apid(matrix_mdev, apid))
-+				assigned = true;
-+
-+	return assigned;
-+}
-+
-+bool vfio_ap_mdev_assign_apqis(struct ap_matrix_mdev *matrix_mdev,
-+			       unsigned long *aqm_assign)
-+{
-+	unsigned long apqi;
-+	bool assigned = false;
-+
-+	for_each_set_bit_inv(apqi, aqm_assign, AP_DOMAINS)
-+		if (test_bit_inv(apqi, matrix_mdev->matrix.aqm))
-+			if (vfio_ap_mdev_assign_guest_apqi(matrix_mdev, apqi))
-+				assigned = true;
-+
-+	return assigned;
-+}
-+
-+void vfio_ap_on_scan_complete(struct ap_config_info *new_config_info,
-+			      struct ap_config_info *old_config_info)
-+{
-+	struct ap_matrix_mdev *matrix_mdev;
-+	DECLARE_BITMAP(apm_assign, AP_DEVICES);
-+	DECLARE_BITMAP(aqm_assign, AP_DOMAINS);
-+	int ap_add, aq_add;
-+	bool assign;
-+	unsigned long *cur_apm, *cur_aqm, *prev_apm, *prev_aqm;
-+
-+	/*
-+	 * If we are not in the middle of a host configuration change scan it is
-+	 * likely that the vfio_ap driver was loaded mid-scan, so let's handle
-+	 * this scenario by calling the vfio_ap_on_cfg_changed function which
-+	 * gets called at the start of an AP bus scan when the host AP
-+	 * configuration has changed.
-+	 */
-+	if (!(matrix_dev->flags & AP_MATRIX_CFG_CHG))
-+		vfio_ap_on_cfg_changed(new_config_info, old_config_info);
-+
-+	cur_apm = (unsigned long *)matrix_dev->config_info.apm;
-+	cur_aqm = (unsigned long *)matrix_dev->config_info.aqm;
-+
-+	prev_apm = (unsigned long *)matrix_dev->config_info_prev.apm;
-+	prev_aqm = (unsigned long *)matrix_dev->config_info_prev.aqm;
-+
-+	ap_add = bitmap_andnot(apm_assign, cur_apm, prev_apm, AP_DEVICES);
-+	aq_add = bitmap_andnot(aqm_assign, cur_aqm, prev_aqm, AP_DOMAINS);
-+
-+	mutex_lock(&matrix_dev->lock);
-+	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
-+		if (!vfio_ap_mdev_has_crycb(matrix_mdev))
-+			continue;
-+
-+		assign = false;
-+
-+		if (ap_add)
-+			if (bitmap_intersects(matrix_mdev->matrix.apm,
-+					      apm_assign, AP_DEVICES))
-+				assign |= vfio_ap_mdev_assign_apids(matrix_mdev,
-+								    apm_assign);
-+
-+		if (aq_add)
-+			if (bitmap_intersects(matrix_mdev->matrix.aqm,
-+					      aqm_assign, AP_DOMAINS))
-+				assign |= vfio_ap_mdev_assign_apqis(matrix_mdev,
-+								    aqm_assign);
-+
-+		if (assign)
-+			vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
-+	}
-+
-+	matrix_dev->flags &= ~AP_MATRIX_CFG_CHG;
-+	mutex_unlock(&matrix_dev->lock);
-+}
-diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index fc8629e28ad3..da1754fd4f66 100644
---- a/drivers/s390/crypto/vfio_ap_private.h
-+++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -113,5 +113,7 @@ void vfio_ap_mdev_remove_queue(struct ap_queue *queue);
- bool vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long *aqm);
- void vfio_ap_on_cfg_changed(struct ap_config_info *new_config_info,
- 			    struct ap_config_info *old_config_info);
-+void vfio_ap_on_scan_complete(struct ap_config_info *new_config_info,
-+			      struct ap_config_info *old_config_info);
- 
- #endif /* _VFIO_AP_PRIVATE_H_ */
--- 
-2.21.1
+I've stuck it in my locking/core branch for testing, I've had to fix a
+few minor rejects (my bad for being to slow), made a few minor edits and
+fixed that one masking thing.
 
+It seems to boot with the selftests all green, haven't done much else
+with it yet, we'll see.
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git locking/core
+
+Thanks!
