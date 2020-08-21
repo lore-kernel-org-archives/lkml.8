@@ -2,131 +2,98 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DACC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75322C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F99B20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7E420738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:43:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgHUAnu (ORCPT
+        id S1727101AbgHUAny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 20:43:50 -0400
-Received: from mga17.intel.com ([192.55.52.151]:13401 "EHLO mga17.intel.com"
+        Thu, 20 Aug 2020 20:43:54 -0400
+Received: from mga01.intel.com ([192.55.52.88]:22591 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbgHUAnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 20:43:50 -0400
-IronPort-SDR: l+Krjx3gmGtJiaxkYnhcPXnpXlHBjwSL09kTcKT2EdWcGI3xx/Jb2ZHhMLIdPwj5nl2BACj5kh
- 9Y2x3ATlvYHg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="135493947"
+        id S1726347AbgHUAnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 20:43:52 -0400
+IronPort-SDR: zZc69eXsPDu1+auV9GcrajuqBRqeA8da9q4si91JxTNBTK9Kr57lsw4TCHkFSywF+Pscjyngzp
+ gDHbobK/Fpuw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="173475545"
 X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="135493947"
+   d="scan'208";a="173475545"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 17:43:49 -0700
-IronPort-SDR: FTiIDdAQKsD8qKcl2BYlQooZIX2YO/UqdWEEXsHMIDutfU7Y41+Gch3BzFZ/SVmQv4FfIoK9PY
- 5DZ+ASAiTz3A==
-X-ExtLoop1: 1
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 17:43:52 -0700
+IronPort-SDR: CV+aD4RVikqpucere4ciRE8C/vejzgapN3ODrrIRnN9LOYhBkdBPuOorNfcXFydm5tLFtevSSG
+ e7B+Vcfib0xg==
 X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="321082648"
-Received: from otc-nc-03.jf.intel.com ([10.54.39.36])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Aug 2020 17:43:49 -0700
-From:   Ashok Raj <ashok.raj@intel.com>
-To:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ashok Raj <ashok.raj@intel.com>,
-        Sukumar Ghorai <sukumar.ghorai@intel.com>,
-        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
-Subject: [PATCH v2] x86/hotplug: Silence APIC only after all irq's are migrated
-Date:   Thu, 20 Aug 2020 17:42:03 -0700
-Message-Id: <1597970523-24797-1-git-send-email-ashok.raj@intel.com>
-X-Mailer: git-send-email 2.7.4
+   d="scan'208";a="498345362"
+Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 17:43:50 -0700
+Date:   Thu, 20 Aug 2020 17:43:50 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Maxim Levitsky <mlevitsk@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v2 4/7] KVM: x86: allow kvm_x86_ops.set_efer to return a
+ value
+Message-ID: <20200821004350.GB13886@sjchrist-ice>
+References: <20200820133339.372823-1-mlevitsk@redhat.com>
+ <20200820133339.372823-5-mlevitsk@redhat.com>
+ <CALMp9eRNLjj5cs1xj44WVRoKK0ZrcGXn7ffdH+bEeDHkLE9nSA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eRNLjj5cs1xj44WVRoKK0ZrcGXn7ffdH+bEeDHkLE9nSA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When offlining CPUs, fixup_irqs() migrates all interrupts away from the
-outgoing CPU to an online CPU. It's always possible the device sent an
-interrupt to the previous CPU destination. Pending interrupt bit in IRR in
-LAPIC identifies such interrupts. apic_soft_disable() will not capture any
-new interrupts in IRR. This causes interrupts from device to be lost during
-CPU offline. The issue was found when explicitly setting MSI affinity to a
-CPU and immediately offlining it. It was simple to recreate with a USB
-ethernet device and doing I/O to it while the CPU is offlined. Lost
-interrupts happen even when Interrupt Remapping is enabled.
+On Thu, Aug 20, 2020 at 02:43:56PM -0700, Jim Mattson wrote:
+> On Thu, Aug 20, 2020 at 6:34 AM Maxim Levitsky <mlevitsk@redhat.com> wrote:
+> >
+> > This will be used later to return an error when setting this msr fails.
+> >
+> > For VMX, it already has an error condition when EFER is
+> > not in the shared MSR list, so return an error in this case.
+> >
+> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > ---
+> 
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -1471,7 +1471,8 @@ static int set_efer(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> >         efer &= ~EFER_LMA;
+> >         efer |= vcpu->arch.efer & EFER_LMA;
+> >
+> > -       kvm_x86_ops.set_efer(vcpu, efer);
+> > +       if (kvm_x86_ops.set_efer(vcpu, efer))
+> > +               return 1;
+> 
+> This seems like a userspace ABI change to me. Previously, it looks
+> like userspace could always use KVM_SET_MSRS to set MSR_EFER to 0 or
+> EFER_SCE, and it would always succeed. Now, it looks like it will fail
+> on CPUs that don't support EFER in hardware. (Perhaps it should fail,
+> but it didn't before, AFAICT.)
 
-Current code does apic_soft_disable() before migrating interrupts.
+KVM emulates SYSCALL, presumably that also works when EFER doesn't exist in
+hardware.
 
-native_cpu_disable()
-{
-	...
-	apic_soft_disable();
-	cpu_disable_common();
-	  --> fixup_irqs(); // Too late to capture anything in IRR.
-}
-
-Just flipping the above call sequence seems to hit the IRR checks
-and the lost interrupt is fixed for both legacy MSI and when
-interrupt remapping is enabled.
-
-Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
-Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
-Reported-by: Evan Green <evgreen@chromium.org>
-Tested-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Tested-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
----
-v2:
-- Typos and fixes suggested by Randy Dunlap
-
-To: linux-kernel@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Sukumar Ghorai <sukumar.ghorai@intel.com>
-Cc: Srikanth Nandamuri <srikanth.nandamuri@intel.com>
-Cc: Evan Green <evgreen@chromium.org>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/kernel/smpboot.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 27aa04a95702..3016c3b627ce 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1594,13 +1594,20 @@ int native_cpu_disable(void)
- 	if (ret)
- 		return ret;
- 
-+	cpu_disable_common();
- 	/*
- 	 * Disable the local APIC. Otherwise IPI broadcasts will reach
- 	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
--	 * messages.
-+	 * messages. It's important to do apic_soft_disable() after
-+	 * fixup_irqs(), because fixup_irqs() called from cpu_disable_common()
-+	 * depends on IRR being set. After apic_soft_disable() CPU preserves
-+	 * currently set IRR/ISR but new interrupts will not set IRR.
-+	 * This causes interrupts sent to outgoing CPU before completion
-+	 * of IRQ migration to be lost. Check SDM Vol 3 "10.4.7.2 Local
-+	 * APIC State after It Has been Software Disabled" section for more
-+	 * details.
- 	 */
- 	apic_soft_disable();
--	cpu_disable_common();
- 
- 	return 0;
- }
--- 
-2.7.4
-
+The above also adds weirdness to nested VMX as vmx_set_efer() simply can't
+fail.
