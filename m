@@ -2,110 +2,94 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAAFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B149BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 789CF20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8057E20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:24:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OtFgP01e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="owR7eiVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgHUHXX (ORCPT
+        id S1728133AbgHUHYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:23:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33466 "EHLO
+        Fri, 21 Aug 2020 03:24:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727956AbgHUHQv (ORCPT
+        with ESMTP id S1727873AbgHUHYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:16:51 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA31C061387
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:16:51 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z18so974762wrm.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jOm2zcmBlBaWvVWKVoK4VDO5au3ZDq1ZZipeMA7blRo=;
-        b=OtFgP01eaZb7/23GqnLTNn5IWnxAJYw4KItiK8c8b4fcUGXygHRwR04/Ov07OppKub
-         9LW3D3fGihN1jlD7K5zkLMwY4HDiHqj7eIwaUiDbo1AzraI35rMxgakzH0cYrqAxSgQ+
-         yVoZq43cEY5X+K88wYniZJp/J8ys8iNowsiz2eEYprlPI3D+DjmPYML5Yb88WOg59eDC
-         GNOEh+Srgw5tV8SZtw2fO1yrFHwDG6DNj5Gk16TL7Y7srVUe5KR/rgXQB/HpXC4vIM+G
-         WX60mkYVnDaGkEk5LVvGejbDWWsBbHdN5B7CC82tJZi3OxQXHc/l+jFuYmrBNjOwa6/3
-         +fqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jOm2zcmBlBaWvVWKVoK4VDO5au3ZDq1ZZipeMA7blRo=;
-        b=W2nTrhFz1AkqDbLaSItGifRYEDSlt28dUW78mGL/Hamza7SN/GG8wOkQwNIVU1Dceo
-         SGf8ZocHCCrnvk/vLztGHJMZsceBEcLj6qOGDQr+1OCt1dupP9wMppejQ5ghyxnYiL/w
-         2nCqwYooZdjQKfL7QHf0bcCpYyTb6cDX2jrg6/J529XIUknReBqMhIWbEsEvhO99XQHz
-         RMA952hArMySAtSrgQsFTYBHGS3lfurN7phKgs5Bz/Bd9dXDSVwOQicfP47zB4AFaG2o
-         CFdhCe5QLh2xc6q3UwGwkHsJOEB3CtcExcSBJXGfYbir2ej3MqlL3MydEO7V0AQDn+iY
-         wAtA==
-X-Gm-Message-State: AOAM532d7ZbCqW6IXKc/4nifh0h/B47akyuw+JVO2uGdsjsjhoVh71bV
-        9GkUETUl/qd3hBWrkDJLwzIJVw==
-X-Google-Smtp-Source: ABdhPJz+Fi6kNfEa5apWxt2K8QCXkkDuhqgmLTS13m1rl/rorzM5V2bYJUS2rXdWvf6A6MhNVJOHmg==
-X-Received: by 2002:a5d:660d:: with SMTP id n13mr1414546wru.52.1597994210118;
-        Fri, 21 Aug 2020 00:16:50 -0700 (PDT)
-Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id y24sm2667957wmi.17.2020.08.21.00.16.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 00:16:49 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>
-Subject: [PATCH 02/32] wireless: rsi: rsi_91x_mac80211: Add description for function param 'sta'
-Date:   Fri, 21 Aug 2020 08:16:14 +0100
-Message-Id: <20200821071644.109970-3-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821071644.109970-1-lee.jones@linaro.org>
-References: <20200821071644.109970-1-lee.jones@linaro.org>
+        Fri, 21 Aug 2020 03:24:45 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57060C061385;
+        Fri, 21 Aug 2020 00:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zz8fZZdhH+JJC5yy6EdzQ8wTU5OLIvBo+26qAJBzST8=; b=owR7eiVgwxP6repaAN6OZzTsKU
+        ALgQR0Z0DDdZr34Clu2uH0hSy8Doug989grf/jXukUqXF4BpdX5TWGhDflwZzJdfqdD2zBTGk2t1T
+        wwyYfMQOsKkLYmhRPrhoJBZhNwP4zUIfEaXbKDFgzp+xeKdsxf+vi8y8YNJNid+1fWkyyotxjg1DH
+        fQ7fRgHy261s466smafmg63VozhZUGLIhj3XdSjRBZjS3uuYTTehwFlHOtW0mNaM6iY3eeGmbAKS/
+        VVzAXuYIBFkpr8mcdS8DuwcmzRz7C016IlIgCXBBRndxV+LTMuzwgMaUAfHUzFZe0vKv6PKIGr+Kl
+        TN5b3bEQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k91PO-0004lQ-2r; Fri, 21 Aug 2020 07:24:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 59090303271;
+        Fri, 21 Aug 2020 09:24:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3EC922B410945; Fri, 21 Aug 2020 09:24:14 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 09:24:14 +0200
+From:   peterz@infradead.org
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>,
+        Chang Seok Bae <chang.seok.bae@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH] x86/entry/64: Disallow RDPID in paranoid entry if KVM is
+ enabled
+Message-ID: <20200821072414.GH1362448@hirez.programming.kicks-ass.net>
+References: <20200821025050.32573-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821025050.32573-1-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warning(s):
+On Thu, Aug 20, 2020 at 07:50:50PM -0700, Sean Christopherson wrote:
+> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+> index 70dea93378162..fd915c46297c5 100644
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -842,8 +842,13 @@ SYM_CODE_START_LOCAL(paranoid_entry)
+>  	 *
+>  	 * The MSR write ensures that no subsequent load is based on a
+>  	 * mispredicted GSBASE. No extra FENCE required.
+> +	 *
+> +	 * Disallow RDPID if KVM is enabled as it may consume a guest's TSC_AUX
+> +	 * if an NMI arrives in KVM's run loop.  KVM loads guest's TSC_AUX on
+> +	 * VM-Enter and may not restore the host's value until the CPU returns
+> +	 * to userspace, i.e. KVM depends on the kernel not using TSC_AUX.
+>  	 */
+> -	SAVE_AND_SET_GSBASE scratch_reg=%rax save_reg=%rbx
+> +	SAVE_AND_SET_GSBASE scratch_reg=%rax save_reg=%rbx no_rdpid=IS_ENABLED(CONFIG_KVM)
+>  	ret
 
- drivers/net/wireless/rsi/rsi_91x_mac80211.c:1021: warning: Function parameter or member 'sta' not described in 'rsi_mac80211_set_key'
-
-Cc: Amitkumar Karwar <amitkarwar@gmail.com>
-Cc: Siva Rebbagondla <siva8118@gmail.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/net/wireless/rsi/rsi_91x_mac80211.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/wireless/rsi/rsi_91x_mac80211.c b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-index ce223e680cba6..16025300cddb3 100644
---- a/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-@@ -1009,6 +1009,7 @@ static int rsi_hal_key_config(struct ieee80211_hw *hw,
-  * @hw: Pointer to the ieee80211_hw structure.
-  * @cmd: enum set_key_cmd.
-  * @vif: Pointer to the ieee80211_vif structure.
-+ * @sta: Pointer to the ieee80211_sta structure.
-  * @key: Pointer to the ieee80211_key_conf structure.
-  *
-  * Return: status: 0 on success, negative error code on failure.
--- 
-2.25.1
-
+With distro configs that's going to be a guaranteed no_rdpid. Also with
+a grand total of 0 performance numbers that RDPID is even worth it, I'd
+suggest to just unconditionally remove that thing. Simpler code
+all-around.
