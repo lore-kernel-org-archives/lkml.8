@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E043C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A91C420758
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D772220758
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:46:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JpTZ2xd3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YlN/AHnL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgHUDqa (ORCPT
+        id S1728033AbgHUDqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:46:30 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:33229 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbgHUDq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:46:27 -0400
+        Thu, 20 Aug 2020 23:46:38 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:58948 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727116AbgHUDqh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 23:46:37 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597981585; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1597981597; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=e/gnTPvWUTbMq564VoLj5uTu8OHvCHvzXduEcgygO8U=; b=JpTZ2xd3N1IEBnjoosMtn+YYw2/VsYjSoEp9pzzPFgnlx+CVTFPB0Xw+Gorx4n+DCDI9NR79
- lDiYj3a0Gy9YtBv9QUgoIUlE1zy/TRov6cTSzCMtEoZSoUM7cNRteOX2ddvo8PfqbOwOeP17
- x6pep59q9ka4FNMLuqutXAT5nw4=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ Sender; bh=XxvKmlFn5ckingHVPbZx5HcrTe6+UXCuwBkcR0kjCqc=; b=YlN/AHnLmZoTe4uhcmjYC6PRGIjuHO2zxz77/dpM1XI0N3v1RAytWoNmcTEfUoAn4N9BVKrU
+ lcrKle3wscb8rpjvnrRJin8ntD83GGIyo27UUwp2+L+1thjzmNgcqoNiZ8/uum6xBGB5i6Dc
+ o/SKKOBR5ordIR786RW4mi6CaXs=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f3f435a0dab4fdee2122df6 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 Aug 2020 03:45:30
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f3f43937eb4541d931e00bf (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 Aug 2020 03:46:27
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 96FA7C433AF; Fri, 21 Aug 2020 03:45:30 +0000 (UTC)
+        id DA542C433B6; Fri, 21 Aug 2020 03:46:26 +0000 (UTC)
 Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A9AA5C433A0;
-        Fri, 21 Aug 2020 03:45:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A9AA5C433A0
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 09A84C43387;
+        Fri, 21 Aug 2020 03:46:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 09A84C43387
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
 From:   Tingwei Zhang <tingwei@codeaurora.org>
@@ -52,20 +53,21 @@ To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Mike Leach <mike.leach@linaro.org>
-Cc:     Mian Yousaf Kaukab <ykaukab@suse.de>,
+Cc:     Kim Phillips <kim.phillips@arm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Leo Yan <leo.yan@linaro.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         Russell King <linux@armlinux.org.uk>,
-        Kim Phillips <kim.phillips@arm.com>, tsoni@codeaurora.org,
+        Mian Yousaf Kaukab <ykaukab@suse.de>, tsoni@codeaurora.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         Mao Jinlong <jinlmao@codeaurora.org>,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
+        Suzuki K Poulose <Suzuki.Poulose@arm.com>,
         Tingwei Zhang <tingwei@codeaurora.org>
-Subject: [PATCH v10 05/24] coresight: export global symbols
-Date:   Fri, 21 Aug 2020 11:44:26 +0800
-Message-Id: <20200821034445.967-6-tingwei@codeaurora.org>
+Subject: [PATCH v10 12/24] coresight: tpiu: allow tpiu to be built as a module
+Date:   Fri, 21 Aug 2020 11:44:33 +0800
+Message-Id: <20200821034445.967-13-tingwei@codeaurora.org>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20200821034445.967-1-tingwei@codeaurora.org>
 References: <20200821034445.967-1-tingwei@codeaurora.org>
@@ -76,174 +78,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mian Yousaf Kaukab <ykaukab@suse.de>
+From: Kim Phillips <kim.phillips@arm.com>
 
-Export symbols used among coresight modules.
+Allow to build coresight-tpiu as a module, for ease of development.
 
-Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+- Kconfig becomes a tristate, to allow =m
+- add a tpiu_remove function, for module unload
+- add a MODULE_DEVICE_TABLE for autoloading on boot
+
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Signed-off-by: Kim Phillips <kim.phillips@arm.com>
 Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-Tested-by: Mike Leach <mike.leach@linaro.org>
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
 Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/hwtracing/coresight/coresight-etm-perf.c | 1 +
- drivers/hwtracing/coresight/coresight-sysfs.c    | 2 ++
- drivers/hwtracing/coresight/coresight-tmc-etr.c  | 6 ++++++
- drivers/hwtracing/coresight/coresight.c          | 8 ++++++++
- 4 files changed, 17 insertions(+)
+ drivers/hwtracing/coresight/Kconfig          |  5 ++++-
+ drivers/hwtracing/coresight/coresight-tpiu.c | 20 +++++++++++++++++++-
+ 2 files changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 1a3169e69bb1..dcb0592418ae 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -517,6 +517,7 @@ int etm_perf_symlink(struct coresight_device *csdev, bool link)
+diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+index 996d84a1edb8..8fd9887fb03b 100644
+--- a/drivers/hwtracing/coresight/Kconfig
++++ b/drivers/hwtracing/coresight/Kconfig
+@@ -46,7 +46,7 @@ config CORESIGHT_CATU
+ 	   mode where the address is not translated.
  
- 	return 0;
+ config CORESIGHT_SINK_TPIU
+-	bool "Coresight generic TPIU driver"
++	tristate "Coresight generic TPIU driver"
+ 	depends on CORESIGHT_LINKS_AND_SINKS
+ 	help
+ 	  This enables support for the Trace Port Interface Unit driver,
+@@ -56,6 +56,9 @@ config CORESIGHT_SINK_TPIU
+ 	  connected to an external host for use case capturing more traces than
+ 	  the on-board coresight memory can handle.
+ 
++	  To compile this driver as a module, choose M here: the
++	  module will be called coresight-tpiu.
++
+ config CORESIGHT_SINK_ETBV10
+ 	tristate "Coresight ETBv1.0 driver"
+ 	depends on CORESIGHT_LINKS_AND_SINKS
+diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
+index f8583e4032a6..566c57e03596 100644
+--- a/drivers/hwtracing/coresight/coresight-tpiu.c
++++ b/drivers/hwtracing/coresight/coresight-tpiu.c
+@@ -173,6 +173,15 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
+ 	return PTR_ERR(drvdata->csdev);
  }
-+EXPORT_SYMBOL_GPL(etm_perf_symlink);
  
- static ssize_t etm_perf_sink_name_show(struct device *dev,
- 				       struct device_attribute *dattr,
-diff --git a/drivers/hwtracing/coresight/coresight-sysfs.c b/drivers/hwtracing/coresight/coresight-sysfs.c
-index 82afeaf2ccc4..34d2a2d31d00 100644
---- a/drivers/hwtracing/coresight/coresight-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-sysfs.c
-@@ -102,6 +102,7 @@ int coresight_add_sysfs_link(struct coresight_sysfs_link *info)
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(coresight_add_sysfs_link);
- 
- void coresight_remove_sysfs_link(struct coresight_sysfs_link *info)
++static int __exit tpiu_remove(struct amba_device *adev)
++{
++	struct tpiu_drvdata *drvdata = dev_get_drvdata(&adev->dev);
++
++	coresight_unregister(drvdata->csdev);
++
++	return 0;
++}
++
+ #ifdef CONFIG_PM
+ static int tpiu_runtime_suspend(struct device *dev)
  {
-@@ -122,6 +123,7 @@ void coresight_remove_sysfs_link(struct coresight_sysfs_link *info)
- 	info->orig->nr_links--;
- 	info->target->nr_links--;
- }
-+EXPORT_SYMBOL_GPL(coresight_remove_sysfs_link);
+@@ -216,6 +225,8 @@ static const struct amba_id tpiu_ids[] = {
+ 	{ 0, 0},
+ };
  
- /*
-  * coresight_make_links: Make a link for a connection from a @orig
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-index b29c2db94d96..ad991a37e2d2 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-@@ -255,6 +255,7 @@ void tmc_free_sg_table(struct tmc_sg_table *sg_table)
- 	tmc_free_table_pages(sg_table);
- 	tmc_free_data_pages(sg_table);
- }
-+EXPORT_SYMBOL_GPL(tmc_free_sg_table);
- 
- /*
-  * Alloc pages for the table. Since this will be used by the device,
-@@ -340,6 +341,7 @@ struct tmc_sg_table *tmc_alloc_sg_table(struct device *dev,
- 
- 	return sg_table;
- }
-+EXPORT_SYMBOL_GPL(tmc_alloc_sg_table);
- 
- /*
-  * tmc_sg_table_sync_data_range: Sync the data buffer written
-@@ -360,6 +362,7 @@ void tmc_sg_table_sync_data_range(struct tmc_sg_table *table,
- 					PAGE_SIZE, DMA_FROM_DEVICE);
- 	}
- }
-+EXPORT_SYMBOL_GPL(tmc_sg_table_sync_data_range);
- 
- /* tmc_sg_sync_table: Sync the page table */
- void tmc_sg_table_sync_table(struct tmc_sg_table *sg_table)
-@@ -372,6 +375,7 @@ void tmc_sg_table_sync_table(struct tmc_sg_table *sg_table)
- 		dma_sync_single_for_device(real_dev, table_pages->daddrs[i],
- 					   PAGE_SIZE, DMA_TO_DEVICE);
- }
-+EXPORT_SYMBOL_GPL(tmc_sg_table_sync_table);
- 
- /*
-  * tmc_sg_table_get_data: Get the buffer pointer for data @offset
-@@ -401,6 +405,7 @@ ssize_t tmc_sg_table_get_data(struct tmc_sg_table *sg_table,
- 		*bufpp = page_address(data_pages->pages[pg_idx]) + pg_offset;
- 	return len;
- }
-+EXPORT_SYMBOL_GPL(tmc_sg_table_get_data);
- 
- #ifdef ETR_SG_DEBUG
- /* Map a dma address to virtual address */
-@@ -766,6 +771,7 @@ tmc_etr_get_catu_device(struct tmc_drvdata *drvdata)
- 
- 	return NULL;
- }
-+EXPORT_SYMBOL_GPL(tmc_etr_get_catu_device);
- 
- static inline int tmc_etr_enable_catu(struct tmc_drvdata *drvdata,
- 				      struct etr_buf *etr_buf)
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index d515088cc47d..cd17aea6b50d 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -54,6 +54,7 @@ static struct list_head *stm_path;
-  * it needs to look for another sync sequence.
-  */
- const u32 coresight_barrier_pkt[4] = {0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff};
-+EXPORT_SYMBOL_GPL(coresight_barrier_pkt);
- 
- static int coresight_id_match(struct device *dev, void *data)
- {
-@@ -179,6 +180,7 @@ int coresight_claim_device_unlocked(void __iomem *base)
- 	coresight_clear_claim_tags(base);
- 	return -EBUSY;
- }
-+EXPORT_SYMBOL_GPL(coresight_claim_device_unlocked);
- 
- int coresight_claim_device(void __iomem *base)
- {
-@@ -190,6 +192,7 @@ int coresight_claim_device(void __iomem *base)
- 
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(coresight_claim_device);
- 
- /*
-  * coresight_disclaim_device_unlocked : Clear the claim tags for the device.
-@@ -208,6 +211,7 @@ void coresight_disclaim_device_unlocked(void __iomem *base)
- 		 */
- 		WARN_ON_ONCE(1);
- }
-+EXPORT_SYMBOL_GPL(coresight_disclaim_device_unlocked);
- 
- void coresight_disclaim_device(void __iomem *base)
- {
-@@ -215,6 +219,7 @@ void coresight_disclaim_device(void __iomem *base)
- 	coresight_disclaim_device_unlocked(base);
- 	CS_LOCK(base);
- }
-+EXPORT_SYMBOL_GPL(coresight_disclaim_device);
- 
- /* enable or disable an associated CTI device of the supplied CS device */
- static int
-@@ -467,6 +472,7 @@ void coresight_disable_path(struct list_head *path)
- {
- 	coresight_disable_path_from(path, NULL);
- }
-+EXPORT_SYMBOL_GPL(coresight_disable_path);
- 
- int coresight_enable_path(struct list_head *path, u32 mode, void *sink_data)
- {
-@@ -1376,6 +1382,7 @@ int coresight_timeout(void __iomem *addr, u32 offset, int position, int value)
- 
- 	return -EAGAIN;
- }
-+EXPORT_SYMBOL_GPL(coresight_timeout);
- 
- struct bus_type coresight_bustype = {
- 	.name	= "coresight",
-@@ -1552,6 +1559,7 @@ bool coresight_loses_context_with_cpu(struct device *dev)
- 	return fwnode_property_present(dev_fwnode(dev),
- 				       "arm,coresight-loses-context-with-cpu");
- }
-+EXPORT_SYMBOL_GPL(coresight_loses_context_with_cpu);
- 
- /*
-  * coresight_alloc_device_name - Get an index for a given device in the
++MODULE_DEVICE_TABLE(amba, tpiu_ids);
++
+ static struct amba_driver tpiu_driver = {
+ 	.drv = {
+ 		.name	= "coresight-tpiu",
+@@ -224,6 +235,13 @@ static struct amba_driver tpiu_driver = {
+ 		.suppress_bind_attrs = true,
+ 	},
+ 	.probe		= tpiu_probe,
++	.remove         = tpiu_remove,
+ 	.id_table	= tpiu_ids,
+ };
+-builtin_amba_driver(tpiu_driver);
++
++module_amba_driver(tpiu_driver);
++
++MODULE_AUTHOR("Pratik Patel <pratikp@codeaurora.org>");
++MODULE_AUTHOR("Mathieu Poirier <mathieu.poirier@linaro.org>");
++MODULE_DESCRIPTION("Arm CoreSight TPIU (Trace Port Interface Unit) driver");
++MODULE_LICENSE("GPL v2");
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
