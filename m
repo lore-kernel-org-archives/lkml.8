@@ -2,149 +2,133 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD7BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46ECFC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9382078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D05A214F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:12:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hCPfZoEF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Trkh8tzC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgHUHLz (ORCPT
+        id S1728030AbgHUHMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:11:55 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:16612 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727924AbgHUHLb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:11:31 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200821071129epoutp01057bc8f71cd8b553407af2f06f5ffaa5~tNvnWMsQF1137911379epoutp01Y
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 07:11:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200821071129epoutp01057bc8f71cd8b553407af2f06f5ffaa5~tNvnWMsQF1137911379epoutp01Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597993889;
-        bh=4HNiRPvHIxvIrfu+Vr7XKCEWbAFVY5lm4GOrgQszxFY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hCPfZoEFRz8uShSvZXy2Qz5F7cmD5Az4R89yN6Hv+bwxjblLbqS/8nMYDDMUZMD3s
-         i89WfT9aUIPzHelDyU3iYKF21Wa7/7zXj+Pj+05gLF38jC272QInAefus/7LT3unqQ
-         PkXQyTibXIv2D1RzmarqJ6QAaYH9VUjlUT+E10Ow=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200821071128epcas1p11cbbdbdf37b64cc859f26b907fd48962~tNvmtPc081679816798epcas1p1A;
-        Fri, 21 Aug 2020 07:11:28 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4BXt3f1y4ZzMqYkt; Fri, 21 Aug
-        2020 07:11:26 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        51.CB.19033.A937F3F5; Fri, 21 Aug 2020 16:11:22 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200821071121epcas1p20c13a4116d56072293b1d81d8e253218~tNvgYHSLB1822418224epcas1p2v;
-        Fri, 21 Aug 2020 07:11:21 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200821071121epsmtrp21c8c40df7e678bc311786ad2fd7180df~tNvgXEHQr2521125211epsmtrp24;
-        Fri, 21 Aug 2020 07:11:21 +0000 (GMT)
-X-AuditID: b6c32a36-159ff70000004a59-db-5f3f739aa989
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5B.C1.08382.9937F3F5; Fri, 21 Aug 2020 16:11:21 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.111.64]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200821071121epsmtip25c56b59247250af5db5f4641cfcf7b17~tNvgABazm2482124821epsmtip2S;
-        Fri, 21 Aug 2020 07:11:21 +0000 (GMT)
-From:   Hoegeun Kwon <hoegeun.kwon@samsung.com>
-To:     nsaenzjulienne@suse.de, eric@anholt.net, maxime@cerno.tech
-Cc:     devicetree@vger.kernel.org, tim.gover@raspberrypi.com,
-        dave.stevenson@raspberrypi.com, sboyd@kernel.org,
-        mturquette@baylibre.com, kdasu.kdev@gmail.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, robh+dt@kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, phil@raspberrypi.com,
-        linux-arm-kernel@lists.infradead.org, hoegeun.kwon@samsung.com
-Subject: [PATCH 1/3] clk: bcm: rpi: Add register to control pixel bvb clk
-Date:   Fri, 21 Aug 2020 16:10:43 +0900
-Message-Id: <20200821071045.24501-2-hoegeun.kwon@samsung.com>
+        Fri, 21 Aug 2020 03:12:17 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:3043 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726864AbgHUHMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 03:12:15 -0400
+IronPort-SDR: 2VXbvpM0wpDsnADs9ZVhZ6cgKIUMtgcaRhqz8Za8c/9zSkU7Y8y82HAThi5mMhwd9UfzZwvbeR
+ 7+ZQUzg8imTnmgzC3qV5dSItklz9GSCFruWyH+cxTarqseYt7T1wTgZKCnVuh8pFnRKNipf1Xn
+ gHE68kwhcWKCOKHPWHeZHVelcbyfbTXK4T2OvAi7gPxF5gyZY6OmyqkdgjmtlQURxe+c6CnVdI
+ b3qIimilR4NIZInlI9Akj2z2WU1unZT4LJqNSgTEfNSeqJ2fDnOd1cxAvImeCv2PKiwjiy+YQH
+ 5F4=
+X-IronPort-AV: E=Sophos;i="5.76,335,1592863200"; 
+   d="scan'208";a="13549139"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 21 Aug 2020 09:12:14 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Fri, 21 Aug 2020 09:12:14 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Fri, 21 Aug 2020 09:12:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1597993934; x=1629529934;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=hsFilC0q1ryGsIIF62waCvhPyJEvTFWfBLAV0i0JgVU=;
+  b=Trkh8tzC0ZhbKNS8pOevh3GZ/JkMriQfhfMOXHBeUHAABSmiycfY/WWY
+   Bo8YaUF/Bo+5JSXNhP812g5tzKyp+JdUsq75gdqnnRN1U2cnZUFCw59Mr
+   lJgigQpzfGsx2SOZsrzLSGdUEpXEs8Q8B0/y2ghKhe9fz1o1SWNuuwYCz
+   xh4tKFfSQKyZhQ8s2SFRzNLM1PnpaLWjDFAMWmhM8yQ6yzo2WpI63knF7
+   aSCC7v6/f87wtTxX353JcFVCfbbvZFfeFGY0EgU4SEiDtClIZs4Cz5+0a
+   h5nDohwYTUotZ4GBWQLqjY7yGLyFw7fDMkbwH9tC1u2vjjXtI5JDi780A
+   Q==;
+IronPort-SDR: Zj2sok/VJ8Obs+mdkHurW+yviq9k9jfjO7VIKm2gnpRJvhaL3GvGHbVAPZCs6QBxmJ/RYzm1mh
+ uvDTbhcWH595M9l3PTHxggtzHeGm0iQEwx0xo86ar9FggiH0NrkTa5mqi9Ib3+fEFtCO4tPIkM
+ Uwsvt2p4sxGS5EN+dCmhcBfZmHMa4hV6TvWJzEF1ojUYJwg6aos0hWRTvgcyPHBdTdY7hRXRw1
+ 2Nppve+eskuJnLsaMRoRsOjNAu8alPc570Wy3mpHmcA54VU0WrMAOKfaGEPR5o1rM7FXMt0v98
+ MXQ=
+X-IronPort-AV: E=Sophos;i="5.76,335,1592863200"; 
+   d="scan'208";a="13549138"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 21 Aug 2020 09:12:14 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id D9150280065;
+        Fri, 21 Aug 2020 09:12:13 +0200 (CEST)
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH 2/2] ASoC: fsl-asoc-card: add support for TLV320AIC32x4 codec
+Date:   Fri, 21 Aug 2020 09:11:53 +0200
+Message-Id: <20200821071153.7317-2-matthias.schiffer@ew.tq-group.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200821071045.24501-1-hoegeun.kwon@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCJsWRmVeSWpSXmKPExsWy7bCmge6sYvt4g8bTvBZre4+yWLydu5jF
-        Yv6Rc6wWV76+Z7M40HiZ0eL98i42i51X1rJYbHp8jdXiY889VovLu+awWUy8vYHdYsaPf4wW
-        F0+5WmybtZzNYt2t12wWrXuPsFv8u7aRxeLR1PuMDkIeTe+PsXm8v9HK7jHr/lk2jzvnzrN5
-        7Jx1l91j06pONo/73ceZPDYvqfdoPfqLxaNvyypGj82nqz0+b5IL4InKtslITUxJLVJIzUvO
-        T8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLxCdB1y8wB+k5JoSwxpxQoFJBYXKykb2dT
-        lF9akqqQkV9cYquUWpCSU2BZoFecmFtcmpeul5yfa2VoYGBkClSYkJ3x9k4HW8FCtoqly14y
-        NTDOY+1i5OSQEDCRONE2E8jm4hAS2MEo8W/xdiYI5xOjxIm9y9kgnG+MEuuvbGPsYuSAaPlS
-        DRHfyyjx4/YFZgjnM6PEjSlzWUDmsgnoSnztuc4EYosI2Em09RxkBCliFtjOLHG9vZsdZJKw
-        gKfE8S1WIDUsAqoSX3v3soPYvAK2Em/f7GSBuE9eYvWGA8wgNifQnMV3lrKAzJEQOMMhsWzH
-        JiaIIheJLzsOQz0kLPHq+BZ2CFtK4vO7vWwQdrHElZmvoJobGCX6J86GKjKW2L90MhPIQcwC
-        mhLrd+lDhBUldv6eywhiMwvwSbz72sMK8T2vREebEESJmsSzhgNQa2UkTvUuhzrHQ+LWslZo
-        yE1klHi84jXzBEa5WQgbFjAyrmIUSy0ozk1PLTYsMEKOsk2M4OSrZbaDcdLbD3qHGJk4GA8x
-        SnAwK4nw9u61jhfiTUmsrEotyo8vKs1JLT7EaAoMvYnMUqLJ+cD0n1cSb2hqZGxsbGFiaGZq
-        aKgkzvvwlkK8kEB6YklqdmpqQWoRTB8TB6dUA1OLtJfjm5fbk39/S3QIrl5scU9oiuLGAL+e
-        r4YeDP51F7In/fVJzJ0XKhVpwDz3z8WY989OPJz+xunf1WQ7mySPd5qRFuunteVZMO9Lcfsy
-        R6BP+g3jXq/c8G9XO+xWsy1RnSz4lEFv94pZOrP2nGH1fM+jnu3Y4MJcskP5YU2n56nVKlNO
-        n/MIT5iY9leiePKFn+u6z3/bcC8hK4X1eWNVV0K9Zr2JpHjogXMKMfpMOybpza8y3dCy7MN/
-        htrQ0HzOmV+Oe0ryTPQKdCvaIuYslmXimzl7k7Yqy+6TGUzruXP1mdlczFuX79kfkpmx7tbm
-        61vy4li3yAoz6J7fU5e77FqPgEnPRIMLKXEHlViKMxINtZiLihMB4t/T6EcEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFLMWRmVeSWpSXmKPExsWy7bCSvO7MYvt4gxUPDCzW9h5lsXg7dzGL
-        xfwj51gtrnx9z2ZxoPEyo8X75V1sFjuvrGWx2PT4GqvFx557rBaXd81hs5h4ewO7xYwf/xgt
-        Lp5ytdg2azmbxbpbr9ksWvceYbf4d20ji8WjqfcZHYQ8mt4fY/N4f6OV3WPW/bNsHnfOnWfz
-        2DnrLrvHplWdbB73u48zeWxeUu/RevQXi0ffllWMHptPV3t83iQXwBPFZZOSmpNZllqkb5fA
-        lfH2TgdbwUK2iqXLXjI1MM5j7WLk4JAQMJE48aW6i5GTQ0hgN6PElz1GILaEgIzEqv4tUCXC
-        EocPF0OUfGSU+LQ1AsRmE9CV+NpznQnEFhFwknjwdx9zFyMXB7PAcWaJ6f0HwHqFBTwljm+x
-        AqlhEVCV+Nq7lx3E5hWwlXj7ZicLxCp5idUbDjCD2JwCdhKL7yxlgdhlK3Gq4yPzBEa+BYwM
-        qxglUwuKc9Nziw0LDPNSy/WKE3OLS/PS9ZLzczcxgqNDS3MH4/ZVH/QOMTJxMB5ilOBgVhLh
-        7d1rHS/Em5JYWZValB9fVJqTWnyIUZqDRUmc90bhwjghgfTEktTs1NSC1CKYLBMHp1QDU+KK
-        e7P+nJM+tUSru7dh7j6ByNb48wsuiJ1U2Nb2a8qGK+r617S/7/6r9NS1K2OdvUPKNIMWXY4j
-        z7T2LN7p+vec2eKEgItK520r7i/0bGJed7Zvm1GM7KywQ/ZZSRVdlTlzbqY3x7WUr/jz8fim
-        oGeHT4r6fDDyXpN9T2rDLUOF2JPFLNl5RRGFc6dXfhP5/fNY8iz1mTutxc5Pzd81u/UXk+yy
-        M29XrfW3Fktm2370htiOuVtPZ2+Zu9x6AcOxSr6XVRf9X+2arLNqC+/X7N+Ldryc/376Wp3j
-        p5kn6Ou0+yTW+fBMtzhj9W9j+/pPTzax/NxZk+QdM2vXlI9nRfouL/7Icbp13ufXv/kXZh5p
-        UGIpzkg01GIuKk4EAApp4Qr9AgAA
-X-CMS-MailID: 20200821071121epcas1p20c13a4116d56072293b1d81d8e253218
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200821071121epcas1p20c13a4116d56072293b1d81d8e253218
-References: <20200821071045.24501-1-hoegeun.kwon@samsung.com>
-        <CGME20200821071121epcas1p20c13a4116d56072293b1d81d8e253218@epcas1p2.samsung.com>
+In-Reply-To: <20200821071153.7317-1-matthias.schiffer@ew.tq-group.com>
+References: <20200821071153.7317-1-matthias.schiffer@ew.tq-group.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To use QHD or higher, we need to modify the pixel_bvb_clk value. So
-add register to control this clock.
+The TLV320AIC32x4 is commonly used on TQ-Systems starterkit mainboards
+for i.MX-based SoMs (i.MX6Q/DL, i.MX6UL, i.MX7) and LS1021A.
 
-Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 ---
- drivers/clk/bcm/clk-raspberrypi.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/fsl/Kconfig         | 2 +-
+ sound/soc/fsl/fsl-asoc-card.c | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
-index 5cc82954e1ce..f89b9cfc4309 100644
---- a/drivers/clk/bcm/clk-raspberrypi.c
-+++ b/drivers/clk/bcm/clk-raspberrypi.c
-@@ -271,6 +271,7 @@ static int raspberrypi_discover_clocks(struct raspberrypi_clk *rpi,
- 		case RPI_FIRMWARE_CORE_CLK_ID:
- 		case RPI_FIRMWARE_M2MC_CLK_ID:
- 		case RPI_FIRMWARE_V3D_CLK_ID:
-+		case RPI_FIRMWARE_PIXEL_BVB_CLK_ID:
- 			hw = raspberrypi_clk_register(rpi, clks->parent,
- 						      clks->id);
- 			if (IS_ERR(hw))
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index 1c4ca5ec8caf..3f76ff71ea47 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -324,7 +324,7 @@ config SND_SOC_FSL_ASOC_CARD
+ 	help
+ 	 ALSA SoC Audio support with ASRC feature for Freescale SoCs that have
+ 	 ESAI/SAI/SSI and connect with external CODECs such as WM8962, CS42888,
+-	 CS4271, CS4272 and SGTL5000.
++	 CS4271, CS4272, SGTL5000 and TLV320AIC32x4.
+ 	 Say Y if you want to add support for Freescale Generic ASoC Sound Card.
+ 
+ config SND_SOC_IMX_AUDMIX
+diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
+index 32f8f756e6bb..a2dd3b6b7fec 100644
+--- a/sound/soc/fsl/fsl-asoc-card.c
++++ b/sound/soc/fsl/fsl-asoc-card.c
+@@ -617,6 +617,9 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+ 		codec_dai_name = "sgtl5000";
+ 		priv->codec_priv.mclk_id = SGTL5000_SYSCLK;
+ 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
++	} else if (of_device_is_compatible(np, "fsl,imx-audio-tlv320aic32x4")) {
++		codec_dai_name = "tlv320aic32x4-hifi";
++		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
+ 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8962")) {
+ 		codec_dai_name = "wm8962";
+ 		priv->codec_priv.mclk_id = WM8962_SYSCLK_MCLK;
+@@ -860,6 +863,7 @@ static const struct of_device_id fsl_asoc_card_dt_ids[] = {
+ 	{ .compatible = "fsl,imx-audio-ac97", },
+ 	{ .compatible = "fsl,imx-audio-cs42888", },
+ 	{ .compatible = "fsl,imx-audio-cs427x", },
++	{ .compatible = "fsl,imx-audio-tlv320aic32x4", },
+ 	{ .compatible = "fsl,imx-audio-sgtl5000", },
+ 	{ .compatible = "fsl,imx-audio-wm8962", },
+ 	{ .compatible = "fsl,imx-audio-wm8960", },
 -- 
 2.17.1
 
