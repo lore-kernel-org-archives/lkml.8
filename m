@@ -2,121 +2,242 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC87C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0132207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D500207C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgHUPIv convert rfc822-to-8bit (ORCPT
+        id S1727877AbgHUPLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgHUPIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:08:51 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62FEC20656;
-        Fri, 21 Aug 2020 15:08:50 +0000 (UTC)
-Date:   Fri, 21 Aug 2020 11:08:48 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joerg Vehlow <lkml@jv-coder.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Huang Ying <ying.huang@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Joerg Vehlow <joerg.vehlow@aox-tech.de>
-Subject: Re: [BUG RT] dump-capture kernel not executed for panic in
- interrupt context
-Message-ID: <20200821110848.6c3183d1@oasis.local.home>
-In-Reply-To: <c6b095af-fc92-420f-303f-d2efd9f28873@jv-coder.de>
-References: <2c243f59-6d10-7abb-bab4-e7b1796cd54f@jv-coder.de>
-        <20200528084614.0c949e8d@gandalf.local.home>
-        <cbbf7926-148e-7acb-dc03-3f055d73364b@jv-coder.de>
-        <20200727163655.8c94c8e245637b62311f5053@linux-foundation.org>
-        <c6b095af-fc92-420f-303f-d2efd9f28873@jv-coder.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 21 Aug 2020 11:11:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgHUPLa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 11:11:30 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F02C061573;
+        Fri, 21 Aug 2020 08:11:29 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 4391329AC90
+Subject: Re: [PATCH v3 4/9] media: vimc: Separate starting stream from
+ pipeline initialisation
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+References: <20200819180442.11630-1-kgupta@es.iitr.ac.in>
+ <20200819180442.11630-5-kgupta@es.iitr.ac.in>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <eb5d4259-fe77-b4f2-1e62-0f846420b7c2@collabora.com>
+Date:   Fri, 21 Aug 2020 17:11:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200819180442.11630-5-kgupta@es.iitr.ac.in>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 12:25:33 +0200
-Joerg Vehlow <lkml@jv-coder.de> wrote:
 
-> Hi Andrew and Others (please read at least the part with @RT developers),
+
+Am 19.08.20 um 20:04 schrieb Kaaira Gupta:
+> Separate the process of initialising pipeline array from starting
+> streaming for all entities in path of a stream. This is needed because
+> multiple streams can stream, but only one pipeline object is needed.
 > 
-> > Yup, mutex_trylock() from interrupt is improper.  Well dang, that's a
-> > bit silly.  Presumably the 2006 spin_lock_mutex() wasn't taken with
-> > irqs-off.
-> >
-> > Ho hum, did you look at switching the kexec code back to the xchg
-> > approach?
-> >  
-> I looked into reverting to the xchg approach, but that seems to be
-> not a good solution anymore, because the mutex is used in many places,
-> a lot with waiting locks and I guess that would require spinning now,
-> if we do this with bare xchg.
+> Process frames only for those entities in a pipeline which are
+> streaming. This is known through their use counts.
 > 
-> Instead I thought about using a spinlock, because they are supposed
-> to be used in interrupt context as well, if I understand the documentation
-> correctly ([1]).
-> @RT developers
-> Unfortunately the rt patches seem to interpret it a bit different and
-> spin_trylock uses __rt_mutex_trylock again, with the same consequences as
-> with the current code.
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> ---
+>   .../media/test-drivers/vimc/vimc-streamer.c   | 95 ++++++++++++++++---
+>   1 file changed, 83 insertions(+), 12 deletions(-)
 > 
-> I tried raw_spinlocks, but it looks like they result in a deadlock at
-> least in the rt kernel. Thiy may be because of memory allocations in the
-> critical sections, that are not allowed if I understand it correctly.
+> diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/media/test-drivers/vimc/vimc-streamer.c
+> index c1644d69686d..cc40ecabe95a 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
+> @@ -40,33 +40,30 @@ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
+>   }
+>   
+>   /**
+> - * vimc_streamer_pipeline_init - Initializes the stream structure
+> + * vimc_streamer_stream_start - Starts streaming for all entities
+> + * in a stream
+>    *
+> - * @stream: the pointer to the stream structure to be initialized
+>    * @ved:    the pointer to the vimc entity initializing the stream
+>    *
+> - * Initializes the stream structure. Walks through the entity graph to
+> - * construct the pipeline used later on the streamer thread.
+> - * Calls vimc_streamer_s_stream() to enable stream in all entities of
+> - * the pipeline.
+> + * Walks through the entity graph to call vimc_streamer_s_stream()
+> + * to enable stream in all entities in path of a stream.
+>    *
+>    * Return: 0 if success, error code otherwise.
+>    */
+> -static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+> -				       struct vimc_ent_device *ved)
+> +static int vimc_streamer_stream_start(struct vimc_stream *stream,
+> +				      struct vimc_ent_device *ved)
+>   {
+>   	struct media_entity *entity;
+>   	struct video_device *vdev;
+>   	struct v4l2_subdev *sd;
+> +	int stream_size = 0;
+>   	int ret = 0;
+>   
+> -	stream->pipe_size = 0;
+> -	while (stream->pipe_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
+> +	while (stream_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
+>   		if (!ved) {
+>   			vimc_streamer_pipeline_terminate(stream);
+>   			return -EINVAL;
+>   		}
+> -		stream->ved_pipeline[stream->pipe_size++] = ved;
+>   
+>   		if (is_media_entity_v4l2_subdev(ved->ent)) {
+>   			sd = media_entity_to_v4l2_subdev(ved->ent);
+> @@ -104,6 +101,73 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+>   					    entity);
+>   			ved = video_get_drvdata(vdev);
+>   		}
+> +		stream_size++;
+> +	}
+> +
+> +	vimc_streamer_pipeline_terminate(stream);
+> +	return -EINVAL;
+> +}
+> +
+> +/**
+> + * vimc_streamer_pipeline_init - Initialises pipeline and pipe size
+> + *
+> + * @stream: the pointer to the stream structure
+> + * @ved:    the pointer to the vimc entity initializing the stream pipeline
+> + *
+> + * Walks through the entity graph to initialise ved_pipeline and updates
+> + * pipe_size too.
+> + *
+> + * Return: 0 if success, error code otherwise.
+> + */
+> +static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+> +				       struct vimc_ent_device *ved)
+> +{
+> +	struct media_entity *entity;
+> +	struct media_device *mdev;
+> +	struct media_graph graph;
+> +	struct video_device *vdev;
+> +	struct v4l2_subdev *sd;
+> +	int ret;
+> +
+> +	entity = ved->ent;
+> +	mdev = entity->graph_obj.mdev;
+> +
+> +	ret = media_graph_walk_init(&graph, mdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	media_graph_walk_start(&graph, entity);
+> +
+> +	/*
+> +	 * Start pipeline array initialisation from RAW Capture only to get
+> +	 * entities in the correct order of their frame processing.
+> +	 */
+> +	if (!strncmp(entity->name, "RGB", 3)) {
+
+I don't understand this condition, way is it good for?
+
+I think the function should be generic and not assume names of entities
+or specific topology.
+
+
+> +		entity = media_graph_walk_next(&graph);
+> +		mdev = entity->graph_obj.mdev;
+> +		media_graph_walk_cleanup(&graph);
+> +
+> +		ret = media_graph_walk_init(&graph, mdev);
+> +		if (ret)
+> +			return ret;
+> +		media_graph_walk_start(&graph, entity);
+> +	}
+> +
+> +	while (stream->pipe_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
+> +		if (is_media_entity_v4l2_subdev(entity)) {
+> +			sd = media_entity_to_v4l2_subdev(entity);
+> +			ved = v4l2_get_subdevdata(sd);
+> +		} else {
+> +			vdev = container_of(entity, struct video_device, entity);
+> +			ved = video_get_drvdata(vdev);
+> +		}
+> +		stream->ved_pipeline[stream->pipe_size++] = ved;
+> +		entity = media_graph_walk_next(&graph);
+> +
+> +		if (!strcmp(entity->name, stream->ved_pipeline[0]->ent->name)) {
+
+I also don't understand this condition
+
+> +			media_graph_walk_cleanup(&graph);
+> +			return 0;
+> +		}
+>   	}
+
+It is not clear what this function does, it looks like it adds to 'ved_pipeline'
+all entities that are connected to the video node, in addition to the entities
+that where there from previous calls, so some entities appear several times.
+
+I think there is no need to use the graph walk here but to access the source entity
+in each iteration, the way done in vimc_streamer_stream_start
+also.
+I think the code should iterate here until it reaches an entity that is already streaming,
+this means that the entity is already in the `ved_pipeline`, also you should make sure
+that the sensor is the first entity that process a frame, therefore the sensor should be
+at the end/start of the list of entities. Generally each entity should appear exactly once
+in the 'ved_pipeline' array and the entities should be ordered such that when calling 'process_frame'
+on one entity should be after calling 'process_frame' on its source entity.
+maybe it is easyer to implement if 'ved_pipeline' is a linked list.
+
+Thanks,
+Dafna
+
+>   
+>   	vimc_streamer_pipeline_terminate(stream);
+> @@ -138,8 +202,11 @@ static int vimc_streamer_thread(void *data)
+>   
+>   		for (i = stream->pipe_size - 1; i >= 0; i--) {
+>   			ved = stream->ved_pipeline[i];
+> -			ret = ved->process_frame(ved);
+>   
+> +			if (atomic_read(&ved->use_count) == 0)
+> +				continue;
+> +
+> +			ret = ved->process_frame(ved);
+>   			if (ret)
+>   				break;
+>   		}
+> @@ -179,6 +246,10 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
+>   		if (stream->kthread)
+>   			return 0;
+>   
+> +		ret = vimc_streamer_stream_start(stream, ved);
+> +		if (ret)
+> +			return ret;
+> +
+>   		ret = vimc_streamer_pipeline_init(stream, ved);
+>   		if (ret)
+>   			return ret;
 > 
-> I have no clue how to fix it at this point.
-> 
-> Jörg
-> 
-> [1] https://kernel.readthedocs.io/en/sphinx-samples/kernel-locking.html
-
-There's only two places that wait on the mutex, and all other places
-try to get it, and if it fails, it simply exits.
-
-What I would do is introduce a kexec_busy counter, and have something
-like this:
-
-For the two locations that actually wait on the mutex:
-
-loop:
-	mutex_lock(&kexec_mutex);
-	ret = atomic_inc_return(&kexec_busy);
-	if (ret > 1) {
-		/* Atomic context is busy on this counter, spin */
-		atomic_dec(&kexec_busy);
-		mutex_unlock(&kexec_mutex);
-		goto loop;
-	}
-	[..]
-	atomic_dec(&kexec_busy);
-	mutex_unlock(&kexec_mutex);
-
-And then all the other places that do the trylock:
-
-	cant_sleep();
-	ret = atomic_inc_return(&kexec_busy);
-	if (ret > 1) {
-		atomic_dec(&kexec_busy);
-		return;
-	}
-	[..]
-	atomic_dec(&kexec_busy);
-
-
--- Steve
