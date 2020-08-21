@@ -2,129 +2,236 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4119AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C59020656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E05206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:29:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mvQsNqxv"
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="ZeXwYQll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHUQ3R (ORCPT
+        id S1728274AbgHUQ3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:29:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbgHUQ2Q (ORCPT
+        Fri, 21 Aug 2020 12:29:52 -0400
+Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:59074 "EHLO
+        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728648AbgHUQZ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:28:16 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871A7C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:28:10 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id m22so2497471ljj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:28:10 -0700 (PDT)
+        Fri, 21 Aug 2020 12:25:57 -0400
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 51712821EC;
+        Fri, 21 Aug 2020 19:25:39 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ASBotJZ8EZpsI/eCx5HlBKysI3NgkGBSfRhPo944ZDA=;
-        b=mvQsNqxvDRfKY9x4pIZgEPhlpB930QAuNErYXzNPLu7IhTBgokTUR97DSKDApKmNfS
-         cibjePU5QCWO42UFsCRWQwMu/X9Q9pISUETSOyLv8GDQ7qwMEl4Ib/H3WWqJjSRry3xl
-         9TU6msunmhJlIGiYjWcVH7a2M3X4BhkWw0G2xvXyrrXNTBchQ9LtnRpmS8/pffU/upUX
-         /kFJp8461OeN+P7fP/3Y2HmjrCgDZQYrsQfpcRdb/+ho08gxWAK1CegzesM559po/s7S
-         QS3/ic98qpHNV6+NY5HcH0fd2uQX7y1u6cKBRJq2fY9JRNDQP1Z7JMuCbauUj7xPMwgM
-         dTgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ASBotJZ8EZpsI/eCx5HlBKysI3NgkGBSfRhPo944ZDA=;
-        b=isUBKKKOMtFxoE2POdUZeJ+8zZCvFbqAFHHYkpot1NsGl+qBAIkpxO8bXIpPPoMiRn
-         iThrsTWhl/cx6uzunKuAR7ovHJcoEyz5ejQS9EA1jc0vNwag48KuPwU1ncKIR4GizhGw
-         /pZSXe9elp1MV5dWrRRzFb0JvCJs/LrUQ38JfHdAS7fDf56AA4Uk/8IruNRG8eiaIMyy
-         5vla98X6E3SF05buQBOKFGp8KkmOTnVzcC9HU2dwmsmTGlobD1MEspa6UyjCneUOERPM
-         kQ9CUnym+vm0SlnurzN8Atf0CRKdS/h3uOKR/bul6byeqphqn5ei1izcVItVzoSMxI7O
-         Wipw==
-X-Gm-Message-State: AOAM532SsyDxAQ1l5TwjgBJmNHvEscmoV/TA1nU+CMRBp9UTJZ29nMJT
-        VY/zifjmNlu+il12879PCGAQnDNl+GVdAOo/3j140g==
-X-Google-Smtp-Source: ABdhPJxBJx48eP7IauIXH6HjOknwmi0SBAJ//UG77vmKK+pXc4hy+ku162ReCSBX43dsu2Kih9HINa4PcVbhBog5/lU=
-X-Received: by 2002:a2e:96c3:: with SMTP id d3mr1932135ljj.270.1598027287929;
- Fri, 21 Aug 2020 09:28:07 -0700 (PDT)
+        d=paragon-software.com; s=mail; t=1598027139;
+        bh=DVLMZjHII+6h7ZanHM0twnhITbQwT9Zy/q8JsKmxgFc=;
+        h=From:To:CC:Subject:Date;
+        b=ZeXwYQllCIlnL4AbW7uL+9nvE39a9kzFeA7b8koU33OC7Zs6rj1t+w4K8+X9/eeqe
+         BRpkz9snV5JHIC9SOn8AXQqxXusEdoF32Q6mjRN70bdYMEvPCIWAbSl69YBPz3LtDr
+         ZL3NoA1nIFE0BbYXDCETl338OGpwqWrT2BGn6gdc=
+Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Fri, 21 Aug 2020 19:25:38 +0300
+Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
+ by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
+ id 15.01.1847.003; Fri, 21 Aug 2020 19:25:38 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+CC:     =?iso-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>
+Subject: [PATCH v2 08/10] fs/ntfs3: Add Kconfig, Makefile and doc
+Thread-Topic: [PATCH v2 08/10] fs/ntfs3: Add Kconfig, Makefile and doc
+Thread-Index: AdZ302F8VVG9og4hTA6+RhoU6EU4hg==
+Date:   Fri, 21 Aug 2020 16:25:37 +0000
+Message-ID: <74de75d537ac486e9fcfe7931181a9b9@paragon-software.com>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.8.36]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200528135444.11508-1-schatzberg.dan@gmail.com>
- <CALvZod655MqFxmzwCf4ZLSh9QU+oLb0HL-Q_yKomh3fb-_W0Vg@mail.gmail.com>
- <20200821150405.GA4137@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com> <20200821160128.GA2233370@carbon.dhcp.thefacebook.com>
-In-Reply-To: <20200821160128.GA2233370@carbon.dhcp.thefacebook.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 21 Aug 2020 09:27:56 -0700
-Message-ID: <CALvZod69w5UoCjfWcqVAejpKWzRAUxX7dEPzqDUknHhUFV_XEA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] Charge loop device i/o to issuing cgroup
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 9:02 AM Roman Gushchin <guro@fb.com> wrote:
->
-> On Fri, Aug 21, 2020 at 11:04:05AM -0400, Dan Schatzberg wrote:
-> > On Thu, Aug 20, 2020 at 10:06:44AM -0700, Shakeel Butt wrote:
-> > > On Thu, May 28, 2020 at 6:55 AM Dan Schatzberg <schatzberg.dan@gmail.com> wrote:
-> > > >
-> > > > Much of the discussion about this has died down. There's been a
-> > > > concern raised that we could generalize infrastructure across loop,
-> > > > md, etc. This may be possible, in the future, but it isn't clear to me
-> > > > how this would look like. I'm inclined to fix the existing issue with
-> > > > loop devices now (this is a problem we hit at FB) and address
-> > > > consolidation with other cases if and when those need to be addressed.
-> > > >
-> > >
-> > > What's the status of this series?
-> >
-> > Thanks for reminding me about this. I haven't got any further
-> > feedback. I'll bug Jens to take a look and see if he has any concerns
-> > and if not send a rebased version.
->
-> Just as a note, I stole a patch from this series called
-> "mm: support nesting memalloc_use_memcg()" to use for the bpf memory accounting.
-> I rewrote the commit log and rebased to the tot with some trivial changes.
->
-> I just sent it upstream:
-> https://lore.kernel.org/bpf/20200821150134.2581465-1-guro@fb.com/T/#md7edb6b5b940cee1c4d15e3cef17aa8b07328c2e
->
-> It looks like we need it for two independent sub-systems, so I wonder
-> if we want to route it first through the mm tree as a standalone patch?
->
+This adds fs/ntfs3 Kconfig, Makefile and Documentation file
 
-Another way is to push that patch to 5.9-rc2 linus tree, so both block
-and mm branches for 5.10 will have it. (Not sure if that's ok.)
+Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com=
+>
+---
+ Documentation/filesystems/ntfs3.rst | 93 +++++++++++++++++++++++++++++
+ fs/ntfs3/Kconfig                    | 23 +++++++
+ fs/ntfs3/Makefile                   | 11 ++++
+ 3 files changed, 127 insertions(+)
+ create mode 100644 Documentation/filesystems/ntfs3.rst
+ create mode 100644 fs/ntfs3/Kconfig
+ create mode 100644 fs/ntfs3/Makefile
+
+diff --git a/Documentation/filesystems/ntfs3.rst b/Documentation/filesystem=
+s/ntfs3.rst
+new file mode 100644
+index 000000000000..4a510a6cdaee
+--- /dev/null
++++ b/Documentation/filesystems/ntfs3.rst
+@@ -0,0 +1,93 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=3D=3D=3D=3D=3D
++NTFS3
++=3D=3D=3D=3D=3D
++
++
++Summary and Features
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++NTFS3 is fully functional NTFS Read-Write driver. The driver works with
++NTFS versions up to 3.1, normal/compressed/sparse files
++and journal replaying. File system type to use on mount is 'ntfs3'.
++
++- This driver implements NTFS read/write support for normal, sparsed and
++  compressed files.
++  NOTE: Operations with compressed files require increased memory consumpt=
+ion;
++- Supports native journal replaying;
++- Supports extended attributes;
++- Supports NFS export of mounted NTFS volumes.
++
++Mount Options
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++The list below describes mount options supported by NTFS3 driver in addtio=
+n to
++generic ones.
++
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
++
++nls=3Dname		These options inform the driver how to interpret path
++			strings and translate them to Unicode and back. In case
++			none of these options are set, or if specified codepage
++			doesn't exist on the system, the default codepage will be
++			used (CONFIG_NLS_DEFAULT).
++			Examples:
++				'nls=3Dutf8'
++
++uid=3D
++gid=3D
++umask=3D			Controls the default permissions for files/directories created
++			after the NTFS volume is mounted.
++
++fmask=3D
++dmask=3D			Instead of specifying umask which applies both to
++			files and directories, fmask applies only to files and
++			dmask only to directories.
++
++nohidden		Files with the Windows-specific HIDDEN (FILE_ATTRIBUTE_HIDDEN)
++			attribute will not be shown under Linux.
++
++sys_immutable		Files with the Windows-specific SYSTEM
++			(FILE_ATTRIBUTE_SYSTEM) attribute will be marked as system
++			immutable files.
++
++discard			Enable support of the TRIM command for improved performance
++			on delete operations, which is recommended for use with the
++			solid-state drives (SSD).
++
++force			Forces the driver to mount partitions even if 'dirty' flag
++			(volume dirty) is set. Not recommended for use.
++
++sparse			Create new files as "sparse".
++
++showmeta		Use this parameter to show all meta-files (System Files) on
++			a mounted NTFS partition.
++			By default, all meta-files are hidden.
++
++no_acs_rules		"No access rules" mount option sets access rights for
++			files/folders to 777 and owner/group to root. This mount
++			option absorbs all other permissions:
++			- permissions change for files/folders will be reported
++				as successful, but they will remain 777;
++			- owner/group change will be reported as successful, but
++				they will stay as root
++
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
++
++
++ToDo list
++=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++- Full journaling support (currently journal replaying is supported) over =
+JBD.
++
++
++References
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++https://www.paragon-software.com/home/ntfs-linux-professional/
++	- Commercial version of the NTFS driver for Linux.
++
++almaz.alexandrovich@paragon-software.com
++	- Direct e-mail address for feedback and requests on the NTFS3 implementa=
+tion.
++
++
+diff --git a/fs/ntfs3/Kconfig b/fs/ntfs3/Kconfig
+new file mode 100644
+index 000000000000..92a9c68008c8
+--- /dev/null
++++ b/fs/ntfs3/Kconfig
+@@ -0,0 +1,23 @@
++# SPDX-License-Identifier: GPL-2.0-only
++config NTFS3_FS
++	tristate "NTFS Read-Write file system support"
++	select NLS
++	help
++	  Windows OS native file system (NTFS) support up to NTFS version 3.1.
++
++	  Y or M enables the NTFS3 driver with full features enabled (read,
++	  write, journal replaying, sparse/compressed files support).
++	  File system type to use on mount is "ntfs3". Module name (M option)
++	  is also "ntfs3".
++
++	  Documentation: <file:Documentation/filesystems/ntfs3.rst>
++
++config NTFS3_64BIT_CLUSTER
++	bool "64 bits per NTFS clusters"
++	depends on NTFS3_FS && 64BIT
++	help
++	  Windows implementation of ntfs.sys uses 32 bits per clusters.
++	  If activated 64 bits per clusters you will be able to use 4k cluster
++	  for 16T+ volumes. Windows will not be able to mount such volumes.
++
++	  It is recommended to say N here.
+diff --git a/fs/ntfs3/Makefile b/fs/ntfs3/Makefile
+new file mode 100644
+index 000000000000..4d4fe198b8b8
+--- /dev/null
++++ b/fs/ntfs3/Makefile
+@@ -0,0 +1,11 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Makefile for the ntfs3 filesystem support.
++#
++
++obj-$(CONFIG_NTFS3_FS) +=3D ntfs3.o
++
++ntfs3-objs :=3D bitfunc.o bitmap.o inode.o fsntfs.o frecord.o \
++	    index.o attrlist.o record.o attrib.o run.o xattr.o\
++	    upcase.o super.o file.o dir.o namei.o lznt.o\
++	    fslog.o
+--=20
+2.25.2
+
