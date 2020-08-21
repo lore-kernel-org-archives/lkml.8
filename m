@@ -2,95 +2,101 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB17DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A441DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A14CD20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CAFC20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgHUKyW (ORCPT
+        id S1728328AbgHUKzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:54:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:57554 "EHLO foss.arm.com"
+        Fri, 21 Aug 2020 06:55:23 -0400
+Received: from mga12.intel.com ([192.55.52.136]:1522 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727979AbgHUKyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:54:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C45E1063;
-        Fri, 21 Aug 2020 03:53:51 -0700 (PDT)
-Received: from [192.168.1.190] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6B203F6CF;
-        Fri, 21 Aug 2020 03:53:50 -0700 (PDT)
-Subject: Re: [PATCH] ARM64: vdso32: Install vdso32 from vdso_install
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20200818014950.42492-1-swboyd@chromium.org>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <9f2a9b2b-bcb6-a719-1861-83ea8617eea6@arm.com>
-Date:   Fri, 21 Aug 2020 11:56:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727979AbgHUKy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 06:54:58 -0400
+IronPort-SDR: RnwvpeHgYYzHk/P4dssr/meOhnLk/YU1J7qUUY/P6dZLrDfBzzUiB17SyM5HbRKf7fbL3wnxzc
+ 16FCIVmAtfAQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="135044537"
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="135044537"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 03:54:52 -0700
+IronPort-SDR: B+RpOjZMIwmGp0HVidz9fJuODHW4MTp4+dOYVPIIXXOHa/fI4aEAVIklC1uWdgpsP6wlzjna3M
+ Kc+F81tZUxUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="327731447"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 03:54:50 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1k94h7-00AK6y-Cr; Fri, 21 Aug 2020 13:54:49 +0300
+Date:   Fri, 21 Aug 2020 13:54:49 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 83/92] mfd: dln2: Run event handler loop under
+ spinlock
+Message-ID: <20200821105449.GN1891694@smile.fi.intel.com>
+References: <20200820091537.490965042@linuxfoundation.org>
+ <20200820091541.964627271@linuxfoundation.org>
+ <20200821072123.GC23823@amd>
+ <CAHp75Vcbmc-PV-gQxuj9i8sAcFCzhJKe_qzEfrkUTZbnf3Vupg@mail.gmail.com>
+ <20200821091416.GA1894114@kroah.com>
+ <20200821091510.GA1894407@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20200818014950.42492-1-swboyd@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821091510.GA1894407@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/20 2:49 AM, Stephen Boyd wrote:
-> Add the 32-bit vdso Makefile to the vdso_install rule so that 'make
-> vdso_install' installs the 32-bit compat vdso when it is compiled.
+On Fri, Aug 21, 2020 at 11:15:10AM +0200, Greg Kroah-Hartman wrote:
+> On Fri, Aug 21, 2020 at 11:14:16AM +0200, Greg Kroah-Hartman wrote:
+> > On Fri, Aug 21, 2020 at 12:06:45PM +0300, Andy Shevchenko wrote:
+> > > On Fri, Aug 21, 2020 at 10:26 AM Pavel Machek <pavel@denx.de> wrote:
+> > > > > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > >
+> > > > > [ Upstream commit 3d858942250820b9adc35f963a257481d6d4c81d ]
+> > > > >
+> > > > > The event handler loop must be run with interrupts disabled.
+> > > > > Otherwise we will have a warning:
+> > > > ...
+> > > > > Recently xHCI driver switched to tasklets in the commit 36dc01657b49
+> > > > > ("usb: host: xhci: Support running urb giveback in tasklet
+> > > > > context").
+> > > >
+> > > > AFAICT, 36dc01657b49 is not included in 4.19.141, so this commit
+> > > > should not be needed, either.
+> > > 
+> > > I'm wondering if there are any other USB host controller drivers that
+> > > use URB giveback in interrupt enabled context.
+> > 
+> > Almost all do.
 > 
-> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Fixes: a7f71a2c8903 ("arm64: compat: Add vDSO")
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  arch/arm64/Makefile               | 1 +
->  arch/arm64/kernel/vdso32/Makefile | 2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
->
+> Sorry, read that the wrong way, most have interrupts disabled, so this
+> change should be fine.
 
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-
-> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-> index 55bc8546d9c7..b45f0124cc16 100644
-> --- a/arch/arm64/Makefile
-> +++ b/arch/arm64/Makefile
-> @@ -165,6 +165,7 @@ zinstall install:
->  PHONY += vdso_install
->  vdso_install:
->  	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso $@
-> +	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso32 $@
->  
->  # We use MRPROPER_FILES and CLEAN_FILES now
->  archclean:
-> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-> index 5139a5f19256..d6adb4677c25 100644
-> --- a/arch/arm64/kernel/vdso32/Makefile
-> +++ b/arch/arm64/kernel/vdso32/Makefile
-> @@ -208,7 +208,7 @@ quiet_cmd_vdsosym = VDSOSYM $@
->        cmd_vdsosym = $(NM) $< | $(gen-vdsosym) | LC_ALL=C sort > $@
->  
->  # Install commands for the unstripped file
-> -quiet_cmd_vdso_install = INSTALL $@
-> +quiet_cmd_vdso_install = INSTALL32 $@
->        cmd_vdso_install = cp $(obj)/$@.dbg $(MODLIB)/vdso/vdso32.so
->  
->  vdso.so: $(obj)/vdso.so.dbg
-> 
-> base-commit: 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
-> 
+The change is harmless in these cases. I was wondering if it actually *helps*
+in some cases besides xHCI.
 
 -- 
-Regards,
-Vincenzo
+With Best Regards,
+Andy Shevchenko
+
+
