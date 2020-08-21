@@ -6,139 +6,107 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3717C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA91C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7344620720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972A620720
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598033896;
-	bh=7ZMnxBinhbuxuu76uI4BQcNGRdzuzbPEh3ZWwy0a3vQ=;
+	s=default; t=1598033905;
+	bh=roBEx2Gr4IXvQgfHy3Ln4LK8d7kklbY3qskNwrZ4tKM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zwLtLiwEdKkRrdqeZqyeg/LlXQoX3z734+ejKWi2IGcfTimZkil6pH9cG4e8S8hJO
-	 2ZUwitUsHJ8Gfmp1t3cl1F30Yhedx4vZfV+CG/2bfhXDFcs3jSSO4/8J67oxldQKVT
-	 EkOyDCII3joUVrPzUzEPLZ04SHR4R/CUog5Ivi5k=
+	b=UrQ6gDKc3PYtZpc5pPV/DxSzX99Dui3+79n2ZCKmSN4BOHBOGVD9XMbHwNBr/Jk5z
+	 kcNMnt85m3uM2RG8lkefMQ/qxgJxlv7uji2agtjMgm0HdFNYyMMNcs+4z4gou5Zigz
+	 aRBohkZ3szKRfECLOrzdzb9hKvVmoqgrMix+MSSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgHUSSN (ORCPT
+        id S1728002AbgHUSSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:18:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgHUSSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:18:10 -0400
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8DD620735
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 18:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598033889;
-        bh=7ZMnxBinhbuxuu76uI4BQcNGRdzuzbPEh3ZWwy0a3vQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=maIWyNWPrBmOGTbebI0zVei53p07oW05BnWwKebNLH6x9g5wSBT47me3h0dMkZRzZ
-         EifSicaXbM+ifLGGs7PFENF09GI4WoHDvywJMZKp1V44q+C+nD9b6B/pq8MHD8AMGQ
-         vM/EW4vOndvpQ0WUl77PeHw3XbFllYbPNTuKiNgI=
-Received: by mail-ot1-f50.google.com with SMTP id k12so2305081otr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:18:09 -0700 (PDT)
-X-Gm-Message-State: AOAM533nZdTDt9MPziszf0ftobxAZvLOL4mx2lQz4vAkyOApgxwP9vUz
-        K5In24630l1R0DepzC3sOO5q2KBLOCE0EhpGlQ==
-X-Google-Smtp-Source: ABdhPJy/o46mSao/iyigXFdlBssYsaaeBIUKzIltnUK6LL8LLeaAnrN+ySSRUiPbmI1h6pQn62RtTu8MK6E5r1dJE4U=
-X-Received: by 2002:a05:6830:1d8e:: with SMTP id y14mr2864009oti.129.1598033889071;
- Fri, 21 Aug 2020 11:18:09 -0700 (PDT)
+        Fri, 21 Aug 2020 14:18:24 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35115 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbgHUSSS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 14:18:18 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k4so2303738oik.2;
+        Fri, 21 Aug 2020 11:18:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QjJkBvBjo776ONBX3/HAkoIAhioOEeqkU0qIVdyiyL8=;
+        b=Zw7l3EQNDJPzJ0cCrAE74lY53hO3/nIiZyeu67RjmrjaRx/JrVXBf9FuZ+A/F9VRS6
+         AnCpiaXw2L7nPFbLQvLJLP5ZjHa1euXxCxyEs0Io1lxJLzJdQuiPDuH6bcqy4Dcle3n2
+         7fDgWDn6OPQFz+SSg8ODRpYnF+oHl0Nixh9OjLxNuSvcMvhVe/YM5GP+1KcjNEMz2QGh
+         M9N9Z/APfF7CHU4fcwsgmnxbamLy5K6tVn7WouvyoyYwl1+8prbUQTaVHR8F4SFMYBiL
+         mNoIUNu1x9RSkS9VTqHjsICr5xxvyQ1z4+VrlwFJcyJ4rF9++P+rFogjMaR6aewQMMM8
+         0w+Q==
+X-Gm-Message-State: AOAM5305nCFt9Qzh4k5uiYi+Z2KsoF1zNmN/7ts51UvzUmWRUdr/AFpj
+        fmgc4S4dvXDBciiAdsNCN8KYcgb0y+rIA1ZQv+s=
+X-Google-Smtp-Source: ABdhPJwDXJduVUwizXZmHUX9etUgUltSIzd/6mAXhHVLPONoFfI4erptBGS0kKbtYaKBSso5vjmNWttHpEInKH3w9wo=
+X-Received: by 2002:aca:110a:: with SMTP id 10mr2503242oir.68.1598033897265;
+ Fri, 21 Aug 2020 11:18:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200821154848.GI7871@localhost.localdomain> <CAL_JsqLBfwXamvCB0C9ujhy-BS6P4BpU-MWPuZX+_+sYPVsUSg@mail.gmail.com>
- <8213206d4764375f32cbea36ea214573248094dc.camel@perches.com>
-In-Reply-To: <8213206d4764375f32cbea36ea214573248094dc.camel@perches.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 21 Aug 2020 12:17:57 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL0v6PXgMLVZzqZwjpZ4KTUGmutg6Z0YuvTccdAUa-=mw@mail.gmail.com>
-Message-ID: <CAL_JsqL0v6PXgMLVZzqZwjpZ4KTUGmutg6Z0YuvTccdAUa-=mw@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Add entry for HPE Superdome Flex (UV) maintainers
-To:     Joe Perches <joe@perches.com>
-Cc:     Steve Wahl <steve.wahl@hpe.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>
+References: <1597174997-22505-1-git-send-email-sumitg@nvidia.com>
+ <20200820053945.xlwtpkvbt4o23flk@vireshk-i7> <20200820123711.GA19989@bogus> <20200821052209.efturkzs2kp4nbcn@vireshk-i7>
+In-Reply-To: <20200821052209.efturkzs2kp4nbcn@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 21 Aug 2020 20:18:06 +0200
+Message-ID: <CAJZ5v0jPdgxR2erER74gcPtRFBCzWkoD7Zq1E-SgN7Lx50bvYg@mail.gmail.com>
+Subject: Re: [Patch] cpufreq: replace cpu_logical_map with read_cpuid_mpir
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sumit Gupta <sumitg@nvidia.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bbasu@nvidia.com, Kefeng Wang <wangkefeng.wang@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 11:05 AM Joe Perches <joe@perches.com> wrote:
+On Fri, Aug 21, 2020 at 7:22 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> On Fri, 2020-08-21 at 10:45 -0600, Rob Herring wrote:
-> > +Joe Perches
-> >
-> > On Fri, Aug 21, 2020 at 9:48 AM Steve Wahl <steve.wahl@hpe.com> wrote:
+> On 20-08-20, 13:37, Sudeep Holla wrote:
+> > On Thu, Aug 20, 2020 at 11:09:45AM +0530, Viresh Kumar wrote:
+> > > On 12-08-20, 01:13, Sumit Gupta wrote:
+> > > > Commit eaecca9e7710 ("arm64: Fix __cpu_logical_map undefined issue")
+> > > > fixes the issue with building tegra194 cpufreq driver as module. But
+> > > > the fix might cause problem while supporting physical cpu hotplug[1].
+> > > >
+> > > > This patch fixes the original problem by avoiding use of cpu_logical_map().
+> > > > Instead calling read_cpuid_mpidr() to get MPIDR on target cpu.
+> > > >
+> > > > [1] https://lore.kernel.org/linux-arm-kernel/20200724131059.GB6521@bogus/
+> > > >
+> > > > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > > Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> > > > ---
+> > > >  drivers/cpufreq/tegra194-cpufreq.c | 10 +++++++---
+> > > >  1 file changed, 7 insertions(+), 3 deletions(-)
 > > >
-> > > Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+> > > Applied. Thanks.
 > >
-> > get_maintainers.pl doesn't work on MAINTAINERS. You need to send this
-> > to the maintainers of the files listed in the entry below. Looks like
-> > that would be the x86 maintainers.
+> > Just to confirm, is this going as a fix ? We want to drop exporting
+> > cpu_logical_map in v5.9 so this needs to go as fix. I missed it earlier,
+> > actually,
 > >
-> >
-> > What did Mauro, David and I do to become MAINTAINERS maintainers?
-> >
-> > Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > (commit_signer:127/806=16%,authored:80/806=10%)
-> > Rob Herring <robh@kernel.org> (commit_signer:103/806=13%)
-> > "David S. Miller" <davem@davemloft.net> (commit_signer:99/806=12%)
-> > linux-kernel@vger.kernel.org (open list)
-> >
-> >
-> > Can we make --no-git-fallback the default? It's useful for
-> > informational purposes, but never for who to email patches to. Having
-> > no output would be better, then submitters have to think about where
-> > to send patches.
+> > Fixes: df320f89359c ("cpufreq: Add Tegra194 cpufreq driver")
+> > is appropriate here so that we can drop export symbol which was part of
+> > Commit eaecca9e7710 ("arm64: Fix __cpu_logical_map undefined issue")
+> > as a workaround to  fix the build.
 >
-> Doubtful that improves things.  At least the --git-fallback option
-> shows who modified or got patches accepted to files that are
-> nominally unmaintained.  It also shows the upstream path for those
-> files via Signed-off-by: lines so I think --git-fallback is generally
-> a good mechanism and control flag for directly unmaintained files.
+> Okay.
 >
-> > What ever happened to splitting up MAINTAINERS to subdirectories? That
-> > would help routing MAINTAINERS changes to the right maintainers.
+> Rafael: Please pick this patch directly for next rc with
 >
-> Splitting MAINTAINERS into subdirectories would do nothing
-> to route patches.  It would just be convenience to reduce
-> the total number of changes to a single file.
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-In general no, but for MAINTAINERS changes it would. Let's say I add
-an entry for Documentation/devicetree/foo-bar.txt. With a per
-subsystem/path MAINTAINERS file in
-Documentation/devicetree/MAINTAINERS, you'd add an entry there and run
-get_maintainer.pl:
-
-$ touch Documentation/devicetree/MAINTAINERS
-$ scripts/get_maintainer.pl -f Documentation/devicetree/MAINTAINERS
-Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND
-FLATTENED DEVICE TREE BINDINGS)
-devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-DEVICE TREE BINDINGS)
-linux-kernel@vger.kernel.org (open list)
-
-> Those large number of changes to the single MAINTAINERS file
-> very rarely have any conflicts either, so it wouldn't really
-> change the overall number of changes to MAINTAINERS entries
-> spread around the tree.
->
-> You are be welcome to try to split the file and get Linus to
-> accept it.  I gave it a go.  Try yourself.
->
-> https://lore.kernel.org/patchwork/patch/817857/
-
-Yes, I remember that. He didn't seem totally opposed to it which is why I asked.
-
-I have another reason for wanting the split. I want to generate a
-MAINTAINERS file from the DT schema files. We have the data there and
-it's checked automatically. I don't care to either continually tell
-folks to add a MAINTAINERS entry or tell them to run checkpatch.pl to
-tell them that. But if the infrastructure got merged, would that
-already work?
-
-Rob
+Applied as 5.9-rc3 material with a couple of minor edits in the
+subject and changelog, thanks!
