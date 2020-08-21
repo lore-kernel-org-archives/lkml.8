@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D1AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E00C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48D9422BF3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7493E22D07
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598026775;
-	bh=FS9LV1mgzKB2FrwnM+i3H+Tuad1djbcvC2VsGtvdOyI=;
+	s=default; t=1598026793;
+	bh=7UJgrp8oLpFznfczBNjW/hayYKMwBDlwUKiE1REJQXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l5jDO5Z4mYtaF7zV8OErCXjhO6qjjIt0p3lhtKBtb23n7/DDlFkbg5sRunfKwu6/w
-	 I8pahQhgG0zdt6MQdmUSqipe+GTguiIeezL9Qz6unwc32hLrJrnVpMBVUblsTf8SBR
-	 3b5RCogAJIfyguS8hFIw3hNT7ZkDxS61/FhJYU5o=
+	b=zIOsvdsy1gRHnl6avrNXA6RxgouCYqsYBtXyTZU2cFQzPPvns3XZqff/SovAYi1bJ
+	 CAAn59mgUtf84XL3jGJ7P+tZJpbypsZTNjOQuL0df82Hc+0F2DCXpMgDmKbwUmF6jH
+	 fawYrpHEeV5/m7cLQinj15igNZq3qhPyx7vaqRuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgHUQTb (ORCPT
+        id S1728273AbgHUQTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:19:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47912 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:19:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727889AbgHUQPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:15:21 -0400
+        id S1727954AbgHUQPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:15:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BADA22C9F;
-        Fri, 21 Aug 2020 16:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E1DD22B43;
+        Fri, 21 Aug 2020 16:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026518;
-        bh=FS9LV1mgzKB2FrwnM+i3H+Tuad1djbcvC2VsGtvdOyI=;
+        s=default; t=1598026534;
+        bh=7UJgrp8oLpFznfczBNjW/hayYKMwBDlwUKiE1REJQXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B4GFlIn0r5x1xYgOq2O9Bo4du9mGyjh15e5A5T1xi8JZe1HWkLKxBZpR1pveNu1sc
-         ldoCrrsdTSvjfv+imFUdFzfOFmNtCuix8Lmz+JsdYdN036w0x+FkWzLK2KFguCIS91
-         GUE8Fy92xcrNZ/ICNeqBWyizuPAnyZ0Hh4Tdh7xE=
+        b=wN5tzABLBp5NqAkdwiJmP6Mm4xBLmE52VuH54vPSTf0IeXLqlyV+/4dJ/JKCt5bZ5
+         K8N4c86gkKAe+cidaFbkpB4GulvSSuomi7ncZs+7oTa3EgBEwCHvV4jpLTcSqtWtAw
+         GGV1cN+U9UEtvA9EeEE3Lvl66Hj4VFrJ+T1acVrs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kaige Li <likaige@loongson.cn>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.8 42/62] ALSA: hda: Add support for Loongson 7A1000 controller
-Date:   Fri, 21 Aug 2020 12:14:03 -0400
-Message-Id: <20200821161423.347071-42-sashal@kernel.org>
+Cc:     Gal Pressman <galpress@amazon.com>,
+        Shadi Ammouri <sammouri@amazon.com>,
+        Yossi Leybovich <sleybo@amazon.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 55/62] RDMA/efa: Add EFA 0xefa1 PCI ID
+Date:   Fri, 21 Aug 2020 12:14:16 -0400
+Message-Id: <20200821161423.347071-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -58,33 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaige Li <likaige@loongson.cn>
+From: Gal Pressman <galpress@amazon.com>
 
-[ Upstream commit 61eee4a7fc406f94e441778c3cecbbed30373c89 ]
+[ Upstream commit d4f9cb5c5b224dca3ff752c1bb854250bf114944 ]
 
-Add the new PCI ID 0x0014 0x7a07 to support Loongson 7A1000 controller.
+Add support for 0xefa1 devices.
 
-Signed-off-by: Kaige Li <likaige@loongson.cn>
-Link: https://lore.kernel.org/r/1594954292-1703-2-git-send-email-likaige@loongson.cn
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20200722140312.3651-5-galpress@amazon.com
+Reviewed-by: Shadi Ammouri <sammouri@amazon.com>
+Reviewed-by: Yossi Leybovich <sleybo@amazon.com>
+Signed-off-by: Gal Pressman <galpress@amazon.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/hw/efa/efa_main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 4c23b169ac67e..1a26940a3fd7c 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2747,6 +2747,8 @@ static const struct pci_device_id azx_ids[] = {
- 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_HDMI },
- 	/* Zhaoxin */
- 	{ PCI_DEVICE(0x1d17, 0x3288), .driver_data = AZX_DRIVER_ZHAOXIN },
-+	/* Loongson */
-+	{ PCI_DEVICE(0x0014, 0x7a07), .driver_data = AZX_DRIVER_GENERIC },
- 	{ 0, }
+diff --git a/drivers/infiniband/hw/efa/efa_main.c b/drivers/infiniband/hw/efa/efa_main.c
+index 82145574c9286..92d7011463203 100644
+--- a/drivers/infiniband/hw/efa/efa_main.c
++++ b/drivers/infiniband/hw/efa/efa_main.c
+@@ -12,10 +12,12 @@
+ 
+ #include "efa.h"
+ 
+-#define PCI_DEV_ID_EFA_VF 0xefa0
++#define PCI_DEV_ID_EFA0_VF 0xefa0
++#define PCI_DEV_ID_EFA1_VF 0xefa1
+ 
+ static const struct pci_device_id efa_pci_tbl[] = {
+-	{ PCI_VDEVICE(AMAZON, PCI_DEV_ID_EFA_VF) },
++	{ PCI_VDEVICE(AMAZON, PCI_DEV_ID_EFA0_VF) },
++	{ PCI_VDEVICE(AMAZON, PCI_DEV_ID_EFA1_VF) },
+ 	{ }
  };
- MODULE_DEVICE_TABLE(pci, azx_ids);
+ 
 -- 
 2.25.1
 
