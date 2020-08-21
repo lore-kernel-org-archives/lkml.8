@@ -2,250 +2,184 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E11AEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E81020748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VbJ5Xxht"
+	by mail.kernel.org (Postfix) with ESMTP id B4C1220738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598030610;
+	bh=sreODwQUCtqPN3qT0WnJb7EiZUoq7aAP/VeQ/Yhu4Xo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BHsqeDy8FcjgnX+8Ejollkl8cKVYBytMu34ZHoFIhjwLQgnJuWZ4qQa9ZH+oafLcx
+	 mV28pQxwVFXY0s22DCtHVFWh6uSsGZlt/aGPCltdFuCU2nhcOJi76RcBYMe4os8HAJ
+	 +KzROLCY3swHuQsoNC7aXrYzVlTW9P41ezFqF8pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbgHURXT (ORCPT
+        id S1729147AbgHURX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:23:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728887AbgHURWR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 13:22:17 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89331C061575
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:22:17 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id s14so1180884plp.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:22:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=h6F45IixAOPfMRMH67FKA7ZAbNwFjoG24ThPGkxleF8=;
-        b=VbJ5XxhtpOO2KZl1vkxhnQ/fhsYqiD8fN9AMkshiFAB5ccj1Z6m+ShREEoPDuQDsAy
-         iEDh1KaYzK2+Z9OjbtW2hPTQFG9lSDx8y0abCnvwguC+KyIlxDZMfzT8JvKxMP/Nnp3J
-         fqYF41W4FyD9Dq0aZxBgPifgg4QuOfqU7+WPY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=h6F45IixAOPfMRMH67FKA7ZAbNwFjoG24ThPGkxleF8=;
-        b=A7RVmGyuVHSwxWClccWx6jHfN8BfIo+td/cjWKP2j7xirS196r2p1vZcvMJf1/kBuU
-         6+elK+4KfWViTHydAaZjrtcDjtvx/6L1pIXxBrDV+IY2NlWNc/VgDDdoXTfub/fF4RLv
-         Qrmf1Ceh4gl5pz/b/ir0vhEQ8oCNzpe9rsaNgN3x8WdVv/CgAjlliYgr6j3wJBcHtS1C
-         IgmUyaVoIDKmzvS0cJRPtzpXsbIAoFCq2rcIuO+VE7MlcCKr9/LPWGduRR7YzOxCrx7e
-         OhBow8FMXfOPaDpgUFAL3IT9e3Cu2z31yo9YwtOLTwkFx+9z6lGDlfjdlsNibMJAH1fs
-         H/bg==
-X-Gm-Message-State: AOAM530OjwpPRM6jE6Vxil4O+9aTRvaYDwRjqQLUuxKtyomeMx4tx7qn
-        kClmnSe0a5GoNq8+2nQPqZWwnA==
-X-Google-Smtp-Source: ABdhPJzJgMrExwlYjiSmCTmjjxtDp092F3nkrO/f++8r5KPWih6kKRCsUa27MT+totrInty0e+3A7w==
-X-Received: by 2002:a17:902:bd09:: with SMTP id p9mr3244072pls.322.1598030536752;
-        Fri, 21 Aug 2020 10:22:16 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id a15sm3128517pfo.185.2020.08.21.10.22.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 10:22:16 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 10:22:15 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     satya priya <skakit@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V3 2/3] arm64: dts: qcom: sc7180: Add sleep pin ctrl for
- BT uart
-Message-ID: <20200821172215.GB486007@google.com>
-References: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
- <1597931467-24268-3-git-send-email-skakit@codeaurora.org>
+        Fri, 21 Aug 2020 13:23:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48180 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbgHUQPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:15:42 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AAC220578;
+        Fri, 21 Aug 2020 16:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598026542;
+        bh=sreODwQUCtqPN3qT0WnJb7EiZUoq7aAP/VeQ/Yhu4Xo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QaxLPKVFrEoq/4ZeEg1SX7Xnq0GkB+yUJDmaOEcoqzN9FwRIkLOQXK+ZyvNQB+tri
+         5u8c9JyEBRa+AYtV+6qh2Wvak5KuviuGSEJsALugRlA106XMTjYGz/bd8Y8X2tjNoY
+         ammlmBsJJg2iblqlHo8pYOVCQk3Ek57CCUkmCmmQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@suse.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 61/62] EDAC/ie31200: Fallback if host bridge device is already initialized
+Date:   Fri, 21 Aug 2020 12:14:22 -0400
+Message-Id: <20200821161423.347071-61-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
+References: <20200821161423.347071-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1597931467-24268-3-git-send-email-skakit@codeaurora.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 07:21:06PM +0530, satya priya wrote:
-> Add sleep pin ctrl for BT uart, and also change the bias
-> configuration to match Bluetooth module.
-> 
-> Signed-off-by: satya priya <skakit@codeaurora.org>
-> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
-> ---
-> Changes in V2:
->  - This patch adds sleep state for BT UART. Newly added in V2.
-> 
-> Changes in V3:
->  - Remove "output-high" for TX from both sleep and default states
->    as it is not required. Configure pull-up for TX in sleep state.
-> 
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 54 +++++++++++++++++++++++++++------
->  1 file changed, 45 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index d8b5507..806f626 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -473,20 +473,20 @@
->  
->  &qup_uart3_default {
->  	pinconf-cts {
-> -		/*
-> -		 * Configure a pull-down on 38 (CTS) to match the pull of
-> -		 * the Bluetooth module.
-> -		 */
-> +		/* Configure no pull on 38 (CTS) to match Bluetooth module */
->  		pins = "gpio38";
-> -		bias-pull-down;
-> -		output-high;
-> +		bias-disable;
+From: Jason Baron <jbaron@akamai.com>
 
-I think it should be ok in functional terms, but I don't like the rationale
-and also doubt the change is really needed.
+[ Upstream commit 709ed1bcef12398ac1a35c149f3e582db04456c2 ]
 
-If the pull is removed to match the Bluetooth module, then that sounds as
-if the signal was floating on the the BT side, which I think is not the case.
-Yes, according to the datasheet there is no pull when the BT controller is
-active, but then it drives the signal actively to either high or low. There
-seems to be no merit in 'matching' the Bluetooth side in this case, if the
-signal was really floating on the BT side we would definitely not want this.
+The Intel uncore driver may claim some of the pci ids from ie31200 which
+means that the ie31200 edac driver will not initialize them as part of
+pci_register_driver().
 
-In a reply to v2 you said:
+Let's add a fallback for this case to 'pci_get_device()' to get a
+reference on the device such that it can still be configured. This is
+similar in approach to other edac drivers.
 
-> Recently on cherokee we worked with BT team and came to an agreement to
-> keep no-pull from our side in order to not conflict with their pull in
-> any state.
+Signed-off-by: Jason Baron <jbaron@akamai.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/r/1594923911-10885-1-git-send-email-jbaron@akamai.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/edac/ie31200_edac.c | 50 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 47 insertions(+), 3 deletions(-)
 
-What are these conflicting pull states?
+diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
+index d68346a8e141a..ebe50996cc423 100644
+--- a/drivers/edac/ie31200_edac.c
++++ b/drivers/edac/ie31200_edac.c
+@@ -170,6 +170,8 @@
+ 	(n << (28 + (2 * skl) - PAGE_SHIFT))
+ 
+ static int nr_channels;
++static struct pci_dev *mci_pdev;
++static int ie31200_registered = 1;
+ 
+ struct ie31200_priv {
+ 	void __iomem *window;
+@@ -538,12 +540,16 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ static int ie31200_init_one(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
+ {
+-	edac_dbg(0, "MC:\n");
++	int rc;
+ 
++	edac_dbg(0, "MC:\n");
+ 	if (pci_enable_device(pdev) < 0)
+ 		return -EIO;
++	rc = ie31200_probe1(pdev, ent->driver_data);
++	if (rc == 0 && !mci_pdev)
++		mci_pdev = pci_dev_get(pdev);
+ 
+-	return ie31200_probe1(pdev, ent->driver_data);
++	return rc;
+ }
+ 
+ static void ie31200_remove_one(struct pci_dev *pdev)
+@@ -552,6 +558,8 @@ static void ie31200_remove_one(struct pci_dev *pdev)
+ 	struct ie31200_priv *priv;
+ 
+ 	edac_dbg(0, "\n");
++	pci_dev_put(mci_pdev);
++	mci_pdev = NULL;
+ 	mci = edac_mc_del_mc(&pdev->dev);
+ 	if (!mci)
+ 		return;
+@@ -593,17 +601,53 @@ static struct pci_driver ie31200_driver = {
+ 
+ static int __init ie31200_init(void)
+ {
++	int pci_rc, i;
++
+ 	edac_dbg(3, "MC:\n");
+ 	/* Ensure that the OPSTATE is set correctly for POLL or NMI */
+ 	opstate_init();
+ 
+-	return pci_register_driver(&ie31200_driver);
++	pci_rc = pci_register_driver(&ie31200_driver);
++	if (pci_rc < 0)
++		goto fail0;
++
++	if (!mci_pdev) {
++		ie31200_registered = 0;
++		for (i = 0; ie31200_pci_tbl[i].vendor != 0; i++) {
++			mci_pdev = pci_get_device(ie31200_pci_tbl[i].vendor,
++						  ie31200_pci_tbl[i].device,
++						  NULL);
++			if (mci_pdev)
++				break;
++		}
++		if (!mci_pdev) {
++			edac_dbg(0, "ie31200 pci_get_device fail\n");
++			pci_rc = -ENODEV;
++			goto fail1;
++		}
++		pci_rc = ie31200_init_one(mci_pdev, &ie31200_pci_tbl[i]);
++		if (pci_rc < 0) {
++			edac_dbg(0, "ie31200 init fail\n");
++			pci_rc = -ENODEV;
++			goto fail1;
++		}
++	}
++	return 0;
++
++fail1:
++	pci_unregister_driver(&ie31200_driver);
++fail0:
++	pci_dev_put(mci_pdev);
++
++	return pci_rc;
+ }
+ 
+ static void __exit ie31200_exit(void)
+ {
+ 	edac_dbg(3, "MC:\n");
+ 	pci_unregister_driver(&ie31200_driver);
++	if (!ie31200_registered)
++		ie31200_remove_one(mci_pdev);
+ }
+ 
+ module_init(ie31200_init);
+-- 
+2.25.1
 
-The WCN3998 datasheet has a pull-down on RTS (WCN3998 side) in reset and
-boot mode, and no pull in active mode. In reset and boot mode the host
-config with a pull down would match, and no pull in active mode doesn't
-conflict with the pull-down on the host UART. My understanding is that
-the pinconf pulls are weak pulls, so as soon as the BT chip drives its
-RTS the pull on the host side shouldn't matter.
-
-Is this change actually related with wakeup support? I have the impression
-that multiple things are conflated in this patch. If some of the changes
-are just fixing/improving other things they should be in a separate patch,
-which could be part of this series, otherwise it's really hard to
-distinguish between the pieces that are actually relevant for wakeup and
-the rest.
-
-Independently of whether the changes are done in a single or multiple
-patches, the commit log should include details on why the changes are
-necessary, especially when there are not explantatory comments in the
-DT/code itself (e.g. the removal of 'output-high', which seems correct
-to me, but no reason is given why it is done).
-
->  	};
->  
->  	pinconf-rts {
-> -		/* We'll drive 39 (RTS), so no pull */
-> +		/*
-> +		 * Configure pull-down on 39 (RTS). This is needed to avoid a
-> +		 * floating pin which could mislead Bluetooth controller
-> +		 * with UART RFR state (READY/NOT_READY).
-> +		 */
->  		pins = "gpio39";
->  		drive-strength = <2>;
-> -		bias-disable;
-> +		bias-pull-down;
->  	};
-
-[copy of my comment on v2]
-
-I'm a bit at a loss here, about two things:
-
-RTS is an output pin controlled by the UART. IIUC if the UART port is active
-and hardware flow control is enabled the RTS signal is either driven to high
-or low, but not floating.
-
-Now lets assume I'm wrong with the above and RTS can be floating. We only want
-the BT SoC to send data when the host UART is ready to receive them, right?
-RTS is an active low signal, hence by configuring it as a pull-down the BT
-SoC can send data regardless of whether the host UART actually asserts RTS,
-so the host UART may not be ready to receive it. I would argue that if there
-is really such a thing as a floating RTS signal then it should have a pull-up,
-to prevent the BT SoC from sending data at any time.
-
-I'm not an expert in UART communication and pinconf, so it could be that I
-got something wrong, but as of now it seems to me that no pull is the correct
-config for RTS.
-
->  
->  	pinconf-tx {
-> @@ -494,7 +494,43 @@
->  		pins = "gpio40";
->  		drive-strength = <2>;
->  		bias-disable;
-> -		output-high;
-> +	};
-> +
-> +	pinconf-rx {
-> +		/*
-> +		 * Configure a pull-up on 41 (RX). This is needed to avoid
-> +		 * garbage data when the TX pin of the Bluetooth module is
-> +		 * in tri-state (module powered off or not driving the
-> +		 * signal yet).
-> +		 */
-> +		pins = "gpio41";
-> +		bias-pull-up;
-> +	};
-> +};
-> +
-> +&qup_uart3_sleep {
-> +	pinconf-cts {
-> +		/* Configure no-pull on 38 (CTS) to match Bluetooth module */
-> +		pins = "gpio38";
-> +		bias-disable;
-> +	};
-> +
-> +	pinconf-rts {
-> +		/*
-> +		 * Configure pull-down on 39 (RTS). This is needed to avoid a
-> +		 * floating pin which could mislead Bluetooth controller
-> +		 * with UART RFR state (READY/NOT_READY).
-> +		 */
-> +		pins = "gpio39";
-> +		drive-strength = <2>;
-> +		bias-pull-down;
-> +	};
-
-I don't know all the details, but I have the impression that this is the
-relevant pull change for wakeup. From the title of the series I derive
-that the UART RX pin is used for signalling wakeup. A pull-down on RTS
-indicates the BT controller that it can always send data to wake up the
-host.
-
-I think RTS in default mode should remain with no-pull (the UART is driving
-the signal), and then change it to pull-down in sleep mode.
-
-
-> +
-> +	pinconf-tx {
-> +		/* Configure pull-up on 40 (TX) when it isn't actively driven */
-
-nit: just say '... on TX ...', the GPIO number isn't really interesting and can
-easily be determined by looking at 'pins' if needed . Applicable to all comments
-involving pins.
-
-> +		pins = "gpio40";
-> +		drive-strength = <2>;
-> +		bias-pull-up;
-
-This makes sense to me.
