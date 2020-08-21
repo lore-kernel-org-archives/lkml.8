@@ -2,154 +2,98 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18C7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0559C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 940B8207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:06:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XM5WiqUM"
+	by mail.kernel.org (Postfix) with ESMTP id 863F2207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:06:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHUQGc (ORCPT
+        id S1726836AbgHUQGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:06:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgHUQG1 (ORCPT
+        Fri, 21 Aug 2020 12:06:47 -0400
+Received: from 12.mo7.mail-out.ovh.net ([178.33.107.167]:50860 "EHLO
+        12.mo7.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgHUQGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:06:27 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63DA5C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:06:27 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id a13so1064716vso.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:06:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b7LMvTJRCBEy3uOnWRZT0zK9P07GM4iF4nxCqVfim8k=;
-        b=XM5WiqUM8GbZZWeaOuKkTmam3WvoxctYZV5DRa4dkgylCOr+Rseuisg062z5LgeG1P
-         cJco8xFaQWvWV6H3T8sJ69chqVgjazfM6SdYNODrXvyRCEDvLw4btsIpd5YUgypTUdml
-         RkmTqQ2iD7gVLxv/e3DZyo47BC2INp7QfIxaOytfUXR5OSBrGLA6OP+8fHfHPkbiUfgp
-         pvjPpGCCaZ71NEql+Gt2TnaXEJwgpYPyKjP7H0voySET5Ym5fEno9kR2UG63FDovPsl/
-         0neZla1O0l+BnfvPd39VsViQUkTk2cLtmnx38rn9B5h47bipQXkmULEYWC0iNy2DdzTw
-         31Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b7LMvTJRCBEy3uOnWRZT0zK9P07GM4iF4nxCqVfim8k=;
-        b=HfWYmimHIUyn1YSE/xEaaWJtmXYjNP8PEHlRsCMYtmphiwj5is25AuA/4dhrX7h/cZ
-         iblm+Lz9AtEdBQu3Fs71/2nvS7RMTH/okFKbPE3c8d3PqoixGmeINqwDtokd8JzkJanA
-         bEMZ4ohT0FMw3XxhBathBwte99OZ/UDORQwS8dsXRNtBzdCAfiNordro52KbiUp3F5A+
-         +R5MAnxtHXj07Vfm/WGMV+TvDeFq7zyCSHmkPgQFd9UTPyyPpZbLd8sLOVB1azA98oSL
-         jgSVIu7t7T2ihlC68RxtPKgC9XcWiKVID5A6KhhGlwGxFFc/dbP7Ql45fJDpYFyB4MPA
-         nc2g==
-X-Gm-Message-State: AOAM531rU4xXw96ivqkM8EpPM3QsrQlbtjOflF9Y7RC03IM2z9S3/BtZ
-        h2ZChv3XMeKDZOqbdtPglX9kP/ZmEW0maCJrICghVQ==
-X-Google-Smtp-Source: ABdhPJwJp9Y7eAvqM2EcEoZSaYF8tzqoAMXUXqdQJN+Vexb2/46sXF/P38JLaCGmhGPvKT+DFFarr66O1p/K/nONX9o=
-X-Received: by 2002:a67:ff92:: with SMTP id v18mr2543591vsq.221.1598025985891;
- Fri, 21 Aug 2020 09:06:25 -0700 (PDT)
+        Fri, 21 Aug 2020 12:06:46 -0400
+Received: from player799.ha.ovh.net (unknown [10.108.35.158])
+        by mo7.mail-out.ovh.net (Postfix) with ESMTP id 7C0F4176719
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 18:00:44 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player799.ha.ovh.net (Postfix) with ESMTPSA id ABD0E156BDE9D;
+        Fri, 21 Aug 2020 16:00:38 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-103G0059f190c4a-db29-4b17-b616-76cf4b1db7b5,
+                    20EB7F6BE0168D07063FB82D5C23839419BBC220) smtp.auth=steve@sk2.org
+From:   Stephen Kitt <steve@sk2.org>
+To:     Juerg Haefliger <juergh@gmail.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] hwmon: (dme1737) use simple i2c probe
+Date:   Fri, 21 Aug 2020 18:00:35 +0200
+Message-Id: <20200821160035.590142-1-steve@sk2.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <87d03lxysr.fsf@x220.int.ebiederm.org> <20200820132631.GK5033@dhcp22.suse.cz>
- <20200820133454.ch24kewh42ax4ebl@wittgenstein> <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
- <20200820140054.fdkbotd4tgfrqpe6@wittgenstein> <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
- <87k0xtv0d4.fsf@x220.int.ebiederm.org> <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
- <20200820162645.GP5033@dhcp22.suse.cz> <87r1s0txxe.fsf@x220.int.ebiederm.org>
- <20200821111558.GG4546@redhat.com> <CAJuCfpF_GhTy5SCjxqyqTFUrJNaw3UGJzCi=WSCXfqPAcbThYg@mail.gmail.com>
-In-Reply-To: <CAJuCfpF_GhTy5SCjxqyqTFUrJNaw3UGJzCi=WSCXfqPAcbThYg@mail.gmail.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Fri, 21 Aug 2020 09:06:14 -0700
-Message-ID: <CAJuCfpG06_KLhQyg9N84bRQOdvG27uAZ2oBDEQPR-OnZeNJd1w@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Tim Murray <timmurray@google.com>, mingo@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com,
-        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
-        adobriyan@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de,
-        John Johansen <john.johansen@canonical.com>,
-        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 17270178671746174236
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrudduvddgkeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeetgedugfelkeeikeetgeegteevfeeufeetuefgudeiiedthfehtdeffeekvdeffeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeelledrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 8:28 AM Suren Baghdasaryan <surenb@google.com> wrote:
->
-> On Fri, Aug 21, 2020 at 4:16 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > On 08/20, Eric W. Biederman wrote:
-> > >
-> > > That said if we are going for a small change why not:
-> > >
-> > >       /*
-> > >        * Make sure we will check other processes sharing the mm if this is
-> > >        * not vfrok which wants its own oom_score_adj.
-> > >        * pin the mm so it doesn't go away and get reused after task_unlock
-> > >        */
-> > >       if (!task->vfork_done) {
-> > >               struct task_struct *p = find_lock_task_mm(task);
-> > >
-> > >               if (p) {
-> > > -                     if (atomic_read(&p->mm->mm_users) > 1) {
-> > > +                     if (atomic_read(&p->mm->mm_users) > p->signal->nr_threads) {
-> >
-> > In theory this needs a barrier to avoid the race with do_exit(). And I'd
-> > suggest to use signal->live, I think signal->nr_threads should die...
-> > Something like
-> >
-> >         bool probably_has_other_mm_users(tsk)
-> >         {
-> >                 return  atomic_read_acquire(&tsk->mm->mm_users) >
-> >                         atomic_read(&tsk->signal->live);
-> >         }
-> >
-> > The barrier implied by _acquire ensures that if we race with the exiting
-> > task and see the result of exit_mm()->mmput(mm), then we must also see
-> > the result of atomic_dec_and_test(signal->live).
-> >
-> > Either way, if we want to fix the race with clone(CLONE_VM) we need other
-> > changes.
->
-> The way I understand this condition in __set_oom_adj() sync logic is
-> that we would be ok with false positives (when we loop unnecessarily)
-> but we can't tolerate false negatives (when oom_score_adj gets out of
-> sync). With the clone(CLONE_VM) race not addressed we are allowing
-> false negatives and IMHO that's not acceptable because it creates a
-> possibility for userspace to get an inconsistent picture. When
-> developing the patch I did think about using (p->mm->mm_users >
-> p->signal->nr_threads) condition and had to reject it due to that
-> reason.
->
+As part of the ongoing i2c transition to the simple probe
+("probe_new"), this patch uses i2c_match_id to retrieve the
+driver_data for the probed device. The id parameter is thus no longer
+necessary and the simple probe can be used instead.
 
-Actually, reviewing again and considering where list_add_tail_rcu is
-happening, maybe the race with clone(CLONE_VM) does not introduce
-false negatives. However a false negative I think will happen when a
-task shares mm with another task and also has an additional thread.
-Shared mm will increment mm_users without adding to signal->live and
-the additional thread will advance signal->live without adding to
-mm_users. As a result these increments will balance themselves and
-(mm->mm_users > signal->live) condition will yield false negative.
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ drivers/hwmon/dme1737.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-> >
-> > Oleg.
-> >
+diff --git a/drivers/hwmon/dme1737.c b/drivers/hwmon/dme1737.c
+index c3472b73fa79..c1e4cfb40c3d 100644
+--- a/drivers/hwmon/dme1737.c
++++ b/drivers/hwmon/dme1737.c
+@@ -2461,8 +2461,9 @@ static int dme1737_i2c_detect(struct i2c_client *client,
+ 	return 0;
+ }
+ 
+-static int dme1737_i2c_probe(struct i2c_client *client,
+-			     const struct i2c_device_id *id)
++static const struct i2c_device_id dme1737_id[];
++
++static int dme1737_i2c_probe(struct i2c_client *client)
+ {
+ 	struct dme1737_data *data;
+ 	struct device *dev = &client->dev;
+@@ -2473,7 +2474,7 @@ static int dme1737_i2c_probe(struct i2c_client *client,
+ 		return -ENOMEM;
+ 
+ 	i2c_set_clientdata(client, data);
+-	data->type = id->driver_data;
++	data->type = i2c_match_id(dme1737_id, client)->driver_data;
+ 	data->client = client;
+ 	data->name = client->name;
+ 	mutex_init(&data->update_lock);
+@@ -2529,7 +2530,7 @@ static struct i2c_driver dme1737_i2c_driver = {
+ 	.driver = {
+ 		.name = "dme1737",
+ 	},
+-	.probe = dme1737_i2c_probe,
++	.probe_new = dme1737_i2c_probe,
+ 	.remove = dme1737_i2c_remove,
+ 	.id_table = dme1737_id,
+ 	.detect = dme1737_i2c_detect,
+-- 
+2.25.4
+
