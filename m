@@ -2,171 +2,160 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3131FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3179C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 050FB2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:43:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mpdesouza.com header.i=@mpdesouza.com header.b="eZRxoRgk"
+	by mail.kernel.org (Postfix) with ESMTP id 94C462078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgHUPm4 (ORCPT
+        id S1726847AbgHUPnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:42:56 -0400
-Received: from gateway36.websitewelcome.com ([192.185.197.22]:39655 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728223AbgHUPmv (ORCPT
+        Fri, 21 Aug 2020 11:43:07 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:16614
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728251AbgHUPmy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:42:51 -0400
-X-Greylist: delayed 1505 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Aug 2020 11:42:50 EDT
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id B5C32400F8C9A
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:19:35 -0500 (CDT)
-Received: from br540.hostgator.com.br ([108.179.252.180])
-        by cmsmtp with SMTP
-        id 98RRkhbFLn9FW98RRkJvkx; Fri, 21 Aug 2020 09:54:53 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=mpdesouza.com; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7RQ2hKgl1ruA2bCIsl6ftQlYVMZxZwpcaDvYoUrDx50=; b=eZRxoRgkbHLqOMgEZ42qkSDvDX
-        Q84Xi+NFCE1L8GeeK86Yi/YI8tAASiJ5znZICE9p+nR6IYHv/dQwh3YOu7olXZeBygrMewlguCjlZ
-        hw3wLo0iyqTDXw8N4l7PyDHyR7bLRP0x710MbDnJQy4jliHJB6aXlgZwcNGWdwIGYf5gWUSwFgwM2
-        NibsmONu0HJRUZCkhE95l3f2OelMjJb0wf90suj/uBDoUEp3B08mzWIu7ZyGW0nOZPzBoJtzoAiRN
-        bCz0/x5pAIw7bXUI0EhIsv+ks/yN/w/v4L6nRff4HkZr4Tqkf4j6IzeslWDdkmNbmRW89mm86SKd9
-        bxb4ZmKA==;
-Received: from [191.248.104.145] (port=54152 helo=hephaestus.suse.de)
-        by br540.hostgator.com.br with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <marcos@mpdesouza.com>)
-        id 1k98RQ-001hcI-MA; Fri, 21 Aug 2020 11:54:53 -0300
-From:   Marcos Paulo de Souza <marcos@mpdesouza.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     dsterba@suse.com, linux-btrfs@vger.kernel.org,
-        Marcos Paulo de Souza <mpdesouza@suse.com>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Filipe Manana <fdmanana@suse.com>
-Subject: [PATCH v3] btrfs: block-group: Fix free-space bitmap threshould
-Date:   Fri, 21 Aug 2020 11:54:44 -0300
-Message-Id: <20200821145444.25791-1-marcos@mpdesouza.com>
-X-Mailer: git-send-email 2.28.0
+        Fri, 21 Aug 2020 11:42:54 -0400
+X-IronPort-AV: E=Sophos;i="5.76,337,1592863200"; 
+   d="scan'208";a="356998838"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 17:42:47 +0200
+Date:   Fri, 21 Aug 2020 17:42:47 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Denis Efremov <efremov@linux.com>
+cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
+Subject: Re: [Cocci] [PATCH] coccinelle: api: add kobj_to_dev.cocci script
+In-Reply-To: <20200821153100.434332-1-efremov@linux.com>
+Message-ID: <alpine.DEB.2.22.394.2008211741360.2486@hadrien>
+References: <20200821153100.434332-1-efremov@linux.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br540.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - mpdesouza.com
-X-BWhitelist: no
-X-Source-IP: 191.248.104.145
-X-Source-L: No
-X-Exim-ID: 1k98RQ-001hcI-MA
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (hephaestus.suse.de) [191.248.104.145]:54152
-X-Source-Auth: marcos@mpdesouza.com
-X-Email-Count: 7
-X-Source-Cap: bXBkZXNvNTM7bXBkZXNvNTM7YnI1NDAuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-[BUG]
-After commit 9afc66498a0b ("btrfs: block-group: refactor how we read one
-block group item"), cache->length is being assigned after calling
-btrfs_create_block_group_cache. This causes a problem since
-set_free_space_tree_thresholds is calculate the free-space threshould to
-decide is the free-space tree should convert from extents to bitmaps.
 
-The current code calls set_free_space_tree_thresholds with cache->length
-being 0, which then makes cache->bitmap_high_thresh being zero. This
-implies the system will always use bitmap instead of extents, which is
-not desired if the block group is not fragmented.
+On Fri, 21 Aug 2020, Denis Efremov wrote:
 
-This behavior can be seen by a test that expects to repair systems
-with FREE_SPACE_EXTENT and FREE_SPACE_BITMAP, but the current code only
-created FREE_SPACE_BITMAP.
+> Use kobj_to_dev() instead of container_of().
 
-[FIX]
-Call set_free_space_tree_thresholds after setting cache->length. There
-is now a WARN_ON in set_free_space_tree_thresholds to help preventing
-the same mistake to happen again in the future.
+Thanks for the patch and the example commits.
 
-Link: https://github.com/kdave/btrfs-progs/issues/251
-Fixes: 9afc66498a0b ("btrfs: block-group: refactor how we read one block group item")
-CC: stable@vger.kernel.org # 5.8+
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
----
- Changes from v2:
- * Add a WARN_ON and changed the warn message (Filipe)
- * Add a Reviewed-by tag from Filipe
- Changes from v1:
- * Add warn message (Qu)
- * Add a Reviewed-by tag from Qu
+Could you add
 
- fs/btrfs/block-group.c     | 4 +++-
- fs/btrfs/free-space-tree.c | 4 ++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+symbol kobj;
 
-diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-index 44fdfa2eeb2e..01e8ba1da1d3 100644
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -1798,7 +1798,6 @@ static struct btrfs_block_group *btrfs_create_block_group_cache(
- 
- 	cache->fs_info = fs_info;
- 	cache->full_stripe_len = btrfs_full_stripe_len(fs_info, start);
--	set_free_space_tree_thresholds(cache);
- 
- 	cache->discard_index = BTRFS_DISCARD_INDEX_UNUSED;
- 
-@@ -1908,6 +1907,8 @@ static int read_one_block_group(struct btrfs_fs_info *info,
- 
- 	read_block_group_item(cache, path, key);
- 
-+	set_free_space_tree_thresholds(cache);
-+
- 	if (need_clear) {
- 		/*
- 		 * When we mount with old space cache, we need to
-@@ -2128,6 +2129,7 @@ int btrfs_make_block_group(struct btrfs_trans_handle *trans, u64 bytes_used,
- 		return -ENOMEM;
- 
- 	cache->length = size;
-+	set_free_space_tree_thresholds(cache);
- 	cache->used = bytes_used;
- 	cache->flags = type;
- 	cache->last_byte_to_unpin = (u64)-1;
-diff --git a/fs/btrfs/free-space-tree.c b/fs/btrfs/free-space-tree.c
-index 8b1f5c8897b7..f072c106b82b 100644
---- a/fs/btrfs/free-space-tree.c
-+++ b/fs/btrfs/free-space-tree.c
-@@ -22,6 +22,10 @@ void set_free_space_tree_thresholds(struct btrfs_block_group *cache)
- 	size_t bitmap_size;
- 	u64 num_bitmaps, total_bitmap_size;
- 
-+	if (WARN_ON(cache->length == 0))
-+		btrfs_warn(cache->fs_info, "block group %llu length is zero",
-+						cache->start);
-+
- 	/*
- 	 * We convert to bitmaps when the disk space required for using extents
- 	 * exceeds that required for using bitmaps.
--- 
-2.28.0
+to the first rule?  That's enough to get rid of the question about whether
+kobj should be a metavariable in all cases.
 
+thanks,
+julia
+
+>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+> Examples of such patches:
+> 893c3d82b425 watchdog: Use kobj_to_dev() API
+> 23fd63a44460 hwmon: (nct6683) Replace container_of() with  kobj_to_dev()
+> 224941c9424f power: supply: use kobj_to_dev
+> a9b9b2af40c7 backlight: lm3533_bl: Use kobj_to_dev() instead
+> 0acb47a3a093 qlcnic: Use kobj_to_dev() instead
+> 97cd738c44c8 gpiolib: sysfs: use kobj_to_dev
+> d06f9e6c8960 hwmon: (nct7802) Replace container_of() API
+> 036855a4c3b3 hwmon : (nct6775) Use kobj_to_dev() API
+> baf1d9c18293 driver/base/soc: Use kobj_to_dev() API
+> ae243ef0afbc rtc: sysfs: use kobj_to_dev
+> 6b060d8a09e9 i2c: use kobj_to_dev() API
+> 9e7bd945b9a9 scsi: core: use kobj_to_dev
+> 0d730b57b95f s390/cio: use kobj_to_dev() API
+> 0616ca73fd35 usb: use kobj_to_dev() API
+> 8c9b839c0b80 alpha: use kobj_to_dev()
+> 016c0bbae1d1 netxen: Use kobj_to_dev()
+> 6908b45eafc4 GenWQE: use kobj_to_dev()
+> 85f4f39c80e9 pch_phub: use kobj_to_dev()
+> 47679cde604d misc: c2port: use kobj_to_dev()
+> 85016ff33f35 misc: cxl: use kobj_to_dev()
+> 092462c2b522 misc: eeprom: use kobj_to_dev()
+> a9c9d9aca4e7 zorro: Use kobj_to_dev()
+> a253f1eee6c4 rapidio: use kobj_to_dev()
+> e3837b00b6bb drm/radeon: use kobj_to_dev()
+> cc29ec874b37 drm/amdgpu: use kobj_to_dev()
+> d122cbf1a310 drm/sysfs: use kobj_to_dev()
+> 657fb5fbadb3 drm/i915: use kobj_to_dev()
+> 554a60379aaa PCI: Use kobj_to_dev() instead of open-coding it
+> 2cf83833fc9c HID: use kobj_to_dev()
+> aeb7ed14fe5d bridge: use kobj_to_dev instead of to_dev
+> 8e3829c61b48 staging:iio:adis16220: Use kobj_to_dev instead of open-coding it
+> b0d1f807f340 driver-core: Use kobj_to_dev instead of re-implementing it
+>
+>  scripts/coccinelle/api/kobj_to_dev.cocci | 44 ++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 scripts/coccinelle/api/kobj_to_dev.cocci
+>
+> diff --git a/scripts/coccinelle/api/kobj_to_dev.cocci b/scripts/coccinelle/api/kobj_to_dev.cocci
+> new file mode 100644
+> index 000000000000..e2cdd424aeca
+> --- /dev/null
+> +++ b/scripts/coccinelle/api/kobj_to_dev.cocci
+> @@ -0,0 +1,44 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +///
+> +/// Use kobj_to_dev() instead of container_of()
+> +///
+> +// Confidence: High
+> +// Copyright: (C) 2020 Denis Efremov ISPRAS
+> +// Options: --no-includes --include-headers
+> +//
+> +// Keywords: kobj_to_dev, container_of
+> +//
+> +
+> +virtual context
+> +virtual report
+> +virtual org
+> +virtual patch
+> +
+> +
+> +@r depends on !patch@
+> +expression ptr;
+> +position p;
+> +@@
+> +
+> +* container_of(ptr, struct device, kobj)@p
+> +
+> +
+> +@depends on patch@
+> +expression ptr;
+> +@@
+> +
+> +- container_of(ptr, struct device, kobj)
+> ++ kobj_to_dev(ptr)
+> +
+> +
+> +@script:python depends on report@
+> +p << r.p;
+> +@@
+> +
+> +coccilib.report.print_report(p[0], "WARNING opportunity for kobj_to_dev()")
+> +
+> +@script:python depends on org@
+> +p << r.p;
+> +@@
+> +
+> +coccilib.org.print_todo(p[0], "WARNING opportunity for kobj_to_dev()")
+> --
+> 2.26.2
+>
+> _______________________________________________
+> Cocci mailing list
+> Cocci@systeme.lip6.fr
+> https://systeme.lip6.fr/mailman/listinfo/cocci
+>
