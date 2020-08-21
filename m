@@ -2,128 +2,93 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B648C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0488F20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598034240;
-	bh=nm0r0pbpxpRJlCr3CC7US1gIBXxav1AVjK0LW5D9Tl4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jO2xrezd2v/JqB9gyKIG/wb4mK9gR5LQJnGaFEpFl3vyc/HM/NV2HiIhINkDScYmu
-	 dfAE7irWayovCuumGBlfUbXd9Mge0Vpivtu+JGfWEwNXxXhfUm5lAV4HPW17O98zgH
-	 msUjH7Oe2gt+uN2m9cpBruGgOOlUaVQxyIwABFjw=
+	by mail.kernel.org (Postfix) with ESMTP id 23B4822EBF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgHUSX6 (ORCPT
+        id S1726716AbgHUS2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:23:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgHUSXx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:23:53 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD708C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:23:52 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id i10so2887724ljn.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:23:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vVM0nc5//lK1v8wxZ87XZqkf3LFcyTaix5QpBjQniwc=;
-        b=MbyUwYZQh6bG3SmDnG7jthrAn7nv2nYdSg47RogmQ2pe5tOsy937deWQCL4eR1nwVQ
-         mAVZLGkYereQlthbnwcftr/bl76j4K8MvSUrrPBfJRjTl+GOZM6lqmXlREHoDsF6aN+z
-         4bGtHdAQ3oyu3EN2Nb8pGKFZOCaDXpXo0a7Gg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vVM0nc5//lK1v8wxZ87XZqkf3LFcyTaix5QpBjQniwc=;
-        b=ikSwNQDL3rYDQhaH85TVfIu0QiW0A4f1j6y/Uq64sD7nzE/4C02piOA9mwIwV9HBwO
-         saNw/YOlOWe4XTbAoTJ/LHUXvYog1HdzU+8sxhGZslfKuxqHoQmUG74neNY65ljWWXtw
-         VFlHbS/OLLMhV0Qt2J/e4elAo/sTDLcjj9oeEbnUu2Mn+nKzanxiSdag3gZXlsZn8ykn
-         OqQiEr+OOHVDhqmpD3YETFMuX0mcODN2r+7NCrucSxBKFNK/wo7Lla3viKaqWAx+HIpY
-         Xo2qAihbQU2j59hQN6v03C91KB6pw0ITUnfDfljeHfruPrstX3JXmvgzHJLUJo+XS3dC
-         3ysQ==
-X-Gm-Message-State: AOAM533ZL3NS3b4dY6mUdneCG9u1blqi8QqMCEa4gUsPBI9WiutpRe4R
-        O0D5bcvI4qIyKQMVSb006ObGyWZIhs2tyQ==
-X-Google-Smtp-Source: ABdhPJxDit96n5qHglb9M6PWssY9knLDdVxNC63Hkcc11TBtt3CekhBccIJXxXPaiEDvs+nGb6kJiw==
-X-Received: by 2002:a2e:9842:: with SMTP id e2mr2155786ljj.88.1598034229569;
-        Fri, 21 Aug 2020 11:23:49 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id u5sm523344lfi.91.2020.08.21.11.23.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 11:23:48 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id 185so2863652ljj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:23:47 -0700 (PDT)
-X-Received: by 2002:a2e:92d0:: with SMTP id k16mr1956690ljh.70.1598034227550;
- Fri, 21 Aug 2020 11:23:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHk-=wit7LDr0tA2eVn7yHHEH76oK=Lfm3tTs8_JxO8XEED4_g@mail.gmail.com>
- <CAHk-=wifRg0pDhufQFasWa7G3sMHbG0nahnm5yRwvTKpKU9g4A@mail.gmail.com>
- <20200811214255.GE6353@xz-x1> <CAHk-=wiVN-+P1vOCSMyfGwYQD3hF7A18OJyXgpiMwGDfMaU+8w@mail.gmail.com>
- <20200820215449.GB358043@xz-x1> <CAHk-=wjGzOjsfmX1Dc=yz6o_+62w4wcTVXX_hia9sHLfsCoxjg@mail.gmail.com>
- <20200821101333.GA3432@quack2.suse.cz> <CAHk-=whXfL5DtinS42dgtNu6i+xchK_VP+XLprQbu_og2J5Dkw@mail.gmail.com>
- <20200821154756.GC3432@quack2.suse.cz> <CAHk-=wj-pfzKf3JDe9fr4o_nKYXJXfuYAMFCajwhy0YYYri4Fw@mail.gmail.com>
- <20200821180848.GA11376@xz-x1>
-In-Reply-To: <20200821180848.GA11376@xz-x1>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 21 Aug 2020 11:23:31 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj3fY2dch7Ah-MLbJcfU3buoXgJnwc1zWFSjVujSd39GA@mail.gmail.com>
-Message-ID: <CAHk-=wj3fY2dch7Ah-MLbJcfU3buoXgJnwc1zWFSjVujSd39GA@mail.gmail.com>
-Subject: Re: [PATCH v3] mm/gup: Allow real explicit breaking of COW
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Jan Kara <jack@suse.cz>, Andrea Arcangeli <aarcange@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marty Mcfadden <mcfadden8@llnl.gov>,
-        "Maya B . Gokhale" <gokhale2@llnl.gov>,
-        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 21 Aug 2020 14:28:39 -0400
+Received: from mga05.intel.com ([192.55.52.43]:19170 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgHUS2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 14:28:30 -0400
+IronPort-SDR: DMsWvog6fm0FUBSWQDni6eB4AgNJp7wFwXwFZhG5FaU/147HEOth2Dycyp9dDuD6gU8pdxznfm
+ K/76hBkATaBg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="240431692"
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="240431692"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 11:25:25 -0700
+IronPort-SDR: GQ6rC2WZaG3VkXyiNLl+Lsii5jmmhwvHQAMfHFcA5pUozCZbiqM2WLGvzcnRr0X5rDuYLJ2jLO
+ PD22isfgKE5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="337723367"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga007.jf.intel.com with ESMTP; 21 Aug 2020 11:25:24 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Borislav Petkov" <bp@alien8.de>, "Ingo Molnar" <mingo@redhat.com>,
+        "Tony Luck" <tony.luck@intel.com>,
+        "Reinette Chatre" <reinette.chatre@intel.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>,
+        "Babu Moger" <babu.moger@amd.com>
+Cc:     "x86" <x86@kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v2 0/2] x86/resctrl: Enable user to view thread or core throttling mode
+Date:   Fri, 21 Aug 2020 11:25:15 -0700
+Message-Id: <1598034317-122771-1-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 11:08 AM Peter Xu <peterx@redhat.com> wrote:
->
-> IIUC, Jan wanted to point out the fact that KSM didn't increase page count for
-> stable pages (reasons are above get_ksm_page()).
+This series enumerates Memory Bandwidth Allocation (MBA) per-thread
+feature and introduces a new resctrl file "thread_throttle_mode".
+The file shows either "per-thread" on newer systems that implement the MBA
+per-thread feature or "max" on other systems that allocate maximum
+throttling per-core.
 
-Ouch.
+Details about the feature can be found in the commit description and
+in Chapter 9 of the most recent Intel ISE available from
+https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
 
-> Do we still at least need to check the swap count if PageSwapCache(page)?
+This series replaces the original MBA thread throttling patch series
+found at
+https://lore.kernel.org/lkml/cover.1592841671.git.reinette.chatre@intel.com/
 
-No. Because a PageSwapCache() page should be a perfectly normal page
-cache thing. It will increment the page count if it's active.
+This is a simplified version of the previous series that skips the
+min/max mode and just provides the per-core vs. per-thread indicator.
 
-That PageKsm() thing that *doesn't* increment the page could does look
-worrisome, but
+Change Log:
+v2:
+- Rename "arch_throttle_mode" to "throttle_mode" and
+  "rdtgroup_rftype_by_name()" to "rdtgroup_rftype_get_by_name()" (Boris).
 
-> So we check page_count() (which covers KSM or normal pages) after we've got the
-> page lock, while we keep all the rest.
+Fenghua Yu (2):
+  x86/resctrl: Enumerate per-thread MBA
+  x86/resctrl: Enable user to view thread or core throttling mode
 
-Why would we keep the rest? I
+ Documentation/x86/resctrl_ui.rst       | 18 ++++++++-
+ arch/x86/include/asm/cpufeatures.h     |  1 +
+ arch/x86/kernel/cpu/cpuid-deps.c       |  1 +
+ arch/x86/kernel/cpu/resctrl/core.c     | 11 ++++++
+ arch/x86/kernel/cpu/resctrl/internal.h | 30 ++++++++++++---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 53 +++++++++++++++++++++++++-
+ arch/x86/kernel/cpu/scattered.c        |  1 +
+ 7 files changed, 106 insertions(+), 9 deletions(-)
 
-The actual thing I would really want to get rid of is the page lock,
-in fact. We shouldn't need it in this path, and it's the most
-expensive part of it all. But that's also why I did the page count
-test optimistically unlocked - because if page_count is 1, then we
-really shouldn't contend with anything else, so hopefully the
-(currently quite expensive) page locking is actually a non-issue once
-you get there.
+-- 
+2.19.1
 
-But the PageKsm() page_count() issue I didn't even realize. That worries me.
-
-                Linus
