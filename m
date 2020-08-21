@@ -2,129 +2,131 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB40C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42404C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E934207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:35:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SDgorumr"
+	by mail.kernel.org (Postfix) with ESMTP id 16DC220724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598027731;
+	bh=iwp4jh51/E3gWoJfH52vilAywRZ+X4+JsCcBlPWWAU4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bhsS6NYenREn+gJ1Cme5vJR8gbJc+ZAQQBRiqvYxS0JElG0m9TYLpEnqPt/Pwhaer
+	 aFl3LjtD2J+J3O1S8EuX7cB4A5DbGT5oK/sz56zoTmrXK+0HKavs5rZjfTCLY8l4jA
+	 UaNhFir4jCJRS0HH9IdZwHbJKe6tdmZdckw66HnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgHUQfB (ORCPT
+        id S1728450AbgHUQf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:35:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42870 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726809AbgHUQd3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:33:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598027601;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=71SIGIW8765UhVrcPeIzz5zqD/0d0YwU7JAOQ+5WuGI=;
-        b=SDgorumrUkaPFP5Brf8UPMG2f4cpJNYAGl32rYaJlsz/RzDTPVy2I2NPUPVVIsi/wzudRU
-        7y8U3x8Y/R8wQz2cz+OxnXNlO8K53YYunNcOQTbZlCZkhyq7+lcl8yYVLAoayLETfzjDeo
-        5H7On6d+DCeH4Bl+hfJfohgKeD/uYvQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-w4fSooo0OPSM6XZNNgiiDQ-1; Fri, 21 Aug 2020 12:33:17 -0400
-X-MC-Unique: w4fSooo0OPSM6XZNNgiiDQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 21 Aug 2020 12:35:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728446AbgHUQVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:21:25 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A75128799EF;
-        Fri, 21 Aug 2020 16:33:13 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.15])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7E8FF10013C4;
-        Fri, 21 Aug 2020 16:33:02 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 21 Aug 2020 18:33:13 +0200 (CEST)
-Date:   Fri, 21 Aug 2020 18:33:01 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Tim Murray <timmurray@google.com>, mingo@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com,
-        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
-        adobriyan@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de,
-        John Johansen <john.johansen@canonical.com>,
-        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-Message-ID: <20200821163300.GB19445@redhat.com>
-References: <20200820133454.ch24kewh42ax4ebl@wittgenstein>
- <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
- <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
- <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
- <87k0xtv0d4.fsf@x220.int.ebiederm.org>
- <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
- <20200820162645.GP5033@dhcp22.suse.cz>
- <87r1s0txxe.fsf@x220.int.ebiederm.org>
- <20200821111558.GG4546@redhat.com>
- <CAJuCfpF_GhTy5SCjxqyqTFUrJNaw3UGJzCi=WSCXfqPAcbThYg@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id F0A0E22D6D;
+        Fri, 21 Aug 2020 16:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598026827;
+        bh=iwp4jh51/E3gWoJfH52vilAywRZ+X4+JsCcBlPWWAU4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zXqq03CI1t093E4SQE18A5r5K+2ox18IYlAlbWEE7j+Z0JkNXM1m4YhCQzf6Sg8sB
+         zVTA7WwrwzKXH8ZtGpAP658ABHaw6nl8lGz+tdU7V7nQtyARNtiExulkEKxtDVEpxY
+         XWpxOJXjVBFAQZUqCFWzegubf6Jbwne045mqTUp4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 10/22] drm/amdgpu/display: fix ref count leak when pm_runtime_get_sync fails
+Date:   Fri, 21 Aug 2020 12:20:02 -0400
+Message-Id: <20200821162014.349506-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821162014.349506-1-sashal@kernel.org>
+References: <20200821162014.349506-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJuCfpF_GhTy5SCjxqyqTFUrJNaw3UGJzCi=WSCXfqPAcbThYg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/21, Suren Baghdasaryan wrote:
->
-> On Fri, Aug 21, 2020 at 4:16 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> >         bool probably_has_other_mm_users(tsk)
-> >         {
-> >                 return  atomic_read_acquire(&tsk->mm->mm_users) >
-> >                         atomic_read(&tsk->signal->live);
-> >         }
-> >
-> > The barrier implied by _acquire ensures that if we race with the exiting
-> > task and see the result of exit_mm()->mmput(mm), then we must also see
-> > the result of atomic_dec_and_test(signal->live).
-> >
-> > Either way, if we want to fix the race with clone(CLONE_VM) we need other
-> > changes.
->
-> The way I understand this condition in __set_oom_adj() sync logic is
-> that we would be ok with false positives (when we loop unnecessarily)
-> but we can't tolerate false negatives (when oom_score_adj gets out of
-> sync).
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-Yes,
+[ Upstream commit f79f94765f8c39db0b7dec1d335ab046aac03f20 ]
 
-> With the clone(CLONE_VM) race not addressed we are allowing
-> false negatives and IMHO that's not acceptable because it creates a
-> possibility for userspace to get an inconsistent picture. When
-> developing the patch I did think about using (p->mm->mm_users >
-> p->signal->nr_threads) condition and had to reject it due to that
-> reason.
+The call to pm_runtime_get_sync increments the counter even in case of
+failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-Not sure I understand... I mean, the test_bit(MMF_PROC_SHARED) you propose
-is equally racy and we need copy_oom_score() at the end of copy_process()
-either way?
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-Oleg.
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+index 1f0e6ede120c4..1b3fda2331bee 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+@@ -734,8 +734,10 @@ amdgpu_connector_lvds_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (encoder) {
+@@ -863,8 +865,10 @@ amdgpu_connector_vga_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	encoder = amdgpu_connector_best_single_encoder(connector);
+@@ -986,8 +990,10 @@ amdgpu_connector_dvi_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
+@@ -1360,8 +1366,10 @@ amdgpu_connector_dp_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
+-- 
+2.25.1
 
