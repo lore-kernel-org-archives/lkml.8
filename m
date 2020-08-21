@@ -2,1230 +2,196 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D10C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2290C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 040EE207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9853207C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2l+WY3W"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ZQSRSQz7";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="hh4r1hjV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgHUWUg (ORCPT
+        id S1727123AbgHUWVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:20:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbgHUWT7 (ORCPT
+        Fri, 21 Aug 2020 18:21:12 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:5554 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726747AbgHUWVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:19:59 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 254DBC061573;
-        Fri, 21 Aug 2020 15:19:59 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id u21so3629076ejz.0;
-        Fri, 21 Aug 2020 15:19:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kWYvl8CL+VMO+CAThG/bxJJ1OgcVUR94PwgbCjmr5s0=;
-        b=R2l+WY3Wx8ckUTEnpoyykPRBLm19xweeS+P9xafvJKXYXGZdIRGVCksNCJm8S8aX1H
-         2OH4LAPzIMso7epVyBFeE0ua2sdw/TVodaoAXGtlliNR+YzZW0uKHyjw0T+BaShiSbze
-         V+jKw3MIN4DW2C/4Jpho68Opcl1L961r63Qsj3dN9IgtfJKWWdypo7h8jutd46jq8T15
-         pTwQilhx38402v0TARpidTsG63JFrH8jaizhDam3txqVIet+Hu/15sFI1qPHeQw0eTn0
-         uviuR8bnyA5JGHz+TBhAVjvPoWDjdUN8rDAzazHVQd/4yzNZHHFSe0qL2J62t45wSK7x
-         FQsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kWYvl8CL+VMO+CAThG/bxJJ1OgcVUR94PwgbCjmr5s0=;
-        b=WKHi/zcVgEkSh7WmKCMD/LnliGBsE/g4//+yMMW7qNnr0EDMrhEnFSV4UIlp/b0iOr
-         Yzz+Tj6xGo/PxkWyir/BD6Pb8vt2015HDyOF2sSLj+Ns5wgqY/SeiOf6zUyro1b41hiR
-         p3MVXZZErCQ+OktebpVkoc0DX4Gkn+plzJaU1n2JzDAOrsvhtOSDa3b36OSvMFNLS2HI
-         SIHhbB168pj2eXiYcWXqyuEyCEG97z2jGj4amQcQCMrXb01O9Gig9uIIU8aRcb68AnLp
-         2U5l+nwz+LIbQhgWkFaKnWeAj01HDPukagUV/fh3wy0TgaHBd64a8nqQISckKGJTCTHx
-         lHGg==
-X-Gm-Message-State: AOAM532Jiadl+xyHw3RYQLRamv+qXQka6k2RRgyzBQE0HNUpCpvBmkzb
-        30bkI7d+sEXMsK5AQzWlBeRzXYh61ZnKCA==
-X-Google-Smtp-Source: ABdhPJysVlAfznvwRHFDvIhyeszG/j/iie6/qMI3avVlugCf8fs4n0VuEUrRFLZt1Nho59SPiRNKbA==
-X-Received: by 2002:a17:906:35db:: with SMTP id p27mr3553406ejb.257.1598048397608;
-        Fri, 21 Aug 2020 15:19:57 -0700 (PDT)
-Received: from localhost.localdomain ([188.24.159.61])
-        by smtp.gmail.com with ESMTPSA id p23sm1780147edm.31.2020.08.21.15.19.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 15:19:57 -0700 (PDT)
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v2 2/6] mfd: Add MFD driver for ATC260x PMICs
-Date:   Sat, 22 Aug 2020 01:19:48 +0300
-Message-Id: <7705c965d82a21571f93f38aeabbd3bcb3d23bac.1598043782.git.cristian.ciocaltea@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
-References: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
+        Fri, 21 Aug 2020 18:21:11 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LMKCNE025616;
+        Fri, 21 Aug 2020 15:20:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=zHC3Xgo17oOVTix6IMnPw8W65mLrTZxQUIxPE2i9VDk=;
+ b=ZQSRSQz7DZ6Yd9/2uEZL0w4oj8Gt79LCHoCBIryrR/HmR335kl27xJYaFe2XrIEIVN1Y
+ 66r9Ke/wOFI5GGcLShV4oOFJkJvFQMdLrv7g+w5X2cxt7DBhkzEYjVu0SMbbzkbrNlOg
+ c3cXvSSrky5ym8lmAEHiBHsWWml/oHEjBLw= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 3318g0wm2a-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 21 Aug 2020 15:20:49 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 21 Aug 2020 15:20:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KQ9AGscsYrRBwKoWaPTE3P5Z5U1jUAw0XvYgSdxXA6NFtcysGWdf6huiTblR+7A3v5eiTLT+7XeJmN4x10TzZiR3lVWkH3NvwfCVVcc41eNEiQAXdn9XUekD1CraVDqXQcTTNpanJ5JV//g+KYW1iJU1QzadpFN4WK1H9k5UNs5OLx8LkAriXlXpmbbFr4tfFZDD17x51+HaYQcYeBp8rCKTT/kmSn1YyZbp/4iDAv/CybE5srTo0PyotgsHDyoe1sYyoZ/VJe2y/JZVUeugJOzjW20YSIXoF8TuMGZ5Y1cESCcRz9bQp1/Rcyr21RvuqD6O9GXn7VkoMTH6u2VE5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zHC3Xgo17oOVTix6IMnPw8W65mLrTZxQUIxPE2i9VDk=;
+ b=FII+uajdaZn7j6fga5CcECO/2SvMoGPivFkI/qhAotKq6nW6cs9z0leNC+cKpVnt7TNgom3xVv5lg5S/DaTXJxt5so14z5dxCmHy7SlHtYQZAqRRt8YwtIjd3sYSsBhcbgJWT9taZhxdI9kgfEmZkwOddWiaQ3eyo9YVozchM53kTelORTntZ4grQPu0p0hkH1B65TW+XeKtUmS2VZ4mmUPgfdC+du/T8qKhmrtaEgivuHjPjSZbqG2IMPOwrqu1bOziusr2WNnMSVAyLKip1aSJdPlqBbimv6xPgedSxH5TjeKG402nSaOV+r7kiY/wc87RL4z5QexwpLHwWHxxag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zHC3Xgo17oOVTix6IMnPw8W65mLrTZxQUIxPE2i9VDk=;
+ b=hh4r1hjVKgziB47x7TweO++8Z4Ey0FYtScr9OWaxlWSoW/J/unelQIP/7ISa4sdZ8GAJzaUNfiVdsTMjaJMOe3iY0lLZU2SjphDTwss98Wv1dP5wdlTXMa08Kt/v0E98DflNgVYrTPPCVSlOAW6H8UT9OjCTx0+e6S8qO2pTj50=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
+Received: from SN6PR1501MB4141.namprd15.prod.outlook.com
+ (2603:10b6:805:e3::14) by SA0PR15MB3952.namprd15.prod.outlook.com
+ (2603:10b6:806:8d::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Fri, 21 Aug
+ 2020 22:20:45 +0000
+Received: from SN6PR1501MB4141.namprd15.prod.outlook.com
+ ([fe80::e1a8:24c:73df:fe9a]) by SN6PR1501MB4141.namprd15.prod.outlook.com
+ ([fe80::e1a8:24c:73df:fe9a%7]) with mapi id 15.20.3305.026; Fri, 21 Aug 2020
+ 22:20:45 +0000
+Date:   Fri, 21 Aug 2020 15:20:36 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     <bpf@vger.kernel.org>
+CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>
+Subject: Re: [PATCH bpf-next v4 00/30] bpf: switch to memcg-based memory
+ accounting
+Message-ID: <20200821222036.GB2250889@carbon.dhcp.thefacebook.com>
+References: <20200821150134.2581465-1-guro@fb.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
+X-ClientProxiedBy: BYAPR05CA0005.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::18) To SN6PR1501MB4141.namprd15.prod.outlook.com
+ (2603:10b6:805:e3::14)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by BYAPR05CA0005.namprd05.prod.outlook.com (2603:10b6:a03:c0::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.10 via Frontend Transport; Fri, 21 Aug 2020 22:20:44 +0000
+X-Originating-IP: [2620:10d:c090:400::5:1692]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7aa0062b-1e4f-4d8a-5d3f-08d8462072a7
+X-MS-TrafficTypeDiagnostic: SA0PR15MB3952:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA0PR15MB39523EADEEFEDB1C0ED3C9EABE5B0@SA0PR15MB3952.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vmHsZuAbYe4ZlMcfix4L/GhKK8fHS3KjtqGzJBxQhFaupw1/hbFNurcPLck4ecv2vuEheh/nfFvAcpdyHOHBQZCvq+JgbrW9iOBcTYtvkLykmiB1IjQ28OVylrlxXHgqUCLrP2Eo19FzbTLELj6yyjafH9/KWNwr1raJh3B+x8YwMnzjV9YoBgUtCnHjMyzxlM/uHpYwSugI6bqXuNHyf0ERSV6WyPYV9NZzcPePIbj/He2DQSX254m9LMAuSY4yD9rQlADCFBfFC98H80v/xTmZQxjuMvDl3x+7MeWHZU25Ruq5B3ntP2jQ241JlIKODEhrbKCdkretpW0r/gMWP9uBrsSgdTt8CjX99XMV/GMhjroOapJSqFwed5LcDn41
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR1501MB4141.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(39860400002)(366004)(396003)(136003)(8936002)(5660300002)(6666004)(6916009)(2906002)(16576012)(956004)(8676002)(86362001)(33656002)(316002)(83380400001)(186003)(15650500001)(54906003)(1076003)(6486002)(110011004)(66946007)(478600001)(66476007)(9686003)(66556008)(52116002)(4326008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 2ElhtghiJT7yhr/AAIUtK1QMMnMy/iDeTHOvPfdjhFrNA8ykDxvm/BYxvDOdE0DkPAsUug/NFLMwDQrr3JcsiBi/3XYtNzxy8MHSVjfyP0VihH4+8i3l4LaOQojSSfm218lnEorE/pC/dqh0+CS6sh177SVndfRVYLEeghR5kQs6EHSzknDqTYX4BMC8TiUL+odExLpZ2MEPF8PQ8p/KU/J7/J+wwc3r4VYWGEhggo5GBPIc3hZoA9FStJRIUF9z5Bj8foOfbvZxcDP5O0rPe3jzAehOSCldA4XxO4FgIGA7X/Q0CXcuzICTCdBukRH+/H8ylmuNf4MgX5VuwPZXXzR8H5LsvzkLyG7/9/0ZWlv8sUFEgKQ1RnCAtDyPAFzI7x+Ez2FaTzYdiJ9e6Pt+4UAoz5xqx/41hMcbJ5yZQlc9uOXRwIFnunlA0VCzKjDnf+K2lUPvFYknATg7YVheYJnCZ6R/0veCJA8TeGIpmatH2HZb73Ynzq+qWRk3+8rhUMZf7WKvpoIpdwOyiInx2PZh75xk4y+qMLm9CHCyPt+AI8TYxzQqafrYQ1eqjdlzjFCQtKWZE4Xg3SURAcfnqWUl09eBQsDxXRGDPM/WDIFdse4vcDqqv1CuFbK/u+QlGzBc0VCsMAq/Nlgl10x4UF5nRd0iK8dmkR4HAfhPiV8=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7aa0062b-1e4f-4d8a-5d3f-08d8462072a7
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR1501MB4141.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 22:20:45.2102
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eOoQ+Kr9Hj3nvjifzy67jv7Fy/emA20JurwXqF1ZhiU8fAosZVOT3hfh6PZ5dkdc
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR15MB3952
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_10:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0 spamscore=0
+ lowpriorityscore=0 clxscore=1015 bulkscore=0 priorityscore=1501
+ mlxlogscore=736 suspectscore=34 mlxscore=0 adultscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210208
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add initial MFD driver for Actions Semi ATC260x PMICs. ATC260x series
-PMICs integrates Audio Codec, Power management, Clock generation and
-GPIO controller blocks.
+On Fri, Aug 21, 2020 at 08:01:04AM -0700, Roman Gushchin wrote:
+> Currently bpf is using the memlock rlimit for the memory accounting.
+> This approach has its downsides and over time has created a significant
+> amount of problems:
+> 
+> 1) The limit is per-user, but because most bpf operations are performed
+>    as root, the limit has a little value.
+> 
+> 2) It's hard to come up with a specific maximum value. Especially because
+>    the counter is shared with non-bpf users (e.g. memlock() users).
+>    Any specific value is either too low and creates false failures
+>    or too high and useless.
+> 
+> 3) Charging is not connected to the actual memory allocation. Bpf code
+>    should manually calculate the estimated cost and precharge the counter,
+>    and then take care of uncharging, including all fail paths.
+>    It adds to the code complexity and makes it easy to leak a charge.
+> 
+> 4) There is no simple way of getting the current value of the counter.
+>    We've used drgn for it, but it's far from being convenient.
+> 
+> 5) Cryptic -EPERM is returned on exceeding the limit. Libbpf even had
+>    a function to "explain" this case for users.
+> 
+> In order to overcome these problems let's switch to the memcg-based
+> memory accounting of bpf objects. With the recent addition of the percpu
+> memory accounting, now it's possible to provide a comprehensive accounting
+> of the memory used by bpf programs and maps.
+> 
+> This approach has the following advantages:
+> 1) The limit is per-cgroup and hierarchical. It's way more flexible and allows
+>    a better control over memory usage by different workloads. Of course, it
+>    requires enabled cgroups and kernel memory accounting and properly configured
+>    cgroup tree, but it's a default configuration for a modern Linux system.
+> 
+> 2) The actual memory consumption is taken into account. It happens automatically
+>    on the allocation time if __GFP_ACCOUNT flags is passed. Uncharging is also
+>    performed automatically on releasing the memory. So the code on the bpf side
+>    becomes simpler and safer.
+> 
+> 3) There is a simple way to get the current value and statistics.
+> 
+> In general, if a process performs a bpf operation (e.g. creates or updates
+> a map), it's memory cgroup is charged. However map updates performed from
+> an interrupt context are charged to the memory cgroup which contained
+> the process, which created the map.
+> 
+> Providing a 1:1 replacement for the rlimit-based memory accounting is
+> a non-goal of this patchset. Users and memory cgroups are completely
+> orthogonal, so it's not possible even in theory.
+> Memcg-based memory accounting requires a properly configured cgroup tree
+> to be actually useful. However, it's the way how the memory is managed
+> on a modern Linux system.
+> 
+> 
+> The patchset consists of the following parts:
+> 1) an auxiliary patch by Johanness, which adds an ability to charge
+>    a custom memory cgroup from an interrupt context
+> 2) memcg-based accounting for various bpf objects: progs and maps
+> 3) removal of the rlimit-based accounting
+> 4) removal of rlimit adjustments in userspace samples
 
-For the moment this driver only supports Regulator, Poweroff and Onkey
-functionalities for the ATC2603C and ATC2609A chip variants.
+As a note, I've resent the first patch from the series as a standalone
+patch to linux-mm@, because a similar change is required by other non-related
+patchset. This should avoid further merge conflicts.
 
-Since the PMICs can be accessed using both I2C and SPI buses, the
-following driver structure has been adopted:
+I did some renamings in the patch, so v5 of this patchset is expected.
+Please, don't merge v4. Feedback is highly appreciated though.
 
-           -----> atc260x-core.c (Implements core functionalities)
-          /
-ATC260x --------> atc260x-i2c.c (Implements I2C interface)
-          \
-           -----> atc260x-spi.c (Implements SPI interface - TODO)
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-[cristian: add ATC2603C variant, poweroff and onkey features, rework]
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
----
- drivers/mfd/Kconfig                  |  18 ++
- drivers/mfd/Makefile                 |   3 +
- drivers/mfd/atc260x-core.c           | 290 +++++++++++++++++++++++++
- drivers/mfd/atc260x-i2c.c            |  73 +++++++
- include/linux/mfd/atc260x/atc2603c.h | 281 ++++++++++++++++++++++++
- include/linux/mfd/atc260x/atc2609a.h | 308 +++++++++++++++++++++++++++
- include/linux/mfd/atc260x/core.h     |  86 ++++++++
- 7 files changed, 1059 insertions(+)
- create mode 100644 drivers/mfd/atc260x-core.c
- create mode 100644 drivers/mfd/atc260x-i2c.c
- create mode 100644 include/linux/mfd/atc260x/atc2603c.h
- create mode 100644 include/linux/mfd/atc260x/atc2609a.h
- create mode 100644 include/linux/mfd/atc260x/core.h
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 33df0837ab41..49cc3c2b46ad 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -2041,6 +2041,24 @@ config MFD_WCD934X
- 	  This driver provides common support WCD934x audio codec and its
- 	  associated Pin Controller, Soundwire Controller and Audio codec.
- 
-+config MFD_ATC260X
-+	tristate
-+	select MFD_CORE
-+	select REGMAP
-+	select REGMAP_IRQ
-+
-+config MFD_ATC260X_I2C
-+	tristate "Actions Semi ATC260x PMICs with I2C"
-+	select MFD_ATC260X
-+	select REGMAP_I2C
-+	depends on I2C
-+	help
-+	  Support for the Actions Semi ATC260x PMICs controlled via I2C.
-+
-+	  This driver provides common support for accessing the ATC2603C
-+	  and ATC2609A chip variants, additional drivers must be enabled
-+	  in order to use the functionality of the device.
-+
- config MFD_KHADAS_MCU
- 	tristate "Support for Khadas System control Microcontroller"
- 	depends on I2C
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index a60e5f835283..508e104b6393 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -264,3 +264,6 @@ obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
- obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
- 
- obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
-+
-+obj-$(CONFIG_MFD_ATC260X)	+= atc260x-core.o
-+obj-$(CONFIG_MFD_ATC260X_I2C)	+= atc260x-i2c.o
-diff --git a/drivers/mfd/atc260x-core.c b/drivers/mfd/atc260x-core.c
-new file mode 100644
-index 000000000000..1c63beda64cd
---- /dev/null
-+++ b/drivers/mfd/atc260x-core.c
-@@ -0,0 +1,290 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Core MFD support for ATC260x PMICs
-+ *
-+ * Copyright (C) 2019 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ * Copyright (C) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/mfd/atc260x/core.h>
-+#include <linux/mfd/core.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+
-+static void regmap_lock_mutex(void *__mutex)
-+{
-+	struct mutex *mutex = __mutex;
-+
-+	/*
-+	 * Using regmap within an atomic context (e.g. accessing a PMIC when
-+	 * powering system down) is normally allowed only if the regmap type
-+	 * is MMIO and the regcache type is either REGCACHE_NONE or
-+	 * REGCACHE_FLAT. For slow buses like I2C and SPI, the regmap is
-+	 * internally protected by a mutex which is acquired non-atomically.
-+	 *
-+	 * Let's improve this by using a customized locking scheme inspired
-+	 * from I2C atomic transfer. See i2c_in_atomic_xfer_mode() for a
-+	 * starting point.
-+	 */
-+	if (system_state > SYSTEM_RUNNING && irqs_disabled())
-+		mutex_trylock(mutex);
-+	else
-+		mutex_lock(mutex);
-+}
-+
-+static void regmap_unlock_mutex(void *__mutex)
-+{
-+	struct mutex *mutex = __mutex;
-+
-+	mutex_unlock(mutex);
-+}
-+
-+static const struct regmap_config atc2603c_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 16,
-+	.max_register = ATC2603C_SADDR,
-+	.cache_type = REGCACHE_NONE,
-+};
-+
-+static const struct regmap_config atc2609a_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 16,
-+	.max_register = ATC2609A_SADDR,
-+	.cache_type = REGCACHE_NONE,
-+};
-+
-+static const struct regmap_irq atc2603c_regmap_irqs[] = {
-+	REGMAP_IRQ_REG(ATC2603C_IRQ_AUDIO,	0, ATC2603C_INTS_MSK_AUDIO),
-+	REGMAP_IRQ_REG(ATC2603C_IRQ_OV,		0, ATC2603C_INTS_MSK_OV),
-+	REGMAP_IRQ_REG(ATC2603C_IRQ_OC,		0, ATC2603C_INTS_MSK_OC),
-+	REGMAP_IRQ_REG(ATC2603C_IRQ_OT,		0, ATC2603C_INTS_MSK_OT),
-+	REGMAP_IRQ_REG(ATC2603C_IRQ_UV,		0, ATC2603C_INTS_MSK_UV),
-+	REGMAP_IRQ_REG(ATC2603C_IRQ_ALARM,	0, ATC2603C_INTS_MSK_ALARM),
-+	REGMAP_IRQ_REG(ATC2603C_IRQ_ONOFF,	0, ATC2603C_INTS_MSK_ONOFF),
-+	REGMAP_IRQ_REG(ATC2603C_IRQ_SGPIO,	0, ATC2603C_INTS_MSK_SGPIO),
-+	REGMAP_IRQ_REG(ATC2603C_IRQ_IR,		0, ATC2603C_INTS_MSK_IR),
-+	REGMAP_IRQ_REG(ATC2603C_IRQ_REMCON,	0, ATC2603C_INTS_MSK_REMCON),
-+	REGMAP_IRQ_REG(ATC2603C_IRQ_POWER_IN,	0, ATC2603C_INTS_MSK_POWERIN),
-+};
-+
-+static const struct regmap_irq atc2609a_regmap_irqs[] = {
-+	REGMAP_IRQ_REG(ATC2609A_IRQ_AUDIO,	0, ATC2609A_INTS_MSK_AUDIO),
-+	REGMAP_IRQ_REG(ATC2609A_IRQ_OV,		0, ATC2609A_INTS_MSK_OV),
-+	REGMAP_IRQ_REG(ATC2609A_IRQ_OC,		0, ATC2609A_INTS_MSK_OC),
-+	REGMAP_IRQ_REG(ATC2609A_IRQ_OT,		0, ATC2609A_INTS_MSK_OT),
-+	REGMAP_IRQ_REG(ATC2609A_IRQ_UV,		0, ATC2609A_INTS_MSK_UV),
-+	REGMAP_IRQ_REG(ATC2609A_IRQ_ALARM,	0, ATC2609A_INTS_MSK_ALARM),
-+	REGMAP_IRQ_REG(ATC2609A_IRQ_ONOFF,	0, ATC2609A_INTS_MSK_ONOFF),
-+	REGMAP_IRQ_REG(ATC2609A_IRQ_WKUP,	0, ATC2609A_INTS_MSK_WKUP),
-+	REGMAP_IRQ_REG(ATC2609A_IRQ_IR,		0, ATC2609A_INTS_MSK_IR),
-+	REGMAP_IRQ_REG(ATC2609A_IRQ_REMCON,	0, ATC2609A_INTS_MSK_REMCON),
-+	REGMAP_IRQ_REG(ATC2609A_IRQ_POWER_IN,	0, ATC2609A_INTS_MSK_POWERIN),
-+};
-+
-+static const struct regmap_irq_chip atc2603c_regmap_irq_chip = {
-+	.name = "atc2603c",
-+	.irqs = atc2603c_regmap_irqs,
-+	.num_irqs = ARRAY_SIZE(atc2603c_regmap_irqs),
-+	.num_regs = 1,
-+	.status_base = ATC2603C_INTS_PD,
-+	.mask_base = ATC2603C_INTS_MSK,
-+	.mask_invert = true,
-+};
-+
-+static const struct regmap_irq_chip atc2609a_regmap_irq_chip = {
-+	.name = "atc2609a",
-+	.irqs = atc2609a_regmap_irqs,
-+	.num_irqs = ARRAY_SIZE(atc2609a_regmap_irqs),
-+	.num_regs = 1,
-+	.status_base = ATC2609A_INTS_PD,
-+	.mask_base = ATC2609A_INTS_MSK,
-+	.mask_invert = true,
-+};
-+
-+static const struct resource atc2603c_onkey_resources[] = {
-+	DEFINE_RES_IRQ(ATC2603C_IRQ_ONOFF),
-+};
-+
-+static const struct resource atc2609a_onkey_resources[] = {
-+	DEFINE_RES_IRQ(ATC2609A_IRQ_ONOFF),
-+};
-+
-+static const struct mfd_cell atc2603c_mfd_cells[] = {
-+	{
-+		.name = "atc260x-regulator",
-+		.of_compatible = "actions,atc2603c-regulator"
-+	}, {
-+		.name = "atc260x-pwrc",
-+		.of_compatible = "actions,atc2603c-pwrc"
-+	}, {
-+		.name = "atc260x-onkey",
-+		.of_compatible = "actions,atc2603c-onkey",
-+		.num_resources = ARRAY_SIZE(atc2603c_onkey_resources),
-+		.resources = atc2603c_onkey_resources,
-+	},
-+};
-+
-+static const struct mfd_cell atc2609a_mfd_cells[] = {
-+	{
-+		.name = "atc260x-regulator",
-+		.of_compatible = "actions,atc2609a-regulator"
-+	}, {
-+		.name = "atc260x-pwrc",
-+		.of_compatible = "actions,atc2609a-pwrc"
-+	}, {
-+		.name = "atc260x-onkey",
-+		.of_compatible = "actions,atc2609a-onkey",
-+		.num_resources = ARRAY_SIZE(atc2609a_onkey_resources),
-+		.resources = atc2609a_onkey_resources,
-+	},
-+};
-+
-+static void atc260x_cmu_reset(struct atc260x *atc260x, u32 reg, u8 mask, u32 bit)
-+{
-+	/* Assert reset */
-+	regmap_update_bits(atc260x->regmap, reg, mask, ~bit);
-+
-+	/* De-assert reset */
-+	regmap_update_bits(atc260x->regmap, reg, mask, bit);
-+}
-+
-+static int atc2603c_dev_init(struct atc260x *atc260x)
-+{
-+	/* Initialize interrupt block */
-+	atc260x_cmu_reset(atc260x, ATC2603C_CMU_DEVRST,
-+			  ATC2603C_CMU_DEVRST_INTS, ATC2603C_CMU_DEVRST_INTS);
-+
-+	/* Disable all interrupt sources */
-+	regmap_write(atc260x->regmap, ATC2603C_INTS_MSK, 0);
-+
-+	/* Enable EXTIRQ pad */
-+	return regmap_update_bits(atc260x->regmap, ATC2603C_PAD_EN,
-+				  ATC2603C_PAD_EN_EXTIRQ, ATC2603C_PAD_EN_EXTIRQ);
-+}
-+
-+static int atc2609a_dev_init(struct atc260x *atc260x)
-+{
-+	/* Initialize interrupt block */
-+	atc260x_cmu_reset(atc260x, ATC2609A_CMU_DEVRST,
-+			  ATC2609A_CMU_DEVRST_INTS, ATC2609A_CMU_DEVRST_INTS);
-+
-+	/* Disable all interrupt sources */
-+	regmap_write(atc260x->regmap, ATC2609A_INTS_MSK, 0);
-+
-+	/* Enable EXTIRQ pad */
-+	return regmap_update_bits(atc260x->regmap, ATC2609A_PAD_EN,
-+				  ATC2609A_PAD_EN_EXTIRQ, ATC2609A_PAD_EN_EXTIRQ);
-+}
-+
-+int atc260x_match_device(struct atc260x *atc260x, struct regmap_config *regmap_cfg)
-+{
-+	struct device *dev = atc260x->dev;
-+	const void *of_data;
-+
-+	of_data = of_device_get_match_data(dev);
-+	if (!of_data)
-+		return -ENODEV;
-+
-+	atc260x->ic_type = (unsigned long)of_data;
-+
-+	switch (atc260x->ic_type) {
-+	case ATC2603C:
-+		*regmap_cfg = atc2603c_regmap_config;
-+		atc260x->regmap_irq_chip = &atc2603c_regmap_irq_chip;
-+		atc260x->cells = atc2603c_mfd_cells;
-+		atc260x->nr_cells = ARRAY_SIZE(atc2603c_mfd_cells);
-+		atc260x->type_name = "atc2603c";
-+		atc260x->rev_reg = ATC2603C_CHIP_VER;
-+		atc260x->dev_init = atc2603c_dev_init;
-+		break;
-+	case ATC2609A:
-+		*regmap_cfg = atc2609a_regmap_config;
-+		atc260x->regmap_irq_chip = &atc2609a_regmap_irq_chip;
-+		atc260x->cells = atc2609a_mfd_cells;
-+		atc260x->nr_cells = ARRAY_SIZE(atc2609a_mfd_cells);
-+		atc260x->type_name = "atc2609a";
-+		atc260x->rev_reg = ATC2609A_CHIP_VER;
-+		atc260x->dev_init = atc2609a_dev_init;
-+		break;
-+	default:
-+		dev_err(dev, "Unsupported ATC260x device type: %u\n",
-+			atc260x->ic_type);
-+		return -EINVAL;
-+	}
-+
-+	atc260x->regmap_mutex = devm_kzalloc(dev, sizeof(*atc260x->regmap_mutex),
-+					     GFP_KERNEL);
-+	if (!atc260x->regmap_mutex)
-+		return -ENOMEM;
-+
-+	mutex_init(atc260x->regmap_mutex);
-+
-+	regmap_cfg->lock = regmap_lock_mutex,
-+	regmap_cfg->unlock = regmap_unlock_mutex,
-+	regmap_cfg->lock_arg = atc260x->regmap_mutex;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(atc260x_match_device);
-+
-+int atc260x_device_probe(struct atc260x *atc260x)
-+{
-+	struct device *dev = atc260x->dev;
-+	unsigned int chip_rev;
-+	int ret;
-+
-+	if (!atc260x->irq) {
-+		dev_err(dev, "No interrupt support\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Initialize the hardware */
-+	if (atc260x->dev_init)
-+		atc260x->dev_init(atc260x);
-+
-+	ret = regmap_read(atc260x->regmap, atc260x->rev_reg, &chip_rev);
-+	if (ret) {
-+		dev_err(dev, "Failed to get chip revision\n");
-+		return ret;
-+	}
-+
-+	if (chip_rev < 0 || chip_rev > 31) {
-+		dev_err(dev, "Unknown chip revision: %d\n", ret);
-+		return -EINVAL;
-+	}
-+
-+	atc260x->ic_ver = __ffs(chip_rev + 1U);
-+
-+	dev_info(dev, "Detected chip type %s rev.%c\n",
-+		 atc260x->type_name, 'A' + atc260x->ic_ver);
-+
-+	ret = regmap_add_irq_chip(atc260x->regmap, atc260x->irq, IRQF_ONESHOT, -1,
-+				  atc260x->regmap_irq_chip, &atc260x->irq_data);
-+	if (ret) {
-+		dev_err(dev, "Failed to add IRQ chip: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
-+				   atc260x->cells, atc260x->nr_cells, NULL, 0,
-+				   regmap_irq_get_domain(atc260x->irq_data));
-+	if (ret) {
-+		dev_err(dev, "Failed to add child devices: %d\n", ret);
-+		regmap_del_irq_chip(atc260x->irq, atc260x->irq_data);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(atc260x_device_probe);
-+
-+int atc260x_device_remove(struct atc260x *atc260x)
-+{
-+	mfd_remove_devices(atc260x->dev);
-+	regmap_del_irq_chip(atc260x->irq, atc260x->irq_data);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(atc260x_device_remove);
-diff --git a/drivers/mfd/atc260x-i2c.c b/drivers/mfd/atc260x-i2c.c
-new file mode 100644
-index 000000000000..9795be35dc22
---- /dev/null
-+++ b/drivers/mfd/atc260x-i2c.c
-@@ -0,0 +1,73 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * I2C bus interface for ATC260x PMICs
-+ *
-+ * Copyright (C) 2019 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ * Copyright (C) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/mfd/atc260x/core.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
-+
-+static int atc260x_i2c_probe(struct i2c_client *client,
-+			     const struct i2c_device_id *id)
-+{
-+	struct atc260x *atc260x;
-+	struct regmap_config regmap_cfg;
-+	int ret;
-+
-+	atc260x = devm_kzalloc(&client->dev, sizeof(*atc260x), GFP_KERNEL);
-+	if (!atc260x)
-+		return -ENOMEM;
-+
-+	atc260x->dev = &client->dev;
-+	atc260x->irq = client->irq;
-+
-+	ret = atc260x_match_device(atc260x, &regmap_cfg);
-+	if (ret)
-+		return ret;
-+
-+	i2c_set_clientdata(client, atc260x);
-+
-+	atc260x->regmap = devm_regmap_init_i2c(client, &regmap_cfg);
-+	if (IS_ERR(atc260x->regmap)) {
-+		ret = PTR_ERR(atc260x->regmap);
-+		dev_err(&client->dev, "failed to init regmap: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return atc260x_device_probe(atc260x);
-+}
-+
-+static int atc260x_i2c_remove(struct i2c_client *client)
-+{
-+	struct atc260x *atc260x = i2c_get_clientdata(client);
-+
-+	return atc260x_device_remove(atc260x);
-+}
-+
-+const struct of_device_id atc260x_i2c_of_match[] = {
-+	{ .compatible = "actions,atc2603c", .data = (void *)ATC2603C },
-+	{ .compatible = "actions,atc2609a", .data = (void *)ATC2609A },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(i2c, atc260x_i2c_of_match);
-+
-+static struct i2c_driver atc260x_i2c_driver = {
-+	.driver = {
-+		.name	= "atc260x",
-+		.of_match_table	= of_match_ptr(atc260x_i2c_of_match),
-+	},
-+	.probe		= atc260x_i2c_probe,
-+	.remove		= atc260x_i2c_remove,
-+};
-+
-+module_i2c_driver(atc260x_i2c_driver);
-+
-+MODULE_DESCRIPTION("ATC260x PMICs I2C bus interface");
-+MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>");
-+MODULE_AUTHOR("Cristian Ciocaltea <cristian.ciocaltea@gmail.com>");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/atc260x/atc2603c.h b/include/linux/mfd/atc260x/atc2603c.h
-new file mode 100644
-index 000000000000..07ac640ef3e1
---- /dev/null
-+++ b/include/linux/mfd/atc260x/atc2603c.h
-@@ -0,0 +1,281 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * ATC2603C PMIC register definitions
-+ *
-+ * Copyright (C) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-+ */
-+
-+#ifndef __LINUX_MFD_ATC260X_ATC2603C_H
-+#define __LINUX_MFD_ATC260X_ATC2603C_H
-+
-+enum atc2603c_irq_def {
-+	ATC2603C_IRQ_AUDIO = 0,
-+	ATC2603C_IRQ_OV,
-+	ATC2603C_IRQ_OC,
-+	ATC2603C_IRQ_OT,
-+	ATC2603C_IRQ_UV,
-+	ATC2603C_IRQ_ALARM,
-+	ATC2603C_IRQ_ONOFF,
-+	ATC2603C_IRQ_SGPIO,
-+	ATC2603C_IRQ_IR,
-+	ATC2603C_IRQ_REMCON,
-+	ATC2603C_IRQ_POWER_IN,
-+};
-+
-+/* PMU Registers */
-+#define ATC2603C_PMU_SYS_CTL0			0x00
-+#define ATC2603C_PMU_SYS_CTL1			0x01
-+#define ATC2603C_PMU_SYS_CTL2			0x02
-+#define ATC2603C_PMU_SYS_CTL3			0x03
-+#define ATC2603C_PMU_SYS_CTL4			0x04
-+#define ATC2603C_PMU_SYS_CTL5			0x05
-+#define ATC2603C_PMU_SYS_CTL6			0x06
-+#define ATC2603C_PMU_SYS_CTL7			0x07
-+#define ATC2603C_PMU_SYS_CTL8			0x08
-+#define ATC2603C_PMU_SYS_CTL9			0x09
-+#define ATC2603C_PMU_BAT_CTL0			0x0A
-+#define ATC2603C_PMU_BAT_CTL1			0x0B
-+#define ATC2603C_PMU_VBUS_CTL0			0x0C
-+#define ATC2603C_PMU_VBUS_CTL1			0x0D
-+#define ATC2603C_PMU_WALL_CTL0			0x0E
-+#define ATC2603C_PMU_WALL_CTL1			0x0F
-+#define ATC2603C_PMU_SYS_PENDING		0x10
-+#define ATC2603C_PMU_DC1_CTL0			0x11
-+#define ATC2603C_PMU_DC1_CTL1			0x12 // Undocumented
-+#define ATC2603C_PMU_DC1_CTL2			0x13 // Undocumented
-+#define ATC2603C_PMU_DC2_CTL0			0x14
-+#define ATC2603C_PMU_DC2_CTL1			0x15 // Undocumented
-+#define ATC2603C_PMU_DC2_CTL2			0x16 // Undocumented
-+#define ATC2603C_PMU_DC3_CTL0			0x17
-+#define ATC2603C_PMU_DC3_CTL1			0x18 // Undocumented
-+#define ATC2603C_PMU_DC3_CTL2			0x19 // Undocumented
-+#define ATC2603C_PMU_DC4_CTL0			0x1A // Undocumented
-+#define ATC2603C_PMU_DC4_CTL1			0x1B // Undocumented
-+#define ATC2603C_PMU_DC5_CTL0			0x1C // Undocumented
-+#define ATC2603C_PMU_DC5_CTL1			0x1D // Undocumented
-+#define ATC2603C_PMU_LDO1_CTL			0x1E
-+#define ATC2603C_PMU_LDO2_CTL			0x1F
-+#define ATC2603C_PMU_LDO3_CTL			0x20
-+#define ATC2603C_PMU_LDO4_CTL			0x21 // Undocumented
-+#define ATC2603C_PMU_LDO5_CTL			0x22
-+#define ATC2603C_PMU_LDO6_CTL			0x23
-+#define ATC2603C_PMU_LDO7_CTL			0x24
-+#define ATC2603C_PMU_LDO8_CTL			0x25 // Undocumented
-+#define ATC2603C_PMU_LDO9_CTL			0x26 // Undocumented
-+#define ATC2603C_PMU_LDO10_CTL			0x27 // Undocumented
-+#define ATC2603C_PMU_LDO11_CTL			0x28
-+#define ATC2603C_PMU_SWITCH_CTL			0x29
-+#define ATC2603C_PMU_OV_CTL0			0x2A
-+#define ATC2603C_PMU_OV_CTL1			0x2B
-+#define ATC2603C_PMU_OV_STATUS			0x2C
-+#define ATC2603C_PMU_OV_EN			0x2D
-+#define ATC2603C_PMU_OV_INT_EN			0x2E
-+#define ATC2603C_PMU_OC_CTL			0x2F
-+#define ATC2603C_PMU_OC_STATUS			0x30
-+#define ATC2603C_PMU_OC_EN			0x31
-+#define ATC2603C_PMU_OC_INT_EN			0x32
-+#define ATC2603C_PMU_UV_CTL0			0x33
-+#define ATC2603C_PMU_UV_CTL1			0x34
-+#define ATC2603C_PMU_UV_STATUS			0x35
-+#define ATC2603C_PMU_UV_EN			0x36
-+#define ATC2603C_PMU_UV_INT_EN			0x37
-+#define ATC2603C_PMU_OT_CTL			0x38
-+#define ATC2603C_PMU_CHARGER_CTL0		0x39
-+#define ATC2603C_PMU_CHARGER_CTL1		0x3A
-+#define ATC2603C_PMU_CHARGER_CTL2		0x3B
-+#define ATC2603C_PMU_BAKCHARGER_CTL		0x3C // Undocumented
-+#define ATC2603C_PMU_APDS_CTL			0x3D
-+#define ATC2603C_PMU_AUXADC_CTL0		0x3E
-+#define ATC2603C_PMU_AUXADC_CTL1		0x3F
-+#define ATC2603C_PMU_BATVADC			0x40
-+#define ATC2603C_PMU_BATIADC			0x41
-+#define ATC2603C_PMU_WALLVADC			0x42
-+#define ATC2603C_PMU_WALLIADC			0x43
-+#define ATC2603C_PMU_VBUSVADC			0x44
-+#define ATC2603C_PMU_VBUSIADC			0x45
-+#define ATC2603C_PMU_SYSPWRADC			0x46
-+#define ATC2603C_PMU_REMCONADC			0x47
-+#define ATC2603C_PMU_SVCCADC			0x48
-+#define ATC2603C_PMU_CHGIADC			0x49
-+#define ATC2603C_PMU_IREFADC			0x4A
-+#define ATC2603C_PMU_BAKBATADC			0x4B
-+#define ATC2603C_PMU_ICTEMPADC			0x4C
-+#define ATC2603C_PMU_AUXADC0			0x4D
-+#define ATC2603C_PMU_AUXADC1			0x4E
-+#define ATC2603C_PMU_AUXADC2			0x4F
-+#define	ATC2603C_PMU_ICMADC			0x50
-+#define ATC2603C_PMU_BDG_CTL			0x51 // Undocumented
-+#define ATC2603C_RTC_CTL			0x52
-+#define ATC2603C_RTC_MSALM			0x53
-+#define ATC2603C_RTC_HALM			0x54
-+#define ATC2603C_RTC_YMDALM			0x55
-+#define ATC2603C_RTC_MS				0x56
-+#define ATC2603C_RTC_H				0x57
-+#define ATC2603C_RTC_DC				0x58
-+#define ATC2603C_RTC_YMD			0x59
-+#define ATC2603C_EFUSE_DAT			0x5A // Undocumented
-+#define ATC2603C_EFUSECRTL1			0x5B // Undocumented
-+#define ATC2603C_EFUSECRTL2			0x5C // Undocumented
-+#define ATC2603C_PMU_FW_USE0			0x5D // Undocumented
-+#define ATC2603C_PMU_FW_USE1			0x5E // Undocumented
-+#define ATC2603C_PMU_FW_USE2			0x5F // Undocumented
-+#define ATC2603C_PMU_FW_USE3			0x60 // Undocumented
-+#define ATC2603C_PMU_FW_USE4			0x61 // Undocumented
-+#define ATC2603C_PMU_ABNORMAL_STATUS		0x62
-+#define ATC2603C_PMU_WALL_APDS_CTL		0x63
-+#define ATC2603C_PMU_REMCON_CTL0		0x64
-+#define ATC2603C_PMU_REMCON_CTL1		0x65
-+#define ATC2603C_PMU_MUX_CTL0			0x66
-+#define ATC2603C_PMU_SGPIO_CTL0			0x67
-+#define ATC2603C_PMU_SGPIO_CTL1			0x68
-+#define ATC2603C_PMU_SGPIO_CTL2			0x69
-+#define ATC2603C_PMU_SGPIO_CTL3			0x6A
-+#define ATC2603C_PMU_SGPIO_CTL4			0x6B
-+#define ATC2603C_PWMCLK_CTL			0x6C
-+#define ATC2603C_PWM0_CTL			0x6D
-+#define ATC2603C_PWM1_CTL			0x6E
-+#define ATC2603C_PMU_ADC_DBG0			0x70
-+#define ATC2603C_PMU_ADC_DBG1			0x71
-+#define ATC2603C_PMU_ADC_DBG2			0x72
-+#define ATC2603C_PMU_ADC_DBG3			0x73
-+#define ATC2603C_PMU_ADC_DBG4			0x74
-+#define ATC2603C_IRC_CTL			0x80
-+#define ATC2603C_IRC_STAT			0x81
-+#define ATC2603C_IRC_CC				0x82
-+#define ATC2603C_IRC_KDC			0x83
-+#define ATC2603C_IRC_WK				0x84
-+#define ATC2603C_IRC_RCC			0x85
-+#define ATC2603C_IRC_FILTER			0x86
-+
-+/* AUDIO_OUT Registers */
-+#define ATC2603C_AUDIOINOUT_CTL			0xA0
-+#define ATC2603C_AUDIO_DEBUGOUTCTL		0xA1
-+#define ATC2603C_DAC_DIGITALCTL			0xA2
-+#define ATC2603C_DAC_VOLUMECTL0			0xA3
-+#define ATC2603C_DAC_ANALOG0			0xA4
-+#define ATC2603C_DAC_ANALOG1			0xA5
-+#define ATC2603C_DAC_ANALOG2			0xA6
-+#define ATC2603C_DAC_ANALOG3			0xA7
-+
-+/* AUDIO_IN Registers */
-+#define ATC2603C_ADC_DIGITALCTL			0xA8
-+#define ATC2603C_ADC_HPFCTL			0xA9
-+#define ATC2603C_ADC_CTL			0xAA
-+#define ATC2603C_AGC_CTL0			0xAB
-+#define ATC2603C_AGC_CTL1			0xAC // Undocumented
-+#define ATC2603C_AGC_CTL2			0xAD
-+#define ATC2603C_ADC_ANALOG0			0xAE
-+#define ATC2603C_ADC_ANALOG1			0xAF
-+
-+/* PCM_IF Registers */
-+#define ATC2603C_PCM0_CTL			0xB0 // Undocumented
-+#define ATC2603C_PCM1_CTL			0xB1 // Undocumented
-+#define ATC2603C_PCM2_CTL			0xB2 // Undocumented
-+#define ATC2603C_PCMIF_CTL			0xB3 // Undocumented
-+
-+/* CMU_CONTROL Registers */
-+#define ATC2603C_CMU_DEVRST			0xC1 // Undocumented
-+
-+/* INTS Registers */
-+#define ATC2603C_INTS_PD			0xC8
-+#define ATC2603C_INTS_MSK			0xC9
-+
-+/* MFP Registers */
-+#define ATC2603C_MFP_CTL			0xD0
-+#define ATC2603C_PAD_VSEL			0xD1 // Undocumented
-+#define ATC2603C_GPIO_OUTEN			0xD2
-+#define ATC2603C_GPIO_INEN			0xD3
-+#define ATC2603C_GPIO_DAT			0xD4
-+#define ATC2603C_PAD_DRV			0xD5
-+#define ATC2603C_PAD_EN				0xD6
-+#define ATC2603C_DEBUG_SEL			0xD7 // Undocumented
-+#define ATC2603C_DEBUG_IE			0xD8 // Undocumented
-+#define ATC2603C_DEBUG_OE			0xD9 // Undocumented
-+#define ATC2603C_BIST_START			0x0A // Undocumented
-+#define ATC2603C_BIST_RESULT			0x0B // Undocumented
-+#define ATC2603C_CHIP_VER			0xDC
-+
-+/* TWSI Registers */
-+#define ATC2603C_SADDR				0xFF
-+
-+/* PMU_SYS_CTL0 Register Mask Bits */
-+#define ATC2603C_PMU_SYS_CTL0_IR_WK_EN			BIT(5)
-+#define ATC2603C_PMU_SYS_CTL0_RESET_WK_EN		BIT(6)
-+#define ATC2603C_PMU_SYS_CTL0_HDSW_WK_EN		BIT(7)
-+#define ATC2603C_PMU_SYS_CTL0_ALARM_WK_EN		BIT(8)
-+#define ATC2603C_PMU_SYS_CTL0_REM_CON_WK_EN		BIT(9)
-+#define ATC2603C_PMU_SYS_CTL0_RESTART_EN		BIT(10)
-+#define ATC2603C_PMU_SYS_CTL0_SGPIOIRQ_WK_EN		BIT(11)
-+#define ATC2603C_PMU_SYS_CTL0_ONOFF_SHORT_WK_EN		BIT(12)
-+#define ATC2603C_PMU_SYS_CTL0_ONOFF_LONG_WK_EN		BIT(13)
-+#define ATC2603C_PMU_SYS_CTL0_WALL_WK_EN		BIT(14)
-+#define ATC2603C_PMU_SYS_CTL0_USB_WK_EN			BIT(15)
-+#define ATC2603C_PMU_SYS_CTL0_WK_ALL			(GENMASK(15, 5) & (~BIT(10)))
-+
-+/* PMU_SYS_CTL1 Register Mask Bits */
-+#define ATC2603C_PMU_SYS_CTL1_EN_S1			BIT(0)
-+#define ATC2603C_PMU_SYS_CTL1_LB_S4_EN			BIT(2)
-+#define ATC2603C_PMU_SYS_CTL1_LB_S4			GENMASK(4, 3)
-+#define ATC2603C_PMU_SYS_CTL1_LB_S4_3_1V		BIT(4)
-+#define ATC2603C_PMU_SYS_CTL1_IR_WK_FLAG		BIT(5)
-+#define ATC2603C_PMU_SYS_CTL1_RESET_WK_FLAG		BIT(6)
-+#define ATC2603C_PMU_SYS_CTL1_HDSW_WK_FLAG		BIT(7)
-+#define ATC2603C_PMU_SYS_CTL1_ALARM_WK_FLAG		BIT(8)
-+#define ATC2603C_PMU_SYS_CTL1_REM_CON_WK_FLAG		BIT(9)
-+#define ATC2603C_PMU_SYS_CTL1_ONOFF_PRESS_RESET_IRQ_PD	BIT(10)
-+#define ATC2603C_PMU_SYS_CTL1_SGPIOIRQ_WK_FLAG		BIT(11)
-+#define ATC2603C_PMU_SYS_CTL1_ONOFF_SHORT_WK_FLAG	BIT(12)
-+#define ATC2603C_PMU_SYS_CTL1_ONOFF_LONG_WK_FLAG	BIT(13)
-+#define ATC2603C_PMU_SYS_CTL1_WALL_WK_FLAG		BIT(14)
-+#define ATC2603C_PMU_SYS_CTL1_USB_WK_FLAG		BIT(15)
-+
-+/* PMU_SYS_CTL2 Register Mask Bits */
-+#define ATC2603C_PMU_SYS_CTL2_PMU_A_EN			BIT(0)
-+#define ATC2603C_PMU_SYS_CTL2_ONOFF_PRESS_INT_EN	BIT(1)
-+#define ATC2603C_PMU_SYS_CTL2_ONOFF_PRESS_PD		BIT(2)
-+#define ATC2603C_PMU_SYS_CTL2_S2TIMER			GENMASK(5, 3)
-+#define ATC2603C_PMU_SYS_CTL2_S2_TIMER_EN		BIT(6)
-+#define ATC2603C_PMU_SYS_CTL2_ONOFF_RESET_TIME_SEL	GENMASK(8, 7)
-+#define ATC2603C_PMU_SYS_CTL2_ONOFF_PRESS_RESET_EN	BIT(9)
-+#define ATC2603C_PMU_SYS_CTL2_ONOFF_PRESS_TIME		GENMASK(11, 10)
-+#define ATC2603C_PMU_SYS_CTL2_ONOFF_INT_EN		BIT(12)
-+#define ATC2603C_PMU_SYS_CTL2_ONOFF_LONG_PRESS		BIT(13)
-+#define ATC2603C_PMU_SYS_CTL2_ONOFF_SHORT_PRESS		BIT(14)
-+#define ATC2603C_PMU_SYS_CTL2_ONOFF_PRESS		BIT(15)
-+
-+/* PMU_SYS_CTL3 Register Mask Bits */
-+#define ATC2603C_PMU_SYS_CTL3_S2S3TOS1_TIMER		GENMASK(8, 7)
-+#define ATC2603C_PMU_SYS_CTL3_S2S3TOS1_TIMER_EN		BIT(9)
-+#define ATC2603C_PMU_SYS_CTL3_S3_TIMER			GENMASK(12, 10)
-+#define ATC2603C_PMU_SYS_CTL3_S3_TIMER_EN		BIT(13)
-+#define ATC2603C_PMU_SYS_CTL3_EN_S3			BIT(14)
-+#define ATC2603C_PMU_SYS_CTL3_EN_S2			BIT(15)
-+
-+/* PMU_SYS_CTL5 Register Mask Bits */
-+#define ATC2603C_PMU_SYS_CTL5_WALLWKDTEN		BIT(7)
-+#define ATC2603C_PMU_SYS_CTL5_VBUSWKDTEN		BIT(8)
-+#define ATC2603C_PMU_SYS_CTL5_REMCON_DECT_EN		BIT(9)
-+#define ATC2603C_PMU_SYS_CTL5_ONOFF_8S_SEL		BIT(10)
-+
-+/* INTS_MSK Register Mask Bits */
-+#define ATC2603C_INTS_MSK_AUDIO				BIT(0)
-+#define ATC2603C_INTS_MSK_OV				BIT(1)
-+#define ATC2603C_INTS_MSK_OC				BIT(2)
-+#define ATC2603C_INTS_MSK_OT				BIT(3)
-+#define ATC2603C_INTS_MSK_UV				BIT(4)
-+#define ATC2603C_INTS_MSK_ALARM				BIT(5)
-+#define ATC2603C_INTS_MSK_ONOFF				BIT(6)
-+#define ATC2603C_INTS_MSK_SGPIO				BIT(7)
-+#define ATC2603C_INTS_MSK_IR				BIT(8)
-+#define ATC2603C_INTS_MSK_REMCON			BIT(9)
-+#define ATC2603C_INTS_MSK_POWERIN			BIT(10)
-+
-+/* CMU_DEVRST Register Mask Bits */
-+#define ATC2603C_CMU_DEVRST_MFP				BIT(1)
-+#define ATC2603C_CMU_DEVRST_INTS			BIT(2)
-+#define ATC2603C_CMU_DEVRST_AUDIO			BIT(4)
-+
-+/* PAD_EN Register Mask Bits */
-+#define ATC2603C_PAD_EN_EXTIRQ				BIT(0)
-+
-+#endif /* __LINUX_MFD_ATC260X_ATC2603C_H */
-diff --git a/include/linux/mfd/atc260x/atc2609a.h b/include/linux/mfd/atc260x/atc2609a.h
-new file mode 100644
-index 000000000000..b957d7bd73e9
---- /dev/null
-+++ b/include/linux/mfd/atc260x/atc2609a.h
-@@ -0,0 +1,308 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * ATC2609A PMIC register definitions
-+ *
-+ * Copyright (C) 2019 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ */
-+
-+#ifndef __LINUX_MFD_ATC260X_ATC2609A_H
-+#define __LINUX_MFD_ATC260X_ATC2609A_H
-+
-+enum atc2609a_irq_def {
-+	ATC2609A_IRQ_AUDIO = 0,
-+	ATC2609A_IRQ_OV,
-+	ATC2609A_IRQ_OC,
-+	ATC2609A_IRQ_OT,
-+	ATC2609A_IRQ_UV,
-+	ATC2609A_IRQ_ALARM,
-+	ATC2609A_IRQ_ONOFF,
-+	ATC2609A_IRQ_WKUP,
-+	ATC2609A_IRQ_IR,
-+	ATC2609A_IRQ_REMCON,
-+	ATC2609A_IRQ_POWER_IN,
-+};
-+
-+/* PMU Registers */
-+#define ATC2609A_PMU_SYS_CTL0			0x00
-+#define ATC2609A_PMU_SYS_CTL1			0x01
-+#define ATC2609A_PMU_SYS_CTL2			0x02
-+#define ATC2609A_PMU_SYS_CTL3			0x03
-+#define ATC2609A_PMU_SYS_CTL4			0x04
-+#define ATC2609A_PMU_SYS_CTL5			0x05
-+#define ATC2609A_PMU_SYS_CTL6			0x06
-+#define ATC2609A_PMU_SYS_CTL7			0x07
-+#define ATC2609A_PMU_SYS_CTL8			0x08
-+#define ATC2609A_PMU_SYS_CTL9			0x09
-+#define ATC2609A_PMU_BAT_CTL0			0x0A
-+#define ATC2609A_PMU_BAT_CTL1			0x0B
-+#define ATC2609A_PMU_VBUS_CTL0			0x0C
-+#define ATC2609A_PMU_VBUS_CTL1			0x0D
-+#define ATC2609A_PMU_WALL_CTL0			0x0E
-+#define ATC2609A_PMU_WALL_CTL1			0x0F
-+#define ATC2609A_PMU_SYS_PENDING		0x10
-+#define ATC2609A_PMU_APDS_CTL0			0x11
-+#define ATC2609A_PMU_APDS_CTL1			0x12
-+#define ATC2609A_PMU_APDS_CTL2			0x13
-+#define ATC2609A_PMU_CHARGER_CTL		0x14
-+#define ATC2609A_PMU_BAKCHARGER_CTL		0x15
-+#define ATC2609A_PMU_SWCHG_CTL0			0x16
-+#define ATC2609A_PMU_SWCHG_CTL1			0x17
-+#define ATC2609A_PMU_SWCHG_CTL2			0x18
-+#define ATC2609A_PMU_SWCHG_CTL3			0x19
-+#define ATC2609A_PMU_SWCHG_CTL4			0x1A
-+#define ATC2609A_PMU_DC_OSC			0x1B
-+#define ATC2609A_PMU_DC0_CTL0			0x1C
-+#define ATC2609A_PMU_DC0_CTL1			0x1D
-+#define ATC2609A_PMU_DC0_CTL2			0x1E
-+#define ATC2609A_PMU_DC0_CTL3			0x1F
-+#define ATC2609A_PMU_DC0_CTL4			0x20
-+#define ATC2609A_PMU_DC0_CTL5			0x21
-+#define ATC2609A_PMU_DC0_CTL6			0x22
-+#define ATC2609A_PMU_DC1_CTL0			0x23
-+#define ATC2609A_PMU_DC1_CTL1			0x24
-+#define ATC2609A_PMU_DC1_CTL2			0x25
-+#define ATC2609A_PMU_DC1_CTL3			0x26
-+#define ATC2609A_PMU_DC1_CTL4			0x27
-+#define ATC2609A_PMU_DC1_CTL5			0x28
-+#define ATC2609A_PMU_DC1_CTL6			0x29
-+#define ATC2609A_PMU_DC2_CTL0			0x2A
-+#define ATC2609A_PMU_DC2_CTL1			0x2B
-+#define ATC2609A_PMU_DC2_CTL2			0x2C
-+#define ATC2609A_PMU_DC2_CTL3			0x2D
-+#define ATC2609A_PMU_DC2_CTL4			0x2E
-+#define ATC2609A_PMU_DC2_CTL5			0x2F
-+#define ATC2609A_PMU_DC2_CTL6			0x30
-+#define ATC2609A_PMU_DC3_CTL0			0x31
-+#define ATC2609A_PMU_DC3_CTL1			0x32
-+#define ATC2609A_PMU_DC3_CTL2			0x33
-+#define ATC2609A_PMU_DC3_CTL3			0x34
-+#define ATC2609A_PMU_DC3_CTL4			0x35
-+#define ATC2609A_PMU_DC3_CTL5			0x36
-+#define ATC2609A_PMU_DC3_CTL6			0x37
-+#define ATC2609A_PMU_DC_ZR			0x38
-+#define ATC2609A_PMU_LDO0_CTL0			0x39
-+#define ATC2609A_PMU_LDO0_CTL1			0x3A
-+#define ATC2609A_PMU_LDO1_CTL0			0x3B
-+#define ATC2609A_PMU_LDO1_CTL1			0x3C
-+#define ATC2609A_PMU_LDO2_CTL0			0x3D
-+#define ATC2609A_PMU_LDO2_CTL1			0x3E
-+#define ATC2609A_PMU_LDO3_CTL0			0x3F
-+#define ATC2609A_PMU_LDO3_CTL1			0x40
-+#define ATC2609A_PMU_LDO4_CTL0			0x41
-+#define ATC2609A_PMU_LDO4_CTL1			0x42
-+#define ATC2609A_PMU_LDO5_CTL0			0x43
-+#define ATC2609A_PMU_LDO5_CTL1			0x44
-+#define ATC2609A_PMU_LDO6_CTL0			0x45
-+#define ATC2609A_PMU_LDO6_CTL1			0x46
-+#define ATC2609A_PMU_LDO7_CTL0			0x47
-+#define ATC2609A_PMU_LDO7_CTL1			0x48
-+#define ATC2609A_PMU_LDO8_CTL0			0x49
-+#define ATC2609A_PMU_LDO8_CTL1			0x4A
-+#define ATC2609A_PMU_LDO9_CTL			0x4B
-+#define ATC2609A_PMU_OV_INT_EN			0x4C
-+#define ATC2609A_PMU_OV_STATUS			0x4D
-+#define ATC2609A_PMU_UV_INT_EN			0x4E
-+#define ATC2609A_PMU_UV_STATUS			0x4F
-+#define ATC2609A_PMU_OC_INT_EN			0x50
-+#define ATC2609A_PMU_OC_STATUS			0x51
-+#define ATC2609A_PMU_OT_CTL			0x52
-+#define ATC2609A_PMU_CM_CTL0			0x53
-+#define ATC2609A_PMU_FW_USE0			0x54
-+#define ATC2609A_PMU_FW_USE1			0x55
-+#define ATC2609A_PMU_ADC12B_I			0x56
-+#define ATC2609A_PMU_ADC12B_V			0x57
-+#define ATC2609A_PMU_ADC12B_DUMMY		0x58
-+#define ATC2609A_PMU_AUXADC_CTL0		0x59
-+#define ATC2609A_PMU_AUXADC_CTL1		0x5A
-+#define ATC2609A_PMU_BATVADC			0x5B
-+#define ATC2609A_PMU_BATIADC			0x5C
-+#define ATC2609A_PMU_WALLVADC			0x5D
-+#define ATC2609A_PMU_WALLIADC			0x5E
-+#define ATC2609A_PMU_VBUSVADC			0x5F
-+#define ATC2609A_PMU_VBUSIADC			0x60
-+#define ATC2609A_PMU_SYSPWRADC			0x61
-+#define ATC2609A_PMU_REMCONADC			0x62
-+#define ATC2609A_PMU_SVCCADC			0x63
-+#define ATC2609A_PMU_CHGIADC			0x64
-+#define ATC2609A_PMU_IREFADC			0x65
-+#define ATC2609A_PMU_BAKBATADC			0x66
-+#define ATC2609A_PMU_ICTEMPADC			0x67
-+#define ATC2609A_PMU_AUXADC0			0x68
-+#define ATC2609A_PMU_AUXADC1			0x69
-+#define ATC2609A_PMU_AUXADC2			0x6A
-+#define ATC2609A_PMU_AUXADC3			0x6B
-+#define ATC2609A_PMU_ICTEMPADC_ADJ		0x6C
-+#define ATC2609A_PMU_BDG_CTL			0x6D
-+#define ATC2609A_RTC_CTL			0x6E
-+#define ATC2609A_RTC_MSALM			0x6F
-+#define ATC2609A_RTC_HALM			0x70
-+#define ATC2609A_RTC_YMDALM			0x71
-+#define ATC2609A_RTC_MS				0x72
-+#define ATC2609A_RTC_H				0x73
-+#define ATC2609A_RTC_DC				0x74
-+#define ATC2609A_RTC_YMD			0x75
-+#define ATC2609A_EFUSE_DAT			0x76
-+#define ATC2609A_EFUSECRTL1			0x77
-+#define ATC2609A_EFUSECRTL2			0x78
-+#define ATC2609A_PMU_DC4_CTL0			0x79
-+#define ATC2609A_PMU_DC4_CTL1			0x7A
-+#define ATC2609A_PMU_DC4_CTL2			0x7B
-+#define ATC2609A_PMU_DC4_CTL3			0x7C
-+#define ATC2609A_PMU_DC4_CTL4			0x7D
-+#define ATC2609A_PMU_DC4_CTL5			0x7E
-+#define ATC2609A_PMU_DC4_CTL6			0x7F
-+#define ATC2609A_PMU_PWR_STATUS			0x80
-+#define ATC2609A_PMU_S2_PWR			0x81
-+#define ATC2609A_CLMT_CTL0			0x82
-+#define ATC2609A_CLMT_DATA0			0x83
-+#define ATC2609A_CLMT_DATA1			0x84
-+#define ATC2609A_CLMT_DATA2			0x85
-+#define ATC2609A_CLMT_DATA3			0x86
-+#define ATC2609A_CLMT_ADD0			0x87
-+#define ATC2609A_CLMT_ADD1			0x88
-+#define ATC2609A_CLMT_OCV_TABLE			0x89
-+#define ATC2609A_CLMT_R_TABLE			0x8A
-+#define ATC2609A_PMU_PWRON_CTL0			0x8D
-+#define ATC2609A_PMU_PWRON_CTL1			0x8E
-+#define ATC2609A_PMU_PWRON_CTL2			0x8F
-+#define ATC2609A_IRC_CTL			0x90
-+#define ATC2609A_IRC_STAT			0x91
-+#define ATC2609A_IRC_CC				0x92
-+#define ATC2609A_IRC_KDC			0x93
-+#define ATC2609A_IRC_WK				0x94
-+#define ATC2609A_IRC_RCC			0x95
-+
-+/* AUDIO_OUT Registers */
-+#define ATC2609A_AUDIOINOUT_CTL			0xA0
-+#define ATC2609A_AUDIO_DEBUGOUTCTL		0xA1
-+#define ATC2609A_DAC_DIGITALCTL			0xA2
-+#define ATC2609A_DAC_VOLUMECTL0			0xA3
-+#define ATC2609A_DAC_ANALOG0			0xA4
-+#define ATC2609A_DAC_ANALOG1			0xA5
-+#define ATC2609A_DAC_ANALOG2			0xA6
-+#define ATC2609A_DAC_ANALOG3			0xA7
-+
-+/* AUDIO_IN Registers */
-+#define ATC2609A_ADC_DIGITALCTL			0xA8
-+#define ATC2609A_ADC_HPFCTL			0xA9
-+#define ATC2609A_ADC_CTL			0xAA
-+#define ATC2609A_AGC_CTL0			0xAB
-+#define ATC2609A_AGC_CTL1			0xAC
-+#define ATC2609A_AGC_CTL2			0xAD
-+#define ATC2609A_ADC_ANALOG0			0xAE
-+#define ATC2609A_ADC_ANALOG1			0xAF
-+
-+/* PCM_IF Registers */
-+#define ATC2609A_PCM0_CTL			0xB0
-+#define ATC2609A_PCM1_CTL			0xB1
-+#define ATC2609A_PCM2_CTL			0xB2
-+#define ATC2609A_PCMIF_CTL			0xB3
-+
-+/* CMU_CONTROL Registers */
-+#define ATC2609A_CMU_DEVRST			0xC1
-+
-+/* INTS Registers */
-+#define ATC2609A_INTS_PD			0xC8
-+#define ATC2609A_INTS_MSK			0xC9
-+
-+/* MFP Registers */
-+#define ATC2609A_MFP_CTL			0xD0
-+#define ATC2609A_PAD_VSEL			0xD1
-+#define ATC2609A_GPIO_OUTEN			0xD2
-+#define ATC2609A_GPIO_INEN			0xD3
-+#define ATC2609A_GPIO_DAT			0xD4
-+#define ATC2609A_PAD_DRV			0xD5
-+#define ATC2609A_PAD_EN				0xD6
-+#define ATC2609A_DEBUG_SEL			0xD7
-+#define ATC2609A_DEBUG_IE			0xD8
-+#define ATC2609A_DEBUG_OE			0xD9
-+#define ATC2609A_CHIP_VER			0xDC
-+
-+/* PWSI Registers */
-+#define ATC2609A_PWSI_CTL			0xF0
-+#define ATC2609A_PWSI_STATUS			0xF1
-+
-+/* TWSI Registers */
-+#define ATC2609A_SADDR				0xFF
-+
-+/* PMU_SYS_CTL0 Register Mask Bits */
-+#define ATC2609A_PMU_SYS_CTL0_IR_WK_EN			BIT(5)
-+#define ATC2609A_PMU_SYS_CTL0_RESET_WK_EN		BIT(6)
-+#define ATC2609A_PMU_SYS_CTL0_HDSW_WK_EN		BIT(7)
-+#define ATC2609A_PMU_SYS_CTL0_ALARM_WK_EN		BIT(8)
-+#define ATC2609A_PMU_SYS_CTL0_REM_CON_WK_EN		BIT(9)
-+#define ATC2609A_PMU_SYS_CTL0_RESTART_EN		BIT(10)
-+#define ATC2609A_PMU_SYS_CTL0_WKIRQ_WK_EN		BIT(11)
-+#define ATC2609A_PMU_SYS_CTL0_ONOFF_SHORT_WK_EN		BIT(12)
-+#define ATC2609A_PMU_SYS_CTL0_ONOFF_LONG_WK_EN		BIT(13)
-+#define ATC2609A_PMU_SYS_CTL0_WALL_WK_EN		BIT(14)
-+#define ATC2609A_PMU_SYS_CTL0_USB_WK_EN			BIT(15)
-+#define ATC2609A_PMU_SYS_CTL0_WK_ALL			(GENMASK(15, 5) & (~BIT(10)))
-+
-+/* PMU_SYS_CTL1 Register Mask Bits */
-+#define ATC2609A_PMU_SYS_CTL1_EN_S1			BIT(0)
-+#define ATC2609A_PMU_SYS_CTL1_LB_S4_EN			BIT(2)
-+#define ATC2609A_PMU_SYS_CTL1_LB_S4			GENMASK(4, 3)
-+#define ATC2609A_PMU_SYS_CTL1_LB_S4_3_1V		BIT(4)
-+#define ATC2609A_PMU_SYS_CTL1_IR_WK_FLAG		BIT(5)
-+#define ATC2609A_PMU_SYS_CTL1_RESET_WK_FLAG		BIT(6)
-+#define ATC2609A_PMU_SYS_CTL1_HDSW_WK_FLAG		BIT(7)
-+#define ATC2609A_PMU_SYS_CTL1_ALARM_WK_FLAG		BIT(8)
-+#define ATC2609A_PMU_SYS_CTL1_REM_CON_WK_FLAG		BIT(9)
-+#define ATC2609A_PMU_SYS_CTL1_RESTART_WK_FLAG		BIT(10)
-+#define ATC2609A_PMU_SYS_CTL1_WKIRQ_WK_FLAG		BIT(11)
-+#define ATC2609A_PMU_SYS_CTL1_ONOFF_SHORT_WK_FLAG	BIT(12)
-+#define ATC2609A_PMU_SYS_CTL1_ONOFF_LONG_WK_FLAG	BIT(13)
-+#define ATC2609A_PMU_SYS_CTL1_WALL_WK_FLAG		BIT(14)
-+#define ATC2609A_PMU_SYS_CTL1_USB_WK_FLAG		BIT(15)
-+
-+/* PMU_SYS_CTL2 Register Mask Bits */
-+#define ATC2609A_PMU_SYS_CTL2_PMU_A_EN			BIT(0)
-+#define ATC2609A_PMU_SYS_CTL2_ONOFF_PRESS_INT_EN	BIT(1)
-+#define ATC2609A_PMU_SYS_CTL2_ONOFF_PRESS_PD		BIT(2)
-+#define ATC2609A_PMU_SYS_CTL2_S2TIMER			GENMASK(5, 3)
-+#define ATC2609A_PMU_SYS_CTL2_S2_TIMER_EN		BIT(6)
-+#define ATC2609A_PMU_SYS_CTL2_ONOFF_RESET_TIME_SEL	GENMASK(8, 7)
-+#define ATC2609A_PMU_SYS_CTL2_ONOFF_RESET_EN		BIT(9)
-+#define ATC2609A_PMU_SYS_CTL2_ONOFF_PRESS_TIME		GENMASK(11, 10)
-+#define ATC2609A_PMU_SYS_CTL2_ONOFF_LSP_INT_EN		BIT(12)
-+#define ATC2609A_PMU_SYS_CTL2_ONOFF_LONG_PRESS		BIT(13)
-+#define ATC2609A_PMU_SYS_CTL2_ONOFF_SHORT_PRESS		BIT(14)
-+#define ATC2609A_PMU_SYS_CTL2_ONOFF_PRESS		BIT(15)
-+
-+/* PMU_SYS_CTL3 Register Mask Bits */
-+#define ATC2609A_PMU_SYS_CTL3_S2S3TOS1_TIMER		GENMASK(8, 7)
-+#define ATC2609A_PMU_SYS_CTL3_S2S3TOS1_TIMER_EN		BIT(9)
-+#define ATC2609A_PMU_SYS_CTL3_S3_TIMER			GENMASK(12, 10)
-+#define ATC2609A_PMU_SYS_CTL3_S3_TIMER_EN		BIT(13)
-+#define ATC2609A_PMU_SYS_CTL3_EN_S3			BIT(14)
-+#define ATC2609A_PMU_SYS_CTL3_EN_S2			BIT(15)
-+
-+/* PMU_SYS_CTL5 Register Mask Bits */
-+#define ATC2609A_PMU_SYS_CTL5_WALLWKDTEN		BIT(7)
-+#define ATC2609A_PMU_SYS_CTL5_VBUSWKDTEN		BIT(8)
-+#define ATC2609A_PMU_SYS_CTL5_REMCON_DECT_EN		BIT(9)
-+#define ATC2609A_PMU_SYS_CTL5_ONOFF_8S_SEL		BIT(10)
-+
-+/* INTS_MSK Register Mask Bits */
-+#define ATC2609A_INTS_MSK_AUDIO				BIT(0)
-+#define ATC2609A_INTS_MSK_OV				BIT(1)
-+#define ATC2609A_INTS_MSK_OC				BIT(2)
-+#define ATC2609A_INTS_MSK_OT				BIT(3)
-+#define ATC2609A_INTS_MSK_UV				BIT(4)
-+#define ATC2609A_INTS_MSK_ALARM				BIT(5)
-+#define ATC2609A_INTS_MSK_ONOFF				BIT(6)
-+#define ATC2609A_INTS_MSK_WKUP				BIT(7)
-+#define ATC2609A_INTS_MSK_IR				BIT(8)
-+#define ATC2609A_INTS_MSK_REMCON			BIT(9)
-+#define ATC2609A_INTS_MSK_POWERIN			BIT(10)
-+
-+/* CMU_DEVRST Register Mask Bits */
-+#define ATC2609A_CMU_DEVRST_AUDIO			BIT(0)
-+#define ATC2609A_CMU_DEVRST_MFP				BIT(1)
-+#define ATC2609A_CMU_DEVRST_INTS			BIT(2)
-+
-+/* PAD_EN Register Mask Bits */
-+#define ATC2609A_PAD_EN_EXTIRQ				BIT(0)
-+
-+#endif /* __LINUX_MFD_ATC260X_ATC2609A_H */
-diff --git a/include/linux/mfd/atc260x/core.h b/include/linux/mfd/atc260x/core.h
-new file mode 100644
-index 000000000000..a87b976f48e3
---- /dev/null
-+++ b/include/linux/mfd/atc260x/core.h
-@@ -0,0 +1,86 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Core MFD defines for ATC260x PMICs
-+ *
-+ * Copyright (C) 2019 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ * Copyright (C) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-+ */
-+
-+#ifndef __LINUX_MFD_ATC260X_CORE_H
-+#define __LINUX_MFD_ATC260X_CORE_H
-+
-+#include <linux/mfd/atc260x/atc2603c.h>
-+#include <linux/mfd/atc260x/atc2609a.h>
-+
-+enum atc260x_type {
-+	ATC2603A = 0,
-+	ATC2603C,
-+	ATC2609A,
-+};
-+
-+enum atc260x_ver {
-+	ATC260X_A = 0,
-+	ATC260X_B,
-+	ATC260X_C,
-+	ATC260X_D,
-+	ATC260X_E,
-+	ATC260X_F,
-+	ATC260X_G,
-+	ATC260X_H,
-+};
-+
-+struct atc260x {
-+	struct device *dev;
-+
-+	struct regmap *regmap;
-+	const struct regmap_irq_chip *regmap_irq_chip;
-+	struct regmap_irq_chip_data *irq_data;
-+
-+	struct mutex *regmap_mutex;	/* mutex for custom regmap locking */
-+
-+	const struct mfd_cell *cells;
-+	int nr_cells;
-+	int irq;
-+
-+	enum atc260x_type ic_type;
-+	enum atc260x_ver ic_ver;
-+	const char *type_name;
-+	unsigned int rev_reg;
-+
-+	int (*dev_init)(struct atc260x *atc260x);
-+};
-+
-+struct regmap_config;
-+
-+/**
-+ * atc260x_match_device(): Setup atc260x variant related fields
-+ *
-+ * @atc260x: atc260x device to setup (.dev field must be set)
-+ * @regmap_cfg: regmap config associated with this atc260x device
-+ *
-+ * This lets the atc260x core configure the mfd cells and register maps
-+ * for later use.
-+ */
-+int atc260x_match_device(struct atc260x *atc260x, struct regmap_config *regmap_cfg);
-+
-+/**
-+ * atc260x_device_probe(): Probe a configured atc260x device
-+ *
-+ * @atc260x: atc260x device to probe (must be configured)
-+ *
-+ * This function lets the atc260x core register the atc260x mfd devices
-+ * and irqchip. The atc260x device passed in must be fully configured
-+ * with atc260x_match_device, its irq set, and regmap created.
-+ */
-+int atc260x_device_probe(struct atc260x *atc260x);
-+
-+/**
-+ * atc260x_device_remove(): Remove a atc260x device
-+ *
-+ * @atc260x: atc260x device to remove
-+ *
-+ * This tells the atc260x core to remove the associated mfd devices
-+ */
-+int atc260x_device_remove(struct atc260x *atc260x);
-+
-+#endif /* __LINUX_MFD_ATC260X_CORE_H */
--- 
-2.28.0
-
+Thanks!
