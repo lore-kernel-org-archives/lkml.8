@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A273C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F397DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBFC22B4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C250D2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598026555;
-	bh=qRCS/QLC3FWuoJNnuz3TG5j7m7cgkYxFjClqQS7j5IU=;
+	s=default; t=1598026568;
+	bh=W2rAa3hVKvGfCtUIdsWN4znjxtVhRCXRyUpQdLekit0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=surFrX0eX8EtcpsOvaCZT6z5iTDV2ZIp4sW5eC7hT7TQkZZeXFAa8tbv7N3Mu6Qis
-	 9TVRgTB21RMaMrjHIXLjZ7WaG4xh37wGmE6GwsjWHcrD+y1um7Tz28Kt5W24sesrd+
-	 CJfjQU/GvqiOt39gNSAm1LWbsuuqHnIysVOKpThM=
+	b=FAPxHjS4GEcwfzv4EeJMUe62fjZzTP+/Z5jxDLEBYcX6k9qOPJ050q9efiLLitoCn
+	 OpGUzETDr1ZOSt3DafR6c8K7ZN2fTuUPYQy8pUCagsCNRgM3IN+HAxr3wOhzzxLQ9E
+	 19pzlQNKn+NaQkeYGwrkOZe33xRELh4H6mVLqYlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgHUQPt (ORCPT
+        id S1728033AbgHUQQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:15:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46396 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:16:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbgHUQOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:14:38 -0400
+        id S1727104AbgHUQOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:14:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 234642173E;
-        Fri, 21 Aug 2020 16:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8EF9214F1;
+        Fri, 21 Aug 2020 16:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026471;
-        bh=qRCS/QLC3FWuoJNnuz3TG5j7m7cgkYxFjClqQS7j5IU=;
+        s=default; t=1598026494;
+        bh=W2rAa3hVKvGfCtUIdsWN4znjxtVhRCXRyUpQdLekit0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ToCi5voofNHv6tf+aRSmMfVdH7yF+he1SUcLp0FKiI5ZAhE/XRnvEbEDS8iag+cSA
-         gxpfywx/VNZpgOh6xfou+cl0nqlLlfxur7G7Jle79RLu0NXOYSEmCucQK87iS9Fsgt
-         tEo2iyhxidaX8BrFPuOVYEzgGXIe/Q9mLFRpHeRE=
+        b=ORrcPmUG8+/aAkJlpqSICxk/MpNksRoWnBHagVzzMbc1gKmihQuydlKo934/qBUv0
+         dmO8ctu3os++dQ+hyVs9N20KAYr4eB09zXaWxpBzuysrjaTBrVhLTPRjVAskKzZPI3
+         5f8b3BRoVYnk67I5YnIU1k8cV8BL31On0390dZxw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guchun Chen <guchun.chen@amd.com>, Tao Zhou <tao.zhou1@amd.com>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 05/62] drm/amdgpu: fix RAS memory leak in error case
-Date:   Fri, 21 Aug 2020 12:13:26 -0400
-Message-Id: <20200821161423.347071-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 25/62] drm/amdgpu: fix ref count leak in amdgpu_display_crtc_set_config
+Date:   Fri, 21 Aug 2020 12:13:46 -0400
+Message-Id: <20200821161423.347071-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -60,74 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guchun Chen <guchun.chen@amd.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 5e91160ac0b5cfbbaeb62cbff8b069262095f744 ]
+[ Upstream commit e008fa6fb41544b63973a529b704ef342f47cc65 ]
 
-RAS context memory needs to freed in failure case.
+in amdgpu_display_crtc_set_config, the call to pm_runtime_get_sync
+increments the counter even in case of failure, leading to incorrect
+ref count. In case of failure, decrement the ref count before returning.
 
-Signed-off-by: Guchun Chen <guchun.chen@amd.com>
-Reviewed-by: Tao Zhou <tao.zhou1@amd.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_display.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-index 50fe08bf2f727..20a7d75b2eb88 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-@@ -1914,9 +1914,8 @@ int amdgpu_ras_init(struct amdgpu_device *adev)
- 	amdgpu_ras_check_supported(adev, &con->hw_supported,
- 			&con->supported);
- 	if (!con->hw_supported) {
--		amdgpu_ras_set_context(adev, NULL);
--		kfree(con);
--		return 0;
-+		r = 0;
-+		goto err_out;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
+index f7143d927b6d8..5e51f0acf744f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
+@@ -282,7 +282,7 @@ int amdgpu_display_crtc_set_config(struct drm_mode_set *set,
+ 
+ 	ret = pm_runtime_get_sync(dev->dev);
+ 	if (ret < 0)
+-		return ret;
++		goto out;
+ 
+ 	ret = drm_crtc_helper_set_config(set, ctx);
+ 
+@@ -297,7 +297,7 @@ int amdgpu_display_crtc_set_config(struct drm_mode_set *set,
+ 	   take the current one */
+ 	if (active && !adev->have_disp_power_ref) {
+ 		adev->have_disp_power_ref = true;
+-		return ret;
++		goto out;
+ 	}
+ 	/* if we have no active crtcs, then drop the power ref
+ 	   we got before */
+@@ -306,6 +306,7 @@ int amdgpu_display_crtc_set_config(struct drm_mode_set *set,
+ 		adev->have_disp_power_ref = false;
  	}
  
- 	con->features = 0;
-@@ -1927,29 +1926,31 @@ int amdgpu_ras_init(struct amdgpu_device *adev)
- 	if (adev->nbio.funcs->init_ras_controller_interrupt) {
- 		r = adev->nbio.funcs->init_ras_controller_interrupt(adev);
- 		if (r)
--			return r;
-+			goto err_out;
- 	}
- 
- 	if (adev->nbio.funcs->init_ras_err_event_athub_interrupt) {
- 		r = adev->nbio.funcs->init_ras_err_event_athub_interrupt(adev);
- 		if (r)
--			return r;
-+			goto err_out;
- 	}
- 
- 	amdgpu_ras_mask &= AMDGPU_RAS_BLOCK_MASK;
- 
--	if (amdgpu_ras_fs_init(adev))
--		goto fs_out;
-+	if (amdgpu_ras_fs_init(adev)) {
-+		r = -EINVAL;
-+		goto err_out;
-+	}
- 
- 	dev_info(adev->dev, "RAS INFO: ras initialized successfully, "
- 			"hardware ability[%x] ras_mask[%x]\n",
- 			con->hw_supported, con->supported);
- 	return 0;
--fs_out:
-+err_out:
- 	amdgpu_ras_set_context(adev, NULL);
- 	kfree(con);
- 
--	return -EINVAL;
-+	return r;
- }
- 
- /* helper function to handle common stuff in ip late init phase */
++out:
+ 	/* drop the power reference we got coming in here */
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 	return ret;
 -- 
 2.25.1
 
