@@ -2,90 +2,75 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A0CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A55E2087D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597995090;
-	bh=zj/aZnBQm8kFqhOGpWxH3Mew6BLTWbXLfyCo9iwAJ+w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u3oD/Z/6xcg43L/805HIuyJ+JIiyAiInZr/XY3/mdmtnbO0II9i8XvZwCr2Paskza
-	 yep5nFYk1kV2u85n7Tz/IWbw8apELdp7ctYMdpcv6pOHfJh9gEoWIlEpFM8fNNt9E5
-	 IppXZ1FAXwvQHphuHgqjcz9bH5h1rYzFCrS/V1jk=
+	by mail.kernel.org (Postfix) with ESMTP id 05FCF2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgHUHb3 (ORCPT
+        id S1728057AbgHUHbz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:31:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbgHUHb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:31:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0F2C2078D;
-        Fri, 21 Aug 2020 07:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597995088;
-        bh=zj/aZnBQm8kFqhOGpWxH3Mew6BLTWbXLfyCo9iwAJ+w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D8zK7oPiLwnJ2LDjAH6lJs+EBUX7wQNEGSv7oaRqbbVM0LsaiaY8xTKt6yNFOd3BB
-         P86zbtb+QJOEd5V+q3ruju/o2LR9pAYTR2oltQtUufXIAsYUk92ER4OPJj+84cTrwC
-         F3IJFtSUzdhUVw77iVJvJAv+LttybNfXFs0W5KbE=
-Date:   Fri, 21 Aug 2020 09:31:47 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ding Hui <dinghui@sangfor.com.cn>
-Cc:     mathias.nyman@intel.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xhci: Always restore EP_SOFT_CLEAR_TOGGLE even if ep
- reset failed
-Message-ID: <20200821073147.GA1681156@kroah.com>
-References: <20200821070652.27782-1-dinghui@sangfor.com.cn>
+        Fri, 21 Aug 2020 03:31:55 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60323 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727868AbgHUHby (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 03:31:54 -0400
+Received: from [2001:67c:670:100:3ad5:47ff:feaf:1a17] (helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k91C3-0005l6-7s; Fri, 21 Aug 2020 09:10:31 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k91C2-00045j-Ip; Fri, 21 Aug 2020 09:10:30 +0200
+Message-ID: <e586d38120241447df58818c1f9e3c04e5068972.camel@pengutronix.de>
+Subject: Re: [PATCH 4.9 196/212] gpu: ipu-v3: image-convert: Combine
+ rotate/no-rotate irq handlers
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Date:   Fri, 21 Aug 2020 09:10:30 +0200
+In-Reply-To: <20200821070216.GB23823@amd>
+References: <20200820091602.251285210@linuxfoundation.org>
+         <20200820091612.258939813@linuxfoundation.org> <20200821070216.GB23823@amd>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821070652.27782-1-dinghui@sangfor.com.cn>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 03:06:52PM +0800, Ding Hui wrote:
-> Some devices driver call libusb_clear_halt when target ep queue
-> is not empty. (eg. spice client connected to qemu for usb redir)
-> 
-> Before commit f5249461b504 ("xhci: Clear the host side toggle
-> manually when endpoint is soft reset"), that works well.
-> But now, we got the error log:
-> 
->     EP not empty, refuse reset
-> 
-> xhch_endpoint_reset failed and left ep_state's EP_SOFT_CLEAR_TOGGLE
-> bit is still on
-> 
-> So all the subsequent urb sumbit to the ep will fail with the
-> warn log:
-> 
->     Can't enqueue URB while manually clearing toggle
-> 
-> We need restore ep_state EP_SOFT_CLEAR_TOGGLE bit after
-> xhci_endpoint_reset, even if it is failed.
-> 
-> Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
-> ---
->  drivers/usb/host/xhci.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+Hi,
 
-Shouldn't this have a Fixes: tag on it and be backported to the affected
-stable trees?
+On Fri, 2020-08-21 at 09:02 +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > From: Steve Longerbeam <slongerbeam@gmail.com>
+> > 
+> > [ Upstream commit 0f6245f42ce9b7e4d20f2cda8d5f12b55a44d7d1 ]
+> > 
+> > Combine the rotate_irq() and norotate_irq() handlers into a single
+> > eof_irq() handler.
+> 
+> AFAICT this is preparation for next patch, not a backfix. And actual
+> fix patch is not there for 4.19, so this can be dropped, too.
 
-thanks,
+You are right, this patch is preparation for commit 0f6245f42ce9 ("gpu:
+ipu-v3: image-convert: Wait for all EOFs before completing a tile").
 
-greg k-h
+regards
+Philipp
