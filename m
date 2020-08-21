@@ -2,54 +2,55 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B135620738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08909207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:21:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="HOgnok7c"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="HMkYOpVh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgHUDV0 (ORCPT
+        id S1727811AbgHUDVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:21:26 -0400
-Received: from mail-mw2nam10on2044.outbound.protection.outlook.com ([40.107.94.44]:29441
+        Thu, 20 Aug 2020 23:21:33 -0400
+Received: from mail-mw2nam10on2070.outbound.protection.outlook.com ([40.107.94.70]:22272
         "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726844AbgHUDVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:21:24 -0400
+        id S1726844AbgHUDVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 23:21:31 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g12RjynUQGtBLPtvLxofzMQ45pD/S6PalFFN1S+FWp4KYPBQnsGQizSdPlhzLmU8grbWU4Vkg35gLsktIt/yGmvW/aDpaEPGUQcyv/X1V/OeTKwJB8+gLgkn7h0S1CNJAFxnLzuMu9C9rA/nygB9/u3YPzY5dZ7sAqGkHvzv5Z8YeKHDcz/bcJMNcinxYxAxTXmQaLL+HrPKdm6O/XtSBdNIy/ziCe2Xq9B5iRvJRUyXfob4O+w9WgoxuhfHLXvmRh5zK15AC9nxL0A+4v/C9HKk5oiMjKxkag8r3VbQ89vH70MDKUYqldhch9tlNsIKUlFG1c9dnhzyvnQR6wEHRA==
+ b=i2+XmJNffEED3IY6m+acraKW2+9OEodBrdkQVqIYReguhOVeCW3+kOnZNWeqnOwUckMR3z9BqNMokAzEGISk6wqayM1R7H4gDBdVaqlfE1GqgaKvEPGN1FseZ9HyLeQyz/sVWmojVLakTNQ74Yjby7kQ9a2m9xvtL1OjZtExUgmpegS7l3nzysQoan5T8Qlzy58Vw7AJECvM+JM1MUMAyG6XSpDbmsdOigbt5C9jFuR/2cF/0AeVZsIJGfoWDNOxKYDxLDScptJuUKHkiH+mmDsa46HPYMnzOKZZ8kX4bnlITwkxxfFpj1Y2pt8PqS6cue4Xl6ExEuoHlOt0u9nJcQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ohvAV5OOiKl0ReUg5vjlQe6z3tHePAnxgumjPGXP+nA=;
- b=Wy/zoEJ22so7Zmr0q1dnzJkUgqZKqfEdwxTAlWT8j/CakFvtvVGVZmi1G0goP7b3RRt84Ee5JyRUl4ZlkZlHkDqxvFO5X4ZYRvXlk7lkMOxKlOiR7RFXgOahPjMnp1tAlzbfGMlgcXYCOSFu3eWqhVc/u+1lo5bDLNTIYHf6f7y5jzuxo5U5e2wL5UMDhbEL7DtmgwLK9BTxdIv+taan1FATSilJd0pSXfz28Nt+1h/h6CZaM6tS6Yqsn40Ilr8sYwvlKBaVpIqX4+hW9sz/B/7HGD5vGYPrlCb0lmdwjGhHjKXjPQ+zaBLSYRlsX3b0Blu6g8H19GnpNi48WUUD1Q==
+ bh=VfV4mxwKqyeAKVXUe2OK/ZKUOFBIRp7DuSMjz6hb7Cw=;
+ b=Sf2YohprQsjmRr/1pIrqY1mu5eCNmkd8jfPutV8+8sdrZAdn21QlWybSVDJ06Bp0rbrQH2s1cUVjZ2sHsbmlfVB6g0TuQlF4sT2iW3NFnAoI62wWDnOLT3w9EEw3DTPmzqcMjrFrF6kCw2gcOeGZI1GrMj4NcxnIRFwiO8bOtpC/XWyTBEUfQ/ke0fKU987qvgCBdjwVGWmVLL19ZHEYCRIOA4TwFh4/FlANjDsepDpgvZ/RiShcdLIsMPBECABc5LbFAO8TtnTwyY5dKs/q+boaSp0NRtXe1yGcL+kNMq4Gte19xE2OQtwf3U2kcPecpqoz8aUvwAt4tOIzx4WPHw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=synaptics.com; dmarc=pass action=none
  header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ohvAV5OOiKl0ReUg5vjlQe6z3tHePAnxgumjPGXP+nA=;
- b=HOgnok7cLW6PETClgThYGxtaZbX5u45wc85UYwGApklYDlg0c9uaBWDb26U/TFG9+/C/S2Mel7ID3U+lzAp+2N/zdT0syCpSt6ZMjX5D54Uxr8lyoStACUhf5OoVECHwfogSg+hEe16F2Bf7y0ngCcM9QRY/qA3t/1t5xPb/zNo=
+ bh=VfV4mxwKqyeAKVXUe2OK/ZKUOFBIRp7DuSMjz6hb7Cw=;
+ b=HMkYOpVhbaUzPmvVV1faOTEe1U6pbhqMT883pgqSZXrTfxUHg0Wr7stjUr0hWhavfL9sHoyVPg8mzt4gdiuckCqyWzzGHwCm1nI7KImvOcTisGJ6yIvqs3Xaz78oG4BDWSif7aFwn97/m3McFk0VJomayjc66qllIeH4eBGyoLY=
 Authentication-Results: gmail.com; dkim=none (message not signed)
  header.d=none;gmail.com; dmarc=none action=none header.from=synaptics.com;
 Received: from DM6PR03MB4555.namprd03.prod.outlook.com (2603:10b6:5:102::17)
  by DM6PR03MB4617.namprd03.prod.outlook.com (2603:10b6:5:15e::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Fri, 21 Aug
- 2020 03:21:22 +0000
+ 2020 03:21:29 +0000
 Received: from DM6PR03MB4555.namprd03.prod.outlook.com
  ([fe80::e494:740f:155:4a38]) by DM6PR03MB4555.namprd03.prod.outlook.com
  ([fe80::e494:740f:155:4a38%7]) with mapi id 15.20.3305.025; Fri, 21 Aug 2020
- 03:21:22 +0000
-Date:   Fri, 21 Aug 2020 11:11:35 +0800
+ 03:21:29 +0000
+Date:   Fri, 21 Aug 2020 11:17:55 +0800
 From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 To:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
@@ -62,85 +63,76 @@ To:     Liam Girdwood <lgirdwood@gmail.com>,
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 00/15] regulator: Fix W=1 build warning when CONFIG_OF=n
-Message-ID: <20200821111135.0b958d3a@xhacker.debian>
+Subject: [PATCH v2 11/15] regulator: stm32-vrefbuf: Fix W=1 build warning
+ when CONFIG_OF=n
+Message-ID: <20200821111755.4c461039@xhacker.debian>
+In-Reply-To: <20200821111135.0b958d3a@xhacker.debian>
+References: <20200821111135.0b958d3a@xhacker.debian>
 X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 X-ClientProxiedBy: TY2PR06CA0043.apcprd06.prod.outlook.com
  (2603:1096:404:2e::31) To DM6PR03MB4555.namprd03.prod.outlook.com
  (2603:10b6:5:102::17)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by TY2PR06CA0043.apcprd06.prod.outlook.com (2603:1096:404:2e::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Fri, 21 Aug 2020 03:21:19 +0000
+Received: from 255.255.255.255 (255.255.255.255) by TY2PR06CA0043.apcprd06.prod.outlook.com (2603:1096:404:2e::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Fri, 21 Aug 2020 03:21:26 +0000
 X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 X-Originating-IP: [124.74.246.114]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7e186b9c-fb7f-4160-b199-08d845814771
+X-MS-Office365-Filtering-Correlation-Id: 7eff0eff-e219-4567-f1ca-08d845814bb1
 X-MS-TrafficTypeDiagnostic: DM6PR03MB4617:
-X-Microsoft-Antispam-PRVS: <DM6PR03MB46171CFF3EC2D841D0E105AEED5B0@DM6PR03MB4617.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:117;
+X-Microsoft-Antispam-PRVS: <DM6PR03MB4617F9671E1C40482ED53469ED5B0@DM6PR03MB4617.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:449;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jL+vUKPtu0WzZXLBfVAFwYrjyV/DbI2qwj0LlBpxljRqOyOb3+/nFj14hpvALux63uX3Min0h0lZg6aPsoUOVRfXdWJAvrVEm8cZLQoOQUXH6C7PnHbcc4guKehD0lDHML0EFnVT9NO6Jc9N+QzCWVGc4Nm+GFzWU1VyB4yjw1Sl3sZJ4u04UbmHTXk4cIt+vS+6ITSB8nNz0JP1W0CKyDwTuNW+6hUmkMQMz0PpNYE1pspvAo9T8eLxyfYibeUqhvvlv3sS/9vU2J7ESC+spCjftllf8O+dBeep7AB7towvFoTK9EcJW7/nnsp0b42sY5EPv1uB4dVzLT4+JRn+3juZtYZTniUiM7GupOwm2YcwUkPM0+5ByzhWjvz45mik
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(396003)(376002)(366004)(39860400002)(346002)(66946007)(478600001)(8936002)(1076003)(7416002)(66556008)(6486002)(52116002)(110011004)(9686003)(4326008)(66476007)(8676002)(6666004)(5660300002)(86362001)(956004)(16576012)(186003)(316002)(26005)(110136005)(2906002)(83380400001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: AT2F9uteWrhkTMx+5TNZV+GMlHXjnsat8nVlCIgCDAzjGJ0UyXvo85jqwVCFs5tDMSrszb5RhPte7XaO7Cluos/VgqJzqel9UlEdnIbB+33Q5OKmxgQQUIXONZV70e4Z0rBF2Wow4FitccY02FA5CMM63/zU/d71mDgUfFi6FwP8juMReXyTSz2gZbYUxtwv+BVnrODdhS+u2PhZwhKnhkjzX135h0dCwnNdE9ZbsqE3UpLFHQ3vqCSBL0vj4HpEYgDt1prsJNAIyFjhfYduUk3s/fDwDSRLjlqgOgCyStJQdKWW5MOALI/9wsvMqwNF2XTFxsJdl3YQkNmkc5HoA2mNOmDbkdQzTOdVccr/o3rt4sw4umSK7pw9YCHT8RyqrchtlquV4nNoSlDShUNwlIDHwKaOwTn5Uj6lLcoL/jdoubo6iartV+jUE/RwPnYv1ymLxwebVucymvKDlNWO+4pCeuMI/0tnf6KOe4OLfQ7hoo3zUN9AyNEjehwdISiiU3IIycVLVLJi/BsCaf1C8nahkpHjmAzEeR8sxxiE/QFsMdLN7cF8LPg7cRT7umjaIy1W18eNJQDj2ERwp4aMMb9a+qutepjLzmiEDaWurlZyBQyGlZ1ljBEmXHOavoXu0gj1sGUGhlcL3GDewCxzrw==
+X-Microsoft-Antispam-Message-Info: DlarCBdAFdEOesLDKHbTTlPWfrY3LpsOfP10DJukCnSZJ7N7YW5gcZvE1kRxYmFCBgpRQYvT3XWfLtTN/r/0dKfVJTO2FVBSszw0VpqE67a3WOo3b3RZKK40DBTgkCrV+TB5GXLsO047tBfzEUcmRY7E5yc7GnP/9NC5Hgq4U8PzHQipFM31JzBE8WKBKRDiBoQMeRqpAaHKwxLJEM8LBdrGTJmEYYbnmopPfe5msN/5KwjRe377Ve6WdCn4UvG8HKn14ExCa/bk9NtUF+m8LfK01k2mBA/MTcQpYyJMOHQBhEVMD47q9zEWfCQNLjLsXsfSB6+MwTaGb5S0kzTSPwPgHz3HVi6Tuu+wPLpzJVh+GhN2lUj+DFkt1q+XrR4W
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(396003)(376002)(366004)(39860400002)(346002)(66946007)(478600001)(8936002)(1076003)(7416002)(66556008)(6486002)(52116002)(110011004)(9686003)(4326008)(66476007)(8676002)(6666004)(5660300002)(86362001)(956004)(16576012)(186003)(316002)(4744005)(26005)(110136005)(2906002)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 5EtHmIOLi6oTiHBvzXx1Cwf5Ah/em6LJtYdin1AjBx8lRxaXytO+rB8B9tbiy5iMFho4sgNqq0klzRW8T/Y657W0n1lEHDy1K6Lfy+oZlZ/JEDPUoEcyfMwZisFt8Zawr2awoGTW34RcKVYgXptI0sUetrs+viIOgVUuhw0y/J1xeY8rbIWOQLbstW083aiNVYs0jJP6c1q9tP7TkO88F0q1xrbRf9sBlwL3RC6xLUVh7i9UraCtf3ra9w0xMvkL5Ru57RmqY1AsmUsJihaySsHv2V2NVhtlfgJopTQhnj2JxjpkMqcYs0V+4w6qI53h6eJ4UO+7iwbh8H5EwPZZhD2uE0r/VeaaP7FMw9uMfGqmPOYFCRIx5xWAu5TNzslbXLIUfuGdSLcuOz7o+PDXVS2v2+0N30wiHgf1frAtAl8EYP932IWmQXTNRjako3n1fTxpNk+LJlEarfi8E8JnfITkV3q218mXqg4WToCZ+Lgn4zsdl6T+nQhv6VMnCbpKQjDBUKg3NTO8hp2IXDpHLWIEQqa3jnNxbZTipOo7sWJi6gojO/mdsk4L2xaZSz34ZKfmPLVWtsZ7BJ5fMrJhLPrw80TWhZsh5zfHHGVYXJ+j48tx/tfab0KP39sQ4RmsY64B6FtqPTYQjaA7qZg1Vg==
 X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e186b9c-fb7f-4160-b199-08d845814771
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7eff0eff-e219-4567-f1ca-08d845814bb1
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 03:21:22.7394
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 03:21:29.8824
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MbQ084ZDwM7t7LC2M+uCuMmaoiEz46r/AGB6Drh69r0Q6OJ6dJwb9kTX33etS6S7P9PSqAk0hbKLEM99kg0p6g==
+X-MS-Exchange-CrossTenant-UserPrincipalName: KQ/KZa+qJnS8l0aOwmmrxuxjWMdb7CCR08utrYQ/1v+qXRuJwb+GQha/riCU9PIRxBc3lF1x6G4gAvv5tItLzg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4617
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixing W=1 build warning when no support for device tree is there.
+Fix below warning when CONFIG_OF=3Dn:
 
-Since v1:
-  - fix the warning with __maybe_unused instead of CONFIG_OF macro
-  - add 3 more patches to fix the same issue
+drivers/regulator/stm32-vrefbuf.c:287:34: warning: =E2=80=98stm32_vrefbuf_o=
+f_match=E2=80=99 defined but not used [-Wunused-const-variable=3D]
+  287 | static const struct of_device_id stm32_vrefbuf_of_match[] =3D {
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~
 
-Jisheng Zhang (15):
-  regulator: 88pg86x: Fix W=1 build warning when CONFIG_OF=n
-  regulator: da9210: Fix W=1 build warning when CONFIG_OF=n
-  regulator: fan53555: Fix W=1 build warning when CONFIG_OF=n
-  regulator: fixed: Fix W=1 build warnings when CONFIG_OF=n
-  regulator: ltc3589: Fix W=1 build warning when CONFIG_OF=n
-  regulator: ltc3676: Fix W=1 build warning when CONFIG_OF=n
-  regulator: max1586: Fix W=1 build warning when CONFIG_OF=n
-  regulator: max77826: Fix W=1 build warning when CONFIG_OF=n
-  regulator: pwm: Fix W=1 build warning when CONFIG_OF=n
-  regulator: stm32-pwr: Fix W=1 build warning when CONFIG_OF=n
-  regulator: stm32-vrefbuf: Fix W=1 build warning when CONFIG_OF=n
-  regulator: sy8106a: Fix W=1 build warning when CONFIG_OF=n
-  regulator: qcom-rpmh: Fix W=1 build warning when CONFIG_OF=n
-  regulator: stm32-booster: Fix W=1 build warning when CONFIG_OF=n
-  regulator: tps65023: Fix W=1 build warning when CONFIG_OF=n
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ drivers/regulator/stm32-vrefbuf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/regulator/88pg86x.c             |  2 +-
- drivers/regulator/da9210-regulator.c    |  2 +-
- drivers/regulator/fan53555.c            |  2 +-
- drivers/regulator/fixed.c               | 16 ++++++++--------
- drivers/regulator/ltc3589.c             |  2 +-
- drivers/regulator/ltc3676.c             |  2 +-
- drivers/regulator/max1586.c             |  2 +-
- drivers/regulator/max77826-regulator.c  |  2 +-
- drivers/regulator/pwm-regulator.c       |  2 +-
- drivers/regulator/qcom-rpmh-regulator.c |  2 +-
- drivers/regulator/stm32-booster.c       |  2 +-
- drivers/regulator/stm32-pwr.c           |  2 +-
- drivers/regulator/stm32-vrefbuf.c       |  2 +-
- drivers/regulator/sy8106a-regulator.c   |  2 +-
- drivers/regulator/tps65023-regulator.c  |  2 +-
- 15 files changed, 22 insertions(+), 22 deletions(-)
-
--- 
+diff --git a/drivers/regulator/stm32-vrefbuf.c b/drivers/regulator/stm32-vr=
+efbuf.c
+index 992bc18101ef..161622ea7259 100644
+--- a/drivers/regulator/stm32-vrefbuf.c
++++ b/drivers/regulator/stm32-vrefbuf.c
+@@ -284,7 +284,7 @@ static const struct dev_pm_ops stm32_vrefbuf_pm_ops =3D=
+ {
+ 			   NULL)
+ };
+=20
+-static const struct of_device_id stm32_vrefbuf_of_match[] =3D {
++static const struct of_device_id __maybe_unused stm32_vrefbuf_of_match[] =
+=3D {
+ 	{ .compatible =3D "st,stm32-vrefbuf", },
+ 	{},
+ };
+--=20
 2.28.0
 
