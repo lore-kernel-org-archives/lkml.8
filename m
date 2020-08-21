@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50168C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E9BC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 224ED20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6A820724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598027558;
-	bh=FresQJ+8YrzQahGXKniizpkZbx4mcAjvUTHqjSRmheQ=;
+	s=default; t=1598027569;
+	bh=sMapnY9eiJygR4cWWZi/1wNJU2zdO+SwpykGS1RmFcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pqwGebK5JlPnzhTlu+nFUa2matDHtjxWr9w0gQP8g+GprXMXQIN+I5x4BvKigmsDQ
-	 F9XVz40ypLfkBZpKyjT9EZzvjbvOH7Z6Xoohx4QHgHaUgiL55orOgG+jyc5U7FMdcJ
-	 SOH9yttBPfmv2j70XehSOxaTYvvHX8D1GolXQXV0=
+	b=Ud1dTIWXE0dsr5LTTpXFoplU4/8yYmd5ga2svJA5h/+KmoT4LLASZP3YABOFlEi67
+	 OYYMmtQkuVuSOx6iKjUOz4LX0z1MKXcrNnxOM/Ay+2xTviArMWYRhDcY1uTvMD0H3W
+	 OB9aiQZrerNu3+QT4UgQ/YqLKOWloLhKxESQFCiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgHUQce (ORCPT
+        id S1728524AbgHUQcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:32:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:32:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbgHUQVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728255AbgHUQVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:21:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F4A022D75;
-        Fri, 21 Aug 2020 16:20:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E224207DF;
+        Fri, 21 Aug 2020 16:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026837;
-        bh=FresQJ+8YrzQahGXKniizpkZbx4mcAjvUTHqjSRmheQ=;
+        s=default; t=1598026835;
+        bh=sMapnY9eiJygR4cWWZi/1wNJU2zdO+SwpykGS1RmFcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bRYa7XV6D+HRAUzu5oELpY0QFg75IKNawAx6Y8vLEHrwHKFHg3sIvYsAIBHa8NSg8
-         1+O08ChVhxwpPizYicNwvqnQjEX7uiJwb9frNbv8SfIntVQc/LpnCAUkB5qSNDdeun
-         Yj3XRibcmUIKfKT0j4Yd9TmBckh36pSLbbXtYTgM=
+        b=ER2h0R5EUYvRHKbKRllgjsr8Ptlf3W1hrkLI9Yoq/Ea9rSe4MfFDDHCaGeBhbJrq2
+         fjE/pTcNoq8rO8JYgcuel/nNTp/FVcYUh8q6E2n3ol/HqSeTg0LY7CMsF30o5oZd2y
+         0lkBxnnnzY0d7gubkqntt2YGGBXAoQq4e3NQGQtU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 18/22] locking/lockdep: Fix overflow in presentation of average lock-time
-Date:   Fri, 21 Aug 2020 12:20:10 -0400
-Message-Id: <20200821162014.349506-18-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>, Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 16/22] drm/nouveau/drm/noveau: fix reference count leak in nouveau_fbcon_open
+Date:   Fri, 21 Aug 2020 12:20:08 -0400
+Message-Id: <20200821162014.349506-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821162014.349506-1-sashal@kernel.org>
 References: <20200821162014.349506-1-sashal@kernel.org>
@@ -60,40 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit a7ef9b28aa8d72a1656fa6f0a01bbd1493886317 ]
+[ Upstream commit bfad51c7633325b5d4b32444efe04329d53297b2 ]
 
-Though the number of lock-acquisitions is tracked as unsigned long, this
-is passed as the divisor to div_s64() which interprets it as a s32,
-giving nonsense values with more than 2 billion acquisitons. E.g.
+nouveau_fbcon_open() calls calls pm_runtime_get_sync() that
+increments the reference count. In case of failure, decrement the
+ref count before returning the error.
 
-  acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-  -------------------------------------------------------------------------
-    2350439395           0.07         353.38   649647067.36          0.-32
-
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20200725185110.11588-1-chris@chris-wilson.co.uk
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep_proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nouveau_fbcon.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index 35b34eccdd109..9484f934aa349 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -423,7 +423,7 @@ static void seq_lock_time(struct seq_file *m, struct lock_time *lt)
- 	seq_time(m, lt->min);
- 	seq_time(m, lt->max);
- 	seq_time(m, lt->total);
--	seq_time(m, lt->nr ? div_s64(lt->total, lt->nr) : 0);
-+	seq_time(m, lt->nr ? div64_u64(lt->total, lt->nr) : 0);
+diff --git a/drivers/gpu/drm/nouveau/nouveau_fbcon.c b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
+index 343476d157266..1b8392b382b03 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_fbcon.c
++++ b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
+@@ -184,8 +184,10 @@ nouveau_fbcon_open(struct fb_info *info, int user)
+ 	struct nouveau_fbdev *fbcon = info->par;
+ 	struct nouveau_drm *drm = nouveau_drm(fbcon->dev);
+ 	int ret = pm_runtime_get_sync(drm->dev->dev);
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
++		pm_runtime_put(drm->dev->dev);
+ 		return ret;
++	}
+ 	return 0;
  }
  
- static void seq_stats(struct seq_file *m, struct lock_stat_data *data)
 -- 
 2.25.1
 
