@@ -2,103 +2,132 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88194C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE3CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE46207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13EE20855
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:55:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgHUPx6 (ORCPT
+        id S1727957AbgHUPzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:53:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56492 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726542AbgHUPxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:53:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C0183AC65;
-        Fri, 21 Aug 2020 15:54:19 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 7DD391E1312; Fri, 21 Aug 2020 17:53:51 +0200 (CEST)
-Date:   Fri, 21 Aug 2020 17:53:51 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, Jan Kara <jack@suse.cz>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] mm: Use pagevec_lookup in shmem_unlock_mapping
-Message-ID: <20200821155351.GD3432@quack2.suse.cz>
-References: <20200819150555.31669-1-willy@infradead.org>
- <20200819150555.31669-2-willy@infradead.org>
+        Fri, 21 Aug 2020 11:55:25 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:39000 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgHUPzS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 11:55:18 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 8848480516;
+        Fri, 21 Aug 2020 17:55:06 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 17:55:05 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
+        Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
+        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+Message-ID: <20200821155505.GA300361@ravnborg.org>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+ <20200819152120.GA106437@ravnborg.org>
+ <20200819174027.70b39ee9@coco.lan>
+ <20200819173558.GA3733@ravnborg.org>
+ <20200821155801.0b820fc6@coco.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200819150555.31669-2-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200821155801.0b820fc6@coco.lan>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=D19gQVrFAAAA:8 a=edBkpzIAjiy-cUzT3AwA:9
+        a=CjuIK1q_8ugA:10 a=W4TVW4IDbPiebHqcZpNg:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-08-20 16:05:49, Matthew Wilcox (Oracle) wrote:
-> The comment shows that the reason for using find_get_entries() is now
-> stale; find_get_pages() will not return 0 if it hits a consecutive run
-> of swap entries, and I don't believe it has since 2011.  pagevec_lookup()
-> is a simpler function to use than find_get_pages(), so use it instead.
+Hi Mauro.
+
+Thanks for the detailed feedabck.
+Two comments in the following.
+
+	Sam
+
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-This looks good to me. You can add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  mm/shmem.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
+> > > +	ctx->dss_pri_clk = devm_clk_get(dev, "clk_edc0");
+> > > +	if (!ctx->dss_pri_clk) {
+> > > +		DRM_ERROR("failed to parse dss_pri_clk\n");
+> > > +	return -ENODEV;
+> > > +	}
+> ...
 > 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 271548ca20f3..a7bbc4ed9677 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -840,7 +840,6 @@ unsigned long shmem_swap_usage(struct vm_area_struct *vma)
->  void shmem_unlock_mapping(struct address_space *mapping)
->  {
->  	struct pagevec pvec;
-> -	pgoff_t indices[PAGEVEC_SIZE];
->  	pgoff_t index = 0;
->  
->  	pagevec_init(&pvec);
-> @@ -848,16 +847,8 @@ void shmem_unlock_mapping(struct address_space *mapping)
->  	 * Minor point, but we might as well stop if someone else SHM_LOCKs it.
->  	 */
->  	while (!mapping_unevictable(mapping)) {
-> -		/*
-> -		 * Avoid pagevec_lookup(): find_get_pages() returns 0 as if it
-> -		 * has finished, if it hits a row of PAGEVEC_SIZE swap entries.
-> -		 */
-> -		pvec.nr = find_get_entries(mapping, index,
-> -					   PAGEVEC_SIZE, pvec.pages, indices);
-> -		if (!pvec.nr)
-> +		if (!pagevec_lookup(&pvec, mapping, &index))
->  			break;
-> -		index = indices[pvec.nr - 1] + 1;
-> -		pagevec_remove_exceptionals(&pvec);
->  		check_move_unevictable_pages(&pvec);
->  		pagevec_release(&pvec);
->  		cond_resched();
-> -- 
-> 2.28.0
+> > I had expected some of these could fail with a PROBE_DEFER.
+> > Consider to use the newly introduced dev_probe_err()
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> Yeah, getting clock lines can fail. I was unable to find dev_probe_err(),
+> at least on Kernel 5.9-rc1. I saw this comment:
+> 
+> 	https://lkml.org/lkml/2020/3/6/356
+> 
+> It sounds it didn't reach upstream. Anyway, I add error handling for the
+> the clk_get calls:
+> 
+> 	ctx->dss_pri_clk = devm_clk_get(dev, "clk_edc0");
+> 	ret = PTR_ERR_OR_ZERO(ctx->dss_pri_clk);
+> 	if (ret == -EPROBE_DEFER) {
+> 		return ret;
+> 	} else if (ret) {
+> 		DRM_ERROR("failed to parse dss_pri_clk: %d\n", ret);
+> 		return ret;
+> 	}
+> 
+> This should be able to detect deferred probe, plus to warn
+> about other errors.
+
+I got the name wrong. It is named dev_err_probe(), and was introduced in -rc1.
+ 
+> > Can the panel stuff be moved out and utilise drm_panel?
+> 
+> I saw the code at drm_panel. The real issue here is that I can't
+> test anything related to panel support, as I lack any hardware
+> for testing. So, there's a high chance I may end breaking
+> something while trying to do that.
+
+I will try to take a look again when you post next revision.
+Maybe we should update it and risk that is not works, so whenever
+someone try to fix it they do so on top of an up-to-date implmentation.
+Lets se and decide later.
+
+
+	Sam
