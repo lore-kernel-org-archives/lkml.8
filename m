@@ -2,142 +2,166 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF63C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C536C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79D3920720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:46:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="e/tTvIsW"
+	by mail.kernel.org (Postfix) with ESMTP id 18E37207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597999652;
+	bh=swmC7UAXvWT1qPRy+nmc9swuccmpZt4xQ+XxVpcsw4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s1zgLriYbmdMS+rMpU3TxE49IitXnG3GRy7qmIAR72laEfPA8w/F72+O1gMX8SMaf
+	 YuWVsC3H0uKkDVjAFwBSqlbIKVJF+2i1d6xQTuU+evRgJURvMflinsK+ryfDZ3sXJ/
+	 Y922BOe3Vt6Cs19WtbzbNrM0ZwEhAWa3ax4NjObU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgHUIqv (ORCPT
+        id S1728092AbgHUIra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:46:51 -0400
-Received: from mail-mw2nam10on2052.outbound.protection.outlook.com ([40.107.94.52]:25152
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727008AbgHUIqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:46:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kefBkRWNfKeNgghAM2IZFiCbAXNWaADFM4lRTxjfjMSl096Q9qeQbuiGGdzNhKgCjN42T9Vh3MuUE3HCjh48v19Hv2t+J6kKUcQsI+QhgdTdrJx/2rM1kJ8sV1QDaBfY1ZsGNAY01y6fMBPUQgtQ1MnczRJPtJ9Aw8lVHwJjSme4Hv8yuOaLEACONGNq7b/nvs88GIlZo3hj4tf6EZJsxHLLpwC+B8/w0KJTeZ7i+YSfUoiLW0TlUDasiMSlOaIwMWgslOg93xSC35ExC8pmFDyP65KvKA/h08OkYvW113+21gWO1qtBh+U0mrL9JH7JJOFeVoIKJP+XTslafP76bw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3mdL0QKGf1VMaxE+yFFiPcOi2C+u5aL005WruikGTZs=;
- b=TvuMQYLTHZfnC87ahfV9OZ2kpEtKQJ0qy0bkrmTg+A+z39pava+EWVOsYa6yJUerzITH5Qy80zfOpD4CGaPsPG5ZDv4Z2LctUJven127035C8AelSx0ChUeHphHg8HAJ+rw8ujx/X5TG4YsJYxmTOfzC+U66owhAvFyChPP7qk7T1S24oHMhotlnwnLoNakWJvTOnni7U1CZil9ujTEnLylTItl/PWEXjTSIj5f7+RlzTVRifcSWloe/YZ03Pj2ONFplp3vzm/cMEWWKJD8zkfxLwSVWls0r0YxRGjWLxJzB48/7d9W+blFrMcSMg6B8fuIVSz/tw2bnYaE6hz4yYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3mdL0QKGf1VMaxE+yFFiPcOi2C+u5aL005WruikGTZs=;
- b=e/tTvIsWDbK+l603Nqljm2zQayPC+Qo2l669nrkzSymAKA2qW5Slbea76u6ZvkVT714+K6kn4Bepj/zSjBHZGXDBIipqdtK+tImeyYXIXSj9IBkjc9Uy6N5Jm1pkDKairICnh5Ym3JMxKkq2TRaiLCFBpw1i9tJJA9menph6qYo=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=windriver.com;
-Received: from SN6PR11MB3360.namprd11.prod.outlook.com (2603:10b6:805:c8::30)
- by SA0PR11MB4637.namprd11.prod.outlook.com (2603:10b6:806:97::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Fri, 21 Aug
- 2020 08:46:46 +0000
-Received: from SN6PR11MB3360.namprd11.prod.outlook.com
- ([fe80::4497:4639:274:54d6]) by SN6PR11MB3360.namprd11.prod.outlook.com
- ([fe80::4497:4639:274:54d6%6]) with mapi id 15.20.3305.025; Fri, 21 Aug 2020
- 08:46:46 +0000
-Subject: Re: [PATCH] mips/oprofile: Fix fallthrough placement
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     rric@kernel.org, oprofile-list@lists.sf.net,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200820125440.350184-1-zhe.he@windriver.com>
- <20200821074821.GD8336@alpha.franken.de>
-From:   He Zhe <zhe.he@windriver.com>
-Message-ID: <5e86b824-4c92-3cfe-fc36-493425e85f2a@windriver.com>
-Date:   Fri, 21 Aug 2020 16:46:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200821074821.GD8336@alpha.franken.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: BYAPR08CA0053.namprd08.prod.outlook.com
- (2603:10b6:a03:117::30) To SN6PR11MB3360.namprd11.prod.outlook.com
- (2603:10b6:805:c8::30)
+        Fri, 21 Aug 2020 04:47:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726433AbgHUIr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 04:47:29 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61B5420720;
+        Fri, 21 Aug 2020 08:47:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597999648;
+        bh=swmC7UAXvWT1qPRy+nmc9swuccmpZt4xQ+XxVpcsw4o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s3m8yO83/JP46GlOofMZy8mYtCgS84V8pMCg79cDORut0LvOof7cy6AH5z6O2Xxaw
+         I/WYJNMHujM65sbfFB3EPI1hcMkpSHIxz8O87NXIRciOLPxm1rKhYaHDjFhofKhh7d
+         RNhKOvrWVZDPB9J2eaJ+DgiQXbx9IrqSP2FjESOU=
+Date:   Fri, 21 Aug 2020 09:47:17 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Barry Song <song.bao.hua@hisilicon.com>
+Cc:     hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        ganapatrao.kulkarni@cavium.com, catalin.marinas@arm.com,
+        iommu@lists.linux-foundation.org, linuxarm@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        huangdaode@huawei.com,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v6 1/2] dma-contiguous: provide the ability to reserve
+ per-numa CMA
+Message-ID: <20200821084717.GA20255@willie-the-truck>
+References: <20200821022615.28596-1-song.bao.hua@hisilicon.com>
+ <20200821022615.28596-2-song.bao.hua@hisilicon.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BYAPR08CA0053.namprd08.prod.outlook.com (2603:10b6:a03:117::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Fri, 21 Aug 2020 08:46:43 +0000
-X-Originating-IP: [60.247.85.82]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2101f93d-d5c1-442c-98b9-08d845aebc33
-X-MS-TrafficTypeDiagnostic: SA0PR11MB4637:
-X-Microsoft-Antispam-PRVS: <SA0PR11MB4637CB95445D9B262D89388F8F5B0@SA0PR11MB4637.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: m7HQOBQyScLygMHiJiB+FNW3l5N4JnJE9pjmQDjOAkmDvEi5D40TM5GHxayKcoJ4DR0xbLm+UvKSVSlJ30qtqg6ANMeaPY6hhAuTYWzpJPwSX6dnPmWEY6tA4FuYCz2o5ljFQvaanXQbLOZOcWX51Gw1dp+4LtCOPMdgRi/nwSSOT8vE7d2FW9Teyz+bZ68poEKeVyg5M3N9lhyJ8YhYcv3XkAKrUMDlN8x4LlIdMO9zj3OMhM9XUSw/10DoI4aZs8CPLcz1nU5XMjVLsQdElh5288qowM0xpkh4eXOF5c0lIdpWshxOZ2wy1AgCnpqFdkpmD/uzb6qnlhvOr7Dh3S9GX/0z0auE5uXG0EsHEXTr6Y5/qWnQRalbgJO7eelzhqUhHUrejC8bz4/3IuhAY2STkLIe3iQV6bsGEBfTWBd08RkpUZDp4hDYPAYQaMr9vKCx2RWCnXETBqCaE8mznFXhOoqUKLE59Ws92BbA9Zo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3360.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(39850400004)(366004)(346002)(376002)(4326008)(31686004)(6486002)(8676002)(16576012)(186003)(2616005)(956004)(316002)(6666004)(8936002)(52116002)(110011004)(2906002)(83380400001)(66476007)(6916009)(53546011)(66946007)(5660300002)(66556008)(86362001)(966005)(36756003)(478600001)(26005)(31696002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 4j+G2VRhl7QB4uZhuvM7oWx2bPcq14tLuuNTaO/yjdWs6EktAjLBqMjl88AYJCj5bNL+mKEYl1HV8JFg6zWI7QhPtRW070hp+b1w9/GtoKeEIRMSKqFW392TNHkLe3MyZO4LZg8kshkF0wxVXMLJNNw0jq/dq8HWUVOYP4kJG7FenXZRWZjjq5i91WFFR1PWBNNre0/fkveE3rwOVh7oS7kP8fNz42xr5xbUCrDeHZF8O6Uhvdy6bhvqMfrhidn0BXJ1NQ2MD6YAJY1kGlsF5TEyfDFzYy3mOdWkAi3gwzSB8B3Di9NW8W4de9hGFbcJNf35di+tmqIo7Owe8UgDSbJCMWSMEtRHFy9s6A5+AF38ajwc07J6jPDuqduYV7Qk7SaAEDFowSuXIzFgdIPj5xNFBR3U1uXYGKfQY+pUKwf23HnvkXX8/Ot+3h8p7qY9+qNtBCaPPa3w/w+t3LrG52LM4fT4Gc5XG24lDhw4ST+fzRlhUJVpxO3IqODY6FYyjFhdppNJFoM+oSkd4/A0BiQCFjC1v+im1dcy37QtCAZp1cZy3bOfXAeC9oSug/srZGqpATa1pUotGYI4j2IVF+EMx3CEDjk8rXzY54KsOXsd0eMPT4LQSx2girce9YZ6ujr50FXtl92OBn9B6Iiy1Q==
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2101f93d-d5c1-442c-98b9-08d845aebc33
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3360.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 08:46:46.3135
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4L6yCCAbRhmfD44OtLC9+Sm/NdC7A4lgIhHhZYccjF+QoyhDW4jzgoVzR+xkj2/Ttviubfci2GVqjh7iVsNTHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4637
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821022615.28596-2-song.bao.hua@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 21, 2020 at 02:26:14PM +1200, Barry Song wrote:
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index bdc1f33fd3d1..3f33b89aeab5 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -599,6 +599,15 @@
+>  			altogether. For more information, see
+>  			include/linux/dma-contiguous.h
+>  
+> +	pernuma_cma=nn[MG]
+> +			[ARM64,KNL]
+> +			Sets the size of kernel per-numa memory area for
+> +			contiguous memory allocations. A value of 0 disables
+> +			per-numa CMA altogether. DMA users on node nid will
+> +			first try to allocate buffer from the pernuma area
+> +			which is located in node nid, if the allocation fails,
+> +			they will fallback to the global default memory area.
 
+What is the default behaviour if this option is not specified? Seems like
+that should be mentioned here.
 
-On 8/21/20 3:48 PM, Thomas Bogendoerfer wrote:
-> On Thu, Aug 20, 2020 at 08:54:40PM +0800, zhe.he@windriver.com wrote:
->> From: He Zhe <zhe.he@windriver.com>
->>
->> We want neither
->> "
->> include/linux/compiler_attributes.h:201:41: warning: statement will never
->> be executed [-Wswitch-unreachable]
->>   201 | # define fallthrough __attribute__((__fallthrough__))
->>       |                      ^~~~~~~~~~~~~
->> "
->> nor
->> "
->> include/linux/compiler_attributes.h:201:41: warning: attribute
->> 'fallthrough' not preceding a case label or default label
->>   201 | # define fallthrough __attribute__((__fallthrough__))
->>       |                      ^~~~~~~~~~~~~
->> "
->>
->> It's not worth adding one more macro. Let's simply place the fallthrough
->> in between the expansions.
->>
->> Signed-off-by: He Zhe <zhe.he@windriver.com>
-> there is already another patch for the problem, which I've applied
-> to mips-fixes.
+> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+> index 847a9d1fa634..db7a37ed35eb 100644
+> --- a/kernel/dma/Kconfig
+> +++ b/kernel/dma/Kconfig
+> @@ -118,6 +118,16 @@ config DMA_CMA
+>  	  If unsure, say "n".
+>  
+>  if  DMA_CMA
+> +
+> +config DMA_PERNUMA_CMA
+> +	bool "Enable separate DMA Contiguous Memory Area for each NUMA Node"
 
-You mean the below one?
-https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/commit/?h=mips-fixes&id=5900acb374fe2f4f42bbcb2c84db64f582d917a1
+I don't understand the need for this config option. If you have DMA_DMA and
+you have NUMA, why wouldn't you want this enabled?
 
-That patch handles the first warning in my commit log but does not handle the
-second one which is introduced since gcc v10.1.0 commit 6c80b1b56dec
-("Make more bad uses of fallthrough attribute into pedwarns.").
+> +	help
+> +	  Enable this option to get pernuma CMA areas so that devices like
+> +	  ARM64 SMMU can get local memory by DMA coherent APIs.
+> +
+> +	  You can set the size of pernuma CMA by specifying "pernuma_cma=size"
+> +	  on the kernel's command line.
+> +
+>  comment "Default contiguous memory area size:"
+>  
+>  config CMA_SIZE_MBYTES
+> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+> index cff7e60968b9..89b95f10e56d 100644
+> --- a/kernel/dma/contiguous.c
+> +++ b/kernel/dma/contiguous.c
+> @@ -69,6 +69,19 @@ static int __init early_cma(char *p)
+>  }
+>  early_param("cma", early_cma);
+>  
+> +#ifdef CONFIG_DMA_PERNUMA_CMA
+> +
+> +static struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
+> +static phys_addr_t pernuma_size_bytes __initdata;
+> +
+> +static int __init early_pernuma_cma(char *p)
+> +{
+> +	pernuma_size_bytes = memparse(p, &p);
+> +	return 0;
+> +}
+> +early_param("pernuma_cma", early_pernuma_cma);
+> +#endif
+> +
+>  #ifdef CONFIG_CMA_SIZE_PERCENTAGE
+>  
+>  static phys_addr_t __init __maybe_unused cma_early_percent_memory(void)
+> @@ -96,6 +109,34 @@ static inline __maybe_unused phys_addr_t cma_early_percent_memory(void)
+>  
+>  #endif
+>  
+> +#ifdef CONFIG_DMA_PERNUMA_CMA
+> +void __init dma_pernuma_cma_reserve(void)
+> +{
+> +	int nid;
+> +
+> +	if (!pernuma_size_bytes)
+> +		return;
 
-Zhe
+If this is useful (I assume it is), then I think we should have a non-zero
+default value, a bit like normal CMA does via CMA_SIZE_MBYTES.
 
->
-> Thomas.
->
+> +	for_each_node_state(nid, N_ONLINE) {
 
+for_each_online_node() {
+
+> +		int ret;
+> +		char name[20];
+
+20?
+
+Ah, wait, this is copy-pasta from hugetlb_cma_reserve(). Can you factor out
+the common parts at all?
+
+Will
