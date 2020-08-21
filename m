@@ -2,185 +2,390 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5039EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D459C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2163D20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F264520732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VDT1FBeO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqEmlDrr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgHUJwP (ORCPT
+        id S1728498AbgHUJwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 21 Aug 2020 05:52:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728453AbgHUJwP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 05:52:15 -0400
-Received: from mail-eopbgr130058.outbound.protection.outlook.com ([40.107.13.58]:56486
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725855AbgHUJwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:52:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jB3gFVYqEg4rMs6VvmQ84+2+sb0QDIUAkQflzFT7JDzRGXzC8queVMFXnOxNKlin1nP/mwLrpp8QpswYXbj9cRDMhtsItbq3CYaCf4+9xObeeMhuxSRFWD4OejXBzVi4S7MmUoH+tHcz8YN1Mn1+34EPWD6XgnsbWpEPrSr5FJATwRGHY5poFI8KzuFhoySAv+weuDEjzjUaVA1yTAT0L1bclsxiX+fJhUtaG11l9S4F8zAbgq5aOlpKsZJW1Eh2TodO26jorDm2st/P/OrgVUMKJrMbuBjDtzh7n36LR3hDlTlT8VufWudfyMQk473pUGKm6hVwXIaWkjr7A3khcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6y40jIdXqSjeJyX4PsUQ9ODdn5bUlDTpJNYivUJSuXI=;
- b=JVMfsm3SRs/Izqk1gIPS1e4jMzSK1yfNSvrTAZLju6phLsSVwNnrgTxI7S9mS+03yvo119dNOAIgVbzR4jFbjR1S8TRkxkOUjzeUCaii1g7gNoxlOIaeoyGypMCD85H9TyFwFhuSUsVZFUoB8seIn8hU5dCHi/O8buElF5xM2H0rJerTqXYsp//TWOGsV2fXGocSjvNnwgGplllMkCKb6uhfs2cVBn8AVgK558oBs/onLLVCgYdhhyIKo/DJBNNgZoC3/qePH+oq2R6tu/eHR8WnvsXIu6/aadD/B8otehMzE702HqqTRrULkOwHVSE0QgnX5w/FqTKmYzS0hH2J0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6y40jIdXqSjeJyX4PsUQ9ODdn5bUlDTpJNYivUJSuXI=;
- b=VDT1FBeOURzIfGzWZtYbITCrgRArGgVdFsT8fHc1iyYWLpHv8aq8KD0TlVIJW+eVQSxZFAnaZx8jU+CNQWwi+/0j6nsnKfrZ49zu2t8qdVasmqbVQw1MW7Y82Odp/wAC5VMxraAZkqfPCnNt9LICS/ts+OhraaXm911dAYwMcPc=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VI1PR0402MB3711.eurprd04.prod.outlook.com (2603:10a6:803:18::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.20; Fri, 21 Aug
- 2020 09:52:00 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::ad7f:d95a:5413:a950]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::ad7f:d95a:5413:a950%3]) with mapi id 15.20.3283.027; Fri, 21 Aug 2020
- 09:52:00 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Lars-Peter Clausen <lars@metafoo.de>
-CC:     Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Richard Leitner - SKIDATA <Richard.Leitner@skidata.com>
-Subject: RE: pcm|dmaengine|imx-sdma race condition on i.MX6
-Thread-Topic: pcm|dmaengine|imx-sdma race condition on i.MX6
-Thread-Index: AQHWcWQbD9eqMlwY2U27XyctTVPmVak3Rd/wgASnXICAA2IfgIABSsWAgAFIBOA=
-Date:   Fri, 21 Aug 2020 09:52:00 +0000
-Message-ID: <VE1PR04MB66386A43E2BCC5B758D1A71A895B0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20200813112258.GA327172@pcleri>
- <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <61498763c60e488a825e8dd270732b62@skidata.com>
- <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
- <20200820065221.GF19745@pengutronix.de>
-In-Reply-To: <20200820065221.GF19745@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 097eb0c9-f049-4500-28cd-08d845b7d9b6
-x-ms-traffictypediagnostic: VI1PR0402MB3711:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB371166538E756AEADF38C128895B0@VI1PR0402MB3711.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: m6hn9tmks7/tkOwxMbBBNzb8gPsV/7Yiqc3nxENZUkmYccM9jnFboAXjspVYH8oKu0gKdlCdq8k5EpRuTr49UAXq1yBsuYXy2WEa4U2g9zBwK+kRtZGUwgD4TmxRNVXIdDf3PPxaDzM7YZOSCcULarC1EXEaBwOcW5g9CzCTapRF2fjAE6/EZuz03TaABzUcXPO3Dy5jVqqZI6xHNt0b3AiRNZqJbrRGf1nGhEQ+FnmE4n0VQnGxFm68yzotyD/uXUskxsIG2gEicfPrZLlHWdELN9YYr3SaMMGRvDBXpLqUHCXCFFKKYHKxvdiMqJ6p2/QVDgS/7riiyleMvOwTkH6TdLPNWtrrxwpdyJfL74BLqELxERTE8i0TN9FEe4wHDvZQDOWZIVJXzsjtQJijtA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(9686003)(71200400001)(966005)(8676002)(8936002)(86362001)(478600001)(54906003)(66946007)(4326008)(110136005)(7696005)(5660300002)(316002)(66556008)(66476007)(7416002)(66446008)(64756008)(83380400001)(2906002)(55016002)(186003)(52536014)(76116006)(33656002)(26005)(53546011)(6506007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 9m9kvxJP/MKG3SqF7SYW/hf1CHuUtprmGV+IfeJATDqWwSX3PlyUBvn8WOqYTxUUhdEIXl0Dciyp9dd5sdlz7v384QZwrmofA2Z3Pzassy1o23E3PHS4FdP2fcI4mPSpfaIzGZOYMNkLFxswouqPOyP3z0KmFTQfJzgATcBfWKlv4MUfCrOhLNUEmR5T5IO74elDmLzMmqrlcI9pgCqwNYBzNEjnE4nX2dfng4n1HHT05miEoNPZQbS06z0AJxllDl2n/5+hlFQUjLPVq6U/IBLvcJRxtrTKZ2dTf4U66HgVfyF7H85jRSjFlI22tdk5VCLH7jMizQ7di7QtdusJbmjKCTetKi1RRR7xXq3Mcy4Qx3YSGgd0FmdpmChD3WxdU/baVpC255O6iuBFxFAN8NegOJ7tis12NmhPTsC/Z1AdjE2ouyCkSCi02Hvn4te7YdLHMm8k6U926K6RmXI5OauJXvybKPRpeIGJvpl1Sdb1W4KeQaKZZRsXma13uMh/vze/lgw2nwg0IjkcTrvdtRpICLkc1UaXszsNp8JwzoODIKpluS39aSLwTfB1JGuzOggUkjZZBWFecaZkZ8I162p8pJSVE5IWM96WMFgot7BbHWgitcfG1OtnJwK+vJfEQQVhH6FpQfWkQvdBHrwWGQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 097eb0c9-f049-4500-28cd-08d845b7d9b6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2020 09:52:00.4542
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8ZU/iO6CvjQ+2nP/PrMxq5fVccSiMqsbS1EVsTGlrpkFfZYbVyl6VHikPNqZNwAy40K1Xpus8X0HphcsnZozew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3711
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED9FBC061385;
+        Fri, 21 Aug 2020 02:52:14 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id d4so593596pjx.5;
+        Fri, 21 Aug 2020 02:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=8/mFnrSXtT6iJdnnmlP6WpblSsale1o7O600k1jCLPc=;
+        b=FqEmlDrrRUjV4MBe4qxSeC55eEkA9Hy/clzDJG4gySzoqS2CjV0UcoEw4bUK3NJ1BM
+         8zqYo3rWuhCebsDL6zV3Q7S0UREbmhT3roWaxGV/3k6KmoEhz5+PBIeuW6rpb95RPsB3
+         76Ki+GrHmks80o81Ku4+dYGl2yDBJ8QNVt+F1v7iLI6jJn9rJ2XKCYXqAS880dVTJppl
+         U3OW9CXUfThBgkQ0ipWAIB8IcM31mR+GRVaH9aVNpsRJgK9AstwbNlewPqKYqUtAspEH
+         l+X3ZJSwYKy623gCrN8YlD/O/aU2HOH+sDS1l0QJQfT4u48QgbeiCaElF2mqoDo823qJ
+         HWAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=8/mFnrSXtT6iJdnnmlP6WpblSsale1o7O600k1jCLPc=;
+        b=W3I6jqo/sgVHd+Ji5yZfNOdjKU1DUXXbabY+1nqMlULGmeRaJv6Rcq+Rk1t0/HhTTe
+         bxKNgoRG4OVmD/4qmiue4xvaeAwA98Yx9mUuJYleBS+lq3NCQInzpo0YEsKCa2fT3+Z7
+         2K9f2RaoDhVbhassgdjkWpBHmfjnOpRJOMUUe0g/3xcgWpSsMb5BKMKORBUMkseMvvRV
+         HnysWK7cdaDyXQWxvGE7jj6cxHhbOar3U/Fajkf91vBxEUvLF+wfGzI5Daz8eKWpBE5J
+         ncheD36vLeRjq8i66KVncosO+0mik+YfSxYtnhpi87XYPftFg38p4zXO9HK5au2u2q/J
+         1R2w==
+X-Gm-Message-State: AOAM532qJQTgsGmJVAiwOMYMY2E90mMu8+MuCAO0FhSQasIXSflAc+fR
+        UzDTuHIAGi9LJbW1EBuS7ic=
+X-Google-Smtp-Source: ABdhPJwBV0mMl6gw8eh6XoQvaGTvnTQHM9XaSVnxKz6y+OQgOFx7vGtiCAMRPgHsjSidGz+OgdQBuw==
+X-Received: by 2002:a17:902:d715:: with SMTP id w21mr1915631ply.14.1598003534446;
+        Fri, 21 Aug 2020 02:52:14 -0700 (PDT)
+Received: from sh05419pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id d5sm1479828pjw.18.2020.08.21.02.52.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Aug 2020 02:52:13 -0700 (PDT)
+From:   Hongtao Wu <wuht06@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Billows Wu <billows.wu@unisoc.com>
+Subject: [PATCH 2/2] PCI: sprd: Add support for Unisoc SoCs' PCIe controller
+Date:   Fri, 21 Aug 2020 17:51:49 +0800
+Message-Id: <1598003509-27896-3-git-send-email-wuht06@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1598003509-27896-1-git-send-email-wuht06@gmail.com>
+References: <1598003509-27896-1-git-send-email-wuht06@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/08/20 14:52 Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> On Wed, Aug 19, 2020 at 01:08:29PM +0200, Lars-Peter Clausen wrote:
-> > > For the first option, which is potentially more performant, we have
-> > > to leave the atomic PCM context and we are not sure if we are allowed=
- to.
-> > > For the second option, we would have to divide the dma_device
-> > > terminate_all into an atomic sync and an async one, which would
-> > > align with the dmaengine API, giving it the option to ensure terminat=
-ion in
-> an atomic context.
-> > > Based on my understanding, most of them are synchronous anyways, for
-> > > the currently async ones we would have to implement busy waits.
-> > > However, with this approach, we reach the WARN_ON [6] inside of an
-> > > atomic context, indicating we might not do the right thing.
-> >
-> > I don't know how feasible this is to implement in the SDMA dmaengine
-> driver.
-> > But I think what is should do is to have some flag to indicate if a
-> > terminate is in progress. If a new transfer is issued while terminate
-> > is in progress the transfer should go on a list. Once terminate
-> > finishes it should check the list and start the transfer if there are a=
-ny on the
-> list.
->=20
-> The list is already there in form of the vchan helpers the driver uses.
-Seems Lars major concern is on the race condition between next descriptor
-and sdma_channel_terminate_work which free the last terminated descriptor,
-not the ability of vchan to support multi descriptors. But anyway, I think =
-we
-should take care vchan_get_all_descriptors to free descriptors during termi=
-nate
-phase in case it's done in worker like sdma_channel_terminate_work, since t=
-hat
-may free the next descriptor wrongly. That's what my patch attached in
-0001-dmaengine-imx-sdma-add-terminated-list-for-freed-des.patch
-https://www.spinics.net/lists/arm-kernel/msg829972.html
+From: Billows Wu <billows.wu@unisoc.com>
 
->=20
-> I think the big mistake the driver makes is to configure fields in struct
-> sdma_channel and also the hardware directly in sdma_prep_memcpy(),
-> sdma_prep_slave_sg() and sdma_prep_dma_cyclic(). All information should b=
-e
-> stored in the struct sdma_desc allocated in the prep functions and only b=
-e used
-> when it's time to fire that specific descriptor.
-Sorry Sascha, seems that's another topic and your intention is to make sure=
- only
-software involved in sdma_prep_* and all HW moved into one function inside
-sdma_start_desc. I agree that will make code more clean but my concern is=20
-sdma_start_desc is protect by spin_lock which should be short as possible w=
-hile
-some HW touch as context_load may cost some time. Anyway, that's another to=
-pic,
-maybe we can refine it in the future.
+This series adds PCIe controller driver for Unisoc SoCs.
+This controller is based on DesignWare PCIe IP.
 
->=20
-> More specifically sdma_config_write() may not be called from
-> sdma_prep_slave_sg() or sdma_prep_dma_cyclic(), but instead must be calle=
-d
-> from sdma_start_desc().  sdma_config_ownership() also must be called late=
-r
-> in sdma_start_desc(). 'direction' must be a member of struct sdma_desc, n=
-ot of
-> struct sdma_channel.
->=20
-> Overall this sounds like a fair amount of work to do, but should be feasi=
-ble and
-> IMO is a step in the right direction.
->=20
-> Sascha
->=20
-> --
+Signed-off-by: Billows Wu <billows.wu@unisoc.com>
+---
+ drivers/pci/controller/dwc/Kconfig     |  12 ++
+ drivers/pci/controller/dwc/Makefile    |   1 +
+ drivers/pci/controller/dwc/pcie-sprd.c | 256 +++++++++++++++++++++++++++++++++
+ 3 files changed, 269 insertions(+)
+ create mode 100644 drivers/pci/controller/dwc/pcie-sprd.c
+
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 044a376..d26ce94 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -311,4 +311,16 @@ config PCIE_AL
+ 	  required only for DT-based platforms. ACPI platforms with the
+ 	  Annapurna Labs PCIe controller don't need to enable this.
+
++config PCIE_SPRD
++       tristate "Unisoc PCIe controller - RC mode"
++       depends on ARCH_SPRD
++       depends on PCI_MSI_IRQ_DOMAIN
++       select PCIE_DW_HOST
++       help
++         Some Uisoc SoCs contain two PCIe controllers as RC: One is gen2,
++         and the other is gen3. While other Unisoc SoCs may have only one
++         PCIe controller which can be configured as an Endpoint(EP) or a Root
++         complex(RC). In order to enable host-specific features PCIE_SPRD must
++         be selected, which uses the Designware core.
++
+ endmenu
+diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+index a751553..eb546e9 100644
+--- a/drivers/pci/controller/dwc/Makefile
++++ b/drivers/pci/controller/dwc/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_PCI_MESON) += pci-meson.o
+ obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
+ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+ obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
++obj-$(CONFIG_PCIE_SPRD) += pcie-sprd.o
+
+ # The following drivers are for devices that use the generic ACPI
+ # pci_root.c driver but don't support standard ECAM config access.
+diff --git a/drivers/pci/controller/dwc/pcie-sprd.c b/drivers/pci/controller/dwc/pcie-sprd.c
+new file mode 100644
+index 0000000..cda812d
+--- /dev/null
++++ b/drivers/pci/controller/dwc/pcie-sprd.c
+@@ -0,0 +1,256 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * PCIe host controller driver for Unisoc SoCs
++ *
++ * Copyright (C) 2020 Unisoc corporation. http://www.unisoc.com
++ *
++ * Author: Billows Wu <Billows.Wu@unisoc.com>
++ */
++
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
++#include <linux/interrupt.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/property.h>
++#include <linux/regmap.h>
++
++#include "pcie-designware.h"
++
++#define NUM_OF_ARGS 5
++
++struct sprd_pcie {
++       struct dw_pcie *pci;
++};
++
++struct sprd_pcie_of_data {
++       enum dw_pcie_device_mode mode;
++};
++
++static int sprd_pcie_establish_link(struct dw_pcie *pci)
++{
++       return 0;
++}
++
++static const struct dw_pcie_ops sprd_pcie_ops = {
++       .start_link = sprd_pcie_establish_link,
++};
++
++int sprd_pcie_syscon_setting(struct platform_device *pdev, char *env)
++{
++       struct device_node *np = pdev->dev.of_node;
++       int i, count, err;
++       u32 type, delay, reg, mask, val, tmp_val;
++       struct of_phandle_args out_args;
++       struct regmap *iomap;
++       struct device *dev = &pdev->dev;
++
++       if (!of_find_property(np, env, NULL)) {
++               dev_info(dev, "There isn't property %s in dts\n", env);
++               return 0;
++       }
++
++       count = of_property_count_elems_of_size(np, env,
++                               (NUM_OF_ARGS + 1) * sizeof(u32));
++       dev_info(dev, "Property (%s) reg count is %d :\n", env, count);
++
++       for (i = 0; i < count; i++) {
++               err = of_parse_phandle_with_fixed_args(np, env, NUM_OF_ARGS,
++                                                      i, &out_args);
++               if (err < 0)
++                       return err;
++
++               type = out_args.args[0];
++               delay = out_args.args[1];
++               reg = out_args.args[2];
++               mask = out_args.args[3];
++               val = out_args.args[4];
++
++               iomap = syscon_node_to_regmap(out_args.np);
++
++               switch (type) {
++               case 0:
++                       regmap_update_bits(iomap, reg, mask, val);
++                       break;
++
++               case 1:
++                       regmap_read(iomap, reg, &tmp_val);
++                       tmp_val &= (~mask);
++                       tmp_val |= (val & mask);
++                       regmap_write(iomap, reg, tmp_val);
++                       break;
++               default:
++                       break;
++               }
++
++               if (delay)
++                       usleep_range(delay, delay + 10);
++
++               regmap_read(iomap, reg, &tmp_val);
++               dev_dbg(&pdev->dev,
++                       "%2d:reg[0x%8x] mask[0x%8x] val[0x%8x] result[0x%8x]\n",
++                       i, reg, mask, val, tmp_val);
++       }
++
++       return i;
++}
++
++static void sprd_pcie_perst_assert(struct platform_device *pdev)
++{
++       sprd_pcie_syscon_setting(pdev, "sprd,pcie-perst-assert");
++}
++
++static void sprd_pcie_perst_deassert(struct platform_device *pdev)
++{
++       sprd_pcie_syscon_setting(pdev, "sprd,pcie-perst-deassert");
++}
++
++static int sprd_pcie_host_shutdown(struct platform_device *pdev)
++{
++       int ret;
++       struct device *dev = &pdev->dev;
++
++       ret = sprd_pcie_syscon_setting(pdev, "sprd,pcie-shutdown-syscons");
++       if (ret < 0)
++               dev_err(dev,
++                       "Failed to set pcie shutdown syscons, return %d\n",
++                       ret);
++
++       sprd_pcie_perst_assert(pdev);
++
++       ret = pm_runtime_put(&pdev->dev);
++       if (ret < 0)
++               dev_warn(&pdev->dev,
++                        "Failed to put runtime,return %d\n", ret);
++
++       return ret;
++}
++
++static int sprd_pcie_host_init(struct pcie_port *pp)
++{
++       struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++       struct platform_device *pdev = to_platform_device(pci->dev);
++
++       sprd_pcie_perst_deassert(pdev);
++
++       dw_pcie_setup_rc(pp);
++
++       if (IS_ENABLED(CONFIG_PCI_MSI))
++               dw_pcie_msi_init(pp);
++
++       if (dw_pcie_wait_for_link(pci)) {
++               dev_warn(pci->dev,
++                        "pcie ep may has not been powered on yet\n");
++               sprd_pcie_host_shutdown(pdev);
++       }
++
++       return 0;
++}
++
++static const struct dw_pcie_host_ops sprd_pcie_host_ops = {
++       .host_init = sprd_pcie_host_init,
++};
++
++static int sprd_add_pcie_port(struct platform_device *pdev)
++{
++       struct resource *res;
++       struct device *dev = &pdev->dev;
++       struct sprd_pcie *ctrl = platform_get_drvdata(pdev);
++       struct dw_pcie *pci = ctrl->pci;
++       struct pcie_port *pp = &pci->pp;
++
++       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
++       if (!res)
++               return -EINVAL;
++
++       pci->dbi_base = devm_ioremap(dev, res->start, resource_size(res));
++       if (!pci->dbi_base)
++               return -ENOMEM;
++
++       pp->ops = &sprd_pcie_host_ops;
++
++       if (IS_ENABLED(CONFIG_PCI_MSI)) {
++               pp->msi_irq = platform_get_irq_byname(pdev, "msi");
++               if (pp->msi_irq < 0) {
++                       dev_err(dev, "Failed to get msi, return %d\n",
++                               pp->msi_irq);
++                       return pp->msi_irq;
++               }
++       }
++
++       return dw_pcie_host_init(pp);
++}
++
++static int sprd_pcie_probe(struct platform_device *pdev)
++{
++       struct device *dev = &pdev->dev;
++       struct dw_pcie *pci;
++       struct sprd_pcie *ctrl;
++       int ret;
++
++       ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
++       if (!ctrl)
++               return -ENOMEM;
++
++       pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
++       if (!pci)
++               return -ENOMEM;
++
++       pci->dev = dev;
++       pci->ops = &sprd_pcie_ops;
++       ctrl->pci = pci;
++
++       platform_set_drvdata(pdev, ctrl);
++
++       pm_runtime_enable(dev);
++       ret = pm_runtime_get_sync(dev);
++       if (ret < 0) {
++               dev_err(dev, "Fialed to get runtime sync, return %d\n", ret);
++               goto err_get_sync;
++       }
++
++       ret = sprd_pcie_syscon_setting(pdev, "sprd,pcie-startup-syscons");
++       if (ret < 0) {
++               dev_err(dev, "Failed to get pcie syscons, return %d\n", ret);
++               goto err_power_off;
++       }
++
++       ret = sprd_add_pcie_port(pdev);
++       if (ret)
++               dev_warn(dev, "Failed to initialize RC controller\n");
++
++       return 0;
++
++err_power_off:
++       sprd_pcie_syscon_setting(pdev, "sprd,pcie-shutdown-syscons");
++
++err_get_sync:
++       pm_runtime_put(&pdev->dev);
++       pm_runtime_disable(dev);
++
++       return ret;
++}
++
++static const struct of_device_id sprd_pcie_of_match[] = {
++       {
++               .compatible = "sprd,pcie",
++       },
++       {},
++};
++
++static struct platform_driver sprd_pcie_driver = {
++       .probe = sprd_pcie_probe,
++       .driver = {
++               .name = "sprd-pcie",
++               .of_match_table = sprd_pcie_of_match,
++       },
++};
++
++module_platform_driver(sprd_pcie_driver);
++
++MODULE_DESCRIPTION("Unisoc PCIe host controller driver");
++MODULE_LICENSE("GPL v2");
+--
+2.7.4
 
