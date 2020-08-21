@@ -2,130 +2,157 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1208AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6343AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37E0207DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:03:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HazYeEzK"
+	by mail.kernel.org (Postfix) with ESMTP id 4ACB4207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:03:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgHUBDl (ORCPT
+        id S1726946AbgHUBDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 21:03:41 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:55920 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726309AbgHUBDl (ORCPT
+        Thu, 20 Aug 2020 21:03:49 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:58194 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726309AbgHUBDp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 21:03:41 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 9C2BE30C016;
-        Thu, 20 Aug 2020 18:01:04 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 9C2BE30C016
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1597971664;
-        bh=gfV9uR728yHTYUxg7H5ULAzW8rEUVFV045F+OHaYPqQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HazYeEzKIGHdcBMStV0QAJpJ20cR1oqFarwW88uBZ3id4PtnGXyXZvPmW/LWkaddu
-         TPIzdRAx9W0Db4XCVEUFJH5SXrhH38bfDK+IJdOPr46EfJLrAbU/UsEAjAMnjIsnkM
-         rtvGP7HrXL92HHD2EOXPxEYsMerocf4crc9/r/S4=
-Received: from lbrmn-mmayer.ric.broadcom.net (lbrmn-mmayer.ric.broadcom.net [10.136.28.150])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id BA7B214008B;
-        Thu, 20 Aug 2020 18:03:38 -0700 (PDT)
-From:   Markus Mayer <markus.mayer@broadcom.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Markus Mayer <markus.mayer@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: [PATCH] memory: brcmstb_dpfe: fix array index out of bounds
-Date:   Thu, 20 Aug 2020 18:03:33 -0700
-Message-Id: <20200821010333.20436-1-mmayer@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 20 Aug 2020 21:03:45 -0400
+Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id AF65F823059;
+        Fri, 21 Aug 2020 11:03:31 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1k8vSs-0007mS-Td; Fri, 21 Aug 2020 11:03:30 +1000
+Date:   Fri, 21 Aug 2020 11:03:30 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Gao Xiang <hsiangkao@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Eric Sandeen <esandeen@redhat.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by
+ mistake
+Message-ID: <20200821010330.GC7728@dread.disaster.area>
+References: <20200820045323.7809-1-hsiangkao@redhat.com>
+ <20200820233446.GB7728@dread.disaster.area>
+ <20200821002145.GA28298@xiangao.remote.csb>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821002145.GA28298@xiangao.remote.csb>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0 cx=a_idp_d
+        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
+        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=7-415B0cAAAA:8
+        a=6Q28Y-3DynG6Ewtw8AoA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We would overrun the error_text array if we hit a TIMEOUT condition,
-because we were using the error code "ETIMEDOUT" (which is 110) as an
-array index.
+On Fri, Aug 21, 2020 at 08:21:45AM +0800, Gao Xiang wrote:
+> Hi Dave,
+> 
+> On Fri, Aug 21, 2020 at 09:34:46AM +1000, Dave Chinner wrote:
+> > On Thu, Aug 20, 2020 at 12:53:23PM +0800, Gao Xiang wrote:
+> > > SWP_FS is used to make swap_{read,write}page() go through
+> > > the filesystem, and it's only used for swap files over
+> > > NFS. So, !SWP_FS means non NFS for now, it could be either
+> > > file backed or device backed. Something similar goes with
+> > > legacy SWP_FILE.
+> > > 
+> > > So in order to achieve the goal of the original patch,
+> > > SWP_BLKDEV should be used instead.
+> > > 
+> > > FS corruption can be observed with SSD device + XFS +
+> > > fragmented swapfile due to CONFIG_THP_SWAP=y.
+> > > 
+> > > I reproduced the issue with the following details:
+> > > 
+> > > Environment:
+> > > QEMU + upstream kernel + buildroot + NVMe (2 GB)
+> > > 
+> > > Kernel config:
+> > > CONFIG_BLK_DEV_NVME=y
+> > > CONFIG_THP_SWAP=y
+> > 
+> > Ok, so at it's core this is a swap file extent versus THP swap
+> > cluster alignment issue?
+> 
+> I think yes.
+> 
+> > 
+> > > diff --git a/mm/swapfile.c b/mm/swapfile.c
+> > > index 6c26916e95fd..2937daf3ca02 100644
+> > > --- a/mm/swapfile.c
+> > > +++ b/mm/swapfile.c
+> > > @@ -1074,7 +1074,7 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
+> > >  			goto nextsi;
+> > >  		}
+> > >  		if (size == SWAPFILE_CLUSTER) {
+> > > -			if (!(si->flags & SWP_FS))
+> > > +			if (si->flags & SWP_BLKDEV)
+> > >  				n_ret = swap_alloc_cluster(si, swp_entries);
+> > >  		} else
+> > >  			n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
+> > 
+> > IOWs, if you don't make this change, does the corruption problem go
+> > away if you align swap extents in iomap_swapfile_add_extent() to
+> > (SWAPFILE_CLUSTER * PAGE_SIZE) instead of just PAGE_SIZE?
+> > 
+> > I.e. if the swapfile extents are aligned correctly to huge page swap
+> > cluster size and alignment, does the swap clustering optimisations
+> > for swapping THP pages work correctly? And, if so, is there any
+> > performance benefit we get from enabling proper THP swap clustering
+> > on swapfiles?
+> > 
+> 
+> Yeah, I once think about some similiar thing as well. My thought for now is
+> 
+>  - First, SWAP THP doesn't claim to support such swapfile for now.
+>    And the original author tried to explicitly avoid the whole thing in
+> 
+>    f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
+> 
+>    So such thing would be considered as some new feature and need
+>    more testing at least. But for now I think we just need a quick
+>    fix to fix the commit f0eea189e8e9 to avoid regression and for
+>    backport use.
 
-We fix the problem by correcting the array index and by providing a
-function to retrieve error messages rather than accessing the array
-directly. The function includes a bounds check that prevents the array
-from being overrun.
+Sure, a quick fix is fine for the current issue. I'm asking
+questions about the design/architecture of how THP_SWAP is supposed
+to work and whether swapfiles are violating some other undocumented
+assumption about swapping THP files...
 
-Signed-off-by: Markus Mayer <mmayer@broadcom.com>
----
+>  - It is hard for users to control swapfile in
+>    SWAPFILE_CLUSTER * PAGE_SIZE extents, especially users'
+>    disk are fragmented or have some on-disk metadata limitation or
+>    something. It's very hard for users to utilize this and arrange
+>    their swapfile physical addr alignment and fragments for now.
 
-This patch was prepared in response to https://lkml.org/lkml/2020/8/18/505.
+This isn't something users control. The swapfile extent mapping code
+rounds the swap extents inwards so that the parts of the on-disk
+extents that are not aligned or cannot hold a full page are
+omitted from the ranges of the file that can be swapped to.
 
- drivers/memory/brcmstb_dpfe.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+i.e. a file that extents aligned to 4kB is fine for a 4KB page size
+machine, but needs additional alignment to allow swapping to work on
+a 64kB page size machine. Hence the swap code rounds the file
+extents inwards to PAGE_SIZE to align them correctly. We really
+should be doing this for THP page size rather than PAGE_SIZE if
+THP_SWAP is enabled, regardless of whether swap clustering is
+enabled or not...
 
-diff --git a/drivers/memory/brcmstb_dpfe.c b/drivers/memory/brcmstb_dpfe.c
-index 81abc4a98a27..a986a849f58e 100644
---- a/drivers/memory/brcmstb_dpfe.c
-+++ b/drivers/memory/brcmstb_dpfe.c
-@@ -190,11 +190,6 @@ struct brcmstb_dpfe_priv {
- 	struct mutex lock;
- };
- 
--static const char * const error_text[] = {
--	"Success", "Header code incorrect", "Unknown command or argument",
--	"Incorrect checksum", "Malformed command", "Timed out",
--};
--
- /*
-  * Forward declaration of our sysfs attribute functions, so we can declare the
-  * attribute data structures early.
-@@ -307,6 +302,20 @@ static const struct dpfe_api dpfe_api_v3 = {
- 	},
- };
- 
-+static const char * const get_error_text(unsigned int i)
-+{
-+	static const char * const error_text[] = {
-+		"Success", "Header code incorrect",
-+		"Unknown command or argument", "Incorrect checksum",
-+		"Malformed command", "Timed out", "Unknown error",
-+	};
-+
-+	if (unlikely(i >= ARRAY_SIZE(error_text)))
-+		i = ARRAY_SIZE(error_text) - 1;
-+
-+	return error_text[i];
-+}
-+
- static bool is_dcpu_enabled(struct brcmstb_dpfe_priv *priv)
- {
- 	u32 val;
-@@ -446,7 +455,7 @@ static int __send_command(struct brcmstb_dpfe_priv *priv, unsigned int cmd,
- 	}
- 	if (resp != 0) {
- 		mutex_unlock(&priv->lock);
--		return -ETIMEDOUT;
-+		return -ffs(DCPU_RET_ERR_TIMEDOUT);
- 	}
- 
- 	/* Compute checksum over the message */
-@@ -695,7 +704,7 @@ static ssize_t generic_show(unsigned int command, u32 response[],
- 
- 	ret = __send_command(priv, command, response);
- 	if (ret < 0)
--		return sprintf(buf, "ERROR: %s\n", error_text[-ret]);
-+		return sprintf(buf, "ERROR: %s\n", get_error_text(-ret));
- 
- 	return 0;
- }
+Cheers,
+
+Dave.
 -- 
-2.17.1
-
+Dave Chinner
+david@fromorbit.com
