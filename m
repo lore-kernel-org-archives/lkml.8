@@ -2,99 +2,169 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18395C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00C87204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E9F204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgHUO0y (ORCPT
+        id S1727824AbgHUO2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 10:26:54 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33995 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgHUO0v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 10:26:51 -0400
-Received: by mail-oi1-f195.google.com with SMTP id z22so1660674oid.1;
-        Fri, 21 Aug 2020 07:26:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TILjLDOFeAler+h2JDe75/V/0ljXFgjHXl0TyPZmqlw=;
-        b=gtnpC0gG1IHWkbOvcHGiohFUG5aL3Q6kSXEwbrIBtwEC0K/5wZBkQXTWMnxc+aX88K
-         ZzZabnVOVwh3mqWunLhxcXSp2eB3Z5ePL3FMOmBJY1p0O7lXFmw9ML0FSa1WQwJdr5ZX
-         nUYYhPKIsYRTcziMssYgLOEVsf25oOVjE8Lsz7kZxXh7bHsXU7xFidDSoObMXJw1W5+1
-         z02dVyOEe7cI0Rawf/moTYecyy32Pl3A4jaioBqoShsvuXyaYqc21AZnnljk3BnAtoxw
-         LrGlr5tjoblMNV28hHo9habaQ1Zp0+bQDRyGUtwITis0s+deiHn1pRMyMRF59mW2HuvO
-         urGA==
-X-Gm-Message-State: AOAM531B+lBoLpr07PDz6R7VnlRN4H5DKmxwL1f7NOc9lF2blQbepVst
-        9ymL5pkUTcmRbg+lpInkv4HDoJFtFtlfKLuDKDY=
-X-Google-Smtp-Source: ABdhPJw1OdJ74/BIAVR1kJHHGz0iDXZ4xs+zxuj9ys+Af+YYTXEh+bb30Dw3y3w5+bI2uXnRe/YiUSCZFUHzrrP088w=
-X-Received: by 2002:aca:4b54:: with SMTP id y81mr1908135oia.54.1598020010626;
- Fri, 21 Aug 2020 07:26:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200816190732.6905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200816190732.6905-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdW2RTCi7rAa_tSsY7ukVM2xk6PYD526SRQU1Wd4SSz2Mw@mail.gmail.com> <CA+V-a8u-DrpNPskCwFEfaxtfSHKDGfOhcVf+y4tZ+aw9jFj=eQ@mail.gmail.com>
-In-Reply-To: <CA+V-a8u-DrpNPskCwFEfaxtfSHKDGfOhcVf+y4tZ+aw9jFj=eQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Aug 2020 16:26:39 +0200
-Message-ID: <CAMuHMdU06OFSgLkrdYPY9zaUkr0gq3wNxkaTMY4QFWwnxruB6w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: sh-pfc: r8a7790: Add CAN pins, groups and functions
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-can@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Fri, 21 Aug 2020 10:28:47 -0400
+Received: from mga09.intel.com ([134.134.136.24]:40735 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727091AbgHUO2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 10:28:47 -0400
+IronPort-SDR: 0g8xVY0iyrKT/0P9YuHYec8jsh8qSyafrdHYoXY4xMFn+yDI0Ovi5uYaBkAtNmrGyLp2Ood07j
+ hxseELYwybfA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="156595407"
+X-IronPort-AV: E=Sophos;i="5.76,337,1592895600"; 
+   d="scan'208";a="156595407"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 07:28:46 -0700
+IronPort-SDR: AJrAyZoWR5sT0vUxtRkAvJQnYwpeH8jNo6DiUn+ppEZBZqMrOJj5NQoFeLEklyk8ykP9G3Y2or
+ OT56dLCFGRfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,337,1592895600"; 
+   d="scan'208";a="497995621"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga006.fm.intel.com with ESMTP; 21 Aug 2020 07:28:41 -0700
+Subject: Re: [RFC PATCH V3 04/21] mmc: core: UHS-II support, try to select
+ UHS-II interface
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Ben Chuang <benchuanggli@gmail.com>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        Takahiro Akashi <takahiro.akashi@linaro.org>,
+        greg.tu@genesyslogic.com.tw
+References: <20200710110848.29114-1-benchuanggli@gmail.com>
+ <CAPDyKFoGQFxdNVA+A76NitGP=yZvE2z90fewAo21Q8U+bgPbBQ@mail.gmail.com>
+ <CACT4zj_iO58CPk_PTfNCot+c2Z1_vcWeVUwH2nPgN-jx43eN2g@mail.gmail.com>
+ <CAPDyKFoL8Yh_SJSw56kQsFBRE64oRGTnyzgvOm__-1f+Cvxpzw@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <a5ee1d39-01c7-acb4-fe84-64a416ced9de@intel.com>
+Date:   Fri, 21 Aug 2020 17:28:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAPDyKFoL8Yh_SJSw56kQsFBRE64oRGTnyzgvOm__-1f+Cvxpzw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On 21/08/20 3:25 pm, Ulf Hansson wrote:
+> [...]
+> 
+>>>> @@ -2300,6 +2304,33 @@ void mmc_rescan(struct work_struct *work)
+>>>>                 goto out;
+>>>>         }
+>>>>
+>>>> +       if (host->caps & MMC_CAP_UHS2) {
+>>>> +               /*
+>>>> +                * Start to try UHS-II initialization from 52MHz to 26MHz
+>>>> +                * (RCLK range) per spec.
+>>>> +                */
+>>>> +               for (i = 0; i < ARRAY_SIZE(uhs2_freqs); i++) {
+>>>> +                       unsigned int freq = uhs2_freqs[i];
+>>>> +                       int err;
+>>>> +
+>>>> +                       err = mmc_uhs2_rescan_try_freq(host,
+>>>> +                                                      max(freq, host->f_min));
+>>>> +                       if (!err) {
+>>>> +                               mmc_release_host(host);
+>>>> +                               goto out;
+>>>> +                       }
+>>>> +
+>>>> +                       if (err == UHS2_PHY_INIT_ERR)
+>>>> +                               /* UHS2 IF detect or Lane Sync error.
+>>>> +                                * Try legacy interface.
+>>>> +                                */
+>>>> +                               break;
+>>>> +
+>>>> +                       if (freq <= host->f_min)
+>>>> +                               break;
+>>>> +               }
+>>>
+>>> Assuming we change the initialization order, trying to initialize the
+>>> legacy SD interface first to figure out if UHS-II is supported, then I
+>>> think we should be able to move the entire code above into a the
+>>> UHS-II specific code/path.
+>>
+>> If the host tries to use the SD interface first,
+>> some failure status needs to be considered.
+>>
+>> For example, first run in SD mode, try UHS-II interface failure,
+>>  and then return to SD flow again.
+>> I don't know a good way to go back to SD flow again.
+> 
+> Right, a re-try path for the legacy SD interface is a very good idea!
+> However, I don't think the initial support for UHS-II needs to cover
+> it. Instead we can add that on top, don't you think?
+> 
+> As a matter of fact, we could even use something like that for
+> different legacy SD speed modes. For example, if UHS-I SDR104 fails we
+> could try with UHS-I SDR25.
+> 
+>>
+>>>
+>>>> +       }
+>>>> +
+>>>>         for (i = 0; i < ARRAY_SIZE(freqs); i++) {
+>>>>                 unsigned int freq = freqs[i];
+>>>>                 if (freq > host->f_max) {
+>>>> diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+>>>> index 5a2210c25aa7..c5b071bd98b3 100644
+>>>> --- a/drivers/mmc/core/sd.c
+>>>> +++ b/drivers/mmc/core/sd.c
+>>>> @@ -901,6 +901,20 @@ int mmc_sd_setup_card(struct mmc_host *host, struct mmc_card *card,
+>>>>                 err = mmc_read_switch(card);
+>>>>                 if (err)
+>>>>                         return err;
+>>>> +               if (host->flags & MMC_UHS2_INITIALIZED) {
+>>>
+>>> Rather than using host->flags, to tweak the behavior of
+>>> mmc_sd_setup_card() to support UHS-II, I would prefer to give
+>>> mmc_sd_setup_card() a new in-parameter that it can look at instead.
+>>
+>> Do you mean that adding a new in-parameter to mmc_sd_setup_card() likes this
+>> mmc_sd_setup_card(struct mmc_host *, struct mmc_card *, boot reinit,
+>> boot uhsii); ?
+> 
+> Correct.
+> 
+> [...]
+> 
+> Looks like we have covered most of the review for the mmc core
+> changes. But please tell me, if there is anything else you want me to
+> look at - at any time. Otherwise I am deferring to wait for a new
+> version of the series.
+> 
+> If I get some time, I may start to help with hacking some code.
+> Perhaps I can do some preparations, so it makes it easier for you to
+> add the UHS-II specific code. If so, I will let you know about it, of
+> course.
+> 
+> When it comes to the changes to SDHCI, I am relying on Adrian to give
+> his opinions.
 
-On Fri, Aug 21, 2020 at 4:23 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Fri, Aug 21, 2020 at 1:52 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Sun, Aug 16, 2020 at 9:07 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > Add pins, groups and functions for the CAN0 and CAN1 interface.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > Don't you want to add the CAN_CLK pins, too?
-> >
-> Will do. Would you prefer an incremental patch or a v2 ?
-
-Up to you. Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I have made some comments.  The thrust of which is:
+- get all the UHS-II code into sdhci-uhs2 (not sdhci.c)
+- make the driver (i.e sdhci-pci-gli) set existing mmc host ops callbacks
+and sdhci host ops callbacks as much as possible to provide UHS-II
+functionality i.e. avoid adding new hooks if possible
+- refactoring and exporting functions from sdhci.c where that can be done
+logically, but otherwise writing separate code for UHS-II
