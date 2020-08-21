@@ -2,126 +2,142 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B68C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D60F20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:51:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JZlV/bMF"
+	by mail.kernel.org (Postfix) with ESMTP id BD85520656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgHUKvb (ORCPT
+        id S1728192AbgHUKvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgHUKvP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:51:15 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C26C061386
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:51:14 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r2so1509493wrs.8
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:51:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zHmahM4WlAU5TkrnZ9qUadrG7WkBXC8LyNKGjyFPPtA=;
-        b=JZlV/bMFi3bja47qPW846zX9+5ZcUjXqZEUqi6aDKdZcnXdbDYLeAeEQt/MAPXm/ye
-         /t8CTNSmIJdEkA1GQEHfXVdG1AvitZZtz7yp9N2WRiYFeQV365HDFCP+G4UT+rfOiVLo
-         kJpE3L0T1OH8XvXmMrBPc/6NOlO4N0ENRAbC3FLerLvK6q5J5V/yBYxc/SdK36MeeeYn
-         C0Z7tuEzIcpSZmeIerWrbvrZrzFn9zvHOFEFKUXQCC83mjFLLpILW+/Qe50m+GsrJr5a
-         +8kv4f+wz5/uf3rMTnBOSG2l2+MVT4P5qJ9nM29Ti2uLcVcywA1ZHEjx8SZ24Mso1S7M
-         654A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zHmahM4WlAU5TkrnZ9qUadrG7WkBXC8LyNKGjyFPPtA=;
-        b=Gdy31xRzIzYDzdUyOPCRqbvmfX7qB9RBXbhLfxBh0A3HQOAfRE1Uu37wGYCXtcscYx
-         /U+QhJhjjcgaJskII0NdBXlTXbRhkoWSzWvR4++TwgEbAxzvKLKbOHELN8DWJytSiv2e
-         F4wEhXeGK9RkzX0ZsaDX1IVOjoYM3vfqhkwIvnoV7MsNLkgH4oDIc3bzDrUeA8oYCtag
-         50Z0YJrE/5Da0oyFwxeSkkMA3dc0ptoBrozhslleJ9pihVCLCeqqGDF5Yuho8aCf+mcL
-         wHzO0GOS9u0/fyyLjUhNTKrCVLP81E6wi6HMRwamNRd/AXhXkf9QmyK5+PCUS6FyIuB2
-         OVwg==
-X-Gm-Message-State: AOAM531m5uYiCjbbKHii2f18Xr6r/avPPmP1bbhbk2UYOliphOBat/HJ
-        1RwHPH9YO6U16ChkokeKDPPySQ==
-X-Google-Smtp-Source: ABdhPJzmKaDTcZfXCKyhcewuR1bQYiG2AundNu1zlG5E8k4jdRUOni8PGM5/AKGLL6Ql07oNTh7RJg==
-X-Received: by 2002:a5d:688d:: with SMTP id h13mr472373wru.176.1598007073221;
-        Fri, 21 Aug 2020 03:51:13 -0700 (PDT)
-Received: from [192.168.1.14] ([195.24.90.54])
-        by smtp.googlemail.com with ESMTPSA id d11sm3363460wrw.77.2020.08.21.03.51.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 03:51:12 -0700 (PDT)
-Subject: Re: [PATCH v5 0/3] Venus dynamic debug
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     jim.cromie@gmail.com, Joe Perches <joe@perches.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20200730095350.13925-1-stanimir.varbanov@linaro.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <eb96ce39-4a2e-aa94-be69-6018f4c7da33@linaro.org>
-Date:   Fri, 21 Aug 2020 13:51:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 21 Aug 2020 06:51:45 -0400
+Received: from mga07.intel.com ([134.134.136.100]:26746 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728218AbgHUKvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 06:51:25 -0400
+IronPort-SDR: QfG2kwKXAUpGt/bbPReZCfSA/Nfi/bj2vo8KqIF4OvjmW6eQyb3NzqNi+VJeLjCWwpzeB82ul7
+ ibrBae9w6KIA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="219800997"
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="219800997"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 03:51:24 -0700
+IronPort-SDR: emp+PiYWpmZnAXCHODRvwRxv6bYsWXhzCA/k6wD/LcuxCXUXXMig+vBUxPjZK3dffZbJnIBOH7
+ wCtvYqPT0iwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="327730791"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 03:51:21 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k94dj-00AK4V-2U; Fri, 21 Aug 2020 13:51:19 +0300
+Date:   Fri, 21 Aug 2020 13:51:19 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v8 1/3] devres: provide devm_krealloc()
+Message-ID: <20200821105119.GL1891694@smile.fi.intel.com>
+References: <20200820185110.17828-1-brgl@bgdev.pl>
+ <20200820185110.17828-2-brgl@bgdev.pl>
+ <20200821081555.GG1891694@smile.fi.intel.com>
+ <CAMRc=Me=D1cOsaRqK-BwHT7f-_=3=eciduA=G95FfE2e_XUWfg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200730095350.13925-1-stanimir.varbanov@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Me=D1cOsaRqK-BwHT7f-_=3=eciduA=G95FfE2e_XUWfg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Fri, Aug 21, 2020 at 10:59:19AM +0200, Bartosz Golaszewski wrote:
+> On Fri, Aug 21, 2020 at 10:35 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, Aug 20, 2020 at 08:51:08PM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-If no objections I'm going to queue 1/3 and 3/3 for v5.10. 2/3 will be
-postponed because of Stephen's comment.
+...
 
-On 7/30/20 12:53 PM, Stanimir Varbanov wrote:
-> Hello,
+> > > +static struct devres *to_devres(void *data)
+> > > +{
+> > > +     return data - ALIGN(sizeof(struct devres), ARCH_KMALLOC_MINALIGN);
+> > > +}
+> > > +
+> > > +static size_t devres_data_size(size_t total_size)
+> > > +{
+> > > +     return total_size - ALIGN(sizeof(struct devres), ARCH_KMALLOC_MINALIGN);
+> > > +}
+> >
+> > I'm fine with above, but here is a side note, perhaps
+> >
+> >         offsetof(struct devres, data)
+> >
+> > will be more practical (no duplication of alignment and hence slightly better
+> > maintenance)? (Note, I didn't check if it provides the correct result)
+> >
 > 
-> Changes in v5:
->  * 1/3 - dropped dev_warn when set FW debug level - Greg KH
->  * 3/3 - dropped pr_debug, and now group levels by prefix in dev_dbg
+> Hi Andy,
 > 
-> v4 can be fount at [1].
+> The data pointer in struct devres is defined as:
 > 
-> regards,
-> Stan
+>     u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
 > 
-> [1] https://www.spinics.net/lists/kernel/msg3550106.html
+> And this value (assigned the value of ARCH_DMA_MINALIGN) varies from
+> one arch to another. I wasn't really sure if offsetof() would work for
+> every case so I went with something very explicit.
+
+I have checked with a small program simulating to_devres() with your variant,
+offsetof() and container_of().
+
+The result is this: if MINALIGN < sizeof(long) and since struct is unpacked the
+offsetof(), and thus container_of(), gives correct result, while ALIGN()
+approach mistakenly moves pointer too back.
+
+Test results
+~~~~~~~~~~~~
+sizeof(devres), ALIGN(data), resulting 3 pointers against NULL followed by
+actual pointer of allocated struct and 3 pointers against it.
+
+% for i in 1 2 4; do gcc -O2 -Wall -DSZ=$i -o test test.c && ./test | head -n1; done
+szof: 24 a: 24 0xffffffffffffffe8 0xffffffffffffffef 0xffffffffffffffef, 0x55a3aa91e2a0: 0x55a3aa91e299 0x55a3aa91e2a0 0x55a3aa91e2a0
+szof: 24 a: 24 0xffffffffffffffe8 0xffffffffffffffee 0xffffffffffffffee, 0x563d7b88b2a0: 0x563d7b88b29a 0x563d7b88b2a0 0x563d7b88b2a0
+szof: 24 a: 24 0xffffffffffffffe8 0xffffffffffffffec 0xffffffffffffffec, 0x557d08cf82a0: 0x557d08cf829c 0x557d08cf82a0 0x557d08cf82a0
+
+% for i in 1 2 4; do gcc -m32 -O2 -Wall -DSZ=$i -o test test.c && ./test | head -n1; done
+szof: 12 a: 12 0xfffffff4 0xfffffff7 0xfffffff7, 0x584301a0: 0x5843019d 0x584301a0 0x584301a0
+szof: 12 a: 12 0xfffffff4 0xfffffff6 0xfffffff6, 0x57bd61a0: 0x57bd619e 0x57bd61a0 0x57bd61a0
+szof: 12 a: 12 0xfffffff4 0xfffffff4 0xfffffff4, 0x56b491a0: 0x56b491a0 0x56b491a0 0x56b491a0
+
+I think you need to change this to use container_of() and offsetof().
+
+> > Another side note: do we have existing users of these helpers?
 > 
-> Stanimir Varbanov (3):
->   venus: Add debugfs interface to set firmware log level
->   venus: Add a debugfs file for SSR trigger
->   venus: Make debug infrastructure more flexible
-> 
->  drivers/media/platform/qcom/venus/Makefile    |  2 +-
->  drivers/media/platform/qcom/venus/core.c      |  3 ++
->  drivers/media/platform/qcom/venus/core.h      |  8 +++
->  drivers/media/platform/qcom/venus/dbgfs.c     | 51 +++++++++++++++++++
->  drivers/media/platform/qcom/venus/dbgfs.h     | 12 +++++
->  drivers/media/platform/qcom/venus/helpers.c   |  2 +-
->  drivers/media/platform/qcom/venus/hfi_msgs.c  | 18 +++----
->  drivers/media/platform/qcom/venus/hfi_venus.c | 10 ++--
->  .../media/platform/qcom/venus/pm_helpers.c    |  2 +-
->  drivers/media/platform/qcom/venus/vdec.c      |  6 +--
->  10 files changed, 96 insertions(+), 18 deletions(-)
->  create mode 100644 drivers/media/platform/qcom/venus/dbgfs.c
->  create mode 100644 drivers/media/platform/qcom/venus/dbgfs.h
-> 
+> Which ones? Because I assume you're not referring to the ones I'm
+> adding in this patch. :)
+
+Opposite, the ones you are introduced here. Meaning that we might convert
+existing user(s) in the separate change(s) later on.
 
 -- 
-regards,
-Stan
+With Best Regards,
+Andy Shevchenko
+
+
