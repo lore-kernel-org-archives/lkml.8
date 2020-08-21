@@ -2,87 +2,123 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279BBC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8F220724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D7520724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgHUUcv (ORCPT
+        id S1726639AbgHUUeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 16:32:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725831AbgHUUcu (ORCPT
+        Fri, 21 Aug 2020 16:34:19 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:2759 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725831AbgHUUeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 16:32:50 -0400
-Received: from tartarus.angband.pl (tartarus.angband.pl [IPv6:2001:41d0:602:dbe::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 616B1C061573;
-        Fri, 21 Aug 2020 13:32:50 -0700 (PDT)
-Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
-        (envelope-from <kilobyte@angband.pl>)
-        id 1k9DiC-0000s1-NO; Fri, 21 Aug 2020 22:32:32 +0200
-Date:   Fri, 21 Aug 2020 22:32:32 +0200
-From:   Adam Borowski <kilobyte@angband.pl>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <len.brown@intel.com>
-Subject: Re: [PATCH] x86/pci: don't set acpi stuff if !CONFIG_ACPI
-Message-ID: <20200821203232.GA2187@angband.pl>
-References: <20200820125320.9967-1-kilobyte@angband.pl>
- <87y2m7rc4a.fsf@nanos.tec.linutronix.de>
+        Fri, 21 Aug 2020 16:34:18 -0400
+X-IronPort-AV: E=Sophos;i="5.76,338,1592863200"; 
+   d="scan'208";a="464264063"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 22:34:17 +0200
+Date:   Fri, 21 Aug 2020 22:34:16 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Denis Efremov <efremov@linux.com>
+cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
+Subject: Re: [Cocci] [PATCH v2] coccinelle: api: add kobj_to_dev.cocci
+ script
+In-Reply-To: <20200821201137.446423-1-efremov@linux.com>
+Message-ID: <alpine.DEB.2.22.394.2008212234060.2486@hadrien>
+References: <20200821153100.434332-1-efremov@linux.com> <20200821201137.446423-1-efremov@linux.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87y2m7rc4a.fsf@nanos.tec.linutronix.de>
-X-Junkbait: aaron@angband.pl, zzyx@angband.pl
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: kilobyte@angband.pl
-X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:13:25PM +0200, Thomas Gleixner wrote:
-> On Thu, Aug 20 2020 at 14:53, Adam Borowski wrote:
-> > Found by randconfig builds.
-> >
-> >  arch/x86/pci/intel_mid_pci.c | 2 ++
-> >  arch/x86/pci/xen.c           | 2 ++
-
-> > --- a/arch/x86/pci/intel_mid_pci.c
-> > +++ b/arch/x86/pci/intel_mid_pci.c
-> > @@ -299,8 +299,10 @@ int __init intel_mid_pci_init(void)
-> > +#ifdef CONFIG_ACPI
-> >  	/* Continue with standard init */
-> >  	acpi_noirq_set();
-> > +#endif
-
-> If CONFIG_ACPI=n then acpi_noirq_set() is an empty stub inline. So I'm
-> not sure what you are trying to solve here.
-> 
-> Ah, I see with CONFIG_ACPI=n linux/acpi.h does not include asm/acpi.h so
-> the stubs are unreachable. So that needs to be fixed and not papered
-> over with #ifdeffery
-
-If I understand Randy Dunlap correctly, he already sent a pair of patches
-that do what you want.
 
 
-Meow.
--- 
-⢀⣴⠾⠻⢶⣦⠀
-⣾⠁⢠⠒⠀⣿⡁
-⢿⡄⠘⠷⠚⠋⠀ It's time to migrate your Imaginary Protocol from version 4i to 6i.
-⠈⠳⣄⠀⠀⠀⠀
+On Fri, 21 Aug 2020, Denis Efremov wrote:
+
+> Use kobj_to_dev() instead of container_of().
+>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+
+Applied, thanks.
+
+julia
+
+> ---
+> Changes in v2:
+>  - "symbol kobj;" added to the rule r
+>
+>  scripts/coccinelle/api/kobj_to_dev.cocci | 45 ++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 scripts/coccinelle/api/kobj_to_dev.cocci
+>
+> diff --git a/scripts/coccinelle/api/kobj_to_dev.cocci b/scripts/coccinelle/api/kobj_to_dev.cocci
+> new file mode 100644
+> index 000000000000..cd5d31c6fe76
+> --- /dev/null
+> +++ b/scripts/coccinelle/api/kobj_to_dev.cocci
+> @@ -0,0 +1,45 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +///
+> +/// Use kobj_to_dev() instead of container_of()
+> +///
+> +// Confidence: High
+> +// Copyright: (C) 2020 Denis Efremov ISPRAS
+> +// Options: --no-includes --include-headers
+> +//
+> +// Keywords: kobj_to_dev, container_of
+> +//
+> +
+> +virtual context
+> +virtual report
+> +virtual org
+> +virtual patch
+> +
+> +
+> +@r depends on !patch@
+> +expression ptr;
+> +symbol kobj;
+> +position p;
+> +@@
+> +
+> +* container_of(ptr, struct device, kobj)@p
+> +
+> +
+> +@depends on patch@
+> +expression ptr;
+> +@@
+> +
+> +- container_of(ptr, struct device, kobj)
+> ++ kobj_to_dev(ptr)
+> +
+> +
+> +@script:python depends on report@
+> +p << r.p;
+> +@@
+> +
+> +coccilib.report.print_report(p[0], "WARNING opportunity for kobj_to_dev()")
+> +
+> +@script:python depends on org@
+> +p << r.p;
+> +@@
+> +
+> +coccilib.org.print_todo(p[0], "WARNING opportunity for kobj_to_dev()")
+> --
+> 2.26.2
+>
+> _______________________________________________
+> Cocci mailing list
+> Cocci@systeme.lip6.fr
+> https://systeme.lip6.fr/mailman/listinfo/cocci
+>
