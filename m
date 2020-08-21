@@ -2,116 +2,109 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCAAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ABFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 427A020738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA1820738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:11:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="raPLPjcf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgHULEM (ORCPT
+        id S1727791AbgHULLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 07:04:12 -0400
-Received: from mga05.intel.com ([192.55.52.43]:50153 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgHULEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 07:04:11 -0400
-IronPort-SDR: fRbEQ4nk4e9JMPTVyNlX6jWYsfKF6ZENSzlo/Ba5VzRUSve0v1OHhU4i8eK2+/nLidgp6YLeLk
- b0Wl9uztwiuw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="240329777"
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="240329777"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 04:04:09 -0700
-IronPort-SDR: uPIWNjKsgmbTmy5qFnQmjlcXjSPlC9PcnJM8fhrBao6WeY3rUFZ9ULanV04N/M1SeF1IQ6zCSW
- XOvQ5hAYzzlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="327733294"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 04:04:05 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k94q3-00AKBu-B3; Fri, 21 Aug 2020 14:04:03 +0300
-Date:   Fri, 21 Aug 2020 14:04:03 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v8 1/3] devres: provide devm_krealloc()
-Message-ID: <20200821110403.GP1891694@smile.fi.intel.com>
-References: <20200820185110.17828-1-brgl@bgdev.pl>
- <20200820185110.17828-2-brgl@bgdev.pl>
- <20200821081555.GG1891694@smile.fi.intel.com>
- <CAMRc=Me=D1cOsaRqK-BwHT7f-_=3=eciduA=G95FfE2e_XUWfg@mail.gmail.com>
- <20200821105119.GL1891694@smile.fi.intel.com>
+        Fri, 21 Aug 2020 07:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgHULL0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 07:11:26 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B430C061385;
+        Fri, 21 Aug 2020 04:11:26 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o13so859008pgf.0;
+        Fri, 21 Aug 2020 04:11:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=O0JOI3uzd7ucCmR5qeZbGG+pRLYOys3ZnqIcbO7aSA8=;
+        b=raPLPjcfRS5fGs6GsJeKHoRE7KZtMB/Kmt/+3TpNhYGZEkTmc9rqs5EaeEt2jXkwmR
+         Pjke8YLKuCt52Qjfrrzo1cjJGbM51qa/lguoTsbuRVTntBeFV6YmmbbY91kIBTfhraZt
+         ep/meXsgBak78BLiUDvktrLgzmxL4hY2nlMLVL2+jskO41rg2XgfixV0JeShCBEwUwgm
+         Yfwnv4PKI0n4/IwHrjUQClJ3xVdb5ixzGgAZH867Y6KYjBhurxhwLe5fjo/8pWJU+JOg
+         50NpKfxgOc2nACLFdQ9cfs9a4AaFxhk/lnmJj9JSeIi1b8zizgfXdoE1Obx8JMc2l11N
+         2ttw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=O0JOI3uzd7ucCmR5qeZbGG+pRLYOys3ZnqIcbO7aSA8=;
+        b=Rk8lQE6ZPXQI14P5ymuKkmbUvHo3v33lkEmgBj5qG+NLnAqmHoo+4sj6rcGDxVeaph
+         NfMFtM6J/JnQVdpWWxIJXJQszrKDOXsOMEODBlev5IzdID5SUEewr4yEqEbcSMBN4rha
+         H9K6UU7HP4i8pfArg8JSZhnPiShcfdzYcp5dnX1Gl+yrvmwFqzpM141dr3Ibwj1+dQ4g
+         LyaqYpyDoh3RaE2bp+IObqweCIpAM5hhSmYMPEszTiIdLRiUVC/WZ1pAJuPFNauf1UyM
+         iBiw7aWd+FDg2dKRMtch4r7RdMDwaY1Q7AsCMVCJwnW+xjmpnXsM2f2N1/SAEmZtUMma
+         x1IA==
+X-Gm-Message-State: AOAM533sh+3XQQzFhqeO496g54hDRSLdDrpRps5UNCbWQDrvKwHlQMuD
+        hw5j52y9CLjDeiVk/7bKhYRNm4YMwpY=
+X-Google-Smtp-Source: ABdhPJyN95KoCLSGpi+TFBy6i2yfFQWUvteLJM7qPop/EXa6ZcjYNEgf2G5C1Xl8hpt0GydW8Ox0Hw==
+X-Received: by 2002:a65:6287:: with SMTP id f7mr1981459pgv.307.1598008285896;
+        Fri, 21 Aug 2020 04:11:25 -0700 (PDT)
+Received: from localhost (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id o7sm1613042pjl.48.2020.08.21.04.11.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 04:11:25 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 21:11:19 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v5 0/8] huge vmalloc mappings
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linux-mm@kvack.org
+Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Zefan Li <lizefan@huawei.com>
+References: <20200821044427.736424-1-npiggin@gmail.com>
+        <bc7537f4-abc6-b7cc-ccd3-420098fec917@csgroup.eu>
+In-Reply-To: <bc7537f4-abc6-b7cc-ccd3-420098fec917@csgroup.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821105119.GL1891694@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Message-Id: <1598006399.kdw772nr6n.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 01:51:19PM +0300, Andy Shevchenko wrote:
-> On Fri, Aug 21, 2020 at 10:59:19AM +0200, Bartosz Golaszewski wrote:
-> > On Fri, Aug 21, 2020 at 10:35 AM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Thu, Aug 20, 2020 at 08:51:08PM +0200, Bartosz Golaszewski wrote:
+Excerpts from Christophe Leroy's message of August 21, 2020 3:47 pm:
+>=20
+>=20
+> Le 21/08/2020 =C3=A0 06:44, Nicholas Piggin a =C3=A9crit=C2=A0:
+>> I made this powerpc-only for the time being. It shouldn't be too hard to
+>> add support for other archs that define HUGE_VMAP. I have booted x86
+>> with it enabled, just may not have audited everything.
+>=20
+> I like this series, but if I understand correctly it enables huge=20
+> vmalloc mappings only for hugepages sizes matching a page directory=20
+> levels, ie on a PPC32 it would work only for 4M hugepages.
 
-...
+Yeah it really just uses the HUGE_VMAP mapping which is already there.
 
-> > > > +static struct devres *to_devres(void *data)
-> > > > +{
-> > > > +     return data - ALIGN(sizeof(struct devres), ARCH_KMALLOC_MINALIGN);
-> > > > +}
-> > > > +
-> > > > +static size_t devres_data_size(size_t total_size)
-> > > > +{
-> > > > +     return total_size - ALIGN(sizeof(struct devres), ARCH_KMALLOC_MINALIGN);
-> > > > +}
+> On the 8xx, we only have 8M and 512k hugepages. Any change that it can=20
+> support these as well one day ?
 
-> > The data pointer in struct devres is defined as:
-> > 
-> >     u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
-> > 
-> > And this value (assigned the value of ARCH_DMA_MINALIGN) varies from
-> > one arch to another. I wasn't really sure if offsetof() would work for
-> > every case so I went with something very explicit.
-> 
-> I have checked with a small program simulating to_devres() with your variant,
-> offsetof() and container_of().
-> 
-> The result is this: if MINALIGN < sizeof(long) and since struct is unpacked the
-> offsetof(), and thus container_of(), gives correct result, while ALIGN()
-> approach mistakenly moves pointer too back.
+The vmap_range interface can now handle that, then adding support is the
+main work. Either make it weak and arch can override it, or add some
+arch helpers to make the generic version create the huge pages if it's
+not too ugly. Then you get those large pages for ioremap for free.
 
-...
+The vmalloc part to allocate and try to map a bigger page size and use=20
+it is quite trivial to change from PMD to an arch specific size.
 
-> I think you need to change this to use container_of() and offsetof().
-
-To be clear, there is probably no real problem, except unlikely possible
-MINALIGN=4 on 64-bit arch, but for sake of the correctness.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Thanks,
+Nick
 
