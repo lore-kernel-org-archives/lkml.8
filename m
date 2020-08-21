@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD20C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96CDE206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A4D20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028342;
-	bh=NZVOiuzSBZakKmTHz5OjTIZ8cTQyyV3gE5QGmIXA1B4=;
+	s=default; t=1598028351;
+	bh=EC0gZpwbVWyRCJJFNNRf8jvNqjXRs7By//WD6ow1/qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JATBHCvKFLxisLuIbLj+9O/IcFdhFJB6Yw+lopPawOqDC+CWJhXC3MFLx7AFsv5OZ
-	 toJONMrEksg7afdQwZ9wdODkgyoxedW/fjkyd3DHxVGOJygYx1o9nh9jO4G5TBwKSg
-	 qicigaX8LImDXAuZILDcxGw0i6TxJmQXPoNqR2Pg=
+	b=cdfvwbfRcf5+yyGkB87VwYHshzTi2ze9TNc66wrfrfDhrKEMAzgSAtwImKgwLzMkQ
+	 HS4sRWaNlGBMZiJlU5b38YKJbNiAco0/q+AtSefZrIRdvj8tmUsBBpwGeAE3eFNMhR
+	 LaplCJicO6dwkEy6IaJvnm+NrqLdkUJHNgLq0xQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbgHUQpj (ORCPT
+        id S1728630AbgHUQpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:45:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:45:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728388AbgHUQUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728387AbgHUQUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:20:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27A6122CAF;
-        Fri, 21 Aug 2020 16:19:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E249B22CAD;
+        Fri, 21 Aug 2020 16:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026788;
-        bh=NZVOiuzSBZakKmTHz5OjTIZ8cTQyyV3gE5QGmIXA1B4=;
+        s=default; t=1598026786;
+        bh=EC0gZpwbVWyRCJJFNNRf8jvNqjXRs7By//WD6ow1/qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bLEvweEAXDgvhTFeZutDgvwA3zt+tjli61eDDxFomz15VX+wTWbzaXtNoaEZi3iu2
-         ROqBdwJPJQYIa9Eyq0JYjHaHwjq8krZAtQjTKuRmf/dASJhvTLFCByGHIOyOG7rhFy
-         ZPaQCFBXpYhRPIt95BwcTYqp2vlQ+an9fpVWz+H8=
+        b=kwLaDLrbj1pgGwCbTrhoI8Db6AzNG5w4ikQKlP32Iez32JcEyaCz2pjHjrCVFW2pT
+         gSjl85WVgPWq03o89T/XDBtC01IUMcY32IbD8JhL7j5+vpBIpdmg7VdFOWi6YhgxrE
+         58AnSKtLc9BM55yKf8J4T+P1hSBk4gRhduOqtv00=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 07/26] drm/amdkfd: Fix reference count leaks.
-Date:   Fri, 21 Aug 2020 12:19:18 -0400
-Message-Id: <20200821161938.349246-7-sashal@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Prakash Gupta <guptap@codeaurora.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.9 06/26] iommu/iova: Don't BUG on invalid PFNs
+Date:   Fri, 21 Aug 2020 12:19:17 -0400
+Message-Id: <20200821161938.349246-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161938.349246-1-sashal@kernel.org>
 References: <20200821161938.349246-1-sashal@kernel.org>
@@ -61,87 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit 20eca0123a35305e38b344d571cf32768854168c ]
+[ Upstream commit d3e3d2be688b4b5864538de61e750721a311e4fc ]
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object.
+Unlike the other instances which represent a complete loss of
+consistency within the rcache mechanism itself, or a fundamental
+and obvious misconfiguration by an IOMMU driver, the BUG_ON() in
+iova_magazine_free_pfns() can be provoked at more or less any time
+in a "spooky action-at-a-distance" manner by any old device driver
+passing nonsense to dma_unmap_*() which then propagates through to
+queue_iova().
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Not only is this well outside the IOVA layer's control, it's also
+nowhere near fatal enough to justify panicking anyway - all that
+really achieves is to make debugging the offending driver more
+difficult. Let's simply WARN and otherwise ignore bogus PFNs.
+
+Reported-by: Prakash Gupta <guptap@codeaurora.org>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Prakash Gupta <guptap@codeaurora.org>
+Link: https://lore.kernel.org/r/acbd2d092b42738a03a21b417ce64e27f8c91c86.1591103298.git.robin.murphy@arm.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_topology.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/iommu/iova.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-index 8c6e47c5507fb..74221e096855d 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-@@ -841,8 +841,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index f106fd9782bfb..99c36a5438a75 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -676,7 +676,9 @@ iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
+ 	for (i = 0 ; i < mag->size; ++i) {
+ 		struct iova *iova = private_find_iova(iovad, mag->pfns[i]);
  
- 	ret = kobject_init_and_add(dev->kobj_node, &node_type,
- 			sys_props.kobj_nodes, "%d", id);
--	if (ret < 0)
-+	if (ret < 0) {
-+		kobject_put(dev->kobj_node);
- 		return ret;
-+	}
+-		BUG_ON(!iova);
++		if (WARN_ON(!iova))
++			continue;
++
+ 		private_free_iova(iovad, iova);
+ 	}
  
- 	dev->kobj_mem = kobject_create_and_add("mem_banks", dev->kobj_node);
- 	if (!dev->kobj_mem)
-@@ -885,8 +887,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
- 			return -ENOMEM;
- 		ret = kobject_init_and_add(mem->kobj, &mem_type,
- 				dev->kobj_mem, "%d", i);
--		if (ret < 0)
-+		if (ret < 0) {
-+			kobject_put(mem->kobj);
- 			return ret;
-+		}
- 
- 		mem->attr.name = "properties";
- 		mem->attr.mode = KFD_SYSFS_FILE_MODE;
-@@ -904,8 +908,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
- 			return -ENOMEM;
- 		ret = kobject_init_and_add(cache->kobj, &cache_type,
- 				dev->kobj_cache, "%d", i);
--		if (ret < 0)
-+		if (ret < 0) {
-+			kobject_put(cache->kobj);
- 			return ret;
-+		}
- 
- 		cache->attr.name = "properties";
- 		cache->attr.mode = KFD_SYSFS_FILE_MODE;
-@@ -923,8 +929,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
- 			return -ENOMEM;
- 		ret = kobject_init_and_add(iolink->kobj, &iolink_type,
- 				dev->kobj_iolink, "%d", i);
--		if (ret < 0)
-+		if (ret < 0) {
-+			kobject_put(iolink->kobj);
- 			return ret;
-+		}
- 
- 		iolink->attr.name = "properties";
- 		iolink->attr.mode = KFD_SYSFS_FILE_MODE;
-@@ -976,8 +984,10 @@ static int kfd_topology_update_sysfs(void)
- 		ret = kobject_init_and_add(sys_props.kobj_topology,
- 				&sysprops_type,  &kfd_device->kobj,
- 				"topology");
--		if (ret < 0)
-+		if (ret < 0) {
-+			kobject_put(sys_props.kobj_topology);
- 			return ret;
-+		}
- 
- 		sys_props.kobj_nodes = kobject_create_and_add("nodes",
- 				sys_props.kobj_topology);
 -- 
 2.25.1
 
