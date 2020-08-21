@@ -2,99 +2,95 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47470C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2312020656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:05:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="ahSuHdM/"
+	by mail.kernel.org (Postfix) with ESMTP id 7946120656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:06:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598029562;
+	bh=PJlJN9iz55FCW+gfWE6Dcvm0SreHsE+AMvFKVq4QXKQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VRI4PK58Y2EIoZgZhkRMjgyX+dVfVc4gAeDnbmD9kiFhDskdxXK6mPn9mIefDDt3h
+	 zr31A8brKPyeq3ZpxNPoCR/Cjwc0LNNE45isBWrGcYFGbJdXI0yrn+Ft4K1qFzMh7X
+	 etSDoL1Q0utNriXusq04O9Pr97Zy1KicZMVORtIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbgHURFx (ORCPT
+        id S1728606AbgHURGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:05:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728252AbgHUQSr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:18:47 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 456A6C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:18:42 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id h4so2266315ioe.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:18:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=luUAi1TbOa9Dnc1tIwWCWIIp6OXw4Q4Gp7/3zvZWN+4=;
-        b=ahSuHdM/nkUJ6JtkBGtFBeRVfzbonjEc/j96YRLEJ4vtmgg/KKihM/7sXJPF+cxzsp
-         QAV3Vt2rftE+yFPlN3N9m9EO0Q3Hto7nzTNZzODiCr5quN7ecOhjw9W9+c9BmYLGabVu
-         E257jRzn/TFc6+q8S1SliMsuyT+g5ggI0Wq4nsEiLaXf0oxG8Za4ala0j1N8BM9LU4kh
-         5R1yY5XWkQh5JRWT1nTTfhm7+z8qkA/rAv9wlXqFEiUn2wJKGX1I4s0Tw9kozND2q7vL
-         N5Rn5ptnxGRFDutvd0+GGNwT+yWVBwQ6bT8s+/djlP7sY3x7ga+3SVfN2hoA+YqCoBF6
-         PzvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=luUAi1TbOa9Dnc1tIwWCWIIp6OXw4Q4Gp7/3zvZWN+4=;
-        b=U/QigE2m3kkXDb3btzNnC3ZjbVEYGdIKOGUoz3zJiAzaBYYUasdTi+avMAd2JLm4Or
-         WfaBKuLn5vSedDjrbWfYJoZ6Ihn+9VSedhYVi5maKkanb+K8jW/fQXHsoC61zDqiGDA1
-         BNYe2hEcRQDleYaly6MKr8+Zv+asa2d6kT05Pvf+aMvEd3t3HsIeXc62DxcpprdA0b1V
-         17jom0PvZOJ9Zo3lhAupPE0PV6nUD0uMKzC8SA61kcoLADosoEuS108NqA1enT6pfljo
-         jBXlkI6r6cv1eonoy+H0+OUQSQ6w70K4fQnQ8b0KdZLKHyMvWjXZtD/lFQnB29s3fnO0
-         bQmA==
-X-Gm-Message-State: AOAM532kQn48ho+UaCWFi/yiIcS6ut2NF8QvH1Adv8JKd9kTwuyBMAko
-        9ImOzG0h2/vYT7T7hDbJIWBeGQfKAIZvqMC5vDX/oxz5PvsNtQ==
-X-Google-Smtp-Source: ABdhPJz5jpr2DxnMaG9eqJjbyNPm6jyyHc64mTSoHOxOHhYYkgi7vT1uWhdnCIVnP0s7oboMggBGb9m0MGs/KT7TKYo=
-X-Received: by 2002:a6b:b495:: with SMTP id d143mr2998016iof.61.1598026721446;
- Fri, 21 Aug 2020 09:18:41 -0700 (PDT)
+        Fri, 21 Aug 2020 13:06:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728245AbgHUQS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:18:29 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D070422BF3;
+        Fri, 21 Aug 2020 16:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598026690;
+        bh=PJlJN9iz55FCW+gfWE6Dcvm0SreHsE+AMvFKVq4QXKQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=raC5drJaEkeATdmMdczeWbWijmgfADtdK/OiYiWtTzIKpPJamjvR0ml931XcGLx+T
+         4TqTuhgDD3KvfLZw3/WBaH9py/BQWkRP6oImXFbBy42EmZB6OvPL7JWsHtdTK5yzqb
+         nMyFIZfhlOsbmCIojLmNo4x836KrNNsB+JIrNrnM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Qiushi Wu <wu000273@umn.edu>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 02/38] ASoC: img: Fix a reference count leak in img_i2s_in_set_fmt
+Date:   Fri, 21 Aug 2020 12:17:31 -0400
+Message-Id: <20200821161807.348600-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
+References: <20200821161807.348600-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200821151942.6b01dbd8@canb.auug.org.au>
-In-Reply-To: <20200821151942.6b01dbd8@canb.auug.org.au>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Fri, 21 Aug 2020 09:18:29 -0700
-Message-ID: <CAOesGMhHhBBdXdEAM+P5orFz56bdQTk8MP20k4UZ2rh53Ge6XQ@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commits in the
- arm-soc-fixes tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Qiushi Wu <wu000273@umn.edu>
 
-On Thu, Aug 20, 2020 at 10:19 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commits
->
->   8d53ecfbf231 ("arm64: dts: xilinx: Align IOMMU nodename with dtschema")
->   b4b6fb8de8dc ("arm64: dts: zynqmp: Add GTR transceivers")
->
-> are missing a Signed-off-by from their committer.
+[ Upstream commit c4c59b95b7f7d4cef5071b151be2dadb33f3287b ]
 
-Ah, I see what happened here. I've been relying on some of my
-semi-automation scripts for catching this, but I had to use regular
-manual git merge for this branch due to GPG signatures not capturing
-it in patchwork.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code, causing incorrect ref count if
+pm_runtime_put_noidle() is not called in error handling paths.
+Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
 
-Since the committer was Michal, and the pull request came from him, we
-still have the chain of contribution documented, but I'll keep this in
-mind on future manual merges.
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Link: https://lore.kernel.org/r/20200614033749.2975-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/img/img-i2s-in.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
+index c22880aea82a2..7e48c740bf550 100644
+--- a/sound/soc/img/img-i2s-in.c
++++ b/sound/soc/img/img-i2s-in.c
+@@ -346,8 +346,10 @@ static int img_i2s_in_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 	chan_control_mask = IMG_I2S_IN_CH_CTL_CLK_TRANS_MASK;
+ 
+ 	ret = pm_runtime_get_sync(i2s->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_noidle(i2s->dev);
+ 		return ret;
++	}
+ 
+ 	for (i = 0; i < i2s->active_channels; i++)
+ 		img_i2s_in_ch_disable(i2s, i);
+-- 
+2.25.1
 
--Olof
