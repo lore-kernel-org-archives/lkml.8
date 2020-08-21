@@ -2,98 +2,155 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2B9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B870EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96AB720724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF5C20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J2WcNmGW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNmJIDej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgHUSjT (ORCPT
+        id S1726636AbgHUSjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:39:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54834 "EHLO
+        Fri, 21 Aug 2020 14:39:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgHUSjM (ORCPT
+        with ESMTP id S1725768AbgHUSjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:39:12 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B153CC061573;
-        Fri, 21 Aug 2020 11:39:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qf7iQOKln7FqCs/F0D07PQ4uJRzWTyA3GUp/BaFL3pY=; b=J2WcNmGW4ZaJnH9WyXYj2IWLGP
-        MY9g2ejM9VdCuKeFodacvhJLeWrsYgo8nqefHsNPMU4Vbrin1ug/GspWQXhQ95BueAlwJU5UBVfme
-        xsSe8aV5Fz96VamAaqHdQ1icy5tdze1dzRwTGt4cLmLg4Kr+Xg9qQPIAXAtJYiZxRyPlRWynCDE5p
-        0qjBdYCKHstNv6qSiYmN1wGDOw4/3X+5ZH2gdOVC3Jp7eb+/miXVMoZwyJWaZJS+e5c/nqkeLwCQi
-        8+GoU1CglEyEwpGA5NoHefHqEee/kH9Idjl6mMPjdqz8exouGunuAwCseTLazWHRTVt5k6sBsZvrS
-        5WvpJlVg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k9BwK-0001sV-RA; Fri, 21 Aug 2020 18:39:01 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E5DB6980DF7; Fri, 21 Aug 2020 20:38:59 +0200 (CEST)
-Date:   Fri, 21 Aug 2020 20:38:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Eric Dumazet <edumazet@google.com>, Marco Elver <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH] random32: Use rcuidle variant for tracepoint
-Message-ID: <20200821183859.GS3982@worktop.programming.kicks-ass.net>
-References: <20200821063043.1949509-1-elver@google.com>
- <20200821085907.GJ1362448@hirez.programming.kicks-ass.net>
- <CANn89i+1MQRCSRVg-af758en5e9nwQBes3aBSjQ6BY1pV5+HdQ@mail.gmail.com>
- <20200821113831.340ba051@oasis.local.home>
- <20200821114141.4b564190@oasis.local.home>
+        Fri, 21 Aug 2020 14:39:35 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89BB0C061575;
+        Fri, 21 Aug 2020 11:39:34 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p37so1407464pgl.3;
+        Fri, 21 Aug 2020 11:39:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6Wed+2KJiJXbDusUkvqx9osbk9K/bLB8+KZ5CEx8UTo=;
+        b=iNmJIDej7pY5YB0Gkj2suBA3Jwl9t7ZD0OZiL9fSPDX24XiLDEM0e95Wyn/8DSpqfX
+         zz7BjmOcvExJ8GwToRQ/le6hkexWWAnQqw8uvs2UDOBYyFUzEqPLT1AL1ErNxKqezEoe
+         LLm8hIFrN0NhqhkQOC/F2g0+GXhFbFfZnlkkTZzfYmnclUc2eJ1v2U9xTMLMViGVtm1j
+         RzF/tQwAqQhmBA4hQPqDgSH8gDK4RCI6dgEHI4JnH4guOiQEJ8U0kBA7K7xWwkVKY+zv
+         J52bpXUFixeHW5YG3B/Kb+ctBXeZArUrQO/f4pOdcUVCRpdMrYrt8pDfUw9heiB5BVLr
+         BaRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6Wed+2KJiJXbDusUkvqx9osbk9K/bLB8+KZ5CEx8UTo=;
+        b=aRzdelHFp3ZyUcgW35z9YCJfaPywJAlaEOFRIh7PSUfDohZ2jhBBvg0NnVCDokpjy+
+         2H8oLLM+AOVkg7Y0jp2x8R4OFp/yclqQL6lp1yYzaCPZWxVVO8IrwMzAOM6y35cttUL4
+         WTL80AVHkxpLpWwXhTT1ydh760ynu9YonoGaV1P2vU3Xy2kkLgffYWFX8EXmB0fsBj4u
+         umoC3Om3Cy5gUxoCAOqHIAMh57OXSlfXGEreJCut8P0UcyhHcYTa8f8qMo5fZHOEXaoL
+         TMQ0aGyftW6sA04BSMZ5w1a9CetmYS3MvPgQxfVNcZBm+SM9zfDESGPKkAs3P83RD11A
+         eP1A==
+X-Gm-Message-State: AOAM53306pQcr8+TnLlgML8lYmnPk6xndgKnh+cyWH3DxHFqASG56n0T
+        DNTOc8/IINt+n8UC/AzJKV3gmOp+FUM=
+X-Google-Smtp-Source: ABdhPJwC0gExCDD5JxS1RpIHUTpceynmzw1eAoWQwOyTleiFyrZ/PfXx94gZCIzS9MB/9eaST4SHRg==
+X-Received: by 2002:a63:4557:: with SMTP id u23mr3120859pgk.197.1598035173716;
+        Fri, 21 Aug 2020 11:39:33 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h193sm2843300pgc.42.2020.08.21.11.39.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Aug 2020 11:39:33 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 11:39:31 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 1/2] hwmon: shtc1: add support for device tree bindings
+Message-ID: <20200821183931.GA245345@roeck-us.net>
+References: <20200815012227.32538-1-chris.ruehl@gtsys.com.hk>
+ <20200815012227.32538-2-chris.ruehl@gtsys.com.hk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200821114141.4b564190@oasis.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200815012227.32538-2-chris.ruehl@gtsys.com.hk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 11:41:41AM -0400, Steven Rostedt wrote:
-> On Fri, 21 Aug 2020 11:38:31 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Sat, Aug 15, 2020 at 09:22:26AM +0800, Chris Ruehl wrote:
+> Add support for DTS bindings for the sensirion shtc1,shtw1 and shtc3.
 > 
-> > > > At some point we're going to have to introduce noinstr to idle as well.
-> > > > But until that time this should indeed cure things.    
-> > > 
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+Applied.
+
+Thanks,
+Guenter
+
+> ---
+>  v8: no change
 > 
-> What the above means, is that ideally we will get rid of all
-> tracepoints and kasan checks from these RCU not watching locations. But
-
-s/and kasan//
-
-We only need to get rid of explicit tracepoints -- typically just move
-them outside of the rcu_idle_enter/exit section.
-
-> to do so, we need to move the RCU not watching as close as possible to
-> where it doesn't need to be watching, and that is not as trivial of a
-> task as one might think.
-
-My recent patch series got a fair way towards that, but yes, there's
-more work to be done still.
-
-> Once we get to a minimal code path for RCU not
-> to be watching, it will become "noinstr" and tracing and "debugging"
-> will be disabled in these sections.
-
-Right, noinstr is like notrace on steriods, not only does it disallow
-tracing, it will also disable all the various *SAN/KCOV instrumentation.
-It also has objtool based validation which ensures noinstr code doesn't
-call out to regular code.
-
+>  drivers/hwmon/shtc1.c | 25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hwmon/shtc1.c b/drivers/hwmon/shtc1.c
+> index a0078ccede03..7993a5ff8768 100644
+> --- a/drivers/hwmon/shtc1.c
+> +++ b/drivers/hwmon/shtc1.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/err.h>
+>  #include <linux/delay.h>
+>  #include <linux/platform_data/shtc1.h>
+> +#include <linux/of.h>
+>  
+>  /* commands (high precision mode) */
+>  static const unsigned char shtc1_cmd_measure_blocking_hpm[]    = { 0x7C, 0xA2 };
+> @@ -196,6 +197,7 @@ static int shtc1_probe(struct i2c_client *client,
+>  	enum shtcx_chips chip = id->driver_data;
+>  	struct i2c_adapter *adap = client->adapter;
+>  	struct device *dev = &client->dev;
+> +	struct device_node *np = dev->of_node;
+>  
+>  	if (!i2c_check_functionality(adap, I2C_FUNC_I2C)) {
+>  		dev_err(dev, "plain i2c transactions not supported\n");
+> @@ -233,8 +235,14 @@ static int shtc1_probe(struct i2c_client *client,
+>  	data->client = client;
+>  	data->chip = chip;
+>  
+> -	if (client->dev.platform_data)
+> -		data->setup = *(struct shtc1_platform_data *)dev->platform_data;
+> +	if (np) {
+> +		data->setup.blocking_io = of_property_read_bool(np, "sensirion,blocking-io");
+> +		data->setup.high_precision = !of_property_read_bool(np, "sensicon,low-precision");
+> +	} else {
+> +		if (client->dev.platform_data)
+> +			data->setup = *(struct shtc1_platform_data *)dev->platform_data;
+> +	}
+> +
+>  	shtc1_select_command(data);
+>  	mutex_init(&data->update_lock);
+>  
+> @@ -257,8 +265,19 @@ static const struct i2c_device_id shtc1_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, shtc1_id);
+>  
+> +static const struct of_device_id shtc1_of_match[] = {
+> +	{ .compatible = "sensirion,shtc1" },
+> +	{ .compatible = "sensirion,shtw1" },
+> +	{ .compatible = "sensirion,shtc3" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, shtc1_of_match);
+> +
+>  static struct i2c_driver shtc1_i2c_driver = {
+> -	.driver.name  = "shtc1",
+> +	.driver = {
+> +		.name = "shtc1",
+> +		.of_match_table = shtc1_of_match,
+> +	},
+>  	.probe        = shtc1_probe,
+>  	.id_table     = shtc1_id,
+>  };
