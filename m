@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950E7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D36EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67E092072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B52920732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028232;
-	bh=RPyEA/kI9KUS4oMh1ysf1Jx+oNDxSmtIr2+ySLYBTQ4=;
+	s=default; t=1598028243;
+	bh=oBFg0rBg/sQw2NyIxsMEgd5WK4ZKpgUp2jCfMzfh8RI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sDVei5PF37X2aK0AAcv1g7VsQQp/eeqp8OjtyrqKj8jlkfyBbMdnH+nmzbEj3/OQ5
-	 kSpaxmPOY8BcwJdI1FnOGbCRX+yd7ZEBwTMXd1az+bselmlrpaYdY83PEbSmlLbCYw
-	 BfZaHd4/aecVRvEgg7SmAq+f0MopZiLBrJwGQXlo=
+	b=k4RnhTGPPjfA+eU69Ou3OExXqlWu5TX7m/ZGjSFBVTkg8vVUU9cJ3T2KOLvvrQbM7
+	 RC8IL4axMoOJI24N1YPNSou0bMtMuE/ksFh4VLjhEILv47tLYbK/Rc1Z/FnnYSrhHU
+	 VBEibPJMKahwiYrXOdnY1M/ukyuPD0h2s0J3dcAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgHUQnn (ORCPT
+        id S1728516AbgHUQoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:43:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50060 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:44:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728084AbgHUQUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:20:42 -0400
+        id S1728397AbgHUQUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:20:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E4D322D00;
-        Fri, 21 Aug 2020 16:19:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4553822B4B;
+        Fri, 21 Aug 2020 16:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026789;
-        bh=RPyEA/kI9KUS4oMh1ysf1Jx+oNDxSmtIr2+ySLYBTQ4=;
+        s=default; t=1598026794;
+        bh=oBFg0rBg/sQw2NyIxsMEgd5WK4ZKpgUp2jCfMzfh8RI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HOvneARCpE1oR1gpiiW6p4LRYSrfcFXIMhXLOdLhJlYxMPNw0vWTTqsPYtcLJejA6
-         l3KLdEDSgBhj4LD8bkZ4DYfKzGLMVZxJWOweqAQmjp+XbReOlNl41MzZm3kN27LsSq
-         qXEnyKBlb4smwEB365Uc3MEcfln8RjpHk+aF7tmY=
+        b=WOqMDOb3dSQ07mFUI56SBESfmnKzPX9CuxHj9xODjSr6Y0WQb6XA2Ly2wpgTpjnPq
+         MdMa+2fsqAD5yEmW0WtCkNl9wMjoYDSLy6PiJK7lyHC4n9K8Agjb9AdGKQHkXshzgP
+         4sC7bjmktMRWFslMNXKNRqcSLGNbJUTHFvK0RN5Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 08/26] drm/radeon: fix multiple reference count leak
-Date:   Fri, 21 Aug 2020 12:19:19 -0400
-Message-Id: <20200821161938.349246-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 12/26] drm/amdgpu/display: fix ref count leak when pm_runtime_get_sync fails
+Date:   Fri, 21 Aug 2020 12:19:23 -0400
+Message-Id: <20200821161938.349246-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161938.349246-1-sashal@kernel.org>
 References: <20200821161938.349246-1-sashal@kernel.org>
@@ -60,26 +60,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 6f2e8acdb48ed166b65d47837c31b177460491ec ]
+[ Upstream commit f79f94765f8c39db0b7dec1d335ab046aac03f20 ]
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
+The call to pm_runtime_get_sync increments the counter even in case of
+failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_connectors.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
-index efa875120071a..9e6c2be0cc7d4 100644
---- a/drivers/gpu/drm/radeon/radeon_connectors.c
-+++ b/drivers/gpu/drm/radeon/radeon_connectors.c
-@@ -892,8 +892,10 @@ radeon_lvds_detect(struct drm_connector *connector, bool force)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+index e9311eb7b8d9f..694f631d9c90d 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+@@ -734,8 +734,10 @@ amdgpu_connector_lvds_detect(struct drm_connector *connector, bool force)
  
  	if (!drm_kms_helper_is_poll_worker()) {
  		r = pm_runtime_get_sync(connector->dev->dev);
@@ -91,7 +91,7 @@ index efa875120071a..9e6c2be0cc7d4 100644
  	}
  
  	if (encoder) {
-@@ -1038,8 +1040,10 @@ radeon_vga_detect(struct drm_connector *connector, bool force)
+@@ -872,8 +874,10 @@ amdgpu_connector_vga_detect(struct drm_connector *connector, bool force)
  
  	if (!drm_kms_helper_is_poll_worker()) {
  		r = pm_runtime_get_sync(connector->dev->dev);
@@ -102,8 +102,8 @@ index efa875120071a..9e6c2be0cc7d4 100644
 +		}
  	}
  
- 	encoder = radeon_best_single_encoder(connector);
-@@ -1176,8 +1180,10 @@ radeon_tv_detect(struct drm_connector *connector, bool force)
+ 	encoder = amdgpu_connector_best_single_encoder(connector);
+@@ -996,8 +1000,10 @@ amdgpu_connector_dvi_detect(struct drm_connector *connector, bool force)
  
  	if (!drm_kms_helper_is_poll_worker()) {
  		r = pm_runtime_get_sync(connector->dev->dev);
@@ -114,8 +114,8 @@ index efa875120071a..9e6c2be0cc7d4 100644
 +		}
  	}
  
- 	encoder = radeon_best_single_encoder(connector);
-@@ -1260,8 +1266,10 @@ radeon_dvi_detect(struct drm_connector *connector, bool force)
+ 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
+@@ -1371,8 +1377,10 @@ amdgpu_connector_dp_detect(struct drm_connector *connector, bool force)
  
  	if (!drm_kms_helper_is_poll_worker()) {
  		r = pm_runtime_get_sync(connector->dev->dev);
@@ -126,19 +126,7 @@ index efa875120071a..9e6c2be0cc7d4 100644
 +		}
  	}
  
- 	if (radeon_connector->detected_hpd_without_ddc) {
-@@ -1701,8 +1709,10 @@ radeon_dp_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	if (!force && radeon_check_hpd_status_unchanged(connector)) {
+ 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
 -- 
 2.25.1
 
