@@ -2,139 +2,150 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86746C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDDCD20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D7B20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:38:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbgHULiD (ORCPT
+        id S1728392AbgHULiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 07:38:03 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10300 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727931AbgHULhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 07:37:06 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6EB9571D0E991F6D9C19;
-        Fri, 21 Aug 2020 19:37:04 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.200.129) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 21 Aug 2020 19:36:58 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <hch@lst.de>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
-        <will@kernel.org>, <ganapatrao.kulkarni@cavium.com>,
-        <catalin.marinas@arm.com>, <akpm@linux-foundation.org>
-CC:     <iommu@lists.linux-foundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <prime.zeng@hisilicon.com>,
-        <huangdaode@huawei.com>, <linuxarm@huawei.com>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Roman Gushchin <guro@fb.com>
-Subject: [PATCH v7 3/3] mm: cma: use CMA_MAX_NAME to define the length of cma name array
-Date:   Fri, 21 Aug 2020 23:33:55 +1200
-Message-ID: <20200821113355.6140-4-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
-In-Reply-To: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
-References: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
+        Fri, 21 Aug 2020 07:38:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38010 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728015AbgHULhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 07:37:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7F617B800;
+        Fri, 21 Aug 2020 11:37:39 +0000 (UTC)
+Date:   Fri, 21 Aug 2020 13:37:10 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Arpitha Raghunandan <98.arpi@gmail.com>, brendanhiggins@google.com,
+        skhan@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] lib: Convert test_printf.c to KUnit
+Message-ID: <20200821113710.GA26290@alley>
+References: <20200817043028.76502-1-98.arpi@gmail.com>
+ <f408efbd-10f7-f1dd-9baa-0f1233cafffc@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.200.129]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f408efbd-10f7-f1dd-9baa-0f1233cafffc@rasmusvillemoes.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CMA_MAX_NAME should be visible to CMA's users as they might need it to set
-the name of CMA areas and avoid hardcoding the size locally.
-So this patch moves CMA_MAX_NAME from local header file to include/linux
-header file and removes the magic number in hugetlb.c and contiguous.c.
+On Mon 2020-08-17 09:06:32, Rasmus Villemoes wrote:
+> On 17/08/2020 06.30, Arpitha Raghunandan wrote:
+> > Converts test lib/test_printf.c to KUnit.
+> > More information about KUnit can be found at
+> > https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html.
+> > KUnit provides a common framework for unit tests in the kernel.
+> 
+> So I can continue to build a kernel with some appropriate CONFIG set to
+> y, boot it under virt-me, run dmesg and see if I broke printf? That's
+> what I do now, and I don't want to have to start using some enterprisy
+> framework.
 
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- this patch is fixing the magic number issue with respect to Will's comment here:
- https://lore.kernel.org/linux-iommu/4ab78767553f48a584217063f6f24eb9@hisilicon.com/
+I had the same concern. I have tried it. It compiled a module called
+printf_kunit.c.
 
- include/linux/cma.h     | 2 ++
- kernel/dma/contiguous.c | 2 +-
- mm/cma.h                | 2 --
- mm/hugetlb.c            | 4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
+    #> modprobe printf_kunit
 
-diff --git a/include/linux/cma.h b/include/linux/cma.h
-index 6ff79fefd01f..217999c8a762 100644
---- a/include/linux/cma.h
-+++ b/include/linux/cma.h
-@@ -18,6 +18,8 @@
- 
- #endif
- 
-+#define CMA_MAX_NAME 64
-+
- struct cma;
- 
- extern unsigned long totalcma_pages;
-diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-index 0383c9b86715..d2d6b715c274 100644
---- a/kernel/dma/contiguous.c
-+++ b/kernel/dma/contiguous.c
-@@ -119,7 +119,7 @@ void __init dma_pernuma_cma_reserve(void)
- 
- 	for_each_online_node(nid) {
- 		int ret;
--		char name[20];
-+		char name[CMA_MAX_NAME];
- 		struct cma **cma = &dma_contiguous_pernuma_area[nid];
- 
- 		snprintf(name, sizeof(name), "pernuma%d", nid);
-diff --git a/mm/cma.h b/mm/cma.h
-index 20f6e24bc477..42ae082cb067 100644
---- a/mm/cma.h
-+++ b/mm/cma.h
-@@ -4,8 +4,6 @@
- 
- #include <linux/debugfs.h>
- 
--#define CMA_MAX_NAME 64
--
- struct cma {
- 	unsigned long   base_pfn;
- 	unsigned long   count;
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index a301c2d672bf..9eec0ea9ba68 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -5683,12 +5683,12 @@ void __init hugetlb_cma_reserve(int order)
- 	reserved = 0;
- 	for_each_node_state(nid, N_ONLINE) {
- 		int res;
--		char name[20];
-+		char name[CMA_MAX_NAME];
- 
- 		size = min(per_node, hugetlb_cma_size - reserved);
- 		size = round_up(size, PAGE_SIZE << order);
- 
--		snprintf(name, 20, "hugetlb%d", nid);
-+		snprintf(name, sizeof(name), "hugetlb%d", nid);
- 		res = cma_declare_contiguous_nid(0, size, 0, PAGE_SIZE << order,
- 						 0, false, name,
- 						 &hugetlb_cma[nid], nid);
--- 
-2.27.0
+produced the following in dmesg:
+
+[   60.931175] printf_kunit: module verification failed: signature and/or required key missing - tainting kernel
+[   60.942209] TAP version 14
+[   60.945197]     # Subtest: printf-kunit-test
+[   60.945200]     1..1
+[   60.951092]     ok 1 - selftest
+[   60.953414] ok 1 - printf-kunit-test
+
+I could live with the above. Then I tried to break a test by the following change:
 
 
+diff --git a/lib/printf_kunit.c b/lib/printf_kunit.c
+index 68ac5f9b8d28..1689dadd70a3 100644
+--- a/lib/printf_kunit.c
++++ b/lib/printf_kunit.c
+@@ -395,7 +395,7 @@ ip4(struct kunit *kunittest)
+        sa.sin_port = cpu_to_be16(12345);
+        sa.sin_addr.s_addr = cpu_to_be32(0x7f000001);
+ 
+-       test(kunittest, "127.000.000.001|127.0.0.1", "%pi4|%pI4", &sa.sin_addr, &sa.sin_addr);
++       test(kunittest, "127-000.000.001|127.0.0.1", "%pi4|%pI4", &sa.sin_addr, &sa.sin_addr);
+        test(kunittest, "127.000.000.001|127.0.0.1", "%piS|%pIS", &sa, &sa);
+        sa.sin_addr.s_addr = cpu_to_be32(0x01020304);
+        test(kunittest, "001.002.003.004:12345|1.2.3.4:12345", "%piSp|%pISp", &sa, &sa);
+
+
+It produced::
+
+[   56.786858] TAP version 14
+[   56.787493]     # Subtest: printf-kunit-test
+[   56.787494]     1..1
+[   56.788612]     # selftest: EXPECTATION FAILED at lib/printf_kunit.c:76
+                   Expected memcmp(test_buffer, expect, written) == 0, but
+                       memcmp(test_buffer, expect, written) == 1
+                       0 == 0
+               vsnprintf(buf, 256, "%pi4|%pI4", ...) wrote '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
+[   56.795433]     # selftest: EXPECTATION FAILED at lib/printf_kunit.c:76
+                   Expected memcmp(test_buffer, expect, written) == 0, but
+                       memcmp(test_buffer, expect, written) == 1
+                       0 == 0
+               vsnprintf(buf, 20, "%pi4|%pI4", ...) wrote '127.000.000.001|127', expected '127-000.000.001|127'
+[   56.800909]     # selftest: EXPECTATION FAILED at lib/printf_kunit.c:108
+                   Expected memcmp(p, expect, elen+1) == 0, but
+                       memcmp(p, expect, elen+1) == 1
+                       0 == 0
+               kvasprintf(..., "%pi4|%pI4", ...) returned '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
+[   56.806497]     not ok 1 - selftest
+[   56.806497] not ok 1 - printf-kunit-test
+
+while the original code would have written the following error messages:
+
+[   95.859225] test_printf: loaded.
+[   95.860031] test_printf: vsnprintf(buf, 256, "%pi4|%pI4", ...) wrote '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
+[   95.862630] test_printf: vsnprintf(buf, 6, "%pi4|%pI4", ...) wrote '127.0', expected '127-0'
+[   95.864118] test_printf: kvasprintf(..., "%pi4|%pI4", ...) returned '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
+[   95.866589] test_printf: failed 3 out of 388 tests
+
+
+Even the error output is acceptable for me. I am just curious why
+the 2nd failure is different:
+
+   + original code: vsnprintf(buf, 6, "%pi4|%pI4", ...) wrote '127.0', expected '127-0'
+   + kunit code: vsnprintf(buf, 20, "%pi4|%pI4", ...) wrote '127.000.000.001|127', expected '127-000.000.001|127'   
+
+
+I am also a bit scared by the following note at
+https://www.kernel.org/doc/html/latest/dev-tools/kunit/start.html#running-tests-without-the-kunit-wrapper
+
+   "KUnit is not designed for use in a production system, and it’s
+   possible that tests may reduce the stability or security of the
+   system."
+
+What does it mean thay it might reduce stability or security?
+Is it because the tests might cause problems?
+Or because the kunit framework modifies functionality of the running
+system all the time?
+
+
+Best Regards,
+Petr
+
+PS: I still have to look at the code. Anwyay, the comments from Rasmus make
+sense.
