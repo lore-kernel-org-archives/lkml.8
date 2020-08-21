@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD775C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C144C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A59A020702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CB9E20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029475;
-	bh=ySY7r+XvByWG/h02YkSpizvqYnRnOEsqEYmyDA8cBmk=;
+	s=default; t=1598029526;
+	bh=0NVxgNCyQiiFF5wY/glbJY2wvl60DzVHgwV9nJpo0Eg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fnnl3VxBo89mVdH9GTysIB72xrk/6QlArfWW8G4nfThEI5mX89jv2LhwaMu61ZV5C
-	 ziptpdCjNgEN/CXFYjtti1H6tGn/38NlH6BvyBnVB4Gjdor7K1zBU7CDfu3E02agZZ
-	 ekvI61NSsj9yRBHE7SlJUsgPSjchavBqNjwj06uM=
+	b=V6IpQ5S93G93kQvH2cdOeXmMaF9UxvrRkZx4zOMtJKMs3pM8kLnXleLIOlPsJwNXZ
+	 joojoTFVy6TfiOpQIPjP0nhb/sNWeSKSb3XpbDAvOc5DfpxwHQqBNa1CVFDN7VkOkT
+	 aSNX357JA2nUHXRvR1geQ0xifsGduEswwDdaaGMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgHUREe (ORCPT
+        id S1727903AbgHURFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:04:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50022 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:05:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727087AbgHUQSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727787AbgHUQSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:18:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18D0C22CA0;
-        Fri, 21 Aug 2020 16:18:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 647E02063A;
+        Fri, 21 Aug 2020 16:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026693;
-        bh=ySY7r+XvByWG/h02YkSpizvqYnRnOEsqEYmyDA8cBmk=;
+        s=default; t=1598026695;
+        bh=0NVxgNCyQiiFF5wY/glbJY2wvl60DzVHgwV9nJpo0Eg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fn38HLXnmjse0s8SeiKmcQBQ/sZAKUQeZqkztCPAtbQkI4F3G4bdPpVbxiQI0n3eK
-         D6+8u39kL4t1p8T3dvuLornndIKYPrAjPRV+S26/BoSHKsIgW0e3Ix1pLgMO00wUma
-         sO9pmsLS3w4yZHQeTNmJQXDohV6zuYMOh7B1rlpA=
+        b=noTGzewiPLN3NgvBi5b+e/3EhqGIRhnCaDRBu1DytnkOLw62xBRcbU3qNOySgPtQ8
+         i5Xfp2qw0cORNpOrq1343hhlDJNe8nqVlAMCzJKFzhb9PPwlmQYOy7dljGJOchES3K
+         tY6Sos+EXrp6MzuBFUIeq+NImfU9NRU6cmVdkjJc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Jon Hunter <jonathanh@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 04/38] ASoC: tegra: Fix reference count leaks.
-Date:   Fri, 21 Aug 2020 12:17:33 -0400
-Message-Id: <20200821161807.348600-4-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 06/38] arm64: dts: qcom: msm8916: Pull down PDM GPIOs during sleep
+Date:   Fri, 21 Aug 2020 12:17:35 -0400
+Message-Id: <20200821161807.348600-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
 References: <20200821161807.348600-1-sashal@kernel.org>
@@ -60,56 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit deca195383a6085be62cb453079e03e04d618d6e ]
+[ Upstream commit e2ee9edc282961783d519c760bbaa20fed4dec38 ]
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count if pm_runtime_put is not called in
-error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+The original qcom kernel changed the PDM GPIOs to be pull-down
+during sleep at some point. Reportedly this was done because
+there was some "leakage at PDM outputs during sleep":
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20200613204422.24484-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  https://source.codeaurora.org/quic/la/kernel/msm-3.10/commit/?id=0f87e08c1cd3e6484a6f7fb3e74e37340bdcdee0
+
+I cannot say how effective this is, but everything seems to work
+fine with this change so let's apply the same to mainline just
+to be sure.
+
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200605185916.318494-3-stephan@gerhold.net
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/tegra/tegra30_ahub.c | 4 +++-
- sound/soc/tegra/tegra30_i2s.c  | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/tegra/tegra30_ahub.c b/sound/soc/tegra/tegra30_ahub.c
-index 43679aeeb12be..88e838ac937dc 100644
---- a/sound/soc/tegra/tegra30_ahub.c
-+++ b/sound/soc/tegra/tegra30_ahub.c
-@@ -655,8 +655,10 @@ static int tegra30_ahub_resume(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 	ret = regcache_sync(ahub->regmap_ahub);
- 	ret |= regcache_sync(ahub->regmap_apbif);
- 	pm_runtime_put(dev);
-diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
-index 0b176ea24914b..bf155c5092f06 100644
---- a/sound/soc/tegra/tegra30_i2s.c
-+++ b/sound/soc/tegra/tegra30_i2s.c
-@@ -551,8 +551,10 @@ static int tegra30_i2s_resume(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 	ret = regcache_sync(i2s->regmap);
- 	pm_runtime_put(dev);
- 
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+index 60d218c5275c1..6754817658fa4 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+@@ -529,7 +529,7 @@ pinconf {
+ 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
+ 				       "gpio67", "gpio68";
+ 				drive-strength = <2>;
+-				bias-disable;
++				bias-pull-down;
+ 			};
+ 		};
+ 	};
 -- 
 2.25.1
 
