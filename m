@@ -2,154 +2,234 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8118C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18A222063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C8F12078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598024031;
+	bh=XSyUhUqo+Gos2SbGp1YxB7LP27cXAxleYAB8qOo6Z+c=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=VshiC/tedMFPOCmLAS3vbKmrfbtBx9DOE0IOuk/Cnf2yRiWseTOmWipnjJd1a0RwD
+	 Gk8pXnHkT5DfSl5vW+6XgUi/mBn6+fwSD3IRXx2KWmdzz39RxFaPiFJ9xbGrJodSzb
+	 bIV+y/kquq5I6hrbc1AwG7NPZ+P6ZMg46dCl9/Kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgHUPbg (ORCPT
+        id S1728138AbgHUPdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:31:36 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43212 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727882AbgHUPbd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:31:33 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v12so2281727ljc.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:31:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RiowHVIdXmdWQw4sb/h6lAEadFKHLzL7PqwIIimzsFs=;
-        b=N8LZfZy/tlqq0o1y729wdePWv3U9Dkqh8D1VZJdY40jOKCI7UCQ3c5srsjuRdQEcs2
-         C/nZEQ/8LJnANsS1cuJsvEh3pzZytlSeAzPHLHVbwc2eVBCpzGnmJtXaYGoVtFiat4tG
-         QrO4IwLLeLcNlF3tDDrqZn5+oyrJGayXf6dVTipQQTLCfpadGrGYmkSU0Y/WQb4yU5Vg
-         VVrVaTN2OOzKCJ+g2Z6zIUaRbCNUn9hdMbsxwlyDGPSEL+mMNh9PLQPCHcFAIfUfKsKP
-         T4puG4eOxDQN2EHva3bK1p3vrhKsfrus01pxD51fpDTQkK/xvE9uEvxBF8Bkd/cdlGYv
-         Vc9g==
-X-Gm-Message-State: AOAM532v/GQjoEVH9f54jqCKqkBMEs63mrjEiv9lkI/7Nq7TsDHJoj0Y
-        hJGsZzWiWpfgeE9WdjSv8d+pCGnOe4E=
-X-Google-Smtp-Source: ABdhPJzjz8FcMOgIuUhj09q0MInHjKvcAKGRb0sLsr90dgT5GOGFgFOstOCNXGo0SSKhlQF1TzthIw==
-X-Received: by 2002:a2e:9003:: with SMTP id h3mr1868250ljg.185.1598023890775;
-        Fri, 21 Aug 2020 08:31:30 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.151.123])
-        by smtp.googlemail.com with ESMTPSA id w11sm446050lff.62.2020.08.21.08.31.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 08:31:28 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Julia Lawall <Julia.Lawall@lip6.fr>
-Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] coccinelle: api: add kobj_to_dev.cocci script
-Date:   Fri, 21 Aug 2020 18:31:00 +0300
-Message-Id: <20200821153100.434332-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 21 Aug 2020 11:33:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727116AbgHUPd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 11:33:29 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BB6F2063A;
+        Fri, 21 Aug 2020 15:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598024008;
+        bh=XSyUhUqo+Gos2SbGp1YxB7LP27cXAxleYAB8qOo6Z+c=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=rhgqW/Px3ewREPr6Shn75ttm9S6U+BsOszbR5E3byLWimS0DkbjrJWthRmRUJ7ih5
+         hbVYkq5UereKHbEkQ6EgHnUz+F2wlQDl8gUiAuzXIb6H4UJ9U6eDPwMFoRpjdEpKtg
+         4NOLrIcAVm/ETiiy8mEAAC3ItX9gbmJFbOyuw6/0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 6B7CD35227D4; Fri, 21 Aug 2020 08:33:28 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 08:33:28 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        "Zhang, Qiang" <Qiang.Zhang@windriver.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: =?utf-8?B?5Zue5aSN?= =?utf-8?Q?=3A?= [PATCH] rcu: shrink each
+ possible cpu krcp
+Message-ID: <20200821153328.GH2855@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <CAEXW_YQu9MAV-3ym0EFB0NmomWkLsBtZCT9sShnzo+vv=8sLgg@mail.gmail.com>
+ <20200818210355.GM27891@paulmck-ThinkPad-P72>
+ <20200818215511.GA2538@pc636>
+ <20200818220245.GO27891@paulmck-ThinkPad-P72>
+ <CAEXW_YRZ6RM90+aYA0JQ1war0n-D0M4peXJZE2_Uqf07xvF+5g@mail.gmail.com>
+ <BYAPR11MB26323E6D956BA22DFE610A13FF5D0@BYAPR11MB2632.namprd11.prod.outlook.com>
+ <20200819135654.GB3875610@google.com>
+ <20200819152159.GX27891@paulmck-ThinkPad-P72>
+ <20200819155808.GA8817@pc636>
+ <20200820223957.GB120898@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200820223957.GB120898@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kobj_to_dev() instead of container_of().
+On Thu, Aug 20, 2020 at 06:39:57PM -0400, Joel Fernandes wrote:
+> On Wed, Aug 19, 2020 at 05:58:08PM +0200, Uladzislau Rezki wrote:
+> > On Wed, Aug 19, 2020 at 08:21:59AM -0700, Paul E. McKenney wrote:
+> > > On Wed, Aug 19, 2020 at 09:56:54AM -0400, Joel Fernandes wrote:
+> > > > On Wed, Aug 19, 2020 at 03:00:55AM +0000, Zhang, Qiang wrote:
+> > > > > 
+> > > > > 
+> > > > > ________________________________________
+> > > > > 发件人: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> 代表 Joel Fernandes <joel@joelfernandes.org>
+> > > > > 发送时间: 2020年8月19日 8:04
+> > > > > 收件人: Paul E. McKenney
+> > > > > 抄送: Uladzislau Rezki; Zhang, Qiang; Josh Triplett; Steven Rostedt; Mathieu Desnoyers; Lai Jiangshan; rcu; LKML
+> > > > > 主题: Re: [PATCH] rcu: shrink each possible cpu krcp
+> > > > > 
+> > > > > On Tue, Aug 18, 2020 at 6:02 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > > 
+> > > > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > > > > index b8ccd7b5af82..6decb9ad2421 100644
+> > > > > > > --- a/kernel/rcu/tree.c
+> > > > > > > +++ b/kernel/rcu/tree.c
+> > > > > > > @@ -2336,10 +2336,15 @@ int rcutree_dead_cpu(unsigned int cpu)
+> > > > > > >  {
+> > > > > > >         struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+> > > > > > >         struct rcu_node *rnp = rdp->mynode;  /* Outgoing CPU's rdp & rnp. */
+> > > > > > > +       struct kfree_rcu_cpu *krcp;
+> > > > > > >
+> > > > > > >         if (!IS_ENABLED(CONFIG_HOTPLUG_CPU))
+> > > > > > >                 return 0;
+> > > > > > >
+> > > > > > > +       /* Drain the kcrp of this CPU. IRQs should be disabled? */
+> > > > > > > +       krcp = this_cpu_ptr(&krc)
+> > > > > > > +       schedule_delayed_work(&krcp->monitor_work, 0);
+> > > > > > > +
+> > > > > > >
+> > > > > > > A cpu can be offlined and its krp will be stuck until a shrinker is involved.
+> > > > > > > Maybe be never.
+> > > > > >
+> > > > > > Does the same apply to its kmalloc() per-CPU caches?  If so, I have a
+> > > > > > hard time getting too worried about it.  ;-)
+> > > > > 
+> > > > > >Looking at slab_offline_cpu() , that calls cancel_delayed_work_sync()
+> > > > > >on the cache reaper who's job is to flush the per-cpu caches. So I
+> > > > > >believe during CPU offlining, the per-cpu slab caches are flushed.
+> > > > > >
+> > > > > >thanks,
+> > > > > >
+> > > > >  >- Joel
+> > > > > 
+> > > > > When cpu going offline, the slub or slab only flush free objects in offline
+> > > > > cpu cache,  put these free objects in node list  or return buddy system,
+> > > > > for those who are still in use, they still stay offline cpu cache.
+> > > > > 
+> > > > > If we want clean per-cpu "krcp" objects when cpu going offline.  we should
+> > > > > free "krcp" cache objects in "rcutree_offline_cpu", this func be called
+> > > > > before other rcu cpu offline func. and then "rcutree_offline_cpu" will be
+> > > > > called in "cpuhp/%u" per-cpu thread.
+> > > > > 
+> > > > 
+> > > > Could you please wrap text properly when you post to mailing list, thanks. I
+> > > > fixed it for you above.
+> > > > 
+> > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > > > index 8ce77d9ac716..1812d4a1ac1b 100644
+> > > > > --- a/kernel/rcu/tree.c
+> > > > > +++ b/kernel/rcu/tree.c
+> > > > > @@ -3959,6 +3959,7 @@ int rcutree_offline_cpu(unsigned int cpu)
+> > > > >         unsigned long flags;
+> > > > >         struct rcu_data *rdp;
+> > > > >         struct rcu_node *rnp;
+> > > > > +       struct kfree_rcu_cpu *krcp;
+> > > > >  
+> > > > >         rdp = per_cpu_ptr(&rcu_data, cpu);
+> > > > >         rnp = rdp->mynode;
+> > > > > @@ -3970,6 +3971,11 @@ int rcutree_offline_cpu(unsigned int cpu)
+> > > > >  
+> > > > >         // nohz_full CPUs need the tick for stop-machine to work quickly
+> > > > >         tick_dep_set(TICK_DEP_BIT_RCU);
+> > > > > +
+> > > > > +       krcp = per_cpu_ptr(&krc, cpu);
+> > > > > +       raw_spin_lock_irqsave(&krcp->lock, flags);
+> > > > > +       schedule_delayed_work(&krcp->monitor_work, 0);
+> > > > > +       raw_spin_unlock_irqrestore(&krcp->lock, flags);
+> > > > >         return 0;
+> > > > 
+> > > > I realized the above is not good enough for what this is trying to do. Unlike
+> > > > the slab, the new kfree_rcu objects cannot always be drained / submitted to
+> > > > RCU because the previous batch may still be waiting for a grace period. So
+> > > > the above code could very well return with the yet-to-be-submitted kfree_rcu
+> > > > objects still in the cache.
+> > > > 
+> > > > One option is to spin-wait here for monitor_todo to be false and keep calling
+> > > > kfree_rcu_drain_unlock() till then.
+> > > > 
+> > > > But then that's not good enough either, because if new objects are queued
+> > > > when interrupts are enabled in the CPU offline path, then the cache will get
+> > > > new objects after the previous set was drained. Further, spin waiting may
+> > > > introduce deadlocks.
+> > > > 
+> > > > Another option is to switch the kfree_rcu() path to non-batching (so new
+> > > > objects cannot be cached in the offline path and are submitted directly to
+> > > > RCU), wait for a GP and then submit the work. But then not sure if 1-argument
+> > > > kfree_rcu() will like that.
+> > > 
+> > > Or spawn a workqueue that does something like this:
+> > > 
+> > > 1.	Get any pending kvfree_rcu() requests sent off to RCU.
+> > > 
+> > > 2.	Do an rcu_barrier().
+> > > 
+> > > 3.	Do the cleanup actions.
+> > > 
+> > > > Probably Qian's original fix for for_each_possible_cpus() is good enough for
+> > > > the shrinker case, and then we can tackle the hotplug one.
+> > > 
+> > > It might take some experimentation to find the best solution.
+> > > 
+> > 
+> > <snip>
+> > static void do_idle(void)
+> > {
+> > ...
+> >  while (!need_resched()) {
+> >   rmb();
+> > 
+> >   local_irq_disable();
+> > 
+> >   if (cpu_is_offline(cpu)) {
+> >    tick_nohz_idle_stop_tick();
+> >    cpuhp_report_idle_dead();
+> >        -> cpuhp_report_idle_dead(void)
+> >               -> rcu_report_dead(smp_processor_id());
+> >    arch_cpu_idle_dead();
+> >   }
+> > ...
+> > <snip>
+> > 
+> > We have the rcu_report_dead() callback. When it gets called IRQs are off
+> > and CPU that is in question is offline.
+> > 
+> >     krcp = per_cpu_ptr(&krc, cpu);
+> >     raw_spin_lock_irqsave(&krcp->lock, flags);
+> >     krcp->monotro_todo = true;
+> >     schedule_delayed_work(&krcp->monitor_work, 0);
+> >     raw_spin_unlock_irqrestore(&krcp->lock, flags);
+> > 
+> > If there is a batch that is in progress, the job will rearm itself.
+> > But i agree, it requires more experiments.
+> 
+> I chatted with Ulad and we believe the timer and/or (delayed) workqueue will
+> get migrated during the CPU offline path, so it is not an issue.
+> 
+> In this case, Qiang's initial patch suffices to fix the shrinker issue.
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
-Examples of such patches:
-893c3d82b425 watchdog: Use kobj_to_dev() API
-23fd63a44460 hwmon: (nct6683) Replace container_of() with  kobj_to_dev()
-224941c9424f power: supply: use kobj_to_dev
-a9b9b2af40c7 backlight: lm3533_bl: Use kobj_to_dev() instead
-0acb47a3a093 qlcnic: Use kobj_to_dev() instead
-97cd738c44c8 gpiolib: sysfs: use kobj_to_dev
-d06f9e6c8960 hwmon: (nct7802) Replace container_of() API
-036855a4c3b3 hwmon : (nct6775) Use kobj_to_dev() API
-baf1d9c18293 driver/base/soc: Use kobj_to_dev() API
-ae243ef0afbc rtc: sysfs: use kobj_to_dev
-6b060d8a09e9 i2c: use kobj_to_dev() API
-9e7bd945b9a9 scsi: core: use kobj_to_dev
-0d730b57b95f s390/cio: use kobj_to_dev() API
-0616ca73fd35 usb: use kobj_to_dev() API
-8c9b839c0b80 alpha: use kobj_to_dev()
-016c0bbae1d1 netxen: Use kobj_to_dev()
-6908b45eafc4 GenWQE: use kobj_to_dev()
-85f4f39c80e9 pch_phub: use kobj_to_dev()
-47679cde604d misc: c2port: use kobj_to_dev()
-85016ff33f35 misc: cxl: use kobj_to_dev()
-092462c2b522 misc: eeprom: use kobj_to_dev()
-a9c9d9aca4e7 zorro: Use kobj_to_dev()
-a253f1eee6c4 rapidio: use kobj_to_dev()
-e3837b00b6bb drm/radeon: use kobj_to_dev()
-cc29ec874b37 drm/amdgpu: use kobj_to_dev()
-d122cbf1a310 drm/sysfs: use kobj_to_dev()
-657fb5fbadb3 drm/i915: use kobj_to_dev()
-554a60379aaa PCI: Use kobj_to_dev() instead of open-coding it
-2cf83833fc9c HID: use kobj_to_dev()
-aeb7ed14fe5d bridge: use kobj_to_dev instead of to_dev
-8e3829c61b48 staging:iio:adis16220: Use kobj_to_dev instead of open-coding it
-b0d1f807f340 driver-core: Use kobj_to_dev instead of re-implementing it
+As in the patch that is currented in -rcu, correct?
 
- scripts/coccinelle/api/kobj_to_dev.cocci | 44 ++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 scripts/coccinelle/api/kobj_to_dev.cocci
-
-diff --git a/scripts/coccinelle/api/kobj_to_dev.cocci b/scripts/coccinelle/api/kobj_to_dev.cocci
-new file mode 100644
-index 000000000000..e2cdd424aeca
---- /dev/null
-+++ b/scripts/coccinelle/api/kobj_to_dev.cocci
-@@ -0,0 +1,44 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+///
-+/// Use kobj_to_dev() instead of container_of()
-+///
-+// Confidence: High
-+// Copyright: (C) 2020 Denis Efremov ISPRAS
-+// Options: --no-includes --include-headers
-+//
-+// Keywords: kobj_to_dev, container_of
-+//
-+
-+virtual context
-+virtual report
-+virtual org
-+virtual patch
-+
-+
-+@r depends on !patch@
-+expression ptr;
-+position p;
-+@@
-+
-+* container_of(ptr, struct device, kobj)@p
-+
-+
-+@depends on patch@
-+expression ptr;
-+@@
-+
-+- container_of(ptr, struct device, kobj)
-++ kobj_to_dev(ptr)
-+
-+
-+@script:python depends on report@
-+p << r.p;
-+@@
-+
-+coccilib.report.print_report(p[0], "WARNING opportunity for kobj_to_dev()")
-+
-+@script:python depends on org@
-+p << r.p;
-+@@
-+
-+coccilib.org.print_todo(p[0], "WARNING opportunity for kobj_to_dev()")
--- 
-2.26.2
-
+							Thanx, Paul
