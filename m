@@ -2,189 +2,218 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49524C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD02C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D95B22B47
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:32:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="M/KVTksU"
+	by mail.kernel.org (Postfix) with ESMTP id 05FA920724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgHUQcx (ORCPT
+        id S1728415AbgHUQdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:32:53 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:18647 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728122AbgHUQcQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:32:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598027524;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=5oM6hmHrkxSTh2VeiPEAHTyoVLjwfurKxWYpMhitciA=;
-        b=M/KVTksU1p3DnoGrWCOFV3S16GhMXigs6zNTYa6Ps/mQHpp7FoTQWk90YclJeUCZBk
-        vaQ1Zx86QhUZ814akr4NwjdgA8WMmr9eqoP4j5lff+v0GMOfFNVyvtJCTz7UHEvVAMQP
-        84c2RMMWhKEjSQo1nZOJtkm7V56+696yIE73JaH1YT2P1nmqxURvDepFmwc2QqlX1vZI
-        dGMpTmxSCW0gfw56YedVk2WOsT9u0+cfw7Vejr2etSAcU0jNzi1Zop2stgtLj5PwEby8
-        /xzScXcrR7NCfd4P/6HMrccilo8bnsZ+PMzTdGdPWfCf8hmdYIW4fstVZo8pkP+GAyM+
-        ITWw==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7Ic/Fboo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id g0b6c1w7LGW2KXw
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 21 Aug 2020 18:32:02 +0200 (CEST)
-Date:   Fri, 21 Aug 2020 18:31:52 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Niklas Cassel <nks@flawful.org>
-Subject: Re: [RFC PATCH 2/3] opp: Set required OPPs in reverse order when
- scaling down
-Message-ID: <20200821163152.GA3422@gerhold.net>
-References: <20200730080146.25185-1-stephan@gerhold.net>
- <20200730080146.25185-3-stephan@gerhold.net>
+        Fri, 21 Aug 2020 12:33:04 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2687 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726971AbgHUQcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:32:14 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 03F623E9FE6DCAEF1E1E;
+        Fri, 21 Aug 2020 17:32:10 +0100 (IST)
+Received: from localhost (10.52.123.86) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Fri, 21 Aug
+ 2020 17:32:09 +0100
+Date:   Fri, 21 Aug 2020 17:30:37 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Brice Goglin" <Brice.Goglin@inria.fr>,
+        Sean V Kelley <sean.v.kelley@linux.intel.com>,
+        <linux-api@vger.kernel.org>, Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH v9 4/6] ACPI: HMAT: Fix handling of changes from ACPI
+ 6.2 to ACPI 6.3
+Message-ID: <20200821173037.00007665@Huawei.com>
+In-Reply-To: <20200821145923.GA1625248@bjorn-Precision-5520>
+References: <20200821134622.GA1620197@bjorn-Precision-5520>
+        <20200821145923.GA1625248@bjorn-Precision-5520>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730080146.25185-3-stephan@gerhold.net>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.123.86]
+X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
+On Fri, 21 Aug 2020 09:59:23 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-On Thu, Jul 30, 2020 at 10:01:45AM +0200, Stephan Gerhold wrote:
-> The OPP core already has well-defined semantics to ensure required
-> OPPs/regulators are set before/after the frequency change, depending
-> on if we scale up or down.
+> On Fri, Aug 21, 2020 at 08:46:22AM -0500, Bjorn Helgaas wrote:
+> > On Fri, Aug 21, 2020 at 01:59:01PM +0100, Jonathan Cameron wrote:  
+> > > On Fri, 21 Aug 2020 07:13:56 -0500
+> > > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >   
+> > > > [+cc Keith, author of 3accf7ae37a9 ("acpi/hmat: Parse and report
+> > > > heterogeneous memory")]
+> > > > 
+> > > > On Fri, Aug 21, 2020 at 09:42:58AM +0100, Jonathan Cameron wrote:  
+> > > > > On Thu, 20 Aug 2020 17:21:29 -0500
+> > > > > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > >     
+> > > > > > On Wed, Aug 19, 2020 at 10:51:09PM +0800, Jonathan Cameron wrote:    
+> > > > > > > In ACPI 6.3, the Memory Proximity Domain Attributes Structure
+> > > > > > > changed substantially.  One of those changes was that the flag
+> > > > > > > for "Memory Proximity Domain field is valid" was deprecated.
+> > > > > > > 
+> > > > > > > This was because the field "Proximity Domain for the Memory"
+> > > > > > > became a required field and hence having a validity flag makes
+> > > > > > > no sense.
+> > > > > > > 
+> > > > > > > So the correct logic is to always assume the field is there.
+> > > > > > > Current code assumes it never is.
+> > > > > > > 
+> > > > > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > > > > ---
+> > > > > > >  drivers/acpi/numa/hmat.c | 2 +-
+> > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > > > 
+> > > > > > > diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> > > > > > > index 2c32cfb72370..07cfe50136e0 100644
+> > > > > > > --- a/drivers/acpi/numa/hmat.c
+> > > > > > > +++ b/drivers/acpi/numa/hmat.c
+> > > > > > > @@ -424,7 +424,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
+> > > > > > >  		pr_info("HMAT: Memory Flags:%04x Processor Domain:%u Memory Domain:%u\n",
+> > > > > > >  			p->flags, p->processor_PD, p->memory_PD);
+> > > > > > >  
+> > > > > > > -	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) {
+> > > > > > > +	if ((p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) || hmat_revision == 2) {      
+> > > > > > 
+> > > > > > I hope/assume the spec is written in such a way that p->memory_PD is
+> > > > > > required for any revision > 1?  So maybe this should be:
+> > > > > > 
+> > > > > >   if ((p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) ||
+> > > > > >       hmat_revision > 1) {    
+> > > > 
+> > > > I should have said simply:
+> > > > 
+> > > >   if (hmat_revision == 1 && p->flags & ACPI_HMAT_MEMORY_PD_VALID)
+> > > > 
+> > > > We shouldn't even test p->flags for ACPI_HMAT_MEMORY_PD_VALID unless
+> > > > we already know it's revision 1.
+> > > > 
+> > > > And unless there was a revision 0 of HMAT, there's no need to look for
+> > > > hmat_revison > 1.  
+> > > 
+> > > It needs to stay as an or statement as you had the first time.
+> > > The field is always valid for hmat_revision > 1, and valid for
+> > > hmat_revision == 1 with the flag set.  You could express it as
+> > > 
+> > > if ((p->flags & ACPI_HMAT_MEMORY_PD_VALID) || (hmat_revision != 1))
+> > > 
+> > > but that seems more confusing to me.  
+> > 
+> > Oh, you're right, sorry!  There are two questions here:
+> > 
+> > 1) In what order should we test "p->flags & ACPI_HMAT_MEMORY_PD_VALID"
+> >    and "hmat_revision == 1"?  ACPI_HMAT_MEMORY_PD_VALID is defined
+> >    only when "hmat_revision == 1", so I think we should test the
+> >    revision first.
+> > 
+> >    When "hmat_revision == 2", ACPI_HMAT_MEMORY_PD_VALID is reserved,
+> >    so we shouldn't test it, even if we later check the revision and
+> >    discard the result of the flag test.  This is a tiny thing,
+> >    admittedly, but I think it follows the spec more clearly.
+> > 
+> > 2) Do we need to test hmat_revision for anything other than 1?  Yes,
+> >    you're right, see below.
+> >   
+> > > > > Good point.  We have existing protections elsewhere against
+> > > > > hmat_revision being anything other than 1 or 2, so we should aim to
+> > > > > keep that in only one place.    
+> > > > 
+> > > > I think the "Ignoring HMAT: Unknown revision" test in hmat_init(),
+> > > > added by 3accf7ae37a9 ("acpi/hmat: Parse and report heterogeneous
+> > > > memory"), is a mistake.
+> > > > 
+> > > > And I think hmat_normalize() has a similar mistake in that it tests
+> > > > explicitly for hmat_revision == 2 when it should accept 2 AND anything
+> > > > later.
+> > > > 
+> > > > We should assume that future spec revisions will be backwards
+> > > > compatible.  Otherwise we're forced to make kernel changes when we
+> > > > otherwise would not have to.  
+> > > 
+> > > I disagree with this. There is no rule in ACPI about maintaining
+> > > backwards compatibility. The assumption is that the version number
+> > > will always be checked.  The meaning of fields changed between
+> > > version 1 and version 2 so it would be bold to assume that won't
+> > > happen in the future!  
+> > 
+> > There *is* a rule about maintaining backwards compatibility.  ACPI
+> > v6.3, sec 5.2.2, says:
+> > 
+> >   All versions of the ACPI tables must maintain backward
+> >   compatibility. To accomplish this, modifications of the tables
+> >   consist of redefinition of previously reserved fields and values
+> >   plus appending data to the 1.0 tables. Modifications of the ACPI
+> >   tables require that the version numbers of the modified tables be
+> >   incremented.
+> >   
+> > > HMAT is an optional table, so if someone boots up an old kernel
+> > > they are probably better off failing to use it at all than
+> > > misinterpreting it.   
+> > 
+> > An old kernel tests:
+> > 
+> >   if (p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1)
+> >     target = find_mem_target(p->memory_PD);
+> > 
+> > which is fine on old firmware.  On new firmware (hmat_revision == 2),
+> > it will ignore p->memory_PD.  That is probably a problem, but I think
+> > we should check for that at the place where we need a memory_PD and
+> > don't find one.  That's more general than sanity checking a revision.
+> > 
+> > A new kernel that tests:
+> > 
+> >   if ((hmat_revision == 1 && p->flags & ACPI_HMAT_MEMORY_PD_VALID) ||
+> >        hmat_revision > 1)
+> >     target = find_mem_target(p->memory_PD);
+> > 
+> > will do the right thing on both old and new firmware.  
 > 
-> Similar requirements might exist for the order of required OPPs
-> when multiple power domains need to be scaled for a frequency change.
+> Actually, I think this part of the spec was done incorrectly.
 > 
-> For example, on Qualcomm platforms using CPR (Core Power Reduction),
-> we need to scale the VDDMX and CPR power domain. When scaling up,
-> MX should be scaled up before CPR. When scaling down, CPR should be
-> scaled down before MX.
+> ACPI v6.3 could have made the p->memory_PD field required without
+> changing the definition of ACPI_HMAT_MEMORY_PD_VALID.  What value was
+> gained by making ACPI_HMAT_MEMORY_PD_VALID a reserved bit in v6.3?
 > 
-> In general, if there are multiple "required-opps" in the device tree
-> I would expect that the order is either irrelevant, or there is some
-> dependency between the power domains. In that case, the power domains
-> should be scaled down in reverse order.
+> If they had left ACPI_HMAT_MEMORY_PD_VALID alone, the Linux code could
+> have been simply this, which would work with old firmware and new
+> firmware, and we wouldn't have to touch this at all:
 > 
-> This commit updates _set_required_opps() to set required OPPs in
-> reverse order when scaling down.
-> 
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+>   if (p->flags & ACPI_HMAT_MEMORY_PD_VALID)
+>     target = find_mem_target(p->memory_PD);
 
-This patch does not apply anymore after the cleanup you pushed to
-opp/linux-next. I would be happy to send a v2 with that fixed.
+I have a slight recollection that might have been my fault :) Oops.
 
-On my other OPP patch set you mentioned that you might apply these
-directly with some of your own changes - would you also prefer to do it
-yourself in this case or should I send a v2?
+Jonathan
 
-Still looking for your feedback on both patch sets by the way! :)
+> 
+> Bjorn
 
-Thanks!
-Stephan
 
-> ---
-> Related discussion: https://lore.kernel.org/linux-arm-msm/20200525194443.GA11851@flawful.org/
-> 
-> The advantage of this approach is that the CPR driver does not need
-> to bother with the VDDMX power domain at all - the requirements
-> can be fully described within the device tree, see e.g. [1].
-> An alternative option would be to modify the CPR driver to make these votes.
-> 
-> [1]: https://lore.kernel.org/linux-arm-msm/20200507104603.GA581328@gerhold.net/2-msm8916-vdd-mx.patch
-> ---
->  drivers/opp/core.c | 30 +++++++++++++++++++++---------
->  1 file changed, 21 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index f7a476b55069..f93f551c911e 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -799,7 +799,7 @@ static int _set_required_opp(struct device *dev, struct device *pd_dev,
->  /* This is only called for PM domain for now */
->  static int _set_required_opps(struct device *dev,
->  			      struct opp_table *opp_table,
-> -			      struct dev_pm_opp *opp)
-> +			      struct dev_pm_opp *opp, bool up)
->  {
->  	struct opp_table **required_opp_tables = opp_table->required_opp_tables;
->  	struct device **genpd_virt_devs = opp_table->genpd_virt_devs;
-> @@ -821,12 +821,24 @@ static int _set_required_opps(struct device *dev,
->  	 */
->  	mutex_lock(&opp_table->genpd_virt_dev_lock);
->  
-> -	for (i = 0; i < opp_table->required_opp_count; i++) {
-> -		pd_dev = genpd_virt_devs[i];
-> +	if (up) {
-> +		/* Scaling up? Set required OPPs in normal order */
-> +		for (i = 0; i < opp_table->required_opp_count; i++) {
-> +			pd_dev = genpd_virt_devs[i];
->  
-> -		ret = _set_required_opp(dev, pd_dev, opp, i);
-> -		if (ret)
-> -			break;
-> +			ret = _set_required_opp(dev, pd_dev, opp, i);
-> +			if (ret)
-> +				break;
-> +		}
-> +	} else {
-> +		/* Scaling down? Set required OPPs in reverse order */
-> +		for (i = opp_table->required_opp_count - 1; i >= 0; i--) {
-> +			pd_dev = genpd_virt_devs[i];
-> +
-> +			ret = _set_required_opp(dev, pd_dev, opp, i);
-> +			if (ret)
-> +				break;
-> +		}
->  	}
->  	mutex_unlock(&opp_table->genpd_virt_dev_lock);
->  
-> @@ -914,7 +926,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->  			opp_table->regulator_enabled = false;
->  		}
->  
-> -		ret = _set_required_opps(dev, opp_table, NULL);
-> +		ret = _set_required_opps(dev, opp_table, NULL, false);
->  		goto put_opp_table;
->  	}
->  
-> @@ -973,7 +985,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->  
->  	/* Scaling up? Configure required OPPs before frequency */
->  	if (freq >= old_freq) {
-> -		ret = _set_required_opps(dev, opp_table, opp);
-> +		ret = _set_required_opps(dev, opp_table, opp, true);
->  		if (ret)
->  			goto put_opp;
->  	}
-> @@ -993,7 +1005,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->  
->  	/* Scaling down? Configure required OPPs after frequency */
->  	if (!ret && freq < old_freq) {
-> -		ret = _set_required_opps(dev, opp_table, opp);
-> +		ret = _set_required_opps(dev, opp_table, opp, false);
->  		if (ret)
->  			dev_err(dev, "Failed to set required opps: %d\n", ret);
->  	}
-> -- 
-> 2.27.0
-> 
