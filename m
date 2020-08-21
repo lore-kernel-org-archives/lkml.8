@@ -2,75 +2,98 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD02EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5228020639
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:16:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QteLqZZn"
+	by mail.kernel.org (Postfix) with ESMTP id 8E83820639
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgHUIQn (ORCPT
+        id S1726946AbgHUISr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:16:43 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:60320 "EHLO mail.skyhub.de"
+        Fri, 21 Aug 2020 04:18:47 -0400
+Received: from mga18.intel.com ([134.134.136.126]:61662 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbgHUIQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:16:42 -0400
-Received: from zn.tnic (p200300ec2f0eda00b4e1d8975031aaf0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:da00:b4e1:d897:5031:aaf0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 149D81EC02B9;
-        Fri, 21 Aug 2020 10:16:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1597997797;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=kD3hyIqaY4rvqARoZXbDQgRT0FQcAV1g3bodMGGGRgI=;
-        b=QteLqZZnrFR+uLNgDqcLl10Ws5SanoiYCyEKKN8xuVymJs+qot81ZM7mUHiuSBxHFkkAvN
-        TkYIJ+ItbEUyyuk/LeuXu6YqdYfSL3EoQmYB5nQrIpoEsjaigm376cfFGrXi60+2RIvavu
-        A7WUkPygQPzvMURb7ApWMuAUPphPm3I=
-Date:   Fri, 21 Aug 2020 10:16:33 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Chang Seok Bae <chang.seok.bae@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH] x86/entry/64: Disallow RDPID in paranoid entry if KVM is
- enabled
-Message-ID: <20200821081633.GD12181@zn.tnic>
-References: <20200821025050.32573-1-sean.j.christopherson@intel.com>
- <20200821074743.GB12181@zn.tnic>
- <3eb94913-662d-5423-21b1-eaf75635142a@redhat.com>
+        id S1725965AbgHUISp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 04:18:45 -0400
+IronPort-SDR: RsAgte9kPmHpwDYmB08HGlkgYUQhUofyUNxuGPsQCIHW9vZTZYkMKD92icbqe9fxxulU8SKcfQ
+ kEHxranHCn6w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="143123071"
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="143123071"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 01:18:44 -0700
+IronPort-SDR: DZAu0Bhv0p82AgHROc21YY+qnN/ldKQDm/gj5dXq2i8T457KdSy/io9OmduhKgG2Cy+qf/o6SE
+ YGkMNqe3N4eA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="327702796"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 01:18:42 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k92Fz-00AI7e-Sz; Fri, 21 Aug 2020 11:18:39 +0300
+Date:   Fri, 21 Aug 2020 11:18:39 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v8 1/3] devres: provide devm_krealloc()
+Message-ID: <20200821081839.GH1891694@smile.fi.intel.com>
+References: <20200820185110.17828-1-brgl@bgdev.pl>
+ <20200820185110.17828-2-brgl@bgdev.pl>
+ <20200821081555.GG1891694@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3eb94913-662d-5423-21b1-eaf75635142a@redhat.com>
+In-Reply-To: <20200821081555.GG1891694@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:09:01AM +0200, Paolo Bonzini wrote:
-> One more MSR *is* a big deal: KVM's vmentry+vmexit cost is around 1000
-> cycles, adding 100 clock cycles for 2 WRMSRs is a 10% increase.
+On Fri, Aug 21, 2020 at 11:15:55AM +0300, Andy Shevchenko wrote:
+> On Thu, Aug 20, 2020 at 08:51:08PM +0200, Bartosz Golaszewski wrote:
 
-The kernel uses TSC_AUX so we can't reserve it to KVM either.
+...
+
+> > +static struct devres *to_devres(void *data)
+> > +{
+> > +	return data - ALIGN(sizeof(struct devres), ARCH_KMALLOC_MINALIGN);
+> > +}
+> > +
+> > +static size_t devres_data_size(size_t total_size)
+> > +{
+> > +	return total_size - ALIGN(sizeof(struct devres), ARCH_KMALLOC_MINALIGN);
+> > +}
+> 
+> I'm fine with above, but here is a side note, perhaps
+> 
+> 	offsetof(struct devres,	data)
+> 
+> will be more practical (no duplication of alignment and hence slightly better
+> maintenance)? (Note, I didn't check if it provides the correct result)
+
+And if the result is correct wouldn't be first a simple container_of() after
+all?
+
+> Another side note: do we have existing users of these helpers?
 
 -- 
-Regards/Gruss,
-    Boris.
+With Best Regards,
+Andy Shevchenko
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
