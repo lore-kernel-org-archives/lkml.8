@@ -2,166 +2,81 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22D502076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:24:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="fu9LKV/W"
+	by mail.kernel.org (Postfix) with ESMTP id B4EEA207C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgHUPYL (ORCPT
+        id S1728025AbgHUPYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:24:11 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:12432 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727829AbgHUPXx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:23:53 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 07LFAlQS005688
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:23:52 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=2XdoCUBVf1UWCThVNQGQA1CjjttSMu9Qw3XfhLRxHkQ=;
- b=fu9LKV/W7cvntY+4VaPOIrFV/Eh7vdwjqlcbu28YB/PRacu6JgIA3mwMV1affaJrEyiB
- jt+djSabMxxE7ER2UZCy0Kf+aDjJmSdz6DIWzYfZFcNX9JqHMX5RZCSps38e0ngHVCw4
- qIE3iS9qos/xvJzOJkNBcFMA5QcvhpdRzYE= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0089730.ppops.net with ESMTP id 331hcc15ha-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:23:52 -0700
-Received: from intmgw004.06.prn3.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:21d::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 21 Aug 2020 08:23:49 -0700
-Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id A098E3441077; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
-To:     <bpf@vger.kernel.org>
-CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
-        Roman Gushchin <guro@fb.com>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next v4 24/30] bpf: eliminate rlimit-based memory accounting for sockmap and sockhash maps
-Date:   Fri, 21 Aug 2020 08:01:28 -0700
-Message-ID: <20200821150134.2581465-25-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
-References: <20200821150134.2581465-1-guro@fb.com>
+        Fri, 21 Aug 2020 11:24:17 -0400
+Received: from mga07.intel.com ([134.134.136.100]:44116 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727950AbgHUPYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 11:24:04 -0400
+IronPort-SDR: 70BIbq1x79/nF0LwGFq++WdYgCvh22Xe/STFbQoDatrGr2SLk1PiOmm8urbQ4e08HcfO0q9fWd
+ 44ZbjSKPnjOw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="219843904"
+X-IronPort-AV: E=Sophos;i="5.76,337,1592895600"; 
+   d="scan'208";a="219843904"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 08:23:56 -0700
+IronPort-SDR: zr1zjNdR2ZfsTBqk29XtWieg4LINsD0s6fmv+QUtyUtLdXM233ywWMMaCMB17PU9sMFN2bIyZ2
+ BH/PZ1xhLQ+Q==
+X-IronPort-AV: E=Sophos;i="5.76,337,1592895600"; 
+   d="scan'208";a="442379328"
+Received: from pcmiller-mobl1.amr.corp.intel.com (HELO [10.209.120.121]) ([10.209.120.121])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 08:23:54 -0700
+Subject: Re: [PATCH] soundwire: intel: fix CONFIG_PM and CONFIG_PM_SLEEP
+ confusion
+To:     Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, mengdong.lin@intel.com, sanyog.r.kale@intel.com,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+References: <20200820140441.9478-1-yung-chuan.liao@linux.intel.com>
+ <20200821050159.GH2639@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <cab31891-15bf-4ae2-44dd-ae33de4eb4ed@linux.intel.com>
+Date:   Fri, 21 Aug 2020 10:23:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
- priorityscore=1501 suspectscore=38 clxscore=1015 bulkscore=0
- mlxlogscore=685 lowpriorityscore=0 phishscore=0 impostorscore=0
- adultscore=0 mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008210143
-X-FB-Internal: deliver
+In-Reply-To: <20200821050159.GH2639@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not use rlimit-based memory accounting for sockmap and sockhash maps.
-It has been replaced with the memcg-based memory accounting.
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Song Liu <songliubraving@fb.com>
----
- net/core/sock_map.c | 33 ++++++---------------------------
- 1 file changed, 6 insertions(+), 27 deletions(-)
 
-diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-index bc797adca44c..07c90baf8db1 100644
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -26,8 +26,6 @@ struct bpf_stab {
- static struct bpf_map *sock_map_alloc(union bpf_attr *attr)
- {
- 	struct bpf_stab *stab;
--	u64 cost;
--	int err;
-=20
- 	if (!capable(CAP_NET_ADMIN))
- 		return ERR_PTR(-EPERM);
-@@ -45,22 +43,15 @@ static struct bpf_map *sock_map_alloc(union bpf_attr =
-*attr)
- 	bpf_map_init_from_attr(&stab->map, attr);
- 	raw_spin_lock_init(&stab->lock);
-=20
--	/* Make sure page count doesn't overflow. */
--	cost =3D (u64) stab->map.max_entries * sizeof(struct sock *);
--	err =3D bpf_map_charge_init(&stab->map.memory, cost);
--	if (err)
--		goto free_stab;
--
- 	stab->sks =3D bpf_map_area_alloc(stab->map.max_entries *
- 				       sizeof(struct sock *),
- 				       stab->map.numa_node);
--	if (stab->sks)
--		return &stab->map;
--	err =3D -ENOMEM;
--	bpf_map_charge_finish(&stab->map.memory);
--free_stab:
--	kfree(stab);
--	return ERR_PTR(err);
-+	if (!stab->sks) {
-+		kfree(stab);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	return &stab->map;
- }
-=20
- int sock_map_get_from_fd(const union bpf_attr *attr, struct bpf_prog *pr=
-og)
-@@ -999,7 +990,6 @@ static struct bpf_map *sock_hash_alloc(union bpf_attr=
- *attr)
- {
- 	struct bpf_shtab *htab;
- 	int i, err;
--	u64 cost;
-=20
- 	if (!capable(CAP_NET_ADMIN))
- 		return ERR_PTR(-EPERM);
-@@ -1027,21 +1017,10 @@ static struct bpf_map *sock_hash_alloc(union bpf_=
-attr *attr)
- 		goto free_htab;
- 	}
-=20
--	cost =3D (u64) htab->buckets_num * sizeof(struct bpf_shtab_bucket) +
--	       (u64) htab->elem_size * htab->map.max_entries;
--	if (cost >=3D U32_MAX - PAGE_SIZE) {
--		err =3D -EINVAL;
--		goto free_htab;
--	}
--	err =3D bpf_map_charge_init(&htab->map.memory, cost);
--	if (err)
--		goto free_htab;
--
- 	htab->buckets =3D bpf_map_area_alloc(htab->buckets_num *
- 					   sizeof(struct bpf_shtab_bucket),
- 					   htab->map.numa_node);
- 	if (!htab->buckets) {
--		bpf_map_charge_finish(&htab->map.memory);
- 		err =3D -ENOMEM;
- 		goto free_htab;
- 	}
---=20
-2.26.2
+>> When CONFIG_PM_SLEEP is not defined, GCC throws compilation warnings:
+>>
+>> drivers/soundwire/intel.c:1816:12: warning: ‘intel_resume’ defined but
+>> not used [-Wunused-function]
+>>   1816 | static int intel_resume(struct device *dev)
+>>        |            ^~~~~~~~~~~~
+>>
+>> drivers/soundwire/intel.c:1697:12: warning: ‘intel_suspend’ defined
+>> but not used [-Wunused-function]
+>>   1697 | static int intel_suspend(struct device *dev)
+>>
+>> Fix by adding the missing CONFIG_PM_SLEEP.
+> 
+> Can you rather use __maybe for for these rather than wrapping in another
+> ifdef, that is the recommended way to do this
 
+No objections, that would work as well.
