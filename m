@@ -2,160 +2,203 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98041C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F14C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71017208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7622076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:17:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kUGCGos3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dsR9qUeQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725992AbgHUEOZ (ORCPT
+        id S1726002AbgHUERo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 00:14:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbgHUEOX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 00:14:23 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED67C061386
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 21:14:23 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id v16so315897plo.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 21:14:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R+6PqGDmju1P8TUKui985wN5cTC8kMP9k9WSWy+URa0=;
-        b=kUGCGos3WLE1bpbh6O7msg86bx9Ao0Sf5P1qcz6SN4hewmUEXGH6Ajt8gkbFzrBxaQ
-         Es1FJMpwyGCUmrZm7c9k6z+Gqp55q/SGRmM3MlvJAgIPFl6wrGT39ZPOVYBWVT/janLp
-         3bzNMPXsvnVEXRD/Un5qzVTWvtrATK8365Zlw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R+6PqGDmju1P8TUKui985wN5cTC8kMP9k9WSWy+URa0=;
-        b=bdRhyj0a3Dzo6Hzya8hUJSwgy6tND0/yh4G3Vr1UXdaCM3LXEwSK8p569V0HIV0x2s
-         d0XaCSZ1XA3Rhk3Hgksyj8LjSbSiJxjOJYPguyeczKt8PSKwyWas3ov8Xn9KHIZHJs9z
-         nxiFtB4rb9nQ2+Z3Jxuwz3ZruZ6jm4sZDg6NQLhRhpivhriCa6sAn06Ljd3AkY7afr/a
-         8YzyywCGLegjuxRVmAbDsHHX8/JqwHNtjU8pfQCqibMXU3BzVTvSRqhiIa5qYXQ8xTx8
-         tC3Z+MMqEROFTotywVdnrqh7JzzMh2wg0R0RLagVMu8V7rQIaOzCP4U7+wK4w2pQKRVl
-         CxdA==
-X-Gm-Message-State: AOAM533wfd7/yBtYzgNrcGSnWlcxq/GWHVhw1EyzMelybTg0Ypn/UASx
-        twUdmEMq3R+MEoS3/ldTBUXqug==
-X-Google-Smtp-Source: ABdhPJyoE4QtlNetKdTpBD0mBXP4WeZ4fIV/NQsjOJ7MyXGse2cOOLja6gdF5h7neoQfxkWjQuiN6A==
-X-Received: by 2002:a17:90a:ea8e:: with SMTP id h14mr956670pjz.105.1597983262635;
-        Thu, 20 Aug 2020 21:14:22 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:1a60:24ff:fe89:3e93])
-        by smtp.gmail.com with ESMTPSA id 30sm419936pjz.24.2020.08.20.21.14.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 21:14:22 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, Irui Wang <irui.wang@mediatek.com>,
-        Anand K Mistry <amistry@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: mtk-vcodec: set dma max segment size
-Date:   Fri, 21 Aug 2020 12:14:14 +0800
-Message-Id: <20200821041414.1560707-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+        Fri, 21 Aug 2020 00:17:44 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:54415 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbgHUERo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 00:17:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597983462; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=dp3nIlYMWIpEqxxYOG00yGTEXD2AmqqdUiwBKlzCCso=;
+ b=dsR9qUeQguO08VjNL1ddZkCynvJrHGGGDKa2g1sPv/WgImqYXgAgDocgNtVITwKxaVvvtmvn
+ e/v0aBA6pEa11oDiom40Z/tk5EMkRZqiGJgx79eenD3/laglopSkxinBS1BXM0ud9NmT8a1m
+ dq9l5h6pU8jecWF8WPGPweEVeEg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5f3f4ada108e5ef85ac306f0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 Aug 2020 04:17:30
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4F3BBC433C6; Fri, 21 Aug 2020 04:17:30 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cgoldswo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A3BFC433CA;
+        Fri, 21 Aug 2020 04:17:28 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Aug 2020 21:17:28 -0700
+From:   cgoldswo@codeaurora.org
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pratikp@codeaurora.org,
+        pdaly@codeaurora.org, sudraja@codeaurora.org,
+        iamjoonsoo.kim@lge.com, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: cma_alloc(), add sleep-and-retry for temporary page pinning
+In-Reply-To: <896f92e8c37936e7cb2914e79273e9e8@codeaurora.org>
+References: <896f92e8c37936e7cb2914e79273e9e8@codeaurora.org>
+Message-ID: <896458e8daf87a274ba1ce8ced30ac8e@codeaurora.org>
+X-Sender: cgoldswo@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set dma max segment size for encoder and decoder driver.
+On 2020-08-11 15:20, cgoldswo@codeaurora.org wrote:
+> On 2020-08-06 18:31, Andrew Morton wrote:
+>> On Wed,  5 Aug 2020 19:56:21 -0700 Chris Goldsworthy
+>> <cgoldswo@codeaurora.org> wrote:
+>> 
+>>> On mobile devices, failure to allocate from a CMA area constitutes a
+>>> functional failure.  Sometimes during CMA allocations, we have 
+>>> observed
+>>> that pages in a CMA area allocated through alloc_pages(), that we're 
+>>> trying
+>>> to migrate away to make room for a CMA allocation, are temporarily 
+>>> pinned.
+>>> This temporary pinning can occur when a process that owns the pinned 
+>>> page
+>>> is being forked (the example is explained further in the commit 
+>>> text).
+>>> This patch addresses this issue by adding a sleep-and-retry loop in
+>>> cma_alloc() . There's another example we know of similar to the above 
+>>> that
+>>> occurs during exit_mmap() (in zap_pte_range() specifically), but I 
+>>> need to
+>>> determine if this is still relevant today.
+>> 
+> 
+>> Sounds fairly serious but boy, we're late for 5.9.
+>> 
+>> I can queue it for 5.10 with a cc:stable so that it gets backported
+>> into earlier kernels a couple of months from now, if we think the
+>> seriousness justifies backporting(?).
+>> 
+> 
+> Queuing this seems like the best way to proceed, if we were to pick up
+> this patch.
+> I think we can forgo back-porting this, as this is something that will 
+> only be
+> needed as vendors such as our selves start using Google's Generic 
+> Kernel Image
+> (we've carried this patch in our tree for over four years).
+> 
+>> 
+>> And...  it really is a sad little patch, isn't it?  Instead of fixing
+>> the problem, it reduces the problem's probability by 5x.  Can't we do
+>> better than this?
+> 
+> I have one alternative in mind.  I have been able to review the 
+> exit_mmap()
+> case, so before proceeding, let's do a breakdown of the problem: we can
+> categorize the pinning issue we're trying to address here as being one 
+> of
+> (1) incrementing _refcount and getting context-switched out before
+> incrementing _mapcount (applies to forking a process / copy_one_pte()), 
+> and
+> (2) decrementing _mapcount and getting context-switched out before
+> decrementing _refcount (applies to tearing down a process / 
+> exit_mmap()).
+> So, one alternative would be to insert preempt_disable/enable() calls 
+> at
+> affected sites. So, for the copy_one_pte() pinning case, we could do 
+> the
+> following inside of copy_one_pte():
+> 
+>         if (page) {
+> +               preempt_disable();
+>                 get_page(page);
+>                 page_dup_rmap(page, false);
+> +               preempt_enable();
+>                 rss[mm_counter(page)]++;
+>         }
+> 
+> I'm not sure if this approach would be acceptable for the exit_mmap()
+> pinning case (applicable when CONFIG_MMU_GATHER_NO_GATHER=y).  For the
+> purposes of this discussion, we can look at two function calls inside 
+> of
+> exit_mmap(), in the order they're called in, to show how the pinning is
+> occuring:
+> 
+>     1. Calling unmap_vmas(): this unmaps the pages in each VMA for an
+>     exiting task, using zap_pte_range() - zap_pte_range() reduces the
+>     _mapcount for each page in a VMA, using page_remove_rmap().  After
+>     calling page_remove_rmap(), the page is placed into a list in
+>     __tlb_remove_page().  This list of pages will be used when flushing
+>     TLB entries later on during the process teardown.
+> 
+>     2. Calling tlb_finish_mmu(): This is will flush the TLB entries
+>     associated with pages, before calling put_page() on them, using the
+>     previously collected pages from __tlb_remove_page() - the call flow 
+> is
+>     tlb_flush_mmu() > tlb_flush_mmu() > tlb_flush_mmu_free()
+>     > tlb_batch_pages_flush() > free_pages_and_swap_cache() >
+>     release_pages(), where release_pages() is described as a "batched
+>     put_page()"
+> 
+> The preempt_disable/enable() approach would entail doing the following
+> inside of exit_mmap():
+> 
+> +       preempt_disable();
+>         unmap_vmas(&tlb, vma, 0, -1);
+>         free_pgtables(&tlb, vma, FIRST_USER_ADDRESS, 
+> USER_PGTABLES_CEILING);
+>         tlb_finish_mmu(&tlb, 0, -1);
+> +       preempt_enable();
+> 
+> I'm not sure doing this is feasible, given how long it could take to do 
+> the
+> process teardown.
+> 
+> The good thing about this patch is that it has been stable in our 
+> kernel
+> for four years (though for some SoCs we increased the retry counts).  
+> One
+> thing to stress is that there are other instances of CMA page pinning, 
+> that
+> this patch isn't attempting to address. Please let me know if you're 
+> okay
+> with queuing this for the 5.10 merge window - if you are, I can add an
+> option to configure the number of retries, and will resend the patch 
+> once
+> the 5.9 merge window closes.
+> 
+> Thanks,
+> 
+> Chris.
 
-Fix following warning with CONFIG_DMA_API_DEBUG_SG=y
+Hi Andrew,
 
-[   75.147825] ------------[ cut here ]------------
-[   75.147844] mtk-vcodec-enc 19002000.vcodec: DMA-API: mapping sg segment longer than device claims to support [len=983040] [max=65536]
-[   75.147876] WARNING: CPU: 2 PID: 4069 at kernel/dma/debug.c:1302 debug_dma_map_sg+0x1a8/0x2c4
-...
-[   75.148139] Call trace:
-[   75.148149]  debug_dma_map_sg+0x1a8/0x2c4
-[   75.148165]  vb2_dc_get_userptr+0x228/0x364 [videobuf2_dma_contig]
-[   75.148178]  __buf_prepare+0x3ac/0x8c0 [videobuf2_common]
-[   75.148188]  vb2_core_qbuf+0xa4/0x58c [videobuf2_common]
-[   75.148199]  vb2_qbuf+0x88/0xe4 [videobuf2_v4l2]
-[   75.148211]  v4l2_m2m_qbuf+0x80/0xf8 [v4l2_mem2mem]
-[   75.148221]  vidioc_venc_qbuf+0x3c/0x70 [mtk_vcodec_enc]
-[   75.148234]  v4l_qbuf+0x48/0x58
-[   75.148242]  __video_do_ioctl+0x200/0x37c
-[   75.148250]  video_usercopy+0x360/0x834
-[   75.148259]  video_ioctl2+0x38/0x48
-[   75.148267]  v4l2_ioctl+0x6c/0x80
-[   75.148276]  do_video_ioctl+0xefc/0x4b70
-[   75.148284]  v4l2_compat_ioctl32+0x5c/0xcc
-[   75.148294]  __arm64_compat_sys_ioctl+0xf4/0x240
-[   75.148304]  el0_svc_common+0xac/0x198
-[   75.148312]  el0_svc_compat_handler+0x2c/0x40
-[   75.148321]  el0_svc_compat+0x8/0x18
-[   75.148328] irq event stamp: 0
-[   75.148337] hardirqs last  enabled at (0): [<0000000000000000>]           (null)
-[   75.148347] hardirqs last disabled at (0): [<ffffff90080e65c0>] copy_process+0x380/0x115c
-[   75.148356] softirqs last  enabled at (0): [<ffffff90080e65d8>] copy_process+0x398/0x115c
-[   75.148364] softirqs last disabled at (0): [<0000000000000000>]           (null)
-[   75.148372] ---[ end trace 588bf529451e3531 ]---
+Have you been able to give the patch any further consideration?
 
-Reported-by: Anand K Mistry <amistry@chromium.org>
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c | 8 ++++++++
- drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c | 8 ++++++++
- 2 files changed, 16 insertions(+)
+Thanks,
 
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-index 97a1b6664c20..3bbd0bac56d6 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-@@ -242,6 +242,14 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 		mtk_v4l2_err("[VPU] vpu device in not ready");
- 		return -EPROBE_DEFER;
- 	}
-+	if (!pdev->dev.dma_parms) {
-+		pdev->dev.dma_parms = devm_kzalloc(&pdev->dev,
-+						sizeof(*pdev->dev.dma_parms),
-+						GFP_KERNEL);
-+		if (!pdev->dev.dma_parms)
-+			return -ENOMEM;
-+	}
-+	dma_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
- 
- 	vpu_wdt_reg_handler(dev->vpu_plat_dev, mtk_vcodec_dec_reset_handler,
- 			dev, VPU_RST_DEC);
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-index 4d31f1ed113f..ff4a87485d69 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-@@ -249,6 +249,14 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 		mtk_v4l2_err("[VPU] vpu device in not ready");
- 		return -EPROBE_DEFER;
- 	}
-+	if (!pdev->dev.dma_parms) {
-+		pdev->dev.dma_parms = devm_kzalloc(&pdev->dev,
-+						sizeof(*pdev->dev.dma_parms),
-+						GFP_KERNEL);
-+		if (!pdev->dev.dma_parms)
-+			return -ENOMEM;
-+	}
-+	dma_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
- 
- 	vpu_wdt_reg_handler(dev->vpu_plat_dev, mtk_vcodec_enc_reset_handler,
- 				dev, VPU_RST_ENC);
+Chris.
+
 -- 
-2.28.0.297.g1956fa8f8d-goog
-
+The Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum,
+a Linux Foundation Collaborative Project
