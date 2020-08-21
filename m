@@ -2,123 +2,122 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55548C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 667CF20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB872087D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:05:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KXTqyq//"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JOi1CDS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbgHUJEd (ORCPT
+        id S1727829AbgHUJFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:04:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgHUJEb (ORCPT
+        Fri, 21 Aug 2020 05:05:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20338 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725965AbgHUJFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:04:31 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACE7EC061385
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 02:04:30 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id q68so344653uaq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 02:04:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2aqaXn/OLBCEnJD6W+rO7Mlnssb9JvC0HBRl/U0OUUg=;
-        b=KXTqyq//OKA+RNGjE5YSIsFCI3e1XJ/Cbv7Kr7u8/PQc0Pne19cNWJTK3R16ixQbyV
-         VAMcV7KnRMckctx7KTif5eeTKATrRY8cWdVqpChUFOqX8BNVrLmVflXeAb8fjaVMF1zW
-         EKyw6ZB2LKGHT5NqprV9oUDt04K8Znv+gyIrF8yr/wGIDsrzsAKPaWox6IKO+hlYRpEk
-         IIbtK7XXBHZeuftRPOHcNPWUf2PfQEdiVxPdJLLe+jnsvQEwzPRGX9Kitbuh1ehG2SUR
-         BEEZz9VPJuWoBa+7bCQxdM6bIy7sWenPObAEnq9BK4FySXEghM3d93OZz1bTInRZPAnq
-         tJgg==
+        Fri, 21 Aug 2020 05:05:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598000729;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=a2gI9Nvwoet4V714YdL5zCr/MsTRTl+MoaZaV7VgHD8=;
+        b=JOi1CDS9CY8VAci2TMLmtUyWLaaPZIkpz9cT1yT78BdjoynH+WhfTmZQGPac3RgJbmVnGS
+        z0jLY0upRatcUtUWDD24IQeWM1nK/19+MxuCiLdQxIRopKxXYYpUQz2Rawnrl3Ub1JdGoJ
+        7DzZ+oCOS5wxnTZOqBHaGT83cVYkfhI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-az-GgATLPgiL1O5fTX61kA-1; Fri, 21 Aug 2020 05:05:27 -0400
+X-MC-Unique: az-GgATLPgiL1O5fTX61kA-1
+Received: by mail-wr1-f70.google.com with SMTP id t3so350031wrr.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 02:05:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2aqaXn/OLBCEnJD6W+rO7Mlnssb9JvC0HBRl/U0OUUg=;
-        b=c8NMky4H3lcZpME0AVycdMp+j213OXlJobW4eIH/Iyyv2pV+R8LkspKJHFD7lpMe29
-         SNiioX5ou9tYauMlHG2piKGx/38Yrjf+FLfkGKFGPJY7KHuhbelZ1HnHdHarlklKi3A+
-         TUVmMTjaHQL38GX2mTzcwzb2fXcaDo3InFg5pWDiO2+BeSoQ4UYrttosI/7UKn8L2pPq
-         G2+KxJo1nkWG8Di64BmkQyVFgGNSe+OiTAaWPd/764KpPm/p+Be966o9qg/PZi2IISoz
-         5/jUExERKnSkKObEhVRzRxFgbjDo4m+gxFyK7S16UH/XEE2P3vDlibEbHyHdsLjKEsnw
-         Dm+Q==
-X-Gm-Message-State: AOAM53341Nt7q+wJdx0Cb6lHKvkQCfxkRgxaZRlBbwarzICpssZ6COlu
-        0tn22nGw3vPQ2fJhcOWeplr0rimspR5PnDepUQIi1Q==
-X-Google-Smtp-Source: ABdhPJydH0kCtnDYCtghoZB5iwFnEbCN/wAnXbObjFLDzaJ5v/m+pKf0/FjLejd2JiPmOueyYS7pzqgtZYcXvBCBayM=
-X-Received: by 2002:ab0:2ea2:: with SMTP id y2mr820544uay.15.1598000669938;
- Fri, 21 Aug 2020 02:04:29 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=a2gI9Nvwoet4V714YdL5zCr/MsTRTl+MoaZaV7VgHD8=;
+        b=gQ1HliPRSMTf+uuPR4oa+oHGvXxKtinZ5GF3vNXpBaEnXn7uxZHdLFWY6psLrnNKVh
+         hxHoWYljiuNqa3Be3uEeAbrSP+M54wlg4G43qby0MRexzqUrSkYF1cIbVFFmDzMcYYwy
+         kxl/0I4M6qeyjBIYdPejXtTiKk7u524QjYpO6uhwgIxvym2Vz9hH8Uy0pMAkd7GbFGJz
+         a5nmAusLVjs5AjBi8wphlQmtixIlUZAVb+qB+I4XuAkVcJ+RaPwKAOy4KLGl13p0gQ3f
+         Ux73Bxc7GCjUYznYJIldf2fBCqUZ4pNuEEdKkc4ylRvniywlF9nR8b2e3zbMJZ3h7GTm
+         7YsQ==
+X-Gm-Message-State: AOAM5308IGJpoS7ELQpEw4F3518rSh7HQ3kshFRd0676PEN2gdEGxla4
+        88kMOF6IaigSR1pj7h4Icaq5zq2kbYfVxVLUBgFC1GeAdiXJRUo8FOibsbIz90GSyD60+uovVxd
+        o6S/Q5IP4/tiWeGW1FMvCx3zd
+X-Received: by 2002:adf:e550:: with SMTP id z16mr1804422wrm.329.1598000726214;
+        Fri, 21 Aug 2020 02:05:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxtSmPRNO2v5XZHoE+3AgJHTVtEt5bRlbkV6IO+RvvNhGsNxv9/jNAWd+Cs2dM5XrePLC4Q+A==
+X-Received: by 2002:adf:e550:: with SMTP id z16mr1804395wrm.329.1598000725944;
+        Fri, 21 Aug 2020 02:05:25 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:1cc0:4e4e:f1a9:1745? ([2001:b07:6468:f312:1cc0:4e4e:f1a9:1745])
+        by smtp.gmail.com with ESMTPSA id d7sm3123948wra.29.2020.08.21.02.05.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 02:05:25 -0700 (PDT)
+Subject: Re: [PATCH] x86/entry/64: Disallow RDPID in paranoid entry if KVM is
+ enabled
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@intel.com>,
+        Chang Seok Bae <chang.seok.bae@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>
+References: <20200821025050.32573-1-sean.j.christopherson@intel.com>
+ <20200821074743.GB12181@zn.tnic>
+ <3eb94913-662d-5423-21b1-eaf75635142a@redhat.com>
+ <20200821081633.GD12181@zn.tnic>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <3b4ba9e9-dbf6-a094-0684-e68248050758@redhat.com>
+Date:   Fri, 21 Aug 2020 11:05:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200819125832.v2.1.Ie8f0689ec9f449203328b37409d1cf06b565f331@changeid>
- <CANMq1KC3BC4bbh9YF1r3nfOAJgQp4mVZJ11_77cwFJY9fGK-Dg@mail.gmail.com>
-In-Reply-To: <CANMq1KC3BC4bbh9YF1r3nfOAJgQp4mVZJ11_77cwFJY9fGK-Dg@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 21 Aug 2020 11:03:52 +0200
-Message-ID: <CAPDyKFoHW=taANc4UZU7spGghn8ASo+2VOiEVPNRh9URdeyQpA@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: sdhci-acpi: Fix HS400 tuning for AMDI0040
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Akshu Agrawal <Akshu.Agrawal@amd.com>, chris.wang@amd.com,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200821081633.GD12181@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 at 02:24, Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> On Thu, Aug 20, 2020 at 3:00 AM Raul E Rangel <rrangel@chromium.org> wrote:
-> >
-> > The AMD eMMC Controller can only use the tuned clock while in HS200 and
-> > HS400 mode. If we switch to a different mode, we need to disable the
-> > tuned clock. If we have previously performed tuning and switch back to
-> > HS200 or HS400, we can re-enable the tuned clock.
-> >
-> > Previously the tuned clock was not getting disabled when switching to
-> > DDR52 which is part of the HS400 tuning sequence.
-> >
-> > Fixes: 34597a3f60b1 ("mmc: sdhci-acpi: Add support for ACPI HID of AMD Controller with HS400")
-> > Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+On 21/08/20 10:16, Borislav Petkov wrote:
+> On Fri, Aug 21, 2020 at 10:09:01AM +0200, Paolo Bonzini wrote:
+>> One more MSR *is* a big deal: KVM's vmentry+vmexit cost is around 1000
+>> cycles, adding 100 clock cycles for 2 WRMSRs is a 10% increase.
+> 
+> The kernel uses TSC_AUX so we can't reserve it to KVM either.
 
-Applied for fixes, by dropping the trace_printk below, thanks!
+KVM only uses TSC_AUX while in kernel space, because the kernel hadn't
+used it until now.  That's for a good reason:
 
-Kind regards
-Uffe
+* if possible, __this_cpu_read(cpu_number) is always faster.
 
+* The kernel can just block preemption at its will and has no need for
+the atomic rdtsc+vgetcpu provided by RDTSCP.
 
-> > ---
-> >
-> > Changes in v2:
-> > - Added static to amd_sdhci_execute_tuning
-> >
-> >  drivers/mmc/host/sdhci-acpi.c | 68 +++++++++++++++++++++++++++++------
-> >  1 file changed, 58 insertions(+), 10 deletions(-)
-> [snip]
-> > +               /* DLL is only required for HS400 */
-> > +               if (host->timing == MMC_TIMING_MMC_HS400 &&
-> > +                   !amd_host->dll_enabled) {
-> > +                       trace_printk("%s: Enabling DLL\n", __func__);
->
-> Please do not use trace_printk in production code [1,2], it is only
-> meant for debug use. Consider using dev_dbg.
->
-> [1] https://elixir.bootlin.com/linux/v5.8/source/kernel/trace/trace.c#L3158
-> [2] https://elixir.bootlin.com/linux/v5.8/source/include/linux/kernel.h#L766
->
-> > +                       sdhci_acpi_amd_hs400_dll(host);
-> > +                       amd_host->dll_enabled = true;
-> > +               }
-> >         }
+So far, the kernel had always used LSL instead of RDPID when
+__this_cpu_read was not available.  In one place, RDTSCP is used as an
+ordered rdtsc but it discards the TSC_AUX value.  RDPID is also used in
+the vDSO but it isn't kernel space.
+
+Hence the assumption that KVM makes (and has made ever since TSC_AUX was
+introduced.  What is the difference in speed between LSL and RDPID?  I
+don't have a machine that has RDPID to test it, unfortunately.
+
+Paolo
+
