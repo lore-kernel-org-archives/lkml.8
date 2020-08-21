@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B74FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3412420656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3705F20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029858;
-	bh=KgBhFEvDd4HhOIDlllG/eGKY+sri+AR5ajXaMJEUJ+w=;
+	s=default; t=1598029862;
+	bh=ps+HJouMxS0MKhtsq4HA6ltIRrGt1y5G3/30b95tvho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+HX5pyr9bc9DbZrQZ8roE/yZTIYoeqtCVhr2pNHNbbx3WozpdZp6lJwkqPfWUqM4
-	 9TOV+p74gLJreAEqJ7fW3icQt1yBkVZcGeB0S2zYt6QmeVKIw1g3w7WNvb1J59krbG
-	 sb+YHpL2KrWG+lP0f6DOvkP1akCigYcdKoC2Aln4=
+	b=PbLyZX8yaTe/Yc3o9YTxnYeHLFD9NYi1t1QLoZFFoohKL6TlJ9ymg6nK1uEAyFA2g
+	 E4sQT9cjlqHsWcYKNi/xqRgILFtuvyo+l/HY01i83U6gEbAqr0puu/Mnkdq3jG/lqX
+	 jaqwW2V9bm35jXd1o7LCzZfa56dAFEqmQQcCSsSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbgHURKx (ORCPT
+        id S1728967AbgHURKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50912 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:10:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728174AbgHUQRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:17:14 -0400
+        id S1726884AbgHUQRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:17:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 074D022B43;
-        Fri, 21 Aug 2020 16:17:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B611F22BED;
+        Fri, 21 Aug 2020 16:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026634;
-        bh=KgBhFEvDd4HhOIDlllG/eGKY+sri+AR5ajXaMJEUJ+w=;
+        s=default; t=1598026639;
+        bh=ps+HJouMxS0MKhtsq4HA6ltIRrGt1y5G3/30b95tvho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AeJBVSF4/KQNrDRR5WbuvkwTFbshHXk4SLuY7rjyya+DP8c+btSEWWKVkKa6wi5EU
-         xdrQsoMaPBQCOIxY6sNJaX6BsJebquXQHPZ2bw1IpN4YnZLD/RxvvvEY2HyAcoPwEi
-         afV4njtI46cn20YozA9w1ACrlOwxdPkxSTA+Ulv4=
+        b=haSSifytKtM35Pnc/TmoZQsKhRKRvTUfu8wO1XZnqlgTqVfoIW1sBIhlHBmHU9oOv
+         YO6LCXirOOFNFX3/6377Q4F4s6XgFBCQTewzbO2ZfQuQa74pUR1EzAbFakHiaAt8eQ
+         pBq4iLWdu9q1SYpAvGE+TVnMqD8qpiCIvBEBNDLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 08/48] mfd: intel-lpss: Add Intel Emmitsburg PCH PCI IDs
-Date:   Fri, 21 Aug 2020 12:16:24 -0400
-Message-Id: <20200821161704.348164-8-sashal@kernel.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 12/48] blktrace: ensure our debugfs dir exists
+Date:   Fri, 21 Aug 2020 12:16:28 -0400
+Message-Id: <20200821161704.348164-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161704.348164-1-sashal@kernel.org>
 References: <20200821161704.348164-1-sashal@kernel.org>
@@ -59,34 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-[ Upstream commit 3ea2e4eab64cefa06055bb0541fcdedad4b48565 ]
+[ Upstream commit b431ef837e3374da0db8ff6683170359aaa0859c ]
 
-Intel Emmitsburg PCH has the same LPSS than Intel Ice Lake.
-Add the new IDs to the list of supported devices.
+We make an assumption that a debugfs directory exists, but since
+this can fail ensure it exists before allowing blktrace setup to
+complete. Otherwise we end up stuffing blktrace files on the debugfs
+root directory. In the worst case scenario this *in theory* can create
+an eventual panic *iff* in the future a similarly named file is created
+prior on the debugfs root directory. This theoretical crash can happen
+due to a recursive removal followed by a specific dentry removal.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+This doesn't fix any known crash, however I have seen the files
+go into the main debugfs root directory in cases where the debugfs
+directory was not created due to other internal bugs with blktrace
+now fixed.
+
+blktrace is also completely useless without this directory, so
+this ensures to userspace we only setup blktrace if the kernel
+can stuff files where they are supposed to go into.
+
+debugfs directory creations typically aren't checked for, and we have
+maintainers doing sweep removals of these checks, but since we need this
+check to ensure proper userspace blktrace functionality we make sure
+to annotate the justification for the check.
+
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/trace/blktrace.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index b33030e3385c7..bc0f3c22021b7 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -196,6 +196,9 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x1ac4), (kernel_ulong_t)&bxt_info },
- 	{ PCI_VDEVICE(INTEL, 0x1ac6), (kernel_ulong_t)&bxt_info },
- 	{ PCI_VDEVICE(INTEL, 0x1aee), (kernel_ulong_t)&bxt_uart_info },
-+	/* EBG */
-+	{ PCI_VDEVICE(INTEL, 0x1bad), (kernel_ulong_t)&bxt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x1bae), (kernel_ulong_t)&bxt_uart_info },
- 	/* GLK */
- 	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&glk_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&glk_i2c_info },
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index a4c8f9d9522e4..884333b9fc767 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -535,6 +535,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ #endif
+ 		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+ 
++	/*
++	 * As blktrace relies on debugfs for its interface the debugfs directory
++	 * is required, contrary to the usual mantra of not checking for debugfs
++	 * files or directories.
++	 */
++	if (IS_ERR_OR_NULL(dir)) {
++		pr_warn("debugfs_dir not present for %s so skipping\n",
++			buts->name);
++		ret = -ENOENT;
++		goto err;
++	}
++
+ 	bt->dev = dev;
+ 	atomic_set(&bt->dropped, 0);
+ 	INIT_LIST_HEAD(&bt->running_list);
 -- 
 2.25.1
 
