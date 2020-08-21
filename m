@@ -2,123 +2,151 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEE3C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7479EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECDC22BEA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030977;
-	bh=KXQV7iN6LfRHw4fLqfpnmxvNW34f/PK96F7lMXsjoCQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K7PEi0J4efzsE9HlbnXCJIftzJOVp8z7v3AETtuLzJzXN1xDxNdzbQPBkoAtNH3C9
-	 AtYj13E+IYNRUePOUHCZizQvCv10aE8kz8gizVShm7cdous5jM2ygHNx0OGXds0GtO
-	 rjlReNGP1khisQCR/XUbk0bCjOjL8GpFZykIIaOE=
+	by mail.kernel.org (Postfix) with ESMTP id 4E9C82075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cEik/R6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgHUR3e (ORCPT
+        id S1729051AbgHUR3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:29:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbgHUQO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:14:29 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6B79208DB;
-        Fri, 21 Aug 2020 16:14:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026468;
-        bh=KXQV7iN6LfRHw4fLqfpnmxvNW34f/PK96F7lMXsjoCQ=;
+        Fri, 21 Aug 2020 13:29:48 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:38843 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbgHUQOU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:14:20 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200821161407euoutp02d11cac7d773ff251406f1e124f2b6056~tVJZRHEQn0537005370euoutp02q
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 16:14:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200821161407euoutp02d11cac7d773ff251406f1e124f2b6056~tVJZRHEQn0537005370euoutp02q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598026447;
+        bh=rhBsub9wjuMeOLZuAmFwGL8Y5MlYJoQUBEjSxehD7oQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hv7W/vIizXQxpqteMFQwNXpFg8sppcx4MvtwnUQZ1qOGmwkWxt1dOYwlvK/oOVqgl
-         ns/8qwGAGlWdXotADZaQ6DWWp6Gao3P4ZMdFxP9D99VPR3XoFJropswSDl+VjgWzU5
-         Ei2huTCDiuOiBOAJwppNkWosW2ok3GcX9fkZpjV0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.8 03/62] ALSA: hda/realtek: Fix pin default on Intel NUC 8 Rugged
-Date:   Fri, 21 Aug 2020 12:13:24 -0400
-Message-Id: <20200821161423.347071-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
-References: <20200821161423.347071-1-sashal@kernel.org>
+        b=cEik/R6fdob4nD8Z2XZtWmhG4YEMcJLvDZNTliTxwtZoRPP775mUMmebTqk+Xfuxb
+         PfTpWjXfoOhtHWb/SfpP0sUYS7CjFluQFo3uOid7fHJUwqegrg8orJoaFP6v0Ao171
+         WGnrXIlVc8HurlVdA5E9nbm6hw3oyl6b7YOA0H9M=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200821161407eucas1p2be320a91a60463a5166e0c03cbb661b0~tVJY8N0I21844518445eucas1p2e;
+        Fri, 21 Aug 2020 16:14:07 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 36.D9.06456.EC2FF3F5; Fri, 21
+        Aug 2020 17:14:06 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200821161406eucas1p121553719d4e9cc020d2c557a69000f0c~tVJYpdGJT0803808038eucas1p1U;
+        Fri, 21 Aug 2020 16:14:06 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200821161406eusmtrp10efe21b7cf620757b68ea4503b40a27d~tVJYox_3g1179011790eusmtrp17;
+        Fri, 21 Aug 2020 16:14:06 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-d5-5f3ff2ce6145
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 22.B9.06017.EC2FF3F5; Fri, 21
+        Aug 2020 17:14:06 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200821161406eusmtip1d752dc1e58f598870119d8412c7be1b8~tVJYeDRr91141711417eusmtip1B;
+        Fri, 21 Aug 2020 16:14:06 +0000 (GMT)
+From:   =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     m.szyprowski@samsung.com, b.zolnierkie@samsung.com,
+        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+Subject: [PATCH v2 5/9] spi: spi-s3c64xx: Fix doc comment for struct
+ s3c64xx_spi_driver_data
+Date:   Fri, 21 Aug 2020 18:13:57 +0200
+Message-Id: <20200821161401.11307-6-l.stelmach@samsung.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200821161401.11307-1-l.stelmach@samsung.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Organization: Samsung R&D Institute Poland
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAKsWRmVeSWpSXmKPExsWy7djPc7rnPtnHGzQdtrJY/OM5k8XGGetZ
+        LaY+fMJm0f/4NbPF+fMb2C1uHlrBaLHp8TVWi8u75rBZzDi/j8mi8eNNdou1R+6yO3B7XF/y
+        idlj06pONo/NS+o9+rasYvT4vEkugDWKyyYlNSezLLVI3y6BK+PN2YPMBRu4Kz7+f8bawPiA
+        o4uRk0NCwESi4e5E9i5GLg4hgRWMEv17+lkgnC+MEvPfXWKFcD4zSvxb/ZYFpuVP2z6oluWM
+        EmcnvmeEcJ4zSjyeMIkJpIpNwFGif+kJsHYRgQlMEg/PvWEDSTALlEr07DwEZHNwCAvESaxp
+        VwAJswioSrxafosFJMwrYC3xb6INxDJ5ifbl28E6OQVsJI5famIFsXkFBCVOznwCdhC/gJbE
+        mqbrLBDT5SWat85mBlkrIXCJXeJQzzomiEEuEmte3mKEsIUlXh3fwg5hy0icntwDtldCoF5i
+        8iQziN4eRoltc35AfWwtcefcL7CTmQU0Jdbv0ocIO0o8O7sIqpVP4sZbQYgT+CQmbZvODBHm
+        lehoE4KoVpFY178HaqCURO+rFYwTGJVmIXlmFpIHZiHsWsDIvIpRPLW0ODc9tdgwL7Vcrzgx
+        t7g0L10vOT93EyMwHZ3+d/zTDsavl5IOMQpwMCrx8P44ZB8vxJpYVlyZe4hRgoNZSYTX6ezp
+        OCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8xotexgoJpCeWpGanphakFsFkmTg4pRoYF1y5t3n+
+        5aoY26m8d7M3x3udZte2emrx71WmcH67bMXVqxPteHP73tl6RPg0HGVocKzxcmQUSrtvIWdo
+        rrYrbEvg4TNfXOXaAy7+f7sr19yjaovEcs+u5uw2zwQF9wTlvY5n9Op43Lm/1FiknDwTUNv/
+        QZV10522Hd6LjPYYGK88f6P0WL4SS3FGoqEWc1FxIgAFQHgYQwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsVy+t/xu7rnPtnHG2x9qGax+MdzJouNM9az
+        Wkx9+ITNov/xa2aL8+c3sFvcPLSC0WLT42usFpd3zWGzmHF+H5NF48eb7BZrj9xld+D2uL7k
+        E7PHplWdbB6bl9R79G1ZxejxeZNcAGuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5
+        rJWRqZK+nU1Kak5mWWqRvl2CXsabsweZCzZwV3z8/4y1gfEBRxcjJ4eEgInEn7Z97F2MXBxC
+        AksZJVZcbGDrYuQASkhJrJybDlEjLPHnWhcbRM1TRokpG2axgCTYBBwl+peeYAVJiAjMYJJ4
+        cmMyK0iCWaBc4tKs5+wgtrBAjMTbA+fYQGwWAVWJV8tvsYAs4BWwlvg30QZigbxE+/LtYCWc
+        AjYSxy81gY0RAirZtvgy2C5eAUGJkzOfgLUyC6hLrJ8nBBLmF9CSWNN0nQViq7xE89bZzBMY
+        hWYh6ZiF0DELSdUCRuZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgdG37djPLTsYu94FH2IU
+        4GBU4uH9ccg+Xog1say4MvcQowQHs5IIr9PZ03FCvCmJlVWpRfnxRaU5qcWHGE2BvpzILCWa
+        nA9MDHkl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqYODilGhg5L+dX39xi
+        u1Tv9t6IDb5HF/eUGWQZLdzusXe+XMkhk4V5TYt+b4g7yrsnrnLGxjesGx9/4xUPDjSMWDlf
+        UGxXQPr8B09XKPsumVLjL6q/RI/5ku7rENYpOu7GJ4tfREQFCrI/uJLcfebJm7MBF7kTdnZG
+        9DJOzBLxzQs6pGNfyWJ8bM2nFTeVWIozEg21mIuKEwHRzKAK1AIAAA==
+X-CMS-MailID: 20200821161406eucas1p121553719d4e9cc020d2c557a69000f0c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200821161406eucas1p121553719d4e9cc020d2c557a69000f0c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200821161406eucas1p121553719d4e9cc020d2c557a69000f0c
+References: <20200821161401.11307-1-l.stelmach@samsung.com>
+        <CGME20200821161406eucas1p121553719d4e9cc020d2c557a69000f0c@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Remove descriptions for non-existent fields and fix indentation.
 
-[ Upstream commit e2d2fded6bdf3f7bb40718a208140dba8b4ec574 ]
-
-The jack on Intel NUC 8 Rugged rear panel doesn't work.
-
-The spec [1] states that the jack supports both headphone and
-microphone, so override a Pin Complex which has both Amp-In and Amp-Out
-to make the jack work.
-
-Node 0x1b fits the requirement, and user confirmed the jack now works
-with new pin config.
-
-[1] https://www.intel.com/content/dam/support/us/en/documents/mini-pcs/NUC8CCH_TechProdSpec.pdf
-BugLink: https://bugs.launchpad.net/bugs/1875199
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Link: https://lore.kernel.org/r/20200807080514.15293-1-kai.heng.feng@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
 ---
- sound/pci/hda/patch_realtek.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/spi/spi-s3c64xx.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 00d155b98c1d1..049a07447ba1a 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6169,6 +6169,7 @@ enum {
- 	ALC269_FIXUP_CZC_L101,
- 	ALC269_FIXUP_LEMOTE_A1802,
- 	ALC269_FIXUP_LEMOTE_A190X,
-+	ALC256_FIXUP_INTEL_NUC8_RUGGED,
- };
- 
- static const struct hda_fixup alc269_fixups[] = {
-@@ -7490,6 +7491,15 @@ static const struct hda_fixup alc269_fixups[] = {
- 		},
- 		.chain_id = ALC269_FIXUP_DMIC,
- 	},
-+	[ALC256_FIXUP_INTEL_NUC8_RUGGED] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x1b, 0x01a1913c }, /* use as headset mic, without its own jack detect */
-+			{ }
-+		},
-+		.chained = true,
-+		.chain_id = ALC269_FIXUP_HEADSET_MODE
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -7787,6 +7797,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x10ec, 0x118c, "Medion EE4254 MD62100", ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1c06, 0x2013, "Lemote A1802", ALC269_FIXUP_LEMOTE_A1802),
- 	SND_PCI_QUIRK(0x1c06, 0x2015, "Lemote A190X", ALC269_FIXUP_LEMOTE_A190X),
-+	SND_PCI_QUIRK(0x8086, 0x2080, "Intel NUC 8 Rugged", ALC256_FIXUP_INTEL_NUC8_RUGGED),
- 
- #if 0
- 	/* Below is a quirk table taken from the old code.
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index 433b9d77b914..6381a7557def 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -162,11 +162,8 @@ struct s3c64xx_spi_port_config {
+  * @cntrlr_info: Platform specific data for the controller this driver manages.
+  * @lock: Controller specific lock.
+  * @state: Set of FLAGS to indicate status.
+- * @rx_dmach: Controller's DMA channel for Rx.
+- * @tx_dmach: Controller's DMA channel for Tx.
+  * @sfr_start: BUS address of SPI controller regs.
+  * @regs: Pointer to ioremap'ed controller registers.
+- * @irq: interrupt
+  * @xfer_completion: To indicate completion of xfer task.
+  * @cur_mode: Stores the active configuration of the controller.
+  * @cur_bpw: Stores the active bits per word settings.
+@@ -183,7 +180,7 @@ struct s3c64xx_spi_driver_data {
+ 	struct clk                      *ioclk;
+ 	struct platform_device          *pdev;
+ 	struct spi_master               *master;
+-	struct s3c64xx_spi_info  *cntrlr_info;
++	struct s3c64xx_spi_info         *cntrlr_info;
+ 	spinlock_t                      lock;
+ 	unsigned long                   sfr_start;
+ 	struct completion               xfer_completion;
 -- 
-2.25.1
+2.26.2
 
