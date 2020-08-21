@@ -2,114 +2,126 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED86C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71413C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4429207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43669207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:28:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XrqNGUmj"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="b8vgBKhg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgHUP2T (ORCPT
+        id S1728219AbgHUP2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:28:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53528 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727782AbgHUP2S (ORCPT
+        Fri, 21 Aug 2020 11:28:50 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:47498 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727902AbgHUP2q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:28:18 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D2ECC061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:28:18 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u18so2304720wmc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:28:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+y66MqggCakjVuRG4cFz30VjWieYM9CuDcuOFxkR0Z0=;
-        b=XrqNGUmj2d6Xu6Kb6GMB3M6jmXO1rzxI9r2vGH/mlHjReZ/EU9RkaCjmwICLzWY4Gn
-         TGX8IBv6+v8eYu5rSay0806nirzMq65EzeJd6NOkbwQbwSEiQFJy8wdhquSBc4YOfmUG
-         p5s1Bzs56kl0dmEPlRi1W31V8SFMxK3pzTUz2D6boIA6gDo8i1/ZZgcjkvirtaMc+lJ5
-         UDWeWSgwgYyOdUACy2ozcc/Iz83Ln4ITtmcCsk/xqOjAcwFXWIiCIgjVAxfygoZs1p0z
-         gKl3GsxfxpaqAYLtGx3HWCsRKVXuJHaNRjzlKM+z/lvf1aseKPg6eUs2uPFuZ5fcGSSB
-         4/Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+y66MqggCakjVuRG4cFz30VjWieYM9CuDcuOFxkR0Z0=;
-        b=o74IrWaPBbrw3+0Meu2vWN4Hd1/8+rpF5RT94sQAu33LEoNTodQMn253cZocT/ew4j
-         zsJWswN6FsLCqAD+0iR92EPY6ZGKsPPCLSjYNWn65HCVjqkUT0RSwXdDWMmCGOaldibj
-         ssR8wqoQyaVmekklyXGLBls+bKQQCf4AL+/ioK32fItSCWsqK8pqwig7mFec5hbcTca+
-         eC5gshaEjnVANAA7b+XY14ByUmNDx3Vpw2Z8SXIG/Fn5HVR/CkbH2cjv9RkH4BDI4dAU
-         0D2h1ID+FZFxmSRb3f1oDPnILNK5XpoP4fmci2GaXg9XgwbKJia0Xb9x7Y6nDGibNXTm
-         oqlQ==
-X-Gm-Message-State: AOAM531gKUHxbd1xeNlcU3XWfQm/flJZdrSO+o5WENongJkl5ETWPBmR
-        2oxf55/de1fefw1cxXsk0NU=
-X-Google-Smtp-Source: ABdhPJzsj3Ldq5q3T34rHmzgtlQJTbTH7AApriawiIsBCRv3S499thDPeosIx/PU22cuIXSKmQim4Q==
-X-Received: by 2002:a7b:c011:: with SMTP id c17mr4278996wmb.63.1598023697023;
-        Fri, 21 Aug 2020 08:28:17 -0700 (PDT)
-Received: from tsnow (IGLD-83-130-85-196.inter.net.il. [83.130.85.196])
-        by smtp.gmail.com with ESMTPSA id w132sm6418009wma.32.2020.08.21.08.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 08:28:16 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 18:28:10 +0300
-From:   Tomer Samara <tomersamara98@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Riley Andrews <riandrews@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Hridya Valsaraju <hridya@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] staging: android: Remove BUG from ion_system_heap.c
-Message-ID: <a39407f84031eaeed5e65a7aab515a079edf5fcc.1598023524.git.tomersamara98@gmail.com>
-References: <cover.1598023523.git.tomersamara98@gmail.com>
+        Fri, 21 Aug 2020 11:28:46 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LFASUV028416
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:28:45 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=QJ4UraS5Q3q15PU57x30nEIbg+862MWUX7q91oaWF44=;
+ b=b8vgBKhggGIHrAJeS1F19MuULvjGeGvvtDU2+ERQiDUthA5PZXm3DVmUdjinDlPKh6Et
+ H4FG5plJQ4iKO5aOHI6djxq6eFDA1uknNWSHwKAUb8qUCiMH7W9lm5wjCzZvS4G3ydB6
+ g+tIM2tz0I0PQzYc+AieOMFBYf/luLq2eCM= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 332gp8031m-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:28:45 -0700
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:11d::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 21 Aug 2020 08:28:43 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id AABF2344107B; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     <bpf@vger.kernel.org>
+CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Roman Gushchin <guro@fb.com>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH bpf-next v4 26/30] bpf: eliminate rlimit-based memory accounting for socket storage maps
+Date:   Fri, 21 Aug 2020 08:01:30 -0700
+Message-ID: <20200821150134.2581465-27-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
+References: <20200821150134.2581465-1-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1598023523.git.tomersamara98@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=899
+ priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 suspectscore=13 spamscore=0
+ clxscore=1015 bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008210143
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove BUG() from ion_sytem_heap.c
+Do not use rlimit-based memory accounting for socket storage maps.
+It has been replaced with the memcg-based memory accounting.
 
-this fix the following checkpatch issue:
-Avoid crashing the kernel - try using WARN_ON &
-recovery code ratherthan BUG() or BUG_ON().
-
-Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Song Liu <songliubraving@fb.com>
 ---
- drivers/staging/android/ion/ion_system_heap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/bpf_sk_storage.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
-index eac0632ab4e8..00d6154aec34 100644
---- a/drivers/staging/android/ion/ion_system_heap.c
-+++ b/drivers/staging/android/ion/ion_system_heap.c
-@@ -30,7 +30,7 @@ static int order_to_index(unsigned int order)
- 	for (i = 0; i < NUM_ORDERS; i++)
- 		if (order == orders[i])
- 			return i;
--	BUG();
-+	/* This is impossible. */
- 	return -1;
- }
- 
--- 
-2.25.1
+diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
+index 806b7a9f836e..bc378ce499f4 100644
+--- a/net/core/bpf_sk_storage.c
++++ b/net/core/bpf_sk_storage.c
+@@ -676,8 +676,6 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union=
+ bpf_attr *attr)
+ 	struct bpf_sk_storage_map *smap;
+ 	unsigned int i;
+ 	u32 nbuckets;
+-	u64 cost;
+-	int ret;
+=20
+ 	smap =3D kzalloc(sizeof(*smap), GFP_USER | __GFP_NOWARN | __GFP_ACCOUNT=
+);
+ 	if (!smap)
+@@ -688,18 +686,9 @@ static struct bpf_map *bpf_sk_storage_map_alloc(unio=
+n bpf_attr *attr)
+ 	/* Use at least 2 buckets, select_bucket() is undefined behavior with 1=
+ bucket */
+ 	nbuckets =3D max_t(u32, 2, nbuckets);
+ 	smap->bucket_log =3D ilog2(nbuckets);
+-	cost =3D sizeof(*smap->buckets) * nbuckets + sizeof(*smap);
+-
+-	ret =3D bpf_map_charge_init(&smap->map.memory, cost);
+-	if (ret < 0) {
+-		kfree(smap);
+-		return ERR_PTR(ret);
+-	}
+-
+ 	smap->buckets =3D kvcalloc(sizeof(*smap->buckets), nbuckets,
+ 				 GFP_USER | __GFP_NOWARN | __GFP_ACCOUNT);
+ 	if (!smap->buckets) {
+-		bpf_map_charge_finish(&smap->map.memory);
+ 		kfree(smap);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+--=20
+2.26.2
 
