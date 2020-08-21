@@ -2,115 +2,149 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2320EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1C1520578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F67207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YMyC8odR"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Wc4jYqOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgHUPEM (ORCPT
+        id S1727887AbgHUPGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:04:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgHUPEK (ORCPT
+        Fri, 21 Aug 2020 11:06:45 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:41772 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725828AbgHUPGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:04:10 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C0E8C061573;
-        Fri, 21 Aug 2020 08:04:10 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id j187so1604924qke.11;
-        Fri, 21 Aug 2020 08:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1FzqZJ6ck6KUzOqSuKnj7ejxM9ufdWSJqP1xoW29qVs=;
-        b=YMyC8odRxwt4e+ebHOdmQFNxzIqRf1A3/okUdcouS+5ljxpc1mDGkbrRKCaOWLMRFr
-         tbYI+SM/yvrHIvogo40z5OqLqYJkChEfGfUzeEtpFZaCRIPZPxYLYEHSc17+Zo/0VE9d
-         TzKI7FDaqtwoQKWX9hUMNi6bHRg3MniqKbnRaJ20ycXK2km/LwmfJw14EqQ2fXHsyxJH
-         0cd8PXp02Ei2m+BYXl573s3GRyAK3iD/xnGq61OQAg6T9ndogxeZFI095Wf2QmPScfjg
-         nermWatu5yNdkT9mlCcjxRIfZTCkdBGzvDieCK0LVBtz3oicHcxtogJkOwk+IkcJnSXu
-         Ya/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1FzqZJ6ck6KUzOqSuKnj7ejxM9ufdWSJqP1xoW29qVs=;
-        b=iUJkRQeFuIukuRSEOMFErl0LkqrL0GhzAQyEUQlCYB5bVklpS1yEj+XAX66UPrmDuf
-         00YjYkUrT04sHR23bLHQ4Lk9/mfUbjvOe4yFZyp0T/a7KDGy/9/yEPKyRxHIcqM4sBKR
-         rVf5yAF9CBWPWFJk7Ekt+lF99XR3pZczL7zh+YbBmYCeA1/NaJL0iSOHYDoF43RtUnfK
-         Dpo0chkyE6ts3u5DGrkIn4BdE4fdRJVT2yS4Ai5DlGX0Kjf9T0gDdvfplaJjleS78VBZ
-         l1xqJbzaGbxMjIuYH4l3SMF3eLed3qwUj2iEh7eudzn4Ah7SXIQRKXitOzgfex6uJ7EO
-         sb6A==
-X-Gm-Message-State: AOAM530WGpk0dcBgs7pBgxdpKQNKzYBRjKI8hn0kaq82MMkDD9JJ+fEO
-        jPiy0dxR2yG/Fbo9kW0xXgw=
-X-Google-Smtp-Source: ABdhPJyBL+mb4e1OJT95Eq9kjSKGYgP7Np7BlljR/yVQfblx5fKS/WHmWdNwlkY/T6ACOLTj7g3OPw==
-X-Received: by 2002:a05:620a:24c9:: with SMTP id m9mr3122749qkn.487.1598022249324;
-        Fri, 21 Aug 2020 08:04:09 -0700 (PDT)
-Received: from dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com ([2620:10d:c091:480::1:4586])
-        by smtp.gmail.com with ESMTPSA id 65sm1942875qkf.33.2020.08.21.08.04.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 08:04:08 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 11:04:05 -0400
-From:   Dan Schatzberg <schatzberg.dan@gmail.com>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Fri, 21 Aug 2020 11:06:44 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LF4MpR012566
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:06:43 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=aJhxUwc8CQWldWv2VHn/REvyN245rZYwC4rTdQ9c38E=;
+ b=Wc4jYqOEuJ7+9N+BqriQQMRXDov6HC1WPMnN9f4AmluA3kugVj6YrqiF7pNy9Cn03HdP
+ AAA0WMPPk/AbGhqoQebb7HmNz3egJSF0Nz2eNjN+9GjCQRfCg4CPyMPc5tApbsNiWdqL
+ vYtNBjGgyunmIK0TZ0iVLGl5rqGr3j24Amc= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 332ehfrpjr-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:06:43 -0700
+Received: from intmgw001.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 21 Aug 2020 08:06:42 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id 72D2E3441065; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     <bpf@vger.kernel.org>
+CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>,
         Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-Subject: Re: [PATCH v6 0/4] Charge loop device i/o to issuing cgroup
-Message-ID: <20200821150405.GA4137@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com>
-References: <20200528135444.11508-1-schatzberg.dan@gmail.com>
- <CALvZod655MqFxmzwCf4ZLSh9QU+oLb0HL-Q_yKomh3fb-_W0Vg@mail.gmail.com>
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Roman Gushchin <guro@fb.com>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH bpf-next v4 15/30] bpf: eliminate rlimit-based memory accounting for bpf_struct_ops maps
+Date:   Fri, 21 Aug 2020 08:01:19 -0700
+Message-ID: <20200821150134.2581465-16-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
+References: <20200821150134.2581465-1-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod655MqFxmzwCf4ZLSh9QU+oLb0HL-Q_yKomh3fb-_W0Vg@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 mlxscore=0 suspectscore=38 mlxlogscore=930
+ phishscore=0 malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210142
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 10:06:44AM -0700, Shakeel Butt wrote:
-> On Thu, May 28, 2020 at 6:55 AM Dan Schatzberg <schatzberg.dan@gmail.com> wrote:
-> >
-> > Much of the discussion about this has died down. There's been a
-> > concern raised that we could generalize infrastructure across loop,
-> > md, etc. This may be possible, in the future, but it isn't clear to me
-> > how this would look like. I'm inclined to fix the existing issue with
-> > loop devices now (this is a problem we hit at FB) and address
-> > consolidation with other cases if and when those need to be addressed.
-> >
-> 
-> What's the status of this series?
+Do not use rlimit-based memory accounting for bpf_struct_ops maps.
+It has been replaced with the memcg-based memory accounting.
 
-Thanks for reminding me about this. I haven't got any further
-feedback. I'll bug Jens to take a look and see if he has any concerns
-and if not send a rebased version.
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+---
+ kernel/bpf/bpf_struct_ops.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
+
+diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
+index 969c5d47f81f..22bfa236683b 100644
+--- a/kernel/bpf/bpf_struct_ops.c
++++ b/kernel/bpf/bpf_struct_ops.c
+@@ -550,12 +550,10 @@ static int bpf_struct_ops_map_alloc_check(union bpf=
+_attr *attr)
+ static struct bpf_map *bpf_struct_ops_map_alloc(union bpf_attr *attr)
+ {
+ 	const struct bpf_struct_ops *st_ops;
+-	size_t map_total_size, st_map_size;
++	size_t st_map_size;
+ 	struct bpf_struct_ops_map *st_map;
+ 	const struct btf_type *t, *vt;
+-	struct bpf_map_memory mem;
+ 	struct bpf_map *map;
+-	int err;
+=20
+ 	if (!bpf_capable())
+ 		return ERR_PTR(-EPERM);
+@@ -575,20 +573,11 @@ static struct bpf_map *bpf_struct_ops_map_alloc(uni=
+on bpf_attr *attr)
+ 		 * struct bpf_struct_ops_tcp_congestions_ops
+ 		 */
+ 		(vt->size - sizeof(struct bpf_struct_ops_value));
+-	map_total_size =3D st_map_size +
+-		/* uvalue */
+-		sizeof(vt->size) +
+-		/* struct bpf_progs **progs */
+-		 btf_type_vlen(t) * sizeof(struct bpf_prog *);
+-	err =3D bpf_map_charge_init(&mem, map_total_size);
+-	if (err < 0)
+-		return ERR_PTR(err);
+=20
+ 	st_map =3D bpf_map_area_alloc(st_map_size, NUMA_NO_NODE);
+-	if (!st_map) {
+-		bpf_map_charge_finish(&mem);
++	if (!st_map)
+ 		return ERR_PTR(-ENOMEM);
+-	}
++
+ 	st_map->st_ops =3D st_ops;
+ 	map =3D &st_map->map;
+=20
+@@ -599,14 +588,12 @@ static struct bpf_map *bpf_struct_ops_map_alloc(uni=
+on bpf_attr *attr)
+ 	st_map->image =3D bpf_jit_alloc_exec(PAGE_SIZE);
+ 	if (!st_map->uvalue || !st_map->progs || !st_map->image) {
+ 		bpf_struct_ops_map_free(map);
+-		bpf_map_charge_finish(&mem);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+=20
+ 	mutex_init(&st_map->lock);
+ 	set_vm_flush_reset_perms(st_map->image);
+ 	bpf_map_init_from_attr(map, attr);
+-	bpf_map_charge_move(&map->memory, &mem);
+=20
+ 	return map;
+ }
+--=20
+2.26.2
+
