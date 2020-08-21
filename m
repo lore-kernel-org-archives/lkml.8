@@ -2,204 +2,210 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6788AC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C50F5C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45AB22087D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:07:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D1boRI8f"
+	by mail.kernel.org (Postfix) with ESMTP id A35A02087D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:11:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598047897;
+	bh=fjUhRuQKm8f1fb1XU0Zes6sQDguM9nwNey/Mjg35Qho=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=O1QHMRGvx//kADPRKeYn6j/hNegd2PBA8DuF1WmmpBg1KPYr8Kjcn2mhOmEspTp4F
+	 S9qoiNiisw7Aq7Qt/BDndSG/v97PU8FgOdumnVoiAEa/kerHKdhWF+gDO37LGgbYwo
+	 jGRLnBolK60BEuNDAvLeCKCXC90hbseaKrsgy1g0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgHUWH4 (ORCPT
+        id S1726839AbgHUWLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:07:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:57700 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726766AbgHUWHx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:07:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598047670;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DkSg3luBHRm0cvkVLNBpsnCZK9HVFB0m9kyx8QwK1QI=;
-        b=D1boRI8f1KQoX0JCm2r9cyKTuCaenilBvXSEGa0O9Rwz6ikzFweyi3ytHipSP9Mr/XEYj7
-        /eDZnEM0ON2XCrd8XAVWynvEnuUGTXWE4IPp8RuLFw26m66QEpw/gvS4pEWvfiu2Cq9RCs
-        2ITMpxNkQkKUTa6XjzWR375c+SKCdHM=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-523-uir71xXmPLm8O565bg76fg-1; Fri, 21 Aug 2020 18:07:48 -0400
-X-MC-Unique: uir71xXmPLm8O565bg76fg-1
-Received: by mail-ej1-f72.google.com with SMTP id u13so1273517ejr.19
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 15:07:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=DkSg3luBHRm0cvkVLNBpsnCZK9HVFB0m9kyx8QwK1QI=;
-        b=WfaROjWkGpHeLcwuAypzsf3DbtWn5aQegCTb+E2ZHENX5EZ9Pn4YxY0Jo4xvY3cSOw
-         bzpKpACaCG+fxWWLaGuDQwpsB2AJIRTPsHnWJZRqdsJY7e3nLMNTlR1w5JtRJLT88mp/
-         1RJdsH4/U6ZAAqOVsT/FF7tWmu8lxti734WxlQY6thhVPH0DAEpW/tjhszAw7KwjlArt
-         yZoQr5kMYEexTFtfIw28BBx3ZEm8cKj6yFOoE40k0ZShA+B+53u0DPW5uPesHsgc7pKI
-         dm0sJfm0ZemRwfz5E/AEw6z6zKP9V1UGski3HX8kHKtwAy8cVp/Kt4OhWCkL5UHCX3fG
-         y8zA==
-X-Gm-Message-State: AOAM531ldimKkS4YYoLB9BUNcSWXZIbbIciJkna1WDyD1CYCGvUzbJH8
-        HeTYRINju0Q0/6ZM6TxkSXltNF6ifCU8kf2+etmKpNeApXbd7kuQiIEd87oI3/+46gdavKM2HYZ
-        UHba7y+gKZAexlrQ3P4mER+0r
-X-Received: by 2002:a17:906:2a04:: with SMTP id j4mr5244904eje.440.1598047667322;
-        Fri, 21 Aug 2020 15:07:47 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwhvJaQ8AyV/ONfuc3qKwQ/zzerkQ6ZDcGPqYKrvzzg0K+cbZJ1cq8ZccJ0IrDrvfkZ/kgetQ==
-X-Received: by 2002:a17:906:2a04:: with SMTP id j4mr5244849eje.440.1598047667115;
-        Fri, 21 Aug 2020 15:07:47 -0700 (PDT)
-Received: from [192.168.3.122] (p5b0c6231.dip0.t-ipconnect.de. [91.12.98.49])
-        by smtp.gmail.com with ESMTPSA id zc8sm181245ejb.103.2020.08.21.15.07.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 15:07:46 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v4 00/23] device-dax: Support sub-dividing soft-reserved ranges
-Date:   Fri, 21 Aug 2020 23:43:50 +0200
-Message-Id: <D0A25288-C72D-47C1-BD8F-C1C1A6BFA0BF@redhat.com>
-References: <646DDE9B-90C2-493A-958C-90EFA1CCA475@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Jason Gunthorpe <jgg@mellanox.com>, Jia He <justin.he@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>
-In-Reply-To: <646DDE9B-90C2-493A-958C-90EFA1CCA475@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-X-Mailer: iPhone Mail (17G68)
+        Fri, 21 Aug 2020 18:11:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726641AbgHUWLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 18:11:35 -0400
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B61422087D;
+        Fri, 21 Aug 2020 22:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598047894;
+        bh=fjUhRuQKm8f1fb1XU0Zes6sQDguM9nwNey/Mjg35Qho=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aX8ReITKM/Ta8LYT5WqOhz02VJTGSGvn7Mw8W7e+XUMMiBHEu+OeNJvyK4jVY0VCt
+         t6OjIKsIKF7mQtHBI0qaLf9egUKAq+ilN+m34gGKwGuIcfVEyw95MKpCP8mkryPOPG
+         +TydynQFsLt1TVnV3Ccq2fAClSMNql6z6T5vvzro=
+Received: by mail-oo1-f42.google.com with SMTP id x6so672494ooe.8;
+        Fri, 21 Aug 2020 15:11:34 -0700 (PDT)
+X-Gm-Message-State: AOAM530JTZVYpnhX4UVs10IrBm4iP2kne9cCAoNTuvjtJped0p8Z94B5
+        ++hEIT0ZGdGPniQNSxL425PDmsIWVmMwp9kGVA==
+X-Google-Smtp-Source: ABdhPJz4dkPtYZT5tRo0MDTYMZbIAn6jfWvcC3zGyEzPL69zfiWh34FaMbJgoP16he88SIHHwmJAUgsYOZo7pRiG0TM=
+X-Received: by 2002:a4a:a60a:: with SMTP id e10mr3730622oom.25.1598047893992;
+ Fri, 21 Aug 2020 15:11:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <1598003509-27896-1-git-send-email-wuht06@gmail.com> <1598003509-27896-2-git-send-email-wuht06@gmail.com>
+In-Reply-To: <1598003509-27896-2-git-send-email-wuht06@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 21 Aug 2020 16:11:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLtGF57Q3FEjFWhDkdwSwp6S4SERAG9AwuB-eEb=xtMKw@mail.gmail.com>
+Message-ID: <CAL_JsqLtGF57Q3FEjFWhDkdwSwp6S4SERAG9AwuB-eEb=xtMKw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: sprd: Document Unisoc PCIe RC host controller
+To:     Hongtao Wu <wuht06@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Billows Wu <billows.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 21, 2020 at 3:52 AM Hongtao Wu <wuht06@gmail.com> wrote:
+>
+> From: Billows Wu <billows.wu@unisoc.com>
+>
+> This series adds PCIe bindings for Uisoc SoCs.
+
+typo
+
+> This controller is based on DesignWare PCIe IP.
+>
+> Signed-off-by: Billows Wu <billows.wu@unisoc.com>
+> ---
+>  .../devicetree/bindings/pci/sprd-pcie.yaml         | 88 ++++++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/sprd-pcie.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/pci/sprd-pcie.yaml b/Documentation/devicetree/bindings/pci/sprd-pcie.yaml
+> new file mode 100644
+> index 0000000..6eab4b8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/sprd-pcie.yaml
+> @@ -0,0 +1,88 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/sprd-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SoC PCIe Host Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Billows Wu <billows.wu@unisoc.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +  - $ref: "sprd-pcie.yaml#"
+
+Drop this. You don't need to include yourself.
+
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: sprd,pcie
+> +      - const: sprd,pcie-ep
+> +
+> +  reg:
+> +    minItems: 2
+> +    maxItems: 3
+> +    items:
+> +      - description: Controller control and status registers.
+> +      - description: PCIe shadow registers.
+> +      - description: PCIe configuration registers.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: dbi2
+> +      - const: cfg
+
+'config' is the standard name.
+
+> +
+> +  ranges:
+> +    maxItems: 2
+> +
+> +  num-lanes:
+> +    maxItems: 1
+
+maxItems is for arrays and this is not an array. How many lanes are valid?
+
+enum: [ 1, 2, 27?, ... ]
 
 
-> Am 21.08.2020 um 23:34 schrieb David Hildenbrand <david@redhat.com>:
->=20
-> =EF=BB=BF
->=20
->>> Am 21.08.2020 um 23:17 schrieb Dan Williams <dan.j.williams@intel.com>:
->>>=20
->>> =EF=BB=BFOn Fri, Aug 21, 2020 at 11:30 AM David Hildenbrand <david@redha=
-t.com> wrote:
->>>=20
->>>> On 21.08.20 20:27, Dan Williams wrote:
->>>> On Fri, Aug 21, 2020 at 3:15 AM David Hildenbrand <david@redhat.com> wr=
-ote:
->>>>>=20
->>>>>>>=20
->>>>>>> 1. On x86-64, e820 indicates "soft-reserved" memory. This memory is n=
-ot
->>>>>>> automatically used in the buddy during boot, but remains untouched
->>>>>>> (similar to pmem). But as it involves ACPI as well, it could also be=
+> +    description: Number of lanes to use for this port.
+> +
+> +  num-ib-windows:
+> +    maxItems: 1
 
->>>>>>> used on arm64 (-e820), correct?
->>>>>>=20
->>>>>> Correct, arm64 also gets the EFI support for enumerating memory this
->>>>>> way. However, I would clarify that whether soft-reserved is given to
->>>>>> the buddy allocator by default or not is the kernel's policy choice,
->>>>>> "buddy-by-default" is ok and is what will happen anyways with older
->>>>>> kernels on platforms that enumerate a memory range this way.
->>>>>=20
->>>>> Is "soft-reserved" then the right terminology for that? It sounds very=
+Not an array.
 
->>>>> x86-64/e820 specific. Maybe a compressed for of "performance
->>>>> differentiated memory" might be a better fit to expose to user space, n=
-o?
->>>>=20
->>>> No. The EFI "Specific Purpose" bit is an attribute independent of
->>>> e820, it's x86-Linux that entangles those together. There is no
->>>> requirement for platform firmware to use that designation even for
->>>> drastic performance differentiation between ranges, and conversely
->>>> there is no requirement that memory *with* that designation has any
->>>> performance difference compared to the default memory pool. So it
->>>> really is a reservation policy about a memory range to keep out of the
->>>> buddy allocator by default.
->>>=20
->>> Okay, still "soft-reserved" is x86-64 specific, no?
->>=20
->> There's nothing preventing other EFI archs, or a similar designation
->> in another firmware spec, picking up this policy.
->>=20
->>> (AFAIK,
->>> "soft-reserved" will be visible in /proc/iomem, or am I confusing
->>> stuff?)
->>=20
->> No, you're correct.
->>=20
->>> IOW, it "performance differentiated" is not universally
->>> applicable, maybe  "specific purpose memory" is ?
->>=20
->> Those bikeshed colors don't seem an improvement to me.
->>=20
->> "Soft-reserved" actually tells you something about the kernel policy
->> for the memory. The criticism of "specific purpose" that led to
->> calling it "soft-reserved" in Linux is the fact that "specific" is
->> undefined as far as the firmware knows, and "specific" may have
->> different applications based on the platform user. "Soft-reserved"
->> like "Reserved" tells you that a driver policy might be in play for
->> that memory.
->>=20
->> Also note that the current color of the bikeshed has already shipped sinc=
-e v5.5:
->>=20
->>  262b45ae3ab4 x86/efi: EFI soft reservation to E820 enumeration
->>=20
->=20
-> I was asking because I was struggling to even understand what =E2=80=9Esof=
-t-reserved=E2=80=9C is and I could bet most people have no clue what that is=
- supposed to be.
->=20
-> In contrast =E2=80=9Epersistent memory=E2=80=9C or =E2=80=9Especial purpos=
-e memory=E2=80=9C in /proc/iomem is something normal (Linux using) human bei=
-ngs can understand.
+> +    description: Number of inbound windows to use for this port.
+> +
+> +  num-ob-windows:
+> +    maxItems: 1
 
-Obviously s/normal/most/
+Not an array.
 
-Cheers!=
+> +    description: Number of outbound windows to use for this port.
+> +
+> +  bus-range:
+> +    description: Range of bus numbers associated with this controller.
 
+Drop if you don't have constraints.
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-names:
+> +    maxItems: 1
+
+Need to define the name, though you don't really need this with only 1.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - num-lanes
+> +  - ranges
+> +  - bus-range
+> +  - interrupts
+> +  - interrupt-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    pcie0@2b100000 {
+> +        compatible = "sprd,pcie", "snps,dw-pcie";
+
+Didn't document "snps,dw-pcie". You'll need a custom 'select' to avoid
+selecting all instances of "snps,dw-pcie".
+
+> +        reg = <0x0 0x2b100000 0x0 0x2000>,
+> +              <0x2 0x00000000 0x0 0x2000>;
+> +        reg-names = "dbi", "config";
+> +        #address-cells = <3>;
+> +        #size-cells = <2>;
+> +        device_type = "pci";
+> +        ranges = <0x01000000 0x0 0x00000000 0x2 0x00002000 0x0 0x00010000
+> +                  0x03000000 0x0 0x10000000 0x2 0x10000000 0x1 0xefffffff>;
+> +        bus-range = <0  15>;
+> +        num-lanes = <1>;
+> +        num-viewport = <8>;
+> +        interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-names = "msi";
+> +    };
+> --
+> 2.7.4
+>
