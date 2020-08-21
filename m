@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B223C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D00612054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810FF20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030452;
-	bh=0fVKRcxzaOhqKpTZuNkdyaVVibqDGakKkUCMuuKRGMk=;
+	s=default; t=1598030460;
+	bh=6AiJeu8UD5jdIPklU0UJ85alxQ5UPRtJBuOG4bUtfxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u2CakShAmr3dI7MJJE3HnA47SvN1eOgSed3J/dCCleJjr5976vnTqEdyGazNYtDrp
-	 iimj7OE2qH5jXQElPlejNWlN2Urp6GFTCL25Vkd1Ba0xqnSTivVcWEekw1Rn4UBB0I
-	 VeFEyDlk+VeyD+1iAcxBwjRsCqyOXc7C5PklBdds=
+	b=M/gukSIs5PMhvEhmu83GVlvMtz9y/p+zpPPcgNDIrUNETxAMDRFSBZXCVEK7zmK0T
+	 Wjnujff2MX73F+pAkRls12Ppd+R+HztL1UtjBUaXKMDF9rC2i8JZfZFPsU4ilfNIDO
+	 Rt21yiuJ3nd8djndO+NWn/VW1ODuE/+5eND175+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgHURUu (ORCPT
+        id S1727125AbgHURUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:20:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:20:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728043AbgHUQQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:16:07 -0400
+        id S1728035AbgHUQQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:16:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B72D420578;
-        Fri, 21 Aug 2020 16:16:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B4192224D;
+        Fri, 21 Aug 2020 16:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026566;
-        bh=0fVKRcxzaOhqKpTZuNkdyaVVibqDGakKkUCMuuKRGMk=;
+        s=default; t=1598026565;
+        bh=6AiJeu8UD5jdIPklU0UJ85alxQ5UPRtJBuOG4bUtfxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EEtDT6z7zzkxUxd2WRLQLETChSMMODA53QA37xwWSqFc5CyAbfVOubbUNkevKLjVX
-         Y97KhtPbw2ctxIamQpO7Bml4cWBNow6/w7ZuOvsMorhvsSySP8k3XxqPFAMUW8pD7z
-         kKmK2iYtH/5m/J1ileNh4rKpDZ1rCli6Cw8Hqjak=
+        b=1euNR5PjkRU24lbvLimBY0gknEh8yFfcH8p80Oc5BbuMfHQWxQGMZme7S/dRoSC71
+         RTAnybr45WRBKhSlqt9dbSSYj/faK0bTteoJQYC9FleDx6Xf/I0S18tTCvrRYtoDKw
+         Ds0EgRPBdxs/juoFI8sKM1vphT3XeeXWyU1qpgCw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        JiangYu <lnsyyj@hotmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 17/61] scsi: target: tcmu: Fix crash on ARM during cmd completion
-Date:   Fri, 21 Aug 2020 12:15:01 -0400
-Message-Id: <20200821161545.347622-17-sashal@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.7 16/61] staging: rts5208: fix memleaks on error handling paths in probe
+Date:   Fri, 21 Aug 2020 12:15:00 -0400
+Message-Id: <20200821161545.347622-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
 References: <20200821161545.347622-1-sashal@kernel.org>
@@ -62,55 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 5a0c256d96f020e4771f6fd5524b80f89a2d3132 ]
+[ Upstream commit 11507bf9a8832741db69efd32bf09a2ab26426bf ]
 
-If tcmu_handle_completions() has to process a padding shorter than
-sizeof(struct tcmu_cmd_entry), the current call to
-tcmu_flush_dcache_range() with sizeof(struct tcmu_cmd_entry) as length
-param is wrong and causes crashes on e.g. ARM, because
-tcmu_flush_dcache_range() in this case calls
-flush_dcache_page(vmalloc_to_page(start)); with start being an invalid
-address above the end of the vmalloc'ed area.
+rtsx_probe() allocates host, but does not free it on error handling
+paths. The patch adds missed scsi_host_put().
 
-The fix is to use the minimum of remaining ring space and sizeof(struct
-tcmu_cmd_entry) as the length param.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-The patch was tested on kernel 4.19.118.
-
-See https://bugzilla.kernel.org/show_bug.cgi?id=208045#c10
-
-Link: https://lore.kernel.org/r/20200629093756.8947-1-bstroesser@ts.fujitsu.com
-Tested-by: JiangYu <lnsyyj@hotmail.com>
-Acked-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Link: https://lore.kernel.org/r/20200623141230.7258-1-novikov@ispras.ru
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_user.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/staging/rts5208/rtsx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index b63a1e0c4aa6d..b64ed7dbaa68a 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -1220,7 +1220,14 @@ static unsigned int tcmu_handle_completions(struct tcmu_dev *udev)
- 
- 		struct tcmu_cmd_entry *entry = (void *) mb + CMDR_OFF + udev->cmdr_last_cleaned;
- 
--		tcmu_flush_dcache_range(entry, sizeof(*entry));
-+		/*
-+		 * Flush max. up to end of cmd ring since current entry might
-+		 * be a padding that is shorter than sizeof(*entry)
-+		 */
-+		size_t ring_left = head_to_end(udev->cmdr_last_cleaned,
-+					       udev->cmdr_size);
-+		tcmu_flush_dcache_range(entry, ring_left < sizeof(*entry) ?
-+					ring_left : sizeof(*entry));
- 
- 		if (tcmu_hdr_get_op(entry->hdr.len_op) == TCMU_OP_PAD) {
- 			UPDATE_HEAD(udev->cmdr_last_cleaned,
+diff --git a/drivers/staging/rts5208/rtsx.c b/drivers/staging/rts5208/rtsx.c
+index be0053c795b7a..937f4e732a75c 100644
+--- a/drivers/staging/rts5208/rtsx.c
++++ b/drivers/staging/rts5208/rtsx.c
+@@ -972,6 +972,7 @@ static int rtsx_probe(struct pci_dev *pci,
+ 	kfree(dev->chip);
+ chip_alloc_fail:
+ 	dev_err(&pci->dev, "%s failed\n", __func__);
++	scsi_host_put(host);
+ scsi_host_alloc_fail:
+ 	pci_release_regions(pci);
+ 	return err;
 -- 
 2.25.1
 
