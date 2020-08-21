@@ -2,145 +2,148 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ED0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2814C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA9762076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C394A20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:25:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="aPWyND+T"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KyfDaFBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgHUPYe (ORCPT
+        id S1728092AbgHUPZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:24:34 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:37076 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727924AbgHUPYW (ORCPT
+        Fri, 21 Aug 2020 11:25:53 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:46832 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727091AbgHUPZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:24:22 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LFB7ic019482
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:24:21 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=ULMQb/YzZ4VRDT3wt8V1/Aj9KrJtBrAJIEAe9Q3/BnY=;
- b=aPWyND+TlWFkFRo9Eqmy6CawjjjehTO4AE8z8Aj39eVEdcYZX6+HGmgHqyEOJ3Ue4owc
- lBhE1pureVVaV9PFm445VrUale5iZHnWUzK1i1mklTWKn0KZu2egNbsVQMSaW6+t7PsU
- /7ZL2ElsUeVTd7HSpbVZbITYMSChjKtFo9M= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 3304p3w84f-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:24:21 -0700
-Received: from intmgw002.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 21 Aug 2020 08:23:47 -0700
-Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id A586C3441079; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
-To:     <bpf@vger.kernel.org>
-CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
-        Roman Gushchin <guro@fb.com>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next v4 25/30] bpf: eliminate rlimit-based memory accounting for stackmap maps
-Date:   Fri, 21 Aug 2020 08:01:29 -0700
-Message-ID: <20200821150134.2581465-26-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
-References: <20200821150134.2581465-1-guro@fb.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=775
- spamscore=0 mlxscore=0 clxscore=1015 suspectscore=38 adultscore=0
- bulkscore=0 impostorscore=0 phishscore=0 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210143
-X-FB-Internal: deliver
+        Fri, 21 Aug 2020 11:25:50 -0400
+Received: from testvm-timer.0wqf5yk0ngwuzjntifuk1ppqse.cx.internal.cloudapp.net (unknown [40.65.222.102])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 95D9720B4908;
+        Fri, 21 Aug 2020 08:25:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 95D9720B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598023550;
+        bh=bC0FGrYXLPz3vW4zlcF+S6Fm1cVv02y/ELXHJG4PNlU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KyfDaFBeiutxMXxnG8OTPzazr2r4CrGFMykBI0bDTRQHM6v8ShOvfOyRbJ361nvWK
+         KL+/ZFDyBQ/1nJKQpjN95BMsoiKXUU6kIfw63pLaMN8m0y/Wgbs3cADrhakUMPF/kp
+         8wgp1VRYnMxsa/D8kZYI5IyFy/9ZWOLsTd8Nr1IA=
+From:   Vineeth Pillai <viremana@linux.microsoft.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] hv_utils: return error if host timesysnc update is stale
+Date:   Fri, 21 Aug 2020 15:25:23 +0000
+Message-Id: <20200821152523.99364-1-viremana@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not use rlimit-based memory accounting for stackmap maps.
-It has been replaced with the memcg-based memory accounting.
+If for any reason, host timesync messages were not processed by
+the guest, hv_ptp_gettime() returns a stale value and the
+caller (clock_gettime, PTP ioctl etc) has no means to know this
+now. Return an error so that the caller knows about this.
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
 ---
- kernel/bpf/stackmap.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index cfed0ac44d38..40e9814906c5 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -90,7 +90,6 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *=
-attr)
+ v2:
+    - Fix warnings reported by Kernel test robot <lkp@intel.com>
+    - s/pr_warn/pr_warn_once/
+
+---
+ drivers/hv/hv_util.c | 46 +++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 35 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
+index 92ee0fe4c919..1f86e8d9b018 100644
+--- a/drivers/hv/hv_util.c
++++ b/drivers/hv/hv_util.c
+@@ -282,26 +282,52 @@ static struct {
+ 	spinlock_t			lock;
+ } host_ts;
+ 
+-static struct timespec64 hv_get_adj_host_time(void)
++static inline u64 reftime_to_ns(u64 reftime)
  {
- 	u32 value_size =3D attr->value_size;
- 	struct bpf_stack_map *smap;
--	struct bpf_map_memory mem;
- 	u64 cost, n_buckets;
- 	int err;
-=20
-@@ -119,15 +118,9 @@ static struct bpf_map *stack_map_alloc(union bpf_att=
-r *attr)
-=20
- 	cost =3D n_buckets * sizeof(struct stack_map_bucket *) + sizeof(*smap);
- 	cost +=3D n_buckets * (value_size + sizeof(struct stack_map_bucket));
--	err =3D bpf_map_charge_init(&mem, cost);
--	if (err)
--		return ERR_PTR(err);
--
- 	smap =3D bpf_map_area_alloc(cost, bpf_map_attr_numa_node(attr));
--	if (!smap) {
--		bpf_map_charge_finish(&mem);
-+	if (!smap)
- 		return ERR_PTR(-ENOMEM);
--	}
-=20
- 	bpf_map_init_from_attr(&smap->map, attr);
- 	smap->map.value_size =3D value_size;
-@@ -135,20 +128,17 @@ static struct bpf_map *stack_map_alloc(union bpf_at=
-tr *attr)
-=20
- 	err =3D get_callchain_buffers(sysctl_perf_event_max_stack);
- 	if (err)
--		goto free_charge;
-+		goto free_smap;
-=20
- 	err =3D prealloc_elems_and_freelist(smap);
- 	if (err)
- 		goto put_buffers;
-=20
--	bpf_map_charge_move(&smap->map.memory, &mem);
--
- 	return &smap->map;
-=20
- put_buffers:
- 	put_callchain_buffers();
--free_charge:
--	bpf_map_charge_finish(&mem);
-+free_smap:
- 	bpf_map_area_free(smap);
- 	return ERR_PTR(err);
+-	struct timespec64 ts;
+-	u64 newtime, reftime;
++	return (reftime - WLTIMEDELTA) * 100;
++}
++
++/*
++ * Hard coded threshold for host timesync delay: 600 seconds
++ */
++static const u64 HOST_TIMESYNC_DELAY_THRESH = 600 * (u64)NSEC_PER_SEC;
++
++static int hv_get_adj_host_time(struct timespec64 *ts)
++{
++	u64 newtime, reftime, timediff_adj;
+ 	unsigned long flags;
++	int ret = 0;
+ 
+ 	spin_lock_irqsave(&host_ts.lock, flags);
+ 	reftime = hv_read_reference_counter();
+-	newtime = host_ts.host_time + (reftime - host_ts.ref_time);
+-	ts = ns_to_timespec64((newtime - WLTIMEDELTA) * 100);
++
++	/*
++	 * We need to let the caller know that last update from host
++	 * is older than the max allowable threshold. clock_gettime()
++	 * and PTP ioctl do not have a documented error that we could
++	 * return for this specific case. Use ESTALE to report this.
++	 */
++	timediff_adj = reftime - host_ts.ref_time;
++	if (timediff_adj * 100 > HOST_TIMESYNC_DELAY_THRESH) {
++		pr_warn_once("TIMESYNC IC: Stale time stamp, %llu nsecs old\n",
++			     (timediff_adj * 100));
++		ret = -ESTALE;
++	}
++
++	newtime = host_ts.host_time + timediff_adj;
++	*ts = ns_to_timespec64(reftime_to_ns(newtime));
+ 	spin_unlock_irqrestore(&host_ts.lock, flags);
+ 
+-	return ts;
++	return ret;
  }
---=20
-2.26.2
+ 
+ static void hv_set_host_time(struct work_struct *work)
+ {
+-	struct timespec64 ts = hv_get_adj_host_time();
+ 
+-	do_settimeofday64(&ts);
++	struct timespec64 ts;
++
++	if (!hv_get_adj_host_time(&ts))
++		do_settimeofday64(&ts);
+ }
+ 
+ /*
+@@ -622,9 +648,7 @@ static int hv_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
+ 
+ static int hv_ptp_gettime(struct ptp_clock_info *info, struct timespec64 *ts)
+ {
+-	*ts = hv_get_adj_host_time();
+-
+-	return 0;
++	return hv_get_adj_host_time(ts);
+ }
+ 
+ static struct ptp_clock_info ptp_hyperv_info = {
+
+base-commit: 49971e6bad2da980686368baa34039907f62b516
+-- 
+2.17.1
 
