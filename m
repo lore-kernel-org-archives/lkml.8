@@ -2,92 +2,123 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FA2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7555C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB73E207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF07220748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:26:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jv-coder.de header.i=@jv-coder.de header.b="JEKA7+Kc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZUcqQk4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgHUKZm (ORCPT
+        id S1728613AbgHUK0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:25:42 -0400
-Received: from mail.jv-coder.de ([5.9.79.73]:49280 "EHLO mail.jv-coder.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbgHUKZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:25:39 -0400
-Received: from [192.168.178.40] (unknown [188.192.1.13])
-        by mail.jv-coder.de (Postfix) with ESMTPSA id 0B8949F8DF;
-        Fri, 21 Aug 2020 10:25:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jv-coder.de; s=dkim;
-        t=1598005534; bh=1mWTmAbl1FHXUkfcwiE4A1L89igwhoE8UwOKzUmeHm8=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version;
-        b=JEKA7+KcO3fKtqEo0jGbqxfkYjUbzq+axCAEOUn333+lk8RFf2gJ+UmmcVysYYTbM
-         4UFP89ssG4JSyg8jsE28E4IUZN5sZ7tq5Va4oYSYEFSU8R618SV2lST02RgGmwUxiF
-         W9jntjtQVgpNSCz2IyaZjljSR1F3EJZA0y61OZPA=
-Subject: Re: [BUG RT] dump-capture kernel not executed for panic in interrupt
- context
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Huang Ying <ying.huang@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Joerg Vehlow <joerg.vehlow@aox-tech.de>
-References: <2c243f59-6d10-7abb-bab4-e7b1796cd54f@jv-coder.de>
- <20200528084614.0c949e8d@gandalf.local.home>
- <cbbf7926-148e-7acb-dc03-3f055d73364b@jv-coder.de>
- <20200727163655.8c94c8e245637b62311f5053@linux-foundation.org>
-From:   Joerg Vehlow <lkml@jv-coder.de>
-Message-ID: <c6b095af-fc92-420f-303f-d2efd9f28873@jv-coder.de>
-Date:   Fri, 21 Aug 2020 12:25:33 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 21 Aug 2020 06:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728442AbgHUK0Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 06:26:24 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA8FFC061385;
+        Fri, 21 Aug 2020 03:26:24 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id g15so682940plj.6;
+        Fri, 21 Aug 2020 03:26:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EDYP1Th9SUcoctkxgo3VQaPnbnmkI7OqEYMxoTvtHN0=;
+        b=tZUcqQk4OxfAKx4yXlUjLq+S42J/dpi6hvKmcCzI7IOMFgXO22q8ZpOubAhZVhTkWT
+         aSQmB1e0K2G2oiTgh0Jvi76L758pJSsbReHvXNc7DWEnXicLnC/wYxrJRkb1Z73wXQ2a
+         vtnv+OsXzqtK3iUEduj5O+B1sA6VgK8M3/U4QvtO37i8XbtUzYVQKweCEFkQpPfDCosT
+         vOpOpxUE8hwCgsOoFilXxhA7Ou47ncykW0t4gif9aGMl9TnGYIKCguP681X0e5iAbae9
+         w68BzZm9t69S75hyC++oITJJAH952IURlQQ4wntJnTU1m1mj2qGH7nV4TBx6IYlkInP4
+         viOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EDYP1Th9SUcoctkxgo3VQaPnbnmkI7OqEYMxoTvtHN0=;
+        b=IlLRmQZ5DMACqetqhpiXJcE7NScJMlScI+D/UaibjHxJkoyKmYT2yk1mG6ElyahGGp
+         e9uYq5lI4JSeeySFpii/lXBDSQ27zNhuPiwUX/mUTu9908KbBohZ/p+B2QXl9ij0Gb1I
+         G2ESguzGi5uWbu73avVroXFWdtgJ7L8b2Eg8sBub7T3wNPoBcCHBeGksTNrGI6bkTJmL
+         q08UToUXHohaIZdnf66CU1DCRw58omz6a8TgL72Po0hKaOZDUeTriPTHw7J2qCaREd5H
+         DLlX7voKKwpDx036X8Gt6lOukjK2j5PEd3Yzub4UdyzlpWzQD1GQ4DjywLKJG0KxVtkc
+         gG5g==
+X-Gm-Message-State: AOAM533tdLD74I1az2olbPgzok9ipIjaEsA3h0kqZepeKq3Gx+G0ZOot
+        3Q7DoWgu4nmywOvs+0qcqw==
+X-Google-Smtp-Source: ABdhPJz9R9MwaPyIag3S3tRWpw9WvpKuu1aTtQc6U/Q6abAmmcfdC12JeVCjoNu3HX8Bp2NmCvYGXA==
+X-Received: by 2002:a17:902:a412:: with SMTP id p18mr1756333plq.283.1598005584196;
+        Fri, 21 Aug 2020 03:26:24 -0700 (PDT)
+Received: from PWN ([2600:3c01::f03c:91ff:fe6e:64cd])
+        by smtp.gmail.com with ESMTPSA id v11sm1634230pgs.22.2020.08.21.03.26.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 03:26:23 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 06:26:14 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] v4l2-tpg: Fix
+ global-out-of-bounds read in precalculate_color()
+Message-ID: <20200821102614.GA490417@PWN>
+References: <20200810050532.640075-1-yepeilin.cs@gmail.com>
+ <774bcf2d-c8eb-086a-3569-c7e530d8a63d@xs4all.nl>
+ <20200821094813.GB480216@PWN>
+ <eab860f3-5520-72cd-3bb1-f990f7f9ea6f@xs4all.nl>
 MIME-Version: 1.0
-In-Reply-To: <20200727163655.8c94c8e245637b62311f5053@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eab860f3-5520-72cd-3bb1-f990f7f9ea6f@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew and Others (please read at least the part with @RT developers),
+On Fri, Aug 21, 2020 at 12:12:28PM +0200, Hans Verkuil wrote:
+> Arrgh! I know what this is. /dev/video6 corresponds to the Metadata output
+> device of vivid, and that metadata format sets brightness, contrast,
+> saturation and hue:
+> 
+> struct vivid_meta_out_buf {
+>         u16     brightness;
+>         u16     contrast;
+>         u16     saturation;
+>         s16     hue;
+> };
+> 
+> vivid_meta_out_process() calls tpg_s_* functions to set these values. But
+> this is wrong, it should set the corresponding V4L2 controls instead since
+> calling these tpg_s_* functions bypasses all range checks. It also will
+> not update the controls themselves, so they are out-of-sync with the actual
+> values. I.e. the test pattern generator uses different values compared to
+> the values in the controls.
+> 
+> So two patches are needed:
+> 
+> 1) a patch for include/media/tpg/v4l2-tpg.h where tpg_s_hue will clamp the
+> hue value to the valid range. This to prevent anyone else from setting invalid
+> hue values in the tpg.
+> 
+> 2) a patch for drivers/media/test-drivers/vivid/vivid-meta-out.c where,
+> instead of calling the tpg_s_* functions in vivid_meta_out_process(), it
+> calls instead:
+> 
+>         v4l2_ctrl_s_ctrl(dev->brightness, meta->brightness);
+>         v4l2_ctrl_s_ctrl(dev->contrast, meta->contrast);
+> 	etc.
+> 
+> Do patch 2 first and test with syzkaller to check that by going through the
+> controls this issue is resolved. Since with that approach the tpg should
+> always get valid hue values.
 
-> Yup, mutex_trylock() from interrupt is improper.  Well dang, that's a
-> bit silly.  Presumably the 2006 spin_lock_mutex() wasn't taken with
-> irqs-off.
->
-> Ho hum, did you look at switching the kexec code back to the xchg
-> approach?
->
-I looked into reverting to the xchg approach, but that seems to be
-not a good solution anymore, because the mutex is used in many places,
-a lot with waiting locks and I guess that would require spinning now,
-if we do this with bare xchg.
+Ah, now it all makes sense! Thank you! I will do them now.
 
-Instead I thought about using a spinlock, because they are supposed
-to be used in interrupt context as well, if I understand the documentation
-correctly ([1]).
-@RT developers
-Unfortunately the rt patches seem to interpret it a bit different and
-spin_trylock uses __rt_mutex_trylock again, with the same consequences as
-with the current code.
-
-I tried raw_spinlocks, but it looks like they result in a deadlock at
-least in the rt kernel. Thiy may be because of memory allocations in the
-critical sections, that are not allowed if I understand it correctly.
-
-I have no clue how to fix it at this point.
-
-Jörg
-
-[1] https://kernel.readthedocs.io/en/sphinx-samples/kernel-locking.html
-
+Peilin
