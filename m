@@ -2,140 +2,137 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AC1C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54804C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3624923100
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39DB420720
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MPICVs9/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pOjcfMhi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHUSaW (ORCPT
+        id S1726939AbgHUSbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:30:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3790 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725821AbgHUSaT (ORCPT
+        Fri, 21 Aug 2020 14:31:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726706AbgHUSbH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:30:19 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LI3UuM029711;
-        Fri, 21 Aug 2020 14:30:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=UdI+uESx+0ouwqK+UkkXRC5jVNonEHLLFlFBL4bsdZc=;
- b=MPICVs9/96Ubrco6QijwGI2grU0C+tAwYz2xEMYb9dlpTCaC7bqlLEjCRl307R4aXvbm
- wSRsCVVYICyLAEVMPaN2l8RHG6lvIMHrz+xMHhjY5YQNO4dCAN3Dq8aFTAfBSkBjaX63
- RUckNaX2pirU9jf73ic+CE9ZTUu91DEPgcaQ/l86H+PE0f4myVUn1MmBlqWc2E6RD+bc
- Zg6AplL/8rlL+Eecj4mzYrtXVBIeXwcw/Qq3i3I7AdiKld2W+ubG6lKnQ2TiW6jly1Ea
- I3w+VMzkJnj8w5SHNkyjWdE9RD1K5SoPg2Y5rOcl/bgUzkhCBpd+n4eRGSBOLwFNyoDe Yg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3327mvc9pg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 14:30:09 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LIU9ZE143948;
-        Fri, 21 Aug 2020 14:30:09 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3327mvc9nc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 14:30:09 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LIG935021179;
-        Fri, 21 Aug 2020 18:30:06 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04fra.de.ibm.com with ESMTP id 3304ujtu51-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 18:30:06 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LIU4FP62128528
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 18:30:04 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2B99852052;
-        Fri, 21 Aug 2020 18:30:04 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.65.240])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A8DBC5204E;
-        Fri, 21 Aug 2020 18:30:02 +0000 (GMT)
-Message-ID: <2b204e31d21e93c0167d154c2397cd5d11be6e7f.camel@linux.ibm.com>
-Subject: Re: [PATCH 01/11] evm: Execute evm_inode_init_security() only when
- the HMAC key is loaded
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Date:   Fri, 21 Aug 2020 14:30:01 -0400
-In-Reply-To: <20200618160133.937-1-roberto.sassu@huawei.com>
-References: <20200618160133.937-1-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- priorityscore=1501 spamscore=0 mlxlogscore=999 adultscore=0
- impostorscore=0 lowpriorityscore=0 phishscore=0 clxscore=1011 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210166
+        Fri, 21 Aug 2020 14:31:07 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 075B2C06179B;
+        Fri, 21 Aug 2020 11:31:07 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y10so1250470plr.11;
+        Fri, 21 Aug 2020 11:31:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fs0kdQgLFops5C+Q5YuWanPWdeCPY1nAvwr21o3lh9E=;
+        b=pOjcfMhi9NIQKBZ6ypeUifTHdrqrhUSBM3X5AWK9Xkbjel5xQNQqGuLm2C3t3TN9bj
+         Zx44C4kaA3IAUpB4bbXgTLb62Evet1+fBdUCP2hRLkKFk7y9iUmSxrM2xA6LiUThJL+I
+         mf2ov2uLvp3U7KW+u+USVo/RUcUeBcCSLPuR+eKnRQBtJ/owkHll6SSQoYnb40dkMkvx
+         B24HSyxoeJgCgRrOzrAi2hfzZLsmj3Y03XZ0W+B9fmO38hNUv6CD8O0oKVs6xbWJCxO1
+         HRqBuoQITmR/GejEbp2QaJIp2c+3qIpb3YFvhMZadjDRghJoyR6fAQMDEiCwrtRwj2hi
+         Wq1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fs0kdQgLFops5C+Q5YuWanPWdeCPY1nAvwr21o3lh9E=;
+        b=NSEu42qUdPx/3sGjFwzFW1+nqJ7J9SSGFR1f1mDO5UjEgI9qpu9xtEFXyEXg5hPTfW
+         9NWRi+qXpHulq2J33tCyyZ6RgxxNkdyOUP2tnyseWV5C5eq5CvRgPnVWkieXsHWx69Aa
+         h8PgjCvGhgScLjOKfv1QqbOMgV8CuwLIVu1jpj9E4mcgEaBmSpntv/n2gcuCZKmhtwOH
+         VfGK6R9U2He9Od/r1qWVIRnaXZK3oR7XMnnUCUpoBIjeQ8ykKWlRy/DJ39Hpdq1FsyoU
+         1RNyxJj6cugZM0uZtV51qFJpFewzCNQpJ5FG3wfgeIhpF3S8lW9rZDFe7hOIi1FW2gqG
+         Zhdw==
+X-Gm-Message-State: AOAM533q1TbV7bDjkmTxe20/YAOhQPe4OkCTKz4LB1SGLB/WSY6druaA
+        cpIOr2+VIlO/e+G2PEfjE+4=
+X-Google-Smtp-Source: ABdhPJwCMvLZ8gso1ZPwMBsuitV3m26hGK4fikp7rhuUhZwxSIsy7HDZtvYonJj2lr4Lti1NSyuH/g==
+X-Received: by 2002:a17:902:728c:: with SMTP id d12mr3300178pll.141.1598034666575;
+        Fri, 21 Aug 2020 11:31:06 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k125sm2848682pga.48.2020.08.21.11.31.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Aug 2020 11:31:06 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 11:31:05 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Riku Voipio <riku.voipio@iki.fi>, Jean Delvare <jdelvare@suse.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (f75375s) use simple i2c probe
+Message-ID: <20200821183105.GA74215@roeck-us.net>
+References: <20200821160159.591293-1-steve@sk2.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821160159.591293-1-steve@sk2.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roberto,
-
-Sorry for the delay in reviewing these patches.   Missing from this
-patch set is a cover letter with an explanation for grouping these
-patches into a patch set, other than for convenience.  In this case, it
-would be along the lines that the original use case for EVM portable
-and immutable keys support was for a few critical files, not combined
-with an EVM encrypted key type.   This patch set more fully integrates
-the initial EVM portable and immutable signature support.
-
-On Thu, 2020-06-18 at 18:01 +0200, Roberto Sassu wrote:
-> evm_inode_init_security() requires the HMAC key to calculate the HMAC on
-> initial xattrs provided by LSMs. Unfortunately, with the evm_key_loaded()
-> check, the function continues even if the HMAC key is not loaded
-> (evm_key_loaded() returns true also if EVM has been initialized only with a
-> public key). If the HMAC key is not loaded, evm_inode_init_security()
-> returns an error later when it calls evm_init_hmac().
+On Fri, Aug 21, 2020 at 06:01:59PM +0200, Stephen Kitt wrote:
+> As part of the ongoing i2c transition to the simple probe
+> ("probe_new"), this patch uses i2c_match_id to retrieve the
+> driver_data for the probed device. The id parameter is thus no longer
+> necessary and the simple probe can be used instead.
 > 
-> Thus, this patch replaces the evm_key_loaded() check with a check of the
-> EVM_INIT_HMAC flag in evm_initialized, so that evm_inode_init_security()
-> returns 0 instead of an error.
-> 
-> Cc: stable@vger.kernel.org # 4.5.x
-> Fixes: 26ddabfe96b ("evm: enable EVM when X509 certificate is loaded")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Applied.
+
+Thanks,
+Guenter
 
 > ---
->  security/integrity/evm/evm_main.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/hwmon/f75375s.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 > 
-> diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
-> index 0d36259b690d..744c105b48d1 100644
-> --- a/security/integrity/evm/evm_main.c
-> +++ b/security/integrity/evm/evm_main.c
-> @@ -521,7 +521,8 @@ int evm_inode_init_security(struct inode *inode,
->  	struct evm_xattr *xattr_data;
->  	int rc;
+> diff --git a/drivers/hwmon/f75375s.c b/drivers/hwmon/f75375s.c
+> index eb847a7d6b83..3e567be60fb1 100644
+> --- a/drivers/hwmon/f75375s.c
+> +++ b/drivers/hwmon/f75375s.c
+> @@ -113,8 +113,7 @@ struct f75375_data {
 >  
-> -	if (!evm_key_loaded() || !evm_protected_xattr(lsm_xattr->name))
-> +	if (!(evm_initialized & EVM_INIT_HMAC) ||
-> +	    !evm_protected_xattr(lsm_xattr->name))
->  		return 0;
+>  static int f75375_detect(struct i2c_client *client,
+>  			 struct i2c_board_info *info);
+> -static int f75375_probe(struct i2c_client *client,
+> -			const struct i2c_device_id *id);
+> +static int f75375_probe(struct i2c_client *client);
+>  static int f75375_remove(struct i2c_client *client);
 >  
->  	xattr_data = kzalloc(sizeof(*xattr_data), GFP_NOFS);
-
-
+>  static const struct i2c_device_id f75375_id[] = {
+> @@ -130,7 +129,7 @@ static struct i2c_driver f75375_driver = {
+>  	.driver = {
+>  		.name = "f75375",
+>  	},
+> -	.probe = f75375_probe,
+> +	.probe_new = f75375_probe,
+>  	.remove = f75375_remove,
+>  	.id_table = f75375_id,
+>  	.detect = f75375_detect,
+> @@ -814,8 +813,7 @@ static void f75375_init(struct i2c_client *client, struct f75375_data *data,
+>  
+>  }
+>  
+> -static int f75375_probe(struct i2c_client *client,
+> -		const struct i2c_device_id *id)
+> +static int f75375_probe(struct i2c_client *client)
+>  {
+>  	struct f75375_data *data;
+>  	struct f75375s_platform_data *f75375s_pdata =
+> @@ -832,7 +830,7 @@ static int f75375_probe(struct i2c_client *client,
+>  
+>  	i2c_set_clientdata(client, data);
+>  	mutex_init(&data->update_lock);
+> -	data->kind = id->driver_data;
+> +	data->kind = i2c_match_id(f75375_id, client)->driver_data;
+>  
+>  	err = sysfs_create_group(&client->dev.kobj, &f75375_group);
+>  	if (err)
