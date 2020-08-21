@@ -2,121 +2,109 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFD5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A75EC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 345D220791
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3689207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:21:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z6d0JADM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ci/q1REo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgHUVVp (ORCPT
+        id S1726818AbgHUVVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:21:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51930 "EHLO
+        Fri, 21 Aug 2020 17:21:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgHUVVh (ORCPT
+        with ESMTP id S1726364AbgHUVVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:21:37 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48D7AC061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:21:37 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u128so1677778pfb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:21:37 -0700 (PDT)
+        Fri, 21 Aug 2020 17:21:49 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60ABAC061573;
+        Fri, 21 Aug 2020 14:21:49 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t11so1447439plr.5;
+        Fri, 21 Aug 2020 14:21:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7zxJLsKDKPmlEOdAqEaMs/th95WQoPa5KmWk+Z1DjV8=;
-        b=Z6d0JADM6ZgtFdmHVXm5tWDcsc0z+xRwVRI6J5P0qu7Wh8Wlh8hMqrvoVoPHscBSX5
-         BPn31oZ1h8KocB9ca3F8q5MQ2YsQ1iVfBeigGJPS6Yoy6p0Po4/KSMrywwADhAagcgS9
-         igh0vRz/eRmU7KOg9mT0Sb0Co7agth6mO4CkA=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pzPVCiNoxUXnWve1pQAQQPwMv0Z5oM4+Bqr3t8jovHY=;
+        b=Ci/q1REoYfWyUw6ZpJqRjlMhi+lzKepr2JIbhqaL5o8UB2Mxj4bHRZ2G0sgu/fV7d6
+         M0995EDpW5abeDx099ojQ3/p9y47tRYNtLF/tsne43fH8IqKPYeYkyzTES7Go0S+nTaZ
+         anCrFNmNP8fF97M/fZkqfG6i/A7i6LT56LBphwzruIO1wHIMN541FmC6uHcigijtVimd
+         uZYpbKHqFH4QNCZ8dommKNCwsI4L0Fdcb9VB6xyF3vHKHD24N+425maVkP6xYogoKs9O
+         YKCsVPBg0YpN8/HPIF29dv2wfIoaGT6/VksZ32fLgdlpz0G7WjZhk1mihWr0PLDK7o4b
+         fWlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7zxJLsKDKPmlEOdAqEaMs/th95WQoPa5KmWk+Z1DjV8=;
-        b=Q2iHnjn5Bb8pJzcN/Iyb/jI9+l4uHrgaDWLfrUESDwOlsn1KtQh6IaEud8/ZuDl7y7
-         jXLICr7rVq6nxgecL8P4otkMEAahXvsONUwmn0wKempiD5THYSETjC7Tfu4n3ihMg54Y
-         xGse0GdhdqrSknb7a7M+fAjF6cfABa8PI/Bv8ADGuPUBSaL5RaPgQAH/9/+X6+5+7Fre
-         n/8HlM5X7jcSxy0LcQLtsoA+fdyP2RinAh65uSA+nZwIRYT5I4dpB5YT9FwKA5VoAasI
-         lOz4vUxVmEHcjSccasF/Hyvmc3oJdP/gORfM0Miyd0D/gq5OYmUVfST1is4QJDwFYVp7
-         qcmg==
-X-Gm-Message-State: AOAM532ZWKaN9ob6ln6m+rB9eEftECVq0+Mg/Czc/ThmwHvLo7xbjCHI
-        Y8t6+NtIoewoPpkkaFA3SPbvlA==
-X-Google-Smtp-Source: ABdhPJwlauw3d/VbXEWNPYofZtpxXF3lSoJiQEDnVGrlctpzlU0ciKIkShtT/G6ZiVpcxESPW34GqQ==
-X-Received: by 2002:a63:7550:: with SMTP id f16mr3613147pgn.118.1598044896892;
-        Fri, 21 Aug 2020 14:21:36 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m22sm2843446pja.36.2020.08.21.14.21.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pzPVCiNoxUXnWve1pQAQQPwMv0Z5oM4+Bqr3t8jovHY=;
+        b=CYpJsLR966xhbjFZ5lwXTw3ykW19UEoZBTxC/0FeTSBSVZjLvTNclcAVJm9cgcCcL0
+         neTkEWwTODs3QEx2p6qSjV54skcpU65Azijnj9Frmsy+D5J0ISMB/vxgjmFniAoG9ibH
+         o1umLgZVun/OaoFbcegACyIHrjUadar+6QqJ8BmWcmkWG6YWROVQvDPR238arWs3HYA9
+         PtfBeq0GOcpvROS0oIGRSfmN3gwJ4VmXZrNM4QsjAppyRvoeC5fM/g84WZ1Ud7BQA7F0
+         UoN723eKgtqkMH36cuzrf1ePFDMocv9IikpGWEdSwK+6QzabrOaneYmEEBW25u4SctLP
+         o2sw==
+X-Gm-Message-State: AOAM532ffco1DDzcfYBS5oNQecKLrCqn/eT9dUbYWCJGQNUSUrM+eFM7
+        rPsqEzx/1++DgaSqMXftWAA=
+X-Google-Smtp-Source: ABdhPJwfsavDvEQmi7fVsJZkBWfl2Pp41P3rQqu5ti0QXM3W2MUqKWAvU6kzN3gnvSdi2VOIBOfGcA==
+X-Received: by 2002:a17:90a:6e0c:: with SMTP id b12mr3938034pjk.141.1598044908845;
+        Fri, 21 Aug 2020 14:21:48 -0700 (PDT)
+Received: from localhost.localdomain.com ([2605:e000:160b:911f:722f:a74:437d:fd3c])
+        by smtp.gmail.com with ESMTPSA id d81sm3488611pfd.174.2020.08.21.14.21.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 14:21:35 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 14:21:34 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 27/29] x86/boot/compressed: Remove, discard, or assert
- for unwanted sections
-Message-ID: <202008211421.47347CA42@keescook>
-References: <20200821194310.3089815-1-keescook@chromium.org>
- <20200821194310.3089815-28-keescook@chromium.org>
- <20200821200159.GC1475504@rani.riverdale.lan>
+        Fri, 21 Aug 2020 14:21:47 -0700 (PDT)
+From:   Chris Healy <cphealy@gmail.com>
+X-Google-Original-From: Chris Healy <cphealy@gmail.com
+To:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, andrew.smirnov@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, stefan@agner.ch,
+        linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
+        festevam@gmail.com
+Cc:     Chris Healy <cphealy@gmail.com>
+Subject: [PATCH v3 1/2] dt-bindings: nvmem: Add syscon to Vybrid OCOTP driver
+Date:   Fri, 21 Aug 2020 14:21:01 -0700
+Message-Id: <20200821212102.137991-1-cphealy@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821200159.GC1475504@rani.riverdale.lan>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 04:01:59PM -0400, Arvind Sankar wrote:
-> On Fri, Aug 21, 2020 at 12:43:08PM -0700, Kees Cook wrote:
-> > In preparation for warning on orphan sections, stop the linker from
-> > generating the .eh_frame* sections, discard unwanted non-zero-sized
-> > generated sections, and enforce other expected-to-be-zero-sized sections
-> > (since discarding them might hide problems with them suddenly gaining
-> > unexpected entries).
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> >  	.rel.dyn : {
-> > -		*(.rel.*)
-> > +		*(.rel.*) *(.rel_*)
-> >  	}
-> >  	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
-> >  
-> >  	.rela.dyn : {
-> > -		*(.rela.*)
-> > +		*(.rela.*) *(.rela_*)
-> >  	}
-> >  	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
-> >  }
-> > -- 
-> > 2.25.1
-> > 
-> 
-> When do you get .rela_?
+From: Chris Healy <cphealy@gmail.com>
 
-i386 builds, IIRC. I can try to hunt that down if you want?
+Add syscon compatibility with Vybrid OCOTP driver binding. This is
+required to access the UID.
 
+Fixes: fa8d20c8dbb77 ("ARM: dts: vfxxx: Add node corresponding to OCOTP")
+Cc: stable@vger.kernel.org
+Signed-off-by: Chris Healy <cphealy@gmail.com>
+---
+ Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt b/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt
+index 56ed481c3e26..5db39f399568 100644
+--- a/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt
++++ b/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt
+@@ -11,7 +11,7 @@ Required Properties:
+ Example for Vybrid VF5xx/VF6xx:
+ 
+ 	ocotp: ocotp@400a5000 {
+-		compatible = "fsl,vf610-ocotp";
++		compatible = "fsl,vf610-ocotp", "syscon";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		reg = <0x400a5000 0xCF0>;
 -- 
-Kees Cook
+2.26.2
+
