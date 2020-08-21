@@ -2,242 +2,735 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2CBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A2FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D500207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A8F2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:11:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RtSBiO/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgHUPLb (ORCPT
+        id S1727986AbgHUPLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:11:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgHUPLa (ORCPT
+        Fri, 21 Aug 2020 11:11:55 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:43530 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725828AbgHUPLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:11:30 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F02C061573;
-        Fri, 21 Aug 2020 08:11:29 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id 4391329AC90
-Subject: Re: [PATCH v3 4/9] media: vimc: Separate starting stream from
- pipeline initialisation
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-References: <20200819180442.11630-1-kgupta@es.iitr.ac.in>
- <20200819180442.11630-5-kgupta@es.iitr.ac.in>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <eb5d4259-fe77-b4f2-1e62-0f846420b7c2@collabora.com>
-Date:   Fri, 21 Aug 2020 17:11:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 21 Aug 2020 11:11:46 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LFBVKM027866
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:11:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=9hRtlYcd2C3GPGwvGY+xEun3aEH2VCcltoqKnxACdtU=;
+ b=RtSBiO/l3VAokVRPfkdO7/bTV5RGYRbEuvDIYNJ9oo5nzdvMsmCK0e9HylShB198hS/Z
+ 30to4Z7dnUE/iM6njdTK9xKbX7zY2veJq82f3KxU7NATB3s6Q/WY1Yj9buSFQuN6xbTk
+ jrRpU1GPT7TjeXVFRhFKtkCPhTGNgYv0aTc= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 331d50t38c-13
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:11:44 -0700
+Received: from intmgw001.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 21 Aug 2020 08:11:43 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id BF9463441083; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     <bpf@vger.kernel.org>
+CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Roman Gushchin <guro@fb.com>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH bpf-next v4 30/30] bpf: samples: do not touch RLIMIT_MEMLOCK
+Date:   Fri, 21 Aug 2020 08:01:34 -0700
+Message-ID: <20200821150134.2581465-31-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
+References: <20200821150134.2581465-1-guro@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20200819180442.11630-5-kgupta@es.iitr.ac.in>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ clxscore=1015 phishscore=0 suspectscore=13 adultscore=0 bulkscore=0
+ mlxscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008210143
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since bpf is not using rlimit memlock for the memory accounting
+and control, do not change the limit in sample applications.
 
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+---
+ samples/bpf/map_perf_test_user.c    | 11 -----------
+ samples/bpf/offwaketime_user.c      |  2 --
+ samples/bpf/sockex2_user.c          |  2 --
+ samples/bpf/sockex3_user.c          |  2 --
+ samples/bpf/spintest_user.c         |  2 --
+ samples/bpf/syscall_tp_user.c       |  2 --
+ samples/bpf/task_fd_query_user.c    |  5 -----
+ samples/bpf/test_lru_dist.c         |  3 ---
+ samples/bpf/test_map_in_map_user.c  |  9 ---------
+ samples/bpf/test_overhead_user.c    |  2 --
+ samples/bpf/trace_event_user.c      |  2 --
+ samples/bpf/tracex2_user.c          |  6 ------
+ samples/bpf/tracex3_user.c          |  6 ------
+ samples/bpf/tracex4_user.c          |  6 ------
+ samples/bpf/tracex5_user.c          |  3 ---
+ samples/bpf/tracex6_user.c          |  3 ---
+ samples/bpf/xdp1_user.c             |  6 ------
+ samples/bpf/xdp_adjust_tail_user.c  |  6 ------
+ samples/bpf/xdp_monitor_user.c      |  6 ------
+ samples/bpf/xdp_redirect_cpu_user.c |  6 ------
+ samples/bpf/xdp_redirect_map_user.c |  6 ------
+ samples/bpf/xdp_redirect_user.c     |  6 ------
+ samples/bpf/xdp_router_ipv4_user.c  |  6 ------
+ samples/bpf/xdp_rxq_info_user.c     |  6 ------
+ samples/bpf/xdp_sample_pkts_user.c  |  6 ------
+ samples/bpf/xdp_tx_iptunnel_user.c  |  6 ------
+ samples/bpf/xdpsock_user.c          |  7 -------
+ 27 files changed, 133 deletions(-)
 
-Am 19.08.20 um 20:04 schrieb Kaaira Gupta:
-> Separate the process of initialising pipeline array from starting
-> streaming for all entities in path of a stream. This is needed because
-> multiple streams can stream, but only one pipeline object is needed.
-> 
-> Process frames only for those entities in a pipeline which are
-> streaming. This is known through their use counts.
-> 
-> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-> ---
->   .../media/test-drivers/vimc/vimc-streamer.c   | 95 ++++++++++++++++---
->   1 file changed, 83 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/media/test-drivers/vimc/vimc-streamer.c
-> index c1644d69686d..cc40ecabe95a 100644
-> --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
-> +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
-> @@ -40,33 +40,30 @@ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
->   }
->   
->   /**
-> - * vimc_streamer_pipeline_init - Initializes the stream structure
-> + * vimc_streamer_stream_start - Starts streaming for all entities
-> + * in a stream
->    *
-> - * @stream: the pointer to the stream structure to be initialized
->    * @ved:    the pointer to the vimc entity initializing the stream
->    *
-> - * Initializes the stream structure. Walks through the entity graph to
-> - * construct the pipeline used later on the streamer thread.
-> - * Calls vimc_streamer_s_stream() to enable stream in all entities of
-> - * the pipeline.
-> + * Walks through the entity graph to call vimc_streamer_s_stream()
-> + * to enable stream in all entities in path of a stream.
->    *
->    * Return: 0 if success, error code otherwise.
->    */
-> -static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
-> -				       struct vimc_ent_device *ved)
-> +static int vimc_streamer_stream_start(struct vimc_stream *stream,
-> +				      struct vimc_ent_device *ved)
->   {
->   	struct media_entity *entity;
->   	struct video_device *vdev;
->   	struct v4l2_subdev *sd;
-> +	int stream_size = 0;
->   	int ret = 0;
->   
-> -	stream->pipe_size = 0;
-> -	while (stream->pipe_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
-> +	while (stream_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
->   		if (!ved) {
->   			vimc_streamer_pipeline_terminate(stream);
->   			return -EINVAL;
->   		}
-> -		stream->ved_pipeline[stream->pipe_size++] = ved;
->   
->   		if (is_media_entity_v4l2_subdev(ved->ent)) {
->   			sd = media_entity_to_v4l2_subdev(ved->ent);
-> @@ -104,6 +101,73 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
->   					    entity);
->   			ved = video_get_drvdata(vdev);
->   		}
-> +		stream_size++;
-> +	}
-> +
-> +	vimc_streamer_pipeline_terminate(stream);
-> +	return -EINVAL;
-> +}
-> +
-> +/**
-> + * vimc_streamer_pipeline_init - Initialises pipeline and pipe size
-> + *
-> + * @stream: the pointer to the stream structure
-> + * @ved:    the pointer to the vimc entity initializing the stream pipeline
-> + *
-> + * Walks through the entity graph to initialise ved_pipeline and updates
-> + * pipe_size too.
-> + *
-> + * Return: 0 if success, error code otherwise.
-> + */
-> +static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
-> +				       struct vimc_ent_device *ved)
-> +{
-> +	struct media_entity *entity;
-> +	struct media_device *mdev;
-> +	struct media_graph graph;
-> +	struct video_device *vdev;
-> +	struct v4l2_subdev *sd;
-> +	int ret;
-> +
-> +	entity = ved->ent;
-> +	mdev = entity->graph_obj.mdev;
-> +
-> +	ret = media_graph_walk_init(&graph, mdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	media_graph_walk_start(&graph, entity);
-> +
-> +	/*
-> +	 * Start pipeline array initialisation from RAW Capture only to get
-> +	 * entities in the correct order of their frame processing.
-> +	 */
-> +	if (!strncmp(entity->name, "RGB", 3)) {
+diff --git a/samples/bpf/map_perf_test_user.c b/samples/bpf/map_perf_test=
+_user.c
+index 8b13230b4c46..4c198bc55beb 100644
+--- a/samples/bpf/map_perf_test_user.c
++++ b/samples/bpf/map_perf_test_user.c
+@@ -421,20 +421,9 @@ static void fixup_map(struct bpf_object *obj)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+-	int nr_cpus =3D sysconf(_SC_NPROCESSORS_ONLN);
+-	struct bpf_link *links[8];
+-	struct bpf_program *prog;
+-	struct bpf_object *obj;
+-	struct bpf_map *map;
+ 	char filename[256];
+ 	int i =3D 0;
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return 1;
+-	}
+-
+ 	if (argc > 1)
+ 		test_flags =3D atoi(argv[1]) ? : test_flags;
+=20
+diff --git a/samples/bpf/offwaketime_user.c b/samples/bpf/offwaketime_use=
+r.c
+index 51c7da5341cc..9e51dd011a2a 100644
+--- a/samples/bpf/offwaketime_user.c
++++ b/samples/bpf/offwaketime_user.c
+@@ -95,12 +95,10 @@ static void int_exit(int sig)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	char filename[256];
+ 	int delay =3D 1;
+=20
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+-	setrlimit(RLIMIT_MEMLOCK, &r);
+=20
+ 	signal(SIGINT, int_exit);
+ 	signal(SIGTERM, int_exit);
+diff --git a/samples/bpf/sockex2_user.c b/samples/bpf/sockex2_user.c
+index af925a5afd1d..bafa567b840c 100644
+--- a/samples/bpf/sockex2_user.c
++++ b/samples/bpf/sockex2_user.c
+@@ -16,7 +16,6 @@ struct pair {
+=20
+ int main(int ac, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	struct bpf_object *obj;
+ 	int map_fd, prog_fd;
+ 	char filename[256];
+@@ -24,7 +23,6 @@ int main(int ac, char **argv)
+ 	FILE *f;
+=20
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+-	setrlimit(RLIMIT_MEMLOCK, &r);
+=20
+ 	if (bpf_prog_load(filename, BPF_PROG_TYPE_SOCKET_FILTER,
+ 			  &obj, &prog_fd))
+diff --git a/samples/bpf/sockex3_user.c b/samples/bpf/sockex3_user.c
+index 4dbee7427d47..6ee7b7a4b9b7 100644
+--- a/samples/bpf/sockex3_user.c
++++ b/samples/bpf/sockex3_user.c
+@@ -26,7 +26,6 @@ struct pair {
+ int main(int argc, char **argv)
+ {
+ 	int i, sock, key, fd, main_prog_fd, jmp_table_fd, hash_map_fd;
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	struct bpf_program *prog;
+ 	struct bpf_object *obj;
+ 	char filename[256];
+@@ -34,7 +33,6 @@ int main(int argc, char **argv)
+ 	FILE *f;
+=20
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+-	setrlimit(RLIMIT_MEMLOCK, &r);
+=20
+ 	obj =3D bpf_object__open_file(filename, NULL);
+ 	if (libbpf_get_error(obj)) {
+diff --git a/samples/bpf/spintest_user.c b/samples/bpf/spintest_user.c
+index fb430ea2ef51..458f1439e670 100644
+--- a/samples/bpf/spintest_user.c
++++ b/samples/bpf/spintest_user.c
+@@ -11,14 +11,12 @@
+=20
+ int main(int ac, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	long key, next_key, value;
+ 	char filename[256];
+ 	struct ksym *sym;
+ 	int i;
+=20
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+-	setrlimit(RLIMIT_MEMLOCK, &r);
+=20
+ 	if (load_kallsyms()) {
+ 		printf("failed to process /proc/kallsyms\n");
+diff --git a/samples/bpf/syscall_tp_user.c b/samples/bpf/syscall_tp_user.=
+c
+index 57014bab7cbe..caa3891ee774 100644
+--- a/samples/bpf/syscall_tp_user.c
++++ b/samples/bpf/syscall_tp_user.c
+@@ -85,7 +85,6 @@ static int test(char *filename, int num_progs)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	int opt, num_progs =3D 1;
+ 	char filename[256];
+=20
+@@ -101,7 +100,6 @@ int main(int argc, char **argv)
+ 		}
+ 	}
+=20
+-	setrlimit(RLIMIT_MEMLOCK, &r);
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+=20
+ 	return test(filename, num_progs);
+diff --git a/samples/bpf/task_fd_query_user.c b/samples/bpf/task_fd_query=
+_user.c
+index 4a74531dc403..0f2050ff54f9 100644
+--- a/samples/bpf/task_fd_query_user.c
++++ b/samples/bpf/task_fd_query_user.c
+@@ -290,16 +290,11 @@ static int test_debug_fs_uprobe(char *binary_path, =
+long offset, bool is_return)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {1024*1024, RLIM_INFINITY};
+ 	extern char __executable_start;
+ 	char filename[256], buf[256];
+ 	__u64 uprobe_file_offset;
+=20
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return 1;
+-	}
+=20
+ 	if (load_kallsyms()) {
+ 		printf("failed to process /proc/kallsyms\n");
+diff --git a/samples/bpf/test_lru_dist.c b/samples/bpf/test_lru_dist.c
+index b313dba4111b..c92c5c06b965 100644
+--- a/samples/bpf/test_lru_dist.c
++++ b/samples/bpf/test_lru_dist.c
+@@ -489,7 +489,6 @@ static void test_parallel_lru_loss(int map_type, int =
+map_flags, int nr_tasks)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	int map_flags[] =3D {0, BPF_F_NO_COMMON_LRU};
+ 	const char *dist_file;
+ 	int nr_tasks =3D 1;
+@@ -508,8 +507,6 @@ int main(int argc, char **argv)
+=20
+ 	setbuf(stdout, NULL);
+=20
+-	assert(!setrlimit(RLIMIT_MEMLOCK, &r));
+-
+ 	srand(time(NULL));
+=20
+ 	nr_cpus =3D bpf_num_possible_cpus();
+diff --git a/samples/bpf/test_map_in_map_user.c b/samples/bpf/test_map_in=
+_map_user.c
+index 98656de56b83..0e65753a157a 100644
+--- a/samples/bpf/test_map_in_map_user.c
++++ b/samples/bpf/test_map_in_map_user.c
+@@ -114,17 +114,8 @@ static void test_map_in_map(void)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+-	struct bpf_link *link =3D NULL;
+-	struct bpf_program *prog;
+-	struct bpf_object *obj;
+ 	char filename[256];
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return 1;
+-	}
+-
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+ 	obj =3D bpf_object__open_file(filename, NULL);
+ 	if (libbpf_get_error(obj)) {
+diff --git a/samples/bpf/test_overhead_user.c b/samples/bpf/test_overhead=
+_user.c
+index 94f74112a20e..c100fd46cd8a 100644
+--- a/samples/bpf/test_overhead_user.c
++++ b/samples/bpf/test_overhead_user.c
+@@ -125,12 +125,10 @@ static void unload_progs(void)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	char filename[256];
+ 	int num_cpu =3D 8;
+ 	int test_flags =3D ~0;
+=20
+-	setrlimit(RLIMIT_MEMLOCK, &r);
+=20
+ 	if (argc > 1)
+ 		test_flags =3D atoi(argv[1]) ? : test_flags;
+diff --git a/samples/bpf/trace_event_user.c b/samples/bpf/trace_event_use=
+r.c
+index ac1ba368195c..9664749bf618 100644
+--- a/samples/bpf/trace_event_user.c
++++ b/samples/bpf/trace_event_user.c
+@@ -294,13 +294,11 @@ static void test_bpf_perf_event(void)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	struct bpf_object *obj =3D NULL;
+ 	char filename[256];
+ 	int error =3D 1;
+=20
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+-	setrlimit(RLIMIT_MEMLOCK, &r);
+=20
+ 	signal(SIGINT, err_exit);
+ 	signal(SIGTERM, err_exit);
+diff --git a/samples/bpf/tracex2_user.c b/samples/bpf/tracex2_user.c
+index 3e36b3e4e3ef..1626d51dfffd 100644
+--- a/samples/bpf/tracex2_user.c
++++ b/samples/bpf/tracex2_user.c
+@@ -116,7 +116,6 @@ static void int_exit(int sig)
+=20
+ int main(int ac, char **argv)
+ {
+-	struct rlimit r =3D {1024*1024, RLIM_INFINITY};
+ 	long key, next_key, value;
+ 	struct bpf_link *links[2];
+ 	struct bpf_program *prog;
+@@ -125,11 +124,6 @@ int main(int ac, char **argv)
+ 	int i, j =3D 0;
+ 	FILE *f;
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return 1;
+-	}
+-
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+ 	obj =3D bpf_object__open_file(filename, NULL);
+ 	if (libbpf_get_error(obj)) {
+diff --git a/samples/bpf/tracex3_user.c b/samples/bpf/tracex3_user.c
+index 70e987775c15..33e16ba39f25 100644
+--- a/samples/bpf/tracex3_user.c
++++ b/samples/bpf/tracex3_user.c
+@@ -107,7 +107,6 @@ static void print_hist(int fd)
+=20
+ int main(int ac, char **argv)
+ {
+-	struct rlimit r =3D {1024*1024, RLIM_INFINITY};
+ 	struct bpf_link *links[2];
+ 	struct bpf_program *prog;
+ 	struct bpf_object *obj;
+@@ -127,11 +126,6 @@ int main(int ac, char **argv)
+ 		}
+ 	}
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return 1;
+-	}
+-
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+ 	obj =3D bpf_object__open_file(filename, NULL);
+ 	if (libbpf_get_error(obj)) {
+diff --git a/samples/bpf/tracex4_user.c b/samples/bpf/tracex4_user.c
+index e8faf8f184ae..cea399424bca 100644
+--- a/samples/bpf/tracex4_user.c
++++ b/samples/bpf/tracex4_user.c
+@@ -48,18 +48,12 @@ static void print_old_objects(int fd)
+=20
+ int main(int ac, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	struct bpf_link *links[2];
+ 	struct bpf_program *prog;
+ 	struct bpf_object *obj;
+ 	char filename[256];
+ 	int map_fd, i, j =3D 0;
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK, RLIM_INFINITY)");
+-		return 1;
+-	}
+-
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+ 	obj =3D bpf_object__open_file(filename, NULL);
+ 	if (libbpf_get_error(obj)) {
+diff --git a/samples/bpf/tracex5_user.c b/samples/bpf/tracex5_user.c
+index 98dad57a96c4..1549fa3ec65c 100644
+--- a/samples/bpf/tracex5_user.c
++++ b/samples/bpf/tracex5_user.c
+@@ -34,7 +34,6 @@ static void install_accept_all_seccomp(void)
+=20
+ int main(int ac, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	struct bpf_link *link =3D NULL;
+ 	struct bpf_program *prog;
+ 	struct bpf_object *obj;
+@@ -43,8 +42,6 @@ int main(int ac, char **argv)
+ 	const char *title;
+ 	FILE *f;
+=20
+-	setrlimit(RLIMIT_MEMLOCK, &r);
+-
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+ 	obj =3D bpf_object__open_file(filename, NULL);
+ 	if (libbpf_get_error(obj)) {
+diff --git a/samples/bpf/tracex6_user.c b/samples/bpf/tracex6_user.c
+index 33df9784775d..28296f40c133 100644
+--- a/samples/bpf/tracex6_user.c
++++ b/samples/bpf/tracex6_user.c
+@@ -175,15 +175,12 @@ static void test_bpf_perf_event(void)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	struct bpf_link *links[2];
+ 	struct bpf_program *prog;
+ 	struct bpf_object *obj;
+ 	char filename[256];
+ 	int i =3D 0;
+=20
+-	setrlimit(RLIMIT_MEMLOCK, &r);
+-
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+ 	obj =3D bpf_object__open_file(filename, NULL);
+ 	if (libbpf_get_error(obj)) {
+diff --git a/samples/bpf/xdp1_user.c b/samples/bpf/xdp1_user.c
+index c447ad9e3a1d..116e39f6b666 100644
+--- a/samples/bpf/xdp1_user.c
++++ b/samples/bpf/xdp1_user.c
+@@ -79,7 +79,6 @@ static void usage(const char *prog)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	struct bpf_prog_load_attr prog_load_attr =3D {
+ 		.prog_type	=3D BPF_PROG_TYPE_XDP,
+ 	};
+@@ -117,11 +116,6 @@ int main(int argc, char **argv)
+ 		return 1;
+ 	}
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return 1;
+-	}
+-
+ 	ifindex =3D if_nametoindex(argv[optind]);
+ 	if (!ifindex) {
+ 		perror("if_nametoindex");
+diff --git a/samples/bpf/xdp_adjust_tail_user.c b/samples/bpf/xdp_adjust_=
+tail_user.c
+index ba482dc3da33..a70b094c8ec5 100644
+--- a/samples/bpf/xdp_adjust_tail_user.c
++++ b/samples/bpf/xdp_adjust_tail_user.c
+@@ -82,7 +82,6 @@ static void usage(const char *cmd)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	struct bpf_prog_load_attr prog_load_attr =3D {
+ 		.prog_type	=3D BPF_PROG_TYPE_XDP,
+ 	};
+@@ -143,11 +142,6 @@ int main(int argc, char **argv)
+ 		}
+ 	}
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK, RLIM_INFINITY)");
+-		return 1;
+-	}
+-
+ 	if (!ifindex) {
+ 		fprintf(stderr, "Invalid ifname\n");
+ 		return 1;
+diff --git a/samples/bpf/xdp_monitor_user.c b/samples/bpf/xdp_monitor_use=
+r.c
+index ef53b93db573..25e6a24f8d7b 100644
+--- a/samples/bpf/xdp_monitor_user.c
++++ b/samples/bpf/xdp_monitor_user.c
+@@ -645,7 +645,6 @@ static void print_bpf_prog_info(void)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	int longindex =3D 0, opt;
+ 	int ret =3D EXIT_SUCCESS;
+ 	char bpf_obj_file[256];
+@@ -676,11 +675,6 @@ int main(int argc, char **argv)
+ 		}
+ 	}
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return EXIT_FAILURE;
+-	}
+-
+ 	if (load_bpf_file(bpf_obj_file)) {
+ 		printf("ERROR - bpf_log_buf: %s", bpf_log_buf);
+ 		return EXIT_FAILURE;
+diff --git a/samples/bpf/xdp_redirect_cpu_user.c b/samples/bpf/xdp_redire=
+ct_cpu_user.c
+index 004c0622c913..6773027b2a89 100644
+--- a/samples/bpf/xdp_redirect_cpu_user.c
++++ b/samples/bpf/xdp_redirect_cpu_user.c
+@@ -779,7 +779,6 @@ static int load_cpumap_prog(char *file_name, char *pr=
+og_name,
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {10 * 1024 * 1024, RLIM_INFINITY};
+ 	char *prog_name =3D "xdp_cpu_map5_lb_hash_ip_pairs";
+ 	char *mprog_filename =3D "xdp_redirect_kern.o";
+ 	char *redir_interface =3D NULL, *redir_map =3D NULL;
+@@ -818,11 +817,6 @@ int main(int argc, char **argv)
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+ 	prog_load_attr.file =3D filename;
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return 1;
+-	}
+-
+ 	if (bpf_prog_load_xattr(&prog_load_attr, &obj, &prog_fd))
+ 		return EXIT_FAIL;
+=20
+diff --git a/samples/bpf/xdp_redirect_map_user.c b/samples/bpf/xdp_redire=
+ct_map_user.c
+index 35e16dee613e..31131b6e7782 100644
+--- a/samples/bpf/xdp_redirect_map_user.c
++++ b/samples/bpf/xdp_redirect_map_user.c
+@@ -96,7 +96,6 @@ static void usage(const char *prog)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	struct bpf_prog_load_attr prog_load_attr =3D {
+ 		.prog_type	=3D BPF_PROG_TYPE_XDP,
+ 	};
+@@ -135,11 +134,6 @@ int main(int argc, char **argv)
+ 		return 1;
+ 	}
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return 1;
+-	}
+-
+ 	ifindex_in =3D if_nametoindex(argv[optind]);
+ 	if (!ifindex_in)
+ 		ifindex_in =3D strtoul(argv[optind], NULL, 0);
+diff --git a/samples/bpf/xdp_redirect_user.c b/samples/bpf/xdp_redirect_u=
+ser.c
+index 9ca2bf457cda..41d705c3a1f7 100644
+--- a/samples/bpf/xdp_redirect_user.c
++++ b/samples/bpf/xdp_redirect_user.c
+@@ -97,7 +97,6 @@ static void usage(const char *prog)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	struct bpf_prog_load_attr prog_load_attr =3D {
+ 		.prog_type	=3D BPF_PROG_TYPE_XDP,
+ 	};
+@@ -136,11 +135,6 @@ int main(int argc, char **argv)
+ 		return 1;
+ 	}
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return 1;
+-	}
+-
+ 	ifindex_in =3D if_nametoindex(argv[optind]);
+ 	if (!ifindex_in)
+ 		ifindex_in =3D strtoul(argv[optind], NULL, 0);
+diff --git a/samples/bpf/xdp_router_ipv4_user.c b/samples/bpf/xdp_router_=
+ipv4_user.c
+index c2da1b51ff95..b5f03cb17a3c 100644
+--- a/samples/bpf/xdp_router_ipv4_user.c
++++ b/samples/bpf/xdp_router_ipv4_user.c
+@@ -625,7 +625,6 @@ static void usage(const char *prog)
+=20
+ int main(int ac, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	struct bpf_prog_load_attr prog_load_attr =3D {
+ 		.prog_type	=3D BPF_PROG_TYPE_XDP,
+ 	};
+@@ -670,11 +669,6 @@ int main(int ac, char **argv)
+ 		return 1;
+ 	}
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return 1;
+-	}
+-
+ 	if (bpf_prog_load_xattr(&prog_load_attr, &obj, &prog_fd))
+ 		return 1;
+=20
+diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_u=
+ser.c
+index caa4e7ffcfc7..74a2926eba08 100644
+--- a/samples/bpf/xdp_rxq_info_user.c
++++ b/samples/bpf/xdp_rxq_info_user.c
+@@ -450,7 +450,6 @@ static void stats_poll(int interval, int action, __u3=
+2 cfg_opt)
+ int main(int argc, char **argv)
+ {
+ 	__u32 cfg_options=3D NO_TOUCH ; /* Default: Don't touch packet memory *=
+/
+-	struct rlimit r =3D {10 * 1024 * 1024, RLIM_INFINITY};
+ 	struct bpf_prog_load_attr prog_load_attr =3D {
+ 		.prog_type	=3D BPF_PROG_TYPE_XDP,
+ 	};
+@@ -474,11 +473,6 @@ int main(int argc, char **argv)
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+ 	prog_load_attr.file =3D filename;
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return 1;
+-	}
+-
+ 	if (bpf_prog_load_xattr(&prog_load_attr, &obj, &prog_fd))
+ 		return EXIT_FAIL;
+=20
+diff --git a/samples/bpf/xdp_sample_pkts_user.c b/samples/bpf/xdp_sample_=
+pkts_user.c
+index 991ef6f0880b..551c6839f593 100644
+--- a/samples/bpf/xdp_sample_pkts_user.c
++++ b/samples/bpf/xdp_sample_pkts_user.c
+@@ -110,7 +110,6 @@ static void usage(const char *prog)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	struct bpf_prog_load_attr prog_load_attr =3D {
+ 		.prog_type	=3D BPF_PROG_TYPE_XDP,
+ 	};
+@@ -144,11 +143,6 @@ int main(int argc, char **argv)
+ 		return 1;
+ 	}
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK)");
+-		return 1;
+-	}
+-
+ 	snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
+ 	prog_load_attr.file =3D filename;
+=20
+diff --git a/samples/bpf/xdp_tx_iptunnel_user.c b/samples/bpf/xdp_tx_iptu=
+nnel_user.c
+index a419bee151a8..1d4f305d02aa 100644
+--- a/samples/bpf/xdp_tx_iptunnel_user.c
++++ b/samples/bpf/xdp_tx_iptunnel_user.c
+@@ -155,7 +155,6 @@ int main(int argc, char **argv)
+ 	struct bpf_prog_load_attr prog_load_attr =3D {
+ 		.prog_type	=3D BPF_PROG_TYPE_XDP,
+ 	};
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	int min_port =3D 0, max_port =3D 0, vip2tnl_map_fd;
+ 	const char *optstr =3D "i:a:p:s:d:m:T:P:FSNh";
+ 	unsigned char opt_flags[256] =3D {};
+@@ -254,11 +253,6 @@ int main(int argc, char **argv)
+ 		}
+ 	}
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		perror("setrlimit(RLIMIT_MEMLOCK, RLIM_INFINITY)");
+-		return 1;
+-	}
+-
+ 	if (!ifindex) {
+ 		fprintf(stderr, "Invalid ifname\n");
+ 		return 1;
+diff --git a/samples/bpf/xdpsock_user.c b/samples/bpf/xdpsock_user.c
+index 19c679456a0e..b3bd60433546 100644
+--- a/samples/bpf/xdpsock_user.c
++++ b/samples/bpf/xdpsock_user.c
+@@ -1216,7 +1216,6 @@ static void enter_xsks_into_map(struct bpf_object *=
+obj)
+=20
+ int main(int argc, char **argv)
+ {
+-	struct rlimit r =3D {RLIM_INFINITY, RLIM_INFINITY};
+ 	bool rx =3D false, tx =3D false;
+ 	struct xsk_umem_info *umem;
+ 	struct bpf_object *obj;
+@@ -1226,12 +1225,6 @@ int main(int argc, char **argv)
+=20
+ 	parse_command_line(argc, argv);
+=20
+-	if (setrlimit(RLIMIT_MEMLOCK, &r)) {
+-		fprintf(stderr, "ERROR: setrlimit(RLIMIT_MEMLOCK) \"%s\"\n",
+-			strerror(errno));
+-		exit(EXIT_FAILURE);
+-	}
+-
+ 	if (opt_num_xsks > 1)
+ 		load_xdp_program(argv, &obj);
+=20
+--=20
+2.26.2
 
-I don't understand this condition, way is it good for?
-
-I think the function should be generic and not assume names of entities
-or specific topology.
-
-
-> +		entity = media_graph_walk_next(&graph);
-> +		mdev = entity->graph_obj.mdev;
-> +		media_graph_walk_cleanup(&graph);
-> +
-> +		ret = media_graph_walk_init(&graph, mdev);
-> +		if (ret)
-> +			return ret;
-> +		media_graph_walk_start(&graph, entity);
-> +	}
-> +
-> +	while (stream->pipe_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
-> +		if (is_media_entity_v4l2_subdev(entity)) {
-> +			sd = media_entity_to_v4l2_subdev(entity);
-> +			ved = v4l2_get_subdevdata(sd);
-> +		} else {
-> +			vdev = container_of(entity, struct video_device, entity);
-> +			ved = video_get_drvdata(vdev);
-> +		}
-> +		stream->ved_pipeline[stream->pipe_size++] = ved;
-> +		entity = media_graph_walk_next(&graph);
-> +
-> +		if (!strcmp(entity->name, stream->ved_pipeline[0]->ent->name)) {
-
-I also don't understand this condition
-
-> +			media_graph_walk_cleanup(&graph);
-> +			return 0;
-> +		}
->   	}
-
-It is not clear what this function does, it looks like it adds to 'ved_pipeline'
-all entities that are connected to the video node, in addition to the entities
-that where there from previous calls, so some entities appear several times.
-
-I think there is no need to use the graph walk here but to access the source entity
-in each iteration, the way done in vimc_streamer_stream_start
-also.
-I think the code should iterate here until it reaches an entity that is already streaming,
-this means that the entity is already in the `ved_pipeline`, also you should make sure
-that the sensor is the first entity that process a frame, therefore the sensor should be
-at the end/start of the list of entities. Generally each entity should appear exactly once
-in the 'ved_pipeline' array and the entities should be ordered such that when calling 'process_frame'
-on one entity should be after calling 'process_frame' on its source entity.
-maybe it is easyer to implement if 'ved_pipeline' is a linked list.
-
-Thanks,
-Dafna
-
->   
->   	vimc_streamer_pipeline_terminate(stream);
-> @@ -138,8 +202,11 @@ static int vimc_streamer_thread(void *data)
->   
->   		for (i = stream->pipe_size - 1; i >= 0; i--) {
->   			ved = stream->ved_pipeline[i];
-> -			ret = ved->process_frame(ved);
->   
-> +			if (atomic_read(&ved->use_count) == 0)
-> +				continue;
-> +
-> +			ret = ved->process_frame(ved);
->   			if (ret)
->   				break;
->   		}
-> @@ -179,6 +246,10 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
->   		if (stream->kthread)
->   			return 0;
->   
-> +		ret = vimc_streamer_stream_start(stream, ved);
-> +		if (ret)
-> +			return ret;
-> +
->   		ret = vimc_streamer_pipeline_init(stream, ved);
->   		if (ret)
->   			return ret;
-> 
