@@ -2,108 +2,124 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1E5C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F838C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3EF2076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D372078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:26:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JqXFZxUa"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZXTvN+Ad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgHUAYg (ORCPT
+        id S1726938AbgHUA0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 20:24:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54410 "EHLO
+        Thu, 20 Aug 2020 20:26:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgHUAYf (ORCPT
+        with ESMTP id S1725834AbgHUAZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 20:24:35 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747A9C061386
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:24:35 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id r7so7798vsq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:24:35 -0700 (PDT)
+        Thu, 20 Aug 2020 20:25:59 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A9AC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:25:58 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id x6so29286qvr.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BoAPkEBYmaAIeDj9u6a/t+uZROJQ/iwEEZfJhamo64s=;
-        b=JqXFZxUaR/8edlUJGUO52Awch269UfrFWNvGMK93mUQOAETx/sKo1/K+IKzZlbPPtD
-         FC/yyhxo6uamcC86ikY+GhWAxl94o5iyrh5gjd+wyoJ1XvkEU6IC31LGvsGdpHUoOwyk
-         AtSEo/NfokfaIWnbailAuvhfcA62QkSvHEBw0=
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1Jw+Cdk9MfRlVtpErJSkzPdykdAR8J99YeYAL5fDmXY=;
+        b=ZXTvN+AdD/Xc4+E53azq1Z+Sin9ZwOE25dkjzCOI4ySw4IoDIc2MR9kKuv0YEkm/Cl
+         Qr+JOpUj3soPeeqsofZLfxhLDXJS7mTznNEwV7bUP2MDuyFgGYwm99ubxd8QX/ZPciMh
+         dH4t1o8fvvuQA3N+Cikg6xbXuTmJIQgGwqGYleYbmvCBnLF0Hp+XsXtxZOSfh0uKdW6Q
+         sTBE57tNVR5lato0L5OI7Vc4DuGYSuC7/+2nipEV5Sp0B+ACQPWYMWQMRORmkqtKuKjn
+         IRAXcu5FbxsEVUTOguRe7eecFIST/zlOpXogIUZn1RTNKtXHXIdmBJtNykHXeqww79a4
+         ltLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BoAPkEBYmaAIeDj9u6a/t+uZROJQ/iwEEZfJhamo64s=;
-        b=IvouclHOCx0OQovpzToY3yHQf+UbMSajgnzUzGzqIQwXB/Gbu5Hj/5M0OVeOVpzbe0
-         5AHxOJcVW71yzpsSp0jef3Sd/ZS6SUeo6LLgd3BGsfvPCoruJn1mc4DnOaTzIyk7Rzmi
-         RMuNRQXuJLYrLCLbHvTFL5DayE9xaeZ9HeF+AaVkZMU6x0ktB0jmbTNQOApmvglDhAgT
-         MDG/kDaMlNb1XKuDQqKmsF34iBG3n2Tdxaq3QNyxCBn48bHLPWj2IbUQRHM3UMbBcrYy
-         ZHwLMqMpOkKG/mSW9RSYD10oZ3yZIH0St/RsUSpafJ5aJXjjtMZvK6Xh22FzfBCx/39g
-         qB4A==
-X-Gm-Message-State: AOAM530veBELqYLonQLP/NNpyZvvrNL2COowwVVR3Pk4ZuIBxn43yYCS
-        INaZxIgzelBedEMVo/9IddVtuBgkQCVchAqtLfCJLw==
-X-Google-Smtp-Source: ABdhPJx/yetjbX/WSG35PdaTz5v2waeZIWjLe8s9fIBDzpDbJM8KU73V2Tv8PSUGfRhPQCUybR6SXd+XY7xll5u83vw=
-X-Received: by 2002:a67:f787:: with SMTP id j7mr343336vso.79.1597969473610;
- Thu, 20 Aug 2020 17:24:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1Jw+Cdk9MfRlVtpErJSkzPdykdAR8J99YeYAL5fDmXY=;
+        b=hI9Ns1gZVL2WmAe1ISpSIT+eDadFfSoVx/8UBQC1m+210uFP2tvaWF2i0L53dG+1Rm
+         40K1JTiM7l+fR8TN5+RF8LgZPYzSslBntLiN9sjb16sJbax0ZtLgUZ5rcJSFiybQ1cD6
+         18jfXLPaOjEVZaRUPSRZajl0LuxQCFhMkSwnlUKyVk3faYL5xMlnHxA9vZt5n6TMticT
+         cXZRLQh/rkn/gW3ifsBXyHWAMdwfy6P7SIkHIIjriPMg1jgBj6/AgI9TTrZUpdXdM5Ev
+         FnH3PskV/MvaHKZzS+mSxfNyYqhBY2YopuimP/0GPE2fXwvYZ1r6ihq7PbKpsgp7xzdL
+         /TCg==
+X-Gm-Message-State: AOAM531pdaTeRWre2g67n4oW3ff85eTSNtVK/DQrAoMS3AwMJhMRKHxM
+        WBBmFyCTP3UyS6niomeRXqZkMkXk01kRMg==
+X-Google-Smtp-Source: ABdhPJx/06R+afR/wZQarlnuBNgbGhN7UPE92LHqX/7DKMOiyMcAyKb3rUIeF2vivT+tEX4n73npgg==
+X-Received: by 2002:ad4:5349:: with SMTP id v9mr316429qvs.160.1597969558110;
+        Thu, 20 Aug 2020 17:25:58 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id w18sm309816qtk.1.2020.08.20.17.25.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 17:25:57 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 20:25:55 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     akpm@linux-foundation.org, catalin.marinas@arm.com,
+        oleg@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH] mm/kmemleak: rely on rcu for task stack scanning
+Message-ID: <20200821002554.GB4622@lca.pw>
+References: <20200820203902.11308-1-dave@stgolabs.net>
 MIME-Version: 1.0
-References: <20200819125832.v2.1.Ie8f0689ec9f449203328b37409d1cf06b565f331@changeid>
-In-Reply-To: <20200819125832.v2.1.Ie8f0689ec9f449203328b37409d1cf06b565f331@changeid>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 21 Aug 2020 08:24:22 +0800
-Message-ID: <CANMq1KC3BC4bbh9YF1r3nfOAJgQp4mVZJ11_77cwFJY9fGK-Dg@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: sdhci-acpi: Fix HS400 tuning for AMDI0040
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     adrian.hunter@intel.com, Akshu.Agrawal@amd.com, chris.wang@amd.com,
-        Nehal-bakulchandra.Shah@amd.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820203902.11308-1-dave@stgolabs.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 3:00 AM Raul E Rangel <rrangel@chromium.org> wrote:
->
-> The AMD eMMC Controller can only use the tuned clock while in HS200 and
-> HS400 mode. If we switch to a different mode, we need to disable the
-> tuned clock. If we have previously performed tuning and switch back to
-> HS200 or HS400, we can re-enable the tuned clock.
->
-> Previously the tuned clock was not getting disabled when switching to
-> DDR52 which is part of the HS400 tuning sequence.
->
-> Fixes: 34597a3f60b1 ("mmc: sdhci-acpi: Add support for ACPI HID of AMD Controller with HS400")
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+On Thu, Aug 20, 2020 at 01:39:02PM -0700, Davidlohr Bueso wrote:
+> kmemleak_scan() currently relies on the big tasklist_lock
+> hammer to stabilize iterating through the tasklist. Instead,
+> this patch proposes simply using rcu along with the rcu-safe
+> for_each_process_thread flavor (without changing scan semantics),
+> which doesn't make use of next_thread/p->thread_group and thus
+> cannot race with exit. Furthermore, any races with fork()
+> and not seeing the new child should be benign as it's not
+> running yet and can also be detected by the next scan.
+
+It is not entirely clear to me what problem the patch is trying to solve. If
+this is about performance, we will probably need some number.
+
+> 
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 > ---
->
-> Changes in v2:
-> - Added static to amd_sdhci_execute_tuning
->
->  drivers/mmc/host/sdhci-acpi.c | 68 +++++++++++++++++++++++++++++------
->  1 file changed, 58 insertions(+), 10 deletions(-)
-[snip]
-> +               /* DLL is only required for HS400 */
-> +               if (host->timing == MMC_TIMING_MMC_HS400 &&
-> +                   !amd_host->dll_enabled) {
-> +                       trace_printk("%s: Enabling DLL\n", __func__);
-
-Please do not use trace_printk in production code [1,2], it is only
-meant for debug use. Consider using dev_dbg.
-
-[1] https://elixir.bootlin.com/linux/v5.8/source/kernel/trace/trace.c#L3158
-[2] https://elixir.bootlin.com/linux/v5.8/source/include/linux/kernel.h#L766
-
-> +                       sdhci_acpi_amd_hs400_dll(host);
-> +                       amd_host->dll_enabled = true;
-> +               }
->         }
+>  mm/kmemleak.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+> index 5e252d91eb14..c0014d3b91c1 100644
+> --- a/mm/kmemleak.c
+> +++ b/mm/kmemleak.c
+> @@ -1471,15 +1471,15 @@ static void kmemleak_scan(void)
+>  	if (kmemleak_stack_scan) {
+>  		struct task_struct *p, *g;
+>  
+> -		read_lock(&tasklist_lock);
+> -		do_each_thread(g, p) {
+> +		rcu_read_lock();
+> +		for_each_process_thread(g, p) {
+>  			void *stack = try_get_task_stack(p);
+>  			if (stack) {
+>  				scan_block(stack, stack + THREAD_SIZE, NULL);
+>  				put_task_stack(p);
+>  			}
+> -		} while_each_thread(g, p);
+> -		read_unlock(&tasklist_lock);
+> +		}
+> +		rcu_read_unlock();
+>  	}
+>  
+>  	/*
+> -- 
+> 2.26.2
