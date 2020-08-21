@@ -2,204 +2,129 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB511C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1FD7207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5F8B207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:11:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="STB2EhqU"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="ZaYfub8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgHUNJv (ORCPT
+        id S1728686AbgHUNLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:09:51 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54382 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726879AbgHUNJt (ORCPT
+        Fri, 21 Aug 2020 09:11:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727942AbgHUNK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:09:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598015387;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Od+bO6wwGHZOpfyUe8CiRlpyX1hZ1GD4+OWd3dAX8YA=;
-        b=STB2EhqUyy49UsAXTTFI1HiJZRY1NW+uJWaeMn2QGu+w9LW8TBYTfmPLLha1JUsqcWdRpB
-        +H9djbOQgOA8nAcvuI9yLake6AJAWqrUhaWVhCzQwmbazFlGaDYRDs/zKW+i2OACFFZZpp
-        dAeL/l+82+ndepKHZ0YMU9UrqPWBT5E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-mXq3zwf3MwmX4df6JT2Brg-1; Fri, 21 Aug 2020 09:09:44 -0400
-X-MC-Unique: mXq3zwf3MwmX4df6JT2Brg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E550B18BA282;
-        Fri, 21 Aug 2020 13:09:41 +0000 (UTC)
-Received: from [10.36.113.93] (ovpn-113-93.ams2.redhat.com [10.36.113.93])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D35877DC2;
-        Fri, 21 Aug 2020 13:09:31 +0000 (UTC)
-Subject: Re: [PATCH v6 08/15] iommu: Pass domain to sva_unbind_gpasid()
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>
-Cc:     baolu.lu@linux.intel.com, joro@8bytes.org, kevin.tian@intel.com,
-        jacob.jun.pan@linux.intel.com, ashok.raj@intel.com,
-        jun.j.tian@intel.com, yi.y.sun@intel.com, jean-philippe@linaro.org,
-        peterx@redhat.com, hao.wu@intel.com, stefanha@gmail.com,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1595917664-33276-1-git-send-email-yi.l.liu@intel.com>
- <1595917664-33276-9-git-send-email-yi.l.liu@intel.com>
- <20200820150619.5dc1ec7a@x1.home>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <7db3f15c-09e3-6a52-352a-c9a499895922@redhat.com>
-Date:   Fri, 21 Aug 2020 15:09:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 21 Aug 2020 09:10:59 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7D83C061386
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:10:58 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id md23so1429904ejb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:10:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0OZLx+a/nSQcE7lQdpLIV/137NKEYeYc+vVq6Ax+/Us=;
+        b=ZaYfub8fe77pPgsvZfW8Zc4FcYt8oZN0UCtpyAacgVXaWup8KKTmQKUad7W88SvSxH
+         xpE9Tq+lW84yYf+VUBfXZBxR/AeVok4P0MxBhl9fNbruLFI8K7lTt+w8Yjsd1DT34IJk
+         Wz2wZedQHFfr8jIftz/ZcPBofnKK52Rxd/S8im3bg/wKNYkGpDf388CinN3RERYFWeRF
+         ndY3/nMIM5t0ZIsJxHbl+oX4LOYkKwbcsKXtL6UloDv2VctqK2cmD/zGklZip3mmcWHB
+         PWAmdAS4ZRtRNy9jp49obXFGotMBF5ogailGh0clq9PaAFfcRkgZb3noyt6AM0TDci3X
+         YPnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0OZLx+a/nSQcE7lQdpLIV/137NKEYeYc+vVq6Ax+/Us=;
+        b=tR3c660hmi3KjCfHYBoul/e90deY5uWsCGZ6Nj5KghEv9jpU92wmSlQGrGlMghJq1U
+         EazKS190jgaUT6yExaVjhIst/w/rAiL8ehJf1p2RGZlb1bD9dBPnAKzI8A2y+LkF8Xop
+         q3QeuqbC0ZUD0UCMv2S9y0EGfq0SLD3JETQJftwwetacnjwvhD77tNnxg5RcQYzwmGEA
+         Q1xL7F2LS1iPGT2/HEwp6zvu0uVOv8uEKhBU1pFDMZn41KG7BAMyszxmlCvRqwgaWgnM
+         BWDXZSm80E13EDVYFEPffe8BKz/sqPmjkYuy48rmqAuSlpw6t+CwiBP+TerkgxB2W4dv
+         sWtg==
+X-Gm-Message-State: AOAM532saaag4juOsYkdNBXAz6JL1MoOhYrNaJB573CxfKrwWuqjE+Ws
+        MpIt7zbekQWXEk/CfkK0os4L+SZhdw7ALRcA/VKV
+X-Google-Smtp-Source: ABdhPJyQWB2b57FXvUUgdmXqQCQjy9gLRIDgIlPOlRK6o42KWg3AaomHrHBOWrFgNtNSLh3FIhetrDVcJWXpSnu9pto=
+X-Received: by 2002:a17:906:43c9:: with SMTP id j9mr2755928ejn.542.1598015457398;
+ Fri, 21 Aug 2020 06:10:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200820150619.5dc1ec7a@x1.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200817170729.2605279-1-tweek@google.com> <20200817170729.2605279-4-tweek@google.com>
+ <d8b1d7a2-2b8e-c714-77b6-d4e7f3fedf08@gmail.com> <6730ec4a-d11b-5c05-b64f-380104a86dab@sony.com>
+ <CAEjxPJ7k648nQxCDzcHc0h1vEfNhAJShG5iKmD52nuO5s9phsQ@mail.gmail.com>
+ <CAHC9VhSYJUAacvzp1hR4RMChTctJ2sFb5+oy_wbsigaWMGTYHg@mail.gmail.com> <CAEjxPJ73t1p9K_FbDKOTRPZn-bz8p7KVOB48UzfzELsMhx5MPw@mail.gmail.com>
+In-Reply-To: <CAEjxPJ73t1p9K_FbDKOTRPZn-bz8p7KVOB48UzfzELsMhx5MPw@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 21 Aug 2020 09:10:45 -0400
+Message-ID: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] selinux: add permission names to trace event
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     peter enderborg <peter.enderborg@sony.com>,
+        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Aug 21, 2020 at 8:15 AM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+>
+> On Thu, Aug 20, 2020 at 10:22 PM Paul Moore <paul@paul-moore.com> wrote:
+> >
+> > On Tue, Aug 18, 2020 at 8:14 AM Stephen Smalley
+> > <stephen.smalley.work@gmail.com> wrote:
+> > > On Tue, Aug 18, 2020 at 4:11 AM peter enderborg <peter.enderborg@sony.com> wrote:
+> >
+> > ...
+> >
+> > > > Is there any other things we need to fix? A part 1&2 now OK?
+> > >
+> > > They looked ok to me, but Paul should review them.
+> >
+> > Patches 1 and 2 look fine to me with the small nits that Stephen
+> > pointed out corrected.  I'm glad to see the information in string form
+> > now, I think that will be a big help for people making use of this.
+> >
+> > Unfortunately, I'm a little concerned about patch 3 for the reason
+> > Stephen already mentioned.  While changes to the class mapping are
+> > infrequent, they do happen, and I'm not very excited about adding it
+> > to the userspace kAPI via a header.  Considering that the tracing
+> > tools are going to be running on the same system that is being
+> > inspected, perhaps the tracing tools could inspect
+> > /sys/fs/selinux/class at runtime to query the permission mappings?
+> > Stephen, is there a libselinux API which does this already?
+>
+> There is a libselinux API but both it and the /sys/fs/selinux/class
+> tree is exposing the policy values for classes/permissions, not the
+> kernel-private indices.  The dynamic class/perm mapping support
+> introduced a layer of indirection between them.  The tracepoint is in
+> the avc and therefore dealing with the kernel-private values, not the
+> policy values.  The mapping occurs on entry/exit of the security
+> server functions. So there is no way for userspace to read the kernel
+> class/perm values.  We'd just need to keep them in sync manually.  And
+> one is allowed to insert new classes or permissions before existing
+> ones, thereby changing the values of existing ones, or even to remove
+> them.
 
-On 8/20/20 11:06 PM, Alex Williamson wrote:
-> On Mon, 27 Jul 2020 23:27:37 -0700
-> Liu Yi L <yi.l.liu@intel.com> wrote:
-> 
->> From: Yi Sun <yi.y.sun@intel.com>
->>
->> Current interface is good enough for SVA virtualization on an assigned
->> physical PCI device, but when it comes to mediated devices, a physical
->> device may attached with multiple aux-domains. Also, for guest unbind,
-> 
-> s/may/may be/
-> 
->> the PASID to be unbind should be allocated to the VM. This check requires
->> to know the ioasid_set which is associated with the domain.
->>
->> So this interface needs to pass in domain info. Then the iommu driver is
->> able to know which domain will be used for the 2nd stage translation of
->> the nesting mode and also be able to do PASID ownership check. This patch
->> passes @domain per the above reason. Also, the prototype of &pasid is
->> changed frnt" to "u32" as the below link.
-> 
-> s/frnt"/from an "int"/
->  
->> https://lore.kernel.org/kvm/27ac7880-bdd3-2891-139e-b4a7cd18420b@redhat.com/
-> 
-> This is really confusing, the link is to Eric's comment asking that the
-> conversion from (at the time) int to ioasid_t be included in the commit
-> log.  The text here implies that it's pointing to some sort of
-> justification for the change, which it isn't.  It just notes that it
-> happened, not why it happened, with a mostly irrelevant link.
-> 
->> Cc: Kevin Tian <kevin.tian@intel.com>
->> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Cc: Alex Williamson <alex.williamson@redhat.com>
->> Cc: Eric Auger <eric.auger@redhat.com>
->> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
->> Cc: Joerg Roedel <joro@8bytes.org>
->> Cc: Lu Baolu <baolu.lu@linux.intel.com>
->> Reviewed-by: Eric Auger <eric.auger@redhat.com>
->> Signed-off-by: Yi Sun <yi.y.sun@intel.com>
->> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
->> ---
->> v5 -> v6:
->> *) use "u32" prototype for @pasid.
->> *) add review-by from Eric Auger.
-> 
-> I'd probably hold off on adding Eric's R-b given the additional change
-> in this version FWIW.  Thanks,
+Ah, okay, thanks.  Can you tell I've never really had to look very
+closely at that code ;)
 
-Yep I did not notice that change given the R-b was applied ;-)
-
-Thanks
-
-Eric
-> 
-> Alex
->  
->> v2 -> v3:
->> *) pass in domain info only
->> *) use u32 for pasid instead of int type
->>
->> v1 -> v2:
->> *) added in v2.
->> ---
->>  drivers/iommu/intel/svm.c   | 3 ++-
->>  drivers/iommu/iommu.c       | 2 +-
->>  include/linux/intel-iommu.h | 3 ++-
->>  include/linux/iommu.h       | 3 ++-
->>  4 files changed, 7 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
->> index c27d16a..c85b8d5 100644
->> --- a/drivers/iommu/intel/svm.c
->> +++ b/drivers/iommu/intel/svm.c
->> @@ -436,7 +436,8 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
->>  	return ret;
->>  }
->>  
->> -int intel_svm_unbind_gpasid(struct device *dev, int pasid)
->> +int intel_svm_unbind_gpasid(struct iommu_domain *domain,
->> +			    struct device *dev, u32 pasid)
->>  {
->>  	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
->>  	struct intel_svm_dev *sdev;
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 1ce2a61..bee79d7 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -2145,7 +2145,7 @@ int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
->>  	if (unlikely(!domain->ops->sva_unbind_gpasid))
->>  		return -ENODEV;
->>  
->> -	return domain->ops->sva_unbind_gpasid(dev, data->hpasid);
->> +	return domain->ops->sva_unbind_gpasid(domain, dev, data->hpasid);
->>  }
->>  EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
->>  
->> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
->> index 0d0ab32..f98146b 100644
->> --- a/include/linux/intel-iommu.h
->> +++ b/include/linux/intel-iommu.h
->> @@ -738,7 +738,8 @@ extern int intel_svm_enable_prq(struct intel_iommu *iommu);
->>  extern int intel_svm_finish_prq(struct intel_iommu *iommu);
->>  int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
->>  			  struct iommu_gpasid_bind_data *data);
->> -int intel_svm_unbind_gpasid(struct device *dev, int pasid);
->> +int intel_svm_unbind_gpasid(struct iommu_domain *domain,
->> +			    struct device *dev, u32 pasid);
->>  struct iommu_sva *intel_svm_bind(struct device *dev, struct mm_struct *mm,
->>  				 void *drvdata);
->>  void intel_svm_unbind(struct iommu_sva *handle);
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index b1ff702..80467fc 100644
->> --- a/include/linux/iommu.h
->> +++ b/include/linux/iommu.h
->> @@ -303,7 +303,8 @@ struct iommu_ops {
->>  	int (*sva_bind_gpasid)(struct iommu_domain *domain,
->>  			struct device *dev, struct iommu_gpasid_bind_data *data);
->>  
->> -	int (*sva_unbind_gpasid)(struct device *dev, int pasid);
->> +	int (*sva_unbind_gpasid)(struct iommu_domain *domain,
->> +				 struct device *dev, u32 pasid);
->>  
->>  	int (*def_domain_type)(struct device *dev);
->>  
-> 
-
+-- 
+paul moore
+www.paul-moore.com
