@@ -2,133 +2,201 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03FA1207CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C14207CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:13:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="ULomP/h5"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HSJhnAMO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgHUVKG (ORCPT
+        id S1726588AbgHUVNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbgHUVKB (ORCPT
+        Fri, 21 Aug 2020 17:13:07 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33348 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgHUVNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:10:01 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D89B8C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:10:00 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id o18so4032020eje.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1GxeclShnz9s6YooeI4FTefDOr5GR0mdhr3H0v41iq8=;
-        b=ULomP/h5zFTlK6svQoBHF/IY5NXh3ZFjFpYZi4r/DmgHSy9n0NMnL40xhDiTVrBqCA
-         qWq+MSCwrWNKuOjgEsiabvf3Gkq5kKn/GU9zOfjHzFhZRu7wcZJr3CbM7mf1CYr9PWtI
-         Hxybv7hJSJA7mQjOs6K3g0XUi4tYBRPGRhB2BHqpM3IE9Pa2qvTqstR8uBgqbWWhe6HP
-         ZbHTHYsvq81ikZ1MGtAcM1fJqcNGeX8z+oxNg5xrrOkXFatp9LK6qEV8ObrLMZiKGmFQ
-         4viLkDIN5bTT7Urlk7RA8BbHEH2aAOVvSt8ECoaghv+LdOF8rM2Sb2MwctjeQHrJUCTv
-         3WhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1GxeclShnz9s6YooeI4FTefDOr5GR0mdhr3H0v41iq8=;
-        b=AOhgiDmf4O50JvZa6TZ5coBJfUASH3LqCE94Uht+pIiB0CRegFZvXyGf7iubiKjLhQ
-         1/Qp6yC9+ASsqSa4tlleV/MjMi3GENTpY/8Bt4SfAI5uyWERj25FOwptD+0gyk4fXZ1z
-         fCI/fE/X827F9pFQrvgolDi+apQ3v2hjJ3JCP9OB4EUs0EzRGu04DuVBqW3SFuizfo6j
-         FWteGJxSBQeS891E0mOf5hdLy1ELkNZVovZX5/xtBKhwcQ9E4FR2xwI1+nRd2z+D7m4m
-         TJRt8WTg61KhrhXKSoSpaipfBZ/k+XrwJpFds+RhEL315xb/mDr76hftL8u4bnaOANwf
-         lOgQ==
-X-Gm-Message-State: AOAM531oKaLlKrkwq5Fh2kwRyNVgwUWwgTZn1PwaTT/344wOrb8v4tyY
-        6Jdunp+F9L99n7iQna195YhlsOBdflwHK/eWZlsF
-X-Google-Smtp-Source: ABdhPJyC10RptEQ9k5GLxJNC51Nlx7LkzAE/O9eV6nL87g4t/8Ya7DkqIpxF9e6v59lZiaYO0q6j+CRyXfS7fsR6qzg=
-X-Received: by 2002:a17:906:5205:: with SMTP id g5mr727520ejm.488.1598044199461;
- Fri, 21 Aug 2020 14:09:59 -0700 (PDT)
+        Fri, 21 Aug 2020 17:13:06 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07LL7N75053126;
+        Fri, 21 Aug 2020 21:12:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=PLoVUsTh268ZC/c6/jEXoez++/4ChE5ZLv+tte7j1qY=;
+ b=HSJhnAMOqTI6sUkwKLAmS/tpB8HRw030RwV/a/Txksuiz3W//Lw9SLmuRBNaWabrAMCV
+ Zj3tKbJeIjM0z1z6kEGe9TcmVc5fWOVLLS8kk0xDQg2tF8x5uJXHoOv0kiQ/C5ihKn7K
+ 7nYqrHLnC5puEEH/h/kjB1m6zrod4w17oMz4Z3Gm1s6WgVzaVh6ItBSyxUrTpGTbFI7W
+ Fdd5JmN56BthFBGijV8Vmc9t2W8xOPtLpHlvoGjiiiAMSQKo5S7To8ORjkAJpYdLuORp
+ sShjjanMi/PuDqHewRdUi0tTywp9JF/4gfPHittVnTpDDu31jCEa1KaOtsqvoMq9o5DH 4w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 3327gcbua3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 21 Aug 2020 21:12:35 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07LL9Kwe081284;
+        Fri, 21 Aug 2020 21:10:35 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 32xsn2yjyh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 21:10:35 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07LLAUMm004194;
+        Fri, 21 Aug 2020 21:10:30 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 21 Aug 2020 21:10:30 +0000
+Subject: Re: [PATCH v7 0/3] make dma_alloc_coherent NUMA-aware by per-NUMA CMA
+To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "ganapatrao.kulkarni@cavium.com" <ganapatrao.kulkarni@cavium.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        huangdaode <huangdaode@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>
+References: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
+ <e47f4bfd-3af7-f682-23a1-51800f992d35@oracle.com>
+ <0a1636c9a3cc4bafb64ef43bed19f2fe@hisilicon.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <55865fbf-d2a8-7f86-0f09-769bc904cb02@oracle.com>
+Date:   Fri, 21 Aug 2020 14:10:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200821140836.3707282-1-tweek@google.com> <20200821140836.3707282-3-tweek@google.com>
-In-Reply-To: <20200821140836.3707282-3-tweek@google.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 21 Aug 2020 17:09:48 -0400
-Message-ID: <CAHC9VhQz+iAvsRoq-Y8Up9W6tUSfnxNva06iK9pFC7wWCTfpUg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] selinux: add basic filtering for audit trace events
-To:     =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
-Cc:     Nick Kralevich <nnk@google.com>,
-        Peter Enderborg <peter.enderborg@sony.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0a1636c9a3cc4bafb64ef43bed19f2fe@hisilicon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9720 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008210195
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9720 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ impostorscore=0 mlxscore=0 phishscore=0 mlxlogscore=999 clxscore=1015
+ adultscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210195
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:09 AM Thi=C3=A9baud Weksteen <tweek@google.com> =
-wrote:
->
-> From: Peter Enderborg <peter.enderborg@sony.com>
->
-> This patch adds further attributes to the event. These attributes are
-> helpful to understand the context of the message and can be used
-> to filter the events.
->
-> There are three common items. Source context, target context and tclass.
-> There are also items from the outcome of operation performed.
->
-> An event is similar to:
->            <...>-1309  [002] ....  6346.691689: selinux_audited:
->        requested=3D0x4000000 denied=3D0x4000000 audited=3D0x4000000
->        result=3D-13
->        scontext=3Dsystem_u:system_r:cupsd_t:s0-s0:c0.c1023
->        tcontext=3Dsystem_u:object_r:bin_t:s0 tclass=3Dfile
->
-> With systems where many denials are occurring, it is useful to apply a
-> filter. The filtering is a set of logic that is inserted with
-> the filter file. Example:
->  echo "tclass=3D=3D\"file\" " > events/avc/selinux_audited/filter
->
-> This adds that we only get tclass=3Dfile.
->
-> The trace can also have extra properties. Adding the user stack
-> can be done with
->    echo 1 > options/userstacktrace
->
-> Now the output will be
->          runcon-1365  [003] ....  6960.955530: selinux_audited:
->      requested=3D0x4000000 denied=3D0x4000000 audited=3D0x4000000
->      result=3D-13
->      scontext=3Dsystem_u:system_r:cupsd_t:s0-s0:c0.c1023
->      tcontext=3Dsystem_u:object_r:bin_t:s0 tclass=3Dfile
->           runcon-1365  [003] ....  6960.955560: <user stack trace>
->  =3D>  <00007f325b4ce45b>
->  =3D>  <00005607093efa57>
->
-> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
-> Reviewed-by: Thi=C3=A9baud Weksteen <tweek@google.com>
-> ---
->  include/trace/events/avc.h | 36 ++++++++++++++++++++++++++----------
->  security/selinux/avc.c     | 28 +++++++++++++++-------------
->  2 files changed, 41 insertions(+), 23 deletions(-)
+On 8/21/20 1:47 PM, Song Bao Hua (Barry Song) wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Song Bao Hua (Barry Song)
+>> Sent: Saturday, August 22, 2020 7:27 AM
+>> To: 'Mike Kravetz' <mike.kravetz@oracle.com>; hch@lst.de;
+>> m.szyprowski@samsung.com; robin.murphy@arm.com; will@kernel.org;
+>> ganapatrao.kulkarni@cavium.com; catalin.marinas@arm.com;
+>> akpm@linux-foundation.org
+>> Cc: iommu@lists.linux-foundation.org; linux-arm-kernel@lists.infradead.org;
+>> linux-kernel@vger.kernel.org; Zengtao (B) <prime.zeng@hisilicon.com>;
+>> huangdaode <huangdaode@huawei.com>; Linuxarm <linuxarm@huawei.com>
+>> Subject: RE: [PATCH v7 0/3] make dma_alloc_coherent NUMA-aware by
+>> per-NUMA CMA
+>>
+>>
+>>
+>>> -----Original Message-----
+>>> From: Mike Kravetz [mailto:mike.kravetz@oracle.com]
+>>> Sent: Saturday, August 22, 2020 5:53 AM
+>>> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>; hch@lst.de;
+>>> m.szyprowski@samsung.com; robin.murphy@arm.com; will@kernel.org;
+>>> ganapatrao.kulkarni@cavium.com; catalin.marinas@arm.com;
+>>> akpm@linux-foundation.org
+>>> Cc: iommu@lists.linux-foundation.org; linux-arm-kernel@lists.infradead.org;
+>>> linux-kernel@vger.kernel.org; Zengtao (B) <prime.zeng@hisilicon.com>;
+>>> huangdaode <huangdaode@huawei.com>; Linuxarm
+>> <linuxarm@huawei.com>
+>>> Subject: Re: [PATCH v7 0/3] make dma_alloc_coherent NUMA-aware by
+>>> per-NUMA CMA
+>>>
+>>> Hi Barry,
+>>> Sorry for jumping in so late.
+>>>
+>>> On 8/21/20 4:33 AM, Barry Song wrote:
+>>>>
+>>>> with per-numa CMA, smmu will get memory from local numa node to save
+>>> command
+>>>> queues and page tables. that means dma_unmap latency will be shrunk
+>>> much.
+>>>
+>>> Since per-node CMA areas for hugetlb was introduced, I have been thinking
+>>> about the limited number of CMA areas.  In most configurations, I believe
+>>> it is limited to 7.  And, IIRC it is not something that can be changed at
+>>> runtime, you need to reconfig and rebuild to increase the number.  In
+>> contrast
+>>> some configs have NODES_SHIFT set to 10.  I wasn't too worried because of
+>>> the limited hugetlb use case.  However, this series is adding another user
+>>> of per-node CMA areas.
+>>>
+>>> With more users, should try to sync up number of CMA areas and number of
+>>> nodes?  Or, perhaps I am worrying about nothing?
+>>
+>> Hi Mike,
+>> The current limitation is 8. If the server has 4 nodes and we enable both
+>> pernuma
+>> CMA and hugetlb, the last node will fail to get one cma area as the default
+>> global cma area will take 1 of 8. So users need to change menuconfig.
+>> If the server has 8 nodes, we enable one of pernuma cma and hugetlb, one
+>> node
+>> will fail to get cma.
+>>
+>> We may set the default number of CMA areas as 8+MAX_NODES(if hugetlb
+>> enabled) +
+>> MAX_NODES(if pernuma cma enabled) if we don't expect users to change
+>> config, but
+>> right now hugetlb has not an option in Kconfig to enable or disable like
+>> pernuma cma
+>> has DMA_PERNUMA_CMA.
+> 
+> I would prefer we make some changes like:
+> 
+> config CMA_AREAS
+> 	int "Maximum count of the CMA areas"
+> 	depends on CMA
+> +	default 19 if NUMA
+> 	default 7
+> 	help
+> 	  CMA allows to create CMA areas for particular purpose, mainly,
+> 	  used as device private area. This parameter sets the maximum
+> 	  number of CMA area in the system.
+> 
+> -	  If unsure, leave the default value "7".
+> +	  If unsure, leave the default value "7" or "19" if NUMA is used.
+> 
+> 1+ CONFIG_CMA_AREAS should be quite enough for almost all servers in the markets.
+> 
+> If 2 numa nodes, and both hugetlb cma and pernuma cma is enabled, we need 2*2 + 1 = 5
+> If 4 numa nodes, and both hugetlb cma and pernuma cma is enabled, we need 2*4 + 1 = 9    -> default ARM64 config.
+> If 8 numa nodes, and both hugetlb cma and pernuma cma is enabled, we need 2*8 + 1 = 17
+> 
+> The default value is supporting the most common case and is not going to support those servers
+> with NODES_SHIFT=10, they can make their own config just like users need to increase CMA_AREAS
+> if they add many cma areas in device tree in a system even without NUMA.
+> 
+> How do you think, mike?
 
-... also merged into selinux/next, thanks everyone!
-
---=20
-paul moore
-www.paul-moore.com
+I'm OK with that.  I really did not want to sidetrach this series.  It is
+just something I thought about when looking at the hugetlb code.  My 'to do'
+list includes looking at a way to make the number of CMA areas dynamic.
+-- 
+Mike Kravetz
