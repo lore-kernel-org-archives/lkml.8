@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4529EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3802C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED9420656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D22920702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029642;
-	bh=EypvJmI80cOBcFHKPawHti9nNSIPxfesQkbtnpmuuts=;
+	s=default; t=1598029645;
+	bh=7Q6HM9Ptm0ehqNKFjOdCuDKFk4FU6X/LwGcfnqJLWIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NTYUEGvltnZXZD7FN2SL2eouUwy6v3BH2WZsthDyf6H/roEhvPYxOndj1fWp6y/Jj
-	 AoRKj+4IdL8Sa3bS4PvpwAHSBf+FfzCiKgIQT4MnIjHZ+1FrGTLNRvLCt75RLHm6Qb
-	 sssxDBCV8wfTzRjJ2mrdp8R/Dny8G5IjZ90TOxkE=
+	b=OCa8kbG1U8c3qXi4TOh2vlV31nbFHtQJjB+eaK6EmB0QS/nPMeR0OGfUQs1uKFyTk
+	 lwoBNDO//rkTRE2dCpOyFUXpyDCfJqLzKL+1xeaK9BiqiGDkT0yBhpiwHj/I1zAsYr
+	 LZ1+mgM9ls3BBP+VDNGYOv3IoMIlSwJcdqP/NWfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgHURHU (ORCPT
+        id S1726734AbgHURHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:07:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48780 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:07:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727950AbgHUQSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:18:06 -0400
+        id S1728223AbgHUQSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:18:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AB2C22CB3;
-        Fri, 21 Aug 2020 16:17:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8119422B4D;
+        Fri, 21 Aug 2020 16:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026677;
-        bh=EypvJmI80cOBcFHKPawHti9nNSIPxfesQkbtnpmuuts=;
+        s=default; t=1598026674;
+        bh=7Q6HM9Ptm0ehqNKFjOdCuDKFk4FU6X/LwGcfnqJLWIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l0qNu6cnbkAxcq5pb/AqkQQOnganDCkPqhnTjIOinaukzPxpvhgtiAcjK1r+zte4J
-         LwZ02Xv7wTgAY10Rxi7ZgNV7YAfrA4zP1rKN4tGKI1tu+WykGlFJFBrueXtdygBUpS
-         /hi+NHEJ0jllRk5dHjvkJK8czEkdmJbKigrME7Ho=
+        b=RBe/cBRm3izYzqojs9SVrvJvIzmyrJff5j0s7USewkCla4SLeQTQ3mPYOHKr/QDt/
+         1jg8KUWvg+Uxv0IFvZ3brOINNu2yHGBzUrPZ21+krnkfKblZTx+KC7atJ9+TgIctmY
+         8KMkHJvaeZPOlbqbCjZh6xlxR6dzefvsgQgHSTiQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 42/48] scsi: iscsi: Do not put host in iscsi_set_flashnode_param()
-Date:   Fri, 21 Aug 2020 12:16:58 -0400
-Message-Id: <20200821161704.348164-42-sashal@kernel.org>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 39/48] locking/lockdep: Fix overflow in presentation of average lock-time
+Date:   Fri, 21 Aug 2020 12:16:55 -0400
+Message-Id: <20200821161704.348164-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161704.348164-1-sashal@kernel.org>
 References: <20200821161704.348164-1-sashal@kernel.org>
@@ -61,35 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jing Xiangfeng <jingxiangfeng@huawei.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 68e12e5f61354eb42cfffbc20a693153fc39738e ]
+[ Upstream commit a7ef9b28aa8d72a1656fa6f0a01bbd1493886317 ]
 
-If scsi_host_lookup() fails we will jump to put_host which may cause a
-panic. Jump to exit_set_fnode instead.
+Though the number of lock-acquisitions is tracked as unsigned long, this
+is passed as the divisor to div_s64() which interprets it as a s32,
+giving nonsense values with more than 2 billion acquisitons. E.g.
 
-Link: https://lore.kernel.org/r/20200615081226.183068-1-jingxiangfeng@huawei.com
-Reviewed-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+  acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
+  -------------------------------------------------------------------------
+    2350439395           0.07         353.38   649647067.36          0.-32
+
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20200725185110.11588-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_iscsi.c | 2 +-
+ kernel/locking/lockdep_proc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index a5c78b38d3022..dbad926e8f87f 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -3174,7 +3174,7 @@ static int iscsi_set_flashnode_param(struct iscsi_transport *transport,
- 		pr_err("%s could not find host no %u\n",
- 		       __func__, ev->u.set_flashnode.host_no);
- 		err = -ENODEV;
--		goto put_host;
-+		goto exit_set_fnode;
- 	}
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 9bb6d2497b040..581f818181386 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -400,7 +400,7 @@ static void seq_lock_time(struct seq_file *m, struct lock_time *lt)
+ 	seq_time(m, lt->min);
+ 	seq_time(m, lt->max);
+ 	seq_time(m, lt->total);
+-	seq_time(m, lt->nr ? div_s64(lt->total, lt->nr) : 0);
++	seq_time(m, lt->nr ? div64_u64(lt->total, lt->nr) : 0);
+ }
  
- 	idx = ev->u.set_flashnode.flashnode_idx;
+ static void seq_stats(struct seq_file *m, struct lock_stat_data *data)
 -- 
 2.25.1
 
