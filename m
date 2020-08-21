@@ -2,132 +2,130 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC8BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC960C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53A222075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C1020748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgHUGtF (ORCPT
+        id S1727860AbgHUGvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:49:05 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10250 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726119AbgHUGtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 02:49:03 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3BAEB2361A4606B1535F;
-        Fri, 21 Aug 2020 14:48:58 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.253) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Fri, 21 Aug 2020
- 14:48:56 +0800
-Subject: Re: [PATCH 1/1] block: move the PAGE_SECTORS definition into
- <linux/blkdev.h>
-To:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        dm-devel <dm-devel@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-bcache <linux-bcache@vger.kernel.org>
-References: <20200821020345.3358-1-thunder.leizhen@huawei.com>
- <b4643e74-aad9-385f-01f2-f8e48ba4dbef@suse.de>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <ad100923-e479-faf0-f749-ac8e4cf87899@huawei.com>
-Date:   Fri, 21 Aug 2020 14:48:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 21 Aug 2020 02:51:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54880 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726119AbgHUGvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 02:51:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 36528B663;
+        Fri, 21 Aug 2020 06:51:35 +0000 (UTC)
+Date:   Fri, 21 Aug 2020 08:51:05 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LTP List <ltp@lists.linux.it>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, patches@kernelci.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [LTP] [PATCH 5.8 000/232] 5.8.3-rc1 review
+Message-ID: <20200821065105.GB11908@dell5510>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20200820091612.692383444@linuxfoundation.org>
+ <CA+G9fYtebf78TH-XpqArunHc1L6s9mHdLEbpY1EY9tSyDjp=sg@mail.gmail.com>
+ <20200820182516.GA49496@sol.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <b4643e74-aad9-385f-01f2-f8e48ba4dbef@suse.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.253]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200820182516.GA49496@sol.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
+
+> On Thu, Aug 20, 2020 at 08:57:57PM +0530, Naresh Kamboju wrote:
+> > On Thu, 20 Aug 2020 at 14:55, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+
+> > > This is the start of the stable review cycle for the 5.8.3 release.
+> > > There are 232 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+
+> > > Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
+> > > Anything received after that time might be too late.
+
+> > > The whole patch series can be found in one patch at:
+> > >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.3-rc1.gz
+> > > or in the git tree and branch at:
+> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
+> > > and the diffstat can be found below.
+
+> > > thanks,
+
+> > > greg k-h
+
+> > > Herbert Xu <herbert@gondor.apana.org.au>
+> > >     crypto: af_alg - Fix regression on empty requests
+
+> > Results from Linaro’s test farm.
+> > Regressions detected.
+
+> >   ltp-crypto-tests:
+> >     * af_alg02
+> >   ltp-cve-tests:
+> >     * cve-2017-17805
+
+> > af_alg02.c:52: BROK: Timed out while reading from request socket.
+> > We are running the LTP 20200515 tag released test suite.
+> >  https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/crypto/af_alg02.c
+
+> > Summary
+> > ------------------------------------------------------------------------
+
+> > kernel: 5.8.3-rc1
+> > git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+> > git branch: linux-5.8.y
+> > git commit: 201fff807310ce10485bcff294d47be95f3769eb
+> > git describe: v5.8.2-233-g201fff807310
+> > Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.8-oe/build/v5.8.2-233-g201fff807310
+
+> > Regressions (compared to build v5.8.2)
+> > ------------------------------------------------------------------------
+
+> > x15:
+> >   ltp-crypto-tests:
+> >     * af_alg02
+
+> >   ltp-cve-tests:
+> >     * cve-2017-17805
 
 
-On 8/21/2020 12:11 PM, Coly Li wrote:
-> On 2020/8/21 10:03, Zhen Lei wrote:
->> There are too many PAGE_SECTORS definitions, and all of them are the
->> same. It looks a bit of a mess. So why not move it into <linux/blkdev.h>,
->> to achieve a basic and unique definition.
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> 
-> 
-> A lazy question about page size > 4KB: currently in bcache code the
-> sector size is assumed to be 512 sectors, if kernel page > 4KB, it is
-> possible that PAGE_SECTORS in bcache will be a number > 8 ?
+> Looks like this test is still "broken" because it assumes behavior that isn't
+> clearly specified, as previously discussed at
+> https://lkml.kernel.org/r/20200702033221.GA19367@gondor.apana.org.au.
 
-Sorry, I don't fully understand your question. I known that the sector size
-can be 512 or 4K, and the PAGE_SIZE can be 4K or 64K. So even if sector size
-is 4K, isn't it greater than 8 for 64K pages?
+> I sent out LTP patches to fix it:
+> https://lkml.kernel.org/linux-crypto/20200820181918.404758-1-ebiggers@kernel.org/T/#u
 
-I'm not sure if the question you're asking is the one Matthew Wilcox has
-answered before:
-https://www.spinics.net/lists/raid/msg64345.html
+FYI fix for LTP merged.
 
-> 
-> Thanks.
-> 
-> Coly Li
-> 
-> 
->> ---
->>  drivers/block/brd.c           | 1 -
->>  drivers/block/null_blk_main.c | 1 -
->>  drivers/md/bcache/util.h      | 2 --
->>  include/linux/blkdev.h        | 5 +++--
->>  include/linux/device-mapper.h | 1 -
->>  5 files changed, 3 insertions(+), 7 deletions(-)
->>
-> 
-> [snipped]
-> 
->> diff --git a/drivers/md/bcache/util.h b/drivers/md/bcache/util.h
->> index c029f7443190805..55196e0f37c32c6 100644
->> --- a/drivers/md/bcache/util.h
->> +++ b/drivers/md/bcache/util.h
->> @@ -15,8 +15,6 @@
->>  
->>  #include "closure.h"
->>  
->> -#define PAGE_SECTORS		(PAGE_SIZE / 512)
->> -
->>  struct closure;
->>  
->>  #ifdef CONFIG_BCACHE_DEBUG
->> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
->> index bb5636cc17b91a7..b068dfc5f2ef0ab 100644
->> --- a/include/linux/blkdev.h
->> +++ b/include/linux/blkdev.h
->> @@ -949,11 +949,12 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
->>   * multiple of 512 bytes. Hence these two constants.
->>   */
->>  #ifndef SECTOR_SHIFT
->> -#define SECTOR_SHIFT 9
->> +#define SECTOR_SHIFT		9
->>  #endif
->>  #ifndef SECTOR_SIZE
->> -#define SECTOR_SIZE (1 << SECTOR_SHIFT)
->> +#define SECTOR_SIZE		(1 << SECTOR_SHIFT)
->>  #endif
->> +#define PAGE_SECTORS		(PAGE_SIZE / SECTOR_SIZE)
->>  
->>  /*
->>   * blk_rq_pos()			: the current sector
-> [snipped]
-> 
-> 
+Kind regards,
+Petr
 
+> - Eric
