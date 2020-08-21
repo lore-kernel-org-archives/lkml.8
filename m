@@ -2,94 +2,105 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C31C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7CAE207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598026273;
-	bh=KoJWYj9R3egfhrmAUtzdmQ4aHcirpe1luSVDllQR65M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VhwshQfTfriQwVTYjVTmF5ynndeN0IuCWSLRqadTMWj6KJVU09L4SK2rs/9WD8B7Q
-	 qVpBcFGniDMZGknDjq2CTyB7jJRkPxIvX9QE+3zMvjTvm20zkqTlDwZBVF3y2o0+XC
-	 H05iChxFeIO4lYOojafALKj0lbNr6FJIT9WvSXNo=
+	by mail.kernel.org (Postfix) with ESMTP id C7BF92086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgHUQLL (ORCPT
+        id S1726718AbgHUQMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:11:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgHUQLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:11:07 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEF24207BB;
-        Fri, 21 Aug 2020 16:11:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026266;
-        bh=KoJWYj9R3egfhrmAUtzdmQ4aHcirpe1luSVDllQR65M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yrHjjTtz8bmAAarxqFRyCKp+eUzDy45aPAVgTpRquqvqFnM2Q3B/KMmajkF5M6yRP
-         JyG3hI6KbQmfq//EsQ6UFchVq138yTLtw8f6zx0ArEmlIXMNHfioz5ksl7E4tQk5La
-         UeC/R4IRIiGU3nWuuLWAUqlvju6DQl64nMKyW+is=
-Date:   Fri, 21 Aug 2020 17:11:01 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Rob Clark <robdclark@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>, kernel-team@android.com,
-        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: update QUALCOMM IOMMU after Arm SSMU
- drivers move
-Message-ID: <20200821161101.GF21517@willie-the-truck>
-References: <20200802065320.7470-1-lukas.bulwahn@gmail.com>
+        Fri, 21 Aug 2020 12:12:06 -0400
+Received: from 6.mo2.mail-out.ovh.net ([87.98.165.38]:43346 "EHLO
+        6.mo2.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgHUQMB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:12:01 -0400
+Received: from player755.ha.ovh.net (unknown [10.110.115.223])
+        by mo2.mail-out.ovh.net (Postfix) with ESMTP id DEFA21E379F
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 18:02:40 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player755.ha.ovh.net (Postfix) with ESMTPSA id 4F52A157ED5B3;
+        Fri, 21 Aug 2020 16:02:35 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-105G006368e313c-e325-44bd-9ae6-001aee886a17,
+                    20EB7F6BE0168D07063FB82D5C23839419BBC220) smtp.auth=steve@sk2.org
+From:   Stephen Kitt <steve@sk2.org>
+To:     Eric Tremblay <etremblay@distech-controls.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] hwmon: (tmp513) use simple i2c probe
+Date:   Fri, 21 Aug 2020 18:02:31 +0200
+Message-Id: <20200821160231.592571-1-steve@sk2.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200802065320.7470-1-lukas.bulwahn@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 17302829769863875927
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrudduvddgkeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeetgedugfelkeeikeetgeegteevfeeufeetuefgudeiiedthfehtdeffeekvdeffeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeehhedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 08:53:20AM +0200, Lukas Bulwahn wrote:
-> Commit e86d1aa8b60f ("iommu/arm-smmu: Move Arm SMMU drivers into their own
-> subdirectory") moved drivers/iommu/qcom_iommu.c to
-> drivers/iommu/arm/arm-smmu/qcom_iommu.c amongst other moves, adjusted some
-> sections in MAINTAINERS, but missed adjusting the QUALCOMM IOMMU section.
-> 
-> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
-> 
->   warning: no file matches    F:    drivers/iommu/qcom_iommu.c
-> 
-> Update the file entry in MAINTAINERS to the new location.
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Will, please ack.
+As part of the ongoing i2c transition to the simple probe
+("probe_new"), this patch uses i2c_match_id to retrieve the
+driver_data for the probed device. The id parameter is thus no longer
+necessary and the simple probe can be used instead.
 
-Typo in subject: s/SSMU/SMMU/
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ drivers/hwmon/tmp513.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-With that:
+diff --git a/drivers/hwmon/tmp513.c b/drivers/hwmon/tmp513.c
+index df66e0bc1253..9f5885b0eb74 100644
+--- a/drivers/hwmon/tmp513.c
++++ b/drivers/hwmon/tmp513.c
+@@ -709,8 +709,7 @@ static int tmp51x_configure(struct device *dev, struct tmp51x_data *data)
+ 	return 0;
+ }
+ 
+-static int tmp51x_probe(struct i2c_client *client,
+-			const struct i2c_device_id *id)
++static int tmp51x_probe(struct i2c_client *client)
+ {
+ 	struct device *dev = &client->dev;
+ 	struct tmp51x_data *data;
+@@ -724,7 +723,7 @@ static int tmp51x_probe(struct i2c_client *client,
+ 	if (client->dev.of_node)
+ 		data->id = (enum tmp51x_ids)device_get_match_data(&client->dev);
+ 	else
+-		data->id = id->driver_data;
++		data->id = i2c_match_id(tmp51x_id, client)->driver_data;
+ 
+ 	ret = tmp51x_configure(dev, data);
+ 	if (ret < 0) {
+@@ -751,7 +750,7 @@ static int tmp51x_probe(struct i2c_client *client,
+ 	if (IS_ERR(hwmon_dev))
+ 		return PTR_ERR(hwmon_dev);
+ 
+-	dev_dbg(dev, "power monitor %s\n", id->name);
++	dev_dbg(dev, "power monitor %s\n", client->name);
+ 
+ 	return 0;
+ }
+@@ -761,7 +760,7 @@ static struct i2c_driver tmp51x_driver = {
+ 		.name	= "tmp51x",
+ 		.of_match_table = of_match_ptr(tmp51x_of_match),
+ 	},
+-	.probe		= tmp51x_probe,
++	.probe_new	= tmp51x_probe,
+ 	.id_table	= tmp51x_id,
+ };
+ 
+-- 
+2.25.4
 
-Acked-by: Will Deacon <will@kernel.org>
-
-> Joerg, please pick this minor non-urgent patch for your -next branch.
-
-Joerg -- can you queue this as a fix for 5.9-rc, please?
-
-Thanks,
-
-Will
