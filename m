@@ -7,44 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BC3C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 020A42075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1732075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:19:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m+me1vmS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WP1lR6Ov"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EbrHK+nj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i1w6grv2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgHUCTm (ORCPT
+        id S1727817AbgHUCQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:19:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52658 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbgHUCQy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 22:16:54 -0400
-Message-Id: <20200821002946.407651941@linutronix.de>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbgHUCQm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 22:16:42 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDBA8C061385;
+        Thu, 20 Aug 2020 19:16:41 -0700 (PDT)
+Message-Id: <20200821002945.262049945@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597976211;
+        s=2020; t=1597976199;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=x5nZXo6cKpQJi+LJrLWJ/GvNtpRx+XtBaOkH00CFFRQ=;
-        b=m+me1vmSQTR1TmOCXfW5HE52gKUQy31X3q+NfoqsEUvoAD1nNrYfO2/d8+9qt9HpnLnc3L
-        9xlyZOu8x7aI7uyVJ45XK9Hue0PkEEp+s7lJJYzhMD9KgMmxE7IyJhl+qSTLZmVKkYCDPb
-        RhFksJJPpPyrfUmUphbCxjmTzowA+en0NCKES+VvvnPe6nUPq93qQ3YCSf6fddT/ePnc2F
-        bfzzUyyaxXlS04q1SifU8oUpFP9pP6+taFWL/M9jY4/PuAnPwCtklyY9sY1DtofZxJype8
-        fGaKGMNErKS2dVD2ukR9ccQR6tSqzmlWF+q4VPljglEyYlxhTriHDgadgfP9Cw==
+        bh=SAePHnv9QIZIElaA8Hv0f8fY0Re6tn3I6Urg3/UB+AE=;
+        b=EbrHK+njZmE28dA4Hrd+kGB8kjnOw8PMN7kGhdHo4H/XTVddC1Oq8PxubaVZD7kI/o4w4L
+        dTtMHjSHI6refIvP4RlqsaMiTyu2R7xsBb6s5doyy7bCq3XOOsh4gJ2r6ELs0x7CDd5Jd5
+        sgpDcDKbuI4Y6UPLkcW5QfXGpNPICqbKsFmBrc13WkHcQw5bL9HUDYTZ+RkVF771BbUXJ1
+        UbB5uO+LOTTZZcfGr1aBUaqpPhcR+Df2fPxXy6FCbTp2w52Zv0c9mLRTlmuieUQreMG5h/
+        wMXEBxiAdTspWuBv51dptpaDxmxbXBbZFrDpiWnri+rKQ0zwCZyyH8X3KS2Nfg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597976211;
+        s=2020e; t=1597976199;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=x5nZXo6cKpQJi+LJrLWJ/GvNtpRx+XtBaOkH00CFFRQ=;
-        b=WP1lR6Ov5eRh39c1bvFbHSX/vrQgh9I3UIKrJ9Fs7pMY2siTXoDYmm3f3wdQVW7v3+oYTa
-        Jz4R7LHGQT+o3TBw==
-Date:   Fri, 21 Aug 2020 02:24:35 +0200
+        bh=SAePHnv9QIZIElaA8Hv0f8fY0Re6tn3I6Urg3/UB+AE=;
+        b=i1w6grv2586y+n4GxwRriZSHHsUqFlzyyiQJ55JZdxUfm48yrSi745Ev04/K+pHwsCTBN+
+        RnicLQnPA4t76MCA==
+Date:   Fri, 21 Aug 2020 02:24:25 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -76,71 +79,38 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [patch RFC 11/38] x86/irq: Consolidate DMAR irq allocation
+Subject: [patch RFC 01/38] iommu/amd: Prevent NULL pointer dereference
 References: <20200821002424.119492231@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline;
- filename="x86-irq--Consolidate-DMAR-irq-allocation.patch"
+ filename="iommu-amd--Prevent-NULL-pointer-dereference.patch"
 Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-None of the DMAR specific fields are required.
+Dereferencing irq_data before checking it for NULL is suboptimal.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux-foundation.org
 ---
- arch/x86/include/asm/hw_irq.h |    6 ------
- arch/x86/kernel/apic/msi.c    |   10 +++++-----
- 2 files changed, 5 insertions(+), 11 deletions(-)
+ drivers/iommu/amd/iommu.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/include/asm/hw_irq.h
-+++ b/arch/x86/include/asm/hw_irq.h
-@@ -83,12 +83,6 @@ struct irq_alloc_info {
- 			irq_hw_number_t	msi_hwirq;
- 		};
- #endif
--#ifdef	CONFIG_DMAR_TABLE
--		struct {
--			int		dmar_id;
--			void		*dmar_data;
--		};
--#endif
- #ifdef	CONFIG_X86_UV
- 		struct {
- 			int		uv_limit;
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -329,15 +329,15 @@ static struct irq_chip dmar_msi_controll
- static irq_hw_number_t dmar_msi_get_hwirq(struct msi_domain_info *info,
- 					  msi_alloc_info_t *arg)
- {
--	return arg->dmar_id;
-+	return arg->hwirq;
- }
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -3717,8 +3717,8 @@ static int irq_remapping_alloc(struct ir
  
- static int dmar_msi_init(struct irq_domain *domain,
- 			 struct msi_domain_info *info, unsigned int virq,
- 			 irq_hw_number_t hwirq, msi_alloc_info_t *arg)
- {
--	irq_domain_set_info(domain, virq, arg->dmar_id, info->chip, NULL,
--			    handle_edge_irq, arg->dmar_data, "edge");
-+	irq_domain_set_info(domain, virq, arg->devid, info->chip, NULL,
-+			    handle_edge_irq, arg->data, "edge");
- 
- 	return 0;
- }
-@@ -384,8 +384,8 @@ int dmar_alloc_hwirq(int id, int node, v
- 
- 	init_irq_alloc_info(&info, NULL);
- 	info.type = X86_IRQ_ALLOC_TYPE_DMAR;
--	info.dmar_id = id;
--	info.dmar_data = arg;
-+	info.devid = id;
-+	info.data = arg;
- 
- 	return irq_domain_alloc_irqs(domain, 1, node, &info);
- }
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		irq_data = irq_domain_get_irq_data(domain, virq + i);
+-		cfg = irqd_cfg(irq_data);
+-		if (!irq_data || !cfg) {
++		cfg = irq_data ? irqd_cfg(irq_data) : NULL;
++		if (!cfg) {
+ 			ret = -EINVAL;
+ 			goto out_free_data;
+ 		}
 
