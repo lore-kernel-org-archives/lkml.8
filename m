@@ -2,105 +2,95 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB17DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A507C20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A14CD20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgHUKyL (ORCPT
+        id S1728469AbgHUKyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:54:11 -0400
-Received: from mga03.intel.com ([134.134.136.65]:31401 "EHLO mga03.intel.com"
+        Fri, 21 Aug 2020 06:54:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:57554 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728375AbgHUKyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727979AbgHUKyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 06:54:00 -0400
-IronPort-SDR: Ie/8+Tswi6Rkljkvv5TD9WptbUI+Xf4DJv46I+JUvfQ2JOkzKOnT6EW470dnEiqvygfWl1y70/
- MZT276Ww3Ygw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="155494756"
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="155494756"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 03:53:44 -0700
-IronPort-SDR: j+94MbSUQj15whe7im+QKZO8y7kzyfjS56Yuc9gPfReD1SP7JjhGcSRoaiXzUNaaUJEqY6bjj8
- izfp95Pyzz1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="401438755"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Aug 2020 03:53:42 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH] device property: Fix the secondary firmware node handling in set_primary_fwnode()
-Date:   Fri, 21 Aug 2020 13:53:42 +0300
-Message-Id: <20200821105342.32368-1-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C45E1063;
+        Fri, 21 Aug 2020 03:53:51 -0700 (PDT)
+Received: from [192.168.1.190] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6B203F6CF;
+        Fri, 21 Aug 2020 03:53:50 -0700 (PDT)
+Subject: Re: [PATCH] ARM64: vdso32: Install vdso32 from vdso_install
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200818014950.42492-1-swboyd@chromium.org>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <9f2a9b2b-bcb6-a719-1861-83ea8617eea6@arm.com>
+Date:   Fri, 21 Aug 2020 11:56:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200818014950.42492-1-swboyd@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the primary firmware node pointer is removed from a
-device (set to NULL) the secondary firmware node pointer,
-when it exists, is made the primary node for the device.
-However, the secondary firmware node pointer of the original
-primary firmware node is never cleared (set to NULL).
+On 8/18/20 2:49 AM, Stephen Boyd wrote:
+> Add the 32-bit vdso Makefile to the vdso_install rule so that 'make
+> vdso_install' installs the 32-bit compat vdso when it is compiled.
+> 
+> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Fixes: a7f71a2c8903 ("arm64: compat: Add vDSO")
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  arch/arm64/Makefile               | 1 +
+>  arch/arm64/kernel/vdso32/Makefile | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+>
 
-To avoid situation where the secondary firmware node pointer
-is pointing to a non-existing object, clearing it properly
-when the primary node is removed from a device in
-set_primary_fwnode().
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-Fixes: 97badf873ab6 ("device property: Make it possible to use secondary firmware nodes")
-Cc: stable@vger.kernel.org
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/base/core.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> index 55bc8546d9c7..b45f0124cc16 100644
+> --- a/arch/arm64/Makefile
+> +++ b/arch/arm64/Makefile
+> @@ -165,6 +165,7 @@ zinstall install:
+>  PHONY += vdso_install
+>  vdso_install:
+>  	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso $@
+> +	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso32 $@
+>  
+>  # We use MRPROPER_FILES and CLEAN_FILES now
+>  archclean:
+> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+> index 5139a5f19256..d6adb4677c25 100644
+> --- a/arch/arm64/kernel/vdso32/Makefile
+> +++ b/arch/arm64/kernel/vdso32/Makefile
+> @@ -208,7 +208,7 @@ quiet_cmd_vdsosym = VDSOSYM $@
+>        cmd_vdsosym = $(NM) $< | $(gen-vdsosym) | LC_ALL=C sort > $@
+>  
+>  # Install commands for the unstripped file
+> -quiet_cmd_vdso_install = INSTALL $@
+> +quiet_cmd_vdso_install = INSTALL32 $@
+>        cmd_vdso_install = cp $(obj)/$@.dbg $(MODLIB)/vdso/vdso32.so
+>  
+>  vdso.so: $(obj)/vdso.so.dbg
+> 
+> base-commit: 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
+> 
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index ac1046a382bc0..f6f620aa94086 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -4264,9 +4264,9 @@ static inline bool fwnode_is_primary(struct fwnode_handle *fwnode)
-  */
- void set_primary_fwnode(struct device *dev, struct fwnode_handle *fwnode)
- {
--	if (fwnode) {
--		struct fwnode_handle *fn = dev->fwnode;
-+	struct fwnode_handle *fn = dev->fwnode;
- 
-+	if (fwnode) {
- 		if (fwnode_is_primary(fn))
- 			fn = fn->secondary;
- 
-@@ -4276,8 +4276,12 @@ void set_primary_fwnode(struct device *dev, struct fwnode_handle *fwnode)
- 		}
- 		dev->fwnode = fwnode;
- 	} else {
--		dev->fwnode = fwnode_is_primary(dev->fwnode) ?
--			dev->fwnode->secondary : NULL;
-+		if (fwnode_is_primary(fn)) {
-+			dev->fwnode = fn->secondary;
-+			fn->secondary = NULL;
-+		} else {
-+			dev->fwnode = NULL;
-+		}
- 	}
- }
- EXPORT_SYMBOL_GPL(set_primary_fwnode);
 -- 
-2.28.0
-
+Regards,
+Vincenzo
