@@ -2,119 +2,274 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83213C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3064DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58FA420738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0898D20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="huthoZKn"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pGLkx5S4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgHUW0Y (ORCPT
+        id S1727062AbgHUW0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:26:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgHUW0U (ORCPT
+        Fri, 21 Aug 2020 18:26:54 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:40937 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbgHUW0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:26:20 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88372C061573;
-        Fri, 21 Aug 2020 15:26:20 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id v1so1343874qvn.3;
-        Fri, 21 Aug 2020 15:26:20 -0700 (PDT)
+        Fri, 21 Aug 2020 18:26:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HrOAERB4tSMoXoJY/dYcv8QwQPeglxKI3SzuuvU5xXQ=;
-        b=huthoZKn+508NeIu97asjfKk5ZibW6IM4BwjqcxZMPWYLra5ewPwdly+MfbsuG/QLg
-         /8J4bHe3FCdTAaWgN1f+9zAk2hBtUQabdrpxqcr+bYnbaIgE0KglsnLM1B2CI8hWEMjW
-         v2g9xTpt4HWouGnqaaBZmY2bLy+/A8KUyypw2yRLVXiI/Wi/0++zFTq6RCa+GvofiKbO
-         oMH3tm9ILfkWDpuQ/eQ5LcSjaEGlHCGkaouhR09i+xxwU9Kd7vGD+kobDG1rQxwx4o2x
-         OOk4mJ4QnSckrNzepGuU5gMtsCM1yGagTmh2AE3geFUXsq8bcKgBEn0HhgVmWs13eKsQ
-         QItQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HrOAERB4tSMoXoJY/dYcv8QwQPeglxKI3SzuuvU5xXQ=;
-        b=PvRn00jmt/bgbFI/uiyoFa1U38sKy7OCYjFkJOJFf/qJTVTRn5buTdbUZC/jTIhxbl
-         O2IXqRjCllRVbleSzvP4eXZTe3rmgiJoy2r8ljANc4pnPoeGI0GykreZqnjDwmUhQAwZ
-         /TWNTdGvWy3/zPK6A1vfUow2J5JiOTf9377F4rXM97oU6Wn91a/A65SYcVs+R8Ub+nPP
-         Ql+me5m937YywsnZbmmvVyQ0Imd+sPPZbKjmXNKYSFK8SPbbGfcgWvHE1OgWNj7E2HHD
-         E1WICCtq5/Evadko/1hEwPDm2Kue/Jny95/MV2skJN4HYNXnk7oUra2l6wiLYlOH1pIY
-         m/Dg==
-X-Gm-Message-State: AOAM5309VHXC3Ik2mAZrAFxLOuAhtT7fLXkn4EGobIitTDqCY+8ib6J0
-        ui+rQUjooe09CRW36S8hbVM=
-X-Google-Smtp-Source: ABdhPJxmS78uvNp2NIm9J15TU+btuZga7HRhSpq2d0fpIuKjBRp8+b8fUxWDJ8Zt2GeSAQtcjSy/UA==
-X-Received: by 2002:ad4:4ea7:: with SMTP id ed7mr4536770qvb.8.1598048779620;
-        Fri, 21 Aug 2020 15:26:19 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id t32sm3649927qtb.3.2020.08.21.15.26.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 15:26:18 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] net: dsa: sja1105: Do not use address of compatible member in sja1105_check_device_id
-Date:   Fri, 21 Aug 2020 15:25:16 -0700
-Message-Id: <20200821222515.414167-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.28.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1598048812; x=1629584812;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=o7rPqzskox0maCiw1iUDOffDHLYZ5i4ym3CYeXYHbeI=;
+  b=pGLkx5S43yNAOy/06g5uigeQwr2sxemJOhOS8wEfRygayYlkBkFbrCBZ
+   /eJWOPMu0+aTIRhx9XJrFRn7RXloJe2vHIJfSdW+GqhyYizAvL4P5oyms
+   9qUvbAqL2SKvdg5uXJTjhi8t7+TgJg08QIruWJlCpXmf/jfTM0lWxza60
+   U=;
+X-IronPort-AV: E=Sophos;i="5.76,338,1592870400"; 
+   d="scan'208";a="69982703"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-579b7f5b.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 21 Aug 2020 22:26:49 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-579b7f5b.us-west-2.amazon.com (Postfix) with ESMTPS id BDD27A2A7C;
+        Fri, 21 Aug 2020 22:26:47 +0000 (UTC)
+Received: from EX13D08UEB001.ant.amazon.com (10.43.60.245) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 21 Aug 2020 22:26:30 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
+ EX13D08UEB001.ant.amazon.com (10.43.60.245) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 21 Aug 2020 22:26:29 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Fri, 21 Aug 2020 22:26:30 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id CE42C40362; Fri, 21 Aug 2020 22:26:29 +0000 (UTC)
+Date:   Fri, 21 Aug 2020 22:26:29 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
+        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
+        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>
+Subject: [PATCH v3 02/11] xenbus: add freeze/thaw/restore callbacks support
+Message-ID: <2d3a7ed32bf38e13e0141a631a453b6e4c7ba5dc.1598042152.git.anchalag@amazon.com>
+References: <cover.1598042152.git.anchalag@amazon.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1598042152.git.anchalag@amazon.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+From: Munehisa Kamata <kamatam@amazon.com> 
 
-drivers/net/dsa/sja1105/sja1105_main.c:3418:38: warning: address of
-array 'match->compatible' will always evaluate to 'true'
-[-Wpointer-bool-conversion]
-        for (match = sja1105_dt_ids; match->compatible; match++) {
-        ~~~                          ~~~~~~~^~~~~~~~~~
-1 warning generated.
+Since commit b3e96c0c7562 ("xen: use freeze/restore/thaw PM events for
+suspend/resume/chkpt"), xenbus uses PMSG_FREEZE, PMSG_THAW and
+PMSG_RESTORE events for Xen suspend. However, they're actually assigned
+to xenbus_dev_suspend(), xenbus_dev_cancel() and xenbus_dev_resume()
+respectively, and only suspend and resume callbacks are supported at
+driver level. To support PM suspend and PM hibernation, modify the bus
+level PM callbacks to invoke not only device driver's suspend/resume but
+also freeze/thaw/restore.
 
-We should check the value of the first character in compatible to see if
-it is empty or not. This matches how the rest of the tree iterates over
-IDs.
+Note that we'll use freeze/restore callbacks even for PM suspend whereas
+suspend/resume callbacks are normally used in the case, becausae the
+existing xenbus device drivers already have suspend/resume callbacks
+specifically designed for Xen suspend. So we can allow the device
+drivers to keep the existing callbacks wihtout modification.
 
-Fixes: 0b0e299720bb ("net: dsa: sja1105: use detected device id instead of DT one on mismatch")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1139
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+[Anchal Agarwal: Changelog]:
+RFC v1->v2: Refactored the callbacks code
+    v1->v2: Use dev_warn instead of pr_warn, naming/initialization
+            conventions
+    v2->v3: Fixed is_xen_suspend naming convention
+Signed-off-by: Agarwal Anchal <anchalag@amazon.com>
+Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
 ---
- drivers/net/dsa/sja1105/sja1105_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/xen/xenbus/xenbus_probe.c | 96 +++++++++++++++++++++++++++++++++------
+ include/xen/xenbus.h              |  3 ++
+ 2 files changed, 84 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index c3f6f124e5f0..5a28dfb36ec3 100644
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -3415,7 +3415,7 @@ static int sja1105_check_device_id(struct sja1105_private *priv)
+diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
+index 38725d97d909..e8ad7879bcd3 100644
+--- a/drivers/xen/xenbus/xenbus_probe.c
++++ b/drivers/xen/xenbus/xenbus_probe.c
+@@ -50,6 +50,7 @@
+ #include <linux/io.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
++#include <linux/suspend.h>
  
- 	sja1105_unpack(prod_id, &part_no, 19, 4, SJA1105_SIZE_DEVICE_ID);
+ #include <asm/page.h>
+ #include <asm/xen/hypervisor.h>
+@@ -599,16 +600,33 @@ int xenbus_dev_suspend(struct device *dev)
+ 	struct xenbus_driver *drv;
+ 	struct xenbus_device *xdev
+ 		= container_of(dev, struct xenbus_device, dev);
++	bool xen_suspend = is_xen_suspend();
  
--	for (match = sja1105_dt_ids; match->compatible; match++) {
-+	for (match = sja1105_dt_ids; match->compatible[0]; match++) {
- 		const struct sja1105_info *info = match->data;
+ 	DPRINTK("%s", xdev->nodename);
  
- 		/* Is what's been probed in our match table at all? */
-
-base-commit: 4af7b32f84aa4cd60e39b355bc8a1eab6cd8d8a4
+ 	if (dev->driver == NULL)
+ 		return 0;
+ 	drv = to_xenbus_driver(dev->driver);
+-	if (drv->suspend)
+-		err = drv->suspend(xdev);
+-	if (err)
+-		dev_warn(dev, "suspend failed: %i\n", err);
++	if (xen_suspend) {
++		if (drv->suspend)
++			err = drv->suspend(xdev);
++	} else {
++		if (drv->freeze) {
++			err = drv->freeze(xdev);
++			if (!err) {
++				free_otherend_watch(xdev);
++				free_otherend_details(xdev);
++				return 0;
++			}
++		}
++	}
++
++	if (err) {
++		dev_warn(&xdev->dev, "%s %s failed: %d\n", xen_suspend ?
++				"suspend" : "freeze", xdev->nodename, err);
++		return err;
++	}
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(xenbus_dev_suspend);
+@@ -619,6 +637,7 @@ int xenbus_dev_resume(struct device *dev)
+ 	struct xenbus_driver *drv;
+ 	struct xenbus_device *xdev
+ 		= container_of(dev, struct xenbus_device, dev);
++	bool xen_suspend = is_xen_suspend();
+ 
+ 	DPRINTK("%s", xdev->nodename);
+ 
+@@ -627,23 +646,34 @@ int xenbus_dev_resume(struct device *dev)
+ 	drv = to_xenbus_driver(dev->driver);
+ 	err = talk_to_otherend(xdev);
+ 	if (err) {
+-		dev_warn(dev, "resume (talk_to_otherend) failed: %i\n", err);
++		dev_warn(&xdev->dev, "%s (talk_to_otherend) %s failed: %d\n",
++				xen_suspend ? "resume" : "restore",
++				xdev->nodename, err);
+ 		return err;
+ 	}
+ 
+-	xdev->state = XenbusStateInitialising;
++	if (xen_suspend) {
++		xdev->state = XenbusStateInitialising;
++		if (drv->resume)
++			err = drv->resume(xdev);
++	} else {
++		if (drv->restore)
++			err = drv->restore(xdev);
++	}
+ 
+-	if (drv->resume) {
+-		err = drv->resume(xdev);
+-		if (err) {
+-			dev_warn(dev, "resume failed: %i\n", err);
+-			return err;
+-		}
++	if (err) {
++		dev_warn(&xdev->dev, "%s %s failed: %d\n",
++				xen_suspend ? "resume" : "restore",
++				xdev->nodename, err);
++		return err;
+ 	}
+ 
+ 	err = watch_otherend(xdev);
+ 	if (err) {
+-		dev_warn(dev, "resume (watch_otherend) failed: %d\n", err);
++		dev_warn(&xdev->dev, "%s (watch_otherend) %s failed: %d.\n",
++				xen_suspend ? "resume" : "restore",
++				xdev->nodename, err);
++
+ 		return err;
+ 	}
+ 
+@@ -653,8 +683,44 @@ EXPORT_SYMBOL_GPL(xenbus_dev_resume);
+ 
+ int xenbus_dev_cancel(struct device *dev)
+ {
+-	/* Do nothing */
+-	DPRINTK("cancel");
++	int err;
++	struct xenbus_driver *drv;
++	struct xenbus_device *xendev = to_xenbus_device(dev);
++	bool xen_suspend = is_xen_suspend();
++
++	if (xen_suspend) {
++		/* Do nothing */
++		DPRINTK("cancel");
++		return 0;
++	}
++
++	DPRINTK("%s", xendev->nodename);
++
++	if (dev->driver == NULL)
++		return 0;
++	drv = to_xenbus_driver(dev->driver);
++	err = talk_to_otherend(xendev);
++	if (err) {
++		dev_warn(&xendev->dev, "thaw (talk_to_otherend) %s failed: %d.\n",
++			xendev->nodename, err);
++		return err;
++	}
++
++	if (drv->thaw) {
++		err = drv->thaw(xendev);
++		if (err) {
++			dev_warn(&xendev->dev, "thaw %s failed: %d\n", xendev->nodename, err);
++			return err;
++		}
++	}
++
++	err = watch_otherend(xendev);
++	if (err) {
++		dev_warn(&xendev->dev, "thaw (watch_otherend) %s failed: %d.\n",
++			xendev->nodename, err);
++		return err;
++	}
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(xenbus_dev_cancel);
+diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
+index 5a8315e6d8a6..8da964763255 100644
+--- a/include/xen/xenbus.h
++++ b/include/xen/xenbus.h
+@@ -104,6 +104,9 @@ struct xenbus_driver {
+ 	int (*remove)(struct xenbus_device *dev);
+ 	int (*suspend)(struct xenbus_device *dev);
+ 	int (*resume)(struct xenbus_device *dev);
++	int (*freeze)(struct xenbus_device *dev);
++	int (*thaw)(struct xenbus_device *dev);
++	int (*restore)(struct xenbus_device *dev);
+ 	int (*uevent)(struct xenbus_device *, struct kobj_uevent_env *);
+ 	struct device_driver driver;
+ 	int (*read_otherend_details)(struct xenbus_device *dev);
 -- 
-2.28.0
+2.16.6
 
