@@ -2,122 +2,132 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6971C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4FB120732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD87214F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597991550;
-	bh=415OZuU8vzA50+rnOVabsjrgwD2vNtA0NKm0cqriH7Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=U7p0me/mdbSGoUg/fouMsi2NiC+83BwDWPRTIKAGvv2VwssJ5Zd5I8VUvdCC8ocOa
-	 tDHT6l+/Im8c1bPDHh+WA4pFNlFP/1CscMw8/pGB65ZLyXOcGsS3jXySqbFsFRr7uz
-	 7YLtkHhDl9SB1g36QECKfXd5QlEvfSRY/03PBQrc=
+	s=default; t=1597991630;
+	bh=ZD+mARjckiaOLmEqpc3pkeddGNiVUiqWbUzQlmXxLCA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=xpqko0meQorhyo6vTZlL3pd5gGIDclfpHRyVOYsn/yTOTJJZX/aRvB5+jESYSfL8u
+	 VQ0/SBR3X4CG05LJicoZPIllY0XvnYxIGpmHwaxY10olZhRJ3ovRfWjcc3y/JArfPh
+	 RN+dUUXdCAVOinIEoIBoIZwYREzXAcMv3w8ST+to=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgHUGca (ORCPT
+        id S1727831AbgHUGdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:32:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42410 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 02:33:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgHUGc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 02:32:28 -0400
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725844AbgHUGds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 02:33:48 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57E19207DA;
-        Fri, 21 Aug 2020 06:32:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D47120732;
+        Fri, 21 Aug 2020 06:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597991547;
-        bh=415OZuU8vzA50+rnOVabsjrgwD2vNtA0NKm0cqriH7Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DuUO7+ImHFtJQvWsmC/X9O7YR+C/54F+4qsahrFrMc6qY/L3qvv2O1nhHQnqCTvWp
-         DBKfRpVW93mQ3Qc3YiU/OCrB9bhR34qnq4FvcaCHsVHaEl5d0oPK+3ll8CQ62mqJZy
-         yWtpPLov+lbV3CgFmJr8wKJ3bba0yhiF7uDvT81s=
-Received: by mail-ej1-f51.google.com with SMTP id u21so360590ejz.0;
-        Thu, 20 Aug 2020 23:32:27 -0700 (PDT)
-X-Gm-Message-State: AOAM531TL/cVnX3hDJHLEGfB3INtcPVrztq/0Ig/oN/E8kwzP+LJMxlI
-        Bg695nUsnJKOSA0/kMNKbaC0uUR+pUYUba0ZoDk=
-X-Google-Smtp-Source: ABdhPJzmNhcgBP4BHaa4+ob9gDnpioFjxsyx1iS1AVeOQjeO7mUt56aSdcZBGdYVXX8gX6athEENQYiVtJNm5lspNOA=
-X-Received: by 2002:a17:906:4ec3:: with SMTP id i3mr1400283ejv.215.1597991545947;
- Thu, 20 Aug 2020 23:32:25 -0700 (PDT)
+        s=default; t=1597991627;
+        bh=ZD+mARjckiaOLmEqpc3pkeddGNiVUiqWbUzQlmXxLCA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gvw3Zr2z6rjPA/azLcwbRJHjKcQUMRkSQ3pAP/XwJWUrQ7t63UojZ3qZ9Jiyp0lr1
+         KtQDkuf9lxnNDjjisrEg9O1xw3DPAro1fyQL1a5Zrw/82QrIafkYGWDPJSTxNM/uaw
+         73FAvDjrpZDVQgEqTIGLya6Yy/9h/1OPmGR67Ajg=
+Date:   Fri, 21 Aug 2020 01:39:34 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Stanislaw Gruszka <stf_xl@wp.pl>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] iwlegacy: Use fallthrough pseudo-keyword
+Message-ID: <20200821063934.GA17838@embeddedor>
 MIME-Version: 1.0
-References: <20200708153420.29484-1-lukasz.luba@arm.com> <20200708153420.29484-3-lukasz.luba@arm.com>
- <20200817155021.GC15887@kozik-lap> <2099aea9-5a63-6e5b-d7f9-4e6476584461@arm.com>
- <CAJKOXPc063m_YcouAO2Q9piJ_GV1Fh9XeS3ZZ3KR=ZyMxPKZ5w@mail.gmail.com>
-In-Reply-To: <CAJKOXPc063m_YcouAO2Q9piJ_GV1Fh9XeS3ZZ3KR=ZyMxPKZ5w@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 21 Aug 2020 08:32:14 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcfo+1UY2wmy0WhyNRo_KqS7sGb9d8bDskDTOehFZoN5Q@mail.gmail.com>
-Message-ID: <CAJKOXPcfo+1UY2wmy0WhyNRo_KqS7sGb9d8bDskDTOehFZoN5Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: exynos: Remove interrupts from DMC
- controller in Exynos5422
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, willy.mh.wolff.ml@gmail.com,
-        k.konieczny@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        s.nawrocki@samsung.com, kgene@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 at 08:31, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Mon, 17 Aug 2020 at 19:17, Lukasz Luba <lukasz.luba@arm.com> wrote:
-> >
-> > Hi Krzysztof,
-> >
-> > On 8/17/20 4:50 PM, Krzysztof Kozlowski wrote:
-> > > On Wed, Jul 08, 2020 at 04:34:20PM +0100, Lukasz Luba wrote:
-> > >> The interrupts in Dynamic Memory Controller in Exynos5422 and Odroid
-> > >> XU3-family boards are no longer needed. They have been used in order
-> > >> to workaround some issues in scheduled work in devfreq. Now when the
-> > >> devfreq framework design is improved, remove the interrupt driven
-> > >> approach and rely on devfreq monitoring mechanism with fixed intervals.
-> > >>
-> > >> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
-> > >> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
-> > >> ---
-> > >>   arch/arm/boot/dts/exynos5420.dtsi | 3 ---
-> > >>   1 file changed, 3 deletions(-)
-> > >
-> > > I think the dependencies were merged so this can be safely applied
-> > > without bisectability problems?
-> >
-> > I have created v2 of that fix and it got merged
-> > via Chanwoo's tree, the commit 4fc9a0470d2dc37028
-> > https://lkml.org/lkml/2020/7/10/1048
-> >
-> > That commit switched the driver default mode from 'irq driven' to
-> > new devfreq monitoring mechanism. Furthermore, when the driver is
-> > built as a module, you can try to use the 'irq mode', but for this
-> > you would need the DT IRQs description (this $subject tries to remove).
-> >
-> > I would like to keep this IRQ mode for experimentation, as I
-> > described in answers to Bartek's questions:
-> > https://lkml.org/lkml/2020/7/14/315
-> >
-> > Unfortunately, I am quite busy and won't make any progress before the
-> > LPC.
->
-> None of these were the actual answer to my question, unless by "v2 of
-> that fix and it got merged" means the dependencies?
->
-> I'll drop it from the queue. Please resend if it is valid.
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-Agh, not drop, I mean postpone for the next cycle (this is v5.11).
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Best regards,
-Krzysztof
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/intel/iwlegacy/3945-mac.c | 2 +-
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c | 4 ++--
+ drivers/net/wireless/intel/iwlegacy/common.c   | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+index 9167c3d2711d..e3f79d6b978d 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+@@ -365,7 +365,7 @@ il3945_build_tx_cmd_hwcrypto(struct il_priv *il, struct ieee80211_tx_info *info,
+ 
+ 	case WLAN_CIPHER_SUITE_WEP104:
+ 		tx_cmd->sec_ctl |= TX_CMD_SEC_KEY128;
+-		/* fall through */
++		fallthrough;
+ 	case WLAN_CIPHER_SUITE_WEP40:
+ 		tx_cmd->sec_ctl |=
+ 		    TX_CMD_SEC_WEP | (info->control.hw_key->
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index e73c223a7d28..9295344cd0d7 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -544,7 +544,7 @@ il4965_translate_rx_status(struct il_priv *il, u32 decrypt_in)
+ 			decrypt_out |= RX_RES_STATUS_BAD_KEY_TTAK;
+ 			break;
+ 		}
+-		/* fall through - if TTAK OK */
++		fallthrough;	/* if TTAK OK */
+ 	default:
+ 		if (!(decrypt_in & RX_MPDU_RES_STATUS_ICV_OK))
+ 			decrypt_out |= RX_RES_STATUS_BAD_ICV_MIC;
+@@ -1617,7 +1617,7 @@ il4965_tx_cmd_build_hwcrypto(struct il_priv *il, struct ieee80211_tx_info *info,
+ 
+ 	case WLAN_CIPHER_SUITE_WEP104:
+ 		tx_cmd->sec_ctl |= TX_CMD_SEC_KEY128;
+-		/* fall through */
++		fallthrough;
+ 	case WLAN_CIPHER_SUITE_WEP40:
+ 		tx_cmd->sec_ctl |=
+ 		    (TX_CMD_SEC_WEP | (keyconf->keyidx & TX_CMD_SEC_MSK) <<
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index f78e062df572..6ede3b2a0b52 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -2677,7 +2677,7 @@ il_set_decrypted_flag(struct il_priv *il, struct ieee80211_hdr *hdr,
+ 		if ((decrypt_res & RX_RES_STATUS_DECRYPT_TYPE_MSK) ==
+ 		    RX_RES_STATUS_BAD_KEY_TTAK)
+ 			break;
+-		/* fall through */
++		fallthrough;
+ 
+ 	case RX_RES_STATUS_SEC_TYPE_WEP:
+ 		if ((decrypt_res & RX_RES_STATUS_DECRYPT_TYPE_MSK) ==
+@@ -2687,7 +2687,7 @@ il_set_decrypted_flag(struct il_priv *il, struct ieee80211_hdr *hdr,
+ 			D_RX("Packet destroyed\n");
+ 			return -1;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	case RX_RES_STATUS_SEC_TYPE_CCMP:
+ 		if ((decrypt_res & RX_RES_STATUS_DECRYPT_TYPE_MSK) ==
+ 		    RX_RES_STATUS_DECRYPT_OK) {
+-- 
+2.27.0
+
