@@ -2,344 +2,202 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ED5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC27DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF57D214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597989729;
-	bh=RL2kB1qW+T6kXdM6zLOpMVYt13gSjORoiUbt1H23+vY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=iSfjt6HNQfweF3DljBjcafJSssmmNZ+Z1lIUtO3kKCN6baEOoVvupiRkR+ocrP74Z
-	 E32U6S2NGgvBvjjvWyDxEqoryFFprJHpNlVG/l69j9FTZvG2wvG/QBADvRetlqIls/
-	 J3wwBRYgI6zzEE2vA/ijRm+0vC+Ee5EaerU/dS6Q=
+	by mail.kernel.org (Postfix) with ESMTP id B95B8207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:02:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="Gex9B71Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgHUGCF (ORCPT
+        id S1727793AbgHUGCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:02:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgHUGCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 02:02:02 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DBF3207DA;
-        Fri, 21 Aug 2020 06:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597989721;
-        bh=RL2kB1qW+T6kXdM6zLOpMVYt13gSjORoiUbt1H23+vY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Z9C//bmM2g7aRchQxAjb7DiBdBofi3otaExWunuzrxg8l/ElAiGwExx8tWw1S2iiT
-         26qylZcyX00rTKvxCdjGUvszgtYzH7/E1TCIVDagl3tosIOFESW0V/j9gHbFSpX4nR
-         Lg/DY+uKsHCabQ60JJq5D2SByWuTlxprMkgm5S8E=
-Date:   Fri, 21 Aug 2020 01:07:48 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] mediatek: Use fallthrough pseudo-keyword
-Message-ID: <20200821060748.GA2483@embeddedor>
+        Fri, 21 Aug 2020 02:02:16 -0400
+Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.174]:10372 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgHUGCP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 02:02:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597989724;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Es9pGKLx4z5oIgmChL28JnLmrOhua6NbH8JPKO7vMAs=;
+        b=Gex9B71YMr3MWO1MhU2tQ45CqFxZ+yLaQaQkq682GlaZaB5rljo2B319j9eeDJBPWL
+        UFRK+ngqMxBHAACPy/gLlfRHqIefFJXCgTH+hLVsoSx+mg+YtanmLBh1ZTpJo4x5hlBk
+        LueV+p6YsUF/wm3v4H6+pKovDCC/+lHtuZlfLw0fC6Unjk5rPdntC/8ZITigCrz3lYHQ
+        GULTp74H3UBtbvmxyT4Q8DgUOGvaJWi2CxFXM6GdTOV3dXFXQL3WA5Pm5c5aTeq1kTeO
+        cE7hnURxWAYESOTffPFPgBjaa11977kb7ASRgejEmPC4bjBvAIICRbMrv9NYO012zBAj
+        hsdQ==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xm0dNS3IdRAZAL+p6A=="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id 002e9aw7L60qGKv
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 21 Aug 2020 08:00:52 +0200 (CEST)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH v33 08/12] crypto: provide access to a static Jitter RNG state
+Date:   Fri, 21 Aug 2020 07:42:28 +0200
+Message-ID: <2292257.jE0xQCEvom@positron.chronox.de>
+In-Reply-To: <5532247.MhkbZ0Pkbq@positron.chronox.de>
+References: <2544450.mvXUDI8C0e@positron.chronox.de> <5532247.MhkbZ0Pkbq@positron.chronox.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-fall-through markings when it is the case.
+To support the LRNG operation which uses the Jitter RNG separately
+from the kernel crypto API, at a time where potentially the regular
+memory management is not yet initialized, the Jitter RNG needs to
+provide a state whose memory is defined at compile time. As only once
+instance will ever be needed by the LRNG, define once static memory
+block which is solely to be used by the LRNG.
 
-[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+CC: "Eric W. Biederman" <ebiederm@xmission.com>
+CC: "Alexander E. Patrakov" <patrakov@gmail.com>
+CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
+CC: "Theodore Y. Ts'o" <tytso@mit.edu>
+CC: Willy Tarreau <w@1wt.eu>
+CC: Matthew Garrett <mjg59@srcf.ucam.org>
+CC: Vito Caputo <vcaputo@pengaru.com>
+CC: Andreas Dilger <adilger.kernel@dilger.ca>
+CC: Jan Kara <jack@suse.cz>
+CC: Ray Strode <rstrode@redhat.com>
+CC: William Jon McCann <mccann@jhu.edu>
+CC: zhangjs <zachary@baishancloud.com>
+CC: Andy Lutomirski <luto@kernel.org>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Lennart Poettering <mzxreary@0pointer.de>
+CC: Nicolai Stange <nstange@suse.de>
+Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
+Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
+Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+Tested-by: Neil Horman <nhorman@redhat.com>
+Signed-off-by: Stephan Mueller <smueller@chronox.de>
+=2D--
+ crypto/jitterentropy-kcapi.c                  |  3 +-
+ crypto/jitterentropy.c                        | 31 ++++++++++++++++++-
+ .../crypto/internal}/jitterentropy.h          |  3 ++
+ 3 files changed, 34 insertions(+), 3 deletions(-)
+ rename {crypto =3D> include/crypto/internal}/jitterentropy.h (84%)
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/wireless/mediatek/mt76/mt7603/dma.c     | 2 +-
- drivers/net/wireless/mediatek/mt76/mt7603/mac.c     | 4 ++--
- drivers/net/wireless/mediatek/mt76/mt7615/mac.c     | 6 +++---
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.c     | 2 +-
- drivers/net/wireless/mediatek/mt76/mt76x0/phy.c     | 2 +-
- drivers/net/wireless/mediatek/mt76/mt76x02_mac.c    | 6 +++---
- drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c | 1 -
- drivers/net/wireless/mediatek/mt76/mt7915/dma.c     | 2 +-
- drivers/net/wireless/mediatek/mt76/mt7915/mac.c     | 4 ++--
- drivers/net/wireless/mediatek/mt76/mt7915/mcu.c     | 2 +-
- drivers/net/wireless/mediatek/mt76/usb.c            | 2 +-
- drivers/net/wireless/mediatek/mt7601u/dma.c         | 4 ++--
- drivers/net/wireless/mediatek/mt7601u/mac.c         | 4 ++--
- drivers/net/wireless/mediatek/mt7601u/phy.c         | 2 +-
- 14 files changed, 21 insertions(+), 22 deletions(-)
+diff --git a/crypto/jitterentropy-kcapi.c b/crypto/jitterentropy-kcapi.c
+index eb7d1dd506bf..25a192f5984e 100644
+=2D-- a/crypto/jitterentropy-kcapi.c
++++ b/crypto/jitterentropy-kcapi.c
+@@ -43,8 +43,7 @@
+ #include <linux/time.h>
+ #include <linux/crypto.h>
+ #include <crypto/internal/rng.h>
+=2D
+=2D#include "jitterentropy.h"
++#include <crypto/internal/jitterentropy.h>
+=20
+ /*************************************************************************=
+**
+  * Helper function
+diff --git a/crypto/jitterentropy.c b/crypto/jitterentropy.c
+index 6e147c43fc18..fa1459f09b01 100644
+=2D-- a/crypto/jitterentropy.c
++++ b/crypto/jitterentropy.c
+@@ -117,7 +117,7 @@ struct rand_data {
+ #define JENT_EHEALTH		9 /* Health test failed during initialization */
+ #define JENT_ERCT		10 /* RCT failed during initialization */
+=20
+=2D#include "jitterentropy.h"
++#include <crypto/internal/jitterentropy.h>
+=20
+ /*************************************************************************=
+**
+  * Adaptive Proportion Test
+@@ -854,3 +854,32 @@ int jent_entropy_init(void)
+=20
+ 	return 0;
+ }
++
++struct rand_data *jent_lrng_entropy_collector(void)
++{
++	static unsigned char lrng_jent_mem[JENT_MEMORY_SIZE];
++	static struct rand_data lrng_jent_state =3D {
++		.data		=3D 0,
++		.old_data	=3D 0,
++		.prev_time	=3D 0,
++		.last_delta	=3D 0,
++		.last_delta2	=3D 0,
++		.osr		=3D 1,
++		.mem		=3D lrng_jent_mem,
++		.memlocation	=3D 0,
++		.memblocks	=3D JENT_MEMORY_BLOCKSIZE,
++		.memblocksize	=3D JENT_MEMORY_BLOCKS,
++		.memaccessloops	=3D JENT_MEMORY_ACCESSLOOPS,
++		.rct_count	=3D 0,
++		.apt_observations =3D 0,
++		.apt_count	=3D 0,
++		.apt_base	=3D 0,
++		.apt_base_set	=3D 0,
++		.health_failure =3D 0
++	};
++
++	if (jent_entropy_init())
++		return NULL;
++
++	return &lrng_jent_state;
++}
+diff --git a/crypto/jitterentropy.h b/include/crypto/internal/jitterentropy=
+=2Eh
+similarity index 84%
+rename from crypto/jitterentropy.h
+rename to include/crypto/internal/jitterentropy.h
+index c83fff32d130..6e07d86eac82 100644
+=2D-- a/crypto/jitterentropy.h
++++ b/include/crypto/internal/jitterentropy.h
+@@ -15,3 +15,6 @@ extern int jent_read_entropy(struct rand_data *ec, unsign=
+ed char *data,
+ extern struct rand_data *jent_entropy_collector_alloc(unsigned int osr,
+ 						      unsigned int flags);
+ extern void jent_entropy_collector_free(struct rand_data *entropy_collecto=
+r);
++
++/* Access to statically allocated Jitter RNG instance */
++extern struct rand_data *jent_lrng_entropy_collector(void);
+=2D-=20
+2.26.2
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/dma.c b/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
-index a08b85281170..1dfcd7407535 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
-@@ -123,7 +123,7 @@ void mt7603_queue_rx_skb(struct mt76_dev *mdev, enum mt76_rxq_id q,
- 			mt76_rx(&dev->mt76, q, skb);
- 			return;
- 		}
--		/* fall through */
-+		fallthrough;
- 	default:
- 		dev_kfree_skb(skb);
- 		break;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-index 8060c1514396..95602cbef3c3 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-@@ -592,7 +592,7 @@ mt7603_mac_fill_rx(struct mt7603_dev *dev, struct sk_buff *skb)
- 		switch (FIELD_GET(MT_RXV1_TX_MODE, rxdg0)) {
- 		case MT_PHY_TYPE_CCK:
- 			cck = true;
--			/* fall through */
-+			fallthrough;
- 		case MT_PHY_TYPE_OFDM:
- 			i = mt76_get_rate(&dev->mt76, sband, i, cck);
- 			break;
-@@ -1161,7 +1161,7 @@ mt7603_fill_txs(struct mt7603_dev *dev, struct mt7603_sta *sta,
- 	switch (FIELD_GET(MT_TX_RATE_MODE, final_rate)) {
- 	case MT_PHY_TYPE_CCK:
- 		cck = true;
--		/* fall through */
-+		fallthrough;
- 	case MT_PHY_TYPE_OFDM:
- 		if (dev->mphy.chandef.chan->band == NL80211_BAND_5GHZ)
- 			sband = &dev->mphy.sband_5g.sband;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-index 3dd8dd28690e..60be7f409470 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-@@ -378,7 +378,7 @@ static int mt7615_mac_fill_rx(struct mt7615_dev *dev, struct sk_buff *skb)
- 		switch (FIELD_GET(MT_RXV1_TX_MODE, rxdg0)) {
- 		case MT_PHY_TYPE_CCK:
- 			cck = true;
--			/* fall through */
-+			fallthrough;
- 		case MT_PHY_TYPE_OFDM:
- 			i = mt76_get_rate(&dev->mt76, sband, i, cck);
- 			break;
-@@ -1271,7 +1271,7 @@ static bool mt7615_fill_txs(struct mt7615_dev *dev, struct mt7615_sta *sta,
- 	switch (FIELD_GET(MT_TX_RATE_MODE, final_rate)) {
- 	case MT_PHY_TYPE_CCK:
- 		cck = true;
--		/* fall through */
-+		fallthrough;
- 	case MT_PHY_TYPE_OFDM:
- 		mphy = &dev->mphy;
- 		if (sta->wcid.ext_phy && dev->mt76.phy2)
-@@ -1478,7 +1478,7 @@ void mt7615_queue_rx_skb(struct mt76_dev *mdev, enum mt76_rxq_id q,
- 			mt76_rx(&dev->mt76, q, skb);
- 			return;
- 		}
--		/* fall through */
-+		fallthrough;
- 	default:
- 		dev_kfree_skb(skb);
- 		break;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-index d0cbb283982f..745133b6b7af 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-@@ -3278,7 +3278,7 @@ static int mt7615_dcoc_freq_idx(u16 freq, u8 bw)
- 			freq = freq_bw40[idx];
- 			break;
- 		}
--		/* fall through */
-+		fallthrough;
- 	case NL80211_CHAN_WIDTH_40:
- 		idx = mt7615_find_freq_idx(freq_bw40, ARRAY_SIZE(freq_bw40),
- 					   freq);
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c b/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c
-index 09f34deb6ba1..3de33aadf794 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c
-@@ -734,7 +734,7 @@ mt76x0_phy_get_delta_power(struct mt76x02_dev *dev, u8 tx_mode,
- 	case 1:
- 		if (chan->band == NL80211_BAND_2GHZ)
- 			tssi_target += 29491; /* 3.6 * 8192 */
--		/* fall through */
-+		fallthrough;
- 	case 0:
- 		break;
- 	default:
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_mac.c b/drivers/net/wireless/mediatek/mt76/mt76x02_mac.c
-index e4e03beabe43..11900bcc1be0 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x02_mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x02_mac.c
-@@ -300,7 +300,7 @@ mt76x02_mac_process_tx_rate(struct ieee80211_tx_rate *txrate, u16 rate,
- 		return 0;
- 	case MT_PHY_TYPE_HT_GF:
- 		txrate->flags |= IEEE80211_TX_RC_GREEN_FIELD;
--		/* fall through */
-+		fallthrough;
- 	case MT_PHY_TYPE_HT:
- 		txrate->flags |= IEEE80211_TX_RC_MCS;
- 		txrate->idx = idx;
-@@ -462,7 +462,7 @@ mt76x02_tx_rate_fallback(struct ieee80211_tx_rate *rates, int idx, int phy)
- 			rates[1].idx = 0;
- 			break;
- 		}
--		/* fall through */
-+		fallthrough;
- 	default:
- 		rates[1].idx = max_t(int, rates[0].idx - 1, 0);
- 		break;
-@@ -677,7 +677,7 @@ mt76x02_mac_process_rate(struct mt76x02_dev *dev,
- 		return 0;
- 	case MT_PHY_TYPE_HT_GF:
- 		status->enc_flags |= RX_ENC_FLAG_HT_GF;
--		/* fall through */
-+		fallthrough;
- 	case MT_PHY_TYPE_HT:
- 		status->encoding = RX_ENC_HT;
- 		status->rate_idx = idx;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c b/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c
-index 38f473d587c9..e7febc982930 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c
-@@ -21,7 +21,6 @@ static int mt7915_ser_trigger_set(void *data, u64 val)
- 	switch (val) {
- 	case SER_SET_RECOVER_L1:
- 	case SER_SET_RECOVER_L2:
--		/* fall through */
- 		ret = mt7915_mcu_set_ser(dev, SER_ENABLE, BIT(val), 0);
- 		if (ret)
- 			return ret;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/dma.c b/drivers/net/wireless/mediatek/mt76/mt7915/dma.c
-index a8832c5e6004..12e5a4988d70 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7915/dma.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7915/dma.c
-@@ -72,7 +72,7 @@ void mt7915_queue_rx_skb(struct mt76_dev *mdev, enum mt76_rxq_id q,
- 			mt76_rx(&dev->mt76, q, skb);
- 			return;
- 		}
--		/* fall through */
-+		fallthrough;
- 	default:
- 		dev_kfree_skb(skb);
- 		break;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mac.c b/drivers/net/wireless/mediatek/mt76/mt7915/mac.c
-index 6825afca1efb..4b38e921ad4a 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7915/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7915/mac.c
-@@ -468,7 +468,7 @@ int mt7915_mac_fill_rx(struct mt7915_dev *dev, struct sk_buff *skb)
- 			switch (mode) {
- 			case MT_PHY_TYPE_CCK:
- 				cck = true;
--				/* fall through */
-+				fallthrough;
- 			case MT_PHY_TYPE_OFDM:
- 				i = mt76_get_rate(&dev->mt76, sband, i, cck);
- 				break;
-@@ -487,7 +487,7 @@ int mt7915_mac_fill_rx(struct mt7915_dev *dev, struct sk_buff *skb)
- 				break;
- 			case MT_PHY_TYPE_HE_MU:
- 				status->flag |= RX_FLAG_RADIOTAP_HE_MU;
--				/* fall through */
-+				fallthrough;
- 			case MT_PHY_TYPE_HE_SU:
- 			case MT_PHY_TYPE_HE_EXT_SU:
- 			case MT_PHY_TYPE_HE_TB:
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
-index eaed5ef05401..323d0a396755 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
-@@ -1407,7 +1407,7 @@ mt7915_mcu_sta_he_tlv(struct sk_buff *skb, struct ieee80211_sta *sta)
- 
- 		he->max_nss_mcs[CMD_HE_MCS_BW160] =
- 				he_cap->he_mcs_nss_supp.rx_mcs_160;
--		/* fall through */
-+		fallthrough;
- 	default:
- 		he->max_nss_mcs[CMD_HE_MCS_BW80] =
- 				he_cap->he_mcs_nss_supp.rx_mcs_80;
-diff --git a/drivers/net/wireless/mediatek/mt76/usb.c b/drivers/net/wireless/mediatek/mt76/usb.c
-index dcab5993763a..aa44b10f69e8 100644
---- a/drivers/net/wireless/mediatek/mt76/usb.c
-+++ b/drivers/net/wireless/mediatek/mt76/usb.c
-@@ -616,7 +616,7 @@ static void mt76u_complete_rx(struct urb *urb)
- 	default:
- 		dev_err_ratelimited(dev->dev, "rx urb failed: %d\n",
- 				    urb->status);
--		/* fall through */
-+		fallthrough;
- 	case 0:
- 		break;
- 	}
-diff --git a/drivers/net/wireless/mediatek/mt7601u/dma.c b/drivers/net/wireless/mediatek/mt7601u/dma.c
-index f6a0454abe04..09f931d4598c 100644
---- a/drivers/net/wireless/mediatek/mt7601u/dma.c
-+++ b/drivers/net/wireless/mediatek/mt7601u/dma.c
-@@ -196,7 +196,7 @@ static void mt7601u_complete_rx(struct urb *urb)
- 	default:
- 		dev_err_ratelimited(dev->dev, "rx urb failed: %d\n",
- 				    urb->status);
--		/* fall through */
-+		fallthrough;
- 	case 0:
- 		break;
- 	}
-@@ -241,7 +241,7 @@ static void mt7601u_complete_tx(struct urb *urb)
- 	default:
- 		dev_err_ratelimited(dev->dev, "tx urb failed: %d\n",
- 				    urb->status);
--		/* fall through */
-+		fallthrough;
- 	case 0:
- 		break;
- 	}
-diff --git a/drivers/net/wireless/mediatek/mt7601u/mac.c b/drivers/net/wireless/mediatek/mt7601u/mac.c
-index cad5e81fcf77..d2ee1aaa3c81 100644
---- a/drivers/net/wireless/mediatek/mt7601u/mac.c
-+++ b/drivers/net/wireless/mediatek/mt7601u/mac.c
-@@ -45,7 +45,7 @@ mt76_mac_process_tx_rate(struct ieee80211_tx_rate *txrate, u16 rate)
- 		return;
- 	case MT_PHY_TYPE_HT_GF:
- 		txrate->flags |= IEEE80211_TX_RC_GREEN_FIELD;
--		/* fall through */
-+		fallthrough;
- 	case MT_PHY_TYPE_HT:
- 		txrate->flags |= IEEE80211_TX_RC_MCS;
- 		txrate->idx = idx;
-@@ -419,7 +419,7 @@ mt76_mac_process_rate(struct ieee80211_rx_status *status, u16 rate)
- 		return;
- 	case MT_PHY_TYPE_HT_GF:
- 		status->enc_flags |= RX_ENC_FLAG_HT_GF;
--		/* fall through */
-+		fallthrough;
- 	case MT_PHY_TYPE_HT:
- 		status->encoding = RX_ENC_HT;
- 		status->rate_idx = idx;
-diff --git a/drivers/net/wireless/mediatek/mt7601u/phy.c b/drivers/net/wireless/mediatek/mt7601u/phy.c
-index d863ab4a66c9..430ae4c1d7db 100644
---- a/drivers/net/wireless/mediatek/mt7601u/phy.c
-+++ b/drivers/net/wireless/mediatek/mt7601u/phy.c
-@@ -787,7 +787,7 @@ mt7601u_phy_rf_pa_mode_val(struct mt7601u_dev *dev, int phy_mode, int tx_rate)
- 	switch (phy_mode) {
- 	case MT_PHY_TYPE_OFDM:
- 		tx_rate += 4;
--		/* fall through */
-+		fallthrough;
- 	case MT_PHY_TYPE_CCK:
- 		reg = dev->rf_pa_mode[0];
- 		break;
--- 
-2.27.0
+
+
 
