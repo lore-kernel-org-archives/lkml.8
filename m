@@ -2,100 +2,132 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9039C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86868208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:42:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="j+bAChCZ"
+	by mail.kernel.org (Postfix) with ESMTP id 8091E208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:43:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgHUEmA (ORCPT
+        id S1726610AbgHUEnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 00:42:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbgHUEl6 (ORCPT
+        Fri, 21 Aug 2020 00:43:19 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:55030 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbgHUEnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 00:41:58 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB5D8C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 21:41:57 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a26so822294ejc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 21:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=9O3MOiDp9rTX/OUCaY8nDp9xXXYuY9V/2TPMnqT2hvc=;
-        b=j+bAChCZOvr8+x9F5KYZlfXGuG/C1Hty9S4BYamev2FciN/J4qfwUh4dL+o+jdFZQg
-         4kUcC8qlulB4/ORHqo03FLFE93hwVr65vNgZZ6/QqnvkOt9ttQ9NrKUr/57jwZPrPTwl
-         xhh3eFDqmRJPumperCORRHgWRLkBKUBDKt3PJnFWIG3d3GoZM/JD4sj+K0zEvlPHT/iR
-         +6zGZc08nGgzMtQ9/prgqhPiWwOKCcdT11Dih2pEq7MQyc/XIXakovP+iN8KsLcCn6UG
-         kBWkskSAb7rFa/qRjbZzfm5btwrXRxEn7/CvJ63BBELOCvD+xG+h1ZFFxg2Ajnoepv1u
-         H0hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=9O3MOiDp9rTX/OUCaY8nDp9xXXYuY9V/2TPMnqT2hvc=;
-        b=NjnuSMw+w3w+dNxIZUNuVQwRVOQK6N2SDAHNnNmxUKKHddbqgF7KoW9lTyypqrydMv
-         8f5XFIet48jO7rGETjZcXhxOyTZjQoTwfvhgRS4f6pdnWWYSctr4UXkTnWqyqBxYIntz
-         OGt77FRjSlhHxSqEs3NyBfKx+bYvoQXBPP9vg3x2k37LQ5g/VQTyz+REJ5sZLRKnXzY5
-         ZBLDLm2SMP+5GrkuP/KlnxyG+3ClzSv6mbYoJiM1e7B5SlSXk2t+DpId5ta0Ys1ZfgJ+
-         ztKyjwJMa5eLNfBSjXTaBsJrTXPaUb63YfmC3Xt5MUvIFx0XjMATordPgvC+FbZWtFVf
-         mapg==
-X-Gm-Message-State: AOAM533APt27AxCJCBqhb+sLRi4rdq2AvPqByKjCfzuF+If5AEKdUzF8
-        FXzvZe8+t7+hj+1R4yVbD9qGDq+cQ4Q7iiOIpIy0fg==
-X-Google-Smtp-Source: ABdhPJw/w+LamKsouBMDL2xI4/tj7QcllFiwGuBa2QAZ3bvSKuccD3wupsTKsCjZHsZ69ChH3iGyH/qk/jnxYf/CsEU=
-X-Received: by 2002:a17:906:401b:: with SMTP id v27mr1146910ejj.300.1597984916441;
- Thu, 20 Aug 2020 21:41:56 -0700 (PDT)
+        Fri, 21 Aug 2020 00:43:17 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k8ytK-008psA-Jl; Thu, 20 Aug 2020 22:43:02 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k8ytJ-00009U-Oh; Thu, 20 Aug 2020 22:43:02 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Tim Murray <timmurray@google.com>, mingo@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com,
+        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
+        Oleg Nesterov <oleg@redhat.com>, adobriyan@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de,
+        John Johansen <john.johansen@canonical.com>,
+        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
+References: <20200820124241.GJ5033@dhcp22.suse.cz>
+        <87lfi9xz7y.fsf@x220.int.ebiederm.org>
+        <87d03lxysr.fsf@x220.int.ebiederm.org>
+        <20200820132631.GK5033@dhcp22.suse.cz>
+        <20200820133454.ch24kewh42ax4ebl@wittgenstein>
+        <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
+        <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
+        <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
+        <87k0xtv0d4.fsf@x220.int.ebiederm.org>
+        <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
+        <20200820162645.GP5033@dhcp22.suse.cz>
+Date:   Thu, 20 Aug 2020 23:39:25 -0500
+In-Reply-To: <20200820162645.GP5033@dhcp22.suse.cz> (Michal Hocko's message of
+        "Thu, 20 Aug 2020 18:26:45 +0200")
+Message-ID: <87r1s0txxe.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-From:   Kyle Huey <me@kylehuey.com>
-Date:   Thu, 20 Aug 2020 21:41:45 -0700
-Message-ID: <CAP045Aq8+h6Y6t7W2GR_jJER5ghaHTH0wP81V-iYHxrR0Lk2vw@mail.gmail.com>
-Subject: [REGRESSION] x86/cpu fsgsbase breaks TLS in 32 bit rr tracees on a 64
- bit system
-To:     Andy Lutomirski <luto@kernel.org>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>
-Cc:     "Robert O'Callahan" <rocallahan@gmail.com>,
-        Ravi Shankar <ravi.v.shankar@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1k8ytJ-00009U-Oh;;;mid=<87r1s0txxe.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18uBSxl8pJIjuyaXaco3WG9+jz0MdU4UDc=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in __set_oom_adj when not necessary
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the x86-64 5.9-rc1 TLS is completely broken in 32 bit tracees when
-running under rr[0]. Booting the kernel with `nofsgsbase` fixes it and
-I bisected to https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v5.8&id=673903495c85137791d5820d690229efe09c8f7b.
+Michal Hocko <mhocko@suse.com> writes:
 
-STR:
-1. Build rr from source by
-  a. git clone https://github.com/mozilla/rr
-  b. mkdir rr/obj
-  c. cd rr/obj
-  d. cmake ..
-  e. make -j16
-2. Run the simple 32 bit tracee outside of rr with `./bin/simple_32`.
-It should print a message and exit cleanly.
-3. Run it under rr with `./bin/rr ./bin/simple_32`.
+> On Thu 20-08-20 08:56:53, Suren Baghdasaryan wrote:
+> [...]
+>> Catching up on the discussion which was going on while I was asleep...
+>> So it sounds like there is a consensus that oom_adj should be moved to
+>> mm_struct rather than trying to synchronize it among tasks sharing mm.
+>> That sounds reasonable to me too. Michal answered all the earlier
+>> questions about this patch, so I won't be reiterating them, thanks
+>> Michal. If any questions are still lingering about the original patch
+>> I'll be glad to answer them.
+>
+> I think it still makes some sense to go with a simpler (aka less tricky)
+> solution which would be your original patch with an incremental fix for
+> vfork and the proper ordering (http://lkml.kernel.org/r/20200820124109.GI5033@dhcp22.suse.cz)
+> and then make a more complex shift to mm struct on top of that. The
+> former will be less tricky to backport to stable IMHO.
 
-It should behave the same way, but with fsgsbase enabled it will
-segfault. The `simple_32` binary is a simple "hello world" type
-program but it does link to pthreads, so pre-main code attempts to
-access TLS variables.
+So I am confused.
 
-The interplay between 32 bit and 64 bit TLS is dark magic to me
-unfortunately so this is all the useful information I have.
+I don't know how a subtle dependency on something in clone
+is better than something flat footed in exec.
 
-- Kyle
 
-[0] https://rr-project.org/
+That said if we are going for a small change why not:
+
+	/*
+	 * Make sure we will check other processes sharing the mm if this is
+	 * not vfrok which wants its own oom_score_adj.
+	 * pin the mm so it doesn't go away and get reused after task_unlock
+	 */
+	if (!task->vfork_done) {
+		struct task_struct *p = find_lock_task_mm(task);
+
+		if (p) {
+-			if (atomic_read(&p->mm->mm_users) > 1) {
++			if (atomic_read(&p->mm->mm_users) > p->signal->nr_threads) {
+				mm = p->mm;
+				mmgrab(mm);
+			}
+			task_unlock(p);
+		}
+	}
+
+That would seem to be the minimal change to make this happen.  That has
+the advantage that if a processes does vfork it won't always have to
+take the slow path.
+
+Moving to the mm_struct is much less racy but this is simple.
+
+Eric
