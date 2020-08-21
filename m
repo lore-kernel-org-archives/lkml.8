@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5114EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD86AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2974E20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C7420738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nTtTsRjV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bt6juGPb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgHUKhE (ORCPT
+        id S1727906AbgHUKhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:37:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36350 "EHLO
+        Fri, 21 Aug 2020 06:37:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728593AbgHUKgn (ORCPT
+        with ESMTP id S1728692AbgHUKhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:36:43 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 512E5C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:36:43 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id g33so812865pgb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:36:43 -0700 (PDT)
+        Fri, 21 Aug 2020 06:37:00 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD09C061388
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:37:00 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bh1so682874plb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:37:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+6RXV8GSzLCbtPxzWI/1s+cpbWPbdB3r+ZLimwxvGCY=;
-        b=nTtTsRjVId3wT5/BFgjOJca9ZVHUc8x0gTJVcOda6fyr8RhGlMSUtqv+yei/hFqPJu
-         zwUguM1G4jYANWhAffjDLIfix1dloWFDmwtBwKo1l9fVv1KHimAVwNXgmYlhXVAwtDi/
-         0OwyHanry+x8hWldAZdZU26EVKVJag0y0Ab/Q=
+        bh=HTg8ZbMrnEBX6XZbAtw/YXsu/7D2NGL6yCO27qDzwAM=;
+        b=Bt6juGPbmaC1G1f3JZE/oHm9QQwPgDr5UQ3A7XNqPAM2EqDMqIbJMMvaI9zGbtYzSb
+         FoDLRkep+6Ob8+bLttjezio5g1YDbu5a1XhpuBYQHRjlyT0md+Rpi9mrpHWs8KjxgFfc
+         /NJMwiegqrTm2yh5Xue70gONScaWg/TFqN59o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+6RXV8GSzLCbtPxzWI/1s+cpbWPbdB3r+ZLimwxvGCY=;
-        b=OtBcJE/fHCdPk0PHzN0FWXkjgueJC0fCRrHd0FjbntXUb3HouxAokaMoZPCjFttUXR
-         zbIdmtuqvb3tDd4QXerf952araldmA1ssH0tVPZvrwLoWMGr2p/6HDHjV4PgxHvcBj2c
-         PHxSocAoRYWiL71BGtC79QC/VV13QwyIt2HGA0Nje+HZUP1/7HK3DzygpnkzOk+7fpNB
-         LtUX9zMk//d9yS5K3+XaJvCYRvb4tSIJljApKiL316gmmpZGUEtikCcGM8Mdr5eHrYjd
-         RkPD2gzrBaf6Ff/E5opUW4A2Dt9dj6C6FOPrl/tDxPeUT+0Jcssfbw569oeYqXBTRZAP
-         YuMg==
-X-Gm-Message-State: AOAM530kZ1EN0aSYwJ3+oLPum56uJUlBLNmFat1gCnXQvgqDEPr4s82y
-        c3KSjhBwd+pVszHOOilPV3Jb5w==
-X-Google-Smtp-Source: ABdhPJy+KdVvXS1pnDGdYuDGQXTaJU/HOLitR9GaNE5+QLuCGIgDpBmwUT8x0N1NOngTz1X97f6WRw==
-X-Received: by 2002:aa7:99cc:: with SMTP id v12mr1946473pfi.255.1598006202848;
-        Fri, 21 Aug 2020 03:36:42 -0700 (PDT)
+        bh=HTg8ZbMrnEBX6XZbAtw/YXsu/7D2NGL6yCO27qDzwAM=;
+        b=tx9FOJeaOW5Fk6gTvcCZxtijxXOX4TtJ4Utfas0nGACJXqe991XIKFMxXZXQoodoDW
+         UvCjBwuq7JYMZbf/w7GjFQ95YEgEe63jY5RPNGjbMwmlPoCFeIKMQlU1cToeDtkC/oQn
+         7kwxodCpVyQksjL4DcokOIOWue6+YMUkppEqaJz7eiSK8FoAosS+f2ZkDazNlnApb3C3
+         taNtTXQu22hWhoPUDWj6TCCVKynB40fottPeqPq6c0hWL8tdXXVSdSUB+2tMQC69kTlR
+         UwEKOAzddSZz0siEApkLs0bXEy5CzBq3aGJYIKlbIMKFPp6cZnPY/Tu9ZCjSQ2TRzVjv
+         xgRg==
+X-Gm-Message-State: AOAM53365rf45y/0doWoSuydYPU7DIZSpcnKDre3ZowVQnX+4tYbc5cf
+        VCTJf+xCiElEjm7CL0fB5s15vQ==
+X-Google-Smtp-Source: ABdhPJzN6nDyZup0sLKds7ZZBQYp8QWOg0gvyO+9HOXmutY4wIibEnN9fBRxqOPj3PZtKkGjIYQvxw==
+X-Received: by 2002:a17:902:ead2:: with SMTP id p18mr1917778pld.259.1598006219865;
+        Fri, 21 Aug 2020 03:36:59 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:eeb1:d7ff:fe57:b7e5])
-        by smtp.gmail.com with ESMTPSA id y20sm2081525pfn.183.2020.08.21.03.36.39
+        by smtp.gmail.com with ESMTPSA id y20sm2081525pfn.183.2020.08.21.03.36.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 03:36:42 -0700 (PDT)
+        Fri, 21 Aug 2020 03:36:59 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
@@ -65,10 +65,11 @@ To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Matthias Brugger <matthias.bgg@gmail.com>
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v4 03/17] media: mtk-vcodec: add SCP firmware ops
-Date:   Fri, 21 Aug 2020 19:35:54 +0900
-Message-Id: <20200821103608.2310097-4-acourbot@chromium.org>
+        Alexandre Courbot <acourbot@chromium.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 08/17] dt-bindings: media: document mediatek,mt8183-vcodec-enc
+Date:   Fri, 21 Aug 2020 19:35:59 +0900
+Message-Id: <20200821103608.2310097-9-acourbot@chromium.org>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 In-Reply-To: <20200821103608.2310097-1-acourbot@chromium.org>
 References: <20200821103608.2310097-1-acourbot@chromium.org>
@@ -79,186 +80,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfei Dong <yunfei.dong@mediatek.com>
+MT8183's encoder is similar to MT8173's.
 
-Add support for communicating with the SCP firmware, which will be used
-by MT8183.
-
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-[acourbot: refactor, cleanup and split]
-Co-developed-by: Alexandre Courbot <acourbot@chromium.org>
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/media/platform/Kconfig                |  1 +
- .../platform/mtk-vcodec/mtk_vcodec_dec_drv.c  |  3 +
- .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  |  3 +
- .../media/platform/mtk-vcodec/mtk_vcodec_fw.c | 56 +++++++++++++++++++
- .../media/platform/mtk-vcodec/mtk_vcodec_fw.h |  2 +
- 5 files changed, 65 insertions(+)
+ Documentation/devicetree/bindings/media/mediatek-vcodec.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index c57ee78fa99d..f0dbe048efea 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -256,6 +256,7 @@ config VIDEO_MEDIATEK_VCODEC
- 	select VIDEOBUF2_DMA_CONTIG
- 	select V4L2_MEM2MEM_DEV
- 	select VIDEO_MEDIATEK_VPU
-+	select MTK_SCP
- 	help
- 	    Mediatek video codec driver provides HW capability to
- 	    encode and decode in a range of video formats
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-index 4f07a5fcce7f..5b5765b98e57 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-@@ -225,6 +225,9 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 	if (!of_property_read_u32(pdev->dev.of_node, "mediatek,vpu",
- 				  &rproc_phandle)) {
- 		fw_type = VPU;
-+	} else if (!of_property_read_u32(pdev->dev.of_node, "mediatek,scp",
-+					 &rproc_phandle)) {
-+		fw_type = SCP;
- 	} else {
- 		mtk_v4l2_err("Could not get vdec IPI device");
- 		return -ENODEV;
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-index 4340ea10afd0..42530cd01a30 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-@@ -233,6 +233,9 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 	if (!of_property_read_u32(pdev->dev.of_node, "mediatek,vpu",
- 				  &rproc_phandle)) {
- 		fw_type = VPU;
-+	} else if (!of_property_read_u32(pdev->dev.of_node, "mediatek,scp",
-+					 &rproc_phandle)) {
-+		fw_type = SCP;
- 	} else {
- 		mtk_v4l2_err("Could not get venc IPI device");
- 		return -ENODEV;
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-index 967bb100a990..f2a62ea62fc6 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-@@ -19,6 +19,7 @@ struct mtk_vcodec_fw {
- 	enum mtk_vcodec_fw_type type;
- 	const struct mtk_vcodec_fw_ops *ops;
- 	struct platform_device *pdev;
-+	struct mtk_scp *scp;
- };
+diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+index 99214faede90..8217424fd4bd 100644
+--- a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
++++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+@@ -4,8 +4,9 @@ Mediatek Video Codec is the video codec hw present in Mediatek SoCs which
+ supports high resolution encoding and decoding functionalities.
  
- static int mtk_vcodec_vpu_load_firmware(struct mtk_vcodec_fw *fw)
-@@ -71,6 +72,48 @@ static const struct mtk_vcodec_fw_ops mtk_vcodec_vpu_msg = {
- 	.ipi_send = mtk_vcodec_vpu_ipi_send,
- };
- 
-+static int mtk_vcodec_scp_load_firmware(struct mtk_vcodec_fw *fw)
-+{
-+	return rproc_boot(scp_get_rproc(fw->scp));
-+}
-+
-+static unsigned int mtk_vcodec_scp_get_vdec_capa(struct mtk_vcodec_fw *fw)
-+{
-+	return scp_get_vdec_hw_capa(fw->scp);
-+}
-+
-+static unsigned int mtk_vcodec_scp_get_venc_capa(struct mtk_vcodec_fw *fw)
-+{
-+	return scp_get_venc_hw_capa(fw->scp);
-+}
-+
-+static void *mtk_vcodec_vpu_scp_dm_addr(struct mtk_vcodec_fw *fw,
-+					u32 dtcm_dmem_addr)
-+{
-+	return scp_mapping_dm_addr(fw->scp, dtcm_dmem_addr);
-+}
-+
-+static int mtk_vcodec_scp_set_ipi_register(struct mtk_vcodec_fw *fw, int id,
-+		mtk_vcodec_ipi_handler handler, const char *name, void *priv)
-+{
-+	return scp_ipi_register(fw->scp, id, handler, priv);
-+}
-+
-+static int mtk_vcodec_scp_ipi_send(struct mtk_vcodec_fw *fw, int id, void *buf,
-+		unsigned int len, unsigned int wait)
-+{
-+	return scp_ipi_send(fw->scp, id, buf, len, wait);
-+}
-+
-+static const struct mtk_vcodec_fw_ops mtk_vcodec_rproc_msg = {
-+	.load_firmware = mtk_vcodec_scp_load_firmware,
-+	.get_vdec_capa = mtk_vcodec_scp_get_vdec_capa,
-+	.get_venc_capa = mtk_vcodec_scp_get_venc_capa,
-+	.map_dm_addr = mtk_vcodec_vpu_scp_dm_addr,
-+	.ipi_register = mtk_vcodec_scp_set_ipi_register,
-+	.ipi_send = mtk_vcodec_scp_ipi_send,
-+};
-+
- static void mtk_vcodec_reset_handler(void *priv)
- {
- 	struct mtk_vcodec_dev *dev = priv;
-@@ -94,6 +137,7 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
- 	const struct mtk_vcodec_fw_ops *ops;
- 	struct mtk_vcodec_fw *fw;
- 	struct platform_device *fw_pdev = NULL;
-+	struct mtk_scp *scp = NULL;
- 
- 	switch (type) {
- 	case VPU:
-@@ -106,6 +150,14 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
- 		vpu_wdt_reg_handler(fw_pdev, mtk_vcodec_reset_handler,
- 				    dev, rst_id);
- 		break;
-+	case SCP:
-+		ops = &mtk_vcodec_rproc_msg;
-+		scp = scp_get(dev->plat_dev);
-+		if (!scp) {
-+			mtk_v4l2_err("could not get vdec scp handle");
-+			return ERR_PTR(-EPROBE_DEFER);
-+		}
-+		break;
- 	default:
- 		mtk_v4l2_err("invalid vcodec fw type");
- 		return ERR_PTR(-EINVAL);
-@@ -118,6 +170,7 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
- 	fw->type = type;
- 	fw->ops = ops;
- 	fw->pdev = fw_pdev;
-+	fw->scp = scp;
- 
- 	return fw;
- }
-@@ -129,6 +182,9 @@ void mtk_vcodec_fw_release(struct mtk_vcodec_fw *fw)
- 	case VPU:
- 		put_device(&fw->pdev->dev);
- 		break;
-+	case SCP:
-+		scp_put(fw->scp);
-+		break;
- 	}
- }
- EXPORT_SYMBOL_GPL(mtk_vcodec_fw_release);
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
-index ff25b0c19f74..ced1b6a10e07 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
-@@ -4,6 +4,7 @@
- #define _MTK_VCODEC_FW_H_
- 
- #include <linux/remoteproc.h>
-+#include <linux/remoteproc/mtk_scp.h>
- 
- #include "../mtk-vpu/mtk_vpu.h"
- 
-@@ -11,6 +12,7 @@ struct mtk_vcodec_dev;
- 
- enum mtk_vcodec_fw_type {
- 	VPU,
-+	SCP,
- };
- 
- struct mtk_vcodec_fw;
+ Required properties:
+-- compatible : "mediatek,mt8173-vcodec-enc" for encoder
+-  "mediatek,mt8173-vcodec-dec" for decoder.
++- compatible : "mediatek,mt8173-vcodec-enc" for MT8173 encoder
++  "mediatek,mt8183-vcodec-enc" for MT8183 encoder.
++  "mediatek,mt8173-vcodec-dec" for MT8173 decoder.
+ - reg : Physical base address of the video codec registers and length of
+   memory mapped region.
+ - interrupts : interrupt number to the cpu.
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
