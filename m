@@ -2,142 +2,74 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B68C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD4AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD85520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0E820656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598007120;
+	bh=1k7U4PSUM4yAUm0/6DoU641DVnINw25wkhL4AAswegs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ym+XkWJcReMajhqKMdlrQfIDAIxKKM/br0dC2ExI41zFx3PRmbBw6dDT2Uj+Th/wl
+	 D8Uqux6ngW+b632ZMdtuEZmNVIV7oWaLWZYkkQBXVq4KdlGoWMrsghPS2d3B1qjAgz
+	 wSCHymu963I2wZuu1TY6bgzS7fVwmWDfJ7pSjG3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgHUKvp (ORCPT
+        id S1728357AbgHUKv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:51:45 -0400
-Received: from mga07.intel.com ([134.134.136.100]:26746 "EHLO mga07.intel.com"
+        Fri, 21 Aug 2020 06:51:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728218AbgHUKvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:51:25 -0400
-IronPort-SDR: QfG2kwKXAUpGt/bbPReZCfSA/Nfi/bj2vo8KqIF4OvjmW6eQyb3NzqNi+VJeLjCWwpzeB82ul7
- ibrBae9w6KIA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="219800997"
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="219800997"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 03:51:24 -0700
-IronPort-SDR: emp+PiYWpmZnAXCHODRvwRxv6bYsWXhzCA/k6wD/LcuxCXUXXMig+vBUxPjZK3dffZbJnIBOH7
- wCtvYqPT0iwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="327730791"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 03:51:21 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k94dj-00AK4V-2U; Fri, 21 Aug 2020 13:51:19 +0300
-Date:   Fri, 21 Aug 2020 13:51:19 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v8 1/3] devres: provide devm_krealloc()
-Message-ID: <20200821105119.GL1891694@smile.fi.intel.com>
-References: <20200820185110.17828-1-brgl@bgdev.pl>
- <20200820185110.17828-2-brgl@bgdev.pl>
- <20200821081555.GG1891694@smile.fi.intel.com>
- <CAMRc=Me=D1cOsaRqK-BwHT7f-_=3=eciduA=G95FfE2e_XUWfg@mail.gmail.com>
+        id S1727794AbgHUKvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 06:51:49 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DAD520656;
+        Fri, 21 Aug 2020 10:51:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598007107;
+        bh=1k7U4PSUM4yAUm0/6DoU641DVnINw25wkhL4AAswegs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=prhbb35myOvkZwCCf8yDkGRFADHWY/m9+JW8VonHKEhgn5l1mTzsd+O2PIHaqjXq/
+         5xnJ/ah7z8Pj8wuXz58f46GPqGOemmHb4VRj+ZkOj/b4p/GoeOB73IadUVpq9fFfBk
+         WP8lltJ8pdoBbdrmW4PHkbnnQffGC/Y+uXurTs4I=
+Date:   Fri, 21 Aug 2020 11:51:43 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Subject: Re: [PATCH] ARM64: vdso32: Install vdso32 from vdso_install
+Message-ID: <20200821105142.GA20455@willie-the-truck>
+References: <20200818014950.42492-1-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMRc=Me=D1cOsaRqK-BwHT7f-_=3=eciduA=G95FfE2e_XUWfg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200818014950.42492-1-swboyd@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:59:19AM +0200, Bartosz Golaszewski wrote:
-> On Fri, Aug 21, 2020 at 10:35 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Aug 20, 2020 at 08:51:08PM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-...
-
-> > > +static struct devres *to_devres(void *data)
-> > > +{
-> > > +     return data - ALIGN(sizeof(struct devres), ARCH_KMALLOC_MINALIGN);
-> > > +}
-> > > +
-> > > +static size_t devres_data_size(size_t total_size)
-> > > +{
-> > > +     return total_size - ALIGN(sizeof(struct devres), ARCH_KMALLOC_MINALIGN);
-> > > +}
-> >
-> > I'm fine with above, but here is a side note, perhaps
-> >
-> >         offsetof(struct devres, data)
-> >
-> > will be more practical (no duplication of alignment and hence slightly better
-> > maintenance)? (Note, I didn't check if it provides the correct result)
-> >
+On Mon, Aug 17, 2020 at 06:49:50PM -0700, Stephen Boyd wrote:
+> Add the 32-bit vdso Makefile to the vdso_install rule so that 'make
+> vdso_install' installs the 32-bit compat vdso when it is compiled.
 > 
-> Hi Andy,
-> 
-> The data pointer in struct devres is defined as:
-> 
->     u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
-> 
-> And this value (assigned the value of ARCH_DMA_MINALIGN) varies from
-> one arch to another. I wasn't really sure if offsetof() would work for
-> every case so I went with something very explicit.
+> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Fixes: a7f71a2c8903 ("arm64: compat: Add vDSO")
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  arch/arm64/Makefile               | 1 +
+>  arch/arm64/kernel/vdso32/Makefile | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
 
-I have checked with a small program simulating to_devres() with your variant,
-offsetof() and container_of().
+Acked-by: Will Deacon <will@kernel.org>
 
-The result is this: if MINALIGN < sizeof(long) and since struct is unpacked the
-offsetof(), and thus container_of(), gives correct result, while ALIGN()
-approach mistakenly moves pointer too back.
-
-Test results
-~~~~~~~~~~~~
-sizeof(devres), ALIGN(data), resulting 3 pointers against NULL followed by
-actual pointer of allocated struct and 3 pointers against it.
-
-% for i in 1 2 4; do gcc -O2 -Wall -DSZ=$i -o test test.c && ./test | head -n1; done
-szof: 24 a: 24 0xffffffffffffffe8 0xffffffffffffffef 0xffffffffffffffef, 0x55a3aa91e2a0: 0x55a3aa91e299 0x55a3aa91e2a0 0x55a3aa91e2a0
-szof: 24 a: 24 0xffffffffffffffe8 0xffffffffffffffee 0xffffffffffffffee, 0x563d7b88b2a0: 0x563d7b88b29a 0x563d7b88b2a0 0x563d7b88b2a0
-szof: 24 a: 24 0xffffffffffffffe8 0xffffffffffffffec 0xffffffffffffffec, 0x557d08cf82a0: 0x557d08cf829c 0x557d08cf82a0 0x557d08cf82a0
-
-% for i in 1 2 4; do gcc -m32 -O2 -Wall -DSZ=$i -o test test.c && ./test | head -n1; done
-szof: 12 a: 12 0xfffffff4 0xfffffff7 0xfffffff7, 0x584301a0: 0x5843019d 0x584301a0 0x584301a0
-szof: 12 a: 12 0xfffffff4 0xfffffff6 0xfffffff6, 0x57bd61a0: 0x57bd619e 0x57bd61a0 0x57bd61a0
-szof: 12 a: 12 0xfffffff4 0xfffffff4 0xfffffff4, 0x56b491a0: 0x56b491a0 0x56b491a0 0x56b491a0
-
-I think you need to change this to use container_of() and offsetof().
-
-> > Another side note: do we have existing users of these helpers?
-> 
-> Which ones? Because I assume you're not referring to the ones I'm
-> adding in this patch. :)
-
-Opposite, the ones you are introduced here. Meaning that we might convert
-existing user(s) in the separate change(s) later on.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Will
