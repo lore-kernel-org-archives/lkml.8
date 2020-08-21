@@ -2,95 +2,114 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE782C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7221C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC6ED20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4907207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgHUDC0 (ORCPT
+        id S1727093AbgHUDFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:02:26 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:47752 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725852AbgHUDCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:02:24 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 564FE26ECB8ED6D33E92;
-        Fri, 21 Aug 2020 11:02:17 +0800 (CST)
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Fri, 21 Aug 2020 11:02:16 +0800
-Subject: Re: [PATCH net-next] hinic: add debugfs support
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <chiqijun@huawei.com>
-References: <20200820121432.23597-1-luobin9@huawei.com>
- <20200820090203.3f56024b@kicinski-fedora-PC1C0HJN>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <b4ad6d8e-0760-bcea-56a3-dd8d3ffc8237@huawei.com>
-Date:   Fri, 21 Aug 2020 11:01:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 20 Aug 2020 23:05:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbgHUDFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 23:05:03 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EDEF20732;
+        Fri, 21 Aug 2020 03:05:01 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 23:04:59 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
+Message-ID: <20200820230459.2471c892@oasis.local.home>
+In-Reply-To: <c0ca85e475d1e761431b2c10ade803451c74178f.camel@perches.com>
+References: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
+        <20200820170951.v4.3.I066d89f39023956c47fb0a42edf196b3950ffbf7@changeid>
+        <20200820102347.15d2f610@oasis.local.home>
+        <CANMq1KCoEZVj=sjxCqBhqLZKBab57+82=Rk_LN7fc3aCuNHMUw@mail.gmail.com>
+        <20200820203601.4f70bf98@oasis.local.home>
+        <CANMq1KAAgXG9MKMZ_D9zYFV-j0oVreA_AeSw-8FoyJgZ9eWQpg@mail.gmail.com>
+        <20200820215701.667f02b2@oasis.local.home>
+        <f9d33bcaa2eda680752205d3c3690cb6bc421730.camel@perches.com>
+        <CANMq1KDYBbtrrCw6YUeoAPeHyet3L7qM3di9zmULDDRaQR_fZA@mail.gmail.com>
+        <c0ca85e475d1e761431b2c10ade803451c74178f.camel@perches.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200820090203.3f56024b@kicinski-fedora-PC1C0HJN>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme714-chm.china.huawei.com (10.1.199.110) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/21 0:02, Jakub Kicinski wrote:
-> On Thu, 20 Aug 2020 20:14:32 +0800 Luo bin wrote:
->> +static int hinic_dbg_help(struct hinic_dev *nic_dev, const char *cmd_buf)
->> +{
->> +	netif_info(nic_dev, drv, nic_dev->netdev, "Available commands:\n");
->> +	netif_info(nic_dev, drv, nic_dev->netdev, "sq info <queue id>\n");
->> +	netif_info(nic_dev, drv, nic_dev->netdev, "sq wqe info <queue id> <wqe id>\n");
->> +	netif_info(nic_dev, drv, nic_dev->netdev, "rq info <queue id>\n");
->> +	netif_info(nic_dev, drv, nic_dev->netdev, "rq wqe info <queue id> <wqe id>\n");
->> +	netif_info(nic_dev, drv, nic_dev->netdev, "sq ci table <queue id>\n");
->> +	netif_info(nic_dev, drv, nic_dev->netdev, "rq cqe info <queue id> <cqe id>\n");
->> +	netif_info(nic_dev, drv, nic_dev->netdev, "mac table\n");
->> +	netif_info(nic_dev, drv, nic_dev->netdev, "global table\n");
->> +	netif_info(nic_dev, drv, nic_dev->netdev, "func table\n");
->> +	netif_info(nic_dev, drv, nic_dev->netdev, "port table\n");
->> +	return 0;
->> +}
->> +
->> +static const struct hinic_dbg_cmd_info g_hinic_dbg_cmd[] = {
->> +	{"help", hinic_dbg_help},
->> +	{"sq info", hinic_dbg_get_sq_info},
->> +	{"sq wqe info", hinic_dbg_get_sq_wqe_info},
->> +	{"rq info", hinic_dbg_get_rq_info},
->> +	{"rq wqe info", hinic_dbg_get_rq_wqe_info},
->> +	{"sq ci table", hinic_dbg_get_ci_table},
->> +	{"rq cqe info", hinic_dbg_get_rq_cqe_info},
->> +	{"mac table", hinic_dbg_get_mac_table},
->> +	{"global table", hinic_dbg_get_global_table},
->> +	{"func table", hinic_dbg_get_function_table},
->> +	{"port table", hinic_dbg_get_port_table},
->> +};
+On Thu, 20 Aug 2020 19:49:59 -0700
+Joe Perches <joe@perches.com> wrote:
+
+> Perhaps make trace_printk dependent on #define DEBUG?
+
+This is basically what Nicolas's patch series does in this very patch!
+
+And no, I hate it. We are currently discussing ways of not having to
+modify the config in order to allow trace_printk() to be used.
+
+We don't want to burden the developer to take a config, add a bunch of
+trace_printks() and find that it's compiled out!
+
+Thus, this is a NAK.
+
+-- Steve
+
+
 > 
-> Please don't create command interfaces like this.
+> Something like:
+> ---
+>  include/linux/kernel.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> Instead create a read only file for objects you want to expose.
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 500def620d8f..6ca8f958df73 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -717,6 +717,7 @@ do {									\
+>   * let gcc optimize the rest.
+>   */
+>  
+> +#ifdef DEBUG
+>  #define trace_printk(fmt, ...)				\
+>  do {							\
+>  	char _______STR[] = __stringify((__VA_ARGS__));	\
+> @@ -725,6 +726,12 @@ do {							\
+>  	else						\
+>  		trace_puts(fmt);			\
+>  } while (0)
+> +#else
+> +#define trace_printk(fmt, ...)						\
+> +do {									\
+> +	__trace_printk_check_format(fmt, ##args);			\
+> +} while (0)
+> +#endif
+>  
+>  #define do_trace_printk(fmt, args...)					\
+>  do {									\
 > 
-> Split addition of each object into a separate patch and provide example
-> output in the commit message.
-> .
-> 
-Will fix. Thanks for your review.
+
