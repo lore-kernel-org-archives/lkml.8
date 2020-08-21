@@ -2,119 +2,105 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA83EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D06CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80DD520724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9150B20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:54:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R1LdeZIF"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="kJrVOdIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgHUTyg (ORCPT
+        id S1726878AbgHUTyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:54:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38290 "EHLO
+        Fri, 21 Aug 2020 15:54:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbgHUTyI (ORCPT
+        with ESMTP id S1726871AbgHUTyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:54:08 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E8CC0613ED
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:54:05 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k13so1335830plk.13
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:54:05 -0700 (PDT)
+        Fri, 21 Aug 2020 15:54:35 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A42C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:54:35 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id v15so1490714lfg.6
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:54:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SwQmKOlsNP/z38IYejjYj+yvvrS1Eywv52+2HVAlv9Q=;
-        b=R1LdeZIF9QjkB4RICKULaFwrCsS1XuI99/vuiq4cUyDFMXBxzUFujL6oWyYM2UH1nh
-         tWsZAtfxgGw6HkqEKt7TA3Ijkwr1LM5uL39F+VTZxX20aJt3RSZikDLByfg7RB4zZr5x
-         8gQzvir0FqNAzAZV4VAGlv9FBJ+2iKZA31XYI=
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KJANaxWQksktmcdpt1vpEvTKGf7eyf5hPRoBA+TJZ88=;
+        b=kJrVOdIXLOjbRM1ug3UwwnDKa3IM7/QSTo42xxKuh8+jtUB19alU08stSTGQR5gup3
+         ENyiHOCJo3yp515bEK4VfhDUBSG1L7C3JNxbiaWeJY0CdJBGAA3d7nsvW7Cq03BA5/is
+         qBZ5fyS6KRsAoeskWWRFyCeOhxo/qsmDjzQGkD54exKLZSvg8iZYxpRpFNbo/lB771F9
+         FGB+4wQvRWUnfGBQ9+ajB/YBTEt12oflRPTl8rf5SdXsRcRgompRq7As508+P3Vpll1N
+         BysX0xoshJnX468Ewgl55HUkJuOYt97kkZ5OBvbm4tZo2LgX54L3/XUHT2xBUTnt6zc5
+         3LOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SwQmKOlsNP/z38IYejjYj+yvvrS1Eywv52+2HVAlv9Q=;
-        b=n96BNj7lHhQSWn5D/3LikHoAC1mWlP9aRf6x0FHyLwhUGJvSOwMeGpS3fMhxOiNQAp
-         ugt4IG2sMgf4Q8uxK6iZFOHl4PDNXrndnur/QRJWFP4yDR7hF5pT9zoK10kIakzMyg5i
-         C1TZ63QJXEan6zH0pRsBV4HqFL1LmxhNBe5MdBH0+aceMvWl+O0qYaRp/4SqTZykDznM
-         b9Se2PJ+RL672IY2mHDJmjIkdsr/pYv33xOy9qknucjFyvyrrTtX8f3vepUsUl+961Li
-         t0d2UoULilZmXCJyuN95DdxP8Lq3pRzG9tDhGWIUH4kYwFNE8NFlROXxSzjLFk73dFVd
-         mRjA==
-X-Gm-Message-State: AOAM530OpqZ8Wrk7DFHQ0EHwNdYqEc/5TWi9D2xM1SdUKdZ9XLXtXh13
-        pagOTU4AosbQKrFODlDFIBsTQg==
-X-Google-Smtp-Source: ABdhPJy2WKMv8VZqejr2E0c2Supk2WQRHgcBJPLIvDE5jyc3fVqM70J7mGGAwnDLjFOWQ8g7AvXYxw==
-X-Received: by 2002:a17:902:9a43:: with SMTP id x3mr3388759plv.31.1598039645460;
-        Fri, 21 Aug 2020 12:54:05 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z77sm3469389pfc.199.2020.08.21.12.54.00
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KJANaxWQksktmcdpt1vpEvTKGf7eyf5hPRoBA+TJZ88=;
+        b=Tcea6ZZqYnX4f0Odv/WK/cwR6LW0lxKU9aaPvEuGGxoMZNiLCr06t3g9xfBNTE3LU7
+         57tE16fLv/FEuu8tObTJ7WK8gBDrp93iIoR21P2hNIW6KoOgr/WhtNZaFGlcA2YOCqVU
+         vUK+fbATT0ILROkPb41LUPD9ujN3jCchj3Fuk9Zg5UvNW21Q1wJNXPFTbdgyVaVysVg8
+         9mwEcOfhqGHW+5tip+O2hClSWiCSl55jroUnXTLa71gkNIDI2bcpLcOy5r92z2vFiv86
+         D8nPIl9sAH+7q4UFWLkq25Zah93XAUGTFvWo6LmW+PVuqRgdxHou3xouHBF7PmAjQiXa
+         P6Sg==
+X-Gm-Message-State: AOAM533OOQkhSOXGQgu3iO6AUaoZtYuB1zdCuV/UvC415kEPy7hckf+V
+        JJ/zsSdAYp/hVPoaxWe15xTUn2KivPlfXN8b
+X-Google-Smtp-Source: ABdhPJx61phnZE+0v199dWLX3X1fWs9S+cuOGQX5EkGw6DlUw0N2Dl3p+Q1wEGjH0LM9pfkmik+PQA==
+X-Received: by 2002:a05:6512:1048:: with SMTP id c8mr2032156lfb.101.1598039673364;
+        Fri, 21 Aug 2020 12:54:33 -0700 (PDT)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id e14sm566846ljl.96.2020.08.21.12.54.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 12:54:02 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 14/29] arm64/build: Warn on orphan section placement
-Date:   Fri, 21 Aug 2020 12:42:55 -0700
-Message-Id: <20200821194310.3089815-15-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821194310.3089815-1-keescook@chromium.org>
-References: <20200821194310.3089815-1-keescook@chromium.org>
+        Fri, 21 Aug 2020 12:54:32 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 11:46:03 -0700
+From:   Olof Johansson <olof@lixom.net>
+To:     Daniel Palmer <daniel@0x0f.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     soc@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux@armlinux.org.uk, w@1wt.eu
+Subject: Re: [RFC PATCH 2/3] ARM: mstar: msc313-intc interrupt controller
+ driver
+Message-ID: <20200821184603.GA3407@lx2k>
+References: <20200730130044.2037509-1-daniel@0x0f.com>
+ <20200730130044.2037509-3-daniel@0x0f.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730130044.2037509-3-daniel@0x0f.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't want to depend on the linker's orphan section placement
-heuristics as these can vary between linkers, and may change between
-versions. All sections need to be explicitly handled in the linker
-script.
+Hi,
 
-With all sections now handled, enable orphan section warnings.
+On Thu, Jul 30, 2020 at 10:00:43PM +0900, Daniel Palmer wrote:
+> Add a driver for the two peripheral interrupt controllers
+> in MStar MSC313 and other MStar/Sigmastar Armv7 SoCs.
+> 
+> Supports both the "IRQ" and "FIQ" controllers that
+> forward interrupts from the various IP blocks inside the
+> SoC to the ARM GIC.
+> 
+> They are basically the same thing except for one difference:
+> The FIQ controller needs to clear the interrupt and the IRQ
+> controller doesn't.
 
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/arm64/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+Sorry for the late response, going through patches we might have missed or that
+need replies now...
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 6de7f551b821..61a46f56ff33 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -29,6 +29,10 @@ LDFLAGS_vmlinux	+= --fix-cortex-a53-843419
-   endif
- endif
- 
-+# We never want expected sections to be placed heuristically by the
-+# linker. All sections should be explicitly named in the linker script.
-+LDFLAGS_vmlinux += --orphan-handling=warn
-+
- ifeq ($(CONFIG_ARM64_USE_LSE_ATOMICS), y)
-   ifneq ($(CONFIG_ARM64_LSE_ATOMICS), y)
- $(warning LSE atomics not supported by binutils)
--- 
-2.25.1
+This needs to go to the irqchip maintainers for review. If you get their
+acked/reviewed-by, we can merge it through our tree if that is easier. But they
+need to sign off on it. Feel free to cc soc@kernel.org on them though, and we
+always merge the dts changes through our tree.
+
+
+-Olof
 
