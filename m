@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3802C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFE5C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D22920702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717EF20702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029645;
-	bh=7Q6HM9Ptm0ehqNKFjOdCuDKFk4FU6X/LwGcfnqJLWIk=;
+	s=default; t=1598029648;
+	bh=8YzhsoQFl5yvaWZV4/nD9oHMVHqPsV9BJ66lDXAXqq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OCa8kbG1U8c3qXi4TOh2vlV31nbFHtQJjB+eaK6EmB0QS/nPMeR0OGfUQs1uKFyTk
-	 lwoBNDO//rkTRE2dCpOyFUXpyDCfJqLzKL+1xeaK9BiqiGDkT0yBhpiwHj/I1zAsYr
-	 LZ1+mgM9ls3BBP+VDNGYOv3IoMIlSwJcdqP/NWfk=
+	b=VZXl/4bsQP3o7P5g2aYuh9GDIoEbBaN0Neqgo7GrMNH/MRngwziGrM2Ap425a9uvt
+	 r5OG5//x3Oq0p50oLDvtMX7hGEdGwzkkMGObgDJpBHiLigwkxBj5JASgtMur4EKutI
+	 l7GKVv8Kq5qKGZsi681+d8nMvfNf9zVnDDNMlAMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgHURHX (ORCPT
+        id S1728881AbgHURHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:07:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728223AbgHUQSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:18:03 -0400
+        id S1728227AbgHUQSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:18:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8119422B4D;
-        Fri, 21 Aug 2020 16:17:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 527B022CF6;
+        Fri, 21 Aug 2020 16:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026674;
-        bh=7Q6HM9Ptm0ehqNKFjOdCuDKFk4FU6X/LwGcfnqJLWIk=;
+        s=default; t=1598026679;
+        bh=8YzhsoQFl5yvaWZV4/nD9oHMVHqPsV9BJ66lDXAXqq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RBe/cBRm3izYzqojs9SVrvJvIzmyrJff5j0s7USewkCla4SLeQTQ3mPYOHKr/QDt/
-         1jg8KUWvg+Uxv0IFvZ3brOINNu2yHGBzUrPZ21+krnkfKblZTx+KC7atJ9+TgIctmY
-         8KMkHJvaeZPOlbqbCjZh6xlxR6dzefvsgQgHSTiQ=
+        b=dr2BJguoguszWZgtJAm0Xsgl4MuuRBb5tzdTPRqml4YueAfjFd9GCvYXg4/xMfCvB
+         F9LUu9REOmpPR0jlHq8rl5ULWhS9Ut+IVrQ+b5Q0b2NSk7VXAfLS7ZlB6g6qmPCkdy
+         MpU3YRZWtPDIuQFcpx0xEX8ddsNqZtDldbpk5d8k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 39/48] locking/lockdep: Fix overflow in presentation of average lock-time
-Date:   Fri, 21 Aug 2020 12:16:55 -0400
-Message-Id: <20200821161704.348164-39-sashal@kernel.org>
+Cc:     Gal Pressman <galpress@amazon.com>,
+        Shadi Ammouri <sammouri@amazon.com>,
+        Yossi Leybovich <sleybo@amazon.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 43/48] RDMA/efa: Add EFA 0xefa1 PCI ID
+Date:   Fri, 21 Aug 2020 12:16:59 -0400
+Message-Id: <20200821161704.348164-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161704.348164-1-sashal@kernel.org>
 References: <20200821161704.348164-1-sashal@kernel.org>
@@ -60,40 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Gal Pressman <galpress@amazon.com>
 
-[ Upstream commit a7ef9b28aa8d72a1656fa6f0a01bbd1493886317 ]
+[ Upstream commit d4f9cb5c5b224dca3ff752c1bb854250bf114944 ]
 
-Though the number of lock-acquisitions is tracked as unsigned long, this
-is passed as the divisor to div_s64() which interprets it as a s32,
-giving nonsense values with more than 2 billion acquisitons. E.g.
+Add support for 0xefa1 devices.
 
-  acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-  -------------------------------------------------------------------------
-    2350439395           0.07         353.38   649647067.36          0.-32
-
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20200725185110.11588-1-chris@chris-wilson.co.uk
+Link: https://lore.kernel.org/r/20200722140312.3651-5-galpress@amazon.com
+Reviewed-by: Shadi Ammouri <sammouri@amazon.com>
+Reviewed-by: Yossi Leybovich <sleybo@amazon.com>
+Signed-off-by: Gal Pressman <galpress@amazon.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep_proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/efa/efa_main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index 9bb6d2497b040..581f818181386 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -400,7 +400,7 @@ static void seq_lock_time(struct seq_file *m, struct lock_time *lt)
- 	seq_time(m, lt->min);
- 	seq_time(m, lt->max);
- 	seq_time(m, lt->total);
--	seq_time(m, lt->nr ? div_s64(lt->total, lt->nr) : 0);
-+	seq_time(m, lt->nr ? div64_u64(lt->total, lt->nr) : 0);
- }
+diff --git a/drivers/infiniband/hw/efa/efa_main.c b/drivers/infiniband/hw/efa/efa_main.c
+index 83858f7e83d0f..6c2e849f44498 100644
+--- a/drivers/infiniband/hw/efa/efa_main.c
++++ b/drivers/infiniband/hw/efa/efa_main.c
+@@ -10,10 +10,12 @@
  
- static void seq_stats(struct seq_file *m, struct lock_stat_data *data)
+ #include "efa.h"
+ 
+-#define PCI_DEV_ID_EFA_VF 0xefa0
++#define PCI_DEV_ID_EFA0_VF 0xefa0
++#define PCI_DEV_ID_EFA1_VF 0xefa1
+ 
+ static const struct pci_device_id efa_pci_tbl[] = {
+-	{ PCI_VDEVICE(AMAZON, PCI_DEV_ID_EFA_VF) },
++	{ PCI_VDEVICE(AMAZON, PCI_DEV_ID_EFA0_VF) },
++	{ PCI_VDEVICE(AMAZON, PCI_DEV_ID_EFA1_VF) },
+ 	{ }
+ };
+ 
 -- 
 2.25.1
 
