@@ -2,419 +2,134 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9940BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69FBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A58F20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E50920738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:15:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xah160YC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHUTPE convert rfc822-to-8bit (ORCPT
+        id S1726641AbgHUTPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:15:04 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:47166 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725801AbgHUTPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 15:15:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgHUTPC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 15:15:02 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 392079F5048610EB87B2;
-        Sat, 22 Aug 2020 03:14:57 +0800 (CST)
-Received: from dggema721-chm.china.huawei.com (10.3.20.85) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Sat, 22 Aug 2020 03:14:56 +0800
-Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
- dggema721-chm.china.huawei.com (10.3.20.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Sat, 22 Aug 2020 03:14:56 +0800
-Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
- dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.1913.007;
- Sat, 22 Aug 2020 03:14:56 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-CC:     "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "ganapatrao.kulkarni@cavium.com" <ganapatrao.kulkarni@cavium.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        huangdaode <huangdaode@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Jonathan Cameron" <jonathan.cameron@huawei.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Steve Capper <steve.capper@arm.com>
-Subject: RE: [PATCH v7 1/3] dma-contiguous: provide the ability to reserve
- per-numa CMA
-Thread-Topic: [PATCH v7 1/3] dma-contiguous: provide the ability to reserve
- per-numa CMA
-Thread-Index: AQHWd69ix8OgXlSJiUCOYl4oKg5K9qlCGRQAgADS8MA=
-Date:   Fri, 21 Aug 2020 19:14:56 +0000
-Message-ID: <d442db3bd2094078a4e50b1c6ffe63b8@hisilicon.com>
-References: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
- <20200821113355.6140-2-song.bao.hua@hisilicon.com>
- <20200821142804.GR969206@linux.ibm.com>
-In-Reply-To: <20200821142804.GR969206@linux.ibm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.201.113]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3A4FC061573;
+        Fri, 21 Aug 2020 12:15:02 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id x69so2342043qkb.1;
+        Fri, 21 Aug 2020 12:15:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0sLKvJx3aFnV8gtyaecG7WJ6uhDEbkAGQLVXZ3qP928=;
+        b=Xah160YCM0xzn9UUnKwjd0claCM16C/euOHhTTE9ub37R9WxWzmf/MF1E4NIHpdfdQ
+         koPkrqtlc4zIsZwVMU5ndHSLC6pPRXvHIYdmMPriU4OUVg/x0Pqx/mw9q1w2h+Q4o8/K
+         kChmgNYiy9C4UScQOFMZn2aTcKJUObYHdXIIEfCFkgKoS+qL14kmcnbXkWldyzpn+L4t
+         vFnIkshF7iA/UYigdg0+v9a11nVsTYGPBfRB67k6GGLvvXRhHmIQ8C4u4Qivvk6dlu0d
+         rKVJ9aGesIrp7nm1pH35rfXmpnbfp6hdOSJ+n0zizmtUcA7EkdBaOUUpSjJ1dcuR6swG
+         7rjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=0sLKvJx3aFnV8gtyaecG7WJ6uhDEbkAGQLVXZ3qP928=;
+        b=jGRnWhTgZYzf855ueLsWxjRU909w+jKG9DbbtoUwwaAbzCjrFZMK9IstCvSsAP3/Bq
+         wPXA4m23F5gpZ0DMc8nmxKDIh+RunuAVDogaqZj3kmhRWSHaMGJnhbs4A8OZD6Om2GLO
+         eZtyOVx3GhTcpD4YG5AC0Q5x1yCgIbNxI8L2B9CqBqBCWhmbbpmSKw2m+xxrBXa0IyC7
+         LEuBNe+MSAe5umJK8N5eVoiH41YSLnEFSzxJhfxUQ8Z+o3jG8vfpxW/Yw1GFyzS7E8GI
+         mCX6175wUR+pM0idefLa0v/sKILnP8pDv2klE+gXz+ezKviOImyAqvcXunCZaSBoVuFw
+         WrSA==
+X-Gm-Message-State: AOAM530b9V9z79IvnETlgKARp3CzoOlxdHMy8H4PhDNRUgGkW4xyFwTJ
+        sz2EPOvYdkVqxfZJUsNgGSQ=
+X-Google-Smtp-Source: ABdhPJz8iysSUxGCA55UQ5iXlD4Gs/QH7SLXCNC+V5QN/wcnVdmjYLu5nATOqx54Mm7/5VktdlOJiQ==
+X-Received: by 2002:a37:9e48:: with SMTP id h69mr4206764qke.249.1598037301820;
+        Fri, 21 Aug 2020 12:15:01 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id y46sm2945634qth.78.2020.08.21.12.15.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 12:15:01 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 21 Aug 2020 15:14:58 -0400
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+Message-ID: <20200821191458.GA1475504@rani.riverdale.lan>
+References: <20200818202407.GA3143683@rani.riverdale.lan>
+ <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
+ <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
+ <20200818214146.GA3196105@rani.riverdale.lan>
+ <df6c1da4-b910-ecb8-0de2-6156dd651be6@rasmusvillemoes.dk>
+ <20200820175617.GA604994@rani.riverdale.lan>
+ <CAHk-=whn91ar+EbcBXQb9UXad00Q5WjU-TCB6UBzVba682a4ew@mail.gmail.com>
+ <20200821172935.GA1411923@rani.riverdale.lan>
+ <CAHk-=wi8vdb+wo-DACDpSijYfAbCs135YcnnAbRhGJcU+A=-+Q@mail.gmail.com>
+ <CAHk-=whjVCTjZG0Y88WhJruLdbxF=7q3mmFThD+N5WK0P5giSw@mail.gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whjVCTjZG0Y88WhJruLdbxF=7q3mmFThD+N5WK0P5giSw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 21, 2020 at 11:02:08AM -0700, Linus Torvalds wrote:
+> On Fri, Aug 21, 2020 at 10:54 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Fri, Aug 21, 2020 at 10:29 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > >
+> > > This is why I'm saying clang's no-builtin-foo option is useful for
+> > > embedded: it doesn't prevent the programmer using __builtin_foo(), it
+> > > prevents the _compiler_ using __builtin_foo() on its own.
+> >
+> > And that's fine. But it's apparently not what gcc does.
+> 
+> Oh, testing it seems to say that that is exactly what gcc does too. I
+> must have misunderstood some comment in this thread to mean otherwise.
+> 
+>                 Linus
 
+How are you testing it?
 
-> -----Original Message-----
-> From: Mike Rapoport [mailto:rppt@linux.ibm.com]
-> Sent: Saturday, August 22, 2020 2:28 AM
-> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
-> Cc: hch@lst.de; m.szyprowski@samsung.com; robin.murphy@arm.com;
-> will@kernel.org; ganapatrao.kulkarni@cavium.com;
-> catalin.marinas@arm.com; akpm@linux-foundation.org;
-> iommu@lists.linux-foundation.org; linux-arm-kernel@lists.infradead.org;
-> linux-kernel@vger.kernel.org; Zengtao (B) <prime.zeng@hisilicon.com>;
-> huangdaode <huangdaode@huawei.com>; Linuxarm <linuxarm@huawei.com>;
-> Jonathan Cameron <jonathan.cameron@huawei.com>; Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de>; Steve Capper <steve.capper@arm.com>
-> Subject: Re: [PATCH v7 1/3] dma-contiguous: provide the ability to reserve
-> per-numa CMA
-> 
-> On Fri, Aug 21, 2020 at 11:33:53PM +1200, Barry Song wrote:
-> > Right now, drivers like ARM SMMU are using dma_alloc_coherent() to get
-> > coherent DMA buffers to save their command queues and page tables. As
-> > there is only one default CMA in the whole system, SMMUs on nodes other
-> > than node0 will get remote memory. This leads to significant latency.
-> >
-> > This patch provides per-numa CMA so that drivers like SMMU can get local
-> > memory. Tests show localizing CMA can decrease dma_unmap latency much.
-> > For instance, before this patch, SMMU on node2  has to wait for more than
-> > 560ns for the completion of CMD_SYNC in an empty command queue; with
-> this
-> > patch, it needs 240ns only.
-> >
-> > A positive side effect of this patch would be improving performance even
-> > further for those users who are worried about performance more than DMA
-> > security and use iommu.passthrough=1 to skip IOMMU. With local CMA, all
-> > drivers can get local coherent DMA buffers.
-> >
-> > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Robin Murphy <robin.murphy@arm.com>
-> > Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Cc: Steve Capper <steve.capper@arm.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Mike Rapoport <rppt@linux.ibm.com>
-> > Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> > ---
-> >  -v7: with respect to Will's comments
-> >  * move to use for_each_online_node
-> >  * add description if users don't specify pernuma_cma
-> >  * provide default value for CONFIG_DMA_PERNUMA_CMA
-> >
-> >  .../admin-guide/kernel-parameters.txt         |  11 ++
-> >  include/linux/dma-contiguous.h                |   6 ++
-> >  kernel/dma/Kconfig                            |  11 ++
-> >  kernel/dma/contiguous.c                       | 100
-> ++++++++++++++++--
-> >  4 files changed, 118 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt
-> b/Documentation/admin-guide/kernel-parameters.txt
-> > index bdc1f33fd3d1..c609527fc35a 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -599,6 +599,17 @@
-> >  			altogether. For more information, see
-> >  			include/linux/dma-contiguous.h
-> >
-> > +	pernuma_cma=nn[MG]
-> 
-> Maybe cma_pernuma or cma_pernode?
-
-Sounds good.
-
-> 
-> > +			[ARM64,KNL]
-> > +			Sets the size of kernel per-numa memory area for
-> > +			contiguous memory allocations. A value of 0 disables
-> > +			per-numa CMA altogether. And If this option is not
-> > +			specificed, the default value is 0.
-> > +			With per-numa CMA enabled, DMA users on node nid will
-> > +			first try to allocate buffer from the pernuma area
-> > +			which is located in node nid, if the allocation fails,
-> > +			they will fallback to the global default memory area.
-> > +
-> >  	cmo_free_hint=	[PPC] Format: { yes | no }
-> >  			Specify whether pages are marked as being inactive
-> >  			when they are freed.  This is used in CMO environments
-> > diff --git a/include/linux/dma-contiguous.h
-> b/include/linux/dma-contiguous.h
-> > index 03f8e98e3bcc..fe55e004f1f4 100644
-> > --- a/include/linux/dma-contiguous.h
-> > +++ b/include/linux/dma-contiguous.h
-> > @@ -171,6 +171,12 @@ static inline void dma_free_contiguous(struct
-> device *dev, struct page *page,
-> >
-> >  #endif
-> >
-> > +#ifdef CONFIG_DMA_PERNUMA_CMA
-> > +void dma_pernuma_cma_reserve(void);
-> > +#else
-> > +static inline void dma_pernuma_cma_reserve(void) { }
-> > +#endif
-> > +
-> >  #endif
-> >
-> >  #endif
-> > diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-> > index 847a9d1fa634..c38979d45b13 100644
-> > --- a/kernel/dma/Kconfig
-> > +++ b/kernel/dma/Kconfig
-> > @@ -118,6 +118,17 @@ config DMA_CMA
-> >  	  If unsure, say "n".
-> >
-> >  if  DMA_CMA
-> > +
-> > +config DMA_PERNUMA_CMA
-> > +	bool "Enable separate DMA Contiguous Memory Area for each NUMA
-> Node"
-> > +	default NUMA && ARM64
-> > +	help
-> > +	  Enable this option to get pernuma CMA areas so that devices like
-> > +	  ARM64 SMMU can get local memory by DMA coherent APIs.
-> > +
-> > +	  You can set the size of pernuma CMA by specifying
-> "pernuma_cma=size"
-> > +	  on the kernel's command line.
-> > +
-> >  comment "Default contiguous memory area size:"
-> >
-> >  config CMA_SIZE_MBYTES
-> > diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-> > index cff7e60968b9..0383c9b86715 100644
-> > --- a/kernel/dma/contiguous.c
-> > +++ b/kernel/dma/contiguous.c
-> > @@ -69,6 +69,19 @@ static int __init early_cma(char *p)
-> >  }
-> >  early_param("cma", early_cma);
-> >
-> > +#ifdef CONFIG_DMA_PERNUMA_CMA
-> > +
-> > +static struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
-> > +static phys_addr_t pernuma_size_bytes __initdata;
-> > +
-> > +static int __init early_pernuma_cma(char *p)
-> > +{
-> > +	pernuma_size_bytes = memparse(p, &p);
-> > +	return 0;
-> > +}
-> > +early_param("pernuma_cma", early_pernuma_cma);
-> > +#endif
-> > +
-> >  #ifdef CONFIG_CMA_SIZE_PERCENTAGE
-> >
-> >  static phys_addr_t __init __maybe_unused
-> cma_early_percent_memory(void)
-> > @@ -96,6 +109,34 @@ static inline __maybe_unused phys_addr_t
-> cma_early_percent_memory(void)
-> >
-> >  #endif
-> >
-> > +#ifdef CONFIG_DMA_PERNUMA_CMA
-> > +void __init dma_pernuma_cma_reserve(void)
-> > +{
-> > +	int nid;
-> > +
-> > +	if (!pernuma_size_bytes)
-> > +		return;
-> > +
-> > +	for_each_online_node(nid) {
-> > +		int ret;
-> > +		char name[20];
-> > +		struct cma **cma = &dma_contiguous_pernuma_area[nid];
-> > +
-> > +		snprintf(name, sizeof(name), "pernuma%d", nid);
-> > +		ret = cma_declare_contiguous_nid(0, pernuma_size_bytes, 0, 0,
-> > +						 0, false, name, cma, nid);
-> > +		if (ret) {
-> > +			pr_warn("%s: reservation failed: err %d, node %d", __func__,
-> > +				ret, nid);
-> > +			continue;
-> > +		}
-> > +
-> > +		pr_debug("%s: reserved %llu MiB on node %d\n", __func__,
-> > +			(unsigned long long)pernuma_size_bytes / SZ_1M, nid);
-> > +	}
-> > +}
-> > +#endif
-> > +
-> >  /**
-> >   * dma_contiguous_reserve() - reserve area(s) for contiguous memory
-> handling
-> >   * @limit: End address of the reserved memory (optional, 0 for any).
-> > @@ -228,23 +269,44 @@ static struct page *cma_alloc_aligned(struct cma
-> *cma, size_t size, gfp_t gfp)
-> >   * @size:  Requested allocation size.
-> >   * @gfp:   Allocation flags.
-> >   *
-> > - * This function allocates contiguous memory buffer for specified device. It
-> > - * tries to use device specific contiguous memory area if available, or the
-> > - * default global one.
-> > + * tries to use device specific contiguous memory area if available, or it
-> > + * tries to use per-numa cma, if the allocation fails, it will fallback to
-> > + * try default global one.
-> >   *
-> > - * Note that it byapss one-page size of allocations from the global area as
-> > - * the addresses within one page are always contiguous, so there is no need
-> > - * to waste CMA pages for that kind; it also helps reduce fragmentations.
-> > + * Note that it bypass one-page size of allocations from the per-numa and
-> > + * global area as the addresses within one page are always contiguous, so
-> > + * there is no need to waste CMA pages for that kind; it also helps reduce
-> > + * fragmentations.
-> >   */
-> >  struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t
-> gfp)
-> >  {
-> > +#ifdef CONFIG_DMA_PERNUMA_CMA
-> > +	int nid = dev_to_node(dev);
-> > +#endif
-> > +
-> >  	/* CMA can be used only in the context which permits sleeping */
-> >  	if (!gfpflags_allow_blocking(gfp))
-> >  		return NULL;
-> >  	if (dev->cma_area)
-> >  		return cma_alloc_aligned(dev->cma_area, size, gfp);
-> > -	if (size <= PAGE_SIZE || !dma_contiguous_default_area)
-> > +	if (size <= PAGE_SIZE)
-> > +		return NULL;
-> > +
-> > +#ifdef CONFIG_DMA_PERNUMA_CMA
-> > +	if (nid != NUMA_NO_NODE && !(gfp & (GFP_DMA | GFP_DMA32))) {
-> > +		struct cma *cma = dma_contiguous_pernuma_area[nid];
-> 
-> It could be that for some node reservation failedm than
-> dma_contiguous_pernuma_area[nid] would be NULL.
-> I'd add a fallback to another node here.
-
-This has been done.
-If dma_contiguous_pernuma_area[nid] is null, it will fallback to the default global cma.
-
-> 
-> > +		struct page *page;
-> > +
-> > +		if (cma) {
-> > +			page = cma_alloc_aligned(cma, size, gfp);
-> > +			if (page)
-> > +				return page;
-> > +		}
-> > +	}
-> > +#endif
-> 
-> I think the selection of the area can be put in a helper funciton and
-> then here we just try to allocate from the selected area. E.g.
-> 
-> static struct cma* dma_get_cma_area(struct device *dev)
-> {
-> #ifdef CONFIG_DMA_PERNUMA_CMA
-> 	int nid = dev_to_node(dev);
-> 	struct cma *cma = dma_contiguous_pernuma_area[nid];
-> 
-> 	if (!cma)
-> 		/* select cma from another node */ ;
-> 
-> 	return cma;
-> #else
-> 	return dma_contiguous_default_area;
-> #endif
-> }
-> 
-
-It is possible dma_contiguous_pernuma_area[nid] is not null, but we fail to get memory
-from it due to it is either full or has no GFP_DMA(32) support. In this case, we still need
-to fallback to the default global cma. So the code is trying pernuma_cma, then trying
-default global cma. It is not picking one from the two areas. It is trying both.
-
-> struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
-> {
-> 	struct cma *cma;
-> 	...
-> 
-> 
-> 	cma = dma_get_cma_area(dev);
-> 	if (!cma)
-> 		return NULL;
-> 
-> 	return cma_alloc_aligned(cma, size, gfp);
-> }
-> 
-> > +	if (!dma_contiguous_default_area)
-> >  		return NULL;
-> > +
-> >  	return cma_alloc_aligned(dma_contiguous_default_area, size, gfp);
-> >  }
-> >
-> > @@ -261,9 +323,27 @@ struct page *dma_alloc_contiguous(struct device
-> *dev, size_t size, gfp_t gfp)
-> >   */
-> >  void dma_free_contiguous(struct device *dev, struct page *page, size_t
-> size)
-> >  {
-> > -	if (!cma_release(dev_get_cma_area(dev), page,
-> > -			 PAGE_ALIGN(size) >> PAGE_SHIFT))
-> > -		__free_pages(page, get_order(size));
-> 
-> Here as well, dev_get_cma_area() can be replaced with, say
-> dma_get_dev_cma_area(dev, page) that will hide the below logic.
-
-As explained above, this won't work.
-
-> 
-> > +	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-> > +
-> > +	/* if dev has its own cma, free page from there */
-> > +	if (dev->cma_area) {
-> > +		if (cma_release(dev->cma_area, page, count))
-> > +			return;
-> > +	} else {
-> > +		/*
-> > +		 * otherwise, page is from either per-numa cma or default cma
-> > +		 */
-> > +#ifdef CONFIG_DMA_PERNUMA_CMA
-> > +		if (cma_release(dma_contiguous_pernuma_area[page_to_nid(page)],
-> > +					page, count))
-> > +			return;
-> > +#endif
-> > +		if (cma_release(dma_contiguous_default_area, page, count))
-> > +			return;
-> > +	}
-> > +
-> > +	/* not in any cma, free from buddy */
-> > +	__free_pages(page, get_order(size));
-> >  }
-> >
-> >  /*
-> > --
-> > 2.27.0
-> >
-> >
-
-Thanks
-Barry
+https://godbolt.org/z/eahdGn
