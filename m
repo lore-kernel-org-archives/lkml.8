@@ -2,74 +2,132 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD4AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C077DC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD0E820656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598007120;
-	bh=1k7U4PSUM4yAUm0/6DoU641DVnINw25wkhL4AAswegs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ym+XkWJcReMajhqKMdlrQfIDAIxKKM/br0dC2ExI41zFx3PRmbBw6dDT2Uj+Th/wl
-	 D8Uqux6ngW+b632ZMdtuEZmNVIV7oWaLWZYkkQBXVq4KdlGoWMrsghPS2d3B1qjAgz
-	 wSCHymu963I2wZuu1TY6bgzS7fVwmWDfJ7pSjG3g=
+	by mail.kernel.org (Postfix) with ESMTP id 9F39620656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y0Mfgip0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgHUKv6 (ORCPT
+        id S1728140AbgHUKyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:51:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727794AbgHUKvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:51:49 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 21 Aug 2020 06:54:00 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29760 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728008AbgHUKwi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 06:52:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598007157;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=m+sWpLL8B15YiBoZkjZFY9ODFpvPLxIevI4EtwVXHWs=;
+        b=Y0Mfgip09bx3eHqxmLhnMsmIkg94RkwyL7qwzYadXcMnWjh6PpY3tn8AHJwVuoWTEixqbF
+        v49vOiWvJPyzBRjVuRTKgkYp3HGNOTiQ0RHLYiQWelG+VczIQJxN2uBWTq+yN1nbMQPwDs
+        hbhisCa3A8eAbpR8rtH2mG8+QIfenNc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-475-Arr460QEMU-dEeMrVD4xNw-1; Fri, 21 Aug 2020 06:52:33 -0400
+X-MC-Unique: Arr460QEMU-dEeMrVD4xNw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DAD520656;
-        Fri, 21 Aug 2020 10:51:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598007107;
-        bh=1k7U4PSUM4yAUm0/6DoU641DVnINw25wkhL4AAswegs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=prhbb35myOvkZwCCf8yDkGRFADHWY/m9+JW8VonHKEhgn5l1mTzsd+O2PIHaqjXq/
-         5xnJ/ah7z8Pj8wuXz58f46GPqGOemmHb4VRj+ZkOj/b4p/GoeOB73IadUVpq9fFfBk
-         WP8lltJ8pdoBbdrmW4PHkbnnQffGC/Y+uXurTs4I=
-Date:   Fri, 21 Aug 2020 11:51:43 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-Subject: Re: [PATCH] ARM64: vdso32: Install vdso32 from vdso_install
-Message-ID: <20200821105142.GA20455@willie-the-truck>
-References: <20200818014950.42492-1-swboyd@chromium.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B9761885D89;
+        Fri, 21 Aug 2020 10:52:31 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 397977C533;
+        Fri, 21 Aug 2020 10:52:30 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     x86@kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Chang Seok Bae <chang.seok.bae@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v2] x86/entry/64: Do not use RDPID in paranoid entry to accomodate KVM
+Date:   Fri, 21 Aug 2020 06:52:29 -0400
+Message-Id: <20200821105229.18938-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818014950.42492-1-swboyd@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 06:49:50PM -0700, Stephen Boyd wrote:
-> Add the 32-bit vdso Makefile to the vdso_install rule so that 'make
-> vdso_install' installs the 32-bit compat vdso when it is compiled.
-> 
-> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Fixes: a7f71a2c8903 ("arm64: compat: Add vDSO")
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  arch/arm64/Makefile               | 1 +
->  arch/arm64/kernel/vdso32/Makefile | 2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Acked-by: Will Deacon <will@kernel.org>
+Don't use RDPID in the paranoid entry flow, as it can consume a KVM
+guest's MSR_TSC_AUX value if an NMI arrives during KVM's run loop.
 
-Will
+In general, the kernel does not need TSC_AUX because it can just use
+__this_cpu_read(cpu_number) to read the current processor id.  It can
+also just block preemption and thread migration at its will, therefore
+it has no need for the atomic rdtsc+vgetcpu provided by RDTSCP.  For this
+reason, as a performance optimization, KVM loads the guest's TSC_AUX when
+a CPU first enters its run loop.  On AMD's SVM, it doesn't restore the
+host's value until the CPU exits the run loop; VMX is even more aggressive
+and defers restoring the host's value until the CPU returns to userspace.
+
+This optimization obviously relies on the kernel not consuming TSC_AUX,
+which falls apart if an NMI arrives during the run loop and uses RDPID.
+Removing it would be painful, as both SVM and VMX would need to context
+switch the MSR on every VM-Enter (for a cost of 2x WRMSR), whereas using
+LSL instead RDPID is a minor blip.
+
+Both SAVE_AND_SET_GSBASE and GET_PERCPU_BASE are only used in paranoid entry,
+therefore the patch can just remove the RDPID alternative.
+
+Fixes: eaad981291ee3 ("x86/entry/64: Introduce the FIND_PERCPU_BASE macro")
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Chang Seok Bae <chang.seok.bae@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org
+Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
+Debugged-by: Tom Lendacky <thomas.lendacky@amd.com>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/entry/calling.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+index 98e4d8886f11..ae9b0d4615b3 100644
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -374,12 +374,14 @@ For 32-bit we have the following conventions - kernel is built with
+  * Fetch the per-CPU GSBASE value for this processor and put it in @reg.
+  * We normally use %gs for accessing per-CPU data, but we are setting up
+  * %gs here and obviously can not use %gs itself to access per-CPU data.
++ *
++ * Do not use RDPID, because KVM loads guest's TSC_AUX on vm-entry and
++ * may not restore the host's value until the CPU returns to userspace.
++ * Thus the kernel would consume a guest's TSC_AUX if an NMI arrives
++ * while running KVM's run loop.
+  */
+ .macro GET_PERCPU_BASE reg:req
+-	ALTERNATIVE \
+-		"LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
+-		"RDPID	\reg", \
+-		X86_FEATURE_RDPID
++	LOAD_CPU_AND_NODE_SEG_LIMIT \reg
+ 	andq	$VDSO_CPUNODE_MASK, \reg
+ 	movq	__per_cpu_offset(, \reg, 8), \reg
+ .endm
+-- 
+2.26.2
+
