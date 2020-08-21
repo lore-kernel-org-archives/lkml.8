@@ -2,162 +2,79 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DFDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B81C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66DF5207CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:34:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rp9TG7pd"
+	by mail.kernel.org (Postfix) with ESMTP id 224A4207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598049258;
+	bh=e9TgfbzPxbZ0RMettD6UjC9e/skty4Ij7sI3PWfvkKA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SUCPLyPGISSYliEZLca7tsagwhzD2W88Er+KGHELOmU2ZEh93oqd6FpJDHN4sG0mb
+	 578TgWxRORC7oSMQLq7Yx914Um17nA500wb+9SguhsBFulrsHKgV8UZj8tjZpsqwjy
+	 5FO4kb+XMC8k5YVy20QjgBfH7g11UFN2ogbLPqW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgHUWeL (ORCPT
+        id S1727006AbgHUWeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgHUWeK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:34:10 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 268D3C061573;
-        Fri, 21 Aug 2020 15:34:09 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id o13so1668054pgf.0;
-        Fri, 21 Aug 2020 15:34:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RZ1PcBsBh9kadoBxW76M+LLiO7WhgEXHum9wOgVmhQM=;
-        b=Rp9TG7pdXFMvdr4kB6vE5IwvvjT56aBVJttTJji/7k+4CmMTDPukzyfz3Y5Qc0jhF3
-         KyLLbd/g+aUX+CwUCD4SA53grlPkDBDIV2UQJ0TJeW8LxPxZ8pdnYqNy8r53CzillBaN
-         YCWV44telWBtLp/ug3JfB/jcgxcAtzob+9/EXJdHhcDwsQ+7hU9Fax19HkUyFs9i5O3L
-         Y0k64W39SCVyVX1nzRBAp7k+JJub96JhDGbqnHXL+W23XjpOGLXt9m/23ZFzCzB5OAvo
-         J+052ijYYj3T3iApfY60rBIV6KakTYFxit57lJ1OC8ZgWTrr7JZxmJLWM8mdvG4cbFsI
-         RVaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=RZ1PcBsBh9kadoBxW76M+LLiO7WhgEXHum9wOgVmhQM=;
-        b=ThsEHa5nuR9kQdcMGXTCpyhJYXr/MGYtyX9VUIdOFc4VP+mqCNznRfb6sZ2MqNR0hG
-         FtIJ31WpErI5XPW1Jd3vCPven3qdimEWm4WQEYzoYTjnqI7BYW0V5Ed6RjXUJQDOJf89
-         OvbH5w2efAQtEQvvyq4V/01bne6+9KS3l9UU/YbcbNd5Ky1yqFpZR8WQ7MQZ7SfoLI28
-         cLA2hT4WPKy3oxlGDq55QFC/NihsPBv+xe9rt7o1bmfUNPfICGLx8Nk39/ZQXHx7QLSk
-         Vk9+Qb4JQq13OLiMibP5ALm7cSsryrOYRUtp+CUi1q+iRj93cRm1DzKJ5u1ishix0rk7
-         7XTQ==
-X-Gm-Message-State: AOAM533CphD25oj0bieQptbC6Ki57mq/Y7+eqcwJwSG08O+2r52ccte4
-        ryljhp4y28mKIwDqBacrDn0=
-X-Google-Smtp-Source: ABdhPJxsfEYBiWaOZCzyPvLWLOC7Oxc8aC6acTeSsMyOZ5mLEfV22P3x4CIXAvCGL6YEO/8P/IEjaw==
-X-Received: by 2002:a63:8ec4:: with SMTP id k187mr3711525pge.425.1598049248232;
-        Fri, 21 Aug 2020 15:34:08 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 77sm3668797pfx.85.2020.08.21.15.34.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 15:34:07 -0700 (PDT)
-Subject: Re: [PATCH] net: dsa: sja1105: Do not use address of compatible
- member in sja1105_check_device_id
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20200821222515.414167-1-natechancellor@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <8de404f5-2d09-dfc5-6477-76d705051bb0@gmail.com>
-Date:   Fri, 21 Aug 2020 15:33:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200821222515.414167-1-natechancellor@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Fri, 21 Aug 2020 18:34:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726358AbgHUWeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 18:34:14 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8125E20738;
+        Fri, 21 Aug 2020 22:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598049253;
+        bh=e9TgfbzPxbZ0RMettD6UjC9e/skty4Ij7sI3PWfvkKA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=E5Ry6Ii/g8IEKJsBAvTX0xghUOft+EGvmMStVB6/N9ULp3ZpMRXQs3s0ezsgFilBf
+         N6gV871jS2Pyiysa3OKhRrRl3FJKe410XDCgbjddqnkl8k88ua0GbgLIZjHzHzHuBa
+         2uMzvkYf96ddYZ9ZWAXJnrXpp2IkefCJHhZD44Cs=
+Date:   Fri, 21 Aug 2020 15:34:12 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        intel-gfx@lists.freedesktop.org, Pavel Machek <pavel@ucw.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Airlie <airlied@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Vrabel <david.vrabel@citrix.com>,
+        Joerg Roedel <jroedel@suse.de>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm: Track page table modifications in
+ __apply_to_page_range()
+Message-Id: <20200821153412.5902e4ed0699615d8de4a595@linux-foundation.org>
+In-Reply-To: <20200821123746.16904-1-joro@8bytes.org>
+References: <20200821123746.16904-1-joro@8bytes.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/20 3:25 PM, Nathan Chancellor wrote:
-> Clang warns:
-> 
-> drivers/net/dsa/sja1105/sja1105_main.c:3418:38: warning: address of
-> array 'match->compatible' will always evaluate to 'true'
-> [-Wpointer-bool-conversion]
->         for (match = sja1105_dt_ids; match->compatible; match++) {
->         ~~~                          ~~~~~~~^~~~~~~~~~
-> 1 warning generated.
-> 
-> We should check the value of the first character in compatible to see if
-> it is empty or not. This matches how the rest of the tree iterates over
-> IDs.
-> 
-> Fixes: 0b0e299720bb ("net: dsa: sja1105: use detected device id instead of DT one on mismatch")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1139
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On Fri, 21 Aug 2020 14:37:46 +0200 Joerg Roedel <joro@8bytes.org> wrote:
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+> The __apply_to_page_range() function is also used to change and/or
+> allocate page-table pages in the vmalloc area of the address space.
+> Make sure these changes get synchronized to other page-tables in the
+> system by calling arch_sync_kernel_mappings() when necessary.
+> 
+> Tested-by: Chris Wilson <chris@chris-wilson.co.uk> #x86-32
+> Cc: <stable@vger.kernel.org> # v5.8+
+
+I'm trying to figure out how you figured out that this is 5.8+.  Has a
+particular misbehaving commit been identified?
+
