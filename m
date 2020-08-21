@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1044DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525D6C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D29BA20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3134320738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030189;
-	bh=xTayRYR+0/7bfA/ll1+zs0Ae21gKdBtoCwtMXuu8Mts=;
+	s=default; t=1598030199;
+	bh=CKAnG2XaRPey94snsPZXqAG3CJ16RazBHyauILYnHWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0mKRJJwgEfZPX022vEqsU52P2JlrogCxRXeJX2UwuHDdexr8iVP8KDiHOheM0NEvt
-	 NSU+OtkFDzqNI37TzU5pMQHkWN4Vs/sp1Oe9YJbYSjcreRa4Q1bjaIHNr1zkho8xLg
-	 VEBRA3q0zMENwkNRrvlh6YzqsW0pQWtuYv6rwsfs=
+	b=ZUgIjfSCO4paovmWO214GLrgsqdBFpNNYDDLtiVZJ8X35ev2gpcaLmTMh4DXuxuh+
+	 yfCoWehAAACf8gEZ5YAJBSWkG1T4uAllmpqvoW8bSO+11E5ZrboiCkKuOi6kX2XExH
+	 qKkVM9GPO7XNBeLWjhjFizW8gdNd6eTdWxgL7qGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgHURQ0 (ORCPT
+        id S1728551AbgHURQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:16:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:16:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728088AbgHUQQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:16:33 -0400
+        id S1727831AbgHUQQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:16:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5084A208DB;
-        Fri, 21 Aug 2020 16:16:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC7E220578;
+        Fri, 21 Aug 2020 16:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026593;
-        bh=xTayRYR+0/7bfA/ll1+zs0Ae21gKdBtoCwtMXuu8Mts=;
+        s=default; t=1598026589;
+        bh=CKAnG2XaRPey94snsPZXqAG3CJ16RazBHyauILYnHWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zSnZvAQN/tekEP1EWGLirpKzzhkSQ70ATb7vdocdxK5ROl6sGpv+KEZJ0s4UpVLv4
-         QJHWTljyKfgwkuOBgxYLt3VBmCUmuy178nafDUV7JFUOCT5LpyCEvIsUPtjaMWU05v
-         tFV98bhH/OrHXmH6ml5w/KvkIJbZymg1v9CVlfIc=
+        b=dIw/Cdvmcn2dEQ/DzIv8GBr8cAH9CtaN8kuVXtVyX22W3918SmgvV7B8e8r5fPEN/
+         BrnoqRlFFF0eCtDOjXQtn3WNnAq+Fg5N59z7EtUlbc7V9ZNJ51sOjYvn9E08R2hXI3
+         SUkW8aQ+5IioF7sAF15WoBO/uViZ91XjTSwe+1ZA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 37/61] PCI: Fix pci_create_slot() reference count leak
-Date:   Fri, 21 Aug 2020 12:15:21 -0400
-Message-Id: <20200821161545.347622-37-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.7 35/61] f2fs: fix error path in do_recover_data()
+Date:   Fri, 21 Aug 2020 12:15:19 -0400
+Message-Id: <20200821161545.347622-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
 References: <20200821161545.347622-1-sashal@kernel.org>
@@ -58,57 +59,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5 ]
+[ Upstream commit 9627a7b31f3c4ff8bc8f3be3683983ffe6eaebe6 ]
 
-kobject_init_and_add() takes a reference even when it fails.  If it returns
-an error, kobject_put() must be called to clean up the memory associated
-with the object.
+- don't panic kernel if f2fs_get_node_page() fails in
+f2fs_recover_inline_data() or f2fs_recover_inline_xattr();
+- return error number of f2fs_truncate_blocks() to
+f2fs_recover_inline_data()'s caller;
 
-When kobject_init_and_add() fails, call kobject_put() instead of kfree().
-
-b8eb718348b8 ("net-sysfs: Fix reference count leak in
-rx|netdev_queue_add_kobject") fixed a similar problem.
-
-Link: https://lore.kernel.org/r/20200528021322.1984-1-wu000273@umn.edu
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/slot.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/f2fs/f2fs.h     |  4 ++--
+ fs/f2fs/inline.c   | 19 ++++++++++++-------
+ fs/f2fs/node.c     |  6 ++++--
+ fs/f2fs/recovery.c | 10 ++++++++--
+ 4 files changed, 26 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-index cc386ef2fa122..3861505741e6d 100644
---- a/drivers/pci/slot.c
-+++ b/drivers/pci/slot.c
-@@ -268,13 +268,16 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 	slot_name = make_slot_name(name);
- 	if (!slot_name) {
- 		err = -ENOMEM;
-+		kfree(slot);
- 		goto err;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 5a0f95dfbac2b..97b178fba1595 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3210,7 +3210,7 @@ bool f2fs_alloc_nid(struct f2fs_sb_info *sbi, nid_t *nid);
+ void f2fs_alloc_nid_done(struct f2fs_sb_info *sbi, nid_t nid);
+ void f2fs_alloc_nid_failed(struct f2fs_sb_info *sbi, nid_t nid);
+ int f2fs_try_to_free_nids(struct f2fs_sb_info *sbi, int nr_shrink);
+-void f2fs_recover_inline_xattr(struct inode *inode, struct page *page);
++int f2fs_recover_inline_xattr(struct inode *inode, struct page *page);
+ int f2fs_recover_xattr_data(struct inode *inode, struct page *page);
+ int f2fs_recover_inode_page(struct f2fs_sb_info *sbi, struct page *page);
+ int f2fs_restore_node_summary(struct f2fs_sb_info *sbi,
+@@ -3676,7 +3676,7 @@ int f2fs_convert_inline_page(struct dnode_of_data *dn, struct page *page);
+ int f2fs_convert_inline_inode(struct inode *inode);
+ int f2fs_try_convert_inline_dir(struct inode *dir, struct dentry *dentry);
+ int f2fs_write_inline_data(struct inode *inode, struct page *page);
+-bool f2fs_recover_inline_data(struct inode *inode, struct page *npage);
++int f2fs_recover_inline_data(struct inode *inode, struct page *npage);
+ struct f2fs_dir_entry *f2fs_find_in_inline_dir(struct inode *dir,
+ 			struct fscrypt_name *fname, struct page **res_page);
+ int f2fs_make_empty_inline_dir(struct inode *inode, struct inode *parent,
+diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+index 59a4b7ff11e17..bd50a14e632ba 100644
+--- a/fs/f2fs/inline.c
++++ b/fs/f2fs/inline.c
+@@ -252,7 +252,7 @@ int f2fs_write_inline_data(struct inode *inode, struct page *page)
+ 	return 0;
+ }
+ 
+-bool f2fs_recover_inline_data(struct inode *inode, struct page *npage)
++int f2fs_recover_inline_data(struct inode *inode, struct page *npage)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct f2fs_inode *ri = NULL;
+@@ -274,7 +274,8 @@ bool f2fs_recover_inline_data(struct inode *inode, struct page *npage)
+ 			ri && (ri->i_inline & F2FS_INLINE_DATA)) {
+ process_inline:
+ 		ipage = f2fs_get_node_page(sbi, inode->i_ino);
+-		f2fs_bug_on(sbi, IS_ERR(ipage));
++		if (IS_ERR(ipage))
++			return PTR_ERR(ipage);
+ 
+ 		f2fs_wait_on_page_writeback(ipage, NODE, true, true);
+ 
+@@ -287,21 +288,25 @@ bool f2fs_recover_inline_data(struct inode *inode, struct page *npage)
+ 
+ 		set_page_dirty(ipage);
+ 		f2fs_put_page(ipage, 1);
+-		return true;
++		return 1;
  	}
  
- 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
- 				   "%s", slot_name);
--	if (err)
+ 	if (f2fs_has_inline_data(inode)) {
+ 		ipage = f2fs_get_node_page(sbi, inode->i_ino);
+-		f2fs_bug_on(sbi, IS_ERR(ipage));
++		if (IS_ERR(ipage))
++			return PTR_ERR(ipage);
+ 		f2fs_truncate_inline_inode(inode, ipage, 0);
+ 		clear_inode_flag(inode, FI_INLINE_DATA);
+ 		f2fs_put_page(ipage, 1);
+ 	} else if (ri && (ri->i_inline & F2FS_INLINE_DATA)) {
+-		if (f2fs_truncate_blocks(inode, 0, false))
+-			return false;
++		int ret;
++
++		ret = f2fs_truncate_blocks(inode, 0, false);
++		if (ret)
++			return ret;
+ 		goto process_inline;
+ 	}
+-	return false;
++	return 0;
+ }
+ 
+ struct f2fs_dir_entry *f2fs_find_in_inline_dir(struct inode *dir,
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index daf531e69b672..8502035dcdaa6 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -2507,7 +2507,7 @@ int f2fs_try_to_free_nids(struct f2fs_sb_info *sbi, int nr_shrink)
+ 	return nr - nr_shrink;
+ }
+ 
+-void f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
++int f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
+ {
+ 	void *src_addr, *dst_addr;
+ 	size_t inline_size;
+@@ -2515,7 +2515,8 @@ void f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
+ 	struct f2fs_inode *ri;
+ 
+ 	ipage = f2fs_get_node_page(F2FS_I_SB(inode), inode->i_ino);
+-	f2fs_bug_on(F2FS_I_SB(inode), IS_ERR(ipage));
++	if (IS_ERR(ipage))
++		return PTR_ERR(ipage);
+ 
+ 	ri = F2FS_INODE(page);
+ 	if (ri->i_inline & F2FS_INLINE_XATTR) {
+@@ -2534,6 +2535,7 @@ void f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
+ update_inode:
+ 	f2fs_update_inode(inode, ipage);
+ 	f2fs_put_page(ipage, 1);
++	return 0;
+ }
+ 
+ int f2fs_recover_xattr_data(struct inode *inode, struct page *page)
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index dd804c07eeb05..3a0e8410632bc 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -513,7 +513,9 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 
+ 	/* step 1: recover xattr */
+ 	if (IS_INODE(page)) {
+-		f2fs_recover_inline_xattr(inode, page);
++		err = f2fs_recover_inline_xattr(inode, page);
++		if (err)
++			goto out;
+ 	} else if (f2fs_has_xattr_block(ofs_of_node(page))) {
+ 		err = f2fs_recover_xattr_data(inode, page);
+ 		if (!err)
+@@ -522,8 +524,12 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 	}
+ 
+ 	/* step 2: recover inline data */
+-	if (f2fs_recover_inline_data(inode, page))
++	err = f2fs_recover_inline_data(inode, page);
 +	if (err) {
-+		kobject_put(&slot->kobj);
- 		goto err;
++		if (err == 1)
++			err = 0;
+ 		goto out;
 +	}
  
- 	INIT_LIST_HEAD(&slot->list);
- 	list_add(&slot->list, &parent->slots);
-@@ -293,7 +296,6 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 	mutex_unlock(&pci_slot_mutex);
- 	return slot;
- err:
--	kfree(slot);
- 	slot = ERR_PTR(err);
- 	goto out;
- }
+ 	/* step 3: recover data indices */
+ 	start = f2fs_start_bidx_of_node(ofs_of_node(page), inode);
 -- 
 2.25.1
 
