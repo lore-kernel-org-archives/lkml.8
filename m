@@ -2,116 +2,137 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE75C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 357DB20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3240B20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBu/8zoc"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="FFvdCi9F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgHUSfC (ORCPT
+        id S1726746AbgHUSfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:35:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54158 "EHLO
+        Fri, 21 Aug 2020 14:35:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgHUSfB (ORCPT
+        with ESMTP id S1726627AbgHUSfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:35:01 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6AC0C061573;
-        Fri, 21 Aug 2020 11:35:00 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id h2so1275454plr.0;
-        Fri, 21 Aug 2020 11:35:00 -0700 (PDT)
+        Fri, 21 Aug 2020 14:35:11 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4174EC061575
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:35:10 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o23so3467940ejr.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:35:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JoIejRu3GXVmKj8cMY9UV1I6PbZ8S3Q6ft2ghX7hxTw=;
-        b=NBu/8zocZGDiGrG4E9Aunx3MiMWHQ/DbqnIZIIGUKj+gwLiaY5Zm3Tzsr6kkC34xZ8
-         vQdXF4/3m2OJs4+OSFUKebs+ayxf+nJB99UAL647l4jH5SXXstv/qQgLQqLMpP5daEyQ
-         wwYPxPCSE+fwFwXWRPTzqgwfznjCR0dMgQrDdPchjISPXdmBamy3qNywXA/EvN6As5+h
-         TNN7NWQuobO8fKNuyUpQOzePfjQDttdyBz5j1C6uT/h8qYLjQ5xJ87ofFhfQIncCL8ts
-         1wz18zn/Y/sM8Bw+/KIqWqssMkpdWswLCOQ3GCihK+nhzjduPnsKtw9xt/kKb6kP5i3m
-         /9ig==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q4frqIW9I+72sr79+gm0FlxLWfHVNqfXNa3Q85/YG38=;
+        b=FFvdCi9F5IYZnNSXXIYkdNN6KgOiWn2gpkkna/pVmWNnIBtYPB/REc3lR/fIaVeCW9
+         xcSIWYk5iEt0s3PqyD4BZtBeNRnNdMU5hgRft3ZaAVYAasCNtgX2d6rzDzZJkEmWns8Q
+         DMouWMb6Wi3acrbp58tg1muQxWsOySA71Li1F/+ycwrhf8v2Y0nl3puJD3YvwQfnHUGb
+         nrBMScR8wjFGLnAUtO3JiGu8kd20y0FCbHOw69GnkVA4KDSkAF+r8hp2olMacxwqoxVg
+         jl1pnhCY2uVZkYVQNb9N1obAwGLTlc2+T6DsKYp19SXlykAO66qL+BjzJ7BOFir1WKli
+         sEEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JoIejRu3GXVmKj8cMY9UV1I6PbZ8S3Q6ft2ghX7hxTw=;
-        b=Q3R8yMnVYL7HFUbBXIRW/WqcYevVt8MpjD0sZMC5sX9b0xbVcfLyoDxHlNiYNYh3LW
-         WuiB5cIBHQjo6BUauFz1blS54KfNJa5nAh5V2h2MWGicinI6aov8vVxNR552de16aRau
-         DPd+HOu+FTl/BPoZgOCJP8f1ObuaAUicSdHFYQ5Mfd04w9pak/KxJ4YQtYoJGfvwd6Bf
-         CWSUqcobTQhu+q+wWunFVWbA1rJznF8tjgjrHKmQyAZrLt3b0CVTuH+wfF9veq1uXq4z
-         hwDB3fpIxyCodPXqpj9m5zDtL05GP4sLpHOLdWpAK33t7ldmktxN9BdL39ktletZjcqz
-         tcfg==
-X-Gm-Message-State: AOAM5329eOQr7gGc1di75yenfwQgpj+Uq9yMc+MJEXda1gJlR59oLxgm
-        h4WG5hIe74gIOBqNzUvYESSe3emsQ9k=
-X-Google-Smtp-Source: ABdhPJwMME1R8UpmQwpatqgtNJLOgW7AEaHEo7Fv5uD2w2wCDXArBFMv6cumaqUQigIUpIOeQiPcVA==
-X-Received: by 2002:a17:902:ed4a:: with SMTP id y10mr3496148plb.106.1598034900348;
-        Fri, 21 Aug 2020 11:35:00 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t28sm2841570pgn.81.2020.08.21.11.34.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Aug 2020 11:34:59 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 11:34:59 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     kamil@wypas.org, b.zolnierkie@samsung.com, jdelvare@suse.com,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH] hwmon: pwm-fan: Use dev_err_probe() to simplify error
- handling
-Message-ID: <20200821183459.GA198234@roeck-us.net>
-References: <1597649673-22329-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q4frqIW9I+72sr79+gm0FlxLWfHVNqfXNa3Q85/YG38=;
+        b=Wd2wHrNAl1eai8mVX84YGWgqjQK/61PDS3JFHH307VIJcvxtdKPxRVqSnTY8EVWBDe
+         OLM8MXi88imRdQ4Ey8mp5HOfMJ+wcXIQzCnf4IfowATHdm9eAvbNDHji/G1MWULSIWdN
+         g6vVRl08jVJ4pIQ3C/+bEKE19saknAVMYKpdiUhAheOK1A8DaBu9zMU6vTSiWHusa0cl
+         zzJNDsXYQ85kEi0z3aaVa+6311PuSzqT2ylFhr+O2kblGmAkty1UeCU05v1QGTBRjJ8J
+         8k87WLaIP6cqvJZ4bJoLGonO7chsjaJeg2GNY43PQUPAGocqSmvHkWcBV+NI82pmvDo9
+         hkww==
+X-Gm-Message-State: AOAM533W7yKioi/vWT8YDJ8xvJtE6fLISw+eizuTMNJEnE6MOdhuu+eD
+        AjHavLLBB0j08EssHmTg/3MTWmQYii01wY/r+9nO
+X-Google-Smtp-Source: ABdhPJxfrGP14Je3zh0ICJTpECzCcS4IA89+zoHjdAPERXK51mLX3W5gqb4xv4Taij+96NOlohguUZetQbWOQvF7dOs=
+X-Received: by 2002:a17:906:43c9:: with SMTP id j9mr4143785ejn.542.1598034909369;
+ Fri, 21 Aug 2020 11:35:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597649673-22329-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1593198710.git.rgb@redhat.com> <4a5019ed3cfab416aeb6549b791ac6d8cc9fb8b7.1593198710.git.rgb@redhat.com>
+ <CAHC9VhSwMEZrq0dnaXmPi=bu0NgUtWPuw-2UGDrQa6TwxWkZtw@mail.gmail.com> <20200718004341.ruyre5xhlu3ps2tr@madcap2.tricolour.ca>
+In-Reply-To: <20200718004341.ruyre5xhlu3ps2tr@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 21 Aug 2020 14:34:57 -0400
+Message-ID: <CAHC9VhSDLF3W4LNqdgz-56m8wXLZLpDhMd8S-DxFcrKvsgCreg@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V9 08/13] audit: add containerid support for user records
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 03:34:33PM +0800, Anson Huang wrote:
-> dev_err_probe() can reduce code size, uniform error handling and record the
-> defer probe reason etc., use it to simplify the code.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Fri, Jul 17, 2020 at 8:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-07-05 11:11, Paul Moore wrote:
+> > On Sat, Jun 27, 2020 at 9:23 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > >
+> > > Add audit container identifier auxiliary record to user event standalone
+> > > records.
+> > >
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> > > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > > ---
+> > >  kernel/audit.c | 19 ++++++++++++-------
+> > >  1 file changed, 12 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/kernel/audit.c b/kernel/audit.c
+> > > index 54dd2cb69402..997c34178ee8 100644
+> > > --- a/kernel/audit.c
+> > > +++ b/kernel/audit.c
+> > > @@ -1507,6 +1504,14 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+> > >                                 audit_log_n_untrustedstring(ab, str, data_len);
+> > >                         }
+> > >                         audit_log_end(ab);
+> > > +                       rcu_read_lock();
+> > > +                       cont = _audit_contobj_get(current);
+> > > +                       rcu_read_unlock();
+> > > +                       audit_log_container_id(context, cont);
+> > > +                       rcu_read_lock();
+> > > +                       _audit_contobj_put(cont);
+> > > +                       rcu_read_unlock();
+> > > +                       audit_free_context(context);
+> >
+> > I haven't searched the entire patchset, but it seems like the pattern
+> > above happens a couple of times in this patchset, yes?  If so would it
+> > make sense to wrap the above get/log/put in a helper function?
+>
+> I've redone the locking with an rcu lock around the get and a spinlock
+> around the put.  It occurs to me that putting an rcu lock around the
+> whole thing and doing a get without the refcount increment would save
+> us the spinlock and put and be fine since we'd be fine with stale but
+> consistent information traversing the contobj list from this point to
+> report it.  Problem with that is needing to use GFP_ATOMIC due to the
+> rcu lock.  If I stick with the spinlock around the put then I can use
+> GFP_KERNEL and just grab the spinlock while traversing the contobj list.
+>
+> > Not a big deal either way, I'm pretty neutral on it at this point in
+> > the patchset but thought it might be worth mentioning in case you
+> > noticed the same and were on the fence.
+>
+> There is only one other place this is used, in audit_log_exit in
+> auditsc.c.  I had noted the pattern but wasn't sure it was worth it.
+> Inline or not?  Should we just let the compiler decide?
 
-Applied.
+I'm generally not a fan of explicit inlines unless it has been shown
+to be a real problem.
 
-Thanks,
-Guenter
-
-> ---
->  drivers/hwmon/pwm-fan.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index 17bb642..bdba214 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -293,14 +293,8 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  	mutex_init(&ctx->lock);
->  
->  	ctx->pwm = devm_of_pwm_get(dev, dev->of_node, NULL);
-> -	if (IS_ERR(ctx->pwm)) {
-> -		ret = PTR_ERR(ctx->pwm);
-> -
-> -		if (ret != -EPROBE_DEFER)
-> -			dev_err(dev, "Could not get PWM: %d\n", ret);
-> -
-> -		return ret;
-> -	}
-> +	if (IS_ERR(ctx->pwm))
-> +		return dev_err_probe(dev, PTR_ERR(ctx->pwm), "Could not get PWM\n");
->  
->  	platform_set_drvdata(pdev, ctx);
->  
+-- 
+paul moore
+www.paul-moore.com
