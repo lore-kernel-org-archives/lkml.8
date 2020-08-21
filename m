@@ -2,124 +2,150 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22A7C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D033E20735
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F9D20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:45:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UBn8tYSN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgHUSpR (ORCPT
+        id S1726716AbgHUSpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:45:17 -0400
-Received: from l2mail1.panix.com ([166.84.1.75]:56142 "EHLO l2mail1.panix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbgHUSpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:45:09 -0400
-X-Greylist: delayed 970 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Aug 2020 14:45:09 EDT
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-        by l2mail1.panix.com (Postfix) with ESMTPS id 4BY95W0HJszDdc;
-        Fri, 21 Aug 2020 14:29:02 -0400 (EDT)
-Received: from xps-7390 (cpe-23-242-39-94.socal.res.rr.com [23.242.39.94])
-        by mailbackend.panix.com (Postfix) with ESMTPSA id 4BY95Q1Z1Lz1XCR;
-        Fri, 21 Aug 2020 14:28:58 -0400 (EDT)
-Date:   Fri, 21 Aug 2020 11:28:57 -0700 (PDT)
-From:   "Kenneth R. Crudup" <kenny@panix.com>
-Reply-To: "Kenneth R. Crudup" <kenny@panix.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH] ACPI: OSL: Prevent acpi_release_memory() from returning
- too early
-In-Reply-To: <6142241.0H6QnnlUA7@kreacher>
-Message-ID: <alpine.DEB.2.23.453.2008211126550.3596@xps-7390>
-References: <6142241.0H6QnnlUA7@kreacher>
-User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 21 Aug 2020 14:45:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23686 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725906AbgHUSp0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 14:45:26 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LIX9jP063691;
+        Fri, 21 Aug 2020 14:45:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=vSOS4YCf0VCleD8hfNfex3HRQvYcTP2XxAkZXGq19qo=;
+ b=UBn8tYSNsfkoeSxiwg1bdoiR5tPseLBd+3251b7x4IA0t5Jl+pg3+Q4anG7vQMnY28yr
+ Xs80SUKuGV3yOLVdUP+yGlJszJAny6J15bM8AeXcIPvSTouS6uVtCWiW5pBgPOrTbFid
+ 0Ef2yBJ9AkBRAIy5naK+A+FJhtay4SgxplmuyCTm/+54oNi38sFZwLmWTr8x0oaZewta
+ 6PX3YP/2bCPhhiwD4NNbic3kfDZq9OjJArQuWAjW7TfgxF7lNfFu4e5JhRgKnv2E3ZPy
+ gSWa2Py8f52MAErMHw4HerdgxXRQPBzlfNjFOj3CfVZCdRBeu1accV2zF7l88J5rRmDE Xg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 332hdd45c1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 14:45:22 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LIY2gc066917;
+        Fri, 21 Aug 2020 14:45:22 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 332hdd45b8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 14:45:21 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LIjJGL012179;
+        Fri, 21 Aug 2020 18:45:19 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04fra.de.ibm.com with ESMTP id 3304ujtud6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 18:45:19 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LIjHTD21823964
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 18:45:17 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 429D0A4053;
+        Fri, 21 Aug 2020 18:45:17 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CBFDAA4057;
+        Fri, 21 Aug 2020 18:45:15 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.65.240])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Aug 2020 18:45:15 +0000 (GMT)
+Message-ID: <8a1773d7707639d275fff138736d57472e26ade5.camel@linux.ibm.com>
+Subject: Re: [PATCH 02/11] evm: Load EVM key in ima_load_x509() to avoid
+ appraisal
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 21 Aug 2020 14:45:14 -0400
+In-Reply-To: <20200618160133.937-2-roberto.sassu@huawei.com>
+References: <20200618160133.937-1-roberto.sassu@huawei.com>
+         <20200618160133.937-2-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ malwarescore=0 bulkscore=0 phishscore=0 clxscore=1015 mlxlogscore=999
+ suspectscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Works here for me:
-
-----
-$ l /sys/class/typec
-total 0
-10012 0 drwxr-xr-x  2 root root 0 Aug 21 11:25 ./
-   10 0 drwxr-xr-x 67 root root 0 Aug 21 11:25 ../
-27771 0 lrwxrwxrwx  1 root root 0 Aug 21 11:25 port0 -> ../../devices/platform/USBC000:00/typec/port0/
-35601 0 lrwxrwxrwx  1 root root 0 Aug 21 11:25 port0-partner -> ../../devices/platform/USBC000:00/typec/port0/port0-partner/
-36686 0 lrwxrwxrwx  1 root root 0 Aug 21 11:25 port1 -> ../../devices/platform/USBC000:00/typec/port1/
-$
-----
-
-On Fri, 21 Aug 2020, Rafael J. Wysocki wrote:
-
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> After commit 1757659d022b ("ACPI: OSL: Implement deferred unmapping
-> of ACPI memory") in some cases acpi_release_memory() may return
-> before the target memory mappings actually go away, because they
-> are released asynchronously now.
->
-> Prevent it from returning prematurely by making it wait for the next
-> RCU grace period to elapse, for all of the RCU callbacks to complete
-> and for all of the scheduled work items to be flushed before
-> returning.
->
-> Fixes: 1757659d022b ("ACPI: OSL: Implement deferred unmapping of ACPI memory")
-> Reported-by: Kenneth R. Crudup <kenny@panix.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, 2020-06-18 at 18:01 +0200, Roberto Sassu wrote:
+> Public keys do not need to be appraised by IMA as the restriction on the
+> IMA/EVM keyrings ensures that a key is loaded only if it is signed with a
+> key in the primary or secondary keyring.
+> 
+> However, when evm_load_x509() is loaded, appraisal is already enabled and
+> a valid IMA signature must be added to the EVM key to pass verification.
+> 
+> Since the restriction is applied on both IMA and EVM keyrings, it is safe
+> to disable appraisal also when the EVM key is loaded. This patch calls
+> evm_load_x509() inside ima_load_x509() if CONFIG_IMA_LOAD_X509 is defined.
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 > ---
->  drivers/acpi/osl.c |   19 +++++++++++++++++--
->  1 file changed, 17 insertions(+), 2 deletions(-)
->
-> Index: linux-pm/drivers/acpi/osl.c
-> ===================================================================
-> --- linux-pm.orig/drivers/acpi/osl.c
-> +++ linux-pm/drivers/acpi/osl.c
-> @@ -1575,11 +1575,26 @@ static acpi_status acpi_deactivate_mem_r
->  acpi_status acpi_release_memory(acpi_handle handle, struct resource *res,
->  				u32 level)
+>  security/integrity/iint.c         | 2 ++
+>  security/integrity/ima/ima_init.c | 4 ++++
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/security/integrity/iint.c b/security/integrity/iint.c
+> index e12c4900510f..4765a266ba96 100644
+> --- a/security/integrity/iint.c
+> +++ b/security/integrity/iint.c
+> @@ -212,7 +212,9 @@ int integrity_kernel_read(struct file *file, loff_t offset,
+>  void __init integrity_load_keys(void)
 >  {
-> +	acpi_status status;
-> +
->  	if (!(res->flags & IORESOURCE_MEM))
->  		return AE_TYPE;
->
-> -	return acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
-> -				   acpi_deactivate_mem_region, NULL, res, NULL);
-> +	status = acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
-> +				     acpi_deactivate_mem_region, NULL,
-> +				     res, NULL);
-> +	if (ACPI_FAILURE(status))
-> +		return status;
-> +
-> +	/*
-> +	 * Wait for all of the mappings queued up for removal by
-> +	 * acpi_deactivate_mem_region() to actually go away.
-> +	 */
-> +	synchronize_rcu();
-> +	rcu_barrier();
-> +	flush_scheduled_work();
-> +
-> +	return AE_OK;
+>  	ima_load_x509();
+> +#ifndef CONFIG_IMA_LOAD_X509
+>  	evm_load_x509();
+> +#endif
 >  }
->  EXPORT_SYMBOL_GPL(acpi_release_memory);
->
->
->
->
->
+>  
+>  static int __init integrity_fs_init(void)
+> diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+> index 4902fe7bd570..9d29a1680da8 100644
+> --- a/security/integrity/ima/ima_init.c
+> +++ b/security/integrity/ima/ima_init.c
+> @@ -106,6 +106,10 @@ void __init ima_load_x509(void)
+>  
+>  	ima_policy_flag &= ~unset_flags;
+>  	integrity_load_x509(INTEGRITY_KEYRING_IMA, CONFIG_IMA_X509_PATH);
+> +
+> +	/* load also EVM key to avoid appraisal */
+> +	evm_load_x509();
+> +
+>  	ima_policy_flag |= unset_flags;
+>  }
+>  #endif
 
--- 
-Kenneth R. Crudup  Sr. SW Engineer, Scott County Consulting, Orange County CA
+As much as possible IMA and EVM should remain independent of each
+other.   Modifying integrity_load_x509() doesn't help.  This looks like
+a good reason for calling another EVM function from within IMA.
+
+Mimi
+
+
