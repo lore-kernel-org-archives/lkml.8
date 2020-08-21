@@ -2,209 +2,105 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA64520732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A05020732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028060;
-	bh=cfdCNrxxqiPmksM9a9a3500KiB2de5Nz5QodaXsb7FM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w2Er3ITyX5pcxDI+DxPfDEZSxaO180PVJW1N3sZ3obk+MIVfLyrTsIEC5ouZE/ym+
-	 oM7+o9q18dWsTsWk97Yf8mmBNrBbKSym8w+ZIjg+IhqyNu+Odnt9dCEwXLkP94u1ra
-	 4R7SffZg2y2kdpqDm/1DA9FZdYzW7Msad4Zw0nFA=
+	s=default; t=1598028069;
+	bh=DtGgnPkg8Vi64C6+dKTHm1EqoFMOck2QxuISZD/5lx0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=Z2jlDDhD9rNaq/c+/Av5utumSn9uGYXmEJ5/mi/E8kzmVLLk7vtZBmT/VtnAhznft
+	 xM+s2cVoideHBcM3bvYZg46bcZ+kyiyM0xOjAvZ1Sg0vlX/NzKNQOkibV/mQ3HelBY
+	 c36s9Wzu5aqJC6bCnN4RsYaPXDt/3pKqU8v3UboM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgHUQky (ORCPT
+        id S1728647AbgHUQlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:40:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51668 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:41:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728404AbgHUQUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:20:46 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728634AbgHUQkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:40:35 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3C1B22D04;
-        Fri, 21 Aug 2020 16:19:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 527382072D;
+        Fri, 21 Aug 2020 16:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026799;
-        bh=cfdCNrxxqiPmksM9a9a3500KiB2de5Nz5QodaXsb7FM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1u62T43t7cy65XOW2v7xXxBCn6MxIK18faQ6uf9P0cHDatB4sBlpCIApK86kp8DJd
-         YS/3zBkHxvLLhD5kN2lb44D98guzXVlFTSX0beJkFOptt/iaGIDRIzfgTRRY09Hgr2
-         IGWAU34gmCjzx9Ow7DShCf3tsVfxf224RHgnVZzA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, kjlu@umn.edu, wu000273@umn.edu,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 15/26] omapfb: fix multiple reference count leaks due to pm_runtime_get_sync
-Date:   Fri, 21 Aug 2020 12:19:26 -0400
-Message-Id: <20200821161938.349246-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161938.349246-1-sashal@kernel.org>
-References: <20200821161938.349246-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        s=default; t=1598028034;
+        bh=DtGgnPkg8Vi64C6+dKTHm1EqoFMOck2QxuISZD/5lx0=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=qMiOzNe6KP7t162HHbQjkPpYIlCVtFv8ltnH10opD/JDehV3q+upopsMV2bo60TM8
+         6Z8WJGPJUdMhItnbU72Y6dskZsMOoGS2HMZSYzDh6KgmEGd3CpOKS9Q4VMnCh+7Qxa
+         GA4kPln/R6m7gkeNxxk4N6dWGdmMey+I6ho9CHW8=
+Date:   Fri, 21 Aug 2020 17:40:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     alsa-devel@alsa-project.org, Brent Lu <brent.lu@intel.com>
+Cc:     Daniel Stuart <daniel.stuart14@gmail.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Sam McNally <sammc@chromium.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Damian van Soelen <dj.vsoelen@gmail.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+In-Reply-To: <1596198365-10105-1-git-send-email-brent.lu@intel.com>
+References: <1596020585-11517-1-git-send-email-brent.lu@intel.com> <1596198365-10105-1-git-send-email-brent.lu@intel.com>
+Subject: Re: [PATCH v3 0/2] Add period size constraint for Atom Chromebook
+Message-Id: <159802798182.25503.9357316995968776171.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+On Fri, 31 Jul 2020 20:26:03 +0800, Brent Lu wrote:
+> Two different constraints are implemented: one is in platform's CPU
+> DAI to enforce the period to be multiple of 1ms to align with firmware
+> design. The other is in Atom Chromebook's machine driver to use 240 as
+> period size which is selected by google.
+> 
+> 
+> Changes since v1:
+> -Add comma at the end of media_period_size array declaration.
+> 
+> [...]
 
-[ Upstream commit 78c2ce9bde70be5be7e3615a2ae7024ed8173087 ]
+Applied to
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Cc: kjlu@umn.edu
-Cc: wu000273@umn.edu
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Enrico Weigelt <info@metux.net>
-cc: "Andrew F. Davis" <afd@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200614030528.128064-1-pakki001@umn.edu
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/video/fbdev/omap2/omapfb/dss/dispc.c | 7 +++++--
- drivers/video/fbdev/omap2/omapfb/dss/dsi.c   | 7 +++++--
- drivers/video/fbdev/omap2/omapfb/dss/dss.c   | 7 +++++--
- drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c | 5 +++--
- drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c | 5 +++--
- drivers/video/fbdev/omap2/omapfb/dss/venc.c  | 7 +++++--
- 6 files changed, 26 insertions(+), 12 deletions(-)
+Thanks!
 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-index 7a75dfda98457..00f5a54aaf9b7 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-@@ -531,8 +531,11 @@ int dispc_runtime_get(void)
- 	DSSDBG("dispc_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&dispc.pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&dispc.pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
- EXPORT_SYMBOL(dispc_runtime_get);
- 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-index 30d49f3800b33..2bfd9063cdfc3 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-@@ -1148,8 +1148,11 @@ static int dsi_runtime_get(struct platform_device *dsidev)
- 	DSSDBG("dsi_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&dsi->pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&dsi->pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
- 
- static void dsi_runtime_put(struct platform_device *dsidev)
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-index 48c6500c24e1f..91879f9d38a7f 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-@@ -778,8 +778,11 @@ int dss_runtime_get(void)
- 	DSSDBG("dss_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&dss.pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&dss.pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
- 
- void dss_runtime_put(void)
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
-index 156a254705ea5..ab64bf0215e82 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
-@@ -50,9 +50,10 @@ static int hdmi_runtime_get(void)
- 	DSSDBG("hdmi_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&hdmi.pdev->dev);
--	WARN_ON(r < 0);
--	if (r < 0)
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&hdmi.pdev->dev);
- 		return r;
-+	}
- 
- 	return 0;
- }
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
-index 4da36bcab9779..c6efaca3235a8 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
-@@ -54,9 +54,10 @@ static int hdmi_runtime_get(void)
- 	DSSDBG("hdmi_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&hdmi.pdev->dev);
--	WARN_ON(r < 0);
--	if (r < 0)
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&hdmi.pdev->dev);
- 		return r;
-+	}
- 
- 	return 0;
- }
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/venc.c b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-index 392464da12e41..96714b4596d2d 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-@@ -402,8 +402,11 @@ static int venc_runtime_get(void)
- 	DSSDBG("venc_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&venc.pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&venc.pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
- 
- static void venc_runtime_put(void)
--- 
-2.25.1
+[1/1] ASoC: intel: atom: Add period size constraint
+      commit: 5e7820e369248f880767c4c4079b414529bc2125
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
