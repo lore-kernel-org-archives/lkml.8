@@ -2,141 +2,87 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B8EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566CAC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B71E207CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rvkncGg+"
+	by mail.kernel.org (Postfix) with ESMTP id 310B22086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598040926;
+	bh=/T7D++jQJVYAEaRhehB6OXQudUAED1x+6RQtwjpgepM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=r6l5Ncwx7iyR3/KvzRW+J/TZ1x4w7bkGhuSNg4xcLzSiftdL9AyYW0EwuwS+jaHLk
+	 8oIpPmdgWd/Mro22TsYgBMvOpacEYFW95jNiijthtrNZEzDDBCHcjhZgIoXy+JsQEd
+	 aizDgTIig/acZgCqjnPXvwL5dCxOKo0rr1mZnt5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgHUUOw (ORCPT
+        id S1726858AbgHUUPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 16:14:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60666 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725938AbgHUUOu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 16:14:50 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LK3H1P132003;
-        Fri, 21 Aug 2020 16:14:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=OEL2qiQPMhRIm7Kf1rmkn8qZo5qwji4nRxuZSZ+sKUc=;
- b=rvkncGg+heFsofqSqD8cscXSzXxVYKzgeH/Icc7sfVL0xKNqLeOgd0nwqFFEzch86iwE
- VZulPcvulKDfulzwX906quMaHfHuZEKEYymfp9Ii3r33S8mr695jmEVksqs3tPjtd45u
- NWyD/vb+rv+4mvNqRAA0DMLYqrX3VXxbdOhueO7yzumIMoKu9UkJsqAKyCGh/2ijzFII
- QIPP342d+8f4V/EQShyut2odxaC/2jnl7YIYszYFx0C9lu0o07le7sBYwIMh4nY/gRxN
- LnImjSLAt9/p68Kb/xC+k8VliAQF8vvvkVdZtFVTbD8QV/AeSg8MDf0mZtnjikd9fkPc Ug== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3327xueyev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 16:14:43 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LK3PAG132989;
-        Fri, 21 Aug 2020 16:14:43 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3327xueyee-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 16:14:43 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LK52fH015848;
-        Fri, 21 Aug 2020 20:14:41 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 3304cc4qka-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 20:14:41 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LKEdlB24314184
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 20:14:39 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 29160A4053;
-        Fri, 21 Aug 2020 20:14:39 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7ED45A4040;
-        Fri, 21 Aug 2020 20:14:37 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.65.240])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Aug 2020 20:14:37 +0000 (GMT)
-Message-ID: <caedd49bc2080a2fb8b16b9ecacab67d11e68fd7.camel@linux.ibm.com>
-Subject: Re: [PATCH 03/11] evm: Refuse EVM_ALLOW_METADATA_WRITES only if the
- HMAC key is loaded
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Date:   Fri, 21 Aug 2020 16:14:36 -0400
-In-Reply-To: <20200618160133.937-3-roberto.sassu@huawei.com>
-References: <20200618160133.937-1-roberto.sassu@huawei.com>
-         <20200618160133.937-3-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+        Fri, 21 Aug 2020 16:15:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725831AbgHUUPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 16:15:24 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E7D820738;
+        Fri, 21 Aug 2020 20:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598040923;
+        bh=/T7D++jQJVYAEaRhehB6OXQudUAED1x+6RQtwjpgepM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oskdNenPwocChae4HFuF7bNEbcd6pqb+OlqWuz9XE4T4ExAobZJPQ+Vv46iy4oJdJ
+         oXZ5UgEOsQ9iMg+gIaCRVB3NH/LeXX5fSGqlllwM6nWkPLGW1EIkJD68mjCC8Opx/j
+         cXUc7Nleu7OIBwWugqQCCej8//v19BgSMb5VLM1Q=
+Date:   Fri, 21 Aug 2020 13:15:22 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Zefan Li <lizefan@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH v6 06/12] powerpc: inline huge vmap supported functions
+Message-Id: <20200821131522.c819f9c5c1fc24d90244c6dd@linux-foundation.org>
+In-Reply-To: <20200821151216.1005117-7-npiggin@gmail.com>
+References: <20200821151216.1005117-1-npiggin@gmail.com>
+        <20200821151216.1005117-7-npiggin@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_09:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roberto,
+On Sat, 22 Aug 2020 01:12:10 +1000 Nicholas Piggin <npiggin@gmail.com> wrote:
 
-On Thu, 2020-06-18 at 18:01 +0200, Roberto Sassu wrote:
-> Granting metadata write is safe if the HMAC key is not loaded, as it won't
-> let an attacker obtain a valid HMAC from corrupted xattrs. evm_write_key()
-> however does not allow it if any key is loaded, including a public key,
-> which should not be a problem.
-> 
+>  #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
+> -bool arch_vmap_p4d_supported(pgprot_t prot);
+> -bool arch_vmap_pud_supported(pgprot_t prot);
+> -bool arch_vmap_pmd_supported(pgprot_t prot);
+> +static inline bool arch_vmap_p4d_supported(pgprot_t prot)
+> +{
+> +	return false;
+> +}
+> +
+> +static inline bool arch_vmap_pud_supported(pgprot_t prot)
+> +{
+> +	/* HPT does not cope with large pages in the vmalloc area */
+> +	return radix_enabled();
+> +}
+> +
+> +static inline bool arch_vmap_pmd_supported(pgprot_t prot)
+> +{
+> +	return radix_enabled();
+> +}
+>  #endif
 
-Why is the existing hebavior a problem?  What is the problem being
-solved?
-
-> This patch allows setting EVM_ALLOW_METADATA_WRITES if the EVM_INIT_HMAC
-> flag is not set.
-> 
-> Cc: stable@vger.kernel.org # 4.16.x
-> Fixes: ae1ba1676b88e ("EVM: Allow userland to permit modification of EVM-protected metadata")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> ---
->  security/integrity/evm/evm_secfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/security/integrity/evm/evm_secfs.c b/security/integrity/evm/evm_secfs.c
-> index cfc3075769bb..92fe26ace797 100644
-> --- a/security/integrity/evm/evm_secfs.c
-> +++ b/security/integrity/evm/evm_secfs.c
-> @@ -84,7 +84,7 @@ static ssize_t evm_write_key(struct file *file, const char __user *buf,
->  	 * keys are loaded.
->  	 */
->  	if ((i & EVM_ALLOW_METADATA_WRITES) &&
-> -	    ((evm_initialized & EVM_KEY_MASK) != 0) &&
-> +	    ((evm_initialized & EVM_INIT_HMAC) != 0) &&
->  	    !(evm_initialized & EVM_ALLOW_METADATA_WRITES))
->  		return -EPERM;
-
->  
-
-Documentation/ABI/testing/evm needs to be updated as well.
-
-thanks,
-
-Mimi
-
-
-
+Oh.  OK, whatever ;)
