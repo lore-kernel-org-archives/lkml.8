@@ -2,144 +2,119 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43761C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A279C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBCC2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24F31204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:23:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="XLdjNQeh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8fThCai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgHUOXG (ORCPT
+        id S1727902AbgHUOXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 10:23:06 -0400
-Received: from mail-eopbgr70089.outbound.protection.outlook.com ([40.107.7.89]:7159
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726907AbgHUOXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 10:23:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oJ11sdkWRA8QW0jjZp6xs2szDtuvP9ceCfDHHH1yAU1XooYEIsWdqDKiPfa+dtd5vXYOqzBeg8GPpRoqpdcShM1mbubpfNpaBIPEBZTX1oYqCdNWfiFB0BnWgjIGMBFXMRiJt2u+GHLnUwqVwxhn/v+Nm43W5igd2Sv/wd4htmNvlxSv/zt6wSDkICEJKjTgfOi7xgUpm5ercL88sYV0rFZ1WOnqFAkAvvGQEVVZloehNKP8HUtBMG4/gBWKGwCUMnQRajvSlAluNkG8olhgEjwhO94oFe77RpzNzFsHVQQcZ8g0dFrcURPrGqxrFNfhhRyWavJXgt+mkU8P7VOHTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q4BxIhAsnRn4eJES5vWq0GH6y20y+19R5uS+OdV0e3w=;
- b=VfsZOuH73xBBdw2AynHEkcLAphriIK67GTdNB9NarkcspspAaTC03HAj8D/s18h7PevK3Yn/StfIxdAOtkOOSaIUMHPbhLZcWEP/Lp6jc/KNQ2xQ4saEKYU19oWnV2sfYd3nBsYRAZym/5Jc7wjEVYU63vDO1Wem91h1MEierG8pixgsehjN4D+IfvQT/47L/0u4OvRFYzszaqAza28nyJGH+5O3FlET9RCJEZExFtSOmE5I42wklDB89fxor0iC2I3iwuUzu+4pjkQZmiQqbPL/suXEURZ3Xg+RPrsTtFvPO9k1Et9gA+K1KhzRSRHmCv3a/1WXuLTerlrJTm4xeg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=neutral (sender ip is
- 193.240.239.45) smtp.rcpttodomain=perex.cz smtp.mailfrom=diasemi.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=diasemi.com;
- dkim=none (message not signed); arc=none
+        Fri, 21 Aug 2020 10:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgHUOXg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 10:23:36 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08874C061573;
+        Fri, 21 Aug 2020 07:23:36 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id i10so1115104ybt.11;
+        Fri, 21 Aug 2020 07:23:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q4BxIhAsnRn4eJES5vWq0GH6y20y+19R5uS+OdV0e3w=;
- b=XLdjNQeh/OJQoD1/XF8w5ag3qQp0DCh8TLunmQ7l76HsWi4f+iWIabNLCGAgjoPnegr2gSzyFab1VKBVL4BR8DZCPL4KUlJ9/krIWh1IQ2OBMJAdzYB6jnJ/7bvsH3/FVTuSkpXSInv25k99uJUyX3BbmOf8H5u+Wou76FUJV5s=
-Received: from AM6P194CA0030.EURP194.PROD.OUTLOOK.COM (2603:10a6:209:90::43)
- by AM6PR10MB2887.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:e4::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Fri, 21 Aug
- 2020 14:23:01 +0000
-Received: from VE1EUR02FT025.eop-EUR02.prod.protection.outlook.com
- (2603:10a6:209:90:cafe::e0) by AM6P194CA0030.outlook.office365.com
- (2603:10a6:209:90::43) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend
- Transport; Fri, 21 Aug 2020 14:23:01 +0000
-X-MS-Exchange-Authentication-Results: spf=neutral (sender IP is
- 193.240.239.45) smtp.mailfrom=diasemi.com; perex.cz; dkim=none (message not
- signed) header.d=none;perex.cz; dmarc=fail action=none
- header.from=diasemi.com;
-Received-SPF: Neutral (protection.outlook.com: 193.240.239.45 is neither
- permitted nor denied by domain of diasemi.com)
-Received: from mailrelay1.diasemi.com (193.240.239.45) by
- VE1EUR02FT025.mail.protection.outlook.com (10.152.12.109) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.3305.24 via Frontend Transport; Fri, 21 Aug 2020 14:23:00 +0000
-Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
- NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Fri, 21 Aug 2020 16:23:00 +0200
-Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22379)      id
- C2ECE3FB96; Fri, 21 Aug 2020 15:22:59 +0100 (BST)
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Date:   Fri, 21 Aug 2020 15:22:59 +0100
-Subject: [PATCH] ASoC: da7219: Fix I/O voltage range configuration during
- probe
-To:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>
-CC:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>
-Message-ID: <20200821142259.C2ECE3FB96@swsrvapps-01.diasemi.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cdaxvWi4S/8iVwLCKzXxlcoFNvM0MXvR3LgfOth28YM=;
+        b=H8fThCaiORW/A6/dBnOiF1aHybeA7nMJKaCWASyx7Qpxbq3FPXn/Z5um1ohc1TVj8J
+         AishFjqxIOJvvIAK7voJPc/EhLxf3j4BDIzuqUvnCyyat5xEpoRWhnnkH5WwrTroq4xQ
+         r8Upzp5AyZNkA620ZlgKimH/Q+mUE6Em11l8+NojkrgA4FUeH2VIKms6iGpA3nVyBOx/
+         B2QpdobNAG5BQecsBBoelQyBJZRPIgbXG6XfYHaOIQcC8AQHhtMSLKoUAtGmsG96kaA8
+         tOQUQlFX+jDd0IXYpi77m8wZ+wLDbjxpgi8gK2ett/pcAI9wZtGS0PPsMUoEffGlPPOy
+         i9Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cdaxvWi4S/8iVwLCKzXxlcoFNvM0MXvR3LgfOth28YM=;
+        b=N/vRlsmK20LWtuwwqXNB99yedR0WcueZKX4rePTRO2FsODHrldcQZ8qrkI/rEZKfsk
+         iumio0E7lKK8Brnujm4FQb+/Dq/GMIUSWOE4GL6Jq7srzGSYVEnt863rM8LVhrL+DItj
+         dBc9Kej1ZgWKd54dvadbAsTeLV9DXuZJSzARCvryvcYTweQTJAyjokAJ7haiw0DiWx7N
+         8qUxFNNfrzdDU0T1bZkQo8yFOY9lx7xM+YGbkt2W9tdixW2DVDkyusHmBhlGCRn2MUct
+         WDaNsMjTYOuWj6SsC/JkvLze5GiP6kzjskMc+LO0NH0/a21Rcc+GViu10jl/vtql/PYy
+         SbNw==
+X-Gm-Message-State: AOAM531Rln+dw4n5GQNT+hSTXBhjmzT1JRUnJb6M/oJBWYnV11+mE0JB
+        t6nNilRn8sDPMJdK1GIvK8IzpeV1BMP6nJW5fi4=
+X-Google-Smtp-Source: ABdhPJwFPfytP1/12rYImnxNWcaTXjulE7JutGzwE1bfpqb8FCG2JODT/EUADB/j4bZB4OEPY2qXKAuU5RvsXOQxWrw=
+X-Received: by 2002:a25:c743:: with SMTP id w64mr3856261ybe.127.1598019815346;
+ Fri, 21 Aug 2020 07:23:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 38419e5f-0efb-4a1d-82de-08d845ddb5a8
-X-MS-TrafficTypeDiagnostic: AM6PR10MB2887:
-X-Microsoft-Antispam-PRVS: <AM6PR10MB28873C53C10AEE1C10E9E52DA75B0@AM6PR10MB2887.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:913;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gYSCjpDhUUhXzGc++Mx4luEAAnbDZGfLQ8Ib3u5lHn3MFmYMyup/QHBr1xBjgmqTmUHi/bUT8cR6CEse398GGS8NaAoZFgsFztswYoukia+7DVphM5PbyVbnBmljSjjspJEO76eHybmMFJQlT1ps6RjMVmCOCl/lZfONAf+N+cghhgiEzw1OBrvCPsD3hyN1ivwf5Qi6pYSxk3zh9CHHDUW4jgLiiaGROSCw+sb3tq7DEZvI6J70LHZnhLXNdY09ceZmkO9FyEVnYQuZFET3jb70AC9QI7n2qrqIDoP2DKqpJucx0Vmrp+ioM7ps/wFshKWCgtC7hparGCYVTQc5/ktk552aL4JDEHpAcPGzKop27BHj8YtwBo6su/wGlUrvtkzYGxHEvpcogul5rFTcvia7Q18aEF88w4gh/Wiy8YFHCjRAQITzaLndPfDIHR/KnLgddamjGfpG5DQsOGETmw==
-X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(396003)(346002)(136003)(39860400002)(376002)(46966005)(186003)(316002)(356005)(81166007)(426003)(1076003)(5660300002)(82310400002)(2906002)(26005)(6266002)(42186006)(36906005)(70586007)(70206006)(33310700002)(8936002)(82740400003)(47076004)(83380400001)(4326008)(107886003)(33656002)(110136005)(86362001)(54906003)(478600001)(8676002)(336012)(34020700003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 14:23:00.8234
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38419e5f-0efb-4a1d-82de-08d845ddb5a8
-X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
-X-MS-Exchange-CrossTenant-AuthSource: VE1EUR02FT025.eop-EUR02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2887
+References: <20200816190732.6905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200816190732.6905-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdW2RTCi7rAa_tSsY7ukVM2xk6PYD526SRQU1Wd4SSz2Mw@mail.gmail.com>
+In-Reply-To: <CAMuHMdW2RTCi7rAa_tSsY7ukVM2xk6PYD526SRQU1Wd4SSz2Mw@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 21 Aug 2020 15:23:08 +0100
+Message-ID: <CA+V-a8u-DrpNPskCwFEfaxtfSHKDGfOhcVf+y4tZ+aw9jFj=eQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] pinctrl: sh-pfc: r8a7790: Add CAN pins, groups and functions
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-can@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previous improvements around handling device and codec level
-probe functionality added the possibility of the voltage level
-being undefined for the scenario where the IO voltage retrieved
-from the regulator supply was below 1.2V, whereas previously the
-code defaulted to the 2.5V to 3.6V range in that case. This
-commit restores the default value to avoid this happening.
+Hi Geert,
 
-Fixes: aa5b18d1c290 ("ASoC: da7219: Move soft reset handling to codec level probe")
-Reported-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
----
- sound/soc/codecs/da7219.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Thank you for the review.
 
-diff --git a/sound/soc/codecs/da7219.c b/sound/soc/codecs/da7219.c
-index ddd422c..045aeb6 100644
---- a/sound/soc/codecs/da7219.c
-+++ b/sound/soc/codecs/da7219.c
-@@ -1862,6 +1862,9 @@ static int da7219_handle_supplies(struct snd_soc_component *component,
- 		return ret;
- 	}
- 
-+	/* Default to upper range */
-+	*io_voltage_lvl = DA7219_IO_VOLTAGE_LEVEL_2_5V_3_6V;
-+
- 	/* Determine VDDIO voltage provided */
- 	vddio = da7219->supplies[DA7219_SUPPLY_VDDIO].consumer;
- 	ret = regulator_get_voltage(vddio);
-@@ -1869,8 +1872,6 @@ static int da7219_handle_supplies(struct snd_soc_component *component,
- 		dev_warn(component->dev, "Invalid VDDIO voltage\n");
- 	else if (ret < 2800000)
- 		*io_voltage_lvl = DA7219_IO_VOLTAGE_LEVEL_1_2V_2_8V;
--	else
--		*io_voltage_lvl = DA7219_IO_VOLTAGE_LEVEL_2_5V_3_6V;
- 
- 	/* Enable main supplies */
- 	ret = regulator_bulk_enable(DA7219_NUM_SUPPLIES, da7219->supplies);
--- 
-1.9.1
+On Fri, Aug 21, 2020 at 1:52 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Sun, Aug 16, 2020 at 9:07 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add pins, groups and functions for the CAN0 and CAN1 interface.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Don't you want to add the CAN_CLK pins, too?
+>
+Will do. Would you prefer an incremental patch or a v2 ?
 
+Cheers,
+Prabhakar
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
