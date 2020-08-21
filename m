@@ -2,104 +2,178 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AACC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E71C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17014207DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDAA20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:12:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Go5cdtDw"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="gzxuQ0QR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgHUKJi (ORCPT
+        id S1728551AbgHUKMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:09:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbgHUKJf (ORCPT
+        Fri, 21 Aug 2020 06:12:33 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:60673 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727791AbgHUKMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:09:35 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D14D2C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:09:34 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id c4so1132523otf.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:09:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oJN3wZD2Iadhta+J9lF+eLKxZbEwH6T5LBO7jjWL+UY=;
-        b=Go5cdtDw/2+rDAroF0NL2B1fIr6RE7CQ8LHkDCxS2qcKqj25C3XoWf8vXu/Zrkz2PE
-         og4/7bXHMt+MQt3ZxSsTe+v71X31CqLGXEEcx6rZmNU8roR2f7OmYO5KjJlgSkwCtoV2
-         n5bkoD6hUyYWaMMMkBiCnDNglxv8X/KImOgD+9lASXGRVJ8qk8tPz19tH1SPDmon47DX
-         2CdHiTG+K0UESi9+k/xSZ+exC3c4dDklPFPjgcIUw7Ut6Nsh1DjVz3EGV0mc5MBtWdD4
-         zm3OLquTJZrhOWZNHEaqtlXidtzUDmZ6VxL+3bPfOGtWVwEKEOPv50kZkpnYhaptT1uV
-         2tdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oJN3wZD2Iadhta+J9lF+eLKxZbEwH6T5LBO7jjWL+UY=;
-        b=jSAnppx1pFH1p5oyEFf4YCl0I32yKPZfLeyOIQVOAtm/4oguCzu45AQbmfgRM53XVp
-         gVwZUfgKudOcjkTVP+6F3GNF4wSizBro4tKFR9ul/8XjcgbkTPlrl0pEBdXcFdwr6ejh
-         QDP1POLrwk3EjB5DUAkuhmA6nfLYmrHllZ/OGr0WpBCh6qF7TXU9Bb87EB2qUaMlr91a
-         X3QAy9UP/grijcHKWCBrNeMFlh20B4sCKg6jmqO9D5gxIGkkaUUJpChEHvqaVEFesxDk
-         9xK6hbpb5rAg1Fubo2t9ZYyYneTZDvY0iXhh122EqLe4grmXVrY/eD8N2g2E9576JGAw
-         kadg==
-X-Gm-Message-State: AOAM530ashzpwUtUTTWcwowgEhFKEB2xyPQZKo5NEHnccGxm7umGRZ0c
-        k4KAtRJgWwHyZXxGJuPoMY3Vux4If+hyd4tsaKu2Yv10+zI=
-X-Google-Smtp-Source: ABdhPJxzqjOcT7nUk1v/EmEVCP82O+3t3KHPfKmS5jfJQNWxh1JZVhwbf1CcogoJ64Tnea3FfHuuo8fQujw2DY8DRNA=
-X-Received: by 2002:a05:6830:11cc:: with SMTP id v12mr1461109otq.268.1598004574028;
- Fri, 21 Aug 2020 03:09:34 -0700 (PDT)
+        Fri, 21 Aug 2020 06:12:32 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 9428ktxFsuuXO9429kqCEW; Fri, 21 Aug 2020 12:12:29 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1598004749; bh=/r2O0JFEUxqJd2/tSjylCfQCSVud3VL6unTLsbJ8osE=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=gzxuQ0QR0fRTz0sVxvhHXbC+x9exVHX659bjIS66c7PnNEtyd6qerZbCBqKFX05CT
+         hkVRdcpMqFgkPW6FISV4FDPYMy6Il990MCoDb8yWPpNvv4MNpkDDR+aiwa6OZbb/c9
+         fXZ3lHWdwId8m7R7vSogOvKfAUGNtHTogUAmKB4FEAiAHkT9j9xmYBHn8JSR/dRxFv
+         tIYWOySXrLWWz6bd2CQ+owF+RAeWQ/3Dm7CKspgzVPl3E0wyYHrKusDcPpatv6lLUH
+         ysKObsv9OfRNP6KeJwv2IzvZGJzWgTKSWEzMILJPJHgpJ37nbbi8ALHnLfzLzbVH6y
+         lNRnyBeNQzGhw==
+Subject: Re: [Linux-kernel-mentees] [PATCH] v4l2-tpg: Fix global-out-of-bounds
+ read in precalculate_color()
+To:     Peilin Ye <yepeilin.cs@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+References: <20200810050532.640075-1-yepeilin.cs@gmail.com>
+ <774bcf2d-c8eb-086a-3569-c7e530d8a63d@xs4all.nl>
+ <20200821094813.GB480216@PWN>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <eab860f3-5520-72cd-3bb1-f990f7f9ea6f@xs4all.nl>
+Date:   Fri, 21 Aug 2020 12:12:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200710101808.1316522-1-jens.wiklander@linaro.org>
-In-Reply-To: <20200710101808.1316522-1-jens.wiklander@linaro.org>
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-Date:   Fri, 21 Aug 2020 12:09:22 +0200
-Message-ID: <CAHUa44GKffKTBdrfchtj=wuM_4EMcFPw35DyXT7pRuqDYQ6VYA@mail.gmail.com>
-Subject: Re: [PATCH] driver: tee: Handle NULL pointer indication from client
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        op-tee@lists.trustedfirmware.org
-Cc:     Cedric Neveux <cedric.neveux@nxp.com>,
-        Michael Whitfield <michael.whitfield@nxp.com>,
-        Joakim Bech <joakim.bech@linaro.org>,
-        Jerome Forissier <jerome@forissier.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200821094813.GB480216@PWN>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfA51CrE3nRlCkBlPcn36s1XLf6uyxMROGsFL8NrhdAPFcp4HpESSGEspSg3O1UzdA4UP/rdQYypoyqy337WLUMv1IaEgP/JB1OQBHtrMAZvQBS77Xm2X
+ a0UUFtXycB2zooXVrlZFiiYa0n3YM3/i2Fd1ClGeGYSY32U5uVrhVUozk5cAxl0IxOM6A9mGCRVkNbgRWMnulWOVBV7+9e59WVj0UryGMDfb2UoYseBap/s3
+ MSFtVZkLrHPGfRp9gMlonBkl9znRrTwXs7vWQ74IwMQOIizSSOyDS1ZKdxYBC6DUav3ze4XScaQ29GkQUkKcn7nM90gb6O07xJ+t2yHbTwv0Mpz1v2y6DAid
+ nNxtyyrD1NfjGDVrcPWTpnsc5eBqjg7sjV9tznwQDeOgrpNrN5fGbd0DptH6uVFd3JQVuKROdJBdUzdYH6DjBL+IH9Atxh9RnBnF1BWgAP1mLspumU0UdrWr
+ fscTb3xwltnqG9T9EQkQ1g2vy8Sfaipj9ejFLg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 12:18 PM Jens Wiklander
-<jens.wiklander@linaro.org> wrote:
->
-> From: Cedric Neveux <cedric.neveux@nxp.com>
->
-> TEE Client introduce a new capability "TEE_GEN_CAP_MEMREF_NULL"
-> to handle the support of the shared memory buffer with a NULL pointer.
->
-> This capability depends on TEE Capabilities and driver support.
-> Driver and TEE exchange capabilities at driver initialization.
->
-> Signed-off-by: Michael Whitfield <michael.whitfield@nxp.com>
-> Signed-off-by: Cedric Neveux <cedric.neveux@nxp.com>
-> Reviewed-by: Joakim Bech <joakim.bech@linaro.org>
-> Tested-by: Joakim Bech <joakim.bech@linaro.org> (QEMU)
-> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> ---
->  drivers/tee/optee/core.c      |  7 +++++
->  drivers/tee/optee/optee_smc.h |  3 +++
->  drivers/tee/tee_core.c        | 49 ++++++++++++++++++++++-------------
->  include/linux/tee_drv.h       |  3 +++
->  include/uapi/linux/tee.h      | 13 ++++++++++
->  5 files changed, 57 insertions(+), 18 deletions(-)
+On 21/08/2020 11:48, Peilin Ye wrote:
+> Hi Mr. Verkuil,
+> 
+> On Wed, Aug 19, 2020 at 04:26:28PM +0200, Hans Verkuil wrote:
+>> Hi Peilin,
+>>
+>> On 10/08/2020 07:05, Peilin Ye wrote:
+>>> precalculate_color() is reading out of `sin` since `tpg->hue` is not being
+>>> properly checked. Fix it. `cos` is safe, as long as `tpg->hue` is higher
+>>> than or equal to -192.
+>>
+>> Thank you for this patch, but there is something I don't understand, namely
+>> just *how* tpg->hue can be out-of-range.
+>>
+>> From what I can see vivid sets hue via tpg_s_hue() when the V4L2_CID_HUE control
+>> is set. But that control has a range of -128...128, so ctrl->val should always be in
+>> that range.
+>>
+>> I would really like to know 1) what the value of tpg->hue actually is when it goes
+>> out of range, and 2) who is changing it to that value. Can you do a bit more digging?
+> 
+> The value of `tpg->hue` was -20551. It came from the userspace, see the
+> "\xb9\xaf" on line 500 of the reproducer:
+> 
+> https://syzkaller.appspot.com/text?tag=ReproC&x=14b49e71e00000
+> 
+>   NONFAILING(memcpy((void*)0x20000200, "/dev/video6\000\000", 13));
+>   res = syscall(__NR_openat, 0xffffffffffffff9cul, 0x20000200ul, 2ul, 0ul);
+>   if (res != -1)
+>     r[0] = res;
+>   NONFAILING(memcpy((void*)0x20000140,
+>                     "\x4d\x43\x66\x34\xfd\x89\xb9\xaf\x0d\x59\xa2\x83\x4c\xfd"
+>                      ^^^^    ^^^^    ^^^^    ^^^^^^^^
+>                     "\x3e\x64\x7c\x96\xcd\x59\xf2\x3a\x18\xa3\x81\x49\x22\xc0"
+>                     "\xc1\xbf\x02\xa5\x50\x5f\xcb\x48\x92\x0e\xf3\xdc\xff\x85"
+>                     "\xb7\x84\x21\xab\xef\x31\x3d\xb1\xb6\x5d\xbf\x07\x8e\xee"
+>                     "\x5e\x7c\x73\x32\xf4\x9d\x1e\x62\x6b\x6a\xa0\x74\x73\xe6"
+>                     "\xca\x1b\xdb\x7a\xca\x76\xd8\x37\xb8\xd9",
+>                     80));
+>   syscall(__NR_write, r[0], 0x20000140ul, 8ul);
+> 
+> I guess the root cause is a race condition in the vivid test driver,
+> which completely corrupted `tpg`. I see bytes like "\x4d", "\x66" and
+> "\xfd" around `tpg->hue`, too.
+> 
+> The reproducer does two things: the above write() on /dev/video6, and a
+> preadv() on /dev/video3:
+> 
+>   NONFAILING(*(uint64_t*)0x20000800 = 0x20000000);
+>   NONFAILING(*(uint64_t*)0x20000808 = 0x1f);
+>   NONFAILING(*(uint64_t*)0x20000810 = 0);
+>   NONFAILING(*(uint64_t*)0x20000818 = 0);
+>   NONFAILING(*(uint64_t*)0x20000820 = 0);
+>   NONFAILING(*(uint64_t*)0x20000828 = 0);
+>   NONFAILING(*(uint64_t*)0x20000830 = 0);
+>   NONFAILING(*(uint64_t*)0x20000838 = 0);
+>   NONFAILING(*(uint64_t*)0x20000840 = 0);
+>   NONFAILING(*(uint64_t*)0x20000848 = 0);
+>   syscall(__NR_preadv, r[1], 0x20000800ul, 5ul, 0ul);
+> 
+> I commented out this preadv(), then the reproducer didn't cause any
+> crash. Unfortunately I don't know the code well enough in order to
+> figure out exactly why...At this point of time I'd like to send you an
+> v2 as you suggested, it should work as a mitigation.
 
-I almost forgot this one. I'm picking this up.
+Arrgh! I know what this is. /dev/video6 corresponds to the Metadata output
+device of vivid, and that metadata format sets brightness, contrast,
+saturation and hue:
 
-Cheers,
-Jens
+struct vivid_meta_out_buf {
+        u16     brightness;
+        u16     contrast;
+        u16     saturation;
+        s16     hue;
+};
+
+vivid_meta_out_process() calls tpg_s_* functions to set these values. But
+this is wrong, it should set the corresponding V4L2 controls instead since
+calling these tpg_s_* functions bypasses all range checks. It also will
+not update the controls themselves, so they are out-of-sync with the actual
+values. I.e. the test pattern generator uses different values compared to
+the values in the controls.
+
+So two patches are needed:
+
+1) a patch for include/media/tpg/v4l2-tpg.h where tpg_s_hue will clamp the
+hue value to the valid range. This to prevent anyone else from setting invalid
+hue values in the tpg.
+
+2) a patch for drivers/media/test-drivers/vivid/vivid-meta-out.c where,
+instead of calling the tpg_s_* functions in vivid_meta_out_process(), it
+calls instead:
+
+        v4l2_ctrl_s_ctrl(dev->brightness, meta->brightness);
+        v4l2_ctrl_s_ctrl(dev->contrast, meta->contrast);
+	etc.
+
+Do patch 2 first and test with syzkaller to check that by going through the
+controls this issue is resolved. Since with that approach the tpg should
+always get valid hue values.
+
+Regards,
+
+	Hans
+
+> 
+> Thank you for the suggestion!
+> 
+> Peilin Ye
+> 
+
