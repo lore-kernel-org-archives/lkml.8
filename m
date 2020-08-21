@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CCFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59FEA20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC6620738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030692;
-	bh=qkbayOhul6ZDiX7nJzww7+opTelW8enBcp/ww1ef7Ks=;
+	s=default; t=1598030702;
+	bh=Lt49ie9UkFpB/aSLxU0lJntBQr6mg8BqMEy6YewOZJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EXHV5dANZUxy3XkvzF9xtfdB7cOVAhy3zWthxBAcQwBGjJGCjKSu+JskTQgjt2FAm
-	 IF6WI3qmhRVPwwx5mXvPMyxh+mCCbtXpXiuLfEgp2lg4/mvF0nlr8mH4j+Q1DSzg11
-	 pl/WhKBu2pCGJjmJtAi1TWUjOIN/WMYle3tGfcZU=
+	b=gcG77eqKGelyXNehBsZ9nn1Gsgz9gVI0u+m/eBfnI3DJoR34x3hEeOLWjpME8/cTm
+	 3/f+K33c5d6hjN+tfEb7TEikbCwVX2uONWCYI5kM+5QSF7usjpu+XgBvyPPX9v2jzr
+	 20JPHSe8BPJ3dyanA3zwxyM4dfRKOiLRsKDP7SIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgHUQP3 (ORCPT
+        id S1729130AbgHURZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:15:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46228 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:25:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726985AbgHUQO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:14:29 -0400
+        id S1727920AbgHUQP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:15:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0BFE2086A;
-        Fri, 21 Aug 2020 16:14:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D49E8208DB;
+        Fri, 21 Aug 2020 16:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026469;
-        bh=qkbayOhul6ZDiX7nJzww7+opTelW8enBcp/ww1ef7Ks=;
+        s=default; t=1598026526;
+        bh=Lt49ie9UkFpB/aSLxU0lJntBQr6mg8BqMEy6YewOZJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1OdEnpGv6LInxCRFr0Cjvu7FBf8bEMIBf1i1nHGq9zJ1BT+bsw/cVUW7pXR33gl/N
-         OVVP33Akwz3Xm6sysb0W/QRiTm97H2h3fSSH4YRrsa7F4vP8c3Coi6Gxiqb+mE2xmd
-         nnlSdNn85wREb3hh9RFWmrqssfvlx3kTnPPb2G4w=
+        b=NGXpxlhXTr126XgQkoHRsT7ywtHkP8K5JLVBgElNEcCDWmvUqjAYlhoFWE3vwbR4b
+         x6Ym/Hf8wNnRL2+JZ75WKSvJ+F0pA7UQiLtfU+d71f4ID9vbSmG4A5/NNZnWmdZT/U
+         Js5NEGQVxLC0bb6q8VcHObKS2NvXvjnjHAEltolg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.8 04/62] ALSA: hda/hdmi: Use force connectivity quirk on another HP desktop
-Date:   Fri, 21 Aug 2020 12:13:25 -0400
-Message-Id: <20200821161423.347071-4-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>, Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.8 49/62] drm/nouveau: fix reference count leak in nv50_disp_atomic_commit
+Date:   Fri, 21 Aug 2020 12:14:10 -0400
+Message-Id: <20200821161423.347071-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -59,35 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit d96f27c80b65437a7b572647ecb4717ec9a50c98 ]
+[ Upstream commit a2cdf39536b0d21fb06113f5e16692513d7bcb9c ]
 
-There's another HP desktop has buggy BIOS which flags the Port
-Connectivity bit as no connection.
+nv50_disp_atomic_commit() calls calls pm_runtime_get_sync and in turn
+increments the reference count. In case of failure, decrement the
+ref count before returning the error.
 
-Apply force connectivity quirk to enable DP/HDMI audio.
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Link: https://lore.kernel.org/r/20200811095336.32396-1-kai.heng.feng@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index b62cd3abb8273..f0c6d2907e396 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -1806,6 +1806,7 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
- }
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index 800b7757252e3..d2c2d102e7329 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -2160,8 +2160,10 @@ nv50_disp_atomic_commit(struct drm_device *dev,
+ 	int ret, i;
  
- static const struct snd_pci_quirk force_connect_list[] = {
-+	SND_PCI_QUIRK(0x103c, 0x870f, "HP", 1),
- 	SND_PCI_QUIRK(0x103c, 0x871a, "HP", 1),
- 	{}
- };
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
+ 
+ 	ret = drm_atomic_helper_setup_commit(state, nonblock);
+ 	if (ret)
 -- 
 2.25.1
 
