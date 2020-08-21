@@ -2,199 +2,197 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0517BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCC4A2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 384102076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:28:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="LmNDfuO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgHUA1S (ORCPT
+        id S1726793AbgHUA2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 20:27:18 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:48280 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgHUA1P (ORCPT
+        Thu, 20 Aug 2020 20:28:22 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:33196 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726701AbgHUA2V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 20:27:15 -0400
-Received: by mail-io1-f70.google.com with SMTP id k10so44131iow.15
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:27:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5m5kdsQS1UuVjSBB6gdS1S0aUbyc8j9RG73oipEn5Ks=;
-        b=BpG4tW3J/A+zRwolJwLcuwzB/PNwylJsVBAlaosbIxhzFbZgcJQYc/Sz59qTjAAbgQ
-         3tUSvecqLiz0T4N/8VRMoeyCBzSjDEvP+U5BdOSDffH12o5KQafHryKNo9en7IPcnrWy
-         BEHJlfLPAQnJ9G6ig8grHJdbvesg48iqigOyzRx6vMxRfTXb1ixe5HNc50/eda2k10tt
-         FORwXgdOgPt+hnZX7Pju8JjxRX33vxo1Ywk7dyjLghL8CP30dWnEcNci+Gyh6j7kktq0
-         4mo5eDkhrKAJYuiwzbnxYlndCywtG1kK7EMevGqeKpq9xV51uBNHzDHANe4WttsIF4z/
-         IF8g==
-X-Gm-Message-State: AOAM533YKM1hLE2ZQmF2jACuAtGX4QRdHWkQ8dYQZpVKYCwRx1ZO1o0e
-        QLUG2ISTZmizRPOee9c4qz4JwvOjuswqMlkz8cmfDP02JYrj
-X-Google-Smtp-Source: ABdhPJwqCTnqdZQ1vfYGnY3mVFDjkEwtNZnJaVyGsA7+J28LsWuXyPGXlp/grZWAzY2+jx73Ob5ywUDtihu/kYZCtjCPNPxxslLr
+        Thu, 20 Aug 2020 20:28:21 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07L0NcOf004410
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:28:21 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=+TU19SEPhogBUaWAdpvGsqkTV6jW0eO0wV7lICDsfFI=;
+ b=LmNDfuO85EiSSVAEzjIhE12t6MnN/SSOuYXLEZo0tSt6nVbwyK8938yWBpg1byi7oVw/
+ U5GgvhESbya0AlFE3zSDhS7fMafRyMixJEXSZ9tuVk0HutSxTt9MKmaEeb0/3tLL1BMx
+ jrDgKtzC1MLapPj9u+a8kaFAar6oP6cXt98= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 331crben2j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:28:21 -0700
+Received: from intmgw002.08.frc2.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:21d::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 20 Aug 2020 17:28:19 -0700
+Received: by devbig218.frc2.facebook.com (Postfix, from userid 116055)
+        id B133B207539; Thu, 20 Aug 2020 17:28:15 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Udip Pant <udippant@fb.com>
+Smtp-Origin-Hostname: devbig218.frc2.facebook.com
+To:     Udip Pant <udippant@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Smtp-Origin-Cluster: frc2c02
+Subject: [PATCH v2 bpf 2/2] selftests/bpf: add test for freplace program with write access
+Date:   Thu, 20 Aug 2020 17:28:04 -0700
+Message-ID: <20200821002804.546826-2-udippant@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200821002804.546826-1-udippant@fb.com>
+References: <20200821002804.546826-1-udippant@fb.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d403:: with SMTP id q3mr472818ilm.158.1597969633655;
- Thu, 20 Aug 2020 17:27:13 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 17:27:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006040a805ad584c37@google.com>
-Subject: KASAN: slab-out-of-bounds Write in vcs_read
-From:   syzbot <syzbot+6d6e5b894ac34506362f@syzkaller.appspotmail.com>
-To:     bp@alien8.de, gregkh@linuxfoundation.org, hpa@zytor.com,
-        jirislaby@kernel.org, jslaby@suse.com, jslaby@suse.cz,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, nico@fluxnic.net,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-20_07:2020-08-19,2020-08-20 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 spamscore=0
+ clxscore=1015 bulkscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210002
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This adds a selftest that tests the behavior when a freplace target progr=
+am
+attempts to make a write access on a packet. The expectation is that the =
+read or write
+access is granted based on the program type of the linked program and
+not itself (which is of type, for e.g., BPF_PROG_TYPE_EXT).
 
-syzbot found the following issue on:
+This test fails without the associated patch on the verifier.
 
-HEAD commit:    605cbf3d Add linux-next specific files for 20200820
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=163dc80e900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a61d44f28687f508
-dashboard link: https://syzkaller.appspot.com/bug?extid=6d6e5b894ac34506362f
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14bf6791900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14019672900000
-
-The issue was bisected to:
-
-commit b1c32fcfadf5593ab7a63261cc8a5747c36e627e
-Author: Jiri Slaby <jslaby@suse.cz>
-Date:   Tue Aug 18 08:57:05 2020 +0000
-
-    vc_screen: extract vcs_read_buf_header
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1070fe7e900000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1270fe7e900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1470fe7e900000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6d6e5b894ac34506362f@syzkaller.appspotmail.com
-Fixes: b1c32fcfadf5 ("vc_screen: extract vcs_read_buf_header")
-
-IPVS: ftp: loaded support on port[0] = 21
-==================================================================
-BUG: KASAN: slab-out-of-bounds in vcs_read_buf drivers/tty/vt/vc_screen.c:357 [inline]
-BUG: KASAN: slab-out-of-bounds in vcs_read+0xaa7/0xb40 drivers/tty/vt/vc_screen.c:449
-Write of size 2 at addr ffff8880a47ef000 by task syz-executor776/6833
-
-CPU: 0 PID: 6833 Comm: syz-executor776 Not tainted 5.9.0-rc1-next-20200820-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- vcs_read_buf drivers/tty/vt/vc_screen.c:357 [inline]
- vcs_read+0xaa7/0xb40 drivers/tty/vt/vc_screen.c:449
- vfs_read+0x1df/0x5a0 fs/read_write.c:479
- ksys_read+0x12d/0x250 fs/read_write.c:607
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x440bb9
-Code: 26 02 00 85 c0 b8 00 00 00 00 48 0f 44 c3 5b c3 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b 0f fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffed959bbf8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000440bb9
-RDX: 0000000000002020 RSI: 0000000020000340 RDI: 0000000000000003
-RBP: 00007ffed959bc00 R08: 0000000120080522 R09: 0000000120080522
-R10: 0000000120080522 R11: 0000000000000246 R12: 0000000000401fe0
-R13: 0000000000402070 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 1:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
- slab_post_alloc_hook mm/slab.h:517 [inline]
- slab_alloc mm/slab.c:3312 [inline]
- kmem_cache_alloc+0x138/0x3a0 mm/slab.c:3482
- kmem_cache_zalloc include/linux/slab.h:656 [inline]
- __alloc_file+0x21/0x350 fs/file_table.c:101
- alloc_empty_file+0x6d/0x170 fs/file_table.c:151
- path_openat+0xe3/0x2730 fs/namei.c:3354
- do_filp_open+0x17e/0x3c0 fs/namei.c:3395
- do_sys_openat2+0x16d/0x420 fs/open.c:1168
- do_sys_open fs/open.c:1184 [inline]
- __do_sys_open fs/open.c:1192 [inline]
- __se_sys_open fs/open.c:1188 [inline]
- __x64_sys_open+0x119/0x1c0 fs/open.c:1188
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 16:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
- kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
- __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
- __cache_free mm/slab.c:3418 [inline]
- kmem_cache_free.part.0+0x67/0x1f0 mm/slab.c:3693
- rcu_do_batch kernel/rcu/tree.c:2474 [inline]
- rcu_core+0x5df/0x11e0 kernel/rcu/tree.c:2709
- __do_softirq+0x2de/0xa24 kernel/softirq.c:298
-
-Last call_rcu():
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
- __call_rcu kernel/rcu/tree.c:2951 [inline]
- call_rcu+0x14f/0x7f0 kernel/rcu/tree.c:3025
- task_work_run+0xdd/0x190 kernel/task_work.c:141
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
- exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:166
- syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Second to last call_rcu():
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
- __call_rcu kernel/rcu/tree.c:2951 [inline]
- call_rcu+0x14f/0x7f0 kernel/rcu/tree.c:3025
- task_work_run+0xdd/0x190 kernel/task_work.c:141
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
- exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:166
- syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff8880a47ef0c0
- which belongs to the cache filp of size 488
-The buggy address is located 192 bytes to the left of
- 488-byte region [ffff8880a47ef0c0, ffff8880a47ef2a8)
-The buggy address belongs to the page:
-page:00000000717406a1 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xa47ef
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00025060c8 ffffea00027ea248 ffff88821bc47b00
-raw: 0000000000000000 ffff8880a47ef0c0 0000000100000006 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a47eef00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8880a47eef80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff8880a47ef000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                   ^
- ffff8880a47ef080: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
- ffff8880a47ef100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
+Signed-off-by: Udip Pant <udippant@fb.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ .../selftests/bpf/prog_tests/fexit_bpf2bpf.c  |  1 +
+ .../selftests/bpf/progs/fexit_bpf2bpf.c       | 27 +++++++++++++++++++
+ .../selftests/bpf/progs/test_pkt_access.c     | 20 ++++++++++++++
+ 3 files changed, 48 insertions(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/tools/testing/selftests/bpf/prog_tests/fexit_bpf2bpf.c b/too=
+ls/testing/selftests/bpf/prog_tests/fexit_bpf2bpf.c
+index 197d0d217b56..7c7168963d52 100644
+--- a/tools/testing/selftests/bpf/prog_tests/fexit_bpf2bpf.c
++++ b/tools/testing/selftests/bpf/prog_tests/fexit_bpf2bpf.c
+@@ -123,6 +123,7 @@ static void test_func_replace(void)
+ 		"freplace/get_skb_len",
+ 		"freplace/get_skb_ifindex",
+ 		"freplace/get_constant",
++		"freplace/test_pkt_write_access_subprog",
+ 	};
+ 	test_fexit_bpf2bpf_common("./fexit_bpf2bpf.o",
+ 				  "./test_pkt_access.o",
+diff --git a/tools/testing/selftests/bpf/progs/fexit_bpf2bpf.c b/tools/te=
+sting/selftests/bpf/progs/fexit_bpf2bpf.c
+index 98e1efe14549..973e8e1a6667 100644
+--- a/tools/testing/selftests/bpf/progs/fexit_bpf2bpf.c
++++ b/tools/testing/selftests/bpf/progs/fexit_bpf2bpf.c
+@@ -2,7 +2,9 @@
+ /* Copyright (c) 2019 Facebook */
+ #include <linux/stddef.h>
+ #include <linux/ipv6.h>
++#include <linux/if_ether.h>
+ #include <linux/bpf.h>
++#include <linux/tcp.h>
+ #include <bpf/bpf_helpers.h>
+ #include <bpf/bpf_endian.h>
+ #include <bpf/bpf_tracing.h>
+@@ -151,4 +153,29 @@ int new_get_constant(long val)
+ 	test_get_constant =3D 1;
+ 	return test_get_constant; /* original get_constant() returns val - 122 =
+*/
+ }
++
++__u64 test_pkt_write_access_subprog =3D 0;
++SEC("freplace/test_pkt_write_access_subprog")
++int new_test_pkt_write_access_subprog(struct __sk_buff *skb, __u32 off)
++{
++
++	void *data =3D (void *)(long)skb->data;
++	void *data_end =3D (void *)(long)skb->data_end;
++	struct tcphdr *tcp;
++
++	if (off > sizeof(struct ethhdr) + sizeof(struct ipv6hdr))
++		return -1;
++
++	tcp =3D data + off;
++	if (tcp + 1 > data_end)
++		return -1;
++
++	/* make modifications to the packet data */
++	tcp->check++;
++	tcp->syn =3D 0;
++
++	test_pkt_write_access_subprog =3D 1;
++	return 0;
++}
++
+ char _license[] SEC("license") =3D "GPL";
+diff --git a/tools/testing/selftests/bpf/progs/test_pkt_access.c b/tools/=
+testing/selftests/bpf/progs/test_pkt_access.c
+index e72eba4a93d2..c36a4731c8e0 100644
+--- a/tools/testing/selftests/bpf/progs/test_pkt_access.c
++++ b/tools/testing/selftests/bpf/progs/test_pkt_access.c
+@@ -79,6 +79,24 @@ int get_skb_ifindex(int val, struct __sk_buff *skb, in=
+t var)
+ 	return skb->ifindex * val * var;
+ }
+=20
++__attribute__ ((noinline))
++int test_pkt_write_access_subprog(struct __sk_buff *skb, __u32 off)
++{
++	void *data =3D (void *)(long)skb->data;
++	void *data_end =3D (void *)(long)skb->data_end;
++	struct tcphdr *tcp =3D NULL;
++
++	if (off > sizeof(struct ethhdr) + sizeof(struct ipv6hdr))
++		return -1;
++
++	tcp =3D data + off;
++	if (tcp + 1 > data_end)
++		return -1;
++	/* make modification to the packet data */
++	tcp->check =3D tcp->check + 1;
++	return 0;
++}
++
+ SEC("classifier/test_pkt_access")
+ int test_pkt_access(struct __sk_buff *skb)
+ {
+@@ -117,6 +135,8 @@ int test_pkt_access(struct __sk_buff *skb)
+ 	if (test_pkt_access_subprog3(3, skb) !=3D skb->len * 3 * skb->ifindex)
+ 		return TC_ACT_SHOT;
+ 	if (tcp) {
++		if (test_pkt_write_access_subprog(skb, (void *)tcp - data))
++			return TC_ACT_SHOT;
+ 		if (((void *)(tcp) + 20) > data_end || proto !=3D 6)
+ 			return TC_ACT_SHOT;
+ 		barrier(); /* to force ordering of checks */
+--=20
+2.24.1
+
