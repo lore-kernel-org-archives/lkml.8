@@ -2,45 +2,46 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C8FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107F9C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21AE62075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA60D2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598036584;
-	bh=tShyHaKe8tUkh6km1kh9+3x47WUePCifeBAweO3Qm4Q=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jyXhTUDflAXMYjUHzXaBqmH/TSP33ll5ufRLwonB4ganQjc1MUPG4M8U59xPhdzZC
-	 BXC7dso0gZAJTLIFWRqcg6qrr/9gH6nZZGSOi8JprtMGn3nF0ujBCboXlCMlcVBIHp
-	 4ktZJ4SbAvSO7HoJrIJRIw+1hka7mHpJ4CLuhuBU=
+	s=default; t=1598036590;
+	bh=t251ibWUxoibg51LaP0Dbh4BAPJu1Wffs4podxDwIRY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sxgKWiTG/JF1H1DwBZr/BxrOhF72zQRixqk7HgWHwzMDYr/m2N5/0RUOXe4MxPeFB
+	 PQrOqIhc5GgcI4Srrm8Z6iSA5C+EBAs3fmo80fEMXX2tQU1Oa0Dz2mh4I1O6yBJQzX
+	 aJVcXHdfIOwZcp+QZGVmGqJFKZXSF2/oDdszCOzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgHUTDD (ORCPT
+        id S1726661AbgHUTDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:03:03 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:62787 "EHLO
+        Fri, 21 Aug 2020 15:03:09 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:62821 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgHUTCy (ORCPT
+        with ESMTP id S1726387AbgHUTC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:02:54 -0400
+        Fri, 21 Aug 2020 15:02:57 -0400
 Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 07LJ23eS027595;
-        Sat, 22 Aug 2020 04:02:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 07LJ23eS027595
+        by conuserg-09.nifty.com with ESMTP id 07LJ23eZ027595;
+        Sat, 22 Aug 2020 04:02:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 07LJ23eZ027595
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598036524;
-        bh=ftGoPv3aGfiGs80AMn9l0nfBRKLTLZIm0W34Sa+JsdY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=zXThTXB6WglYsn86kbrOCUeZGHuWIFoy2A+TyuiJ4iClm96JDH4uZ1gALfsdd5IZi
-         97AedB9OfUuTBRLzKVfZNUv3AX98R/p3hg1U0ieiqjjICuPsCpRUUkK26+4nkinvCc
-         zyKbXEct1u2ZenJXYaN7ADaWN/nfN9tF5PUp97Nv8gb01D2gIN+shWECQMOErlUq4K
-         ZLFuOokrHH6JbP6nAm0FZMjJ47rXjk9fCwbQ00Y2R1KPjErTchfVSYDIJWQcx4QGQR
-         DvDmsYpfImCkhuHERDi1OwZrX1apsfwcHviwAWOjsFX4ubm2rD0YToFOZyvjki9FUZ
-         RFnd3MwE+78Jg==
+        s=dec2015msa; t=1598036529;
+        bh=tMEUJhFRfVlsf+Bq735fe/sTFgfgHqQiZv6E88yGDDQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2LyUnHUDJ5Xk9MClLntRAFcbYwyYb0w1RlmZ6HgHedQshTxy6IFFtGT2zJQ5a00ac
+         +OJ3mY9W3i3rfXety2DFPvkodGrMvj8hL6394wGK2cAqh5V/ZfaR8dRrnrWQCLYj8y
+         2e9kps5sNr7ABVIlA3aOB9ug1JWyT44sQzfFq6ThesoZj2XSZenZtqEVmuRKYeq9c8
+         Atzch3v0odofkFSuAO25yxje49CgtO+E5QIFqi1JpTDRuDD2bOlyr5flYgZJz99tg/
+         6+ZVJDWfj/Fa7mZRfcetkJJpALLCDl7nu0PfjG4cMMmN2an1SQiv36z7v/f9rwNA/2
+         WzSXWZE4U6n6Q==
 X-Nifty-SrcIP: [126.90.211.135]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,12 +50,13 @@ Cc:     Nathan Huckleberry <nhuck@google.com>,
         Tom Roeder <tmroeder@google.com>,
         clang-built-linux@googlegroups.com,
         Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/9] kbuild: clang-tidy
-Date:   Sat, 22 Aug 2020 04:01:50 +0900
-Message-Id: <20200821190159.1033740-1-masahiroy@kernel.org>
+Subject: [PATCH v2 7/9] gen_compile_commands: support *.o, *.a, modules.order in positional argument
+Date:   Sat, 22 Aug 2020 04:01:57 +0900
+Message-Id: <20200821190159.1033740-8-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821190159.1033740-1-masahiroy@kernel.org>
+References: <20200821190159.1033740-1-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,49 +64,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I improved gen_compile_commands.py,
-then rebased Nathan's v7 [1] on top of them.
-To save time, I modified the Makefile part.
-No change for run-clang-tools.py
+This script currently searches the specified directory for .cmd files.
+One drawback is it may contain stale .cmd files after you rebuild the
+kernel several times without 'make clean'.
 
-"make clang-tidy" should work in-tree build,
-out-of-tree build (O=), and external module build (M=).
+This commit supports *.o, *.a, and modules.order as positional
+parameters. If such files are given, they are parsed to collect
+associated .cmd files. I added a generator helper for each of them.
 
-This version keeps the previous work-flow.
-You can still manually run scripts/gen_compile_commands.json
+This feature is useful to get the list of active .cmd files from the
+last build, and will be used by the next commit to wire up the
+compile_commands.json rule to the Makefile.
 
-'make compile_commands.json' or 'make clang-tidy' is handier
-for most cases. As Nick noted, there is 3 % loss of the coverage.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-If you need the full compilation database that covers all the
-compiled C files, please run the script manually.
+Changes in v2:
+  - Separate the file parser into generator functions
+  - Use 'obj' instead of 'object' because 'object' is a built-in function
+  - I think using 'file' is OK because it is not a built-in function in Python3
+    (https://docs.python.org/3/library/functions.html)
+    Anyway, the variable 'file' is no longer used in this version
+  - Keep the previous work-flow to allow to search the given directory
 
-[1] https://patchwork.kernel.org/patch/11687833/
+ scripts/gen_compile_commands.py | 100 ++++++++++++++++++++++++++++++--
+ 1 file changed, 96 insertions(+), 4 deletions(-)
 
-Masahiro Yamada (8):
-  gen_compile_commands: parse only the first line of .*.cmd files
-  gen_compile_commands: use choices for --log_levels option
-  gen_compile_commands: do not support .cmd files under tools/ directory
-  gen_compile_commands: reword the help message of -d option
-  gen_compile_commands: make -o option independent of -d option
-  gen_compile_commands: move directory walk to a generator function
-  gen_compile_commands: support *.o, *.a, modules.order in positional
-    argument
-  kbuild: wire up the build rule of compile_commands.json to Makefile
-
-Nathan Huckleberry (1):
-  Makefile: Add clang-tidy and static analyzer support to makefile
-
- MAINTAINERS                                 |   1 +
- Makefile                                    |  45 +++-
- scripts/clang-tools/gen_compile_commands.py | 245 ++++++++++++++++++++
- scripts/clang-tools/run-clang-tools.py      |  74 ++++++
- scripts/gen_compile_commands.py             | 151 ------------
- 5 files changed, 361 insertions(+), 155 deletions(-)
- create mode 100755 scripts/clang-tools/gen_compile_commands.py
- create mode 100755 scripts/clang-tools/run-clang-tools.py
- delete mode 100755 scripts/gen_compile_commands.py
-
+diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
+index 6dec7e2c4098..65859e6044b5 100755
+--- a/scripts/gen_compile_commands.py
++++ b/scripts/gen_compile_commands.py
+@@ -12,6 +12,7 @@ import json
+ import logging
+ import os
+ import re
++import subprocess
+ 
+ _DEFAULT_OUTPUT = 'compile_commands.json'
+ _DEFAULT_LOG_LEVEL = 'WARNING'
+@@ -32,8 +33,9 @@ def parse_arguments():
+     Returns:
+         log_level: A logging level to filter log output.
+         directory: The work directory where the objects were built
++        ar: Command used for parsing .a archives
+         output: Where to write the compile-commands JSON file.
+-        paths: The list of directories to handle to find .cmd files
++        paths: The list of files/directories to handle to find .cmd files
+     """
+     usage = 'Creates a compile_commands.json database from kernel .cmd files'
+     parser = argparse.ArgumentParser(description=usage)
+@@ -53,12 +55,21 @@ def parse_arguments():
+     parser.add_argument('--log_level', choices=_VALID_LOG_LEVELS,
+                         default=_DEFAULT_LOG_LEVEL, help=log_level_help)
+ 
++    ar_help = 'command used for parsing .a archives'
++    parser.add_argument('-a', '--ar', type=str, default='ar', help=ar_help)
++
++    paths_help = ('directories to search or files to parse '
++                  '(files should be *.o, *.a, or modules.order). '
++                  'If nothing is specified, the current directory is searched')
++    parser.add_argument('paths', type=str, nargs='*', help=paths_help)
++
+     args = parser.parse_args()
+ 
+     return (args.log_level,
+             os.path.abspath(args.directory),
+             args.output,
+-            [args.directory])
++            args.ar,
++            args.paths if len(args.paths) > 0 else [args.directory])
+ 
+ 
+ def cmdfiles_in_dir(directory):
+@@ -81,6 +92,73 @@ def cmdfiles_in_dir(directory):
+                 yield os.path.join(dirpath, filename)
+ 
+ 
++def to_cmdfile(path):
++    """Return the path of .cmd file used for the given build artifact
++
++    Args:
++        Path: file path
++
++    Returns:
++        The path to .cmd file
++    """
++    dir, base = os.path.split(path)
++    return os.path.join(dir, '.' + base + '.cmd')
++
++
++def cmdfiles_for_o(obj):
++    """Generate the iterator of .cmd files associated with the object
++
++    Yield the .cmd file used to build the given object
++
++    Args:
++        obj: The object path
++
++    Yields:
++        The path to .cmd file
++    """
++    yield to_cmdfile(obj)
++
++
++def cmdfiles_for_a(archive, ar):
++    """Generate the iterator of .cmd files associated with the archive.
++
++    Parse the given archive, and yield every .cmd file used to build it.
++
++    Args:
++        archive: The archive to parse
++
++    Yields:
++        The path to every .cmd file found
++    """
++    for obj in subprocess.check_output([ar, '-t', archive]).decode().split():
++        yield to_cmdfile(obj)
++
++
++def cmdfiles_for_modorder(modorder):
++    """Generate the iterator of .cmd files associated with the modules.order.
++
++    Parse the given modules.order, and yield every .cmd file used to build the
++    contained modules.
++
++    Args:
++        modorder: The modules.order file to parse
++
++    Yields:
++        The path to every .cmd file found
++    """
++    with open(modorder) as f:
++        for line in f:
++            ko = line.rstrip()
++            base, ext = os.path.splitext(ko)
++            if ext != '.ko':
++                sys.exit('{}: module path must end with .ko'.format(ko))
++            mod = base + '.mod'
++	    # The first line of *.mod lists the objects that compose the module.
++            with open(mod) as m:
++                for obj in m.readline().split():
++                    yield to_cmdfile(obj)
++
++
+ def process_line(root_directory, command_prefix, file_path):
+     """Extracts information from a .cmd line and creates an entry from it.
+ 
+@@ -116,7 +194,7 @@ def process_line(root_directory, command_prefix, file_path):
+ 
+ def main():
+     """Walks through the directory and finds and parses .cmd files."""
+-    log_level, directory, output, paths = parse_arguments()
++    log_level, directory, output, ar, paths = parse_arguments()
+ 
+     level = getattr(logging, log_level)
+     logging.basicConfig(format='%(levelname)s: %(message)s', level=level)
+@@ -126,7 +204,21 @@ def main():
+     compile_commands = []
+ 
+     for path in paths:
+-        cmdfiles = cmdfiles_in_dir(path)
++        # If 'path' is a directory, handle all .cmd files under it.
++        # Otherwise, handle .cmd files associated with the file.
++        # Most of built-in objects are linked via archives (built-in.a or lib.a)
++        # but some are linked to vmlinux directly.
++        # Modules are lis
++        if os.path.isdir(path):
++            cmdfiles = cmdfiles_in_dir(path)
++        elif path.endswith('.o'):
++            cmdfiles = cmdfiles_for_o(path)
++        elif path.endswith('.a'):
++            cmdfiles = cmdfiles_for_a(path, ar)
++        elif path.endswith('modules.order'):
++            cmdfiles = cmdfiles_for_modorder(path)
++        else:
++            sys.exit('{}: unknown file type'.format(path))
+ 
+         for cmdfile in cmdfiles:
+             with open(cmdfile, 'rt') as f:
 -- 
 2.25.1
 
