@@ -2,85 +2,117 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B833C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9B420738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C558F20855
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:32:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C6d0k9O+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgHUB3w (ORCPT
+        id S1726946AbgHUBcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 21:29:52 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48814 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725859AbgHUB3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 21:29:52 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E3870F6F848AB82DB325;
-        Fri, 21 Aug 2020 09:29:48 +0800 (CST)
-Received: from DESKTOP-C3MD9UG.china.huawei.com (10.174.177.253) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 21 Aug 2020 09:29:38 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Song Liu <song@kernel.org>, <linux-raid@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 1/1] md: Simplify code with existing definition RESYNC_SECTORS in raid10.c
-Date:   Fri, 21 Aug 2020 09:29:18 +0800
-Message-ID: <20200821012918.3302-1-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
+        Thu, 20 Aug 2020 21:32:17 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38450 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbgHUBcQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 21:32:16 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07L1RQuA169617;
+        Fri, 21 Aug 2020 01:32:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ references : message-id : date : mime-version : in-reply-to : content-type
+ : content-transfer-encoding; s=corp-2020-01-29;
+ bh=uIhfs7+1C8pqessy29+fcC/6JOmkc8hDIhW6tbNi4HQ=;
+ b=C6d0k9O+YmVvUZJQ6ShUbWm1W0k0EMb6tPIU9pkqTeomj4CTJR1P+xLC9WrH9/4yywcY
+ 4cUIVRzOKYCjbKoAFNcjGaMM+MNmVGPSgorWgrrUPWxb/oXipjwRMSTU7btTIzNVWjQT
+ Cr7difwoq/iXfNgnVb7ieoJRcQJmkZ1MlQ8H5TNvn9QASnlrDcjwpjbo+FgbY2+DO+Ze
+ sAkVajhK7e2gM+nk6hNCNMoiVp+zEHDP9fmY3IWSUxjriK6vUyMCxtbid91fAQ4lzSft
+ qbPyMj/rL68kUpvHIZEU/Zq1jQuq2Q1B7Qn1CxF92KG7Jmb6zlzxGUHxFpmbYbRaHn5/ eg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 32x8bnknc0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 21 Aug 2020 01:32:14 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07L1T3OU104164;
+        Fri, 21 Aug 2020 01:32:14 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 32xsn221qd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 01:32:14 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07L1WDEM020880;
+        Fri, 21 Aug 2020 01:32:14 GMT
+Received: from [10.191.7.165] (/10.191.7.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Aug 2020 18:32:13 -0700
+Subject: Re: [PATCH 1/2] block: use DEFINE_WAIT_BIT instead of DEFINE_WAIT for
+ bit wait queue
+From:   Jacob Wen <jian.w.wen@oracle.com>
+To:     linux-fsdevel@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org
+References: <20200813050552.26856-1-jian.w.wen@oracle.com>
+Message-ID: <3eff2c13-640e-6686-9a79-70c97e9fdfa5@oracle.com>
+Date:   Fri, 21 Aug 2020 09:32:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.177.253]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200813050552.26856-1-jian.w.wen@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9719 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008210011
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9719 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 spamscore=0 malwarescore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 clxscore=1011 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008210011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#define RESYNC_SECTORS (RESYNC_BLOCK_SIZE >> 9)
+Can I have a review?
 
-"RESYNC_BLOCK_SIZE/512" is equal to "RESYNC_BLOCK_SIZE >> 9", replace it
-with RESYNC_SECTORS.
-
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- drivers/md/raid10.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index e8fa327339171c7..da12e3daf6fa8d9 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -4466,8 +4466,8 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr,
- 		last = conf->reshape_progress - 1;
- 		sector_nr = last & ~(sector_t)(conf->geo.chunk_mask
- 					       & conf->prev.chunk_mask);
--		if (sector_nr + RESYNC_BLOCK_SIZE/512 < last)
--			sector_nr = last + 1 - RESYNC_BLOCK_SIZE/512;
-+		if (sector_nr + RESYNC_SECTORS < last)
-+			sector_nr = last + 1 - RESYNC_SECTORS;
- 	} else {
- 		/* 'next' is after the last device address that we
- 		 * might write to for this chunk in the new layout
-@@ -4489,8 +4489,8 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr,
- 		last  = sector_nr | (conf->geo.chunk_mask
- 				     & conf->prev.chunk_mask);
- 
--		if (sector_nr + RESYNC_BLOCK_SIZE/512 <= last)
--			last = sector_nr + RESYNC_BLOCK_SIZE/512 - 1;
-+		if (sector_nr + RESYNC_SECTORS <= last)
-+			last = sector_nr + RESYNC_SECTORS - 1;
- 	}
- 
- 	if (need_flush ||
--- 
-1.8.3
-
-
+On 8/13/20 1:05 PM, Jacob Wen wrote:
+> DEFINE_WAIT_BIT uses wake_bit_function() which is able to avoid
+> false-wakeups due to possible hash collisions in the bit wait table.
+>
+> Signed-off-by: Jacob Wen <jian.w.wen@oracle.com>
+> ---
+>   fs/block_dev.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/block_dev.c b/fs/block_dev.c
+> index 0ae656e022fd..ba4fad08cdaf 100644
+> --- a/fs/block_dev.c
+> +++ b/fs/block_dev.c
+> @@ -1062,12 +1062,12 @@ static int bd_prepare_to_claim(struct block_device *bdev,
+>   	/* if claiming is already in progress, wait for it to finish */
+>   	if (whole->bd_claiming) {
+>   		wait_queue_head_t *wq = bit_waitqueue(&whole->bd_claiming, 0);
+> -		DEFINE_WAIT(wait);
+> +		DEFINE_WAIT_BIT(wait, &whole->bd_claiming, 0);
+>   
+> -		prepare_to_wait(wq, &wait, TASK_UNINTERRUPTIBLE);
+> +		prepare_to_wait(wq, &wait.wq_entry, TASK_UNINTERRUPTIBLE);
+>   		spin_unlock(&bdev_lock);
+>   		schedule();
+> -		finish_wait(wq, &wait);
+> +		finish_wait(wq, &wait.wq_entry);
+>   		spin_lock(&bdev_lock);
+>   		goto retry;
+>   	}
