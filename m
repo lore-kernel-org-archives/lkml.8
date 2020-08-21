@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36082C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16AE220702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5A920702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgHUGKh (ORCPT
+        id S1727936AbgHUGKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:10:37 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:42543 "EHLO
+        Fri, 21 Aug 2020 02:10:36 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:33796 "EHLO
         mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbgHUGKX (ORCPT
+        with ESMTP id S1727811AbgHUGKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 02:10:23 -0400
-Received: by mail-il1-f199.google.com with SMTP id z1so756842ilz.9
+Received: by mail-il1-f199.google.com with SMTP id p10so771078ile.1
         for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 23:10:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=IxFD2LeFV9lhBKwLRF4hOPpykT3iCEC0QBcV1jPgu38=;
-        b=oHAftcrh8V+GJXMdU9UYRbtCts0dgMLUoM+T6n4p/2b6UT6UtOv2CkMpUDNRXgZsRE
-         sWkVAsQw3OA09TTb16F9++UFuYypA8Jdnhf/BVtfrxXviznY437k2iaCcHw+b/Dn5p2x
-         Ow7hopGqXgXFofioTH5A7AlJNia0Y+vFF4yWejKctyg5yWMNOnSYzCUH62j4p0Pp0uVh
-         bG/XW7kdHy+Bu/6DYGPH9pyMOItWDhC2p8TRucjFIRlMo8K0/cB8slN/BgadbGgqG9wT
-         BUsh1i2sDNlXqUzVPGGh4cMrzreY9aQUUCdmt1upjG6T5gx8un6sZbZpuACeLivK3mUB
-         WKNA==
-X-Gm-Message-State: AOAM531wpzdB0kGfzwx+eoXgrSyFB1u6BFREKrdLW8ZksD9qffUGNnYP
-        FW9/RpuugaxR85F9wnsTGm5FMLZzfAAIxOzSgVc8QB+QiNxd
-X-Google-Smtp-Source: ABdhPJxKHmX+9FsrPazIeU1DH/usAm1x+76LJLhB6hFoElErsD/Ghpq4L8j1ReUpXrANYS4p/87LevImetzbXbLvxP0J1xwR69lz
+        bh=bwIyHpBXlz89+XKQ2tXFKJh+Ai+1kzfysfyo1EuoWWs=;
+        b=I/PJ4JUB+S/8Ccz7rmD38YiPMs3ycGE/xuhXCW+5CcZfoAyFG0Z9Wc60zHB3iELppB
+         2tBIrKnVbpJaVDdaSVQprN5oSvoKxoWVzcdUW0To4OAeoK3JLxVVcVxbU5gJ+jeow3bP
+         NmfrLkfH0e8o/iM68VPk4LuoH48uU6SOh6Qj6+s0+dkSB8kk6o687P5JFwuG+jVmsz5D
+         dbnR6Aw+Zrdhgvn5B4G6OcDCnEShuAm+zx4wOZ9M1X/Dmg6+xgMpeCQU/oGQvDHYL+d2
+         WfX1M8KB93NtlUN0nWzlx+AEAIT/zsHZSBOFVAN0j1NzpxSFUZqSRA6dMSYHBJu7U7lQ
+         BCvg==
+X-Gm-Message-State: AOAM530vl2s66qlgOUmixXPPieYIhjtzhUj8Em2q3J+XB5ZpK827TZBI
+        Jif5d8O5SMJF+522VV/fYRKncOhy04nF2z6gA6hg4k+o+Ok+
+X-Google-Smtp-Source: ABdhPJzs7kJxPjHj/hYFomSnuL9Fjhw1pVAvpI1wzOuf158cQcg7XvLiK5/VF6Ebjfy7Vpvd8ATnLnf/i8W4dPBa0FbFmOaXV1eC
 MIME-Version: 1.0
-X-Received: by 2002:a6b:bd45:: with SMTP id n66mr1136428iof.121.1597990222356;
+X-Received: by 2002:a05:6e02:13ee:: with SMTP id w14mr1423488ilj.4.1597990222039;
  Thu, 20 Aug 2020 23:10:22 -0700 (PDT)
 Date:   Thu, 20 Aug 2020 23:10:22 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008ee6f205ad5d1779@google.com>
-Subject: general protection fault in afs_dynroot_depopulate
-From:   syzbot <syzbot+c1eff8205244ae7e11a6@syzkaller.appspotmail.com>
-To:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000008a0f4f05ad5d1743@google.com>
+Subject: general protection fault in map_vdso_randomized
+From:   syzbot <syzbot+6719f65e8a293105edcc@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        luto@kernel.org, mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,75 +58,56 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    18445bf4 Merge tag 'spi-fix-v5.9-rc1' of git://git.kernel...
+HEAD commit:    4b6c093e Merge tag 'block-5.9-2020-08-14' of git://git.ker..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14ff6f29900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a0437fdd630bee11
-dashboard link: https://syzkaller.appspot.com/bug?extid=c1eff8205244ae7e11a6
+console output: https://syzkaller.appspot.com/x/log.txt?x=179f99f6900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a98b778f5fca0653
+dashboard link: https://syzkaller.appspot.com/bug?extid=6719f65e8a293105edcc
 compiler:       gcc (GCC) 10.1.0-syz 20200507
 
 Unfortunately, I don't have any reproducer for this issue yet.
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c1eff8205244ae7e11a6@syzkaller.appspotmail.com
+Reported-by: syzbot+6719f65e8a293105edcc@syzkaller.appspotmail.com
 
-RSP: 002b:00007fd9b2daca88 EFLAGS: 00000202 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007fd9b2dacb20 RCX: 000000000045ff2a
-RDX: 0000000020000040 RSI: 0000000020000080 RDI: 0000000000000000
-RBP: 00007fd9b2dacae0 R08: 00007fd9b2dacb20 R09: 0000000020000040
-R10: 0000000000000000 R11: 0000000000000202 R12: 0000000020000040
-R13: 0000000020000080 R14: 0000000000000000 R15: 0000000020000000
-general protection fault, probably for non-canonical address 0xdffffc000000000d: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000068-0x000000000000006f]
-CPU: 0 PID: 26047 Comm: syz-executor.3 Not tainted 5.9.0-rc1-syzkaller #0
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 PID: 27621 Comm: modprobe Not tainted 5.8.0-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:afs_dynroot_depopulate+0x25f/0x529 fs/afs/dynroot.c:385
-Code: 00 00 0f 84 5c 01 00 00 e8 2e a5 ae fe 4d 8d 7e 68 48 89 ef e8 02 70 2f 05 4c 89 fa 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 4d 02 00 00 49 8b 46 68 4d 8d ae 18 01 00 00 48
-RSP: 0018:ffffc90015fa7ca0 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff88809edfc000 RCX: 1ffff92002bf4f81
-RDX: 000000000000000d RSI: 0000000000000008 RDI: ffff88809dd392c0
-RBP: ffff88809dd392c0 R08: 0000000000000001 R09: ffff88809dd392c7
-R10: ffffed1013ba7258 R11: 0000000000000001 R12: ffff88809dd39000
-R13: ffff8880a650b800 R14: 0000000000000000 R15: 0000000000000068
-FS:  00007fd9b2dad700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+RIP: 0010:map_vdso_randomized+0x64/0x160 arch/x86/entry/vdso/vma.c:364
+Code: 00 fc ff df 48 89 f9 48 c1 e9 03 80 3c 01 00 0f 85 eb 00 00 00 65 48 8b 1c 25 c0 fe 01 00 48 8d bb 28 04 00 00 41 2b 54 24 20 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc9000ab57c10 EFLAGS: 00010207
+RAX: dffffc0000000000 RBX: ffff88804e0963c0 RCX: 1ffffffff1080a60
+RDX: 0000000000006000 RSI: 0000000000000001 RDI: ffff88804e0967e8
+RBP: ffff88801459b000 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000160 R12: ffffffff884052e0
+R13: ffff8880a69cf950 R14: 00007faba47c2c20 R15: ffff8880a5cb4400
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000016a1000 CR3: 000000008eb1d000 CR4: 00000000001506f0
+CR2: 00007faba49e6fc0 CR3: 0000000031b89000 CR4: 00000000001506f0
 DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
 DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- afs_kill_super+0x13b/0x180 fs/afs/super.c:535
- deactivate_locked_super+0x94/0x160 fs/super.c:335
- afs_get_tree+0x1124/0x1460 fs/afs/super.c:598
- vfs_get_tree+0x89/0x2f0 fs/super.c:1547
- do_new_mount fs/namespace.c:2875 [inline]
- path_mount+0x1387/0x2070 fs/namespace.c:3192
- do_mount fs/namespace.c:3205 [inline]
- __do_sys_mount fs/namespace.c:3413 [inline]
- __se_sys_mount fs/namespace.c:3390 [inline]
- __x64_sys_mount+0x27f/0x300 fs/namespace.c:3390
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45ff2a
-Code: b8 a6 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 fd 89 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 da 89 fb ff c3 66 0f 1f 84 00 00 00 00 00
-RSP: 002b:00007fd9b2daca88 EFLAGS: 00000202 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007fd9b2dacb20 RCX: 000000000045ff2a
-RDX: 0000000020000040 RSI: 0000000020000080 RDI: 0000000000000000
-RBP: 00007fd9b2dacae0 R08: 00007fd9b2dacb20 R09: 0000000020000040
-R10: 0000000000000000 R11: 0000000000000202 R12: 0000000020000040
-R13: 0000000020000080 R14: 0000000000000000 R15: 0000000020000000
+ load_elf_binary+0x22d4/0x47c0 fs/binfmt_elf.c:1221
+ search_binary_handler fs/exec.c:1819 [inline]
+ exec_binprm fs/exec.c:1860 [inline]
+ bprm_execve+0x936/0x1b10 fs/exec.c:1931
+ kernel_execve+0x370/0x460 fs/exec.c:2080
+ call_usermodehelper_exec_async+0x27a/0x500 kernel/umh.c:101
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
 Modules linked in:
----[ end trace d330bd77c4cff0f5 ]---
-RIP: 0010:afs_dynroot_depopulate+0x25f/0x529 fs/afs/dynroot.c:385
-Code: 00 00 0f 84 5c 01 00 00 e8 2e a5 ae fe 4d 8d 7e 68 48 89 ef e8 02 70 2f 05 4c 89 fa 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 4d 02 00 00 49 8b 46 68 4d 8d ae 18 01 00 00 48
-RSP: 0018:ffffc90015fa7ca0 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff88809edfc000 RCX: 1ffff92002bf4f81
-RDX: 000000000000000d RSI: 0000000000000008 RDI: ffff88809dd392c0
-RBP: ffff88809dd392c0 R08: 0000000000000001 R09: ffff88809dd392c7
-R10: ffffed1013ba7258 R11: 0000000000000001 R12: ffff88809dd39000
-R13: ffff8880a650b800 R14: 0000000000000000 R15: 0000000000000068
-FS:  00007fd9b2dad700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+---[ end trace f344c46c1e164ddf ]---
+RIP: 0010:map_vdso_randomized+0x64/0x160 arch/x86/entry/vdso/vma.c:364
+Code: 00 fc ff df 48 89 f9 48 c1 e9 03 80 3c 01 00 0f 85 eb 00 00 00 65 48 8b 1c 25 c0 fe 01 00 48 8d bb 28 04 00 00 41 2b 54 24 20 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc9000ab57c10 EFLAGS: 00010207
+RAX: dffffc0000000000 RBX: ffff88804e0963c0 RCX: 1ffffffff1080a60
+RDX: 0000000000006000 RSI: 0000000000000001 RDI: ffff88804e0967e8
+RBP: ffff88801459b000 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000160 R12: ffffffff884052e0
+R13: ffff8880a69cf950 R14: 00007faba47c2c20 R15: ffff8880a5cb4400
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000016a1000 CR3: 000000008eb1d000 CR4: 00000000001506f0
+CR2: 00007ffc99314e38 CR3: 0000000031b89000 CR4: 00000000001506e0
 DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
 DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
