@@ -2,133 +2,119 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8C4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFD472078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598012058;
-	bh=uVOgG9JFL4Fi6p0po8bQ65Th7wRBuNvR5zhzLTPFR5k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Mfa2cuHj9W3Hho+x5DJuz8z+ck7RoPRs+ImaOjPJPswjEfOYHnNVM5tRvDba2eMDC
-	 8POJlGpFar5D6vIc8mYjpfHPUXs2dhJrFW1lzQRAHuHJ96WLX9YvPaDr1lqvLWygdl
-	 y7oMZbTAXTHLjdhUklTFgYxl/pC1z+wrOuPXfNrk=
+	by mail.kernel.org (Postfix) with ESMTP id A104320724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:15:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8x8INlm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgHUMOP (ORCPT
+        id S1727860AbgHUMPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 08:14:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727029AbgHUMN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 08:13:58 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1E0D2078D;
-        Fri, 21 Aug 2020 12:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598012038;
-        bh=uVOgG9JFL4Fi6p0po8bQ65Th7wRBuNvR5zhzLTPFR5k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ox5cTwPbjAUMDQ3PBaEQj29JiEe+7IH6AXVS6NxjULgL51ySfWOkFhBpDTJzVedaY
-         /UuJysTOHbBMdbgEM7N7gU5gumkTHskOHzhwVjf+hvwlVhTurv/GZKKfyOQ8zI5AmJ
-         zAPVwHcdFODduuOfyQXQDv1dwLqxCHq47/KNa/tk=
-Date:   Fri, 21 Aug 2020 07:13:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     linux-mm@kvack.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, rafael@kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, linuxarm@huawei.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>,
-        linux-api@vger.kernel.org, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH v9 4/6] ACPI: HMAT: Fix handling of changes from ACPI 6.2
- to ACPI 6.3
-Message-ID: <20200821121356.GA1616281@bjorn-Precision-5520>
+        Fri, 21 Aug 2020 08:15:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgHUMPJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 08:15:09 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C8AC061385;
+        Fri, 21 Aug 2020 05:15:09 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id b22so1314262oic.8;
+        Fri, 21 Aug 2020 05:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SgDeAg08mFvRbn4SjuUaCVJq4IHVZKTa47Sz3vQfoKs=;
+        b=r8x8INlmyoCzm36Urkdb25+9EjQbty79MyCXhHD4WJgt8+yVVYQmfWfgAp1UDWhSUb
+         +pBbuDrG96hyTxqhc+G82AEVHgcjUujjGYtSnpTHMG9eEKZiPMhVnVHusgJO2rSfBGuG
+         rx0u1eNVG0UGKF7SxsYUFmx6CD/XZKxvflGTRPCuAoWd3b+sMhJaLZxUW+FZkhQALX5j
+         W69WVCxXx7DkgC8AAvw6vhgkyBpuEjrBltShJgyLqNhI83ChtmwU3G8W7PASStp7FcOK
+         NU0liX9OhQEgEq+skOTTXtxtq/61gS/Kq2TXt30gcDHL81J4zRy5gO3gTl3a5+3+FEBB
+         fZhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SgDeAg08mFvRbn4SjuUaCVJq4IHVZKTa47Sz3vQfoKs=;
+        b=ZPLjrjdzWfDEr+TT5QP1NAZOI3XnlUS/ep4IMq+ohcYYV3rmAkcb4i2Nw/EZdbZhq8
+         LQZSEudSqoDyaSpmXl8ZBc+O4KDfmKD+6I133WezLOtybF6pc3ESGzbL9Ap9MmGx6JlT
+         BJBGCF3kyuOKM5v5K/T9MH4UpdFPTWM5c1hxmRkUZ4XduD1P+hVsBAAcn2tEUjS1I0pH
+         xU+E1DwJLNPj0tpz6K0juw99FF7Cez1rvPZMy0jaSE/PGoeAzXEGPkx8gXDZAlo0TfCW
+         g1NDP4jHSu18ka8YHezP0bCWcUQ+oII5KAJBqZq2F1q1arfkCkhkfmOrowtaDSpMjADy
+         ubMg==
+X-Gm-Message-State: AOAM530Bd9SPEwE9CT3kjz/Zikm7HZ9Aj/5D2hEIm+EWBsuoIq2vi3lX
+        61AwkuBYeUjEdmM8qNNXzy3xrSYXFHZq1Zphgtc=
+X-Google-Smtp-Source: ABdhPJwqYOgGah6oEeIswNAXNbOLsxR3uQsaMcOo12hqgyH94QEQAHgDjoKbOhk6XEyWk3bo7Wq+sBSj5x7TzoApk1Q=
+X-Received: by 2002:a54:4817:: with SMTP id j23mr1532133oij.140.1598012108392;
+ Fri, 21 Aug 2020 05:15:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821094258.00007925@Huawei.com>
+References: <20200817170729.2605279-1-tweek@google.com> <20200817170729.2605279-4-tweek@google.com>
+ <d8b1d7a2-2b8e-c714-77b6-d4e7f3fedf08@gmail.com> <6730ec4a-d11b-5c05-b64f-380104a86dab@sony.com>
+ <CAEjxPJ7k648nQxCDzcHc0h1vEfNhAJShG5iKmD52nuO5s9phsQ@mail.gmail.com> <CAHC9VhSYJUAacvzp1hR4RMChTctJ2sFb5+oy_wbsigaWMGTYHg@mail.gmail.com>
+In-Reply-To: <CAHC9VhSYJUAacvzp1hR4RMChTctJ2sFb5+oy_wbsigaWMGTYHg@mail.gmail.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Fri, 21 Aug 2020 08:14:57 -0400
+Message-ID: <CAEjxPJ73t1p9K_FbDKOTRPZn-bz8p7KVOB48UzfzELsMhx5MPw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] selinux: add permission names to trace event
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     peter enderborg <peter.enderborg@sony.com>,
+        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Keith, author of 3accf7ae37a9 ("acpi/hmat: Parse and report
-heterogeneous memory")]
+On Thu, Aug 20, 2020 at 10:22 PM Paul Moore <paul@paul-moore.com> wrote:
+>
+> On Tue, Aug 18, 2020 at 8:14 AM Stephen Smalley
+> <stephen.smalley.work@gmail.com> wrote:
+> > On Tue, Aug 18, 2020 at 4:11 AM peter enderborg <peter.enderborg@sony.com> wrote:
+>
+> ...
+>
+> > > Is there any other things we need to fix? A part 1&2 now OK?
+> >
+> > They looked ok to me, but Paul should review them.
+>
+> Patches 1 and 2 look fine to me with the small nits that Stephen
+> pointed out corrected.  I'm glad to see the information in string form
+> now, I think that will be a big help for people making use of this.
+>
+> Unfortunately, I'm a little concerned about patch 3 for the reason
+> Stephen already mentioned.  While changes to the class mapping are
+> infrequent, they do happen, and I'm not very excited about adding it
+> to the userspace kAPI via a header.  Considering that the tracing
+> tools are going to be running on the same system that is being
+> inspected, perhaps the tracing tools could inspect
+> /sys/fs/selinux/class at runtime to query the permission mappings?
+> Stephen, is there a libselinux API which does this already?
 
-On Fri, Aug 21, 2020 at 09:42:58AM +0100, Jonathan Cameron wrote:
-> On Thu, 20 Aug 2020 17:21:29 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> > On Wed, Aug 19, 2020 at 10:51:09PM +0800, Jonathan Cameron wrote:
-> > > In ACPI 6.3, the Memory Proximity Domain Attributes Structure
-> > > changed substantially.  One of those changes was that the flag
-> > > for "Memory Proximity Domain field is valid" was deprecated.
-> > > 
-> > > This was because the field "Proximity Domain for the Memory"
-> > > became a required field and hence having a validity flag makes
-> > > no sense.
-> > > 
-> > > So the correct logic is to always assume the field is there.
-> > > Current code assumes it never is.
-> > > 
-> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > ---
-> > >  drivers/acpi/numa/hmat.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> > > index 2c32cfb72370..07cfe50136e0 100644
-> > > --- a/drivers/acpi/numa/hmat.c
-> > > +++ b/drivers/acpi/numa/hmat.c
-> > > @@ -424,7 +424,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
-> > >  		pr_info("HMAT: Memory Flags:%04x Processor Domain:%u Memory Domain:%u\n",
-> > >  			p->flags, p->processor_PD, p->memory_PD);
-> > >  
-> > > -	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) {
-> > > +	if ((p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) || hmat_revision == 2) {  
-> > 
-> > I hope/assume the spec is written in such a way that p->memory_PD is
-> > required for any revision > 1?  So maybe this should be:
-> > 
-> >   if ((p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) ||
-> >       hmat_revision > 1) {
-
-I should have said simply:
-
-  if (hmat_revision == 1 && p->flags & ACPI_HMAT_MEMORY_PD_VALID)
-
-We shouldn't even test p->flags for ACPI_HMAT_MEMORY_PD_VALID unless
-we already know it's revision 1.
-
-And unless there was a revision 0 of HMAT, there's no need to look for
-hmat_revison > 1.
-
-> Good point.  We have existing protections elsewhere against
-> hmat_revision being anything other than 1 or 2, so we should aim to
-> keep that in only one place.
-
-I think the "Ignoring HMAT: Unknown revision" test in hmat_init(),
-added by 3accf7ae37a9 ("acpi/hmat: Parse and report heterogeneous
-memory"), is a mistake.
-
-And I think hmat_normalize() has a similar mistake in that it tests
-explicitly for hmat_revision == 2 when it should accept 2 AND anything
-later.
-
-We should assume that future spec revisions will be backwards
-compatible.  Otherwise we're forced to make kernel changes when we
-otherwise would not have to.
-
-Bjorn
+There is a libselinux API but both it and the /sys/fs/selinux/class
+tree is exposing the policy values for classes/permissions, not the
+kernel-private indices.  The dynamic class/perm mapping support
+introduced a layer of indirection between them.  The tracepoint is in
+the avc and therefore dealing with the kernel-private values, not the
+policy values.  The mapping occurs on entry/exit of the security
+server functions. So there is no way for userspace to read the kernel
+class/perm values.  We'd just need to keep them in sync manually.  And
+one is allowed to insert new classes or permissions before existing
+ones, thereby changing the values of existing ones, or even to remove
+them.
