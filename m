@@ -2,352 +2,76 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFAE8204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:54:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PixCF4QV"
+	by mail.kernel.org (Postfix) with ESMTP id 4F895204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598010867;
+	bh=lCFRFQbXpUWJDBNgEKqSJWBGXQEf3rG2KVJd2mGFMBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VTL/rcR9Tdsvl/7F0sShB0MPItXKw8bZJpjSPcfRZ3QuHPIKlNJJzJFTPy9LQtWkO
+	 1tDXUnbQzRAnGsqoD8S5QI6N07Gn5SndoAMd0rK5RcQd+tDo0VyHB3G0yN1CMEItKr
+	 Vlyqw7L3TgcMYSHRQJX/4MJoDNmwcYZ4XdgiXysU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725897AbgHULyM (ORCPT
+        id S1726803AbgHULyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 07:54:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728594AbgHULv0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 07:51:26 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F768C061387
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 04:51:26 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id k18so951814qtm.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 04:51:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6gFr9Xs5EElVSv/fUTGh7jgK0DiOtFjiMWxGxvaqivc=;
-        b=PixCF4QVbNKFaXIjeDdt8fSzko6aEe0Fqncx1DkJgEAfRi+YBaF1qttW7mpzanmsut
-         V9WFD2mMJy329+GXa7qJklCGvuAEpndBnkBTHLthKvufP1c9c8Gkv+H5Fv520zWXmR1K
-         eJ5HWxpTFxlV8jUXYU0RwGX7uOqGW0OYfjxUbGMkh3piCkTvm5D6kKOJhem5bJTzFayx
-         ajxrx6SQDKJ2MXqzhMkDSEScR2aHdfQMv/VN/ATnHB9UjIU27VXVzZUpWVhRf6A9PKSE
-         Wl1eSaIHZn89anb3oXy4xFJ5O6ikJPVhJVDCgaUWpw8PwxzTLTorVfkJ/W8U3eWDw44P
-         BCEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6gFr9Xs5EElVSv/fUTGh7jgK0DiOtFjiMWxGxvaqivc=;
-        b=qW5/OzpGczDircBhZnnQskJuPv7HSzNxm5xjETSn8C7nXfu+Ash3zqb/908ReBjsy3
-         ck3IMg35FExpYKqB0IqPLILdt6A65p4gWPqKcMb8tbmCjR1Tc07/arH57Mz+8Wh3Ub+B
-         1YgAoCa45/7DlGUOjGZ1P2J2KLD+UNW9YWyj91mKRxwf5y4zEytVQ0qG9HcrW452I0gU
-         M9+GRyakEZI/vs/Fux/HCP4NWMQqd2LJv2oKFbXYwRKUpnoofzobVi7yEtuOgfFbcvEI
-         HCgDg8wS55d8NRt6X5hdeC5mte71a707fOJdJW+VOpwoC9kd6kG/1SzePKa1biD8UMPY
-         bYGQ==
-X-Gm-Message-State: AOAM530awxJdG1Qt4dexge9pY3adxKHxBPZorJYD2uDE10dL7XmjdcUt
-        hiPo5KU18ikqlLi7u3Z49vYN4jGNOfTeeJGibgPf7g==
-X-Google-Smtp-Source: ABdhPJw4S97OapVp8oPBhFQuGIaYHCnNjLel2vnOd+8Ghoo9TmXmzdMDTdegaHwD9rjgqsBPdXZL6vSVTxWAxiENUCg=
-X-Received: by 2002:ac8:470e:: with SMTP id f14mr2280512qtp.380.1598010685125;
- Fri, 21 Aug 2020 04:51:25 -0700 (PDT)
+        Fri, 21 Aug 2020 07:54:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727979AbgHULyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 07:54:01 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D39F204EC;
+        Fri, 21 Aug 2020 11:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598010841;
+        bh=lCFRFQbXpUWJDBNgEKqSJWBGXQEf3rG2KVJd2mGFMBk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=boebsSOHPgamimsG1i9BIlwiVaHkGTNh12pa0x+o+mhd56enf1Bm3/5zY3uyCsANS
+         vvHjZ21aOzYC7qV4VKprqN2ZYp3Id17c5VOdmxA5SiT6Hk1XF2Rrou77wBbZ/vPeUD
+         pkxqlcsQsZEdB7+7vQc/qwwVMOfWW4zEgHu2jebE=
+Date:   Fri, 21 Aug 2020 12:53:57 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Marta Rybczynska <rybczynska@gmail.com>
+Cc:     peterz@infradead.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] Documentation/locking/locktypes: fix local_locks
+ documentation
+Message-ID: <20200821115356.GA20833@willie-the-truck>
+References: <CAApg2=SKxQ3Sqwj6TZnV-0x0cKLXFKDaPvXT4N15MPDMKq724g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200821104926.828511-1-alinde@google.com> <20200821104926.828511-2-alinde@google.com>
-In-Reply-To: <20200821104926.828511-2-alinde@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 21 Aug 2020 13:51:13 +0200
-Message-ID: <CACT4Y+ZeoUX39tBZs-DLoX0q5tC+skB56Cxf_SSpKiJdv3mMFg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] lib, include/linux: add usercopy failure capability
-To:     albert.linde@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Marco Elver <elver@google.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Albert van der Linde <alinde@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAApg2=SKxQ3Sqwj6TZnV-0x0cKLXFKDaPvXT4N15MPDMKq724g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 12:50 PM <albert.linde@gmail.com> wrote:
->
-> From: Albert van der Linde <alinde@google.com>
->
-> Add a failure injection capability to improve testing of fault-tolerance
-> in usages of user memory access functions.
->
-> Adds CONFIG_FAULT_INJECTION_USERCOPY to enable faults in usercopy
-> functions. By default functions are to either fail with -EFAULT or
-> return that no bytes were copied. To use partial copies (e.g.,
-> copy_from_user permits partial failures) the number of bytes not to copy
-> must be written to /sys/kernel/debug/fail_usercopy/failsize.
->
-> Signed-off-by: Albert van der Linde <alinde@google.com>
+On Sun, Jul 26, 2020 at 08:54:40PM +0200, Marta Rybczynska wrote:
+> Fix issues with local_locks documentation:
+> - fix function names, local_lock.h has local_unlock_irqrestore(),
+> not local_lock_irqrestore()
+> - fix mapping table, local_unlock_irqrestore() maps to local_irq_restore(),
+> not _save()
+> 
+> Signed-off-by: Marta Rybczynska <rybczynska@gmail.com>
 > ---
->  .../fault-injection/fault-injection.rst       | 64 ++++++++++++++++++
->  include/linux/fault-inject-usercopy.h         | 20 ++++++
->  lib/Kconfig.debug                             |  7 ++
->  lib/Makefile                                  |  1 +
->  lib/fault-inject-usercopy.c                   | 66 +++++++++++++++++++
->  5 files changed, 158 insertions(+)
->  create mode 100644 include/linux/fault-inject-usercopy.h
->  create mode 100644 lib/fault-inject-usercopy.c
->
-> diff --git a/Documentation/fault-injection/fault-injection.rst b/Documentation/fault-injection/fault-injection.rst
-> index f850ad018b70..cf52eabde332 100644
-> --- a/Documentation/fault-injection/fault-injection.rst
-> +++ b/Documentation/fault-injection/fault-injection.rst
-> @@ -16,6 +16,10 @@ Available fault injection capabilities
->
->    injects page allocation failures. (alloc_pages(), get_free_pages(), ...)
->
-> +- fail_usercopy
-> +
-> +  injects failures in user memory access functions. (copy_from_user(), get_user(), ...)
-> +
->  - fail_futex
->
->    injects futex deadlock and uaddr fault errors.
-> @@ -138,6 +142,12 @@ configuration of fault-injection capabilities.
->         specifies the minimum page allocation order to be injected
->         failures.
->
-> +- /sys/kernel/debug/fail_usercopy/failsize:
-> +
-> +       specifies the error code to return or amount of bytes not to copy.
-> +       If set to 0 then -EFAULT is returned instead. Positive values can be
-> +       used to inject partial copies (copy_from_user(), ...)
-> +
->  - /sys/kernel/debug/fail_futex/ignore-private:
->
->         Format: { 'Y' | 'N' }
-> @@ -177,6 +187,7 @@ use the boot option::
->
->         failslab=
->         fail_page_alloc=
-> +       fail_usercopy=
->         fail_make_request=
->         fail_futex=
->         mmc_core.fail_request=<interval>,<probability>,<space>,<times>
-> @@ -383,6 +394,59 @@ allocation failure::
->                 ./tools/testing/fault-injection/failcmd.sh --times=100 \
->                 -- make -C tools/testing/selftests/ run_tests
->
-> +
-> +Fail usercopy functions
-> +---------------------------------
-> +
-> +The following code fails the usercopy call in stat: copy_to_user is only
-> +partially completed.
-> +
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <sys/sendfile.h>
-> +#include <sys/stat.h>
-> +#include <sys/types.h>
-> +#include <time.h>
-> +#include <unistd.h>
-> +
-> +void inject_size()
-> +{
-> +       int fd = open("/sys/kernel/debug/fail_usercopy/failsize", O_RDWR);
-> +       char buf[16];
-> +       sprintf(buf, "%d", 60);
-> +       write(fd, buf, strlen(buf));
-> +}
-> +
-> +void inject_fault()
-> +{
-> +       int fd = open("/proc/thread-self/fail-nth", O_RDWR);
-> +       char buf[16];
-> +       sprintf(buf, "%d", 4);
-> +       write(fd, buf, strlen(buf));
-> +}
-> +
-> +int main()
-> +{
-> +       struct stat sb;
-> +       inject_size();
-> +       inject_fault();
-> +       stat(".", &sb);
-> +       printf("Stat error code:          %d\n", errno);
-> +       printf("Last status change:       %s", ctime(&sb.st_ctime));
-> +       printf("Last file access:         %s", ctime(&sb.st_atime));
-> +       printf("Last file modification:   %s", ctime(&sb.st_mtime));
-> +       return 0;
-> +}
-> +
-> +Example output:
-> +Stat error code:          14
-> +Last status change:       Thu Jan  1 00:00:00 1970
-> +Last file access:         Tue Aug 18 14:09:34 2020
-> +Last file modification:   Sun Dec 12 00:19:57 2989041
-> +
->  Systematic faults using fail-nth
->  ---------------------------------
->
-> diff --git a/include/linux/fault-inject-usercopy.h b/include/linux/fault-inject-usercopy.h
-> new file mode 100644
-> index 000000000000..95dad8ddb56f
-> --- /dev/null
-> +++ b/include/linux/fault-inject-usercopy.h
-> @@ -0,0 +1,20 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/*
-> + * This header provides a wrapper for partial failures on usercopy functions.
-> + * For usage see Documentation/fault-injection/fault-injection.rst
-> + */
-> +#ifndef __LINUX_FAULT_INJECT_USERCOPY_H__
-> +#define __LINUX_FAULT_INJECT_USERCOPY_H__
-> +
-> +#ifdef CONFIG_FAULT_INJECTION_USERCOPY
-> +
-> +long should_fail_usercopy(unsigned long n);
-> +
-> +#else
-> +
-> +static inline long should_fail_usercopy(unsigned long n) { return 0; }
-> +
-> +#endif /* CONFIG_FAULT_INJECTION_USERCOPY */
-> +
-> +#endif /* __LINUX_FAULT_INJECT_USERCOPY_H__ */
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index e068c3c7189a..bd0ec3ddb459 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1770,6 +1770,13 @@ config FAIL_PAGE_ALLOC
->         help
->           Provide fault-injection capability for alloc_pages().
->
-> +config FAULT_INJECTION_USERCOPY
-> +       bool "Fault injection capability for usercopy functions"
-> +       depends on FAULT_INJECTION
-> +       help
-> +         Provides fault-injection capability to inject failures and
-> +         partial copies in usercopy functions.
-> +
->  config FAIL_MAKE_REQUEST
->         bool "Fault-injection capability for disk IO"
->         depends on FAULT_INJECTION && BLOCK
-> diff --git a/lib/Makefile b/lib/Makefile
-> index a4a4c6864f51..18daad2bc606 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -207,6 +207,7 @@ obj-$(CONFIG_AUDIT_COMPAT_GENERIC) += compat_audit.o
->
->  obj-$(CONFIG_IOMMU_HELPER) += iommu-helper.o
->  obj-$(CONFIG_FAULT_INJECTION) += fault-inject.o
-> +obj-$(CONFIG_FAULT_INJECTION_USERCOPY) += fault-inject-usercopy.o
->  obj-$(CONFIG_NOTIFIER_ERROR_INJECTION) += notifier-error-inject.o
->  obj-$(CONFIG_PM_NOTIFIER_ERROR_INJECT) += pm-notifier-error-inject.o
->  obj-$(CONFIG_NETDEV_NOTIFIER_ERROR_INJECT) += netdev-notifier-error-inject.o
-> diff --git a/lib/fault-inject-usercopy.c b/lib/fault-inject-usercopy.c
-> new file mode 100644
-> index 000000000000..c151e0817ca7
-> --- /dev/null
-> +++ b/lib/fault-inject-usercopy.c
-> @@ -0,0 +1,66 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +#include <linux/fault-inject.h>
-> +#include <linux/fault-inject-usercopy.h>
-> +#include <linux/random.h>
-> +
-> +static struct {
-> +       struct fault_attr attr;
-> +       u32 failsize;
-> +} fail_usercopy = {
-> +       .attr = FAULT_ATTR_INITIALIZER,
-> +       .failsize = 0,
-> +};
-> +
-> +static int __init setup_fail_usercopy(char *str)
-> +{
-> +       return setup_fault_attr(&fail_usercopy.attr, str);
-> +}
-> +__setup("fail_usercopy=", setup_fail_usercopy);
-> +
-> +#ifdef CONFIG_FAULT_INJECTION_DEBUG_FS
-> +
-> +static int __init fail_usercopy_debugfs(void)
-> +{
-> +       umode_t mode = S_IFREG | 0600;
-> +       struct dentry *dir;
-> +
-> +       dir = fault_create_debugfs_attr("fail_usercopy", NULL,
-> +                                       &fail_usercopy.attr);
-> +       if (IS_ERR(dir))
-> +               return PTR_ERR(dir);
-> +
-> +       debugfs_create_u32("failsize", mode, dir,
-> +                          &fail_usercopy.failsize);
+>  Documentation/locking/locktypes.rst | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
 
-Marco, what's the right way to annotate these concurrent accesses for KCSAN?
+Looks correct to me, thanks:
 
-> +       return 0;
-> +}
-> +
-> +late_initcall(fail_usercopy_debugfs);
-> +
-> +#endif /* CONFIG_FAULT_INJECTION_DEBUG_FS */
-> +
-> +/**
-> + * should_fail_usercopy() - Failure code or amount of bytes not to copy.
-> + * @n: Size of the original copy call.
-> + *
-> + * The general idea is to have a method which returns the amount of bytes not
-> + * to copy, a failure to return, or 0 if the calling function should progress
-> + * without a failure. E.g., copy_{to,from}_user should NOT copy the amount of
-> + * bytes returned by should_fail_usercopy, returning this value (in addition
-> + * to any bytes that could actually not be copied) or a failure.
-> + *
-> + * Return: one of:
-> + * negative, failure to return;
-> + * 0, progress normally;
-> + * a number in ]0, n], the number of bytes not to copy.
-> + *
-> + */
-> +long should_fail_usercopy(unsigned long n)
-> +{
-> +       if (should_fail(&fail_usercopy.attr, n)) {
-> +               if (fail_usercopy.failsize > 0)
-> +                       return fail_usercopy.failsize % (n + 1);
+Acked-by: Will Deacon <will@kernel.org>
 
-What's the use-case for this fail_usercopy.failsize? How is it
-supposed to be used?
-It seems that setting an exact value only makes sense if you know the
-exact failure site (and size it will use). But it's global and not
-per-task.
-It does not allow systematic enumeration of all return values because
-there is no way to understand that we tried all possible return values
-for a particular usercopy. And it also can "undo" failure if %(n+1)
-yields 0, right? Maybe it should saturate?
-
-
-> +               return -EFAULT;
-> +       }
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(should_fail_usercopy);
-> --
-> 2.28.0.297.g1956fa8f8d-goog
->
+Will
