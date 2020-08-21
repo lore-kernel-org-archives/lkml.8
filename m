@@ -2,318 +2,153 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D31C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 873C020748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:15:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597990511;
-	bh=HtZtEqMJWa6v3dxpOCJD+qG/hLS19G82LkSofuiaKCE=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=hV3P5YdqXW0ODDDfg9d3TLKsAVWWHXkuve0cQ/E4wm4SetU4SyQfjCcMUVfmhVbCh
-	 zALLXdxHuH1rMj7NbzhguqmK//svAYyAp+xyiuRbSiRJ0IDpTBNL+QJcn1WcFmVu61
-	 sjsqG/aQGA/Cup0qwvx30f8ZETxPdZ04mH3aTqzo=
+	by mail.kernel.org (Postfix) with ESMTP id 7F63F2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:18:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y4jFZd58"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgHUGPJ (ORCPT
+        id S1727891AbgHUGSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:15:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgHUGPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 02:15:06 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D07620702;
-        Fri, 21 Aug 2020 06:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597990505;
-        bh=HtZtEqMJWa6v3dxpOCJD+qG/hLS19G82LkSofuiaKCE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Cg1UFB2hWRgaLxqJET7zYpuqVCiBC4EDIvlIvizwTJRLITR7lbwgVf8v9E4JMEO5a
-         LCANYFbYh/n4r/+OvfTCFObuUveacrjkqpv4CWf2lqKFhtTHONj6kW9wLwwU+CPLFu
-         zZlTLgNJs0bIP6EI8cVDYIUsBOyEmkDhTMMo1Z7c=
-Date:   Fri, 21 Aug 2020 01:20:52 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Stanislaw Gruszka <stf_xl@wp.pl>,
-        Helmut Schaa <helmut.schaa@googlemail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] rt2x00: Use fallthrough pseudo-keyword
-Message-ID: <20200821062052.GA8618@embeddedor>
+        Fri, 21 Aug 2020 02:18:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727822AbgHUGR7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 02:17:59 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C085C061385;
+        Thu, 20 Aug 2020 23:17:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=IBcexKFr3UjZZmXJsxriFU+NEblTsPCGVKw6LJaZq6g=; b=Y4jFZd58hCGWF6Xt6uTzcnBXxC
+        UWtop2H3owB7z8izxB38rhYUBWzbMNcfGF/ZbKA0of3MSSGs4NQaKztvqV9BDUpRVEyZJptkpmFLB
+        eHZ5eUt+m/6J/A4wdP7EESaEV5liZvZfwbZtkswrXPxv9gneKZZ7Q4CLnAnyEyTg7b3sB729YufK9
+        IRx3e5Gu6yO2cex9ZECh9Ci2L0FU60l/zlPbPI/LJmRmkCkLWVoIQNSHeAZjBvAHmdauVr7YPXpJv
+        jBqr6WseTRQf+buwuQLScNsP5fKKfFg9m5mjh5K6k2emz1kUBkSy6mo8I4xRd9ThC4JeRxnP7VO2b
+        VYTysohw==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k90N6-0001K8-RX; Fri, 21 Aug 2020 06:17:52 +0000
+Date:   Fri, 21 Aug 2020 07:17:52 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     hch@infradead.org, darrick.wong@oracle.com, willy@infradead.org,
+        david@fromorbit.com, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yi.zhang@huawei.com
+Subject: Re: [RFC PATCH V3] iomap: add support to track dirty state of sub
+ pages
+Message-ID: <20200821061752.GF31091@infradead.org>
+References: <20200819120542.3780727-1-yukuai3@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200819120542.3780727-1-yukuai3@huawei.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-fall-through markings when it is the case.
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index bcfc288dba3f..b6a7457d8581 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -21,15 +21,20 @@
+>  
+>  #include "../internal.h"
+>  
+> +#define DIRTY_BITS(x)	((x) + PAGE_SIZE / SECTOR_SIZE)
+>  /*
 
-[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+Nit: please keep an empty line between a definition and a comment.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- .../net/wireless/ralink/rt2x00/rt2400pci.c    |  2 +-
- .../net/wireless/ralink/rt2x00/rt2500pci.c    |  2 +-
- .../net/wireless/ralink/rt2x00/rt2800lib.c    | 42 +++++++++----------
- .../net/wireless/ralink/rt2x00/rt2800mmio.c   |  1 -
- .../net/wireless/ralink/rt2x00/rt2800usb.c    |  1 -
- drivers/net/wireless/ralink/rt2x00/rt61pci.c  |  3 +-
- drivers/net/wireless/ralink/rt2x00/rt73usb.c  |  1 -
- 7 files changed, 24 insertions(+), 28 deletions(-)
+> +	 * The first half bits are used to track sub-page uptodate status,
+> +	 * the second half bits are for dirty status.
+> +	 */
+> +	DECLARE_BITMAP(state, PAGE_SIZE * 2 / SECTOR_SIZE);
+>  };
+>  
+>  static inline struct iomap_page *to_iomap_page(struct page *page)
+> @@ -52,8 +57,8 @@ iomap_page_create(struct inode *inode, struct page *page)
+>  	iop = kmalloc(sizeof(*iop), GFP_NOFS | __GFP_NOFAIL);
+>  	atomic_set(&iop->read_count, 0);
+>  	atomic_set(&iop->write_count, 0);
+> -	spin_lock_init(&iop->uptodate_lock);
+> -	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
+> +	spin_lock_init(&iop->state_lock);
+> +	bitmap_zero(iop->state, PAGE_SIZE * 2 / SECTOR_SIZE);
 
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt2400pci.c b/drivers/net/wireless/ralink/rt2x00/rt2400pci.c
-index c1ac933349d1..c8bb378148c3 100644
---- a/drivers/net/wireless/ralink/rt2x00/rt2400pci.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2400pci.c
-@@ -1291,7 +1291,7 @@ static void rt2400pci_txdone(struct rt2x00_dev *rt2x00dev,
- 			break;
- 		case 2: /* Failure, excessive retries */
- 			__set_bit(TXDONE_EXCESSIVE_RETRY, &txdesc.flags);
--			/* Fall through - this is a failed frame! */
-+			fallthrough;	/* this is a failed frame! */
- 		default: /* Failure */
- 			__set_bit(TXDONE_FAILURE, &txdesc.flags);
- 		}
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt2500pci.c b/drivers/net/wireless/ralink/rt2x00/rt2500pci.c
-index 0859adebd860..2e015c16cd4b 100644
---- a/drivers/net/wireless/ralink/rt2x00/rt2500pci.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2500pci.c
-@@ -1419,7 +1419,7 @@ static void rt2500pci_txdone(struct rt2x00_dev *rt2x00dev,
- 			break;
- 		case 2: /* Failure, excessive retries */
- 			__set_bit(TXDONE_EXCESSIVE_RETRY, &txdesc.flags);
--			/* Fall through - this is a failed frame! */
-+			fallthrough;	/* this is a failed frame! */
- 		default: /* Failure */
- 			__set_bit(TXDONE_FAILURE, &txdesc.flags);
- 		}
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt2800lib.c b/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
-index a779fe771a55..fed6d21cd6ce 100644
---- a/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
-@@ -928,7 +928,7 @@ static void rt2800_rate_from_status(struct skb_frame_desc *skbdesc,
- 	switch (rt2x00_get_field32(status, TX_STA_FIFO_PHYMODE)) {
- 	case RATE_MODE_HT_GREENFIELD:
- 		flags |= IEEE80211_TX_RC_GREEN_FIELD;
--		/* fall through */
-+		fallthrough;
- 	case RATE_MODE_HT_MIX:
- 		flags |= IEEE80211_TX_RC_MCS;
- 		break;
-@@ -2567,7 +2567,7 @@ static void rt2800_config_channel_rf3052(struct rt2x00_dev *rt2x00dev,
- 		switch (rt2x00dev->default_ant.tx_chain_num) {
- 		case 1:
- 			rt2x00_set_field8(&rfcsr, RFCSR1_TX1_PD, 1);
--			/* fall through */
-+			fallthrough;
- 		case 2:
- 			rt2x00_set_field8(&rfcsr, RFCSR1_TX2_PD, 1);
- 			break;
-@@ -2576,7 +2576,7 @@ static void rt2800_config_channel_rf3052(struct rt2x00_dev *rt2x00dev,
- 		switch (rt2x00dev->default_ant.rx_chain_num) {
- 		case 1:
- 			rt2x00_set_field8(&rfcsr, RFCSR1_RX1_PD, 1);
--			/* fall through */
-+			fallthrough;
- 		case 2:
- 			rt2x00_set_field8(&rfcsr, RFCSR1_RX2_PD, 1);
- 			break;
-@@ -2768,10 +2768,10 @@ static void rt2800_config_channel_rf3053(struct rt2x00_dev *rt2x00dev,
- 	switch (rt2x00dev->default_ant.tx_chain_num) {
- 	case 3:
- 		rt2x00_set_field8(&rfcsr, RFCSR1_TX2_PD, 1);
--		/* fallthrough */
-+		fallthrough;
- 	case 2:
- 		rt2x00_set_field8(&rfcsr, RFCSR1_TX1_PD, 1);
--		/* fallthrough */
-+		fallthrough;
- 	case 1:
- 		rt2x00_set_field8(&rfcsr, RFCSR1_TX0_PD, 1);
- 		break;
-@@ -2780,10 +2780,10 @@ static void rt2800_config_channel_rf3053(struct rt2x00_dev *rt2x00dev,
- 	switch (rt2x00dev->default_ant.rx_chain_num) {
- 	case 3:
- 		rt2x00_set_field8(&rfcsr, RFCSR1_RX2_PD, 1);
--		/* fallthrough */
-+		fallthrough;
- 	case 2:
- 		rt2x00_set_field8(&rfcsr, RFCSR1_RX1_PD, 1);
--		/* fallthrough */
-+		fallthrough;
- 	case 1:
- 		rt2x00_set_field8(&rfcsr, RFCSR1_RX0_PD, 1);
- 		break;
-@@ -3005,10 +3005,10 @@ static void rt2800_config_channel_rf3853(struct rt2x00_dev *rt2x00dev,
- 	switch (rt2x00dev->default_ant.tx_chain_num) {
- 	case 3:
- 		rt2x00_set_field8(&rfcsr, RFCSR1_TX2_PD, 1);
--		/* fallthrough */
-+		fallthrough;
- 	case 2:
- 		rt2x00_set_field8(&rfcsr, RFCSR1_TX1_PD, 1);
--		/* fallthrough */
-+		fallthrough;
- 	case 1:
- 		rt2x00_set_field8(&rfcsr, RFCSR1_TX0_PD, 1);
- 		break;
-@@ -3017,10 +3017,10 @@ static void rt2800_config_channel_rf3853(struct rt2x00_dev *rt2x00dev,
- 	switch (rt2x00dev->default_ant.rx_chain_num) {
- 	case 3:
- 		rt2x00_set_field8(&rfcsr, RFCSR1_RX2_PD, 1);
--		/* fallthrough */
-+		fallthrough;
- 	case 2:
- 		rt2x00_set_field8(&rfcsr, RFCSR1_RX1_PD, 1);
--		/* fallthrough */
-+		fallthrough;
- 	case 1:
- 		rt2x00_set_field8(&rfcsr, RFCSR1_RX0_PD, 1);
- 		break;
-@@ -4216,14 +4216,14 @@ static void rt2800_config_channel(struct rt2x00_dev *rt2x00dev,
- 				   rf->channel > 14);
- 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_G2_EN,
- 				   rf->channel <= 14);
--		/* fall-through */
-+		fallthrough;
- 	case 2:
- 		/* Turn on secondary PAs */
- 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_A1_EN,
- 				   rf->channel > 14);
- 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_G1_EN,
- 				   rf->channel <= 14);
--		/* fall-through */
-+		fallthrough;
- 	case 1:
- 		/* Turn on primary PAs */
- 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_A0_EN,
-@@ -4241,12 +4241,12 @@ static void rt2800_config_channel(struct rt2x00_dev *rt2x00dev,
- 		/* Turn on tertiary LNAs */
- 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_LNA_PE_A2_EN, 1);
- 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_LNA_PE_G2_EN, 1);
--		/* fall-through */
-+		fallthrough;
- 	case 2:
- 		/* Turn on secondary LNAs */
- 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_LNA_PE_A1_EN, 1);
- 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_LNA_PE_G1_EN, 1);
--		/* fall-through */
-+		fallthrough;
- 	case 1:
- 		/* Turn on primary LNAs */
- 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_LNA_PE_A0_EN, 1);
-@@ -5438,10 +5438,10 @@ void rt2800_vco_calibration(struct rt2x00_dev *rt2x00dev)
- 		switch (rt2x00dev->default_ant.tx_chain_num) {
- 		case 3:
- 			rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_G2_EN, 1);
--			/* fall through */
-+			fallthrough;
- 		case 2:
- 			rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_G1_EN, 1);
--			/* fall through */
-+			fallthrough;
- 		case 1:
- 		default:
- 			rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_G0_EN, 1);
-@@ -5451,10 +5451,10 @@ void rt2800_vco_calibration(struct rt2x00_dev *rt2x00dev)
- 		switch (rt2x00dev->default_ant.tx_chain_num) {
- 		case 3:
- 			rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_A2_EN, 1);
--			/* fall through */
-+			fallthrough;
- 		case 2:
- 			rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_A1_EN, 1);
--			/* fall through */
-+			fallthrough;
- 		case 1:
- 		default:
- 			rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_A0_EN, 1);
-@@ -10100,10 +10100,10 @@ static int rt2800_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
- 	switch (rx_chains) {
- 	case 3:
- 		spec->ht.mcs.rx_mask[2] = 0xff;
--		/* fall through */
-+		fallthrough;
- 	case 2:
- 		spec->ht.mcs.rx_mask[1] = 0xff;
--		/* fall through */
-+		fallthrough;
- 	case 1:
- 		spec->ht.mcs.rx_mask[0] = 0xff;
- 		spec->ht.mcs.rx_mask[4] = 0x1; /* MCS32 */
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt2800mmio.c b/drivers/net/wireless/ralink/rt2x00/rt2800mmio.c
-index 110bb391c372..6e7c14757261 100644
---- a/drivers/net/wireless/ralink/rt2x00/rt2800mmio.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2800mmio.c
-@@ -593,7 +593,6 @@ void rt2800mmio_queue_init(struct data_queue *queue)
- 		break;
- 
- 	case QID_ATIM:
--		/* fallthrough */
- 	default:
- 		BUG();
- 		break;
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt2800usb.c b/drivers/net/wireless/ralink/rt2x00/rt2800usb.c
-index 4cc64fe481a7..d08b251ec5a2 100644
---- a/drivers/net/wireless/ralink/rt2x00/rt2800usb.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2800usb.c
-@@ -746,7 +746,6 @@ static void rt2800usb_queue_init(struct data_queue *queue)
- 		break;
- 
- 	case QID_ATIM:
--		/* fallthrough */
- 	default:
- 		BUG();
- 		break;
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt61pci.c b/drivers/net/wireless/ralink/rt2x00/rt61pci.c
-index eefce76fc99b..43c3cdd13710 100644
---- a/drivers/net/wireless/ralink/rt2x00/rt61pci.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt61pci.c
-@@ -2130,7 +2130,7 @@ static void rt61pci_txdone(struct rt2x00_dev *rt2x00dev)
- 			break;
- 		case 6: /* Failure, excessive retries */
- 			__set_bit(TXDONE_EXCESSIVE_RETRY, &txdesc.flags);
--			/* Fall through - this is a failed frame! */
-+			fallthrough;	/* this is a failed frame! */
- 		default: /* Failure */
- 			__set_bit(TXDONE_FAILURE, &txdesc.flags);
- 		}
-@@ -2953,7 +2953,6 @@ static void rt61pci_queue_init(struct data_queue *queue)
- 		break;
- 
- 	case QID_ATIM:
--		/* fallthrough */
- 	default:
- 		BUG();
- 		break;
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt73usb.c b/drivers/net/wireless/ralink/rt2x00/rt73usb.c
-index e908c303b677..e69793773d87 100644
---- a/drivers/net/wireless/ralink/rt2x00/rt73usb.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt73usb.c
-@@ -2373,7 +2373,6 @@ static void rt73usb_queue_init(struct data_queue *queue)
- 		break;
- 
- 	case QID_ATIM:
--		/* fallthrough */
- 	default:
- 		BUG();
- 		break;
--- 
-2.27.0
+Maybe add a
 
+#define IOMAP_STATE_ARRAY_SIZE	(PAGE_SIZE * 2 / SECTOR_SIZE)
+
+and use?  That isn't much shorter, but a little easier to read at least.
+
+> +	spin_lock_irqsave(&iop->state_lock, flags);
+> +	for (i = first; i <= last; i++)
+> +		set_bit(i, iop->state);
+
+I think Matthew had some patches to move the these days pointlessly
+atomic bitops to use the bitmap_* routines.  It might make sense to
+start out that way for new code as well.
+
+> +
+> +	if (last >= first)
+> +		iomap_set_page_dirty(page);
+> +
+> +	spin_unlock_irqrestore(&iop->state_lock, flags);
+
+As aready pointed out, this probably needs to move out of the lock.
+
+> +static void
+> +iomap_set_range_dirty(struct page *page, unsigned int off,
+> +		unsigned int len)
+> +{
+> +	if (PageError(page))
+> +		return;
+> +
+> +	if (page_has_private(page))
+> +		iomap_iop_set_range_dirty(page, off, len);
+
+I'd be tempted to merge this function and iomap_iop_set_range_dirty,
+and just return early if there is an error or no iomap_page structure,
+relying on the fact that to_iomap_page returns NULL for that case.
+
+> +static void
+> +iomap_iop_clear_range_dirty(struct page *page, unsigned int off,
+> +		unsigned int len)
+> +{
+> +	struct iomap_page *iop = to_iomap_page(page);
+> +	struct inode *inode = page->mapping->host;
+> +	unsigned int first = DIRTY_BITS(off >> inode->i_blkbits);
+> +	unsigned int last = DIRTY_BITS((off + len - 1) >> inode->i_blkbits);
+> +	unsigned long flags;
+> +	unsigned int i;
+> +
+> +	spin_lock_irqsave(&iop->state_lock, flags);
+> +	for (i = first; i <= last; i++)
+> +		clear_bit(i, iop->state);
+
+should probably use bitmap_clear().
+
+> +static void
+> +iomap_clear_range_dirty(struct page *page, unsigned int off,
+> +		unsigned int len)
+> +{
+> +	if (PageError(page))
+> +		return;
+> +
+> +	if (page_has_private(page))
+> +		iomap_iop_clear_range_dirty(page, off, len);
+> +}
+
+Same comment about merging the two functions as above.
