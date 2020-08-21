@@ -2,79 +2,104 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB49C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46914C433E4
 	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF7C0208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597981510;
-	bh=EurlpFZvEALku2yAmqdxOL64IyitGFPQ6qKy1OzRhHI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rjVY5t+n70Y0VTnU5d5oWm7k1KGbXuh+IortdTlY5QF7yNf/WkXq9iid7z0yPMXmG
-	 jILfTH47L8jLMPvUQHdA5t4dFgCp5hKL9VZfHBbzXlOCw2YJJxNhP1qLoBhbyPvI2U
-	 Cec9UccEeSdLuShy59Y2BUvBzyPCeNVzXMoesuYY=
+	by mail.kernel.org (Postfix) with ESMTP id 27033208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:45:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mV8MyBfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgHUDoy (ORCPT
+        id S1727898AbgHUDpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:44:54 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:25396 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgHUDov (ORCPT
+        Thu, 20 Aug 2020 23:45:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgHUDpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:44:51 -0400
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 07L3iYNR006929;
-        Fri, 21 Aug 2020 12:44:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 07L3iYNR006929
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1597981475;
-        bh=NcTV0rU4lqUzCGeSvj+IhR2DmoMnjOnTSqkCOLXjihI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CnIvqsKvc0gf0dxrbxdAc+BzYbQk4qOqDIIFTsP4aGjhh+9mcR3pMU+Qpmx506QgA
-         bI3Wyk2Y1ClTvdt38adMcLST/8OJKx0UkBLvFEmGnCn+BV2Cx7/MrvqfOZXNg4+inC
-         +PofSWTJfNgvEwNczWxoW6om1BM3DFnZMdfY/f6U//78Tm2Tb4ZvYynONHFsklAzJ0
-         QF/n2XLyefgMFhAquUgmEAJeQQ2ITbvSlquE8BMvEQhNJmz7syrmGYPAIVrz8uAAWt
-         /3fErwUqcBsCD2l6jb4Rjq4G2ZnLsssPfVTkUj1jr6mkzQyFORUBL07YeQkE1yqlSV
-         9pvi0Rk0bJ2aQ==
-X-Nifty-SrcIP: [209.85.222.53]
-Received: by mail-ua1-f53.google.com with SMTP id d20so160159ual.13;
-        Thu, 20 Aug 2020 20:44:35 -0700 (PDT)
-X-Gm-Message-State: AOAM531AIdH1jVFcJhWkFrBUSei9Ltt90ia/FiU5/ROHjFNE3i/7VAXI
-        iwCUjy4oVsh14ECO70erLFOhORmY0aiwH8yp2os=
-X-Google-Smtp-Source: ABdhPJwyVtkEj0z6jbnZ/ZYmrdRit6XeU5c258QdTKoyURxGnPxMSmgPltgrdQ/tb1o3/w8aLnbUYHZgVFIi1z3jZz0=
-X-Received: by 2002:ab0:108:: with SMTP id 8mr452069uak.25.1597981474093; Thu,
- 20 Aug 2020 20:44:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200820174328.490374-1-masahiroy@kernel.org> <20200820174328.490374-2-masahiroy@kernel.org>
-In-Reply-To: <20200820174328.490374-2-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 21 Aug 2020 12:43:57 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT=w6o7z-V57t0oXfN5swurWt1LtCVx_pst6=tR0C-m8Q@mail.gmail.com>
-Message-ID: <CAK7LNAT=w6o7z-V57t0oXfN5swurWt1LtCVx_pst6=tR0C-m8Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kconfig: qconf: replace depreacated
- QString::sprintf() with QTextStream
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Robert Crawford <flacycads@cox.net>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 20 Aug 2020 23:45:05 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 672FBC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 20:45:05 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id k4so301690ilr.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 20:45:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=pjb3qXMqNGgbJ/lSuknPKaxC91VgiCH9RpbBjdcDS+8=;
+        b=mV8MyBfwdtBHyzYdMge8jfhsn0YXfWoqfrEOge4JH25XoMui3ok4QyrAfAHSRsxDUD
+         BbFoOhjLpPdqki5bLodj0gyNJif5RCd8HiuIHXg/rtUVRQfOaacVwr1i7upVDHR7DV47
+         ABbgHTY/zwpTVpqbyL2Rccs5IRsNy4N2lC2NMl6a8U1FTWRInZlBE0gv7Mf8fE83Ea60
+         bvmlXqd4QCjdqXHPvlv83QOdA1U4U/JgS3aS7rF4GCoNF0hg/sXgFB9bk08YuZ/PZbnw
+         Lj24IFQ3UUP1UNc7Fr5GwdXe8BoIMFMFVfqI4bTsaH4y2/VSJQPMj8BotrkS+lv3C8v7
+         dZOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pjb3qXMqNGgbJ/lSuknPKaxC91VgiCH9RpbBjdcDS+8=;
+        b=jQg6phyKf0EYlfS+Z/wu/ifzUH6F0S4mf4rj7xQKfGbhfNgEa+uDzuntdkZnNo3/6k
+         U+ca+KbclDYvQHwT1ygkmBxeOEVGJ78KLU/Dl41JcYKKrIKsbd4VnjxmRajxVY7Tjo99
+         f+o6lVHqnmKNJmjKVtyg8Vx37RtbcY4lFjUBkR1llMSC8dkD18GdkDKw3diEXIoBys3k
+         2HzvdIuJDp3dUXqsefpld6T9XSXP5/up0LinXrY0fhc8XrkbnOAu+1H3V7MmrB79Fva/
+         kfsSYcKIYIz/XunTqx2kCqsoFvNUB1ubrY1wtlgYX7os8ynas/x1MuYinSVd8Zpi+VH5
+         c+0w==
+X-Gm-Message-State: AOAM5335seHIY+F4qfLo+ZZvYNyAKmi2rjnxYiHhEcRUtN3xURNymCsU
+        oqQGQ1hzsrFWGHTqQUUI0qA=
+X-Google-Smtp-Source: ABdhPJyQO2gsgp9hegbJXCRacpvIWQr1eAIAyQvGnHxGPvbmUrWyvaCsC/lHY6qQXi/ljXI9Zed6fg==
+X-Received: by 2002:a92:2901:: with SMTP id l1mr949385ilg.306.1597981503759;
+        Thu, 20 Aug 2020 20:45:03 -0700 (PDT)
+Received: from localhost.localdomain (x-128-101-215-112.reshalls.umn.edu. [128.101.215.112])
+        by smtp.gmail.com with ESMTPSA id c90sm390227ilf.30.2020.08.20.20.45.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 20:45:03 -0700 (PDT)
+From:   George Acosta <acostag.ubuntu@gmail.com>
+To:     acostag.ubuntu@gmail.com
+Cc:     Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] rapidio: fix get device imbalance on error
+Date:   Thu, 20 Aug 2020 22:44:57 -0500
+Message-Id: <20200821034458.22472-1-acostag.ubuntu@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I will fix the typo in the subject.
+Fix the imbalance in mport_cdev_open.
+Call put_device in error path to balance the
+refcount that increased by the get_device.
 
-"depreacated" -> "deprecated"
+Fixes: e8de370188d0 ("rapidio: add mport char device driver")
+Signed-off-by: George Acosta <acostag.ubuntu@gmail.com>
+---
+ drivers/rapidio/devices/rio_mport_cdev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-
-
+diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
+index c07ceec3c6d4..3b68e00eb40f 100644
+--- a/drivers/rapidio/devices/rio_mport_cdev.c
++++ b/drivers/rapidio/devices/rio_mport_cdev.c
+@@ -1908,6 +1908,7 @@ static int mport_cdev_open(struct inode *inode, struct file *filp)
+ 			  sizeof(struct rio_event) * MPORT_EVENT_DEPTH,
+ 			  GFP_KERNEL);
+ 	if (ret < 0) {
++		put_device(&chdev->dev);
+ 		dev_err(&chdev->dev, DRV_NAME ": kfifo_alloc failed\n");
+ 		ret = -ENOMEM;
+ 		goto err_fifo;
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
