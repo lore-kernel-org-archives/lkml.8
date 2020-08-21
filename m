@@ -2,132 +2,92 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C077DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF0EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F39620656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y0Mfgip0"
+	by mail.kernel.org (Postfix) with ESMTP id 60E2B20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgHUKyA (ORCPT
+        id S1728560AbgHUKyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:54:00 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29760 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728008AbgHUKwi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:52:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598007157;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=m+sWpLL8B15YiBoZkjZFY9ODFpvPLxIevI4EtwVXHWs=;
-        b=Y0Mfgip09bx3eHqxmLhnMsmIkg94RkwyL7qwzYadXcMnWjh6PpY3tn8AHJwVuoWTEixqbF
-        v49vOiWvJPyzBRjVuRTKgkYp3HGNOTiQ0RHLYiQWelG+VczIQJxN2uBWTq+yN1nbMQPwDs
-        hbhisCa3A8eAbpR8rtH2mG8+QIfenNc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-475-Arr460QEMU-dEeMrVD4xNw-1; Fri, 21 Aug 2020 06:52:33 -0400
-X-MC-Unique: Arr460QEMU-dEeMrVD4xNw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B9761885D89;
-        Fri, 21 Aug 2020 10:52:31 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 397977C533;
-        Fri, 21 Aug 2020 10:52:30 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     x86@kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Chang Seok Bae <chang.seok.bae@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v2] x86/entry/64: Do not use RDPID in paranoid entry to accomodate KVM
-Date:   Fri, 21 Aug 2020 06:52:29 -0400
-Message-Id: <20200821105229.18938-1-pbonzini@redhat.com>
+        Fri, 21 Aug 2020 06:54:05 -0400
+Received: from mga01.intel.com ([192.55.52.88]:2596 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728058AbgHUKwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 06:52:54 -0400
+IronPort-SDR: 8aNO/msoBSpTqqCklOoI2JacQjPjJQO7YCLjMr1I3OOZV3lZ1AUJ5pD9elmREgbCIopPhUm8HQ
+ sEH1QZIVz28w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="173557967"
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="173557967"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 03:52:53 -0700
+IronPort-SDR: O7Lz0ZnWt71v2rhcFMeN/ax6FCKFYVTkccb1vrG1j5ztBa9wkip6kUaRQ1nMEuIOPKHxS+3k0z
+ lLexMjyeq4Ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="327731116"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 03:52:50 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1k94fA-00AK5B-Ke; Fri, 21 Aug 2020 13:52:48 +0300
+Date:   Fri, 21 Aug 2020 13:52:48 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com
+Subject: Re: [PATCH v8 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200821105248.GM1891694@smile.fi.intel.com>
+References: <cover.1597898872.git.rahul.tanwar@linux.intel.com>
+ <b6d0a65625a2bc231c649c970c0a1af1ff3a5dd5.1597898872.git.rahul.tanwar@linux.intel.com>
+ <20200820105255.GB1891694@smile.fi.intel.com>
+ <56c2a40d-6872-8ae7-7214-420b8bb9f027@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56c2a40d-6872-8ae7-7214-420b8bb9f027@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Fri, Aug 21, 2020 at 05:14:29PM +0800, Tanwar, Rahul wrote:
+> On 20/8/2020 6:52 pm, Andy Shevchenko wrote:
+> > On Thu, Aug 20, 2020 at 12:50:46PM +0800, Rahul Tanwar wrote:
+> >> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+> >> This PWM controller does not have any other consumer, it is a
+> >> dedicated PWM controller for fan attached to the system. Add
+> >> driver for this PWM fan controller.
+> > ...
+> > +#include <linux/bitfield.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/module.h>
+> >> +#include <linux/of_device.h>
+> > This should be mod_devicetable.h.
+> 
+> Inlcuding mod_devicetable.h instead of of_device.h results in
+> build failure related to all platform calls. Build is ok if
+> i remove it. Just FYI..
 
-Don't use RDPID in the paranoid entry flow, as it can consume a KVM
-guest's MSR_TSC_AUX value if an NMI arrives during KVM's run loop.
+I didn't get what the change you performed, by there is no users of of_device.h
+in your code. If build fails it means you need to figure out proper list of
+what has to be included.
 
-In general, the kernel does not need TSC_AUX because it can just use
-__this_cpu_read(cpu_number) to read the current processor id.  It can
-also just block preemption and thread migration at its will, therefore
-it has no need for the atomic rdtsc+vgetcpu provided by RDTSCP.  For this
-reason, as a performance optimization, KVM loads the guest's TSC_AUX when
-a CPU first enters its run loop.  On AMD's SVM, it doesn't restore the
-host's value until the CPU exits the run loop; VMX is even more aggressive
-and defers restoring the host's value until the CPU returns to userspace.
-
-This optimization obviously relies on the kernel not consuming TSC_AUX,
-which falls apart if an NMI arrives during the run loop and uses RDPID.
-Removing it would be painful, as both SVM and VMX would need to context
-switch the MSR on every VM-Enter (for a cost of 2x WRMSR), whereas using
-LSL instead RDPID is a minor blip.
-
-Both SAVE_AND_SET_GSBASE and GET_PERCPU_BASE are only used in paranoid entry,
-therefore the patch can just remove the RDPID alternative.
-
-Fixes: eaad981291ee3 ("x86/entry/64: Introduce the FIND_PERCPU_BASE macro")
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Chang Seok Bae <chang.seok.bae@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org
-Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
-Debugged-by: Tom Lendacky <thomas.lendacky@amd.com>
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/entry/calling.h | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-index 98e4d8886f11..ae9b0d4615b3 100644
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -374,12 +374,14 @@ For 32-bit we have the following conventions - kernel is built with
-  * Fetch the per-CPU GSBASE value for this processor and put it in @reg.
-  * We normally use %gs for accessing per-CPU data, but we are setting up
-  * %gs here and obviously can not use %gs itself to access per-CPU data.
-+ *
-+ * Do not use RDPID, because KVM loads guest's TSC_AUX on vm-entry and
-+ * may not restore the host's value until the CPU returns to userspace.
-+ * Thus the kernel would consume a guest's TSC_AUX if an NMI arrives
-+ * while running KVM's run loop.
-  */
- .macro GET_PERCPU_BASE reg:req
--	ALTERNATIVE \
--		"LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
--		"RDPID	\reg", \
--		X86_FEATURE_RDPID
-+	LOAD_CPU_AND_NODE_SEG_LIMIT \reg
- 	andq	$VDSO_CPUNODE_MASK, \reg
- 	movq	__per_cpu_offset(, \reg, 8), \reg
- .endm
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
