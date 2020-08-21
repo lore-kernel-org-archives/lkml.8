@@ -2,157 +2,144 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB141C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C11FF207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B1E20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:33:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="IORYYSgd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgHUV3o (ORCPT
+        id S1726719AbgHUVdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:29:44 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:47324 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgHUV3n (ORCPT
+        Fri, 21 Aug 2020 17:33:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgHUVdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:29:43 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id E5BBD1C0BB0; Fri, 21 Aug 2020 23:29:41 +0200 (CEST)
-Date:   Fri, 21 Aug 2020 23:29:41 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Joerg Roedel <joro@8bytes.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Airlie <airlied@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Vrabel <david.vrabel@citrix.com>,
-        Joerg Roedel <jroedel@suse.de>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] mm: Track page table modifications in
- __apply_to_page_range()
-Message-ID: <20200821212941.GA5408@amd>
-References: <20200821123746.16904-1-joro@8bytes.org>
- <20200821133548.be58a3b0881b41a32759fa04@linux-foundation.org>
- <159804301810.32652.14249776487575415877@build.alporthouse.com>
+        Fri, 21 Aug 2020 17:33:00 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05101C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:33:00 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id w2so2725411edv.7
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:32:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kylehuey.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dekqT/9e5PdeM8sWswsA+oOJMSN8oLgPDWj1BwuZ1oM=;
+        b=IORYYSgdCNFTn1PvikD7MWj5KJMBEC4w3neBYPhoHuZl3+1NadfWxOJzUnBl6of0uR
+         LTiG3KN3prEReIIdaTIjxkNBTZWTd6k8ETvSrgPn2fIzIj5jMR6TA/1oaAx/KQwgdnLV
+         07qffHl1uhiIujQ62NY3IqQ5kzpVeoamXgrsy3REzM7kN/q0ehYtJOTYZ90tRr3KAiKG
+         AYdohTXLaDF/jn07aM+JpXkU0yTWwRUKAkEZUwCnqnrealdxKr3h8R4YKhiVuQ8mS8Z+
+         PJp0vwU8fjUJ28lp7nf29xGo19Oanxu6uDGFztLYBU7HzftX0kGqPHVs+IHslg03Ju+r
+         mdrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dekqT/9e5PdeM8sWswsA+oOJMSN8oLgPDWj1BwuZ1oM=;
+        b=JnLKBt7czpiS5Oy/DSCDG31SMbT0gsGzzIMPcU45OQRz/wEBYpIt62gP/UfHh4rG9C
+         dV9YhOF6Q35NP6+njw1ONEHMSsIPIdZsTAfWXedt2sxUGa87qtvPeFaI1OdEddXqIFun
+         efB0qawExMhghU+Sr/ywLTplMW6fY1b8yZEBkERE+NwssPhlQDNnzt708dYxFVhuhjPA
+         pz97Q0guhRjYhVN5e9yluEujOYE3wmxAmWuDAiwRdsgyaJ3+/+LQ/n6TVTwruCg7I+5H
+         1pFRrAMVJ1c/B7nGjViBTtoME65GY9N7wAGZ0DCdMS87sW6RTdcVrMtp4iYNjGJRAie2
+         Li/w==
+X-Gm-Message-State: AOAM532P0Da7qSyQJylLfbuVnZ4yBmzaaQLTbpHgQYK6yhVWx6/TPIXz
+        hqmaY0H8q7ejRpfDkkhOvIQTN3rZUPoXD+cRRntrUA==
+X-Google-Smtp-Source: ABdhPJxl8w752+O26JqyOdWAMNWy4Yq/ZQfEDJxbzsalwN4fVAhF7D0XRMkmJx/ev4NmSymkDfw53FsU226oStsd5nA=
+X-Received: by 2002:aa7:da9a:: with SMTP id q26mr4929479eds.163.1598045578567;
+ Fri, 21 Aug 2020 14:32:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
-Content-Disposition: inline
-In-Reply-To: <159804301810.32652.14249776487575415877@build.alporthouse.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <CAP045Aq8+h6Y6t7W2GR_jJER5ghaHTH0wP81V-iYHxrR0Lk2vw@mail.gmail.com>
+ <29FD0DDA-3093-46A3-BCF4-85DEC229E30D@intel.com>
+In-Reply-To: <29FD0DDA-3093-46A3-BCF4-85DEC229E30D@intel.com>
+From:   Kyle Huey <me@kylehuey.com>
+Date:   Fri, 21 Aug 2020 14:32:47 -0700
+Message-ID: <CAP045AqiT75B9o5OV+SJT8uTzo7A55Y1BxjNcaSuxtm5EoAxaQ@mail.gmail.com>
+Subject: Re: [REGRESSION] x86/cpu fsgsbase breaks TLS in 32 bit rr tracees on
+ a 64 bit system
+To:     "Bae, Chang Seok" <chang.seok.bae@intel.com>
+Cc:     "Robert O'Callahan" <rocallahan@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 21, 2020 at 1:08 PM Bae, Chang Seok
+<chang.seok.bae@intel.com> wrote:
+>
+>
+> > On Aug 20, 2020, at 21:41, Kyle Huey <me@kylehuey.com> wrote:
+> >
+> > On the x86-64 5.9-rc1 TLS is completely broken in 32 bit tracees when
+> > running under rr[0]. Booting the kernel with `nofsgsbase` fixes it and
+> > I bisected to https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v5.8&id=673903495c85137791d5820d690229efe09c8f7b.
+> >
+> > STR:
+> > 1. Build rr from source by
+> >  a. git clone https://github.com/mozilla/rr
+> >  b. mkdir rr/obj
+> >  c. cd rr/obj
+> >  d. cmake ..
+> >  e. make -j16
+> > 2. Run the simple 32 bit tracee outside of rr with `./bin/simple_32`.
+> > It should print a message and exit cleanly.
+> > 3. Run it under rr with `./bin/rr ./bin/simple_32`.
+> >
+> > It should behave the same way, but with fsgsbase enabled it will
+> > segfault. The `simple_32` binary is a simple "hello world" type
+> > program but it does link to pthreads, so pre-main code attempts to
+> > access TLS variables.
+> >
+> > The interplay between 32 bit and 64 bit TLS is dark magic to me
+> > unfortunately so this is all the useful information I have.
+>
+> As I run it and collect the ptrace logs, it starts to set FSBASE with
+> some numbers, e.g. 140632147826496, and then later attempts to set GS
+> with 99 through putreg(), not putreg32().
+>
+> With FSGSBASE, the FS/GS base is decoupled from the selector. Andy
+> made putreg32() to retain the old behavior, fetching FS/GS base
+> according to the index, but the putreg() does not do. So, rr probably
+> relies on the old behavior as observed to setting the GS index only.
+> But it was previously considered to be okay with this comment [1]:
+>
+>    "Our modifications to fs/gs/fs_base/gs_base are always either a)
+>     setting values that the kernel set during recording to make them
+>     happen during replay or b) emulating PTRACE_SET_REGS that a tracee
+>     ptracer tried to set on another tracee. Either way I think the
+>     effects are going to be the same as what would happen if the
+>     program were run without rr."
+>
+> It is not straightforward to go into the rr internal to me. Robert,
+> any thought?
 
---jRHKVT23PllUwdXP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hmm. When we are running a 32 bit tracee in a 64 bit build of rr we
+internally convert between the 32 bit and 64 bit user_regs_structs[0]
+at the ptrace boundary. This does not preserve the fs/gsbase (because
+there is no fs/gsbase in the 32 bit user_regs_struct, of course).
 
-Hi!
+40c45904f818c1f6555294ca27afc5fda4f09e68 added magic for a 32 bit
+tracer tracing a 32 bit tracee on a 64 bit kernel, but it looks like a
+64 bit tracer tracing a 32 bit tracee on a 64 bit kernel *is* now
+expected to preserve the fs/gsbase values (or die, in our case).
 
-> > > The __apply_to_page_range() function is also used to change and/or
-> > > allocate page-table pages in the vmalloc area of the address space.
-> > > Make sure these changes get synchronized to other page-tables in the
-> > > system by calling arch_sync_kernel_mappings() when necessary.
-> >=20
-> > There's no description here of the user-visible effects of the bug.=20
-> > Please always provide this, especially when proposing a -stable
-> > backport.  Take pity upon all the downstream kernel maintainers who are
-> > staring at this wondering whether they should risk adding it to their
-> > kernels.
->=20
-> The impact appears limited to x86-32, where apply_to_page_range may miss
-> updating the PMD. That leads to explosions in drivers like
->=20
-> [   24.227844] BUG: unable to handle page fault for address: fe036000
-> [   24.228076] #PF: supervisor write access in kernel mode
-> [   24.228294] #PF: error_code(0x0002) - not-present page
-> [   24.228494] *pde =3D 00000000
-> [   24.228640] Oops: 0002 [#1] SMP
-> [   24.228788] CPU: 3 PID: 1300 Comm: gem_concurrent_ Not tainted 5.9.0-r=
-c1+ #16
-> [   24.228957] Hardware name:  /NUC6i3SYB, BIOS SYSKLi35.86A.0024.2015.10=
-27.2142 10/27/2015
-> [   24.229297] EIP: __execlists_context_alloc+0x132/0x2d0 [i915]
-> [   24.229462] Code: 31 d2 89 f0 e8 2f 55 02 00 89 45 e8 3d 00 f0 ff ff 0=
-f 87 11 01 00 00 8b 4d e8 03 4b 30 b8 5a 5a 5a 5a ba 01 00 00 00 8d 79 04 <=
-c7> 01 5a 5a 5a 5a c7 81 fc 0f 00 00 5a 5a 5a 5a 83 e7 fc 29 f9 81
-> [   24.229759] EAX: 5a5a5a5a EBX: f60ca000 ECX: fe036000 EDX: 00000001
-> [   24.229915] ESI: f43b7340 EDI: fe036004 EBP: f6389cb8 ESP: f6389c9c
-> [   24.230072] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010=
-286
-> [   24.230229] CR0: 80050033 CR2: fe036000 CR3: 2d361000 CR4: 001506d0
-> [   24.230385] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-> [   24.230539] DR6: fffe0ff0 DR7: 00000400
-> [   24.230675] Call Trace:
-> [   24.230957]  execlists_context_alloc+0x10/0x20 [i915]
-> [   24.231266]  intel_context_alloc_state+0x3f/0x70 [i915]
-> [   24.231547]  __intel_context_do_pin+0x117/0x170 [i915]
-> [   24.231850]  i915_gem_do_execbuffer+0xcc7/0x2500 [i915]
-> [   24.232024]  ? __kmalloc_track_caller+0x54/0x230
-> [   24.232181]  ? ktime_get+0x3e/0x120
-> [   24.232333]  ? dma_fence_signal+0x34/0x50
-> [   24.232617]  i915_gem_execbuffer2_ioctl+0xcd/0x1f0 [i915]
-> [   24.232912]  ? i915_gem_execbuffer_ioctl+0x2e0/0x2e0 [i915]
-> [   24.233084]  drm_ioctl_kernel+0x8f/0xd0
-> [   24.233236]  drm_ioctl+0x223/0x3d0
-> [   24.233505]  ? i915_gem_execbuffer_ioctl+0x2e0/0x2e0 [i915]
-> [   24.233684]  ? pick_next_task_fair+0x1b5/0x3d0
-> [   24.233873]  ? __switch_to_asm+0x36/0x50
-> [   24.234021]  ? drm_ioctl_kernel+0xd0/0xd0
-> [   24.234167]  __ia32_sys_ioctl+0x1ab/0x760
-> [   24.234313]  ? exit_to_user_mode_prepare+0xe5/0x110
-> [   24.234453]  ? syscall_exit_to_user_mode+0x23/0x130
-> [   24.234601]  __do_fast_syscall_32+0x3f/0x70
-> [   24.234744]  do_fast_syscall_32+0x29/0x60
-> [   24.234885]  do_SYSENTER_32+0x15/0x20
-> [   24.235021]  entry_SYSENTER_32+0x9f/0xf2
-> [   24.235157] EIP: 0xb7f28559
-> [   24.235288] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01 10 0=
-7 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <=
-5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
-> [   24.235576] EAX: ffffffda EBX: 00000005 ECX: c0406469 EDX: bf95556c
-> [   24.235722] ESI: b7e68000 EDI: c0406469 EBP: 00000005 ESP: bf9554d8
-> [   24.235869] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000=
-296
-> [   24.236018] Modules linked in: i915 x86_pkg_temp_thermal intel_powercl=
-amp crc32_pclmul crc32c_intel intel_cstate intel_uncore intel_gtt drm_kms_h=
-elper intel_pch_thermal video button autofs4 i2c_i801 i2c_smbus fan
-> [   24.236336] CR2: 00000000fe036000
->=20
-> It looks like kasan, xen and i915 are vulnerable.
+Is that correct?
 
-And actual impact is "on thinkpad X60 in 5.9-rc1, screen starts
-blinking after 30-or-so minutes, and macine is unusable"... that is
-assuming we are taking same bug.
+- Kyle
 
-Best regards,
-								Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---jRHKVT23PllUwdXP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl9APMUACgkQMOfwapXb+vIqlQCgm7zxsEBdfcvxbL1Na0G7WDPX
-+KUAn2d/s1U+J6N41YFcV66zr9KtN9+q
-=89db
------END PGP SIGNATURE-----
-
---jRHKVT23PllUwdXP--
+[0] https://github.com/mozilla/rr/blob/fcd2a26680a3fc2bda5f40d732d0c72b9628357b/src/Registers.cc#L519
