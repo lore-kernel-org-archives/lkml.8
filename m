@@ -2,111 +2,122 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B6BC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B641FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0B42063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93BE42078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:38:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mqf3QLSj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgHUPil (ORCPT
+        id S1728378AbgHUPix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:38:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbgHUPie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:38:34 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC872063A;
-        Fri, 21 Aug 2020 15:38:33 +0000 (UTC)
-Date:   Fri, 21 Aug 2020 11:38:31 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Marco Elver <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH] random32: Use rcuidle variant for tracepoint
-Message-ID: <20200821113831.340ba051@oasis.local.home>
-In-Reply-To: <CANn89i+1MQRCSRVg-af758en5e9nwQBes3aBSjQ6BY1pV5+HdQ@mail.gmail.com>
-References: <20200821063043.1949509-1-elver@google.com>
-        <20200821085907.GJ1362448@hirez.programming.kicks-ass.net>
-        <CANn89i+1MQRCSRVg-af758en5e9nwQBes3aBSjQ6BY1pV5+HdQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 21 Aug 2020 11:38:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727971AbgHUPif (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 11:38:35 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BD96C061573;
+        Fri, 21 Aug 2020 08:38:34 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y6so1042874plt.3;
+        Fri, 21 Aug 2020 08:38:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kco/6vI1blM/NwfzBHIDs3oyI1qAQDpBfmbjozxRSNk=;
+        b=Mqf3QLSjkioKMk0zBDuIglw6zdeZUKHZ1HQUwduW7GDONUqZycokbVPPLpKEOpQl4b
+         PDAb2rY3stSYZvKhK1ciDdXI9QFuSd5868ZADYj2vkdJQuduZNKyrfw/bl/VOhAJoTHE
+         5SQ3KeiX1D57s96SJHQo5n9Kx3TDPfJxYN6T73LU2hqZcH37Y2pQK8ncVnOIHTCw+dH9
+         JH5LBDlhrptca3/0S5Ff7Fwp+Av93sdvs2f7yyKFqjraHST6wJ+2aZBaDb4HvmRbJ8cZ
+         Ev10EsauM4bU6+fZB47gY9myTYHuYjfP5cXd8jqrKQ0astUglqR98D7equtA387ONVto
+         1OLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kco/6vI1blM/NwfzBHIDs3oyI1qAQDpBfmbjozxRSNk=;
+        b=bSSeUfLwWjDSN2g/2HCvNOeIkT0JO3x3ZwmKsv9qy3v61B3U0ef8QmkScyE3RAIuf8
+         3GrzDl7vypiMDg1u/sZJjo0eVG5Ax/o8Zrog4sRF1fz48yjGoN3Ugn/kWr8fS7/l+FFW
+         3kybaQFHoi6cX71V6gH39PYFhE0hO7O49PYhRoaGQ8iI6nrqk80wXGjtZQTpgO5naPcZ
+         9r7WSk5KL+bYW/lHls3ZTSACpuRKwU4WnPUO30UPM03i9yjU+FHQzvg5qhvqqyTJcCnC
+         9luI06+rHSl/AOlQWEhx01oQ7Ced1CnKJieDL1XC1EloO3rC4YWRPtBtlct1MYR2IRsu
+         7b/Q==
+X-Gm-Message-State: AOAM531Y6dw3haM9DIny4DOjrTl3IQOWmnuYyPhwJhGPBTR3vbQ3EPXP
+        TvA8DaeKDOpIMERY0yU0jpo=
+X-Google-Smtp-Source: ABdhPJwru3LiGVN0/RGun5gHVd79iZu23NuOL+aXtjWUQONE0O/idm7t/GaI88fUhyFkLtAmK/d3Rw==
+X-Received: by 2002:a17:90a:ba05:: with SMTP id s5mr1612246pjr.114.1598024313966;
+        Fri, 21 Aug 2020 08:38:33 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id q207sm2581667pgq.71.2020.08.21.08.38.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 08:38:33 -0700 (PDT)
+Subject: Re: [PATCH v6 11/12] mm/vmalloc: Hugepage vmalloc mappings
+To:     Nicholas Piggin <npiggin@gmail.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Zefan Li <lizefan@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+References: <20200821151216.1005117-1-npiggin@gmail.com>
+ <20200821151216.1005117-12-npiggin@gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <1e001c2c-6c47-21a9-e920-caf78933b713@gmail.com>
+Date:   Fri, 21 Aug 2020 08:38:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200821151216.1005117-12-npiggin@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 08:06:49 -0700
-Eric Dumazet <edumazet@google.com> wrote:
 
-> On Fri, Aug 21, 2020 at 1:59 AM <peterz@infradead.org> wrote:
-> >
-> > On Fri, Aug 21, 2020 at 08:30:43AM +0200, Marco Elver wrote:  
-> > > With KCSAN enabled, prandom_u32() may be called from any context,
-> > > including idle CPUs.
-> > >
-> > > Therefore, switch to using trace_prandom_u32_rcuidle(), to avoid various
-> > > issues due to recursion and lockdep warnings when KCSAN and tracing is
-> > > enabled.  
-> >
-> > At some point we're going to have to introduce noinstr to idle as well.
-> > But until that time this should indeed cure things.  
+On 8/21/20 8:12 AM, Nicholas Piggin wrote:
+> Support huge page vmalloc mappings. Config option HAVE_ARCH_HUGE_VMALLOC
+> enables support on architectures that define HAVE_ARCH_HUGE_VMAP and
+> supports PMD sized vmap mappings.
 > 
-> I do not understand what the issue is.  This _rcuidle() is kind of opaque ;)
-
-kasan can be called when RCU is not "watching". That is, in the idle
-code, RCU will stop bothering idle CPUs by checking on them to move
-along the grace period. Just before going to idle, RCU will just set
-that its in a quiescent state. The issue is, after RCU has basically
-shutdown, and before getting to where the CPU is "sleeping", kasan is
-called, and kasan call a tracepoint. The problem is that tracepoints
-are protected by RCU. If RCU has shutdown, then it loses the
-protection. There's code to detect this and give a warning.
-
-All tracepoints have a _rcuidle() version. What this does is adds a
-little bit more overhead to the tracepoint when enabled to check if RCU
-is watching or not. If it is not watching, it tells RCU to start
-watching again while it runs the tracepoint, and afterward it lets RCU
-know that it can go back to not watching.
-
+> vmalloc will attempt to allocate PMD-sized pages if allocating PMD size or
+> larger, and fall back to small pages if that was unsuccessful.
 > 
-> Would this alternative patch work, or is it something more fundamental ?
+> Allocations that do not use PAGE_KERNEL prot are not permitted to use huge
+> pages, because not all callers expect this (e.g., module allocations vs
+> strict module rwx).
+> 
+> This reduces TLB misses by nearly 30x on a `git diff` workload on a 2-node
+> POWER9 (59,800 -> 2,100) and reduces CPU cycles by 0.54%.
+> 
+> This can result in more internal fragmentation and memory overhead for a
+> given allocation, an option nohugevmalloc is added to disable at boot.
+> 
+>
 
-As I hope the above explained. The answer is "no".
+Thanks for working on this stuff, I tried something similar in the past,
+but could not really do more than a hack.
+( https://lkml.org/lkml/2016/12/21/285 )
 
--- Steve
+Note that __init alloc_large_system_hash() is used at boot time,
+when NUMA policy is spreading allocations over all NUMA nodes.
 
-> 
-> Thanks !
-> 
-> diff --git a/lib/random32.c b/lib/random32.c
-> index 932345323af092a93fc2690b0ebbf4f7485ae4f3..17af2d1631e5ab6e02ad1e9288af7e007bed6d5f
-> 100644
-> --- a/lib/random32.c
-> +++ b/lib/random32.c
-> @@ -83,9 +83,10 @@ u32 prandom_u32(void)
->         u32 res;
-> 
->         res = prandom_u32_state(state);
-> -       trace_prandom_u32(res);
->         put_cpu_var(net_rand_state);
-> 
-> +       trace_prandom_u32(res);
-> +
->         return res;
->  }
->  EXPORT_SYMBOL(prandom_u32);
+This means that on a dual node system, a hash table should be 50/50 spread.
+
+With your patch, if a hashtable is exactly the size of one huge page,
+the location of this hashtable will be not balanced, this might have some
+unwanted impact.
+
+Thanks !
 
