@@ -2,128 +2,111 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B183C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73D80214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F30320720
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:09:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rbrs1TW/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l0MQpjBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgHUJJp (ORCPT
+        id S1728270AbgHUJJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:09:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36800 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725806AbgHUJJo (ORCPT
+        Fri, 21 Aug 2020 05:09:57 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:49110 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725806AbgHUJJ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:09:44 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07L94TYM184971;
-        Fri, 21 Aug 2020 05:09:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding : message-id; s=pp1;
- bh=g6D81fjAjzolDRs4TMpcl3zql7MrdCXnnXbsd2Bw0Uw=;
- b=rbrs1TW/Ktbt8v4E6b5FgMaH6CBNDFOYt+yK5tnULi1Vt4cxZmV2URgtnc7zHnFldRHF
- hAjGOk7EH1PoX+rxEPOHH/Jqo9fUJVSC1ubH/q1Vv8ybPdnAikUJUip1iK5tvEUr7Iy/
- 9SJXXqf/GBgNL0m7ecnE44ZSO/xoPjRqh0Zvuoj8KRaP1J25TIdtuj9acUzi8UQvzgfb
- kAD3793WcIF5r3QG+gUqbdBpXy+Oak3S2GcsQEs3RHdqAyO7dgpm1m7lxATdM6dIWlqH
- EhfwJvaqCVUzm9PI7LSBECG6t2mRuj1Le6rNmIUN6e3U3ao4P4JU8setBmZq8RhZAgjZ rA== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 331an7mekx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 05:09:39 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07L92hT5002103;
-        Fri, 21 Aug 2020 09:09:38 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 330tbvtv5g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 09:09:37 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07L99Zad27984142
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 09:09:35 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A36CD4C058;
-        Fri, 21 Aug 2020 09:09:35 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4BDF04C04A;
-        Fri, 21 Aug 2020 09:09:34 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.33.217])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Aug 2020 09:09:34 +0000 (GMT)
-Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        willy@infradead.org
-References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
- <20200820231140.GE7941@dread.disaster.area>
- <20200821044533.BBFD1A405F@d06av23.portsmouth.uk.ibm.com>
- <20200821060025.GA31091@infradead.org>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Fri, 21 Aug 2020 14:39:33 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 21 Aug 2020 05:09:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598000996; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=DKbT5SYW9YuDWZyzPT6+7oVs0JXbbl+H8yc/pdhTi9M=;
+ b=l0MQpjBvDtUagDl4DO/Y+nKfAvl0zmUgCcszEY+0DqqaaMU5KHS2b288xiUs6aV1RDO41Jau
+ pv+qvWGIpiqAd3nb2DEBYabsjxYso1jHQkbw1rYf6z7eoFl86wq9zPYL7ln9SqL/ShdOxDTO
+ iFNz14gnpPCK90DOjR+MB+fXjis=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f3f8f567eb4541d939de9ed (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 Aug 2020 09:09:42
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CB735C433AF; Fri, 21 Aug 2020 09:09:40 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4F427C433CA;
+        Fri, 21 Aug 2020 09:09:39 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200821060025.GA31091@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20200821090934.4BDF04C04A@d06av22.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_06:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 adultscore=0 priorityscore=1501 spamscore=0 mlxscore=0
- suspectscore=0 malwarescore=0 impostorscore=0 bulkscore=0 clxscore=1015
- mlxlogscore=879 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210080
+Date:   Fri, 21 Aug 2020 14:39:39 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Tingwei Zhang <tingwei@codeaurora.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mike Leach <mike.leach@linaro.org>, tsoni@codeaurora.org,
+        Kim Phillips <kim.phillips@arm.com>,
+        kernel test robot <lkp@intel.com>,
+        Mao Jinlong <jinlmao@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        coresight@lists.linaro.org, Randy Dunlap <rdunlap@infradead.org>,
+        Mian Yousaf Kaukab <ykaukab@suse.de>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v10 14/24] coresight: allow funnel driver to be built as
+ module
+In-Reply-To: <20200821034445.967-15-tingwei@codeaurora.org>
+References: <20200821034445.967-1-tingwei@codeaurora.org>
+ <20200821034445.967-15-tingwei@codeaurora.org>
+Message-ID: <472632ddb17ef8f26645d27b1661c96e@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/21/20 11:30 AM, Christoph Hellwig wrote:
-> On Fri, Aug 21, 2020 at 10:15:33AM +0530, Ritesh Harjani wrote:
->> Please correct me here, but as I see, bio has only these two limits
->> which it checks for adding page to bio. It doesn't check for limits
->> of /sys/block/<dev>/queue/* no? I guess then it could be checked
->> by block layer below b4 submitting the bio?
+On 2020-08-21 09:14, Tingwei Zhang wrote:
+> From: Kim Phillips <kim.phillips@arm.com>
 > 
-> The bio does not, but the blk-mq code will split the bios when mapping
-> it to requests, take a look at blk_mq_submit_bio and __blk_queue_split.
-
-Thanks :)
-
+> Allow to build coresight-funnel as module, for ease of development.
 > 
-> But while the default limits are quite low, they can be increased
-> siginificantly, which tends to help with performance and is often
-> also done by scripts shipped by the distributions.
+> - combine static and dynamic funnel init into single
+>   module_init/exit call
+> - add funnel_remove functions, for module unload
+> - add a MODULE_DEVICE_TABLE for autoloading on boot
 > 
->> This issue was first observed while running a fio run on a system with
->> huge memory. But then here is an easy way we figured out to trigger the
->> issue almost everytime with loop device on my VM setup. I have provided
->> all the details on this below.
-> 
-> Can you wire this up for xfstests?
-> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Leo Yan <leo.yan@linaro.org>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Co-developed-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+> Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+> Signed-off-by: Kim Phillips <kim.phillips@arm.com>
+> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Tested-by: Mike Leach <mike.leach@linaro.org>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
 
-Sure, will do that.
-I do see generic/460 does play with such vm dirty_ratio params which
-this test would also require to manipulate to trigger this issue.
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-
-Thanks for the suggestion!
--ritesh
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
