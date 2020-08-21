@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D06CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7FFC20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8FAA207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598027611;
-	bh=zby1bdyNKvlbw/2B9KxrATkPOOQOOknxZ7Nnr25BQoc=;
+	s=default; t=1598027618;
+	bh=lhPzxAMtGiGwqFgokTYuR2htwCTnKmFaZukK5H3J0RU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lfKIsU9jlcmBHY3tbIQBNG4JTBXiIgnA3c+Ou3rEqYb9R8oe5Zc4RHP1ceDi3ipBa
-	 wUIjt5L4IYRCh6F+/rMQxzVq5Ms4Y07rM1jKOLPkPsa+GiUSUqiKthhmPZNDOPTZir
-	 LaUBT+Xd9BdgtJAfJe3uFmO1HcDzewpacWLAOkQ4=
+	b=fgVgzLrp/mOrd5vBHiCApzhYi/BqI/1dt0nkv4DCPOsxaKw65MxN0OEHlxe8bx1rS
+	 7D2NzGOKCl5EZoBn4NH3lq70adYe+JQcC8vdUHWfzndhJudh2lSs4qBr4svIX4m3Lp
+	 UtzjGjEYRBG8kFHPkfV+j/RztXZcvyeDJdwRkDuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgHUQd2 (ORCPT
+        id S1728563AbgHUQdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:33:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:33:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728266AbgHUQVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:21:34 -0400
+        id S1726734AbgHUQVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:21:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE03022B43;
-        Fri, 21 Aug 2020 16:20:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F7FC207BB;
+        Fri, 21 Aug 2020 16:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026836;
-        bh=zby1bdyNKvlbw/2B9KxrATkPOOQOOknxZ7Nnr25BQoc=;
+        s=default; t=1598026831;
+        bh=lhPzxAMtGiGwqFgokTYuR2htwCTnKmFaZukK5H3J0RU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bnt/3PY9fgtfrcEp0VuygvKFQKf3ybaPP1aTxu4KEkw9UJzyykmI0X7NNkOZL6Zbj
-         Ice57Wl/jWYxA7g0g+5B0rCutvAS/pW0qqrcsjZFkccTGGO6UmWOMqQFzGvNZWoQo3
-         emmkNEPojD92CfK/4BSxcRfhij0GZC5TjTJJ3400=
+        b=N7FXC1o0yxNcLIkolrPkLoD37W14+I9u3cnoEg4nHd6MQbBrLRI+Hq477SpzCER62
+         enMwmRWDHe7cx75OHxV84YjqN1clrAryd8XGyMY3btr5V0LhgTBmRNMwgcr2qQypIe
+         bRYC//T0YvXYNp+DT4oDU7GS1Hw+1Q893fE1Fndk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 17/22] drm/nouveau: Fix reference count leak in nouveau_connector_detect
-Date:   Fri, 21 Aug 2020 12:20:09 -0400
-Message-Id: <20200821162014.349506-17-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 13/22] PCI: Fix pci_create_slot() reference count leak
+Date:   Fri, 21 Aug 2020 12:20:05 -0400
+Message-Id: <20200821162014.349506-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821162014.349506-1-sashal@kernel.org>
 References: <20200821162014.349506-1-sashal@kernel.org>
@@ -59,37 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 990a1162986e8eff7ca18cc5a0e03b4304392ae2 ]
+[ Upstream commit 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5 ]
 
-nouveau_connector_detect() calls pm_runtime_get_sync and in turn
-increments the reference count. In case of failure, decrement the
-ref count before returning the error.
+kobject_init_and_add() takes a reference even when it fails.  If it returns
+an error, kobject_put() must be called to clean up the memory associated
+with the object.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+When kobject_init_and_add() fails, call kobject_put() instead of kfree().
+
+b8eb718348b8 ("net-sysfs: Fix reference count leak in
+rx|netdev_queue_add_kobject") fixed a similar problem.
+
+Link: https://lore.kernel.org/r/20200528021322.1984-1-wu000273@umn.edu
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_connector.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pci/slot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-index 1855b475cc0b2..42be04813b682 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-@@ -263,8 +263,10 @@ nouveau_connector_detect(struct drm_connector *connector, bool force)
- 		pm_runtime_get_noresume(dev->dev);
- 	} else {
- 		ret = pm_runtime_get_sync(dev->dev);
--		if (ret < 0 && ret != -EACCES)
-+		if (ret < 0 && ret != -EACCES) {
-+			pm_runtime_put_autosuspend(dev->dev);
- 			return conn_status;
-+		}
+diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+index 429d34c348b9f..01a343ad7155c 100644
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -303,13 +303,16 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+ 	slot_name = make_slot_name(name);
+ 	if (!slot_name) {
+ 		err = -ENOMEM;
++		kfree(slot);
+ 		goto err;
  	}
  
- 	nv_encoder = nouveau_connector_ddc_detect(connector);
+ 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
+ 				   "%s", slot_name);
+-	if (err)
++	if (err) {
++		kobject_put(&slot->kobj);
+ 		goto err;
++	}
+ 
+ 	INIT_LIST_HEAD(&slot->list);
+ 	list_add(&slot->list, &parent->slots);
+@@ -328,7 +331,6 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+ 	mutex_unlock(&pci_slot_mutex);
+ 	return slot;
+ err:
+-	kfree(slot);
+ 	slot = ERR_PTR(err);
+ 	goto out;
+ }
 -- 
 2.25.1
 
