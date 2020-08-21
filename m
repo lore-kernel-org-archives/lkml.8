@@ -2,99 +2,193 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE04C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15A5320855
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D839521741
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:00:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QRaFm871"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgHUP5B (ORCPT
+        id S1727849AbgHUQAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:57:01 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:39316 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726542AbgHUP44 (ORCPT
+        Fri, 21 Aug 2020 12:00:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726542AbgHUP74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:56:56 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id AC78180516;
-        Fri, 21 Aug 2020 17:56:51 +0200 (CEST)
-Date:   Fri, 21 Aug 2020 17:56:50 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
-        Rob Clark <robdclark@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
-        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-Message-ID: <20200821155650.GB300361@ravnborg.org>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
- <20200819152120.GA106437@ravnborg.org>
- <20200819174027.70b39ee9@coco.lan>
- <20200819173558.GA3733@ravnborg.org>
- <20200821164158.22777f95@coco.lan>
+        Fri, 21 Aug 2020 11:59:56 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3976C061575
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:59:55 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m8so1280796pfh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:59:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PHpiChL5JGq/LZstNZ28HM8fDTmJE8/7UUfCPtEQhGQ=;
+        b=QRaFm8718FJefFz/ypkWhug9/DCf/520wNooIeoa6t5O4C45AC95WUTi1ttLZiYLRn
+         jr7dWao9AJB1UbBIpKv95dwEGAH0dnhLIpO7Y4ni6VA9BaBNQVe0hU3PiXIfSUwTllE+
+         X2hydUevanG1SL0jAjD59jjfs0PY0SWj0tsrM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PHpiChL5JGq/LZstNZ28HM8fDTmJE8/7UUfCPtEQhGQ=;
+        b=ix1D5dzvYrqbE/pbFvFZU2PQvhxjO+pMZUs/DX+CKMiQW1SKsMqFMxGGL/sk/goLe5
+         lEcaTCvIoxAnCxUMnrZXZm1p6RaOySQHBQg+ZqdmnYxOH9hmmtM4X9PhX70Ttvfp70Y+
+         eR/MzoLtFEzQcqoXmKn/w2o+qYSkb8E81cr0u+IEWwqXH2CE5Ct9yr9gFpqvUGeiEXAu
+         wi4PsfHyFicPkyhKzOxPAAn2VAEvyIod8+PL0XJn7smQbqxXJeSiUSEGMcf+ZqRRCs0+
+         2yia9hN1lsCMb8BkX4CIO4aTAQ/+EMQXsalKjawRoRxKnigieAcAJaWt7rPrcdEoCpU1
+         t4JQ==
+X-Gm-Message-State: AOAM5317zxUoIYa+KzpcGoxncchV5GHSAgjVQxPX9EnckZZR+PDPnFxj
+        sQ+sNIXnNwg/kpDGBrdBH96R8+5VBQUiAg==
+X-Google-Smtp-Source: ABdhPJxu94S4fcnRQU+u1dFIIXVlfyW3pAeruNuWAjh/VFOzFXlkhNvwvKybp1t2lQ+XH5CYv1OZUg==
+X-Received: by 2002:a62:7f0e:: with SMTP id a14mr3083836pfd.320.1598025595418;
+        Fri, 21 Aug 2020 08:59:55 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id f13sm2885733pfd.215.2020.08.21.08.59.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 08:59:54 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 08:59:53 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     skakit@codeaurora.org
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
+Subject: Re: [PATCH V2 2/3] arm64: dts: qcom: sc7180: Add sleep pin ctrl for
+ BT uart
+Message-ID: <20200821155953.GG2995789@google.com>
+References: <1595563082-2353-1-git-send-email-skakit@codeaurora.org>
+ <1595563082-2353-3-git-send-email-skakit@codeaurora.org>
+ <20200817180158.GD2995789@google.com>
+ <1cbbc8cf5c918c6a9eee5ef349707fc6@codeaurora.org>
+ <20200819161311.GF2995789@google.com>
+ <29d523f4a46ecce8e4a62a5310528969@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200821164158.22777f95@coco.lan>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=7oA8CBdsI_oY7ygzQxoA:9
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+In-Reply-To: <29d523f4a46ecce8e4a62a5310528969@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro.
-
-On Fri, Aug 21, 2020 at 04:41:58PM +0200, Mauro Carvalho Chehab wrote:
-> Another quick question:
+On Thu, Aug 20, 2020 at 05:49:53PM +0530, skakit@codeaurora.org wrote:
+> Hi Matthias,
 > 
-> Em Wed, 19 Aug 2020 19:35:58 +0200
-> Sam Ravnborg <sam@ravnborg.org> escreveu:
+> On 2020-08-19 21:43, Matthias Kaehlcke wrote:
+> > On Wed, Aug 19, 2020 at 07:19:25PM +0530, skakit@codeaurora.org wrote:
+> > > On 2020-08-17 23:31, Matthias Kaehlcke wrote:
+> > > > On Fri, Jul 24, 2020 at 09:28:01AM +0530, satya priya wrote:
+> > > > > Add sleep pin ctrl for BT uart, and also change the bias
+> > > > > configuration to match Bluetooth module.
+> > > > >
+> > > > > Signed-off-by: satya priya <skakit@codeaurora.org>
+> > > > > ---
+> > > > > Changes in V2:
+> > > > >  - This patch adds sleep state for BT UART. Newly added in V2.
+> > > > >
+> > > > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 42
+> > > > > ++++++++++++++++++++++++++++-----
+> > > > >  1 file changed, 36 insertions(+), 6 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > > > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > > > index 26cc491..bc919f2 100644
+> > > > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > > > @@ -469,20 +469,50 @@
+> > > > >
+> > > > >  &qup_uart3_default {
+> > > > >  	pinconf-cts {
+> > > > > -		/*
+> > > > > -		 * Configure a pull-down on 38 (CTS) to match the pull of
+> > > > > -		 * the Bluetooth module.
+> > > > > -		 */
+> > > > > +		/* Configure no pull on 38 (CTS) to match Bluetooth module */
+> > > >
+> > > > Has the pull from the Bluetooth module been removed or did the previous
+> > > > config
+> > > > incorrectly claim that the Bluetooth module has a pull-down?
+> > > >
+> > > 
+> > > The previous config was incorrect, so we corrected it to match the
+> > > pull of
+> > > BT.
+> > 
+> > The pull config of the BT controller varies depending on its state,
+> > could
+> > you clarify which state you intend to match?
+> > 
 > 
-> > > +#define DSS_REDUCE(x)	((x) > 0 ? ((x) - 1) : (x))  
-> > Use generic macros for this?
+> Since this line is driven by BT SoC, they could change their pull(although
+> it's less likely). Recently on cherokee we worked with BT team and came to
+> an agreement to keep no-pull from our side in order to not conflict with
+> their pull in any state.
 > 
-> Do you know a generic macro similar to this? Or do you mean adding
-> it to include/kernel.h?
+> > > 
+> > > > >  		pins = "gpio38";
+> > > > > +		bias-disable;
+> > > > > +	};
+> > > > > +
+> > > > > +	pinconf-rts {
+> > > > > +		/* We'll drive 39 (RTS), so configure pull-down */
+> > > > > +		pins = "gpio39";
+> > > > > +		drive-strength = <2>;
+> > > > >  		bias-pull-down;
+> > > > > +	};
+> > > > > +
+> > > > > +	pinconf-tx {
+> > > > > +		/* We'll drive 40 (TX), so no pull */
+> > > >
+> > > > The rationales for RTS and TX contradict each other. According to the
+> > > > comment
+> > > > the reason to configure a pull-down on RTS is that it is driven by the
+> > > > host.
+> > > > Then for TX the reason to configure no pull is that it is driven by the
+> > > > host.
+> > > >
+> > > > Please make sure the comments *really* describe the rationale, otherwise
+> > > > they
+> > > > are just confusing.
+> > > 
+> > > The rationale for RTS is that we don't want it to be floating and
+> > > want to
+> > > make sure that it is pulled down, to receive bytes. Will modify the
+> > > comment
+> > > mentioning the same.
+> > 
+> > Could you clarify what you mean with "to receive bytes"?
+> > 
+> 
+> When we keep no-pull(floating), sometimes it may be pulled high and UART
+> flow will be turned off(RFR_NOT_READY), due to this BT SoC wont be able to
+> send data even though host is ready.
 
-It looked like something there should be a macro for.
-But I do not know one.
+I'm a bit at a loss here, about two things:
 
-And no, do not try to go the kernel.h route on this.
-At least not until you see more than one user.
+RTS is an output pin controlled by the UART. IIUC if the UART port is active
+and hardware flow control is enabled the RTS signal is either driven to high
+or low, but not floating.
 
-	Sam
+Now lets assume I'm wrong with the above and RTS can be floating. We only want
+the BT SoC to send data when the host UART is ready to receive them, right?
+RTS is an active low signal, hence by configuring it as a pull-down the BT
+SoC can send data regardless of whether the host UART actually asserts RTS,
+so the host UART may not be ready to receive it. I would argue that if there
+is really such a thing as a floating RTS signal then it should have a pull-up,
+to prevent the BT SoC from sending data at any time.
+
+I'm not an expert in UART communication and pinconf, so it could be that I
+got something wrong, but as of now it seems to me that no pull is the correct
+config for RTS.
