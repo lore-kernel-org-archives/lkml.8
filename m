@@ -2,169 +2,390 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9616C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08E9F204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847702075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:28:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hKX6+2z9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbgHUO2r (ORCPT
+        id S1727849AbgHUO2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 10:28:47 -0400
-Received: from mga09.intel.com ([134.134.136.24]:40735 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727091AbgHUO2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 10:28:47 -0400
-IronPort-SDR: 0g8xVY0iyrKT/0P9YuHYec8jsh8qSyafrdHYoXY4xMFn+yDI0Ovi5uYaBkAtNmrGyLp2Ood07j
- hxseELYwybfA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="156595407"
-X-IronPort-AV: E=Sophos;i="5.76,337,1592895600"; 
-   d="scan'208";a="156595407"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 07:28:46 -0700
-IronPort-SDR: AJrAyZoWR5sT0vUxtRkAvJQnYwpeH8jNo6DiUn+ppEZBZqMrOJj5NQoFeLEklyk8ykP9G3Y2or
- OT56dLCFGRfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,337,1592895600"; 
-   d="scan'208";a="497995621"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by fmsmga006.fm.intel.com with ESMTP; 21 Aug 2020 07:28:41 -0700
-Subject: Re: [RFC PATCH V3 04/21] mmc: core: UHS-II support, try to select
- UHS-II interface
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Ben Chuang <benchuanggli@gmail.com>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
-        Takahiro Akashi <takahiro.akashi@linaro.org>,
-        greg.tu@genesyslogic.com.tw
-References: <20200710110848.29114-1-benchuanggli@gmail.com>
- <CAPDyKFoGQFxdNVA+A76NitGP=yZvE2z90fewAo21Q8U+bgPbBQ@mail.gmail.com>
- <CACT4zj_iO58CPk_PTfNCot+c2Z1_vcWeVUwH2nPgN-jx43eN2g@mail.gmail.com>
- <CAPDyKFoL8Yh_SJSw56kQsFBRE64oRGTnyzgvOm__-1f+Cvxpzw@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <a5ee1d39-01c7-acb4-fe84-64a416ced9de@intel.com>
-Date:   Fri, 21 Aug 2020 17:28:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 21 Aug 2020 10:28:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59734 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727123AbgHUO2s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 10:28:48 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LER7QR030815;
+        Fri, 21 Aug 2020 10:28:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=AIr0krHtySX330UJYHqhrO9p46eIJWxHy6x3jCSssWM=;
+ b=hKX6+2z9iWhy+gGfo3t+GLTF8u147m1/MAEpSCXY9KXowAiceVsS09krQfmQg3/KPW0e
+ akJa8er+y8betG7LJZEYeIiMNZo4Sv4zJUFpR78lRk9HQx/YTKjFm9FJ3ouR1UANLIIR
+ iwuQvC4Q70kTKAX302ojFubThoTjXxbdYU8qRPEhlcA5ZoL43P9C8RlC+JAtzJQL0t3a
+ qfaxsAc0Tv5acqM/uXPg+1R+lmwk9Ok4rXb6GLwYpoplUP/EVxE9NFQ4GauXKKGHemkf
+ EPv4aFf8xUmdHRzMGUNscwEsPaXOgirTNcTNKGxq0iFb4tU5JLcWAkNlbS9QF8ae/sRO Iw== 
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 332f0cj1bb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 10:28:12 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LEP0Oe018796;
+        Fri, 21 Aug 2020 14:28:10 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma05fra.de.ibm.com with ESMTP id 3304bujqwr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 14:28:10 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LEQcgg63242524
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 14:26:38 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1291611C050;
+        Fri, 21 Aug 2020 14:28:08 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 71B3811C052;
+        Fri, 21 Aug 2020 14:28:06 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.145.34.219])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 21 Aug 2020 14:28:06 +0000 (GMT)
+Date:   Fri, 21 Aug 2020 17:28:04 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Barry Song <song.bao.hua@hisilicon.com>
+Cc:     hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        will@kernel.org, ganapatrao.kulkarni@cavium.com,
+        catalin.marinas@arm.com, akpm@linux-foundation.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        prime.zeng@hisilicon.com, huangdaode@huawei.com,
+        linuxarm@huawei.com,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Steve Capper <steve.capper@arm.com>
+Subject: Re: [PATCH v7 1/3] dma-contiguous: provide the ability to reserve
+ per-numa CMA
+Message-ID: <20200821142804.GR969206@linux.ibm.com>
+References: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
+ <20200821113355.6140-2-song.bao.hua@hisilicon.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFoL8Yh_SJSw56kQsFBRE64oRGTnyzgvOm__-1f+Cvxpzw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821113355.6140-2-song.bao.hua@hisilicon.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ mlxlogscore=999 adultscore=0 malwarescore=0 suspectscore=5 mlxscore=0
+ spamscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/08/20 3:25 pm, Ulf Hansson wrote:
-> [...]
+On Fri, Aug 21, 2020 at 11:33:53PM +1200, Barry Song wrote:
+> Right now, drivers like ARM SMMU are using dma_alloc_coherent() to get
+> coherent DMA buffers to save their command queues and page tables. As
+> there is only one default CMA in the whole system, SMMUs on nodes other
+> than node0 will get remote memory. This leads to significant latency.
 > 
->>>> @@ -2300,6 +2304,33 @@ void mmc_rescan(struct work_struct *work)
->>>>                 goto out;
->>>>         }
->>>>
->>>> +       if (host->caps & MMC_CAP_UHS2) {
->>>> +               /*
->>>> +                * Start to try UHS-II initialization from 52MHz to 26MHz
->>>> +                * (RCLK range) per spec.
->>>> +                */
->>>> +               for (i = 0; i < ARRAY_SIZE(uhs2_freqs); i++) {
->>>> +                       unsigned int freq = uhs2_freqs[i];
->>>> +                       int err;
->>>> +
->>>> +                       err = mmc_uhs2_rescan_try_freq(host,
->>>> +                                                      max(freq, host->f_min));
->>>> +                       if (!err) {
->>>> +                               mmc_release_host(host);
->>>> +                               goto out;
->>>> +                       }
->>>> +
->>>> +                       if (err == UHS2_PHY_INIT_ERR)
->>>> +                               /* UHS2 IF detect or Lane Sync error.
->>>> +                                * Try legacy interface.
->>>> +                                */
->>>> +                               break;
->>>> +
->>>> +                       if (freq <= host->f_min)
->>>> +                               break;
->>>> +               }
->>>
->>> Assuming we change the initialization order, trying to initialize the
->>> legacy SD interface first to figure out if UHS-II is supported, then I
->>> think we should be able to move the entire code above into a the
->>> UHS-II specific code/path.
->>
->> If the host tries to use the SD interface first,
->> some failure status needs to be considered.
->>
->> For example, first run in SD mode, try UHS-II interface failure,
->>  and then return to SD flow again.
->> I don't know a good way to go back to SD flow again.
+> This patch provides per-numa CMA so that drivers like SMMU can get local
+> memory. Tests show localizing CMA can decrease dma_unmap latency much.
+> For instance, before this patch, SMMU on node2  has to wait for more than
+> 560ns for the completion of CMD_SYNC in an empty command queue; with this
+> patch, it needs 240ns only.
 > 
-> Right, a re-try path for the legacy SD interface is a very good idea!
-> However, I don't think the initial support for UHS-II needs to cover
-> it. Instead we can add that on top, don't you think?
+> A positive side effect of this patch would be improving performance even
+> further for those users who are worried about performance more than DMA
+> security and use iommu.passthrough=1 to skip IOMMU. With local CMA, all
+> drivers can get local coherent DMA buffers.
 > 
-> As a matter of fact, we could even use something like that for
-> different legacy SD speed modes. For example, if UHS-I SDR104 fails we
-> could try with UHS-I SDR25.
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Cc: Steve Capper <steve.capper@arm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+> ---
+>  -v7: with respect to Will's comments
+>  * move to use for_each_online_node
+>  * add description if users don't specify pernuma_cma
+>  * provide default value for CONFIG_DMA_PERNUMA_CMA
 > 
->>
->>>
->>>> +       }
->>>> +
->>>>         for (i = 0; i < ARRAY_SIZE(freqs); i++) {
->>>>                 unsigned int freq = freqs[i];
->>>>                 if (freq > host->f_max) {
->>>> diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
->>>> index 5a2210c25aa7..c5b071bd98b3 100644
->>>> --- a/drivers/mmc/core/sd.c
->>>> +++ b/drivers/mmc/core/sd.c
->>>> @@ -901,6 +901,20 @@ int mmc_sd_setup_card(struct mmc_host *host, struct mmc_card *card,
->>>>                 err = mmc_read_switch(card);
->>>>                 if (err)
->>>>                         return err;
->>>> +               if (host->flags & MMC_UHS2_INITIALIZED) {
->>>
->>> Rather than using host->flags, to tweak the behavior of
->>> mmc_sd_setup_card() to support UHS-II, I would prefer to give
->>> mmc_sd_setup_card() a new in-parameter that it can look at instead.
->>
->> Do you mean that adding a new in-parameter to mmc_sd_setup_card() likes this
->> mmc_sd_setup_card(struct mmc_host *, struct mmc_card *, boot reinit,
->> boot uhsii); ?
+>  .../admin-guide/kernel-parameters.txt         |  11 ++
+>  include/linux/dma-contiguous.h                |   6 ++
+>  kernel/dma/Kconfig                            |  11 ++
+>  kernel/dma/contiguous.c                       | 100 ++++++++++++++++--
+>  4 files changed, 118 insertions(+), 10 deletions(-)
 > 
-> Correct.
-> 
-> [...]
-> 
-> Looks like we have covered most of the review for the mmc core
-> changes. But please tell me, if there is anything else you want me to
-> look at - at any time. Otherwise I am deferring to wait for a new
-> version of the series.
-> 
-> If I get some time, I may start to help with hacking some code.
-> Perhaps I can do some preparations, so it makes it easier for you to
-> add the UHS-II specific code. If so, I will let you know about it, of
-> course.
-> 
-> When it comes to the changes to SDHCI, I am relying on Adrian to give
-> his opinions.
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index bdc1f33fd3d1..c609527fc35a 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -599,6 +599,17 @@
+>  			altogether. For more information, see
+>  			include/linux/dma-contiguous.h
+>  
+> +	pernuma_cma=nn[MG]
 
-I have made some comments.  The thrust of which is:
-- get all the UHS-II code into sdhci-uhs2 (not sdhci.c)
-- make the driver (i.e sdhci-pci-gli) set existing mmc host ops callbacks
-and sdhci host ops callbacks as much as possible to provide UHS-II
-functionality i.e. avoid adding new hooks if possible
-- refactoring and exporting functions from sdhci.c where that can be done
-logically, but otherwise writing separate code for UHS-II
+Maybe cma_pernuma or cma_pernode?
+
+> +			[ARM64,KNL]
+> +			Sets the size of kernel per-numa memory area for
+> +			contiguous memory allocations. A value of 0 disables
+> +			per-numa CMA altogether. And If this option is not
+> +			specificed, the default value is 0.
+> +			With per-numa CMA enabled, DMA users on node nid will
+> +			first try to allocate buffer from the pernuma area
+> +			which is located in node nid, if the allocation fails,
+> +			they will fallback to the global default memory area.
+> +
+>  	cmo_free_hint=	[PPC] Format: { yes | no }
+>  			Specify whether pages are marked as being inactive
+>  			when they are freed.  This is used in CMO environments
+> diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
+> index 03f8e98e3bcc..fe55e004f1f4 100644
+> --- a/include/linux/dma-contiguous.h
+> +++ b/include/linux/dma-contiguous.h
+> @@ -171,6 +171,12 @@ static inline void dma_free_contiguous(struct device *dev, struct page *page,
+>  
+>  #endif
+>  
+> +#ifdef CONFIG_DMA_PERNUMA_CMA
+> +void dma_pernuma_cma_reserve(void);
+> +#else
+> +static inline void dma_pernuma_cma_reserve(void) { }
+> +#endif
+> +
+>  #endif
+>  
+>  #endif
+> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+> index 847a9d1fa634..c38979d45b13 100644
+> --- a/kernel/dma/Kconfig
+> +++ b/kernel/dma/Kconfig
+> @@ -118,6 +118,17 @@ config DMA_CMA
+>  	  If unsure, say "n".
+>  
+>  if  DMA_CMA
+> +
+> +config DMA_PERNUMA_CMA
+> +	bool "Enable separate DMA Contiguous Memory Area for each NUMA Node"
+> +	default NUMA && ARM64
+> +	help
+> +	  Enable this option to get pernuma CMA areas so that devices like
+> +	  ARM64 SMMU can get local memory by DMA coherent APIs.
+> +
+> +	  You can set the size of pernuma CMA by specifying "pernuma_cma=size"
+> +	  on the kernel's command line.
+> +
+>  comment "Default contiguous memory area size:"
+>  
+>  config CMA_SIZE_MBYTES
+> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+> index cff7e60968b9..0383c9b86715 100644
+> --- a/kernel/dma/contiguous.c
+> +++ b/kernel/dma/contiguous.c
+> @@ -69,6 +69,19 @@ static int __init early_cma(char *p)
+>  }
+>  early_param("cma", early_cma);
+>  
+> +#ifdef CONFIG_DMA_PERNUMA_CMA
+> +
+> +static struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
+> +static phys_addr_t pernuma_size_bytes __initdata;
+> +
+> +static int __init early_pernuma_cma(char *p)
+> +{
+> +	pernuma_size_bytes = memparse(p, &p);
+> +	return 0;
+> +}
+> +early_param("pernuma_cma", early_pernuma_cma);
+> +#endif
+> +
+>  #ifdef CONFIG_CMA_SIZE_PERCENTAGE
+>  
+>  static phys_addr_t __init __maybe_unused cma_early_percent_memory(void)
+> @@ -96,6 +109,34 @@ static inline __maybe_unused phys_addr_t cma_early_percent_memory(void)
+>  
+>  #endif
+>  
+> +#ifdef CONFIG_DMA_PERNUMA_CMA
+> +void __init dma_pernuma_cma_reserve(void)
+> +{
+> +	int nid;
+> +
+> +	if (!pernuma_size_bytes)
+> +		return;
+> +
+> +	for_each_online_node(nid) {
+> +		int ret;
+> +		char name[20];
+> +		struct cma **cma = &dma_contiguous_pernuma_area[nid];
+> +
+> +		snprintf(name, sizeof(name), "pernuma%d", nid);
+> +		ret = cma_declare_contiguous_nid(0, pernuma_size_bytes, 0, 0,
+> +						 0, false, name, cma, nid);
+> +		if (ret) {
+> +			pr_warn("%s: reservation failed: err %d, node %d", __func__,
+> +				ret, nid);
+> +			continue;
+> +		}
+> +
+> +		pr_debug("%s: reserved %llu MiB on node %d\n", __func__,
+> +			(unsigned long long)pernuma_size_bytes / SZ_1M, nid);
+> +	}
+> +}
+> +#endif
+> +
+>  /**
+>   * dma_contiguous_reserve() - reserve area(s) for contiguous memory handling
+>   * @limit: End address of the reserved memory (optional, 0 for any).
+> @@ -228,23 +269,44 @@ static struct page *cma_alloc_aligned(struct cma *cma, size_t size, gfp_t gfp)
+>   * @size:  Requested allocation size.
+>   * @gfp:   Allocation flags.
+>   *
+> - * This function allocates contiguous memory buffer for specified device. It
+> - * tries to use device specific contiguous memory area if available, or the
+> - * default global one.
+> + * tries to use device specific contiguous memory area if available, or it
+> + * tries to use per-numa cma, if the allocation fails, it will fallback to
+> + * try default global one.
+>   *
+> - * Note that it byapss one-page size of allocations from the global area as
+> - * the addresses within one page are always contiguous, so there is no need
+> - * to waste CMA pages for that kind; it also helps reduce fragmentations.
+> + * Note that it bypass one-page size of allocations from the per-numa and
+> + * global area as the addresses within one page are always contiguous, so
+> + * there is no need to waste CMA pages for that kind; it also helps reduce
+> + * fragmentations.
+>   */
+>  struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+>  {
+> +#ifdef CONFIG_DMA_PERNUMA_CMA
+> +	int nid = dev_to_node(dev);
+> +#endif
+> +
+>  	/* CMA can be used only in the context which permits sleeping */
+>  	if (!gfpflags_allow_blocking(gfp))
+>  		return NULL;
+>  	if (dev->cma_area)
+>  		return cma_alloc_aligned(dev->cma_area, size, gfp);
+> -	if (size <= PAGE_SIZE || !dma_contiguous_default_area)
+> +	if (size <= PAGE_SIZE)
+> +		return NULL;
+> +
+> +#ifdef CONFIG_DMA_PERNUMA_CMA
+> +	if (nid != NUMA_NO_NODE && !(gfp & (GFP_DMA | GFP_DMA32))) {
+> +		struct cma *cma = dma_contiguous_pernuma_area[nid];
+
+It could be that for some node reservation failedm than
+dma_contiguous_pernuma_area[nid] would be NULL.
+I'd add a fallback to another node here.
+
+> +		struct page *page;
+> +
+> +		if (cma) {
+> +			page = cma_alloc_aligned(cma, size, gfp);
+> +			if (page)
+> +				return page;
+> +		}
+> +	}
+> +#endif
+
+I think the selection of the area can be put in a helper funciton and
+then here we just try to allocate from the selected area. E.g.
+
+static struct cma* dma_get_cma_area(struct device *dev)
+{
+#ifdef CONFIG_DMA_PERNUMA_CMA
+	int nid = dev_to_node(dev);
+	struct cma *cma = dma_contiguous_pernuma_area[nid];
+
+	if (!cma)
+		/* select cma from another node */ ;
+		
+	return cma;
+#else
+	return dma_contiguous_default_area;
+#endif
+}
+
+struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+{
+	struct cma *cma;
+	...
+
+
+	cma = dma_get_cma_area(dev);
+	if (!cma)
+		return NULL;
+
+	return cma_alloc_aligned(cma, size, gfp);
+}	
+ 
+> +	if (!dma_contiguous_default_area)
+>  		return NULL;
+> +
+>  	return cma_alloc_aligned(dma_contiguous_default_area, size, gfp);
+>  }
+>  
+> @@ -261,9 +323,27 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+>   */
+>  void dma_free_contiguous(struct device *dev, struct page *page, size_t size)
+>  {
+> -	if (!cma_release(dev_get_cma_area(dev), page,
+> -			 PAGE_ALIGN(size) >> PAGE_SHIFT))
+> -		__free_pages(page, get_order(size));
+
+Here as well, dev_get_cma_area() can be replaced with, say
+dma_get_dev_cma_area(dev, page) that will hide the below logic.
+
+> +	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> +
+> +	/* if dev has its own cma, free page from there */
+> +	if (dev->cma_area) {
+> +		if (cma_release(dev->cma_area, page, count))
+> +			return;
+> +	} else {
+> +		/*
+> +		 * otherwise, page is from either per-numa cma or default cma
+> +		 */
+> +#ifdef CONFIG_DMA_PERNUMA_CMA
+> +		if (cma_release(dma_contiguous_pernuma_area[page_to_nid(page)],
+> +					page, count))
+> +			return;
+> +#endif
+> +		if (cma_release(dma_contiguous_default_area, page, count))
+> +			return;
+> +	}
+> +
+> +	/* not in any cma, free from buddy */
+> +	__free_pages(page, get_order(size));
+>  }
+>  
+>  /*
+> -- 
+> 2.27.0
+> 
+> 
+
+-- 
+Sincerely yours,
+Mike.
