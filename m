@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC67C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E987BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7B620578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0B820578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598027038;
-	bh=HLpcYm022fsWDy3FXUhFyjTS+Kk9jiUppDpx58YYbJI=;
+	s=default; t=1598027044;
+	bh=8kd2JWfylGbyX5junfsVFBIFiC5m0s7OyUEiuP3YRFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d9/QVeutyo89Npkz1NJVn5L/UjHkDw11f8LiKtDddxKnhBS9+oXBpnk6MvaQ3Rf0+
-	 zV9Jt4xUUTeChEdKHXieffk8fgZx8otDHGrhrSe/Y8okf2OMMt64tQPV2Xs1P2mjP3
-	 mOR502ONC8TJUJhrM0pkRkmcZkybcv3bKYAepzrM=
+	b=BivIA3HsT9MnBwMj6bGEQ/W1xRZbm9N0r4LvQweA3ICqmQltIqd+D2GLSAcNbYCQ8
+	 AXyj/43b7VaQQbXqbNiZB9cpq15iX0DV/o3Hq1AqpAvKJ/JMP5p7qufQgyXqMWJRaV
+	 fHMZQf/7GamAmUT79u1waf/spGPn2NFT9M13c7OE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbgHUQX5 (ORCPT
+        id S1728584AbgHUQYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:23:57 -0400
+        Fri, 21 Aug 2020 12:24:02 -0400
 Received: from mail.kernel.org ([198.145.29.99]:49882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728377AbgHUQUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:20:33 -0400
+        id S1728146AbgHUQUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:20:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FA0022CF6;
-        Fri, 21 Aug 2020 16:19:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A95E22D2C;
+        Fri, 21 Aug 2020 16:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026775;
-        bh=HLpcYm022fsWDy3FXUhFyjTS+Kk9jiUppDpx58YYbJI=;
+        s=default; t=1598026804;
+        bh=8kd2JWfylGbyX5junfsVFBIFiC5m0s7OyUEiuP3YRFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pFVX1FmcTe0yT4u3PIYEMiU0vuwGXARhfkxYdb+Uov483qEDQ8BlSlTt/br4HIASy
-         1iAiL1bpeKjQgG7jCTJfHHupP6SrQ0tQgIiQCOUqDKtJ7OfB60yNm6fs8IeTbfzylA
-         +vSow3aqp3MnI9HrSrq6rpIf9pR8E1X2xVo3ybn4=
+        b=gZ9jFDVwmCaXZXBb1deWpdSWZD/rmKF3B0u5K+8t27bEnrGEBC/0b7WR02YtYXraX
+         JEqLUQIc9Vl3MZ8XCEEocpfmJLE4rLt6SUT6DGNsEpjBZig3QuROsnky397fnFuVCN
+         p0GSoNUJ3zErU0aKjkBgbdBqvCkDVCL28GZvjCEs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Javed Hasan <jhasan@marvell.com>,
-        Girish Basrur <gbasrur@marvell.com>,
-        Santosh Vernekar <svernekar@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        Shyam Sundar <ssundar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 29/30] scsi: fcoe: Memory leak fix in fcoe_sysfs_fcf_del()
-Date:   Fri, 21 Aug 2020 12:18:56 -0400
-Message-Id: <20200821161857.348955-29-sashal@kernel.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.9 19/26] cec-api: prevent leaking memory through hole in structure
+Date:   Fri, 21 Aug 2020 12:19:30 -0400
+Message-Id: <20200821161938.349246-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161857.348955-1-sashal@kernel.org>
-References: <20200821161857.348955-1-sashal@kernel.org>
+In-Reply-To: <20200821161938.349246-1-sashal@kernel.org>
+References: <20200821161938.349246-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,42 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Javed Hasan <jhasan@marvell.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit e95b4789ff4380733006836d28e554dc296b2298 ]
+[ Upstream commit 6c42227c3467549ddc65efe99c869021d2f4a570 ]
 
-In fcoe_sysfs_fcf_del(), we first deleted the fcf from the list and then
-freed it if ctlr_dev was not NULL. This was causing a memory leak.
+Fix this smatch warning:
 
-Free the fcf even if ctlr_dev is NULL.
+drivers/media/cec/core/cec-api.c:156 cec_adap_g_log_addrs() warn: check that 'log_addrs' doesn't leak information (struct has a hole after
+'features')
 
-Link: https://lore.kernel.org/r/20200729081824.30996-3-jhasan@marvell.com
-Reviewed-by: Girish Basrur <gbasrur@marvell.com>
-Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
-Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
-Reviewed-by: Shyam Sundar <ssundar@marvell.com>
-Signed-off-by: Javed Hasan <jhasan@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/fcoe/fcoe_ctlr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/media/cec/cec-api.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
-index d95ba1a07ba3b..eaab59afd90c7 100644
---- a/drivers/scsi/fcoe/fcoe_ctlr.c
-+++ b/drivers/scsi/fcoe/fcoe_ctlr.c
-@@ -267,9 +267,9 @@ static void fcoe_sysfs_fcf_del(struct fcoe_fcf *new)
- 		WARN_ON(!fcf_dev);
- 		new->fcf_dev = NULL;
- 		fcoe_fcf_device_delete(fcf_dev);
--		kfree(new);
- 		mutex_unlock(&cdev->lock);
- 	}
-+	kfree(new);
- }
+diff --git a/drivers/staging/media/cec/cec-api.c b/drivers/staging/media/cec/cec-api.c
+index e274e2f223986..264bb7d1efcb8 100644
+--- a/drivers/staging/media/cec/cec-api.c
++++ b/drivers/staging/media/cec/cec-api.c
+@@ -141,7 +141,13 @@ static long cec_adap_g_log_addrs(struct cec_adapter *adap,
+ 	struct cec_log_addrs log_addrs;
  
- /**
+ 	mutex_lock(&adap->lock);
+-	log_addrs = adap->log_addrs;
++	/*
++	 * We use memcpy here instead of assignment since there is a
++	 * hole at the end of struct cec_log_addrs that an assignment
++	 * might ignore. So when we do copy_to_user() we could leak
++	 * one byte of memory.
++	 */
++	memcpy(&log_addrs, &adap->log_addrs, sizeof(log_addrs));
+ 	if (!adap->is_configured)
+ 		memset(log_addrs.log_addr, CEC_LOG_ADDR_INVALID,
+ 		       sizeof(log_addrs.log_addr));
 -- 
 2.25.1
 
