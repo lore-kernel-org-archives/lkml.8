@@ -2,156 +2,118 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A39C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D88C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 667A52054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:40:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oiLRwa4h"
+	by mail.kernel.org (Postfix) with ESMTP id 56DF32076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598038998;
+	bh=BsReOYPldtA5Sgb82PqTOETXDTs67K0zvGl45jGVPp4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MNqO0zjuMyle7xFGvjCwhFiUYmC4Lv9AihKg1hZuUyTf03RalKFxfXotDjuRO1AoO
+	 lVQ3pSjEi1LuJ4ITbNpT/hooMtsdy6r5FD26MNFb2U4waUPDmZYQK/xVjA85bNELzI
+	 dULpx9DzMIlY+8wX+45shAvbmRxdiI+BxlSzeau8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgHUTkm (ORCPT
+        id S1726391AbgHUTnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:40:42 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7347 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725831AbgHUTkk (ORCPT
+        Fri, 21 Aug 2020 15:43:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725831AbgHUTnQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:40:40 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4023290001>; Fri, 21 Aug 2020 12:40:25 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 21 Aug 2020 12:40:39 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 21 Aug 2020 12:40:39 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Aug
- 2020 19:40:39 +0000
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
- by HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 21 Aug 2020 19:40:39 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jFytsqJhySf6aS0TFaxeKLUQQsNwtIyY+PwwXytjg5xAH60LJkzF7cW+TeMyRWSTIovNXjlGvNVdSJiDY2WksOLNs5Zu5WDJIKG0imssx8o7lyc99nJg+fdbNZYx8cy0xuMIxZ1j4ndMiTKbWzGv0IgjP8SaCrlxtKqyrwaRjSlEtt5O1ooC6hvjzOg2Kj6ANO0h8RXun4fOBzbXpukYGapHBpX5DbTFbRtCemTyhfiDU5tmFJ7K3omNOHuidsgVZZNBKooszyFMFJwikyqalM/RH+3t9vXT43ZcrFx+Uk7FBgkizwUimE2rqHmGF2ObIcNIJOEo4gUW2MjKQ7JSUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ms5lYmj2yDKCLP7wuU52VEwOMm2Nng+ahlfTRaofbJo=;
- b=ExiLCWcxjywAKoCunHBeIToo/ZTochAnDPi8nbl4Z4XDC4c+a3Hv71xRyYtBUn4n1G+niPV7+XucCO3sHu2Kb6U+gz2VL89LFvUz/zCnfM+qNuxnTkvSLXOsrizctl0qEOsm5CoIPdoDW38+0AwZ9XORWwYTaFPtoTyG2EZmVHDIoP6rDs9JDzkO0gnA4r8RqsYLP0LO5wbFAtC8P/dvm3jiNlUS2db1X3KVjoQoqRaI1C2ow7Q9AaOCfmm1xYhLUlhVMUOGYbtSvN1Yt9TLylZM8hQnWO1MUFlrr/bfIpLnvd0UjxJ85Mc5yswQF+35V7nZ/9QPMU1ZpalWnoLB9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR12MB1340.namprd12.prod.outlook.com (2603:10b6:3:76::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Fri, 21 Aug
- 2020 19:40:37 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3305.025; Fri, 21 Aug 2020
- 19:40:37 +0000
-Date:   Fri, 21 Aug 2020 16:40:36 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Sasha Levin <sashal@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Gal Pressman <galpress@amazon.com>,
-        Shadi Ammouri <sammouri@amazon.com>,
-        Yossi Leybovich <sleybo@amazon.com>,
-        <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 5.8 55/62] RDMA/efa: Add EFA 0xefa1 PCI ID
-Message-ID: <20200821194036.GB2811093@nvidia.com>
-References: <20200821161423.347071-1-sashal@kernel.org>
- <20200821161423.347071-55-sashal@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200821161423.347071-55-sashal@kernel.org>
-X-ClientProxiedBy: MN2PR12CA0028.namprd12.prod.outlook.com
- (2603:10b6:208:a8::41) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Fri, 21 Aug 2020 15:43:16 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06FDAC061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:43:15 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id v12so3094594ljc.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZqmMf8s/qw8dVmkIjWEKz4hGdQy13QWnrbeE3wlgAlU=;
+        b=C6jruGU7XbdTD/cONqgTWdl5nfkxg4Siv9fW8Uhgr4NO+SmRJdhu7HWZRPm54zt2o+
+         20HDheaQPalvgiMB4KRYdPqOBxh9avoWJdfixq4xwgGGimMuq/eA02dHooa9DKd3Ych8
+         0M8zvhKhXJ6rBuzgU0YlRzYErgGqfBWqu+dEI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZqmMf8s/qw8dVmkIjWEKz4hGdQy13QWnrbeE3wlgAlU=;
+        b=XUyzZURJwW/7GzACjH+mojlHL2/BFYI4qLEZNq42Zc9ZbTQ2t56SJRGSgS/+mXSavT
+         XvJ3NGK27OjXs3IUqNWvxI/Q2YhKHawr9OgeGUEVEtMCSKlcJV3pwg12NmHbfRf4pmgI
+         51gyotp/sqjJ6NYyjdk3fDVnj+feV2tQH/T0x5bJQCU4T3ucjqPG8/Aq22xLakqg+e1S
+         M47pnncH+gnvgLr0XVBSAYA0s1sQyjxzCP6gfBjEeVumggvY3TgXTetaeOBB2SAX+RRo
+         fA26gKdB4w+PoHzAfWznL2gKxwCQOsVyTvsD6798++yV4X9wX89GXa8lgtWWIf/xwZ3E
+         3kCQ==
+X-Gm-Message-State: AOAM533XQ87Cg6N425y962iwo31fnNqs2ajuU2l+phWgHjFqLakzEDkQ
+        42jsjc3l6svoREv6CqzLNXcoy/Sh2HwEgA==
+X-Google-Smtp-Source: ABdhPJzDJxDOQbCcLBFhJEb1ex4QTI3Xp6lIp0PjiwuHwSB7K8lBHQu4Ul9oBT7jc4ruxJe6IuKvnA==
+X-Received: by 2002:a2e:5d8:: with SMTP id 207mr2025312ljf.58.1598038993822;
+        Fri, 21 Aug 2020 12:43:13 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id o23sm567193lfr.67.2020.08.21.12.43.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 12:43:13 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id j15so1469790lfg.7
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:43:12 -0700 (PDT)
+X-Received: by 2002:ac2:58d5:: with SMTP id u21mr2080928lfo.31.1598038992293;
+ Fri, 21 Aug 2020 12:43:12 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by MN2PR12CA0028.namprd12.prod.outlook.com (2603:10b6:208:a8::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Fri, 21 Aug 2020 19:40:37 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k9Ctw-00BnNf-HK; Fri, 21 Aug 2020 16:40:36 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ca920675-5509-4c94-c09e-08d8460a1438
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1340:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB13404B84E6B0492237F85BD0C25B0@DM5PR12MB1340.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:741;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5re0c6DNrvSH4aA9itG9jjVbrAUZfbH/zerGOR8X68owfxdg4YZVfG/5gZ6/O9p6rVvZ+Ya3LwuG8ML0sYVwWeHR201HYhNcnGnSYBCHSX/3WjL1gcXIjLHPQ2zY1tSwKV4prf6mFSoFKlCv03gkCVvfkE8NIbJ3dbt+mi7213dGMSyRPKCff22dP5fGXm4VUnCRzXNLUQePudcZYb1XHudfm7KsUfCj/vMCwDyOVKMw/EdpT2EEr9jX1d95t3YXDqdIe0R8V0a4naZ7LZyaU0ZV4c1a2mHBzcY8JBu7xcC9ZHAHF2jlweld4oyDt+lKGKGc/ecrmMs3TtvKwIoOAKLWaTKBrZg/vMi6UDCiYsWda3kbYf/IU9JgwTnFpQb8cFdBTSwgNniRkPaaUqHksQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(366004)(39860400002)(396003)(9786002)(8936002)(966005)(54906003)(9746002)(478600001)(36756003)(86362001)(4744005)(83380400001)(8676002)(4326008)(33656002)(1076003)(426003)(2906002)(5660300002)(6916009)(186003)(66946007)(66556008)(316002)(26005)(2616005)(66476007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: iEagGQ948LTNmcg/xFxjLNiUK8LotzoYYFnwEvvfuH/FlOMcGYR8zNKc1oqI9/TsGVwCzgNGzQ10pvbLfGbrmztCOkZVNY8v3QufhPxhzv16LtuVA83Z1+NjW3eo1G/SI6H9QVyIY64wN5PnQlnZLmCp8dKrIL6K59ncn7/YRbXANS25d+J3zsdoY0KxY/xuP0NrRILxYKQwX90wsIyaoYjJ5EIBPEyMFr65FFyBGvZvqpaVj7JBUsrAfD3RA3P+yavjbojSA1fL/Mjij+0HbQke3QKQ3mFyfXWw+NwMvD636ibHcRIVXFUCvkPJOdfhrF9LmAZ1Lz9QX4ioRztMGiMfHFkpVHjnASPiLH38kYHneOUSDJgWIxjCC8qrv4RNYuRE6vmWsIgh8yNQG74Prba2Q8lwhhWCkJltDLSsoXDKKVaTq0CQZg9i/v+V8lqi0ykdqxW+BXxLZw4QhnqxiB6ujRm0gRy8LhzJ92AxXcLk9f4ENsRvUK2a6GkvneYF0joenno2NP2Eq4YtK9De2As5QIpwKy6wzwtMc6rfZmpBg/2u6FlJ++gvW7k0idEmDe7bkEwumgNO+af7A56QXwxjZ6E6skQuvhkYIlRp1kk4CnSBxHChcl4J96hQHQDVN/Ag3j97M36Ukx+4WZLCrA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca920675-5509-4c94-c09e-08d8460a1438
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 19:40:37.7535
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xzLxorYioUpua+bX4t8nuBbPXgrZHpIVFhdkv3vgRTPKIWMGSnfHD+88XaXmertW
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1340
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598038825; bh=ms5lYmj2yDKCLP7wuU52VEwOMm2Nng+ahlfTRaofbJo=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
-         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=oiLRwa4h5x6SymRZHDvRBy6cjGBP5DQPbiiqsT1xwToVm6Os4CX4Ua5nXDCQoFB0C
-         qPy3bXbfrdMHtmYwQ+DRU5ZkVUqabAg5spRKd+Uwl6fQu2AVcGq5ujt0xmVOnfdo4q
-         dpbgGqzZ8kACHts//v3p6ceDK3IVdGaIPCLFQa8Pk85bIqRNwUtkfD+KAkBlYoknU0
-         kvhU7j+6r6hD2iDqkJPCbZfvXMTWdLgNGNvCblhBKVPw8eD7BZ96LnvDfVkbXNN8YR
-         8ksKyIcd86RdiosjZq1BX8YTmaMfcPjpa81MpVNtPGU98us9r0P2eP5YwK1I5dDRZq
-         7R8N49n9/LThw==
+References: <20200811214255.GE6353@xz-x1> <CAHk-=wiVN-+P1vOCSMyfGwYQD3hF7A18OJyXgpiMwGDfMaU+8w@mail.gmail.com>
+ <20200820215449.GB358043@xz-x1> <CAHk-=wjGzOjsfmX1Dc=yz6o_+62w4wcTVXX_hia9sHLfsCoxjg@mail.gmail.com>
+ <20200821101333.GA3432@quack2.suse.cz> <CAHk-=whXfL5DtinS42dgtNu6i+xchK_VP+XLprQbu_og2J5Dkw@mail.gmail.com>
+ <20200821154756.GC3432@quack2.suse.cz> <CAHk-=wj-pfzKf3JDe9fr4o_nKYXJXfuYAMFCajwhy0YYYri4Fw@mail.gmail.com>
+ <20200821180848.GA11376@xz-x1> <CAHk-=wj3fY2dch7Ah-MLbJcfU3buoXgJnwc1zWFSjVujSd39GA@mail.gmail.com>
+ <20200821193100.GA38249@xz-x1>
+In-Reply-To: <20200821193100.GA38249@xz-x1>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 21 Aug 2020 12:42:56 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh0syDtNzt9jGyHRV0r1pVX5gkdJWdenwmvy=dq0AL5mA@mail.gmail.com>
+Message-ID: <CAHk-=wh0syDtNzt9jGyHRV0r1pVX5gkdJWdenwmvy=dq0AL5mA@mail.gmail.com>
+Subject: Re: [PATCH v3] mm/gup: Allow real explicit breaking of COW
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Jan Kara <jack@suse.cz>, Andrea Arcangeli <aarcange@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        "Maya B . Gokhale" <gokhale2@llnl.gov>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 12:14:16PM -0400, Sasha Levin wrote:
-> From: Gal Pressman <galpress@amazon.com>
-> 
-> [ Upstream commit d4f9cb5c5b224dca3ff752c1bb854250bf114944 ]
-> 
-> Add support for 0xefa1 devices.
-> 
-> Link: https://lore.kernel.org/r/20200722140312.3651-5-galpress@amazon.com
-> Reviewed-by: Shadi Ammouri <sammouri@amazon.com>
-> Reviewed-by: Yossi Leybovich <sleybo@amazon.com>
-> Signed-off-by: Gal Pressman <galpress@amazon.com>
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/infiniband/hw/efa/efa_main.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+On Fri, Aug 21, 2020 at 12:31 PM Peter Xu <peterx@redhat.com> wrote:
+>
+> However, do we really want to revert the whole logic of
+> 52d1e606ee73?  Asking because it still seems to be an improvement to me (after
+> all we'll need to look after KSM pages here).  So it seems still good to keep.
 
-Wait, what? Why is this being autosel'd?
+Does anybody have numbers for it?
 
-This needs to be the last patch in a series enabling support for this
-chip, it will badly break this driver to pick it out of sequence!!
+I'd rather simplify and get rid of the locking that has been
+problematic, and then re-introduce limited cases with actual numbers.
 
-Jason
+Right now that commit has no real argument for it except for "do what
+we do for swap cache". And since we're getting rid of the swap cache
+special case, I'd say that commit 52d1e606ee73 argues for getting rid
+of the KSM special case too.
+
+Honestly, I'd expect that if KSM is effective, it's for pages that
+really *are* shared. If you get a lot of "write fault on the last
+copy" and that ends up being a problem, I think that says more about
+the KSM issue than it says about the write fault..
+
+               Linus
