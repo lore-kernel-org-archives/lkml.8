@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35122C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B07C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 132572075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8D620748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030128;
-	bh=l4gfc2q1SPp9LVlWv9fQLokfWUFLtIw+L29wCvLl3R4=;
+	s=default; t=1598030137;
+	bh=x7Vx8g3c9JAZeAAUAs7GP+bh0aZadk+LACNHmWaGmxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YYGIq9OJgAMXvC2BJVlPQxzb49SVJaPHqOWilAJ1OdtGZuwIC4RNaIbiqMjaSSpJM
-	 K6NMkVnqpCHzklT94YWFs0SRSd7y2vsxuVbayxsLlMtDG6AEHni/w07BTg+lmYSFph
-	 1DHw2wtkAmbZZjaEQ4wf6+1Pz2pYB7i7SJzwDWeY=
+	b=XEFyPgu6JI1cBXpqI46cafkdkHZ/G29Mb6OVUkC8XY3IGwPA5NHgamsNCUKfFbf96
+	 3rSPeBl3UUktnjwdw1VpyIE2ZXNDP7cwlDcmuoQAUZoKGJCO4FH4O5oAn7YHdnC5HM
+	 FAXbJ2Aw+U+uOx4k+RkRxsP3ngnPFO/TvFZhwOOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbgHURPY (ORCPT
+        id S1728502AbgHURPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:15:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50244 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:15:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbgHUQQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:16:44 -0400
+        id S1728116AbgHUQQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:16:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A52E22BEA;
-        Fri, 21 Aug 2020 16:16:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED43922B43;
+        Fri, 21 Aug 2020 16:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026603;
-        bh=l4gfc2q1SPp9LVlWv9fQLokfWUFLtIw+L29wCvLl3R4=;
+        s=default; t=1598026602;
+        bh=x7Vx8g3c9JAZeAAUAs7GP+bh0aZadk+LACNHmWaGmxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TVuqtnN4yIOsH+EP13M7VMZgkRZc9BAZ2BZZuoktfBkciE1fy9tsN330Et5wodskr
-         CyuUasyzzRbRGJ7D7o7rHoAQznv7/BhSHHPOqysDixIzHwlG+zucwPi9Eo1YIzByZW
-         ovz+AujW1XihhVVrUe0HWsEPmzZfAIeOdLLgBpnI=
+        b=jOf2PAqJ1794jhsWQ8clonFdKmYVCPmYC9O6oZX0W+OCcMhc5PSnKpKEpabaJsm4Z
+         6wy9xnFh9Oiu620RHDsWuVMbjTqlCvP69HBrDXgHos40w38AuzeHTbfDxMKQboxK0p
+         EAwTiQv9FMrjRCtb3OXzd7HNKaj+eJJ7wELJIvJk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li Guifu <bluce.liguifu@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.7 46/61] f2fs: fix use-after-free issue
-Date:   Fri, 21 Aug 2020 12:15:30 -0400
-Message-Id: <20200821161545.347622-46-sashal@kernel.org>
+Cc:     Ikjoon Jang <ikjn@chromium.org>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 45/61] HID: quirks: add NOGET quirk for Logitech GROUP
+Date:   Fri, 21 Aug 2020 12:15:29 -0400
+Message-Id: <20200821161545.347622-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
 References: <20200821161545.347622-1-sashal@kernel.org>
@@ -60,48 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Guifu <bluce.liguifu@huawei.com>
+From: Ikjoon Jang <ikjn@chromium.org>
 
-[ Upstream commit 99c787cfd2bd04926f1f553b30bd7dcea2caaba1 ]
+[ Upstream commit 68f775ddd2a6f513e225f9a565b054ab48fef142 ]
 
-During umount, f2fs_put_super() unregisters procfs entries after
-f2fs_destroy_segment_manager(), it may cause use-after-free
-issue when umount races with procfs accessing, fix it by relocating
-f2fs_unregister_sysfs().
+Add HID_QUIRK_NOGET for Logitech GROUP device.
 
-[Chao Yu: change commit title/message a bit]
+Logitech GROUP is a compound with camera and audio.
+When the HID interface in an audio device is requested to get
+specific report id, all following control transfers are stalled
+and never be restored back.
 
-Signed-off-by: Li Guifu <bluce.liguifu@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203419
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 4696c9cb47a5f..194ac4941584e 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1145,6 +1145,9 @@ static void f2fs_put_super(struct super_block *sb)
- 	int i;
- 	bool dropped;
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 047abf731cf09..1543d153fb3ad 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -780,6 +780,7 @@
+ #define USB_DEVICE_ID_LOGITECH_G27_WHEEL	0xc29b
+ #define USB_DEVICE_ID_LOGITECH_WII_WHEEL	0xc29c
+ #define USB_DEVICE_ID_LOGITECH_ELITE_KBD	0xc30a
++#define USB_DEVICE_ID_LOGITECH_GROUP_AUDIO	0x0882
+ #define USB_DEVICE_ID_S510_RECEIVER	0xc50c
+ #define USB_DEVICE_ID_S510_RECEIVER_2	0xc517
+ #define USB_DEVICE_ID_LOGITECH_CORDLESS_DESKTOP_LX500	0xc512
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 934fc0a798d4d..c242150d35a3a 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -179,6 +179,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_GROUP_AUDIO), HID_QUIRK_NOGET },
  
-+	/* unregister procfs/sysfs entries in advance to avoid race case */
-+	f2fs_unregister_sysfs(sbi);
-+
- 	f2fs_quota_off_umount(sb);
- 
- 	/* prevent remaining shrinker jobs */
-@@ -1210,8 +1213,6 @@ static void f2fs_put_super(struct super_block *sb)
- 
- 	kvfree(sbi->ckpt);
- 
--	f2fs_unregister_sysfs(sbi);
--
- 	sb->s_fs_info = NULL;
- 	if (sbi->s_chksum_driver)
- 		crypto_free_shash(sbi->s_chksum_driver);
+ 	{ 0 }
+ };
 -- 
 2.25.1
 
