@@ -2,179 +2,69 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D31C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD3EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96E5A2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6955C2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:32:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FBhfxiep"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cuq3iopC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgHUNbt (ORCPT
+        id S1728728AbgHUNcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:31:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35346 "EHLO
+        Fri, 21 Aug 2020 09:32:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728508AbgHUNbg (ORCPT
+        with ESMTP id S1728691AbgHUNbz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:31:36 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7AE5C061575
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:31:30 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id d16so1932488wrq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:31:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=09U6vmSaahNdcLROs1sJRQMLO2jTllhKcJ+uh2MtTKA=;
-        b=FBhfxiepYWlS9uM4Bp3qtAyG46bdidayLJQHBxfbLueX+M3HuwfkeT558+nRQSbGQ4
-         WIkVB7yUWXC2eCaRIJYc9a46sTBZ1NQ87YdhCK4Kk7YUvpR4FWpISpOByJZ/KcL7WD9W
-         FnnokDVRdBqspIHoF/ghT0bvw9dXJK9uZLJKKLX3++cPmth+P3DTxEK7dchVqIzmC7/w
-         qESqZ7Ekkci69zw1SX0P7XlEJHyLp71EYw9mf3yxrtfwZQN2AVKie5IdT9vBStgJ3ipy
-         xWFmymgEZ+MbB5be3/p9NsdJln2lhDmi8cUI7UmvNIiDwlTSZprlboBjw6xYvbCGDtGk
-         6u7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=09U6vmSaahNdcLROs1sJRQMLO2jTllhKcJ+uh2MtTKA=;
-        b=ViHnlNkUYizwfT3/OthIKvILABnh3TIw9dBgofGFbZCRSg5NymVpijqQ406LCph3Jd
-         4PQQOWCzQi3XqOm0G90rEBMHl3RICUisMhdRed4Uu66NZE4pBawFOJOnC31Y8MJvju81
-         FfGQGLZ/Gd2qZE+ayzANB2lIo83tIhYhMppW9bNceFjOFijqL5CraNPisOrjgQZJxmE8
-         et2DJRy9JYBjl3kbalxwMsQJnkAXQdzTISopSYlpz85IoIJrmUQ17H2/hB7ZpZvsSsvx
-         ByHbpxQdwDdZGyE11yZtybkINHita7MxdLouvUIpzxh4NYJ7DqsOxsGvsc6LVlx4nZOI
-         87RQ==
-X-Gm-Message-State: AOAM532mPHdBBWdMtRjPlkwFKBJLr8A16b2yYB7nM+4t5P4hHRmCdJNH
-        bkhq2eOzOt2jsm5F+ZOjtZSRGA==
-X-Google-Smtp-Source: ABdhPJxriNxDM/f9/YbCE9WsW7FeM36vohjb4MJ/IXB6Q5OW1j4S16rZa29+Vlc8vCz1eSzYWkhUIg==
-X-Received: by 2002:a5d:4a8d:: with SMTP id o13mr471970wrq.194.1598016687509;
-        Fri, 21 Aug 2020 06:31:27 -0700 (PDT)
-Received: from elver.google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id 15sm4796747wmo.33.2020.08.21.06.31.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 06:31:26 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 15:31:20 +0200
-From:   Marco Elver <elver@google.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     albert.linde@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Albert van der Linde <alinde@google.com>
-Subject: Re: [PATCH 1/3] lib, include/linux: add usercopy failure capability
-Message-ID: <20200821133120.GA3145341@elver.google.com>
-References: <20200821104926.828511-1-alinde@google.com>
- <20200821104926.828511-2-alinde@google.com>
- <CACT4Y+ZeoUX39tBZs-DLoX0q5tC+skB56Cxf_SSpKiJdv3mMFg@mail.gmail.com>
+        Fri, 21 Aug 2020 09:31:55 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64906C061573;
+        Fri, 21 Aug 2020 06:31:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AIbazufSjLEMEQ/d/Dh4pzlQECF2J1OLKd5TXR+II1g=; b=Cuq3iopCyVuYMmI6xbYWhJ1Kl0
+        0boWHRzDvAaO2vLimQwyTgS/xEuMuO++yFe37kDXEXMvaDf9/VNnh2/TPnWtZD75afcstreGP2Ax0
+        NMqzK6i16wUPYSmrrx4PEt+PQEVR4AOD2P+nYEBXCqmuzvfJ6r7wCoNjBEXNbpQZn2q5UsoMtAB+P
+        TATSZC29536WsJXebAjdJo6I0UHaShiqCFYD0haW4GYBoPbgVqzedCkzez1n9rkQMZ93fDqo5WDoq
+        nRuqig6eDHOPlm6YHAugAJu+oHcKQlJ67Gvnb2ngSzlrLCRvp3/gVpJVj8xmiKer+Q1I7l29AJBr/
+        CT1VtZAw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9794-0005mN-ND; Fri, 21 Aug 2020 13:31:50 +0000
+Date:   Fri, 21 Aug 2020 14:31:50 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc:     hch@infradead.org, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, riteshh@linux.ibm.com
+Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
+Message-ID: <20200821133150.GT17456@casper.infradead.org>
+References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZeoUX39tBZs-DLoX0q5tC+skB56Cxf_SSpKiJdv3mMFg@mail.gmail.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+In-Reply-To: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 01:51PM +0200, Dmitry Vyukov wrote:
-...
-> > +++ b/lib/fault-inject-usercopy.c
-> > @@ -0,0 +1,66 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +#include <linux/fault-inject.h>
-> > +#include <linux/fault-inject-usercopy.h>
-> > +#include <linux/random.h>
-> > +
-> > +static struct {
-> > +       struct fault_attr attr;
-> > +       u32 failsize;
-> > +} fail_usercopy = {
-> > +       .attr = FAULT_ATTR_INITIALIZER,
-> > +       .failsize = 0,
-> > +};
-> > +
-> > +static int __init setup_fail_usercopy(char *str)
-> > +{
-> > +       return setup_fault_attr(&fail_usercopy.attr, str);
-> > +}
-> > +__setup("fail_usercopy=", setup_fail_usercopy);
-> > +
-> > +#ifdef CONFIG_FAULT_INJECTION_DEBUG_FS
-> > +
-> > +static int __init fail_usercopy_debugfs(void)
-> > +{
-> > +       umode_t mode = S_IFREG | 0600;
-> > +       struct dentry *dir;
-> > +
-> > +       dir = fault_create_debugfs_attr("fail_usercopy", NULL,
-> > +                                       &fail_usercopy.attr);
-> > +       if (IS_ERR(dir))
-> > +               return PTR_ERR(dir);
-> > +
-> > +       debugfs_create_u32("failsize", mode, dir,
-> > +                          &fail_usercopy.failsize);
-> 
-> Marco, what's the right way to annotate these concurrent accesses for KCSAN?
+On Wed, Aug 19, 2020 at 03:58:41PM +0530, Anju T Sudhakar wrote:
+> __bio_try_merge_page() may return same_page = 1 and merged = 0. 
+> This could happen when bio->bi_iter.bi_size + len > UINT_MAX. 
+> Handle this case in iomap_add_to_ioend() by incrementing write_count.
 
-For debugfs variables that are accessed concurrently, the only
-non-data-racy option (currently) is to use debugfs_create_atomic_t() and
-make the variable an atomic_t.
+One of the patches I have pending ignores same_page by just using the
+write_count as a byte count instead of a segment count.  It's currently
+mixed into this patch but needs to be separated.
 
-If it's read-mostly as is the case here, and given that atomic_read() is
-cheap (it maps to READ_ONCE on x86 and arm64), that'd be reasonable even
-if performance is a concern.
+http://git.infradead.org/users/willy/pagecache.git/commitdiff/0186d1dde949a458584c56b706fa8dfd252466ff
 
-> > +       return 0;
-> > +}
-> > +
-> > +late_initcall(fail_usercopy_debugfs);
-> > +
-> > +#endif /* CONFIG_FAULT_INJECTION_DEBUG_FS */
-> > +
-> > +/**
-> > + * should_fail_usercopy() - Failure code or amount of bytes not to copy.
-> > + * @n: Size of the original copy call.
-> > + *
-> > + * The general idea is to have a method which returns the amount of bytes not
-> > + * to copy, a failure to return, or 0 if the calling function should progress
-> > + * without a failure. E.g., copy_{to,from}_user should NOT copy the amount of
-> > + * bytes returned by should_fail_usercopy, returning this value (in addition
-> > + * to any bytes that could actually not be copied) or a failure.
-> > + *
-> > + * Return: one of:
-> > + * negative, failure to return;
-> > + * 0, progress normally;
-> > + * a number in ]0, n], the number of bytes not to copy.
-> > + *
-> > + */
-> > +long should_fail_usercopy(unsigned long n)
-> > +{
-> > +       if (should_fail(&fail_usercopy.attr, n)) {
-> > +               if (fail_usercopy.failsize > 0)
-> > +                       return fail_usercopy.failsize % (n + 1);
-
-If you wanted to retain the u32 in debugfs, you can mark this
-'data_race(fail_usercopy.failsize)' -- since what we're doing here is
-probabilistic anyway, reading a garbage value won't affect things much.
-
-Alternatively, just switch to atomic_t and it'll just be an
-atomic_read().
-
-Thanks,
--- Marco
+(another patch does the same thing to the read count).
