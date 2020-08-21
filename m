@@ -2,158 +2,67 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3D5C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6485EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B30320855
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370B220855
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598047306;
-	bh=aq7qmIMUGdMaoUlA+6jQpfeWcG91tpxIXFUSsaIi1FU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=n3+9IjVtCgUqcszEDfoditlhg8ZtuZnv5c94Qoq8tHn0k533T8iLUoyqQpYZdMVnD
-	 qHoi+2qVTHi+XPz5zwur2Lj+5P5okUmJrjlK6fLP+NLLhUQh3H0uzXqFpI0K8aKtV5
-	 NYXqZmazPOiQv83XvT4vbnweXaY60erPdmuzmE/o=
+	s=default; t=1598047509;
+	bh=opOBlqaUGECh+5z5xpnvyiZ8AHozCfhVoJLtemUrOFg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=TktC3skzVsRolXThFAaWMeGufwkQSTGgWV2sJ4wWUyXXTqk5YuQnrwlXpDNJY+lzC
+	 5CcHGxw6ZnFZ75T250lEZRm4MFHn/2ok6Eb29ESnM4vW8LLq8UNzhrDCLjvnSVnpns
+	 3aT4+XT+EKYe3QHQtzTNx1tPmXWQyIhFrk09XWgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgHUWBp (ORCPT
+        id S1726820AbgHUWFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:01:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37208 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 18:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726731AbgHUWBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:01:44 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95B9D207C3;
-        Fri, 21 Aug 2020 22:01:43 +0000 (UTC)
+        id S1726641AbgHUWFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 18:05:07 -0400
+Subject: Re: [GIT PULL] RISC-V Fixes for 5.9-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598047304;
-        bh=aq7qmIMUGdMaoUlA+6jQpfeWcG91tpxIXFUSsaIi1FU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yQNLm87wvpu/PSjqkUXCuyDFfqEx5vmk96zjhAzeD2wDj86JlCP+M142C36DgZQkP
-         pvwYdh0H9KVArGe0M6Ah0Rd8+GCxjWa9LNEE+BeYyaOuaPAENds6qAanbnF/rZP3Kv
-         vcsfzrgfrj5bsVjBAnLSE9AsG9/HbFjoj11LyXIc=
-Date:   Fri, 21 Aug 2020 15:01:43 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     cgoldswo@codeaurora.org
-Cc:     linux-mm@kvack.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pratikp@codeaurora.org,
-        pdaly@codeaurora.org, sudraja@codeaurora.org,
-        iamjoonsoo.kim@lge.com, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: cma_alloc(), add sleep-and-retry for temporary page pinning
-Message-Id: <20200821150143.8a8645b3fabc11016311b78d@linux-foundation.org>
-In-Reply-To: <896f92e8c37936e7cb2914e79273e9e8@codeaurora.org>
-References: <896f92e8c37936e7cb2914e79273e9e8@codeaurora.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1598047506;
+        bh=opOBlqaUGECh+5z5xpnvyiZ8AHozCfhVoJLtemUrOFg=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=vDxnRB7E92FJK9kzPB4fyfxG0U2U8fBGbSe/Q9/THG+bBgIqhryx3exsF0k3PwoGL
+         2DKsUjX7t12Rafv5+mutDxsJdrVF3wak/0vVo0FP4zxXoDWvI/7qv12WONcBjzgme5
+         ykxBHQ9mxQaE+jTz7jHZv2XQmbxixrBWd/Q92aNA=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <mhng-32c8d053-acbd-4c72-b41d-8d6042ac639d@palmerdabbelt-glaptop1>
+References: <mhng-32c8d053-acbd-4c72-b41d-8d6042ac639d@palmerdabbelt-glaptop1>
+X-PR-Tracked-List-Id: <linux-riscv.lists.infradead.org>
+X-PR-Tracked-Message-Id: <mhng-32c8d053-acbd-4c72-b41d-8d6042ac639d@palmerdabbelt-glaptop1>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.9-rc2
+X-PR-Tracked-Commit-Id: fc26f5bbf19459930b7290c87b65a9ae6a274650
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f22c5579a7d600fa03f8c1d150cf78188f8709b6
+Message-Id: <159804750671.4316.9225136869085625949.pr-tracker-bot@kernel.org>
+Date:   Fri, 21 Aug 2020 22:05:06 +0000
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Aug 2020 15:20:47 -0700 cgoldswo@codeaurora.org wrote:
+The pull request you sent on Fri, 21 Aug 2020 11:26:44 -0700 (PDT):
 
-> On 2020-08-06 18:31, Andrew Morton wrote:
-> > On Wed,  5 Aug 2020 19:56:21 -0700 Chris Goldsworthy
-> > <cgoldswo@codeaurora.org> wrote:
-> > 
-> >> On mobile devices, failure to allocate from a CMA area constitutes a
-> >> functional failure.  Sometimes during CMA allocations, we have 
-> >> observed
-> >> that pages in a CMA area allocated through alloc_pages(), that we're 
-> >> trying
-> >> to migrate away to make room for a CMA allocation, are temporarily 
-> >> pinned.
-> >> This temporary pinning can occur when a process that owns the pinned 
-> >> page
-> >> is being forked (the example is explained further in the commit text).
-> >> This patch addresses this issue by adding a sleep-and-retry loop in
-> >> cma_alloc() . There's another example we know of similar to the above 
-> >> that
-> >> occurs during exit_mmap() (in zap_pte_range() specifically), but I 
-> >> need to
-> >> determine if this is still relevant today.
-> > 
-> 
-> > Sounds fairly serious but boy, we're late for 5.9.
-> > 
-> > I can queue it for 5.10 with a cc:stable so that it gets backported
-> > into earlier kernels a couple of months from now, if we think the
-> > seriousness justifies backporting(?).
-> > 
-> 
-> Queuing this seems like the best way to proceed
+> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.9-rc2
 
-I'd really prefer not.  It's very hacky and it isn't a fix - it's a
-likelihood-reducer.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f22c5579a7d600fa03f8c1d150cf78188f8709b6
 
-> > 
-> > And...  it really is a sad little patch, isn't it?  Instead of fixing
-> > the problem, it reduces the problem's probability by 5x.  Can't we do
-> > better than this?
-> 
-> I have one alternative in mind.  I have been able to review the 
-> exit_mmap()
-> case, so before proceeding, let's do a breakdown of the problem: we can
-> categorize the pinning issue we're trying to address here as being one 
-> of
-> (1) incrementing _refcount and getting context-switched out before
-> incrementing _mapcount (applies to forking a process / copy_one_pte()), 
-> and
-> (2) decrementing _mapcount and getting context-switched out before
-> decrementing _refcount (applies to tearing down a process / 
-> exit_mmap()).
-> So, one alternative would be to insert preempt_disable/enable() calls at
-> affected sites. So, for the copy_one_pte() pinning case, we could do the
-> following inside of copy_one_pte():
-> 
->          if (page) {
-> +               preempt_disable();
->                  get_page(page);
->                  page_dup_rmap(page, false);
-> +               preempt_enable();
->                  rss[mm_counter(page)]++;
->          }
+Thank you!
 
-This would make the retry loop much more reliable, and
-preempt_disable() is fast.  Such additions should be clearly commented
-(a bare preempt_disable() explains nothing).  Perhaps by wrapping the
-prerempt_disable() in a suitably-named wrapper function.
-
-But it's still really unpleasant.
-
-> 
-> The good thing about this patch is that it has been stable in our kernel
-> for four years (though for some SoCs we increased the retry counts).  
-
-That's discouraging!
-
-> One
-> thing to stress is that there are other instances of CMA page pinning, 
-> that
-> this patch isn't attempting to address.
-
-Oh.  How severe are these?
-
-> Please let me know if you're 
-> okay
-> with queuing this for the 5.10 merge window - if you are, I can add an
-> option to configure the number of retries, and will resend the patch 
-> once
-> the 5.9 merge window closes.
-
-Well.  Why not wait infinitely?  Because there are other sources of CMA
-page pinning, I guess.
-
-
-Could we take a sleeping lock on the exit_mmap() path and on the
-migration path?  So that the migration path automatically waits for
-the exact amount of time?
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
