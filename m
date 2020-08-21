@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03308C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED2EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D82F42075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2BA2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030945;
-	bh=rHHGcYV8JungSDFr7AkEIceiV4sani6jasI+xEnahjM=;
+	s=default; t=1598030952;
+	bh=G7Bxe3htfLyEMy8okKHuhNIpEbesWGNFyZOsNYvkWzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z27WzxLF3CrMtqb96Kk462cQxL7U+jHhCsrgdyL4/lLxDWWRdopw8Yo8VgQNDRoIC
-	 7RKHa5NThNkj9+G9QgiQSVN0913h3XR87Zs4jVm2xxM5g9VfaVQ0OVo+jyRyghzdrc
-	 VOfexY8kRqko6dvK+i3gop19NNJ8TSVx1/nr04Ww=
+	b=aP1JHPGmk5gw32YktGeWJ88R6Ul4U3RTBwcs6P481Bi+IgVEB+H7aETrRvgOxNpIm
+	 ZHfQcdQPNhcYo9VwiDsFjM25NI7hw01rbLX5BIse0t3pz8pIzpIQLoFRh6oz9WdUiQ
+	 g/zOZK8q19cwQ1WOMcqZI1wjc/Mq+D9oeGqmBjYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbgHUR3E (ORCPT
+        id S1727108AbgHUR3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:29:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46614 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:29:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727000AbgHUQOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:14:43 -0400
+        id S1725935AbgHUQOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:14:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C87322BEB;
-        Fri, 21 Aug 2020 16:14:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89AD62224D;
+        Fri, 21 Aug 2020 16:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026476;
-        bh=rHHGcYV8JungSDFr7AkEIceiV4sani6jasI+xEnahjM=;
+        s=default; t=1598026473;
+        bh=G7Bxe3htfLyEMy8okKHuhNIpEbesWGNFyZOsNYvkWzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y50jNDm//VJ/H4qksxejr7Gt3UQEJFpFu5qrJFMW8vD/7ueycwT8XpGnc3tChsqRG
-         qUHo2WNtlHYujs8C8k+RaJ5OkG6WYZLHu74kyNqwizwvCCsq7GRxmguPvrOeaXwjGD
-         t00YgxI/y2dGly9nMLCog9MWWZ/HfozCZO2jh+y8=
+        b=DiJ8AsxhFt693FsnMMHtLU/1FdZKpp9E4e6v2qkm1hfXSVsYL0U6k8ubOgoYK0cz0
+         fVuvvGJGiVV1lB0pTuIPXaFla2UOdYU+WA9UW6agoyyarl6iRq91fLc1KlRkbR0IyJ
+         MQhIoKlGuW8v4H1slSomda/EnIdaQj5WBjNKK8S0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.8 10/62] mfd: intel-lpss: Add Intel Emmitsburg PCH PCI IDs
-Date:   Fri, 21 Aug 2020 12:13:31 -0400
-Message-Id: <20200821161423.347071-10-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.8 07/62] ASoC: img: Fix a reference count leak in img_i2s_in_set_fmt
+Date:   Fri, 21 Aug 2020 12:13:28 -0400
+Message-Id: <20200821161423.347071-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -59,34 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 3ea2e4eab64cefa06055bb0541fcdedad4b48565 ]
+[ Upstream commit c4c59b95b7f7d4cef5071b151be2dadb33f3287b ]
 
-Intel Emmitsburg PCH has the same LPSS than Intel Ice Lake.
-Add the new IDs to the list of supported devices.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code, causing incorrect ref count if
+pm_runtime_put_noidle() is not called in error handling paths.
+Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Link: https://lore.kernel.org/r/20200614033749.2975-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/img/img-i2s-in.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index 046222684b8b2..17bcadc00a11c 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -201,6 +201,9 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x1ac4), (kernel_ulong_t)&bxt_info },
- 	{ PCI_VDEVICE(INTEL, 0x1ac6), (kernel_ulong_t)&bxt_info },
- 	{ PCI_VDEVICE(INTEL, 0x1aee), (kernel_ulong_t)&bxt_uart_info },
-+	/* EBG */
-+	{ PCI_VDEVICE(INTEL, 0x1bad), (kernel_ulong_t)&bxt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x1bae), (kernel_ulong_t)&bxt_uart_info },
- 	/* GLK */
- 	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&glk_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&glk_i2c_info },
+diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
+index e30b66b94bf67..0843235d73c91 100644
+--- a/sound/soc/img/img-i2s-in.c
++++ b/sound/soc/img/img-i2s-in.c
+@@ -343,8 +343,10 @@ static int img_i2s_in_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 	chan_control_mask = IMG_I2S_IN_CH_CTL_CLK_TRANS_MASK;
+ 
+ 	ret = pm_runtime_get_sync(i2s->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_noidle(i2s->dev);
+ 		return ret;
++	}
+ 
+ 	for (i = 0; i < i2s->active_channels; i++)
+ 		img_i2s_in_ch_disable(i2s, i);
 -- 
 2.25.1
 
