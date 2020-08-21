@@ -2,148 +2,227 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6144FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39187C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33260207CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09273207CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="itnoQ8Tt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lwozd2AP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgHUVqv (ORCPT
+        id S1726906AbgHUVq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:46:51 -0400
-Received: from mga04.intel.com ([192.55.52.120]:45583 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbgHUVqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:46:49 -0400
-IronPort-SDR: RrWd3yksRbcGz8ppRe8XZkCme6EbUZMXi60brHfbWUlPjKIXd7vvULEwMPDolBkXpviaV3izXA
- xOf5x6CDTMJg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="153051842"
-X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
-   d="scan'208";a="153051842"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 14:46:48 -0700
-IronPort-SDR: 5s+//9EVGKULGg3VsA7er3WDONJiJ0bpUSc9y75ZV52ENCcJ3LbmQ5l+stpyzZLW38RvBF9WPA
- v954bjGj5nmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
-   d="scan'208";a="401583587"
-Received: from fmsmsx602-2.cps.intel.com (HELO fmsmsx602.amr.corp.intel.com) ([10.18.84.212])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Aug 2020 14:46:48 -0700
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 21 Aug 2020 14:46:48 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 21 Aug 2020 14:46:48 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.177)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Fri, 21 Aug 2020 14:46:47 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JaLiBgsEf1Xx/07yIu/tScCDsDBm+xcyJLK4aehMjn+e+JJx1fjnEZ3EtO8t60w80PhgAZj34+ei37PLRXctcpB5eF2OEs5M09qmXeeQKDuO3x2Lwt2xrC9I3udpqNKF8Sogd4KV16+YvOYAqILyw+IKRqDFpzspCQJyqiIUE60Wm1SIqUdUSYVJhWk7odIISHQC9YM4A/WMN0w2WS66mv7e5DgRrNRg1n1Plcgl13gVVBiy7fRxELxpZ1aWkH9LW9kjcTIvI9oUWUVa1NzvtVu5xNyXsZuCOuO9xf14H7rZHIPacJd7ucEk7/3oV1AuvzH67jl7y7BDcF0iApQ/+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HvNOA85b8bLdWkLzFnmuI1wfPF81NY+x3XRdwATzboM=;
- b=EB229S5Kj53Z1Sr6fyWQUptz2zshTvfHsSIdX/68vIsxS1v4VDlpbaHQkCxxvJxzdDpnj2VcISzio8fmbGTyecZxHqBunB42w2t0ofx3WWkOqW1dZK4s92un/setsMzX+P+kvm9DeApS5ayvlvZXz0IC8zZXahEsZ4TGA9IlaVRe4P2v8o7LBi9N0Nmg7L6fdsaTFqOKsi8tSxzQabBLC/+TEqDt7bMc9XpztQNCDBSAhfjmLzGEd0H160vZMzJgp+XL5v74sc/PsaNdypk0Zsn4lllV2eXmogbMwsjhAd+ngiX0aGB+uEfyXxu/ezXlrBm1mPqPcDniCV6qygiivw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HvNOA85b8bLdWkLzFnmuI1wfPF81NY+x3XRdwATzboM=;
- b=itnoQ8Ttl4rPgHAnKJxrqKys1sJ+zm40yu+wCcr0PAahS8B8XMly1afTwMdL8ygUTHQ5HlMtztSoDocBQqtONvSR3KfHRhzhazNwg9sMhqO9xSl0zl3NS94N76SFgtp2HrEuFY8uI7OS/Nk75soX4E/pyxVDATeXNP9V5Zl16j4=
-Received: from BY5PR11MB4056.namprd11.prod.outlook.com (2603:10b6:a03:18c::17)
- by BY5PR11MB4338.namprd11.prod.outlook.com (2603:10b6:a03:1c8::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Fri, 21 Aug
- 2020 21:46:46 +0000
-Received: from BY5PR11MB4056.namprd11.prod.outlook.com
- ([fe80::b8cb:b59f:8cbb:75a7]) by BY5PR11MB4056.namprd11.prod.outlook.com
- ([fe80::b8cb:b59f:8cbb:75a7%6]) with mapi id 15.20.3283.027; Fri, 21 Aug 2020
- 21:46:46 +0000
-From:   "Bae, Chang Seok" <chang.seok.bae@intel.com>
-To:     Kyle Huey <me@kylehuey.com>
-CC:     Robert O'Callahan <rocallahan@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        Fri, 21 Aug 2020 17:46:59 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24723 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726867AbgHUVq4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 17:46:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598046413;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=1WdXRvG4bCNhwZSZkTWr9Rx/+hCL+T87J2kS4FEJuzY=;
+        b=Lwozd2APRza5SRfRvW0MISGY0Lb3Ey6GW0WP9xnKgnrLZ9kphdIVuiONDm6NMTAwv/0glm
+        9aI74GukoayvdkI8q4u03B1CPN4SySK6U7+as3jSwoyRiPIYn4svpWAuLp+Uph4F3Wa60o
+        og4JxcYNEf6wiweoH1+bCvTyGvaSa5g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-172-SAp0EwLqMC6y5pmLPLYV_Q-1; Fri, 21 Aug 2020 17:46:49 -0400
+X-MC-Unique: SAp0EwLqMC6y5pmLPLYV_Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 34F87801AB9;
+        Fri, 21 Aug 2020 21:46:44 +0000 (UTC)
+Received: from [10.36.112.5] (ovpn-112-5.ams2.redhat.com [10.36.112.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DE76410013D0;
+        Fri, 21 Aug 2020 21:46:34 +0000 (UTC)
+Subject: Re: [PATCH v4 00/23] device-dax: Support sub-dividing soft-reserved
+ ranges
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>
-Subject: Re: [REGRESSION] x86/cpu fsgsbase breaks TLS in 32 bit rr tracees on
- a 64 bit system
-Thread-Topic: [REGRESSION] x86/cpu fsgsbase breaks TLS in 32 bit rr tracees on
- a 64 bit system
-Thread-Index: AQHWd3V5K8M4bUeg6Em80I1SKO69L6lC/t2AgAAXcYCAAAPmAA==
-Date:   Fri, 21 Aug 2020 21:46:46 +0000
-Message-ID: <6758DBF1-D707-45B3-BA10-3621674DEBF8@intel.com>
-References: <CAP045Aq8+h6Y6t7W2GR_jJER5ghaHTH0wP81V-iYHxrR0Lk2vw@mail.gmail.com>
- <29FD0DDA-3093-46A3-BCF4-85DEC229E30D@intel.com>
- <CAP045AqiT75B9o5OV+SJT8uTzo7A55Y1BxjNcaSuxtm5EoAxaQ@mail.gmail.com>
-In-Reply-To: <CAP045AqiT75B9o5OV+SJT8uTzo7A55Y1BxjNcaSuxtm5EoAxaQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.120.23.2.1)
-authentication-results: kylehuey.com; dkim=none (message not signed)
- header.d=none;kylehuey.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [73.189.248.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 421d940e-2e59-4a51-6531-08d8461bb3a7
-x-ms-traffictypediagnostic: BY5PR11MB4338:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR11MB43388A9880CD782C1243CA1DD85B0@BY5PR11MB4338.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YYeFUq3xsLhlrlm4WmNnN+dhGUfvBtFRdiGMIuKa++ogXYdUG3JiGZYQ6q0vZvY11RxgpvkmkPJtRHyCFkktySC2XsQv/9Zojz4EZAnsAkb6S7pX9jFS75XW2UIJYTP8H9fnbuor8fyVft2pG77fq29L9qTAI62CSlw02GTqkKUz5mwO8TmNaz0zRNEbJ0iac7WNe78YkARRNYCo3oVwsVFZVzMTY6krhB9xlVu8qX/4I8xchfUufhH76YOzvgxd12IAERWCLDUvWdVlqEgILG3myL3cviiKbq1HhxqzP6iLiopB5n5rMbhK7RQd22UhgZ9Sdc5PXNpHvQlWtJy1kw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4056.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(39860400002)(396003)(366004)(71200400001)(8936002)(36756003)(8676002)(54906003)(6916009)(478600001)(33656002)(4326008)(86362001)(4744005)(53546011)(6506007)(5660300002)(66446008)(186003)(76116006)(2616005)(26005)(6486002)(6512007)(316002)(64756008)(66946007)(2906002)(66556008)(66476007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: CB/CAYQxOjrIFk1eaz6QkTyOBXikDUnxzipEEWsvvaxc4OeA6+71gqAJYZQF3ziMueZwVrpJhv8+KQ2KI3Fu/+LPfhIz51Zh46+2l+gm0l1TiqgZdrO1DOGtVfErlUkRqN5pxfhs4tqU9+bPQhFTK66IhxQxj44sN76DlEwNzQBAYIWTClZutcVgSy6huDSmNlNdhco1wcIo0GbxiotxXb6vgHpKsuTEez1rqaFC0iawXDn9QLtenRim5zVLoA6Mk0wU0roo09hhh3kTO4x4xl41pVUovPatsZBB6rk8QcYOKrGbpmp4wKQWDaASlZDw78DmWzXws6QSfMFW3dkI71MckYGRfDDs/10tngqxdRWwEfZ5CooFIkBsoelk1gS16KuELTKMFhG3qG2XtPeT0BaoginmvaDBo2zrm/EcIvc4JD8g0HlMIOykFRi5RL4rX8axfhT0Ntu9hBq9msLi44/atXiwL+Co+d+moWSA/Zw0SeK+wFBQ5WxSGig/y0q2yCohjyySd07sa0uOBkV4YL4hE0S3aXJRCYWhcZSDlbLSFFrb5PPkkKFlm8vJXptEpnc/KtnzVkKk0XzWeEsPuWiQNY8LzsyOsStUtQAOd1VQ9dqD+xcrUdDJkRIR5Uvbia3LPF81Vr0SAkvnCZs91A==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A3EE2BF901EDA34EADD737F16E347AA2@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jason Gunthorpe <jgg@mellanox.com>, Jia He <justin.he@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>
+References: <CAPcyv4gTJgZ0jM3oRM8Exs7MKwyNHF5yWNceAFrX7k8KfFcBig@mail.gmail.com>
+ <646DDE9B-90C2-493A-958C-90EFA1CCA475@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <6cee1e57-7b7e-f8b6-2c53-f913b18926c0@redhat.com>
+Date:   Fri, 21 Aug 2020 23:46:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4056.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 421d940e-2e59-4a51-6531-08d8461bb3a7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2020 21:46:46.4169
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yoe1/5eaNNSwr35SqwHlrxQLQCULrSuSJbcTx3UA4z3WV9H+O/yGph0/rDl/YIH4yzxN9dlQ9HwPdMtyz5cXtixetRLpbo8YVhSgPrX2tqU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4338
-X-OriginatorOrg: intel.com
+In-Reply-To: <646DDE9B-90C2-493A-958C-90EFA1CCA475@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 21.08.20 23:33, David Hildenbrand wrote:
+> 
+> 
+>> Am 21.08.2020 um 23:17 schrieb Dan Williams <dan.j.williams@intel.com>:
+>>
+>> ﻿On Fri, Aug 21, 2020 at 11:30 AM David Hildenbrand <david@redhat.com> wrote:
+>>>
+>>>> On 21.08.20 20:27, Dan Williams wrote:
+>>>> On Fri, Aug 21, 2020 at 3:15 AM David Hildenbrand <david@redhat.com> wrote:
+>>>>>
+>>>>>>>
+>>>>>>> 1. On x86-64, e820 indicates "soft-reserved" memory. This memory is not
+>>>>>>> automatically used in the buddy during boot, but remains untouched
+>>>>>>> (similar to pmem). But as it involves ACPI as well, it could also be
+>>>>>>> used on arm64 (-e820), correct?
+>>>>>>
+>>>>>> Correct, arm64 also gets the EFI support for enumerating memory this
+>>>>>> way. However, I would clarify that whether soft-reserved is given to
+>>>>>> the buddy allocator by default or not is the kernel's policy choice,
+>>>>>> "buddy-by-default" is ok and is what will happen anyways with older
+>>>>>> kernels on platforms that enumerate a memory range this way.
+>>>>>
+>>>>> Is "soft-reserved" then the right terminology for that? It sounds very
+>>>>> x86-64/e820 specific. Maybe a compressed for of "performance
+>>>>> differentiated memory" might be a better fit to expose to user space, no?
+>>>>
+>>>> No. The EFI "Specific Purpose" bit is an attribute independent of
+>>>> e820, it's x86-Linux that entangles those together. There is no
+>>>> requirement for platform firmware to use that designation even for
+>>>> drastic performance differentiation between ranges, and conversely
+>>>> there is no requirement that memory *with* that designation has any
+>>>> performance difference compared to the default memory pool. So it
+>>>> really is a reservation policy about a memory range to keep out of the
+>>>> buddy allocator by default.
+>>>
+>>> Okay, still "soft-reserved" is x86-64 specific, no?
+>>
+>> There's nothing preventing other EFI archs, or a similar designation
+>> in another firmware spec, picking up this policy.
+>>
+>>>  (AFAIK,
+>>> "soft-reserved" will be visible in /proc/iomem, or am I confusing
+>>> stuff?)
+>>
+>> No, you're correct.
+>>
+>>> IOW, it "performance differentiated" is not universally
+>>> applicable, maybe  "specific purpose memory" is ?
+>>
+>> Those bikeshed colors don't seem an improvement to me.
+>>
+>> "Soft-reserved" actually tells you something about the kernel policy
+>> for the memory. The criticism of "specific purpose" that led to
+>> calling it "soft-reserved" in Linux is the fact that "specific" is
+>> undefined as far as the firmware knows, and "specific" may have
+>> different applications based on the platform user. "Soft-reserved"
+>> like "Reserved" tells you that a driver policy might be in play for
+>> that memory.
+>>
+>> Also note that the current color of the bikeshed has already shipped since v5.5:
+>>
+>>   262b45ae3ab4 x86/efi: EFI soft reservation to E820 enumeration
+>>
+> 
+> I was asking because I was struggling to even understand what „soft-reserved“ is and I could bet most people have no clue what that is supposed to be.
+> 
+> In contrast „persistent memory“ or „special purpose memory“ in /proc/iomem is something normal (Linux using) human beings can understand.
 
-> On Aug 21, 2020, at 14:32, Kyle Huey <me@kylehuey.com> wrote:
->=20
-> 40c45904f818c1f6555294ca27afc5fda4f09e68 added magic for a 32 bit
-> tracer tracing a 32 bit tracee on a 64 bit kernel, but it looks like a
-> 64 bit tracer tracing a 32 bit tracee on a 64 bit kernel *is* now
-> expected to preserve the fs/gsbase values (or die, in our case).
->=20
-> Is that correct?
+s/normal/most/ , shouldn't be writing emails from my smartphone. Cheers!
 
-Correct.
 
+-- 
 Thanks,
-Chang
+
+David / dhildenb
+
