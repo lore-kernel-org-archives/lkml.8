@@ -7,31 +7,37 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8714EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071E5C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8FB208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF4EE22D04
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:50:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgHUIu3 (ORCPT
+        id S1728251AbgHUIud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:50:29 -0400
-Received: from mail.fireflyinternet.com ([77.68.26.236]:55722 "EHLO
+        Fri, 21 Aug 2020 04:50:33 -0400
+Received: from mail.fireflyinternet.com ([77.68.26.236]:55731 "EHLO
         fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728182AbgHUIu1 (ORCPT
+        with ESMTP id S1727868AbgHUIu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:50:27 -0400
+        Fri, 21 Aug 2020 04:50:28 -0400
 X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
 Received: from build.alporthouse.com (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP id 22195099-1500050 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP id 22195098-1500050 
         for multiple; Fri, 21 Aug 2020 09:50:15 +0100
 From:   Chris Wilson <chris@chris-wilson.co.uk>
 To:     linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org
 Cc:     linux-mm@kvack.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>
-Subject: [PATCH 3/4] drm/i915/gem: Use set_pte_at() for assigning the vmapped PTE
-Date:   Fri, 21 Aug 2020 09:50:10 +0100
-Message-Id: <20200821085011.28878-3-chris@chris-wilson.co.uk>
+        Pavel Machek <pavel@ucw.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Airlie <airlied@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>, stable@vger.kernel.org
+Subject: [PATCH 2/4] drm/i915/gem: Sync the vmap PTEs upon construction
+Date:   Fri, 21 Aug 2020 09:50:09 +0100
+Message-Id: <20200821085011.28878-2-chris@chris-wilson.co.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200821085011.28878-1-chris@chris-wilson.co.uk>
 References: <20200821085011.28878-1-chris@chris-wilson.co.uk>
@@ -42,60 +48,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use set_pte_at() to assign the PTE pointer returned by alloc_vm_area(),
-rather than a direct assignment.
+Since synchronising the PTE after assignment is a manual step, use the
+newly exported interface to flush the PTE after assigning via
+alloc_vm_area().
 
-Fixes: 6056e50033d9 ("drm/i915/gem: Support discontiguous lmem object maps")
+Reported-by: Pavel Machek <pavel@ucw.cz>
+References: 2ba3e6947aed ("mm/vmalloc: track which page-table levels were modified")
 Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Matthew Auld <matthew.auld@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: <stable@vger.kernel.org> # v5.8+
 ---
- drivers/gpu/drm/i915/gem/i915_gem_pages.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/i915/gem/i915_gem_pages.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/gpu/drm/i915/gem/i915_gem_pages.c b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-index 0fee67f34d74..6838cf9bdae6 100644
+index 7050519c87a4..0fee67f34d74 100644
 --- a/drivers/gpu/drm/i915/gem/i915_gem_pages.c
 +++ b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
-@@ -286,23 +286,34 @@ static void *i915_gem_object_map(struct drm_i915_gem_object *obj,
+@@ -304,6 +304,7 @@ static void *i915_gem_object_map(struct drm_i915_gem_object *obj,
+ 		for_each_sgt_daddr(addr, iter, sgt)
+ 			**ptes++ = iomap_pte(iomap, addr, pgprot);
  	}
++	flush_vm_area(area);
  
- 	if (i915_gem_object_has_struct_page(obj)) {
-+		unsigned long addr = (unsigned long)area->addr;
- 		struct sgt_iter iter;
- 		struct page *page;
- 		pte_t **ptes = mem;
- 
--		for_each_sgt_page(page, iter, sgt)
--			**ptes++ = mk_pte(page, pgprot);
-+		for_each_sgt_page(page, iter, sgt) {
-+			set_pte_at(&init_mm, addr, *ptes, mk_pte(page, pgprot));
-+			addr += PAGE_SIZE;
-+			ptes++;
-+		}
-+		GEM_BUG_ON(addr != (unsigned long)area->addr + obj->base.size);
- 	} else {
-+		unsigned long addr = (unsigned long)area->addr;
- 		resource_size_t iomap;
- 		struct sgt_iter iter;
- 		pte_t **ptes = mem;
--		dma_addr_t addr;
-+		dma_addr_t offset;
- 
- 		iomap = obj->mm.region->iomap.base;
- 		iomap -= obj->mm.region->region.start;
- 
--		for_each_sgt_daddr(addr, iter, sgt)
--			**ptes++ = iomap_pte(iomap, addr, pgprot);
-+		for_each_sgt_daddr(offset, iter, sgt) {
-+			set_pte_at(&init_mm, addr, *ptes,
-+				   iomap_pte(iomap, offset, pgprot));
-+			addr += PAGE_SIZE;
-+			ptes++;
-+		}
-+		GEM_BUG_ON(addr != (unsigned long)area->addr + obj->base.size);
- 	}
- 	flush_vm_area(area);
- 
+ 	if (mem != stack)
+ 		kvfree(mem);
 -- 
 2.20.1
 
