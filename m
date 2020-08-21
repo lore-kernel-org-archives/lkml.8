@@ -2,66 +2,95 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FEBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F15D5207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B492E207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:31:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Z+vwNJnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgHUJ3x (ORCPT
+        id S1728431AbgHUJbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:29:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53232 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbgHUJ3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:29:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C8EC9B189;
-        Fri, 21 Aug 2020 09:30:18 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id D6D5DDA730; Fri, 21 Aug 2020 11:28:44 +0200 (CEST)
-Date:   Fri, 21 Aug 2020 11:28:44 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Tong Zhang <ztong0001@gmail.com>
-Cc:     jikos@kernel.org, dsterba@suse.com, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tty: ipwireless: fix error handling
-Message-ID: <20200821092844.GB2026@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Tong Zhang <ztong0001@gmail.com>,
-        jikos@kernel.org, dsterba@suse.com, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, linux-kernel@vger.kernel.org
-References: <b360242d-f488-da51-9d47-36b2abdf90cd@kernel.org>
- <20200818160401.4736-1-ztong0001@gmail.com>
+        Fri, 21 Aug 2020 05:31:11 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:3227 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725965AbgHUJbK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 05:31:10 -0400
+X-UUID: f4295ce883d44d24b6e236211704ced1-20200821
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=CzHYYkmPwpQ2AhKcg65BgQbtfesFRKYUwxvX0kNJpAM=;
+        b=Z+vwNJnJh0nwVwgVSj9g3M3ZE4gowtox6pVfQ0ckqWPUsVnD4KV0yh/WUHGQy/YhXvKEc3j14+9COxECsIA3O1JfHuHkCSwj8L4CHyVTbeRrvH422yeC0HO8664hFof6UTwRjn9MqkCt9ZhLHZGExE+Wv6CsMPSy2jmDwH62hAA=;
+X-UUID: f4295ce883d44d24b6e236211704ced1-20200821
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 113662065; Fri, 21 Aug 2020 17:31:05 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 21 Aug 2020 17:31:02 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 21 Aug 2020 17:31:02 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH 1/2] dt-bindings: spmi: document binding for the Mediatek SPMI controller
+Date:   Fri, 21 Aug 2020 17:30:59 +0800
+Message-ID: <1598002260-12724-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 2.6.4
+In-Reply-To: <1598002260-12724-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <1598002260-12724-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818160401.4736-1-ztong0001@gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:03:58PM -0400, Tong Zhang wrote:
-> ipwireless_send_packet() can only return 0 on success and -ENOMEM on
-> error, the caller should check non zero for error condition
+VGhpcyBhZGRzIGRvY3VtZW50YXRpb24gZm9yIHRoZSBTUE1JIGNvbnRyb2xsZXIgZm91bmQgb24g
+TWVkaWF0ZWsgU29Dcy4NCg0KU2lnbmVkLW9mZi1ieTogSHNpbi1Ic2l1bmcgV2FuZyA8aHNpbi1o
+c2l1bmcud2FuZ0BtZWRpYXRlay5jb20+DQotLS0NCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+cG1pL3NwbWktbXRrLXBtaWYudHh0ICAgICB8IDMzICsrKysrKysrKysrKysrKysrKysrKysNCiAx
+IGZpbGUgY2hhbmdlZCwgMzMgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BtaS9zcG1pLW10ay1wbWlmLnR4dA0KDQpk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwbWkvc3BtaS1t
+dGstcG1pZi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BtaS9zcG1p
+LW10ay1wbWlmLnR4dA0KbmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAuLjc1YTBl
+ZWINCi0tLSAvZGV2L251bGwNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9zcG1pL3NwbWktbXRrLXBtaWYudHh0DQpAQCAtMCwwICsxLDMzIEBADQorTWVkaWF0ZWsgU1BN
+SSBDb250cm9sbGVyDQorDQorVGhpcyBkb2N1bWVudCBkZXNjcmliZXMgdGhlIGJpbmRpbmcgZm9y
+IHRoZSBNZWRpYVRlayBTUE1JIGNvbnRyb2xsZXIuDQorDQorT24gTWVkaWFUZWsgU29DcyB0aGUg
+UE1JQyBpcyBjb25uZWN0ZWQgdmlhIFNQTUkgYW5kIHRoZSBjb250cm9sbGVyIGFsbG93cw0KK2Zv
+ciBtdWx0aXBsZSBTb0NzIHRvIGNvbnRyb2wgYSBzaW5nbGUgU1BNSSBtYXN0ZXIuDQorDQorUmVx
+dWlyZWQgcHJvcGVydGllczoNCistIGNvbXBhdGlibGUgOiAibWVkaWF0ZWssbXQ2ODczLXNwbWki
+Lg0KKy0gcmVnLW5hbWVzICA6IG11c3QgY29udGFpbjoNCisgICAgICJwbWlmIiAtIHBtaWYgcmVn
+aXN0ZXJzDQorICAgICAic3BtaW1zdCIgLSBzcG1pIGNvbnRyb2xsZXIgcmVnaXN0ZXJzDQorLSBy
+ZWc6IE11c3QgY29udGFpbiBhbiBlbnRyeSBmb3IgZWFjaCBlbnRyeSBpbiByZWctbmFtZXMuDQor
+LSBjbG9jay1uYW1lczogTXVzdCBpbmNsdWRlIHRoZSBmb2xsb3dpbmcgZW50cmllczoNCisgICJw
+bWlmX3N5c19jayI6IHBtaWYgc3lzdGVtIGNsb2NrDQorICAicG1pZl90bXJfY2siOiBwbWlmIHRp
+bWVyIGNsb2NrDQorICAic3BtaW1zdF9jbGtfbXV4Ijogc3BtaSBtYXN0ZXIgY2xrIG11eA0KKy0g
+Y2xvY2tzOiBNdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2ggZW50cnkgaW4gY2xvY2stbmFt
+ZXMuDQorDQorRXhhbXBsZToNCisNCisJc3BtaTogc3BtaUAxMDAyNzAwMCB7DQorCQljb21wYXRp
+YmxlID0gIm1lZGlhdGVrLG10Njg3My1zcG1pIjsNCisJCXJlZyA9IDwwIDB4MTAwMjcwMDAgMCAw
+eDAwMGUwMD4sDQorCQkgICAgICA8MCAweDEwMDI5MDAwIDAgMHgwMDAxMDA+Ow0KKwkJcmVnLW5h
+bWVzID0gInBtaWYiLCAic3BtaW1zdCI7DQorCQljbG9ja3MgPSA8JmluZnJhY2ZnIENMS19JTkZS
+QV9QTUlDX0FQPiwNCisJCQkgPCZpbmZyYWNmZyBDTEtfSU5GUkFfUE1JQ19UTVI+LA0KKwkJCSA8
+JnRvcGNrZ2VuIENMS19UT1BfU1BNSV9NU1RfU0VMPjsNCisJCWNsb2NrLW5hbWVzID0gInBtaWZf
+c3lzX2NrIiwNCisJCQkgICAgICAicG1pZl90bXJfY2siLA0KKwkJCSAgICAgICJzcG1pbXN0X2Ns
+a19tdXgiOw0KKwl9Ow0KLS0gDQoyLjYuNA0K
 
-Thanks.
-
-Acked-by: David Sterba <dsterba@suse.com>
-
----
-> v2: - According to Jiri's comment, I made the checking consistent with
-> the rest of the kernel. I also rebased the code using f684668a24ec.
-> Thank you Jiri!
----
-
-This paragraph should not be in the changelog. The patches to ipwireless
-go via Greg's tree, please send an updated v3 so he can just apply that
-without further edits.  Thanks.
