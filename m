@@ -2,161 +2,109 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDE6C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E69D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9DB4207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C996B207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgHUIzv (ORCPT
+        id S1728208AbgHUI4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:55:51 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2681 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726243AbgHUIzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:55:50 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id E386C4B18AC1B04972AA;
-        Fri, 21 Aug 2020 09:55:48 +0100 (IST)
-Received: from localhost (10.52.123.86) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Fri, 21 Aug
- 2020 09:55:47 +0100
-Date:   Fri, 21 Aug 2020 09:54:14 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <rafael@kernel.org>,
-        <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Brice Goglin" <Brice.Goglin@inria.fr>,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>,
-        <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v9 2/6] x86: Support Generic Initiator only proximity
- domains
-Message-ID: <20200821095414.00004559@Huawei.com>
-In-Reply-To: <20200820222433.GA1571517@bjorn-Precision-5520>
-References: <20200819145111.1715026-3-Jonathan.Cameron@huawei.com>
-        <20200820222433.GA1571517@bjorn-Precision-5520>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 21 Aug 2020 04:56:11 -0400
+Received: from thoth.sbs.de ([192.35.17.2]:56601 "EHLO thoth.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726243AbgHUI4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 04:56:08 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id 07L8t3Ls009097
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 10:55:03 +0200
+Received: from [167.87.31.209] ([167.87.31.209])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 07L8t0nk008339;
+        Fri, 21 Aug 2020 10:55:00 +0200
+Subject: Re: [PATCH 0/2][next] update gdb scripts for lockless printk
+ ringbuffer
+To:     Petr Mladek <pmladek@suse.com>,
+        John Ogness <john.ogness@linutronix.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org
+References: <20200814212525.6118-1-john.ogness@linutronix.de>
+ <20200821080813.GM4353@alley>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <d81e8b0d-fa7f-1da1-671f-0541b94ad349@siemens.com>
+Date:   Fri, 21 Aug 2020 10:55:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <20200821080813.GM4353@alley>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.123.86]
-X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 17:24:33 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> On Wed, Aug 19, 2020 at 10:51:07PM +0800, Jonathan Cameron wrote:
-> > In common with memoryless domains we only register GI domains
-> > if the proximity node is not online. If a domain is already
-> > a memory containing domain, or a memoryless domain there is
-> > nothing to do just because it also contains a Generic Initiator.
-> > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> >  arch/x86/include/asm/numa.h |  2 ++
-> >  arch/x86/kernel/setup.c     |  1 +
-> >  arch/x86/mm/numa.c          | 14 ++++++++++++++
-> >  3 files changed, 17 insertions(+)
-> > 
-> > diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
-> > index bbfde3d2662f..f631467272a3 100644
-> > --- a/arch/x86/include/asm/numa.h
-> > +++ b/arch/x86/include/asm/numa.h
-> > @@ -62,12 +62,14 @@ extern void numa_clear_node(int cpu);
-> >  extern void __init init_cpu_to_node(void);
-> >  extern void numa_add_cpu(int cpu);
-> >  extern void numa_remove_cpu(int cpu);
-> > +extern void init_gi_nodes(void);
-> >  #else	/* CONFIG_NUMA */
-> >  static inline void numa_set_node(int cpu, int node)	{ }
-> >  static inline void numa_clear_node(int cpu)		{ }
-> >  static inline void init_cpu_to_node(void)		{ }
-> >  static inline void numa_add_cpu(int cpu)		{ }
-> >  static inline void numa_remove_cpu(int cpu)		{ }
-> > +static inline void init_gi_nodes(void)			{ }
-> >  #endif	/* CONFIG_NUMA */
-> >  
-> >  #ifdef CONFIG_DEBUG_PER_CPU_MAPS
-> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > index 3511736fbc74..9062c146f03a 100644
-> > --- a/arch/x86/kernel/setup.c
-> > +++ b/arch/x86/kernel/setup.c
-> > @@ -1218,6 +1218,7 @@ void __init setup_arch(char **cmdline_p)
-> >  	prefill_possible_map();
-> >  
-> >  	init_cpu_to_node();
-> > +	init_gi_nodes();
-> >  
-> >  	io_apic_init_mappings();
-> >  
-> > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> > index aa76ec2d359b..fc630dc6764e 100644
-> > --- a/arch/x86/mm/numa.c
-> > +++ b/arch/x86/mm/numa.c
-> > @@ -747,6 +747,20 @@ static void __init init_memory_less_node(int nid)
-> >  	 */
-> >  }
-> >  
-> > +/*
-> > + * Generic Initiator Nodes may have neither CPU nor Memory.
-> > + * At this stage if either of the others were present we would
-> > + * already be online.
-> > + */
-> > +void __init init_gi_nodes(void)
-> > +{
-> > +	int nid;
-> > +
-> > +	for_each_node_state(nid, N_GENERIC_INITIATOR)
-> > +		if (!node_online(nid))
-> > +			init_memory_less_node(nid);
-> > +}  
+On 21.08.20 10:08, Petr Mladek wrote:
+> On Fri 2020-08-14 23:31:23, John Ogness wrote:
+>> Hi,
+>>
+>> When we brought in the new lockless printk ringbuffer, we overlooked the gdb
+>> scripts. Here are a set of patches to implement gdb support for the new
+>> ringbuffer.
+>>
+>> John Ogness (2):
+>>   scripts/gdb: add utils.read_ulong()
+>>   scripts/gdb: update for lockless printk ringbuffer
 > 
-> This doesn't *look* very x86-specific, and apparently you don't need
-> any arm64-specific changes?  Too bad this can't be unified a little
-> bit to remove the arch #ifdefs completely.
-
-The only ifdefs in the set aren't actually about this (which is entirely
-contained in arch code) they are to avoid ia64 issues as has an entirely
-different implementation that I doubt anyone wants to touch!
-
+> I am not fluent in the gdb macros and python so I did not try any
+> deep review. But both patches work for me:
 > 
-> I do see that init_memory_less_node() is only implemented on x86, but
-> it just seems like all this might not be inherently be arch-specific.
+> Tested-by: Petr Mladek <pmladek@suse.com>
+> 
+> I am going to give it few more days before pushing just in case there is
+> another feedback.
+> 
 
-I absolutely agree with a long term aim to unify the numa setup code
-across architectures.
+Thanks, perfect!
 
-The x86 code is rather more involved than what we have for arm64. On arm64,
-memoryless nodes are handled in the same pass as those with memory (and
-we get GI nodes for free).
+> Best Regards,
+> Petr
+> 
+> BTW: Are you aware of https://github.com/crash-python/crash-python project?
+>      The ambition is to implement "crash" features and even more into
+>      gdb using python extensions. It similar approach like
+>      scripts/gdb/
+> 
+>      crash-python is being developed sporadically in waves. It is
+>      mostly during a week that is dedicated for such projects
+>      at SUSE. It would be great to get more contributors.
+> 
 
-There are some separate patches under discussion that take a few steps
-in that direction.
+The problem with all those out-of-tree kernel debugging projects is that
+they are even further away from the changes in upstream they need to
+adjust to over and over again. It's already hard for scripts/gdb to keep
+up as only few people are aware of the dependencies, and it's always
+easy to forget. But it's getting better and better here IMHO. And that
+was my idea behind pushing things into upstream.
 
-https://lore.kernel.org/linux-arm-kernel/20200814214725.28818-3-atish.patra@wdc.com/T/
-https://patchwork.kernel.org/patch/11651437/ (this one is mostly by coincidence rather
-than intent!)
+Jan
 
-Jonathan
-
-
-
-
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
