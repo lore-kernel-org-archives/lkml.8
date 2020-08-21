@@ -2,195 +2,80 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23426C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B467420732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBDB1207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:00:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="akR/dH1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgHUF4y (ORCPT
+        id S1726757AbgHUGAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 01:56:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:54404 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgHUF4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 01:56:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B53D31B;
-        Thu, 20 Aug 2020 22:56:52 -0700 (PDT)
-Received: from net-arm-thunderx2-02.shanghai.arm.com (net-arm-thunderx2-02.shanghai.arm.com [10.169.210.119])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C76BF3F6CF;
-        Thu, 20 Aug 2020 22:56:50 -0700 (PDT)
-From:   Jianlin Lv <Jianlin.Lv@arm.com>
-To:     netdev@vger.kernel.org
-Cc:     davem@davemloft.net, kuba@kernel.org, Jianlin.Lv@arm.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] net: remove redundant variable in vxlan_xmit_one
-Date:   Fri, 21 Aug 2020 13:56:36 +0800
-Message-Id: <20200821055636.59937-1-Jianlin.Lv@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 21 Aug 2020 02:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbgHUGAh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 02:00:37 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68CF7C061385;
+        Thu, 20 Aug 2020 23:00:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=HWB+/2Nt9PlJumw2ZEaPgdNpFexNYVi38bcYSvOU2wU=; b=akR/dH1A9l7PREYPjibZXxeJbz
+        TrcKAjIO6AOtnVfb5cHo3RKx2gWnUbdO5lLIITlStex6gUJgbL6sqMtxHdjMUiCLsIX2rgN61DQ7+
+        UAdQL9cDNQb7Sd8opb/ZpCj0XKBVhvMmcETK7Hv4PmSrwOZLkZATxZDccz+CpFV6Uf2tDAhtV9gfE
+        gbgOkAylwCl5+4KrLdRVjVjue6PHzzzV2fq0P6U42KJB+lM9rwCliZbw5ELAUb+yXWAOLBsrAh4xM
+        HZHod7MHQzZVAErqRD8kzJRNJQNR8D8XJN/H0efFvmFI3AoOo+EWAvS6smimAc3281j/TV05ukiVg
+        dKRsysew==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k906E-0008LC-1n; Fri, 21 Aug 2020 06:00:26 +0000
+Date:   Fri, 21 Aug 2020 07:00:25 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>, hch@infradead.org,
+        darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        willy@infradead.org
+Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
+Message-ID: <20200821060025.GA31091@infradead.org>
+References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
+ <20200820231140.GE7941@dread.disaster.area>
+ <20200821044533.BBFD1A405F@d06av23.portsmouth.uk.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821044533.BBFD1A405F@d06av23.portsmouth.uk.ibm.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dst/src is used multiple times in vxlan_xmit_one function as the variable
-name, although its scope is different, but it reduces the readability and
-it is unnecessary to use intermediate variables here;
-This patch reduces unnecessary assignments and removes redundant variables
+On Fri, Aug 21, 2020 at 10:15:33AM +0530, Ritesh Harjani wrote:
+> Please correct me here, but as I see, bio has only these two limits
+> which it checks for adding page to bio. It doesn't check for limits
+> of /sys/block/<dev>/queue/* no? I guess then it could be checked
+> by block layer below b4 submitting the bio?
 
-Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
----
- drivers/net/vxlan.c | 40 +++++++++++++++-------------------------
- 1 file changed, 15 insertions(+), 25 deletions(-)
+The bio does not, but the blk-mq code will split the bios when mapping
+it to requests, take a look at blk_mq_submit_bio and __blk_queue_split.
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index b9fefe27e3e8..679260e1d9f1 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -2597,7 +2597,6 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 	struct ip_tunnel_info *info;
- 	struct vxlan_dev *vxlan = netdev_priv(dev);
- 	const struct iphdr *old_iph = ip_hdr(skb);
--	union vxlan_addr *dst;
- 	union vxlan_addr remote_ip, local_ip;
- 	struct vxlan_metadata _md;
- 	struct vxlan_metadata *md = &_md;
-@@ -2614,8 +2613,8 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 	info = skb_tunnel_info(skb);
- 
- 	if (rdst) {
--		dst = &rdst->remote_ip;
--		if (vxlan_addr_any(dst)) {
-+		remote_ip = rdst->remote_ip;
-+		if (vxlan_addr_any(&remote_ip)) {
- 			if (did_rsc) {
- 				/* short-circuited back to local bridge */
- 				vxlan_encap_bypass(skb, vxlan, vxlan,
-@@ -2635,7 +2634,7 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 			ttl = ip_tunnel_get_ttl(old_iph, skb);
- 		} else {
- 			ttl = vxlan->cfg.ttl;
--			if (!ttl && vxlan_addr_multicast(dst))
-+			if (!ttl && vxlan_addr_multicast(&remote_ip))
- 				ttl = 1;
- 		}
- 
-@@ -2643,7 +2642,7 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 		if (tos == 1)
- 			tos = ip_tunnel_get_dsfield(old_iph, skb);
- 
--		if (dst->sa.sa_family == AF_INET)
-+		if (remote_ip.sa.sa_family == AF_INET)
- 			udp_sum = !(flags & VXLAN_F_UDP_ZERO_CSUM_TX);
- 		else
- 			udp_sum = !(flags & VXLAN_F_UDP_ZERO_CSUM6_TX);
-@@ -2662,7 +2661,6 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 			remote_ip.sin6.sin6_addr = info->key.u.ipv6.dst;
- 			local_ip.sin6.sin6_addr = info->key.u.ipv6.src;
- 		}
--		dst = &remote_ip;
- 		dst_port = info->key.tp_dst ? : vxlan->cfg.dst_port;
- 		vni = tunnel_id_to_key32(info->key.tun_id);
- 		ifindex = 0;
-@@ -2681,7 +2679,7 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 				     vxlan->cfg.port_max, true);
- 
- 	rcu_read_lock();
--	if (dst->sa.sa_family == AF_INET) {
-+	if (remote_ip.sa.sa_family == AF_INET) {
- 		struct vxlan_sock *sock4 = rcu_dereference(vxlan->vn4_sock);
- 		struct rtable *rt;
- 		__be16 df = 0;
-@@ -2690,7 +2688,7 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 			ifindex = sock4->sock->sk->sk_bound_dev_if;
- 
- 		rt = vxlan_get_route(vxlan, dev, sock4, skb, ifindex, tos,
--				     dst->sin.sin_addr.s_addr,
-+				     remote_ip.sin.sin_addr.s_addr,
- 				     &local_ip.sin.sin_addr.s_addr,
- 				     dst_port, src_port,
- 				     dst_cache, info);
-@@ -2701,7 +2699,7 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 
- 		if (!info) {
- 			/* Bypass encapsulation if the destination is local */
--			err = encap_bypass_if_local(skb, dev, vxlan, dst,
-+			err = encap_bypass_if_local(skb, dev, vxlan, &remote_ip,
- 						    dst_port, ifindex, vni,
- 						    &rt->dst, rt->rt_flags);
- 			if (err)
-@@ -2728,12 +2726,8 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 			goto tx_error;
- 		} else if (err) {
- 			if (info) {
--				struct in_addr src, dst;
--
--				src = remote_ip.sin.sin_addr;
--				dst = local_ip.sin.sin_addr;
--				info->key.u.ipv4.src = src.s_addr;
--				info->key.u.ipv4.dst = dst.s_addr;
-+				info->key.u.ipv4.src = remote_ip.sin.sin_addr.s_addr;
-+				info->key.u.ipv4.dst = local_ip.sin.sin_addr.s_addr;
- 			}
- 			vxlan_encap_bypass(skb, vxlan, vxlan, vni, false);
- 			dst_release(ndst);
-@@ -2748,7 +2742,7 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 			goto tx_error;
- 
- 		udp_tunnel_xmit_skb(rt, sock4->sock->sk, skb, local_ip.sin.sin_addr.s_addr,
--				    dst->sin.sin_addr.s_addr, tos, ttl, df,
-+				    remote_ip.sin.sin_addr.s_addr, tos, ttl, df,
- 				    src_port, dst_port, xnet, !udp_sum);
- #if IS_ENABLED(CONFIG_IPV6)
- 	} else {
-@@ -2758,7 +2752,7 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 			ifindex = sock6->sock->sk->sk_bound_dev_if;
- 
- 		ndst = vxlan6_get_route(vxlan, dev, sock6, skb, ifindex, tos,
--					label, &dst->sin6.sin6_addr,
-+					label, &remote_ip.sin6.sin6_addr,
- 					&local_ip.sin6.sin6_addr,
- 					dst_port, src_port,
- 					dst_cache, info);
-@@ -2771,7 +2765,7 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 		if (!info) {
- 			u32 rt6i_flags = ((struct rt6_info *)ndst)->rt6i_flags;
- 
--			err = encap_bypass_if_local(skb, dev, vxlan, dst,
-+			err = encap_bypass_if_local(skb, dev, vxlan, &remote_ip,
- 						    dst_port, ifindex, vni,
- 						    ndst, rt6i_flags);
- 			if (err)
-@@ -2784,12 +2778,8 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 			goto tx_error;
- 		} else if (err) {
- 			if (info) {
--				struct in6_addr src, dst;
--
--				src = remote_ip.sin6.sin6_addr;
--				dst = local_ip.sin6.sin6_addr;
--				info->key.u.ipv6.src = src;
--				info->key.u.ipv6.dst = dst;
-+				info->key.u.ipv6.src = remote_ip.sin6.sin6_addr;
-+				info->key.u.ipv6.dst = local_ip.sin6.sin6_addr;
- 			}
- 
- 			vxlan_encap_bypass(skb, vxlan, vxlan, vni, false);
-@@ -2807,7 +2797,7 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 
- 		udp_tunnel6_xmit_skb(ndst, sock6->sock->sk, skb, dev,
- 				     &local_ip.sin6.sin6_addr,
--				     &dst->sin6.sin6_addr, tos, ttl,
-+				     &remote_ip.sin6.sin6_addr, tos, ttl,
- 				     label, src_port, dst_port, !udp_sum);
- #endif
- 	}
--- 
-2.17.1
+But while the default limits are quite low, they can be increased
+siginificantly, which tends to help with performance and is often
+also done by scripts shipped by the distributions.
 
+> This issue was first observed while running a fio run on a system with
+> huge memory. But then here is an easy way we figured out to trigger the
+> issue almost everytime with loop device on my VM setup. I have provided
+> all the details on this below.
+
+Can you wire this up for xfstests?
