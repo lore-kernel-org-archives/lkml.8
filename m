@@ -2,218 +2,79 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A732C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E121DC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD1B12076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:27:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HFG0wtmb"
+	by mail.kernel.org (Postfix) with ESMTP id B509420738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598048887;
+	bh=wlABeF2wHRGKFWcrW1qcmJlOxJFFx4ELaysDi+OGuaI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=buzxr7MpDAc/dt/mFwCHQW4peyPZf3PqjkIy6RPUFkJIaMLj5btleCuCkpiW10yR2
+	 sx5fs1faq8mHOhYew3eou/rcgSlEJJrzQZzZYifTma7U4PbYLHAcaRcHm6dpfUeW+z
+	 4MYbCWVDrhH64mqU6JBDTsTum82dx8+0v9B/oZlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgHUW1j (ORCPT
+        id S1727805AbgHUW2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:27:39 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:38559 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgHUW1i (ORCPT
+        Fri, 21 Aug 2020 18:28:06 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41267 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726848AbgHUW2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:27:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598048857; x=1629584857;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=pnNXSAi218kX4gixFJtZ3Iig1xRXyX/Xb2Q2WiRjc+w=;
-  b=HFG0wtmbk7Tj/C5tVa4u5QW79GpfD7XtRwd1gPEw1xihzWbTiTJtLL6A
-   U6sb4IFgazJVXraM5ewAs6iI1ryi0q7aL0PdPe8zWOy+CA4ADCiMy3WLB
-   kNK5QeV/ZUKtSjwA8irfL9TCn6ZcBN6I7Lsc8hnxJMlc+5ZNizJIKC9wh
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.76,338,1592870400"; 
-   d="scan'208";a="49306994"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-579b7f5b.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 21 Aug 2020 22:27:34 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-579b7f5b.us-west-2.amazon.com (Postfix) with ESMTPS id AA474A2B36;
-        Fri, 21 Aug 2020 22:27:32 +0000 (UTC)
-Received: from EX13D05UWB003.ant.amazon.com (10.43.161.26) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 21 Aug 2020 22:27:26 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D05UWB003.ant.amazon.com (10.43.161.26) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 21 Aug 2020 22:27:25 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Fri, 21 Aug 2020 22:27:25 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id E96BE40362; Fri, 21 Aug 2020 22:27:25 +0000 (UTC)
-Date:   Fri, 21 Aug 2020 22:27:25 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
-        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
-        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
-        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
-        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>
-Subject: [PATCH v3 04/11] x86/xen: add system core suspend and resume
- callbacks
-Message-ID: <6b86a4bf71ee3e3e9b0bb00f594a4edc85da19a9.1598042152.git.anchalag@amazon.com>
-References: <cover.1598042152.git.anchalag@amazon.com>
+        Fri, 21 Aug 2020 18:28:06 -0400
+Received: by mail-io1-f66.google.com with SMTP id m23so2653142iol.8;
+        Fri, 21 Aug 2020 15:28:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mzaI9sAfILdFuQlpBeNIrRuh+tzXLS66g4kfINbIeTc=;
+        b=q2rweMEQmzYPVWzvPAfZS7IH7uKSZhUSFZw43A83w7SKVaYG0sqYjgoqDA2tXJNsrA
+         zgNEm93P+DCpcQUzRqpL32ow1ONA8eZqTaYWmtXUHw8xy8DXTcmVR9aHM7F5J3hdthDE
+         TlFF7anIdaX//NkoCxWkf+SmBpl83W+7wsGIeeBoFlPcAm7WpoRSTHpvpuBYI11m+FPf
+         MBO5F9Bqc+3RpqJwlhxO24VDQcRjaoKdXw+KrULmB4QmskBfufHi7vfT1Z9R50D5CVLu
+         w57CywtS9m+5b9vMd9RPgRh6n6b0rto3aDbzti2dOHZPm9VB7gXx7tGarzK6M3RFu46i
+         wrrQ==
+X-Gm-Message-State: AOAM530lr2Y8CbuqF912vx47zfhmvk4d9TWmOgzP5RN3sAUrjLz60dkt
+        /9jC+/rluc9KycANwS/IUw==
+X-Google-Smtp-Source: ABdhPJxMNUycBKYVIrQkrb7DSHaYpXi7X7D27/OGPkK+s7+NskTrfg6aPBxmpAd9eaq2f16bIJmYPw==
+X-Received: by 2002:a05:6638:214d:: with SMTP id z13mr4643568jaj.7.1598048885479;
+        Fri, 21 Aug 2020 15:28:05 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id 3sm2102716ily.31.2020.08.21.15.28.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 15:28:04 -0700 (PDT)
+Received: (nullmailer pid 1829396 invoked by uid 1000);
+        Fri, 21 Aug 2020 22:28:04 -0000
+Date:   Fri, 21 Aug 2020 16:28:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: vendor-prefixes: Remove trailing whitespace
+Message-ID: <20200821222804.GA1829240@bogus>
+References: <20200819092058.1526-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1598042152.git.anchalag@amazon.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200819092058.1526-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Munehisa Kamata <kamatam@amazon.com>
+On Wed, 19 Aug 2020 11:20:58 +0200, Geert Uytterhoeven wrote:
+> Fixes: f516fb704d02fff2 ("dt-bindings: Whitespace clean-ups in schema files")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Add Xen PVHVM specific system core callbacks for PM
-hibernation support. The callbacks suspend and resume
-Xen primitives like shared_info, pvclock and grant table.
-These syscore_ops are specifically for domU hibernation.
-xen_suspend() calls syscore_suspend() during Xen suspend
-operation however, during xen suspend lock_system_sleep()
-lock is taken and thus system cannot trigger hibernation.
-These system core callbacks will be called only from the
-hibernation context.
-
-[Anchal Agarwal: Changelog]:
-v1->v2: Edit commit message
-        Fixed syscore_suspend() to call gnntab_suspend
-        Removed suspend mode check in syscore_suspend()/
-        syscore_resume()
-v2->v3: Re-introduced check for xen suspend mode to avoid
-        syscore osp callbacks getting executed during xen
-	suspend/resume
-
-Signed-off-by: Agarwal Anchal <anchalag@amazon.com>
-Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
----
- arch/x86/xen/enlighten_hvm.c |  1 +
- arch/x86/xen/suspend.c       | 55 ++++++++++++++++++++++++++++++++++++++++++++
- include/xen/xen-ops.h        |  2 ++
- 3 files changed, 58 insertions(+)
-
-diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
-index ff7c69278f63..4b6ad30106dd 100644
---- a/arch/x86/xen/enlighten_hvm.c
-+++ b/arch/x86/xen/enlighten_hvm.c
-@@ -216,6 +216,7 @@ static void __init xen_hvm_guest_init(void)
- 	if (xen_feature(XENFEAT_hvm_callback_vector))
- 		xen_have_vector_callback = 1;
- 
-+	xen_setup_syscore_ops();
- 	xen_hvm_smp_init();
- 	WARN_ON(xen_cpuhp_setup(xen_cpu_up_prepare_hvm, xen_cpu_dead_hvm));
- 	xen_unplug_emulated_devices();
-diff --git a/arch/x86/xen/suspend.c b/arch/x86/xen/suspend.c
-index 1d83152c761b..550aa0fc9465 100644
---- a/arch/x86/xen/suspend.c
-+++ b/arch/x86/xen/suspend.c
-@@ -2,17 +2,22 @@
- #include <linux/types.h>
- #include <linux/tick.h>
- #include <linux/percpu-defs.h>
-+#include <linux/syscore_ops.h>
-+#include <linux/kernel_stat.h>
- 
- #include <xen/xen.h>
- #include <xen/interface/xen.h>
-+#include <xen/interface/memory.h>
- #include <xen/grant_table.h>
- #include <xen/events.h>
-+#include <xen/xen-ops.h>
- 
- #include <asm/cpufeatures.h>
- #include <asm/msr-index.h>
- #include <asm/xen/hypercall.h>
- #include <asm/xen/page.h>
- #include <asm/fixmap.h>
-+#include <asm/pvclock.h>
- 
- #include "xen-ops.h"
- #include "mmu.h"
-@@ -82,3 +87,53 @@ void xen_arch_suspend(void)
- 
- 	on_each_cpu(xen_vcpu_notify_suspend, NULL, 1);
- }
-+
-+static int xen_syscore_suspend(void)
-+{
-+	struct xen_remove_from_physmap xrfp;
-+	int ret;
-+
-+	/* Xen suspend does similar stuffs in its own logic */
-+	if (is_xen_suspend())
-+		return 0;
-+
-+	gnttab_suspend();
-+
-+	xrfp.domid = DOMID_SELF;
-+	xrfp.gpfn = __pa(HYPERVISOR_shared_info) >> PAGE_SHIFT;
-+
-+	ret = HYPERVISOR_memory_op(XENMEM_remove_from_physmap, &xrfp);
-+	if (!ret)
-+		HYPERVISOR_shared_info = &xen_dummy_shared_info;
-+
-+	return ret;
-+}
-+
-+static void xen_syscore_resume(void)
-+{
-+	/* Xen suspend does similar stuffs in its own logic */
-+	if (is_xen_suspend())
-+		return;
-+
-+	/* No need to setup vcpu_info as it's already moved off */
-+	xen_hvm_map_shared_info();
-+
-+	pvclock_resume();
-+
-+	gnttab_resume();
-+}
-+
-+/*
-+ * These callbacks will be called with interrupts disabled and when having only
-+ * one CPU online.
-+ */
-+static struct syscore_ops xen_hvm_syscore_ops = {
-+	.suspend = xen_syscore_suspend,
-+	.resume = xen_syscore_resume
-+};
-+
-+void __init xen_setup_syscore_ops(void)
-+{
-+	if (xen_hvm_domain())
-+		register_syscore_ops(&xen_hvm_syscore_ops);
-+}
-diff --git a/include/xen/xen-ops.h b/include/xen/xen-ops.h
-index e8b08734fab1..bad334cd55d7 100644
---- a/include/xen/xen-ops.h
-+++ b/include/xen/xen-ops.h
-@@ -41,6 +41,8 @@ u64 xen_steal_clock(int cpu);
- int xen_setup_shutdown_event(void);
- 
- bool is_xen_suspend(void);
-+void xen_setup_syscore_ops(void);
-+
- extern unsigned long *xen_contiguous_bitmap;
- 
- #if defined(CONFIG_XEN_PV) || defined(CONFIG_ARM) || defined(CONFIG_ARM64)
--- 
-2.16.6
-
+Applied, thanks!
