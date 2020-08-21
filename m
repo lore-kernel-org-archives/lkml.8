@@ -2,50 +2,52 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34981C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76939C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF56207DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50CBD207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:16:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ypwGQhEt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ModaSDKC"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Kq3VTSX8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ASAU7xfB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgHUCQl (ORCPT
+        id S1727836AbgHUCQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:16:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43442 "EHLO
+        Thu, 20 Aug 2020 22:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727076AbgHUCQk (ORCPT
+        with ESMTP id S1727118AbgHUCQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:16:40 -0400
+        Thu, 20 Aug 2020 22:16:42 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11E0BC061385;
-        Thu, 20 Aug 2020 19:16:40 -0700 (PDT)
-Message-Id: <20200821002424.119492231@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF74C061386;
+        Thu, 20 Aug 2020 19:16:42 -0700 (PDT)
+Message-Id: <20200821002945.441137487@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597976198;
+        s=2020; t=1597976200;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-transfer-encoding:content-transfer-encoding;
-        bh=6NqCao/16SSVwxU3sscyKk1x2qrVHv19Kl/+7RncOTA=;
-        b=ypwGQhEtLxJihh7WUOQQEaAMlphwrov24vksOjnplfhLD07eIrUGaOcUsnEzRKsQfyOv/i
-        7w3zMDmRM2AoILgUnodia+JhCGDeEecxjS6Pu5B9VOARPg36DZQvZeo3cHLxUaeivTe+oA
-        b91J3yONxQwvP86lUhhb4bjxDEGxzXuyNYzWewdtECWVYDomQWqDCXKmI2M3HSXB6Prxt7
-        nLYJK526HDM/9meX7y2CpT4QepzWxd6Yg+SAMiq1YT8ZAHqO22TcuSmwUR8pFh1G1hA4Sr
-        0Uyr/DE44KKYwFVw7JO1Gl05Kv5vlC356zn0ns8or6odT6MWASx99abAUFd1zg==
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=+IgASHQdqPCnOTucPcGX02wYMC5pdn/nyOwg+ouAU7Y=;
+        b=Kq3VTSX8uKjpioBzzueTkN79nNBO2I0XUAh6jd71XwTySEooE4uoZ7HkYYujC26KxfiByj
+        vj/umpMZyxUbQTfEwQEQJx7Nu0JBttvca8e0D+yDHETVbvQ7Ef5eIIglB0we9V36cMBnyT
+        zCkjrT+YImdEjrxWFJshsLvIFDur7OnZtXRW8WFNyhZ5/30P/l0sWafQCCn5R6Or0tO8x1
+        G1GHFZ91C4ttID0SK06vuZMb8GKmiNN29i25BygZZJo7Ioo/h9219SPZtsE3nV23yqglAP
+        8nD7vKolbLJZ0c8QYpdewxwfG5hksiFcVSYd3eve0E8mNhSCa43lKd8UBggBWA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597976198;
+        s=2020e; t=1597976200;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-transfer-encoding:content-transfer-encoding;
-        bh=6NqCao/16SSVwxU3sscyKk1x2qrVHv19Kl/+7RncOTA=;
-        b=ModaSDKC/7KPKpfoJXwOupDLtqnQezio5NWZrrxDV9Wdr6vs4o0nJj6hFBppTFsrFMtbmR
-        0BGx93AAb/NWdaDg==
-Date:   Fri, 21 Aug 2020 02:24:24 +0200
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=+IgASHQdqPCnOTucPcGX02wYMC5pdn/nyOwg+ouAU7Y=;
+        b=ASAU7xfBpU57hwXmRkSKAraaHaBXoaaWxjHGByCWVurZfPFoa1OO+VM698eeg4/bGLoGHL
+        RYRF87iRi7qicEAw==
+Date:   Fri, 21 Aug 2020 02:24:26 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -77,152 +79,172 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [patch RFC 00/38] x86, PCI, XEN, genirq ...: Prepare for device MSI
+Subject: [patch RFC 02/38] x86/init: Remove unused init ops
+References: <20200821002424.119492231@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline; filename=x86-init--Remove-unused-init-ops.patch
 Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First of all, sorry for the horrible long Cc list, which was
-unfortunately unavoidable as this touches the world and some more.
+Some past platform removal forgot to get rid of this unused ballast.
 
-This patch series aims to provide a base to support device MSI (non
-PCI based) in a halfways architecture independent way.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/include/asm/mpspec.h   |   10 ----------
+ arch/x86/include/asm/x86_init.h |   10 ----------
+ arch/x86/kernel/mpparse.c       |   26 ++++----------------------
+ arch/x86/kernel/x86_init.c      |    4 ----
+ 4 files changed, 4 insertions(+), 46 deletions(-)
 
-It's a mixed bag of bug fixes, cleanups and general improvements which
-are worthwhile independent of the device MSI stuff. Unfortunately this
-also comes with an evil abuse of the irqdomain system to coerce XEN on
-x86 into compliance without rewriting XEN from scratch.
+--- a/arch/x86/include/asm/mpspec.h
++++ b/arch/x86/include/asm/mpspec.h
+@@ -67,21 +67,11 @@ static inline void find_smp_config(void)
+ #ifdef CONFIG_X86_MPPARSE
+ extern void e820__memblock_alloc_reserved_mpc_new(void);
+ extern int enable_update_mptable;
+-extern int default_mpc_apic_id(struct mpc_cpu *m);
+-extern void default_smp_read_mpc_oem(struct mpc_table *mpc);
+-# ifdef CONFIG_X86_IO_APIC
+-extern void default_mpc_oem_bus_info(struct mpc_bus *m, char *str);
+-# else
+-#  define default_mpc_oem_bus_info NULL
+-# endif
+ extern void default_find_smp_config(void);
+ extern void default_get_smp_config(unsigned int early);
+ #else
+ static inline void e820__memblock_alloc_reserved_mpc_new(void) { }
+ #define enable_update_mptable 0
+-#define default_mpc_apic_id NULL
+-#define default_smp_read_mpc_oem NULL
+-#define default_mpc_oem_bus_info NULL
+ #define default_find_smp_config x86_init_noop
+ #define default_get_smp_config x86_init_uint_noop
+ #endif
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -11,22 +11,12 @@ struct cpuinfo_x86;
+ 
+ /**
+  * struct x86_init_mpparse - platform specific mpparse ops
+- * @mpc_record:			platform specific mpc record accounting
+  * @setup_ioapic_ids:		platform specific ioapic id override
+- * @mpc_apic_id:		platform specific mpc apic id assignment
+- * @smp_read_mpc_oem:		platform specific oem mpc table setup
+- * @mpc_oem_pci_bus:		platform specific pci bus setup (default NULL)
+- * @mpc_oem_bus_info:		platform specific mpc bus info
+  * @find_smp_config:		find the smp configuration
+  * @get_smp_config:		get the smp configuration
+  */
+ struct x86_init_mpparse {
+-	void (*mpc_record)(unsigned int mode);
+ 	void (*setup_ioapic_ids)(void);
+-	int (*mpc_apic_id)(struct mpc_cpu *m);
+-	void (*smp_read_mpc_oem)(struct mpc_table *mpc);
+-	void (*mpc_oem_pci_bus)(struct mpc_bus *m);
+-	void (*mpc_oem_bus_info)(struct mpc_bus *m, char *name);
+ 	void (*find_smp_config)(void);
+ 	void (*get_smp_config)(unsigned int early);
+ };
+--- a/arch/x86/kernel/mpparse.c
++++ b/arch/x86/kernel/mpparse.c
+@@ -46,11 +46,6 @@ static int __init mpf_checksum(unsigned
+ 	return sum & 0xFF;
+ }
+ 
+-int __init default_mpc_apic_id(struct mpc_cpu *m)
+-{
+-	return m->apicid;
+-}
+-
+ static void __init MP_processor_info(struct mpc_cpu *m)
+ {
+ 	int apicid;
+@@ -61,7 +56,7 @@ static void __init MP_processor_info(str
+ 		return;
+ 	}
+ 
+-	apicid = x86_init.mpparse.mpc_apic_id(m);
++	apicid = m->apicid;
+ 
+ 	if (m->cpuflag & CPU_BOOTPROCESSOR) {
+ 		bootup_cpu = " (Bootup-CPU)";
+@@ -73,7 +68,7 @@ static void __init MP_processor_info(str
+ }
+ 
+ #ifdef CONFIG_X86_IO_APIC
+-void __init default_mpc_oem_bus_info(struct mpc_bus *m, char *str)
++static void __init mpc_oem_bus_info(struct mpc_bus *m, char *str)
+ {
+ 	memcpy(str, m->bustype, 6);
+ 	str[6] = 0;
+@@ -84,7 +79,7 @@ static void __init MP_bus_info(struct mp
+ {
+ 	char str[7];
+ 
+-	x86_init.mpparse.mpc_oem_bus_info(m, str);
++	mpc_oem_bus_info(m, str);
+ 
+ #if MAX_MP_BUSSES < 256
+ 	if (m->busid >= MAX_MP_BUSSES) {
+@@ -100,9 +95,6 @@ static void __init MP_bus_info(struct mp
+ 		mp_bus_id_to_type[m->busid] = MP_BUS_ISA;
+ #endif
+ 	} else if (strncmp(str, BUSTYPE_PCI, sizeof(BUSTYPE_PCI) - 1) == 0) {
+-		if (x86_init.mpparse.mpc_oem_pci_bus)
+-			x86_init.mpparse.mpc_oem_pci_bus(m);
+-
+ 		clear_bit(m->busid, mp_bus_not_pci);
+ #ifdef CONFIG_EISA
+ 		mp_bus_id_to_type[m->busid] = MP_BUS_PCI;
+@@ -198,8 +190,6 @@ static void __init smp_dump_mptable(stru
+ 			1, mpc, mpc->length, 1);
+ }
+ 
+-void __init default_smp_read_mpc_oem(struct mpc_table *mpc) { }
+-
+ static int __init smp_read_mpc(struct mpc_table *mpc, unsigned early)
+ {
+ 	char str[16];
+@@ -218,14 +208,7 @@ static int __init smp_read_mpc(struct mp
+ 	if (early)
+ 		return 1;
+ 
+-	if (mpc->oemptr)
+-		x86_init.mpparse.smp_read_mpc_oem(mpc);
+-
+-	/*
+-	 *      Now process the configuration blocks.
+-	 */
+-	x86_init.mpparse.mpc_record(0);
+-
++	/* Now process the configuration blocks. */
+ 	while (count < mpc->length) {
+ 		switch (*mpt) {
+ 		case MP_PROCESSOR:
+@@ -256,7 +239,6 @@ static int __init smp_read_mpc(struct mp
+ 			count = mpc->length;
+ 			break;
+ 		}
+-		x86_init.mpparse.mpc_record(1);
+ 	}
+ 
+ 	if (!num_processors)
+--- a/arch/x86/kernel/x86_init.c
++++ b/arch/x86/kernel/x86_init.c
+@@ -67,11 +67,7 @@ struct x86_init_ops x86_init __initdata
+ 	},
+ 
+ 	.mpparse = {
+-		.mpc_record		= x86_init_uint_noop,
+ 		.setup_ioapic_ids	= x86_init_noop,
+-		.mpc_apic_id		= default_mpc_apic_id,
+-		.smp_read_mpc_oem	= default_smp_read_mpc_oem,
+-		.mpc_oem_bus_info	= default_mpc_oem_bus_info,
+ 		.find_smp_config	= default_find_smp_config,
+ 		.get_smp_config		= default_get_smp_config,
+ 	},
 
-As discussed in length in this mail thread:
-
-  https://lore.kernel.org/r/87h7tcgbs2.fsf@nanos.tec.linutronix.de
-
-the initial attempt of piggypacking device MSI support on platform MSI
-is doomed for various reasons, but creating independent interrupt
-domains for these upcoming magic PCI subdevices which are not PCI, but
-might be exposed as PCI devices is not as trivial as it seems.
-
-The initially suggested and evaluated approach of extending platform
-MSI turned out to be the completely wrong direction and in fact
-platform MSI should be rewritten on top of device MSI or completely
-replaced by it.
-
-One of the main issues is that x86 does not support the concept of irq
-domains associations stored in device::msi_domain and still relies on
-the arch_*_msi_irqs() fallback implementations which has it's own set
-of problems as outlined in
-
-  https://lore.kernel.org/r/87bljg7u4f.fsf@nanos.tec.linutronix.de/
-
-in the very same thread.
-
-The main obstacle of storing that pointer is XEN which has it's own
-historical notiion of handling PCI MSI interupts.
-
-This series tries to address these issues in several steps:
-
- 1) Accidental bug fixes
-	iommu/amd: Prevent NULL pointer dereference
-
- 2) Janitoring
-	x86/init: Remove unused init ops
-
- 3) Simplification of the x86 specific interrupt allocation mechanism
-
-	x86/irq: Rename X86_IRQ_ALLOC_TYPE_MSI* to reflect PCI dependency
-	x86/irq: Add allocation type for parent domain retrieval
-	iommu/vt-d: Consolidate irq domain getter
-	iommu/amd: Consolidate irq domain getter
-	iommu/irq_remapping: Consolidate irq domain lookup
-
- 4) Consolidation of the X86 specific interrupt allocation mechanism to be as close
-    as possible to the generic MSI allocation mechanism which allows to get rid
-    of quite a bunch of x86'isms which are pointless
-
-	x86/irq: Prepare consolidation of irq_alloc_info
-	x86/msi: Consolidate HPET allocation
-	x86/ioapic: Consolidate IOAPIC allocation
-	x86/irq: Consolidate DMAR irq allocation
-	x86/irq: Consolidate UV domain allocation
-	PCI: MSI: Rework pci_msi_domain_calc_hwirq()
-	x86/msi: Consolidate MSI allocation
-	x86/msi: Use generic MSI domain ops
-
-  5) x86 specific cleanups to remove the dependency on arch_*_msi_irqs()
-
-	x86/irq: Move apic_post_init() invocation to one place
-	z86/pci: Reducde #ifdeffery in PCI init code
-	x86/irq: Initialize PCI/MSI domain at PCI init time
-	irqdomain/msi: Provide DOMAIN_BUS_VMD_MSI
-	PCI: vmd: Mark VMD irqdomain with DOMAIN_BUS_VMD_MSI
-	PCI: MSI: Provide pci_dev_has_special_msi_domain() helper
-	x86/xen: Make xen_msi_init() static and rename it to xen_hvm_msi_init()
-	x86/xen: Rework MSI teardown
-	x86/xen: Consolidate XEN-MSI init
-	irqdomain/msi: Allow to override msi_domain_alloc/free_irqs()
-	x86/xen: Wrap XEN MSI management into irqdomain
-	iommm/vt-d: Store irq domain in struct device
-	iommm/amd: Store irq domain in struct device
-	x86/pci: Set default irq domain in pcibios_add_device()
-	PCI/MSI: Allow to disable arch fallbacks
-	x86/irq: Cleanup the arch_*_msi_irqs() leftovers
-	x86/irq: Make most MSI ops XEN private
-
-    This one is paving the way to device MSI support, but it comes
-    with an ugly and evil hack. The ability of overriding the default
-    allocation/free functions of an MSI irq domain is useful in general as
-    (hopefully) demonstrated with the device MSI POC, but the abuse
-    in context of XEN is evil. OTOH without enough XENology and without
-    rewriting XEN from scratch wrapping XEN MSI handling into a pseudo
-    irq domain is a reasonable step forward for mere mortals with severly
-    limited XENology. One day the XEN folks might make it a real irq domain.
-    Perhaps when they have to support the same mess on other architectures.
-    Hope dies last...
-
-    At least the mechanism to override alloc/free turned out to be useful
-    for implementing the base infrastructure for device MSI. So it's not a
-    completely lost case.
-
-  6) X86 specific preparation for device MSI
-
-       x86/irq: Add DEV_MSI allocation type
-       x86/msi: Let pci_msi_prepare() handle non-PCI MSI
-
-  7) Generic device MSI infrastructure
-
-       platform-msi: Provide default irq_chip:ack
-       platform-msi: Add device MSI infrastructure
-
-  8) Infrastructure for and a POC of an IMS (Interrupt Message
-     Storm) irq domain and irqchip implementation
-
-       irqdomain/msi: Provide msi_alloc/free_store() callbacks
-       irqchip: Add IMS array driver - NOT FOR MERGING
-
-The whole lot is also available from git:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git device-msi
-
-This has been tested on Intel/AMD/KVM but lacks testing on:
-
-    - HYPERV (-ENODEV)
-    - VMD enabled systems (-ENODEV)
-    - XEN (-ENOCLUE)
-
-#1 and #2 should be applied unconditionally for obvious reasons
-#3-5 are wortwhile cleanups which should be done independent of device MSI
-
-#6-7 look promising to cleanup the platform MSI implementation
-     independent of #8, but I neither had cycles nor stomache to tackle that.
-
-#8 is obviously just for the folks interested in IMS
-
-And of course this all started with a 100 lines combo patch to figure
-out whether this is possible at all with a reasonable effort. 38
-patches later ...
-
-Thanks,
-
-	tglx
