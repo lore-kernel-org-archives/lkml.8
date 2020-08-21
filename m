@@ -2,170 +2,143 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9974DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC56DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 805D0207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC119207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgHUC7Q (ORCPT
+        id S1727097AbgHUDBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:59:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:15865 "EHLO mga05.intel.com"
+        Thu, 20 Aug 2020 23:01:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbgHUC7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:59:14 -0400
-IronPort-SDR: fRFhhQgm34nxBgQegBM22Mcwm29cCgLJliPh6V13jrBYFaEhhtTTTUUNJ/y3Sy4xApDZ3Fnyep
- sVfkunuU1VDg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="240268650"
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="240268650"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 19:59:13 -0700
-IronPort-SDR: HsHkPk12FpU091H67hyVGHN+fyXnU1tcswRmp+L1e70WC0Lg2cctbfTvjmT+Ak6sDZ/MBN7emc
- G75NVWkkyjmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="293693132"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.164])
-  by orsmga003.jf.intel.com with ESMTP; 20 Aug 2020 19:59:09 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Gao Xiang <hsiangkao@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        Eric Sandeen <esandeen@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by mistake
-References: <20200820045323.7809-1-hsiangkao@redhat.com>
-        <20200820233446.GB7728@dread.disaster.area>
-        <20200821002145.GA28298@xiangao.remote.csb>
-        <20200821010330.GC7728@dread.disaster.area>
-Date:   Fri, 21 Aug 2020 10:59:08 +0800
-In-Reply-To: <20200821010330.GC7728@dread.disaster.area> (Dave Chinner's
-        message of "Fri, 21 Aug 2020 11:03:30 +1000")
-Message-ID: <87mu2ovh4z.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        id S1725852AbgHUDBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 23:01:08 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1EF220732;
+        Fri, 21 Aug 2020 03:01:06 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 23:01:05 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
+Message-ID: <20200820230105.1f9651b7@oasis.local.home>
+In-Reply-To: <CANMq1KCpV+RKCqHsK-=Xeb+Vq28qdnBVF51rcga7m9-xjqNSCg@mail.gmail.com>
+References: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
+        <20200820170951.v4.3.I066d89f39023956c47fb0a42edf196b3950ffbf7@changeid>
+        <20200820102347.15d2f610@oasis.local.home>
+        <CANMq1KCoEZVj=sjxCqBhqLZKBab57+82=Rk_LN7fc3aCuNHMUw@mail.gmail.com>
+        <20200820203601.4f70bf98@oasis.local.home>
+        <CANMq1KAAgXG9MKMZ_D9zYFV-j0oVreA_AeSw-8FoyJgZ9eWQpg@mail.gmail.com>
+        <20200820215701.667f02b2@oasis.local.home>
+        <CANMq1KCpV+RKCqHsK-=Xeb+Vq28qdnBVF51rcga7m9-xjqNSCg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Chinner <david@fromorbit.com> writes:
+On Fri, 21 Aug 2020 10:39:02 +0800
+Nicolas Boichat <drinkcat@chromium.org> wrote:
 
-> On Fri, Aug 21, 2020 at 08:21:45AM +0800, Gao Xiang wrote:
->> Hi Dave,
->> 
->> On Fri, Aug 21, 2020 at 09:34:46AM +1000, Dave Chinner wrote:
->> > On Thu, Aug 20, 2020 at 12:53:23PM +0800, Gao Xiang wrote:
->> > > SWP_FS is used to make swap_{read,write}page() go through
->> > > the filesystem, and it's only used for swap files over
->> > > NFS. So, !SWP_FS means non NFS for now, it could be either
->> > > file backed or device backed. Something similar goes with
->> > > legacy SWP_FILE.
->> > > 
->> > > So in order to achieve the goal of the original patch,
->> > > SWP_BLKDEV should be used instead.
->> > > 
->> > > FS corruption can be observed with SSD device + XFS +
->> > > fragmented swapfile due to CONFIG_THP_SWAP=y.
->> > > 
->> > > I reproduced the issue with the following details:
->> > > 
->> > > Environment:
->> > > QEMU + upstream kernel + buildroot + NVMe (2 GB)
->> > > 
->> > > Kernel config:
->> > > CONFIG_BLK_DEV_NVME=y
->> > > CONFIG_THP_SWAP=y
->> > 
->> > Ok, so at it's core this is a swap file extent versus THP swap
->> > cluster alignment issue?
->> 
->> I think yes.
->> 
->> > 
->> > > diff --git a/mm/swapfile.c b/mm/swapfile.c
->> > > index 6c26916e95fd..2937daf3ca02 100644
->> > > --- a/mm/swapfile.c
->> > > +++ b/mm/swapfile.c
->> > > @@ -1074,7 +1074,7 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
->> > >  			goto nextsi;
->> > >  		}
->> > >  		if (size == SWAPFILE_CLUSTER) {
->> > > -			if (!(si->flags & SWP_FS))
->> > > +			if (si->flags & SWP_BLKDEV)
->> > >  				n_ret = swap_alloc_cluster(si, swp_entries);
->> > >  		} else
->> > >  			n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
->> > 
->> > IOWs, if you don't make this change, does the corruption problem go
->> > away if you align swap extents in iomap_swapfile_add_extent() to
->> > (SWAPFILE_CLUSTER * PAGE_SIZE) instead of just PAGE_SIZE?
->> > 
->> > I.e. if the swapfile extents are aligned correctly to huge page swap
->> > cluster size and alignment, does the swap clustering optimisations
->> > for swapping THP pages work correctly? And, if so, is there any
->> > performance benefit we get from enabling proper THP swap clustering
->> > on swapfiles?
->> > 
->> 
->> Yeah, I once think about some similiar thing as well. My thought for now is
->> 
->>  - First, SWAP THP doesn't claim to support such swapfile for now.
->>    And the original author tried to explicitly avoid the whole thing in
->> 
->>    f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
->> 
->>    So such thing would be considered as some new feature and need
->>    more testing at least. But for now I think we just need a quick
->>    fix to fix the commit f0eea189e8e9 to avoid regression and for
->>    backport use.
->
-> Sure, a quick fix is fine for the current issue. I'm asking
-> questions about the design/architecture of how THP_SWAP is supposed
-> to work and whether swapfiles are violating some other undocumented
-> assumption about swapping THP files...
+> I'm not sure how that helps? I mean, the use case you have in mind is
+> somebody reusing a distro/random config and not being able to use
+> trace_printk, right? If that config has CONFIG_DISABLE_TRACE_PRINTK=y,
+> then the developer will still need to flip that back.
+> 
+> Note that the option I'm added has default=y (_allow_ trace_printk),
+> so I don't think default y or default n really matters?
 
-The main requirement for THP_SWAP is that the swap cluster need to be
-mapped to the continuous block device space.
+Ideally, the production system doesn't have it set. It only sets it to
+make sure that it's clean before sending out. But then it can add it
+back before production. Yeah, it's pretty much cutting hairs between
+the two. I don't like either one.
 
-So Yes.  In theory, it's possible to support THP_SWAP for swapfile.  But
-I don't know whether people need it or not.
+Really, if you are worried about this, just add your patch to your
+local tree. I'm not sure this is something that can be fixed upstream.
 
-Best Regards,
-Huang, Ying
+Another idea is to add something like below, and build with:
 
->>  - It is hard for users to control swapfile in
->>    SWAPFILE_CLUSTER * PAGE_SIZE extents, especially users'
->>    disk are fragmented or have some on-disk metadata limitation or
->>    something. It's very hard for users to utilize this and arrange
->>    their swapfile physical addr alignment and fragments for now.
->
-> This isn't something users control. The swapfile extent mapping code
-> rounds the swap extents inwards so that the parts of the on-disk
-> extents that are not aligned or cannot hold a full page are
-> omitted from the ranges of the file that can be swapped to.
->
-> i.e. a file that extents aligned to 4kB is fine for a 4KB page size
-> machine, but needs additional alignment to allow swapping to work on
-> a 64kB page size machine. Hence the swap code rounds the file
-> extents inwards to PAGE_SIZE to align them correctly. We really
-> should be doing this for THP page size rather than PAGE_SIZE if
-> THP_SWAP is enabled, regardless of whether swap clustering is
-> enabled or not...
->
-> Cheers,
->
-> Dave.
+ make CHECK_TRACE_PRINT=1
+
+This way it is a build command line option that causes the build to
+fail if trace_printk() is added.
+
+This way production systems can add this to make sure their kernels are
+free of trace_printk() but it doesn't affect the config that is used.
+
+-- Steve
+
+[ Not even compiled tested! ]
+
+diff --git a/Makefile b/Makefile
+index 2057c92a6205..5714a738879d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -91,6 +91,13 @@ else
+   Q = @
+ endif
+ 
++ifeq ("$(origin CHECK_TRACE_PRINTK)", "command line")
++  KBUILD_NO_TRACE_PRINTK = $(NO_TRACE_PRINTK)
++endif
++ifndef KBUILD_NO_TRACE_PRINTK
++  KBUILD_NO_TRACE_PRINTK = 0
++endif
++
+ # If the user is running make -s (silent mode), suppress echoing of
+ # commands
+ 
+@@ -839,6 +846,10 @@ KBUILD_AFLAGS	+= -gz=zlib
+ KBUILD_LDFLAGS	+= --compress-debug-sections=zlib
+ endif
+ 
++ifeq ($(KBUILD_NO_TRACE_PRINTK),1)
++KBUILD_CFLAGS += -DNO_TRACE_PRINTK
++endif
++
+ KBUILD_CFLAGS += $(DEBUG_CFLAGS)
+ export DEBUG_CFLAGS
+ 
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 500def620d8f..bee432547d26 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -680,11 +680,14 @@ extern void tracing_stop(void);
+ static inline __printf(1, 2)
+ void ____trace_printk_check_format(const char *fmt, ...)
+ {
++#ifdef NO_TRACE_PRINTK
++	extern void __no_trace_printk_on_build(void);
++	__no_trace_printk_on_build();
++#endif
+ }
+ #define __trace_printk_check_format(fmt, args...)			\
+ do {									\
+-	if (0)								\
+-		____trace_printk_check_format(fmt, ##args);		\
++	____trace_printk_check_format(fmt, ##args);			\
+ } while (0)
+ 
+ /**
