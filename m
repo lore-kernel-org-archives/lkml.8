@@ -2,118 +2,152 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F0FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F4AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16852078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807F62078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZSAgctt6"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Dl+SLCO2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgHUIJM (ORCPT
+        id S1728041AbgHUIJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:09:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21525 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726216AbgHUIJJ (ORCPT
+        Fri, 21 Aug 2020 04:09:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38342 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726239AbgHUIJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:09:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597997347;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Kuv27KkdzWeRw0okScxNF6ME0DnUfvMSl85Yx9SjFI4=;
-        b=ZSAgctt6grrW5qVRnKk/jdccAIu4TKojRwIKGOLF/H8ovR8L1+0dSX5H+A5Q/scU7J4U9x
-        pCOun5zGVC9Cbvf27v10sneRd4F5StiMY683rMhV+QzMGyM3/G6rrgaVGbn5MMXyvKlf1G
-        MW0MjmxGKO24+Sq808clOM+IXAuBSFk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-243-M86TeufaNrOm0nWjR9csqg-1; Fri, 21 Aug 2020 04:09:05 -0400
-X-MC-Unique: M86TeufaNrOm0nWjR9csqg-1
-Received: by mail-wr1-f72.google.com with SMTP id o10so299860wrs.21
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 01:09:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Kuv27KkdzWeRw0okScxNF6ME0DnUfvMSl85Yx9SjFI4=;
-        b=c01FCKUeuce6/ulI3peQb2z7OfCHh+huUZGnDlpz8Wh5FZ69Syu8NoT+lytIs0hC4H
-         PVg7O0Yw+15HYtqNKSvb0fSnYmqmh3y9A5gYZ7OHPdNKrEU6BGniv9dPlC0hd9kD7Qd4
-         Nq2b75Gcozha0bu6/udTjbjsp9HDGfP00Nk8ALtyuSdQ8B6ToqxxbImmq05KDZ5YTYZ7
-         qVoHELEslahD37+iI0YH/RaLEM6aWFBRzFj9JGoq5O+T4rLTbpILpIPH5IYoI0oKyFbs
-         NOWeKw+GEAx3GIaIyNzspaT2OzGZ4Ktf0doyTUivvpPiD1DflrX/ULhSL9He0OL8qkQp
-         L8iw==
-X-Gm-Message-State: AOAM533/+B7PwCoNTMVw2dPKsZkriIYDRLak0PdWKEmJkFZSKKjITb2f
-        8jYFs7oeK6HYKVt7oUWShjoHlV/e6n3gXGmMKjaB2iVWyjFfZkV0jy6+L5j3VPVGbT6OgF7VfHa
-        XGtbEsTs4m4x+hQSwWqWVsm17
-X-Received: by 2002:a7b:c242:: with SMTP id b2mr1981496wmj.90.1597997344015;
-        Fri, 21 Aug 2020 01:09:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzHY1ITn5JcVj0dvaRsByYUByLRDSGyp3RfKZXp3gpLmamr7JT/gqsy22MhRt27obuHXYNTIg==
-X-Received: by 2002:a7b:c242:: with SMTP id b2mr1981446wmj.90.1597997343663;
-        Fri, 21 Aug 2020 01:09:03 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:1cc0:4e4e:f1a9:1745? ([2001:b07:6468:f312:1cc0:4e4e:f1a9:1745])
-        by smtp.gmail.com with ESMTPSA id t11sm2607917wrs.66.2020.08.21.01.09.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 01:09:02 -0700 (PDT)
-Subject: Re: [PATCH] x86/entry/64: Disallow RDPID in paranoid entry if KVM is
- enabled
-To:     Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Chang Seok Bae <chang.seok.bae@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>
-References: <20200821025050.32573-1-sean.j.christopherson@intel.com>
- <20200821074743.GB12181@zn.tnic>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <3eb94913-662d-5423-21b1-eaf75635142a@redhat.com>
-Date:   Fri, 21 Aug 2020 10:09:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 21 Aug 2020 04:09:48 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07L843Yv002860;
+        Fri, 21 Aug 2020 04:09:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=Pm8s+o6jRPa9NYp7ijwD+XJfdsiqQJcILTOc0JqbjwU=;
+ b=Dl+SLCO2Jsh7mZvYnxr5726XZRHrgd2c5boW0GoBO/O+M7BRO6tNU4sCvAqtJRSqTVKH
+ vFZywkAm3u0JQ5P86K/jjTyhwgNRh+d5RmyVTslIh7FySp1HOogkVgoz0lQCzZ5Qw9sC
+ cC5AurYVi7TZm0o52VUx4rXrDnLHOZd8cA+YmhSd9WvL69iTUVRiKnwKOHztZ5DKoYt6
+ P5OEsznkzEOZLY2/0nd0y7FfWRHsCApBHZWXECbbB6nh5JU3380Y7C3MK0C/Hm48nxph
+ AA8Y1uT6RA6LxD11k1Fz92t8BzdaPMT0AtIKA4Iv7/5iDSS515sU27qBHPTU5B3I3lMP fQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 331an7jvbf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 04:09:46 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07L84N62004336;
+        Fri, 21 Aug 2020 04:09:46 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 331an7jvar-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 04:09:46 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07L82PDq016627;
+        Fri, 21 Aug 2020 08:09:44 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 330tbvttda-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 08:09:44 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07L89fse29753624
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 08:09:42 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CA3E411C050;
+        Fri, 21 Aug 2020 08:09:41 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C146711C05B;
+        Fri, 21 Aug 2020 08:09:39 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.199.47.231])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Aug 2020 08:09:39 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     jolsa@redhat.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        maddy@linux.ibm.com, kjain@linux.ibm.com
+Subject: [PATCH] perf/tools/pmu-events/powerpc: update nest metric event to utilize other metrics
+Date:   Fri, 21 Aug 2020 13:39:23 +0530
+Message-Id: <20200821080923.126522-1-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200821074743.GB12181@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_05:2020-08-19,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 spamscore=0 mlxscore=0
+ suspectscore=1 malwarescore=0 impostorscore=0 bulkscore=0 clxscore=1015
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/08/20 09:47, Borislav Petkov wrote:
-> On Thu, Aug 20, 2020 at 07:50:50PM -0700, Sean Christopherson wrote:
->> +	 * Disallow RDPID if KVM is enabled as it may consume a guest's TSC_AUX
->> +	 * if an NMI arrives in KVM's run loop.  KVM loads guest's TSC_AUX on
->> +	 * VM-Enter and may not restore the host's value until the CPU returns
->> +	 * to userspace, i.e. KVM depends on the kernel not using TSC_AUX.
->>  	 */
-> And frankly, this is really unfair. The kernel should be able to use any
-> MSR. IOW, KVM needs to be fixed here. I'm sure it context-switches other
-> MSRs so one more MSR is not a big deal.
+This patch take advantage of the new capability added to use
+computed metrics in calculating other metrics. It also update
+metric group for nest events to make it consistent for all nest
+memory events.
 
-The only MSR that KVM needs to context-switch manually are XSS and
-SPEC_CTRL.  They tend to be the same on host and guest in which case
-they can be optimized away.
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ .../arch/powerpc/power9/nest_metrics.json      | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-All the other MSRs (EFER and PAT are those that come to mind) are
-handled by the microcode and thus they don't have the slowness of
-RDMSR/WRMSR
-
-One more MSR *is* a big deal: KVM's vmentry+vmexit cost is around 1000
-cycles, adding 100 clock cycles for 2 WRMSRs is a 10% increase.
-
-Paolo
+diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+index 8383a37647ad..a21e179edaf9 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
++++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+@@ -18,25 +18,25 @@
+     },
+     {
+ 	"MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@",
+-	"MetricName" : "mcs01-read",
+-	"MetricGroup" : "memory_bw",
++	"MetricName" : "mcs01_read",
++	"MetricGroup" : "memory-bandwidth",
+ 	"ScaleUnit": "6.1e-5MB"
+     },
+     {
+ 	"MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@",
+-	"MetricName" : "mcs23-read",
+-	"MetricGroup" : "memory_bw",
++	"MetricName" : "mcs23_read",
++	"MetricGroup" : "memory-bandwidth",
+ 	"ScaleUnit": "6.1e-5MB"
+     },
+     {
+ 	"MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@",
+-	"MetricName" : "mcs01-write",
+-	"MetricGroup" : "memory_bw",
++	"MetricName" : "mcs01_write",
++	"MetricGroup" : "memory-bandwidth",
+ 	"ScaleUnit": "6.1e-5MB"
+     },
+     {
+ 	"MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@",
+-	"MetricName" : "mcs23-write",
++	"MetricName" : "mcs23_write",
+ 	"MetricGroup" : "memory-bandwidth",
+ 	"ScaleUnit": "6.1e-5MB"
+     },
+@@ -46,9 +46,9 @@
+ 	"ScaleUnit": "1e-9GHz"
+     },
+     {
+-	"MetricExpr" : "(nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@)",
++	"MetricExpr" : "mcs01_read + mcs23_read + mcs01_write + mcs23_write",
+ 	"MetricName" : "Memory-bandwidth-MCS",
+-	"MetricGroup" : "memory_bw",
++	"MetricGroup" : "memory-bandwidth",
+ 	"ScaleUnit": "6.1e-5MB"
+     }
+ ]
+-- 
+2.17.1
 
