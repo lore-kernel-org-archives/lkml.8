@@ -2,167 +2,138 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D79C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59040C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE626207CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3210E207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pw5Xo2UH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgHUVyO (ORCPT
+        id S1726856AbgHUV5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:54:14 -0400
-Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:35825 "EHLO
-        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726672AbgHUVyM (ORCPT
+        Fri, 21 Aug 2020 17:57:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbgHUV5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:54:12 -0400
-Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
-        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id DC7B6108A69;
-        Sat, 22 Aug 2020 07:53:59 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1k9Ez0-0002OM-F0; Sat, 22 Aug 2020 07:53:58 +1000
-Date:   Sat, 22 Aug 2020 07:53:58 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ritesh Harjani <riteshh@linux.ibm.com>
-Cc:     Anju T Sudhakar <anju@linux.vnet.ibm.com>, hch@infradead.org,
-        darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        willy@infradead.org
-Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
-Message-ID: <20200821215358.GG7941@dread.disaster.area>
-References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
- <20200820231140.GE7941@dread.disaster.area>
- <20200821044533.BBFD1A405F@d06av23.portsmouth.uk.ibm.com>
+        Fri, 21 Aug 2020 17:57:32 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 664AAC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:57:31 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id b16so1231790vsl.6
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ea41IW4FRO1fiOOu+MNwgvHwUn7WCVWJ5tD03OQqvkM=;
+        b=Pw5Xo2UHWDlSgrbQcxG+BrXhrL8Z7LLa8uwTq8y+Hb1n8SJqnVEDUsHacaTNt4Ydqh
+         Yz3ur1h9GYoyAOKh/BX7HR7DSFCZbutB6vW8ua4cqQBj/FpQD59/tn5UVneBsUi0ReXK
+         VqMRERyzHLqQqJtLROcsChQGNqGAXQYUelANpt01zRg1n5wSfIGaO97oV7/+/F0wc5qZ
+         OMWTB+Ka45i+5TQE/MYqK22KlP/ApUJCjEKwh0cayaOCdZX3B9gCeHFfGPbIaXnc77hE
+         vXiIeE2friHSLAONaBtMlTkqp1/nUiinZSMw9/CzpFRPYTAy5hcdpmN0rkwqj+7oaifE
+         WoyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ea41IW4FRO1fiOOu+MNwgvHwUn7WCVWJ5tD03OQqvkM=;
+        b=in1g/YjUYnnTzyyemEpFP3yUylHOAlEuOl4dNxdqQHaDMJmivPO6V1P1t/TLc4B+S+
+         Zmh4XdMA/VsokBaP0OCOV+yXmAP8w8e/duwL0U/gEDNIrS7GuD+68bMt9+1B9Fdfa4Wb
+         2yrmmW6fQAoQ22wj/n6Q0B0wk0rLw5VGnQe2+f/7K2mIsrhMu1nKMdYjypUNIYwI+zis
+         hh3Fthc/s+tzmTZ9ov9yqiw1D0BHis0KUDOk03xcdmGeIuGFzbpvRLHdrXbCX0Gl4vrz
+         TylpDOw8BfzU/o1pUKtNSBZmkJ4whQHZOdqitQtO1qQQtZuR+QsVQ+zSUOCVvPffjJQ2
+         jNQg==
+X-Gm-Message-State: AOAM531yJEhTegbUntwWzbwcaxtQTQfr2OwJNDGPAQWc0e6Jd1dPB42r
+        ly4iKufkzyUWEFG1ob8rLTuYGILGLqJmDUruLL43qA==
+X-Google-Smtp-Source: ABdhPJxIbsHfva0t8MC9x0VZDf4ULSJcLPSdTF7LyvZ5vYS9dGrRQdcNDwYmfpQUh9Z5N+rsDRn4F2T/8VDA3SYlu4c=
+X-Received: by 2002:a67:e9d8:: with SMTP id q24mr3266310vso.165.1598047050532;
+ Fri, 21 Aug 2020 14:57:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821044533.BBFD1A405F@d06av23.portsmouth.uk.ibm.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QKgWuTDL c=1 sm=1 tr=0 cx=a_idp_d
-        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=VnNF1IyMAAAA:8 a=7-415B0cAAAA:8
-        a=Qh6IE-2GF9-oy0DaVTgA:9 a=RXxoB3lGECdc3DDF:21 a=r0DmFvm1JCai0nq2:21
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20200819125832.v2.1.Ie8f0689ec9f449203328b37409d1cf06b565f331@changeid>
+ <CANMq1KC3BC4bbh9YF1r3nfOAJgQp4mVZJ11_77cwFJY9fGK-Dg@mail.gmail.com>
+ <CAPDyKFoHW=taANc4UZU7spGghn8ASo+2VOiEVPNRh9URdeyQpA@mail.gmail.com> <CAHQZ30BW4YMzK9KUOHP8wV49Yw0UG_PZY6UdaQZdQRdMYFjFwQ@mail.gmail.com>
+In-Reply-To: <CAHQZ30BW4YMzK9KUOHP8wV49Yw0UG_PZY6UdaQZdQRdMYFjFwQ@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 21 Aug 2020 23:56:54 +0200
+Message-ID: <CAPDyKFqRNQaNVw5WL1jxKE5gnfcKbm1e_bzEgnP--arvNJezXg@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: sdhci-acpi: Fix HS400 tuning for AMDI0040
+To:     Raul Rangel <rrangel@chromium.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Akshu Agrawal <Akshu.Agrawal@amd.com>,
+        "Wang, Chris" <chris.wang@amd.com>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:15:33AM +0530, Ritesh Harjani wrote:
-> Hello Dave,
-> 
-> Thanks for reviewing this.
-> 
-> On 8/21/20 4:41 AM, Dave Chinner wrote:
-> > On Wed, Aug 19, 2020 at 03:58:41PM +0530, Anju T Sudhakar wrote:
-> > > From: Ritesh Harjani <riteshh@linux.ibm.com>
-> > > 
-> > > __bio_try_merge_page() may return same_page = 1 and merged = 0.
-> > > This could happen when bio->bi_iter.bi_size + len > UINT_MAX.
-> > 
-> > Ummm, silly question, but exactly how are we getting a bio that
-> > large in ->writepages getting built? Even with 64kB pages, that's a
-> > bio with 2^16 pages attached to it. We shouldn't be building single
-> > bios in writeback that large - what storage hardware is allowing
-> > such huge bios to be built? (i.e. can you dump all the values in
-> > /sys/block/<dev>/queue/* for that device for us?)
-> 
-> Please correct me here, but as I see, bio has only these two limits
-> which it checks for adding page to bio. It doesn't check for limits
-> of /sys/block/<dev>/queue/* no? I guess then it could be checked
-> by block layer below b4 submitting the bio?
-> 
-> 113 static inline bool bio_full(struct bio *bio, unsigned len)
-> 114 {
-> 115         if (bio->bi_vcnt >= bio->bi_max_vecs)
-> 116                 return true;
-> 117
-> 118         if (bio->bi_iter.bi_size > UINT_MAX - len)
-> 119                 return true;
-> 120
-> 121         return false;
-> 122 }
+On Fri, 21 Aug 2020 at 16:31, Raul Rangel <rrangel@chromium.org> wrote:
+>
+> Oops, what was embarrassing! Thanks Ulf for removing it. Thanks Nick for caching that.
 
-but iomap only allows BIO_MAX_PAGES when creating the bio. And:
+No worries, we all make mistakes. The important thing is that we take
+good care of fixing them as soon as possible.
 
-#define BIO_MAX_PAGES 256
+Kind regards
+Uffe
 
-So even on a 64k page machine, we should not be building a bio with
-more than 16MB of data in it. So how are we getting 4GB of data into
-it?
-
-Further, the writeback code is designed around the bios having a
-bound size that is relatively small to keep IO submission occurring
-as we pack pages into bios. This keeps IO latency down and minimises
-the individual IO completion overhead of each IO. This is especially
-important as the writeback path is critical for memory relcaim to
-make progress because we do not want to trap gigabytes of dirty
-memory in the writeback IO path.
-
-IOWs, seeing huge bios being built by writeback is indicative of
-design assumptions and contraints being violated - huge bios on the
-buffered writeback path like this are not a good thing to see.
-
-FWIW, We've also recently got reports of hard lockups in IO
-completion of overwrites because our ioend bio chains have grown to
-almost 3 million pages and all the writeback pages get processed as
-a single completion. This is a similar situation to this bug report
-in that the bio chains are unbound in length, and I'm betting the
-cause is the same: overwrite a 10GB file in memory (with dirty
-limits turned up), then run fsync so we do a single writepages call
-that tries to write 10GB of dirty pages....
-
-The only reason we don't normally see this is that background
-writeback caps the number of pages written per writepages call to
-1024. i.e.  it caps writeback IO sizes to a small amount so that IO
-latency, writeback fairness across dirty inodes, etc can be
-maintained for background writeback - no one dirty file can
-monopolise the available writeback bandwidth and starve writeback
-to other dirty inodes.
-
-So combine the two, and we've got a problem that the writeback IO
-sizes are not being bound to sane IO sizes. I have no problems with
-building individual bios that are 4MB or even 16MB in size - that
-allows the block layer to work efficiently. Problems at a system
-start to occur, however, when individual bios or bio chains built
-by writeback end up being orders of magnitude larger than this....
-
-i.e. I'm not looking at this as a "bio overflow bug" - I'm
-commenting on what this overflow implies from an architectural point
-of view. i.e. that uncapped bio sizes and bio chain lengths in
-writeback are actually a bad thing and something we've always
-tried to avoid doing....
-
-.....
-
-> /sys/block/<dev>/queue/*
-> ========================
-> 
-> setup:/run/perf$ cat /sys/block/loop1/queue/max_segments
-> 128
-> setup:/run/perf$ cat /sys/block/loop1/queue/max_segment_size
-> 65536
-
-A maximumally size bio (16MB) will get split into two bios for this
-hardware based on this (8MB max size).
-
-> setup:/run/perf$ cat /sys/block/loop1/queue/max_hw_sectors_kb
-> 1280
-
-Except this says 1280kB is the max size, so it will actually get
-split into 14 bios.
-
-So a stream of 16MB bios from writeback will be more than large
-enough to keep this hardware's pipeline full....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+>
+> On Fri, Aug 21, 2020 at 3:04 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>
+>> On Fri, 21 Aug 2020 at 02:24, Nicolas Boichat <drinkcat@chromium.org> wrote:
+>> >
+>> > On Thu, Aug 20, 2020 at 3:00 AM Raul E Rangel <rrangel@chromium.org> wrote:
+>> > >
+>> > > The AMD eMMC Controller can only use the tuned clock while in HS200 and
+>> > > HS400 mode. If we switch to a different mode, we need to disable the
+>> > > tuned clock. If we have previously performed tuning and switch back to
+>> > > HS200 or HS400, we can re-enable the tuned clock.
+>> > >
+>> > > Previously the tuned clock was not getting disabled when switching to
+>> > > DDR52 which is part of the HS400 tuning sequence.
+>> > >
+>> > > Fixes: 34597a3f60b1 ("mmc: sdhci-acpi: Add support for ACPI HID of AMD Controller with HS400")
+>> > > Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+>> > > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>>
+>> Applied for fixes, by dropping the trace_printk below, thanks!
+>>
+>> Kind regards
+>> Uffe
+>>
+>>
+>> > > ---
+>> > >
+>> > > Changes in v2:
+>> > > - Added static to amd_sdhci_execute_tuning
+>> > >
+>> > >  drivers/mmc/host/sdhci-acpi.c | 68 +++++++++++++++++++++++++++++------
+>> > >  1 file changed, 58 insertions(+), 10 deletions(-)
+>> > [snip]
+>> > > +               /* DLL is only required for HS400 */
+>> > > +               if (host->timing == MMC_TIMING_MMC_HS400 &&
+>> > > +                   !amd_host->dll_enabled) {
+>> > > +                       trace_printk("%s: Enabling DLL\n", __func__);
+>> >
+>> > Please do not use trace_printk in production code [1,2], it is only
+>> > meant for debug use. Consider using dev_dbg.
+>> >
+>> > [1] https://elixir.bootlin.com/linux/v5.8/source/kernel/trace/trace.c#L3158
+>> > [2] https://elixir.bootlin.com/linux/v5.8/source/include/linux/kernel.h#L766
+>> >
+>> > > +                       sdhci_acpi_amd_hs400_dll(host);
+>> > > +                       amd_host->dll_enabled = true;
+>> > > +               }
+>> > >         }
