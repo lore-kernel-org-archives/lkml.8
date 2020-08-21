@@ -2,131 +2,156 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A86D6207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEC520724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598012842;
-	bh=zry6Or1kr2aFqLBbV3onaCN8a/kdLAuY9x+g5pVkg1Y=;
+	s=default; t=1598012900;
+	bh=FyT2qvOgCd1d4RFL2pkzqcNEjG8u0pgvhqcSayfPdZE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PkXGOHrb0/cW9khmvW5zTQS7p9e0jkkvq6cSqKXMYjM3oaGqt9sn8WVJMgvabmbSH
-	 wgKa5yj+WFlfog/W3Y663eFYFFtANZEahAZQp+SqML7290v0649S68BhbEyuNbHi5z
-	 IiJO8dxU9VMYB7wUzPZhhQPa8iAuK9YHJAIBZS7E=
+	b=wDJrdAMAnA56PuYc5ud8iJOmJWjB/3hTFS4ISNO1BJCMiHhk+bbaZpq5q7CvRAizJ
+	 7+UZSjMTs4MSHK+ULAlB+oF8YmqO8n4FlO/iBEhxSxADu7Q2S0nvNdTuIlcCOdPfFu
+	 S7T7fm5qqUfjvWCeCbmqlDimfvdoKjvkYspMPFHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgHUM1V (ORCPT
+        id S1727824AbgHUM2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 08:27:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbgHUM1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 08:27:19 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 645CF207DF
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:27:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598012838;
-        bh=zry6Or1kr2aFqLBbV3onaCN8a/kdLAuY9x+g5pVkg1Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cXIZAyZJKu08fvDG/T0UYw+UZV4KkVgsa5bMEkogyPKKdCLFOWNyOpOvx720EbR/c
-         RMu4BXg+rq8ZrUe/NzgVucM9ycSE/L8k/G11dh3JoqHCR0ybGUI3eXxvQi6GhOVyKY
-         fdLTPVKgCW0f5zzdjqJlrhJqO90ompXZT+hzagaU=
-Received: by mail-oi1-f181.google.com with SMTP id u63so1351194oie.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 05:27:18 -0700 (PDT)
-X-Gm-Message-State: AOAM5312GMinovy6P+g3HtOImLqOuP+nyUEypI8cGIYhF/WBpK7kPjHm
-        brulodkZysdSxjE2KWN6bq9uKBsMCtCUmCKn45k=
-X-Google-Smtp-Source: ABdhPJxnc6gdOq52yrEI4QlBI9K2JzfIBU9efqbxRGC3WGBt3PD7Um4utjm3bTpFGI6b56ul6ebn7GTupw8bDq+1Ors=
-X-Received: by 2002:a05:6808:b37:: with SMTP id t23mr1640590oij.174.1598012837736;
- Fri, 21 Aug 2020 05:27:17 -0700 (PDT)
+        Fri, 21 Aug 2020 08:28:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgHUM2B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 08:28:01 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 182F5C061385
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 05:28:01 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id v12so1620113ljc.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 05:28:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vVEnmevXmWjia/tSlEkYasW33doqxhq1hrrAE4gD2Zs=;
+        b=Uslkk0kLQy8rVRDLWSC4ZSu6zvuyMgq+S/0d9jEY3xM3jauyLCUuB1L5uuSRDph/tK
+         EI/3nCJ4e1wvBuC6vpeEHOcGT9fwhPy9TNUii0Ts+Qql8fTUZrxacQGLJO6i9xKFZGss
+         3ZAdtX/wD7LddOm/Dx5TflS8QpQ9/sGryn/rc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vVEnmevXmWjia/tSlEkYasW33doqxhq1hrrAE4gD2Zs=;
+        b=skDrIGoHrDlvevGPJZRrKrD/6qLOo2cUZATMzvri4oR47NV3ViJb+uH0MpHtV//muQ
+         1be404i0XuPhs59eh3Eyyv4hCtcR/1KScucAV47J52786H2Y19jVH1HO1CgoDp7bJk4b
+         wuvnXRqsBJI2rr+752dL0a/EVWbreb6yZJ/tgcbXfB3SggdgNrjqvcHEMlnhMRsEQiWv
+         LisOfYh3bMqUt27gfG9UZkn0hTQUuo9jrlzq+hFr9vcRpuvBjIzUY0pQnKyxxk6N/pKS
+         XXYadU211sObJ/GqsvLKyV/Wwl0uJDB81DxJqpQezcrXCP/id5KV226mxG3YIushfVWr
+         fdnQ==
+X-Gm-Message-State: AOAM533xagTtDdj0jLtmWyjwwXKlmnUWNkd4S7VOoAgAD7dAZdQNpLGZ
+        cPDQIORorYbZT+y/IsFk4E+FmpaMf7II8A==
+X-Google-Smtp-Source: ABdhPJzpaww07W3UjRgC8XmFAp0Cr84bWmTAIMv6zy5QM1+AqM044Umf8ENPRSxVvdEbdUWA1b4m/A==
+X-Received: by 2002:a2e:9dca:: with SMTP id x10mr1338024ljj.396.1598012878960;
+        Fri, 21 Aug 2020 05:27:58 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id t22sm362397lfr.12.2020.08.21.05.27.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 05:27:57 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id i19so825476lfj.8
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 05:27:57 -0700 (PDT)
+X-Received: by 2002:a19:c206:: with SMTP id l6mr1365004lfc.152.1598012876870;
+ Fri, 21 Aug 2020 05:27:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
- <20200812104005.GN2674@hirez.programming.kicks-ass.net> <20200812125645.GA8675@willie-the-truck>
- <20200812141557.GQ14398@arm.com> <20200812160017.GA30302@linux-8ccs>
- <CAMj1kXFfSLvujJYk4Em6T+UvAUDW3VX0BibsD43z30Q_TSsehg@mail.gmail.com>
- <20200812200019.GY3982@worktop.programming.kicks-ass.net> <CAMj1kXEn5o_7OOqgcntOPCqBYmpY74OkGqQ_bUBJvHG6Q9GVLA@mail.gmail.com>
- <20200813130422.GA16938@linux-8ccs> <CAMj1kXErCQYNN9r5siGNukc+9KC=QnER8LfFXVfbHdeDivYztg@mail.gmail.com>
- <20200821121959.GC20833@willie-the-truck>
-In-Reply-To: <20200821121959.GC20833@willie-the-truck>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 21 Aug 2020 14:27:05 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEyLMQz7+Fmv7i0FAu4x0uDmh7aUpbfuXaqs6k6XGog7w@mail.gmail.com>
-Message-ID: <CAMj1kXEyLMQz7+Fmv7i0FAu4x0uDmh7aUpbfuXaqs6k6XGog7w@mail.gmail.com>
-Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
-To:     Will Deacon <will@kernel.org>
-Cc:     Jessica Yu <jeyu@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+References: <20200811183950.10603-1-peterx@redhat.com> <CAHk-=whQM=m5td5tfbuxh1f_Gxjsa74XV962BYkjrbeDMAhBpA@mail.gmail.com>
+ <CAHk-=wit7LDr0tA2eVn7yHHEH76oK=Lfm3tTs8_JxO8XEED4_g@mail.gmail.com>
+ <CAHk-=wifRg0pDhufQFasWa7G3sMHbG0nahnm5yRwvTKpKU9g4A@mail.gmail.com>
+ <20200811214255.GE6353@xz-x1> <CAHk-=wiVN-+P1vOCSMyfGwYQD3hF7A18OJyXgpiMwGDfMaU+8w@mail.gmail.com>
+ <20200820215449.GB358043@xz-x1> <CAHk-=wjGzOjsfmX1Dc=yz6o_+62w4wcTVXX_hia9sHLfsCoxjg@mail.gmail.com>
+ <20200821101333.GA3432@quack2.suse.cz>
+In-Reply-To: <20200821101333.GA3432@quack2.suse.cz>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 21 Aug 2020 05:27:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whXfL5DtinS42dgtNu6i+xchK_VP+XLprQbu_og2J5Dkw@mail.gmail.com>
+Message-ID: <CAHk-=whXfL5DtinS42dgtNu6i+xchK_VP+XLprQbu_og2J5Dkw@mail.gmail.com>
+Subject: Re: [PATCH v3] mm/gup: Allow real explicit breaking of COW
+To:     Jan Kara <jack@suse.cz>
+Cc:     Peter Xu <peterx@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Mark Rutland <mark.rutland@arm.com>, nd <nd@arm.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        "Maya B . Gokhale" <gokhale2@llnl.gov>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 at 14:20, Will Deacon <will@kernel.org> wrote:
+On Fri, Aug 21, 2020 at 3:13 AM Jan Kara <jack@suse.cz> wrote:
 >
-> On Thu, Aug 13, 2020 at 03:07:13PM +0200, Ard Biesheuvel wrote:
-> > On Thu, 13 Aug 2020 at 15:04, Jessica Yu <jeyu@kernel.org> wrote:
-> > >
-> > > +++ Ard Biesheuvel [13/08/20 10:36 +0200]:
-> > > >On Wed, 12 Aug 2020 at 22:00, Peter Zijlstra <peterz@infradead.org> wrote:
-> > > >>
-> > > >> On Wed, Aug 12, 2020 at 06:37:57PM +0200, Ard Biesheuvel wrote:
-> > > >> > I know there is little we can do at this point, apart from ignoring
-> > > >> > the permissions - perhaps we should just defer the w^x check until
-> > > >> > after calling module_frob_arch_sections()?
-> > > >>
-> > > >> My earlier suggestion was to ignore it for 0-sized sections.
-> > > >
-> > > >Only they are 1 byte sections in this case.
-> > > >
-> > > >We override the sh_type and sh_flags explicitly for these sections at
-> > > >module load time, so deferring the check seems like a reasonable
-> > > >alternative to me.
-> > >
-> > > So module_enforce_rwx_sections() is already called after
-> > > module_frob_arch_sections() - which really baffled me at first, since
-> > > sh_type and sh_flags should have been set already in
-> > > module_frob_arch_sections().
-> > >
-> > > I added some debug prints to see which section the module code was
-> > > tripping on, and it was .text.ftrace_trampoline. See this snippet from
-> > > arm64's module_frob_arch_sections():
-> > >
-> > >                 else if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE) &&
-> > >                          !strcmp(secstrings + sechdrs[i].sh_name,
-> > >                                  ".text.ftrace_trampoline"))
-> > >                         tramp = sechdrs + i;
-> > >
-> > > Since Mauro's config doesn't have CONFIG_DYNAMIC_FTRACE enabled, tramp
-> > > is never set here and the if (tramp) check at the end of the function
-> > > fails, so its section flags are never set, so they remain WAX and fail
-> > > the rwx check.
-> >
-> > Right. Our module.lds does not go through the preprocessor, so we
-> > cannot add the #ifdef check there currently. So we should either drop
-> > the IS_ENABLED() check here, or simply rename the section, dropping
-> > the .text prefix (which doesn't seem to have any significance outside
-> > this context)
-> >
-> > I'll leave it to Will to make the final call here.
+> > +             if (page_mapcount(page) != 1 && page_count(page) != 1) {
 >
-> Why don't we just preprocess the linker script, like we do for the main
-> kernel?
+> So this condition looks strange to me... Did you mean:
 >
+>                 if (page_mapcount(page) != 1 || page_count(page) != 1)
 
-That should work as well, I just haven't checked how straight-forward
-it is to change that.
+Duh. Yes.
+
+> > -             if (PageKsm(vmf->page)) {
+>
+> Also I know nothing about KSM but looking at reuse_ksm_page() I can see it
+> plays some tricks with page index & mapping even for pages with page_count
+> == 1 so you cannot just drop those bits AFAICT.
+
+Yeah, I wasn't really sure what we want to do.
+
+In an optimal world, I was thinking that we'd actually do exactly what
+we do at munmap time.
+
+Which is not to get the page lock at all. Just look at what
+zap_pte_range() does for an a page when it unmaps it:
+
+                        page_remove_rmap(page, false);
+
+and that's it. No games.
+
+And guess what? That "'page_remove_rmap()" is what wp_page_copy() already does.
+
+So I really think *all* of these games we play are complete garbage
+and completely wrong.
+
+Because the zap_page_range() path is a *lot* more common than the WP
+path, and triggers for every single page when we do munmap or exit or
+whatever.
+
+So why would WP need to do anything else for correctness? Absolutely
+no reason I can see.
+
+> Also I'm not sure if dropping this is safe for THP - reuse_swap_page()
+> seems to be a misnomer and seems to do also some THP handling.
+
+Again, I think that's a bogus argument.
+
+Because this all is actually not the common path at all, and the thing
+is, the common path does none of these odd games.
+
+I really think this COW handling magic is just legacy garbage because
+people have carried it along forever and everybody is worried about
+it. The fact is, the "copy" case is always safe, because all it does
+is basically the same as zap_page_range() does, with just adding a new
+page instead.
+
+And it's also possible I'm missing something.
+
+But yes. That '&&' should very much be a '||'. What can I say? Oops.
+
+              Linus
