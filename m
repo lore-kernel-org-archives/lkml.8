@@ -2,137 +2,73 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE75C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E66C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3240B20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:35:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="FFvdCi9F"
+	by mail.kernel.org (Postfix) with ESMTP id 5D79220724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:35:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgHUSfV (ORCPT
+        id S1726435AbgHUSfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:35:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbgHUSfL (ORCPT
+        Fri, 21 Aug 2020 14:35:55 -0400
+Received: from smtprelay0065.hostedemail.com ([216.40.44.65]:54846 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725768AbgHUSfy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:35:11 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4174EC061575
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:35:10 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id o23so3467940ejr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:35:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q4frqIW9I+72sr79+gm0FlxLWfHVNqfXNa3Q85/YG38=;
-        b=FFvdCi9F5IYZnNSXXIYkdNN6KgOiWn2gpkkna/pVmWNnIBtYPB/REc3lR/fIaVeCW9
-         xcSIWYk5iEt0s3PqyD4BZtBeNRnNdMU5hgRft3ZaAVYAasCNtgX2d6rzDzZJkEmWns8Q
-         DMouWMb6Wi3acrbp58tg1muQxWsOySA71Li1F/+ycwrhf8v2Y0nl3puJD3YvwQfnHUGb
-         nrBMScR8wjFGLnAUtO3JiGu8kd20y0FCbHOw69GnkVA4KDSkAF+r8hp2olMacxwqoxVg
-         jl1pnhCY2uVZkYVQNb9N1obAwGLTlc2+T6DsKYp19SXlykAO66qL+BjzJ7BOFir1WKli
-         sEEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q4frqIW9I+72sr79+gm0FlxLWfHVNqfXNa3Q85/YG38=;
-        b=Wd2wHrNAl1eai8mVX84YGWgqjQK/61PDS3JFHH307VIJcvxtdKPxRVqSnTY8EVWBDe
-         OLM8MXi88imRdQ4Ey8mp5HOfMJ+wcXIQzCnf4IfowATHdm9eAvbNDHji/G1MWULSIWdN
-         g6vVRl08jVJ4pIQ3C/+bEKE19saknAVMYKpdiUhAheOK1A8DaBu9zMU6vTSiWHusa0cl
-         zzJNDsXYQ85kEi0z3aaVa+6311PuSzqT2ylFhr+O2kblGmAkty1UeCU05v1QGTBRjJ8J
-         8k87WLaIP6cqvJZ4bJoLGonO7chsjaJeg2GNY43PQUPAGocqSmvHkWcBV+NI82pmvDo9
-         hkww==
-X-Gm-Message-State: AOAM533W7yKioi/vWT8YDJ8xvJtE6fLISw+eizuTMNJEnE6MOdhuu+eD
-        AjHavLLBB0j08EssHmTg/3MTWmQYii01wY/r+9nO
-X-Google-Smtp-Source: ABdhPJxfrGP14Je3zh0ICJTpECzCcS4IA89+zoHjdAPERXK51mLX3W5gqb4xv4Taij+96NOlohguUZetQbWOQvF7dOs=
-X-Received: by 2002:a17:906:43c9:: with SMTP id j9mr4143785ejn.542.1598034909369;
- Fri, 21 Aug 2020 11:35:09 -0700 (PDT)
+        Fri, 21 Aug 2020 14:35:54 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 6DC3E1822495E;
+        Fri, 21 Aug 2020 18:35:53 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: shoe97_390c3bd2703b
+X-Filterd-Recvd-Size: 1887
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 21 Aug 2020 18:35:52 +0000 (UTC)
+Message-ID: <745aba13716b91cf58a45468083b59201d1530fc.camel@perches.com>
+Subject: Re: [PATCH] MAINTAINERS: Add entry for HPE Superdome Flex (UV)
+ maintainers
+From:   Joe Perches <joe@perches.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Steve Wahl <steve.wahl@hpe.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>
+Date:   Fri, 21 Aug 2020 11:35:50 -0700
+In-Reply-To: <CAL_JsqL0v6PXgMLVZzqZwjpZ4KTUGmutg6Z0YuvTccdAUa-=mw@mail.gmail.com>
+References: <20200821154848.GI7871@localhost.localdomain>
+         <CAL_JsqLBfwXamvCB0C9ujhy-BS6P4BpU-MWPuZX+_+sYPVsUSg@mail.gmail.com>
+         <8213206d4764375f32cbea36ea214573248094dc.camel@perches.com>
+         <CAL_JsqL0v6PXgMLVZzqZwjpZ4KTUGmutg6Z0YuvTccdAUa-=mw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-References: <cover.1593198710.git.rgb@redhat.com> <4a5019ed3cfab416aeb6549b791ac6d8cc9fb8b7.1593198710.git.rgb@redhat.com>
- <CAHC9VhSwMEZrq0dnaXmPi=bu0NgUtWPuw-2UGDrQa6TwxWkZtw@mail.gmail.com> <20200718004341.ruyre5xhlu3ps2tr@madcap2.tricolour.ca>
-In-Reply-To: <20200718004341.ruyre5xhlu3ps2tr@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 21 Aug 2020 14:34:57 -0400
-Message-ID: <CAHC9VhSDLF3W4LNqdgz-56m8wXLZLpDhMd8S-DxFcrKvsgCreg@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V9 08/13] audit: add containerid support for user records
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 8:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-07-05 11:11, Paul Moore wrote:
-> > On Sat, Jun 27, 2020 at 9:23 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > >
-> > > Add audit container identifier auxiliary record to user event standalone
-> > > records.
-> > >
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > Acked-by: Neil Horman <nhorman@tuxdriver.com>
-> > > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
-> > > ---
-> > >  kernel/audit.c | 19 ++++++++++++-------
-> > >  1 file changed, 12 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > index 54dd2cb69402..997c34178ee8 100644
-> > > --- a/kernel/audit.c
-> > > +++ b/kernel/audit.c
-> > > @@ -1507,6 +1504,14 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
-> > >                                 audit_log_n_untrustedstring(ab, str, data_len);
-> > >                         }
-> > >                         audit_log_end(ab);
-> > > +                       rcu_read_lock();
-> > > +                       cont = _audit_contobj_get(current);
-> > > +                       rcu_read_unlock();
-> > > +                       audit_log_container_id(context, cont);
-> > > +                       rcu_read_lock();
-> > > +                       _audit_contobj_put(cont);
-> > > +                       rcu_read_unlock();
-> > > +                       audit_free_context(context);
-> >
-> > I haven't searched the entire patchset, but it seems like the pattern
-> > above happens a couple of times in this patchset, yes?  If so would it
-> > make sense to wrap the above get/log/put in a helper function?
->
-> I've redone the locking with an rcu lock around the get and a spinlock
-> around the put.  It occurs to me that putting an rcu lock around the
-> whole thing and doing a get without the refcount increment would save
-> us the spinlock and put and be fine since we'd be fine with stale but
-> consistent information traversing the contobj list from this point to
-> report it.  Problem with that is needing to use GFP_ATOMIC due to the
-> rcu lock.  If I stick with the spinlock around the put then I can use
-> GFP_KERNEL and just grab the spinlock while traversing the contobj list.
->
-> > Not a big deal either way, I'm pretty neutral on it at this point in
-> > the patchset but thought it might be worth mentioning in case you
-> > noticed the same and were on the fence.
->
-> There is only one other place this is used, in audit_log_exit in
-> auditsc.c.  I had noted the pattern but wasn't sure it was worth it.
-> Inline or not?  Should we just let the compiler decide?
+On Fri, 2020-08-21 at 12:17 -0600, Rob Herring wrote:
+> I have another reason for wanting the split. I want to generate a
+> MAINTAINERS file from the DT schema files. We have the data there and
+> it's checked automatically. I don't care to either continually tell
+> folks to add a MAINTAINERS entry or tell them to run checkpatch.pl to
+> tell them that. But if the infrastructure got merged, would that
+> already work?
 
-I'm generally not a fan of explicit inlines unless it has been shown
-to be a real problem.
+It already gets addresses from yaml files.
+The same could be done for dts/dtsi files.
 
--- 
-paul moore
-www.paul-moore.com
+Last month I proposed:
+
+https://lore.kernel.org/linux-arm-kernel/da52724655ff2161add7fb27fea8fc673028b9fc.camel@perches.com/
+
+
