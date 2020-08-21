@@ -2,139 +2,103 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A513DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB33C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7837320720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:11:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VIJtt3CG"
+	by mail.kernel.org (Postfix) with ESMTP id 36B3120720
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598033569;
+	bh=SJEVARyTxOwGK1UTh6HDBMKaWxUQ4ePCEQQ1BEvpqoE=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=OEMxrqBGtGIOKGi+DfdWhTy4UOLM36itR2WBH9pWu3+8W7pWXnsYtJu25PTWJV++q
+	 9SxoquPzgWnRmDzx9JoKUwiT9mbVZn/BpyWCHtAyi5gAsyuZkb8KyyJYd5zT4TBk5U
+	 dhM8EU+cgDxnBVnjLwl9mH7u3C9IWKB8ru0jjthQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgHUSLk (ORCPT
+        id S1726784AbgHUSMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:11:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49422 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726057AbgHUSLj (ORCPT
+        Fri, 21 Aug 2020 14:12:48 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46786 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgHUSMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:11:39 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LI1dKk193635;
-        Fri, 21 Aug 2020 14:11:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=8yvEI0g2E8xG0SJMCtpKCuoNmNMpLdEw9u+yzYkMfTk=;
- b=VIJtt3CGuTG5sUiykNJVYhLxmszHb9Wdm6J2EYpLcqgQckwJbpZSCOXpbpZTT7qfDYek
- khVO23HbKGkVeXfY7yvjblSsk5ons8MFYnUE+xfiKmPxrpQy2O1Uzm3t5KljAQGAS3Bi
- JVDBAhSLcbgn8Q/8zPHOpshUdkZ+z1NKbejUMvQAwJmfqD5Cb+GA0p96cn0q/15zvROB
- kz1jz3TOeBsOPq4XU9WgyJQDHOHnllQQ5W6D/cbf6KeGIc+tarqDXE2nurzt4C1Xegzr
- zNxTx2jCdFLnGYmixgTjm89ER17TSvq+cH5qFnlKiQjfTRrfDAjs6hfREYhPvOx3uYJk 1Q== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3327xucbrh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 14:11:31 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LIB7c5003354;
-        Fri, 21 Aug 2020 18:11:28 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 3304bujubn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 18:11:28 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LI9ucF56230152
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 18:09:56 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 767124C044;
-        Fri, 21 Aug 2020 18:11:25 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C639E4C04A;
-        Fri, 21 Aug 2020 18:11:23 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.33.217])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Aug 2020 18:11:23 +0000 (GMT)
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-To:     linux-block@vger.kernel.org
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, axboe@kernel.dk,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Shivaprasad G Bhat <sbhat@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Subject: [PATCH 1/1] block: Set same_page to false in __bio_try_merge_page if ret is false
-Date:   Fri, 21 Aug 2020 23:41:17 +0530
-Message-Id: <e50582833c897c1a51a676d7726d1380a3e5a678.1598032711.git.riteshh@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
+        Fri, 21 Aug 2020 14:12:44 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v13so2252466oiv.13;
+        Fri, 21 Aug 2020 11:12:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=4fRLhlLaF1BRs42dZn3SS3uUZBKao5hBFOcfm7E01Do=;
+        b=m1UlCExyjgZM1WK9E7SrvYf+qCinnMtm2up6ssE6TIyfMKTU2EGClsJ1yAePFCXB0O
+         Km/efFrvZyndAKZyq/J8tjzRZzMJ+W8/98FP2be/QLVhsSLa78blowXYwhF3nrFoqyTb
+         QLpJVCKb8UsMkKd+YB+S4OF25hNVbHm5EO/CAHK4IcIZPVDWjOWPRBAGaxu2AJnP9Cq1
+         LyYvPrFYvKpyE/oRysXNDcTy5XGyyP5u7y92idf10vY2B1MIsSh/RaWj/Fui3F/jdhWW
+         /5fHUZnbKb36GwfDTFktRrPDTWetqYyPz17w9HfsE+Zarj6gbDvWMP7waiRWGUSBi2J2
+         w2qA==
+X-Gm-Message-State: AOAM533FNYqn8OgaFHM+RY2gLW3hyWGGLBokQXNBugO2J2QXpaC2Vh9S
+        e0SKE76NzRfiE047YgzLv6r7px22/PbkvZXaL+iH3L9hotI=
+X-Google-Smtp-Source: ABdhPJz7XhbTXhP0vSLmrKIAcTR4mnXD7awwk8eiby2xKvqRc1Iy3Z7m7qxHRq1ORUYzeZjINnniHdv0eex7T9SULVQ=
+X-Received: by 2002:a54:4f14:: with SMTP id e20mr2659047oiy.103.1598033563881;
+ Fri, 21 Aug 2020 11:12:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 mlxlogscore=981 lowpriorityscore=0
- bulkscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210166
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 21 Aug 2020 20:12:33 +0200
+Message-ID: <CAJZ5v0hVw_1b_hf7UWv06ipusZ=xs-0Lhi-a0npqU8Uua26FPQ@mail.gmail.com>
+Subject: [GIT PULL] Power management fixes for v5.9-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we hit the UINT_MAX limit of bio->bi_iter.bi_size and so we are anyway
-not merging this page in this bio, then it make sense to make same_page
-also as false before returning.
+Hi Linus,
 
-Without this patch, we hit below WARNING in iomap.
-This mostly happens with very large memory system and / or after tweaking
-vm dirty threshold params to delay writeback of dirty data.
+Please pull from the tag
 
-WARNING: CPU: 18 PID: 5130 at fs/iomap/buffered-io.c:74 iomap_page_release+0x120/0x150
- CPU: 18 PID: 5130 Comm: fio Kdump: loaded Tainted: G        W         5.8.0-rc3 #6
- Call Trace:
-  __remove_mapping+0x154/0x320 (unreliable)
-  iomap_releasepage+0x80/0x180
-  try_to_release_page+0x94/0xe0
-  invalidate_inode_page+0xc8/0x110
-  invalidate_mapping_pages+0x1dc/0x540
-  generic_fadvise+0x3c8/0x450
-  xfs_file_fadvise+0x2c/0xe0 [xfs]
-  vfs_fadvise+0x3c/0x60
-  ksys_fadvise64_64+0x68/0xe0
-  sys_fadvise64+0x28/0x40
-  system_call_exception+0xf8/0x1c0
-  system_call_common+0xf0/0x278
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.9-rc2
 
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Reported-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
----
-[prev discussion]:- https://patchwork.kernel.org/patch/11723453/
+with top-most commit cc15fd9892e28689b6e17dbd6e28d00c55d62928
 
- block/bio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Merge branch 'opp/fixes' of
+git://git.kernel.org/pub/scm/linux/kernel/git/vireshk/pm
 
-diff --git a/block/bio.c b/block/bio.c
-index a7366c02c9b5..675ecd81047b 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -877,8 +877,10 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
- 		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
- 
- 		if (page_is_mergeable(bv, page, len, off, same_page)) {
--			if (bio->bi_iter.bi_size > UINT_MAX - len)
-+			if (bio->bi_iter.bi_size > UINT_MAX - len) {
-+				*same_page = false;
- 				return false;
-+			}
- 			bv->bv_len += len;
- 			bio->bi_iter.bi_size += len;
- 			return true;
--- 
-2.25.4
+on top of commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
 
+ Linux 5.9-rc1
+
+to receive power management fixes for 5.9-rc2.
+
+These fix a few issues in the operating performance points (OPP)
+framework.
+
+Specifics:
+
+ - Fix re-enabling of resources in dev_pm_opp_set_rate() (Rajendra
+   Nayak).
+
+ - Fix OPP table reference counting in error paths (Stephen Boyd).
+
+Thanks!
+
+
+---------------
+
+Rajendra Nayak (1):
+      opp: Enable resources again if they were disabled earlier
+
+Stephen Boyd (2):
+      opp: Put opp table in dev_pm_opp_set_rate() for empty tables
+      opp: Put opp table in dev_pm_opp_set_rate() if _set_opp_bw() fails
+
+---------------
+
+ drivers/opp/core.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
