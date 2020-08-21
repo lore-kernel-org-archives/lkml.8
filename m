@@ -2,98 +2,142 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAF5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4243C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B522A20855
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA7320855
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:14:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwE38bqT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSf5Jpl9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgHUDMS (ORCPT
+        id S1727116AbgHUDOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:12:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52046 "EHLO
+        Thu, 20 Aug 2020 23:14:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbgHUDMS (ORCPT
+        with ESMTP id S1726702AbgHUDOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:12:18 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1A9C061385;
-        Thu, 20 Aug 2020 20:12:17 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id z17so410267ioi.6;
-        Thu, 20 Aug 2020 20:12:16 -0700 (PDT)
+        Thu, 20 Aug 2020 23:14:18 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA56C061385;
+        Thu, 20 Aug 2020 20:14:18 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 128so336348pgd.5;
+        Thu, 20 Aug 2020 20:14:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Z24e9MTBcFw/wYogXzpZAl98eujY/DD/T14so9s//xk=;
-        b=RwE38bqTRHq/mkoc6SEkAbqkA5cjvwAxQxuax8BbysUK+V5VWVGmmQMy6XpDZnMAKZ
-         9rTs07At6fiyd2GQpl3xduqX/xKCr8XC+AEwJcgJ4UL4Yxpusgt0dOwAjy9Uw+7jMi7S
-         Cj/zelKBa5CC+tIGkxD0kIJmRKW8VkIZ/k0gosfbkuEv0z21XJIafXWVtni8QK7xhwCs
-         cJrEQVEEQvrrtTgCYd0iE/1Wfcdni3ALlrr4y6kRAkmnCVacQIIUxBiK/SFi6t5el/Tm
-         cjcGIJQK0TOKJfAAY/Qk82UklbL1k6Mvz8dfvd/2fcrOTIApxO+uuNoUp8mVDz7BFUH/
-         wcIg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/YxLwfqRT0LzVr6sU/PoWPx80Kd+H0Hr2LJri5kk/Pc=;
+        b=FSf5Jpl9/IFj6kOf3jntWnnXmVi0fLzyoVNQd9Et5l837ZviEz5bE51u7MyzY6jN8t
+         1g9QNe55Es1Nb1JFpV+rTReUp4PBLd/w1e4Ub0VahG7xJ+3rH20rvqP+0UXh/87EGoFO
+         pL9rqZH508dmmnpYu4gIA3rrQ50GklgzWc9//pBTGS/krgazkAdC/0lb83YMtgVqQ1DB
+         yubYb7m7vreAwvGmz3sBZwhPm2//3l7q5G3aB2LawHC+oVLKanL0o7S0sPo1KCEkTwav
+         soByUFvv+zRuPOu7B0Wy1d2ItNz2SDssVb/rRDupRH1JyZXec7eTt3BvN3ni3zpq0kn6
+         coxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Z24e9MTBcFw/wYogXzpZAl98eujY/DD/T14so9s//xk=;
-        b=jXD+lZqm2CJteVJO8wcUG8MWlwi6EFI9KHEy7TKHL/07XXNfm/20bySwAAY5D2e9fE
-         +JWYG9Sg8Ai0c4yMInPHoAaeDx6qF36YOVsLRNR8jb+PQEEer1EPIIcmy8Fj+HbnJKRa
-         MgghZYYIVCuetqcI3Xn++qMfdHMKu2cVb08IfO3LIGvU8onTqzfmi420pglbuAk63jtF
-         wjAExTa2Mg0axOikhKosboOtxJKsAC7U2BG5OVx9gWDpFOt4WWvFxENzbAXY9tn6O0r1
-         VDR4LnSEKRBpVKSv14IiSWJPjTRrkNMBwtGo6ffTt9uLTzNXWUBMPkNv5cVsREKBizkg
-         TSHg==
-X-Gm-Message-State: AOAM530lsjb9FmVFsetvWCXuq6fYPW0+3YDx+WlNA5W5ham+q06YXdBb
-        asb7GYFvNhXfRpMvVWal6AY=
-X-Google-Smtp-Source: ABdhPJw14Jl2G7Bp8vAMyHdgawhjyhj4+kYTA82rGwLI8PGW7p7LMS3YEGS90Z4Yln+dbenmUYgXXw==
-X-Received: by 2002:a02:5a48:: with SMTP id v69mr802492jaa.51.1597979536328;
-        Thu, 20 Aug 2020 20:12:16 -0700 (PDT)
-Received: from localhost.localdomain (x-128-101-215-112.reshalls.umn.edu. [128.101.215.112])
-        by smtp.gmail.com with ESMTPSA id s13sm338359iln.12.2020.08.20.20.12.15
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/YxLwfqRT0LzVr6sU/PoWPx80Kd+H0Hr2LJri5kk/Pc=;
+        b=mpjSOZ6GzqJtBTU6MH4CbNhgAWRTHWy5zPTOQ6IhXx4zNGtG1KrIUBLmGppJMCS8Cj
+         KuwffJoviuwVZ00Lvgf39tg901sVKrEbbN6G9BmcmlrTTlIGIYIvkN0PfNinrYasRjyC
+         usG88kWEgx954Q0UB4apc73qWQuXDK+GMbnh7mAirsNNQwuytUydMkP5eVyQT2N/fD/0
+         S+kyj3cZ4Azo44as+rR29+Dl1iW/vgcUdyFQ7IeP952lea5wLoZcMpzVEyZ5qxZnJz9g
+         XLRybjg6z/Q6uvI/L1N0sTCobNjZA6Lw/6oJxYN7YfSlQiMo6J7PYkpkT4KfHMVVeTSC
+         eY+Q==
+X-Gm-Message-State: AOAM532RAo7pOnUqKKF20kyDQh3yqOMK2f+5ee9e7rr4n6qc/xLSog2Z
+        PLOyxhFJUgb2X5MVy2X6Wsp6tl40Vzr/REn1GAU=
+X-Google-Smtp-Source: ABdhPJz4sS4YBiY4YgsXDfQAOA6FAJKd3JDRxKn3w9h0Gc1psHawgfUEVTaUUsVEuEbrx9ShztbGLA==
+X-Received: by 2002:a63:5a0f:: with SMTP id o15mr839105pgb.187.1597979657741;
+        Thu, 20 Aug 2020 20:14:17 -0700 (PDT)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id np4sm376656pjb.4.2020.08.20.20.14.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 20:12:15 -0700 (PDT)
-From:   George Acosta <acostag.ubuntu@gmail.com>
-To:     acostag.ubuntu@gmail.com
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Phani Kiran Hemadri <phemadri@marvell.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: cavium/nitrox: add an error message to explain the failure of pci_request_mem_regions
-Date:   Thu, 20 Aug 2020 22:12:08 -0500
-Message-Id: <20200821031209.21279-1-acostag.ubuntu@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 20 Aug 2020 20:14:17 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Fri, 21 Aug 2020 11:14:04 +0800
+To:     Benjamin Poirier <benjamin.poirier@gmail.com>
+Cc:     netdev@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 3/3] staging: qlge: clean up code that dump info to dmesg
+Message-ID: <20200821031404.mjlqgcvvz3htxoj2@Rk>
+References: <20200814160601.901682-1-coiby.xu@gmail.com>
+ <20200814160601.901682-4-coiby.xu@gmail.com>
+ <20200816025717.GA28176@f3>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200816025717.GA28176@f3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide an error message for users when pci_request_mem_regions failed.
+On Sun, Aug 16, 2020 at 11:57:17AM +0900, Benjamin Poirier wrote:
+>On 2020-08-15 00:06 +0800, Coiby Xu wrote:
+>> The related code are not necessary because,
+>> - Device status and general registers can be obtained by ethtool.
+>> - Coredump can be done via devlink health reporter.
+>> - Structure related to the hardware (struct ql_adapter) can be obtained
+>>   by crash or drgn.
+>
+>I would suggest to add the drgn script from the cover letter to
+>Documentation/networking/device_drivers/qlogic/
 
-Signed-off-by: George Acosta <acostag.ubuntu@gmail.com>
----
- drivers/crypto/cavium/nitrox/nitrox_main.c | 1 +
- 1 file changed, 1 insertion(+)
+Thank you for this suggestion! I planned to send a pull request to
+https://github.com/osandov/drgn. This is a better idea.
+>
+>I would also suggest to submit a separate patch now which fixes the
+>build breakage reported in <20200629053004.GA6165@f3> while you work on
+>removing that code.
+>
+I'll send a single patch to fix that issue before preparing for v1
+of this work.
 
-diff --git a/drivers/crypto/cavium/nitrox/nitrox_main.c b/drivers/crypto/cavium/nitrox/nitrox_main.c
-index cee2a2713038..9d14be97e381 100644
---- a/drivers/crypto/cavium/nitrox/nitrox_main.c
-+++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
-@@ -451,6 +451,7 @@ static int nitrox_probe(struct pci_dev *pdev,
- 	err = pci_request_mem_regions(pdev, nitrox_driver_name);
- 	if (err) {
- 		pci_disable_device(pdev);
-+		dev_err(&pdev->dev, "Failed to request mem regions!\n");
- 		return err;
- 	}
- 	pci_set_master(pdev);
--- 
-2.17.1
+>>
+>> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+>> ---
+>>  drivers/staging/qlge/qlge.h         |  82 ----
+>>  drivers/staging/qlge/qlge_dbg.c     | 672 ----------------------------
+>>  drivers/staging/qlge/qlge_ethtool.c |   1 -
+>>  drivers/staging/qlge/qlge_main.c    |   6 -
+>>  4 files changed, 761 deletions(-)
+>>
+>[...]
+>> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+>> index 058889687907..368394123d16 100644
+>> --- a/drivers/staging/qlge/qlge_dbg.c
+>> +++ b/drivers/staging/qlge/qlge_dbg.c
+>> @@ -1326,675 +1326,3 @@ void ql_mpi_core_to_log(struct work_struct *work)
+>>  		       sizeof(*qdev->mpi_coredump), false);
+>>  }
+>>
+>> -#ifdef QL_REG_DUMP
+>> -static void ql_dump_intr_states(struct ql_adapter *qdev)
+>> -{
+>[...]
+>> -	}
+>> -}
+>> -#endif
+>
+>This leaves a stray newline at the end of the file and also does not
+>apply over latest staging.
 
+I will fix it in v1. Thank you for reviewing this patch!
+
+--
+Best regards,
+Coiby
