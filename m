@@ -2,114 +2,252 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6115C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91E482075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442662075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:19:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="iqb3h5kZ"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DQo5o0E2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BRfXUkkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgHUCTZ (ORCPT
+        id S1728282AbgHUCTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:19:25 -0400
-Received: from mail-co1nam11on2075.outbound.protection.outlook.com ([40.107.220.75]:52480
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727787AbgHUCTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:19:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N6f5R9aNUmLrGHuJSRq0/KI14YpFpwKJPhC9p8qIyfQIzgaUX7E4nJOi4xIRysKq8hp+m/EWZ51dBN0YIpcsLlmq6h+4BUOuCemRT9N+VXrbICafbuGkTwabYhxZymzfuO9OZwniOr7QEncK90ufbQkkBJyNQBfjbimMyA+3pvbFdlusPkPxBZQm0I2EZGwsAfXrZO088VpKyQ+HtW/tFSUQiYjxfwXFnkzUTk38cMmql9LUCH4r/BhtxxguX59yah0LES0yIc8Ba84akiR3075gA0Yb9HRDotUh9VnyNh6TTDgeKqF1O+Phw+T6WBWYDC7raq446F7+B5vfOKSllA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1fq5SiOaTYdX32V7iVt1nuK8Uq8FAEUJE5Q8hg0hsC0=;
- b=aEQJhhIuw2G1dmO7+axkjlSRk0wPKa2LVM7F+5gYaALJ1QR8jVg4HWnbWhWeFvhbEQnfMJs7d/wgoh1bHf9HynJ2dF+SlYYi522mpgzxiL54rOn2n2NtkxKT4jW6LWClYBjmQIjDJiyU8EFd+3W1NO5Fbi2t0CzWFPNn9j+SxiMzUz9ZlBpeZKQ3ywdk9Wb3c8bj1j6n7JhAtFixs488qqFXLsExKRxAnhHPAYBpLKyzWOKL4+vpzpOcd9Gs+uqRMMj4HwL1AyJT1KSYkWCQzKkS37Bl5iwzgjA7HFqjyi7vF962DytLOuQmVsBFFDwPWGI21xi1HVzD3jmdJ12r5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1fq5SiOaTYdX32V7iVt1nuK8Uq8FAEUJE5Q8hg0hsC0=;
- b=iqb3h5kZCGIvRMQPJTPyy80RLXcq5b4of1cFOcnvsCT/kH1NmRfZwMhx58MhAd0EXI1SrhWk1ykQDhzX6NDcUEoSwH0cpPnM6AgBy/z3IpENLp36dXSPeQGMyOP1byNnnHtPffmilklwG85B8SR+VxyCiisu+2XGRj0/T9sgbBo=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=synaptics.com;
-Received: from DM6PR03MB4555.namprd03.prod.outlook.com (2603:10b6:5:102::17)
- by DM6PR03MB4233.namprd03.prod.outlook.com (2603:10b6:5:8::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3305.25; Fri, 21 Aug 2020 02:19:17 +0000
-Received: from DM6PR03MB4555.namprd03.prod.outlook.com
- ([fe80::e494:740f:155:4a38]) by DM6PR03MB4555.namprd03.prod.outlook.com
- ([fe80::e494:740f:155:4a38%7]) with mapi id 15.20.3305.025; Fri, 21 Aug 2020
- 02:19:17 +0000
-Date:   Fri, 21 Aug 2020 10:17:29 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] regulator: mp886x: implement set_ramp_delay
-Message-ID: <20200821101729.76f1951b@xhacker.debian>
-In-Reply-To: <20200820210513.GA41191@sirena.org.uk>
-References: <20200820171020.5df4683b@xhacker.debian>
-        <20200820171051.55a238e8@xhacker.debian>
-        <20200820210513.GA41191@sirena.org.uk>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYAPR01CA0052.jpnprd01.prod.outlook.com
- (2603:1096:404:2b::16) To DM6PR03MB4555.namprd03.prod.outlook.com
- (2603:10b6:5:102::17)
+        Thu, 20 Aug 2020 22:19:30 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52880 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgHUCRD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 22:17:03 -0400
+Message-Id: <20200821002947.075507468@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597976220;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=R6JxsviuQwbwX1XcXkkzKQyT+T09StpqXEtTQLkEikY=;
+        b=DQo5o0E2WeO60HEbPpznUfv/fyHaZz6TzI8gYCMBjgqs4f3s7extmvfXyO7EAhTksKFRKq
+        mvtWArIM2U1VOhePfnms1RYw8XDK9WpqVobucAP6JaquG3rVNS2CLVdbHu/TBc3qsigxVg
+        uHbxWuIZd26AsH63CUHieyPhvEjiStO37f1hYv54ZnHBkcQKk6bzmSD7/A/Fxdkkb/Syij
+        YxqKenD82ZQdMn2h5p5d73A+PqERU4aI52sNyvm88zGFFhHt0oeiD1bMCVY5n3i8KBw+kn
+        t0SxvyiQ+H8LfApRgesHYdyXcQ/KzNm81G0Ix1yA/VCHh/asmwD6xUUwXIf3EA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597976220;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=R6JxsviuQwbwX1XcXkkzKQyT+T09StpqXEtTQLkEikY=;
+        b=BRfXUkkOYf/yCGZZ1rSc74TlbnMx60yjOLHMFdtEViH1OQED5w/ZEnmHNmx+f/pGQQFIDh
+        05oW78opN0GrQEDA==
+Date:   Fri, 21 Aug 2020 02:24:42 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, linux-pci@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [patch RFC 18/38] x86/irq: Initialize PCI/MSI domain at PCI init time
+References: <20200821002424.119492231@linutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by TYAPR01CA0052.jpnprd01.prod.outlook.com (2603:1096:404:2b::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Fri, 21 Aug 2020 02:19:15 +0000
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ae0be932-a328-45e2-e333-08d845789aee
-X-MS-TrafficTypeDiagnostic: DM6PR03MB4233:
-X-Microsoft-Antispam-PRVS: <DM6PR03MB42334F217C28FA7294542A41ED5B0@DM6PR03MB4233.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hOGGkrV+C7OX9r0qZAlZqAiSzMBE4zIdju9KtjQWjphJZDUPe+FWhEuBXN1M7T67Cvzd3hnGNIP4WrHWMGToumyHa17F3XR6FAP/6swZoqqUmOxQliqYh83suaxltmgwZhep6ieVhoMxsiOJCo+7Ci1vVbEyOZ6TE/4Rlfz64Kn9LTM2R/19I+DSn+8B8MIlZb3VAZ4Iaxb5VesbffecJ5Unn7RxiWx0kpoK/7HA0A1C85vAeD4hiCk786NylCgzB20DMyyHJ2eseRVl5Qyz6eM2qdvPeT5E1NF4e1omJJunIqepZwIxLZEdSijBKmHxmnNNhReO6EWqqWGeR3LCnyO4SE0/kIEm3lm4yTb287B/zhTNxu8viT6g2arpCUme
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(346002)(39860400002)(136003)(376002)(366004)(66556008)(316002)(4326008)(66476007)(6916009)(6666004)(2906002)(66946007)(54906003)(52116002)(1076003)(956004)(26005)(5660300002)(16576012)(86362001)(4744005)(186003)(6486002)(478600001)(8936002)(9686003)(110011004)(8676002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: G6iyJVTZ4ns74/AaPlIuXAn3k5QIEkdiq/dlqu6e6mEzZet0EVpMatDluEhGVikgu/fXLDjo2aul16i2wvl5eXBokQFPRQlChoetnmloulqzFaoHAg/ca7UeMsVighZBU/bq4G1/f4Kb+b53emNFzLXgnZSw1Aiv9e2kcLxFvwgYyI696/QpTaghLH0Hy9kNrgSmuHpmYxBWsG2GHQewD3d/sxdWhmPan5wwmVaypToCwRCyi9aLxoCrbhadafObiBVlYw9mDof4FgcgWIVLXz19ZUA/Ev2A85e8aIfpPhH9Ar8F/uPwiYlk8IQBPBSSnHVrXYnjSjmsA7h+1sT0F8s/ja/9tQJpX6KNaicD6IbPuwik7LZvEiDw7oTXPd/0snkIvjbXfFhhR7Bi4IzvwsqhycCjm3uUYQmTM94+goz3y/voFY78LyPTl4taugY2dOv48VsF8TBYQchz5WfF4Scs8Jiqzbq9XyNF2ofLfyNYyIOnBaWgAJbuKrTxP9f2oIURFqBuOUnbtOzxb9N+nVh64rCJAJRBBV6IQlM3cfc4esNWCezYnAjk52drw87A+38saZvp59tI1aKBemkrVAXUMT7SUmib3w32HqkKFSQlQnSk2hMyEDr4c39P1spvq+CvpXlQq4GyZM43GYrNdg==
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae0be932-a328-45e2-e333-08d845789aee
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 02:19:17.5331
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KZ+7pgeGkBRr7w8iS8gCm3XRINGd8BWIHG8Yj6PDQxmWQA4FXWIIhRHAQazim3hM4TIgVqsFT5dKfyMg38dFwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4233
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline;
+ filename="x86-irq--Initialize-PCI-MSI-domain-at-PCI-init-time.patch"
+Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 22:05:13 +0100 Mark Brown wrote:
+No point in initializing the default PCI/MSI interrupt domain early and no
+point to create it when XEN PV/HVM/DOM0 are active.
 
-> On Thu, Aug 20, 2020 at 05:10:51PM +0800, Jisheng Zhang wrote:
-> > Implement the .set_ramp_delay for MP8867 and MP8869. MP8867 and MP8869
-> > could share the implementation, the only difference is the slew_rates
-> > array.  
-> 
-> This doesn't apply against current code, please check and resend.
+Move the initialization to pci_arch_init() and convert it to init ops so
+that XEN can override it as XEN has it's own PCI/MSI management. The XEN
+override comes in a later step.
 
-I found the reason, the three patches in v2 were applied to for-next tree.
-Should I renew patches based on for-next? Since the "mps,switch-frequency"
-binding isn't released and used, I think I can send new patches to convert
-mps,switch-frequency to mps,switch-frequency-hz.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-pci@vger.kernel.org
+---
+ arch/x86/include/asm/irqdomain.h |    6 ++++--
+ arch/x86/include/asm/x86_init.h  |    3 +++
+ arch/x86/kernel/apic/msi.c       |   26 ++++++++++++++++----------
+ arch/x86/kernel/apic/vector.c    |    2 --
+ arch/x86/kernel/x86_init.c       |    3 ++-
+ arch/x86/pci/init.c              |    3 +++
+ 6 files changed, 28 insertions(+), 15 deletions(-)
 
-Thanks
+--- a/arch/x86/include/asm/irqdomain.h
++++ b/arch/x86/include/asm/irqdomain.h
+@@ -51,9 +51,11 @@ extern int mp_irqdomain_ioapic_idx(struc
+ #endif /* CONFIG_X86_IO_APIC */
+ 
+ #ifdef CONFIG_PCI_MSI
+-extern void arch_init_msi_domain(struct irq_domain *domain);
++void x86_create_pci_msi_domain(void);
++struct irq_domain *native_create_pci_msi_domain(void);
+ #else
+-static inline void arch_init_msi_domain(struct irq_domain *domain) { }
++static inline void x86_create_pci_msi_domain(void) { }
++#define native_create_pci_msi_domain	NULL
+ #endif
+ 
+ #endif
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -8,6 +8,7 @@ struct mpc_bus;
+ struct mpc_cpu;
+ struct mpc_table;
+ struct cpuinfo_x86;
++struct irq_domain;
+ 
+ /**
+  * struct x86_init_mpparse - platform specific mpparse ops
+@@ -42,12 +43,14 @@ struct x86_init_resources {
+  * @intr_init:			interrupt init code
+  * @intr_mode_select:		interrupt delivery mode selection
+  * @intr_mode_init:		interrupt delivery mode setup
++ * @create_pci_msi_domain:	Create the PCI/MSI interrupt domain
+  */
+ struct x86_init_irqs {
+ 	void (*pre_vector_init)(void);
+ 	void (*intr_init)(void);
+ 	void (*intr_mode_select)(void);
+ 	void (*intr_mode_init)(void);
++	struct irq_domain *(*create_pci_msi_domain)(void);
+ };
+ 
+ /**
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -21,7 +21,7 @@
+ #include <asm/apic.h>
+ #include <asm/irq_remapping.h>
+ 
+-static struct irq_domain *msi_default_domain;
++static struct irq_domain *x86_pci_msi_default_domain __ro_after_init;
+ 
+ static void __irq_msi_compose_msg(struct irq_cfg *cfg, struct msi_msg *msg)
+ {
+@@ -192,7 +192,7 @@ int native_setup_msi_irqs(struct pci_dev
+ 
+ 	domain = irq_remapping_get_irq_domain(&info);
+ 	if (domain == NULL)
+-		domain = msi_default_domain;
++		domain = x86_pci_msi_default_domain;
+ 	if (domain == NULL)
+ 		return -ENOSYS;
+ 
+@@ -243,25 +243,31 @@ static struct msi_domain_info pci_msi_do
+ 	.handler_name	= "edge",
+ };
+ 
+-void __init arch_init_msi_domain(struct irq_domain *parent)
++struct irq_domain * __init native_create_pci_msi_domain(void)
+ {
+ 	struct fwnode_handle *fn;
++	struct irq_domain *d;
+ 
+ 	if (disable_apic)
+-		return;
++		return NULL;
+ 
+ 	fn = irq_domain_alloc_named_fwnode("PCI-MSI");
+ 	if (fn) {
+-		msi_default_domain =
+-			pci_msi_create_irq_domain(fn, &pci_msi_domain_info,
+-						  parent);
++		d = pci_msi_create_irq_domain(fn, &pci_msi_domain_info,
++					      x86_vector_domain);
+ 	}
+-	if (!msi_default_domain) {
++	if (!d) {
+ 		irq_domain_free_fwnode(fn);
+-		pr_warn("failed to initialize irqdomain for MSI/MSI-x.\n");
++		pr_warn("Failed to initialize PCI-MSI irqdomain.\n");
+ 	} else {
+-		msi_default_domain->flags |= IRQ_DOMAIN_MSI_NOMASK_QUIRK;
++		d->flags |= IRQ_DOMAIN_MSI_NOMASK_QUIRK;
+ 	}
++	return d;
++}
++
++void __init x86_create_pci_msi_domain(void)
++{
++	x86_pci_msi_default_domain = x86_init.irqs.create_pci_msi_domain();
+ }
+ 
+ #ifdef CONFIG_IRQ_REMAP
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -713,8 +713,6 @@ int __init arch_early_irq_init(void)
+ 	BUG_ON(x86_vector_domain == NULL);
+ 	irq_set_default_host(x86_vector_domain);
+ 
+-	arch_init_msi_domain(x86_vector_domain);
+-
+ 	BUG_ON(!alloc_cpumask_var(&vector_searchmask, GFP_KERNEL));
+ 
+ 	/*
+--- a/arch/x86/kernel/x86_init.c
++++ b/arch/x86/kernel/x86_init.c
+@@ -76,7 +76,8 @@ struct x86_init_ops x86_init __initdata
+ 		.pre_vector_init	= init_ISA_irqs,
+ 		.intr_init		= native_init_IRQ,
+ 		.intr_mode_select	= apic_intr_mode_select,
+-		.intr_mode_init		= apic_intr_mode_init
++		.intr_mode_init		= apic_intr_mode_init,
++		.create_pci_msi_domain	= native_create_pci_msi_domain,
+ 	},
+ 
+ 	.oem = {
+--- a/arch/x86/pci/init.c
++++ b/arch/x86/pci/init.c
+@@ -3,6 +3,7 @@
+ #include <linux/init.h>
+ #include <asm/pci_x86.h>
+ #include <asm/x86_init.h>
++#include <asm/irqdomain.h>
+ 
+ /* arch_initcall has too random ordering, so call the initializers
+    in the right sequence from here. */
+@@ -10,6 +11,8 @@ static __init int pci_arch_init(void)
+ {
+ 	int type;
+ 
++	x86_create_pci_msi_domain();
++
+ 	type = pci_direct_probe();
+ 
+ 	if (!(pci_probe & PCI_PROBE_NOEARLY))
+
