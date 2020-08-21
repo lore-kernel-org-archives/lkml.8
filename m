@@ -2,84 +2,147 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED3AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F278C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75AC420656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB5620656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598029914;
+	bh=atyzxSmKZvCjKg35gnk/DNffB9siaSr+jtZ4WxUcGOg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ngvwjBn779BXTz8sOeM2tX5PgpKc/QQiZJi1+f4DG3t5WWW0Dh7oY5VyYT8qcN0RZ
+	 S8cva6TRX06Pa4jU693YP4VYGS4259opmXU08WRqE/sQQ7h0wPo2mtRtGFNfZlwnG0
+	 oHSmiuvh2rn9T7dPFwwnT8NyH1lZBnmwN/uxkM7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgHURLd (ORCPT
+        id S1728177AbgHURLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:11:33 -0400
-Received: from mga09.intel.com ([134.134.136.24]:52337 "EHLO mga09.intel.com"
+        Fri, 21 Aug 2020 13:11:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbgHURLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 13:11:06 -0400
-IronPort-SDR: htkML8yGL21V2AYUjRalkwViV/dEW592mpf6yrtewWBjMnRY6L8F5myZk77uoivKXr6pYhdBVY
- kcpu0N6H5Uxg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="156644348"
-X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
-   d="scan'208";a="156644348"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 10:11:05 -0700
-IronPort-SDR: I2mZkfr9xcMQIMP3kfbfldOKn4lii7Hzzr/Gi2BjSAbq3aMpijSBnuzGSdvAMmyB1ynYeQlPGP
- rA54NwF0FaEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
-   d="scan'208";a="330096839"
-Received: from otcwcpicx6.sc.intel.com ([172.25.55.29])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Aug 2020 10:11:05 -0700
-Date:   Fri, 21 Aug 2020 17:11:05 +0000
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Babu Moger <babu.moger@amd.com>, H Peter Anvin <hpa@zytor.com>,
-        x86 <x86@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] x86/resctrl: Enable user to view thread or core
- throttling mode
-Message-ID: <20200821171105.GA362575@otcwcpicx6.sc.intel.com>
-References: <1594921994-66192-1-git-send-email-fenghua.yu@intel.com>
- <1594921994-66192-3-git-send-email-fenghua.yu@intel.com>
- <20200821131306.GH12181@zn.tnic>
+        id S1728149AbgHUQRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:17:09 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 984E320578;
+        Fri, 21 Aug 2020 16:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598026626;
+        bh=atyzxSmKZvCjKg35gnk/DNffB9siaSr+jtZ4WxUcGOg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=P5yRMhbBOrzvKZ6MV0jITLoO5S8IOCabSu5j7119+lBGseM7qUa0Plik8CRfUahKR
+         PnjDvP9/DxXZ3Y9ZxUU8qykEPowss2kwqqPcems1ztvsk27emdARcf+GsLDsqR6wyg
+         MX4VV5WD63zeP+awtm1dicO7WQBwmlbCZ7xMioQc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 01/48] ALSA: hda/hdmi: Add quirk to force connectivity
+Date:   Fri, 21 Aug 2020 12:16:17 -0400
+Message-Id: <20200821161704.348164-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821131306.GH12181@zn.tnic>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 03:13:17PM +0200, Borislav Petkov wrote:
-> On Thu, Jul 16, 2020 at 10:53:14AM -0700, Fenghua Yu wrote:
-> >  struct rdt_membw {
-> > +	enum membw_throttle_mode	arch_throttle_mode;
-> 
-> I guess "arch" is implicit so you can
-> 
-> s/arch_throttle_mode/throttle_mode/g
-Ok. Will fix this.
-> 
-> ...
-> 
-> > +static struct rftype *rdtgroup_rftype_by_name(const char *name)
-> 
-> That function name needs a verb.
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-I will change it to rdtgroup_rftype_get_by_name().
+[ Upstream commit cd72c317a0a11f64225b9a3f1fe503bb8c7327b5 ]
 
-Thank you very much for your review!
+HDMI on some platforms doesn't enable audio support because its Port
+Connectivity [31:30] is set to AC_JACK_PORT_NONE:
+Node 0x05 [Pin Complex] wcaps 0x40778d: 8-Channels Digital Amp-Out CP
+  Amp-Out caps: ofs=0x00, nsteps=0x00, stepsize=0x00, mute=1
+  Amp-Out vals:  [0x00 0x00]
+  Pincap 0x0b000094: OUT Detect HBR HDMI DP
+  Pin Default 0x58560010: [N/A] Digital Out at Int HDMI
+    Conn = Digital, Color = Unknown
+    DefAssociation = 0x1, Sequence = 0x0
+  Pin-ctls: 0x40: OUT
+  Unsolicited: tag=00, enabled=0
+  Power states:  D0 D3 EPSS
+  Power: setting=D0, actual=D0
+  Devices: 0
+  Connection: 3
+     0x02 0x03* 0x04
 
--Fenghua
-> https://people.kernel.org/tglx/notes-about-netiquette
+For now, use a quirk to force connectivity based on SSID. If there are
+more platforms affected by the same issue, we can eye for a more generic
+solution.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200804155836.16252-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/pci/hda/patch_hdmi.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 908b68fda24c9..a9559fb29e209 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -176,6 +176,7 @@ struct hdmi_spec {
+ 	bool use_jack_detect; /* jack detection enabled */
+ 	bool use_acomp_notifier; /* use eld_notify callback for hotplug */
+ 	bool acomp_registered; /* audio component registered in this driver */
++	bool force_connect; /* force connectivity */
+ 	struct drm_audio_component_audio_ops drm_audio_ops;
+ 	int (*port2pin)(struct hda_codec *, int); /* reverse port/pin mapping */
+ 
+@@ -1711,7 +1712,8 @@ static int hdmi_add_pin(struct hda_codec *codec, hda_nid_t pin_nid)
+ 	 * all device entries on the same pin
+ 	 */
+ 	config = snd_hda_codec_get_pincfg(codec, pin_nid);
+-	if (get_defcfg_connect(config) == AC_JACK_PORT_NONE)
++	if (get_defcfg_connect(config) == AC_JACK_PORT_NONE &&
++	    !spec->force_connect)
+ 		return 0;
+ 
+ 	/*
+@@ -1815,11 +1817,18 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
+ 	return 0;
+ }
+ 
++static const struct snd_pci_quirk force_connect_list[] = {
++	SND_PCI_QUIRK(0x103c, 0x871a, "HP", 1),
++	{}
++};
++
+ static int hdmi_parse_codec(struct hda_codec *codec)
+ {
++	struct hdmi_spec *spec = codec->spec;
+ 	hda_nid_t start_nid;
+ 	unsigned int caps;
+ 	int i, nodes;
++	const struct snd_pci_quirk *q;
+ 
+ 	nodes = snd_hda_get_sub_nodes(codec, codec->core.afg, &start_nid);
+ 	if (!start_nid || nodes < 0) {
+@@ -1827,6 +1836,11 @@ static int hdmi_parse_codec(struct hda_codec *codec)
+ 		return -EINVAL;
+ 	}
+ 
++	q = snd_pci_quirk_lookup(codec->bus->pci, force_connect_list);
++
++	if (q && q->value)
++		spec->force_connect = true;
++
+ 	/*
+ 	 * hdmi_add_pin() assumes total amount of converters to
+ 	 * be known, so first discover all converters
+-- 
+2.25.1
+
