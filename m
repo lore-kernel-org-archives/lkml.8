@@ -2,63 +2,64 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA70FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 286BB207DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90668207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:12:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZUnJ6jz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBgyPhP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgHUPMj (ORCPT
+        id S1728133AbgHUPMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51044 "EHLO
+        Fri, 21 Aug 2020 11:12:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727833AbgHUPMa (ORCPT
+        with ESMTP id S1727833AbgHUPMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:12:30 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EC48C061573;
-        Fri, 21 Aug 2020 08:12:28 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o13so1148685pgf.0;
-        Fri, 21 Aug 2020 08:12:28 -0700 (PDT)
+        Fri, 21 Aug 2020 11:12:39 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51BCFC061573;
+        Fri, 21 Aug 2020 08:12:39 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id r11so1191971pfl.11;
+        Fri, 21 Aug 2020 08:12:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lRxrDToJB/xPOxG5kGdgUWQPtXDsSaGWKdRXIKBnLww=;
-        b=kZUnJ6jz2FEkjkC4B07sDG1MjmzhjlUML84kGzNbhSDyDdfVyIkBqQ1JVaKnlcpnsW
-         O4/rnCdzXc5wLDuh66q0rTTJxxarsRrbbSJ3CBzYgOl2Kiph/wZYJr1Qvco+GQ7avZZF
-         Dbs74MOkriYYn3Uv1eGMGWPeNA1bNr83Aa+YHScAmKLmebvgMrUyej9FYoVnkrCPjtE3
-         /d9DU7qLsc96xQiWL8n/lPwiBLfzsLbk3ZLdsUeHAbC9H8xLy9KN7b5omTiIo5lCszfb
-         4BIvgj0FwaU6x9/I2bYSDZEgvwAguArcSIW9qjKYuZ90qn8CQH/xh3SQ44OCN04qHdb/
-         qz8A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UY3nHiN8pgkQXggDgWgnBUQkjwXub5T9CsJzFX8rSpk=;
+        b=VBgyPhP1+Sl/ttwJwVQxq7xmnvzliKnqHCmayEmnyxdcPFsr1octp/TFFnWKIEgvRt
+         294S6aSmYr6+teDwU/0oFVzm4wO8+Ym1+jXMpbnFTPBYO+2xzGlknVi7FAcl88wBr/Kn
+         jSZkAndm5y1hxR9jtTL3QmJ/7YVnKPSdfMQyRZU97E1JDVGr3HV4RCBEpAOa/BCvA9ew
+         PzNoQdId4cgj4lGg/uVYeDkwqO1XRV789Gm96zPIqWeFF2ms2ljOEpvTkeA0JKPRXdMQ
+         yE1d22vcwtb7CcTa4Q/ntF/Qt3GIPcHPi4IxgVwof5EEpCPKIlnt9saulwv9E1MnoSxk
+         SlGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lRxrDToJB/xPOxG5kGdgUWQPtXDsSaGWKdRXIKBnLww=;
-        b=EA68r7e7JOxQzC089+nNHH9Kj1n1ZhweTRlVYDRRfkbCMMoERm2JwwNxgRvd6KpEc5
-         ea6H8E/y6CJ3Aeix0tJVBPcxUm+BvyC9p44hg1PO4HjOij7e33AEhTxr28auEaMt5x9D
-         nkdR9H5XfmjLLDcLWylnz5fYzKWHP40Pa8JNaWuWe/px8cxTQzLm+EX7uyWagOiLy4v7
-         b80pi7dm8tTXGpyjPjTeSJRl4aLWdovWIdwiXL1Qap6byiU+DVzaeMZHThvmoP8bHtlI
-         2t1oLCaV+BVkOOMkXyy06MbfXv2M4VI2IvEoBFsyblpjudnindX8A18di6JG28FZU98u
-         y56g==
-X-Gm-Message-State: AOAM532Gx1MvVzhoP6NRbe41YT+BvvnoK+kcCVTgc5zRSEEVvrxnFSsr
-        i9zjSjxyiHgBkB/Bi65YwXjaYB1uPZM=
-X-Google-Smtp-Source: ABdhPJxt6gfGs7RCQ4HiMUqjAvNGZuzKIyZP+qM+HUnYFTtKpiyJhyFCAA1UxFk4xgMqZ7BnAojcJw==
-X-Received: by 2002:aa7:8757:: with SMTP id g23mr2825194pfo.283.1598022748057;
-        Fri, 21 Aug 2020 08:12:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UY3nHiN8pgkQXggDgWgnBUQkjwXub5T9CsJzFX8rSpk=;
+        b=Uh3pvxLm0rbNKE4SU4GC4X/6LzH57nS4/ZoDotFeeab/mkA0btVW037w3gtFbkq0NO
+         n5wG1Vx4sJv5iKGCs1EpfTvz9mW31HwryBMK+ji+/IXv+M843np09qOYJQKf9J5JgIB8
+         4slaMs49wfZT63CYh2Y6Zlht3lMO3QHk8H4+vTq7THwuPHs5LLty9tKeYoaRFhglaDg9
+         j8MCkQJ53MQsFUUzcDbzlbhylk4+sEcsnA/PYSOiDO03GsYLoSxURDwon/2ILir1uN4I
+         04wq19/+P1hYMpU8kd+DWFL5lbYLzOb0pXxHP9iVf0n7sNrjnMi0+gWAln7u+5TLDK2y
+         BokA==
+X-Gm-Message-State: AOAM531J61IUUxVGs91SGcx8HF2DI3oWw3EaiJ64Pi4Jioad1qsQd7/g
+        ZSaOz64MCMgGCTKqHH7argU=
+X-Google-Smtp-Source: ABdhPJyCXdSqBEAC0kFcsNvD5EqD53KjatKAQFKOQvMLJcOoi8k3fLMlmfj8qhPEMS+C8bwc9rHuyw==
+X-Received: by 2002:aa7:9556:: with SMTP id w22mr2775906pfq.245.1598022758914;
+        Fri, 21 Aug 2020 08:12:38 -0700 (PDT)
 Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
-        by smtp.gmail.com with ESMTPSA id s8sm3126985pfc.122.2020.08.21.08.12.22
+        by smtp.gmail.com with ESMTPSA id s8sm3126985pfc.122.2020.08.21.08.12.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 08:12:27 -0700 (PDT)
+        Fri, 21 Aug 2020 08:12:38 -0700 (PDT)
 From:   Nicholas Piggin <npiggin@gmail.com>
 To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
 Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
@@ -67,10 +68,12 @@ Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Christoph Hellwig <hch@infradead.org>,
         Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v6 00/12] huge vmalloc mappings
-Date:   Sat, 22 Aug 2020 01:12:04 +1000
-Message-Id: <20200821151216.1005117-1-npiggin@gmail.com>
+Subject: [PATCH v6 02/12] mm: apply_to_pte_range warn and fail if a large pte is encountered
+Date:   Sat, 22 Aug 2020 01:12:06 +1000
+Message-Id: <20200821151216.1005117-3-npiggin@gmail.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200821151216.1005117-1-npiggin@gmail.com>
+References: <20200821151216.1005117-1-npiggin@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,69 +81,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Christophe and Christoph for reviews.
+Currently this might mistake a large pte for bad, or treat it as a
+page table, resulting in a crash or corruption.
 
-Thanks,
-Nick
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+ mm/memory.c | 60 +++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 44 insertions(+), 16 deletions(-)
 
-Since v5:
-- Split arch changes out better and make the constant folding work
-- Avoid most of the 80 column wrap, fix a reference to lib/ioremap.c
-- Fix compile error on some archs
-
-Since v4:
-- Fixed an off-by-page-order bug in v4
-- Several minor cleanups.
-- Added page order to /proc/vmallocinfo
-- Added hugepage to alloc_large_system_hage output.
-- Made an architecture config option, powerpc only for now.
-
-Since v3:
-- Fixed an off-by-one bug in a loop
-- Fix !CONFIG_HAVE_ARCH_HUGE_VMAP build fail
-- Hopefully this time fix the arm64 vmap stack bug, thanks Jonathan
-  Cameron for debugging the cause of this (hopefully).
-
-Since v2:
-- Rebased on vmalloc cleanups, split series into simpler pieces.
-- Fixed several compile errors and warnings
-- Keep the page array and accounting in small page units because
-  struct vm_struct is an interface (this should fix x86 vmap stack debug
-  assert). [Thanks Zefan]
-
-Nicholas Piggin (12):
-  mm/vmalloc: fix vmalloc_to_page for huge vmap mappings
-  mm: apply_to_pte_range warn and fail if a large pte is encountered
-  mm/vmalloc: rename vmap_*_range vmap_pages_*_range
-  lib/ioremap: rename ioremap_*_range to vmap_*_range
-  mm: HUGE_VMAP arch support cleanup
-  powerpc: inline huge vmap supported functions
-  arm64: inline huge vmap supported functions
-  x86: inline huge vmap supported functions
-  mm: Move vmap_range from mm/ioremap.c to mm/vmalloc.c
-  mm/vmalloc: add vmap_range_noflush variant
-  mm/vmalloc: Hugepage vmalloc mappings
-  powerpc/64s/radix: Enable huge vmalloc mappings
-
- .../admin-guide/kernel-parameters.txt         |   2 +
- arch/Kconfig                                  |   4 +
- arch/arm64/include/asm/vmalloc.h              |  25 +
- arch/arm64/mm/mmu.c                           |  26 -
- arch/powerpc/Kconfig                          |   1 +
- arch/powerpc/include/asm/vmalloc.h            |  21 +
- arch/powerpc/mm/book3s64/radix_pgtable.c      |  21 -
- arch/x86/include/asm/vmalloc.h                |  23 +
- arch/x86/mm/ioremap.c                         |  19 -
- arch/x86/mm/pgtable.c                         |  13 -
- include/linux/io.h                            |   9 -
- include/linux/vmalloc.h                       |  10 +
- init/main.c                                   |   1 -
- mm/ioremap.c                                  | 225 +--------
- mm/memory.c                                   |  60 ++-
- mm/page_alloc.c                               |   5 +-
- mm/vmalloc.c                                  | 443 +++++++++++++++---
- 17 files changed, 515 insertions(+), 393 deletions(-)
-
+diff --git a/mm/memory.c b/mm/memory.c
+index 602f4283122f..3a39a47920e2 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2262,13 +2262,20 @@ static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+ 	}
+ 	do {
+ 		next = pmd_addr_end(addr, end);
+-		if (create || !pmd_none_or_clear_bad(pmd)) {
+-			err = apply_to_pte_range(mm, pmd, addr, next, fn, data,
+-						 create);
+-			if (err)
+-				break;
++		if (pmd_none(*pmd) && !create)
++			continue;
++		if (WARN_ON_ONCE(pmd_leaf(*pmd)))
++			return -EINVAL;
++		if (WARN_ON_ONCE(pmd_bad(*pmd))) {
++			if (!create)
++				continue;
++			pmd_clear_bad(pmd);
+ 		}
++		err = apply_to_pte_range(mm, pmd, addr, next, fn, data, create);
++		if (err)
++			break;
+ 	} while (pmd++, addr = next, addr != end);
++
+ 	return err;
+ }
+ 
+@@ -2289,13 +2296,20 @@ static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
+ 	}
+ 	do {
+ 		next = pud_addr_end(addr, end);
+-		if (create || !pud_none_or_clear_bad(pud)) {
+-			err = apply_to_pmd_range(mm, pud, addr, next, fn, data,
+-						 create);
+-			if (err)
+-				break;
++		if (pud_none(*pud) && !create)
++			continue;
++		if (WARN_ON_ONCE(pud_leaf(*pud)))
++			return -EINVAL;
++		if (WARN_ON_ONCE(pud_bad(*pud))) {
++			if (!create)
++				continue;
++			pud_clear_bad(pud);
+ 		}
++		err = apply_to_pmd_range(mm, pud, addr, next, fn, data, create);
++		if (err)
++			break;
+ 	} while (pud++, addr = next, addr != end);
++
+ 	return err;
+ }
+ 
+@@ -2316,13 +2330,20 @@ static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
+ 	}
+ 	do {
+ 		next = p4d_addr_end(addr, end);
+-		if (create || !p4d_none_or_clear_bad(p4d)) {
+-			err = apply_to_pud_range(mm, p4d, addr, next, fn, data,
+-						 create);
+-			if (err)
+-				break;
++		if (p4d_none(*p4d) && !create)
++			continue;
++		if (WARN_ON_ONCE(p4d_leaf(*p4d)))
++			return -EINVAL;
++		if (WARN_ON_ONCE(p4d_bad(*p4d))) {
++			if (!create)
++				continue;
++			p4d_clear_bad(p4d);
+ 		}
++		err = apply_to_pud_range(mm, p4d, addr, next, fn, data, create);
++		if (err)
++			break;
+ 	} while (p4d++, addr = next, addr != end);
++
+ 	return err;
+ }
+ 
+@@ -2341,8 +2362,15 @@ static int __apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+ 	pgd = pgd_offset(mm, addr);
+ 	do {
+ 		next = pgd_addr_end(addr, end);
+-		if (!create && pgd_none_or_clear_bad(pgd))
++		if (pgd_none(*pgd) && !create)
+ 			continue;
++		if (WARN_ON_ONCE(pgd_leaf(*pgd)))
++			return -EINVAL;
++		if (WARN_ON_ONCE(pgd_bad(*pgd))) {
++			if (!create)
++				continue;
++			pgd_clear_bad(pgd);
++		}
+ 		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, create);
+ 		if (err)
+ 			break;
 -- 
 2.23.0
 
