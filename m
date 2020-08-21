@@ -2,184 +2,192 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E11AEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE20BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4C1220738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030610;
-	bh=sreODwQUCtqPN3qT0WnJb7EiZUoq7aAP/VeQ/Yhu4Xo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BHsqeDy8FcjgnX+8Ejollkl8cKVYBytMu34ZHoFIhjwLQgnJuWZ4qQa9ZH+oafLcx
-	 mV28pQxwVFXY0s22DCtHVFWh6uSsGZlt/aGPCltdFuCU2nhcOJi76RcBYMe4os8HAJ
-	 +KzROLCY3swHuQsoNC7aXrYzVlTW9P41ezFqF8pg=
+	by mail.kernel.org (Postfix) with ESMTP id AD88B20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HC8fJQDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgHURX3 (ORCPT
+        id S1726867AbgHURX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:23:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgHUQPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:15:42 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AAC220578;
-        Fri, 21 Aug 2020 16:15:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026542;
-        bh=sreODwQUCtqPN3qT0WnJb7EiZUoq7aAP/VeQ/Yhu4Xo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QaxLPKVFrEoq/4ZeEg1SX7Xnq0GkB+yUJDmaOEcoqzN9FwRIkLOQXK+ZyvNQB+tri
-         5u8c9JyEBRa+AYtV+6qh2Wvak5KuviuGSEJsALugRlA106XMTjYGz/bd8Y8X2tjNoY
-         ammlmBsJJg2iblqlHo8pYOVCQk3Ek57CCUkmCmmQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@suse.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.8 61/62] EDAC/ie31200: Fallback if host bridge device is already initialized
-Date:   Fri, 21 Aug 2020 12:14:22 -0400
-Message-Id: <20200821161423.347071-61-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
-References: <20200821161423.347071-1-sashal@kernel.org>
+        Fri, 21 Aug 2020 13:23:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728887AbgHURXU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 13:23:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E14C061573;
+        Fri, 21 Aug 2020 10:23:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=bAt7ua5tnS/ugttXa8syUdUtImCbHpozqT/YgY2E6VQ=; b=HC8fJQDjtjQ3Dn0KB/nl8zm9G5
+        OLgrSW3g6OaQ9uai7u+zZmZJfqgSnYnOR2POzC4borlXdhU4uanc69FkLkcMK01ljOM4VsD9evszx
+        b8TgshtNVP+0p7U0OyVHyP7m8tgw5IcHbfs4er/rdYYg4vrq3cZK2Hmu4MK8GmJvuzN7HBP3444S+
+        udMNGiSWaZyZAoH2u3M0lxijNC51owYxV13GfERmGF6W220M7G7CrwFan+/tYueVE8OuVXhhSnqaS
+        BklX4calxAGYqosbBsaY8kFvqDv2dFGwb2QF/h8qja0iAa8pIPv3X7o/G6VbIE2YJgAnMwet+E/U0
+        2PuvU1Vw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9Al3-0004jP-5u; Fri, 21 Aug 2020 17:23:17 +0000
+Subject: Re: [PATCH v2 08/10] fs/ntfs3: Add Kconfig, Makefile and doc
+To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+References: <74de75d537ac486e9fcfe7931181a9b9@paragon-software.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <63ae69b5-ee05-053d-feb6-6c9b5ed04499@infradead.org>
+Date:   Fri, 21 Aug 2020 10:23:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <74de75d537ac486e9fcfe7931181a9b9@paragon-software.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Baron <jbaron@akamai.com>
+On 8/21/20 9:25 AM, Konstantin Komarov wrote:
+> This adds fs/ntfs3 Kconfig, Makefile and Documentation file
+> 
+> Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+> ---
+>  Documentation/filesystems/ntfs3.rst | 93 +++++++++++++++++++++++++++++
+>  fs/ntfs3/Kconfig                    | 23 +++++++
+>  fs/ntfs3/Makefile                   | 11 ++++
+>  3 files changed, 127 insertions(+)
+>  create mode 100644 Documentation/filesystems/ntfs3.rst
+>  create mode 100644 fs/ntfs3/Kconfig
+>  create mode 100644 fs/ntfs3/Makefile
+> 
+> diff --git a/Documentation/filesystems/ntfs3.rst b/Documentation/filesystems/ntfs3.rst
+> new file mode 100644
+> index 000000000000..4a510a6cdaee
+> --- /dev/null
+> +++ b/Documentation/filesystems/ntfs3.rst
+> @@ -0,0 +1,93 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=====
+> +NTFS3
+> +=====
+> +
+> +
+> +Summary and Features
+> +====================
+> +
+> +NTFS3 is fully functional NTFS Read-Write driver. The driver works with
+> +NTFS versions up to 3.1, normal/compressed/sparse files
+> +and journal replaying. File system type to use on mount is 'ntfs3'.
+> +
+> +- This driver implements NTFS read/write support for normal, sparsed and
 
-[ Upstream commit 709ed1bcef12398ac1a35c149f3e582db04456c2 ]
+                                                                sparse
 
-The Intel uncore driver may claim some of the pci ids from ie31200 which
-means that the ie31200 edac driver will not initialize them as part of
-pci_register_driver().
+> +  compressed files.
+> +  NOTE: Operations with compressed files require increased memory consumption;
+> +- Supports native journal replaying;
+> +- Supports extended attributes;
+> +- Supports NFS export of mounted NTFS volumes.
+> +
+> +Mount Options
+> +=============
+> +
+> +The list below describes mount options supported by NTFS3 driver in addtion to
 
-Let's add a fallback for this case to 'pci_get_device()' to get a
-reference on the device such that it can still be configured. This is
-similar in approach to other edac drivers.
+                                                                       addition
 
-Signed-off-by: Jason Baron <jbaron@akamai.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/r/1594923911-10885-1-git-send-email-jbaron@akamai.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/edac/ie31200_edac.c | 50 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 47 insertions(+), 3 deletions(-)
+> +generic ones.
+> +
+> +===============================================================================
+> +
+> +nls=name		These options inform the driver how to interpret path
+> +			strings and translate them to Unicode and back. In case
+> +			none of these options are set, or if specified codepage
+> +			doesn't exist on the system, the default codepage will be
+> +			used (CONFIG_NLS_DEFAULT).
+> +			Examples:
+> +				'nls=utf8'
+> +
+> +uid=
+> +gid=
+> +umask=			Controls the default permissions for files/directories created
+> +			after the NTFS volume is mounted.
+> +
+> +fmask=
+> +dmask=			Instead of specifying umask which applies both to
+> +			files and directories, fmask applies only to files and
+> +			dmask only to directories.
+> +
+> +nohidden		Files with the Windows-specific HIDDEN (FILE_ATTRIBUTE_HIDDEN)
+> +			attribute will not be shown under Linux.
 
-diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-index d68346a8e141a..ebe50996cc423 100644
---- a/drivers/edac/ie31200_edac.c
-+++ b/drivers/edac/ie31200_edac.c
-@@ -170,6 +170,8 @@
- 	(n << (28 + (2 * skl) - PAGE_SHIFT))
- 
- static int nr_channels;
-+static struct pci_dev *mci_pdev;
-+static int ie31200_registered = 1;
- 
- struct ie31200_priv {
- 	void __iomem *window;
-@@ -538,12 +540,16 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
- static int ie31200_init_one(struct pci_dev *pdev,
- 			    const struct pci_device_id *ent)
- {
--	edac_dbg(0, "MC:\n");
-+	int rc;
- 
-+	edac_dbg(0, "MC:\n");
- 	if (pci_enable_device(pdev) < 0)
- 		return -EIO;
-+	rc = ie31200_probe1(pdev, ent->driver_data);
-+	if (rc == 0 && !mci_pdev)
-+		mci_pdev = pci_dev_get(pdev);
- 
--	return ie31200_probe1(pdev, ent->driver_data);
-+	return rc;
- }
- 
- static void ie31200_remove_one(struct pci_dev *pdev)
-@@ -552,6 +558,8 @@ static void ie31200_remove_one(struct pci_dev *pdev)
- 	struct ie31200_priv *priv;
- 
- 	edac_dbg(0, "\n");
-+	pci_dev_put(mci_pdev);
-+	mci_pdev = NULL;
- 	mci = edac_mc_del_mc(&pdev->dev);
- 	if (!mci)
- 		return;
-@@ -593,17 +601,53 @@ static struct pci_driver ie31200_driver = {
- 
- static int __init ie31200_init(void)
- {
-+	int pci_rc, i;
-+
- 	edac_dbg(3, "MC:\n");
- 	/* Ensure that the OPSTATE is set correctly for POLL or NMI */
- 	opstate_init();
- 
--	return pci_register_driver(&ie31200_driver);
-+	pci_rc = pci_register_driver(&ie31200_driver);
-+	if (pci_rc < 0)
-+		goto fail0;
-+
-+	if (!mci_pdev) {
-+		ie31200_registered = 0;
-+		for (i = 0; ie31200_pci_tbl[i].vendor != 0; i++) {
-+			mci_pdev = pci_get_device(ie31200_pci_tbl[i].vendor,
-+						  ie31200_pci_tbl[i].device,
-+						  NULL);
-+			if (mci_pdev)
-+				break;
-+		}
-+		if (!mci_pdev) {
-+			edac_dbg(0, "ie31200 pci_get_device fail\n");
-+			pci_rc = -ENODEV;
-+			goto fail1;
-+		}
-+		pci_rc = ie31200_init_one(mci_pdev, &ie31200_pci_tbl[i]);
-+		if (pci_rc < 0) {
-+			edac_dbg(0, "ie31200 init fail\n");
-+			pci_rc = -ENODEV;
-+			goto fail1;
-+		}
-+	}
-+	return 0;
-+
-+fail1:
-+	pci_unregister_driver(&ie31200_driver);
-+fail0:
-+	pci_dev_put(mci_pdev);
-+
-+	return pci_rc;
- }
- 
- static void __exit ie31200_exit(void)
- {
- 	edac_dbg(3, "MC:\n");
- 	pci_unregister_driver(&ie31200_driver);
-+	if (!ie31200_registered)
-+		ie31200_remove_one(mci_pdev);
- }
- 
- module_init(ie31200_init);
+Without this mount option, will HIDDEN files be shown by default?
+
+> +
+> +sys_immutable		Files with the Windows-specific SYSTEM
+> +			(FILE_ATTRIBUTE_SYSTEM) attribute will be marked as system
+> +			immutable files.
+> +
+> +discard			Enable support of the TRIM command for improved performance
+> +			on delete operations, which is recommended for use with the
+> +			solid-state drives (SSD).
+> +
+> +force			Forces the driver to mount partitions even if 'dirty' flag
+> +			(volume dirty) is set. Not recommended for use.
+> +
+> +sparse			Create new files as "sparse".
+> +
+> +showmeta		Use this parameter to show all meta-files (System Files) on
+> +			a mounted NTFS partition.
+> +			By default, all meta-files are hidden.
+> +
+> +no_acs_rules		"No access rules" mount option sets access rights for
+> +			files/folders to 777 and owner/group to root. This mount
+> +			option absorbs all other permissions:
+> +			- permissions change for files/folders will be reported
+> +				as successful, but they will remain 777;
+> +			- owner/group change will be reported as successful, but
+> +				they will stay as root
+> +
+> +===============================================================================
+> +
+> +
+> +ToDo list
+> +=========
+> +
+> +- Full journaling support (currently journal replaying is supported) over JBD.
+
+          journalling
+seems to be preferred.
+
+> +
+> +
+> +References
+> +==========
+> +https://www.paragon-software.com/home/ntfs-linux-professional/
+> +	- Commercial version of the NTFS driver for Linux.
+> +
+> +almaz.alexandrovich@paragon-software.com
+> +	- Direct e-mail address for feedback and requests on the NTFS3 implementation.
+> +
+> +
+
+thanks.
 -- 
-2.25.1
+~Randy
 
