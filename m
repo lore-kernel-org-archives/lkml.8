@@ -2,159 +2,134 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F61CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ECAC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06C5920FC3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598039256;
-	bh=S6dcRAdeTpUdhqBralYNBKRs92bvR5wAJJq1s5WcS70=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=l1jSlMEnaIW1Hq1bMeesFCbQHUeuPGKZjF4UFOxnFY23XQBksC0p3Yc52NotPzNAX
-	 jFsolVjwQdelKEKZTrkzxuqA76pcL22y5if/ZaKDt3uVyDswk7EXAW2/q9WqnV9ME7
-	 gft6xtEctUWnDiWsnyxj/wOXVat62rawdQMOwpG8=
+	by mail.kernel.org (Postfix) with ESMTP id 55EAF20FC3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:47:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KiXQi33X";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZNTKZwPc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgHUTre (ORCPT
+        id S1727769AbgHUTrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:47:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbgHUTrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:47:10 -0400
-Received: from localhost.localdomain (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4399207BB;
-        Fri, 21 Aug 2020 19:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598039229;
-        bh=S6dcRAdeTpUdhqBralYNBKRs92bvR5wAJJq1s5WcS70=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=umhRCS1Kl07lT3+NNeROkgKekyNrIwxAmSo1a7/CnyH7pkY7OHda+JObTUT4VYvXu
-         DF7aTbG6NpKJm0wpZJ4sUoI0AuVXcPtCvFxxRpj76Ac37Q3YUoCjtgwWrQQNlx1BA1
-         eCvZb8l11X9Kq9tD7D4pgzR4wkh7+YhjKNcPHYTo=
-From:   zanussi@kernel.org
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Clark Williams <williams@redhat.com>,
-        Pavel Machek <pavel@denx.de>, Tom Zanussi <zanussi@kernel.org>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: [PATCH RT 3/5] net: phy: fixed_phy: Remove unused seqcount
-Date:   Fri, 21 Aug 2020 14:47:02 -0500
-Message-Id: <31cc35dc4938fe8f94631327ab9e9966de09dd50.1598039186.git.zanussi@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1598039186.git.zanussi@kernel.org>
-References: <cover.1598039186.git.zanussi@kernel.org>
-In-Reply-To: <cover.1598039186.git.zanussi@kernel.org>
-References: <cover.1598039186.git.zanussi@kernel.org>
+        Fri, 21 Aug 2020 15:47:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58382 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgHUTrr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 15:47:47 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598039264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oc6rWuK4RWluEJBMD17wpMBfxGYcOFdDWSkk5lcadvw=;
+        b=KiXQi33Xg/nd2cc5p/iAKtPJMeJNOzlCIzhWjWEbDdZsQcUjTDcZub6BshDwVTeuzhZGv3
+        zw2QKFIaV6T0xnr0tMl0umwZIX8sVQuHMEUfRQUVCSNH+RS3Ctu3yRElL1RDrH9OSkUBvR
+        Tsr3wMNO6B9xByzMz6gnGKvZsy58iZhaXxtRYkjnJJ3WTiyQxefyan9gZqT9mGBT6u+xX7
+        879KRDH1ZIZQf7iaP+awji6DDAUxA8bYq12w27+m5dPt9dX2xBuAi7ENRI59fAae7fEgGi
+        t8GgtNuJOLOuihUaToMYiDcn5kSYsxXPj3V4PLzYavwP+TAnb34LXNCN2fVjfQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598039264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oc6rWuK4RWluEJBMD17wpMBfxGYcOFdDWSkk5lcadvw=;
+        b=ZNTKZwPc7JAJl8Qd563jtK8cr0w4Fu55mv5EH+kVE+8/1HT5hcM/atj4LWnPcJrRJGhXkM
+        niAVH0dbiv4S6wAA==
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Marc Zyngier <maz@kernel.org>, Megha Dey <megha.dey@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [patch RFC 38/38] irqchip: Add IMS array driver - NOT FOR MERGING
+In-Reply-To: <20200821124547.GY1152540@nvidia.com>
+References: <20200821002424.119492231@linutronix.de> <20200821002949.049867339@linutronix.de> <20200821124547.GY1152540@nvidia.com>
+Date:   Fri, 21 Aug 2020 21:47:43 +0200
+Message-ID: <874kovsrvk.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Ahmed S. Darwish" <a.darwish@linutronix.de>
+On Fri, Aug 21 2020 at 09:45, Jason Gunthorpe wrote:
+> On Fri, Aug 21, 2020 at 02:25:02AM +0200, Thomas Gleixner wrote:
+>> +static void ims_mask_irq(struct irq_data *data)
+>> +{
+>> +	struct msi_desc *desc = irq_data_get_msi_desc(data);
+>> +	struct ims_array_slot __iomem *slot = desc->device_msi.priv_iomem;
+>> +	u32 __iomem *ctrl = &slot->ctrl;
+>> +
+>> +	iowrite32(ioread32(ctrl) & ~IMS_VECTOR_CTRL_UNMASK, ctrl);
+>
+> Just to be clear, this is exactly the sort of operation we can't do
+> with non-MSI interrupts. For a real PCI device to execute this it
+> would have to keep the data on die.
 
-v4.19.135-rt61-rc1 stable review patch.
-If anyone has any objections, please let me know.
+We means NVIDIA and your new device, right?
 
------------
+So if I understand correctly then the queue memory where the MSI
+descriptor sits is in RAM.
 
+How is that supposed to work if interrupt remapping is disabled?
 
-[ Upstream commit 6554eac9ef2bd1c968886b31cc7266b49258a463 ]
+That means irq migration and proper disabling of an interrupt become an
+interesting exercise. I'm so not looking forward to that.
 
-Commit bf7afb29d545 ("phy: improve safety of fixed-phy MII register
-reading") protected the fixed PHY status with a sequence counter.
+If interrupt remapping is enabled then both are trivial because then the
+irq chip can delegate everything to the parent chip, i.e. the remapping
+unit.
 
-Two years later, commit d2b977939b18 ("net: phy: fixed-phy: remove
-fixed_phy_update_state()") removed the sequence counter's write side
-critical section -- neutralizing its read side retry loop.
+Can you please explain that a bit more precise?
 
-Remove the unused seqcount.
+> I saw the idxd driver was doing something like this, I assume it
+> avoids trouble because it is a fake PCI device integrated with the
+> CPU, not on a real PCI bus?
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-(cherry picked from v5.8-rc1 commit 79cbb6bc3332da7162c2581e151659ab8ebaa528)
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- drivers/net/phy/fixed_phy.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+That's how it is implemented as far as I understood the patches. It's
+device memory therefore iowrite32().
 
-diff --git a/drivers/net/phy/fixed_phy.c b/drivers/net/phy/fixed_phy.c
-index 59820164502e..953ff54dd5df 100644
---- a/drivers/net/phy/fixed_phy.c
-+++ b/drivers/net/phy/fixed_phy.c
-@@ -23,7 +23,6 @@
- #include <linux/slab.h>
- #include <linux/of.h>
- #include <linux/gpio.h>
--#include <linux/seqlock.h>
- #include <linux/idr.h>
- 
- #include "swphy.h"
-@@ -36,7 +35,6 @@ struct fixed_mdio_bus {
- struct fixed_phy {
- 	int addr;
- 	struct phy_device *phydev;
--	seqcount_t seqcount;
- 	struct fixed_phy_status status;
- 	int (*link_update)(struct net_device *, struct fixed_phy_status *);
- 	struct list_head node;
-@@ -62,18 +60,15 @@ static int fixed_mdio_read(struct mii_bus *bus, int phy_addr, int reg_num)
- 	list_for_each_entry(fp, &fmb->phys, node) {
- 		if (fp->addr == phy_addr) {
- 			struct fixed_phy_status state;
--			int s;
--
--			do {
--				s = read_seqcount_begin(&fp->seqcount);
--				/* Issue callback if user registered it. */
--				if (fp->link_update)
--					fp->link_update(fp->phydev->attached_dev,
--							&fp->status);
--				/* Check the GPIO for change in status */
--				fixed_phy_update(fp);
--				state = fp->status;
--			} while (read_seqcount_retry(&fp->seqcount, s));
-+
-+			/* Issue callback if user registered it. */
-+			if (fp->link_update)
-+				fp->link_update(fp->phydev->attached_dev,
-+						&fp->status);
-+
-+			/* Check the GPIO for change in status */
-+			fixed_phy_update(fp);
-+			state = fp->status;
- 
- 			return swphy_read_reg(reg_num, &state);
- 		}
-@@ -131,8 +126,6 @@ int fixed_phy_add(unsigned int irq, int phy_addr,
- 	if (!fp)
- 		return -ENOMEM;
- 
--	seqcount_init(&fp->seqcount);
--
- 	if (irq != PHY_POLL)
- 		fmb->mii_bus->irq[phy_addr] = irq;
- 
--- 
-2.17.1
+> It is really nice to see irq_domain used properly in x86!
 
+If you ignore the abuse in XEN :)
+
+And to be fair proper and usable (hierarchical) irq domains originate
+from x86 and happened to solve quite a few horrorshows on the ARM side.
+
+Just back then when we converted the original maze, nobody had a good
+idea and the stomach to touch XEN.
+
+Thanks,
+
+        tglx
