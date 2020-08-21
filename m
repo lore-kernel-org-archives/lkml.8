@@ -2,97 +2,308 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B68C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2707BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9080C22EBF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598034540;
-	bh=gWkydbRYuoGO994AK4VaGbYiR8+uV6Wu+cGWVFVlMTg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W2KSAqCLtXtNMZd2naVf2sK9M1paK/sq2K8w9EIyNlz/1HLwL2b6zAkpfREwJIFYA
-	 Dmc8CIEdZUG/ylcRK7bZmBaVFXXAewgoIdoOLOM6XtN+MNZYbIp04lnR1UzrXAWJ9u
-	 HLvrm+AOlOk31ekydW5fwJRtPHFtLkGLM9nqtMc0=
+	by mail.kernel.org (Postfix) with ESMTP id 12582230FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgHUS26 (ORCPT
+        id S1726754AbgHUS2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:28:58 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45979 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgHUS2x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:28:53 -0400
-Received: by mail-oi1-f195.google.com with SMTP id o21so2298607oie.12;
-        Fri, 21 Aug 2020 11:28:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/zXZIgCAakjsdNMqDTQ9OdhUqc8aoLFT/Ev7IhMzMsk=;
-        b=CqNS/nixEAmTficKp/RL0Ks0o5uUl3ztZ6hnmvp4yxJUGCef9wr/LLJ7OcJdfZe9C0
-         nJUKLbK7oyHhM2RhLbQIuFPgpQDwKD23fvZ7anngUeV4NpbbMTq6I5mhpYUWWkqCOI7u
-         i5NKsp4CostSKgSmwqV0jaypGEaRtJmq3a4Er15ESYf5DFGP9EjRr4VQroPjF8XU9ro3
-         X42r/Yi4NhOE3i0T7XE3DD+o9jWKxcP1vHw6ndW5mEM0yo87O1Q8PEMMotqUosK0VxG8
-         F98WiHAKCUY2rruvcmJylcICBVWxUpG0j+jUcYImUyDSjo/jO6bZepi4iVgOEn9Mvqbu
-         +jBA==
-X-Gm-Message-State: AOAM530YgAUvem2Y55E0VASeDYYjGfd0q32GWGsRqFqSEe+T9+cl63a+
-        aMpmvQZqoVV23mcDpCLyX1esX3ixSmf953o0vGk=
-X-Google-Smtp-Source: ABdhPJwo4v+bahA41e9ZWtLtpBPogqz1x0/57tZqP3kKMwFe5aYH3e0vzQOOukfdhIBJZscikxIZrUISkTbm5IZp4AQ=
-X-Received: by 2002:aca:a88e:: with SMTP id r136mr2692389oie.110.1598034532187;
- Fri, 21 Aug 2020 11:28:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200819171656.2650926-1-furquan@google.com>
-In-Reply-To: <20200819171656.2650926-1-furquan@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 21 Aug 2020 20:28:41 +0200
-Message-ID: <CAJZ5v0h3vFLyY9AXYFvcJD3agYk7RFCyzkWefDk_9bvCE09RNg@mail.gmail.com>
-Subject: Re: [PATCH] drivers: acpi: apd: Check return value of acpi_dev_get_property
-To:     Furquan Shaikh <furquan@google.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Aaron Durbin <adurbin@google.com>,
-        "Agrawal, Akshu" <akshu.agrawal@amd.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 21 Aug 2020 14:28:51 -0400
+Received: from mga05.intel.com ([192.55.52.43]:19176 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbgHUS2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 14:28:35 -0400
+IronPort-SDR: obSWUrHuZRREx1jtdkWTJgRaZl7NW3UKNazDWqDPh/hYyXfACpjMEDSrT6W/Q8snIQrPHyKJoH
+ 6BJscg1XtwYQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="240431696"
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="240431696"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 11:25:25 -0700
+IronPort-SDR: 3gXdurGhGhZIwSqwStH50rzu7AGv9r0Iu7bmNyUtyHVwAk5DvQlAc+yJiQXhq8q+eFCGW1jIYs
+ YfgKK4Ykt89w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="337723373"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga007.jf.intel.com with ESMTP; 21 Aug 2020 11:25:25 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Borislav Petkov" <bp@alien8.de>, "Ingo Molnar" <mingo@redhat.com>,
+        "Tony Luck" <tony.luck@intel.com>,
+        "Reinette Chatre" <reinette.chatre@intel.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>,
+        "Babu Moger" <babu.moger@amd.com>
+Cc:     "x86" <x86@kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v2 2/2] x86/resctrl: Enable user to view thread or core throttling mode
+Date:   Fri, 21 Aug 2020 11:25:17 -0700
+Message-Id: <1598034317-122771-3-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
+In-Reply-To: <1598034317-122771-1-git-send-email-fenghua.yu@intel.com>
+References: <1598034317-122771-1-git-send-email-fenghua.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 7:17 PM Furquan Shaikh <furquan@google.com> wrote:
->
-> `fch_misc_setup()` uses `acpi_dev_get_property()` to read the value of
-> "is-rv" passed in by BIOS in ACPI tables. However, not all BIOSes
-> might pass in this property and hence it is important to first check
-> the return value of `acpi_dev_get_property()` before referencing the
-> object filled by it.
->
-> Signed-off-by: Furquan Shaikh <furquan@google.com>
-> ---
->  drivers/acpi/acpi_apd.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
-> index 4c348377a39d..806b8ce05624 100644
-> --- a/drivers/acpi/acpi_apd.c
-> +++ b/drivers/acpi/acpi_apd.c
-> @@ -99,8 +99,8 @@ static int fch_misc_setup(struct apd_private_data *pdata)
->         if (ret < 0)
->                 return -ENOENT;
->
-> -       acpi_dev_get_property(adev, "is-rv", ACPI_TYPE_INTEGER, &obj);
-> -       clk_data->is_rv = obj->integer.value;
-> +       if (!acpi_dev_get_property(adev, "is-rv", ACPI_TYPE_INTEGER, &obj))
-> +               clk_data->is_rv = obj->integer.value;
->
->         list_for_each_entry(rentry, &resource_list, node) {
->                 clk_data->base = devm_ioremap(&adev->dev, rentry->res->start,
-> --
+Early Intel hardware implementations of Memory Bandwidth Allocation (MBA)
+could only control bandwidth at the processor core level. This meant that
+when two processes with different bandwidth allocations ran simultaneously
+on the same core the hardware had to resolve this difference. It did so by
+applying the higher throttling value (lower bandwidth) to both processes.
 
-Applied (with minor subject edits) as 5.9-rc material, thanks!
+Newer implementations can apply different throttling values to each
+thread on a core.
+
+Introduce a new resctrl file, "thread_throttle_mode", on Intel systems
+that shows to the user how throttling values are allocated, per-core or
+per-thread.
+
+On systems that support per-core throttling, the file will display "max".
+On newer systems that support per-thread throttling, the file will display
+"per-thread".
+
+AMD confirmed in
+https://lore.kernel.org/lkml/18d277fd-6523-319c-d560-66b63ff606b8@amd.com
+that AMD bandwidth allocation is already at thread level but that the AMD
+implementation does not use a memory delay throttle mode. So to avoid
+confusion the thread throttling mode would be UNDEFINED on AMD systems
+and the "thread_throttle_mode" file will not be visible.
+
+Originally-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+Change log:
+v2:
+- Rename "arch_throttle_mode" to "throttle_mode" and
+  "rdtgroup_rftype_by_name()" to "rdtgroup_rftype_get_by_name()" (Boris).
+
+ Documentation/x86/resctrl_ui.rst       | 18 ++++++++-
+ arch/x86/kernel/cpu/resctrl/core.c     | 11 ++++++
+ arch/x86/kernel/cpu/resctrl/internal.h | 30 ++++++++++++---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 53 +++++++++++++++++++++++++-
+ 4 files changed, 103 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/x86/resctrl_ui.rst b/Documentation/x86/resctrl_ui.rst
+index 5368cedfb530..e59b7b93a9b4 100644
+--- a/Documentation/x86/resctrl_ui.rst
++++ b/Documentation/x86/resctrl_ui.rst
+@@ -138,6 +138,18 @@ with respect to allocation:
+ 		non-linear. This field is purely informational
+ 		only.
+ 
++"thread_throttle_mode":
++		Indicator on Intel systems of how tasks running on threads
++		of a physical core are throttled in cases where they
++		request different memory bandwidth percentages:
++
++		"max":
++			the smallest percentage is applied
++			to all threads
++		"per-thread":
++			bandwidth percentages are directly applied to
++			the threads running on the core
++
+ If RDT monitoring is available there will be an "L3_MON" directory
+ with the following files:
+ 
+@@ -364,8 +376,10 @@ to the next control step available on the hardware.
+ 
+ The bandwidth throttling is a core specific mechanism on some of Intel
+ SKUs. Using a high bandwidth and a low bandwidth setting on two threads
+-sharing a core will result in both threads being throttled to use the
+-low bandwidth. The fact that Memory bandwidth allocation(MBA) is a core
++sharing a core may result in both threads being throttled to use the
++low bandwidth (see "thread_throttle_mode").
++
++The fact that Memory bandwidth allocation(MBA) may be a core
+ specific mechanism where as memory bandwidth monitoring(MBM) is done at
+ the package level may lead to confusion when users try to apply control
+ via the MBA and then monitor the bandwidth to see if the controls are
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 6a9df71c1b9e..249f005fe26e 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -270,6 +270,12 @@ static bool __get_mem_config_intel(struct rdt_resource *r)
+ 	}
+ 	r->data_width = 3;
+ 
++	if (boot_cpu_has(X86_FEATURE_PER_THREAD_MBA))
++		r->membw.throttle_mode = THREAD_THROTTLE_PER_THREAD;
++	else
++		r->membw.throttle_mode = THREAD_THROTTLE_MAX;
++	thread_throttle_mode_init();
++
+ 	r->alloc_capable = true;
+ 	r->alloc_enabled = true;
+ 
+@@ -289,6 +295,11 @@ static bool __rdt_get_mem_config_amd(struct rdt_resource *r)
+ 	/* AMD does not use delay */
+ 	r->membw.delay_linear = false;
+ 
++	/*
++	 * AMD does not use memory delay throttle model to control
++	 * the allocation like Intel does.
++	 */
++	r->membw.throttle_mode = THREAD_THROTTLE_UNDEFINED;
+ 	r->membw.min_bw = 0;
+ 	r->membw.bw_gran = 1;
+ 	/* Max value is 2048, Data width should be 4 in decimal */
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 5ffa32256b3b..bf31a74a929a 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -369,6 +369,20 @@ struct rdt_cache {
+ 	unsigned int	shareable_bits;
+ };
+ 
++/**
++ * enum membw_throttle_mode - System's memory bandwidth throttling mode
++ * @THREAD_THROTTLE_UNDEFINED:	Not relevant to the system
++ * @THREAD_THROTTLE_MAX:	Memory bandwidth is throttled at the core
++ *				always using smallest bandwidth percentage
++ *				assigned to threads, aka "max throttling"
++ * @THREAD_THROTTLE_PER_THREAD:	Memory bandwidth is throttled at the thread
++ */
++enum membw_throttle_mode {
++	THREAD_THROTTLE_UNDEFINED = 0,
++	THREAD_THROTTLE_MAX,
++	THREAD_THROTTLE_PER_THREAD,
++};
++
+ /**
+  * struct rdt_membw - Memory bandwidth allocation related data
+  * @max_delay:		Max throttle delay. Delay is the hardware
+@@ -376,16 +390,19 @@ struct rdt_cache {
+  * @min_bw:		Minimum memory bandwidth percentage user can request
+  * @bw_gran:		Granularity at which the memory bandwidth is allocated
+  * @delay_linear:	True if memory B/W delay is in linear scale
++ * @throttle_mode:	Bandwidth throttling mode when threads request
++ *			different memory bandwidths
+  * @mba_sc:		True if MBA software controller(mba_sc) is enabled
+  * @mb_map:		Mapping of memory B/W percentage to memory B/W delay
+  */
+ struct rdt_membw {
+-	u32		max_delay;
+-	u32		min_bw;
+-	u32		bw_gran;
+-	u32		delay_linear;
+-	bool		mba_sc;
+-	u32		*mb_map;
++	u32				max_delay;
++	u32				min_bw;
++	u32				bw_gran;
++	u32				delay_linear;
++	enum membw_throttle_mode	throttle_mode;
++	bool				mba_sc;
++	u32				*mb_map;
+ };
+ 
+ static inline bool is_llc_occupancy_enabled(void)
+@@ -612,5 +629,6 @@ void __check_limbo(struct rdt_domain *d, bool force_free);
+ bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r);
+ bool cbm_validate_amd(char *buf, u32 *data, struct rdt_resource *r);
+ void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
++void __init thread_throttle_mode_init(void);
+ 
+ #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 3f844f14fc0a..4ad7eb9c57ba 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1017,6 +1017,19 @@ static int max_threshold_occ_show(struct kernfs_open_file *of,
+ 	return 0;
+ }
+ 
++static int rdt_thread_throttle_mode_show(struct kernfs_open_file *of,
++					 struct seq_file *seq, void *v)
++{
++	struct rdt_resource *r = of->kn->parent->priv;
++
++	if (r->membw.throttle_mode == THREAD_THROTTLE_PER_THREAD)
++		seq_puts(seq, "per-thread\n");
++	else
++		seq_puts(seq, "max\n");
++
++	return 0;
++}
++
+ static ssize_t max_threshold_occ_write(struct kernfs_open_file *of,
+ 				       char *buf, size_t nbytes, loff_t off)
+ {
+@@ -1513,6 +1526,17 @@ static struct rftype res_common_files[] = {
+ 		.seq_show	= rdt_delay_linear_show,
+ 		.fflags		= RF_CTRL_INFO | RFTYPE_RES_MB,
+ 	},
++	/*
++	 * Platform specific which (if any) capabilities are provided by
++	 * thread_throttle_mode. Defer "fflags" initialization to platform
++	 * discovery.
++	 */
++	{
++		.name		= "thread_throttle_mode",
++		.mode		= 0444,
++		.kf_ops		= &rdtgroup_kf_single_ops,
++		.seq_show	= rdt_thread_throttle_mode_show,
++	},
+ 	{
+ 		.name		= "max_threshold_occupancy",
+ 		.mode		= 0644,
+@@ -1583,7 +1607,7 @@ static int rdtgroup_add_files(struct kernfs_node *kn, unsigned long fflags)
+ 	lockdep_assert_held(&rdtgroup_mutex);
+ 
+ 	for (rft = rfts; rft < rfts + len; rft++) {
+-		if ((fflags & rft->fflags) == rft->fflags) {
++		if (rft->fflags && ((fflags & rft->fflags) == rft->fflags)) {
+ 			ret = rdtgroup_add_file(kn, rft);
+ 			if (ret)
+ 				goto error;
+@@ -1600,6 +1624,33 @@ static int rdtgroup_add_files(struct kernfs_node *kn, unsigned long fflags)
+ 	return ret;
+ }
+ 
++static struct rftype *get_rdtgroup_rftype_get_by_name(const char *name)
++{
++	struct rftype *rfts, *rft;
++	int len;
++
++	rfts = res_common_files;
++	len = ARRAY_SIZE(res_common_files);
++
++	for (rft = rfts; rft < rfts + len; rft++) {
++		if (!strcmp(rft->name, name))
++			return rft;
++	}
++
++	return NULL;
++}
++
++void __init thread_throttle_mode_init(void)
++{
++	struct rftype *rft;
++
++	rft = get_rdtgroup_rftype_get_by_name("thread_throttle_mode");
++	if (!rft)
++		return;
++
++	rft->fflags = RF_CTRL_INFO | RFTYPE_RES_MB;
++}
++
+ /**
+  * rdtgroup_kn_mode_restrict - Restrict user access to named resctrl file
+  * @r: The resource group with which the file is associated.
+-- 
+2.19.1
+
