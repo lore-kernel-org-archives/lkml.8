@@ -2,136 +2,94 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C228BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED69DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A49D220702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD52D207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 01:01:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="d9oof434"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgHUA5z (ORCPT
+        id S1726806AbgHUBBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 20:57:55 -0400
-Received: from mga04.intel.com ([192.55.52.120]:19780 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725859AbgHUA5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 20:57:54 -0400
-IronPort-SDR: Vx0Z/EfvIDx09nUvE49oJpBD0RFDXn9lvJQHh+Ro4G5Fp3zu+tcFs/XU0FeAyXq904FvK+PruB
- jkAxv/1zuFHQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="152844195"
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="152844195"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 17:57:54 -0700
-IronPort-SDR: s8Q3GTMRn4CZHTNRB6VtBti3Xkq6jyXeTOWGQp5lLiKprp79ujG+ljBfEV7mujn1EP0U8k3RpN
- jdl/ao99K4gA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="311288655"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.164])
-  by orsmga002.jf.intel.com with ESMTP; 20 Aug 2020 17:57:51 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Yang Shi <shy828301@gmail.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        "David Rientjes" <rientjes@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: Re: [RFC][PATCH 5/9] mm/migrate: demote pages during reclaim
-References: <20200818184122.29C415DF@viggo.jf.intel.com>
-        <20200818184131.C972AFCC@viggo.jf.intel.com>
-        <87lfi9wxk9.fsf@yhuang-dev.intel.com>
-        <6a378a57-a453-0318-924b-05dfa0a10c1f@intel.com>
-        <CAHbLzkrjxm38VV+ibQxoQkC4nW7F13aJcL5RypUchX30rqUstA@mail.gmail.com>
-Date:   Fri, 21 Aug 2020 08:57:50 +0800
-In-Reply-To: <CAHbLzkrjxm38VV+ibQxoQkC4nW7F13aJcL5RypUchX30rqUstA@mail.gmail.com>
-        (Yang Shi's message of "Thu, 20 Aug 2020 09:26:57 -0700")
-Message-ID: <87v9hcvmr5.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 20 Aug 2020 21:01:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgHUBBh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 21:01:37 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DB82C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 18:01:37 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id w9so216041qts.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 18:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OxdQmW2oX9NgI5mQQ7VEZQKRJIIZoe0SIp1V2OIQN94=;
+        b=d9oof434BR4dRx1VQjJfCxUgsEJ1qEfPbSQxwzU/G4IyTUT8CxMoV5e9BNjUHDCDZj
+         bxNfaDBcC3LAWPmyLuj1dDR4fpvTsHmkIIYW48cC7saYyAjyjLkkk+L+nTs5tFtcHWM4
+         Y+AjNeUtJUA9GdZyCMYWEmc71khedRSOrGhorLE1GGncgMydqmeclzKykoXteG1cL2ot
+         Pz7l92hDeWnzPRrGwCDbuccMbJHyiMkdOZYBunp8ax6FuZAVU0UIAD3uklzpPlH3FtwH
+         +ykRnpHN0KBNDKqEyYOwnZl9bgzQD3BW/WhMzaucnfsecPjUL33fjpxqGgcHTqysjVM4
+         plAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OxdQmW2oX9NgI5mQQ7VEZQKRJIIZoe0SIp1V2OIQN94=;
+        b=hL1IBW1u+yd/9w5y5PtUFIo6G363UG6U922Xgs3mAtMNuwJ/WfmQzwNlaz5/WjLGFG
+         WGLIibnbDFSNU0471eK/ru9lDnGuwPkIPmSGXsKydCN3893cJ4YPJ5qnfIsxQk3OjWEg
+         hQUCLpVNW1yy7U8zbvfkwDHYux3YpzXBwxENh9eOVtoHJDN/oo9PQPBvQ3qRd37OxTSq
+         kRPJYxla5INTgDiecG8qE8dWXDpaDCyRWiEkjW8Qv/bU68g1u/UVuWfNgx65d31TM/U+
+         RP5gJJK5o6gMrf0ZSCpxZmtow4LlP1JyAsgY8W2ZySvmxNqN75b9WhFeuRpRICijJLdc
+         1hHw==
+X-Gm-Message-State: AOAM532tYW8jXQCiJ5ljA6hKIuYFEj41yF+lXgBTHzMVlVOGX/Hgmei+
+        HR697bFwC1/heS5Rkw1oIZZyQQ==
+X-Google-Smtp-Source: ABdhPJxWnqVox2CDbULIHZsYUdHlAUpcgCqK94Sn8VKlIOWKUYxc3cR1yDf68hoH4mK7EJQWgs9hnQ==
+X-Received: by 2002:ac8:22ea:: with SMTP id g39mr558713qta.146.1597971696292;
+        Thu, 20 Aug 2020 18:01:36 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d15sm199619qka.91.2020.08.20.18.01.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 18:01:35 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 21:01:33 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [mm] c566586818:
+ BUG:kernel_hang_in_early-boot_stage,last_printk:Probing_EDD(edd=off_to_disable)...ok
+Message-ID: <20200821010132.GC4622@lca.pw>
+References: <20200818002351.GC18179@shao2-debian>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818002351.GC18179@shao2-debian>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yang Shi <shy828301@gmail.com> writes:
+On Tue, Aug 18, 2020 at 08:23:51AM +0800, kernel test robot wrote:
+> Greeting,
+> 
+> FYI, we noticed the following commit (built with gcc-9):
+> 
+> commit: c5665868183fec689dbab9fb8505188b2c4f0757 ("mm: kmemleak: use the memory pool for early allocations")
 
-> On Thu, Aug 20, 2020 at 8:22 AM Dave Hansen <dave.hansen@intel.com> wrote:
->>
->> On 8/20/20 1:06 AM, Huang, Ying wrote:
->> >> +    /* Migrate pages selected for demotion */
->> >> +    nr_reclaimed += demote_page_list(&ret_pages, &demote_pages, pgdat, sc);
->> >> +
->> >>      pgactivate = stat->nr_activate[0] + stat->nr_activate[1];
->> >>
->> >>      mem_cgroup_uncharge_list(&free_pages);
->> >> _
->> > Generally, it's good to batch the page migration.  But one side effect
->> > is that, if the pages are failed to be migrated, they will be placed
->> > back to the LRU list instead of falling back to be reclaimed really.
->> > This may cause some issue in some situation.  For example, if there's no
->> > enough space in the PMEM (slow) node, so the page migration fails, OOM
->> > may be triggered, because the direct reclaiming on the DRAM (fast) node
->> > may make no progress, while it can reclaim some pages really before.
->>
->> Yes, agreed.
->
-> Kind of. But I think that should be transient and very rare. The
-> kswapd on pmem nodes will be waken up to drop pages when we try to
-> allocate migration target pages. It should be very rare that there is
-> not reclaimable page on pmem nodes.
->
->>
->> There are a couple of ways we could fix this.  Instead of splicing
->> 'demote_pages' back into 'ret_pages', we could try to get them back on
->> 'page_list' and goto the beginning on shrink_page_list().  This will
->> probably yield the best behavior, but might be a bit ugly.
->>
->> We could also add a field to 'struct scan_control' and just stop trying
->> to migrate after it has failed one or more times.  The trick will be
->> picking a threshold that doesn't mess with either the normal reclaim
->> rate or the migration rate.
->
-> In my patchset I implemented a fallback mechanism via adding a new
-> PGDAT_CONTENDED node flag. Please check this out:
-> https://patchwork.kernel.org/patch/10993839/.
->
-> Basically the PGDAT_CONTENDED flag will be set once migrate_pages()
-> return -ENOMEM which indicates the target pmem node is under memory
-> pressure, then it would fallback to regular reclaim path. The flag
-> would be cleared by clear_pgdat_congested() once the pmem node memory
-> pressure is gone.
-
-There may be some races between the flag set and clear.  For example,
-
-- try to migrate some pages from DRAM node to PMEM node
-
-- no enough free pages on the PMEM node, so wakeup kswapd
-
-- kswapd on PMEM node reclaimed some page and try to clear
-  PGDAT_CONTENDED on DRAM node
-
-- set PGDAT_CONTENDED on DRAM node
- 
-This may be resolvable.  But I still prefer to fallback to real page
-reclaiming directly for the pages failed to be migrated.  That looks
-more robust.
-
-Best Regards,
-Huang, Ying
-
-> We already use node flags to indicate the state of node in reclaim
-> code, i.e. PGDAT_WRITEBACK, PGDAT_DIRTY, etc. So, adding a new flag
-> sounds more straightforward to me IMHO.
->
->>
->> This is on my list to fix up next.
->>
+I might see one of those early boot failure before. In my case, the bare-metal
+system was reset. Can you try to narrow down to a smaller
+CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE (assume 0 works if your bisecting was
+correct) that works?
