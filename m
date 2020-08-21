@@ -2,128 +2,86 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4A0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 198A8204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:25:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="wnyAQK+s"
+	by mail.kernel.org (Postfix) with ESMTP id 6E68F204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgHUOY6 (ORCPT
+        id S1727903AbgHUOZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 10:24:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgHUOY5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 10:24:57 -0400
-Received: from mail.kmu-office.ch (mail.kmu-office.ch [IPv6:2a02:418:6a02::a2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB5ACC061573;
-        Fri, 21 Aug 2020 07:24:57 -0700 (PDT)
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 2CA215C3C40;
-        Fri, 21 Aug 2020 16:24:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1598019890;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T+8cdmlCgL2E/JdDt751XqJVqvg2UVPQwivpPWqEdjI=;
-        b=wnyAQK+sRU/WEsnin5QCSSp8c9IBjtyFN29UoeZvEpOXFRCfPputNuiPsDX3EbIte6J7fc
-        uXfxZjhmX/ZwV7tmc0ICFV5Et+nLP8r9PWwPr6+Et95NLWIaZZyd18DWeURyhznzLxKOC+
-        mfyclFvU8MxvQ1KjHHNVZfL9ndh3Pvk=
+        Fri, 21 Aug 2020 10:25:20 -0400
+Received: from mga11.intel.com ([192.55.52.93]:57635 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbgHUOZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 10:25:19 -0400
+IronPort-SDR: tmrcRxjxaL0P9lxHQ7fr8fIMQuNJUR145nv5zbTnWsAJKJT1I6opAexyVj89fqpzxYZ3FHCObC
+ yk8lV0uqhcWw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="153141612"
+X-IronPort-AV: E=Sophos;i="5.76,337,1592895600"; 
+   d="scan'208";a="153141612"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 07:25:18 -0700
+IronPort-SDR: 0PX8c1AP+LiD/ldqSHSeX0OluTdTmBHyW7SVV7DsRew8NFCU55CsPnQ4Ni2NEWVOl7YteqPS0I
+ jSJjTx9KarsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,337,1592895600"; 
+   d="scan'208";a="278927662"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 21 Aug 2020 07:25:17 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 2806826A; Fri, 21 Aug 2020 17:25:15 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Subject: [PATCH v2] mfd: intel-lpss: Add device IDs for UART ports for Lakefield
+Date:   Fri, 21 Aug 2020 17:25:09 +0300
+Message-Id: <20200821142509.20133-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 21 Aug 2020 16:24:49 +0200
-From:   Stefan Agner <stefan@agner.ch>
-To:     Chris Healy <cphealy@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] ARM: dts: vfxxx: Add syscon compatible with ocotp
-In-Reply-To: <CAFXsbZp0_hCZ-cz3vBtFySv-q4X8bKjSaPrAMt-aA5aAbtGVGA@mail.gmail.com>
-References: <20200820041055.75848-1-cphealy@gmail.com>
- <1bf1c9664d8c376c87dc55aeb27da6e4@agner.ch>
- <CAFXsbZp0_hCZ-cz3vBtFySv-q4X8bKjSaPrAMt-aA5aAbtGVGA@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.1
-Message-ID: <76061743bc1c4ac7b498549921e937cb@agner.ch>
-X-Sender: stefan@agner.ch
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-21 16:13, Chris Healy wrote:
-> On Fri, Aug 21, 2020 at 6:21 AM Stefan Agner <stefan@agner.ch> wrote:
->>
->> On 2020-08-20 06:10, Chris Healy wrote:
->> > From: Chris Healy <cphealy@gmail.com>
->> >
->> > Add syscon compatibility with Vybrid ocotp node. This is required to
->> > access the UID.
->>
->> Hm, it seems today the SoC driver uses the specific compatible. It also
->> should expose the UID as soc_id, see drivers/soc/imx/soc-imx.c.
->>
-> Yes, until I added syscon, the soc_id was empty and I would get the
-> following line in dmesg:  "failed to find vf610-ocotp regmap!
-> 
+Add PCI IDs for Lakefield to the list of supported UARTs.
 
-Ah I see, it looks up syscon, so that requires syscon to be in
-compatible.
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/mfd/intel-lpss-pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
->> Maybe it does make sense exposing it as syscon, but then we should
->> probably also adjust
->> Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt.
->>
-> Makes sense.  I will update vf610-ocotp.txt in v3.  Tnx
-> 
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 9a58032f818a..2d7c588ef1ed 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -293,6 +293,10 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x5ac4), (kernel_ulong_t)&bxt_info },
+ 	{ PCI_VDEVICE(INTEL, 0x5ac6), (kernel_ulong_t)&bxt_info },
+ 	{ PCI_VDEVICE(INTEL, 0x5aee), (kernel_ulong_t)&bxt_uart_info },
++	/* LKF */
++	{ PCI_VDEVICE(INTEL, 0x98a8), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x98a9), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x98c7), (kernel_ulong_t)&bxt_uart_info },
+ 	/* SPT-LP */
+ 	{ PCI_VDEVICE(INTEL, 0x9d27), (kernel_ulong_t)&spt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x9d28), (kernel_ulong_t)&spt_uart_info },
+-- 
+2.28.0
 
-Ok, thx. With that you can add Reviewed-by: Stefan Agner
-<stefan@agner.ch> as well.
-
---
-Stefan
-
->> --
->> Stefan
->>
->> >
->> > Fixes: fa8d20c8dbb77 ("ARM: dts: vfxxx: Add node corresponding to OCOTP")
->> > Cc: stable@vger.kernel.org
->> > Signed-off-by: Chris Healy <cphealy@gmail.com>
->> > ---
->> > Changes in v2:
->> >  - Add Fixes line to commit message
->> >
->> >  arch/arm/boot/dts/vfxxx.dtsi | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
->> > index 0fe03aa0367f..2259d11af721 100644
->> > --- a/arch/arm/boot/dts/vfxxx.dtsi
->> > +++ b/arch/arm/boot/dts/vfxxx.dtsi
->> > @@ -495,7 +495,7 @@ edma1: dma-controller@40098000 {
->> >                       };
->> >
->> >                       ocotp: ocotp@400a5000 {
->> > -                             compatible = "fsl,vf610-ocotp";
->> > +                             compatible = "fsl,vf610-ocotp", "syscon";
->> >                               reg = <0x400a5000 0x1000>;
->> >                               clocks = <&clks VF610_CLK_OCOTP>;
->> >                       };
