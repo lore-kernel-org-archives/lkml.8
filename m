@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEE3C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7232075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ECDC22BEA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030961;
-	bh=HoRWHVr2nxkcyHpWx7uSIErrJ+zEm+ycisSWs6Uvf6c=;
+	s=default; t=1598030977;
+	bh=KXQV7iN6LfRHw4fLqfpnmxvNW34f/PK96F7lMXsjoCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G6Hd0Qgha70hJb/ZIAh86a1HjD1zf/fbyad5yg7YmF8FiiuOGqvCkgfJgk1RsUzGY
-	 JI1YmbBSbtIJEvkndiSehNSBVKFfz41AZQPUsYrd1je6CFbSmfnReypndBNkz+ZP+8
-	 8LIeUEFWnzL37xwc4bSnAezL8p6JhoI3aj1z+bZE=
+	b=K7PEi0J4efzsE9HlbnXCJIftzJOVp8z7v3AETtuLzJzXN1xDxNdzbQPBkoAtNH3C9
+	 AtYj13E+IYNRUePOUHCZizQvCv10aE8kz8gizVShm7cdous5jM2ygHNx0OGXds0GtO
+	 rjlReNGP1khisQCR/XUbk0bCjOjL8GpFZykIIaOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgHUR3S (ORCPT
+        id S1728524AbgHUR3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:29:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46398 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726862AbgHUQOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:14:38 -0400
+        id S1726373AbgHUQO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:14:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B71722B43;
-        Fri, 21 Aug 2020 16:14:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6B79208DB;
+        Fri, 21 Aug 2020 16:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026472;
-        bh=HoRWHVr2nxkcyHpWx7uSIErrJ+zEm+ycisSWs6Uvf6c=;
+        s=default; t=1598026468;
+        bh=KXQV7iN6LfRHw4fLqfpnmxvNW34f/PK96F7lMXsjoCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JUqpTZKWQa0R90nJzo/xZhfmR/BYnbjmwGPYmRkiFpBADDwWxnd/yhyT89JvZdEXn
-         LN0O2WjWmZR6KEkqfjqOQ7TKDN8hqtgpqglKeQttt6esD5J/EeSZGqMgJAD/2ioOFp
-         81p0rzvt56vo4w2TfB7L9WN7xA3uajHt1k7P14uM=
+        b=Hv7W/vIizXQxpqteMFQwNXpFg8sppcx4MvtwnUQZ1qOGmwkWxt1dOYwlvK/oOVqgl
+         ns/8qwGAGlWdXotADZaQ6DWWp6Gao3P4ZMdFxP9D99VPR3XoFJropswSDl+VjgWzU5
+         Ei2huTCDiuOiBOAJwppNkWosW2ok3GcX9fkZpjV0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 06/62] EDAC/mc: Call edac_inc_ue_error() before panic
-Date:   Fri, 21 Aug 2020 12:13:27 -0400
-Message-Id: <20200821161423.347071-6-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.8 03/62] ALSA: hda/realtek: Fix pin default on Intel NUC 8 Rugged
+Date:   Fri, 21 Aug 2020 12:13:24 -0400
+Message-Id: <20200821161423.347071-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -59,43 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit e9ff6636d3f97a764487999754c0bfee9d2c231e ]
+[ Upstream commit e2d2fded6bdf3f7bb40718a208140dba8b4ec574 ]
 
-By calling edac_inc_ue_error() before panic, we get a correct UE error
-count for core dump analysis.
+The jack on Intel NUC 8 Rugged rear panel doesn't work.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/r/20200610065846.3626-2-zhenzhong.duan@gmail.com
+The spec [1] states that the jack supports both headphone and
+microphone, so override a Pin Complex which has both Amp-In and Amp-Out
+to make the jack work.
+
+Node 0x1b fits the requirement, and user confirmed the jack now works
+with new pin config.
+
+[1] https://www.intel.com/content/dam/support/us/en/documents/mini-pcs/NUC8CCH_TechProdSpec.pdf
+BugLink: https://bugs.launchpad.net/bugs/1875199
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200807080514.15293-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index 5813e931f2f00..01ff71f7b6456 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -950,6 +950,8 @@ static void edac_ue_error(struct edac_raw_error_desc *e)
- 			e->other_detail);
- 	}
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 00d155b98c1d1..049a07447ba1a 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6169,6 +6169,7 @@ enum {
+ 	ALC269_FIXUP_CZC_L101,
+ 	ALC269_FIXUP_LEMOTE_A1802,
+ 	ALC269_FIXUP_LEMOTE_A190X,
++	ALC256_FIXUP_INTEL_NUC8_RUGGED,
+ };
  
-+	edac_inc_ue_error(e);
-+
- 	if (edac_mc_get_panic_on_ue()) {
- 		panic("UE %s%son %s (%s page:0x%lx offset:0x%lx grain:%ld%s%s)\n",
- 			e->msg,
-@@ -959,8 +961,6 @@ static void edac_ue_error(struct edac_raw_error_desc *e)
- 			*e->other_detail ? " - " : "",
- 			e->other_detail);
- 	}
--
--	edac_inc_ue_error(e);
- }
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7490,6 +7491,15 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		},
+ 		.chain_id = ALC269_FIXUP_DMIC,
+ 	},
++	[ALC256_FIXUP_INTEL_NUC8_RUGGED] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x1b, 0x01a1913c }, /* use as headset mic, without its own jack detect */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MODE
++	},
+ };
  
- static void edac_inc_csrow(struct edac_raw_error_desc *e, int row, int chan)
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7787,6 +7797,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x10ec, 0x118c, "Medion EE4254 MD62100", ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1c06, 0x2013, "Lemote A1802", ALC269_FIXUP_LEMOTE_A1802),
+ 	SND_PCI_QUIRK(0x1c06, 0x2015, "Lemote A190X", ALC269_FIXUP_LEMOTE_A190X),
++	SND_PCI_QUIRK(0x8086, 0x2080, "Intel NUC 8 Rugged", ALC256_FIXUP_INTEL_NUC8_RUGGED),
+ 
+ #if 0
+ 	/* Below is a quirk table taken from the old code.
 -- 
 2.25.1
 
