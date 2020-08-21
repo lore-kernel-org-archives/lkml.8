@@ -2,71 +2,74 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0BAE20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD8620748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:54:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHn3Pdrj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hhuq0Hx4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgHUSxm (ORCPT
+        id S1726792AbgHUSx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57078 "EHLO
+        Fri, 21 Aug 2020 14:53:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgHUSxk (ORCPT
+        with ESMTP id S1726118AbgHUSxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:53:40 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48576C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:53:40 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id v22so1933480qtq.8
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:53:40 -0700 (PDT)
+        Fri, 21 Aug 2020 14:53:43 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112FAC061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:53:43 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id x69so2284774qkb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:53:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6fEk5o+JtGsEMi+t1XipTCOzTB4EYy5u5pAnjhPn+tc=;
-        b=IHn3PdrjjkxPkH4x22lOEh8mz7SNlFAtCTdUqXGkJQNcr2zYGRLUIhWPChaEStztrQ
-         fC/X4a4IPpXC+NY6PV3e13wwGSXbSutrgBvEH73X2uTEg6Xexsr19AGU9QjZhTNFNv9x
-         NdqMYitYDpykv2AWPTiK4bJrpYsjuc4oSaSL9WWNnMA3QzMNEwiRbL44QUpyJpuBnP5d
-         xJdHOFyVMWGVxmdu0QhU8ph4AOeofUo9QO2a8SJma2sX6/7ZSpMj1KUYJDrFphbiyCtK
-         qD+CYmbFsLahWwV05hIQgi6XNJ+eYkuoJBqWoH2lTf1YqXyOjVnj6GpNSzTI3//xx9tY
-         pl+w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Lo2pPs5Z3dtcsHghWeXAbSPyEkVTw+1ChIKWljdMLdA=;
+        b=hhuq0Hx4TJPHClzp9r74EhJLSdpuxu8ResuY2frq/hEdhYs4zdfv5NRfjUkFTHZ+S1
+         iz58WdMPtsh9Y9D4F2mjX22GtYfGei9JE1D6+Oiu4BxB5M+ECpQDLolCDl+40q1SOH0m
+         H5fmQAaikv4BqVKHN6qKr7P60TPef4ctDHwd7cuvcAOug38h4UXH6sll1Yg4+SdJihXy
+         4c8U5Nvt4ln1ViHQRW7i1NdtST9Kr/vg3YG2524X9mdmSs6XWRBLKMErzO5U23z1aK5f
+         FMAFo55F/G0UlnlL5q+mD2R4x0keZtNpjxw/vHLD5yJObLTS2ki1oWDHlbOjlo5hWA0R
+         xryg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6fEk5o+JtGsEMi+t1XipTCOzTB4EYy5u5pAnjhPn+tc=;
-        b=AqJtplJCMqi7OLL7LKL16orneaOoXso5r8J4yO5dN1QfcNdxSc8Ok58CD3QasCzAF1
-         mJWekHRkru1D2xwNdEVMx/t6Q/BUkbB/E0jcxsrmV23O3DxEFfMeuLSxKBr5CiV6o2u5
-         ObzL+ZR4+3v2gexMQVhDCFy46lpbmIlAH8tcxc0nCkiZcdAPV92GAAYZxMcF5FdBYUV1
-         GvdfFuIdWg1Vq4+fDdrSkQHOD82TWbX990/lWSCnhVy/cTTqyE0xA2pCrrd6eBoVwev2
-         dDCK5U9G2PpCTlYVkiQdzkD/k6l1QoSPxV/3kxoKLAep7bNqk3rAjeJO7WaXtl0/sK+q
-         fy4w==
-X-Gm-Message-State: AOAM531xJZazhjG4FbSh+GHBgU/R4gUhI7F1/fUCuhZiZ81TyGwNhd1O
-        jtaKQbQPXL1mEruo5m6Yq9M=
-X-Google-Smtp-Source: ABdhPJxqidkPRdoAqeh12zWutA108nXj9dr2/WKtZ5kYfsIuy56E6pDiDC5ku6o7yafxKR14Hb7DfA==
-X-Received: by 2002:ac8:4117:: with SMTP id q23mr4029550qtl.186.1598036019416;
-        Fri, 21 Aug 2020 11:53:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Lo2pPs5Z3dtcsHghWeXAbSPyEkVTw+1ChIKWljdMLdA=;
+        b=cat+dFFfS7xiXeb8+10zCJhMFh6pmWrGZWft2WR7ejg6qyfid8DDgg5//xAeWRvOFz
+         P9AXQay+1FOFZPG4sWNuedNXe5Ara2W1U96pNlptc6+NDEi19vVfgnyjZ6z+XxgZpqXz
+         oQr9M1R8CoQV1UBXCaWzm6rgXXVChXbFNBqUg+QFwxM95P4dE3O8xgP1S3WEiqTY+wHI
+         iKJcZ8VTX59y0pAekr1M40+pbWEM5CMufT6d92mgsR4QGHhdCc0B4Tw/VwkP/Fl3W75N
+         zkKKDJj9yV5CDlOhIv8KmArt7g89ZcA+Qi+l64IJjitDDoOkmzxkoGyd0YO5TqO/0jGP
+         en6A==
+X-Gm-Message-State: AOAM530IYoL8EqBwEuz8mYV+a7rELBOuBWbsw6VJd8OxmQFDsCo3wjzc
+        4J+4VfOk9MvZCOCRQyAnCmM=
+X-Google-Smtp-Source: ABdhPJzfHeyDtR/Zz7BUePb7KVyMb+ysLTTOtkU1enog/lyv/qDAs4rhuFZUp4+drONrbrZ61Ni8yA==
+X-Received: by 2002:a37:d201:: with SMTP id f1mr4008345qkj.188.1598036022319;
+        Fri, 21 Aug 2020 11:53:42 -0700 (PDT)
 Received: from localhost.localdomain (cpe-71-65-111-223.cinci.res.rr.com. [71.65.111.223])
-        by smtp.googlemail.com with ESMTPSA id o72sm2468426qka.113.2020.08.21.11.53.38
+        by smtp.googlemail.com with ESMTPSA id o72sm2468426qka.113.2020.08.21.11.53.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 11:53:38 -0700 (PDT)
+        Fri, 21 Aug 2020 11:53:41 -0700 (PDT)
 From:   Connor McAdams <conmanx360@gmail.com>
 Cc:     conmanx360@gmail.com, Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 00/20] ALSA: hda/ca0132 - Add AE-7 support/Control cleanup.
-Date:   Fri, 21 Aug 2020 14:52:17 -0400
-Message-Id: <20200821185239.26133-1-conmanx360@gmail.com>
+Subject: [PATCH 01/20] ALSA: hda/ca0132 - Cleanup ca0132_mmio_init function.
+Date:   Fri, 21 Aug 2020 14:52:18 -0400
+Message-Id: <20200821185239.26133-2-conmanx360@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200821185239.26133-1-conmanx360@gmail.com>
+References: <20200821185239.26133-1-conmanx360@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
@@ -75,37 +78,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds support for the Sound Blaster AE-7 along with
-adding new controls and cleaning up the old ones. I have personally
-tested the Recon3D, Recon3Di, Sound Blaster Z/ZxR, and AE-5 cards to
-confirm they work with these patches. Another user has confirmed that
-they work on the AE-7.
+Cleanup the ca0132_mmio_init function, separating into two separate
+functions, one for Sound Blaster Z/ZxR/Recon3D, and another for the
+AE-5.
 
-Connor McAdams (20):
-  ALSA: hda/ca0132 - Cleanup ca0132_mmio_init function.
-  ALSA: hda/ca0132 - Add speaker tuning initialization commands.
-  ALSA: hda/ca0132 - Add surround channel config control.
-  ALSA: hda/ca0132 - Add full-range speaker selection controls.
-  ALSA: hda/ca0132 - Add bass redirection controls.
-  ALSA: hda/ca0132 - Remove surround output selection.
-  ALSA: hda/ca0132 - Clean up ca0132_alt_out_select.
-  ALSA: hda/ca0132 - Add quirk output selection structures.
-  ALSA: hda/ca0132 - Fix Recon3D Center/LFE output.
-  ALSA: hda/ca0132 - Add new quirk ID for SoundBlaster AE-7.
-  ALSA: hda/ca0132 - Add SoundBlaster AE-7 pincfg.
-  ALSA: hda/ca0132 - Set AE-7 bools and select mixer.
-  ALSA: hda/ca0132 - Add ca0132_mmio_init data for SoundBlaster AE-7.
-  ALSA: hda/ca0132 - Add pre-init function for SoundBlaster AE-7.
-  ALSA: hda/ca0132 - Add init data for SoundBlaster AE-7.
-  ALSA: hda/ca0132 - Add DSP setup functions for AE-7.
-  ALSA: hda/ca0132 - Add output selection for SoundBlaster AE-7.
-  ALSA: hda/ca0132 - Add AE-7 microphone selection commands.
-  ALSA: hda/ca0132 - Add AE-7 custom controls.
-  ALSA: hda/ca0132 - Add AE-7 exit commands.
+Signed-off-by: Connor McAdams <conmanx360@gmail.com>
+---
+ sound/pci/hda/patch_ca0132.c | 158 ++++++++++++++++++++++-------------
+ 1 file changed, 99 insertions(+), 59 deletions(-)
 
- sound/pci/hda/patch_ca0132.c | 1794 +++++++++++++++++++++++++++-------
- 1 file changed, 1430 insertions(+), 364 deletions(-)
-
+diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
+index b7dbf2e7f77a..7491e2044638 100644
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -8108,78 +8108,118 @@ static void r3di_pre_dsp_setup(struct hda_codec *codec)
+  * what they do, or if they're necessary. Could possibly
+  * be removed. Figure they're better to leave in.
+  */
+-static void ca0132_mmio_init(struct hda_codec *codec)
++static const unsigned int ca0113_mmio_init_address_sbz[] = {
++	0x400, 0x408, 0x40c, 0x01c, 0xc0c, 0xc00, 0xc04, 0xc0c, 0xc0c, 0xc0c,
++	0xc0c, 0xc08, 0xc08, 0xc08, 0xc08, 0xc08, 0xc04
++};
++
++static const unsigned int ca0113_mmio_init_data_sbz[] = {
++	0x00000030, 0x00000000, 0x00000003, 0x00000003, 0x00000003,
++	0x00000003, 0x000000c1, 0x000000f1, 0x00000001, 0x000000c7,
++	0x000000c1, 0x00000080
++};
++
++static const unsigned int ca0113_mmio_init_data_zxr[] = {
++	0x00000030, 0x00000000, 0x00000000, 0x00000003, 0x00000003,
++	0x00000003, 0x00000001, 0x000000f1, 0x00000001, 0x000000c7,
++	0x000000c1, 0x00000080
++};
++
++static const unsigned int ca0113_mmio_init_address_ae5[] = {
++	0x400, 0x42c, 0x46c, 0x4ac, 0x4ec, 0x43c, 0x47c, 0x4bc, 0x4fc, 0x408,
++	0x100, 0x410, 0x40c, 0x100, 0x100, 0x830, 0x86c, 0x800, 0x86c, 0x800,
++	0x804, 0x20c, 0x01c, 0xc0c, 0xc00, 0xc04, 0xc0c, 0xc0c, 0xc0c, 0xc0c,
++	0xc08, 0xc08, 0xc08, 0xc08, 0xc08, 0xc04, 0x01c
++};
++
++static const unsigned int ca0113_mmio_init_data_ae5[] = {
++	0x00000001, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
++	0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000001,
++	0x00000600, 0x00000014, 0x00000001, 0x0000060f, 0x0000070f,
++	0x00000aff, 0x00000000, 0x0000006b, 0x00000001, 0x0000006b,
++	0x00000057, 0x00800000, 0x00880680, 0x00000080, 0x00000030,
++	0x00000000, 0x00000000, 0x00000003, 0x00000003, 0x00000003,
++	0x00000001, 0x000000f1, 0x00000001, 0x000000c7, 0x000000c1,
++	0x00000080, 0x00880680
++};
++
++static void ca0132_mmio_init_sbz(struct hda_codec *codec)
+ {
+ 	struct ca0132_spec *spec = codec->spec;
++	unsigned int tmp[2], i, count, cur_addr;
++	const unsigned int *addr, *data;
+ 
+-	if (ca0132_quirk(spec) == QUIRK_AE5)
+-		writel(0x00000001, spec->mem_base + 0x400);
+-	else
+-		writel(0x00000000, spec->mem_base + 0x400);
++	addr = ca0113_mmio_init_address_sbz;
++	for (i = 0; i < 3; i++)
++		writel(0x00000000, spec->mem_base + addr[i]);
+ 
+-	if (ca0132_quirk(spec) == QUIRK_AE5)
+-		writel(0x00000001, spec->mem_base + 0x408);
+-	else
+-		writel(0x00000000, spec->mem_base + 0x408);
++	cur_addr = i;
++	switch (ca0132_quirk(spec)) {
++	case QUIRK_ZXR:
++		tmp[0] = 0x00880480;
++		tmp[1] = 0x00000080;
++		break;
++	case QUIRK_SBZ:
++		tmp[0] = 0x00820680;
++		tmp[1] = 0x00000083;
++		break;
++	case QUIRK_R3D:
++		tmp[0] = 0x00880680;
++		tmp[1] = 0x00000083;
++		break;
++	default:
++		tmp[0] = 0x00000000;
++		tmp[1] = 0x00000000;
++		break;
++	}
+ 
+-	if (ca0132_quirk(spec) == QUIRK_AE5)
+-		writel(0x00000001, spec->mem_base + 0x40c);
+-	else
+-		writel(0x00000000, spec->mem_base + 0x40C);
++	for (i = 0; i < 2; i++)
++		writel(tmp[i], spec->mem_base + addr[cur_addr + i]);
+ 
+-	if (ca0132_quirk(spec) == QUIRK_ZXR)
+-		writel(0x00880640, spec->mem_base + 0x01C);
+-	else
+-		writel(0x00880680, spec->mem_base + 0x01C);
++	cur_addr += i;
+ 
+-	if (ca0132_quirk(spec) == QUIRK_AE5)
+-		writel(0x00000080, spec->mem_base + 0xC0C);
+-	else
+-		writel(0x00000083, spec->mem_base + 0xC0C);
++	switch (ca0132_quirk(spec)) {
++	case QUIRK_ZXR:
++		count = ARRAY_SIZE(ca0113_mmio_init_data_zxr);
++		data = ca0113_mmio_init_data_zxr;
++		break;
++	default:
++		count = ARRAY_SIZE(ca0113_mmio_init_data_sbz);
++		data = ca0113_mmio_init_data_sbz;
++		break;
++	}
+ 
+-	writel(0x00000030, spec->mem_base + 0xC00);
+-	writel(0x00000000, spec->mem_base + 0xC04);
++	for (i = 0; i < count; i++)
++		writel(data[i], spec->mem_base + addr[cur_addr + i]);
++}
+ 
+-	if (ca0132_quirk(spec) == QUIRK_AE5)
+-		writel(0x00000000, spec->mem_base + 0xC0C);
+-	else
+-		writel(0x00000003, spec->mem_base + 0xC0C);
++static void ca0132_mmio_init_ae5(struct hda_codec *codec)
++{
++	struct ca0132_spec *spec = codec->spec;
++	const unsigned int *addr, *data;
++	unsigned int i, count;
+ 
+-	writel(0x00000003, spec->mem_base + 0xC0C);
+-	writel(0x00000003, spec->mem_base + 0xC0C);
+-	writel(0x00000003, spec->mem_base + 0xC0C);
++	addr = ca0113_mmio_init_address_ae5;
++	data = ca0113_mmio_init_data_ae5;
++	count = ARRAY_SIZE(ca0113_mmio_init_data_ae5);
+ 
+-	if (ca0132_quirk(spec) == QUIRK_AE5)
+-		writel(0x00000001, spec->mem_base + 0xC08);
+-	else
+-		writel(0x000000C1, spec->mem_base + 0xC08);
++	for (i = 0; i < count; i++)
++		writel(data[i], spec->mem_base + addr[i]);
++}
+ 
+-	writel(0x000000F1, spec->mem_base + 0xC08);
+-	writel(0x00000001, spec->mem_base + 0xC08);
+-	writel(0x000000C7, spec->mem_base + 0xC08);
+-	writel(0x000000C1, spec->mem_base + 0xC08);
+-	writel(0x00000080, spec->mem_base + 0xC04);
++static void ca0132_mmio_init(struct hda_codec *codec)
++{
++	struct ca0132_spec *spec = codec->spec;
+ 
+-	if (ca0132_quirk(spec) == QUIRK_AE5) {
+-		writel(0x00000000, spec->mem_base + 0x42c);
+-		writel(0x00000000, spec->mem_base + 0x46c);
+-		writel(0x00000000, spec->mem_base + 0x4ac);
+-		writel(0x00000000, spec->mem_base + 0x4ec);
+-		writel(0x00000000, spec->mem_base + 0x43c);
+-		writel(0x00000000, spec->mem_base + 0x47c);
+-		writel(0x00000000, spec->mem_base + 0x4bc);
+-		writel(0x00000000, spec->mem_base + 0x4fc);
+-		writel(0x00000600, spec->mem_base + 0x100);
+-		writel(0x00000014, spec->mem_base + 0x410);
+-		writel(0x0000060f, spec->mem_base + 0x100);
+-		writel(0x0000070f, spec->mem_base + 0x100);
+-		writel(0x00000aff, spec->mem_base + 0x830);
+-		writel(0x00000000, spec->mem_base + 0x86c);
+-		writel(0x0000006b, spec->mem_base + 0x800);
+-		writel(0x00000001, spec->mem_base + 0x86c);
+-		writel(0x0000006b, spec->mem_base + 0x800);
+-		writel(0x00000057, spec->mem_base + 0x804);
+-		writel(0x00800000, spec->mem_base + 0x20c);
++	switch (ca0132_quirk(spec)) {
++	case QUIRK_R3D:
++	case QUIRK_SBZ:
++	case QUIRK_ZXR:
++		ca0132_mmio_init_sbz(codec);
++		break;
++	case QUIRK_AE5:
++		ca0132_mmio_init_ae5(codec);
++		break;
+ 	}
+ }
+ 
 -- 
 2.20.1
 
