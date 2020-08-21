@@ -2,420 +2,194 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428D0C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14552207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:21:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598048514;
-	bh=zT875L3jZJ4vivhMR5xi1PQyDj30T3yhLQ25cxtjVMs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kMHcZq0NRVE5hsWHTOC/6CRyptPFiEmybBSSK6Q9ee9GIONy5MQ+QyDbYZ9TveLqg
-	 TjwWUYDW9oxGEQBzAL2VWF4ragrMmaCQgUFuofrEAfVMIuFRDKQa/Q5+krRa15cXS9
-	 kauR4iKGvikjkkwrBkXGYQug+sdEh5LXexbXORT8=
+	by mail.kernel.org (Postfix) with ESMTP id 0D5C3207C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:22:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="PI7GeONl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgHUWVx (ORCPT
+        id S1727019AbgHUWW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:21:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726747AbgHUWVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:21:52 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55AAA207DF;
-        Fri, 21 Aug 2020 22:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598048511;
-        bh=zT875L3jZJ4vivhMR5xi1PQyDj30T3yhLQ25cxtjVMs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cFtjZKA568zBvXXmbolfGuG2z0p8f68ezoXRwKbvTJQpqtRWqI2ugyBgk6qnlR613
-         yc+rRDN/k15i7g2YBCXbStl3rnSiFDVgghy1uXs+GzhfEv1REEW3BZsJW8CPPFWEuP
-         Y+JFcoyR8aKzhLnWRjpGDB4VmxmGbJ6ZiqSGth5c=
-Received: by mail-ot1-f53.google.com with SMTP id z18so2791912otk.6;
-        Fri, 21 Aug 2020 15:21:51 -0700 (PDT)
-X-Gm-Message-State: AOAM530/Y8dOkdokmObkTc/gnvKOGJE76P+JvlWq3nEbh1HB8CR5TzyX
-        dYMR0FKIosRVz6grJWIOw2lVJzMTqjYF2tH+ew==
-X-Google-Smtp-Source: ABdhPJwYCn6kWMxZ3MMVCesxuxOvrTlyCc5cN1Ae197gJkY+XORFl+sBlvUTWsvZv37dHjO+tuVuK1nS28HpCz3gnac=
-X-Received: by 2002:a05:6830:1d8e:: with SMTP id y14mr3534680oti.129.1598048510539;
- Fri, 21 Aug 2020 15:21:50 -0700 (PDT)
+        Fri, 21 Aug 2020 18:22:56 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:17353 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbgHUWWy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 18:22:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1598048573; x=1629584573;
+  h=date:from:to:subject:message-id:mime-version;
+  bh=pCzwDhN0iVXUQqFByiUrlU6LR1qEKbE8xAOG3bRhl3E=;
+  b=PI7GeONlDITVjEQYYTEFGC0SntSPRdAOCCdEiEL5+PfRsIVh8KYUmfr7
+   WL14IafWzt7Gmocc1Ibhh/MgIIP2uAvyGhThrmU3XqVcT7Jwfok68dnOL
+   wpC1x5upw7Lro74Z1FXhoST8oI00uPzJZI740Co7D8s0HXIGm7WgumXs9
+   c=;
+X-IronPort-AV: E=Sophos;i="5.76,338,1592870400"; 
+   d="scan'208";a="49403112"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 21 Aug 2020 22:22:50 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com (Postfix) with ESMTPS id 13476A260D;
+        Fri, 21 Aug 2020 22:22:48 +0000 (UTC)
+Received: from EX13D10UWB002.ant.amazon.com (10.43.161.130) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 21 Aug 2020 22:22:43 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D10UWB002.ant.amazon.com (10.43.161.130) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 21 Aug 2020 22:22:43 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Fri, 21 Aug 2020 22:22:43 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id 8D45F40362; Fri, 21 Aug 2020 22:22:43 +0000 (UTC)
+Date:   Fri, 21 Aug 2020 22:22:43 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
+        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
+        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>
+Subject: [PATCH v3 00/11] Fix PM hibernation in Xen guests
+Message-ID: <cover.1598042152.git.anchalag@amazon.com>
 MIME-Version: 1.0
-References: <1598003509-27896-1-git-send-email-wuht06@gmail.com> <1598003509-27896-3-git-send-email-wuht06@gmail.com>
-In-Reply-To: <1598003509-27896-3-git-send-email-wuht06@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 21 Aug 2020 16:21:39 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKWU8pNcwepA28qZN6bY_wRKhuwbwPsZvANxyKBe7nOCQ@mail.gmail.com>
-Message-ID: <CAL_JsqKWU8pNcwepA28qZN6bY_wRKhuwbwPsZvANxyKBe7nOCQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: sprd: Add support for Unisoc SoCs' PCIe controller
-To:     Hongtao Wu <wuht06@gmail.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Billows Wu <billows.wu@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 3:52 AM Hongtao Wu <wuht06@gmail.com> wrote:
->
-> From: Billows Wu <billows.wu@unisoc.com>
->
-> This series adds PCIe controller driver for Unisoc SoCs.
-> This controller is based on DesignWare PCIe IP.
+Hello,
+This series fixes PM hibernation for hvm guests running on xen hypervisor.
+The running guest could now be hibernated and resumed successfully at a
+later time. The fixes for PM hibernation are added to block and
+network device drivers i.e xen-blkfront and xen-netfront. Any other driver
+that needs to add S4 support if not already, can follow same method of
+introducing freeze/thaw/restore callbacks.
+The patches had been tested against upstream kernel and xen4.11. Large
+scale testing is also done on Xen based Amazon EC2 instances. All this testing
+involved running memory exhausting workload in the background.
+  
+Doing guest hibernation does not involve any support from hypervisor and
+this way guest has complete control over its state. Infrastructure
+restrictions for saving up guest state can be overcome by guest initiated
+hibernation.
+  
+These patches were send out as RFC before and all the feedback had been
+incorporated in the patches. The last v1 & v2 could be found here:
+  
+[v1]: https://lkml.org/lkml/2020/5/19/1312
+[v2]: https://lkml.org/lkml/2020/7/2/995
+All comments and feedback from v2 had been incorporated in v3 series.
 
-Please test this on top of my 40 part series of DWC clean-ups:
+Known issues:
+1.KASLR causes intermittent hibernation failures. VM fails to resumes and
+has to be restarted. I will investigate this issue separately and shouldn't
+be a blocker for this patch series.
+2. During hibernation, I observed sometimes that freezing of tasks fails due
+to busy XFS workqueuei[xfs-cil/xfs-sync]. This is also intermittent may be 1
+out of 200 runs and hibernation is aborted in this case. Re-trying hibernation
+may work. Also, this is a known issue with hibernation and some
+filesystems like XFS has been discussed by the community for years with not an
+effectve resolution at this point.
 
-https://lore.kernel.org/linux-pci/20200821035420.380495-1-robh@kernel.org/
+Testing How to:
+---------------
+1. Setup xen hypervisor on a physical machine[ I used Ubuntu 16.04 +upstream
+xen-4.11]
+2. Bring up a HVM guest w/t kernel compiled with hibernation patches
+[I used ubuntu18.04 netboot bionic images and also Amazon Linux on-prem images].
+3. Create a swap file size=RAM size
+4. Update grub parameters and reboot
+5. Trigger pm-hibernation from within the VM
 
-> Signed-off-by: Billows Wu <billows.wu@unisoc.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig     |  12 ++
->  drivers/pci/controller/dwc/Makefile    |   1 +
->  drivers/pci/controller/dwc/pcie-sprd.c | 256 +++++++++++++++++++++++++++++++++
->  3 files changed, 269 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-sprd.c
->
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 044a376..d26ce94 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -311,4 +311,16 @@ config PCIE_AL
->           required only for DT-based platforms. ACPI platforms with the
->           Annapurna Labs PCIe controller don't need to enable this.
->
-> +config PCIE_SPRD
-> +       tristate "Unisoc PCIe controller - RC mode"
-> +       depends on ARCH_SPRD
+Example:
+Set up a file-backed swap space. Swap file size>=Total memory on the system
+sudo dd if=/dev/zero of=/swap bs=$(( 1024 * 1024 )) count=4096 # 4096MiB
+sudo chmod 600 /swap
+sudo mkswap /swap
+sudo swapon /swap
 
-|| COMPILE_TEST
+Update resume device/resume offset in grub if using swap file:
+resume=/dev/xvda1 resume_offset=200704 no_console_suspend=1
 
-> +       depends on PCI_MSI_IRQ_DOMAIN
-> +       select PCIE_DW_HOST
-> +       help
-> +         Some Uisoc SoCs contain two PCIe controllers as RC: One is gen2,
-> +         and the other is gen3. While other Unisoc SoCs may have only one
-> +         PCIe controller which can be configured as an Endpoint(EP) or a Root
-> +         complex(RC). In order to enable host-specific features PCIE_SPRD must
-> +         be selected, which uses the Designware core.
-> +
->  endmenu
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index a751553..eb546e9 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_PCI_MESON) += pci-meson.o
->  obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
->  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
-> +obj-$(CONFIG_PCIE_SPRD) += pcie-sprd.o
->
->  # The following drivers are for devices that use the generic ACPI
->  # pci_root.c driver but don't support standard ECAM config access.
-> diff --git a/drivers/pci/controller/dwc/pcie-sprd.c b/drivers/pci/controller/dwc/pcie-sprd.c
-> new file mode 100644
-> index 0000000..cda812d
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-sprd.c
-> @@ -0,0 +1,256 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe host controller driver for Unisoc SoCs
-> + *
-> + * Copyright (C) 2020 Unisoc corporation. http://www.unisoc.com
-> + *
-> + * Author: Billows Wu <Billows.Wu@unisoc.com>
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/property.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "pcie-designware.h"
-> +
-> +#define NUM_OF_ARGS 5
-> +
-> +struct sprd_pcie {
-> +       struct dw_pcie *pci;
-> +};
-> +
-> +struct sprd_pcie_of_data {
-> +       enum dw_pcie_device_mode mode;
-> +};
-> +
-> +static int sprd_pcie_establish_link(struct dw_pcie *pci)
-> +{
-> +       return 0;
-> +}
-> +
-> +static const struct dw_pcie_ops sprd_pcie_ops = {
-> +       .start_link = sprd_pcie_establish_link,
+Execute:
+--------
+sudo pm-hibernate
+OR
+echo disk > /sys/power/state && echo reboot > /sys/power/disk
 
-I don't think you need an empty function here.
+Compute resume offset code:
+"
+#!/usr/bin/env python
+import sys
+import array
+import fcntl
 
-> +};
-> +
-> +int sprd_pcie_syscon_setting(struct platform_device *pdev, char *env)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +       int i, count, err;
-> +       u32 type, delay, reg, mask, val, tmp_val;
-> +       struct of_phandle_args out_args;
-> +       struct regmap *iomap;
-> +       struct device *dev = &pdev->dev;
-> +
-> +       if (!of_find_property(np, env, NULL)) {
-> +               dev_info(dev, "There isn't property %s in dts\n", env);
-> +               return 0;
-> +       }
-> +
-> +       count = of_property_count_elems_of_size(np, env,
-> +                               (NUM_OF_ARGS + 1) * sizeof(u32));
-> +       dev_info(dev, "Property (%s) reg count is %d :\n", env, count);
-> +
-> +       for (i = 0; i < count; i++) {
-> +               err = of_parse_phandle_with_fixed_args(np, env, NUM_OF_ARGS,
-> +                                                      i, &out_args);
-> +               if (err < 0)
-> +                       return err;
-> +
-> +               type = out_args.args[0];
-> +               delay = out_args.args[1];
-> +               reg = out_args.args[2];
-> +               mask = out_args.args[3];
-> +               val = out_args.args[4];
-> +
-> +               iomap = syscon_node_to_regmap(out_args.np);
-> +
-> +               switch (type) {
-> +               case 0:
-> +                       regmap_update_bits(iomap, reg, mask, val);
-> +                       break;
-> +
-> +               case 1:
-> +                       regmap_read(iomap, reg, &tmp_val);
-> +                       tmp_val &= (~mask);
-> +                       tmp_val |= (val & mask);
-> +                       regmap_write(iomap, reg, tmp_val);
-> +                       break;
-> +               default:
-> +                       break;
-> +               }
-> +
-> +               if (delay)
-> +                       usleep_range(delay, delay + 10);
-> +
-> +               regmap_read(iomap, reg, &tmp_val);
-> +               dev_dbg(&pdev->dev,
-> +                       "%2d:reg[0x%8x] mask[0x%8x] val[0x%8x] result[0x%8x]\n",
-> +                       i, reg, mask, val, tmp_val);
-> +       }
-> +
-> +       return i;
-> +}
-> +
-> +static void sprd_pcie_perst_assert(struct platform_device *pdev)
-> +{
-> +       sprd_pcie_syscon_setting(pdev, "sprd,pcie-perst-assert");
+#swap file
+f = open(sys.argv[1], 'r')
+buf = array.array('L', [0])
 
-Not documented.
+#FIBMAP
+ret = fcntl.ioctl(f.fileno(), 0x01, buf)
+print buf[0]
+"
 
-> +}
-> +
-> +static void sprd_pcie_perst_deassert(struct platform_device *pdev)
-> +{
-> +       sprd_pcie_syscon_setting(pdev, "sprd,pcie-perst-deassert");
+Aleksei Besogonov (1):
+  PM / hibernate: update the resume offset on SNAPSHOT_SET_SWAP_AREA
 
-These 2 can be a single property.
+Anchal Agarwal (4):
+  x86/xen: Introduce new function to map HYPERVISOR_shared_info on
+    Resume
+  x86/xen: save and restore steal clock during PM hibernation
+  xen: Introduce wrapper for save/restore sched clock offset
+  xen: Update sched clock offset to avoid system instability in
+    hibernation
 
-> +}
-> +
-> +static int sprd_pcie_host_shutdown(struct platform_device *pdev)
-> +{
-> +       int ret;
-> +       struct device *dev = &pdev->dev;
-> +
-> +       ret = sprd_pcie_syscon_setting(pdev, "sprd,pcie-shutdown-syscons");
+Munehisa Kamata (5):
+  xen/manage: keep track of the on-going suspend mode
+  xenbus: add freeze/thaw/restore callbacks support
+  x86/xen: add system core suspend and resume callbacks
+  xen-blkfront: add callbacks for PM suspend and hibernation
+  xen-netfront: add callbacks for PM suspend and hibernation
 
-Not documented.
+Thomas Gleixner (1):
+  genirq: Shutdown irq chips in suspend/resume during hibernation
 
-> +       if (ret < 0)
-> +               dev_err(dev,
-> +                       "Failed to set pcie shutdown syscons, return %d\n",
-> +                       ret);
-> +
-> +       sprd_pcie_perst_assert(pdev);
-> +
-> +       ret = pm_runtime_put(&pdev->dev);
-> +       if (ret < 0)
-> +               dev_warn(&pdev->dev,
-> +                        "Failed to put runtime,return %d\n", ret);
-> +
-> +       return ret;
-> +}
-> +
-> +static int sprd_pcie_host_init(struct pcie_port *pp)
-> +{
-> +       struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +       struct platform_device *pdev = to_platform_device(pci->dev);
-> +
-> +       sprd_pcie_perst_deassert(pdev);
-> +
-> +       dw_pcie_setup_rc(pp);
-> +
-> +       if (IS_ENABLED(CONFIG_PCI_MSI))
+ arch/x86/xen/enlighten_hvm.c      |   7 +++
+ arch/x86/xen/suspend.c            |  63 ++++++++++++++++++++
+ arch/x86/xen/time.c               |  15 ++++-
+ arch/x86/xen/xen-ops.h            |   3 +
+ drivers/block/xen-blkfront.c      | 122 ++++++++++++++++++++++++++++++++++++--
+ drivers/net/xen-netfront.c        |  96 +++++++++++++++++++++++++++++-
+ drivers/xen/events/events_base.c  |   1 +
+ drivers/xen/manage.c              |  46 ++++++++++++++
+ drivers/xen/xenbus/xenbus_probe.c |  96 +++++++++++++++++++++++++-----
+ include/linux/irq.h               |   2 +
+ include/xen/xen-ops.h             |   3 +
+ include/xen/xenbus.h              |   3 +
+ kernel/irq/chip.c                 |   2 +-
+ kernel/irq/internals.h            |   1 +
+ kernel/irq/pm.c                   |  31 +++++++---
+ kernel/power/user.c               |   7 ++-
+ 16 files changed, 464 insertions(+), 34 deletions(-)
 
-You won't need this check anymore with my series.
+-- 
+2.16.6
 
-> +               dw_pcie_msi_init(pp);
-> +
-> +       if (dw_pcie_wait_for_link(pci)) {
-> +               dev_warn(pci->dev,
-> +                        "pcie ep may has not been powered on yet\n");
-> +               sprd_pcie_host_shutdown(pdev);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct dw_pcie_host_ops sprd_pcie_host_ops = {
-> +       .host_init = sprd_pcie_host_init,
-> +};
-> +
-> +static int sprd_add_pcie_port(struct platform_device *pdev)
-> +{
-> +       struct resource *res;
-> +       struct device *dev = &pdev->dev;
-> +       struct sprd_pcie *ctrl = platform_get_drvdata(pdev);
-> +       struct dw_pcie *pci = ctrl->pci;
-> +       struct pcie_port *pp = &pci->pp;
-> +
-> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-
-The core will do this for you.
-
-> +       if (!res)
-> +               return -EINVAL;
-> +
-> +       pci->dbi_base = devm_ioremap(dev, res->start, resource_size(res));
-> +       if (!pci->dbi_base)
-> +               return -ENOMEM;
-> +
-> +       pp->ops = &sprd_pcie_host_ops;
-> +
-> +       if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +               pp->msi_irq = platform_get_irq_byname(pdev, "msi");
-> +               if (pp->msi_irq < 0) {
-> +                       dev_err(dev, "Failed to get msi, return %d\n",
-> +                               pp->msi_irq);
-> +                       return pp->msi_irq;
-> +               }
-> +       }
-> +
-> +       return dw_pcie_host_init(pp);
-> +}
-> +
-> +static int sprd_pcie_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct dw_pcie *pci;
-> +       struct sprd_pcie *ctrl;
-> +       int ret;
-> +
-> +       ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
-> +       if (!ctrl)
-> +               return -ENOMEM;
-> +
-> +       pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-
-Embed dw_pcie in sprd_pcie and then have a single alloc.
-
-> +       if (!pci)
-> +               return -ENOMEM;
-> +
-> +       pci->dev = dev;
-> +       pci->ops = &sprd_pcie_ops;
-> +       ctrl->pci = pci;
-> +
-> +       platform_set_drvdata(pdev, ctrl);
-> +
-> +       pm_runtime_enable(dev);
-> +       ret = pm_runtime_get_sync(dev);
-
-I don't think these do anything because you don't have any
-suspend/resume callbacks.
-
-> +       if (ret < 0) {
-> +               dev_err(dev, "Fialed to get runtime sync, return %d\n", ret);
-> +               goto err_get_sync;
-> +       }
-> +
-> +       ret = sprd_pcie_syscon_setting(pdev, "sprd,pcie-startup-syscons");
-
-I don't like all these properties. Do they point to different blocks?
-If all the same block, then 1 property please.
-
-Maybe you need a reset controller?
-
-> +       if (ret < 0) {
-> +               dev_err(dev, "Failed to get pcie syscons, return %d\n", ret);
-> +               goto err_power_off;
-> +       }
-> +
-> +       ret = sprd_add_pcie_port(pdev);
-> +       if (ret)
-> +               dev_warn(dev, "Failed to initialize RC controller\n");
-> +
-> +       return 0;
-> +
-> +err_power_off:
-> +       sprd_pcie_syscon_setting(pdev, "sprd,pcie-shutdown-syscons");
-> +
-> +err_get_sync:
-> +       pm_runtime_put(&pdev->dev);
-> +       pm_runtime_disable(dev);
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct of_device_id sprd_pcie_of_match[] = {
-> +       {
-> +               .compatible = "sprd,pcie",
-> +       },
-> +       {},
-> +};
-> +
-> +static struct platform_driver sprd_pcie_driver = {
-> +       .probe = sprd_pcie_probe,
-> +       .driver = {
-> +               .name = "sprd-pcie",
-> +               .of_match_table = sprd_pcie_of_match,
-> +       },
-> +};
-> +
-> +module_platform_driver(sprd_pcie_driver);
-> +
-> +MODULE_DESCRIPTION("Unisoc PCIe host controller driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.7.4
->
