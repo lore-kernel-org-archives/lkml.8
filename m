@@ -2,232 +2,115 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,
-	DATE_IN_FUTURE_06_12,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09B462063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBC52063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbgHUPhf (ORCPT
+        id S1727950AbgHUPhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:37:35 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10252 "EHLO huawei.com"
+        Fri, 21 Aug 2020 11:37:42 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2686 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728020AbgHUPha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:37:30 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A82DCE63793C753BE110;
-        Fri, 21 Aug 2020 23:37:20 +0800 (CST)
-Received: from huawei.com (10.151.151.249) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 21 Aug 2020
- 23:37:11 +0800
-From:   Dongjiu Geng <gengdongjiu@huawei.com>
-To:     <mingo@redhat.com>, <peterz@infradead.org>,
-        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
-        <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>,
-        <bsegall@google.com>, <mgorman@suse.de>,
-        <thara.gopinath@linaro.org>, <pauld@redhat.com>,
-        <vincent.donnefort@arm.com>, <rdunlap@infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: [PATCH] sched: Add trace for task wake up latency and leave running time
-Date:   Fri, 21 Aug 2020 23:59:28 +0000
-Message-ID: <20200821235928.32727-1-gengdongjiu@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        id S1728020AbgHUPhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 11:37:38 -0400
+Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 98A7062CF7245DA15360;
+        Fri, 21 Aug 2020 16:37:34 +0100 (IST)
+Received: from fraeml711-chm.china.huawei.com (10.206.15.60) by
+ lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Fri, 21 Aug 2020 16:37:34 +0100
+Received: from lhreml722-chm.china.huawei.com (10.201.108.73) by
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Fri, 21 Aug 2020 17:37:33 +0200
+Received: from lhreml722-chm.china.huawei.com ([10.201.108.73]) by
+ lhreml722-chm.china.huawei.com ([10.201.108.73]) with mapi id 15.01.1913.007;
+ Fri, 21 Aug 2020 16:37:33 +0100
+From:   Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "stefanb@linux.vnet.ibm.com" <stefanb@linux.vnet.ibm.com>,
+        "sunyuqiong1988@gmail.com" <sunyuqiong1988@gmail.com>,
+        "mkayaalp@cs.binghamton.edu" <mkayaalp@cs.binghamton.edu>,
+        "dmitry.kasatkin@gmail.com" <dmitry.kasatkin@gmail.com>,
+        "serge@hallyn.com" <serge@hallyn.com>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "christian@brauner.io" <christian@brauner.io>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "jannh@google.com" <jannh@google.com>
+Subject: RE: [RFC PATCH 00/30] ima: Introduce IMA namespace
+Thread-Topic: [RFC PATCH 00/30] ima: Introduce IMA namespace
+Thread-Index: AQHWdXPBkpeRDLdh20+fyp1BiEOjYak+A3mAgASuOEA=
+Date:   Fri, 21 Aug 2020 15:37:33 +0000
+Message-ID: <1b706f78375f472988702f77d607f8f7@huawei.com>
+References: <N> <20200818152037.11869-1-krzysztof.struczynski@huawei.com>
+ <20200818164943.va3um7toztazcfud@wittgenstein>
+In-Reply-To: <20200818164943.va3um7toztazcfud@wittgenstein>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.48.215.114]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.151.151.249]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1) The perf event sched_switch is used to record scheduling tracks,
-   which consumes a large amount of CPU resources and disk space.
-   Therefore, a mechanism is required to record only the scheduling
-   delay greater than a certain threshold. This patch supports this
-   feature. For example, if the threshold is 10 ms, you can run the
-   following command to only record the scheduling track with the
-   scheduling delay greater than 10 ms.
-
-   echo 'time > 10000000' > /sys/kernel/debug/tracing/events/sched/sched_wakeup_latency/filter
-   echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wakeup_latency/enable
-
-2) Similarly, when tune performance, we usually want to know which
-   tasks are not running for a long time, Use the following methods
-   to save CPU overhead and storage space.
-
-   echo 'time > 10000000' > /sys/kernel/debug/tracing/events/sched/sched_leave_running_time/filter
-   echo 1 > /sys/kernel/debug/tracing/events/sched/sched_leave_running_time/enable
-
-Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
----
- include/linux/sched.h        |  7 ++++
- include/trace/events/sched.h | 66 ++++++++++++++++++++++++++++++++++++
- kernel/sched/core.c          | 20 +++++++++++
- 3 files changed, 93 insertions(+)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 93ecd930efd3..edb622c40a90 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1324,6 +1324,13 @@ struct task_struct {
- 	/* CPU-specific state of this task: */
- 	struct thread_struct		thread;
- 
-+	/* Task wake up time stamp */
-+	u64				ts_wakeup;
-+	/* Previous task switch out time stamp */
-+	u64				pre_ts_end;
-+	/* Next task switch in time stamp */
-+	u64				next_ts_start;
-+	bool				wakeup_state;
- 	/*
- 	 * WARNING: on x86, 'thread_struct' contains a variable-sized
- 	 * structure.  It *MUST* be at the end of 'task_struct'.
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index fec25b9cfbaf..e99c6d573a42 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -183,6 +183,72 @@ TRACE_EVENT(sched_switch,
- 		__entry->next_comm, __entry->next_pid, __entry->next_prio)
- );
- 
-+DECLARE_EVENT_CLASS(sched_latency_template,
-+
-+	TP_PROTO(bool preempt,
-+		 struct task_struct *prev,
-+		 struct task_struct *next,
-+		 u64 time),
-+
-+	TP_ARGS(preempt, prev, next, time),
-+
-+	TP_STRUCT__entry(
-+		__array(	char,	prev_comm,	TASK_COMM_LEN	)
-+		__field(	pid_t,	prev_pid			)
-+		__field(	int,	prev_prio			)
-+		__field(	long,	prev_state			)
-+		__array(	char,	next_comm,	TASK_COMM_LEN	)
-+		__field(	pid_t,	next_pid			)
-+		__field(	int,	next_prio			)
-+		__field(	u64,	time				)
-+	),
-+
-+	TP_fast_assign(
-+		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
-+		__entry->prev_pid	= prev->pid;
-+		__entry->prev_prio	= prev->prio;
-+		__entry->prev_state	= __trace_sched_switch_state(preempt, prev);
-+		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
-+		__entry->next_pid	= next->pid;
-+		__entry->next_prio	= next->prio;
-+		__entry->time		= time;
-+		/* XXX SCHED_DEADLINE */
-+	),
-+
-+	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d passed time=%llu (ns)",
-+		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
-+
-+		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
-+		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
-+				{ TASK_INTERRUPTIBLE, "S" },
-+				{ TASK_UNINTERRUPTIBLE, "D" },
-+				{ __TASK_STOPPED, "T" },
-+				{ __TASK_TRACED, "t" },
-+				{ EXIT_DEAD, "X" },
-+				{ EXIT_ZOMBIE, "Z" },
-+				{ TASK_PARKED, "P" },
-+				{ TASK_DEAD, "I" }) :
-+		  "R",
-+
-+		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
-+		__entry->next_comm, __entry->next_pid, __entry->next_prio,
-+		__entry->time)
-+);
-+
-+DEFINE_EVENT(sched_latency_template, sched_wakeup_latency,
-+	TP_PROTO(bool preempt,
-+		 struct task_struct *prev,
-+		 struct task_struct *next,
-+		 u64 time),
-+	TP_ARGS(preempt, prev, next, time));
-+
-+DEFINE_EVENT(sched_latency_template, sched_leave_running_time,
-+	TP_PROTO(bool preempt,
-+		 struct task_struct *prev,
-+		 struct task_struct *next,
-+		 u64 time),
-+	TP_ARGS(preempt, prev, next, time));
-+
- /*
-  * Tracepoint for a task being migrated:
-  */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8471a0f7eb32..b5a1928dc948 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2464,6 +2464,8 @@ static void ttwu_do_wakeup(struct rq *rq, struct task_struct *p, int wake_flags,
- {
- 	check_preempt_curr(rq, p, wake_flags);
- 	p->state = TASK_RUNNING;
-+	p->ts_wakeup = local_clock();
-+	p->wakeup_state = true;
- 	trace_sched_wakeup(p);
- 
- #ifdef CONFIG_SMP
-@@ -2846,6 +2848,8 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 		success = 1;
- 		trace_sched_waking(p);
- 		p->state = TASK_RUNNING;
-+		p->ts_wakeup = local_clock();
-+		p->wakeup_state = true;
- 		trace_sched_wakeup(p);
- 		goto out;
- 	}
-@@ -3299,6 +3303,9 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
- 	plist_node_init(&p->pushable_tasks, MAX_PRIO);
- 	RB_CLEAR_NODE(&p->pushable_dl_tasks);
- #endif
-+	p->ts_wakeup = 0;
-+	p->wakeup_state = false;
-+	p->pre_ts_end = p->next_ts_start = 0;
- 	return 0;
- }
- 
-@@ -3355,6 +3362,8 @@ void wake_up_new_task(struct task_struct *p)
- 	post_init_entity_util_avg(p);
- 
- 	activate_task(rq, p, ENQUEUE_NOCLOCK);
-+	p->ts_wakeup = local_clock();
-+	p->wakeup_state = true;
- 	trace_sched_wakeup_new(p);
- 	check_preempt_curr(rq, p, WF_FORK);
- #ifdef CONFIG_SMP
-@@ -4521,8 +4530,19 @@ static void __sched notrace __schedule(bool preempt)
- 
- 		psi_sched_switch(prev, next, !task_on_rq_queued(prev));
- 
-+		next->next_ts_start = prev->pre_ts_end = local_clock();
-+
- 		trace_sched_switch(preempt, prev, next);
- 
-+		if (next->ts_wakeup && next->wakeup_state) {
-+			trace_sched_wakeup_latency(preempt, prev, next,
-+				next->next_ts_start - next->ts_wakeup);
-+			next->wakeup_state = false;
-+		}
-+
-+		trace_sched_leave_running_time(preempt, prev,
-+			next, next->next_ts_start - next->pre_ts_end);
-+
- 		/* Also unlocks the rq: */
- 		rq = context_switch(rq, prev, next, &rf);
- 	} else {
--- 
-2.17.1
-
+PiBGcm9tOiBDaHJpc3RpYW4gQnJhdW5lciBbbWFpbHRvOmNocmlzdGlhbi5icmF1bmVyQHVidW50
+dS5jb21dDQo+IE9uIFR1ZSwgQXVnIDE4LCAyMDIwIGF0IDA1OjIwOjA3UE0gKzAyMDAsIGtyenlz
+enRvZi5zdHJ1Y3p5bnNraUBodWF3ZWkuY29tDQo+IHdyb3RlOg0KPiA+IEZyb206IEtyenlzenRv
+ZiBTdHJ1Y3p5bnNraSA8a3J6eXN6dG9mLnN0cnVjenluc2tpQGh1YXdlaS5jb20+DQo+ID4NCj4g
+PiBJTUEgaGFzIG5vdCBiZWVuIGRlc2lnbmVkIHRvIHdvcmsgd2l0aCBjb250YWluZXJzLiBJdCBo
+YW5kbGVzIGV2ZXJ5DQo+ID4gcHJvY2VzcyBpbiB0aGUgc2FtZSB3YXksIGFuZCBpdCBjYW5ub3Qg
+ZGlzdGluZ3Vpc2ggaWYgYSBwcm9jZXNzIGJlbG9uZ3MgdG8NCj4gPiBhIGNvbnRhaW5lciBvciBu
+b3QuDQo+ID4NCj4gPiBDb250YWluZXJzIHVzZSBuYW1lc3BhY2VzIHRvIG1ha2UgaXQgYXBwZWFy
+IHRvIHRoZSBwcm9jZXNzZXMgaW4gdGhlDQo+ID4gY29udGFpbmVycyB0aGF0IHRoZXkgaGF2ZSB0
+aGVpciBvd24gaXNvbGF0ZWQgaW5zdGFuY2Ugb2YgdGhlIGdsb2JhbA0KPiA+IHJlc291cmNlLiBG
+b3IgSU1BIGFzIHdlbGwsIGl0IGlzIGRlc2lyYWJsZSB0byBsZXQgcHJvY2Vzc2VzIGluIHRoZQ0K
+PiANCj4gSU1BIGlzIGJyb3VnaHQgdXAgb24gYSByZWd1bGFyIGJhc2lzIHdpdGggIndlIHdhbnQg
+dG8gaGF2ZSB0aGlzIiBmb3INCj4geWVhcnMgYW5kIHRoZW4gbm9uLW9uZSBzZWVtcyB0byByZWFs
+bHkgY2FyZSBlbm91Z2guDQo+IA0KPiBJJ20gaGlnaGx5IHNrZXB0aWNhbCBvZiB0aGUgdmFsdWUg
+b2YgfjI1MDAgbGluZXMgb2YgY29kZSBldmVuIGlmIGl0DQo+IGluY2x1ZGVzIGEgYnVuY2ggb2Yg
+bmFtZXNwYWNlIGJvaWxlcnBsYXRlLiBJdCdzIHlldCBhbm90aGVyIG5hbWVzcGFjZSwNCj4gYW5k
+IHlldCBhbm90aGVyIHNlY3VyaXR5IGZyYW1ld29yay4NCj4gV2h5IGRvZXMgSU1BIG5lZWQgdG8g
+YmUgYSBzZXBhcmF0ZSBuYW1lc3BhY2U/IEtleXJpbmdzIGFyZSB0aWVkIHRvIHVzZXINCj4gbmFt
+ZXNwYWNlcyB3aHkgY2FuJ3QgSU1BIGJlPyBJIGJlbGlldmUgRXJpYyBoYXMgZXZlbiBwb2ludGVk
+IHRoYXQgb3V0DQo+IGJlZm9yZS4NCg0KVGhlIHVzZXIgbmFtZXNwYWNlIGhhcyBpdHMgd2VsbCBk
+ZWZpbmVkIHB1cnBvc2UgdG8gaXNvbGF0ZQ0Kc2VjdXJpdHktcmVsYXRlZCBpZGVudGlmaWVycyBh
+bmQgYXR0cmlidXRlcywgcGFydGljdWxhcmx5IFVJRHMgYW5kIEdJRHMuDQpJIHRoaW5rIHRoYXQg
+SU1BIGdvYWxzIGFyZSBkaWZmZXJlbnQuDQoNCkEgdXNlciBtYXkgd2FudCB0byBpc29sYXRlIGUu
+Zy4gVUlEcyBidXQgbm90IHRvIGNyZWF0ZSBhIHNlcGFyYXRlIElNTCBvcg0KZGVmaW5lIHRoZSBu
+ZXcgSU1BIHBvbGljaWVzLiBPbiB0aGUgb3RoZXIgaGFuZCwgZXNwZWNpYWxseSBpbiB0aGUNCnNp
+bmdsZS10ZW5hbnQgZW52aXJvbm1lbnQsIHRoZSB1c2VyIG1heSB3YW50IHRvIGhhdmUgYSBwZXIg
+Y29udGFpbmVyIElNTCwNCmJ1dCBubyBVSUQvR0lEIG1hcHBpbmcgaXMgcmVxdWlyZWQuIElNQSBw
+b2xpY3kgZGVmaW5lcyBzdWJqZWN0LWJhc2VkDQpydWxlcyAodWlkLCBldWlkLCBzdWJqXyosIC4u
+LiksIGJ1dCBhbHNvIG9iamVjdC1iYXNlZCBydWxlcy4NCg0KSU1BIGhhcyB0byBiZSBwcmUtY29u
+ZmlndXJlZCwgZS5nLiBhbGwgYWN0aW9ucyBvZiB0aGUgcHJvY2VzcyBoYXZlIHRvIGJlDQphcHBy
+YWlzZWQvbWVhc3VyZWQvYXVkaXRlZCBhY2NvcmRpbmcgdG8gdGhlIHByZS1kZWZpbmVkIHBvbGlj
+eSwgYXBwcmFpc2FsDQprZXkgaGFzIHRvIGJlIGF2YWlsYWJsZSBiZWZvcmUgdGhlIHByb2Nlc3Mg
+aXMgY3JlYXRlZCwgZXRjLiBJZiBJTUEgaXMgdGllZA0KdG8gdGhlIHVzZXIgbmFtZXNwYWNlLCB3
+aGVuIGlzIGEgZ29vZCBtb21lbnQgdG8gZG8gaXQ/DQoNCldoYXQncyB0aGUgYXJndW1lbnQgYWdh
+aW5zdCBhZGRpbmcgYSBuZXcgbmFtZXNwYWNlPw0KDQo+IA0KPiBFcmljLCB0aG91Z2h0cz8NCj4g
+DQo+IENocmlzdGlhbg0K
