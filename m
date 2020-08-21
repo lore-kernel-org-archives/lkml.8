@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0423FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C828FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A3120702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9083020702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029085;
-	bh=k0rWLmZwDfjD4ftltvqsxTxBu0HTcoclSTPOtjMPq7w=;
+	s=default; t=1598029103;
+	bh=wWypa74ApxnbJrtT25Hj2RfEkG8HY3F1rSeh2fTUozo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hKYhzewuuIWM4YED1ra+CeslTFXEAGepyT+aVD9Vhd3ZD4nAZRIHispYmtCidFJox
-	 XRCqgUwyFdjdWaLSRXdAnYo692ys78M4XfQcGHmkS3CH449SNygtZg3Sl2SSbVoZKz
-	 OrSrsIrMHmRIyF7a6Ls/HV2y9r/fBsxJakkCK33Y=
+	b=ndNICg8AKa3N4Q2Cavkw6ABdHPA6t6VyER7RFEWpH5pMCVlMESfkKySf3fitFvWi5
+	 IUu+jqhzxXRJEbkVqoed8JgcYmGtQ93K6KiB8162dm9oVY1qKq1auT5fnoOpMzg6Ku
+	 Eb0CKSb4/UFXXenAtnG0kl6hJDWXevHedqePHo3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbgHUQ6C (ORCPT
+        id S1728193AbgHUQ6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:58:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:58:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728048AbgHUQTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:19:36 -0400
+        id S1728305AbgHUQTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:19:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEAF522D6D;
-        Fri, 21 Aug 2020 16:18:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5763A22D3E;
+        Fri, 21 Aug 2020 16:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026727;
-        bh=k0rWLmZwDfjD4ftltvqsxTxBu0HTcoclSTPOtjMPq7w=;
+        s=default; t=1598026725;
+        bh=wWypa74ApxnbJrtT25Hj2RfEkG8HY3F1rSeh2fTUozo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xcGPowVKEQ3QX4HzcL98ccmddpAXcRCRmoMdLcMevA0AMcQfy/0d+LbWgNtiiwUz9
-         6ym//FYWVXEXuC7uhbpy7ayfxyeCZpKXA2i52QSmcwU1QUw8NP1LB69qU14F3frJxy
-         x8OUjuYyhsFetUbAREAxhwdkN3TDFcDl+lOdzA9s=
+        b=gzlVBmI17jbS8pTdYpdzoJltmUjsQ1JDGQpGUEJfZYQYPt5PgYrFRAE81qnlzK18S
+         MII43YMI3kt8UhWaY0HgzOMTVwAFkIpmhHDU/JZVJ6DHOAboPiZ77saB3iKnUrKjuO
+         ZBAoAofbRPI84VLVmODplVVJPR+PiDbNAbr6eRm4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Ben Skeggs <bskeggs@redhat.com>,
+Cc:     Li Guifu <bluce.liguifu@huawei.com>, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 31/38] drm/nouveau: fix reference count leak in nv50_disp_atomic_commit
-Date:   Fri, 21 Aug 2020 12:18:00 -0400
-Message-Id: <20200821161807.348600-31-sashal@kernel.org>
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 29/38] f2fs: fix use-after-free issue
+Date:   Fri, 21 Aug 2020 12:17:58 -0400
+Message-Id: <20200821161807.348600-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
 References: <20200821161807.348600-1-sashal@kernel.org>
@@ -59,37 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Li Guifu <bluce.liguifu@huawei.com>
 
-[ Upstream commit a2cdf39536b0d21fb06113f5e16692513d7bcb9c ]
+[ Upstream commit 99c787cfd2bd04926f1f553b30bd7dcea2caaba1 ]
 
-nv50_disp_atomic_commit() calls calls pm_runtime_get_sync and in turn
-increments the reference count. In case of failure, decrement the
-ref count before returning the error.
+During umount, f2fs_put_super() unregisters procfs entries after
+f2fs_destroy_segment_manager(), it may cause use-after-free
+issue when umount races with procfs accessing, fix it by relocating
+f2fs_unregister_sysfs().
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+[Chao Yu: change commit title/message a bit]
+
+Signed-off-by: Li Guifu <bluce.liguifu@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/disp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/f2fs/super.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-index 10107e551fac3..e06ea8c8184cb 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -1920,8 +1920,10 @@ nv50_disp_atomic_commit(struct drm_device *dev,
- 	int ret, i;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 9782250c98156..161ce0eb8891a 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1004,6 +1004,9 @@ static void f2fs_put_super(struct super_block *sb)
+ 	int i;
+ 	bool dropped;
  
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
++	/* unregister procfs/sysfs entries in advance to avoid race case */
++	f2fs_unregister_sysfs(sbi);
++
+ 	f2fs_quota_off_umount(sb);
  
- 	ret = drm_atomic_helper_setup_commit(state, nonblock);
- 	if (ret)
+ 	/* prevent remaining shrinker jobs */
+@@ -1067,8 +1070,6 @@ static void f2fs_put_super(struct super_block *sb)
+ 
+ 	kfree(sbi->ckpt);
+ 
+-	f2fs_unregister_sysfs(sbi);
+-
+ 	sb->s_fs_info = NULL;
+ 	if (sbi->s_chksum_driver)
+ 		crypto_free_shash(sbi->s_chksum_driver);
 -- 
 2.25.1
 
