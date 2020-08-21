@@ -2,183 +2,124 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08944C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D303820724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:21:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ma8DyBTi"
+	by mail.kernel.org (Postfix) with ESMTP id A21BC207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598012481;
+	bh=dyzu8JJ2FTVbgIo72WlGH/VPEaryNWuRCr3LcXdqh4U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dVivEegtW4FEAF8IlMBUhoVQpJX7Jmo/gS3VBlG0Ab3wIIhkWnmIB5ndMlPG+X8SZ
+	 FOBEX7G4xB3evEtBXsclN8yQGWKVWWGLqpwky9ai74C5+1cwkJqYLpWs0z2F/tjqgz
+	 RpSuOnuotB75lNMvc0WwB7pnkQHo08wTjnuSajCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgHUMVL (ORCPT
+        id S1728593AbgHUMVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 08:21:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728344AbgHUMUH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 08:20:07 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B76C061387
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 05:20:06 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id j188so718491vsd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 05:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=52w1cJUaQ9YanpUGNy0nDzv1xTgiDNv65mHDcwVGT/k=;
-        b=ma8DyBTio5H7kC0GIQ2hYvDq/OC2i1mxC0vGTCsokkwIOce8mzt3dmwWQ2pc7uHqhw
-         GQjt7ejyzZqestweM11fLlNXDcO8dJAf767AZFt9DXZcnqF9FCaUBsu+nP3DBFbWA/8H
-         m9IprTGaVujoL/pcNzqE6hjgEPBKQmEx73Tck=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=52w1cJUaQ9YanpUGNy0nDzv1xTgiDNv65mHDcwVGT/k=;
-        b=Y+yIgeuQLbqp44Xr2XJ3RFEdmZlbyTNno5ClbzfKZ4UvWh11aUxLGfX+cwJnfO4BRI
-         HUpVIVM8DUjKfvXNfnHVEmdZPhOARE4gnIc+kVykwebbc7Dqej38WtiF2zESqoj6X1rx
-         siEjCLf21A7wJ7svuaWBj9bzx7fAtshoA3N0heMnngmXLyZ0XiqDo7Gzs6PNoO3O0is6
-         q04o+7Rm/KHdSrRBxiwsu3MvXJlcxRsjCO/6+jBOTu3XEE3KUj/z4/StMknUpg+e9AAt
-         1yO4GOeetb4qWXtXHOLZg3heDPojpzbKgDRYjkuXBO59Su5HyR8nigKKLPwMbU8nYXjc
-         Rhjg==
-X-Gm-Message-State: AOAM530cau2j/mAqP8dMgwWTM+4zJlLbEIK+/t1o8yjamy09ebC5VkPG
-        PAmmrDIcGbzxmiNuWSJWIGOpV89Fgm+WXuw3LznTtQ==
-X-Google-Smtp-Source: ABdhPJx5f1sQLnbRNjOhBQQZgrQyMKznEcXj7NlHlGGfOAbWXzvtJyasjXRpR5CO9AqugLoE5SfHzGUP5k61w0/lFFA=
-X-Received: by 2002:a05:6102:1ca:: with SMTP id s10mr1289867vsq.14.1598012403767;
- Fri, 21 Aug 2020 05:20:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
- <20200820170951.v4.3.I066d89f39023956c47fb0a42edf196b3950ffbf7@changeid>
- <20200820102347.15d2f610@oasis.local.home> <CANMq1KCoEZVj=sjxCqBhqLZKBab57+82=Rk_LN7fc3aCuNHMUw@mail.gmail.com>
- <20200820203601.4f70bf98@oasis.local.home> <CANMq1KAAgXG9MKMZ_D9zYFV-j0oVreA_AeSw-8FoyJgZ9eWQpg@mail.gmail.com>
- <20200820215701.667f02b2@oasis.local.home> <CANMq1KCpV+RKCqHsK-=Xeb+Vq28qdnBVF51rcga7m9-xjqNSCg@mail.gmail.com>
- <20200820230105.1f9651b7@oasis.local.home>
-In-Reply-To: <20200820230105.1f9651b7@oasis.local.home>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 21 Aug 2020 20:19:52 +0800
-Message-ID: <CANMq1KAuB4fCg50=G9ed_ALaD7O8=3PWQQMZNit52As-r7to4Q@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Fri, 21 Aug 2020 08:21:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728305AbgHUMUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 08:20:06 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E9C920724;
+        Fri, 21 Aug 2020 12:20:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598012405;
+        bh=dyzu8JJ2FTVbgIo72WlGH/VPEaryNWuRCr3LcXdqh4U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lu/9DkAtOB95J4Ms4k9gmDWfffQIS72eFLvyILY0YFPx/9OPsNw7L9blTvB+RML2e
+         cHAKxOgMKoyELaprbdI0V5apssBPfSPYWc7PFijT3N0ro9KWOqjzyldA+NaTv+6Ram
+         /dTH146HYvby4S9XHjrCAIgHqL25RK7OLHgOiQQg=
+Date:   Fri, 21 Aug 2020 13:20:00 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Jessica Yu <jeyu@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+        Miroslav Benes <mbenes@suse.cz>,
+        Mark Rutland <mark.rutland@arm.com>, nd <nd@arm.com>
+Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
+Message-ID: <20200821121959.GC20833@willie-the-truck>
+References: <CAMj1kXF8fm=9CdQykqDbgYCJSP88ezMs3EOosCW+SDi+Lve0zg@mail.gmail.com>
+ <20200812104005.GN2674@hirez.programming.kicks-ass.net>
+ <20200812125645.GA8675@willie-the-truck>
+ <20200812141557.GQ14398@arm.com>
+ <20200812160017.GA30302@linux-8ccs>
+ <CAMj1kXFfSLvujJYk4Em6T+UvAUDW3VX0BibsD43z30Q_TSsehg@mail.gmail.com>
+ <20200812200019.GY3982@worktop.programming.kicks-ass.net>
+ <CAMj1kXEn5o_7OOqgcntOPCqBYmpY74OkGqQ_bUBJvHG6Q9GVLA@mail.gmail.com>
+ <20200813130422.GA16938@linux-8ccs>
+ <CAMj1kXErCQYNN9r5siGNukc+9KC=QnER8LfFXVfbHdeDivYztg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXErCQYNN9r5siGNukc+9KC=QnER8LfFXVfbHdeDivYztg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 11:01 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Fri, 21 Aug 2020 10:39:02 +0800
-> Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> > I'm not sure how that helps? I mean, the use case you have in mind is
-> > somebody reusing a distro/random config and not being able to use
-> > trace_printk, right? If that config has CONFIG_DISABLE_TRACE_PRINTK=y,
-> > then the developer will still need to flip that back.
+On Thu, Aug 13, 2020 at 03:07:13PM +0200, Ard Biesheuvel wrote:
+> On Thu, 13 Aug 2020 at 15:04, Jessica Yu <jeyu@kernel.org> wrote:
 > >
-> > Note that the option I'm added has default=y (_allow_ trace_printk),
-> > so I don't think default y or default n really matters?
->
-> Ideally, the production system doesn't have it set. It only sets it to
-> make sure that it's clean before sending out. But then it can add it
-> back before production. Yeah, it's pretty much cutting hairs between
-> the two. I don't like either one.
->
-> Really, if you are worried about this, just add your patch to your
-> local tree. I'm not sure this is something that can be fixed upstream.
->
-> Another idea is to add something like below, and build with:
->
->  make CHECK_TRACE_PRINT=1
->
-> This way it is a build command line option that causes the build to
-> fail if trace_printk() is added.
->
-> This way production systems can add this to make sure their kernels are
-> free of trace_printk() but it doesn't affect the config that is used.
+> > +++ Ard Biesheuvel [13/08/20 10:36 +0200]:
+> > >On Wed, 12 Aug 2020 at 22:00, Peter Zijlstra <peterz@infradead.org> wrote:
+> > >>
+> > >> On Wed, Aug 12, 2020 at 06:37:57PM +0200, Ard Biesheuvel wrote:
+> > >> > I know there is little we can do at this point, apart from ignoring
+> > >> > the permissions - perhaps we should just defer the w^x check until
+> > >> > after calling module_frob_arch_sections()?
+> > >>
+> > >> My earlier suggestion was to ignore it for 0-sized sections.
+> > >
+> > >Only they are 1 byte sections in this case.
+> > >
+> > >We override the sh_type and sh_flags explicitly for these sections at
+> > >module load time, so deferring the check seems like a reasonable
+> > >alternative to me.
+> >
+> > So module_enforce_rwx_sections() is already called after
+> > module_frob_arch_sections() - which really baffled me at first, since
+> > sh_type and sh_flags should have been set already in
+> > module_frob_arch_sections().
+> >
+> > I added some debug prints to see which section the module code was
+> > tripping on, and it was .text.ftrace_trampoline. See this snippet from
+> > arm64's module_frob_arch_sections():
+> >
+> >                 else if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE) &&
+> >                          !strcmp(secstrings + sechdrs[i].sh_name,
+> >                                  ".text.ftrace_trampoline"))
+> >                         tramp = sechdrs + i;
+> >
+> > Since Mauro's config doesn't have CONFIG_DYNAMIC_FTRACE enabled, tramp
+> > is never set here and the if (tramp) check at the end of the function
+> > fails, so its section flags are never set, so they remain WAX and fail
+> > the rwx check.
+> 
+> Right. Our module.lds does not go through the preprocessor, so we
+> cannot add the #ifdef check there currently. So we should either drop
+> the IS_ENABLED() check here, or simply rename the section, dropping
+> the .text prefix (which doesn't seem to have any significance outside
+> this context)
+> 
+> I'll leave it to Will to make the final call here.
 
-(for some reason I missed this reply in the thread ,-P)
+Why don't we just preprocess the linker script, like we do for the main
+kernel?
 
-Thanks, that's quite a nice idea, I'll try it out (not sure if we
-still want that build_assert trick). We'd lose the automatic detection
-of issues through randconfig kernel test robot, but hopefully if
-enough distros enable it they'll start filing reports about issues.
-
-And maybe we can use that in combination with a checkpatch.pl check.
-
-(it turns out I'm having a hard time finding a good spot for this test
-in our Chrome OS build infra, so an upstream-friendly solution would
-be much better ,-P)
-
->
-> -- Steve
->
-> [ Not even compiled tested! ]
->
-> diff --git a/Makefile b/Makefile
-> index 2057c92a6205..5714a738879d 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -91,6 +91,13 @@ else
->    Q = @
->  endif
->
-> +ifeq ("$(origin CHECK_TRACE_PRINTK)", "command line")
-> +  KBUILD_NO_TRACE_PRINTK = $(NO_TRACE_PRINTK)
-> +endif
-> +ifndef KBUILD_NO_TRACE_PRINTK
-> +  KBUILD_NO_TRACE_PRINTK = 0
-> +endif
-> +
->  # If the user is running make -s (silent mode), suppress echoing of
->  # commands
->
-> @@ -839,6 +846,10 @@ KBUILD_AFLAGS      += -gz=zlib
->  KBUILD_LDFLAGS += --compress-debug-sections=zlib
->  endif
->
-> +ifeq ($(KBUILD_NO_TRACE_PRINTK),1)
-> +KBUILD_CFLAGS += -DNO_TRACE_PRINTK
-> +endif
-> +
->  KBUILD_CFLAGS += $(DEBUG_CFLAGS)
->  export DEBUG_CFLAGS
->
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 500def620d8f..bee432547d26 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -680,11 +680,14 @@ extern void tracing_stop(void);
->  static inline __printf(1, 2)
->  void ____trace_printk_check_format(const char *fmt, ...)
->  {
-> +#ifdef NO_TRACE_PRINTK
-> +       extern void __no_trace_printk_on_build(void);
-> +       __no_trace_printk_on_build();
-> +#endif
->  }
->  #define __trace_printk_check_format(fmt, args...)                      \
->  do {                                                                   \
-> -       if (0)                                                          \
-> -               ____trace_printk_check_format(fmt, ##args);             \
-> +       ____trace_printk_check_format(fmt, ##args);                     \
->  } while (0)
->
->  /**
+Will
