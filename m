@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C74C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6E5C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2E5C207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995632075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZHPMzYaP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JYv5Wl4U"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mT69zWbq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Dwkt+c9O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgHUCR3 (ORCPT
+        id S1728071AbgHUCRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:17:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52582 "EHLO
+        Thu, 20 Aug 2020 22:17:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53204 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727870AbgHUCRE (ORCPT
+        with ESMTP id S1727957AbgHUCR0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:17:04 -0400
-Message-Id: <20200821002947.263753263@linutronix.de>
+        Thu, 20 Aug 2020 22:17:26 -0400
+Message-Id: <20200821002948.957173267@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597976223;
+        s=2020; t=1597976244;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=xhbFdhsCsQ5VSYCUiVy99pvX2yN4idfA0I7XlvTQakE=;
-        b=ZHPMzYaPzfOECo836sQFsUmCX7TFv2uj13sv98D4bI8o6iI6WKZs1U7pYv9brD8a4az4fs
-        NyW2wBNkPya+ae9bCFjp09So5OeSSAX52C6juW+HKgm4ymvYeCx/IfVgaDhjbZBDHJN2Y7
-        N3Ga0P6rEMZqQTiiVOkR3j0KsFCD4vhJzcH9tjRPhCUvVfZb3FJIfpw8yH5bG9MqEf/Vfx
-        HtYfBOCZj0F8653MC9JjGiUq1BCATOsRuRbgl0R92oj6nP6xijsr8QEAN3xNC7i6G9hIwj
-        93+5AhgyK99DgKHmu6NAF2r5clFidEeEDceyitr+J6fyYTJp9z6GKMouFgvM/g==
+        bh=MBz11fb1y0SE61ESFW1a7CcpOIrqCZo4UZnpmxe0caQ=;
+        b=mT69zWbqwzYr72TDoZpl1gLGTJ55DZw2Vv6z3jUPH/nrcsLHz9KLIT93NVjBl+3vcMvBRc
+        CqKcDx2xnJQQIiyTsIeSwv+6Bdf0tEX1V2wJD+UvqFHZnXOmGHJQ+2uH12yXT7cT8NFVg0
+        ECpHS2QO2Cr7DCOiouur6vbnMb9QdTLMVjN0Nvnoki3NsxyqjUv18HiPkFPcXewwfDDvx7
+        te+desFYiJoLvNHI/HhnldQUsW9p0WRWEFCxfTgIMTfQ3r9MYYVFRehstXWPekQ85f0VOy
+        brgxhSlfw9BieAuZc11A8YeAeWGO4DIvBMQpssjjareY82nstIQWnrJdyL39Hg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597976223;
+        s=2020e; t=1597976244;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=xhbFdhsCsQ5VSYCUiVy99pvX2yN4idfA0I7XlvTQakE=;
-        b=JYv5Wl4UiPVl3hvzKT1TU9FbgMyvxpUxxeVQ/q1ta3fiBXM7WdZyhJVHsfCIDihr82ihZJ
-        mZtv6aJHBV8/OEAQ==
-Date:   Fri, 21 Aug 2020 02:24:44 +0200
+        bh=MBz11fb1y0SE61ESFW1a7CcpOIrqCZo4UZnpmxe0caQ=;
+        b=Dwkt+c9Oh4UbvZmtg7B+uyvXpCShVXkZvd7fqALYgsIWyxidXsx5Fii4HTZY1T4upIV9/2
+        zFJ6kUyY7XD+NiCQ==
+Date:   Fri, 21 Aug 2020 02:25:01 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        linux-pci@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+Cc:     x86@kernel.org, Marc Zyngier <maz@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
         iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Jon Derrick <jonathan.derrick@intel.com>,
@@ -60,12 +58,14 @@ Cc:     x86@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Steve Wahl <steve.wahl@hpe.com>,
         Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
         xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Megha Dey <megha.dey@intel.com>,
@@ -76,47 +76,95 @@ Cc:     x86@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [patch RFC 20/38] PCI: vmd: Mark VMD irqdomain with DOMAIN_BUS_VMD_MSI
+Subject: [patch RFC 37/38] irqdomain/msi: Provide msi_alloc/free_store() callbacks
 References: <20200821002424.119492231@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline;
- filename="PCI--vmd--Mark-VMD-irqdomain-with-DOMAIN_BUS_VMD_PCI.patch"
+ filename="irqdomain-msi--Provide-msi_alloc-free_store---callbacks.patch"
 Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Devices on the VMD bus use their own MSI irq domain, but it is not
-distinguishable from regular PCI/MSI irq domains. This is required
-to exclude VMD devices from getting the irq domain pointer set by
-interrupt remapping.
+For devices which don't have a standard storage for MSI messages like the
+upcoming IMS (Interrupt Message Storm) it's required to allocate storage
+space before allocating interrupts and after freeing them.
 
-Override the default bus token.
+This could be achieved with the existing callbacks, but that would be
+awkward because they operate on msi_alloc_info_t which is not uniform
+accross architectures. Also these callbacks are invoked per interrupt but
+the allocation might have bulk requirements depending on the device.
+
+As such devices can operate on different architectures it is simpler to
+have seperate callbacks which operate on struct device. The resulting
+storage information has to be stored in struct msi_desc so the underlying
+irq chip implementation can retrieve it for the relevant operations.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Jonathan Derrick <jonathan.derrick@intel.com>
-Cc: linux-pci@vger.kernel.org
+Cc: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/controller/vmd.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ include/linux/msi.h |    8 ++++++++
+ kernel/irq/msi.c    |   11 +++++++++++
+ 2 files changed, 19 insertions(+)
 
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -579,6 +579,12 @@ static int vmd_enable_domain(struct vmd_
- 		return -ENODEV;
- 	}
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -279,6 +279,10 @@ struct msi_domain_info;
+  *			function.
+  * @domain_free_irqs:	Optional function to override the default free
+  *			function.
++ * @msi_alloc_store:	Optional callback to allocate storage in a device
++ *			specific non-standard MSI store
++ * @msi_alloc_free:	Optional callback to free storage in a device
++ *			specific non-standard MSI store
+  *
+  * @get_hwirq, @msi_init and @msi_free are callbacks used by
+  * msi_create_irq_domain() and related interfaces
+@@ -328,6 +332,10 @@ struct msi_domain_ops {
+ 					     struct device *dev, int nvec);
+ 	void		(*domain_free_irqs)(struct irq_domain *domain,
+ 					    struct device *dev);
++	int		(*msi_alloc_store)(struct irq_domain *domain,
++					   struct device *dev, int nvec);
++	void		(*msi_free_store)(struct irq_domain *domain,
++					    struct device *dev);
+ };
  
-+	/*
-+	 * Override the irq domain bus token so the domain can be distinguished
-+	 * from a regular PCI/MSI domain.
-+	 */
-+	irq_domain_update_bus_token(vmd->irq_domain, DOMAIN_BUS_VMD_MSI);
+ /**
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -410,6 +410,12 @@ int __msi_domain_alloc_irqs(struct irq_d
+ 	if (ret)
+ 		return ret;
+ 
++	if (ops->msi_alloc_store) {
++		ret = ops->msi_alloc_store(domain, dev, nvec);
++		if (ret)
++			return ret;
++	}
 +
- 	pci_add_resource(&resources, &vmd->resources[0]);
- 	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
- 	pci_add_resource_offset(&resources, &vmd->resources[2], offset[1]);
+ 	for_each_msi_entry(desc, dev) {
+ 		ops->set_desc(&arg, desc);
+ 
+@@ -509,6 +515,8 @@ int msi_domain_alloc_irqs(struct irq_dom
+ 
+ void __msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+ {
++	struct msi_domain_info *info = domain->host_data;
++	struct msi_domain_ops *ops = info->ops;
+ 	struct msi_desc *desc;
+ 
+ 	for_each_msi_entry(desc, dev) {
+@@ -522,6 +530,9 @@ void __msi_domain_free_irqs(struct irq_d
+ 			desc->irq = 0;
+ 		}
+ 	}
++
++	if (ops->msi_free_store)
++		ops->msi_free_store(domain, dev);
+ }
+ 
+ /**
 
