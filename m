@@ -2,159 +2,122 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92124C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6405720724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 674242078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:02:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZYyfGkw"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="nkPVH+Ov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgHUOB2 (ORCPT
+        id S1727902AbgHUOB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 10:01:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40004 "EHLO
+        Fri, 21 Aug 2020 10:01:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgHUOBW (ORCPT
+        with ESMTP id S1726279AbgHUOBw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 10:01:22 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74FA8C061573;
-        Fri, 21 Aug 2020 07:01:22 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id a34so1081291ybj.9;
-        Fri, 21 Aug 2020 07:01:22 -0700 (PDT)
+        Fri, 21 Aug 2020 10:01:52 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57582C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 07:01:51 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id x69so1438782qkb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 07:01:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Jw01XlkZuO1lBRa3ozBQbunEgaoyU0nIhFJxWLCaKKw=;
-        b=MZYyfGkwxqet+LIKS37OT1iprToOJ/dwyf/SF/td+iRm9s2FgIuVLvusrR0L4eN0tN
-         Q7s+QK2Zee28lz5+3Z633qYxtYB23vl9N+F19LevUsoza9ylA+UmpE0taoTvggPSaflz
-         L5+bSA49fnMUra1QhgHGWTWDlWtP+Hs2MdCEYxCkkvzeligvUMxOSX4LZpSNoumO6kC4
-         mxMnzk2i2t3qh7rgkXpAEd2V2aclL4Ou5J/r6wxG7/C6rN4Y7IXstl+qEqdc+hEe4D55
-         OWQHW5v+FpOQeU1HCl3JFK+HUCnw6xA+s8oXti293C2SE/rBF+K5B3yeGO2mlr0mHQ6b
-         r6hg==
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cA1F72P9Gm2cautm1YaokGwNbN8rzVJerys9S7kz+dY=;
+        b=nkPVH+Ovq+PbJXglpdeME9hid7vf1PM4g5XbkjiJo5EratmsU7t9cUuws/8svKmlrP
+         EeJLdQjFqqNF2PsTU39YI7W6UsK8DFi1Nsy2Fsed4IO48Km3gUAjJBL70SSYLIFiXjHT
+         apFxLWdt25F9C+P6lXRwJOvayqJmLTXwaQtRh7tn1NVJ1G7xJKl4g02yk1IOhlgJXpgE
+         uhu72bWnmxOnt+jHNENMYLGGBUgmEqijytDjIXanSn7EPu572k+I6lEd46ZQ5uvzCaUz
+         QOGQUAuwpZeIzffQ1NmA823BQb4J5ZlOOb2aQbwOMLeV5GUlsqBpF4j6iEl1YEtNCXX0
+         Dl+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Jw01XlkZuO1lBRa3ozBQbunEgaoyU0nIhFJxWLCaKKw=;
-        b=UNoJwq6ZGrQeUFJ1MeP+TpXHHaeT3ZExeAwYceUFDewU8Wuka9moRYNMQkxQ1GYAaQ
-         L60cxxLFkQNq9isUWLrqAiPnY1Ww84RGrS4aEpl3BhvrYgA7GTV4unsOQ0v8nBCxN6Mv
-         DHpEwzlaSy8drWTlG8N0RCJoxzEIstgFE0NMC7+VVatQtqlScEL8t46YWNf47cYGzgXM
-         7k/aQvWFUuR7+DJqkXXejBQFIQk+lO5xcxUhRloNHy2fA+aY0pAH/64eLdNMn9YrdyZa
-         AxXYHrY3HuSoabf43GWP3syLvAL/F1J+TrLxKuUB8yOZXPHncO7KHTT7gLVNsQVJ5KCe
-         Uwdg==
-X-Gm-Message-State: AOAM533/F1w5FDH3IuPLZ7y+IXTwNjSTIAifKCcM2hsfFiLHyN/hbgeH
-        lFoyDd0TUpNpI1OSo4qrRqoFavUFrCQgsZbNcws=
-X-Google-Smtp-Source: ABdhPJwrn7PoYxKIN5mQSBTB2hrhv1LQJ6Tmd/jaX3wqgNKylI4z5b+QmwAMppF2FJIgyyrU6GyU5izHH/3uDRToysc=
-X-Received: by 2002:a25:e712:: with SMTP id e18mr3686224ybh.395.1598018481678;
- Fri, 21 Aug 2020 07:01:21 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cA1F72P9Gm2cautm1YaokGwNbN8rzVJerys9S7kz+dY=;
+        b=Ra2N3CWLSvglcNK4bnhi6kAP+UGyzqHNjQ1QiZK1kETqEfax9HaEotwueFIqwJSPVV
+         8EHlEwUDglLPrvdPNMIU6YGtWNAkgVNIttbErVp5woNJFZWOULEW/91mOG90Ucx9r9hG
+         Y0FrpMueY2flDiuWAlwOFWand9vrqEvhlFP1AsPYSxHH5CUAmGdTgRiFqczXox6QmoVQ
+         60wruopH6XcqyQU4aRz+LVRxU6C04MDkcVWxHltuW41jmrUlposDmEkgrDzo9jDf9CIh
+         jjcHfPqOwxKfyBvXia/kV3YyNPaE83RxXj3aSuzD2WZvhVrM2b0lRZaaOfkAzSbz8+gI
+         wMrA==
+X-Gm-Message-State: AOAM53256VXBRt/9v0hZtVAxTKQkMWGVDnhY06ifl9QmbWoL0PKpApN9
+        1Wn4lG7cd3Z9NZQp240AxU//hA==
+X-Google-Smtp-Source: ABdhPJwPS73vtoYQwDHYcuev8ZG8I9A0ALFJUzGNNDGInBppfnv7YCsr8cJGOO2lQw5S4Qj+0Je+7A==
+X-Received: by 2002:a37:9b95:: with SMTP id d143mr2782128qke.272.1598018510305;
+        Fri, 21 Aug 2020 07:01:50 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 15sm1789776qkm.112.2020.08.21.07.01.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 07:01:49 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 10:01:43 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>, akpm@linux-foundation.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, nao.horiguchi@gmail.com,
+        osalvador@suse.de, mike.kravetz@oracle.com
+Subject: Re: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead
+ page charged
+Message-ID: <20200821140134.GA8147@lca.pw>
+References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200820145850.GA4622@lca.pw>
+ <20200821080127.GD32537@dhcp22.suse.cz>
+ <20200821123934.GA4314@lca.pw>
+ <20200821134842.GF32537@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20200816193316.7641-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200816193316.7641-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWVOv3LC_wWi1r9EHtnmT=w8d1HgDTP3aPD7uEZcb5ZYg@mail.gmail.com>
-In-Reply-To: <CAMuHMdWVOv3LC_wWi1r9EHtnmT=w8d1HgDTP3aPD7uEZcb5ZYg@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 21 Aug 2020 15:00:55 +0100
-Message-ID: <CA+V-a8skSHQCh3Ng68APvAfi_OeHq1QOWgsRu8Ghay=FOPC7-g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: r8a7742-iwg21m: Add SPI NOR support
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821134842.GF32537@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Fri, Aug 21, 2020 at 03:48:42PM +0200, Michal Hocko wrote:
+> On Fri 21-08-20 08:39:37, Qian Cai wrote:
+> > On Fri, Aug 21, 2020 at 10:01:27AM +0200, Michal Hocko wrote:
+> > > On Thu 20-08-20 10:58:51, Qian Cai wrote:
+> > > > On Tue, Aug 11, 2020 at 07:10:27PM +0800, Alex Shi wrote:
+> > > > > Since readahead page is charged on memcg too, in theory we don't have to
+> > > > > check this exception now. Before safely remove them all, add a warning
+> > > > > for the unexpected !memcg.
+> > > > > 
+> > > > > Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> > > > > Acked-by: Michal Hocko <mhocko@suse.com>
+> > > > 
+> > > > This will trigger,
+> > > 
+> > > Thanks for the report!
+> > >  
+> > > > [ 1863.916499] LTP: starting move_pages12
+> > > > [ 1863.946520] page:000000008ccc1062 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1fd3c0
+> > > > [ 1863.946553] head:000000008ccc1062 order:5 compound_mapcount:0 compound_pincount:0
+> > > 
+> > > Hmm, this is really unexpected. How did we get order-5 page here? Is
+> > > this some special mappaing that sys_move_pages should just ignore?
+> > 
+> > Well, I thought everybody should be able to figure out where to find the LTP
+> > tests source code at this stage to see what it does. Anyway, the test simply
+> > migrate hugepages while soft offlining, so order 5 is expected as that is 2M
+> > hugepage on powerpc (also reproduced on x86 below). It might be easier to
+> > reproduce using our linux-mm random bug collection on NUMA systems.
+> 
+> OK, I must have missed that this was on ppc. The order makes more sense
+> now. I will have a look at this next week.
 
-Thank you for the review.
-
-On Fri, Aug 21, 2020 at 2:33 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Sun, Aug 16, 2020 at 9:33 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Add support for the SPI NOR device used to boot up the system
-> > to the System on Module DT.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
-> > +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
->
-> > @@ -70,4 +80,28 @@
-> >                 groups = "mmc1_data4", "mmc1_ctrl";
-> >                 function = "mmc1";
-> >         };
-> > +
-> > +       qspi_pins: qspi {
-> > +               groups = "qspi_ctrl", "qspi_data2";
-> > +               function = "qspi";
-> > +       };
-> > +};
-> > +
-> > +&qspi {
-> > +       pinctrl-0 = <&qspi_pins>;
-> > +       pinctrl-names = "default";
-> > +
-> > +       status = "okay";
-> > +
-> > +       /* WARNING - This device contains the bootloader. Handle with care. */
-> > +       flash: flash@0 {
-> > +               #address-cells = <1>;
-> > +               #size-cells = <1>;
->
-> #{address,size}-cells are not needed, unless you list legacy partitions
-> (i.e. partitions not contained in a "partitions" container).
->
-Agreed will drop it.
-
-> > +               compatible = "sst,sst25vf016b", "jedec,spi-nor";
-> > +               reg = <0>;
-> > +               spi-max-frequency = <50000000>;
-> > +               m25p,fast-read;
-> > +               spi-cpol;
-> > +               spi-cpha;
->
-> Perhaps you want to add the partition layout, too?
->
-will do.
-
-> > +       };
-> >  };
->
-> With the above fixed/clarified:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-Thank you. I shall post this lone patch fixing the above.
-
-Cheers,
-Prabhakar
-
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Sorry about not mentioning powerpc in the first place. I don't know since when
+powerpc will no longer print out hardware information like x86 does in those
+warning reports. I'll dig.
