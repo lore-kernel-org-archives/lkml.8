@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE19C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C42520738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571F4206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028287;
-	bh=/99HfNvZQT+pdnlQDcg8nOPTiYMoLV8LgYWzXg1CdMo=;
+	s=default; t=1598028314;
+	bh=xAEgqohY3FdYqYTTjlQYaSeUB4UNZYS7CDwMTrmHEbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ljU3aAPHAaRtnuP6x07ZT2Q1L1Xmp07ggKvBXWGhZO8Ma1qPD+U75MvsKPasecJ1T
-	 CqGm+R/O/fDAIvNwA9WHXYTQ4uCGUbmvYlRO8eHeaGF1h6KQXi9Rn6rvn2hPhU+zJ+
-	 0lVMEAEvDVhoMgmGYHi7KuHrzdYhn8nzBc0RI/kM=
+	b=j6w1KD5yICorCSS0trvXSWLe/GydkC/FXFIMV+hMvK8Xl4F17f/tTK6FWrAcqZYXl
+	 UqSj3oRgCy5ZGmALugE0XJitkuff4PE2cwNJ6Zkb72EfokjD7r8rkM8ItP/XswIInv
+	 HZsCrsRBrijtWZsPjO01TbELPF/mL/fAYVdqYISk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgHUQop (ORCPT
+        id S1728422AbgHUQpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:44:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50114 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728391AbgHUQUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728385AbgHUQUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:20:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA2882224D;
-        Fri, 21 Aug 2020 16:19:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83EA522C9F;
+        Fri, 21 Aug 2020 16:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026791;
-        bh=/99HfNvZQT+pdnlQDcg8nOPTiYMoLV8LgYWzXg1CdMo=;
+        s=default; t=1598026785;
+        bh=xAEgqohY3FdYqYTTjlQYaSeUB4UNZYS7CDwMTrmHEbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PJ6a4SDUs+ONv/niXjyNG9Nk45tbbGaSTM6q5Jdg0FUGmyQgpLw21D5LhCMpj4MmT
-         qAQeXQlXVecLJiLRTSKbluY98Vu71JkiB/vumLYgMYfS0FcOMo7+GBupaJdbgFVUDU
-         OoGPgry9H8wV9rbQE7LIqo/6Dd8n4WrGPqRokP7Q=
+        b=m1IOW4UDl3/BZLHx/LW0xHuRy4jPBUf4ccUcTrTVyIELHPxQQt8zRSUuTZftzQX3m
+         EruUj79ItnxG4mrN2ePGYGb0gfuNDuksTX0Pk5Rq+etODDYgUQRGT8friaG5YBaYvc
+         njDsI/pERmIMvW4kd9RhVQq7kNF2YF56OXV8H2eM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 10/26] drm/amd/display: fix ref count leak in amdgpu_drm_ioctl
-Date:   Fri, 21 Aug 2020 12:19:21 -0400
-Message-Id: <20200821161938.349246-10-sashal@kernel.org>
+Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        JiangYu <lnsyyj@hotmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/26] scsi: target: tcmu: Fix crash on ARM during cmd completion
+Date:   Fri, 21 Aug 2020 12:19:16 -0400
+Message-Id: <20200821161938.349246-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161938.349246-1-sashal@kernel.org>
 References: <20200821161938.349246-1-sashal@kernel.org>
@@ -60,39 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit 5509ac65f2fe5aa3c0003237ec629ca55024307c ]
+[ Upstream commit 5a0c256d96f020e4771f6fd5524b80f89a2d3132 ]
 
-in amdgpu_drm_ioctl the call to pm_runtime_get_sync increments the
-counter even in case of failure, leading to incorrect
-ref count. In case of failure, decrement the ref count before returning.
+If tcmu_handle_completions() has to process a padding shorter than
+sizeof(struct tcmu_cmd_entry), the current call to
+tcmu_flush_dcache_range() with sizeof(struct tcmu_cmd_entry) as length
+param is wrong and causes crashes on e.g. ARM, because
+tcmu_flush_dcache_range() in this case calls
+flush_dcache_page(vmalloc_to_page(start)); with start being an invalid
+address above the end of the vmalloc'ed area.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The fix is to use the minimum of remaining ring space and sizeof(struct
+tcmu_cmd_entry) as the length param.
+
+The patch was tested on kernel 4.19.118.
+
+See https://bugzilla.kernel.org/show_bug.cgi?id=208045#c10
+
+Link: https://lore.kernel.org/r/20200629093756.8947-1-bstroesser@ts.fujitsu.com
+Tested-by: JiangYu <lnsyyj@hotmail.com>
+Acked-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/target/target_core_user.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-index e0890deccb2fe..7cae10fec78de 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -633,11 +633,12 @@ long amdgpu_drm_ioctl(struct file *filp,
- 	dev = file_priv->minor->dev;
- 	ret = pm_runtime_get_sync(dev->dev);
- 	if (ret < 0)
--		return ret;
-+		goto out;
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index 1a83456a65a00..693fbb2858404 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -666,7 +666,14 @@ static unsigned int tcmu_handle_completions(struct tcmu_dev *udev)
+ 		struct tcmu_cmd_entry *entry = (void *) mb + CMDR_OFF + udev->cmdr_last_cleaned;
+ 		struct tcmu_cmd *cmd;
  
- 	ret = drm_ioctl(filp, cmd, arg);
+-		tcmu_flush_dcache_range(entry, sizeof(*entry));
++		/*
++		 * Flush max. up to end of cmd ring since current entry might
++		 * be a padding that is shorter than sizeof(*entry)
++		 */
++		size_t ring_left = head_to_end(udev->cmdr_last_cleaned,
++					       udev->cmdr_size);
++		tcmu_flush_dcache_range(entry, ring_left < sizeof(*entry) ?
++					ring_left : sizeof(*entry));
  
- 	pm_runtime_mark_last_busy(dev->dev);
-+out:
- 	pm_runtime_put_autosuspend(dev->dev);
- 	return ret;
- }
+ 		if (tcmu_hdr_get_op(entry->hdr.len_op) == TCMU_OP_PAD) {
+ 			UPDATE_HEAD(udev->cmdr_last_cleaned,
 -- 
 2.25.1
 
