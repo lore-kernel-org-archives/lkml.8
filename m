@@ -2,77 +2,158 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11395C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB0220748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E663E2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:50:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598035821;
+	bh=jVmD4cYA73ai51T+nKWy61SyNZb8ZI5HBpOqDGjchfo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oPWnwOhhiwgAgE/fc9W2vXVdW99/13pRC1jUqmsiJU75rkQNwDuzWk6UdMewEq1Hy
+	 ldX0Bfnl8jA2owdUz+ozEqA8lOrpSHT1zvfchKltiSTDFoCMa32eJrf+7cSU9XqFCh
+	 mFTplroglXAMgmP9nZQZDdJ1gVcueAS3uG8Fm0tQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgHUSsx (ORCPT
+        id S1726585AbgHUSuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgHUSsw (ORCPT
+        Fri, 21 Aug 2020 14:50:19 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:33914 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgHUSuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:48:52 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85DBEC061573;
-        Fri, 21 Aug 2020 11:48:52 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 599EA128809AE;
-        Fri, 21 Aug 2020 11:32:05 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 11:48:50 -0700 (PDT)
-Message-Id: <20200821.114850.193253709080317487.davem@davemloft.net>
-To:     trix@redhat.com
-Cc:     f.fainelli@gmail.com, andrew@lunn.ch, vivien.didelot@gmail.com,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: b53: check for timeout
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200821135600.18017-1-trix@redhat.com>
-References: <20200821135600.18017-1-trix@redhat.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 21 Aug 2020 11:32:05 -0700 (PDT)
+        Fri, 21 Aug 2020 14:50:18 -0400
+Received: by mail-ej1-f67.google.com with SMTP id o23so3526321ejr.1;
+        Fri, 21 Aug 2020 11:50:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sYzLZgwpvbGKths6LYp8+ddZvzUQfeDT+gGev5xd+mQ=;
+        b=uANUCq4AkqWLkoH2FU99OPkqwdK+63+Q+fuAQiZtQj6PdoZpe2WIL2I8kN5ZossFXX
+         1ojLCVg6HqESB0klZGeNRh1RolTaEKgTZFfQ4M3O2OyqC7mw4v6/UFrmXKtPtR60Tf4S
+         j3Ry+IMl6hzhPmx1YcIVNrgAuse6sDUNrwnN/V9YhznzRup0373t3M3gMZYmilUmcHyR
+         N7jN2DHAYx/pgJo23rP9lrW8Vl/IqZjwMMY+dmRS/9hpRnNlngKPnwU06DyLGnzj/xFz
+         IhPOyFITZJqD9JHrB5dHkpXo3QAmsGablkAzarrDhflfhhVn6wfRc8t4gjqoxqEKITQu
+         AaZg==
+X-Gm-Message-State: AOAM532DwVbC/H4P7zXTr3jPX4mq9QvjjWSrwUby5CoPEnts52PjAetf
+        6ARLXzzAuEwgJmm31cH5/VKxxLaGvZ+fkIsq7wUW82fPtIY=
+X-Google-Smtp-Source: ABdhPJy/3f/bgh6Ufo4q/gpnOxySM0lm90ZX/2duRJBB/eV9Nk76yTVwEcSKbIuZwDEUYC+1H1UmBaDPnP42ZotHBv4=
+X-Received: by 2002:a17:906:b157:: with SMTP id bt23mr4451828ejb.354.1598035815823;
+ Fri, 21 Aug 2020 11:50:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200717060849.12469-1-liwei.song@windriver.com>
+ <CAJvTdKm9WHgQuP38Y2o1zQ-VgLKMMDup4crAPrW3pexoWft+6Q@mail.gmail.com> <52f16995-6d2d-fa7d-ed5e-682db3461d03@windriver.com>
+In-Reply-To: <52f16995-6d2d-fa7d-ed5e-682db3461d03@windriver.com>
+From:   Len Brown <lenb@kernel.org>
+Date:   Fri, 21 Aug 2020 14:50:04 -0400
+Message-ID: <CAJvTdKms0Qj3d+g_tK8oboMXebYgnPm51EdSL_UvLdw3GV6A3A@mail.gmail.com>
+Subject: Re: [PATCH] tools/power turbostat: call pread64 in kernel directly
+To:     Liwei Song <liwei.song@windriver.com>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: trix@redhat.com
-Date: Fri, 21 Aug 2020 06:56:00 -0700
+Re: offset size
 
-> From: Tom Rix <trix@redhat.com>
-> 
-> clang static analysis reports this problem
-> 
-> b53_common.c:1583:13: warning: The left expression of the compound
->   assignment is an uninitialized value. The computed value will
->   also be garbage
->         ent.port &= ~BIT(port);
->         ~~~~~~~~ ^
-> 
-> ent is set by a successful call to b53_arl_read().  Unsuccessful
-> calls are caught by an switch statement handling specific returns.
-> b32_arl_read() calls b53_arl_op_wait() which fails with the
-> unhandled -ETIMEDOUT.
-> 
-> So add -ETIMEDOUT to the switch statement.  Because
-> b53_arl_op_wait() already prints out a message, do not add another
-> one.
-> 
-> Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
-> 
-> Signed-off-by: Tom Rix <trix@redhat.com>
+The offsets on this file are the MSR offsets.
+What MSR are you trying to access at offset 0xc0010299?
 
-Applied and queued up for -stable, thanks.
+Re: pread vs pread64
+
+If I take on faith that you have some kind of 32-bit execution
+environment that makes pread into pread32 instead of pread64, and that
+truncates an off_t to 32-bits from 64-bits, and it actually makes
+sense to request a read at this large offset...
+
+would we really have to invoke syscall() directly -- couldn't we
+invoke pread64() directly? (eg. below)
+
+thanks,
+-Len
+
+
+@@ -490,11 +491,12 @@ int get_msr_fd(int cpu)
+        return fd;
+ }
+
+-int get_msr(int cpu, off_t offset, unsigned long long *msr)
++int get_msr(int cpu, unsigned long long offset, unsigned long long *msr)
+ {
+        ssize_t retval;
+
+-       retval = pread(get_msr_fd(cpu), msr, sizeof(*msr), offset);
++       retval = pread64(get_msr_fd(cpu), msr, sizeof(*msr), offset);
+
+        if (retval != sizeof *msr)
+                err(-1, "cpu%d: msr offset 0x%llx read failed", cpu,
+(unsigned long long)offset);
+
+On Thu, Aug 13, 2020 at 10:17 PM Liwei Song <liwei.song@windriver.com> wrote:
+>
+> with multilib lib32 support, the rootfs will be 32-bit,
+> the kernel is still 64-bit, in this case run turbostat
+> will failed with "out of range" error.
+>
+> Thanks,
+> Liwei.
+>
+> On 8/14/20 05:43, Len Brown wrote:
+> > Huh?
+> >
+> > On Fri, Jul 17, 2020 at 2:09 AM Liwei Song <liwei.song@windriver.com> wrote:
+> >>
+> >> with 32-bit rootfs, the offset may out of range when set it
+> >> to 0xc0010299, define it as "unsigned long long" type and
+> >> call pread64 directly in kernel.
+> >>
+> >> Signed-off-by: Liwei Song <liwei.song@windriver.com>
+> >> ---
+> >>  tools/power/x86/turbostat/turbostat.c | 5 +++--
+> >>  1 file changed, 3 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+> >> index 33b370865d16..4c5cdfcb5721 100644
+> >> --- a/tools/power/x86/turbostat/turbostat.c
+> >> +++ b/tools/power/x86/turbostat/turbostat.c
+> >> @@ -33,6 +33,7 @@
+> >>  #include <sys/capability.h>
+> >>  #include <errno.h>
+> >>  #include <math.h>
+> >> +#include <sys/syscall.h>
+> >>
+> >>  char *proc_stat = "/proc/stat";
+> >>  FILE *outf;
+> >> @@ -381,11 +382,11 @@ int get_msr_fd(int cpu)
+> >>         return fd;
+> >>  }
+> >>
+> >> -int get_msr(int cpu, off_t offset, unsigned long long *msr)
+> >> +int get_msr(int cpu, unsigned long long offset, unsigned long long *msr)
+> >>  {
+> >>         ssize_t retval;
+> >>
+> >> -       retval = pread(get_msr_fd(cpu), msr, sizeof(*msr), offset);
+> >> +       retval = syscall(SYS_pread64, get_msr_fd(cpu), msr, sizeof(*msr), offset);
+> >>
+> >>         if (retval != sizeof *msr)
+> >>                 err(-1, "cpu%d: msr offset 0x%llx read failed", cpu, (unsigned long long)offset);
+> >> --
+> >> 2.17.1
+> >>
+> >
+> >
+
+
+
+-- 
+Len Brown, Intel Open Source Technology Center
