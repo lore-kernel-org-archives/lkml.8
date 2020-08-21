@@ -2,133 +2,94 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B257C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68567C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC8EA2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455E42072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:20:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dnImnfFj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mIeS9Xim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgHUHUb (ORCPT
+        id S1728105AbgHUHUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:20:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33498 "EHLO
+        Fri, 21 Aug 2020 03:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728249AbgHUHSM (ORCPT
+        with ESMTP id S1727961AbgHUHUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:18:12 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72EDBC06137C
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:17:19 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l2so999869wrc.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:17:19 -0700 (PDT)
+        Fri, 21 Aug 2020 03:20:16 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB75C061385;
+        Fri, 21 Aug 2020 00:20:16 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id y6so498949plt.3;
+        Fri, 21 Aug 2020 00:20:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1SwOdl3qsamQLekmEElFc9JqMKayOsDgTAbLZhvVikk=;
-        b=dnImnfFjiDNFfYpg8z5tV2sLsHw86tH7Jc+5orDMUB1MplgaOUwBUiMJ0coiV8t5Kd
-         Or89x62EZ7WSqJVpjl7E99tdGFe+lsMtoIH10bCg02O6sO49kSY4rsdAdJVbVlh3TD0n
-         DJyysjPrA0/1PGaxfT/LMg2NKe4hbmVZ+Yv9z6bnSvoFmfFGbGbwMYp1E6HayrUv2xtW
-         HS9HkdRvxF/37JBgu/O0LgLDthdxhBLW/LweO6uEmAJCnyLhN5NGgZPAYZJvboD4IxOm
-         LVzeDQJpHAr3qxOYXxUm78DPtzRAOJKYRfIJOQviyRNQq8V7nG85PDxgJkyPVNN9xHsL
-         77cg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+LGTq1mqvMSViuH9XCWlGLerVDHsR7IO+qqsPsb76uI=;
+        b=mIeS9XimBJsE+R74E2h+kzAGFNmF9sHLZa++02iH7VXJs4TWPgfQWEmq0TIGn9dSuY
+         bggAhy01WqgfXZAccaweCDv2yCrj7Fnv1w/Rtz2677vfJeT/ZuZK2P8FCehZ3aML7DVe
+         JNbOQhn9Ad0YNMUBEeuu9wGHe09e8S/9ZsKJ5NL0xYcRezro27bAQZDb/sbiNb//gSzk
+         UM+e3vqmi5mq+SOBGHJ/iF2j4ANUjlJGLyE1PbJkO5QYZsaLvf0RItyuCmcMAe4guCGY
+         +3ZzoqR0umpZ59pMu5JRBp9ghz+eBwEHt0hixBuvSslIhPq5Km/6Zo07teG2lwub9bmA
+         gYUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1SwOdl3qsamQLekmEElFc9JqMKayOsDgTAbLZhvVikk=;
-        b=jW659mZaWBvwFvy4LBwRx87N55gKKyZGIEZX6zNzJ7tK/ppfAdcNjPuXFbpM/1AZPD
-         oCuLOkiCUlTXdZDLtK4EZYKtWtJEES4BCMAQlVizFcyy+JAXGOe7WKvG4WORdwlWylQD
-         VE9Hea5+FTpDuJtXJyfSHZy1e0ORQS9Ucpa3/iWau+//Yh5kvl3WvS6n9W/7NToISJK1
-         dLLuDm7KM8xeDRnbojzTdy1jqYbndvHPt2wrIlugliyeOyFk4mG5nY6808+j+EV36f0b
-         OQmNPiSFHD+f4OpBg+SmrA/525S3KaFtNkab/hNXBNRVYAet2W4OKXI6ZHweZ/u0odWR
-         NYhg==
-X-Gm-Message-State: AOAM532C4733eoazdhcwgpo2OcD/R1m4g9ZU/nWS73c6Y2EfvgcTqLpV
-        hbstad7L/Gv8QUdVxX+1fAVClQ==
-X-Google-Smtp-Source: ABdhPJzJi0T0vD0alFijUDBN82QjCRhNnnHBSeBmNRlzlDy6K5aaLeA4aB21h/7nMVFAL/QHiEZKmA==
-X-Received: by 2002:a5d:526d:: with SMTP id l13mr1324804wrc.279.1597994238166;
-        Fri, 21 Aug 2020 00:17:18 -0700 (PDT)
-Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id y24sm2667957wmi.17.2020.08.21.00.17.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 00:17:17 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
-Subject: [PATCH 24/32] wireless: brcmfmac: fwsignal: Remove unused variable 'brcmf_fws_prio2fifo'
-Date:   Fri, 21 Aug 2020 08:16:36 +0100
-Message-Id: <20200821071644.109970-25-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821071644.109970-1-lee.jones@linaro.org>
-References: <20200821071644.109970-1-lee.jones@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+LGTq1mqvMSViuH9XCWlGLerVDHsR7IO+qqsPsb76uI=;
+        b=ufsc7RRmdXWMWSKI1nMNshH6fpUnK/svwwM2dCvEctGXenylI+3lz3MRDqRWm0WZ8U
+         da+nVQ8Iy0K3znSrC0b0F3LGjV/cVhIp6wDfcxMWwdsfZHh7S0Aiz7dBQY+R++M5pdOr
+         KUb+mmF2LQzyqYv2CrSneLRusreXoOwCsV6lVbn3T90NBqTtGkrdw4DptUC3jxkuW5ug
+         0ZknWI8CYtvuPFjR4rpUKyMUe4J3oe1tawdqG8TisbW5Wo6+OMGmmd5d0s2N5FVxdQyF
+         41NRz6B4f1qLQmVo9qnl5RKJ5UYcwjV5TAYs+m3hNP69OFbvs5+wJ310LA15VMTEsrFK
+         kLBA==
+X-Gm-Message-State: AOAM530j9Y43NqDIkc2cQ9eWgArn/un2UdB0XkdbCQleMKhBpFoV426E
+        +uK9QBozq7MVfoz5gMnLEp4=
+X-Google-Smtp-Source: ABdhPJyY4LIUiQOEFw4qKKYRk/DqxT3xnarW2dvCwbV61Q9ZpHhPswII0/WPHdU5HxTecshuqMQ5vw==
+X-Received: by 2002:a17:90b:4ac9:: with SMTP id mh9mr1424330pjb.40.1597994415561;
+        Fri, 21 Aug 2020 00:20:15 -0700 (PDT)
+Received: from Asurada-Nvidia (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id y23sm1425650pfb.66.2020.08.21.00.20.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Aug 2020 00:20:15 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 00:20:03 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] ASoC: bindings: fsl-asoc-card: add compatible string
+ for TLV320AIC32x4 codec
+Message-ID: <20200821072003.GB19890@Asurada-Nvidia>
+References: <20200821071153.7317-1-matthias.schiffer@ew.tq-group.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821071153.7317-1-matthias.schiffer@ew.tq-group.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warning(s):
+On Fri, Aug 21, 2020 at 09:11:52AM +0200, Matthias Schiffer wrote:
+> The TLV320AIC32x4 is commonly used on TQ-Systems starterkit mainboards
+> for i.MX-based SoMs (i.MX6Q/DL, i.MX6UL, i.MX7) and LS1021A.
+> 
+> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c:504:18: warning: ‘brcmf_fws_prio2fifo’ defined but not used [-Wunused-const-variable=]
-
-Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc: Franky Lin <franky.lin@broadcom.com>
-Cc: Hante Meuleman <hante.meuleman@broadcom.com>
-Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Cc: Wright Feng <wright.feng@cypress.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Cc: brcm80211-dev-list.pdl@broadcom.com
-Cc: brcm80211-dev-list@cypress.com
-Cc: netdev@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- .../broadcom/brcm80211/brcmfmac/fwsignal.c         | 14 --------------
- 1 file changed, 14 deletions(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-index 2df6811c066ef..902b2f65d4605 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-@@ -498,20 +498,6 @@ struct brcmf_fws_info {
- 	bool avoid_queueing;
- };
- 
--/*
-- * brcmf_fws_prio2fifo - mapping from 802.1d priority to firmware fifo index.
-- */
--static const int brcmf_fws_prio2fifo[] = {
--	BRCMF_FWS_FIFO_AC_BE,
--	BRCMF_FWS_FIFO_AC_BK,
--	BRCMF_FWS_FIFO_AC_BK,
--	BRCMF_FWS_FIFO_AC_BE,
--	BRCMF_FWS_FIFO_AC_VI,
--	BRCMF_FWS_FIFO_AC_VI,
--	BRCMF_FWS_FIFO_AC_VO,
--	BRCMF_FWS_FIFO_AC_VO
--};
--
- #define BRCMF_FWS_TLV_DEF(name, id, len) \
- 	case BRCMF_FWS_TYPE_ ## name: \
- 		return len;
--- 
-2.25.1
-
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
