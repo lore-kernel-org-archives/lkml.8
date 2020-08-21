@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B223C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68EE520748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D00612054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030441;
-	bh=K7rQBmF2o/HDSQ0ZPX0Bc+/MKqPqW6lr/a49UeaCeTk=;
+	s=default; t=1598030452;
+	bh=0fVKRcxzaOhqKpTZuNkdyaVVibqDGakKkUCMuuKRGMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hgB13ekq1qtPMEHrqNXGYTxY+XVrAnO77IVqaJXtHIjM5JjGJam2JoaCkWGCzdJt4
-	 linJSMWqSYeXygzQNha+tICa01yiGxVF3083HIKuqj2alZBq83VAR+T/3Xs1s2dczg
-	 y4Il6rMvlUPSGHCU88MDNTWQrbBOfXo9lfhExPwY=
+	b=u2CakShAmr3dI7MJJE3HnA47SvN1eOgSed3J/dCCleJjr5976vnTqEdyGazNYtDrp
+	 iimj7OE2qH5jXQElPlejNWlN2Urp6GFTCL25Vkd1Ba0xqnSTivVcWEekw1Rn4UBB0I
+	 VeFEyDlk+VeyD+1iAcxBwjRsCqyOXc7C5PklBdds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgHURUi (ORCPT
+        id S1728209AbgHURUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:20:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48780 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:20:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbgHUQQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:16:10 -0400
+        id S1728043AbgHUQQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:16:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6891C22BF5;
-        Fri, 21 Aug 2020 16:16:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B72D420578;
+        Fri, 21 Aug 2020 16:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026570;
-        bh=K7rQBmF2o/HDSQ0ZPX0Bc+/MKqPqW6lr/a49UeaCeTk=;
+        s=default; t=1598026566;
+        bh=0fVKRcxzaOhqKpTZuNkdyaVVibqDGakKkUCMuuKRGMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oHpY3aFDaWDy1sbclSa6Klf5IBITPQ/e0fPv+I4rabfBQHZXXQKBBINjtbXCeDYIi
-         6M1QfIuoV22lscq+sBicMltYjkfeQeOt6YFWXWA2CVUlNWd/1w6iyH5dB/OtuCNUTk
-         sWHWBEAK/G5eJ+AlhBb7RKUI2EU4xaMQ8GORP0G8=
+        b=EEtDT6z7zzkxUxd2WRLQLETChSMMODA53QA37xwWSqFc5CyAbfVOubbUNkevKLjVX
+         Y97KhtPbw2ctxIamQpO7Bml4cWBNow6/w7ZuOvsMorhvsSySP8k3XxqPFAMUW8pD7z
+         kKmK2iYtH/5m/J1ileNh4rKpDZ1rCli6Cw8Hqjak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gwendal Grignou <gwendal@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 20/61] platform/chrome: cros_ec_sensorhub: Fix EC timestamp overflow
-Date:   Fri, 21 Aug 2020 12:15:04 -0400
-Message-Id: <20200821161545.347622-20-sashal@kernel.org>
+Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        JiangYu <lnsyyj@hotmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 17/61] scsi: target: tcmu: Fix crash on ARM during cmd completion
+Date:   Fri, 21 Aug 2020 12:15:01 -0400
+Message-Id: <20200821161545.347622-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
 References: <20200821161545.347622-1-sashal@kernel.org>
@@ -59,36 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gwendal Grignou <gwendal@chromium.org>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit e48bc01ed5adec203676c735365373b31c3c7600 ]
+[ Upstream commit 5a0c256d96f020e4771f6fd5524b80f89a2d3132 ]
 
-EC is using 32 bit timestamps (us), and before converting it to 64bit
-they were not casted, so it would overflow every 4s.
-Regular overflow every ~70 minutes was not taken into account either.
+If tcmu_handle_completions() has to process a padding shorter than
+sizeof(struct tcmu_cmd_entry), the current call to
+tcmu_flush_dcache_range() with sizeof(struct tcmu_cmd_entry) as length
+param is wrong and causes crashes on e.g. ARM, because
+tcmu_flush_dcache_range() in this case calls
+flush_dcache_page(vmalloc_to_page(start)); with start being an invalid
+address above the end of the vmalloc'ed area.
 
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+The fix is to use the minimum of remaining ring space and sizeof(struct
+tcmu_cmd_entry) as the length param.
+
+The patch was tested on kernel 4.19.118.
+
+See https://bugzilla.kernel.org/show_bug.cgi?id=208045#c10
+
+Link: https://lore.kernel.org/r/20200629093756.8947-1-bstroesser@ts.fujitsu.com
+Tested-by: JiangYu <lnsyyj@hotmail.com>
+Acked-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_sensorhub_ring.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/target/target_core_user.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_sensorhub_ring.c b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
-index 24e48d96ed766..b1c641c72f515 100644
---- a/drivers/platform/chrome/cros_ec_sensorhub_ring.c
-+++ b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
-@@ -419,9 +419,7 @@ cros_ec_sensor_ring_process_event(struct cros_ec_sensorhub *sensorhub,
- 			 * Disable filtering since we might add more jitter
- 			 * if b is in a random point in time.
- 			 */
--			new_timestamp = fifo_timestamp -
--					fifo_info->timestamp  * 1000 +
--					in->timestamp * 1000;
-+			new_timestamp = c - b * 1000 + a * 1000;
- 			/*
- 			 * The timestamp can be stale if we had to use the fifo
- 			 * info timestamp.
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index b63a1e0c4aa6d..b64ed7dbaa68a 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -1220,7 +1220,14 @@ static unsigned int tcmu_handle_completions(struct tcmu_dev *udev)
+ 
+ 		struct tcmu_cmd_entry *entry = (void *) mb + CMDR_OFF + udev->cmdr_last_cleaned;
+ 
+-		tcmu_flush_dcache_range(entry, sizeof(*entry));
++		/*
++		 * Flush max. up to end of cmd ring since current entry might
++		 * be a padding that is shorter than sizeof(*entry)
++		 */
++		size_t ring_left = head_to_end(udev->cmdr_last_cleaned,
++					       udev->cmdr_size);
++		tcmu_flush_dcache_range(entry, ring_left < sizeof(*entry) ?
++					ring_left : sizeof(*entry));
+ 
+ 		if (tcmu_hdr_get_op(entry->hdr.len_op) == TCMU_OP_PAD) {
+ 			UPDATE_HEAD(udev->cmdr_last_cleaned,
 -- 
 2.25.1
 
