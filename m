@@ -2,201 +2,104 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9C3C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AACC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7244421741
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17014207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:09:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Go5cdtDw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgHUKJG (ORCPT
+        id S1728544AbgHUKJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:09:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46848 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726983AbgHUKJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:09:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id AD749AE38;
-        Fri, 21 Aug 2020 10:09:31 +0000 (UTC)
-Date:   Fri, 21 Aug 2020 12:09:02 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-mm@kvack.org, Pavel Machek <pavel@ucw.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Airlie <airlied@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Vrabel <david.vrabel@citrix.com>, stable@vger.kernel.org
-Subject: [PATCH] mm: Track page table modifications in
- __apply_to_page_range() construction
-Message-ID: <20200821100902.GG3354@suse.de>
-References: <20200821085011.28878-1-chris@chris-wilson.co.uk>
+        Fri, 21 Aug 2020 06:09:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbgHUKJf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 06:09:35 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D14D2C061385
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:09:34 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id c4so1132523otf.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:09:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oJN3wZD2Iadhta+J9lF+eLKxZbEwH6T5LBO7jjWL+UY=;
+        b=Go5cdtDw/2+rDAroF0NL2B1fIr6RE7CQ8LHkDCxS2qcKqj25C3XoWf8vXu/Zrkz2PE
+         og4/7bXHMt+MQt3ZxSsTe+v71X31CqLGXEEcx6rZmNU8roR2f7OmYO5KjJlgSkwCtoV2
+         n5bkoD6hUyYWaMMMkBiCnDNglxv8X/KImOgD+9lASXGRVJ8qk8tPz19tH1SPDmon47DX
+         2CdHiTG+K0UESi9+k/xSZ+exC3c4dDklPFPjgcIUw7Ut6Nsh1DjVz3EGV0mc5MBtWdD4
+         zm3OLquTJZrhOWZNHEaqtlXidtzUDmZ6VxL+3bPfOGtWVwEKEOPv50kZkpnYhaptT1uV
+         2tdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oJN3wZD2Iadhta+J9lF+eLKxZbEwH6T5LBO7jjWL+UY=;
+        b=jSAnppx1pFH1p5oyEFf4YCl0I32yKPZfLeyOIQVOAtm/4oguCzu45AQbmfgRM53XVp
+         gVwZUfgKudOcjkTVP+6F3GNF4wSizBro4tKFR9ul/8XjcgbkTPlrl0pEBdXcFdwr6ejh
+         QDP1POLrwk3EjB5DUAkuhmA6nfLYmrHllZ/OGr0WpBCh6qF7TXU9Bb87EB2qUaMlr91a
+         X3QAy9UP/grijcHKWCBrNeMFlh20B4sCKg6jmqO9D5gxIGkkaUUJpChEHvqaVEFesxDk
+         9xK6hbpb5rAg1Fubo2t9ZYyYneTZDvY0iXhh122EqLe4grmXVrY/eD8N2g2E9576JGAw
+         kadg==
+X-Gm-Message-State: AOAM530ashzpwUtUTTWcwowgEhFKEB2xyPQZKo5NEHnccGxm7umGRZ0c
+        k4KAtRJgWwHyZXxGJuPoMY3Vux4If+hyd4tsaKu2Yv10+zI=
+X-Google-Smtp-Source: ABdhPJxzqjOcT7nUk1v/EmEVCP82O+3t3KHPfKmS5jfJQNWxh1JZVhwbf1CcogoJ64Tnea3FfHuuo8fQujw2DY8DRNA=
+X-Received: by 2002:a05:6830:11cc:: with SMTP id v12mr1461109otq.268.1598004574028;
+ Fri, 21 Aug 2020 03:09:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821085011.28878-1-chris@chris-wilson.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200710101808.1316522-1-jens.wiklander@linaro.org>
+In-Reply-To: <20200710101808.1316522-1-jens.wiklander@linaro.org>
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+Date:   Fri, 21 Aug 2020 12:09:22 +0200
+Message-ID: <CAHUa44GKffKTBdrfchtj=wuM_4EMcFPw35DyXT7pRuqDYQ6VYA@mail.gmail.com>
+Subject: Re: [PATCH] driver: tee: Handle NULL pointer indication from client
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        op-tee@lists.trustedfirmware.org
+Cc:     Cedric Neveux <cedric.neveux@nxp.com>,
+        Michael Whitfield <michael.whitfield@nxp.com>,
+        Joakim Bech <joakim.bech@linaro.org>,
+        Jerome Forissier <jerome@forissier.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The __apply_to_page_range() function is also used to change and/or
-allocate page-table pages in the vmalloc area of the address space.
-Make sure these changes get synchronized to other page-tables in the
-system by calling arch_sync_kernel_mappings() when necessary.
+On Fri, Jul 10, 2020 at 12:18 PM Jens Wiklander
+<jens.wiklander@linaro.org> wrote:
+>
+> From: Cedric Neveux <cedric.neveux@nxp.com>
+>
+> TEE Client introduce a new capability "TEE_GEN_CAP_MEMREF_NULL"
+> to handle the support of the shared memory buffer with a NULL pointer.
+>
+> This capability depends on TEE Capabilities and driver support.
+> Driver and TEE exchange capabilities at driver initialization.
+>
+> Signed-off-by: Michael Whitfield <michael.whitfield@nxp.com>
+> Signed-off-by: Cedric Neveux <cedric.neveux@nxp.com>
+> Reviewed-by: Joakim Bech <joakim.bech@linaro.org>
+> Tested-by: Joakim Bech <joakim.bech@linaro.org> (QEMU)
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> ---
+>  drivers/tee/optee/core.c      |  7 +++++
+>  drivers/tee/optee/optee_smc.h |  3 +++
+>  drivers/tee/tee_core.c        | 49 ++++++++++++++++++++++-------------
+>  include/linux/tee_drv.h       |  3 +++
+>  include/uapi/linux/tee.h      | 13 ++++++++++
+>  5 files changed, 57 insertions(+), 18 deletions(-)
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
-(Only compile tested on x86-64 so far)
+I almost forgot this one. I'm picking this up.
 
- mm/memory.c | 32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index 3a7779d9891d..fd845991f14a 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -83,6 +83,7 @@
- #include <asm/tlb.h>
- #include <asm/tlbflush.h>
- 
-+#include "pgalloc-track.h"
- #include "internal.h"
- 
- #if defined(LAST_CPUPID_NOT_IN_PAGE_FLAGS) && !defined(CONFIG_COMPILE_TEST)
-@@ -2206,7 +2207,8 @@ EXPORT_SYMBOL(vm_iomap_memory);
- 
- static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
- 				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data, bool create)
-+				     pte_fn_t fn, void *data, bool create,
-+				     pgtbl_mod_mask *mask)
- {
- 	pte_t *pte;
- 	int err = 0;
-@@ -2235,6 +2237,7 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
- 				break;
- 		}
- 	} while (addr += PAGE_SIZE, addr != end);
-+	*mask |= PGTBL_PTE_MODIFIED;
- 
- 	arch_leave_lazy_mmu_mode();
- 
-@@ -2245,7 +2248,8 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
- 
- static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
- 				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data, bool create)
-+				     pte_fn_t fn, void *data, bool create,
-+				     pgtbl_mod_mask *mask)
- {
- 	pmd_t *pmd;
- 	unsigned long next;
-@@ -2254,7 +2258,7 @@ static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
- 	BUG_ON(pud_huge(*pud));
- 
- 	if (create) {
--		pmd = pmd_alloc(mm, pud, addr);
-+		pmd = pmd_alloc_track(mm, pud, addr, mask);
- 		if (!pmd)
- 			return -ENOMEM;
- 	} else {
-@@ -2264,7 +2268,7 @@ static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
- 		next = pmd_addr_end(addr, end);
- 		if (create || !pmd_none_or_clear_bad(pmd)) {
- 			err = apply_to_pte_range(mm, pmd, addr, next, fn, data,
--						 create);
-+						 create, mask);
- 			if (err)
- 				break;
- 		}
-@@ -2274,14 +2278,15 @@ static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
- 
- static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
- 				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data, bool create)
-+				     pte_fn_t fn, void *data, bool create,
-+				     pgtbl_mod_mask *mask)
- {
- 	pud_t *pud;
- 	unsigned long next;
- 	int err = 0;
- 
- 	if (create) {
--		pud = pud_alloc(mm, p4d, addr);
-+		pud = pud_alloc_track(mm, p4d, addr, mask);
- 		if (!pud)
- 			return -ENOMEM;
- 	} else {
-@@ -2291,7 +2296,7 @@ static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
- 		next = pud_addr_end(addr, end);
- 		if (create || !pud_none_or_clear_bad(pud)) {
- 			err = apply_to_pmd_range(mm, pud, addr, next, fn, data,
--						 create);
-+						 create, mask);
- 			if (err)
- 				break;
- 		}
-@@ -2301,14 +2306,15 @@ static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
- 
- static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
- 				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data, bool create)
-+				     pte_fn_t fn, void *data, bool create,
-+				     pgtbl_mod_mask *mask)
- {
- 	p4d_t *p4d;
- 	unsigned long next;
- 	int err = 0;
- 
- 	if (create) {
--		p4d = p4d_alloc(mm, pgd, addr);
-+		p4d = p4d_alloc_track(mm, pgd, addr, mask);
- 		if (!p4d)
- 			return -ENOMEM;
- 	} else {
-@@ -2318,7 +2324,7 @@ static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
- 		next = p4d_addr_end(addr, end);
- 		if (create || !p4d_none_or_clear_bad(p4d)) {
- 			err = apply_to_pud_range(mm, p4d, addr, next, fn, data,
--						 create);
-+						 create, mask);
- 			if (err)
- 				break;
- 		}
-@@ -2333,6 +2339,7 @@ static int __apply_to_page_range(struct mm_struct *mm, unsigned long addr,
- 	pgd_t *pgd;
- 	unsigned long next;
- 	unsigned long end = addr + size;
-+	pgtbl_mod_mask mask = 0;
- 	int err = 0;
- 
- 	if (WARN_ON(addr >= end))
-@@ -2343,11 +2350,14 @@ static int __apply_to_page_range(struct mm_struct *mm, unsigned long addr,
- 		next = pgd_addr_end(addr, end);
- 		if (!create && pgd_none_or_clear_bad(pgd))
- 			continue;
--		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, create);
-+		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, create, &mask);
- 		if (err)
- 			break;
- 	} while (pgd++, addr = next, addr != end);
- 
-+	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
-+		arch_sync_kernel_mappings(addr, addr + size);
-+
- 	return err;
- }
- 
--- 
-2.28.0
-
+Cheers,
+Jens
