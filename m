@@ -2,129 +2,250 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A4EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDFDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9F5820738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E81020748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fsv4g5/t"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VbJ5Xxht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgHURXI (ORCPT
+        id S1728976AbgHURXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:23:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42966 "EHLO
+        Fri, 21 Aug 2020 13:23:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728714AbgHURWr (ORCPT
+        with ESMTP id S1728887AbgHURWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 13:22:47 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F06C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:22:47 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id k25so1184967vsm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:22:47 -0700 (PDT)
+        Fri, 21 Aug 2020 13:22:17 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89331C061575
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:22:17 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id s14so1180884plp.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:22:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rDqVNDY5Q+RZDqESGD0TGY14TPQ/cJSVcY4W2ZTOurU=;
-        b=fsv4g5/tYJjOZyeNAid6KP6IC/d+32IDs1B84c2++eXQf89w47tOGpLE8FXrjFv3/Y
-         jnlLa9noNsJIa4Elln1YeI9aod0vrZLaR52LTJzo0JMk3SyylMuj93Kk0KjI7YAs+pnz
-         RL/cnKuZ9cc9suLnmxGsHHPb9lBpp80bJcJI1TshbZV3bZKHYiyib1+xgGH3sIF6p027
-         kcTzZXQWPS+rYqmCxqRyzoKXiqJJfRcBxzq5Lx96V6fIR2YgRaFbyP9e0hkDx4GijMAG
-         qitSwMCHtXfcd4M4frAsJPIHOR6nLv2y9mJFaw4VrOy3QbWhfod2LsF52cyBWN1Flbtf
-         vnDA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=h6F45IixAOPfMRMH67FKA7ZAbNwFjoG24ThPGkxleF8=;
+        b=VbJ5XxhtpOO2KZl1vkxhnQ/fhsYqiD8fN9AMkshiFAB5ccj1Z6m+ShREEoPDuQDsAy
+         iEDh1KaYzK2+Z9OjbtW2hPTQFG9lSDx8y0abCnvwguC+KyIlxDZMfzT8JvKxMP/Nnp3J
+         fqYF41W4FyD9Dq0aZxBgPifgg4QuOfqU7+WPY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rDqVNDY5Q+RZDqESGD0TGY14TPQ/cJSVcY4W2ZTOurU=;
-        b=ko6VWw5n12g1cPioqFVbo6QWuLXgLNCa3ukpqfyiCNAOlyNC9hE8MSmlNW91/UGimD
-         TV17T/eoEH4CUvrC+BYmpf08Kd8Ez/FI3GsnKMiWHM4nLOOmpE1rkUx8RerMnwWEUqNh
-         IeY+O0/rAEbL2eYNIZSJSvg6etp66rTpiIrZxM6qqFedG/95Z23aImQGbC89L50OGKHG
-         s7wKYPl9Hsd52lzhEo85vGH/XxrYPZuLFljrhlMGLZ/++9oa73sJrcfe9jJzA52L8NXn
-         0KcoCMb3fYPRZARNXRd+9myMbigEJM9kH6IAVMtjr+7I3QRNDC+ikbtGPIWYGbKSoA50
-         5DNg==
-X-Gm-Message-State: AOAM531hCzBpdiXr2Qmfl4U/dTGyB41j7JT/SY0vy2XFBhZRhbJnBArf
-        JzOEsXVLDkWfX1AJPzUB1xfCMZF+Si/Wc7kiXPykpQ==
-X-Google-Smtp-Source: ABdhPJzA6appk8Xhd4tm4AjN6izo2oLrkOILpz+oGjpaon/Hiqu27vcPQ3jAQ/sCmSWKBd2jYGp5pyBMjq8/f5OPO+c=
-X-Received: by 2002:a05:6102:189:: with SMTP id r9mr2590828vsq.239.1598030565992;
- Fri, 21 Aug 2020 10:22:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=h6F45IixAOPfMRMH67FKA7ZAbNwFjoG24ThPGkxleF8=;
+        b=A7RVmGyuVHSwxWClccWx6jHfN8BfIo+td/cjWKP2j7xirS196r2p1vZcvMJf1/kBuU
+         6+elK+4KfWViTHydAaZjrtcDjtvx/6L1pIXxBrDV+IY2NlWNc/VgDDdoXTfub/fF4RLv
+         Qrmf1Ceh4gl5pz/b/ir0vhEQ8oCNzpe9rsaNgN3x8WdVv/CgAjlliYgr6j3wJBcHtS1C
+         IgmUyaVoIDKmzvS0cJRPtzpXsbIAoFCq2rcIuO+VE7MlcCKr9/LPWGduRR7YzOxCrx7e
+         OhBow8FMXfOPaDpgUFAL3IT9e3Cu2z31yo9YwtOLTwkFx+9z6lGDlfjdlsNibMJAH1fs
+         H/bg==
+X-Gm-Message-State: AOAM530OjwpPRM6jE6Vxil4O+9aTRvaYDwRjqQLUuxKtyomeMx4tx7qn
+        kClmnSe0a5GoNq8+2nQPqZWwnA==
+X-Google-Smtp-Source: ABdhPJzJgMrExwlYjiSmCTmjjxtDp092F3nkrO/f++8r5KPWih6kKRCsUa27MT+totrInty0e+3A7w==
+X-Received: by 2002:a17:902:bd09:: with SMTP id p9mr3244072pls.322.1598030536752;
+        Fri, 21 Aug 2020 10:22:16 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id a15sm3128517pfo.185.2020.08.21.10.22.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 10:22:16 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 10:22:15 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     satya priya <skakit@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
+Subject: Re: [PATCH V3 2/3] arm64: dts: qcom: sc7180: Add sleep pin ctrl for
+ BT uart
+Message-ID: <20200821172215.GB486007@google.com>
+References: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
+ <1597931467-24268-3-git-send-email-skakit@codeaurora.org>
 MIME-Version: 1.0
-References: <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
- <20200820140054.fdkbotd4tgfrqpe6@wittgenstein> <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
- <87k0xtv0d4.fsf@x220.int.ebiederm.org> <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
- <20200820162645.GP5033@dhcp22.suse.cz> <87r1s0txxe.fsf@x220.int.ebiederm.org>
- <20200821111558.GG4546@redhat.com> <CAJuCfpF_GhTy5SCjxqyqTFUrJNaw3UGJzCi=WSCXfqPAcbThYg@mail.gmail.com>
- <CAJuCfpG06_KLhQyg9N84bRQOdvG27uAZ2oBDEQPR-OnZeNJd1w@mail.gmail.com> <20200821163724.GC19445@redhat.com>
-In-Reply-To: <20200821163724.GC19445@redhat.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Fri, 21 Aug 2020 10:22:34 -0700
-Message-ID: <CAJuCfpGcmSmMc2zEBR-0FgbeZVre+Tbqmu04y8deEwySasvD3Q@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Tim Murray <timmurray@google.com>, mingo@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com,
-        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
-        adobriyan@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de,
-        John Johansen <john.johansen@canonical.com>,
-        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1597931467-24268-3-git-send-email-skakit@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 9:37 AM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> again, don't really understand...
->
-> On 08/21, Suren Baghdasaryan wrote:
-> >
-> > Actually, reviewing again and considering where list_add_tail_rcu is
-> > happening, maybe the race with clone(CLONE_VM) does not introduce
-> > false negatives.
->
-> I think it does... Whatever we check, mm_users or MMF_PROC_SHARED,
-> the task can do clone(CLONE_VM) right after the check.
+On Thu, Aug 20, 2020 at 07:21:06PM +0530, satya priya wrote:
+> Add sleep pin ctrl for BT uart, and also change the bias
+> configuration to match Bluetooth module.
+> 
+> Signed-off-by: satya priya <skakit@codeaurora.org>
+> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - This patch adds sleep state for BT UART. Newly added in V2.
+> 
+> Changes in V3:
+>  - Remove "output-high" for TX from both sleep and default states
+>    as it is not required. Configure pull-up for TX in sleep state.
+> 
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 54 +++++++++++++++++++++++++++------
+>  1 file changed, 45 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index d8b5507..806f626 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -473,20 +473,20 @@
+>  
+>  &qup_uart3_default {
+>  	pinconf-cts {
+> -		/*
+> -		 * Configure a pull-down on 38 (CTS) to match the pull of
+> -		 * the Bluetooth module.
+> -		 */
+> +		/* Configure no pull on 38 (CTS) to match Bluetooth module */
+>  		pins = "gpio38";
+> -		bias-pull-down;
+> -		output-high;
+> +		bias-disable;
 
-Ah, yes of course. I missed this same just like in the original patch.
+I think it should be ok in functional terms, but I don't like the rationale
+and also doubt the change is really needed.
 
->
-> > However a false negative I think will happen when a
-> > task shares mm with another task and also has an additional thread.
-> > Shared mm will increment mm_users without adding to signal->live
->
-> Yes,
->
-> > and
-> > the additional thread will advance signal->live without adding to
-> > mm_users.
->
-> No, please note that CLONE_THREAD requires CLONE_VM.
+If the pull is removed to match the Bluetooth module, then that sounds as
+if the signal was floating on the the BT side, which I think is not the case.
+Yes, according to the datasheet there is no pull when the BT controller is
+active, but then it drives the signal actively to either high or low. There
+seems to be no merit in 'matching' the Bluetooth side in this case, if the
+signal was really floating on the BT side we would definitely not want this.
 
-My fault. Forgot that CLONE_VM means "share VM" and not "dup VM". Need
-some coffee.
-Thanks Oleg!
+In a reply to v2 you said:
 
->
-> Oleg.
->
+> Recently on cherokee we worked with BT team and came to an agreement to
+> keep no-pull from our side in order to not conflict with their pull in
+> any state.
+
+What are these conflicting pull states?
+
+The WCN3998 datasheet has a pull-down on RTS (WCN3998 side) in reset and
+boot mode, and no pull in active mode. In reset and boot mode the host
+config with a pull down would match, and no pull in active mode doesn't
+conflict with the pull-down on the host UART. My understanding is that
+the pinconf pulls are weak pulls, so as soon as the BT chip drives its
+RTS the pull on the host side shouldn't matter.
+
+Is this change actually related with wakeup support? I have the impression
+that multiple things are conflated in this patch. If some of the changes
+are just fixing/improving other things they should be in a separate patch,
+which could be part of this series, otherwise it's really hard to
+distinguish between the pieces that are actually relevant for wakeup and
+the rest.
+
+Independently of whether the changes are done in a single or multiple
+patches, the commit log should include details on why the changes are
+necessary, especially when there are not explantatory comments in the
+DT/code itself (e.g. the removal of 'output-high', which seems correct
+to me, but no reason is given why it is done).
+
+>  	};
+>  
+>  	pinconf-rts {
+> -		/* We'll drive 39 (RTS), so no pull */
+> +		/*
+> +		 * Configure pull-down on 39 (RTS). This is needed to avoid a
+> +		 * floating pin which could mislead Bluetooth controller
+> +		 * with UART RFR state (READY/NOT_READY).
+> +		 */
+>  		pins = "gpio39";
+>  		drive-strength = <2>;
+> -		bias-disable;
+> +		bias-pull-down;
+>  	};
+
+[copy of my comment on v2]
+
+I'm a bit at a loss here, about two things:
+
+RTS is an output pin controlled by the UART. IIUC if the UART port is active
+and hardware flow control is enabled the RTS signal is either driven to high
+or low, but not floating.
+
+Now lets assume I'm wrong with the above and RTS can be floating. We only want
+the BT SoC to send data when the host UART is ready to receive them, right?
+RTS is an active low signal, hence by configuring it as a pull-down the BT
+SoC can send data regardless of whether the host UART actually asserts RTS,
+so the host UART may not be ready to receive it. I would argue that if there
+is really such a thing as a floating RTS signal then it should have a pull-up,
+to prevent the BT SoC from sending data at any time.
+
+I'm not an expert in UART communication and pinconf, so it could be that I
+got something wrong, but as of now it seems to me that no pull is the correct
+config for RTS.
+
+>  
+>  	pinconf-tx {
+> @@ -494,7 +494,43 @@
+>  		pins = "gpio40";
+>  		drive-strength = <2>;
+>  		bias-disable;
+> -		output-high;
+> +	};
+> +
+> +	pinconf-rx {
+> +		/*
+> +		 * Configure a pull-up on 41 (RX). This is needed to avoid
+> +		 * garbage data when the TX pin of the Bluetooth module is
+> +		 * in tri-state (module powered off or not driving the
+> +		 * signal yet).
+> +		 */
+> +		pins = "gpio41";
+> +		bias-pull-up;
+> +	};
+> +};
+> +
+> +&qup_uart3_sleep {
+> +	pinconf-cts {
+> +		/* Configure no-pull on 38 (CTS) to match Bluetooth module */
+> +		pins = "gpio38";
+> +		bias-disable;
+> +	};
+> +
+> +	pinconf-rts {
+> +		/*
+> +		 * Configure pull-down on 39 (RTS). This is needed to avoid a
+> +		 * floating pin which could mislead Bluetooth controller
+> +		 * with UART RFR state (READY/NOT_READY).
+> +		 */
+> +		pins = "gpio39";
+> +		drive-strength = <2>;
+> +		bias-pull-down;
+> +	};
+
+I don't know all the details, but I have the impression that this is the
+relevant pull change for wakeup. From the title of the series I derive
+that the UART RX pin is used for signalling wakeup. A pull-down on RTS
+indicates the BT controller that it can always send data to wake up the
+host.
+
+I think RTS in default mode should remain with no-pull (the UART is driving
+the signal), and then change it to pull-down in sleep mode.
+
+
+> +
+> +	pinconf-tx {
+> +		/* Configure pull-up on 40 (TX) when it isn't actively driven */
+
+nit: just say '... on TX ...', the GPIO number isn't really interesting and can
+easily be determined by looking at 'pins' if needed . Applicable to all comments
+involving pins.
+
+> +		pins = "gpio40";
+> +		drive-strength = <2>;
+> +		bias-pull-up;
+
+This makes sense to me.
