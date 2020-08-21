@@ -2,281 +2,138 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A413C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5EB20702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0359B20702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:56:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="M+3DnEIY"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Na8jhfRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgHUQzh (ORCPT
+        id S1728476AbgHUQz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:55:37 -0400
-Received: from mail.codeweavers.com ([50.203.203.244]:59238 "EHLO
-        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727973AbgHUQxI (ORCPT
+        Fri, 21 Aug 2020 12:55:58 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:39806 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728644AbgHUQwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:53:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codeweavers.com; s=6377696661; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AA7lGGivbZPmA7QrszqepmyBkBD8US4csbOn6MBTBkc=; b=M+3DnEIY52DM4oipnTQr3NNJcV
-        FgbEhUerDYX8J9c0Ls4XZJeK6sVb7DbqcKp1pkWdngNi/flaV2rUot5vuZ+DVhHf/6nVApGrMBiHm
-        nI+jB2uIOz6ROax+QCt2XecNbj1Yst4ne0P3GO5pi68UdMVDxeXm0TsW2+BdAZUGyENw=;
-Received: from lfbn-mar-1-577-251.w109-208.abo.wanadoo.fr ([109.208.123.251] helo=xps9380.mn.codeweavers.com)
-        by mail.codeweavers.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <rbernon@codeweavers.com>)
-        id 1k9AHo-0003jO-6H; Fri, 21 Aug 2020 11:53:06 -0500
-From:   Remi Bernon <rbernon@codeweavers.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Remi Bernon <rbernon@codeweavers.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jacek Caban <jacek@codeweavers.com>
-Subject: [PATCH v3 2/3] perf symbols: Try reading the symbol table with libbfd
-Date:   Fri, 21 Aug 2020 18:52:37 +0200
-Message-Id: <20200821165238.1340315-2-rbernon@codeweavers.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200821165238.1340315-1-rbernon@codeweavers.com>
-References: <20200821165238.1340315-1-rbernon@codeweavers.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 21 Aug 2020 12:52:39 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 3386A30C193;
+        Fri, 21 Aug 2020 09:49:56 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 3386A30C193
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1598028596;
+        bh=1N277qLlwPe3wO79G1bB+4oXclXO8d32DbZS3HyRadQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Na8jhfRpR8y7lbNjf/dOMgpbj+FQLlA1dRc4fIZ+D0+31C9SQvuEbj1prGbmHy/qx
+         sTfb5MFF9KTPXm9U58ayVkcd0V4rkHJfkmgPOUJE8uZ/RbcngSR/H8FMG+XZODwRuW
+         7M9RXa5z4lFxHhdCsw1O2iAOXrcVFhOvWY52B85U=
+Received: from lbrmn-mmayer.ric.broadcom.net (lbrmn-mmayer.ric.broadcom.net [10.136.28.150])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id E31A214008D;
+        Fri, 21 Aug 2020 09:52:32 -0700 (PDT)
+From:   Markus Mayer <markus.mayer@broadcom.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Markus Mayer <markus.mayer@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] memory: brcmstb_dpfe: fix array index out of bounds
+Date:   Fri, 21 Aug 2020 09:52:21 -0700
+Message-Id: <20200821165221.32267-1-mmayer@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wine generates PE binaries for its code modules and also generates
-debug files in PE or PDB formats, which perf cannot parse either.
+We would overrun the error_text array if we hit a TIMEOUT condition,
+because we were using the error code "ETIMEDOUT" (which is 110) as an
+array index.
 
-Trying to read symbols on non-ELF binaries with libbfd, when supported,
-makes it possible for perf to report symbols and annotations for Windows
-applications running under Wine.
+We fix the problem by correcting the array index and by providing a
+function to retrieve error messages rather than accessing the array
+directly. The function includes a bounds check that prevents the array
+from being overrun.
 
-Because libbfd doesn't provide symbol size (probably because of some
-backends not supporting it), we compute it by first sorting the symbols
-by addresses and then considering that they are sequential in a given
-section.
+This patch was prepared in response to
+    https://lkml.org/lkml/2020/8/18/505.
 
-Signed-off-by: Remi Bernon <rbernon@codeweavers.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jacek Caban <jacek@codeweavers.com>
+Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
 
-v3: Also include local and weak bfd symbols and mark them as such, only
-    global symbols were previously reported, and that caused a very
-    imprecise address to symbol resolution.
+Changes since v1:
+    - Added link of the coverity report to the commit message.
+    - Added Florian's ack.
+    - Removed second "const" from get_error_text() return type
+      (thanks to the kernel test robot).
 
- tools/perf/util/symbol.c | 140 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/symbol.h |   4 ++
- 2 files changed, 144 insertions(+)
+ drivers/memory/brcmstb_dpfe.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 1f5fcb828a21..55023d301eb9 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1525,6 +1525,138 @@ static int dso__load_perf_map(const char *map_path, struct dso *dso)
- 	return -1;
- }
+diff --git a/drivers/memory/brcmstb_dpfe.c b/drivers/memory/brcmstb_dpfe.c
+index e08528b12cbd..dcf50bb8dd69 100644
+--- a/drivers/memory/brcmstb_dpfe.c
++++ b/drivers/memory/brcmstb_dpfe.c
+@@ -188,11 +188,6 @@ struct brcmstb_dpfe_priv {
+ 	struct mutex lock;
+ };
  
-+#ifdef HAVE_LIBBFD_SUPPORT
-+#define PACKAGE 'perf'
-+#include <bfd.h>
-+
-+static int bfd_symbols__cmpvalue(const void *a, const void *b)
+-static const char * const error_text[] = {
+-	"Success", "Header code incorrect", "Unknown command or argument",
+-	"Incorrect checksum", "Malformed command", "Timed out",
+-};
+-
+ /*
+  * Forward declaration of our sysfs attribute functions, so we can declare the
+  * attribute data structures early.
+@@ -307,6 +302,20 @@ static const struct dpfe_api dpfe_api_v3 = {
+ 	},
+ };
+ 
++static const char *get_error_text(unsigned int i)
 +{
-+	const asymbol *as = *(const asymbol **)a, *bs = *(const asymbol **)b;
++	static const char * const error_text[] = {
++		"Success", "Header code incorrect",
++		"Unknown command or argument", "Incorrect checksum",
++		"Malformed command", "Timed out", "Unknown error",
++	};
 +
-+	if (bfd_asymbol_value(as) != bfd_asymbol_value(bs))
-+		return bfd_asymbol_value(as) - bfd_asymbol_value(bs);
++	if (unlikely(i >= ARRAY_SIZE(error_text)))
++		i = ARRAY_SIZE(error_text) - 1;
 +
-+	return bfd_asymbol_name(as)[0] - bfd_asymbol_name(bs)[0];
++	return error_text[i];
 +}
 +
-+static int bfd2elf_binding(asymbol *symbol)
-+{
-+	if (symbol->flags & BSF_WEAK)
-+		return STB_WEAK;
-+	if (symbol->flags & BSF_GLOBAL)
-+		return STB_GLOBAL;
-+	if (symbol->flags & BSF_LOCAL)
-+		return STB_LOCAL;
-+	return -1;
-+}
-+
-+int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
-+{
-+	int err = -1;
-+	long symbols_size, symbols_count;
-+	asection *section;
-+	asymbol **symbols, *sym;
-+	struct symbol *symbol;
-+	bfd *abfd;
-+	u_int i;
-+	u64 start, len;
-+
-+	abfd = bfd_openr(dso->long_name, NULL);
-+	if (!abfd)
-+		return -1;
-+
-+	if (!bfd_check_format(abfd, bfd_object)) {
-+		pr_debug2("%s: cannot read %s bfd file.\n", __func__,
-+			  dso->long_name);
-+		goto out_close;
-+	}
-+
-+	if (bfd_get_flavour(abfd) == bfd_target_elf_flavour)
-+		goto out_close;
-+
-+	section = bfd_get_section_by_name(abfd, ".text");
-+	if (section)
-+		dso->text_offset = section->vma - section->filepos;
-+
-+	bfd_close(abfd);
-+
-+	abfd = bfd_openr(debugfile, NULL);
-+	if (!abfd)
-+		return -1;
-+
-+	if (!bfd_check_format(abfd, bfd_object)) {
-+		pr_debug2("%s: cannot read %s bfd file.\n", __func__,
-+			  debugfile);
-+		goto out_close;
-+	}
-+
-+	if (bfd_get_flavour(abfd) == bfd_target_elf_flavour)
-+		goto out_close;
-+
-+	symbols_size = bfd_get_symtab_upper_bound(abfd);
-+	if (symbols_size == 0) {
-+		bfd_close(abfd);
-+		return 0;
-+	}
-+
-+	if (symbols_size < 0)
-+		goto out_close;
-+
-+	symbols = malloc(symbols_size);
-+	if (!symbols)
-+		goto out_close;
-+
-+	symbols_count = bfd_canonicalize_symtab(abfd, symbols);
-+	if (symbols_count < 0)
-+		goto out_free;
-+
-+	qsort(symbols, symbols_count, sizeof(asymbol *), bfd_symbols__cmpvalue);
-+
-+#ifdef bfd_get_section
-+#define bfd_asymbol_section bfd_get_section
-+#endif
-+	for (i = 0; i < symbols_count; ++i) {
-+		sym = symbols[i];
-+		section = bfd_asymbol_section(sym);
-+		if (bfd2elf_binding(sym) < 0)
-+			continue;
-+
-+		while (i + 1 < symbols_count &&
-+		       bfd_asymbol_section(symbols[i + 1]) == section &&
-+		       bfd2elf_binding(symbols[i + 1]) < 0)
-+			i++;
-+
-+		if (i + 1 < symbols_count &&
-+		    bfd_asymbol_section(symbols[i + 1]) == section)
-+			len = symbols[i + 1]->value - sym->value;
-+		else
-+			len = section->size - sym->value;
-+
-+		start = bfd_asymbol_value(sym) - dso->text_offset;
-+		symbol = symbol__new(start, len, bfd2elf_binding(sym), STT_FUNC,
-+				     bfd_asymbol_name(sym));
-+		if (!symbol)
-+			goto out_free;
-+
-+		symbols__insert(&dso->symbols, symbol);
-+	}
-+#ifdef bfd_get_section
-+#undef bfd_asymbol_section
-+#endif
-+
-+	symbols__fixup_end(&dso->symbols);
-+	symbols__fixup_duplicate(&dso->symbols);
-+	dso->adjust_symbols = 1;
-+
-+	err = 0;
-+out_free:
-+	free(symbols);
-+out_close:
-+	bfd_close(abfd);
-+	return err;
-+}
-+#endif
-+
- static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
- 					   enum dso_binary_type type)
+ static bool is_dcpu_enabled(struct brcmstb_dpfe_priv *priv)
  {
-@@ -1698,6 +1830,7 @@ int dso__load(struct dso *dso, struct map *map)
- 		bool next_slot = false;
- 		bool is_reg;
- 		bool nsexit;
-+		int bfdrc = -1;
- 		int sirc = -1;
+ 	u32 val;
+@@ -445,7 +454,7 @@ static int __send_command(struct brcmstb_dpfe_priv *priv, unsigned int cmd,
+ 	}
+ 	if (resp != 0) {
+ 		mutex_unlock(&priv->lock);
+-		return -ETIMEDOUT;
++		return -ffs(DCPU_RET_ERR_TIMEDOUT);
+ 	}
  
- 		enum dso_binary_type symtab_type = binary_type_symtab[i];
-@@ -1716,12 +1849,19 @@ int dso__load(struct dso *dso, struct map *map)
- 			nsinfo__mountns_exit(&nsc);
+ 	/* Compute checksum over the message */
+@@ -695,7 +704,7 @@ static ssize_t generic_show(unsigned int command, u32 response[],
  
- 		is_reg = is_regular_file(name);
-+#ifdef HAVE_LIBBFD_SUPPORT
- 		if (is_reg)
-+			bfdrc = dso__load_bfd_symbols(dso, name);
-+#endif
-+		if (is_reg && bfdrc < 0)
- 			sirc = symsrc__init(ss, dso, name, symtab_type);
+ 	ret = __send_command(priv, command, response);
+ 	if (ret < 0)
+-		return sprintf(buf, "ERROR: %s\n", error_text[-ret]);
++		return sprintf(buf, "ERROR: %s\n", get_error_text(-ret));
  
- 		if (nsexit)
- 			nsinfo__mountns_enter(dso->nsinfo, &nsc);
- 
-+		if (bfdrc == 0)
-+			break;
-+
- 		if (!is_reg || sirc < 0)
- 			continue;
- 
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index ff4f4c47e148..11fe71f46d14 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -175,6 +175,10 @@ int symbol__config_symfs(const struct option *opt __maybe_unused,
- 
- struct symsrc;
- 
-+#ifdef HAVE_LIBBFD_SUPPORT
-+int dso__load_bfd_symbols(struct dso *dso, const char *debugfile);
-+#endif
-+
- int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 		  struct symsrc *runtime_ss, int kmodule);
- int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss);
+ 	return 0;
+ }
 -- 
-2.28.0
+2.17.1
 
