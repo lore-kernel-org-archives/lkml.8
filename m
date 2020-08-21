@@ -2,142 +2,141 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B34C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4126BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5626207DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1863E207C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="e2s/4Wka"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TxXlzi+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgHUP3U (ORCPT
+        id S1728119AbgHUP3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:29:20 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:45380 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728230AbgHUP2v (ORCPT
+        Fri, 21 Aug 2020 11:29:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728174AbgHUP3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:28:51 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LFQhPb025611
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:28:50 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=IZ4oxQB4/gQmXQTitC2NkXNm51p60GVHM4vmI7htyxY=;
- b=e2s/4WkaR/QIx243MWa85P5d7cWRtiDAi0ZUh2eGKZ7fxFUNbI1JFOa833v4PD/8xd+X
- XrGJEda5X5R0kqFhtCA06svBfpcMWS7DEut5PfDt1pNENOpbcJ6RLo0c9MDNlkkDhDjk
- J1/KCXOZ/biqDHswf4VDGKKMBZYTr2ydPCc= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 331cueabbs-8
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:28:50 -0700
-Received: from intmgw002.41.prn1.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 21 Aug 2020 08:28:44 -0700
-Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id 89079344106D; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
-To:     <bpf@vger.kernel.org>
-CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
-        Roman Gushchin <guro@fb.com>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next v4 19/30] bpf: eliminate rlimit-based memory accounting for hashtab maps
-Date:   Fri, 21 Aug 2020 08:01:23 -0700
-Message-ID: <20200821150134.2581465-20-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
-References: <20200821150134.2581465-1-guro@fb.com>
+        Fri, 21 Aug 2020 11:29:00 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E76C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:29:00 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id n4so1005097vsl.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:29:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EfNlVXRvcKj6Y0hPR3mdXqrOmf9uMfzMQoJ/2wwN28s=;
+        b=TxXlzi+3Re0/Y9A0DJKuWYYfMbzRZqmxmjtsXj3fQuS4mqCgNSCPkMIQPvBngkmWlL
+         l+2M8q+GXYbPRKVD+IckYVampaZtFXiHooayDG34TdBXVrx9JkAMywZrNoMj4nxurTbK
+         hIEm/0LDDdzWPZXsTtvAUAku7YOeaXpfHpi8sX0O6l0dcRBbvZN7a84HeF1b02vhtebg
+         9YXjlG+gLFSzi9twT8LENDCNB7E555n/NpyTP1TmCq4IocXeoibGF8U+WhgTSQO/Qf/1
+         Dluhy83z8d9UtOK4Xcv0+yM9ul9o4AEHrED67jdkIUeyhJ3q18M4gxRHP/YJ7S+WD1Bl
+         y9tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EfNlVXRvcKj6Y0hPR3mdXqrOmf9uMfzMQoJ/2wwN28s=;
+        b=q0XmntA98F9vmh526d6+taW07+gzUTmMh7eD4gKw0aMR1qmQM7H2cjtr7NvRzFYtzi
+         57CX0JuC4tCBvsAUaZITxuMaW0IycPhsccwhZhbhM3Fu2aog1R2a2y8bmAtB7gB+kShL
+         llTNcdZcXHD8Dng08Bwm+BhXcTRw2eDO3aH1qrjtGzxk3XlMKzkLf/baNR40ZFG7mOFH
+         FRrJCCjXsmjASocVYBlfsF+YBea2R2C7ESNzpCJTizSGG1ObB29+d01ahN14V0IZ4C9k
+         4oX5eIsHGglj+inqA/qzAUL52bo5/bGPcLO7oF8whofEu2k/IIVlO+pkWMkHVuqDbArI
+         CobA==
+X-Gm-Message-State: AOAM532mDnLNYGkkq1eP7gcTfyScu2pvtCI1kDj4/TTJTZhkkiK8APeQ
+        GkxZjTY0/p8yseOvZJxLod5bpXCWKRxOHg6qtDE23Q==
+X-Google-Smtp-Source: ABdhPJzuHGDNNiJJ/NVWgNCFo1qYw+4Wfg2mv7fUfSmQoHgQcGFTX5WEJREfXbTaagyxn+o5RQxZ5jAycl8ogxstPMQ=
+X-Received: by 2002:a67:f30e:: with SMTP id p14mr2165736vsf.119.1598023739293;
+ Fri, 21 Aug 2020 08:28:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1015
- priorityscore=1501 suspectscore=38 spamscore=0 impostorscore=0 mlxscore=0
- adultscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 mlxlogscore=791
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210144
-X-FB-Internal: deliver
+References: <87d03lxysr.fsf@x220.int.ebiederm.org> <20200820132631.GK5033@dhcp22.suse.cz>
+ <20200820133454.ch24kewh42ax4ebl@wittgenstein> <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
+ <20200820140054.fdkbotd4tgfrqpe6@wittgenstein> <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
+ <87k0xtv0d4.fsf@x220.int.ebiederm.org> <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
+ <20200820162645.GP5033@dhcp22.suse.cz> <87r1s0txxe.fsf@x220.int.ebiederm.org> <20200821111558.GG4546@redhat.com>
+In-Reply-To: <20200821111558.GG4546@redhat.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Fri, 21 Aug 2020 08:28:48 -0700
+Message-ID: <CAJuCfpF_GhTy5SCjxqyqTFUrJNaw3UGJzCi=WSCXfqPAcbThYg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Tim Murray <timmurray@google.com>, mingo@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com,
+        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
+        adobriyan@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de,
+        John Johansen <john.johansen@canonical.com>,
+        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not use rlimit-based memory accounting for hashtab maps.
-It has been replaced with the memcg-based memory accounting.
+On Fri, Aug 21, 2020 at 4:16 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> On 08/20, Eric W. Biederman wrote:
+> >
+> > That said if we are going for a small change why not:
+> >
+> >       /*
+> >        * Make sure we will check other processes sharing the mm if this is
+> >        * not vfrok which wants its own oom_score_adj.
+> >        * pin the mm so it doesn't go away and get reused after task_unlock
+> >        */
+> >       if (!task->vfork_done) {
+> >               struct task_struct *p = find_lock_task_mm(task);
+> >
+> >               if (p) {
+> > -                     if (atomic_read(&p->mm->mm_users) > 1) {
+> > +                     if (atomic_read(&p->mm->mm_users) > p->signal->nr_threads) {
+>
+> In theory this needs a barrier to avoid the race with do_exit(). And I'd
+> suggest to use signal->live, I think signal->nr_threads should die...
+> Something like
+>
+>         bool probably_has_other_mm_users(tsk)
+>         {
+>                 return  atomic_read_acquire(&tsk->mm->mm_users) >
+>                         atomic_read(&tsk->signal->live);
+>         }
+>
+> The barrier implied by _acquire ensures that if we race with the exiting
+> task and see the result of exit_mm()->mmput(mm), then we must also see
+> the result of atomic_dec_and_test(signal->live).
+>
+> Either way, if we want to fix the race with clone(CLONE_VM) we need other
+> changes.
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Song Liu <songliubraving@fb.com>
----
- kernel/bpf/hashtab.c | 19 +------------------
- 1 file changed, 1 insertion(+), 18 deletions(-)
+The way I understand this condition in __set_oom_adj() sync logic is
+that we would be ok with false positives (when we loop unnecessarily)
+but we can't tolerate false negatives (when oom_score_adj gets out of
+sync). With the clone(CLONE_VM) race not addressed we are allowing
+false negatives and IMHO that's not acceptable because it creates a
+possibility for userspace to get an inconsistent picture. When
+developing the patch I did think about using (p->mm->mm_users >
+p->signal->nr_threads) condition and had to reject it due to that
+reason.
 
-diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-index c2651cbce516..f3eb40a4d13c 100644
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -422,7 +422,6 @@ static struct bpf_map *htab_map_alloc(union bpf_attr =
-*attr)
- 	bool percpu_lru =3D (attr->map_flags & BPF_F_NO_COMMON_LRU);
- 	bool prealloc =3D !(attr->map_flags & BPF_F_NO_PREALLOC);
- 	struct bpf_htab *htab;
--	u64 cost;
- 	int err;
-=20
- 	htab =3D kzalloc(sizeof(*htab), GFP_USER | __GFP_ACCOUNT);
-@@ -459,26 +458,12 @@ static struct bpf_map *htab_map_alloc(union bpf_att=
-r *attr)
- 	    htab->n_buckets > U32_MAX / sizeof(struct bucket))
- 		goto free_htab;
-=20
--	cost =3D (u64) htab->n_buckets * sizeof(struct bucket) +
--	       (u64) htab->elem_size * htab->map.max_entries;
--
--	if (percpu)
--		cost +=3D (u64) round_up(htab->map.value_size, 8) *
--			num_possible_cpus() * htab->map.max_entries;
--	else
--	       cost +=3D (u64) htab->elem_size * num_possible_cpus();
--
--	/* if map size is larger than memlock limit, reject it */
--	err =3D bpf_map_charge_init(&htab->map.memory, cost);
--	if (err)
--		goto free_htab;
--
- 	err =3D -ENOMEM;
- 	htab->buckets =3D bpf_map_area_alloc(htab->n_buckets *
- 					   sizeof(struct bucket),
- 					   htab->map.numa_node);
- 	if (!htab->buckets)
--		goto free_charge;
-+		goto free_htab;
-=20
- 	if (htab->map.map_flags & BPF_F_ZERO_SEED)
- 		htab->hashrnd =3D 0;
-@@ -508,8 +493,6 @@ static struct bpf_map *htab_map_alloc(union bpf_attr =
-*attr)
- 	prealloc_destroy(htab);
- free_buckets:
- 	bpf_map_area_free(htab->buckets);
--free_charge:
--	bpf_map_charge_finish(&htab->map.memory);
- free_htab:
- 	kfree(htab);
- 	return ERR_PTR(err);
---=20
-2.26.2
-
+>
+> Oleg.
+>
