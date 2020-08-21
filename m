@@ -2,97 +2,86 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA32C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B6EE20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1FE0207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgHUNye (ORCPT
+        id S1728782AbgHUNzY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:54:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54568 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbgHUNyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:54:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9077DAE93;
-        Fri, 21 Aug 2020 13:54:59 +0000 (UTC)
-From:   Coly Li <colyli@suse.de>
-To:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Peter Huewe <peterhuewe@gmx.de>
-Subject: [PATCH v4] docs: trusted-encrypted.rst: update parameters for command examples
-Date:   Fri, 21 Aug 2020 21:53:56 +0800
-Message-Id: <20200821135356.15737-1-colyli@suse.de>
-X-Mailer: git-send-email 2.26.2
+        Fri, 21 Aug 2020 09:55:24 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:34948 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727123AbgHUNzU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 09:55:20 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id EFF001C0BB3; Fri, 21 Aug 2020 15:55:17 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 15:53:40 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, gregkh@linuxfoundation.org,
+        iourit@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
+Message-ID: <20200821135340.GA4067@bug>
+References: <20200814123856.3880009-1-sashal@kernel.org>
+ <20200814123856.3880009-2-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200814123856.3880009-2-sashal@kernel.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The parameters in command examples for tpm2_createprimary and
-tpm2_evictcontrol are outdated, people (like me) are not able to create
-trusted key by these command examples.
+On Fri 2020-08-14 08:38:53, Sasha Levin wrote:
+> Add support for a Hyper-V based vGPU implementation that exposes the
+> DirectX API to Linux userspace.
 
-This patch updates the parameters of command example tpm2_createprimary
-and tpm2_evictcontrol in trusted-encrypted.rst. With Linux kernel v5.8
-and tpm2-tools-4.1, people can create a trusted key by following the
-examples in this document.
+NAK.
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: James Bottomley <jejb@linux.ibm.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>
----
-Changelog:
-v4: update Reviewed-by list, and Cc linux-doc and linux-integrity
-    maintainers.
-v3: update commit log with review comments from Jarkko Sakkinen. 
-v2: remove the change of trusted key related operation.
-v1: initial version.
+Kernel APIs should be documented. ... in tree and with suitable license.
+	
+> +int dxgadapter_init(struct dxgadapter *adapter, struct hv_device *hdev)
+> +{
+> +	int ret = 0;
+> +	char s[80];
+> +
+> +	UNUSED(s);
 
- Documentation/security/keys/trusted-encrypted.rst | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+What is going on here?
 
-diff --git a/Documentation/security/keys/trusted-encrypted.rst b/Documentation/security/keys/trusted-encrypted.rst
-index 9483a7425ad5..1da879a68640 100644
---- a/Documentation/security/keys/trusted-encrypted.rst
-+++ b/Documentation/security/keys/trusted-encrypted.rst
-@@ -39,10 +39,9 @@ With the IBM TSS 2 stack::
- 
- Or with the Intel TSS 2 stack::
- 
--  #> tpm2_createprimary --hierarchy o -G rsa2048 -o key.ctxt
-+  #> tpm2_createprimary --hierarchy o -G rsa2048 -c key.ctxt
-   [...]
--  handle: 0x800000FF
--  #> tpm2_evictcontrol -c key.ctxt -p 0x81000001
-+  #> tpm2_evictcontrol -c key.ctxt 0x81000001
-   persistentHandle: 0x81000001
- 
- Usage::
+> +{
+> +	struct dxgprocess_adapter *adapter_info = dxgmem_alloc(process,
+> +							       DXGMEM_PROCESS_ADAPTER,
+> +							       sizeof
+> +							       (*adapter_info));
+
+We normally use kernel functions in kernel code.
+
+> +	dxgmutex_unlock(&device->adapter_info->device_list_mutex);
+
+And you should not have private locking primitives, either.
+
+> +bool dxghwqueue_acquire_reference(struct dxghwqueue *hwqueue)
+> +{
+> +	return refcount_inc_not_zero(&hwqueue->refcount);
+> +}
+
+Midlayers are evil.
+
+Best regards,
+									Pavel
 -- 
-2.26.2
-
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
