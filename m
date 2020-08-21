@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4414CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F13320656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224CD20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029918;
-	bh=ic9JKEOa90qWS909NEeeluVFq6XpThGmYmRWeY5QmJ4=;
+	s=default; t=1598029920;
+	bh=GeOPMaAgcqhBSay3ZbXknEfy+kySbISlCBOER5/9U9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pn4C9aDsk3WpCXDb9rdqKFwsIGXClFW6iGoOzIV/aI9GP9/HpkgXDbNO8+cf2to9T
-	 vhHGaBwdFCfNv4fOXlmNjbrx+/nBgH2W+HcMGtB6jJYl0a9U1ehc1sRqoey/eq+jx1
-	 Tid9D8iYfQ57l48Vnb8RrC6LhGXTPoCCqOyfAPZE=
+	b=IWhvKmtd/MZfTo45jR7pCWQ+sXC6DLO5ULEvbOTqzyV29hYCTVbtTzLVhyf5WTHSz
+	 CrQF8084cu4qcqf9LCqqF9M+l4RQFoLetsWc/7TBgkY3g1lOIU5jJ1B6CbXenebTHu
+	 f3PbPcnvF5mzVbP+xrBWsfl0swlrcNomcLsBNABk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgHURLz (ORCPT
+        id S1729048AbgHURL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:11:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:11:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728147AbgHUQRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728153AbgHUQRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:17:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 543CC2063A;
-        Fri, 21 Aug 2020 16:16:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D561A20FC3;
+        Fri, 21 Aug 2020 16:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026620;
-        bh=ic9JKEOa90qWS909NEeeluVFq6XpThGmYmRWeY5QmJ4=;
+        s=default; t=1598026623;
+        bh=GeOPMaAgcqhBSay3ZbXknEfy+kySbISlCBOER5/9U9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e7M1Q2vjQzEzhbnz4NvgRaARmcVpeCQyfWS15cbQvZz00roXDRzMSI0zoCw33k+S7
-         W6bMHR9vlnr+C/Lpea5HLobhT8MMnu9i6Ew4sh3/I6qGU2UoGe6Zx9TdX3lvEsu5cI
-         6XByb0Kq1H3hmbj5vRJ6llBJK1z+LB/oWkXhjPdA=
+        b=d3z3U/vWwNHqK3DORMHpL7bvYkkwp3ALBpTt2OGEUkaDTs8DZnpxGgFfBywIgqiKv
+         zB25d6iPm2XSxW++EfJqhPJGgXr6mQl3wQPPrEKxJgU2VVR1hfVCCvCyjymC87QLjQ
+         ZzdhyY1TzE8qTJY7yszRs0RB+svQHGRHG4URCGJo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.de>, Wolfram Sang <wsa@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 59/61] i2c: i801: Add support for Intel Tiger Lake PCH-H
-Date:   Fri, 21 Aug 2020 12:15:43 -0400
-Message-Id: <20200821161545.347622-59-sashal@kernel.org>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com,
+        Amir Goldstein <amir73il@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Colin Walters <walters@verbum.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.7 61/61] hugetlbfs: prevent filesystem stacking of hugetlbfs
+Date:   Fri, 21 Aug 2020 12:15:45 -0400
+Message-Id: <20200821161545.347622-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
 References: <20200821161545.347622-1-sashal@kernel.org>
@@ -59,56 +66,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-[ Upstream commit f46efbcad97bfb2caded0397eccce7c71402868c ]
+[ Upstream commit 15568299b7d9988063afce60731df605ab236e2a ]
 
-Add SMBus PCI ID on Intel Tiger Lake PCH-H.
+syzbot found issues with having hugetlbfs on a union/overlay as reported
+in [1].  Due to the limitations (no write) and special functionality of
+hugetlbfs, it does not work well in filesystem stacking.  There are no
+know use cases for hugetlbfs stacking.  Rather than making modifications
+to get hugetlbfs working in such environments, simply prevent stacking.
 
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+[1] https://lore.kernel.org/linux-mm/000000000000b4684e05a2968ca6@google.com/
+
+Reported-by: syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com
+Suggested-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Colin Walters <walters@verbum.org>
+Link: http://lkml.kernel.org/r/80f869aa-810d-ef6c-8888-b46cee135907@oracle.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-i801.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/hugetlbfs/inode.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index a9c03f5c34825..0b33a5f7ee50f 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -67,6 +67,7 @@
-  * Comet Lake-H (PCH)		0x06a3	32	hard	yes	yes	yes
-  * Elkhart Lake (PCH)		0x4b23	32	hard	yes	yes	yes
-  * Tiger Lake-LP (PCH)		0xa0a3	32	hard	yes	yes	yes
-+ * Tiger Lake-H (PCH)		0x43a3	32	hard	yes	yes	yes
-  * Jasper Lake (SOC)		0x4da3	32	hard	yes	yes	yes
-  * Comet Lake-V (PCH)		0xa3a3	32	hard	yes	yes	yes
-  *
-@@ -221,6 +222,7 @@
- #define PCI_DEVICE_ID_INTEL_GEMINILAKE_SMBUS		0x31d4
- #define PCI_DEVICE_ID_INTEL_ICELAKE_LP_SMBUS		0x34a3
- #define PCI_DEVICE_ID_INTEL_5_3400_SERIES_SMBUS		0x3b30
-+#define PCI_DEVICE_ID_INTEL_TIGERLAKE_H_SMBUS		0x43a3
- #define PCI_DEVICE_ID_INTEL_ELKHART_LAKE_SMBUS		0x4b23
- #define PCI_DEVICE_ID_INTEL_JASPER_LAKE_SMBUS		0x4da3
- #define PCI_DEVICE_ID_INTEL_BROXTON_SMBUS		0x5ad4
-@@ -1074,6 +1076,7 @@ static const struct pci_device_id i801_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_COMETLAKE_V_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ELKHART_LAKE_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TIGERLAKE_LP_SMBUS) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TIGERLAKE_H_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_JASPER_LAKE_SMBUS) },
- 	{ 0, }
- };
-@@ -1742,6 +1745,7 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	case PCI_DEVICE_ID_INTEL_COMETLAKE_H_SMBUS:
- 	case PCI_DEVICE_ID_INTEL_ELKHART_LAKE_SMBUS:
- 	case PCI_DEVICE_ID_INTEL_TIGERLAKE_LP_SMBUS:
-+	case PCI_DEVICE_ID_INTEL_TIGERLAKE_H_SMBUS:
- 	case PCI_DEVICE_ID_INTEL_JASPER_LAKE_SMBUS:
- 		priv->features |= FEATURE_BLOCK_PROC;
- 		priv->features |= FEATURE_I2C_BLOCK_READ;
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 991c60c7ffe06..f32759c8e84db 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -1313,6 +1313,12 @@ hugetlbfs_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	sb->s_magic = HUGETLBFS_MAGIC;
+ 	sb->s_op = &hugetlbfs_ops;
+ 	sb->s_time_gran = 1;
++
++	/*
++	 * Due to the special and limited functionality of hugetlbfs, it does
++	 * not work well as a stacking filesystem.
++	 */
++	sb->s_stack_depth = FILESYSTEM_MAX_STACK_DEPTH;
+ 	sb->s_root = d_make_root(hugetlbfs_get_root(sb, ctx));
+ 	if (!sb->s_root)
+ 		goto out_free;
 -- 
 2.25.1
 
