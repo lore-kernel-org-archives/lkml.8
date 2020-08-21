@@ -2,81 +2,129 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC60C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5CB3207CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 798192067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:46:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZLLicUE0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aaem4Vn0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgHUWpZ (ORCPT
+        id S1727030AbgHUWp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:45:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36632 "EHLO
+        Fri, 21 Aug 2020 18:45:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgHUWpY (ORCPT
+        with ESMTP id S1726746AbgHUWp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:45:24 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9341FC061573;
-        Fri, 21 Aug 2020 15:45:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=LfI/OrzE1eBdqL3okL2YqXp0meafLH7tI15of/K2lE0=; b=ZLLicUE0LXy5ygDPQ600jwapxE
-        ntnYFz9WnnkqfIwwuEhmTF+f9vh9UMaifQSEswH6deeDHwu5k7fNlyhAIUHDuGcsr6FZ5N9pWFyWJ
-        jacc3CKKFXCfV17LDEzxdAGXz7lRoaHNX77thOOT2xZiTwY7iX6jY33McKUcEKA+3WBu23uDc7nql
-        utKtmIMlPcYxxWRBqAhHEFn+WDuyski6M19v+7lJdkYlYgSEh+KeMR+YlbTQq4K7IBmPlFlMdbboe
-        VHiYKMJ13v1jkicupFxmvKxEouwtnklxTgVLVmwRc/1up5RKS8tsLWiOXB/OkRxZUm9spH4SkCvgE
-        M9dODXFg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k9Fmk-0008SE-Rj; Fri, 21 Aug 2020 22:45:22 +0000
-Date:   Fri, 21 Aug 2020 23:45:22 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/78] Transparent Huge Pages for XFS
-Message-ID: <20200821224522.GX17456@casper.infradead.org>
+        Fri, 21 Aug 2020 18:45:56 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 369B9C061573;
+        Fri, 21 Aug 2020 15:45:56 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p37so1673064pgl.3;
+        Fri, 21 Aug 2020 15:45:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=XRteHtv7uQmPq//ewuwrb7IZate8ro17vyeajkupG2I=;
+        b=Aaem4Vn0bTEhViBFnc9tNsPPZfZuxBSub2f1nuc4MmLrKJfehNNHC9FP58+Q99TpoJ
+         CpyvdmR758FAbXUk+bZELWHzl0ZBJJHNrJ0o1OiFr5aEhnPiK7JAYnBYHuFlc87PBxMw
+         5CkKUufHHUze0EbfKk5GkR4Sze0bxy10EoqSvehwLcZJivmtaCviba+jHzYG29+4F1hR
+         kqoGu7zsi8jiLTa8Ca1bap7yXXxhgWrpwIC4iek8D8rNgLuKpNWAQMCj6+Sri3WvOUGr
+         ZpkrJVq6T11xVJA0tVsLBKFfIsFV+B/n1jrQ+SlwybFHe3e4OAiIp0iV880jRDPNyHar
+         P9TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=XRteHtv7uQmPq//ewuwrb7IZate8ro17vyeajkupG2I=;
+        b=DQJtBnpPI1P48Ull4NmznaQCNZy5Sceb6xS3F/vh8Mj9sszRpt2VFH2Fjyqv6p4bQK
+         6XyY26ak/ZHlBZd9FpRI8hgbQW4YxjVsgDeyrRU6LWQIX9GgNeMk8KYP2EDNFV0puVBZ
+         ebeahouDgP2fgkdsDldX8n8/mQ4WfTOSlblJBuh+v42xCL9LYaYmCNqP6YNyJkwbrjXd
+         +xjZX5S/we3jKAzlL63U9RbCNIdZUaZQqOalaoL2A2zY25ZmXXqfsgS8kI0/XRAYY6m8
+         Eyu4As643Sew5ZMVsJmfbmoXzBK5psevRGH7MLyoGTasEEZuNC6hj1zlry9NNraegb2y
+         yyyw==
+X-Gm-Message-State: AOAM5339Djuz4WEDVLDoRjgcRkuiIkvwc4zGyFz9eSSV2H+20nxA0ITl
+        PxBI/EJypUbOaJeIY1L7Na0=
+X-Google-Smtp-Source: ABdhPJy7krGSqdemncjBBCsDGsMdylWo6zM9qjg4SD8PzW/+V58PKpTZD+S3JHXtmZJ0AJ7MWzK3TQ==
+X-Received: by 2002:a62:7acb:: with SMTP id v194mr4142526pfc.302.1598049954288;
+        Fri, 21 Aug 2020 15:45:54 -0700 (PDT)
+Received: from localhost (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id w130sm3564073pfd.104.2020.08.21.15.45.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 15:45:53 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 08:45:48 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v6 05/12] mm: HUGE_VMAP arch support cleanup
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     =?iso-8859-1?q?Borislav=0A?= Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Christoph Hellwig <hch@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, Zefan Li <lizefan@huawei.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        =?iso-8859-1?q?Thomas=0A?= Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org
+References: <20200821151216.1005117-1-npiggin@gmail.com>
+        <20200821151216.1005117-6-npiggin@gmail.com>
+        <20200821131422.110abb1a0c0b6a9d378b0e48@linux-foundation.org>
+In-Reply-To: <20200821131422.110abb1a0c0b6a9d378b0e48@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Message-Id: <1598049779.exwra3cjwe.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-... just kidding.  Nobody's going to review 78 patches.  Here's a git
-tree instead:
+Excerpts from Andrew Morton's message of August 22, 2020 6:14 am:
+> On Sat, 22 Aug 2020 01:12:09 +1000 Nicholas Piggin <npiggin@gmail.com> wr=
+ote:
+>=20
+>> This changes the awkward approach where architectures provide init
+>> functions to determine which levels they can provide large mappings for,
+>> to one where the arch is queried for each call.
+>>=20
+>> This removes code and indirection, and allows constant-folding of dead
+>> code for unsupported levels.
+>>=20
+>> This also adds a prot argument to the arch query. This is unused
+>> currently but could help with some architectures (e.g., some powerpc
+>> processors can't map uncacheable memory with large pages).
+>>=20
+>> --- a/arch/arm64/include/asm/vmalloc.h
+>> +++ b/arch/arm64/include/asm/vmalloc.h
+>> @@ -1,4 +1,12 @@
+>>  #ifndef _ASM_ARM64_VMALLOC_H
+>>  #define _ASM_ARM64_VMALLOC_H
+>> =20
+>> +#include <asm/page.h>
+>> +
+>> +#ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
+>> +bool arch_vmap_p4d_supported(pgprot_t prot);
+>> +bool arch_vmap_pud_supported(pgprot_t prot);
+>> +bool arch_vmap_pmd_supported(pgprot_t prot);
+>> +#endif
+>=20
+> Moving these out of generic code and into multiple arch headers is
+> unfortunate.  Can we leave them in include/linux/somewhere?  And remove
+> the ifdefs, if so inclined - they just move the build error from
+> link-time to compile-time, and such an error shouldn't occur!
 
-http://git.infradead.org/users/willy/pagecache.git
+Yeah this was just an intermediate step as you saw. It's a bit=20
+unfortunate, but I thought it made the arch changes clearer.
 
-I do want people to know that the THP patchset now passes xfstests.
-I'm sending out portions of the patchset as individual series and trying
-to get at least some of these patches merged for 5.10.
+Thanks,
+Nick
 
-https://lore.kernel.org/linux-mm/20200819150555.31669-1-willy@infradead.org/
-https://lore.kernel.org/linux-mm/20200819184850.24779-1-willy@infradead.org/
-https://lore.kernel.org/linux-block/20200817195206.15172-1-willy@infradead.org/
-https://lore.kernel.org/linux-mm/20200804161755.10100-1-willy@infradead.org/
-https://lore.kernel.org/linux-mm/20200629152033.16175-1-willy@infradead.org/
-
-I would like people to run their workloads against the git tree and
-provide some performance numbers.
-
-The biggest part of this patchset is supporting variable-sized THPs.
-So far, all THPs have been PMD sized, and filesystems would prefer a page
-size somewhere between PAGE_SIZE and PMD_SIZE.  Using the readahead code,
-we increase the page size as we increase the size of readaheads.
-
-This patch set does not attempt to allocate larger pages on writes.
-That's a future enhancement.  There is also no support for larger pages
-on filesystems other than XFS.  I have plans to add support for NFS, but I
-don't plan to add support for buffer heads.  Think of this as an incentive
-to convert to using the iomap infrastructure for buffered I/O ;-)
