@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E29C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CA3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE3A2076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F682076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8zEtgRK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dxuzt8Gq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgHUPOI (ORCPT
+        id S1726610AbgHUPOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:14:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51216 "EHLO
+        Fri, 21 Aug 2020 11:14:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbgHUPNb (ORCPT
+        with ESMTP id S1728193AbgHUPNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:13:31 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406A8C061573;
-        Fri, 21 Aug 2020 08:13:31 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id y206so1195209pfb.10;
-        Fri, 21 Aug 2020 08:13:31 -0700 (PDT)
+        Fri, 21 Aug 2020 11:13:06 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1DF6C061573;
+        Fri, 21 Aug 2020 08:13:03 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ds1so946249pjb.1;
+        Fri, 21 Aug 2020 08:13:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6KJeQP8NI0Gmq28+Z9mGp8SWZDiLwVnET1WJkFSU9fg=;
-        b=Z8zEtgRKVXUKEafq+BytMBdAjJWq2DwMBV20kRlLX5910YO0R7cKvUsIcL8v1pRYKU
-         f3Pl6F79/hwufCJXg45xBzbla+S5DozM+HIRjqgZ4PHTEj7MzbyVUPLu7UpMi/zmdIU/
-         VNrkrLEiCD8Cw2llSTxosbpmwffD2TnRjeWhPiUJQZHXJyb6AQx2vVa0VOVwQEwJ2Zk7
-         xMP8bH6RNgY8ShKkJthiCFS9QRx2G/C2fdXbkRyh0cbiN+2fC0QC0jwWueRJUCxk3hrK
-         xTIfLi1r4nATNuQZjM5FRvJJFcDQ2rI387nTdTYz8HW8k/+bPgZVVcyg5q2bXzNmE7eX
-         nyyA==
+        bh=mshGO+fS8Fvu8aEJg35ArnuOW0kj8WJXDS3j67fcQcE=;
+        b=Dxuzt8Gq7VFN+A3EE1DxMPxeR9USeuD5Ig74qLhRJfNfR1CmVPxrcgV8gPhNHj2A8P
+         quPQ5BBpTYZyqfVksB15bO0M5UDQGUg2/RLxDTyK+Jo40A3mOU5yASraaNxMTRw9S0OZ
+         JN/wNNkHe44ywg52mENRYGVDjuigU4bPuvrNsGcn/ef5dP1I5n/TKYfxM9lVuHicwz6s
+         Zw/5/ic/iqoZQf//idHiVEb0OpRo1LT4zDCNXeQ+gcZ8ESpEwAwKL9N6H+yqcJSx8YM0
+         URv+AuGrWbPWMx5M1EKzJeHJmDN2ARnD48B0zdNvmgnYzHz2Jn8n6nsRPZQUsqV4Q4nK
+         axrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6KJeQP8NI0Gmq28+Z9mGp8SWZDiLwVnET1WJkFSU9fg=;
-        b=OqmDKlXS3y3PiqRboG647S2AAYkLtyfAR7J8Flvv1Dql/U7UIOjcCUfD737QDwLybh
-         gM+luhX7ik/SHPXzZxQL8qtJYlyIIB4MVqn6jQYEISqeUmu9vSiSgHbv6FnWx7+Dy5mP
-         coQZN58o9XyRJNr7OQMwwTbnEf5JJ1yq+psO8tpOC6ejaaXQkqYAeF7dVFBUyGQcH32a
-         ofPPBFfIDINCgfBE2m2b1yMuwNgAY0fHh9qt7CpQORSNBAy7CuTlHRkTcWJR6oilGh/S
-         wfGpi3pS4bWqRJuUTk53PgPQmxgCwTuEgYoulhgkTvRWA5YOBVs1haDCllcaiC9O9eMe
-         MFDA==
-X-Gm-Message-State: AOAM531b4yKDvfbWS+MHM+MVbixa0WxoZycumPKQI3YQD9eDw5KT2mrM
-        Pp8N6Ng7GlORlfbON9tyWPg=
-X-Google-Smtp-Source: ABdhPJyRBkCseiTqr7oIuBuYcSqCIamQ8jFoTXrJZMGETK3wzfRu2eOl4lTHIp9RIC12bd+rxOYlIQ==
-X-Received: by 2002:a05:6a00:7c8:: with SMTP id n8mr2869467pfu.123.1598022810717;
-        Fri, 21 Aug 2020 08:13:30 -0700 (PDT)
+        bh=mshGO+fS8Fvu8aEJg35ArnuOW0kj8WJXDS3j67fcQcE=;
+        b=CetdOjLLioar06av/nlVp3MNEjezf0eWj48cFNX71iF/K8KUSDJgWGzFEeAUBnVzJE
+         0kXD7G3Mb2mR0z8Y9+mF81TSL/s6z8p1KYqCcmoIVp3y9gmBeVYiV15AMjqCiHyXusjG
+         YPrCEDvgN5iH2xeJq0HmrFnvDeJXTXLlAHNa1aW1yVrVq9G43+uh9+/umAkFJCu626Fr
+         4FCOP/2AcXTEI3GIqMy7x1Psa/j6BFaPkVk3ifVts0pIcxnSdNkB8fFgQ+zulcMbyZyn
+         h9+QPqVGAoUgXiHpo6XjOyIRpxl3UU0Lf7UoJGIEpdQgdvyVUrw/CiU5NAqxnl9pCLFd
+         6VyQ==
+X-Gm-Message-State: AOAM5322JfWivpC06z0PZnsrAvkLU4DsX8KTLEUMEtSHBkFGPCgyqnP/
+        TASOlWmopINdGidFDisO/0k=
+X-Google-Smtp-Source: ABdhPJyI4dN8FzkV0FOxrBa1THMuB+8nPxJGWft+AXElncM0Z7aiq7OcjvvT8WAe06i2OCzHEasr8Q==
+X-Received: by 2002:a17:90a:cb0b:: with SMTP id z11mr2882310pjt.77.1598022783284;
+        Fri, 21 Aug 2020 08:13:03 -0700 (PDT)
 Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
-        by smtp.gmail.com with ESMTPSA id s8sm3126985pfc.122.2020.08.21.08.13.26
+        by smtp.gmail.com with ESMTPSA id s8sm3126985pfc.122.2020.08.21.08.12.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 08:13:30 -0700 (PDT)
+        Fri, 21 Aug 2020 08:13:02 -0700 (PDT)
 From:   Nicholas Piggin <npiggin@gmail.com>
 To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
 Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
@@ -68,9 +68,9 @@ Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Christoph Hellwig <hch@infradead.org>,
         Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v6 11/12] mm/vmalloc: Hugepage vmalloc mappings
-Date:   Sat, 22 Aug 2020 01:12:15 +1000
-Message-Id: <20200821151216.1005117-12-npiggin@gmail.com>
+Subject: [PATCH v6 06/12] powerpc: inline huge vmap supported functions
+Date:   Sat, 22 Aug 2020 01:12:10 +1000
+Message-Id: <20200821151216.1005117-7-npiggin@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200821151216.1005117-1-npiggin@gmail.com>
 References: <20200821151216.1005117-1-npiggin@gmail.com>
@@ -81,405 +81,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support huge page vmalloc mappings. Config option HAVE_ARCH_HUGE_VMALLOC
-enables support on architectures that define HAVE_ARCH_HUGE_VMAP and
-supports PMD sized vmap mappings.
+This allows unsupported levels to be constant folded away, and so
+p4d_free_pud_page can be removed because it's no longer linked to.
 
-vmalloc will attempt to allocate PMD-sized pages if allocating PMD size or
-larger, and fall back to small pages if that was unsuccessful.
-
-Allocations that do not use PAGE_KERNEL prot are not permitted to use huge
-pages, because not all callers expect this (e.g., module allocations vs
-strict module rwx).
-
-This reduces TLB misses by nearly 30x on a `git diff` workload on a 2-node
-POWER9 (59,800 -> 2,100) and reduces CPU cycles by 0.54%.
-
-This can result in more internal fragmentation and memory overhead for a
-given allocation, an option nohugevmalloc is added to disable at boot.
-
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/Kconfig            |   4 +
- include/linux/vmalloc.h |   1 +
- mm/page_alloc.c         |   5 +-
- mm/vmalloc.c            | 180 ++++++++++++++++++++++++++++++----------
- 4 files changed, 145 insertions(+), 45 deletions(-)
+ arch/powerpc/include/asm/vmalloc.h       | 19 ++++++++++++++++---
+ arch/powerpc/mm/book3s64/radix_pgtable.c | 21 ---------------------
+ 2 files changed, 16 insertions(+), 24 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index af14a567b493..b2b89d629317 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -616,6 +616,10 @@ config HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
- config HAVE_ARCH_HUGE_VMAP
- 	bool
+diff --git a/arch/powerpc/include/asm/vmalloc.h b/arch/powerpc/include/asm/vmalloc.h
+index 105abb73f075..3f0c153befb0 100644
+--- a/arch/powerpc/include/asm/vmalloc.h
++++ b/arch/powerpc/include/asm/vmalloc.h
+@@ -1,12 +1,25 @@
+ #ifndef _ASM_POWERPC_VMALLOC_H
+ #define _ASM_POWERPC_VMALLOC_H
  
-+config HAVE_ARCH_HUGE_VMALLOC
-+	depends on HAVE_ARCH_HUGE_VMAP
-+	bool
-+
- config ARCH_WANT_HUGE_PMD_SHARE
- 	bool
++#include <asm/mmu.h>
+ #include <asm/page.h>
  
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 15adb9a14fb6..a7449064fe35 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -58,6 +58,7 @@ struct vm_struct {
- 	unsigned long		size;
- 	unsigned long		flags;
- 	struct page		**pages;
-+	unsigned int		page_order;
- 	unsigned int		nr_pages;
- 	phys_addr_t		phys_addr;
- 	const void		*caller;
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 0e2bab486fea..b6427cc7b838 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -69,6 +69,7 @@
- #include <linux/nmi.h>
- #include <linux/psi.h>
- #include <linux/padata.h>
-+#include <linux/vmalloc.h>
- 
- #include <asm/sections.h>
- #include <asm/tlbflush.h>
-@@ -8102,6 +8103,7 @@ void *__init alloc_large_system_hash(const char *tablename,
- 	void *table = NULL;
- 	gfp_t gfp_flags;
- 	bool virt;
-+	bool huge;
- 
- 	/* allow the kernel cmdline to have a say */
- 	if (!numentries) {
-@@ -8169,6 +8171,7 @@ void *__init alloc_large_system_hash(const char *tablename,
- 		} else if (get_order(size) >= MAX_ORDER || hashdist) {
- 			table = __vmalloc(size, gfp_flags);
- 			virt = true;
-+			huge = (find_vm_area(table)->page_order > 0);
- 		} else {
- 			/*
- 			 * If bucketsize is not a power-of-two, we may free
-@@ -8185,7 +8188,7 @@ void *__init alloc_large_system_hash(const char *tablename,
- 
- 	pr_info("%s hash table entries: %ld (order: %d, %lu bytes, %s)\n",
- 		tablename, 1UL << log2qty, ilog2(size) - PAGE_SHIFT, size,
--		virt ? "vmalloc" : "linear");
-+		virt ? (huge ? "vmalloc hugepage" : "vmalloc") : "linear");
- 
- 	if (_hash_shift)
- 		*_hash_shift = log2qty;
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 1d6cad16bda3..8db53c2d7f72 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -44,6 +44,19 @@
- #include "internal.h"
- #include "pgalloc-track.h"
- 
-+#ifdef CONFIG_HAVE_ARCH_HUGE_VMALLOC
-+static bool __ro_after_init vmap_allow_huge = true;
-+
-+static int __init set_nohugevmalloc(char *str)
+ #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
+-bool arch_vmap_p4d_supported(pgprot_t prot);
+-bool arch_vmap_pud_supported(pgprot_t prot);
+-bool arch_vmap_pmd_supported(pgprot_t prot);
++static inline bool arch_vmap_p4d_supported(pgprot_t prot)
 +{
-+	vmap_allow_huge = false;
-+	return 0;
++	return false;
 +}
-+early_param("nohugevmalloc", set_nohugevmalloc);
-+#else /* CONFIG_HAVE_ARCH_HUGE_VMALLOC */
-+static const bool vmap_allow_huge = false;
-+#endif	/* CONFIG_HAVE_ARCH_HUGE_VMALLOC */
 +
- bool is_vmalloc_addr(const void *x)
- {
- 	unsigned long addr = (unsigned long)x;
-@@ -477,31 +490,12 @@ static int vmap_pages_p4d_range(pgd_t *pgd, unsigned long addr,
- 	return 0;
++static inline bool arch_vmap_pud_supported(pgprot_t prot)
++{
++	/* HPT does not cope with large pages in the vmalloc area */
++	return radix_enabled();
++}
++
++static inline bool arch_vmap_pmd_supported(pgprot_t prot)
++{
++	return radix_enabled();
++}
+ #endif
+ 
+ #endif /* _ASM_POWERPC_VMALLOC_H */
+diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
+index eca83a50bf2e..27f5837cf145 100644
+--- a/arch/powerpc/mm/book3s64/radix_pgtable.c
++++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
+@@ -1134,22 +1134,6 @@ void radix__ptep_modify_prot_commit(struct vm_area_struct *vma,
+ 	set_pte_at(mm, addr, ptep, pte);
  }
  
--/**
-- * map_kernel_range_noflush - map kernel VM area with the specified pages
-- * @addr: start of the VM area to map
-- * @size: size of the VM area to map
-- * @prot: page protection flags to use
-- * @pages: pages to map
-- *
-- * Map PFN_UP(@size) pages at @addr.  The VM area @addr and @size specify should
-- * have been allocated using get_vm_area() and its friends.
-- *
-- * NOTE:
-- * This function does NOT do any cache flushing.  The caller is responsible for
-- * calling flush_cache_vmap() on to-be-mapped areas before calling this
-- * function.
-- *
-- * RETURNS:
-- * 0 on success, -errno on failure.
-- */
--int map_kernel_range_noflush(unsigned long addr, unsigned long size,
--			     pgprot_t prot, struct page **pages)
-+static int vmap_small_pages_range_noflush(unsigned long addr, unsigned long end,
-+		pgprot_t prot, struct page **pages)
- {
- 	unsigned long start = addr;
--	unsigned long end = addr + size;
--	unsigned long next;
- 	pgd_t *pgd;
-+	unsigned long next;
- 	int err = 0;
- 	int nr = 0;
- 	pgtbl_mod_mask mask = 0;
-@@ -523,6 +517,65 @@ int map_kernel_range_noflush(unsigned long addr, unsigned long size,
- 	return 0;
- }
- 
-+static int vmap_pages_range_noflush(unsigned long addr, unsigned long end,
-+		pgprot_t prot, struct page **pages, unsigned int page_shift)
-+{
-+	unsigned int i, nr = (end - addr) >> PAGE_SHIFT;
-+
-+	WARN_ON(page_shift < PAGE_SHIFT);
-+
-+	if (page_shift == PAGE_SHIFT)
-+		return vmap_small_pages_range_noflush(addr, end, prot, pages);
-+
-+	for (i = 0; i < nr; i += 1U << (page_shift - PAGE_SHIFT)) {
-+		int err;
-+
-+		err = vmap_range_noflush(addr, addr + (1UL << page_shift),
-+					__pa(page_address(pages[i])), prot,
-+					page_shift);
-+		if (err)
-+			return err;
-+
-+		addr += 1UL << page_shift;
-+	}
-+
-+	return 0;
-+}
-+
-+static int vmap_pages_range(unsigned long addr, unsigned long end,
-+		pgprot_t prot, struct page **pages, unsigned int page_shift)
-+{
-+	int err;
-+
-+	err = vmap_pages_range_noflush(addr, end, prot, pages, page_shift);
-+	flush_cache_vmap(addr, end);
-+	return err;
-+}
-+
-+/**
-+ * map_kernel_range_noflush - map kernel VM area with the specified pages
-+ * @addr: start of the VM area to map
-+ * @size: size of the VM area to map
-+ * @prot: page protection flags to use
-+ * @pages: pages to map
-+ *
-+ * Map PFN_UP(@size) pages at @addr.  The VM area @addr and @size specify should
-+ * have been allocated using get_vm_area() and its friends.
-+ *
-+ * NOTE:
-+ * This function does NOT do any cache flushing.  The caller is responsible for
-+ * calling flush_cache_vmap() on to-be-mapped areas before calling this
-+ * function.
-+ *
-+ * RETURNS:
-+ * 0 on success, -errno on failure.
-+ */
-+int map_kernel_range_noflush(unsigned long addr, unsigned long size,
-+			     pgprot_t prot, struct page **pages)
-+{
-+	return vmap_pages_range_noflush(addr, addr + size, prot, pages, PAGE_SHIFT);
-+}
-+
- int map_kernel_range(unsigned long start, unsigned long size, pgprot_t prot,
- 		struct page **pages)
- {
-@@ -2400,6 +2453,7 @@ static inline void set_area_direct_map(const struct vm_struct *area,
- {
- 	int i;
- 
-+	/* HUGE_VMALLOC passes small pages to set_direct_map */
- 	for (i = 0; i < area->nr_pages; i++)
- 		if (page_address(area->pages[i]))
- 			set_direct_map(area->pages[i]);
-@@ -2433,11 +2487,12 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
- 	 * map. Find the start and end range of the direct mappings to make sure
- 	 * the vm_unmap_aliases() flush includes the direct map.
- 	 */
--	for (i = 0; i < area->nr_pages; i++) {
-+	for (i = 0; i < area->nr_pages; i += 1U << area->page_order) {
- 		unsigned long addr = (unsigned long)page_address(area->pages[i]);
- 		if (addr) {
-+			unsigned long page_size = PAGE_SIZE << area->page_order;
- 			start = min(addr, start);
--			end = max(addr + PAGE_SIZE, end);
-+			end = max(addr + page_size, end);
- 			flush_dmap = 1;
- 		}
- 	}
-@@ -2480,11 +2535,11 @@ static void __vunmap(const void *addr, int deallocate_pages)
- 	if (deallocate_pages) {
- 		int i;
- 
--		for (i = 0; i < area->nr_pages; i++) {
-+		for (i = 0; i < area->nr_pages; i += 1U << area->page_order) {
- 			struct page *page = area->pages[i];
- 
- 			BUG_ON(!page);
--			__free_pages(page, 0);
-+			__free_pages(page, area->page_order);
- 		}
- 		atomic_long_sub(area->nr_pages, &nr_vmalloc_pages);
- 
-@@ -2623,9 +2678,12 @@ void *vmap(struct page **pages, unsigned int count,
- EXPORT_SYMBOL(vmap);
- 
- static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
--				 pgprot_t prot, int node)
-+				 pgprot_t prot, unsigned int page_shift, int node)
- {
- 	struct page **pages;
-+	unsigned long addr = (unsigned long)area->addr;
-+	unsigned long size = get_vm_area_size(area);
-+	unsigned int page_order = page_shift - PAGE_SHIFT;
- 	unsigned int nr_pages, array_size, i;
- 	const gfp_t nested_gfp = (gfp_mask & GFP_RECLAIM_MASK) | __GFP_ZERO;
- 	const gfp_t alloc_mask = gfp_mask | __GFP_NOWARN;
-@@ -2633,7 +2691,7 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
- 					0 :
- 					__GFP_HIGHMEM;
- 
--	nr_pages = get_vm_area_size(area) >> PAGE_SHIFT;
-+	nr_pages = size >> PAGE_SHIFT;
- 	array_size = (nr_pages * sizeof(struct page *));
- 
- 	/* Please note that the recursion is strictly bounded. */
-@@ -2652,29 +2710,29 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
- 
- 	area->pages = pages;
- 	area->nr_pages = nr_pages;
-+	area->page_order = page_order;
- 
--	for (i = 0; i < area->nr_pages; i++) {
-+	for (i = 0; i < area->nr_pages; i += 1U << page_order) {
- 		struct page *page;
-+		int p;
- 
--		if (node == NUMA_NO_NODE)
--			page = alloc_page(alloc_mask|highmem_mask);
--		else
--			page = alloc_pages_node(node, alloc_mask|highmem_mask, 0);
+-bool arch_vmap_pud_supported(pgprot_t prot)
+-{
+-	/* HPT does not cope with large pages in the vmalloc area */
+-	return radix_enabled();
+-}
 -
-+		page = alloc_pages_node(node, alloc_mask|highmem_mask, page_order);
- 		if (unlikely(!page)) {
- 			/* Successfully allocated i pages, free them in __vunmap() */
- 			area->nr_pages = i;
- 			atomic_long_add(area->nr_pages, &nr_vmalloc_pages);
- 			goto fail;
- 		}
--		area->pages[i] = page;
-+
-+		for (p = 0; p < (1U << page_order); p++)
-+			area->pages[i + p] = page + p;
-+
- 		if (gfpflags_allow_blocking(gfp_mask))
- 			cond_resched();
- 	}
- 	atomic_long_add(area->nr_pages, &nr_vmalloc_pages);
+-bool arch_vmap_pmd_supported(pgprot_t prot)
+-{
+-	return radix_enabled();
+-}
+-
+-int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
+-{
+-	return 0;
+-}
+-
+ int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
+ {
+ 	pte_t *ptep = (pte_t *)pud;
+@@ -1233,8 +1217,3 @@ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
  
--	if (map_kernel_range((unsigned long)area->addr, get_vm_area_size(area),
--			prot, pages) < 0)
-+	if (vmap_pages_range(addr, addr + size, prot, pages, page_shift) < 0)
- 		goto fail;
- 
- 	return area->addr;
-@@ -2682,7 +2740,7 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
- fail:
- 	warn_alloc(gfp_mask, NULL,
- 			  "vmalloc: allocation failure, allocated %ld of %ld bytes",
--			  (area->nr_pages*PAGE_SIZE), area->size);
-+			  (area->nr_pages*PAGE_SIZE), size);
- 	__vfree(area->addr);
- 	return NULL;
+ 	return 1;
  }
-@@ -2713,19 +2771,42 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
- 	struct vm_struct *area;
- 	void *addr;
- 	unsigned long real_size = size;
-+	unsigned long real_align = align;
-+	unsigned int shift = PAGE_SHIFT;
- 
--	size = PAGE_ALIGN(size);
- 	if (!size || (size >> PAGE_SHIFT) > totalram_pages())
- 		goto fail;
- 
--	area = __get_vm_area_node(real_size, align, VM_ALLOC | VM_UNINITIALIZED |
-+	if (vmap_allow_huge && (pgprot_val(prot) == pgprot_val(PAGE_KERNEL))) {
-+		unsigned long size_per_node;
-+
-+		/*
-+		 * Try huge pages. Only try for PAGE_KERNEL allocations,
-+		 * others like modules don't yet expect huge pages in
-+		 * their allocations due to apply_to_page_range not
-+		 * supporting them.
-+		 */
-+
-+		size_per_node = size;
-+		if (node == NUMA_NO_NODE)
-+			size_per_node /= num_online_nodes();
-+		if (size_per_node >= PMD_SIZE) {
-+			shift = PMD_SHIFT;
-+			align = max(real_align, 1UL << shift);
-+			size = ALIGN(real_size, 1UL << shift);
-+		}
-+	}
-+
-+again:
-+	size = PAGE_ALIGN(size);
-+	area = __get_vm_area_node(size, align, VM_ALLOC | VM_UNINITIALIZED |
- 				vm_flags, start, end, node, gfp_mask, caller);
- 	if (!area)
- 		goto fail;
- 
--	addr = __vmalloc_area_node(area, gfp_mask, prot, node);
-+	addr = __vmalloc_area_node(area, gfp_mask, prot, shift, node);
- 	if (!addr)
--		return NULL;
-+		goto fail;
- 
- 	/*
- 	 * In this function, newly allocated vm_struct has VM_UNINITIALIZED
-@@ -2739,8 +2820,19 @@ void *__vmalloc_node_range(unsigned long size, unsigned long align,
- 	return addr;
- 
- fail:
--	warn_alloc(gfp_mask, NULL,
-+	if (shift > PAGE_SHIFT) {
-+		free_vm_area(area);
-+		shift = PAGE_SHIFT;
-+		align = real_align;
-+		size = real_size;
-+		goto again;
-+	}
-+
-+	if (!area) {
-+		/* Warn for area allocation, page allocations already warn */
-+		warn_alloc(gfp_mask, NULL,
- 			  "vmalloc: allocation failure: %lu bytes", real_size);
-+	}
- 	return NULL;
- }
- 
-@@ -3739,7 +3831,7 @@ static int s_show(struct seq_file *m, void *p)
- 		seq_printf(m, " %pS", v->caller);
- 
- 	if (v->nr_pages)
--		seq_printf(m, " pages=%d", v->nr_pages);
-+		seq_printf(m, " pages=%d order=%d", v->nr_pages, v->page_order);
- 
- 	if (v->phys_addr)
- 		seq_printf(m, " phys=%pa", &v->phys_addr);
+-
+-bool arch_vmap_p4d_supported(pgprot_t prot)
+-{
+-	return false;
+-}
 -- 
 2.23.0
 
