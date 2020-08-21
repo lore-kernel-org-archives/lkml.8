@@ -2,52 +2,51 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43957C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA3620732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8F4206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028522;
-	bh=x7OVgJvlaRrLCQacPk05iX576FtirOsPaf9wehDa5GQ=;
+	s=default; t=1598028529;
+	bh=hHlrvVv6ZvQQkb3Q7+JMMIw0qSxNayamM1etArGofpc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VjTOAfzgNbQG3eBtF1BvHkYNJrxjd7sBdG0HGp2cvVRxhxevR6oFEA/hy4fyuLLHb
-	 FGf+ID2Xwe1wW1x/jThw+WCE02AlopoXHBVaDHQS6+LrAeiAj9JH2Wzqj/rnh1Qrmt
-	 MKk7bh4WNoNjSiNHz+EwRUKvJR3jR2AJwX8cY7UQ=
+	b=v2v3Ln4fjUdiyTwjGCgyKjJ1zbqe5V72cH8V7ZYDK9Rjkd5Gl65G+8BKo11bVpRN5
+	 YrkPe97yXCPMNi4VuHoOZYcm1Kprbap/GsDp9QVYoFUJZUmb3qu5s0ES+9iGRJI14b
+	 finWJe4/Bb3ubwAinUcxHpLGUJoH0FhjgQANmToc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgHUQsd (ORCPT
+        id S1728641AbgHUQsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:48:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49282 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:48:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727106AbgHUQUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:20:20 -0400
+        id S1727099AbgHUQUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:20:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FA1020FC3;
-        Fri, 21 Aug 2020 16:19:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2695622BEF;
+        Fri, 21 Aug 2020 16:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026768;
-        bh=x7OVgJvlaRrLCQacPk05iX576FtirOsPaf9wehDa5GQ=;
+        s=default; t=1598026765;
+        bh=hHlrvVv6ZvQQkb3Q7+JMMIw0qSxNayamM1etArGofpc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LCdMu8OiEeVjm6dslMfZum+s0EZ6096SG8kGXbDlNZ01H4026etZMklUkvryfRIec
-         FXk4c9FWU0yjLBPXw6EFDmxdg9HnWFM6cdnOyj+2dZ0OJFDwBkkQGZFonazwyeg18c
-         SoiEQRsIXouXvv7W0VfENWNT4roztd9suy5kkt6o=
+        b=ARo5ITiCKWMaihyQIAzNaZFyPjo3LdUfUf1E4urzIK6JErymnGYefe9rV8ocjUL1W
+         2V8Qzra5hH7hNVFWHye14VOnj+181ZU8LAoIDVQkxiodW8FiTe9gI3lBmJ5D16Db3V
+         JAkjUJXwgKUH16p/qvwIE8aXFEGyK/3+RBkxl1+o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li Guifu <bluce.liguifu@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 23/30] f2fs: fix use-after-free issue
-Date:   Fri, 21 Aug 2020 12:18:50 -0400
-Message-Id: <20200821161857.348955-23-sashal@kernel.org>
+Cc:     Peng Fan <fanpeng@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 21/30] mips/vdso: Fix resource leaks in genvdso.c
+Date:   Fri, 21 Aug 2020 12:18:48 -0400
+Message-Id: <20200821161857.348955-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161857.348955-1-sashal@kernel.org>
 References: <20200821161857.348955-1-sashal@kernel.org>
@@ -60,48 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Guifu <bluce.liguifu@huawei.com>
+From: Peng Fan <fanpeng@loongson.cn>
 
-[ Upstream commit 99c787cfd2bd04926f1f553b30bd7dcea2caaba1 ]
+[ Upstream commit a859647b4e6bfeb192284d27d24b6a0c914cae1d ]
 
-During umount, f2fs_put_super() unregisters procfs entries after
-f2fs_destroy_segment_manager(), it may cause use-after-free
-issue when umount races with procfs accessing, fix it by relocating
-f2fs_unregister_sysfs().
+Close "fd" before the return of map_vdso() and close "out_file"
+in main().
 
-[Chao Yu: change commit title/message a bit]
-
-Signed-off-by: Li Guifu <bluce.liguifu@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Peng Fan <fanpeng@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/mips/vdso/genvdso.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 89319c3524061..990339c538b0a 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -782,6 +782,9 @@ static void f2fs_put_super(struct super_block *sb)
- 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
- 	int i;
+diff --git a/arch/mips/vdso/genvdso.c b/arch/mips/vdso/genvdso.c
+index 530a36f465ced..afcc86726448e 100644
+--- a/arch/mips/vdso/genvdso.c
++++ b/arch/mips/vdso/genvdso.c
+@@ -126,6 +126,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (fstat(fd, &stat) != 0) {
+ 		fprintf(stderr, "%s: Failed to stat '%s': %s\n", program_name,
+ 			path, strerror(errno));
++		close(fd);
+ 		return NULL;
+ 	}
  
-+	/* unregister procfs/sysfs entries in advance to avoid race case */
-+	f2fs_unregister_sysfs(sbi);
-+
- 	f2fs_quota_off_umount(sb);
+@@ -134,6 +135,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (addr == MAP_FAILED) {
+ 		fprintf(stderr, "%s: Failed to map '%s': %s\n", program_name,
+ 			path, strerror(errno));
++		close(fd);
+ 		return NULL;
+ 	}
  
- 	/* prevent remaining shrinker jobs */
-@@ -834,8 +837,6 @@ static void f2fs_put_super(struct super_block *sb)
+@@ -143,6 +145,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0) {
+ 		fprintf(stderr, "%s: '%s' is not an ELF file\n", program_name,
+ 			path);
++		close(fd);
+ 		return NULL;
+ 	}
  
- 	kfree(sbi->ckpt);
+@@ -154,6 +157,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	default:
+ 		fprintf(stderr, "%s: '%s' has invalid ELF class\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
  
--	f2fs_unregister_sysfs(sbi);
--
- 	sb->s_fs_info = NULL;
- 	if (sbi->s_chksum_driver)
- 		crypto_free_shash(sbi->s_chksum_driver);
+@@ -165,6 +169,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	default:
+ 		fprintf(stderr, "%s: '%s' has invalid ELF data order\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -172,15 +177,18 @@ static void *map_vdso(const char *path, size_t *_size)
+ 		fprintf(stderr,
+ 			"%s: '%s' has invalid ELF machine (expected EM_MIPS)\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	} else if (swap_uint16(ehdr->e_type) != ET_DYN) {
+ 		fprintf(stderr,
+ 			"%s: '%s' has invalid ELF type (expected ET_DYN)\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+ 	*_size = stat.st_size;
++	close(fd);
+ 	return addr;
+ }
+ 
+@@ -284,10 +292,12 @@ int main(int argc, char **argv)
+ 	/* Calculate and write symbol offsets to <output file> */
+ 	if (!get_symbols(dbg_vdso_path, dbg_vdso)) {
+ 		unlink(out_path);
++		fclose(out_file);
+ 		return EXIT_FAILURE;
+ 	}
+ 
+ 	fprintf(out_file, "};\n");
++	fclose(out_file);
+ 
+ 	return EXIT_SUCCESS;
+ }
 -- 
 2.25.1
 
