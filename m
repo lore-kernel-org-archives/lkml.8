@@ -2,129 +2,121 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E03D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC87C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8C8E20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:08:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="jP8jPmAI"
+	by mail.kernel.org (Postfix) with ESMTP id D0132207C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgHUPIZ (ORCPT
+        id S1728059AbgHUPIv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:08:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgHUPIV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:08:21 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47519C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:08:21 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id q14so1658462ilj.8
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:08:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cATovcDF6EIIZdeZ6DTsdMSJEoMk6qL5T5u7Q6ei1rg=;
-        b=jP8jPmAII5A/BaqiPZZXBQ/0nb55IKsHNPaIJCOCI9t3wpmalgbB3xtv+ZoD/sHlfF
-         P+2P1a6l/tNo3CGG6rHSJOb2IyuNmPFeHlVWbqMcSNj1CfYxBRCcIrHXmxjgYLGee9X+
-         U8S1nzS4XZPZ/BE4wN0ErVYadwOoNpmLpOool5rbLR3DdGUsHEPU4tGcNEpum1JuZxOz
-         m+02WpKlWQtfgjk6LTzXRBBSat40NNh3PIKAvsnsTHx+V6B91HpRAinkxOylKxG+3bCN
-         anLuNaN4N8xemHqYfRg4R+bxjkc6kGr5zSL4J420RagQmWnaJQ9IPgk4EFIg6Qw4I3lE
-         eM/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cATovcDF6EIIZdeZ6DTsdMSJEoMk6qL5T5u7Q6ei1rg=;
-        b=DSN2t71aJhbwywLJ+zPqOnOGB1WqwY0Kx/C8e0yYaM2BpztZS2BDTKPU7YRwRpQadk
-         ehzYrRMMJMqPYaHEfJOWe2YlicsY1tnEHLzY7qzSG4KLwp7DSbK/8cT2n+tjvsdKfSk4
-         ewlrBVnMyCp0V8qWc5000sxLaV7ya2aLgFi/mGMHQRf24jK8VxgYQOMjAl1s3kzBcd7m
-         wJ/PVEdvqeKz2TtExdm/7UZ5wZ7RbXEy5uc1kRC2Gn1V+WfYw48qti1AcnLKCz0Cy+vT
-         9ruuE4hDEX+8D1eDyMhqjNlBZ7gEstGbSsPtWHZiJ2pxbeLlvTdqCfTyaqljiNKRdpun
-         rl+Q==
-X-Gm-Message-State: AOAM530Tsx4UXXyrUCJ6gkcO++vSchUdBFROaWGEyq8ETncrvveUCl0O
-        DV5oIR/RyaF3ll7MflDMyafteQ==
-X-Google-Smtp-Source: ABdhPJz7MRRaC85bkv/XmtISHRlp+BhEJvWp0fMl+7/CE/SMYUH37t/Cy8RTJG/mux9jGrmgdXSbsw==
-X-Received: by 2002:a05:6e02:1352:: with SMTP id k18mr2826675ilr.276.1598022499002;
-        Fri, 21 Aug 2020 08:08:19 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id 187sm1388945ile.52.2020.08.21.08.08.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 08:08:18 -0700 (PDT)
-Subject: Re: [PATCH v6 0/4] Charge loop device i/o to issuing cgroup
-To:     Dan Schatzberg <schatzberg.dan@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
+        Fri, 21 Aug 2020 11:08:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbgHUPIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 11:08:51 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62FEC20656;
+        Fri, 21 Aug 2020 15:08:50 +0000 (UTC)
+Date:   Fri, 21 Aug 2020 11:08:48 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joerg Vehlow <lkml@jv-coder.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-References: <20200528135444.11508-1-schatzberg.dan@gmail.com>
- <CALvZod655MqFxmzwCf4ZLSh9QU+oLb0HL-Q_yKomh3fb-_W0Vg@mail.gmail.com>
- <20200821150405.GA4137@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <9b55ca3d-cca5-50ae-4085-5a1866f77308@kernel.dk>
-Date:   Fri, 21 Aug 2020 09:08:16 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Huang Ying <ying.huang@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Joerg Vehlow <joerg.vehlow@aox-tech.de>
+Subject: Re: [BUG RT] dump-capture kernel not executed for panic in
+ interrupt context
+Message-ID: <20200821110848.6c3183d1@oasis.local.home>
+In-Reply-To: <c6b095af-fc92-420f-303f-d2efd9f28873@jv-coder.de>
+References: <2c243f59-6d10-7abb-bab4-e7b1796cd54f@jv-coder.de>
+        <20200528084614.0c949e8d@gandalf.local.home>
+        <cbbf7926-148e-7acb-dc03-3f055d73364b@jv-coder.de>
+        <20200727163655.8c94c8e245637b62311f5053@linux-foundation.org>
+        <c6b095af-fc92-420f-303f-d2efd9f28873@jv-coder.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200821150405.GA4137@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/20 9:04 AM, Dan Schatzberg wrote:
-> On Thu, Aug 20, 2020 at 10:06:44AM -0700, Shakeel Butt wrote:
->> On Thu, May 28, 2020 at 6:55 AM Dan Schatzberg <schatzberg.dan@gmail.com> wrote:
->>>
->>> Much of the discussion about this has died down. There's been a
->>> concern raised that we could generalize infrastructure across loop,
->>> md, etc. This may be possible, in the future, but it isn't clear to me
->>> how this would look like. I'm inclined to fix the existing issue with
->>> loop devices now (this is a problem we hit at FB) and address
->>> consolidation with other cases if and when those need to be addressed.
->>>
->>
->> What's the status of this series?
+On Fri, 21 Aug 2020 12:25:33 +0200
+Joerg Vehlow <lkml@jv-coder.de> wrote:
+
+> Hi Andrew and Others (please read at least the part with @RT developers),
 > 
-> Thanks for reminding me about this. I haven't got any further
-> feedback. I'll bug Jens to take a look and see if he has any concerns
-> and if not send a rebased version.
+> > Yup, mutex_trylock() from interrupt is improper.  Well dang, that's a
+> > bit silly.  Presumably the 2006 spin_lock_mutex() wasn't taken with
+> > irqs-off.
+> >
+> > Ho hum, did you look at switching the kexec code back to the xchg
+> > approach?
+> >  
+> I looked into reverting to the xchg approach, but that seems to be
+> not a good solution anymore, because the mutex is used in many places,
+> a lot with waiting locks and I guess that would require spinning now,
+> if we do this with bare xchg.
+> 
+> Instead I thought about using a spinlock, because they are supposed
+> to be used in interrupt context as well, if I understand the documentation
+> correctly ([1]).
+> @RT developers
+> Unfortunately the rt patches seem to interpret it a bit different and
+> spin_trylock uses __rt_mutex_trylock again, with the same consequences as
+> with the current code.
+> 
+> I tried raw_spinlocks, but it looks like they result in a deadlock at
+> least in the rt kernel. Thiy may be because of memory allocations in the
+> critical sections, that are not allowed if I understand it correctly.
+> 
+> I have no clue how to fix it at this point.
+> 
+> Jörg
+> 
+> [1] https://kernel.readthedocs.io/en/sphinx-samples/kernel-locking.html
 
-No immediate concerns, I think rebasing and sending one against the
-current tree is probably a good idea. Then we can hopefully get it
-queued up for 5.10.
+There's only two places that wait on the mutex, and all other places
+try to get it, and if it fails, it simply exits.
 
--- 
-Jens Axboe
+What I would do is introduce a kexec_busy counter, and have something
+like this:
 
+For the two locations that actually wait on the mutex:
+
+loop:
+	mutex_lock(&kexec_mutex);
+	ret = atomic_inc_return(&kexec_busy);
+	if (ret > 1) {
+		/* Atomic context is busy on this counter, spin */
+		atomic_dec(&kexec_busy);
+		mutex_unlock(&kexec_mutex);
+		goto loop;
+	}
+	[..]
+	atomic_dec(&kexec_busy);
+	mutex_unlock(&kexec_mutex);
+
+And then all the other places that do the trylock:
+
+	cant_sleep();
+	ret = atomic_inc_return(&kexec_busy);
+	if (ret > 1) {
+		atomic_dec(&kexec_busy);
+		return;
+	}
+	[..]
+	atomic_dec(&kexec_busy);
+
+
+-- Steve
