@@ -2,106 +2,100 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E79C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83481C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA50620748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CCEC20702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598029388;
+	bh=LX02lHq/65D91ykDc6OlibqFlwnpLmix249DejHjv68=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=b6MnbIQ+pOLHakW6WqLxau6flezI7NW4xUWmONaWOrXyU8781UT55eSPEYyDAT2M7
+	 EmPfCSZ0wk9SH4hjX3fbDw0r4gf3IJVLfFlWJ44aeNQtz0PudVVL+16K12tIhOXfyG
+	 4kwzyQObvHpZfWj+IcyGqKuODzy3mCiwBIW6fWWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgHURDB (ORCPT
+        id S1727063AbgHURDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:03:01 -0400
-Received: from elvis.franken.de ([193.175.24.41]:54990 "EHLO elvis.franken.de"
+        Fri, 21 Aug 2020 13:03:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728220AbgHUQ5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:57:42 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1k9AME-0003dt-00; Fri, 21 Aug 2020 18:57:38 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 79A5CC0D8F; Fri, 21 Aug 2020 18:55:39 +0200 (CEST)
-Date:   Fri, 21 Aug 2020 18:55:39 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 1/2] MIPS: cacheinfo: Add missing VCache
-Message-ID: <20200821165539.GA15948@alpha.franken.de>
-References: <20200820004253.3418-1-jiaxun.yang@flygoat.com>
- <20200820004253.3418-2-jiaxun.yang@flygoat.com>
+        id S1727961AbgHUQTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:19:15 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85E9622CF8;
+        Fri, 21 Aug 2020 16:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598026705;
+        bh=LX02lHq/65D91ykDc6OlibqFlwnpLmix249DejHjv68=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=biFZdgLKLNzACFisEc2RSB7bSJJNu0P4xi27G8Yzg/93Q1l6Anrml319/1Ujdd0sl
+         dk7ojylMeDL1EiTRiBcpL0Ocw+butUkDY5g/J7ABZK3S2m1tu4ZtoKMiZMUU17ayRo
+         DR+dX3TVxqbLFHEg2ahOhTavsy8KZMzTcmWTXIZo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 14/38] drm/amdgpu: fix ref count leak in amdgpu_driver_open_kms
+Date:   Fri, 21 Aug 2020 12:17:43 -0400
+Message-Id: <20200821161807.348600-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
+References: <20200821161807.348600-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820004253.3418-2-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 08:42:49AM +0800, Jiaxun Yang wrote:
-> Victim Cache is defined by Loongson as per-core unified
-> private Cache.
-> Add this into cacheinfo and make cache levels selfincrement
-> instead of hardcode levels.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  arch/mips/kernel/cacheinfo.c | 34 ++++++++++++++++++++++++++--------
->  1 file changed, 26 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
-> index 47312c529410..83548331ee94 100644
-> --- a/arch/mips/kernel/cacheinfo.c
-> +++ b/arch/mips/kernel/cacheinfo.c
-> @@ -35,6 +35,11 @@ static int __init_cache_level(unsigned int cpu)
->  
->  	leaves += (c->icache.waysize) ? 2 : 1;
->  
-> +	if (c->vcache.waysize) {
-> +		levels++;
-> +		leaves++;
-> +	}
-> +
->  	if (c->scache.waysize) {
->  		levels++;
->  		leaves++;
-> @@ -74,25 +79,38 @@ static int __populate_cache_leaves(unsigned int cpu)
->  	struct cpuinfo_mips *c = &current_cpu_data;
->  	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
->  	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
-> +	int level = 1;
->  
->  	if (c->icache.waysize) {
-> -		/* L1 caches are per core */
-> +		/* D/I caches are per core */
->  		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
-> -		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_DATA);
-> +		populate_cache(dcache, this_leaf, level, CACHE_TYPE_DATA);
->  		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
-> -		populate_cache(icache, this_leaf, 1, CACHE_TYPE_INST);
-> +		populate_cache(icache, this_leaf, level, CACHE_TYPE_INST);
-> +		level++;
->  	} else {
-> -		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_UNIFIED);
-> +		populate_cache(dcache, this_leaf, level, CACHE_TYPE_UNIFIED);
-> +		level++;
-> +	}
-> +
-> +	if (c->vcache.waysize) {
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-why can't we insert vcache as level 4 and leave the rest of the file
-alone ?
+[ Upstream commit 9ba8923cbbe11564dd1bf9f3602add9a9cfbb5c6 ]
 
-Thomas.
+in amdgpu_driver_open_kms the call to pm_runtime_get_sync increments the
+counter even in case of failure, leading to incorrect
+ref count. In case of failure, decrement the ref count before returning.
 
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+index bb41936df0d97..2beaaf4bee687 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -835,7 +835,7 @@ int amdgpu_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
+ 
+ 	r = pm_runtime_get_sync(dev->dev);
+ 	if (r < 0)
+-		return r;
++		goto pm_put;
+ 
+ 	fpriv = kzalloc(sizeof(*fpriv), GFP_KERNEL);
+ 	if (unlikely(!fpriv)) {
+@@ -883,6 +883,7 @@ int amdgpu_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
+ 
+ out_suspend:
+ 	pm_runtime_mark_last_busy(dev->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 
+ 	return r;
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.25.1
+
