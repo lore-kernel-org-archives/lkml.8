@@ -2,180 +2,110 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF97C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5AFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8089E20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9007A20720
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:21:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kMpbG4iR"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dl9KO6qt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgHUSTN (ORCPT
+        id S1725935AbgHUSVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgHUSTJ (ORCPT
+        Fri, 21 Aug 2020 14:21:21 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:42916 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgHUSVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:19:09 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C62D0C061575
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:19:08 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id v16so1256508plo.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:19:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1UNk1AGGEwhw+lM3t9AwUmUxfOaOF1KAPiPeob9V2WI=;
-        b=kMpbG4iRuCojoWkd9Kr7f3KqtxxxnZ10DzhhdpflsKagz8HB7it+PRVF5wN7+8u6I4
-         sqBh30VQTJPNbvblPyfm/F9b+BO+6jM1CyemdUgNWau96AHd6FqGN/+ea6xfBpWIWBKp
-         hsFaBfhftz0hmT5UiB/RyPDzi3o3unARrGvu4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1UNk1AGGEwhw+lM3t9AwUmUxfOaOF1KAPiPeob9V2WI=;
-        b=Pu7PTPBqhwdjPYqictJ9/gfk40wVwFPoi3WYZfHh9Ha56/CUYz6GDFs8mqLuSBzhxX
-         d6fGD3D7l2Wx0TfgVmyoyuV3NBNuYnOU+PnDeB45rfqNkCZGoImi6MFTSfmjaZUSTBYB
-         Y2oimnO2IXMhWJD83cVbs5WFyznsaUPWv2hVHWi+uNCUMJ9QH0Kqa8ZNXfjYkPe39C2X
-         1DMUBjIorhxUMxiVCyXNT5VicYZPZCucGYY1erOwNeuwZ/boy5VIu3X6yKQkfSUJ9K5I
-         6yd6j6tTiuEQyUA9Pdac/5Gi9pmyDYgccMEmoGJV8oqv9I78HHi7pJCR2S+2K2r+C21P
-         m4Ug==
-X-Gm-Message-State: AOAM530yakFEmfe1RyQmi9xWPP6eTItY4pu3nd2/HcrnpFkD3nRi4o28
-        4Et77KvmkAndC9FIXxAegpZMBw==
-X-Google-Smtp-Source: ABdhPJzZTS1JRIXsH9Qe8ywfl5m5EX+fz/bw1Bxes5X8MeXUUxEITYki8dcePvVFwXnhyN1uHyj01g==
-X-Received: by 2002:a17:90a:c0f:: with SMTP id 15mr3438069pjs.193.1598033948161;
-        Fri, 21 Aug 2020 11:19:08 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d13sm3316084pfq.118.2020.08.21.11.19.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 11:19:07 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 11:19:06 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 32/36] x86/boot/compressed: Reorganize zero-size
- section asserts
-Message-ID: <202008211113.F872C40ED@keescook>
-References: <20200731230820.1742553-1-keescook@chromium.org>
- <20200731230820.1742553-33-keescook@chromium.org>
- <20200801014755.GA2700342@rani.riverdale.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200801014755.GA2700342@rani.riverdale.lan>
+        Fri, 21 Aug 2020 14:21:17 -0400
+Received: from tusharsu-Ubuntu.lan (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 947F020B4908;
+        Fri, 21 Aug 2020 11:21:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 947F020B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598034077;
+        bh=jnKN/0o6ga2bWvn4K8enZulq7Q+WGRizfYc70OIvU5c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=dl9KO6qt8EGWHaif1XCF5RmRVBVNHM5//G9NMMco8U20lNs7+vjJmJz7dmodxS3e6
+         iwxVddFMdNksVb3x/i15h0ZB0zsd/JPX1mwZSVNImu/Tvr8jsbPCmw+KdAOeXZtGFL
+         cIkSqIzhtJCqyAEyKgQQiSaX5RYoGGkLLxCK5G/0=
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com, agk@redhat.com, snitzer@redhat.com,
+        gmazyland@gmail.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com
+Subject: [PATCH v2 0/3] IMA: Infrastructure for measurement of critical kernel data
+Date:   Fri, 21 Aug 2020 11:21:04 -0700
+Message-Id: <20200821182107.5328-1-tusharsu@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 09:47:55PM -0400, Arvind Sankar wrote:
-> On Fri, Jul 31, 2020 at 04:08:16PM -0700, Kees Cook wrote:
-> > For readability, move the zero-sized sections to the end after DISCARDS
-> > and mark them NOLOAD for good measure.
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  arch/x86/boot/compressed/vmlinux.lds.S | 42 +++++++++++++++-----------
-> >  1 file changed, 25 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> > index 3c2ee9a5bf43..42dea70a5091 100644
-> > --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> > +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> > @@ -42,18 +42,16 @@ SECTIONS
-> >  		*(.rodata.*)
-> >  		_erodata = . ;
-> >  	}
-> > -	.rel.dyn : {
-> > -		*(.rel.*)
-> > -	}
-> > -	.rela.dyn : {
-> > -		*(.rela.*)
-> > -	}
-> > -	.got : {
-> > -		*(.got)
-> > -	}
-> >  	.got.plt : {
-> >  		*(.got.plt)
-> >  	}
-> > +	ASSERT(SIZEOF(.got.plt) == 0 ||
-> > +#ifdef CONFIG_X86_64
-> > +	       SIZEOF(.got.plt) == 0x18,
-> > +#else
-> > +	       SIZEOF(.got.plt) == 0xc,
-> > +#endif
-> > +	       "Unexpected GOT/PLT entries detected!")
-> >  
-> >  	.data :	{
-> >  		_data = . ;
-> > @@ -85,13 +83,23 @@ SECTIONS
-> >  	ELF_DETAILS
-> >  
-> >  	DISCARDS
-> > -}
-> >  
-> > -ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
-> > -#ifdef CONFIG_X86_64
-> > -ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
-> > -#else
-> > -ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
-> > -#endif
-> > +	/*
-> > +	 * Sections that should stay zero sized, which is safer to
-> > +	 * explicitly check instead of blindly discarding.
-> > +	 */
-> > +	.got (NOLOAD) : {
-> > +		*(.got)
-> > +	}
-> > +	ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
-> >  
-> > -ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations detected!")
-> > +	/* ld.lld does not like .rel* sections being made "NOLOAD". */
-> > +	.rel.dyn : {
-> > +		*(.rel.*)
-> > +	}
-> > +	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
-> > +	.rela.dyn : {
-> > +		*(.rela.*)
-> > +	}
-> > +	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
-> > +}
-> > -- 
-> > 2.25.1
-> > 
-> 
-> There's no point in marking zero-size sections NOLOAD -- if the ASSERT's
-> passed, they won't be present in the file at all anyway.
+There are several kernel components that contain critical data which if
+accidentally or maliciously altered, can compromise the security of the
+kernel. Example of such components would include LSMs like SELinux, or
+AppArmor; or device-mapper targets like dm-crypt, dm-verity etc.
 
-That's a good point, yes. I will adjust this.
+Many of these components do not use the capabilities provided by kernel
+integrity subsystem (IMA), and thus they don't use the benefits of
+extended TPM PCR quotes and ultimately the benefits of remote attestation.
 
-> The only section for which there might be a point is .got.plt, which is
-> non-empty on 32-bit, and only if it is first moved to the end. That
-> saves a few bytes.
+This series bridges this gap, so that potential kernel components that
+contain data critical to the security of the kernel could take advantage
+of IMA's measuring and quoting abilities - thus ultimately enabling
+remote attestation for their specific data.
 
-Yeah, also this. :) I will try it.
+System administrators may want to pick and choose which kernel
+components they would want to enable for measurements, quoting, and
+remote attestation. To enable that, a new IMA policy is introduced.
+
+And lastly, the functionality is exposed through a function
+ima_measure_critical_data(). The functionality is generic enough to
+measure the data of any kernel component at run-time.
+
+This series is based on the following repo/branch:
+ repo: https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
+ branch: next-integrity
+
+This series also has a dependency on the following patch series:
+ https://patchwork.kernel.org/patch/11709527/
+
+Change Log v2:
+ - Reverted the unnecessary indentations in existing #define.
+ - Updated the description to replace the word 'enlightened' with
+   'supported'.
+ - Reverted the unnecessary rename of attribute size to buf_len.
+ - Introduced a boolean parameter measure_buf_hash as per community
+   feedback to support measuring hash of the buffer, instead of the
+   buffer itself.
+
+Tushar Sugandhi (3):
+  IMA: generalize keyring specific measurement constructs
+  IMA: add policy to support measuring critical data from kernel
+    components
+  IMA: define IMA hook to measure critical data from kernel components
+
+ Documentation/ABI/testing/ima_policy         |   6 +-
+ include/linux/ima.h                          |  11 ++
+ security/integrity/ima/ima.h                 |  12 ++-
+ security/integrity/ima/ima_api.c             |   8 +-
+ security/integrity/ima/ima_appraise.c        |   2 +-
+ security/integrity/ima/ima_asymmetric_keys.c |   2 +-
+ security/integrity/ima/ima_main.c            |  69 +++++++++++--
+ security/integrity/ima/ima_policy.c          | 100 +++++++++++++++----
+ security/integrity/ima/ima_queue_keys.c      |   3 +-
+ 9 files changed, 167 insertions(+), 46 deletions(-)
 
 -- 
-Kees Cook
+2.17.1
+
