@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5621DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E434C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29E5F20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F052A20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030493;
-	bh=SF7cbSp+8aJt7HKiEK1+h754VI5LCsyUECgtetCo9QU=;
+	s=default; t=1598030501;
+	bh=wZFzfsDxyijk+fXlHRo7ntdpFEpA3ayQ0lpVHhKWO2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WP0amoiNdS/Y3TSzR4K2bIVignRixpMgHrcRM09z/3BTPUC8y6/vuNAho94UhRrI7
-	 RQwNZ9wat8sHcitw1X51YoLSpxha8smC4y4QglN/hkzNTIpsoSr9PClcrHtHs7ARY0
-	 PeqcEO7Kf1X6DgSiHp8sJekgg7o95s290Ea2zNGM=
+	b=lc3cei39eirT38aHKewlbnEtD52Vapa0uOQZUVzgfUkpQwAE99y7jXVpDWpXbXAzC
+	 Jt82fU9Nctj4vpfYoVhVjAtdXB/6ZPd4vYb3sQ7qdtDRu9bXk8zA2w6awl3CDtBfWE
+	 sufQaCgTcv1g+Lbls1rTswAepI+YpJ+ayX3wj93Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgHURV1 (ORCPT
+        id S1729122AbgHURVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:21:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48370 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:21:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728023AbgHUQQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:16:02 -0400
+        id S1726189AbgHUQP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:15:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1317A21741;
-        Fri, 21 Aug 2020 16:16:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9371822B43;
+        Fri, 21 Aug 2020 16:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026561;
-        bh=SF7cbSp+8aJt7HKiEK1+h754VI5LCsyUECgtetCo9QU=;
+        s=default; t=1598026558;
+        bh=wZFzfsDxyijk+fXlHRo7ntdpFEpA3ayQ0lpVHhKWO2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O8Psq1iZ2OvyUlFiZBIhYbGURShiyJu/Fmkl9iECSoAlRY3FV3T6Ml1BMrwZnNdxk
-         JdVtjf3cCfuSKID2UGY00JZPtIdxd0DxE9iXW1s3IeEtjYdmlmQ5zvGSq0CnUnNIvQ
-         ZBAK8Rvi/sNEjNx/xnsoS8ddT1a6bKR5LChG1Hs0=
+        b=q+cVVMtZDAWRXPeM5m885pg9eWfdfUPJ5xSkhGRAcmWc8K3d3NOTAulFDFoTCZtxF
+         q0s9IsRnOm0T4xcPfGvNfwjzi2eRq24dDhd+BzhCPVnu8F9bVyS7ziZtw+KLPy7f4c
+         taqk1iUCozSTL55g3KRPleo8qyuClYDqelyvL6GA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju@tsinghua.edu.cn>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 13/61] media: pci: ttpci: av7110: fix possible buffer overflow caused by bad DMA value in debiirq()
-Date:   Fri, 21 Aug 2020 12:14:57 -0400
-Message-Id: <20200821161545.347622-13-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 10/61] mfd: intel-lpss: Add Intel Emmitsburg PCH PCI IDs
+Date:   Fri, 21 Aug 2020 12:14:54 -0400
+Message-Id: <20200821161545.347622-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
 References: <20200821161545.347622-1-sashal@kernel.org>
@@ -59,49 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 6499a0db9b0f1e903d52f8244eacc1d4be00eea2 ]
+[ Upstream commit 3ea2e4eab64cefa06055bb0541fcdedad4b48565 ]
 
-The value av7110->debi_virt is stored in DMA memory, and it is assigned
-to data, and thus data[0] can be modified at any time by malicious
-hardware. In this case, "if (data[0] < 2)" can be passed, but then
-data[0] can be changed into a large number, which may cause buffer
-overflow when the code "av7110->ci_slot[data[0]]" is used.
+Intel Emmitsburg PCH has the same LPSS than Intel Ice Lake.
+Add the new IDs to the list of supported devices.
 
-To fix this possible bug, data[0] is assigned to a local variable, which
-replaces the use of data[0].
-
-Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/ttpci/av7110.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/mfd/intel-lpss-pci.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/pci/ttpci/av7110.c b/drivers/media/pci/ttpci/av7110.c
-index d0cdee1c6eb0b..bf36b1e22b635 100644
---- a/drivers/media/pci/ttpci/av7110.c
-+++ b/drivers/media/pci/ttpci/av7110.c
-@@ -406,14 +406,15 @@ static void debiirq(unsigned long cookie)
- 	case DATA_CI_GET:
- 	{
- 		u8 *data = av7110->debi_virt;
-+		u8 data_0 = data[0];
- 
--		if ((data[0] < 2) && data[2] == 0xff) {
-+		if (data_0 < 2 && data[2] == 0xff) {
- 			int flags = 0;
- 			if (data[5] > 0)
- 				flags |= CA_CI_MODULE_PRESENT;
- 			if (data[5] > 5)
- 				flags |= CA_CI_MODULE_READY;
--			av7110->ci_slot[data[0]].flags = flags;
-+			av7110->ci_slot[data_0].flags = flags;
- 		} else
- 			ci_get_data(&av7110->ci_rbuffer,
- 				    av7110->debi_virt,
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 7fc0c5d4edffa..c96e98a3614df 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -201,6 +201,9 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x1ac4), (kernel_ulong_t)&bxt_info },
+ 	{ PCI_VDEVICE(INTEL, 0x1ac6), (kernel_ulong_t)&bxt_info },
+ 	{ PCI_VDEVICE(INTEL, 0x1aee), (kernel_ulong_t)&bxt_uart_info },
++	/* EBG */
++	{ PCI_VDEVICE(INTEL, 0x1bad), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x1bae), (kernel_ulong_t)&bxt_uart_info },
+ 	/* GLK */
+ 	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&glk_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&glk_i2c_info },
 -- 
 2.25.1
 
