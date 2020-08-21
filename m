@@ -3,268 +3,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EACC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0139B207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429F8207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=exactco.de header.i=@exactco.de header.b="n9TrCahZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oye/IAhw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgHUNB6 (ORCPT
+        id S1728611AbgHUNED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:01:58 -0400
-Received: from mx.exactcode.de ([144.76.154.42]:58946 "EHLO mx.exactcode.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbgHUNBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:01:55 -0400
-X-Greylist: delayed 1548 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Aug 2020 09:01:54 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=exactco.de; s=x;
-        h=Content-Transfer-Encoding:Content-Type:Mime-Version:From:Subject:To:Message-Id:Date; bh=EZakprQURThyScfP48Tq8ctA9RQ6xHO0ZAnyTU/h0CI=;
-        b=n9TrCahZbh3QFtbJbr1Yr1LaDvppcZN+wYZtvI/hVX6hTT5SfNWIgCCvJEK+Akm6R2puEmw0ltV38Pf5vgh14h6ov5eoF6+tMV+z3EK7L/MKno9KqQUgeglt+q2mt4naMWMKWQzlm5LDo3ziSl756zq0T8TFNU67ggr/duhuUaM=;
-Received: from exactco.de ([90.187.5.221])
-        by mx.exactcode.de with esmtp (Exim 4.82)
-        (envelope-from <rene@exactcode.com>)
-        id 1k96HX-0002kE-I8
-        for linux-kernel@vger.kernel.org; Fri, 21 Aug 2020 12:36:31 +0000
-Received: from [192.168.2.130] (helo=localhost)
-        by exactco.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.86_2)
-        (envelope-from <rene@exactcode.com>)
-        id 1k95ys-0002O4-PH
-        for linux-kernel@vger.kernel.org; Fri, 21 Aug 2020 12:17:16 +0000
-Date:   Fri, 21 Aug 2020 14:35:53 +0200 (CEST)
-Message-Id: <20200821.143553.1830499839841272707.rene@exactcode.com>
-To:     linux-kernel@vger.kernel.org
-Subject: [PATCH] zstd compressed firmware loading
-From:   Rene Rebe <rene@exactcode.com>
-X-Mailer: Mew version 6.8 on Emacs 27.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+        Fri, 21 Aug 2020 09:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727123AbgHUNDz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 09:03:55 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF259C061386
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:03:53 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id y17so507183uaq.6
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O+UdDeZ/2tqE7MfvVL8jobOjZYYl/iWCp3SMwXE+pYI=;
+        b=oye/IAhwoGHhUTKN0VDCeB9+n7Ej5BVwsxTVFBrPEUrAH3agaKG/a8gY/MpxPCDPQL
+         RhDAZBl1ESEo046+/7L962m/G0G9ZBoKssMsZ+UiQwq2KTW5KSLNgdLqtsdWuBFMNoSA
+         O9WJmv6LyF5YRFDFll1a4lw6Q7JgIPX7ffEvBu28jH1DXV46fBULX011gWhf2xqU7yOY
+         +cM47S3PVLc7HRUZz2U+fCtvWaLE2sp9piQtHatgqWV/iNGFqMxPXQ2LHxvfPCGwhYms
+         o6DrsY5zx0QTBIDLTElUd4P5ONhgafNb8/ZRgmSFJu1EF/r9N+KAZPUXAYrqBvv7Ifs/
+         yvzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O+UdDeZ/2tqE7MfvVL8jobOjZYYl/iWCp3SMwXE+pYI=;
+        b=p0uHn53b49O3N+wYdhQM8q9TDwS0CGhrkjg9CHKmmqNnUi9J9jsaz5PJf/4XUOonKw
+         yVxAEPd1d+UF6hEEeAB5CltLZw+BBNQIO3FG2ZFxvuJB8DF5T5ifsyvL8BporyCDcaHu
+         QX8ih2igBMipMm/IBxH8Gx8Xrv+XvYPGygks9wpbShZAHhb18Qd0+Yrh/OHGmBP3Cuek
+         C2ZYQR2Xygn56QHJ1bSAA3+hA3OJRzbmKgYfnHzKYpd8+k5+pAhjaWfjSpC73n7iBUDh
+         CmS1UYk3UcS4zqIQrUjtjseNIQW2sm74qZhmfEU3i7xal1/X3szv4oooenHIh3vUodz8
+         st5Q==
+X-Gm-Message-State: AOAM532r/rnhbJ7waz6dE6OWKBSLGeR9z44JRz1Vj3bb0Zu0Efo2cLd3
+        FRkKU9kj0hp/XDM/6HTLlIjox6nk5fy02QSo8LnbXA==
+X-Google-Smtp-Source: ABdhPJxDTEfIcRtV8RMQHOwlZMFRP/4rR96hCwMj4qXIk7uEX+dsYaSghRhbtxsDlt6Dcfzr8CA6M9pC/tkoV/n7lWU=
+X-Received: by 2002:ab0:65c3:: with SMTP id n3mr1386883uaq.100.1598015032299;
+ Fri, 21 Aug 2020 06:03:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200718090614.88946-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200718090614.88946-1-grandmaster@al2klimov.de>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 21 Aug 2020 15:03:14 +0200
+Message-ID: <CAPDyKFrzq0dGKJtR4Ncp670-EdsoHBhWQQ=30dUnK3FM_TmWQQ@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci_am654: Replace HTTP links with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 18 Jul 2020 at 11:06, Alexander A. Klimov
+<grandmaster@al2klimov.de> wrote:
+>
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-Now with zstd compressed kernel & initrd upstream, we would rather
-compress everything with one type of compressor, so I added support
-for zstd compressed firmware loading, too.
+Applied for next, thanks!
 
-Tested on x86-64, sparc64 and mips64.
+Kind regards
+Uffe
 
-Signed-off-by: Ren=E9 Rebe <rene@exactcode.de>
 
-diff --git a/drivers/base/firmware_loader/Kconfig b/drivers/base/firmwa=
-re_loader/Kconfig
-index 5b24f3959255..30d440bec257 100644
---- a/drivers/base/firmware_loader/Kconfig
-+++ b/drivers/base/firmware_loader/Kconfig
-@@ -169,6 +169,16 @@ config FW_LOADER_COMPRESS
- 	  be compressed with either none or crc32 integrity check type (pass
- 	  "-C crc32" option to xz command).
- =
-
-+config FW_LOADER_COMPRESS_ZSTD
-+	bool "Enable Zstd compressed firmware support"
-+	select FW_LOADER_PAGED_BUF
-+	select ZSTD_DECOMPRESS
-+	help
-+	  This option enables the support for loading Zstd compressed firmwar=
-e
-+	  files. The caller of firmware API receives the decompressed file
-+	  content. The compressed file is loaded as a fallback, only after
-+	  loading the raw file failed at first.
-+
- config FW_CACHE
- 	bool "Enable firmware caching during suspend"
- 	depends on PM_SLEEP
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmwar=
-e_loader/main.c
-index 9da0c9d5f538..5deb73dbe81e 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -33,7 +33,9 @@
- #include <linux/syscore_ops.h>
- #include <linux/reboot.h>
- #include <linux/security.h>
-+#include <linux/decompress/mm.h>
- #include <linux/xz.h>
-+#include <linux/zstd.h>
- =
-
- #include <generated/utsrelease.h>
- =
-
-@@ -435,6 +437,140 @@ static int fw_decompress_xz(struct device *dev, s=
-truct fw_priv *fw_priv,
- }
- #endif /* CONFIG_FW_LOADER_COMPRESS */
- =
-
-+/*
-+ * Zstd-compressed firmware support
-+ */
-+#ifdef CONFIG_FW_LOADER_COMPRESS_ZSTD
-+/* show an error and return the standard error code */
-+static int handle_zstd_error(size_t ret)
-+{
-+	const int err =3D ZSTD_getErrorCode(ret);
-+
-+	if (!ZSTD_isError(ret))
-+		return 0;
-+
-+	switch (err) {
-+	case ZSTD_error_memory_allocation:
-+		printk("ZSTD decompressor ran out of memory");
-+		break;
-+	case ZSTD_error_prefix_unknown:
-+		printk("Input is not in the ZSTD format (wrong magic bytes)");
-+		break;
-+	case ZSTD_error_dstSize_tooSmall:
-+	case ZSTD_error_corruption_detected:
-+	case ZSTD_error_checksum_wrong:
-+		printk("ZSTD-compressed data is corrupt");
-+		break;
-+	default:
-+		printk("ZSTD-compressed data is probably corrupt");
-+		break;
-+	}
-+	return -1;
-+}
-+
-+/* single-shot decompression onto the pre-allocated buffer */
-+static int fw_decompress_zstd_single(struct device *dev, struct fw_pri=
-v *fw_priv,
-+				   size_t in_size, const void *in_buffer)
-+{
-+	const size_t wksp_size =3D ZSTD_DCtxWorkspaceBound();
-+	void *wksp =3D large_malloc(wksp_size);
-+	ZSTD_DCtx *dctx =3D ZSTD_initDCtx(wksp, wksp_size);
-+	int err;
-+	size_t ret;
-+
-+	printk("zstd_single\n");
-+
-+	if (dctx =3D=3D NULL) {
-+	        dev_warn(dev, "Out of memory while allocating ZSTD_DCtx");
-+		err =3D -1;
-+		goto out;
-+	}
-+	/* Find out how large the frame actually is, there may be junk at
-+	 * the end of the frame that ZSTD_decompressDCtx() can't handle.
-+	 */
-+	ret =3D ZSTD_findFrameCompressedSize(in_buffer, in_size);
-+	err =3D handle_zstd_error(ret);
-+	if (err)
-+		goto out;
-+	in_size =3D (long)ret;
-+
-+	ret =3D ZSTD_decompressDCtx(dctx, fw_priv->data, fw_priv->allocated_s=
-ize, in_buffer, in_size);
-+	err =3D handle_zstd_error(ret);
-+	if (err)
-+		goto out;
-+
-+	fw_priv->size =3D ret;
-+
-+out:
-+	if (wksp !=3D NULL)
-+		large_free(wksp);
-+	return err;
-+}
-+
-+/* decompression on paged buffer and map it */
-+static int fw_decompress_zstd_pages(struct device *dev, struct fw_priv=
- *fw_priv,
-+				  size_t in_size, const void *in_buffer)
-+{
-+#if 0
-+	struct zstd_dec *zstd_dec;
-+	struct zstd_buf zstd_buf;
-+	enum zstd_ret zstd_ret;
-+	struct page *page;
-+	int err =3D 0;
-+
-+	printk("zstd_pages\n");
-+
-+	zstd_dec =3D zstd_dec_init(ZSTD_DYNALLOC, (u32)-1);
-+	if (!zstd_dec)
-+		return -ENOMEM;
-+
-+	zstd_buf.in_size =3D in_size;
-+	zstd_buf.in =3D in_buffer;
-+	zstd_buf.in_pos =3D 0;
-+
-+	fw_priv->is_paged_buf =3D true;
-+	fw_priv->size =3D 0;
-+	do {
-+		if (fw_grow_paged_buf(fw_priv, fw_priv->nr_pages + 1)) {
-+			err =3D -ENOMEM;
-+			goto out;
-+		}
-+
-+		/* decompress onto the new allocated page */
-+		page =3D fw_priv->pages[fw_priv->nr_pages - 1];
-+		zstd_buf.out =3D kmap(page);
-+		zstd_buf.out_pos =3D 0;
-+		zstd_buf.out_size =3D PAGE_SIZE;
-+		zstd_ret =3D zstd_dec_run(zstd_dec, &zstd_buf);
-+		kunmap(page);
-+		fw_priv->size +=3D zstd_buf.out_pos;
-+		/* partial decompression means either end or error */
-+		if (zstd_buf.out_pos !=3D PAGE_SIZE)
-+			break;
-+	} while (zstd_ret =3D=3D ZSTD_OK);
-+
-+	err =3D fw_decompress_zstd_error(dev, zstd_ret);
-+	if (!err)
-+		err =3D fw_map_paged_buf(fw_priv);
-+
-+ out:
-+	zstd_dec_end(zstd_dec);
-+	return err;
-+#endif
-+	return -ENOMEM;
-+}
-+
-+static int fw_decompress_zstd(struct device *dev, struct fw_priv *fw_p=
-riv,
-+			    size_t in_size, const void *in_buffer)
-+{
-+	/* if the buffer is pre-allocated, we can perform in single-shot mode=
- */
-+	if (fw_priv->data)
-+		return fw_decompress_zstd_single(dev, fw_priv, in_size, in_buffer);
-+	else
-+		return fw_decompress_zstd_pages(dev, fw_priv, in_size, in_buffer);
-+}
-+#endif /* CONFIG_FW_LOADER_COMPRESS_ZSTD */
-+
- /* direct firmware loading support */
- static char fw_path_para[256];
- static const char * const fw_path[] =3D {
-@@ -773,6 +909,11 @@ _request_firmware(const struct firmware **firmware=
-_p, const char *name,
- 		ret =3D fw_get_filesystem_firmware(device, fw->priv, ".xz",
- 						 fw_decompress_xz);
- #endif
-+#ifdef CONFIG_FW_LOADER_COMPRESS_ZSTD
-+	if (ret =3D=3D -ENOENT)
-+		ret =3D fw_get_filesystem_firmware(device, fw->priv, ".zst",
-+						 fw_decompress_zstd);
-+#endif
- =
-
- 	if (ret =3D=3D -ENOENT)
- 		ret =3D firmware_fallback_platform(fw->priv, opt_flags);
-
--- =
-
-  Ren=E9 Rebe, ExactCODE GmbH, Lietzenburger Str. 42, DE-10789 Berlin
-  https://exactcode.com | https://t2sde.org | https://rene.rebe.de
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>
+>  If there are any URLs to be removed completely
+>  or at least not (just) HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+>
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+>
+>  If you apply the patch, please let me know.
+>
+>
+>  drivers/mmc/host/sdhci_am654.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
+> index 061b4398a4f1..f2c89f0c0263 100644
+> --- a/drivers/mmc/host/sdhci_am654.c
+> +++ b/drivers/mmc/host/sdhci_am654.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * sdhci_am654.c - SDHCI driver for TI's AM654 SOCs
+>   *
+> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com
+> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com
+>   *
+>   */
+>  #include <linux/clk.h>
+> --
+> 2.27.0
+>
