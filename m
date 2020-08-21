@@ -2,111 +2,127 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9899C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B480C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AACB2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598008577;
-	bh=Cd+VoXUvwJoGAVVf2MJ9G2nda7Xj5OzTfnu49z0OnaM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o5zcmVFtvp8aoLix1aKHNN8N2Fb54oPlJKPGOcCZRk7/NT46aP/23W/jnta3KWwi8
-	 PtHqFNhCz289g9Mlpx9a4/58aCyo+V5MUvJCcIMMzN3ll8Fdzhx2XLLBm91nWrKBdn
-	 42jHP/89gsoVgNoV8VRv5r4b475rTfHny78ZJfJw=
+	by mail.kernel.org (Postfix) with ESMTP id 558F52072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:16:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gu+esTfB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgHULP7 (ORCPT
+        id S1728320AbgHULQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 07:15:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgHULPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 07:15:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 21 Aug 2020 07:16:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:53214 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728271AbgHULQT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 07:16:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598008578;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ABDyB8/1YGeMfmJ/yBam8ctdBXagiKU/H6XOWCtsLPc=;
+        b=Gu+esTfBWJPvyMXu3X4Glei4T8yRK6HV1+KU/dqU1ljPUbM0pdkeWGCz1+wNImwdVIHHhJ
+        5ebVyPvSFn4LtG+xh6T/HCLPW9seHLglppnOcOZKtpRT7Y5RGFefH1yMlnvhEdkOxvyNGX
+        0afCuRM1gbb+wtf3G+JoYvGvK6XTBNQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-386-zWW6EVJFMqGwA_lUPfjDnQ-1; Fri, 21 Aug 2020 07:16:14 -0400
+X-MC-Unique: zWW6EVJFMqGwA_lUPfjDnQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB66120738;
-        Fri, 21 Aug 2020 11:15:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598008516;
-        bh=Cd+VoXUvwJoGAVVf2MJ9G2nda7Xj5OzTfnu49z0OnaM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=12JYQxi4ejZkUIEesZewhBfWUQ8hgtJxF8GwvPIQG/3OgM2uQnieWte9i/Yxy9Oyr
-         ThPKZ9roAg3JXeLxoQS5WpzDG+5JCfH7bVG7EeI4f6Bpa5umKeLVewur4v5fRBw0AB
-         6s1jA/B1G+DxBcEyy2rW2mm/IultwhXAsGdN8/Ic=
-Date:   Fri, 21 Aug 2020 13:15:35 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        LTP List <ltp@lists.linux.it>,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        Eric Biggers <ebiggers@kernel.org>
-Subject: Re: [PATCH 5.8 000/232] 5.8.3-rc1 review
-Message-ID: <20200821111535.GC2222852@kroah.com>
-References: <20200820091612.692383444@linuxfoundation.org>
- <CA+G9fYtebf78TH-XpqArunHc1L6s9mHdLEbpY1EY9tSyDjp=sg@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 852DA18B9F01;
+        Fri, 21 Aug 2020 11:16:10 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.73])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B090650AC5;
+        Fri, 21 Aug 2020 11:16:00 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 21 Aug 2020 13:16:10 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 13:15:59 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Tim Murray <timmurray@google.com>, mingo@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com,
+        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
+        adobriyan@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de,
+        John Johansen <john.johansen@canonical.com>,
+        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200821111558.GG4546@redhat.com>
+References: <87d03lxysr.fsf@x220.int.ebiederm.org>
+ <20200820132631.GK5033@dhcp22.suse.cz>
+ <20200820133454.ch24kewh42ax4ebl@wittgenstein>
+ <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
+ <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
+ <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
+ <87k0xtv0d4.fsf@x220.int.ebiederm.org>
+ <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
+ <20200820162645.GP5033@dhcp22.suse.cz>
+ <87r1s0txxe.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYtebf78TH-XpqArunHc1L6s9mHdLEbpY1EY9tSyDjp=sg@mail.gmail.com>
+In-Reply-To: <87r1s0txxe.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 08:57:57PM +0530, Naresh Kamboju wrote:
-> On Thu, 20 Aug 2020 at 14:55, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.8.3 release.
-> > There are 232 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.3-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> > Herbert Xu <herbert@gondor.apana.org.au>
-> >     crypto: af_alg - Fix regression on empty requests
-> 
-> Results from Linaro’s test farm.
-> Regressions detected.
-> 
->   ltp-crypto-tests:
->     * af_alg02
->   ltp-cve-tests:
->     * cve-2017-17805
-> 
-> af_alg02.c:52: BROK: Timed out while reading from request socket.
-> We are running the LTP 20200515 tag released test suite.
->  https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/crypto/af_alg02.c
+On 08/20, Eric W. Biederman wrote:
+>
+> That said if we are going for a small change why not:
+>
+> 	/*
+> 	 * Make sure we will check other processes sharing the mm if this is
+> 	 * not vfrok which wants its own oom_score_adj.
+> 	 * pin the mm so it doesn't go away and get reused after task_unlock
+> 	 */
+> 	if (!task->vfork_done) {
+> 		struct task_struct *p = find_lock_task_mm(task);
+>
+> 		if (p) {
+> -			if (atomic_read(&p->mm->mm_users) > 1) {
+> +			if (atomic_read(&p->mm->mm_users) > p->signal->nr_threads) {
 
-Looks like the crypto tests are now fixed :)
+In theory this needs a barrier to avoid the race with do_exit(). And I'd
+suggest to use signal->live, I think signal->nr_threads should die...
+Something like
 
-Anyway, thanks for testing all of these and letting me know.
+	bool probably_has_other_mm_users(tsk)
+	{
+		return	atomic_read_acquire(&tsk->mm->mm_users) >
+			atomic_read(&tsk->signal->live);
+	}
 
-greg k-h
+The barrier implied by _acquire ensures that if we race with the exiting
+task and see the result of exit_mm()->mmput(mm), then we must also see
+the result of atomic_dec_and_test(signal->live).
+
+Either way, if we want to fix the race with clone(CLONE_VM) we need other
+changes.
+
+Oleg.
+
