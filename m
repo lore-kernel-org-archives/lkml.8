@@ -2,147 +2,144 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA6BC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1DD214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598026501;
-	bh=bpqFFIuJIaqnBbKwzmWCfJM+VGZuHc3Yu7TUhucPvko=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=mEDHkExiUb52lyEG7/2tXPrt6wl07ExBH/bf3tZOX78t9hA/fIGjZmlxDVgfR8Mhk
-	 W7ObO5fTbPZJJkWFDkErjOz1Ue33wUjcmPyfCqLpWcirkTEDli9P8TZxhaU5nNTs5g
-	 wIr9fy6znytfIeUJsnkazZW5YcbIO9xyt3CYq0C4=
+	by mail.kernel.org (Postfix) with ESMTP id D6E7B208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:15:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ofdfivze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgHUQO4 (ORCPT
+        id S1727877AbgHUQPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:14:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726976AbgHUQO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:14:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52F5120855;
-        Fri, 21 Aug 2020 16:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026466;
-        bh=bpqFFIuJIaqnBbKwzmWCfJM+VGZuHc3Yu7TUhucPvko=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hET2W7+L+AyCGbfHrGxcLq9cfB3lH/scu7BOfsVK+iAzwOXu6TnIIthd18n5NeeGT
-         1qSlXR86jltCXky4HHoHmHTXIVo+ajXFCKrSX+NunP1QzPf8XRIvTPAvFo4IQ+MZgi
-         HTzPLNVG5Rz90eOFjsOQUIY2NATqnY5HAehjAoz8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.8 01/62] ALSA: hda/hdmi: Add quirk to force connectivity
-Date:   Fri, 21 Aug 2020 12:13:22 -0400
-Message-Id: <20200821161423.347071-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Fri, 21 Aug 2020 12:15:12 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:38845 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgHUQOW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:14:22 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200821161409euoutp023e0e376ce1d2c23f9a9a3ac6b2fb22ce~tVJbCVso_0696006960euoutp02F
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 16:14:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200821161409euoutp023e0e376ce1d2c23f9a9a3ac6b2fb22ce~tVJbCVso_0696006960euoutp02F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598026449;
+        bh=Dxb1SZqMxibqUhl7VyWNPNEmP5zeKa3acFNVfEqRw/o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OfdfivzeID+QoggnK8XOEVNIPQgAVgy9s/4/dsDxCMcelyYsqZ55fFVQAzWqAo9p1
+         LVDhQCO5AzEl4hiPYlEALMMCb3+8TEgq8qqFTFUEZtghWqtPG/6ypFp2gHHbMVzqaz
+         29WbXxGh/96oueBnmCJ50Xq98W9pV40VLuVbgGSI=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200821161408eucas1p2cafb7eeed6d5b4efac5898f5a39f8204~tVJaHwHFv1578115781eucas1p2l;
+        Fri, 21 Aug 2020 16:14:08 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 05.B2.06318.0D2FF3F5; Fri, 21
+        Aug 2020 17:14:08 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200821161407eucas1p23a283ac117d4381e087e9bacec537665~tVJZrBcp81823418234eucas1p2m;
+        Fri, 21 Aug 2020 16:14:07 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200821161407eusmtrp10acbb38b7aa0954ac61f8e63a2c5ccda~tVJZqYXBt1179011790eusmtrp19;
+        Fri, 21 Aug 2020 16:14:07 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-d5-5f3ff2d0fc0e
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id E2.B9.06017.FC2FF3F5; Fri, 21
+        Aug 2020 17:14:07 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200821161407eusmtip2fe0ec413613697189cd2361948227403~tVJZdOHJ_2051720517eusmtip2n;
+        Fri, 21 Aug 2020 16:14:07 +0000 (GMT)
+From:   =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     m.szyprowski@samsung.com, b.zolnierkie@samsung.com,
+        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+Subject: [PATCH v2 8/9] spi: spi-s3c64xx: Increase transfer timeout
+Date:   Fri, 21 Aug 2020 18:14:00 +0200
+Message-Id: <20200821161401.11307-9-l.stelmach@samsung.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200821161401.11307-1-l.stelmach@samsung.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Organization: Samsung R&D Institute Poland
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIKsWRmVeSWpSXmKPExsWy7djPc7oXPtnHG/zv5LNY/OM5k8XGGetZ
+        LaY+fMJm0f/4NbPF+fMb2C1uHlrBaLHp8TVWi8u75rBZzDi/j8mi8eNNdou1R+6yO3B7XF/y
+        idlj06pONo/NS+o9+rasYvT4vEkugDWKyyYlNSezLLVI3y6BK2P19tfsBbs4KjoWTmZtYHzG
+        1sXIySEhYCJx7/hupi5GLg4hgRWMEicutjNDOF8YJX5NWsMEUiUk8JlR4sjmAJiO/b0HWSGK
+        ljNKnN40hx3Cec4osa9pEStIFZuAo0T/0hNgVSICE5gkHp57A7aQWaBUomfnITBbWMBZ4sm9
+        /WA2i4CqxOsFe8FsXgFriZMr10IdKC/Rvnw7mM0pYCNx/FITK0SNoMTJmU9YQGx+AS2JNU3X
+        WSDmy0s0b50N9oOEwCl2iUkNm6AGuUj8OL2LBcIWlnh1fAs7hC0jcXpyD1CcA8iul5g8yQyi
+        t4dRYtucH1D11hJ3zv1iA6lhFtCUWL9LHyLsKDGleTczRCufxI23ghAn8ElM2jYdKswr0dEm
+        BFGtIrGufw/UQCmJ3lcrGCcwKs1C8swsJA/MQti1gJF5FaN4amlxbnpqsXFearlecWJucWle
+        ul5yfu4mRmBCOv3v+NcdjPv+JB1iFOBgVOLh/XHIPl6INbGsuDL3EKMEB7OSCK/T2dNxQrwp
+        iZVVqUX58UWlOanFhxilOViUxHmNF72MFRJITyxJzU5NLUgtgskycXBKNTCevhMv8jHGVGdt
+        ltSDdwfNdky64K45b3Js68rnHas+fdPlc4ljPCQ5JXbzvrQ4kdMXwjlPiK/dprROcPMvTWPr
+        vF+Gjk0Lryd3LbcNDs38scrzv9bM63WbTr88PX2njuJcz75nBqWx1mI73v50eibgXXRuT/jZ
+        RIctnS9+t5XlbYzcYzl3Zd0DJZbijERDLeai4kQAK4uuS0QDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsVy+t/xe7rnP9nHG9zZrGWx+MdzJouNM9az
+        Wkx9+ITNov/xa2aL8+c3sFvcPLSC0WLT42usFpd3zWGzmHF+H5NF48eb7BZrj9xld+D2uL7k
+        E7PHplWdbB6bl9R79G1ZxejxeZNcAGuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5
+        rJWRqZK+nU1Kak5mWWqRvl2CXsbq7a/ZC3ZxVHQsnMzawPiMrYuRk0NCwERif+9B1i5GLg4h
+        gaWMEvvbdrB0MXIAJaQkVs5Nh6gRlvhzrQusXkjgKaPE5ZY8EJtNwFGif+kJsF4RgRlMEk9u
+        TGYFSTALlEtcmvWcHcQWFnCWeHJvP1gzi4CqxOsFe8FsXgFriZMr10IdIS/Rvnw7mM0pYCNx
+        /FITK8Qya4ltiy+zQNQLSpyc+QTsNmYBdYn184RAwvwCWhJrmq6zQKyVl2jeOpt5AqPQLCQd
+        sxA6ZiGpWsDIvIpRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMw+rYd+7llB2PXu+BDjAIcjEo8
+        vD8O2ccLsSaWFVfmHmKU4GBWEuF1Ons6Tog3JbGyKrUoP76oNCe1+BCjKdCbE5mlRJPzgYkh
+        ryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDo7xZd5Szt3//6eNX
+        MxcLvvwbPD2Rp6T13+Lrisa/2VTmu7Iu1WK1bRFaUB3QssG843jhL2/x/ZPK4+efnxn81lcs
+        O+9rh4/r/F5N8ZrerM0qU67fNJigMb3OrDDksETE6kc3BWUrXn9aYp0TarCM+R13vv3uKYp7
+        nj5ZohCxdXLSpYgrhgGPlFiKMxINtZiLihMBWyc9dNQCAAA=
+X-CMS-MailID: 20200821161407eucas1p23a283ac117d4381e087e9bacec537665
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200821161407eucas1p23a283ac117d4381e087e9bacec537665
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200821161407eucas1p23a283ac117d4381e087e9bacec537665
+References: <20200821161401.11307-1-l.stelmach@samsung.com>
+        <CGME20200821161407eucas1p23a283ac117d4381e087e9bacec537665@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Increase timeout by 30 ms for some wiggle and set the minimum value to
+100 ms. This ensures a non-zero value for short transfers which
+may take less than 1 ms. The timeout value does not affect
+performance because it is used with a completion.
 
-[ Upstream commit cd72c317a0a11f64225b9a3f1fe503bb8c7327b5 ]
+Similar formula is used in other drivers e.g. sun4i, sun6i.
 
-HDMI on some platforms doesn't enable audio support because its Port
-Connectivity [31:30] is set to AC_JACK_PORT_NONE:
-Node 0x05 [Pin Complex] wcaps 0x40778d: 8-Channels Digital Amp-Out CP
-  Amp-Out caps: ofs=0x00, nsteps=0x00, stepsize=0x00, mute=1
-  Amp-Out vals:  [0x00 0x00]
-  Pincap 0x0b000094: OUT Detect HBR HDMI DP
-  Pin Default 0x58560010: [N/A] Digital Out at Int HDMI
-    Conn = Digital, Color = Unknown
-    DefAssociation = 0x1, Sequence = 0x0
-  Pin-ctls: 0x40: OUT
-  Unsolicited: tag=00, enabled=0
-  Power states:  D0 D3 EPSS
-  Power: setting=D0, actual=D0
-  Devices: 0
-  Connection: 3
-     0x02 0x03* 0x04
-
-For now, use a quirk to force connectivity based on SSID. If there are
-more platforms affected by the same issue, we can eye for a more generic
-solution.
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Link: https://lore.kernel.org/r/20200804155836.16252-1-kai.heng.feng@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
 ---
- sound/pci/hda/patch_hdmi.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/spi/spi-s3c64xx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index cd46247988e4d..b62cd3abb8273 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -160,6 +160,7 @@ struct hdmi_spec {
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index 89c162efe355..ea5a22dec53d 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -473,7 +473,8 @@ static int s3c64xx_wait_for_dma(struct s3c64xx_spi_driver_data *sdd,
  
- 	bool use_acomp_notifier; /* use eld_notify callback for hotplug */
- 	bool acomp_registered; /* audio component registered in this driver */
-+	bool force_connect; /* force connectivity */
- 	struct drm_audio_component_audio_ops drm_audio_ops;
- 	int (*port2pin)(struct hda_codec *, int); /* reverse port/pin mapping */
+ 	/* millisecs to xfer 'len' bytes @ 'cur_speed' */
+ 	ms = xfer->len * 8 * 1000 / sdd->cur_speed;
+-	ms += 10; /* some tolerance */
++	ms += 30;               /* some tolerance */
++	ms = max(ms, 100);      /* minimum timeout */
  
-@@ -1701,7 +1702,8 @@ static int hdmi_add_pin(struct hda_codec *codec, hda_nid_t pin_nid)
- 	 * all device entries on the same pin
- 	 */
- 	config = snd_hda_codec_get_pincfg(codec, pin_nid);
--	if (get_defcfg_connect(config) == AC_JACK_PORT_NONE)
-+	if (get_defcfg_connect(config) == AC_JACK_PORT_NONE &&
-+	    !spec->force_connect)
- 		return 0;
- 
- 	/*
-@@ -1803,11 +1805,18 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
- 	return 0;
- }
- 
-+static const struct snd_pci_quirk force_connect_list[] = {
-+	SND_PCI_QUIRK(0x103c, 0x871a, "HP", 1),
-+	{}
-+};
-+
- static int hdmi_parse_codec(struct hda_codec *codec)
- {
-+	struct hdmi_spec *spec = codec->spec;
- 	hda_nid_t start_nid;
- 	unsigned int caps;
- 	int i, nodes;
-+	const struct snd_pci_quirk *q;
- 
- 	nodes = snd_hda_get_sub_nodes(codec, codec->core.afg, &start_nid);
- 	if (!start_nid || nodes < 0) {
-@@ -1815,6 +1824,11 @@ static int hdmi_parse_codec(struct hda_codec *codec)
- 		return -EINVAL;
- 	}
- 
-+	q = snd_pci_quirk_lookup(codec->bus->pci, force_connect_list);
-+
-+	if (q && q->value)
-+		spec->force_connect = true;
-+
- 	/*
- 	 * hdmi_add_pin() assumes total amount of converters to
- 	 * be known, so first discover all converters
+ 	val = msecs_to_jiffies(ms) + 10;
+ 	val = wait_for_completion_timeout(&sdd->xfer_completion, val);
 -- 
-2.25.1
+2.26.2
 
