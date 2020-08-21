@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9815DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E8CC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 753D720748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CE020702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029619;
-	bh=NHy1UHvvcpEH4xJoWIdVR/k2ARR+z4EDGVqQNYb3gjE=;
+	s=default; t=1598029626;
+	bh=ZPRLgWruTxjOmkQuH5o6TI5OSaCQSXvREQIgIM5+oEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zUyLU8LXUTXsXqsvUuoXg1IuFvq02pQrfb390G17P9jV8fbQ+wmLaN6wSpI8d4/Jk
-	 gN/UjUfMP6mrzKItx9RrkH7JxHzXHEILBYpb3/9uhZi6ybaQhX05DJ4hZqFEomF4v/
-	 d2WevfnXH9EQBTEQg84jlCMIvh+mPH707ErLWeEk=
+	b=Y0zNOrtPY3z3rO6XYuM70zaozbl1p67kSPGowx/YMOTKb9jsWFymHSSpkGcVgrYDO
+	 ofouyg2M+ibD3tFyj/Fh4BeciYFpt4H4FuVjyDMMd+zk10GSBF3+FkmUu2gOuPMLD8
+	 az4GRLx5qxwiYoHETvt9zswv+yblzfABn1cI+hJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgHURG6 (ORCPT
+        id S1728848AbgHURHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:06:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50060 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:07:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728230AbgHUQSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727884AbgHUQSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:18:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F31C22D03;
-        Fri, 21 Aug 2020 16:17:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A4DD22CAE;
+        Fri, 21 Aug 2020 16:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026680;
-        bh=NHy1UHvvcpEH4xJoWIdVR/k2ARR+z4EDGVqQNYb3gjE=;
+        s=default; t=1598026675;
+        bh=ZPRLgWruTxjOmkQuH5o6TI5OSaCQSXvREQIgIM5+oEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bKmPjLSYFOOT+0U8BoOs5Qx7Yebh2Rb7W+T4HBtyuZ8mPQ4hwXRVMgA2NnNsEibSY
-         vLenWteoIdV5VHYAG0b7EOOLsZlgcw8DPSi8rbggn/4rXVChkSEE7tOHpg0QXUBmVx
-         Ph7Jk0EUQaXC+NDS5RdHCzWk8hYTjtsOhW+oCUMc=
+        b=C+/K+dtV4qoQqJLF31nX7UY+0H2pRws1IQ3nueIaGOkzO5W41eFp909O7iZLOBjEx
+         u5jWn3aDeLx//dRMxAiimIW+29u7KB8hjUfzCtj34DccyxmMAcCIha9JTJ9k8q444h
+         YjRmIK5y7UBpTbpX/hq/HOJ4T4SIUApnlzJGX9S0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 44/48] ceph: fix potential mdsc use-after-free crash
-Date:   Fri, 21 Aug 2020 12:17:00 -0400
-Message-Id: <20200821161704.348164-44-sashal@kernel.org>
+Cc:     Qu Wenruo <wqu@suse.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 40/48] btrfs: file: reserve qgroup space after the hole punch range is locked
+Date:   Fri, 21 Aug 2020 12:16:56 -0400
+Message-Id: <20200821161704.348164-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161704.348164-1-sashal@kernel.org>
 References: <20200821161704.348164-1-sashal@kernel.org>
@@ -59,62 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit fa9967734227b44acb1b6918033f9122dc7825b9 ]
+[ Upstream commit a7f8b1c2ac21bf081b41264c9cfd6260dffa6246 ]
 
-Make sure the delayed work stopped before releasing the resources.
+The incoming qgroup reserved space timing will move the data reservation
+to ordered extent completely.
 
-cancel_delayed_work_sync() will only guarantee that the work finishes
-executing if the work is already in the ->worklist.  That means after
-the cancel_delayed_work_sync() returns, it will leave the work requeued
-if it was rearmed at the end. That can lead to a use after free once the
-work struct is freed.
+However in btrfs_punch_hole_lock_range() will call
+btrfs_invalidate_page(), which will clear QGROUP_RESERVED bit for the
+range.
 
-Fix it by flushing the delayed work instead of trying to cancel it, and
-ensure that the work doesn't rearm if the mdsc is stopping.
+In current stage it's OK, but if we're making ordered extents handle the
+reserved space, then btrfs_punch_hole_lock_range() can clear the
+QGROUP_RESERVED bit before we submit ordered extent, leading to qgroup
+reserved space leakage.
 
-URL: https://tracker.ceph.com/issues/46293
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+So here change the timing to make reserve data space after
+btrfs_punch_hole_lock_range().
+The new timing is fine for either current code or the new code.
+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/mds_client.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ fs/btrfs/file.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index b79fe6549df6f..b719aa655576a 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -4066,6 +4066,9 @@ static void delayed_work(struct work_struct *work)
- 
- 	dout("mdsc delayed_work\n");
- 
-+	if (mdsc->stopping)
-+		return;
-+
- 	mutex_lock(&mdsc->mutex);
- 	renew_interval = mdsc->mdsmap->m_session_timeout >> 2;
- 	renew_caps = time_after_eq(jiffies, HZ*renew_interval +
-@@ -4430,7 +4433,16 @@ void ceph_mdsc_force_umount(struct ceph_mds_client *mdsc)
- static void ceph_mdsc_stop(struct ceph_mds_client *mdsc)
- {
- 	dout("stop\n");
--	cancel_delayed_work_sync(&mdsc->delayed_work); /* cancel timer */
-+	/*
-+	 * Make sure the delayed work stopped before releasing
-+	 * the resources.
-+	 *
-+	 * Because the cancel_delayed_work_sync() will only
-+	 * guarantee that the work finishes executing. But the
-+	 * delayed work will re-arm itself again after that.
-+	 */
-+	flush_delayed_work(&mdsc->delayed_work);
-+
- 	if (mdsc->mdsmap)
- 		ceph_mdsmap_destroy(mdsc->mdsmap);
- 	kfree(mdsc->sessions);
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index 3cfbccacef7fd..a02c44b6a2be5 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -3130,14 +3130,14 @@ static int btrfs_zero_range(struct inode *inode,
+ 		if (ret < 0)
+ 			goto out;
+ 		space_reserved = true;
+-		ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
+-						alloc_start, bytes_to_reserve);
+-		if (ret)
+-			goto out;
+ 		ret = btrfs_punch_hole_lock_range(inode, lockstart, lockend,
+ 						  &cached_state);
+ 		if (ret)
+ 			goto out;
++		ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
++						alloc_start, bytes_to_reserve);
++		if (ret)
++			goto out;
+ 		ret = btrfs_prealloc_file_range(inode, mode, alloc_start,
+ 						alloc_end - alloc_start,
+ 						i_blocksize(inode),
 -- 
 2.25.1
 
