@@ -2,137 +2,221 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707A1C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD58208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43509208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:55:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ROGpziHz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XsMgvt1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgHUIyK (ORCPT
+        id S1727955AbgHUIzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:54:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55564 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726243AbgHUIyG (ORCPT
+        Fri, 21 Aug 2020 04:55:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgHUIzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:54:06 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07L8X7fK072907;
-        Fri, 21 Aug 2020 04:54:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding : message-id; s=pp1;
- bh=tMpNeTWf65DjC70rS5HyK/935zN2nZFWJAbrMtoWLWM=;
- b=ROGpziHzLer7q4RxRNMlsIh02QHcsuW4nx++4W55MlAtDvOnm/34MSU8qEoaLAzmD+7w
- nqAjYrE1XeOtfd8QRjezVGQfBhj6Sd0bbGl7Bo751retTKKsInVQwOhtx9QscBOoaYne
- 0rY8IHweV1QP7Mo0k7L/MZMzooxmsfqVyBdJlWGwGRiln6UxMRjbz/neUvPF6qZ3bEOw
- b+HXkegr5fRrIG5z2nG0fwUTDXaduQntoBkSWO+/FFsYVwv1fk59mY/82uYE/hUk4ag0
- j93qu64MIdTR5+BTPYz1fVQ4QxOhjkqoIS3wfbfGLBovyc+ehlsOaclW4gqGgD8noq7L ng== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33257sshsd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 04:54:02 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07L8q58q025176;
-        Fri, 21 Aug 2020 08:54:00 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 330tbvtupg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 08:54:00 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07L8rwYK65405230
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 08:53:58 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 16D634C044;
-        Fri, 21 Aug 2020 08:53:58 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93CF64C040;
-        Fri, 21 Aug 2020 08:53:56 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.33.217])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Aug 2020 08:53:56 +0000 (GMT)
-Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
-To:     Christoph Hellwig <hch@infradead.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        linux-block@vger.kernel.org
-Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        willy@infradead.org
-References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
- <20200821060710.GC31091@infradead.org>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Fri, 21 Aug 2020 14:23:55 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200821060710.GC31091@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Message-Id: <20200821085356.93CF64C040@d06av22.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_06:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- mlxlogscore=840 suspectscore=0 impostorscore=0 mlxscore=0 adultscore=0
- spamscore=0 clxscore=1011 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210079
+        Fri, 21 Aug 2020 04:55:09 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC14BC061386
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 01:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Subject:Cc:To:From:Date:Message-ID:
+        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=9I+CPHtwNh52Myl7R/ps1QfNvu2GLg9g228MpAOwUUo=; b=XsMgvt1DL0/CGZ0EtEPgC7rWuV
+        jehs+aAL3+wCvpR7WaOjcpCc6nQlyYiYKJpIpRtGz6hcWwbNOenRjk5BfiKUZbvivfTx95ILsfwDf
+        D8hpjb+ridBEURxxdokfKZpPZA8afH/wqeA1aEpcwk4j+KjQu76YVxlnIpRXovCWf00Jmu8RhwCnu
+        wHVu3jxeV+NL9Bu9xYoDb+qQTzsVsKNmfHArFAz/JMnHj5/QGBMsMJFLvxUmLJi3M7XugA2MJJUZF
+        Ryac9/oXmCzqXvOgCbAUcuzyf01wFhD7lymCU/eF9jSYn7OWIj6TOm0AFGeuEwQ+QO/jo/MxMA3A8
+        TsIf1srQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k92p3-0008UG-DB; Fri, 21 Aug 2020 08:54:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EBA17302526;
+        Fri, 21 Aug 2020 10:54:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id D60902B64990F; Fri, 21 Aug 2020 10:54:49 +0200 (CEST)
+Message-ID: <20200821084738.508092956@infradead.org>
+User-Agent: quilt/0.66
+Date:   Fri, 21 Aug 2020 10:47:38 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org
+Cc:     npiggin@gmail.com, elver@google.com, jgross@suse.com,
+        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
+        joel@joelfernandes.org, svens@linux.ibm.com, tglx@linutronix.de,
+        peterz@infradead.org
+Subject: [PATCH v2 00/11] TRACE_IRQFLAGS wreckage
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+TRACE_IRQFLAGS
 
-On 8/21/20 11:37 AM, Christoph Hellwig wrote:
-> On Wed, Aug 19, 2020 at 03:58:41PM +0530, Anju T Sudhakar wrote:
->> From: Ritesh Harjani <riteshh@linux.ibm.com>
->>
->> __bio_try_merge_page() may return same_page = 1 and merged = 0.
->> This could happen when bio->bi_iter.bi_size + len > UINT_MAX.
->> Handle this case in iomap_add_to_ioend() by incrementing write_count.
->> This scenario mostly happens where we have too much dirty data accumulated.
->>
->> w/o the patch we hit below kernel warning,
-> 
-> I think this is better fixed in the block layer rather than working
-> around the problem in the callers.  Something like this:
-> 
-> diff --git a/block/bio.c b/block/bio.c
-> index c63ba04bd62967..ef321cd1072e4e 100644
-> --- a/block/bio.c
-> +++ b/block/bio.c
-> @@ -879,8 +879,10 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
->   		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
->   
->   		if (page_is_mergeable(bv, page, len, off, same_page)) {
-> -			if (bio->bi_iter.bi_size > UINT_MAX - len)
-> +			if (bio->bi_iter.bi_size > UINT_MAX - len) {
-> +				*same_page = false;
->   				return false;
-> +			}
->   			bv->bv_len += len;
->   			bio->bi_iter.bi_size += len;
->   			return true;
-> 
+local_irq_*() keeps a software state that mirrors the hardware state,
+used for lockdep, includes tracepoints.
 
-Ya, we had think of that. But what we then thought was, maybe the
-API does return the right thing. Meaning, what API says is, same_page is
-true, but the page couldn't be merged hence it returned ret = false.
-With that thought, we fixed this in the caller.
+raw_local_irq_*() does not update the software state, no tracing.
 
-But agree with you that with ret = false, there is no meaning of
-same_page being true. Ok, so let linux-block comment on whether
-above also looks good. If yes, I can spin out an official patch with
-all details.
+---
 
--ritesh
+Problem 1:
+
+	raw_local_irq_save(); // software state on
+	local_irq_save(); // software state off
+	...
+	local_irq_restore(); // software state still off, because we don't enable IRQs
+	raw_local_irq_restore(); // software state still off, *whoopsie*
+
+existing instances:
+
+ - lock_acquire()
+     raw_local_irq_save()
+     __lock_acquire()
+       arch_spin_lock(&graph_lock)
+         pv_wait() := kvm_wait() (same or worse for Xen/HyperV)
+           local_irq_save()
+
+ - trace_clock_global()
+     raw_local_irq_save()
+     arch_spin_lock()
+       pv_wait() := kvm_wait()
+	 local_irq_save()
+
+ - apic_retrigger_irq()
+     raw_local_irq_save()
+     apic->send_IPI() := default_send_IPI_single_phys()
+       local_irq_save()
+
+Possible solutions:
+
+ A) make it work by enabling the tracing inside raw_*()
+ B) make it work by keeping tracing disabled inside raw_*()
+ C) call it broken and clean it up now
+
+Now, given that the only reason to use the raw_* variant is because you don't
+want tracing. Therefore A) seems like a weird option (although it can be done).
+C) is tempting, but OTOH it ends up converting a _lot_ of code to raw just
+because there is one raw user, this strips the validation/tracing off for all
+the other users.
+
+So we pick B) and declare any code that ends up doing:
+
+	raw_local_irq_save()
+	local_irq_save()
+	lockdep_assert_irqs_disabled();
+
+broken. AFAICT this problem has existed forever, the only reason it came
+up is because I changed IRQ tracing vs lockdep recursion and the first
+instance is fairly common, the other cases hardly ever happen.
+
+---
+
+Problem 2:
+
+	raw_local_irq_save(); // software state on
+	trace_*()
+          ...
+          perf_tp_event()
+            ...
+            perf_callchain()
+	    <#PF>
+	      trace_hardirqs_off(); // software state off
+	      ...
+	      if (regs_irqs_disabled(regs)) // false
+	        trace_hardirqs_on();
+	    </#PF>
+	raw_local_irq_restore(); // software state stays off, *whoopsie*
+
+existing instances:
+
+ - lock_acquire() / lock_release()
+     raw_local_irq_save()
+     trace_lock_acquire() / trace_lock_release()
+
+ - function tracing
+
+Possible solutions:
+
+ A) fix every architecture's entry code
+ B) only fix kernel/entry/common.c
+ C) fix lockdep tracepoints and pray
+
+This series does C, AFAICT this problem has existed forever.
+
+---
+
+Problem 3:
+
+	raw_local_irq_save(); // software state on
+	<#NMI>
+	  trace_hardirqs_off(); // software state off
+	  ...
+	  if (regs_irqs_disabled(regs)) // false
+	    trace_hardirqs_on();
+	</#NMI>
+	raw_local_irq_restore(); // software state stays off, *whoopsie*
+
+Possible solutions:
+
+This *should* not be a problem if an architecture has it's entry ordering
+right. In particular we rely on the architecture doing nmi_enter() before
+trace_hardirqs_off().
+
+In that case, in_nmi() will be true, and lockdep_hardirqs_*() should NO-OP,
+except if CONFIG_TRACE_IRQFLAGS_NMI (x86).
+
+There might be a problem with using lockdep_assert_irqs_disabled() from NMI
+context, if so, those needs a little TLC.
+
+---
+
+The patches in this series do (in reverse order):
+
+ - 2C
+ - 1B
+ - fix fallout in idle due to the trace_lock_*() tracepoints suddenly
+   being visible to rcu-lockdep.
+
+---
+
+Change since -v1:
+
+ - typo (rostedt)
+ - split WARN (rostedt)
+ - reorder start_critical_section / rcu_idle_enter (rostedt)
+ - added arm64 patch (kernel test robot)
+
+---
+
+ arch/arm/mach-omap2/pm34xx.c      |    4 --
+ arch/arm64/include/asm/irqflags.h |    5 ++
+ arch/arm64/kernel/process.c       |    2 -
+ arch/nds32/include/asm/irqflags.h |    5 ++
+ arch/powerpc/include/asm/hw_irq.h |   11 ++---
+ arch/s390/kernel/idle.c           |    3 -
+ arch/x86/entry/thunk_32.S         |    5 --
+ arch/x86/include/asm/mmu.h        |    1 
+ arch/x86/kernel/process.c         |    4 --
+ arch/x86/mm/tlb.c                 |   13 +-----
+ drivers/cpuidle/cpuidle.c         |   19 +++++++--
+ drivers/idle/intel_idle.c         |   16 --------
+ include/linux/cpuidle.h           |   13 +++---
+ include/linux/irqflags.h          |   73 ++++++++++++++++++++------------------
+ include/linux/lockdep.h           |   18 ++++++---
+ include/linux/mmu_context.h       |    5 ++
+ kernel/locking/lockdep.c          |   18 +++++----
+ kernel/sched/idle.c               |   25 +++++--------
+ 18 files changed, 118 insertions(+), 122 deletions(-)
+
+
