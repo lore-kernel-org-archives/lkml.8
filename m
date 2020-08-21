@@ -2,339 +2,364 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B376AC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5589C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78671214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:03:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="INetoV3T"
+	by mail.kernel.org (Postfix) with ESMTP id ADA89207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597989967;
+	bh=59Bhlg03bophqCjhTvXtoOFm/L0sB/uyuECPf6berIs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=btehYvUHfPz4VmDBUr7A8SLd5buggasN+jjRKDT0J4Y9KgnDSnvWKPqr14NjoVJar
+	 NWVVg5X5Vx+r64lcuH8B8JdhsDemLU8gHp1zfKEdp7m8GAS00wJMMebw7F7bvMaJWa
+	 TV3OCOFvPCEjbtty3MartnNdqmXh3jg8TDiN6FwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgHUGDO (ORCPT
+        id S1727095AbgHUGGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:03:14 -0400
-Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.177]:17146 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727897AbgHUGCo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 02:02:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597989759;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=xzcjnuC3HSpuLYqSkbNslAqmBVF439Sp8rjR8ADFIQw=;
-        b=INetoV3TLkEyn3F02z5z5R5HYGVk1LMQxVWSt2tGZr1dK66Mm567466MlDR9/DvUkF
-        VEtDlnIFLeGx0ZG6H8d7bNAhCxl6a7resqqr1rnIrVI6x/ez3L4EsP+dy7v1VWspwz5i
-        qm7GJPL7tly3EaP1g8CUkbNBBfWl+gvSr7/pPdZ+4BbLpETEW+/GVI1NV5OFUgbiGAf8
-        LEZvBeybswr6tQwsEGCJOg6G105c1+0IXiAjtbEakvwl8KIwMSs8eKl2DyRUcM7GuGA7
-        YehddCXN/HrBETrMuYEmkFx5/tY8Us+K2hTGJOgWPpPoFL+8zlV/wszSYAU0dJVty9hm
-        buzg==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xm0dNS3IdRAZAL+p6A=="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id 002e9aw7L61LGLH
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 21 Aug 2020 08:01:21 +0200 (CEST)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH v33 00/12] /dev/random - a new approach with full SP800-90B compliance
-Date:   Fri, 21 Aug 2020 07:37:51 +0200
-Message-ID: <5532247.MhkbZ0Pkbq@positron.chronox.de>
-In-Reply-To: <2544450.mvXUDI8C0e@positron.chronox.de>
-References: <2544450.mvXUDI8C0e@positron.chronox.de>
+        Fri, 21 Aug 2020 02:06:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbgHUGGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 02:06:00 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E25D207DA;
+        Fri, 21 Aug 2020 06:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597989958;
+        bh=59Bhlg03bophqCjhTvXtoOFm/L0sB/uyuECPf6berIs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NwSOydEuElShglZkcANik6Ec+qKCU4ZLgxu0vHQZxJQqfvQdvpIdP7oLlA6ljM88H
+         rJE7c1kIgmjRSKukoshBZNdd45YdLefdC8mnRsf5Ergp8XawCZFXzyZI8y0xKJ5HaT
+         5gPPq9u91BiPg6obEjQhNuAkSc61Jxfac9QWuc2k=
+Date:   Fri, 21 Aug 2020 01:11:45 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] iwlwifi: Use fallthrough pseudo-keyword
+Message-ID: <20200821061145.GA2859@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-The following patch set provides a different approach to /dev/random which =
-is
-called Linux Random Number Generator (LRNG) to collect entropy within the L=
-inux
-kernel. The main improvements compared to the existing /dev/random is to pr=
-ovide
-sufficient entropy during boot time as well as in virtual environments and =
-when
-using SSDs. A secondary design goal is to limit the impact of the entropy
-collection on massive parallel systems and also allow the use accelerated
-cryptographic primitives. Also, all steps of the entropic data processing a=
-re
-testable.
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-The LRNG patch set allows a user to select use of the existing /dev/random =
-or
-the LRNG during compile time. As the LRNG provides API and ABI compatible
-interfaces to the existing /dev/random implementation, the user can freely =
-chose
-the RNG implementation without affecting kernel or user space operations.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/intel/iwlwifi/dvm/mac80211.c |  2 +-
+ drivers/net/wireless/intel/iwlwifi/dvm/rx.c       |  6 +++---
+ drivers/net/wireless/intel/iwlwifi/dvm/scan.c     |  2 +-
+ drivers/net/wireless/intel/iwlwifi/dvm/sta.c      |  2 +-
+ drivers/net/wireless/intel/iwlwifi/dvm/tx.c       |  2 +-
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c      |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/led.c      |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/phy-ctxt.c |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/rx.c       |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c     |  8 ++++----
+ drivers/net/wireless/intel/iwlwifi/mvm/scan.c     |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c      | 10 +++++-----
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c       |  4 ++--
+ 15 files changed, 25 insertions(+), 25 deletions(-)
 
-This patch set provides early boot-time entropy which implies that no
-additional flags to the getrandom(2) system call discussed recently on
-the LKML is considered to be necessary. Yet, if additional flags are
-introduced to cover special hardware, the LRNG implementation will also
-provide them to be fully ABI and API compliant as already discussed on
-LKML.
-
-The LRNG is fully compliant to SP800-90B requirements and is shipped with a
-full SP800-90B assessment and all required test tools. The existing /dev/ra=
-ndom
-implementation on the other hand has architectural limitations which
-does not easily allow to bring the implementation in compliance with
-SP800-90B. The key statement that causes concern is SP800-90B section
-3.1.6. This section denies crediting entropy to multiple similar noise
-sources. This section explicitly references different noise sources resting
-on the timing of events and their derivatives (i.e. it is a direct complaint
-to the existing existing /dev/random implementation). Therefore, SP800-90B
-now denies the very issue mentioned in [1] with the existing /dev/random
-implementation for a long time: crediting entropy to interrupts as well as
-crediting entropy to derivatives of interrupts (HID and disk events). This =
-is
-not permissible with SP800-90B.
-
-SP800-90B specifies various requirements for the noise source(s) that seed =
-any
-DRNG including SP800-90A DRBGs. In about a year from now, SP800-90B will be
-mandated for all noise sources that provide entropy to DRBGs as part of a F=
-IPS
-140-[2|3] validation or other evaluation types. That means, if we there are=
- no
-solutions to comply with the requirements of SP800-90B found till one year
-from now, any random number generation and ciphers based on random numbers
-on Linux will be considered and treated as not applicable and delivering
-no entropy! As /dev/urandom, getrandom(2) and /dev/random are the most
-common and prevalent noise sources for DRNGs, all these DRNGs are affected.
-This applies across the board for all validations of cryptography executing=
- on
-Linux (kernel and user space modules).
-
-=46or users that are not interested in SP800-90B, the entire code for the
-compliance as well as test interfaces can be deselected at compile time.
-
-The design and implementation is driven by a set of goals described in [1]
-that the LRNG completely implements. Furthermore, [1] includes the full
-assessment of the SP800-90B compliance as well as a comparison with RNG
-design suggestions of SP800-90C, and AIS20/31.
-
-The LRNG provides a complete separation of the noise source maintenance
-and the collection of entropy into an entropy pool from the post-processing
-using a pseudo-random number generator. Different DRNGs are supported,
-including:
-
-* The LRNG can be compile-time enabled to replace the existing /dev/random
-  implementation. When not selecting the LRNG at compile time (default), the
-  existing /dev/random implementation is built.
-
-* Built-in ChaCha20 DRNG which has no dependency to other kernel
-  frameworks.
-
-* SP800-90A DRBG using the kernel crypto API including its accelerated
-  raw cipher implementations. This implies that the output of /dev/random,
-  getrandom(2), /dev/urandom or get_random_bytes is fully compliant to
-  SP800-90A.
-
-* Arbitrary DRNGs registered with the kernel crypto API
-
-* Full compliance with SP800-90B which covers the startup and runtime health
-  tests mandated by SP800-90B as well as providing the test tools and test
-  interfaces to obtain raw noise data securely. The test tools are provided=
- at
-  [1].
-
-Booting the patch with the kernel command line option
-"dyndbg=3Dfile drivers/char/lrng/* +p" generates logs indicating the operat=
-ion
-of the LRNG. Each log is pre-pended with "lrng".
-
-The LRNG has a flexible design by allowing an easy replacement of the
-deterministic random number generator component.
-
-Compared to the existing /dev/random implementation, the compiled binary
-is smaller when the LRNG is compiled with all options equal to the
-existing /dev/random (i.e. only CONFIG_LRNG is set): random.o is 52.5 kBytes
-whereas all LRNG object files are in 49 kBytes in size. The fully
-SP800-90A/SP800-90B compliant binary code (CONFIG_LRNG,
-CONFIG_LRNG_DRNG_SWITCH, CONFIG_LRNG_DRBG, CONFIG_LRNG_HEALTH_TESTS)
-uses some 61 kBytes. In addition, the LRNG is about 50% faster in the
-performance critical interrupt handler code path compared to the existing
-/dev/random implementation.
-
-=46ull SP800-90B testing is performed on the following systems - details
-are given in [2] appendix C:
-
-* x86 KVM virtualized guest 32 and 64 bit systems
-
-* x86 bare metal
-
-* older and newer ARMv7 system
-
-* ARM64
-
-* POWER7 LE and POWER 8 BE
-
-* IBM Z System mainframe
-
-* old MIPS embedded device
-
-[1] https://www.chronox.de/lrng.html - If the patch is accepted, I would
-be volunteering to convert the documentation into RST format and
-contribute it to the Linux kernel documentation directory.
-
-[2] https://www.chronox.de/lrng/doc/lrng.pdf
-
-Changes (compared to the previous patch set):
-
-* fix const static -> static const as indicated by kernel test robot
-
-* fix double initialization as indicated by kernel test robot
-
-* add hw_random.h header file and add get_random_bytes_full prototypes
-  as indicated by kernel test robot
-
-* if -> ifdef for CONFIG_CRYPTO_LIB_SHA256 in lrng_selftest.c
-
-* Note, the warning on random_table is expected as it is there to ensure
-  patch 0001 can be compiled. This symbol is "fixed" with patch 0003.
-
-As a side node: With the switchable DRNG support offered in this patch set,
-the following areas could be removed. As the existing /dev/random has no su=
-pport
-for switchable DRNGs, however, this is not yet feasible though.
-
-* remove lrng_ready_list and all code around it in lrng_interfaces.c
-
-* remove the kernel crypto API RNG API to avoid having two random number
-  providing APIs - this would imply that all RNGs developed for this API wo=
-uld
-  be converted to the LRNG interface
-
-CC: "Eric W. Biederman" <ebiederm@xmission.com>
-CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-CC: Willy Tarreau <w@1wt.eu>
-CC: Matthew Garrett <mjg59@srcf.ucam.org>
-CC: Vito Caputo <vcaputo@pengaru.com>
-CC: Andreas Dilger <adilger.kernel@dilger.ca>
-CC: Jan Kara <jack@suse.cz>
-CC: Ray Strode <rstrode@redhat.com>
-CC: William Jon McCann <mccann@jhu.edu>
-CC: zhangjs <zachary@baishancloud.com>
-CC: Andy Lutomirski <luto@kernel.org>
-CC: Florian Weimer <fweimer@redhat.com>
-CC: Lennart Poettering <mzxreary@0pointer.de>
-CC: Nicolai Stange <nstange@suse.de>
-Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
-Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-
-Stephan Mueller (12):
-  Linux Random Number Generator
-  LRNG - allocate one DRNG instance per NUMA node
-  LRNG - sysctls and /proc interface
-  LRNG - add switchable DRNG support
-  crypto: DRBG - externalize DRBG functions for LRNG
-  LRNG - add SP800-90A DRBG extension
-  LRNG - add kernel crypto API PRNG extension
-  crypto: provide access to a static Jitter RNG state
-  LRNG - add Jitter RNG fast noise source
-  LRNG - add SP800-90B compliant health tests
-  LRNG - add interface for gathering of raw entropy
-  LRNG - add power-on and runtime self-tests
-
- MAINTAINERS                                   |   7 +
- crypto/drbg.c                                 |  16 +-
- crypto/jitterentropy-kcapi.c                  |   3 +-
- crypto/jitterentropy.c                        |  31 +-
- drivers/char/Kconfig                          |   2 +
- drivers/char/Makefile                         |   9 +-
- drivers/char/lrng/Kconfig                     | 315 +++++++++
- drivers/char/lrng/Makefile                    |  19 +
- drivers/char/lrng/lrng_archrandom.c           |  93 +++
- drivers/char/lrng/lrng_aux.c                  | 136 ++++
- drivers/char/lrng/lrng_chacha20.c             | 320 +++++++++
- drivers/char/lrng/lrng_chacha20.h             |  29 +
- drivers/char/lrng/lrng_drbg.c                 | 259 +++++++
- drivers/char/lrng/lrng_drng.c                 | 409 +++++++++++
- drivers/char/lrng/lrng_health.c               | 407 +++++++++++
- drivers/char/lrng/lrng_interfaces.c           | 648 ++++++++++++++++++
- drivers/char/lrng/lrng_internal.h             | 345 ++++++++++
- drivers/char/lrng/lrng_jent.c                 |  88 +++
- drivers/char/lrng/lrng_kcapi.c                | 321 +++++++++
- drivers/char/lrng/lrng_lfsr.h                 | 152 ++++
- drivers/char/lrng/lrng_numa.c                 | 101 +++
- drivers/char/lrng/lrng_pool.c                 | 589 ++++++++++++++++
- drivers/char/lrng/lrng_proc.c                 | 163 +++++
- drivers/char/lrng/lrng_selftest.c             | 504 ++++++++++++++
- drivers/char/lrng/lrng_sw_noise.c             | 155 +++++
- drivers/char/lrng/lrng_sw_noise.h             |  57 ++
- drivers/char/lrng/lrng_switch.c               | 189 +++++
- drivers/char/lrng/lrng_testing.c              | 575 ++++++++++++++++
- include/crypto/drbg.h                         |   7 +
- .../crypto/internal}/jitterentropy.h          |   3 +
- include/linux/lrng.h                          |  63 ++
- 31 files changed, 6005 insertions(+), 10 deletions(-)
- create mode 100644 drivers/char/lrng/Kconfig
- create mode 100644 drivers/char/lrng/Makefile
- create mode 100644 drivers/char/lrng/lrng_archrandom.c
- create mode 100644 drivers/char/lrng/lrng_aux.c
- create mode 100644 drivers/char/lrng/lrng_chacha20.c
- create mode 100644 drivers/char/lrng/lrng_chacha20.h
- create mode 100644 drivers/char/lrng/lrng_drbg.c
- create mode 100644 drivers/char/lrng/lrng_drng.c
- create mode 100644 drivers/char/lrng/lrng_health.c
- create mode 100644 drivers/char/lrng/lrng_interfaces.c
- create mode 100644 drivers/char/lrng/lrng_internal.h
- create mode 100644 drivers/char/lrng/lrng_jent.c
- create mode 100644 drivers/char/lrng/lrng_kcapi.c
- create mode 100644 drivers/char/lrng/lrng_lfsr.h
- create mode 100644 drivers/char/lrng/lrng_numa.c
- create mode 100644 drivers/char/lrng/lrng_pool.c
- create mode 100644 drivers/char/lrng/lrng_proc.c
- create mode 100644 drivers/char/lrng/lrng_selftest.c
- create mode 100644 drivers/char/lrng/lrng_sw_noise.c
- create mode 100644 drivers/char/lrng/lrng_sw_noise.h
- create mode 100644 drivers/char/lrng/lrng_switch.c
- create mode 100644 drivers/char/lrng/lrng_testing.c
- rename {crypto =3D> include/crypto/internal}/jitterentropy.h (84%)
- create mode 100644 include/linux/lrng.h
-
-=2D-=20
-2.26.2
-
-
-
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/dvm/mac80211.c
+index 423d3c396b2d..75e7665773c5 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/mac80211.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/mac80211.c
+@@ -619,7 +619,7 @@ static int iwlagn_mac_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
+ 	switch (key->cipher) {
+ 	case WLAN_CIPHER_SUITE_TKIP:
+ 		key->flags |= IEEE80211_KEY_FLAG_GENERATE_MMIC;
+-		/* fall through */
++		fallthrough;
+ 	case WLAN_CIPHER_SUITE_CCMP:
+ 		key->flags |= IEEE80211_KEY_FLAG_GENERATE_IV;
+ 		break;
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/rx.c b/drivers/net/wireless/intel/iwlwifi/dvm/rx.c
+index 673d60784bfa..e16589018ebb 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/rx.c
+@@ -582,7 +582,7 @@ static int iwlagn_set_decrypted_flag(struct iwl_priv *priv,
+ 		if ((decrypt_res & RX_RES_STATUS_DECRYPT_TYPE_MSK) ==
+ 		    RX_RES_STATUS_BAD_KEY_TTAK)
+ 			break;
+-		/* fall through */
++		fallthrough;
+ 	case RX_RES_STATUS_SEC_TYPE_WEP:
+ 		if ((decrypt_res & RX_RES_STATUS_DECRYPT_TYPE_MSK) ==
+ 		    RX_RES_STATUS_BAD_ICV_MIC) {
+@@ -591,7 +591,7 @@ static int iwlagn_set_decrypted_flag(struct iwl_priv *priv,
+ 			IWL_DEBUG_RX(priv, "Packet destroyed\n");
+ 			return -1;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	case RX_RES_STATUS_SEC_TYPE_CCMP:
+ 		if ((decrypt_res & RX_RES_STATUS_DECRYPT_TYPE_MSK) ==
+ 		    RX_RES_STATUS_DECRYPT_OK) {
+@@ -720,7 +720,7 @@ static u32 iwlagn_translate_rx_status(struct iwl_priv *priv, u32 decrypt_in)
+ 			decrypt_out |= RX_RES_STATUS_BAD_KEY_TTAK;
+ 			break;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		if (!(decrypt_in & RX_MPDU_RES_STATUS_ICV_OK))
+ 			decrypt_out |= RX_RES_STATUS_BAD_ICV_MIC;
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/scan.c b/drivers/net/wireless/intel/iwlwifi/dvm/scan.c
+index 1d8590046ff7..0eecc2afcf4d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/scan.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/scan.c
+@@ -406,7 +406,7 @@ static u16 iwl_limit_dwell(struct iwl_priv *priv, u16 dwell_time)
+ 		limit = (limits[1] * 98) / 100 - IWL_CHANNEL_TUNE_TIME * 2;
+ 		limit /= 2;
+ 		dwell_time = min(limit, dwell_time);
+-		/* fall through */
++		fallthrough;
+ 	case 1:
+ 		limit = (limits[0] * 98) / 100 - IWL_CHANNEL_TUNE_TIME * 2;
+ 		limit /= n_active;
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/sta.c b/drivers/net/wireless/intel/iwlwifi/dvm/sta.c
+index 51158edce15b..d49c46914275 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/sta.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/sta.c
+@@ -1109,7 +1109,7 @@ static int iwlagn_send_sta_key(struct iwl_priv *priv,
+ 		break;
+ 	case WLAN_CIPHER_SUITE_WEP104:
+ 		key_flags |= STA_KEY_FLG_KEY_SIZE_MSK;
+-		/* fall through */
++		fallthrough;
+ 	case WLAN_CIPHER_SUITE_WEP40:
+ 		key_flags |= STA_KEY_FLG_WEP;
+ 		memcpy(&sta_cmd.key.key[3], keyconf->key, keyconf->keylen);
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/tx.c b/drivers/net/wireless/intel/iwlwifi/dvm/tx.c
+index fd454836adbe..52c682dd5957 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/tx.c
+@@ -210,7 +210,7 @@ static void iwlagn_tx_cmd_build_hwcrypto(struct iwl_priv *priv,
+ 
+ 	case WLAN_CIPHER_SUITE_WEP104:
+ 		tx_cmd->sec_ctl |= TX_CMD_SEC_KEY128;
+-		/* fall through */
++		fallthrough;
+ 	case WLAN_CIPHER_SUITE_WEP40:
+ 		tx_cmd->sec_ctl |= (TX_CMD_SEC_WEP |
+ 			(keyconf->keyidx & TX_CMD_SEC_MSK) << TX_CMD_SEC_SHIFT);
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+index 04f14bfdd091..1a7bc29d1a72 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+@@ -1561,7 +1561,7 @@ static void iwl_req_fw_callback(const struct firmware *ucode_raw, void *context)
+ 		break;
+ 	default:
+ 		WARN(1, "Invalid fw type %d\n", fw->type);
+-		/* fall through */
++		fallthrough;
+ 	case IWL_FW_MVM:
+ 		op = &iwlwifi_opmode_table[MVM_OP_MODE];
+ 		break;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/led.c b/drivers/net/wireless/intel/iwlwifi/mvm/led.c
+index 72c4b2b8399d..6c910d681a92 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/led.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/led.c
+@@ -115,7 +115,7 @@ int iwl_mvm_leds_init(struct iwl_mvm *mvm)
+ 	switch (mode) {
+ 	case IWL_LED_BLINK:
+ 		IWL_ERR(mvm, "Blink led mode not supported, used default\n");
+-		/* fall through */
++		fallthrough;
+ 	case IWL_LED_DEFAULT:
+ 	case IWL_LED_RF_STATE:
+ 		mode = IWL_LED_RF_STATE;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
+index b78992e341d5..4581edcecd64 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
+@@ -289,7 +289,7 @@ int iwl_mvm_mac_ctxt_init(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
+ 	case NL80211_IFTYPE_STATION:
+ 		if (!vif->p2p)
+ 			break;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		__clear_bit(0, data.available_mac_ids);
+ 	}
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+index 9374c85c5caf..e58898951815 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+@@ -4059,7 +4059,7 @@ static int __iwl_mvm_assign_vif_chanctx(struct iwl_mvm *mvm,
+ 			mvmvif->ap_ibss_active = true;
+ 			break;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_IFTYPE_ADHOC:
+ 		/*
+ 		 * The AP binding flow is handled as part of the start_ap flow
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/phy-ctxt.c b/drivers/net/wireless/intel/iwlwifi/mvm/phy-ctxt.c
+index 0243dbe8ac49..103294969a26 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/phy-ctxt.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/phy-ctxt.c
+@@ -109,7 +109,7 @@ u8 iwl_mvm_get_ctrl_pos(struct cfg80211_chan_def *chandef)
+ 		return PHY_VHT_CTRL_POS_4_ABOVE;
+ 	default:
+ 		WARN(1, "Invalid channel definition");
+-		/* fall through */
++		fallthrough;
+ 	case 0:
+ 		/*
+ 		 * The FW is expected to check the control channel position only
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
+index 77b8def26edb..9cf4c8e12a82 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
+@@ -226,7 +226,7 @@ static u32 iwl_mvm_set_mac80211_rx_flag(struct iwl_mvm *mvm,
+ 		    !(rx_pkt_status & RX_MPDU_RES_STATUS_TTAK_OK))
+ 			return 0;
+ 		*crypt_len = IEEE80211_TKIP_IV_LEN;
+-		/* fall through */
++		fallthrough;
+ 
+ 	case RX_MPDU_RES_STATUS_SEC_WEP_ENC:
+ 		if (!(rx_pkt_status & RX_MPDU_RES_STATUS_ICV_OK))
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
+index c15f7dbc9516..78f4cc11e2eb 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
+@@ -354,7 +354,7 @@ static int iwl_mvm_rx_crypto(struct iwl_mvm *mvm, struct ieee80211_hdr *hdr,
+ 			stats->flag |= RX_FLAG_MMIC_ERROR;
+ 
+ 		*crypt_len = IEEE80211_TKIP_IV_LEN;
+-		/* fall through */
++		fallthrough;
+ 	case IWL_RX_MPDU_STATUS_SEC_WEP:
+ 		if (!(status & IWL_RX_MPDU_STATUS_ICV_OK))
+ 			return -1;
+@@ -1275,7 +1275,7 @@ static void iwl_mvm_decode_he_phy_data(struct iwl_mvm *mvm,
+ 		he->data4 |= le16_encode_bits(le32_get_bits(phy_data->d2,
+ 							    IWL_RX_PHY_DATA2_HE_TB_EXT_SPTL_REUSE4),
+ 					      IEEE80211_RADIOTAP_HE_DATA4_TB_SPTL_REUSE4);
+-		/* fall through */
++		fallthrough;
+ 	case IWL_RX_PHY_INFO_TYPE_HE_SU:
+ 	case IWL_RX_PHY_INFO_TYPE_HE_MU:
+ 	case IWL_RX_PHY_INFO_TYPE_HE_MU_EXT:
+@@ -1348,7 +1348,7 @@ static void iwl_mvm_decode_he_phy_data(struct iwl_mvm *mvm,
+ 						       IWL_RX_PHY_DATA4_HE_MU_EXT_PREAMBLE_PUNC_TYPE_MASK),
+ 					 IEEE80211_RADIOTAP_HE_MU_FLAGS2_PUNC_FROM_SIG_A_BW);
+ 		iwl_mvm_decode_he_mu_ext(mvm, phy_data, rate_n_flags, he_mu);
+-		/* fall through */
++		fallthrough;
+ 	case IWL_RX_PHY_INFO_TYPE_HE_MU:
+ 		he_mu->flags2 |=
+ 			le16_encode_bits(le32_get_bits(phy_data->d1,
+@@ -1358,7 +1358,7 @@ static void iwl_mvm_decode_he_phy_data(struct iwl_mvm *mvm,
+ 			le16_encode_bits(le32_get_bits(phy_data->d1,
+ 						       IWL_RX_PHY_DATA1_HE_MU_SIGB_COMPRESSION),
+ 					 IEEE80211_RADIOTAP_HE_MU_FLAGS2_SIG_B_COMP);
+-		/* fall through */
++		fallthrough;
+ 	case IWL_RX_PHY_INFO_TYPE_HE_TB:
+ 	case IWL_RX_PHY_INFO_TYPE_HE_TB_EXT:
+ 		iwl_mvm_decode_he_phy_ru_alloc(phy_data, rate_n_flags,
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/scan.c b/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
+index 51a061b138ba..04ee18e565ba 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
+@@ -2149,7 +2149,7 @@ static int iwl_mvm_check_running_scans(struct iwl_mvm *mvm, int type)
+ 		/* Something is wrong if no scan was running but we
+ 		 * ran out of scans.
+ 		 */
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		WARN_ON(1);
+ 		break;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+index 9e124755a3ce..f4bf102633af 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+@@ -144,13 +144,13 @@ int iwl_mvm_sta_send_to_fw(struct iwl_mvm *mvm, struct ieee80211_sta *sta,
+ 	switch (sta->bandwidth) {
+ 	case IEEE80211_STA_RX_BW_160:
+ 		add_sta_cmd.station_flags |= cpu_to_le32(STA_FLG_FAT_EN_160MHZ);
+-		/* fall through */
++		fallthrough;
+ 	case IEEE80211_STA_RX_BW_80:
+ 		add_sta_cmd.station_flags |= cpu_to_le32(STA_FLG_FAT_EN_80MHZ);
+-		/* fall through */
++		fallthrough;
+ 	case IEEE80211_STA_RX_BW_40:
+ 		add_sta_cmd.station_flags |= cpu_to_le32(STA_FLG_FAT_EN_40MHZ);
+-		/* fall through */
++		fallthrough;
+ 	case IEEE80211_STA_RX_BW_20:
+ 		if (sta->ht_cap.ht_supported)
+ 			add_sta_cmd.station_flags |=
+@@ -3258,14 +3258,14 @@ static int iwl_mvm_send_sta_key(struct iwl_mvm *mvm,
+ 		break;
+ 	case WLAN_CIPHER_SUITE_WEP104:
+ 		key_flags |= cpu_to_le16(STA_KEY_FLG_WEP_13BYTES);
+-		/* fall through */
++		fallthrough;
+ 	case WLAN_CIPHER_SUITE_WEP40:
+ 		key_flags |= cpu_to_le16(STA_KEY_FLG_WEP);
+ 		memcpy(u.cmd.common.key + 3, key->key, key->keylen);
+ 		break;
+ 	case WLAN_CIPHER_SUITE_GCMP_256:
+ 		key_flags |= cpu_to_le16(STA_KEY_FLG_KEY_32BYTES);
+-		/* fall through */
++		fallthrough;
+ 	case WLAN_CIPHER_SUITE_GCMP:
+ 		key_flags |= cpu_to_le16(STA_KEY_FLG_GCMP);
+ 		memcpy(u.cmd.common.key, key->key, key->keylen);
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+index 2f6484e0d726..b536e04a35e6 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -459,7 +459,7 @@ static void iwl_mvm_set_tx_cmd_crypto(struct iwl_mvm *mvm,
+ 
+ 	case WLAN_CIPHER_SUITE_WEP104:
+ 		tx_cmd->sec_ctl |= TX_CMD_SEC_KEY128;
+-		/* fall through */
++		fallthrough;
+ 	case WLAN_CIPHER_SUITE_WEP40:
+ 		tx_cmd->sec_ctl |= TX_CMD_SEC_WEP |
+ 			((keyconf->keyidx << TX_CMD_SEC_WEP_KEY_IDX_POS) &
+@@ -470,7 +470,7 @@ static void iwl_mvm_set_tx_cmd_crypto(struct iwl_mvm *mvm,
+ 	case WLAN_CIPHER_SUITE_GCMP:
+ 	case WLAN_CIPHER_SUITE_GCMP_256:
+ 		type = TX_CMD_SEC_GCMP;
+-		/* Fall through */
++		fallthrough;
+ 	case WLAN_CIPHER_SUITE_CCMP_256:
+ 		/* TODO: Taking the key from the table might introduce a race
+ 		 * when PTK rekeying is done, having an old packets with a PN
+-- 
+2.27.0
 
