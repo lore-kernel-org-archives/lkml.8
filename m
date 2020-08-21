@@ -2,86 +2,77 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA65C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B281C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E256E20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F135E20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgHUHs7 convert rfc822-to-8bit (ORCPT
+        id S1728193AbgHUHuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:48:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60985 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725908AbgHUHs6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:48:58 -0400
-Received: from [2001:67c:670:100:3ad5:47ff:feaf:1a17] (helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k91nD-000287-Le; Fri, 21 Aug 2020 09:48:55 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k91nC-0006r7-JA; Fri, 21 Aug 2020 09:48:54 +0200
-Message-ID: <ce211ce5b10024aec1ff03e4a2abe1b46a71e8ff.camel@pengutronix.de>
-Subject: Re: [PATCH 4.9 196/212] gpu: ipu-v3: image-convert: Combine
- rotate/no-rotate irq handlers
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Date:   Fri, 21 Aug 2020 09:48:54 +0200
-In-Reply-To: <20200821073440.GB1681156@kroah.com>
-References: <20200820091602.251285210@linuxfoundation.org>
-         <20200820091612.258939813@linuxfoundation.org> <20200821070216.GB23823@amd>
-         <e586d38120241447df58818c1f9e3c04e5068972.camel@pengutronix.de>
-         <20200821073440.GB1681156@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 21 Aug 2020 03:50:13 -0400
+Received: from elvis.franken.de ([193.175.24.41]:54235 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725908AbgHUHuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 03:50:12 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1k91oP-00079q-00; Fri, 21 Aug 2020 09:50:09 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id D9FBCC0D76; Fri, 21 Aug 2020 09:46:25 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 09:46:25 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Robert Richter <rric@kernel.org>, Huacai Chen <chenhc@lemote.com>,
+        Liangliang Huang <huanglllzu@gmail.com>,
+        oprofile-list@lists.sf.net, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: op_model_mipsxx: Fix non-executable code bug
+Message-ID: <20200821074625.GA8336@alpha.franken.de>
+References: <20200819045813.GA24181@embeddedor>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200819045813.GA24181@embeddedor>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-08-21 at 09:34 +0200, Greg Kroah-Hartman wrote:
-> On Fri, Aug 21, 2020 at 09:10:30AM +0200, Philipp Zabel wrote:
-> > Hi,
-> > 
-> > On Fri, 2020-08-21 at 09:02 +0200, Pavel Machek wrote:
-> > > Hi!
-> > > 
-> > > > From: Steve Longerbeam <slongerbeam@gmail.com>
-> > > > 
-> > > > [ Upstream commit 0f6245f42ce9b7e4d20f2cda8d5f12b55a44d7d1 ]
-> > > > 
-> > > > Combine the rotate_irq() and norotate_irq() handlers into a single
-> > > > eof_irq() handler.
-> > > 
-> > > AFAICT this is preparation for next patch, not a backfix. And actual
-> > > fix patch is not there for 4.19, so this can be dropped, too.
-                                ^^^^^^ 4.9
-> > 
-> > You are right, this patch is preparation for commit 0f6245f42ce9 ("gpu:
-> > ipu-v3: image-convert: Wait for all EOFs before completing a tile").
+On Tue, Aug 18, 2020 at 11:58:13PM -0500, Gustavo A. R. Silva wrote:
+> The fallthrough pseudo-keyword is being wrongly used and is causing
+> the non-executable code error below:
 > 
-> Which is included in this patch series...
+> arch/mips/oprofile/op_model_mipsxx.c: In function ‘mipsxx_perfcount_handler’:
+> ./include/linux/compiler_attributes.h:214:41: warning: statement will never be executed [-Wswitch-unreachable]
+>  # define fallthrough                    __attribute__((__fallthrough__))
+>                                          ^
+> arch/mips/oprofile/op_model_mipsxx.c:248:2: note: in expansion of macro ‘fallthrough’
+>   fallthrough;       \
+>   ^~~~~~~~~~~
+> arch/mips/oprofile/op_model_mipsxx.c:258:2: note: in expansion of macro ‘HANDLE_COUNTER’
+>   HANDLE_COUNTER(3)
+>   ^~~~~~~~~~~~~~
+> 
+> Fix this by placing the fallthrough macro at the proper place.
+> 
+> Fixes: c9b029903466 ("MIPS: Use fallthrough for arch/mips")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  arch/mips/oprofile/op_model_mipsxx.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-It didn't hit my inbox for the v4.9 series, I can't see it on lore
-either:
+applied to mips-fixes.
 
-https://lore.kernel.org/stable/20200820091602.251285210@linuxfoundation.org/
+Thomas.
 
-regards
-Philipp
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
