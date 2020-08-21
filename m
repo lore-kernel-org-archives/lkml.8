@@ -2,131 +2,157 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237DFC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB141C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEBDE20791
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:28:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoMfAjUZ"
+	by mail.kernel.org (Postfix) with ESMTP id C11FF207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgHUV2d (ORCPT
+        id S1726716AbgHUV3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:28:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726433AbgHUV2c (ORCPT
+        Fri, 21 Aug 2020 17:29:44 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:47324 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgHUV3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:28:32 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C8C1C061573;
-        Fri, 21 Aug 2020 14:28:31 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id k18so2250837qtm.10;
-        Fri, 21 Aug 2020 14:28:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=u1w1dHewQ24Wh+EinJOH0pHgm/+gMZl7ydhUDFjuxnU=;
-        b=OoMfAjUZNkobdLMpwQ9UFNRLMGg4krPXHtBq3Ds15ChRcLsqX5B44nEIZJ7s3FioZb
-         6oYiG18I/qsd0529aq3ua3uxtI9gSYEoW1ALH3ba3XWAGTaZyUYdsQjnyKpSlukJxuDK
-         blqEdLgUgL92jae/PdnFYiYeQApnlj3mz4LbeuOo0gZeJGEl1IO3i09PIX52HxaxPzuw
-         RFp86XFjqI3KHojp/MGn7uEZDzu48zBiI1YdZs1C9zvnjpGOTRvfXPiIBijrgP0nQZ/8
-         r1qooc2oOrlTJHcXqo4mDtmOntpRN/IkGUKtZOIH8/BEzBMvlyrn5M0AFD1NgtMnpmVn
-         cKwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=u1w1dHewQ24Wh+EinJOH0pHgm/+gMZl7ydhUDFjuxnU=;
-        b=BX2MLtIcDcf8Ced0SLuiHabf4WDIiqrULdH+/X8rQDjutqeQKi056Jza3vWjKYq6re
-         TBXzkWVPbTh6BSmfeeauMCi9DhnNlx8mcoNXVegZbxvkrngyu0pGu82plVsAYw5q5yLC
-         jlf/qdcfmgx95r7/TekMrrXXCG/M05S/U34Joag7srIKmlH7qixrTDE+OX4PfL1FDDFy
-         OfSRhAIzBbbxdZUB5UhsdSeN36m2+KQRY9K+lyoD9KW0Naz+wsj0ST+urbqHBQ8zG91E
-         rwZsTg4XVFuILgpAUVBR4TUQR2t+PZ2bp9SwJPP/iSV61+BKk8b7/M3XlAYjbjkNrNnG
-         vzrw==
-X-Gm-Message-State: AOAM531cHi1mcfApn5zQ4ImWX0f+vNV00Dg6Wo54lPjkrcsv6mZREVSf
-        CzNHN1JCa74rnilLYH+9fRc=
-X-Google-Smtp-Source: ABdhPJxtZVULVA3N4dt/bqKeQXc8/i3GQ6y0v/dOVtDkDPQdS8K00WAzx4b4ykHLL9yquf0LN759jg==
-X-Received: by 2002:aed:27c8:: with SMTP id m8mr4565676qtg.302.1598045310404;
-        Fri, 21 Aug 2020 14:28:30 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id p189sm2823699qkb.61.2020.08.21.14.28.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 14:28:29 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 21 Aug 2020 17:28:28 -0400
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 27/29] x86/boot/compressed: Remove, discard, or assert
- for unwanted sections
-Message-ID: <20200821212828.GA1741495@rani.riverdale.lan>
-References: <20200821194310.3089815-1-keescook@chromium.org>
- <20200821194310.3089815-28-keescook@chromium.org>
- <20200821200159.GC1475504@rani.riverdale.lan>
- <202008211421.47347CA42@keescook>
+        Fri, 21 Aug 2020 17:29:43 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id E5BBD1C0BB0; Fri, 21 Aug 2020 23:29:41 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 23:29:41 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Joerg Roedel <joro@8bytes.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Airlie <airlied@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Vrabel <david.vrabel@citrix.com>,
+        Joerg Roedel <jroedel@suse.de>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm: Track page table modifications in
+ __apply_to_page_range()
+Message-ID: <20200821212941.GA5408@amd>
+References: <20200821123746.16904-1-joro@8bytes.org>
+ <20200821133548.be58a3b0881b41a32759fa04@linux-foundation.org>
+ <159804301810.32652.14249776487575415877@build.alporthouse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
 Content-Disposition: inline
-In-Reply-To: <202008211421.47347CA42@keescook>
+In-Reply-To: <159804301810.32652.14249776487575415877@build.alporthouse.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 02:21:34PM -0700, Kees Cook wrote:
-> On Fri, Aug 21, 2020 at 04:01:59PM -0400, Arvind Sankar wrote:
-> > On Fri, Aug 21, 2020 at 12:43:08PM -0700, Kees Cook wrote:
-> > > In preparation for warning on orphan sections, stop the linker from
-> > > generating the .eh_frame* sections, discard unwanted non-zero-sized
-> > > generated sections, and enforce other expected-to-be-zero-sized sections
-> > > (since discarding them might hide problems with them suddenly gaining
-> > > unexpected entries).
-> > > 
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > >  	.rel.dyn : {
-> > > -		*(.rel.*)
-> > > +		*(.rel.*) *(.rel_*)
-> > >  	}
-> > >  	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
-> > >  
-> > >  	.rela.dyn : {
-> > > -		*(.rela.*)
-> > > +		*(.rela.*) *(.rela_*)
-> > >  	}
-> > >  	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
-> > >  }
-> > > -- 
-> > > 2.25.1
-> > > 
-> > 
-> > When do you get .rela_?
-> 
-> i386 builds, IIRC. I can try to hunt that down if you want?
-> 
-> -- 
-> Kees Cook
 
-Nah, just curious.
+--jRHKVT23PllUwdXP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
+Hi!
+
+> > > The __apply_to_page_range() function is also used to change and/or
+> > > allocate page-table pages in the vmalloc area of the address space.
+> > > Make sure these changes get synchronized to other page-tables in the
+> > > system by calling arch_sync_kernel_mappings() when necessary.
+> >=20
+> > There's no description here of the user-visible effects of the bug.=20
+> > Please always provide this, especially when proposing a -stable
+> > backport.  Take pity upon all the downstream kernel maintainers who are
+> > staring at this wondering whether they should risk adding it to their
+> > kernels.
+>=20
+> The impact appears limited to x86-32, where apply_to_page_range may miss
+> updating the PMD. That leads to explosions in drivers like
+>=20
+> [   24.227844] BUG: unable to handle page fault for address: fe036000
+> [   24.228076] #PF: supervisor write access in kernel mode
+> [   24.228294] #PF: error_code(0x0002) - not-present page
+> [   24.228494] *pde =3D 00000000
+> [   24.228640] Oops: 0002 [#1] SMP
+> [   24.228788] CPU: 3 PID: 1300 Comm: gem_concurrent_ Not tainted 5.9.0-r=
+c1+ #16
+> [   24.228957] Hardware name:  /NUC6i3SYB, BIOS SYSKLi35.86A.0024.2015.10=
+27.2142 10/27/2015
+> [   24.229297] EIP: __execlists_context_alloc+0x132/0x2d0 [i915]
+> [   24.229462] Code: 31 d2 89 f0 e8 2f 55 02 00 89 45 e8 3d 00 f0 ff ff 0=
+f 87 11 01 00 00 8b 4d e8 03 4b 30 b8 5a 5a 5a 5a ba 01 00 00 00 8d 79 04 <=
+c7> 01 5a 5a 5a 5a c7 81 fc 0f 00 00 5a 5a 5a 5a 83 e7 fc 29 f9 81
+> [   24.229759] EAX: 5a5a5a5a EBX: f60ca000 ECX: fe036000 EDX: 00000001
+> [   24.229915] ESI: f43b7340 EDI: fe036004 EBP: f6389cb8 ESP: f6389c9c
+> [   24.230072] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010=
+286
+> [   24.230229] CR0: 80050033 CR2: fe036000 CR3: 2d361000 CR4: 001506d0
+> [   24.230385] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+> [   24.230539] DR6: fffe0ff0 DR7: 00000400
+> [   24.230675] Call Trace:
+> [   24.230957]  execlists_context_alloc+0x10/0x20 [i915]
+> [   24.231266]  intel_context_alloc_state+0x3f/0x70 [i915]
+> [   24.231547]  __intel_context_do_pin+0x117/0x170 [i915]
+> [   24.231850]  i915_gem_do_execbuffer+0xcc7/0x2500 [i915]
+> [   24.232024]  ? __kmalloc_track_caller+0x54/0x230
+> [   24.232181]  ? ktime_get+0x3e/0x120
+> [   24.232333]  ? dma_fence_signal+0x34/0x50
+> [   24.232617]  i915_gem_execbuffer2_ioctl+0xcd/0x1f0 [i915]
+> [   24.232912]  ? i915_gem_execbuffer_ioctl+0x2e0/0x2e0 [i915]
+> [   24.233084]  drm_ioctl_kernel+0x8f/0xd0
+> [   24.233236]  drm_ioctl+0x223/0x3d0
+> [   24.233505]  ? i915_gem_execbuffer_ioctl+0x2e0/0x2e0 [i915]
+> [   24.233684]  ? pick_next_task_fair+0x1b5/0x3d0
+> [   24.233873]  ? __switch_to_asm+0x36/0x50
+> [   24.234021]  ? drm_ioctl_kernel+0xd0/0xd0
+> [   24.234167]  __ia32_sys_ioctl+0x1ab/0x760
+> [   24.234313]  ? exit_to_user_mode_prepare+0xe5/0x110
+> [   24.234453]  ? syscall_exit_to_user_mode+0x23/0x130
+> [   24.234601]  __do_fast_syscall_32+0x3f/0x70
+> [   24.234744]  do_fast_syscall_32+0x29/0x60
+> [   24.234885]  do_SYSENTER_32+0x15/0x20
+> [   24.235021]  entry_SYSENTER_32+0x9f/0xf2
+> [   24.235157] EIP: 0xb7f28559
+> [   24.235288] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01 10 0=
+7 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <=
+5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
+> [   24.235576] EAX: ffffffda EBX: 00000005 ECX: c0406469 EDX: bf95556c
+> [   24.235722] ESI: b7e68000 EDI: c0406469 EBP: 00000005 ESP: bf9554d8
+> [   24.235869] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000=
+296
+> [   24.236018] Modules linked in: i915 x86_pkg_temp_thermal intel_powercl=
+amp crc32_pclmul crc32c_intel intel_cstate intel_uncore intel_gtt drm_kms_h=
+elper intel_pch_thermal video button autofs4 i2c_i801 i2c_smbus fan
+> [   24.236336] CR2: 00000000fe036000
+>=20
+> It looks like kasan, xen and i915 are vulnerable.
+
+And actual impact is "on thinkpad X60 in 5.9-rc1, screen starts
+blinking after 30-or-so minutes, and macine is unusable"... that is
+assuming we are taking same bug.
+
+Best regards,
+								Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--jRHKVT23PllUwdXP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl9APMUACgkQMOfwapXb+vIqlQCgm7zxsEBdfcvxbL1Na0G7WDPX
++KUAn2d/s1U+J6N41YFcV66zr9KtN9+q
+=89db
+-----END PGP SIGNATURE-----
+
+--jRHKVT23PllUwdXP--
