@@ -2,119 +2,136 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94752C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D73C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71BEF20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8A920738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:20:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u4QxWI9+"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="fy8OA3hb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgHUDQh (ORCPT
+        id S1727084AbgHUDU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:16:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbgHUDQh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:16:37 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D181C061385;
-        Thu, 20 Aug 2020 20:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=oAY+ROTTJJQR3iPt2JQ1lkA+1apv58uojBryWs9cKTI=; b=u4QxWI9+OygIHweKPZ0qOgSPo+
-        /2ZTVwnRxGyCx6Os/OuTPgCurrTCIxVxEIIk+PbtpqSGDofOzC0du6gg3H8F3SGsuZaz73irPEBwc
-        rjqOvVdED9O6+UflvW2ZkYQNK+GjE9wWHAkUXLzqajIB9PslSJpt7ibnt47hLlPGogrDVqh5vXdtv
-        bICjSZU346tdrMEz/YTVtLlrAdZUU7eM6MBEaJirkRmiqAGmp4hRtcP+xkEjPhBHEVdmRqzFCZo4n
-        oHuPbS2VSelA/DwU3edOk8+xJaFPgadZyhfGdB4BUG/rS/mNFhEk6zKPxUYvOJ1O/GVLsVZrYirSC
-        u0jjYsMg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8xXd-0007pr-2E; Fri, 21 Aug 2020 03:16:33 +0000
-Subject: Re: [PATCH v2] x86/hotplug: Silence APIC only after all irq's are
- migrated
-To:     Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Sukumar Ghorai <sukumar.ghorai@intel.com>,
-        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
-References: <1597970523-24797-1-git-send-email-ashok.raj@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <595d331e-59f3-309c-a25d-f92c8aafb812@infradead.org>
-Date:   Thu, 20 Aug 2020 20:16:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 20 Aug 2020 23:20:57 -0400
+Received: from mail-mw2nam10on2076.outbound.protection.outlook.com ([40.107.94.76]:49057
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726844AbgHUDU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 23:20:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KEDfIX4AeMZ8IbT2mPBzUOyIObbHADZdWw85/eIFwzYzJUW+uU3nioMA5V1NkZS3c77VPbYLzmP6JCAn4VMnUm+E6l0qUE85G2DPDb5qp0IHhOSh5Q63fWDdOb2SVeG45pOE9xpSfcN2m8iXsY88R4ac8KqXYFQRtGAQv7T0fLcjvbOjX0tnoIUuKpfIJ2CX83WgSoClh+B+hCjqLhzTo3Ykn+8+C4HPA1RVOzklKI+UhAaXr/LTA/0y/w4gtxVmCICi2CNH3h3kuTiQZsyLhGfGyBFibVasAm/d0JCrJfe9DBD4sYBiTjSqVJRFUBhb32RfIsy+cYdIEBDarPfR6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S7JS/7BXnnRuPn0zPKlPB4EE+b4KH7GRiE8Sl/r6Ixs=;
+ b=PcAg2552w8w09fzGPscYTtVhfaSGQ/PUZRM0U5rdKgTf4coP1gsRnrFRvuKwGoeO326OIk9vLQEmAKWmWGyoh+nnWBTIJHCcAn9PnvqdkIrO1k9O0ygThYBEi5qDC4UjpwmaFx37mfEsh62tbHBjJQqaqgXuHmYGUbvDbLWA+lxxwuMHF/yqijXnMIfzEmTfL5CLN/z4pKtH+Wz4cc7CSAgFUhN8M3OrMzfTywIarK9a2QzwNCApsi0JPp6Jga1l7G0P1dFB1rsK5uTGMDyBWoofRO4+9qQMXxqagfW6k0rVs169Uxkjs95x2ueaM1+MQouhGu6Xpru8oTaGS5WfoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S7JS/7BXnnRuPn0zPKlPB4EE+b4KH7GRiE8Sl/r6Ixs=;
+ b=fy8OA3hbmSQSUE+wpmaqWXMGvi0CkHag6FTAY5BB2mAvag/40OqVmqvk3T0xJYX9PolEIbwviKRIl6zQvtGmbBTYlhW39IkpTRoZ8PByTxcqwsa/DHA93XT1iuZZUyZ7N4dbFtuCJwLn54XABtiQz2K1FR6yq5IeI8BxBypEFDY=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=synaptics.com;
+Received: from DM6PR03MB4555.namprd03.prod.outlook.com (2603:10b6:5:102::17)
+ by DM6PR03MB4617.namprd03.prod.outlook.com (2603:10b6:5:15e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Fri, 21 Aug
+ 2020 03:20:53 +0000
+Received: from DM6PR03MB4555.namprd03.prod.outlook.com
+ ([fe80::e494:740f:155:4a38]) by DM6PR03MB4555.namprd03.prod.outlook.com
+ ([fe80::e494:740f:155:4a38%7]) with mapi id 15.20.3305.025; Fri, 21 Aug 2020
+ 03:20:53 +0000
+Date:   Fri, 21 Aug 2020 11:16:31 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Icenowy Zheng <icenowy@aosc.io>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 08/15] regulator: max77826: Fix W=1 build warning when
+ CONFIG_OF=n
+Message-ID: <20200821111631.4e799c86@xhacker.debian>
+In-Reply-To: <20200821111135.0b958d3a@xhacker.debian>
+References: <20200821111135.0b958d3a@xhacker.debian>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: TY2PR06CA0043.apcprd06.prod.outlook.com
+ (2603:1096:404:2e::31) To DM6PR03MB4555.namprd03.prod.outlook.com
+ (2603:10b6:5:102::17)
 MIME-Version: 1.0
-In-Reply-To: <1597970523-24797-1-git-send-email-ashok.raj@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by TY2PR06CA0043.apcprd06.prod.outlook.com (2603:1096:404:2e::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Fri, 21 Aug 2020 03:20:49 +0000
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d591de87-faab-4e2f-34c9-08d8458135d6
+X-MS-TrafficTypeDiagnostic: DM6PR03MB4617:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB4617DC75F2FAF6F6FED8EB7EED5B0@DM6PR03MB4617.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:449;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: RolNriHAhyRdVr04zS4Fl2G1nPIkMOpndh/iiA4VpM1lARB6s5xUWeWw9UNT1mizxE6HJIRXbJ3ADtgx8odl3EmzNM2uLU2VyK0z9/5FUDphVbdzrXfS5jgIM0MrA2dPEnYQrqYZYjQgEoh1riK1Z8Uh78gmoToE4rT8dySGAvRNe3bii5yfhAXv4yQQxof971/S0VNVex2ASIh9Es71ETVLx2/Xs7vRnGVybKdZBJBFGLbSLOo9nY5Mxtb0KXDPP/xdtUT3lDd7OXt/q0rILHczNCRTrJDeoz9ZXT6tM6vFcj0tmmZoZkzc5UhUGPZ7MyIJgT89BMVdxB3OfZUP6qVWhrwSqRmjTb60lbC/Aa7poTOCRlxyNRtue5azJBTf
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(396003)(376002)(366004)(39860400002)(346002)(66946007)(478600001)(8936002)(1076003)(7416002)(66556008)(6486002)(52116002)(110011004)(9686003)(4326008)(66476007)(8676002)(6666004)(5660300002)(86362001)(956004)(16576012)(186003)(316002)(4744005)(26005)(110136005)(2906002)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: RyKx2bA397HLCEsFjkJiF5mBhoKdu6SSxebZloGQFm/8KV5tP9hhV4LkRppJZrJJiAJtgu7gJyR7kVkO5691GszHnNcn8RzVD7WQn0JJWu44N6WWisqCcgJHndx5Hm9ca1+45jaR2NQStxCuneW8fuzMK/xehYhz/PpwUdApZfr3BJ/44YLxBsjyk5NlPu+mWFXy2UFgt/n/x/lXYnuVyS0/dig0RxJeaDuDSxMDYZNAolSmN/u3cT5PUY8tlTUqSRUcLYWiYgEyY59tvEGApZtX81GAdqaBsbHdXHml5n5EBh33Wf6pbDvYpMjboAQQ0iRJ2tbpgl/sP41cFkNZDj0L1wBtyyy4A5d9k1tyuJWDHTIz2+9LijdVIb5HSCg1etSC55CH3h6VgfaQckg6D3C+hVii1C1xW0zBFE3l3qJmd8fVlqxQh2ghGEXgndNKNchSOrpMpgLGljSo7voa/eGeNGeGzIa5X9HvDSl2vTgxjzxcweiHBln9pjIbM6f8/iS963/UmjDdaEi5e+otPL6nOleh1h00Beup2mSZNyov62Swe9qDJc5vu+7XpXyWAtcZkwqVsajHZEZdHg7ye+t9FO7Hb7SjUVrvXIEXFv56em6DwFn157NuF9qfsYnnkT8fgNbK4XWyzkKkWPHm9Q==
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d591de87-faab-4e2f-34c9-08d8458135d6
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 03:20:53.2641
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oZLs6Q0zoq40uoPPZpfifhSa5M5miQarNzRiD2BoxHcbZCvJtxfwp33xlGoRhSJtPNGwikhgnx1fHto4fhXcXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4617
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/20 5:42 PM, Ashok Raj wrote:
-> When offlining CPUs, fixup_irqs() migrates all interrupts away from the
-> outgoing CPU to an online CPU. It's always possible the device sent an
-> interrupt to the previous CPU destination. Pending interrupt bit in IRR in
-> LAPIC identifies such interrupts. apic_soft_disable() will not capture any
-> new interrupts in IRR. This causes interrupts from device to be lost during
-> CPU offline. The issue was found when explicitly setting MSI affinity to a
-> CPU and immediately offlining it. It was simple to recreate with a USB
-> ethernet device and doing I/O to it while the CPU is offlined. Lost
-> interrupts happen even when Interrupt Remapping is enabled.
-> 
-> Current code does apic_soft_disable() before migrating interrupts.
-> 
-> native_cpu_disable()
-> {
-> 	...
-> 	apic_soft_disable();
-> 	cpu_disable_common();
-> 	  --> fixup_irqs(); // Too late to capture anything in IRR.
-> }
-> 
-> Just flipping the above call sequence seems to hit the IRR checks
-> and the lost interrupt is fixed for both legacy MSI and when
-> interrupt remapping is enabled.
-> 
-> Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
-> Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
-> Reported-by: Evan Green <evgreen@chromium.org>
-> Tested-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-> Tested-by: Evan Green <evgreen@chromium.org>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> ---
-> v2:
-> - Typos and fixes suggested by Randy Dunlap
+Fix below warning when CONFIG_OF=3Dn:
 
-Those all look good now.  Thanks for the update.
+drivers/regulator/max77826-regulator.c:277:34: warning: =E2=80=98max77826_o=
+f_match=E2=80=99 defined but not used [-Wunused-const-variable=3D]
+  277 | static const struct of_device_id max77826_of_match[] =3D {
+      |                                  ^~~~~~~~~~~~~~~~~
 
-> To: linux-kernel@vger.kernel.org
-> To: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Sukumar Ghorai <sukumar.ghorai@intel.com>
-> Cc: Srikanth Nandamuri <srikanth.nandamuri@intel.com>
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: stable@vger.kernel.org
-> ---
->  arch/x86/kernel/smpboot.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ drivers/regulator/max77826-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
--- 
-~Randy
+diff --git a/drivers/regulator/max77826-regulator.c b/drivers/regulator/max=
+77826-regulator.c
+index 502ab6afc814..f9e2e884ff54 100644
+--- a/drivers/regulator/max77826-regulator.c
++++ b/drivers/regulator/max77826-regulator.c
+@@ -274,7 +274,7 @@ static int max77826_i2c_probe(struct i2c_client *client=
+)
+ 	return max77826_read_device_id(regmap, dev);
+ }
+=20
+-static const struct of_device_id max77826_of_match[] =3D {
++static const struct of_device_id __maybe_unused max77826_of_match[] =3D {
+ 	{ .compatible =3D "maxim,max77826" },
+ 	{ /* sentinel */ }
+ };
+--=20
+2.28.0
 
