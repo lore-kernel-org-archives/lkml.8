@@ -2,76 +2,134 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D85C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6356020714
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C7620714
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHUTb1 (ORCPT
+        id S1726466AbgHUTeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:31:27 -0400
-Received: from orcam.me.uk ([81.187.245.177]:40872 "EHLO orcam.me.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbgHUTb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:31:27 -0400
-X-Greylist: delayed 478 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Aug 2020 15:31:26 EDT
-Received: from bugs.linux-mips.org (eddie.linux-mips.org [IPv6:2a01:4f8:201:92aa::3])
-        by orcam.me.uk (Postfix) with ESMTPS id 688F72BE086;
-        Fri, 21 Aug 2020 20:23:17 +0100 (BST)
-Date:   Fri, 21 Aug 2020 20:23:16 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@linux-mips.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-cc:     Zhou Yanjie <zhouyanjie@wanyeetech.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>, od@zcrc.me,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        =?UTF-8?B?5ryG6bmP5oyv?= <aric.pzqi@ingenic.com>,
-        dongsheng.qiu@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, xuwanhao@wanyeetech.com
-Subject: Re: [PATCH 00/13] MIPS: Convert Ingenic to a generic board
-In-Reply-To: <L8DPEQ.71Z8YA0QXBJA@crapouillou.net>
-Message-ID: <alpine.LFD.2.21.2008211949220.3460685@eddie.linux-mips.org>
-References: <20200803170124.231110-1-paul@crapouillou.net>        <ab985296-8441-4006-210d-a71503bd01f0@wanyeetech.com> <L8DPEQ.71Z8YA0QXBJA@crapouillou.net>
+        Fri, 21 Aug 2020 15:34:44 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:58621 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725831AbgHUTeo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 15:34:44 -0400
+Received: (qmail 266418 invoked by uid 1000); 21 Aug 2020 15:34:42 -0400
+Date:   Fri, 21 Aug 2020 15:34:42 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] PM: sleep: core: Fix the handling of pending runtime
+ resume requests
+Message-ID: <20200821193442.GA264863@rowland.harvard.edu>
+References: <7969920.MVx1BpXlEM@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7969920.MVx1BpXlEM@kreacher>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Aug 2020, Paul Cercueil wrote:
-
-> > I'm not too sure if remove "cpu-feature-overrides.h" will cause some
-> > problems for X2000, because according to my current test on X2000, I found
-> > that it is somewhat different from the SoCs using XBurst1 CPU core, with the
-> > kernel source code provided by Ingenic, for example, we must configure
-> > "#define cpu_has_tlbinv 1" in "cpu-feature-overrides.h" to make the X2000
-> > work normally, otherwise the kernel will get stuck. And X2000's interrupt
-> > controller has also been redesigned. If these differences make it impossible
-> > to share code, should we set a subdirectory of "xburst" and "xburst2" in
-> > "arch/mips/ingenic"? (I am just worried about this situation, so far I have
-> > not been able to successfully run the mainline kernel on X2000).
+On Fri, Aug 21, 2020 at 07:41:02PM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> The <cpu-feature-overrides.h> is kind of a hack, to hardcode settings in case
-> the CPU is not properly detected. The cpu-probe.c should be able to
-> auto-detect these settings, including the inverted TLB that the X2000 has,
-> reading from the CPU config registers ("TLB INV" info should be in config4).
-> Right now cpu_probe_ingenic() doesn't read config4 (not present on older SoCs)
-> but that's trivial to add.
+> It has been reported that system-wide suspend may be aborted in the
+> absence of any wakeup events due to unforseen interactions of it with
+> the runtume PM framework.
+> 
+> One failing scenario is when there are multiple devices sharing an
+> ACPI power resource and runtime-resume needs to be carried out for
+> one of them during system-wide suspend (for example, because it needs
+> to be reconfigured before the whole system goes to sleep).  In that
+> case, the runtime-resume of that device involves turning the ACPI
+> power resource "on" which in turn causes runtime resume requests
+> to be queued up for all of the other devices sharing it.  Those
+> requests go to the runtime PM workqueue which is frozen during
+> system-wide suspend, so they are not actually taken care of until
+> the resume of the whole system, but the pm_runtime_barrier()
+> call in __device_suspend() sees them and triggers system wakeup
+> events for them which then cause the system-wide suspend to be
+> aborted if wakeup source objects are in active use.
+> 
+> Of course, the logic that leads to triggering those wakeup events is
+> questionable in the first place, because clearly there are cases in
+> which a pending runtime resume request for a device is not connected
+> to any real wakeup events in any way (like the one above).  Moreover,
+> if there is a pending runtime resume request for a device while
+> __device_suspend() is running for it, the physical state of the
+> device may not be in agreement with the "suspended" runtime PM status
+> of it (which may be the very reason for queuing up the runtime resume
+> request for it).
+> 
+> For these reasons, rework __device_suspend() to carry out synchronous
+> runtime-resume for devices with pending runtime resume requests before
+> attempting to invoke system-wide suspend callbacks for them with the
+> expectation that their drivers will trigger system-wide wakeup events
+> in the process of handling the runtime resume, if necessary.
+> 
+> Fixes: 1e2ef05bb8cf8 ("PM: Limit race conditions between runtime PM and system sleep (v2)")
+> Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/base/power/main.c |   12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> Index: linux-pm/drivers/base/power/main.c
+> ===================================================================
+> --- linux-pm.orig/drivers/base/power/main.c
+> +++ linux-pm/drivers/base/power/main.c
+> @@ -1606,13 +1606,13 @@ static int __device_suspend(struct devic
+>  	}
+>  
+>  	/*
+> -	 * If a device configured to wake up the system from sleep states
+> -	 * has been suspended at run time and there's a resume request pending
+> -	 * for it, this is equivalent to the device signaling wakeup, so the
+> -	 * system suspend operation should be aborted.
+> +	 * If there's a runtime resume request pending for the device, resume
+> +	 * it before proceeding with invoking the system-wide suspend callbacks
+> +	 * for it, because the physical state of the device may not reflect the
+> +	 * "suspended" runtime PM status already in that case.
+>  	 */
+> -	if (pm_runtime_barrier(dev) && device_may_wakeup(dev))
+> -		pm_wakeup_event(dev, 0);
+> +	if (pm_runtime_barrier(dev))
+> +		pm_runtime_resume(dev);
 
- FAOD <cpu-feature-overrides.h> is not a hack, but an optimisation measure 
-so that features known to be hardwired for a given machine/CPU do not have 
-to be dynamically queried every time referred.  In some cases that results 
-in large portions of code being optimised away by the compiler as well. 
+Is this really right?  Note that whenever pm_runtime_barrier() returns a 
+nonzero value, it already calls rpm_resume(dev, 0).  So the 
+pm_runtime_resume() call added here is redundant.
 
- The hardcoded value for a feature defined in <cpu-feature-overrides.h> 
-always has to be the same as one in the corresponding bit of the `options' 
-member of `struct cpuinfo_mips', in this case MIPS_CPU_TLBINV.
+Furthermore, by the logic used in this patch, the call to 
+pm_wakeup_event() in the original code is also redundant: Any required 
+wakeup event should have been generated when the runtime resume inside 
+pm_runtime_barrer() was carried out.  Removing a redundant function call 
+can't fix a bug!
 
-  Maciej
+This means that the code could be simplified to just:
+
+	pm_runtime_barrier(dev);
+
+Will this fix the reported bug?  It seems likely to me that the actual 
+problem with the failure scenario in the patch description was that 
+turning on an ACPI power resource causes runtime-resume requests to be 
+queued for all devices sharing that resource.  Wouldn't it make more 
+sense to resume only the device that requested it and leave the others 
+in runtime suspend?
+
+Alan Stern
