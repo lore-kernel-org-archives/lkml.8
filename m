@@ -2,117 +2,98 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A59BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56BC420720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A61020720
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:07:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pB+qRKM2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="grlxyTPg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgHUJG3 (ORCPT
+        id S1728115AbgHUJHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:06:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50610 "EHLO
+        Fri, 21 Aug 2020 05:07:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgHUJG1 (ORCPT
+        with ESMTP id S1725965AbgHUJHC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:06:27 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB1D2C061385;
-        Fri, 21 Aug 2020 02:06:27 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 17so759768pfw.9;
-        Fri, 21 Aug 2020 02:06:27 -0700 (PDT)
+        Fri, 21 Aug 2020 05:07:02 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE92C061385;
+        Fri, 21 Aug 2020 02:07:02 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id f5so597987plr.9;
+        Fri, 21 Aug 2020 02:07:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ClwOCvNdMbSwIvrMHBCrtpWj2Sg/nFcA0Erlf/v7f9I=;
-        b=pB+qRKM2AHS443Cscmz2VK4Ro/JI40bwhD7Jojrqv8T5gBjlAJHShryWeO428vDXYX
-         ba1w9qmlClKif7NBjCAoRMkKUF93bm5sXS8wJu0QtUkrJbhhyqtFDODTNmN5V0lTklSs
-         vkL39anLkBg7pl9m6hMWkwMXJPnmACSdheQtEfT5fo0M9o6448sE4ajPJqRh8iIz4dAT
-         0bkU/CNmCn78G43XilreYQG+s0mSsgtzijT58BNhCKzJZneW2IDR/Ci5STpAmsl28R9L
-         m8PgYNKRE+rWrQAeEtOUzTB0N9vmecHgcD47MIePwL2oORMeciG+NGBpQD9OQoMlSXd5
-         lojA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lpRfEAK9hizU8z+MYAdROsy4y7XmRdPj3BG7wTbZLZw=;
+        b=grlxyTPg/iyMdHs7mW+oLR6rh0bk0w5Ls5KRZqaoAaFp0LjCwJ7buqxLZLTlThUDNG
+         tzvM0MKOmcCIT5u6eDZpI3YjhBxLAJ8vLuqN1lHFnNyYkHMqb7SyZT9KvsiHE4grXAQ4
+         I4BdGNwGW6X5UdrbmMBiHkesLOrwhbVcP8BkFH0xUL8JxKPnyaG5aEx8kZRSvo+A12wK
+         +K5r5Nth0voQc8KbJl+6dOlYi4q6/MGuxe4P1dy1fYiaKDpOgvmw1u0VhFzBWJBVmd2k
+         6tjToZKd5NwF/yIeh0ZDhl18GnkHArtdzY9T5df2LnLtFo6u+wV1ffS9b7eeS9vdIjpt
+         V/eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ClwOCvNdMbSwIvrMHBCrtpWj2Sg/nFcA0Erlf/v7f9I=;
-        b=owMckdZwQpIX9bwI1iSY7ifUDL3LAbqXhv1ydeK3wGijcF9uEmFLeOtu9DtbfdHOlO
-         l2O/A6oTlfvvfYyvPaao1lckPV8KQrDmu54oqzvtEI5vjzcHfKsanlNAtleNvEgkAujn
-         LcTdTg5n5972fwk4WBdZW/Ie5Si03aTCN6Vky5K025DUoj6L87w8Pn8MrC11METMF6XD
-         W7Bhcbllp4KiO4L97v5BuR4E9Uh8l5LB6PQj2E3yQORmkI/MIXQ1M+x02/cWv8bmFeer
-         EjkwhmU6jmUWZfEkrzf8AUQM5XQiw5sfVk/5SFhWvNWuWUPtsdnytRDk93XHs0X2J3iV
-         8g2A==
-X-Gm-Message-State: AOAM5332SWu5OBKVPvmnfLTTAErWiTaOhNromtavrI0gxLK+ZdlKxDUh
-        f4bx0zyl7+U5WTqcQ1hGero=
-X-Google-Smtp-Source: ABdhPJzA8ojiKKI8C6VE102tj7IvFCYcv7NiClYkDnphzjF8/kZShjWd0Ex6CLnTjD6jrVu9Pjy4HA==
-X-Received: by 2002:a62:6185:: with SMTP id v127mr1627684pfb.259.1598000787273;
-        Fri, 21 Aug 2020 02:06:27 -0700 (PDT)
-Received: from localhost ([124.156.176.71])
-        by smtp.gmail.com with ESMTPSA id o19sm1388158pjs.8.2020.08.21.02.06.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Aug 2020 02:06:26 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 17:06:27 +0800
-From:   Yue Hu <zbestahu@gmail.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "huyue2@yulong.com" <huyue2@yulong.com>,
-        "zhangwen@yulong.com" <zhangwen@yulong.com>
-Subject: Re: [PATCH] thermal: sysfs: Fall back to vmalloc() for cooling
- device's statistics
-Message-ID: <20200821170627.00003d5e.zbestahu@gmail.com>
-In-Reply-To: <7a0c2e488e024c0694fd730f95ba98fb@AcuMS.aculab.com>
-References: <20200821024406.10404-1-zbestahu@gmail.com>
-        <7a0c2e488e024c0694fd730f95ba98fb@AcuMS.aculab.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lpRfEAK9hizU8z+MYAdROsy4y7XmRdPj3BG7wTbZLZw=;
+        b=QZcQaHcIrdn9/FdG5IJOgMnm7BpCjX3J5yGikkZvt/QePBr7EKB4PgufD5LSt6t8Fx
+         803yGgwfb/OHZV8QAsMqB9OkHjwoPCLF2YcpPq0uaJls8CKJWv5GongHpxs7H1VWFJBZ
+         1TssRSSLCeqj15cXyv06Vt49dig/XHts6EySAyMcUOe96dxP209NKDjJtc8jw4r66fR1
+         GVyEVwTtMtd/P+mb89f5DGgLuNnjrbpAZIlddtoQLVo26NYncpA6UFkHy6VP3HP/35T/
+         bEWCGhoy+7/OhaEbiDNegm41WwkIRV36zFZyXqYpOf842NI/+2D+LtAjq0xT35aZ9qat
+         JKCg==
+X-Gm-Message-State: AOAM531SOf2amG1SRxGKLfG5AKKzcxPvp2l5aKk4+IN/3aUE4IEPSkxf
+        7OG8G6YjTLTdRLXLdjnp3UzY5bICldAuNbFhLm8=
+X-Google-Smtp-Source: ABdhPJxcGz7B04L23FgStmA+C5YUh17LayGi0wW4N43S/c8dvT4rWSpO7MdM8lbbuwaa/qzB9+Qc/M9bxRj0WNOq5u0=
+X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr1765347pjb.129.1598000821832;
+ Fri, 21 Aug 2020 02:07:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200820091537.490965042@linuxfoundation.org> <20200820091541.964627271@linuxfoundation.org>
+ <20200821072123.GC23823@amd>
+In-Reply-To: <20200821072123.GC23823@amd>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 21 Aug 2020 12:06:45 +0300
+Message-ID: <CAHp75Vcbmc-PV-gQxuj9i8sAcFCzhJKe_qzEfrkUTZbnf3Vupg@mail.gmail.com>
+Subject: Re: [PATCH 4.19 83/92] mfd: dln2: Run event handler loop under spinlock
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 08:39:45 +0000
-David Laight <David.Laight@ACULAB.COM> wrote:
+On Fri, Aug 21, 2020 at 10:26 AM Pavel Machek <pavel@denx.de> wrote:
+> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >
+> > [ Upstream commit 3d858942250820b9adc35f963a257481d6d4c81d ]
+> >
+> > The event handler loop must be run with interrupts disabled.
+> > Otherwise we will have a warning:
+> ...
+> > Recently xHCI driver switched to tasklets in the commit 36dc01657b49
+> > ("usb: host: xhci: Support running urb giveback in tasklet
+> > context").
+>
+> AFAICT, 36dc01657b49 is not included in 4.19.141, so this commit
+> should not be needed, either.
 
-> From: Yue Hu
-> > Sent: 21 August 2020 03:44
-> > 
-> > From: Yue Hu <huyue2@yulong.com>
-> > 
-> > We observed warning about kzalloc() when register thermal cooling device
-> > in backlight_device_register(). backlight display can be a cooling device
-> > since reducing screen brightness will can help reduce temperature.
-> > 
-> > However, ->get_max_state of backlight will assign max brightness of 1024
-> > to states. The memory size can be getting 1MB+ due to states * states.
-> > That is so large to trigger kmalloc() warning.  
-> 
-> I can't help feeling that there is an 'adequate' implementation
-> that doesn't require anywhere near 1MB of memory.
+I'm wondering if there are any other USB host controller drivers that
+use URB giveback in interrupt enabled context.
 
-However, it should be a potential issue due to what i described above, rt?
-
-Thx.
-
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
-
+-- 
+With Best Regards,
+Andy Shevchenko
