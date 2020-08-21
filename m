@@ -2,70 +2,94 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAEAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC57CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE9D5207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7905420724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgHUMTi (ORCPT
+        id S1727797AbgHUMUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 08:19:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55504 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbgHUMSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 08:18:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 2DA22ACCF;
-        Fri, 21 Aug 2020 12:18:47 +0000 (UTC)
-Date:   Fri, 21 Aug 2020 14:18:16 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-mm@kvack.org, Pavel Machek <pavel@ucw.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Airlie <airlied@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Vrabel <david.vrabel@citrix.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] mm: Track page table modifications in
- __apply_to_page_range() construction
-Message-ID: <20200821121816.GJ3354@suse.de>
-References: <20200821085011.28878-1-chris@chris-wilson.co.uk>
- <20200821100902.GG3354@suse.de>
- <159800481672.29194.17217138842959831589@build.alporthouse.com>
- <20200821102343.GI3354@suse.de>
- <159800635942.29194.13489565974587679781@build.alporthouse.com>
- <159800988352.29194.8498025838223804532@build.alporthouse.com>
+        Fri, 21 Aug 2020 08:20:39 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:29032 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727837AbgHUMSf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 08:18:35 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-48-5tsXRHYdNKyZh1jxPg801Q-1; Fri, 21 Aug 2020 13:18:29 +0100
+X-MC-Unique: 5tsXRHYdNKyZh1jxPg801Q-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 21 Aug 2020 13:18:28 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 21 Aug 2020 13:18:28 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Nicolas Boichat' <drinkcat@chromium.org>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Linux Media Mailing List" <linux-media@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: RE: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
+Thread-Topic: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
+Thread-Index: AQHWd1MRQFeXK2GIIEihfK8khxWsrqlCP3rwgAAMdQCAACDnQP//+vQAgAARUeA=
+Date:   Fri, 21 Aug 2020 12:18:28 +0000
+Message-ID: <6c5249afad274ce49e643d9b05706e3a@AcuMS.aculab.com>
+References: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
+ <20200820170951.v4.3.I066d89f39023956c47fb0a42edf196b3950ffbf7@changeid>
+ <20200820102347.15d2f610@oasis.local.home>
+ <CANMq1KCoEZVj=sjxCqBhqLZKBab57+82=Rk_LN7fc3aCuNHMUw@mail.gmail.com>
+ <20200820203601.4f70bf98@oasis.local.home>
+ <21fae92da07c4566ba4eed3b5e1bce2d@AcuMS.aculab.com>
+ <CANMq1KBvNqcdCsuDGGygYqS5+ZBw+qSVXTC+WWNycypG2=BRMQ@mail.gmail.com>
+ <898c56e4b7ef4c3da1d634fdef5a8898@AcuMS.aculab.com>
+ <CANMq1KDT+uecuqxXRsxv9-sMv0sGXk6ZQ3hWv0aK34dfzaJXyg@mail.gmail.com>
+In-Reply-To: <CANMq1KDT+uecuqxXRsxv9-sMv0sGXk6ZQ3hWv0aK34dfzaJXyg@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159800988352.29194.8498025838223804532@build.alporthouse.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 12:38:03PM +0100, Chris Wilson wrote:
-> In the version I tested, I also had
-> 
-> @@ -2216,7 +2216,7 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
-> 
->         if (create) {
->                 pte = (mm == &init_mm) ?
-> -                       pte_alloc_kernel(pmd, addr) :
-> +                       pte_alloc_kernel_track(pmd, addr, mask) :
->                         pte_alloc_map_lock(mm, pmd, addr, &ptl);
->                 if (!pte)
->                         return -ENOMEM;
-> 
-> And that PGTBL_PMD_MODIFIED makes a difference.
+RnJvbTogTmljb2xhcyBCb2ljaGF0DQo+IFNlbnQ6IDIxIEF1Z3VzdCAyMDIwIDEzOjA3DQouLi4N
+Cj4gPiBZb3UgbWlnaHQgYWxzbyB3YW50IGEgI2RlZmluZSB0aGF0IGNhbiBzZXQgdGVtcG9yYXJp
+bHkNCj4gPiB0byBlbmFibGUgdHJhY2VzIGluIGEgc3BlY2lmaWMgZmlsZS9tb2R1bGUgZXZlbiB0
+aG91Z2gNCj4gPiBDT05GSUdfVFJBQ0U9bi4NCj4gDQo+IEkgZG9uJ3QgdW5kZXJzdGFuZCBob3cg
+dHJhY2VzIGFyZSBzdXBwb3NlZCB0byB3b3JrIHdpdGggQ09ORklHX1RSQUNFPW4/DQoNClByb2Jh
+Ymx5IGJlY2F1c2UgSSBtZWFudCBzb21ldGhpbmcgZGlmZmVyZW50IDotKQ0KDQpZb3Ugd2FudCB0
+aGUga2VybmVsIGJ1aWx0IHNvIHRoYXQgdGhlcmUgYXJlIG5vIChleHBhbmRlZCkNCmNhbGxzIHRv
+IHRyYWNlX3ByaW50ZigpIGJ1dCB3aXRoIHN1cHBvcnQgZm9yIG1vZHVsZXMgdGhhdA0KY29udGFp
+biB0aGVtLg0KDQpUaGVuIEkgY2FuIGxvYWQgYSBtb2R1bGUgaW50byBhIGRpc3RybyBrZXJuZWwg
+dGhhdA0KY29udGFpbnMgdHJhY2VfcHJpbnRmKCkgY2FsbHMgZm9yIGRlYnVnIHRlc3RpbmcuDQoN
+CldoaWNoIGlzIHdoeSBJIHdhcyBzdWdnZXN0aW5nIGEgY29uZmlnIG9wdGlvbiB0aGF0DQpvbmx5
+IHJhbmQtY29uZmlnIGJ1aWxkcyB3b3VsZCBldmVyIHNldCB0aGF0IHdvdWxkDQpjYXVzZSB0aGUg
+Y2FsbHMgdG8gZ2VuZXJhdGUgY29tcGlsZS10aW1lIGVycm9ycy4NCg0KCURhdmlkDQoNCi0NClJl
+Z2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0
+b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykN
+Cg==
 
-Right, thanks. Added that too.
