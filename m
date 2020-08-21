@@ -2,226 +2,282 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 004C6C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE9CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C55052075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDD12075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 04:54:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="j3xzh4AG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cwe7WcRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgHUEwd (ORCPT
+        id S1726504AbgHUEyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 00:52:33 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:6765 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725270AbgHUEwc (ORCPT
+        Fri, 21 Aug 2020 00:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbgHUEyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 00:52:32 -0400
-X-UUID: e40e435730c742c28a7ed91899ca03e1-20200821
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=rtSNcj9WdoW8N3anyRnK6q6++/r1djDG3stDnjKlZVI=;
-        b=j3xzh4AGxw6U6gl1ggHCDFu/e/MHoOGUz2jbI3q0hgXlgvUJ4PBOIOPcXseoUjcH2wlLcPPjAeXEYFSmml3CLE2+qUPvL0flr5cXRycGVwkRrW0QDobZSn+aTZQeM6w6h+R/a1Z9paSC/p16DKBPfyeNSQC7fJYuZxLJFNDfCBQ=;
-X-UUID: e40e435730c742c28a7ed91899ca03e1-20200821
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1312047966; Fri, 21 Aug 2020 12:47:13 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 21 Aug 2020 12:47:10 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 21 Aug 2020 12:47:10 +0800
-Message-ID: <1597985231.23380.22.camel@mtkswgap22>
-Subject: Re: [PATCH v1 1/2] pinctrl: mediatek: support access registers
- without race-condition
-From:   Light Hsieh <light.hsieh@mediatek.com>
-To:     Sean Wang <sean.wang@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>
-Date:   Fri, 21 Aug 2020 12:47:11 +0800
-In-Reply-To: <CAGp9Lzo31FPCQ5PMyA7wAgB_pGM3bZbxP84XYqL7Njb9d+w6Fw@mail.gmail.com>
-References: <1597739776-15944-1-git-send-email-light.hsieh@mediatek.com>
-         <CAGp9Lzo31FPCQ5PMyA7wAgB_pGM3bZbxP84XYqL7Njb9d+w6Fw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 21 Aug 2020 00:54:43 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A9FC061385;
+        Thu, 20 Aug 2020 21:54:43 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id h2so354094plr.0;
+        Thu, 20 Aug 2020 21:54:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FeLWSTdoM4nf+36Zjzc7ne8kyEInVTO4IOni7rUwpas=;
+        b=cwe7WcRuGsa6f/zGPnLYLtWyVucgzXqUMN+gDwsJfZZ8jjhKvHxJOX30r7GqxWs7Qd
+         qfh9x+hbvHjsz/jwN2Pc/brQaR0Kaaa67FRBA2VicBgJqjmoaV/Wi/JYnwxrHhW4zgxX
+         P7wYR1zBZLOGPqK3Hrx/FjuFz3i7oWT9a9+D5VZUSvFx9A3DyjjaXTbWLZGqdqyx0cd0
+         9Rx/UzHI3cP1klYZhfnNeraGjE8tb9MdCUg0bIE5kQ50QJRRBXronFnF8iytC3ml/Frd
+         c83dKCeL+Hwei5yesXlif/HeqnQ/6cRJHSGeY86DxYzhlUzWBqoNK6W+A0u3ntzUJAwM
+         zVaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FeLWSTdoM4nf+36Zjzc7ne8kyEInVTO4IOni7rUwpas=;
+        b=GBpXe1M6Geizj99R0XGk50P+98jP9/HXNyDfbrXszVBnpQBW2WJ/YhucFID5ZaR2eE
+         lXN2IIam7Sv48bBDHWV1HdeDQJBP1HsegwPEXti6gJyxQC4GacN43y4LRLwVXCAlavXX
+         Fd3LVbI7NA65f/jQDfTs19HA0iK2zbuq6XL57iEoRrq2xle0hZSCgqcdHSYLkpL69mWw
+         Lv2A/azGea5imfpFLFBZ2B/PVektOaMG1nYaYLRWJK86b0T4zok+9D7aSrxc2407MkjJ
+         KVSpw2n3oWLE0suyeQUm5s02bLYhTNu+EaxViSYGqD6aTMbHI2oD3ChJVq6N0xgz/4Nv
+         H7jA==
+X-Gm-Message-State: AOAM531I0MrEKm8i6OHfBXDaViqx1Z9Z5y/lp+TtgRi24YXqLLSW3kLR
+        sr8bFLRIKss2oLVE0wLnoJjSGyeJzfZsbkNO
+X-Google-Smtp-Source: ABdhPJwSYeHb6R0XOe+q1qknq8go0JYAceoF6n2aOzvEaYKe5W+Xf6Gec0ftsAnTCpKMlQp/dhtA3g==
+X-Received: by 2002:a17:902:b681:: with SMTP id c1mr1017367pls.214.1597985682615;
+        Thu, 20 Aug 2020 21:54:42 -0700 (PDT)
+Received: from [192.168.86.81] ([49.206.11.137])
+        by smtp.gmail.com with ESMTPSA id b185sm829596pfg.71.2020.08.20.21.54.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2020 21:54:41 -0700 (PDT)
+Subject: Re: [PATCH] lib: Convert test_printf.c to KUnit
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        brendanhiggins@google.com, skhan@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com
+Cc:     kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20200817043028.76502-1-98.arpi@gmail.com>
+ <f408efbd-10f7-f1dd-9baa-0f1233cafffc@rasmusvillemoes.dk>
+From:   Arpitha Raghunandan <98.arpi@gmail.com>
+Message-ID: <2e1d1e40-b448-9389-d7d2-93841af60a88@gmail.com>
+Date:   Fri, 21 Aug 2020 10:24:36 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 51BC122EDEF3F1D67EED8335CAD5141E90041D04EFD83219FE1A1A71628C7C8B2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <f408efbd-10f7-f1dd-9baa-0f1233cafffc@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA4LTE5IGF0IDE2OjExIC0wNzAwLCBTZWFuIFdhbmcgd3JvdGU6DQo+IEhp
-IExpZ2h0LA0KPiANCj4gT24gVHVlLCBBdWcgMTgsIDIwMjAgYXQgMTozNiBBTSA8bGlnaHQuaHNp
-ZWhAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206IExpZ2h0IEhzaWVoIDxsaWdo
-dC5oc2llaEBtZWRpYXRlay5jb20+DQo+ID4NCj4gPiBTb21lIE1lZGlhVGVrIFNPQyBwcm92aWRl
-IG1vcmUgY29udHJvbCByZWdpc3RlcnMgb3RoZXIgdGhhbiB2YWx1ZSByZWdpc3Rlci4NCj4gDQo+
-IHMvTVQ2NzY1L1NvbWUgTWVkaWFUZWsgU29DLw0KPiANCj4gPiBHZW5lcmFubGwsIGEgdmFsdWUg
-cmVnaXN0ZXIgbmVlZCByZWFkLW1vZGlmeS13cml0ZSBpcyBhdCBvZmZzZXQgMHhYWFhYWFhYWDAu
-DQo+IA0KPiBzL0dlbmVyYWxseS9HZW5lcmFubGwvDQo+IA0KPiA+IEEgY29ycmVzcG9uZGluZyBT
-RVQgcmVnaXN0ZXIgaXMgYXQgb2Zmc2V0IDB4WFhYWFhYWDQuIFdyaXRlIDFzJyB0byBzb21lIGJp
-dHMNCj4gPiAgIG9mIFNFVCByZWdpc3RlciB3aWxsIHNldCBzYW1lIGJpdHMgaW4gdmFsdWUgcmVn
-aXN0ZXIuDQo+ID4gQSBjb3JyZXNwb25kaW5nIENMUiByZWdpc3RlciBpcyBhdCBvZmZzZXQgMHhY
-WFhYWFhYOC4gV3JpdGUgMXMnIHRvIHNvbWUgYml0cw0KPiA+ICAgb2YgQ0xSIHJlZ2lzdGVyIHdp
-bGwgY2xlYXIgc2FtZSBiaXRzIGluIHZhbHVlIHJlZ2lzdGVyLg0KPiA+IEZvciBHUElPIG1vZGUg
-c2VsZWN0aW9uLCBNV1IgcmVnaXN0ZXIgaXMgcHJvdmlkZWQgYXQgb2Zmc2V0IDB4WFhYWFhYWEMu
-DQo+ID4gICBXaXRoIE1XUiwgdGhlIE1TQml0IG9mIEdQSU8gbW9kZSBzZWxlY3Rpb24gZmllbGQg
-aXMgZm9yIG1vZGlmaWNhdGlvbi1lbmFibGUsDQo+ID4gICBub3QgZm9yIEdQSU8gbW9kZSBzZWxl
-Y3Rpb24sIGFuZCB0aGUgcmVtYWluaW5nIExTQml0cyBhcmUgZm9yIG1vZGUNCj4gPiAgIHNlbGVj
-dGlvbi4NCj4gPiAgIFRha2UgbW9kZSBzZWxlY3Rpb24gZmllbGQgd2l0aCA0LWJpdHMgYXMgZXhh
-bXBsZSwgdG8gc2VsZWN0IG1vZGUgMH43IHZpYQ0KPiA+ICAgTVdSIHJlZ2lzdGVyLCA4fjE1IChp
-bnN0ZWFkIG9mIDB+Nykgc2hhbGwgYmUgd3JpdHRlbiB0byBjb3JyZXNwb25kaW5nIG1vZGUNCj4g
-PiAgIHNlbGVjdGlvbiBmaWVsZC4NCj4gPiBXaGVuIHVzaW5nIFNFVC9DTFIvTVdSIHJlZ2lzdGVy
-cywgcmVhZC1tb2RpZnktd3JpdGUgb2YgdmFsdWUgcmVnaXN0ZXIgaXMgbm90DQo+ID4gICBuZWNl
-c3NhcnkuIFRoaXMgY2FuIHByZXZlbnQgZnJvbSByYWNlIGNvbmRpdGlvbiB3aGVuIG11bHRpcGxl
-IGJ1cyBtYXN0ZXJzDQo+ID4gICBjb25jdXJyZW50bHkgcmVhZC1tb2RpZnktd3JpdGUgdGhlIHNh
-bWUgdmFsdWUgcmVnaXN0ZXIgZm9yIHNldHRpbmcgZGlmZmVyZW50DQo+ID4gICBmaWVsZHMgb2Yg
-dGhlIHNhbWUgdmFsdWUgcmVnaXN0ZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBMaWdodCBI
-c2llaCA8bGlnaHQuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3Bp
-bmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgfCA2OSArKysrKysrKysrKysr
-KysrKysrKysrLS0NCj4gPiAgZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNv
-bW1vbi12Mi5oIHwgIDIgKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKyks
-IDQgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21l
-ZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVr
-L3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jDQo+ID4gaW5kZXggYjc3YjE4Zi4uNTFmMGI1MyAxMDA2
-NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9u
-LXYyLmMNCj4gPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29t
-bW9uLXYyLmMNCj4gPiBAQCAtMTgsNiArMTgsMjkgQEANCj4gPiAgI2luY2x1ZGUgIm10ay1laW50
-LmgiDQo+ID4gICNpbmNsdWRlICJwaW5jdHJsLW10ay1jb21tb24tdjIuaCINCj4gPg0KPiA+ICsv
-KiBTb21lIE1lZGlhVGVrIFNPQyBwcm92aWRlIG1vcmUgY29udHJvbCByZWdpc3RlcnMgb3RoZXIg
-dGhhbiB2YWx1ZSByZWdpc3Rlci4NCj4gDQo+IHMvTVQ2NzY1L1NvbWUgTWVkaWFUZWsgU29DLw0K
-DQpOb3Qgb25seSBNVDY3NjUgcHJvdmlkZXMgc3VjaCBjb250cm9sIHJlZ2lzdGVycy4NCkFjdHVh
-bGx5LCBtYW55IChidXQgbm90IGFsbCkgTWVkaWFUZWsgU29DIHN1cHBvcnQuDQpPdGhlciBNZWRp
-YVRlayBTb0MgY2FuIGVuYWJsZSBzdWNoIGNvbnRyb2wgYWNjb3JkaW5nIHRvIGl0cyBIVyBzdXBw
-b3J0Lg0KDQo+IA0KPiA+ICsgKiBHZW5lcmFubGwsIGEgdmFsdWUgcmVnaXN0ZXIgbmVlZCByZWFk
-LW1vZGlmeS13cml0ZSBpcyBhdCBvZmZzZXQgMHhYWFhYWFhYWDAuDQo+IA0KPiBzL0dlbmVyYWxs
-eS9HZW5lcmFubGwvDQo+IA0KPiA+ICsgKiBBIGNvcnJlc3BvbmRpbmcgU0VUIHJlZ2lzdGVyIGlz
-IGF0IG9mZnNldCAweFhYWFhYWFg0LiBXcml0ZSAxcycgdG8gc29tZSBiaXRzDQo+ID4gKyAqICBv
-ZiBTRVQgcmVnaXN0ZXIgd2lsbCBzZXQgc2FtZSBiaXRzIGluIHZhbHVlIHJlZ2lzdGVyLg0KPiA+
-ICsgKiBBIGNvcnJlc3BvbmRpbmcgQ0xSIHJlZ2lzdGVyIGlzIGF0IG9mZnNldCAweFhYWFhYWFg4
-LiBXcml0ZSAxcycgdG8gc29tZSBiaXRzDQo+ID4gKyAqICBvZiBDTFIgcmVnaXN0ZXIgd2lsbCBj
-bGVhciBzYW1lIGJpdHMgaW4gdmFsdWUgcmVnaXN0ZXIuDQo+ID4gKyAqIEZvciBHUElPIG1vZGUg
-c2VsZWN0aW9uLCBNV1IgcmVnaXN0ZXIgaXMgcHJvdmlkZWQgYXQgb2Zmc2V0IDB4WFhYWFhYWEMu
-DQo+ID4gKyAqICBXaXRoIE1XUiwgdGhlIE1TQml0IG9mIEdQSU8gbW9kZSBzZWxlY3Rpb24gZmll
-bGQgaXMgZm9yIG1vZGlmaWNhdGlvbi1lbmFibGUsDQo+ID4gKyAqICBub3QgZm9yIEdQSU8gbW9k
-ZSBzZWxlY3Rpb24sIGFuZCB0aGUgcmVtYWluaW5nIExTQml0cyBhcmUgZm9yIG1vZGUNCj4gPiAr
-ICogIHNlbGVjdGlvbi4NCj4gPiArICogIFRha2UgbW9kZSBzZWxlY3Rpb24gZmllbGQgd2l0aCA0
-LWJpdHMgYXMgZXhhbXBsZSwgdG8gc2VsZWN0IG1vZGUgMH43IHZpYQ0KPiA+ICsgKiAgTVdSIHJl
-Z2lzdGVyLCA4fjE1IChpbnN0ZWFkIG9mIDB+Nykgc2hhbGwgYmUgd3JpdHRlbiB0byBjb3JyZXNw
-b25kaW5nIG1vZGUNCj4gPiArICogIHNlbGVjdGlvbiBmaWVsZC4NCj4gPiArICogV2hlbiB1c2lu
-ZyBTRVQvQ0xSL01XUiByZWdpc3RlcnMsIHJlYWQtbW9kaWZ5LXdyaXRlIG9mIHZhbHVlIHJlZ2lz
-dGVyIGlzIG5vdA0KPiA+ICsgKiAgbmVjZXNzYXJ5LiBUaGlzIGNhbiBwcmV2ZW50IGZyb20gcmFj
-ZSBjb25kaXRpb24gd2hlbiBtdWx0aXBsZSBidXMgbWFzdGVycw0KPiA+ICsgKiAgY29uY3VycmVu
-dGx5IHJlYWQtbW9kaWZ5LXdyaXRlIHRoZSBzYW1lIHZhbHVlIHJlZ2lzdGVyIGZvciBzZXR0aW5n
-IGRpZmZlcmVudA0KPiA+ICsgKiAgZmllbGRzIG9mIHRoZSBzYW1lIHZhbHVlIHJlZ2lzdGVyLg0K
-PiA+ICsgKi8NCj4gPiArDQo+ID4gKyNkZWZpbmUgU0VUX09GRlNFVCAweDQNCj4gPiArI2RlZmlu
-ZSBDTFJfT0ZGU0VUIDB4OA0KPiANCj4gY2FuIHNldC9jbHIgb2Zmc2V0IHdvcmsgZm9yIG1vZGUg
-cmVnaXN0ZXI/DQoNClllcy4gSG93ZXZlciwgdXNlIHNldC9jbHIgdG8gY2hhbmdlIG1vZGUgcmVx
-dWlyZSAyIHJlZ2lzdGVyIGFjY2VzcyB3aGVuDQp0YXJnZXQgbW9kZSBpcyBub3QgYWxsIDAncyBv
-ciBhbGwgMSdzLg0KVGhlIG13ciBIVyBzdXBwb3J0IGlzIG5vdCBhdmFpbGFibGUgb24gbW9kZSBy
-ZWdpc3Rlci4NCg0KPiANCj4gPiArI2RlZmluZSBNV1JfT0ZGU0VUIDB4Qw0KPiA+ICsNCj4gPiAg
-LyoqDQo+ID4gICAqIHN0cnVjdCBtdGtfZHJpdmVfZGVzYyAtIHRoZSBzdHJ1Y3R1cmUgdGhhdCBo
-b2xkcyB0aGUgaW5mb3JtYXRpb24NCj4gPiAgICogICAgICAgICAgICAgICAgICAgICAgICAgb2Yg
-dGhlIGRyaXZpbmcgY3VycmVudA0KPiA+IEBAIC02NCw2ICs4NywzOCBAQCB2b2lkIG10a19ybXco
-c3RydWN0IG10a19waW5jdHJsICpwY3RsLCB1OCBpLCB1MzIgcmVnLCB1MzIgbWFzaywgdTMyIHNl
-dCkNCj4gPiAgICAgICAgIG10a193MzIocGN0bCwgaSwgcmVnLCB2YWwpOw0KPiA+ICB9DQo+ID4N
-Cj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIG10a19od19zZXRfdmFsdWVfcmFjZV9mcmVlKHN0cnVj
-dCBtdGtfcGluY3RybCAqcGN0bCwNCj4gPiArICAgICAgICAgICAgICAgc3RydWN0IG10a19waW5f
-ZmllbGQgKnBmLCB1MzIgdmFsdWUpDQo+IA0KPiBzL210a19od19zZXRfdmFsdWVfcmFjZV9mcmVl
-L210a19od193MXNjLyB0byBleHBsaWN0bHkgaW5kaWNhdGUNCj4gd3JpdGUtb25lIGV0aGllciBz
-ZXQgb3IgY2xlYXIgb3BlcmF0aW9uIHN1cHBvcnRlZCBieSBodw0KPiANCj4gPiArew0KPiA+ICsg
-ICAgICAgdW5zaWduZWQgaW50IHNldCwgY2xyOw0KPiA+ICsNCj4gPiArICAgICAgIHNldCA9IHZh
-bHVlICYgcGYtPm1hc2s7DQo+ID4gKyAgICAgICBjbHIgPSAofnNldCkgJiBwZi0+bWFzazsNCj4g
-PiArDQo+ID4gKyAgICAgICBpZiAoc2V0KQ0KPiA+ICsgICAgICAgICAgICAgICBtdGtfdzMyKHBj
-dGwsIHBmLT5pbmRleCwgcGYtPm9mZnNldCArIFNFVF9PRkZTRVQsDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgc2V0IDw8IHBmLT5iaXRwb3MpOw0KPiA+ICsgICAgICAgaWYgKGNscikNCj4g
-PiArICAgICAgICAgICAgICAgbXRrX3czMihwY3RsLCBwZi0+aW5kZXgsIHBmLT5vZmZzZXQgKyBD
-TFJfT0ZGU0VULA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNsciA8PCBwZi0+Yml0cG9z
-KTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgbXRrX2h3X3NldF9tb2RlX3JhY2Vf
-ZnJlZShzdHJ1Y3QgbXRrX3BpbmN0cmwgKnBjdGwsDQo+ID4gKyAgICAgICAgICAgICAgIHN0cnVj
-dCBtdGtfcGluX2ZpZWxkICpwZiwgdTMyIHZhbHVlKQ0KPiANCj4gcy9tdGtfaHdfc2V0X21vZGVf
-cmFjZV9mcmVlL210a19od19td3IvDQo+IA0KPiA+ICt7DQo+ID4gKyAgICAgICB1bnNpZ25lZCBp
-bnQgdmFsdWVfbmV3Ow0KPiA+ICsNCj4gPiArICAgICAgIC8qIE1TQiBvZiBtYXNrIGlzIG1vZGlm
-aWNhdGlvbi1lbmFibGUgYml0LCBzZXQgdGhpcyBiaXQgKi8NCj4gPiArICAgICAgIHZhbHVlX25l
-dyA9ICgxIDw8IChwY3RsLT5zb2MtPm13cl9maWVsZF93aWR0aCAtIDEpKSB8IHZhbHVlOw0KPiAN
-Cj4gaXQgc2VlbXMgdG8gYmUgd2UgY2FuIHVzZSBmbHMocGYtPm1hc2spIHRvIHJlcGxhY2UgY3Rs
-LT5zb2MtPm13cl9maWVsZF93aWR0aA0KPiANCg0KcGYtPm1hc2sgY2Fubm90IGJlIHVzZWQgZGly
-ZWN0LiBJdCBuZWVkcyBjb252ZXJzaW9uLkZvciBleGFtcGxlOg0KcGYtPm1hc2s6IDB4MWYgLT4g
-dmFsdWVfbmV3ID0gKDEgPDwgNCkgfCB2YWx1ZTsNCnBmLT5tYXNrOiAweGYgLT4gdmFsdWVfbmV3
-ID0gKDEgPDwgMykgfCB2YWx1ZTsNCnBmLT5tYXNrOiAweDcgLT4gdmFsdWVfbmV3ID0gKDEgPDwg
-MikgfCB2YWx1ZTsNCg0KVGhlIGNvZGUgc2l6ZSBvZiBwZXJmb3JtIGNvbnZlcnNpb24gaXMgZ3Jl
-YXRlciB0aGFuIHVzaW5nIGEgZGlyZWN0DQptd3JfZmllbGRfd2lkdGggZmllbGQuDQoNCg0KPiA+
-ICsgICAgICAgaWYgKHZhbHVlX25ldyA9PSB2YWx1ZSkNCj4gPiArICAgICAgICAgICAgICAgZGV2
-X25vdGljZShwY3RsLT5kZXYsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgImludmFsaWQg
-bW9kZSAweCV4LCB1c2UgaXQgYnkgaWdub3JpbmcgTVNCaXQhXG4iLA0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIHZhbHVlKTsNCj4gPiArICAgICAgIG10a193MzIocGN0bCwgcGYtPmluZGV4
-LCBwZi0+b2Zmc2V0ICsgTVdSX09GRlNFVCwNCj4gPiArICAgICAgICAgICAgICAgdmFsdWVfbmV3
-IDw8IHBmLT5iaXRwb3MpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgaW50IG10a19od19w
-aW5fZmllbGRfbG9va3VwKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQo+ID4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLA0K
-PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50IGZpZWxkLCBzdHJ1Y3Qg
-bXRrX3Bpbl9maWVsZCAqcGZkKQ0KPiA+IEBAIC0xOTcsMTAgKzI1MiwxNiBAQCBpbnQgbXRrX2h3
-X3NldF92YWx1ZShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LCBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9k
-ZXNjICpkZXNjLA0KPiA+ICAgICAgICAgaWYgKHZhbHVlIDwgMCB8fCB2YWx1ZSA+IHBmLm1hc2sp
-DQo+ID4gICAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOw0KPiA+DQo+ID4gLSAgICAgICBp
-ZiAoIXBmLm5leHQpDQo+ID4gLSAgICAgICAgICAgICAgIG10a19ybXcoaHcsIHBmLmluZGV4LCBw
-Zi5vZmZzZXQsIHBmLm1hc2sgPDwgcGYuYml0cG9zLA0KPiA+IC0gICAgICAgICAgICAgICAgICAg
-ICAgICh2YWx1ZSAmIHBmLm1hc2spIDw8IHBmLmJpdHBvcyk7DQo+ID4gLSAgICAgICBlbHNlDQo+
-ID4gKyAgICAgICBpZiAoIXBmLm5leHQpIHsNCj4gPiArICAgICAgICAgICAgICAgaWYgKGh3LT5z
-b2MtPnJhY2VfZnJlZV9hY2Nlc3MpIHsNCj4gDQo+IGxldCdzIGNyZWF0ZSBhbiBleHRyYSBmbGFn
-cyBjYXBzIHVuZGVyIGh3LT5zb2MgYW5kIHRoZSBTb0MgY2FwYWJpbGl0eQ0KPiBjaGVjaywgc29t
-ZXRoaW5nIGxpa2UgaHctPnNvYy0+Y2FwcyAmIE1US19IV19DQVBTX1JNV19BVE9NSUMgdG8gZWFz
-aWx5DQo+IGV4dGVuZCB2YXJpb3VzIHRoaW5ncyBmb3IgZnV0dXJlIFNvQw0KPiANCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICBpZiAoZmllbGQgPT0gUElOQ1RSTF9QSU5fUkVHX01PREUpDQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtdGtfaHdfc2V0X21vZGVfcmFjZV9m
-cmVlKGh3LCAmcGYsIHZhbHVlKTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBlbHNlDQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtdGtfaHdfc2V0X3ZhbHVlX3JhY2Vf
-ZnJlZShodywgJnBmLCB2YWx1ZSk7DQo+ID4gKyAgICAgICAgICAgICAgIH0NCj4gDQo+IGxldCdz
-IGNyZWF0ZSBhIGZ1bmN0aW9uIGhvbGRpbmcgdGhhdCBzcGVjaWZpYyBoYXJkd2FyZSBzdHVmZiAo
-YXQgbGVhc3QNCj4gY3VycmVudGx5IGl0IGxvb2sgbGlrZSksIHNvbWV0aGluZyBsaWtlDQo+IA0K
-PiBzdGF0aWMgdm9pZCBtdGtfaHdfcm13KHN0cnVjdCBtdGtfcGluY3RybCAqcGN0bCwgIHN0cnVj
-dCBtdGtfcGluX2ZpZWxkICpwZikNCj4gew0KPiAgICAgIGlmIChwZi0+ZmllbGQgPT0gUElOQ1RS
-TF9QSU5fUkVHX01PREUpIC8qIGNyZWF0ZSBhIG1lbWJlciBmaWVsZCBmb3IgcGYgKi8NCj4gICAg
-ICAgICAgICAgbXRrX2h3X213ciguLi4pOw0KPiAgICAgZWxzZQ0KPiAgICAgICAgICAgICBtdGtf
-aHdfdzFzYyguLi4pOw0KPiB9DQo+IA0KDQpTaW5lIHRoZXJlIGlzIG5vIG1lbWJlciAnZmllbGQn
-IGluIHN0cnVjdCBtdGtfcGluX2ZpZWxkLCBwZi0+ZmllbGQNCmNhbm5vdCBiZSB1c2VkLiANClRo
-ZXJlZm9yZSBhbiBleHRyYSBmdW5jdGlvbiBwYXJhbWV0ZXIgaXMgcmVxdWlyZWQgaWYgeW91IHdh
-bnQgdG8gdXNlIGENCnN0YW5kYWxvbmUgZnVuY3Rpb24gbXRrX2h3X3Jtdy4gTGlrZSB0aGlzOiAN
-Cg0Kdm9pZCBtdGtfaHdfcm13KHN0cnVjdCBtdGtfcGluY3RybCAqcGN0bCwgc3RydWN0IG10a19w
-aW5fZmllbGQgKnBmLA0KCQlpbnQgZmllbGQsIHUzMiB2YWx1ZSkNCnsNCglpZiAoZmllbGQgPT0g
-UElOQ1RSTF9QSU5fUkVHX01PREUpDQoJCW10a19od19zZXRfbW9kZV9yYWNlX2ZyZWUoaHcsICZw
-ZiwgdmFsdWUpOw0KCWVsc2UNCgkJbXRrX2h3X3NldF92YWx1ZV9yYWNlX2ZyZWUoaHcsICZwZiwg
-dmFsdWUpOw0KfQ0KDQpJIHdvbmRlciB0aGUgbmVjZXNzaXR5L2VmZmljaWVuY3kgb2Ygc3VjaCBl
-eHRyYSBpbnRlcm1lZGlhdGUgZnVuY3Rpb24NCndpdGggbWFueSBmdW5jdGlvbiBwYXJhbWV0ZXJz
-LiANCg0KDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbXRrX3JtdyhodywgcGYuaW5kZXgs
-IHBmLm9mZnNldCwgcGYubWFzayA8PCBwZi5iaXRwb3MsDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAodmFsdWUgJiBwZi5tYXNrKSA8PCBwZi5iaXRwb3MpOw0KPiA+ICsgICAg
-ICAgfSBlbHNlDQo+ID4gICAgICAgICAgICAgICAgIG10a19od193cml0ZV9jcm9zc19maWVsZCho
-dywgJnBmLCB2YWx1ZSk7DQo+ID4NCj4gPiAgICAgICAgIHJldHVybiAwOw0KPiA+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmggYi9k
-cml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmgNCj4gPiBpbmRl
-eCAyN2RmMDg3Li45NWZiMzI5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9tZWRp
-YXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuaA0KPiA+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9t
-ZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuaA0KPiA+IEBAIC0yMDMsNiArMjAzLDggQEAg
-c3RydWN0IG10a19waW5fc29jIHsNCj4gPiAgICAgICAgIC8qIFNwZWNpZmljIHBhcmFtZXRlcnMg
-cGVyIFNvQyAqLw0KPiA+ICAgICAgICAgdTggICAgICAgICAgICAgICAgICAgICAgICAgICAgICBn
-cGlvX207DQo+ID4gICAgICAgICBib29sICAgICAgICAgICAgICAgICAgICAgICAgICAgIGllc19w
-cmVzZW50Ow0KPiA+ICsgICAgICAgYm9vbCAgICAgICAgICAgICAgICAgICAgICAgICAgICByYWNl
-X2ZyZWVfYWNjZXNzOw0KPiA+ICsgICAgICAgdW5zaWduZWQgaW50ICAgICAgICAgICAgICAgICAg
-ICBtd3JfZmllbGRfd2lkdGg7DQo+ID4gICAgICAgICBjb25zdCBjaGFyICogY29uc3QgICAgICAg
-ICAgICAgICpiYXNlX25hbWVzOw0KPiA+ICAgICAgICAgdW5zaWduZWQgaW50ICAgICAgICAgICAg
-ICAgICAgICBuYmFzZV9uYW1lczsNCj4gPg0KPiA+IC0tDQo+ID4gMS44LjEuMS5kaXJ0eQ0KDQo=
+On 17/08/20 12:36 pm, Rasmus Villemoes wrote:
+> On 17/08/2020 06.30, Arpitha Raghunandan wrote:
+>> Converts test lib/test_printf.c to KUnit.
+>> More information about KUnit can be found at
+>> https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html.
+>> KUnit provides a common framework for unit tests in the kernel.
+> 
+> So I can continue to build a kernel with some appropriate CONFIG set to
+> y, boot it under virt-me, run dmesg and see if I broke printf? That's
+> what I do now, and I don't want to have to start using some enterprisy
+> framework.
+> 
 
+Yes, the test can be run on boot up. More information about this can be found here: https://www.kernel.org/doc/html/latest/dev-tools/kunit/start.html#running-tests-without-the-kunit-wrapper.
+
+>> diff --git a/lib/test_printf.c b/lib/printf_kunit.c
+>> similarity index 45%
+>> rename from lib/test_printf.c
+>> rename to lib/printf_kunit.c
+>> index 7ac87f18a10f..68ac5f9b8d28 100644
+>> --- a/lib/test_printf.c
+>> +++ b/lib/printf_kunit.c
+>> @@ -5,6 +5,7 @@
+>>  
+>>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>>  
+>> +#include <kunit/test.h>
+>>  #include <linux/init.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/module.h>
+>> @@ -30,79 +31,61 @@
+>>  #define PAD_SIZE 16
+>>  #define FILL_CHAR '$'
+>>  
+>> -static unsigned total_tests __initdata;
+>> -static unsigned failed_tests __initdata;
+>> -static char *test_buffer __initdata;
+>> -static char *alloced_buffer __initdata;
+>> +static char *test_buffer;
+>> +static char *alloced_buffer;
+>>  
+>> -static int __printf(4, 0) __init
+>> -do_test(int bufsize, const char *expect, int elen,
+>> +static void __printf(5, 0)
+>> +do_test(struct kunit *kunittest, int bufsize, const char *expect, int elen,
+>>  	const char *fmt, va_list ap)
+>>  {
+>>  	va_list aq;
+>>  	int ret, written;
+>>  
+>> -	total_tests++;
+>> -
+>>  	memset(alloced_buffer, FILL_CHAR, BUF_SIZE + 2*PAD_SIZE);
+>>  	va_copy(aq, ap);
+>>  	ret = vsnprintf(test_buffer, bufsize, fmt, aq);
+>>  	va_end(aq);
+>>  
+>> -	if (ret != elen) {
+>> -		pr_warn("vsnprintf(buf, %d, \"%s\", ...) returned %d, expected %d\n",
+>> +	KUNIT_EXPECT_EQ_MSG(kunittest, ret, elen,
+>> +			"vsnprintf(buf, %d, \"%s\", ...) returned %d, expected %d\n",
+>>  			bufsize, fmt, ret, elen);
+>> -		return 1;
+>> -	}
+> 
+> 
+> IIRC, some of these early returns are required to ensure the following
+> checks do not fail (as in, potentially crash the kernel) simply because
+> they go off into the weeds. Please double-check that they are all safe
+> to continue to perform (though, another reason I might have put them in
+> is to simply avoid lots of useless collateral).
+> 
+
+These are safe to perform. I will check once again though.
+
+> 
+>> -	if (memchr_inv(alloced_buffer, FILL_CHAR, PAD_SIZE)) {
+>> +	KUNIT_EXPECT_EQ_MSG(kunittest, memchr_inv(alloced_buffer, FILL_CHAR, PAD_SIZE), NULL,
+> 
+>> -		if (memchr_inv(test_buffer, FILL_CHAR, BUF_SIZE + PAD_SIZE)) {
+>> +		KUNIT_EXPECT_FALSE_MSG(kunittest,
+> 
+>> -	if (memchr_inv(test_buffer + written + 1, FILL_CHAR, BUF_SIZE + PAD_SIZE - (written + 1))) {
+>> +	KUNIT_EXPECT_FALSE_MSG(kunittest,
+>> +			memchr_inv(test_buffer + written + 1, FILL_CHAR, BUF_SIZE + PAD_SIZE - (written + 1))
+> 
+> Why the inconsistency in what a memchr_inv != NULL check gets converted to?
+> 
+
+Oh my bad. I will make this consistent.
+
+> 
+>>  
+>> -static void __printf(3, 4) __init
+>> -__test(const char *expect, int elen, const char *fmt, ...)
+>> +static void __printf(4, 5)
+>> +__test(struct kunit *kunittest, const char *expect, int elen, const char *fmt, ...)
+>>  {
+>>  	va_list ap;
+>>  	int rand;
+>>  	char *p;
+>>  
+>> -	if (elen >= BUF_SIZE) {
+>> -		pr_err("error in test suite: expected output length %d too long. Format was '%s'.\n",
+>> -		       elen, fmt);
+>> -		failed_tests++;
+>> -		return;
+>> -	}
+>> +	KUNIT_EXPECT_LT_MSG(kunittest, elen, BUF_SIZE,
+>> +			"error in test suite: expected output length %d too long. Format was '%s'.\n",
+>> +			elen, fmt);
+> 
+> And it's ok to continue with the tests when the test suite itself is
+> buggy because? [*]
+> 
+>>  	va_start(ap, fmt);
+>>  
+>> @@ -112,49 +95,46 @@ __test(const char *expect, int elen, const char *fmt, ...)
+>>  	 * enough and 0), and then we also test that kvasprintf would
+>>  	 * be able to print it as expected.
+>>  	 */
+>> -	failed_tests += do_test(BUF_SIZE, expect, elen, fmt, ap);
+>> +	do_test(kunittest, BUF_SIZE, expect, elen, fmt, ap);
+>>  	rand = 1 + prandom_u32_max(elen+1);
+>>  	/* Since elen < BUF_SIZE, we have 1 <= rand <= BUF_SIZE. */
+>> -	failed_tests += do_test(rand, expect, elen, fmt, ap);
+> 
+> [*] Certainly this invariant gets violated, so we (may) provide do_test
+> with a buffer size larger than, well, BUF_SIZE.
+> 
+>>  
+>> -#define test(expect, fmt, ...)					\
+>> -	__test(expect, strlen(expect), fmt, ##__VA_ARGS__)
+>> +#define test(kunittest, expect, fmt, ...)					\
+>> +	__test(kunittest, expect, strlen(expect), fmt, ##__VA_ARGS__)
+>>  
+>> -static void __init
+>> -test_basic(void)
+>> +static void
+>> +test_basic(struct kunit *kunittest)
+>>  {
+>>  	/* Work around annoying "warning: zero-length gnu_printf format string". */
+>>  	char nul = '\0';
+>>  
+>> -	test("", &nul);
+>> -	test("100%", "100%%");
+>> -	test("xxx%yyy", "xxx%cyyy", '%');
+>> -	__test("xxx\0yyy", 7, "xxx%cyyy", '\0');
+>> +	test(kunittest, "", &nul);
+>> +	test(kunittest, "100%", "100%%");
+>> +	test(kunittest, "xxx%yyy", "xxx%cyyy", '%');
+>> +	__test(kunittest, "xxx\0yyy", 7, "xxx%cyyy", '\0');
+> 
+> Am I reading this right that all this is simply to prepend kunittest to
+> the arguments? How about just redefining the test macro so it
+> automagically does that instead of all this churn? The few cases that
+> use __test may need to be handled specially.
+> 
+>> +
+>> +static void selftest(struct kunit *kunittest)
+>>  {
+>>  	alloced_buffer = kmalloc(BUF_SIZE + 2*PAD_SIZE, GFP_KERNEL);
+>>  	if (!alloced_buffer)
+>>  		return;
+>>  	test_buffer = alloced_buffer + PAD_SIZE;
+>>  
+>> -	test_basic();
+>> -	test_number();
+>> -	test_string();
+>> -	test_pointer();
+>> +	test_basic(kunittest);
+>> +	test_number(kunittest);
+>> +	test_string(kunittest);
+>> +	test_pointer(kunittest);
+>>  
+>>  	kfree(alloced_buffer);
+>>  }
+> 
+> Even better, since the whole thing still relies on the static variables
+> test_buffer and alloced_buffer, why not just stash the struct kunit*
+> that the framework passes in a file-scope static and avoid even more
+> churn? Then only the newly introduce KUNIT_CHECK_* macros need to refer
+> to it, and none of the existing code (or future cases) needs that piece
+> of boilerplate.
+> 
+
+Yes, using file-scope static will be better. I will make this change.
+
+> BTW, does the framework have some kind of logic that ensures nobody runs
+> the printf suite twice in parallel?
+> 
+
+Brendan would have a better idea about this. But, it wouldn't be possible at boot up because KUnit only dispatches each test once. The other way for a KUnit test to be executed currently is as a module, and a module can only be loaded once until it is unloaded.
+
+Thanks for the review.
