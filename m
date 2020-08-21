@@ -2,116 +2,94 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FACC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1744C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D994220732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:54:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="kRb96QOO"
+	by mail.kernel.org (Postfix) with ESMTP id 918A720732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598003879;
+	bh=dWI2a7PDA/idr+i5N+8t74lwOiD4O7oGsjPEewaLymI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xr2j7CLRR+6n0GMd7FCtMzRH9FPvtY48EbBnvxa0g/uGEzOgRceNNVysttx/av6pJ
+	 oiKIrWFjowV/X6E5DqU9SFIqd4RHrHaWAVKLXCK7e1TRwDXa9q6EQJF2F8iQiPoJLw
+	 Os2H6mhuOlHYlmsWLf+1nGxX75rinMS2rSMztZmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgHUJyj (ORCPT
+        id S1728369AbgHUJ56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:54:39 -0400
-Received: from mail1.skidata.com ([91.230.2.99]:49057 "EHLO mail1.skidata.com"
+        Fri, 21 Aug 2020 05:57:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbgHUJye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:54:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1598003673; x=1629539673;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NstbtL4h85xlZs4+XVTJ2ZVNFbQJtI/QKJuqZTJ2ZeQ=;
-  b=kRb96QOOc5MO+LFrktYiLSRs7IwA3NGeTLusUmzGrVJVRDVGjmHF6ENc
-   sCInO7yfgGH/0SEgvxXaMM0rBBcOfuXYV3IxAciCai+KKnNPulICBS8sx
-   PRN+/oAAQG5pYdJhVUtWss9AZoS0ObYmkD0dJ678Fdmk9xcNodSQNAQLr
-   1EZerV/8QvohyhxTehcUhKtloM9TE9ngfd9YSFbK2eH7tnrWOMJnhHvTJ
-   19DnSr0R37yswQYzcwJ/m75bo7Bf5fwWzvb1d93I5tOG+S0EXk9oFioM2
-   8DsZEacsecj5a7Q211dhOqX7rv2UpS4le+yWf1rgMpNsuciJ/OxVEunrT
-   Q==;
-IronPort-SDR: 3YRGmzjJwFhLM47ZZA2avh0ZdlsTTCQs/vrDyCckW8v4KIO9OYH5mDxDlRHi6DXdj0zw0l3grt
- zFumAJ3NT23lh0uS6wZWMxdgSpk1Xr0dBlNPCRmJ5lztPu3KFzyKJJxVV0PHvDrpHz4uKeJ14S
- y7+o1plvPyokFmzMttD3BtEOSYoQPPNKqa3w0vtJRhur8kqBqGxHvyCB5JVemSvoArcwHvWDf0
- YPYQZgTBK+99J3q2ew3/FXG378z1H6pj4Y+XNESw2CcHD/V83drLWg6/hjN4wq/bNyCX19Qt/E
- N04=
-X-IronPort-AV: E=Sophos;i="5.76,335,1592863200"; 
-   d="scan'208";a="26271758"
-Date:   Fri, 21 Aug 2020 11:54:30 +0200
-From:   Richard Leitner <richard.leitner@skidata.com>
-To:     Robin Gong <yibin.gong@nxp.com>
-CC:     Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Subject: Re: pcm|dmaengine|imx-sdma race condition on i.MX6
-Message-ID: <20200821095430.GB65616@pcleri>
-References: <20200813112258.GA327172@pcleri>
- <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <61498763c60e488a825e8dd270732b62@skidata.com>
- <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
- <6b5799a567d14cfb9ce34d278a33017d@skidata.com>
- <VE1PR04MB6638A7AC625B6771F9A69F0D895A0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200821043418.GA65616@pcleri>
- <VE1PR04MB6638271FA459E4068391ABF8895B0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+        id S1725855AbgHUJ56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 05:57:58 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3B4420732;
+        Fri, 21 Aug 2020 09:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598003877;
+        bh=dWI2a7PDA/idr+i5N+8t74lwOiD4O7oGsjPEewaLymI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TTbP/CiZ3LtTB+OzxEptC2eHtTbOfsJ2FjyIQsq2/Gvn9i8ZQ7LizcL2YDst7kYsA
+         JtpBz6dBPRziVhbXXdzJpTG3lRWuoNFZNARyGTuhaZYN9I2l0GNpxVk5XiQDSh9kBA
+         98bvlftlZHiOTVi2iQw03awiCSQq97qHeR167EcI=
+Date:   Fri, 21 Aug 2020 10:57:24 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] regulator: mp886x: implement set_ramp_delay
+Message-ID: <20200821095724.GA4870@sirena.org.uk>
+References: <20200820171020.5df4683b@xhacker.debian>
+ <20200820171051.55a238e8@xhacker.debian>
+ <20200820210513.GA41191@sirena.org.uk>
+ <20200821101729.76f1951b@xhacker.debian>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
 Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6638271FA459E4068391ABF8895B0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-X-Originating-IP: [192.168.111.252]
-X-ClientProxiedBy: sdex6srv.skidata.net (192.168.111.84) To
- sdex5srv.skidata.net (192.168.111.83)
+In-Reply-To: <20200821101729.76f1951b@xhacker.debian>
+X-Cookie: divorce, n:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 09:21:37AM +0000, Robin Gong wrote:
-> On 2020/08/21 12:34 Richard Leitner <richard.leitner@skidata.com> wrote: 
-> > On Thu, Aug 20, 2020 at 03:01:44PM +0000, Robin Gong wrote:
-> > > On 2020/08/19 22:26 Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>
-> > wrote:
-> > > >
-> > > > @Robin:
-> > > > Is it possible to tag the commits for the stable-tree
-> > > > Cc: stable@vger.kernel.org?
-> > > Could my patch work in your side? If yes, I will add
-> > > Cc: stable@vger.kernel.org
-> > 
-> > I've tested the patches 3 & 4 (removing sdmac->context_loaded) of the series
-> > you mentioned and sent Tested-by tags for them [1,2], as they fix the EIO
-> > problems for our use case.
-> > 
-> > So from our side they are fine for stable.
-> > 
-> Okay, I thought that's just decrease the issue in your side not totally fix, and the patch
 
-As Benjamin mentioned the issue isn't "fixed" for us from the logical/
-technical side.
-Nonetheless the EIO error won't occur anymore with the patches applied.
-Therefore the issue is for me "fixed from a userspace point of view", as
-they don't get/see the error anymore.
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> I post in https://www.spinics.net/lists/arm-kernel/msg829972.html
-> could resolve the potential next descriptor wrongly freed by vchan_get_all_descriptors
-> in sdma_channel_terminate_work. Anyway, I'll add ' Cc: stable@vger.kernel.org' and
-> your Tested-by tags in 3&4, then resend it again, thanks.
+On Fri, Aug 21, 2020 at 10:17:29AM +0800, Jisheng Zhang wrote:
 
-Great. Thank you!
+> I found the reason, the three patches in v2 were applied to for-next tree.
+> Should I renew patches based on for-next? Since the "mps,switch-frequency"
+> binding isn't released and used, I think I can send new patches to convert
+> mps,switch-frequency to mps,switch-frequency-hz.
 
-regards;rl
+Yes, please - for-next is best for anything that isn't a bug fix.
 
+--mYCpIKhGyMATD0i+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8/moMACgkQJNaLcl1U
+h9DOLQf+JY4OH5CtLLpCMhjPhpz6MwFD8HLR9eEjxgKO5k5ThcKPyekM/nMPmXkB
+pw9TaIAB5WX1su+yUtIgCyDANcpwG/ST2zLsVcZK0EXyP3cxuR4xSy7iky6dBcPk
+cIPTZMiGMSAOqZMrq8TxEv+emszCbp2hlzQaV5/YQJjtBlSwAQONcI7yi4WXBkQt
+G8d1egfMLBeKKFgy+rI7XyuHQsPTj0LZno/Eouk0U8pVNTtb1G/g/3NTA7bSjkJK
+awwGEnzWJm+ltjV/0MkZv91A530UIiMTGGN4A7832fywr5rr+pBez2VnblWwoasT
+P80pu+wGRpyIt0yhG/1Yl0ifB5GQtQ==
+=dKT8
+-----END PGP SIGNATURE-----
+
+--mYCpIKhGyMATD0i+--
