@@ -2,111 +2,84 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717D1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F09C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB7520720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C1820720
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:46:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bzUnGTMp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hEob0pfx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgHUIqN (ORCPT
+        id S1728070AbgHUIqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:46:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728000AbgHUIqL (ORCPT
+        Fri, 21 Aug 2020 04:46:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24345 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727008AbgHUIqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:46:11 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992EAC061386
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 01:46:09 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id u15so324498uau.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 01:46:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FBSyf+yXd7kiYAF9BZfiPGXH0tN6S8pKBPuNovCFIWg=;
-        b=bzUnGTMpFMBlKFRo4KHl6EmHFbz2NNiN55TErkmKGkClkdBPW7M8o/cmJou7X3zh0E
-         v5/1DmgNBKJFGQftdVexRCnYxq9PSrmpRxK9hFhyuewGRT8Q8cFKzskZTQqdYYppLPk0
-         PZiCmQp/v/qeABwXaKmgFTkeK7NPzfMpZYgDekBA3fbM0fUDL2rGNjmycIungSLFP3l1
-         Ixq4N3ChAyrt0ePjJF0OAvJhHeFgIx+uaM3OpcHRf3zaL08JxrD+npAW6F+jBN6DIat6
-         s1CYxZufog8kBKhFOL9J93G+rlVALXH/IVTc4E4FDU3BbV9XSNuz+ZrIyb/g625Sc+bI
-         A64Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FBSyf+yXd7kiYAF9BZfiPGXH0tN6S8pKBPuNovCFIWg=;
-        b=oIu374PN1Op1ycE0m6MQ4Otv6sTjDxGiYU7nz5UPvBnMP3tDnD9MIxWC6PXnOJsZ1d
-         ByE1rxxG6Xt/B30ESFWyR79GfyG9aT9NHtxziGc8ndEStrPsoQWjl32AKH/Qo/tQtF3c
-         31QQQ/DQnzHLOaATcri+V6f9Ufwwf/EZPWG/se0IOYqzE2R2SXeYjVPOpXosmQXIZVUl
-         gykFMESApHmavv4nA6gAR6TgEqQIgjMva38hCKC0LAHS6Cdf6p3B8NIgrxXAEthciQ0i
-         +XM0SKFkvuKSekrKp4RSbLW4kzKjvG6FgudsNya/vQ0kCvrjmw1uSkRDA5Ulzy4Pfk0H
-         9H1w==
-X-Gm-Message-State: AOAM531SL2MVCJr2vfUjLZ45ja1iNTqd+4HVs2Jz5wJHxY1nSfa3zuN9
-        r7OsOydlDTx+5x0sZyF/0PppEwdlZgJ/NO6aYlRT5A==
-X-Google-Smtp-Source: ABdhPJzrlAajobgpJPI56OVk2bDqzvfYUokRh11GmgukIRnTn43dOHrshkENdJIqI9aJ7hMomaPoCzr2mWE9EakgQ+E=
-X-Received: by 2002:ab0:6341:: with SMTP id f1mr778421uap.19.1597999568563;
- Fri, 21 Aug 2020 01:46:08 -0700 (PDT)
+        Fri, 21 Aug 2020 04:46:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597999582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=olCjBKF17qwtakghkMirVinWe1Vu2ZqCQev6/U3Rq7c=;
+        b=hEob0pfxunXvvdfZcCIfvT/2dlldl672JgvJgDbPrc086avxIZCtobu5ITj1ppj7EUEjux
+        nAdFbF4wea5HxLi/2ZjKCtY0p4zVlb0UP3XiJgpGNg1pV123/5/eodNF0doUUiGBM4TTdm
+        r/DTC9wGxfroCKalDJN28T9OiluEoHk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-435-Y6UCf7X5O_yLWpjnzsdODg-1; Fri, 21 Aug 2020 04:46:20 -0400
+X-MC-Unique: Y6UCf7X5O_yLWpjnzsdODg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C088D18686FA;
+        Fri, 21 Aug 2020 08:46:18 +0000 (UTC)
+Received: from localhost (ovpn-12-124.pek2.redhat.com [10.72.12.124])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 66A807191C;
+        Fri, 21 Aug 2020 08:46:12 +0000 (UTC)
+Date:   Fri, 21 Aug 2020 16:46:10 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH v5 0/6] mm / virtio-mem: support ZONE_MOVABLE
+Message-ID: <20200821084610.GH10792@MiWiFi-R3L-srv>
+References: <20200816125333.7434-1-david@redhat.com>
+ <552a2a55-6082-d286-1cd4-7f7e368eebb4@redhat.com>
 MIME-Version: 1.0
-References: <20200814185011.3252020-1-t.schramm@manjaro.org>
-In-Reply-To: <20200814185011.3252020-1-t.schramm@manjaro.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 21 Aug 2020 10:45:31 +0200
-Message-ID: <CAPDyKFruUf7BxrF3YeYnJn=U4vZKMoQhms4SC=Gp91Z3fzk0Sw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: mmc_spi: fix timeout calculation
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <552a2a55-6082-d286-1cd4-7f7e368eebb4@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020 at 20:50, Tobias Schramm <t.schramm@manjaro.org> wrote:
->
-> Previously the cycle timeout was converted to a microsecond value but
-> then incorrectly treated as a nanosecond timeout. This patch changes
-> the code to convert both the nanosecond timeout and the cycle timeout
-> to a microsecond value and use that directly.
->
-> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+On 08/21/20 at 10:31am, David Hildenbrand wrote:
+> On 16.08.20 14:53, David Hildenbrand wrote:
+> > For 5.10. Patch #1-#4,#6 have RBs or ACKs, patch #5 is virtio-mem stuff
+> > maintained by me. This should go via the -mm tree.
+> > 
+> 
+> @Andrew, can we give this a churn if there are no further comments? Thanks!
 
-This looks good to me, but before applying just wanted to check that
-you tested this on some HW, to make sure it doesn't break anything?
+Saw this series in next already.
 
-Kind regards
-Uffe
-
-
-> ---
->  drivers/mmc/host/mmc_spi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
-> index 39bb1e30c2d7..f85e0ad896a9 100644
-> --- a/drivers/mmc/host/mmc_spi.c
-> +++ b/drivers/mmc/host/mmc_spi.c
-> @@ -882,9 +882,9 @@ mmc_spi_data_do(struct mmc_spi_host *host, struct mmc_command *cmd,
->         else
->                 clock_rate = spi->max_speed_hz;
->
-> -       timeout = data->timeout_ns +
-> +       timeout = data->timeout_ns / 1000 +
->                   data->timeout_clks * 1000000 / clock_rate;
-> -       timeout = usecs_to_jiffies((unsigned int)(timeout / 1000)) + 1;
-> +       timeout = usecs_to_jiffies((unsigned int)timeout) + 1;
->
->         /* Handle scatterlist segments one at a time, with synch for
->          * each 512-byte block
-> --
-> 2.28.0
->
