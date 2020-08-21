@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950E7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7E320732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E092072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028189;
-	bh=mgvQJt2XumH4rdSkwuDr2n17RsuTgZb097gW/jUr4b8=;
+	s=default; t=1598028232;
+	bh=RPyEA/kI9KUS4oMh1ysf1Jx+oNDxSmtIr2+ySLYBTQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cPdB97hQhaYf9xux0ODVGvZAR3jIgukZsEdSVXDAnfrIECXiqtamke9165jNSaOBD
-	 BlP9u3OByMrBS4MoRiS2jqhr6YIFHSQo0kKNGum1ynMmwPEjeh5lkSSZqqJNAorKRf
-	 3hhPSQ3FP86/NIlmgkA7/eOi0tdyespX9KAB4n+8=
+	b=sDVei5PF37X2aK0AAcv1g7VsQQp/eeqp8OjtyrqKj8jlkfyBbMdnH+nmzbEj3/OQ5
+	 kSpaxmPOY8BcwJdI1FnOGbCRX+yd7ZEBwTMXd1az+bselmlrpaYdY83PEbSmlLbCYw
+	 BfZaHd4/aecVRvEgg7SmAq+f0MopZiLBrJwGQXlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgHUQnE (ORCPT
+        id S1728571AbgHUQnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:43:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50912 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:43:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728400AbgHUQUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:20:43 -0400
+        id S1728084AbgHUQUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:20:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 873BD22D03;
-        Fri, 21 Aug 2020 16:19:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E4D322D00;
+        Fri, 21 Aug 2020 16:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026795;
-        bh=mgvQJt2XumH4rdSkwuDr2n17RsuTgZb097gW/jUr4b8=;
+        s=default; t=1598026789;
+        bh=RPyEA/kI9KUS4oMh1ysf1Jx+oNDxSmtIr2+ySLYBTQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EJpTvdCeOYWxspVRJjTiuSTsMGBq1OeHQA50k+5k+om/Jipop3sOkH3l0TDOjUd32
-         jnZw07YjDBu0+16x5qHDKAI/k5R3YQ7Qwt2+M0kRiNHU+hgDqz9OpNetGl6S31RVn1
-         wzxUuLFAW11YAPsCUjogrdhzjLp+etL6nShBbxyQ=
+        b=HOvneARCpE1oR1gpiiW6p4LRYSrfcFXIMhXLOdLhJlYxMPNw0vWTTqsPYtcLJejA6
+         l3KLdEDSgBhj4LD8bkZ4DYfKzGLMVZxJWOweqAQmjp+XbReOlNl41MzZm3kN27LsSq
+         qXEnyKBlb4smwEB365Uc3MEcfln8RjpHk+aF7tmY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/26] scsi: lpfc: Fix shost refcount mismatch when deleting vport
-Date:   Fri, 21 Aug 2020 12:19:24 -0400
-Message-Id: <20200821161938.349246-13-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 08/26] drm/radeon: fix multiple reference count leak
+Date:   Fri, 21 Aug 2020 12:19:19 -0400
+Message-Id: <20200821161938.349246-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161938.349246-1-sashal@kernel.org>
 References: <20200821161938.349246-1-sashal@kernel.org>
@@ -60,84 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dick Kennedy <dick.kennedy@broadcom.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 03dbfe0668e6692917ac278883e0586cd7f7d753 ]
+[ Upstream commit 6f2e8acdb48ed166b65d47837c31b177460491ec ]
 
-When vports are deleted, it is observed that there is memory/kthread
-leakage as the vport isn't fully being released.
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+reference count before returning the error.
 
-There is a shost reference taken in scsi_add_host_dma that is not released
-during scsi_remove_host. It was noticed that other drivers resolve this by
-doing a scsi_host_put after calling scsi_remove_host.
-
-The vport_delete routine is taking two references one that corresponds to
-an access to the scsi_host in the vport_delete routine and another that is
-released after the adapter mailbox command completes that destroys the VPI
-that corresponds to the vport.
-
-Remove one of the references taken such that the second reference that is
-put will complete the missing scsi_add_host_dma reference and the shost
-will be terminated.
-
-Link: https://lore.kernel.org/r/20200630215001.70793-8-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_vport.c | 26 ++++++++------------------
- 1 file changed, 8 insertions(+), 18 deletions(-)
+ drivers/gpu/drm/radeon/radeon_connectors.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_vport.c b/drivers/scsi/lpfc/lpfc_vport.c
-index e18bbc66e83b1..77cb16d8dfd35 100644
---- a/drivers/scsi/lpfc/lpfc_vport.c
-+++ b/drivers/scsi/lpfc/lpfc_vport.c
-@@ -624,27 +624,16 @@ lpfc_vport_delete(struct fc_vport *fc_vport)
- 		    vport->port_state < LPFC_VPORT_READY)
- 			return -EAGAIN;
+diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
+index efa875120071a..9e6c2be0cc7d4 100644
+--- a/drivers/gpu/drm/radeon/radeon_connectors.c
++++ b/drivers/gpu/drm/radeon/radeon_connectors.c
+@@ -892,8 +892,10 @@ radeon_lvds_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
  	}
-+
- 	/*
--	 * This is a bit of a mess.  We want to ensure the shost doesn't get
--	 * torn down until we're done with the embedded lpfc_vport structure.
--	 *
--	 * Beyond holding a reference for this function, we also need a
--	 * reference for outstanding I/O requests we schedule during delete
--	 * processing.  But once we scsi_remove_host() we can no longer obtain
--	 * a reference through scsi_host_get().
--	 *
--	 * So we take two references here.  We release one reference at the
--	 * bottom of the function -- after delinking the vport.  And we
--	 * release the other at the completion of the unreg_vpi that get's
--	 * initiated after we've disposed of all other resources associated
--	 * with the port.
-+	 * Take early refcount for outstanding I/O requests we schedule during
-+	 * delete processing for unreg_vpi.  Always keep this before
-+	 * scsi_remove_host() as we can no longer obtain a reference through
-+	 * scsi_host_get() after scsi_host_remove as shost is set to SHOST_DEL.
- 	 */
- 	if (!scsi_host_get(shost))
- 		return VPORT_INVAL;
--	if (!scsi_host_get(shost)) {
--		scsi_host_put(shost);
--		return VPORT_INVAL;
--	}
-+
- 	lpfc_free_sysfs_attr(vport);
  
- 	lpfc_debugfs_terminate(vport);
-@@ -792,8 +781,9 @@ lpfc_vport_delete(struct fc_vport *fc_vport)
- 		if (!(vport->vpi_state & LPFC_VPI_REGISTERED) ||
- 				lpfc_mbx_unreg_vpi(vport))
- 			scsi_host_put(shost);
--	} else
-+	} else {
- 		scsi_host_put(shost);
-+	}
+ 	if (encoder) {
+@@ -1038,8 +1040,10 @@ radeon_vga_detect(struct drm_connector *connector, bool force)
  
- 	lpfc_free_vpi(phba, vport->vpi);
- 	vport->work_port_events = 0;
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	encoder = radeon_best_single_encoder(connector);
+@@ -1176,8 +1180,10 @@ radeon_tv_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	encoder = radeon_best_single_encoder(connector);
+@@ -1260,8 +1266,10 @@ radeon_dvi_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (radeon_connector->detected_hpd_without_ddc) {
+@@ -1701,8 +1709,10 @@ radeon_dp_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (!force && radeon_check_hpd_status_unchanged(connector)) {
 -- 
 2.25.1
 
