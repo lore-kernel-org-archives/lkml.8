@@ -2,108 +2,116 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BEEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28726C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0253B20791
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03DD20791
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:27:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1J4ZCEzp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5ysZ7BX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgHUV0j (ORCPT
+        id S1726784AbgHUV1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:26:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52702 "EHLO
+        Fri, 21 Aug 2020 17:27:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgHUV0i (ORCPT
+        with ESMTP id S1726187AbgHUV1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:26:38 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27B5FC061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:26:37 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id u126so3098931iod.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:26:37 -0700 (PDT)
+        Fri, 21 Aug 2020 17:27:41 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5348C061573;
+        Fri, 21 Aug 2020 14:27:41 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 128so1586923pgd.5;
+        Fri, 21 Aug 2020 14:27:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jPqxc4OgKI9Opavzdh3uvDImVIna5oiu3wI1Ldz2iFA=;
-        b=1J4ZCEzpws6MSvmSIYNmOl9EqXEPcmOnwafmyG+kOO9ex9UTRKycw/6xVqQzxDRhC9
-         h3n5iJFbcdJQrMqI6vGFrBxW5e2WSgMTVlDwU+9pTBwr+Oijnro6yvOMEINT8JXfeyZz
-         AujmHREjdOrfoYhnwn1PdDvEZPc/WvWNe6T5R/BdxtA3yMbR5WJ81VI2DuuoeP3ECXQf
-         Qh65RGtzCTzYfTXPbLpwAvndmlFbxCCr4MNULvRrRoUjrFjBc729y6zISEoa1Kx2DlFH
-         r5dkUDloddOMRfIy9IMkJOhwllKz50K/riJHm9kfxZ4Qqf9M5E+Snhvhk4errJyF1H68
-         o4rw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QWnVqkXsQ2VHac6sNBlwzOFyH2VOJDY/ZCWON4QvS5I=;
+        b=O5ysZ7BX+yeoWYpqn0zquTNx0iwRRKm2Bzx3i0KWfMjzIB59kkB+pfCQadtv+THzVF
+         LjYONAb2xWOCOooyA/gOSaHcBtzivEBljT9wbum2c3BIahbl+nDRM4pZ1/MVlz7HS077
+         M3cGX7Z8/QRJ5bRx86su5ApaXmUtndHcN3vWWao5asovSjC0tGD+HB7jNgwgsc6kusuT
+         6iqbs9NPOuGfI1bNWxIfHB14J2N1BLeFzSRL5qOwzsDWsvMwEJWM3oEKjyq3ghqUeUWD
+         HJRy7cN/FLGd4JvsDQvbkSgbMHJPs9pNxeC8jpha8jvKpoEteXjMOamRYaG91cpi0dSR
+         Jfow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=jPqxc4OgKI9Opavzdh3uvDImVIna5oiu3wI1Ldz2iFA=;
-        b=qa84QaYFBvB0dSp4EA7OHBdeWU7um16vbJK5yRIwqnX74Lcp5lJc2e286csvENxyqS
-         Kz6RXY3Jjip4Y1sRroyTVjBw4YtwbKjkAQ02GQlHlb0qe90hD0D1OQTZLIePSZBRx/nG
-         OSJ7Ts/63ok/VOoAZ0VTENa6zX9qVMgv4qzASha9targVu5jE9vNPINhonAnyxJ1LYSG
-         0FJNxMPJRorsgcbdsSBIn61z+CYTx0YDHkenQMJiFkDyOrVQ6l293DIuPLA0ozS4jTuX
-         qAP5+TFF/DUnDmtxjUtUZ334ji9I37zPRymEi2dpfedcTstaayt/KhPOby/60Vi84C9e
-         T3Lw==
-X-Gm-Message-State: AOAM531iwXDfoqpg9MjUngfH35NYoZ4J8GkC7OIDezFf9zbZFxEOvGWc
-        TPccb8M+pVks362BT3Jf4f4w/MhZDx0Iw/N3
-X-Google-Smtp-Source: ABdhPJwILXvN/gcpaBDfJHt6cEhQT7gl/roFCqi9AyYjVW7g0sdtZbLU7yC+5fBIf2BrmzyKYaYQjg==
-X-Received: by 2002:a05:6638:2493:: with SMTP id x19mr4391343jat.53.1598045196675;
-        Fri, 21 Aug 2020 14:26:36 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id 202sm1949505ila.59.2020.08.21.14.26.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 14:26:36 -0700 (PDT)
-Subject: Re: [PATCH] ext4: flag as supporting buffered async reads
-From:   Jens Axboe <axboe@kernel.dk>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-ext4@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <fb90cc2d-b12c-738f-21a4-dd7a8ae0556a@kernel.dk>
- <20200818181117.GA34125@mit.edu>
- <990cc101-d4a1-f346-fe78-0fb5b963b406@kernel.dk>
-Message-ID: <20c844c8-b649-3250-ff5b-b7420f72ff38@kernel.dk>
-Date:   Fri, 21 Aug 2020 15:26:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=QWnVqkXsQ2VHac6sNBlwzOFyH2VOJDY/ZCWON4QvS5I=;
+        b=jYolLoQrfdhQva0pBGReMAxxIhJqxSyfl/yUsKONdCOKC1LyGiUtOx6vV6fFfpiTLY
+         6tZg3hK6Hd3g4PwtLExUbdpav0wRpGekOsDVfP2fe3CLDPbzYt32Y2+szRfmsdmSm9hb
+         oTgUkjRSPjKDMnlpJDuUHnpwjNimV/6AZVw60Vi7rcWbTcuNy6dr1+uxgpsBgwkJqD/r
+         HiVQ6ZyyTIWS0gD+2FjguREappYaoRvbMLqEi25oKGlQY8AiW/1YbHe3ELTZhapzfVgh
+         P7NeDh5+1P5CSZzPaOrJzVaMAeH+XEbXPq+UON1Zhn4bWcBdn7bi/bitwfaZv/fkCQJg
+         V5fg==
+X-Gm-Message-State: AOAM530Xni5GndUNzDp9Icv+AWOZs54Pp9s6fY2QG1M8wQ020CIJUxJd
+        BawDP6u9bXCd6w8G9OTs/64MuTpXRXE=
+X-Google-Smtp-Source: ABdhPJyNJHaQhxQmL0Xty5/tLXUcqT2A3go11AbPNwihM9m6T3s/IKR5KxH7Ajta0gztQMLP8U3Cjw==
+X-Received: by 2002:a62:164a:: with SMTP id 71mr4035129pfw.266.1598045261183;
+        Fri, 21 Aug 2020 14:27:41 -0700 (PDT)
+Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:4c03:c51f:2cf5:9726])
+        by smtp.gmail.com with ESMTPSA id l12sm2780525pjq.31.2020.08.21.14.27.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 14:27:40 -0700 (PDT)
+From:   Xie He <xie.he.0141@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
+Cc:     Xie He <xie.he.0141@gmail.com>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Martin Schiller <ms@dev.tdt.de>
+Subject: [PATCH net v2] drivers/net/wan/lapbether: Added needed_tailroom
+Date:   Fri, 21 Aug 2020 14:26:59 -0700
+Message-Id: <20200821212659.14551-1-xie.he.0141@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <990cc101-d4a1-f346-fe78-0fb5b963b406@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/18/20 12:12 PM, Jens Axboe wrote:
-> On 8/18/20 11:11 AM, Theodore Y. Ts'o wrote:
->> On Mon, Aug 03, 2020 at 05:02:11PM -0600, Jens Axboe wrote:
->>> ext4 uses generic_file_read_iter(), which already supports this.
->>>
->>> Cc: Theodore Ts'o <tytso@mit.edu>
->>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
->>>
->>> ---
->>>
->>> Resending this one, as I've been carrying it privately since May. The
->>> necessary bits are now upstream (and XFS/btrfs equiv changes as well),
->>> please consider this one for 5.9. Thanks!
->>
->> The necessary commit only hit upstream as of 5.9-rc1, unless I'm
->> missing something?  It's on my queue to send to Linus once I get my
->> (late) ext4 primary pull request for 5.9.
-> 
-> Right, it went in at the start of the merge window for 5.9. Thanks Ted!
+The underlying Ethernet device may request necessary tailroom to be
+allocated by setting needed_tailroom. This driver should also set
+needed_tailroom to request the tailroom needed by the underlying
+Ethernet device to be allocated.
 
-Didn't see it in the queue that just sent in, is it still queued up?
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+---
+Change from v1:
+None
+I'm re-sending this patch unchanged because the previous reviewer has
+stopped responding for 11 days and he didn't indicate what change I
+should do to this patch.
 
+It's hard to find reviewers for this code. I tried to send emails, but
+people don't respond. If you can review it, I'd really appreciate it.
+I'm not in a hurry so please take your time. Thanks!
+---
+ drivers/net/wan/lapbether.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+index 1ea15f2123ed..cc297ea9c6ec 100644
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -340,6 +340,7 @@ static int lapbeth_new_device(struct net_device *dev)
+ 	 */
+ 	ndev->needed_headroom = -1 + 3 + 2 + dev->hard_header_len
+ 					   + dev->needed_headroom;
++	ndev->needed_tailroom = dev->needed_tailroom;
+ 
+ 	lapbeth = netdev_priv(ndev);
+ 	lapbeth->axdev = ndev;
 -- 
-Jens Axboe
+2.25.1
 
