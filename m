@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD00C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1695BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB8E2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2742075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030863;
-	bh=hFA+ejo3MW88ZO4xFBQQQLDRxo0rFnG78sbE4dwsNds=;
+	s=default; t=1598030876;
+	bh=I4Wlmq7GKFOjBL0ckexthBX9+g9/8WxjprGjJADup6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DHB8Ffuna2AqrxZjYZg2XrI7HZod2gSS/lmgNccvj1CjL9zLJJpUUG4uLWcgltway
-	 HSgj+FeueQZwl0Qw2Yyo2LuJtcSOVJk9gepy05ytQjGo/NmF5Buso8d1FVGZ0Zqq+r
-	 I7mnzFCfYGP4+a/1NFHzcjgGFw3VKC4tgmyDA6J8=
+	b=gEwIe0FXZuyX+LTHPgYjKndBJ5CU7unYNE/rZwjyJAVm1k4svZMAj08GCO176EOr0
+	 53BIHFgkjA1HTouJv6iw1Y6tkP5lTy9aRkXXVXu7rfIgT+8ihYFstRdyGS1BGS/0uI
+	 APpPCMp+g30eNSatDjK3w56jBmxrVFHE1/CY5d8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgHUR1k (ORCPT
+        id S1729224AbgHUR1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:27:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46556 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:27:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727047AbgHUQOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:14:49 -0400
+        id S1727031AbgHUQOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:14:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B41EA20FC3;
-        Fri, 21 Aug 2020 16:14:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A77A72086A;
+        Fri, 21 Aug 2020 16:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026487;
-        bh=hFA+ejo3MW88ZO4xFBQQQLDRxo0rFnG78sbE4dwsNds=;
+        s=default; t=1598026486;
+        bh=I4Wlmq7GKFOjBL0ckexthBX9+g9/8WxjprGjJADup6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OgJWzexRD3iYaXuZ1LcccMryCrJg+wxQK8WRNJmrdv6lMUcVVtfpsBBf4u0aaw9K8
-         Izx5QeM2NBbiYBc7SabIOK3xXXD59TFRKpMjtdB6jXla9O/1YR2Tfxw7wpyhmW7111
-         phD77EteYRnwR7kxPHpoowQIzC3+ojkcvgKA9RL8=
+        b=HfZPdcuNnMqUpFuY1avP3Xt3ODIRKShIRQZBJMipJBxknzPwF7IIXQc2miegUfEc/
+         wcFlRiTTiSnzq32hZzaruk4yKRgcjYkdEcFnCr9l/IfzbVOKS1P933hO3lVuAELMLb
+         xgI2NRm8dfgohmZZnpT9LhGnglFU/CTuGAyO9Wa8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Prakash Gupta <guptap@codeaurora.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.8 19/62] iommu/iova: Don't BUG on invalid PFNs
-Date:   Fri, 21 Aug 2020 12:13:40 -0400
-Message-Id: <20200821161423.347071-19-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 18/62] mfd: intel-lpss: Add Intel Tiger Lake PCH-H PCI IDs
+Date:   Fri, 21 Aug 2020 12:13:39 -0400
+Message-Id: <20200821161423.347071-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -61,48 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit d3e3d2be688b4b5864538de61e750721a311e4fc ]
+[ Upstream commit bb7fcad48d3804d814b97c785514e2d1657e157f ]
 
-Unlike the other instances which represent a complete loss of
-consistency within the rcache mechanism itself, or a fundamental
-and obvious misconfiguration by an IOMMU driver, the BUG_ON() in
-iova_magazine_free_pfns() can be provoked at more or less any time
-in a "spooky action-at-a-distance" manner by any old device driver
-passing nonsense to dma_unmap_*() which then propagates through to
-queue_iova().
+Intel Tiger Lake PCH-H has the same LPSS than Intel Broxton.
+Add the new IDs to the list of supported devices.
 
-Not only is this well outside the IOVA layer's control, it's also
-nowhere near fatal enough to justify panicking anyway - all that
-really achieves is to make debugging the offending driver more
-difficult. Let's simply WARN and otherwise ignore bogus PFNs.
-
-Reported-by: Prakash Gupta <guptap@codeaurora.org>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Reviewed-by: Prakash Gupta <guptap@codeaurora.org>
-Link: https://lore.kernel.org/r/acbd2d092b42738a03a21b417ce64e27f8c91c86.1591103298.git.robin.murphy@arm.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/iova.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/mfd/intel-lpss-pci.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index 49fc01f2a28d4..45a251da54537 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -811,7 +811,9 @@ iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
- 	for (i = 0 ; i < mag->size; ++i) {
- 		struct iova *iova = private_find_iova(iovad, mag->pfns[i]);
- 
--		BUG_ON(!iova);
-+		if (WARN_ON(!iova))
-+			continue;
-+
- 		private_free_iova(iovad, iova);
- 	}
- 
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 17bcadc00a11c..9a58032f818ae 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -233,6 +233,22 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x34ea), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x34eb), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x34fb), (kernel_ulong_t)&spt_info },
++	/* TGL-H */
++	{ PCI_VDEVICE(INTEL, 0x43a7), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x43a8), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x43a9), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x43aa), (kernel_ulong_t)&bxt_info },
++	{ PCI_VDEVICE(INTEL, 0x43ab), (kernel_ulong_t)&bxt_info },
++	{ PCI_VDEVICE(INTEL, 0x43ad), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43ae), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43d8), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43da), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x43e8), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43e9), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43ea), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43eb), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43fb), (kernel_ulong_t)&bxt_info },
++	{ PCI_VDEVICE(INTEL, 0x43fd), (kernel_ulong_t)&bxt_info },
+ 	/* EHL */
+ 	{ PCI_VDEVICE(INTEL, 0x4b28), (kernel_ulong_t)&bxt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x4b29), (kernel_ulong_t)&bxt_uart_info },
 -- 
 2.25.1
 
