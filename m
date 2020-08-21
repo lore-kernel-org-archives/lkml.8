@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2C4620738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B9320738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030732;
-	bh=3aEdmM77SGyBfskiqRaEc/vEs5I+jwxpTPr1Qlw1VPM=;
+	s=default; t=1598030738;
+	bh=RirBJnGWSx+8SfHSLXWiXEKeGrvmh1KYf16yHJ8Ti0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=giozFrSyMMm6H8P6JprkDm9Ut9YZc6g6wRm0wNwH/OE2vjeIUG46aPMYcEG7ujNZs
-	 9b2Xz4PCHBQTXs0uSxL+UpW9ZEIfqtOU/rfeDNE/uwXRtb3Sm3tJTzqBWdhbvouxBa
-	 vt1DXszHhznFqSZu5mMIa04uEE3dGdrzkg2ANivo=
+	b=zgp6acwwIVPR5ZNBXRpXwwiBlXJdrB31zNQ4H3mDD2jpFRRncqXEDWDkt81ju6xn0
+	 GARA4yOarE6UXsWSgw9CVAoco3duw3MlMcknBWM9TfOlRSMn8jhc2Wp62/noeR4amH
+	 T5AKAh5RGlpqrC+eXUfbCcuT4MtfI9HlnDg6h3mg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgHURZb (ORCPT
+        id S1729212AbgHURZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:25:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48014 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:25:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727901AbgHUQPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:15:23 -0400
+        id S1727892AbgHUQPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:15:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA1522B47;
-        Fri, 21 Aug 2020 16:15:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7347522B40;
+        Fri, 21 Aug 2020 16:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026523;
-        bh=3aEdmM77SGyBfskiqRaEc/vEs5I+jwxpTPr1Qlw1VPM=;
+        s=default; t=1598026519;
+        bh=RirBJnGWSx+8SfHSLXWiXEKeGrvmh1KYf16yHJ8Ti0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ds/rF5g7ZzWmSFMcDaFreDhyt8P2u1he4Y52r+CYo4yu8qOlQ1QI0yzz9GaAQpq5l
-         qwiMsixILK5RcwLbtLN85Fr2wAzSkqUUAAlPApqAXNG8twUVcWvpHDHE0P1KNsrHXi
-         aeTmoBL1NXWOPc+CzcjERIc4tw4NSRwsKABoYUp4=
+        b=ywQ7HHt3Dm0WNTKlGHDwBVODV2IdaQ5sWE4y5wbrHhPsX05S+L6/6e+3UNaNXxXjC
+         XSodAHXxVu6wQz00O+BjXlUi/tV77bDG/NPYnVXVUHgW0heqqOLJQWXlVcDe4+7FZY
+         zRhdvTPFJlhUYcHvfgtmEZdFyzrB35TyTBlYW8EM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ikjoon Jang <ikjn@chromium.org>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 46/62] HID: quirks: add NOGET quirk for Logitech GROUP
-Date:   Fri, 21 Aug 2020 12:14:07 -0400
-Message-Id: <20200821161423.347071-46-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 43/62] gpu: host1x: Put gather's BO on pinning error
+Date:   Fri, 21 Aug 2020 12:14:04 -0400
+Message-Id: <20200821161423.347071-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -58,50 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ikjoon Jang <ikjn@chromium.org>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 68f775ddd2a6f513e225f9a565b054ab48fef142 ]
+[ Upstream commit fd323e9ef0a19112c0c85b85afc4848c0518174b ]
 
-Add HID_QUIRK_NOGET for Logitech GROUP device.
+This patch fixes gather's BO refcounting on a pinning error. Gather's BO
+won't be leaked now if something goes wrong.
 
-Logitech GROUP is a compound with camera and audio.
-When the HID interface in an audio device is requested to get
-specific report id, all following control transfers are stalled
-and never be restored back.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203419
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/gpu/host1x/job.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 6f370e020feb3..7cfa9785bfbb0 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -773,6 +773,7 @@
- #define USB_DEVICE_ID_LOGITECH_G27_WHEEL	0xc29b
- #define USB_DEVICE_ID_LOGITECH_WII_WHEEL	0xc29c
- #define USB_DEVICE_ID_LOGITECH_ELITE_KBD	0xc30a
-+#define USB_DEVICE_ID_LOGITECH_GROUP_AUDIO	0x0882
- #define USB_DEVICE_ID_S510_RECEIVER	0xc50c
- #define USB_DEVICE_ID_S510_RECEIVER_2	0xc517
- #define USB_DEVICE_ID_LOGITECH_CORDLESS_DESKTOP_LX500	0xc512
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 934fc0a798d4d..c242150d35a3a 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -179,6 +179,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_GROUP_AUDIO), HID_QUIRK_NOGET },
+diff --git a/drivers/gpu/host1x/job.c b/drivers/gpu/host1x/job.c
+index a10643aa89aa5..2ac5a99406d98 100644
+--- a/drivers/gpu/host1x/job.c
++++ b/drivers/gpu/host1x/job.c
+@@ -102,6 +102,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+ {
+ 	struct host1x_client *client = job->client;
+ 	struct device *dev = client->dev;
++	struct host1x_job_gather *g;
+ 	struct iommu_domain *domain;
+ 	unsigned int i;
+ 	int err;
+@@ -184,7 +185,6 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+ 	}
  
- 	{ 0 }
- };
+ 	for (i = 0; i < job->num_gathers; i++) {
+-		struct host1x_job_gather *g = &job->gathers[i];
+ 		size_t gather_size = 0;
+ 		struct scatterlist *sg;
+ 		struct sg_table *sgt;
+@@ -194,6 +194,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+ 		dma_addr_t *phys;
+ 		unsigned int j;
+ 
++		g = &job->gathers[i];
+ 		g->bo = host1x_bo_get(g->bo);
+ 		if (!g->bo) {
+ 			err = -EINVAL;
+@@ -213,7 +214,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+ 		sgt = host1x_bo_pin(host->dev, g->bo, phys);
+ 		if (IS_ERR(sgt)) {
+ 			err = PTR_ERR(sgt);
+-			goto unpin;
++			goto put;
+ 		}
+ 
+ 		if (!IS_ENABLED(CONFIG_TEGRA_HOST1X_FIREWALL) && host->domain) {
+@@ -226,7 +227,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+ 					   host->iova_end >> shift, true);
+ 			if (!alloc) {
+ 				err = -ENOMEM;
+-				goto unpin;
++				goto put;
+ 			}
+ 
+ 			err = iommu_map_sg(host->domain,
+@@ -235,7 +236,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+ 			if (err == 0) {
+ 				__free_iova(&host->iova, alloc);
+ 				err = -EINVAL;
+-				goto unpin;
++				goto put;
+ 			}
+ 
+ 			job->unpins[job->num_unpins].size = gather_size;
+@@ -245,7 +246,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+ 					 DMA_TO_DEVICE);
+ 			if (!err) {
+ 				err = -ENOMEM;
+-				goto unpin;
++				goto put;
+ 			}
+ 
+ 			job->unpins[job->num_unpins].dir = DMA_TO_DEVICE;
+@@ -263,6 +264,8 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+ 
+ 	return 0;
+ 
++put:
++	host1x_bo_put(g->bo);
+ unpin:
+ 	host1x_job_unpin(job);
+ 	return err;
 -- 
 2.25.1
 
