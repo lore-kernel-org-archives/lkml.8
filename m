@@ -2,126 +2,338 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB84CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42397204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF748204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:51:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rcjTeFwX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgHULup (ORCPT
+        id S1728589AbgHULvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 07:50:45 -0400
-Received: from mga02.intel.com ([134.134.136.20]:14287 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728550AbgHULju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 07:39:50 -0400
-IronPort-SDR: Y5K4zKlOqOXhkIeHxmflq9y3e5V83CXMLAo/MW/tfKfYTOU+bl4WBf53W+3yEKl3KDe7nC19tG
- LfiJ5wHc59Cw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="143305569"
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="143305569"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 04:39:39 -0700
-IronPort-SDR: 8Sf87sfsDKabPw+QBy4GE2Sn2+XhoMzh7YDQ/CEJfaG8d3zBCBccMrQcd9YCuyf3tak5HIeRjv
- BROt9xdMvj8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="327740407"
-Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
-  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 04:39:37 -0700
-From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
-        andriy.shevchenko@intel.com, eswara.kota@linux.intel.com,
-        vadivel.muruganx.ramuthevar@linux.intel.com,
-        lakshmi.bai.raja.subramanian@intel.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v7 0/3] phy: intel: Add Keem Bay eMMC PHY support
-Date:   Fri, 21 Aug 2020 19:37:44 +0800
-Message-Id: <20200821113747.2912-1-wan.ahmad.zainie.wan.mohamad@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 21 Aug 2020 07:51:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728284AbgHULrB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 07:47:01 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74ED7C061387
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 04:47:00 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id u3so1051910qkd.9
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 04:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xlnXTlGn+73FaQqYEKMTIwjgsfte17lUDuLFeOhYJVs=;
+        b=rcjTeFwXlW60HuBFAs6JyZDV+6ZWsjcxBzcIezje7rj/qz1/x/onwuueFTXxG0cBSU
+         4xhHDtSZl7OsOY9RHeHjJl7LmEJUXrYmLwJwLnHYqYMKymo3pg1F4ONvtTfxIC8mS+k+
+         1Hm2ZWBL9VftQZ0jqqmc8oaFgaMXaskbC9kQy2X8LjFhD7ZzuxK6i4WrIFfyRdQhYPb0
+         uFCDtgtTJWBrCmz2YmEx0Y8u6QjUZWIkMOVb4DMcmHlBanLTfZSp786AY4YstfXA4BHM
+         FulPrhF7LsS4lYpvBt0HvMk5L4t7SibR8K/NdaTl/kdA+5i9PrggLylLfV0nDqO1dC9I
+         xFqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xlnXTlGn+73FaQqYEKMTIwjgsfte17lUDuLFeOhYJVs=;
+        b=JZBIsQsHt1YVQ/S21quIRk7ywGmLU+BxPxsT6BRPy8dR4zWQ/lGgwGaopus7Hi4RJJ
+         8lChy15VgY59CFcHDvkI02qMtNwoZzQj+2inyYf2VDWvvQxlu6cDwJZ9D6w3iUmjUJBi
+         25kzwDVhKi1lnSY66HCZ7YaRps02eu5fBBKlk/ein0HMXyk56pnIMgXffR6v70kok9Ez
+         4c8m1/U5PQcv43MKkKstl/4D2pfbXEPcL2Th5dpwu5mvmvigvwE2T6kPwgXmbvXpP8Ki
+         VqYyN9MWUDtnXJmEY/doSJHjtfWZAzpUfWfU+9JQ/THbCS0vRi9/DgbyddeilIKdf71N
+         F1Lw==
+X-Gm-Message-State: AOAM5305wxlHCi0q13nEP8Stnkx4iOhy+wmVslIdKP2Sn7Z403k/9AOI
+        Q8ljBAoSmeMeteoYzxNmvOS3xwy0dShpGYx2SrTKUyF/wZXyZA==
+X-Google-Smtp-Source: ABdhPJw+sm7ro4I7WA8pyqz8op2A63y9wzx/NdirfDTTYkXEA/iga5FcEuT/Jkw+/5p6jasuF4n0OKFXwyXJEh/reNQ=
+X-Received: by 2002:a37:4f8f:: with SMTP id d137mr1061732qkb.43.1598010418680;
+ Fri, 21 Aug 2020 04:46:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200821104926.828511-1-alinde@google.com> <20200821104926.828511-3-alinde@google.com>
+In-Reply-To: <20200821104926.828511-3-alinde@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 21 Aug 2020 13:46:46 +0200
+Message-ID: <CACT4Y+YQS5d7Xpe-353RsLP=zwF03t-Z1j2ZAEGxMcCUF_D0pw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] lib, uaccess: add failure injection to usercopy functions
+To:     albert.linde@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Marco Elver <elver@google.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Albert van der Linde <alinde@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+On Fri, Aug 21, 2020 at 12:50 PM <albert.linde@gmail.com> wrote:
+>
+> From: Albert van der Linde <alinde@google.com>
+>
+> To test fault-tolerance of usercopy accesses, introduce fault injection
+> in usercopy functions.
+>
+> Adds failure injection to usercopy functions. If a failure is expected
+> we return either the failure or the total amount of bytes. As many
+> usercopy functions can fail partially, permit also partial failures:
+> e.g., copy_from_user can fail copying between 0 and n.
+>
+> Signed-off-by: Albert van der Linde <alinde@google.com>
+> ---
+>  include/linux/uaccess.h | 31 ++++++++++++++++++++++++++-----
+>  lib/iov_iter.c          | 20 +++++++++++++++++---
+>  lib/strncpy_from_user.c |  3 +++
+>  lib/usercopy.c          | 13 +++++++++++--
+>  4 files changed, 57 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+> index 94b285411659..79e736077ef4 100644
+> --- a/include/linux/uaccess.h
+> +++ b/include/linux/uaccess.h
+> @@ -2,6 +2,7 @@
+>  #ifndef __LINUX_UACCESS_H__
+>  #define __LINUX_UACCESS_H__
+>
+> +#include <linux/fault-inject-usercopy.h>
+>  #include <linux/instrumented.h>
+>  #include <linux/sched.h>
+>  #include <linux/thread_info.h>
+> @@ -82,10 +83,14 @@ __copy_from_user_inatomic(void *to, const void __user *from, unsigned long n)
+>  static __always_inline __must_check unsigned long
+>  __copy_from_user(void *to, const void __user *from, unsigned long n)
+>  {
+> +       long not_copied = should_fail_usercopy(n);
+> +
+> +       if (not_copied < 0)
+> +               not_copied = n;
 
-The first patch is new and added to rename rename
-phy-intel-{combo,emmc}.c to phy-intel-lgm-{combo,emmc}.c..
+It feels that this "if (not_copied < 0)" part should be factored into
+some common place because it's duplicated lots of times.
+Maybe we need a separate helper similar to should_fail_usercopy that
+does not return negative values; or make should_fail_usercopy accept a
+flag to return -EFAULT or n; or maybe we simply make
+should_fail_usercopy return n instead of -EFAULT?
 
-The second patch is to document DT bindings for Keem Bay eMMC PHY.
+Also, why do we continue when we already know that we should fail it?
+In some places we don't, but in most we still run the actual
+raw_copy_from_user. What's the rationale? Can we return early in all
+cases?
 
-The the third is the driver file, loosely based on phy-rockchip-emmc.c
-and phy-intel-emmc.c. The latter is not being reused as there are
-quite a number of differences i.e. registers offset, supported clock
-rates, bitfield to set.
+>         might_fault();
+>         instrument_copy_from_user(to, from, n);
+>         check_object_size(to, n, false);
+> -       return raw_copy_from_user(to, from, n);
+> +       return not_copied + raw_copy_from_user(to, from, n - not_copied);
 
-The patch was tested with Keem Bay evaluation module board.
+Is returning "not_copied + raw_copy_from_user" fine in all cases?
+We can return more than the number of bytes we were asked to copy,
+which may be surprising for some callers. Or we can both return an
+error and do the copy, which may be surprising for userspace.
 
-Thank you.
-
-Best regards,
-Zainie
-
-Changes since v6:
-- Add new patch to rename phy-intel-{combo,emmc}.c to
-  phy-intel-lgm-{combo,emmc}.c.
-- Add Reviewed-by: Rob Herring <robh@kernel.org> tag to 2nd patch.
-- In 3rd patch,
-  - add and use generic helper to update register bits,
-  - end module name with .ko in Kconfig help.
-
-Changes since resend v5:
-- In keembay_emmc_phy_power(), remove redundant return ret;.
-
-Resend v5:
-- Include missing changes done for phy-keembay-emmc.c (See Changes since
-  v3)
-
-Changes since v4:
-- In Kconfig file, add depends on ARM64 || COMPILE_TEST and
-  depends on OF && HAS_IOMEM.
-- In Kconfig file, reword the help section to be more verbose.
-
-Changes since v3:
-- Exit keembay_emmc_phy_power() with return ret;.
-- In keembay_emmc_phy_init(), use PTR_ERR_OR_ZERO(...).
-- In keembay_emmc_phy_probe(), devm_regmap_init_mmio(...) in single
-  line.
-
-Changes since v2:
-- Modify DT example to use single cell for address and size.
-
-Changes since v1:
-- Rework phy-keembay-emmc.c to make it similar to phy-intel-emmc.c.
-- Use regmap_mmio, and remove reference to intel,syscon.
-- Use node name phy@....
-- Update license i.e. use dual license.
-
-
-Wan Ahmad Zainie (3):
-  phy: intel: Rename phy-intel to phy-intel-lgm
-  dt-bindings: phy: intel: Add Keem Bay eMMC PHY bindings
-  phy: intel: Add Keem Bay eMMC PHY support
-
- .../bindings/phy/intel,keembay-emmc-phy.yaml  |  44 +++
- drivers/phy/intel/Kconfig                     |  22 +-
- drivers/phy/intel/Makefile                    |   5 +-
- drivers/phy/intel/phy-intel-keembay-emmc.c    | 310 ++++++++++++++++++
- ...hy-intel-combo.c => phy-intel-lgm-combo.c} |   0
- ...{phy-intel-emmc.c => phy-intel-lgm-emmc.c} |   0
- 6 files changed, 374 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
- create mode 100644 drivers/phy/intel/phy-intel-keembay-emmc.c
- rename drivers/phy/intel/{phy-intel-combo.c => phy-intel-lgm-combo.c} (100%)
- rename drivers/phy/intel/{phy-intel-emmc.c => phy-intel-lgm-emmc.c} (100%)
-
--- 
-2.17.1
-
+>  }
+>
+>  /**
+> @@ -104,18 +109,26 @@ __copy_from_user(void *to, const void __user *from, unsigned long n)
+>  static __always_inline __must_check unsigned long
+>  __copy_to_user_inatomic(void __user *to, const void *from, unsigned long n)
+>  {
+> +       long not_copied = should_fail_usercopy(n);
+> +
+> +       if (not_copied < 0)
+> +               not_copied = n;
+>         instrument_copy_to_user(to, from, n);
+>         check_object_size(from, n, true);
+> -       return raw_copy_to_user(to, from, n);
+> +       return not_copied + raw_copy_to_user(to, from, n - not_copied);
+>  }
+>
+>  static __always_inline __must_check unsigned long
+>  __copy_to_user(void __user *to, const void *from, unsigned long n)
+>  {
+> +       long not_copied = should_fail_usercopy(n);
+> +
+> +       if (not_copied < 0)
+> +               not_copied = n;
+>         might_fault();
+>         instrument_copy_to_user(to, from, n);
+>         check_object_size(from, n, true);
+> -       return raw_copy_to_user(to, from, n);
+> +       return not_copied + raw_copy_to_user(to, from, n - not_copied);
+>  }
+>
+>  #ifdef INLINE_COPY_FROM_USER
+> @@ -123,10 +136,14 @@ static inline __must_check unsigned long
+>  _copy_from_user(void *to, const void __user *from, unsigned long n)
+>  {
+>         unsigned long res = n;
+> +       long not_copied = should_fail_usercopy(n);
+> +
+> +       if (not_copied < 0)
+> +               not_copied = n;
+>         might_fault();
+>         if (likely(access_ok(from, n))) {
+>                 instrument_copy_from_user(to, from, n);
+> -               res = raw_copy_from_user(to, from, n);
+> +               res = not_copied + raw_copy_from_user(to, from, n - not_copied);
+>         }
+>         if (unlikely(res))
+>                 memset(to + (n - res), 0, res);
+> @@ -141,10 +158,14 @@ _copy_from_user(void *, const void __user *, unsigned long);
+>  static inline __must_check unsigned long
+>  _copy_to_user(void __user *to, const void *from, unsigned long n)
+>  {
+> +       long not_copied = should_fail_usercopy(n);
+> +
+> +       if (not_copied < 0)
+> +               not_copied = n;
+>         might_fault();
+>         if (access_ok(to, n)) {
+>                 instrument_copy_to_user(to, from, n);
+> -               n = raw_copy_to_user(to, from, n);
+> +               n = not_copied + raw_copy_to_user(to, from, n - not_copied);
+>         }
+>         return n;
+>  }
+> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+> index 5e40786c8f12..c55c9bff9b0c 100644
+> --- a/lib/iov_iter.c
+> +++ b/lib/iov_iter.c
+> @@ -2,6 +2,7 @@
+>  #include <crypto/hash.h>
+>  #include <linux/export.h>
+>  #include <linux/bvec.h>
+> +#include <linux/fault-inject-usercopy.h>
+>  #include <linux/uio.h>
+>  #include <linux/pagemap.h>
+>  #include <linux/slab.h>
+> @@ -139,18 +140,26 @@
+>
+>  static int copyout(void __user *to, const void *from, size_t n)
+>  {
+> +       long not_copied = should_fail_usercopy(n);
+> +
+> +       if (not_copied < 0)
+> +               return not_copied;
+>         if (access_ok(to, n)) {
+>                 instrument_copy_to_user(to, from, n);
+> -               n = raw_copy_to_user(to, from, n);
+> +               n = not_copied + raw_copy_to_user(to, from, n - not_copied);
+>         }
+>         return n;
+>  }
+>
+>  static int copyin(void *to, const void __user *from, size_t n)
+>  {
+> +       long not_copied = should_fail_usercopy(n);
+> +
+> +       if (not_copied < 0)
+> +               return not_copied;
+>         if (access_ok(from, n)) {
+>                 instrument_copy_from_user(to, from, n);
+> -               n = raw_copy_from_user(to, from, n);
+> +               n = not_copied + raw_copy_from_user(to, from, n - not_copied);
+>         }
+>         return n;
+>  }
+> @@ -640,9 +649,14 @@ EXPORT_SYMBOL(_copy_to_iter);
+>  #ifdef CONFIG_ARCH_HAS_UACCESS_MCSAFE
+>  static int copyout_mcsafe(void __user *to, const void *from, size_t n)
+>  {
+> +       long not_copied = should_fail_usercopy(n);
+> +
+> +       if (not_copied < 0)
+> +               return not_copied;
+>         if (access_ok(to, n)) {
+>                 instrument_copy_to_user(to, from, n);
+> -               n = copy_to_user_mcsafe((__force void *) to, from, n);
+> +               n = not_copied + copy_to_user_mcsafe((__force void *) to,
+> +                              from, n - not_copied);
+>         }
+>         return n;
+>  }
+> diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
+> index 34696a348864..f65973007931 100644
+> --- a/lib/strncpy_from_user.c
+> +++ b/lib/strncpy_from_user.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/compiler.h>
+>  #include <linux/export.h>
+> +#include <linux/fault-inject-usercopy.h>
+>  #include <linux/kasan-checks.h>
+>  #include <linux/thread_info.h>
+>  #include <linux/uaccess.h>
+> @@ -101,6 +102,8 @@ long strncpy_from_user(char *dst, const char __user *src, long count)
+>         might_fault();
+>         if (unlikely(count <= 0))
+>                 return 0;
+> +       if (should_fail_usercopy(count))
+> +               return -EFAULT;
+>
+>         max_addr = user_addr_max();
+>         src_addr = (unsigned long)untagged_addr(src);
+> diff --git a/lib/usercopy.c b/lib/usercopy.c
+> index b26509f112f9..e79716b4634b 100644
+> --- a/lib/usercopy.c
+> +++ b/lib/usercopy.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/bitops.h>
+> +#include <linux/fault-inject-usercopy.h>
+>  #include <linux/instrumented.h>
+>  #include <linux/uaccess.h>
+>
+> @@ -9,10 +10,14 @@
+>  unsigned long _copy_from_user(void *to, const void __user *from, unsigned long n)
+>  {
+>         unsigned long res = n;
+> +       long not_copied = should_fail_usercopy(n);
+> +
+> +       if (not_copied < 0)
+> +               not_copied = n;
+>         might_fault();
+>         if (likely(access_ok(from, n))) {
+>                 instrument_copy_from_user(to, from, n);
+> -               res = raw_copy_from_user(to, from, n);
+> +               res = not_copied + raw_copy_from_user(to, from, n - not_copied);
+>         }
+>         if (unlikely(res))
+>                 memset(to + (n - res), 0, res);
+> @@ -24,10 +29,14 @@ EXPORT_SYMBOL(_copy_from_user);
+>  #ifndef INLINE_COPY_TO_USER
+>  unsigned long _copy_to_user(void __user *to, const void *from, unsigned long n)
+>  {
+> +       long not_copied = should_fail_usercopy(n);
+> +
+> +       if (not_copied < 0)
+> +               not_copied = n;
+>         might_fault();
+>         if (likely(access_ok(to, n))) {
+>                 instrument_copy_to_user(to, from, n);
+> -               n = raw_copy_to_user(to, from, n);
+> +               n = not_copied + raw_copy_to_user(to, from, n - not_copied);
+>         }
+>         return n;
+>  }
+> --
+> 2.28.0.297.g1956fa8f8d-goog
+>
