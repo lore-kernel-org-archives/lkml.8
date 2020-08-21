@@ -2,93 +2,114 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43821C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C39C92078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18AA1207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:05:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OGx1XxSc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgHUMFE (ORCPT
+        id S1728377AbgHUMFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 08:05:04 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40712 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbgHUMFA (ORCPT
+        Fri, 21 Aug 2020 08:05:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:37003 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725935AbgHUMF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 08:05:00 -0400
-Received: by mail-oi1-f194.google.com with SMTP id u24so1293931oic.7;
-        Fri, 21 Aug 2020 05:04:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P1HeEvz2wI1FOpRCVf2LfgURAoLuEdudBP1iVF0BOkU=;
-        b=SgyFr+usmSXelf51B2NkMUawWpK1exeGDPeyGt80VxsZgiQzVutCIkQpuOF8dCtELh
-         G/5pcxlpkGIrbeVcFg9tYoA9baqMeN0qkOzGVecLYs3cdvMyQTvphmx2/BlUB2BJ8zpc
-         J4HO4VjzwQ7Uu1sSIJUUa8iNRouGkjuH7cmwB8gjkLcZBZHu0a6fPp+HoIaPW4oQc1Kp
-         cX4szgw9ZZ1+MdfXJJ3z7qqU8Ycls6PpQzC6sWmcea+QoaZocDgptBosl4+7ZjBsLz/f
-         +Ftj4MhrVCBTs38Iq723R8jZFoNtVvgtqfGF8QXfWGeYsgNR6A3QGIb8Pkpx6K2+QgXN
-         q7hQ==
-X-Gm-Message-State: AOAM532P9eF/0EgPUpIjQkCJOTbkdCkVtOIWUXUnMu0TOUQ9HqP83gzt
-        kFwdMjXxFtM+cqukELDPaz65qGjuYVPr5pLQG/Dz3Ksa
-X-Google-Smtp-Source: ABdhPJw5Y6tFxNr/+/JFx28hKhjq7S4wmnRiKJapNiD/bD3qDlIgDmcckQH7DDOWMsrwer6Zd17bG01T/JVwo+X+V5Y=
-X-Received: by 2002:aca:adc4:: with SMTP id w187mr1331706oie.153.1598011499077;
- Fri, 21 Aug 2020 05:04:59 -0700 (PDT)
+        Fri, 21 Aug 2020 08:05:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598011525;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QtKGfR+1iR3kEPsEfjDAOfFZGutCuRuneaQE3YwB9Lg=;
+        b=OGx1XxScDqNqx0DyLVsiMUTHwAfWbI2wH19FA03ABwJEZEpGKvLs51V5XzXN4Vyy3fr7i1
+        4q18ufGNjoq6q+gtCgNYSoFbibHG0aQtHG+HGflngXOxhPaLVeckLqguGuv+bWzdQGm2Jl
+        fDpr9Jek8I4OwLbizGq3Pfz4WUfwpoY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-550-2ptqIlFQPKaVrVvN1P1Tbw-1; Fri, 21 Aug 2020 08:05:21 -0400
+X-MC-Unique: 2ptqIlFQPKaVrVvN1P1Tbw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0AF017A162;
+        Fri, 21 Aug 2020 12:05:19 +0000 (UTC)
+Received: from gondolin (ovpn-113-4.ams2.redhat.com [10.36.113.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0614D5D9CC;
+        Fri, 21 Aug 2020 12:05:12 +0000 (UTC)
+Date:   Fri, 21 Aug 2020 14:05:10 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v9 2/2] s390: virtio: PV needs VIRTIO I/O device
+ protection
+Message-ID: <20200821140510.3849410c.cohuck@redhat.com>
+In-Reply-To: <1597854198-2871-3-git-send-email-pmorel@linux.ibm.com>
+References: <1597854198-2871-1-git-send-email-pmorel@linux.ibm.com>
+        <1597854198-2871-3-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200814173037.17822-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200814173037.17822-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Aug 2020 14:04:47 +0200
-Message-ID: <CAMuHMdVHOcPMPM4pWpTgzzDYWhgWnzPthcP5husNNEc_cjC2yA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] dt-bindings: pci: rcar-pci-ep: Document r8a774a1 and r8a774b1
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 7:32 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document the support for R-Car PCIe EP on R8A774A1 and R8A774B1 SoC
-> devices.
->
-> Also constify "renesas,rcar-gen3-pcie-ep" so that it can be used as
-> fallback compatible string for R-Car Gen3 and RZ/G2 devices as the
-> PCIe module is identical.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+On Wed, 19 Aug 2020 18:23:18 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> If protected virtualization is active on s390, VIRTIO has retricted
 
-Gr{oetje,eeting}s,
+s/retricted/only restricted/
 
-                        Geert
+> access to the guest memory.
+> Define CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS and export
+> arch_has_restricted_virtio_memory_access to advertize VIRTIO if that's
+> the case, preventing a host error on access attempt.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  arch/s390/Kconfig   |  1 +
+>  arch/s390/mm/init.c | 11 +++++++++++
+>  2 files changed, 12 insertions(+)
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+(...)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> index 6dc7c3b60ef6..8febd73ed6ca 100644
+> --- a/arch/s390/mm/init.c
+> +++ b/arch/s390/mm/init.c
+> @@ -45,6 +45,7 @@
+>  #include <asm/kasan.h>
+>  #include <asm/dma-mapping.h>
+>  #include <asm/uv.h>
+> +#include <linux/virtio_config.h>
+
+I don't think you need this include anymore.
+
+>  
+>  pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+>  
+
+(...)
+
+With the nit fixed,
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
