@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589A1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 341FD20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238B220748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029820;
-	bh=TOh96QfmfrBkrpD0r09P51xvbFtNbbhZKZs8Xh54sJU=;
+	s=default; t=1598029824;
+	bh=eVcPTzL9hbKoVXDtsQ64VvN+g9cHH5uG0hbLgDgR5vc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aj+uPzyi+mNzp6RMDWzBuK9v9OC6HyWfyOT2ToXMq9KNDl3rAqY0pg/zbbR5vbnos
-	 1azfTAB5EVVWJIZu3QAgvl3qEghTrkw/s7WLYiqs1AxFpoNTvbVp4tmzHsys5VCAvq
-	 Qshxz+qQ/6uNLFWFicGAAMP61KLbHpfATryo6uVo=
+	b=Qj/V3dlg1KVww1c1IBm0vaG74iHnj/d5hSqJhF029+seO+dC059rMeUITOEPpJn6U
+	 1UGZhUs2EIDmXw1wwBoXKfJ9u8ywN8cWD2BwEKEyxbc7tt4zdkFq3YY+kuzxB1WXPw
+	 SJv3d8FrGtDNW9y5GZcdUREmlVTqEEfWSsJOShro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgHURKS (ORCPT
+        id S1728948AbgHURKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:10:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50022 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbgHUQRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727069AbgHUQRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:17:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B98C622CA0;
-        Fri, 21 Aug 2020 16:17:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 434C122CAF;
+        Fri, 21 Aug 2020 16:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026644;
-        bh=TOh96QfmfrBkrpD0r09P51xvbFtNbbhZKZs8Xh54sJU=;
+        s=default; t=1598026647;
+        bh=eVcPTzL9hbKoVXDtsQ64VvN+g9cHH5uG0hbLgDgR5vc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f4+/rOU/y4sfr7Cv6y3rfLI5jt8QMYYY4uW/NzzRLM/eDULztY/6g7a7X/fBPjft6
-         PmjUh2iau5OsTtO+HlyiyFM+RjP6MLPz8PfLxAqZu1X9i63XKlTNJVpnPjfNIKRkiH
-         6/P7wJ1FlUJg45rfs+Us9bCuZjlGMCCBihak9dGk=
+        b=FdUKsA4Rofp17CjpZD2xC4rs3Ue0UQmHhcrX/zK16ScVTOv9hEh2pPsoR/UiY9/YI
+         kyBpKX9XX2tx00wqQO90CnjgQOXtsbSp/XfwDgef9vpnc+PLrcqExY4DP2ssIHF56h
+         94nbEWYVXmW86eLelb02YSmkuNpZfccGdMMKmhqc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 16/48] drm/amdkfd: Fix reference count leaks.
-Date:   Fri, 21 Aug 2020 12:16:32 -0400
-Message-Id: <20200821161704.348164-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 18/48] drm/amdgpu: fix ref count leak in amdgpu_driver_open_kms
+Date:   Fri, 21 Aug 2020 12:16:34 -0400
+Message-Id: <20200821161704.348164-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161704.348164-1-sashal@kernel.org>
 References: <20200821161704.348164-1-sashal@kernel.org>
@@ -61,87 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 20eca0123a35305e38b344d571cf32768854168c ]
+[ Upstream commit 9ba8923cbbe11564dd1bf9f3602add9a9cfbb5c6 ]
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object.
+in amdgpu_driver_open_kms the call to pm_runtime_get_sync increments the
+counter even in case of failure, leading to incorrect
+ref count. In case of failure, decrement the ref count before returning.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_topology.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-index 7551761f2aa97..a49e2ab071d68 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-@@ -612,8 +612,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+index 2a7da26008a27..fcc5905a7535d 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -976,7 +976,7 @@ int amdgpu_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
  
- 	ret = kobject_init_and_add(dev->kobj_node, &node_type,
- 			sys_props.kobj_nodes, "%d", id);
--	if (ret < 0)
-+	if (ret < 0) {
-+		kobject_put(dev->kobj_node);
- 		return ret;
-+	}
+ 	r = pm_runtime_get_sync(dev->dev);
+ 	if (r < 0)
+-		return r;
++		goto pm_put;
  
- 	dev->kobj_mem = kobject_create_and_add("mem_banks", dev->kobj_node);
- 	if (!dev->kobj_mem)
-@@ -660,8 +662,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
- 			return -ENOMEM;
- 		ret = kobject_init_and_add(mem->kobj, &mem_type,
- 				dev->kobj_mem, "%d", i);
--		if (ret < 0)
-+		if (ret < 0) {
-+			kobject_put(mem->kobj);
- 			return ret;
-+		}
+ 	fpriv = kzalloc(sizeof(*fpriv), GFP_KERNEL);
+ 	if (unlikely(!fpriv)) {
+@@ -1027,6 +1027,7 @@ int amdgpu_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
  
- 		mem->attr.name = "properties";
- 		mem->attr.mode = KFD_SYSFS_FILE_MODE;
-@@ -679,8 +683,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
- 			return -ENOMEM;
- 		ret = kobject_init_and_add(cache->kobj, &cache_type,
- 				dev->kobj_cache, "%d", i);
--		if (ret < 0)
-+		if (ret < 0) {
-+			kobject_put(cache->kobj);
- 			return ret;
-+		}
+ out_suspend:
+ 	pm_runtime_mark_last_busy(dev->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(dev->dev);
  
- 		cache->attr.name = "properties";
- 		cache->attr.mode = KFD_SYSFS_FILE_MODE;
-@@ -698,8 +704,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
- 			return -ENOMEM;
- 		ret = kobject_init_and_add(iolink->kobj, &iolink_type,
- 				dev->kobj_iolink, "%d", i);
--		if (ret < 0)
-+		if (ret < 0) {
-+			kobject_put(iolink->kobj);
- 			return ret;
-+		}
- 
- 		iolink->attr.name = "properties";
- 		iolink->attr.mode = KFD_SYSFS_FILE_MODE;
-@@ -779,8 +787,10 @@ static int kfd_topology_update_sysfs(void)
- 		ret = kobject_init_and_add(sys_props.kobj_topology,
- 				&sysprops_type,  &kfd_device->kobj,
- 				"topology");
--		if (ret < 0)
-+		if (ret < 0) {
-+			kobject_put(sys_props.kobj_topology);
- 			return ret;
-+		}
- 
- 		sys_props.kobj_nodes = kobject_create_and_add("nodes",
- 				sys_props.kobj_topology);
+ 	return r;
 -- 
 2.25.1
 
