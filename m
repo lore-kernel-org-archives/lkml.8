@@ -2,61 +2,60 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E61C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F291207DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC6F20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:38:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P8vvNleH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QllXcQva"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgHUKhy (ORCPT
+        id S1728810AbgHUKiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:37:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36450 "EHLO
+        Fri, 21 Aug 2020 06:38:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbgHUKhX (ORCPT
+        with ESMTP id S1728776AbgHUKhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:37:23 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB82C061386
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:37:23 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d19so798557pgl.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:37:23 -0700 (PDT)
+        Fri, 21 Aug 2020 06:37:31 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7B0DC06134B
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:37:30 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id r11so857124pfl.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:37:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ljhi/VG5P34Hs9+4uh6nLgqd8v+gNFS6fb+CvHrY46E=;
-        b=P8vvNleHgwAynsmC6lsMKY3uwNUsNbZ452tZWs27SpnLxhe2UCnzODapTh66dRpnyW
-         cCwYlU0eob1fTTdvoCMzGkcjlp1+7SWxMOF06GyRJReplD8lO+viqGBFPZffZ2j1PDpu
-         m8gMb3YxQc5AJYYMpqR4GoYAPjzM9401B+4w0=
+        bh=p5ysidPZyRWdeECygkw5/tjlDUm7P4m3Td9H5p5iiOo=;
+        b=QllXcQvafwdxZtqCOWYNuOpr5bk3EVyJhW4ve3i3V6F8CPxZfPfuCYKOpteZvfbSWQ
+         jVDZ9ABjjKcr3jDHnLC+xDtUicUOM8Ld4koytB4iMeEd2VkFkAGxhoX/ZVNmFq4dX7iR
+         5FEkIlSTKHlJdiaGljctSN4bguGNRwS27iCXQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ljhi/VG5P34Hs9+4uh6nLgqd8v+gNFS6fb+CvHrY46E=;
-        b=WR6IszMA7g29xWKxBx38Vh1iQm1benrBfQEoJNESFe7ERSZajjO57a5Q5fUFRubdJ5
-         bErfZGZaWBHPHJ/pzL7rXnUV1v8RSJM+lpMvHnI3og0bgZ/UDMt8TMujCr8DFFnWEDqX
-         AWFdT0KjL3q+TZUPmmuwrmg8du6km7kgNhoiBiVTQnFhZoiMWuMdChhAQMN1s6nUGAHo
-         AVIxLhlWNP4VMKiCyIwO5ad7JG7i76SsGdXQMSZ33lE14qNy3C51GmJ4sfaRipjt0aPJ
-         mfr8PYU9UJsMtlgUIvv7tphMJQWJkm6yjFBQPmEuRjRgUzEnzKnSNIbx/+ooz0KILGAY
-         JFHg==
-X-Gm-Message-State: AOAM530RS2uo9accuu1KrMVkkRJlHzdBt9OKI74G9HzdN/GVr0JfKSpI
-        F5bGO4Yx1waGKv4zVsq4Vy97RqpObBNljzsa
-X-Google-Smtp-Source: ABdhPJxfUTmFDWyoXGgTXQnxxK5YQdD4uEr3YGTNDXasSVXq6ygIS2UJtCfWh+Z8fX1itWDOPrt+xg==
-X-Received: by 2002:a62:8416:: with SMTP id k22mr1930146pfd.293.1598006243121;
-        Fri, 21 Aug 2020 03:37:23 -0700 (PDT)
+        bh=p5ysidPZyRWdeECygkw5/tjlDUm7P4m3Td9H5p5iiOo=;
+        b=BsnFUrY+CIwVmC+x377g6u/aY3cWH9+oXGlxIcm8M61Zh9IHfZvDAqg5Cr6zSaw1Eg
+         o4hnyXMG6eFDVKvUULbVflQ2cEv/f4qhHtqHvaUPRHxOgQkmqylsLUZTkyHcNQ42+Oir
+         y5RvD5Q1mlnfLdSFF3GjgcbPwH/qfGpB+UilXxnVo/8iEoVVtToXQjXIUcdjp03Z3OSO
+         S6Qt6t6K8kT1v4YSKysqm+HnrW/DwH0+3y36u29jtUhIXkVlxHh9lLtLrxiFHnL6RPQE
+         jYqHOMpofa6gqdj7sLSR5KTyVRjnhbMZp6Isj0jqOax2J9vKzy3DeDT3a+4WFGlyGuwB
+         FVAA==
+X-Gm-Message-State: AOAM530H+rthf7DODqqGp1AMRRHO2otEa9DsBJCViTBVfYZDAAJjJVte
+        BiSZCvK1/DzVOGXbtRYdbYccWUzgqVD1OTyP
+X-Google-Smtp-Source: ABdhPJwFeTw+XO7IIO3hIBMzDU1dUX0aLZcDBZNoCjlCGYvip1tLKkM+/8qFTxgpvgudTqGdGsdaUg==
+X-Received: by 2002:a65:480a:: with SMTP id h10mr1840003pgs.304.1598006250395;
+        Fri, 21 Aug 2020 03:37:30 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:eeb1:d7ff:fe57:b7e5])
-        by smtp.gmail.com with ESMTPSA id y20sm2081525pfn.183.2020.08.21.03.37.19
+        by smtp.gmail.com with ESMTPSA id y20sm2081525pfn.183.2020.08.21.03.37.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 03:37:22 -0700 (PDT)
+        Fri, 21 Aug 2020 03:37:29 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
@@ -67,9 +66,9 @@ To:     Tiffany Lin <tiffany.lin@mediatek.com>,
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v4 15/17] media: mtk-vcodec: venc: support ENUM_FRAMESIZES on OUTPUT formats
-Date:   Fri, 21 Aug 2020 19:36:06 +0900
-Message-Id: <20200821103608.2310097-16-acourbot@chromium.org>
+Subject: [PATCH v4 17/17] media: mtk-vcodec: venc: fix invalid time per frame in S_PARM
+Date:   Fri, 21 Aug 2020 19:36:08 +0900
+Message-Id: <20200821103608.2310097-18-acourbot@chromium.org>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 In-Reply-To: <20200821103608.2310097-1-acourbot@chromium.org>
 References: <20200821103608.2310097-1-acourbot@chromium.org>
@@ -80,141 +79,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v4l2-compliance requires ENUM_FRAMESIZES to support OUTPUT formats.
-Reuse mtk_venc_find_format() to make sure both queues are considered
-when serving an ENUM_FRAMESIZES.
+v4l2-compliance expects the driver to adjust the time per frame if it is
+invalid (numerator or denominator set to 0). Adjust it to the default
+value in these cases.
 
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
 ---
- .../platform/mtk-vcodec/mtk_vcodec_enc.c      | 71 +++++++++----------
- 1 file changed, 33 insertions(+), 38 deletions(-)
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-index f8d4fbe927f9..1b79185cf922 100644
+index 09baac2dbc36..82b04714f750 100644
 --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
 +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-@@ -123,28 +123,44 @@ static int vidioc_enum_fmt(struct v4l2_fmtdesc *f,
- 	return 0;
- }
- 
-+static const struct mtk_video_fmt *mtk_venc_find_format(u32 fourcc,
-+	const struct mtk_vcodec_enc_pdata *pdata)
-+{
-+	const struct mtk_video_fmt *fmt;
-+	unsigned int k;
-+
-+	for (k = 0; k < pdata->num_capture_formats; k++) {
-+		fmt = &pdata->capture_formats[k];
-+		if (fmt->fourcc == fourcc)
-+			return fmt;
-+	}
-+
-+	for (k = 0; k < pdata->num_output_formats; k++) {
-+		fmt = &pdata->output_formats[k];
-+		if (fmt->fourcc == fourcc)
-+			return fmt;
-+	}
-+
-+	return NULL;
-+}
-+
- static int vidioc_enum_framesizes(struct file *file, void *fh,
- 				  struct v4l2_frmsizeenum *fsize)
+@@ -200,14 +200,18 @@ static int vidioc_venc_s_parm(struct file *file, void *priv,
+ 			      struct v4l2_streamparm *a)
  {
--	const struct mtk_vcodec_enc_pdata *pdata =
--		fh_to_ctx(fh)->dev->venc_pdata;
--	int i = 0;
-+	const struct mtk_video_fmt *fmt;
- 
- 	if (fsize->index != 0)
- 		return -EINVAL;
- 
--	for (i = 0; i < pdata->num_capture_formats; ++i) {
--		const struct mtk_video_fmt *fmt = &pdata->capture_formats[i];
-+	fmt = mtk_venc_find_format(fsize->pixel_format,
-+				   fh_to_ctx(fh)->dev->venc_pdata);
-+	if (!fmt)
-+		return -EINVAL;
- 
--		if (fsize->pixel_format != fmt->fourcc)
--			continue;
-+	fsize->type = V4L2_FRMSIZE_TYPE_STEPWISE;
-+	fsize->stepwise = mtk_venc_framesizes;
- 
--		fsize->type = V4L2_FRMSIZE_TYPE_STEPWISE;
--		fsize->stepwise = mtk_venc_framesizes;
--		return 0;
--	}
--
--	return -EINVAL;
-+	return 0;
- }
- 
- static int vidioc_enum_fmt_vid_cap(struct file *file, void *priv,
-@@ -222,27 +238,6 @@ static struct mtk_q_data *mtk_venc_get_q_data(struct mtk_vcodec_ctx *ctx,
- 	return &ctx->q_data[MTK_Q_DATA_DST];
- }
- 
--static const struct mtk_video_fmt *mtk_venc_find_format(struct v4l2_format *f,
--	const struct mtk_vcodec_enc_pdata *pdata)
--{
--	const struct mtk_video_fmt *fmt;
--	unsigned int k;
--
--	for (k = 0; k < pdata->num_capture_formats; k++) {
--		fmt = &pdata->capture_formats[k];
--		if (fmt->fourcc == f->fmt.pix.pixelformat)
--			return fmt;
--	}
--
--	for (k = 0; k < pdata->num_output_formats; k++) {
--		fmt = &pdata->output_formats[k];
--		if (fmt->fourcc == f->fmt.pix.pixelformat)
--			return fmt;
--	}
--
--	return NULL;
--}
--
- /* V4L2 specification suggests the driver corrects the format struct if any of
-  * the dimensions is unsupported
-  */
-@@ -403,7 +398,7 @@ static int vidioc_venc_s_fmt_cap(struct file *file, void *priv,
- 		return -EINVAL;
- 	}
- 
--	fmt = mtk_venc_find_format(f, pdata);
-+	fmt = mtk_venc_find_format(f->fmt.pix.pixelformat, pdata);
- 	if (!fmt) {
- 		fmt = &ctx->dev->venc_pdata->capture_formats[0];
- 		f->fmt.pix.pixelformat = fmt->fourcc;
-@@ -467,7 +462,7 @@ static int vidioc_venc_s_fmt_out(struct file *file, void *priv,
- 		return -EINVAL;
- 	}
- 
--	fmt = mtk_venc_find_format(f, pdata);
-+	fmt = mtk_venc_find_format(f->fmt.pix.pixelformat, pdata);
- 	if (!fmt) {
- 		fmt = &ctx->dev->venc_pdata->output_formats[0];
- 		f->fmt.pix.pixelformat = fmt->fourcc;
-@@ -550,7 +545,7 @@ static int vidioc_try_fmt_vid_cap_mplane(struct file *file, void *priv,
  	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
- 	const struct mtk_vcodec_enc_pdata *pdata = ctx->dev->venc_pdata;
++	struct v4l2_fract *timeperframe = &a->parm.output.timeperframe;
  
--	fmt = mtk_venc_find_format(f, pdata);
-+	fmt = mtk_venc_find_format(f->fmt.pix.pixelformat, pdata);
- 	if (!fmt) {
- 		fmt = &ctx->dev->venc_pdata->capture_formats[0];
- 		f->fmt.pix.pixelformat = fmt->fourcc;
-@@ -570,7 +565,7 @@ static int vidioc_try_fmt_vid_out_mplane(struct file *file, void *priv,
- 	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
- 	const struct mtk_vcodec_enc_pdata *pdata = ctx->dev->venc_pdata;
+ 	if (a->type != V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+ 		return -EINVAL;
  
--	fmt = mtk_venc_find_format(f, pdata);
-+	fmt = mtk_venc_find_format(f->fmt.pix.pixelformat, pdata);
- 	if (!fmt) {
- 		fmt = &ctx->dev->venc_pdata->output_formats[0];
- 		f->fmt.pix.pixelformat = fmt->fourcc;
+-	ctx->enc_params.framerate_num =
+-			a->parm.output.timeperframe.denominator;
+-	ctx->enc_params.framerate_denom =
+-			a->parm.output.timeperframe.numerator;
++	if (timeperframe->numerator == 0 || timeperframe->denominator == 0) {
++		timeperframe->numerator = MTK_DEFAULT_FRAMERATE_NUM;
++		timeperframe->denominator = MTK_DEFAULT_FRAMERATE_DENOM;
++	}
++
++	ctx->enc_params.framerate_num = timeperframe->denominator;
++	ctx->enc_params.framerate_denom = timeperframe->numerator;
+ 	ctx->param_change |= MTK_ENCODE_PARAM_FRAMERATE;
+ 
+ 	a->parm.output.capability = V4L2_CAP_TIMEPERFRAME;
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
