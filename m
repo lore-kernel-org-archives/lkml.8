@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63F4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1FA20758
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCD6620758
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:46:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uxQgK1Yo"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WQzGeRlb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgHUDqD (ORCPT
+        id S1727987AbgHUDqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:46:03 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:50495 "EHLO
+        Thu, 20 Aug 2020 23:46:12 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:58948 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727116AbgHUDqC (ORCPT
+        by vger.kernel.org with ESMTP id S1727116AbgHUDqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:46:02 -0400
+        Thu, 20 Aug 2020 23:46:06 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597981561; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1597981566; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=eerdHILkw5cBqv1jX7gbIol9qUJRwlLYNGbKnm8Hhuw=; b=uxQgK1YopMm/V6kHdewcGT8DekfM9IDzk7f1bqN4u7pkowy+V/jq8AiHt00EyI/judkCVPyK
- QQ8J2fZeat6CaA+P0yq6hgs7U7pjGSg9xgBJe+LunRjZWP4r1e9iAczfKg0X1P77Q0hb5EMt
- m28bEMq8rLOMehAMf7wxaOQb0Fw=
+ Sender; bh=MZNhX62GC5mduYw1hv3vNaxsR+pcnDEzoaKSap/G7+w=; b=WQzGeRlboP+aaImlfdEHuH+6K7NYorRu49+0GZX43L7DIdazfEfLUAeKOHMFMvJ8nkNw2vMr
+ sD03QPBwa+OdUu47xgVSueoFr41ew66CLzVX8LJR0cqsCImKUpw1q+CQLYYTweJH9VDg6pQI
+ 9hgH6vD1Spzf1toFdaKEiqkC08w=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f3f4376ce76f1f96143e6d3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 Aug 2020 03:45:58
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f3f4355b9730f4536cc6c43 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 Aug 2020 03:45:25
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 59D3DC433AD; Fri, 21 Aug 2020 03:45:57 +0000 (UTC)
+        id 9873EC433CB; Fri, 21 Aug 2020 03:45:25 +0000 (UTC)
 Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A192C433CA;
-        Fri, 21 Aug 2020 03:45:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A192C433CA
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9F739C433B1;
+        Fri, 21 Aug 2020 03:45:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9F739C433B1
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
 From:   Tingwei Zhang <tingwei@codeaurora.org>
@@ -53,21 +53,20 @@ To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Mike Leach <mike.leach@linaro.org>
-Cc:     Kim Phillips <kim.phillips@arm.com>,
+Cc:     Tingwei Zhang <tingwei@codeaurora.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Leo Yan <leo.yan@linaro.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         Russell King <linux@armlinux.org.uk>,
+        Kim Phillips <kim.phillips@arm.com>,
         Mian Yousaf Kaukab <ykaukab@suse.de>, tsoni@codeaurora.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         Mao Jinlong <jinlmao@codeaurora.org>,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-        Tingwei Zhang <tingwei@codeaurora.org>
-Subject: [PATCH v10 09/24] coresight: etm3x: allow etm3x to be built as a module
-Date:   Fri, 21 Aug 2020 11:44:30 +0800
-Message-Id: <20200821034445.967-10-tingwei@codeaurora.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v10 04/24] coresight: add coresight prefix to barrier_pkt
+Date:   Fri, 21 Aug 2020 11:44:25 +0800
+Message-Id: <20200821034445.967-5-tingwei@codeaurora.org>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20200821034445.967-1-tingwei@codeaurora.org>
 References: <20200821034445.967-1-tingwei@codeaurora.org>
@@ -78,125 +77,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@arm.com>
+Add coresight prefix to make it specific. It will be a export symbol.
 
-Allow to build coresight-etm3x as a module, for ease of development.
-
-- Kconfig becomes a tristate, to allow =m
-- append -core to source file name to allow module to
-  be called coresight-etm3x by the Makefile
-- add an etm_remove function, for module unload
-- add a MODULE_DEVICE_TABLE for autoloading on boot
-
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Signed-off-by: Kim Phillips <kim.phillips@arm.com>
+Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
 Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/hwtracing/coresight/Kconfig           |  5 +++-
- drivers/hwtracing/coresight/Makefile          |  3 +-
- ...resight-etm3x.c => coresight-etm3x-core.c} | 28 ++++++++++++++++++-
- 3 files changed, 33 insertions(+), 3 deletions(-)
- rename drivers/hwtracing/coresight/{coresight-etm3x.c => coresight-etm3x-core.c} (97%)
+ drivers/hwtracing/coresight/coresight-etb10.c   | 2 +-
+ drivers/hwtracing/coresight/coresight-priv.h    | 8 ++++----
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 2 +-
+ drivers/hwtracing/coresight/coresight.c         | 2 +-
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index 6433f835fc97..8fd9fd139cf3 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -65,7 +65,7 @@ config CORESIGHT_SINK_ETBV10
- 	  special enhancement or added features.
+diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
+index 03e3f2590191..04ee9cda988d 100644
+--- a/drivers/hwtracing/coresight/coresight-etb10.c
++++ b/drivers/hwtracing/coresight/coresight-etb10.c
+@@ -525,7 +525,7 @@ static unsigned long etb_update_buffer(struct coresight_device *csdev,
  
- config CORESIGHT_SOURCE_ETM3X
--	bool "CoreSight Embedded Trace Macrocell 3.x driver"
-+	tristate "CoreSight Embedded Trace Macrocell 3.x driver"
- 	depends on !ARM64
- 	select CORESIGHT_LINKS_AND_SINKS
- 	help
-@@ -74,6 +74,9 @@ config CORESIGHT_SOURCE_ETM3X
- 	  This is primarily useful for instruction level tracing.  Depending
- 	  the ETM version data tracing may also be available.
+ 	cur = buf->cur;
+ 	offset = buf->offset;
+-	barrier = barrier_pkt;
++	barrier = coresight_barrier_pkt;
  
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called coresight-etm3x.
-+
- config CORESIGHT_SOURCE_ETM4X
- 	bool "CoreSight Embedded Trace Macrocell 4.x driver"
- 	depends on ARM64
-diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-index 19497d1d92bf..d619cfd0abd8 100644
---- a/drivers/hwtracing/coresight/Makefile
-+++ b/drivers/hwtracing/coresight/Makefile
-@@ -11,7 +11,8 @@ obj-$(CONFIG_CORESIGHT_SINK_TPIU) += coresight-tpiu.o
- obj-$(CONFIG_CORESIGHT_SINK_ETBV10) += coresight-etb10.o
- obj-$(CONFIG_CORESIGHT_LINKS_AND_SINKS) += coresight-funnel.o \
- 					   coresight-replicator.o
--obj-$(CONFIG_CORESIGHT_SOURCE_ETM3X) += coresight-etm3x.o coresight-etm-cp14.o \
-+obj-$(CONFIG_CORESIGHT_SOURCE_ETM3X) += coresight-etm3x.o
-+coresight-etm3x-y := coresight-etm3x-core.o coresight-etm-cp14.o \
- 					coresight-etm3x-sysfs.o
- obj-$(CONFIG_CORESIGHT_SOURCE_ETM4X) += coresight-etm4x.o \
- 					coresight-etm4x-sysfs.o
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-similarity index 97%
-rename from drivers/hwtracing/coresight/coresight-etm3x.c
-rename to drivers/hwtracing/coresight/coresight-etm3x-core.c
-index bf22dcfd3327..ba9c86497acb 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-@@ -895,6 +895,23 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
- 	return ret;
+ 	for (i = 0; i < to_read; i += 4) {
+ 		buf_ptr = buf->data_pages[cur] + offset;
+diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+index d801a2755432..dcb8aeb6af62 100644
+--- a/drivers/hwtracing/coresight/coresight-priv.h
++++ b/drivers/hwtracing/coresight/coresight-priv.h
+@@ -66,8 +66,8 @@ static DEVICE_ATTR_RO(name)
+ #define coresight_simple_reg64(type, name, lo_off, hi_off)		\
+ 	__coresight_simple_func(type, NULL, name, lo_off, hi_off)
+ 
+-extern const u32 barrier_pkt[4];
+-#define CORESIGHT_BARRIER_PKT_SIZE (sizeof(barrier_pkt))
++extern const u32 coresight_barrier_pkt[4];
++#define CORESIGHT_BARRIER_PKT_SIZE (sizeof(coresight_barrier_pkt))
+ 
+ enum etm_addr_type {
+ 	ETM_ADDR_TYPE_NONE,
+@@ -104,10 +104,10 @@ struct cs_buffers {
+ static inline void coresight_insert_barrier_packet(void *buf)
+ {
+ 	if (buf)
+-		memcpy(buf, barrier_pkt, CORESIGHT_BARRIER_PKT_SIZE);
++		memcpy(buf, coresight_barrier_pkt,
++				CORESIGHT_BARRIER_PKT_SIZE);
  }
  
-+static int __exit etm_remove(struct amba_device *adev)
-+{
-+	struct etm_drvdata *drvdata = dev_get_drvdata(&adev->dev);
-+
-+	etm_perf_symlink(drvdata->csdev, false);
-+
-+	if (--etm_count == 0) {
-+		cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_STARTING);
-+		if (hp_online)
-+			cpuhp_remove_state_nocalls(hp_online);
-+	}
-+
-+	coresight_unregister(drvdata->csdev);
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_PM
- static int etm_runtime_suspend(struct device *dev)
+-
+ static inline void CS_LOCK(void __iomem *addr)
  {
-@@ -937,6 +954,8 @@ static const struct amba_id etm_ids[] = {
- 	{ 0, 0},
- };
+ 	do {
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index 6375504ba8b0..44402d413ebb 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -519,7 +519,7 @@ static unsigned long tmc_update_etf_buffer(struct coresight_device *csdev,
  
-+MODULE_DEVICE_TABLE(amba, etm_ids);
-+
- static struct amba_driver etm_driver = {
- 	.drv = {
- 		.name	= "coresight-etm3x",
-@@ -945,6 +964,13 @@ static struct amba_driver etm_driver = {
- 		.suppress_bind_attrs = true,
- 	},
- 	.probe		= etm_probe,
-+	.remove         = etm_remove,
- 	.id_table	= etm_ids,
- };
--builtin_amba_driver(etm_driver);
-+
-+module_amba_driver(etm_driver);
-+
-+MODULE_AUTHOR("Pratik Patel <pratikp@codeaurora.org>");
-+MODULE_AUTHOR("Mathieu Poirier <mathieu.poirier@linaro.org>");
-+MODULE_DESCRIPTION("Arm CoreSight Program Flow Trace driver");
-+MODULE_LICENSE("GPL v2");
+ 	cur = buf->cur;
+ 	offset = buf->offset;
+-	barrier = barrier_pkt;
++	barrier = coresight_barrier_pkt;
+ 
+ 	/* for every byte to read */
+ 	for (i = 0; i < to_read; i += 4) {
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index e9c90f2de34a..d515088cc47d 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -53,7 +53,7 @@ static struct list_head *stm_path;
+  * beginning of the data collected in a buffer.  That way the decoder knows that
+  * it needs to look for another sync sequence.
+  */
+-const u32 barrier_pkt[4] = {0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff};
++const u32 coresight_barrier_pkt[4] = {0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff};
+ 
+ static int coresight_id_match(struct device *dev, void *data)
+ {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
