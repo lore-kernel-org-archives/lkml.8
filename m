@@ -2,156 +2,137 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0320D20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FEAB20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:55:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NK/EUI8K"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mE+a7e+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgHUSzK (ORCPT
+        id S1727043AbgHUSzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:55:10 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:33131 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726885AbgHUSye (ORCPT
+        Fri, 21 Aug 2020 14:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbgHUSyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:54:34 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598036074; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=ZBEo8ZeEHfGtM2pRpX9PkSiYXraZn21iFGcK2Njnv+c=; b=NK/EUI8KAIKqC2P1MXm61AKwSJz4LLAvNKBejoXBZZNfaof2WjmOnCly49BYT6ZghE1UOkhC
- MNxGmcniGckJtdsXSBjBCKfv/97ySS7YZaoYEJDo/tFEfgUHTuX6Z2+eNhalx4wq3Uxj5Rag
- 9BP4veqHteASiQP9bd+BFAi/Ba8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f401836c1ce10a051f4e151 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 Aug 2020 18:53:42
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D035BC433A1; Fri, 21 Aug 2020 18:53:42 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F09FC433C6;
-        Fri, 21 Aug 2020 18:53:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F09FC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        Fri, 21 Aug 2020 14:54:25 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A282DC061796
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:54:15 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id t6so1090392qvw.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:54:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Nh1SeH655blb1lMsGRsZcuvpTaQWPjWEn/zrRW9ahdk=;
+        b=mE+a7e+L2zMvC3oBW95DSznj8stF0K+CCHUS7uvPsHY2jNp+L2nhKvp1nNnfpk3bIe
+         jOxyztVEfgvd7sf8pbyzkprs0aNnNrElB8py6oBxLjx6+1u6rRUWFmlcdH4PWmNDVMIG
+         zshJDg8WrAiyHQea1lJB9G2YN3hCVt69g2ZmK2ZijznzbY9HGfTXerRQAApQXwx5oB5k
+         0O1u0C3ba6Pwh5fZVNML/PErCmcyf+ZwEalBXFM3Oz5TzCKuaoq+WG1l+WpyQwchg0Ls
+         2oQFChZEF+Hb3P326cFah7Qi4l4PEay+Z6lA5I9mVOdFABo80L8nAl/WDScRbMDUtcyT
+         GsMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Nh1SeH655blb1lMsGRsZcuvpTaQWPjWEn/zrRW9ahdk=;
+        b=tfMmr1m80919WDDJDd5g8dOLyjDShp1VqV2UNm9aYhMxeDvgUDF21vFb/B73JHlNl+
+         Ge+iLA/3WYOFrxtLghHjVhk7+QsbveFPvnvH7xDHWDnBmTksImDBwlweMo7ZAI8VXboC
+         3E8PBtGMvEdkWBMdAbro8NJ4ZFvGqkBxKqjjR17UiyY/KcMfQyGG6AnijTiDB6PcWJHk
+         xG94TGPO5gIuzu0Gh/3oHRGQ1CaZfQpfnhIcUEMK9GpJlSIdlpPjmzVrUdcEiTVcxDZd
+         CQ6AS6HH6t8TbZk/VJPCa7n1KpSvhrYouYc1wD93y3nkGhhCHEck7Lm9/drQ1qkfo6D6
+         ba0g==
+X-Gm-Message-State: AOAM531MjREc7TTgtbF6nYBR84EVXF7RMxfDyCvJEKMNEQsDgUZRik8V
+        dsyJNqaCGmlpoDU98gKwTSc=
+X-Google-Smtp-Source: ABdhPJwE4nMumlYjaLS4lWaAmu6jEEVGiRXoA1KUQpzmOPGLoyj3FUleVHp+0RO/r0PTDtY2AX2QIA==
+X-Received: by 2002:ad4:510b:: with SMTP id g11mr3567035qvp.20.1598036054969;
+        Fri, 21 Aug 2020 11:54:14 -0700 (PDT)
+Received: from localhost.localdomain (cpe-71-65-111-223.cinci.res.rr.com. [71.65.111.223])
+        by smtp.googlemail.com with ESMTPSA id o72sm2468426qka.113.2020.08.21.11.54.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 11:54:14 -0700 (PDT)
+From:   Connor McAdams <conmanx360@gmail.com>
+Cc:     conmanx360@gmail.com, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] drm/msm: Split the a5xx preemption record
-Date:   Fri, 21 Aug 2020 12:53:35 -0600
-Message-Id: <20200821185336.2196780-1-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.25.1
+Subject: [PATCH 18/20] ALSA: hda/ca0132 - Add AE-7 microphone selection commands.
+Date:   Fri, 21 Aug 2020 14:52:35 -0400
+Message-Id: <20200821185239.26133-19-conmanx360@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200821185239.26133-1-conmanx360@gmail.com>
+References: <20200821185239.26133-1-conmanx360@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The main a5xx preemption record can be marked as privileged to
-protect it from user access but the counters storage needs to be
-remain unprivileged. Split the buffers mark the critical memory
-privileged.
+Add AE-7 quirk data for setting of microphone. The AE-7 has no front
+panel connector, so only rear-mic/line-in have new commands.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Connor McAdams <conmanx360@gmail.com>
 ---
+ sound/pci/hda/patch_ca0132.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
- drivers/gpu/drm/msm/adreno/a5xx_gpu.h     |  1 +
- drivers/gpu/drm/msm/adreno/a5xx_preempt.c | 25 ++++++++++++++++++-----
- 2 files changed, 21 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.h b/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
-index 54868d4e3958..1e5b1a15a70f 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
-@@ -31,6 +31,7 @@ struct a5xx_gpu {
- 	struct msm_ringbuffer *next_ring;
+diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
+index ad594c2d47ec..933f3b0be63e 100644
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -4997,6 +4997,15 @@ static int ca0132_alt_select_in(struct hda_codec *codec)
+ 			ca0113_mmio_command_set(codec, 0x30, 0x28, 0x00);
+ 			tmp = FLOAT_THREE;
+ 			break;
++		case QUIRK_AE7:
++			ca0113_mmio_command_set(codec, 0x30, 0x28, 0x00);
++			tmp = FLOAT_THREE;
++			chipio_set_conn_rate(codec, MEM_CONNID_MICIN2,
++					SR_96_000);
++			chipio_set_conn_rate(codec, MEM_CONNID_MICOUT2,
++					SR_96_000);
++			dspio_set_uint_param(codec, 0x80, 0x01, FLOAT_ZERO);
++			break;
+ 		default:
+ 			tmp = FLOAT_ONE;
+ 			break;
+@@ -5042,6 +5051,14 @@ static int ca0132_alt_select_in(struct hda_codec *codec)
+ 		case QUIRK_AE5:
+ 			ca0113_mmio_command_set(codec, 0x30, 0x28, 0x00);
+ 			break;
++		case QUIRK_AE7:
++			ca0113_mmio_command_set(codec, 0x30, 0x28, 0x3f);
++			chipio_set_conn_rate(codec, MEM_CONNID_MICIN2,
++					SR_96_000);
++			chipio_set_conn_rate(codec, MEM_CONNID_MICOUT2,
++					SR_96_000);
++			dspio_set_uint_param(codec, 0x80, 0x01, FLOAT_ZERO);
++			break;
+ 		default:
+ 			break;
+ 		}
+@@ -5051,7 +5068,10 @@ static int ca0132_alt_select_in(struct hda_codec *codec)
+ 		if (ca0132_quirk(spec) == QUIRK_R3DI)
+ 			chipio_set_conn_rate(codec, 0x0F, SR_96_000);
  
- 	struct drm_gem_object *preempt_bo[MSM_GPU_MAX_RINGS];
-+	struct drm_gem_object *preempt_counters_bo[MSM_GPU_MAX_RINGS];
- 	struct a5xx_preempt_record *preempt[MSM_GPU_MAX_RINGS];
- 	uint64_t preempt_iova[MSM_GPU_MAX_RINGS];
+-		tmp = FLOAT_ZERO;
++		if (ca0132_quirk(spec) == QUIRK_AE7)
++			tmp = FLOAT_THREE;
++		else
++			tmp = FLOAT_ZERO;
+ 		dspio_set_uint_param(codec, 0x80, 0x00, tmp);
  
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-index 9cf9353a7ff1..9f3fe177b00e 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-@@ -226,19 +226,31 @@ static int preempt_init_ring(struct a5xx_gpu *a5xx_gpu,
- 	struct adreno_gpu *adreno_gpu = &a5xx_gpu->base;
- 	struct msm_gpu *gpu = &adreno_gpu->base;
- 	struct a5xx_preempt_record *ptr;
--	struct drm_gem_object *bo = NULL;
--	u64 iova = 0;
-+	void *counters;
-+	struct drm_gem_object *bo = NULL, *counters_bo = NULL;
-+	u64 iova = 0, counters_iova = 0;
- 
- 	ptr = msm_gem_kernel_new(gpu->dev,
- 		A5XX_PREEMPT_RECORD_SIZE + A5XX_PREEMPT_COUNTER_SIZE,
--		MSM_BO_UNCACHED, gpu->aspace, &bo, &iova);
-+		MSM_BO_UNCACHED | MSM_BO_MAP_PRIV, gpu->aspace, &bo, &iova);
- 
- 	if (IS_ERR(ptr))
- 		return PTR_ERR(ptr);
- 
-+	/* The buffer to store counters needs to be unprivileged */
-+	counters = msm_gem_kernel_new(gpu->dev,
-+		A5XX_PREEMPT_COUNTER_SIZE,
-+		MSM_BO_UNCACHED, gpu->aspace, &counters_bo, &counters_iova);
-+	if (IS_ERR(counters)) {
-+		msm_gem_kernel_put(bo, gpu->aspace, true);
-+		return PTR_ERR(counters);
-+	}
-+
- 	msm_gem_object_set_name(bo, "preempt");
-+	msm_gem_object_set_name(counters_bo, "preempt_counters");
- 
- 	a5xx_gpu->preempt_bo[ring->id] = bo;
-+	a5xx_gpu->preempt_counters_bo[ring->id] = counters_bo;
- 	a5xx_gpu->preempt_iova[ring->id] = iova;
- 	a5xx_gpu->preempt[ring->id] = ptr;
- 
-@@ -249,7 +261,7 @@ static int preempt_init_ring(struct a5xx_gpu *a5xx_gpu,
- 	ptr->data = 0;
- 	ptr->cntl = MSM_GPU_RB_CNTL_DEFAULT;
- 	ptr->rptr_addr = rbmemptr(ring, rptr);
--	ptr->counter = iova + A5XX_PREEMPT_RECORD_SIZE;
-+	ptr->counter = counters_iova;
- 
- 	return 0;
- }
-@@ -260,8 +272,11 @@ void a5xx_preempt_fini(struct msm_gpu *gpu)
- 	struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
- 	int i;
- 
--	for (i = 0; i < gpu->nr_rings; i++)
-+	for (i = 0; i < gpu->nr_rings; i++) {
- 		msm_gem_kernel_put(a5xx_gpu->preempt_bo[i], gpu->aspace, true);
-+		msm_gem_kernel_put(a5xx_gpu->preempt_counters_bo[i],
-+			gpu->aspace, true);
-+	}
- }
- 
- void a5xx_preempt_init(struct msm_gpu *gpu)
+ 		switch (ca0132_quirk(spec)) {
 -- 
-2.25.1
+2.20.1
 
