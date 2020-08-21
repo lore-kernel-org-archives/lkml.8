@@ -2,116 +2,131 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28726C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237DFC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F03DD20791
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBDE20791
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:28:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5ysZ7BX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoMfAjUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgHUV1m (ORCPT
+        id S1726796AbgHUV2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52866 "EHLO
+        Fri, 21 Aug 2020 17:28:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgHUV1l (ORCPT
+        with ESMTP id S1726433AbgHUV2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:27:41 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5348C061573;
-        Fri, 21 Aug 2020 14:27:41 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 128so1586923pgd.5;
-        Fri, 21 Aug 2020 14:27:41 -0700 (PDT)
+        Fri, 21 Aug 2020 17:28:32 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C8C1C061573;
+        Fri, 21 Aug 2020 14:28:31 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id k18so2250837qtm.10;
+        Fri, 21 Aug 2020 14:28:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QWnVqkXsQ2VHac6sNBlwzOFyH2VOJDY/ZCWON4QvS5I=;
-        b=O5ysZ7BX+yeoWYpqn0zquTNx0iwRRKm2Bzx3i0KWfMjzIB59kkB+pfCQadtv+THzVF
-         LjYONAb2xWOCOooyA/gOSaHcBtzivEBljT9wbum2c3BIahbl+nDRM4pZ1/MVlz7HS077
-         M3cGX7Z8/QRJ5bRx86su5ApaXmUtndHcN3vWWao5asovSjC0tGD+HB7jNgwgsc6kusuT
-         6iqbs9NPOuGfI1bNWxIfHB14J2N1BLeFzSRL5qOwzsDWsvMwEJWM3oEKjyq3ghqUeUWD
-         HJRy7cN/FLGd4JvsDQvbkSgbMHJPs9pNxeC8jpha8jvKpoEteXjMOamRYaG91cpi0dSR
-         Jfow==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=u1w1dHewQ24Wh+EinJOH0pHgm/+gMZl7ydhUDFjuxnU=;
+        b=OoMfAjUZNkobdLMpwQ9UFNRLMGg4krPXHtBq3Ds15ChRcLsqX5B44nEIZJ7s3FioZb
+         6oYiG18I/qsd0529aq3ua3uxtI9gSYEoW1ALH3ba3XWAGTaZyUYdsQjnyKpSlukJxuDK
+         blqEdLgUgL92jae/PdnFYiYeQApnlj3mz4LbeuOo0gZeJGEl1IO3i09PIX52HxaxPzuw
+         RFp86XFjqI3KHojp/MGn7uEZDzu48zBiI1YdZs1C9zvnjpGOTRvfXPiIBijrgP0nQZ/8
+         r1qooc2oOrlTJHcXqo4mDtmOntpRN/IkGUKtZOIH8/BEzBMvlyrn5M0AFD1NgtMnpmVn
+         cKwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QWnVqkXsQ2VHac6sNBlwzOFyH2VOJDY/ZCWON4QvS5I=;
-        b=jYolLoQrfdhQva0pBGReMAxxIhJqxSyfl/yUsKONdCOKC1LyGiUtOx6vV6fFfpiTLY
-         6tZg3hK6Hd3g4PwtLExUbdpav0wRpGekOsDVfP2fe3CLDPbzYt32Y2+szRfmsdmSm9hb
-         oTgUkjRSPjKDMnlpJDuUHnpwjNimV/6AZVw60Vi7rcWbTcuNy6dr1+uxgpsBgwkJqD/r
-         HiVQ6ZyyTIWS0gD+2FjguREappYaoRvbMLqEi25oKGlQY8AiW/1YbHe3ELTZhapzfVgh
-         P7NeDh5+1P5CSZzPaOrJzVaMAeH+XEbXPq+UON1Zhn4bWcBdn7bi/bitwfaZv/fkCQJg
-         V5fg==
-X-Gm-Message-State: AOAM530Xni5GndUNzDp9Icv+AWOZs54Pp9s6fY2QG1M8wQ020CIJUxJd
-        BawDP6u9bXCd6w8G9OTs/64MuTpXRXE=
-X-Google-Smtp-Source: ABdhPJyNJHaQhxQmL0Xty5/tLXUcqT2A3go11AbPNwihM9m6T3s/IKR5KxH7Ajta0gztQMLP8U3Cjw==
-X-Received: by 2002:a62:164a:: with SMTP id 71mr4035129pfw.266.1598045261183;
-        Fri, 21 Aug 2020 14:27:41 -0700 (PDT)
-Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:4c03:c51f:2cf5:9726])
-        by smtp.gmail.com with ESMTPSA id l12sm2780525pjq.31.2020.08.21.14.27.39
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=u1w1dHewQ24Wh+EinJOH0pHgm/+gMZl7ydhUDFjuxnU=;
+        b=BX2MLtIcDcf8Ced0SLuiHabf4WDIiqrULdH+/X8rQDjutqeQKi056Jza3vWjKYq6re
+         TBXzkWVPbTh6BSmfeeauMCi9DhnNlx8mcoNXVegZbxvkrngyu0pGu82plVsAYw5q5yLC
+         jlf/qdcfmgx95r7/TekMrrXXCG/M05S/U34Joag7srIKmlH7qixrTDE+OX4PfL1FDDFy
+         OfSRhAIzBbbxdZUB5UhsdSeN36m2+KQRY9K+lyoD9KW0Naz+wsj0ST+urbqHBQ8zG91E
+         rwZsTg4XVFuILgpAUVBR4TUQR2t+PZ2bp9SwJPP/iSV61+BKk8b7/M3XlAYjbjkNrNnG
+         vzrw==
+X-Gm-Message-State: AOAM531cHi1mcfApn5zQ4ImWX0f+vNV00Dg6Wo54lPjkrcsv6mZREVSf
+        CzNHN1JCa74rnilLYH+9fRc=
+X-Google-Smtp-Source: ABdhPJxtZVULVA3N4dt/bqKeQXc8/i3GQ6y0v/dOVtDkDPQdS8K00WAzx4b4ykHLL9yquf0LN759jg==
+X-Received: by 2002:aed:27c8:: with SMTP id m8mr4565676qtg.302.1598045310404;
+        Fri, 21 Aug 2020 14:28:30 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id p189sm2823699qkb.61.2020.08.21.14.28.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 14:27:40 -0700 (PDT)
-From:   Xie He <xie.he.0141@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Martin Schiller <ms@dev.tdt.de>
-Subject: [PATCH net v2] drivers/net/wan/lapbether: Added needed_tailroom
-Date:   Fri, 21 Aug 2020 14:26:59 -0700
-Message-Id: <20200821212659.14551-1-xie.he.0141@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 21 Aug 2020 14:28:29 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 21 Aug 2020 17:28:28 -0400
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 27/29] x86/boot/compressed: Remove, discard, or assert
+ for unwanted sections
+Message-ID: <20200821212828.GA1741495@rani.riverdale.lan>
+References: <20200821194310.3089815-1-keescook@chromium.org>
+ <20200821194310.3089815-28-keescook@chromium.org>
+ <20200821200159.GC1475504@rani.riverdale.lan>
+ <202008211421.47347CA42@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202008211421.47347CA42@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The underlying Ethernet device may request necessary tailroom to be
-allocated by setting needed_tailroom. This driver should also set
-needed_tailroom to request the tailroom needed by the underlying
-Ethernet device to be allocated.
+On Fri, Aug 21, 2020 at 02:21:34PM -0700, Kees Cook wrote:
+> On Fri, Aug 21, 2020 at 04:01:59PM -0400, Arvind Sankar wrote:
+> > On Fri, Aug 21, 2020 at 12:43:08PM -0700, Kees Cook wrote:
+> > > In preparation for warning on orphan sections, stop the linker from
+> > > generating the .eh_frame* sections, discard unwanted non-zero-sized
+> > > generated sections, and enforce other expected-to-be-zero-sized sections
+> > > (since discarding them might hide problems with them suddenly gaining
+> > > unexpected entries).
+> > > 
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > >  	.rel.dyn : {
+> > > -		*(.rel.*)
+> > > +		*(.rel.*) *(.rel_*)
+> > >  	}
+> > >  	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
+> > >  
+> > >  	.rela.dyn : {
+> > > -		*(.rela.*)
+> > > +		*(.rela.*) *(.rela_*)
+> > >  	}
+> > >  	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
+> > >  }
+> > > -- 
+> > > 2.25.1
+> > > 
+> > 
+> > When do you get .rela_?
+> 
+> i386 builds, IIRC. I can try to hunt that down if you want?
+> 
+> -- 
+> Kees Cook
 
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
----
-Change from v1:
-None
-I'm re-sending this patch unchanged because the previous reviewer has
-stopped responding for 11 days and he didn't indicate what change I
-should do to this patch.
+Nah, just curious.
 
-It's hard to find reviewers for this code. I tried to send emails, but
-people don't respond. If you can review it, I'd really appreciate it.
-I'm not in a hurry so please take your time. Thanks!
----
- drivers/net/wan/lapbether.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-index 1ea15f2123ed..cc297ea9c6ec 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -340,6 +340,7 @@ static int lapbeth_new_device(struct net_device *dev)
- 	 */
- 	ndev->needed_headroom = -1 + 3 + 2 + dev->hard_header_len
- 					   + dev->needed_headroom;
-+	ndev->needed_tailroom = dev->needed_tailroom;
- 
- 	lapbeth = netdev_priv(ndev);
- 	lapbeth->axdev = ndev;
--- 
-2.25.1
-
+Thanks.
