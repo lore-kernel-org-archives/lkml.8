@@ -2,122 +2,96 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 674242078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E966020724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="nkPVH+Ov"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="Ttm+//iX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgHUOB7 (ORCPT
+        id S1727084AbgHUOEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 10:01:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40076 "EHLO
+        Fri, 21 Aug 2020 10:04:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgHUOBw (ORCPT
+        with ESMTP id S1725897AbgHUOD5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 10:01:52 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57582C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 07:01:51 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id x69so1438782qkb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 07:01:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cA1F72P9Gm2cautm1YaokGwNbN8rzVJerys9S7kz+dY=;
-        b=nkPVH+Ovq+PbJXglpdeME9hid7vf1PM4g5XbkjiJo5EratmsU7t9cUuws/8svKmlrP
-         EeJLdQjFqqNF2PsTU39YI7W6UsK8DFi1Nsy2Fsed4IO48Km3gUAjJBL70SSYLIFiXjHT
-         apFxLWdt25F9C+P6lXRwJOvayqJmLTXwaQtRh7tn1NVJ1G7xJKl4g02yk1IOhlgJXpgE
-         uhu72bWnmxOnt+jHNENMYLGGBUgmEqijytDjIXanSn7EPu572k+I6lEd46ZQ5uvzCaUz
-         QOGQUAuwpZeIzffQ1NmA823BQb4J5ZlOOb2aQbwOMLeV5GUlsqBpF4j6iEl1YEtNCXX0
-         Dl+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cA1F72P9Gm2cautm1YaokGwNbN8rzVJerys9S7kz+dY=;
-        b=Ra2N3CWLSvglcNK4bnhi6kAP+UGyzqHNjQ1QiZK1kETqEfax9HaEotwueFIqwJSPVV
-         8EHlEwUDglLPrvdPNMIU6YGtWNAkgVNIttbErVp5woNJFZWOULEW/91mOG90Ucx9r9hG
-         Y0FrpMueY2flDiuWAlwOFWand9vrqEvhlFP1AsPYSxHH5CUAmGdTgRiFqczXox6QmoVQ
-         60wruopH6XcqyQU4aRz+LVRxU6C04MDkcVWxHltuW41jmrUlposDmEkgrDzo9jDf9CIh
-         jjcHfPqOwxKfyBvXia/kV3YyNPaE83RxXj3aSuzD2WZvhVrM2b0lRZaaOfkAzSbz8+gI
-         wMrA==
-X-Gm-Message-State: AOAM53256VXBRt/9v0hZtVAxTKQkMWGVDnhY06ifl9QmbWoL0PKpApN9
-        1Wn4lG7cd3Z9NZQp240AxU//hA==
-X-Google-Smtp-Source: ABdhPJwPS73vtoYQwDHYcuev8ZG8I9A0ALFJUzGNNDGInBppfnv7YCsr8cJGOO2lQw5S4Qj+0Je+7A==
-X-Received: by 2002:a37:9b95:: with SMTP id d143mr2782128qke.272.1598018510305;
-        Fri, 21 Aug 2020 07:01:50 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 15sm1789776qkm.112.2020.08.21.07.01.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 07:01:49 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 10:01:43 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>, akpm@linux-foundation.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, nao.horiguchi@gmail.com,
-        osalvador@suse.de, mike.kravetz@oracle.com
-Subject: Re: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead
- page charged
-Message-ID: <20200821140134.GA8147@lca.pw>
-References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200820145850.GA4622@lca.pw>
- <20200821080127.GD32537@dhcp22.suse.cz>
- <20200821123934.GA4314@lca.pw>
- <20200821134842.GF32537@dhcp22.suse.cz>
+        Fri, 21 Aug 2020 10:03:57 -0400
+Received: from mxout3.routing.net (mxout3.routing.net [IPv6:2a03:2900:1:a::8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35328C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 07:03:57 -0700 (PDT)
+Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
+        by mxout3.routing.net (Postfix) with ESMTP id 1F3BB600E3;
+        Fri, 21 Aug 2020 14:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+        s=20200217; t=1598018629;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3uwhXQPwN7FPz65pMgdPSDnQeJydLmXsPIKMifEpXlY=;
+        b=Ttm+//iX1eUjhmNpOhcZr0EJVANL4/aMV+hFs1aBFQHSZpxDImZst5eKj0kjJpGR1uqk3D
+        bwvXJXQfHPOCXdAp4pBImBqdKOc5gDAH5rBYb26oi2pv0gyw6kq8ayn7NXtCifx3r7DcNb
+        hCaFTQJTuDFXkgNB/5e7oyVERpc0jy0=
+Received: from frank-s9 (fttx-pool-185.76.97.101.bambit.de [185.76.97.101])
+        by mxbox1.masterlogin.de (Postfix) with ESMTPSA id 53963402D3;
+        Fri, 21 Aug 2020 14:03:48 +0000 (UTC)
+Date:   Fri, 21 Aug 2020 16:03:42 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <93debe6a0308b66d3f307af67ba7ec2c@kernel.org>
+References: <20200819161907.1155110-1-enric.balletbo@collabora.com> <C9E59107-CE83-4554-9447-5DE5BEE09A3B@fw-web.de> <CAGETcx9_A-E5b-JxT2G142mGxqoo8xqFNEgT+CNWt=oOv0Z5+w@mail.gmail.com> <a23bac35d20eb002bdfb5263bf5dd213@kernel.org> <CAGETcx-NpRzzeXYN-UBP1eAsC3s_AofSQ9rXOEmCjhLhKLnxWg@mail.gmail.com> <14b8f4b9667d29ee25e25eb19c69e3f7@kernel.org> <95ae0ae3-7798-d6d5-fc37-391862a0b4ca@collabora.com> <93debe6a0308b66d3f307af67ba7ec2c@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821134842.GF32537@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] Revert "irqchip/mtk-sysirq: Convert to a platform driver"
+To:     Marc Zyngier <maz@kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+CC:     Saravana Kannan <saravanak@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Hanks Chen <hanks.chen@mediatek.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+From:   Frank Wunderlich <linux@fw-web.de>
+Message-ID: <C4270F76-C385-4D5B-96BF-F3B9DEB555E3@fw-web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 03:48:42PM +0200, Michal Hocko wrote:
-> On Fri 21-08-20 08:39:37, Qian Cai wrote:
-> > On Fri, Aug 21, 2020 at 10:01:27AM +0200, Michal Hocko wrote:
-> > > On Thu 20-08-20 10:58:51, Qian Cai wrote:
-> > > > On Tue, Aug 11, 2020 at 07:10:27PM +0800, Alex Shi wrote:
-> > > > > Since readahead page is charged on memcg too, in theory we don't have to
-> > > > > check this exception now. Before safely remove them all, add a warning
-> > > > > for the unexpected !memcg.
-> > > > > 
-> > > > > Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> > > > > Acked-by: Michal Hocko <mhocko@suse.com>
-> > > > 
-> > > > This will trigger,
-> > > 
-> > > Thanks for the report!
-> > >  
-> > > > [ 1863.916499] LTP: starting move_pages12
-> > > > [ 1863.946520] page:000000008ccc1062 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1fd3c0
-> > > > [ 1863.946553] head:000000008ccc1062 order:5 compound_mapcount:0 compound_pincount:0
-> > > 
-> > > Hmm, this is really unexpected. How did we get order-5 page here? Is
-> > > this some special mappaing that sys_move_pages should just ignore?
-> > 
-> > Well, I thought everybody should be able to figure out where to find the LTP
-> > tests source code at this stage to see what it does. Anyway, the test simply
-> > migrate hugepages while soft offlining, so order 5 is expected as that is 2M
-> > hugepage on powerpc (also reproduced on x86 below). It might be easier to
-> > reproduce using our linux-mm random bug collection on NUMA systems.
-> 
-> OK, I must have missed that this was on ppc. The order makes more sense
-> now. I will have a look at this next week.
+Am 21=2E August 2020 12:17:36 MESZ schrieb Marc Zyngier <maz@kernel=2Eorg>:
 
-Sorry about not mentioning powerpc in the first place. I don't know since when
-powerpc will no longer print out hardware information like x86 does in those
-warning reports. I'll dig.
+>It'd be good if you could help with that, but I will definitely apply
+>the revert (below for the revert list)=2E Any change is too invasive to
+>be added to this cycle=2E
+>
+>920ecb8c35cb irqchip/mtk-cirq: Convert to a platform driver
+>f97dbf48ca43 irqchip/mtk-sysirq: Convert to a platform driver
+>5be57099d445 irqchip/qcom-pdc: Switch to using IRQCHIP_PLATFORM_DRIVER=20
+>helper macros
+
+with Patch "irqchip: Fix probing deferal when using IRQCHIP_PLATFORM_DRIVE=
+R helper" i can boot my board, but i get these errors:
+
+[ 0=2E014234] irq: no irq domain found for interrupt-controller@10200100 !
+[ 0=2E020981] Failed to map interrupt for /timer@10008000
+[ 0=2E026248] Failed to initialize '/timer@10008000': -22
+[ 4=2E314126] hw perfevents: /pmu: failed to register PMU devices!
+
+if i revert f97dbf48ca43009e8b8bcdf07f47fc9f06149b36 these are gone
+
+So from my pov revert is best way at the moment
+
+regards Frank
