@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03608C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5622C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D39F320748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B4020738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030393;
-	bh=m+1apagXqrqjpioWi5YRjOeRWYJSsRXYy6sL/f44RPk=;
+	s=default; t=1598030400;
+	bh=aeNLfbOxc1fi4O4pUGXUtGAphJ/8yx6rS/qKYDWhY34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cjIgDINfxhaXwp4RX8qkZEAFfW/rdW61rTWsCFY0xiZ+ihdFu28N71ZOxkucHItgN
-	 kl/stR0n/6GGs0VVvnHSigin885twc8SXVXgtpgJkgRBGOfXxQu06KV+61ymVH9DVV
-	 BKEMEo48m9IbPVyuvaoGuBWDuQWVm+VQaiu4IHuk=
+	b=Tqh6pzXd3syxDoQ3jn8fL83aP78gAqCoRNsswcUL3yJon3hCz238HxL9sPg63ftAc
+	 tyEHqUX+35Py2q342HIvWXwQreFvucyuU+7AMmZ+WxJ8G5VzKDGrBJ6seQ5Or7uz6A
+	 zaJhzSCMm5NV+9xvDTRCceqwpw12ebsXhUdfdmEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgHURTw (ORCPT
+        id S1728220AbgHURT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:19:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:19:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728072AbgHUQQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:16:25 -0400
+        id S1728067AbgHUQQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:16:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5093B22B47;
-        Fri, 21 Aug 2020 16:16:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD2B12224D;
+        Fri, 21 Aug 2020 16:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026585;
-        bh=m+1apagXqrqjpioWi5YRjOeRWYJSsRXYy6sL/f44RPk=;
+        s=default; t=1598026578;
+        bh=aeNLfbOxc1fi4O4pUGXUtGAphJ/8yx6rS/qKYDWhY34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a6p+94eYrbDv/eceBBWi39sbXG4K3s//0x4om/90U7iPiu12rrMYrQCVAQ0x9I3kr
-         QZ34fhHSgXrIEnlvk03gzA2AVEdxzPvvfiQjBdJ1Ry1tLB8TDfPiZ1c7KKALhac2vg
-         vp35lVBOrKM3dOCQ9IGI5S2VjvR1zgRuzbdnYCFY=
+        b=nMHUqRKJvojsv7bdiGwB1NXBKoc6OWu8CDYXvGpe0D3hcp3ypC7sKar5lCuORgQVZ
+         khOXQgUEfN6yvnavTK4JKugsEjzLm9XuX2/ihiPjMuDSaC67XdY01UDmJvVFO7Bd0P
+         NxjF05cj9O8nsOZ5B3WVb2tXTo/f5jB63maiGvQQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Christie <michael.christie@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 32/61] scsi: target: Fix xcopy sess release leak
-Date:   Fri, 21 Aug 2020 12:15:16 -0400
-Message-Id: <20200821161545.347622-32-sashal@kernel.org>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 27/61] drm/amdgpu/fence: fix ref count leak when pm_runtime_get_sync fails
+Date:   Fri, 21 Aug 2020 12:15:11 -0400
+Message-Id: <20200821161545.347622-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
 References: <20200821161545.347622-1-sashal@kernel.org>
@@ -60,96 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <michael.christie@oracle.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 3c006c7d23aac928279f7cbe83bbac4361255d53 ]
+[ Upstream commit e520d3e0d2818aafcdf9d8b60916754d8fedc366 ]
 
-transport_init_session can allocate memory via percpu_ref_init, and
-target_xcopy_release_pt never frees it. This adds a
-transport_uninit_session function to handle cleanup of resources allocated
-in the init function.
+The call to pm_runtime_get_sync increments the counter even in case of
+failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-Link: https://lore.kernel.org/r/1593654203-12442-3-git-send-email-michael.christie@oracle.com
-Signed-off-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Acked-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_internal.h  |  1 +
- drivers/target/target_core_transport.c |  7 ++++++-
- drivers/target/target_core_xcopy.c     | 11 +++++++++--
- 3 files changed, 16 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/target/target_core_internal.h b/drivers/target/target_core_internal.h
-index 8533444159635..e7b3c6e5d5744 100644
---- a/drivers/target/target_core_internal.h
-+++ b/drivers/target/target_core_internal.h
-@@ -138,6 +138,7 @@ int	init_se_kmem_caches(void);
- void	release_se_kmem_caches(void);
- u32	scsi_get_new_index(scsi_index_t);
- void	transport_subsystem_check_init(void);
-+void	transport_uninit_session(struct se_session *);
- unsigned char *transport_dump_cmd_direction(struct se_cmd *);
- void	transport_dump_dev_state(struct se_device *, char *, int *);
- void	transport_dump_dev_info(struct se_device *, struct se_lun *,
-diff --git a/drivers/target/target_core_transport.c b/drivers/target/target_core_transport.c
-index 264a822c0bfac..989d5e5924816 100644
---- a/drivers/target/target_core_transport.c
-+++ b/drivers/target/target_core_transport.c
-@@ -236,6 +236,11 @@ int transport_init_session(struct se_session *se_sess)
- }
- EXPORT_SYMBOL(transport_init_session);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+index 892c1e9a1eb04..bf82b25e1aa32 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+@@ -746,8 +746,10 @@ static int amdgpu_debugfs_gpu_recover(struct seq_file *m, void *data)
+ 	int r;
  
-+void transport_uninit_session(struct se_session *se_sess)
-+{
-+	percpu_ref_exit(&se_sess->cmd_count);
-+}
-+
- /**
-  * transport_alloc_session - allocate a session object and initialize it
-  * @sup_prot_ops: bitmask that defines which T10-PI modes are supported.
-@@ -579,7 +584,7 @@ void transport_free_session(struct se_session *se_sess)
- 		sbitmap_queue_free(&se_sess->sess_tag_pool);
- 		kvfree(se_sess->sess_cmd_map);
- 	}
--	percpu_ref_exit(&se_sess->cmd_count);
-+	transport_uninit_session(se_sess);
- 	kmem_cache_free(se_sess_cache, se_sess);
- }
- EXPORT_SYMBOL(transport_free_session);
-diff --git a/drivers/target/target_core_xcopy.c b/drivers/target/target_core_xcopy.c
-index bd3ed6ce75719..4a01d7c195da7 100644
---- a/drivers/target/target_core_xcopy.c
-+++ b/drivers/target/target_core_xcopy.c
-@@ -474,7 +474,7 @@ int target_xcopy_setup_pt(void)
- 	memset(&xcopy_pt_sess, 0, sizeof(struct se_session));
- 	ret = transport_init_session(&xcopy_pt_sess);
- 	if (ret < 0)
--		return ret;
-+		goto destroy_wq;
- 
- 	xcopy_pt_nacl.se_tpg = &xcopy_pt_tpg;
- 	xcopy_pt_nacl.nacl_sess = &xcopy_pt_sess;
-@@ -483,12 +483,19 @@ int target_xcopy_setup_pt(void)
- 	xcopy_pt_sess.se_node_acl = &xcopy_pt_nacl;
- 
- 	return 0;
-+
-+destroy_wq:
-+	destroy_workqueue(xcopy_wq);
-+	xcopy_wq = NULL;
-+	return ret;
- }
- 
- void target_xcopy_release_pt(void)
- {
--	if (xcopy_wq)
-+	if (xcopy_wq) {
- 		destroy_workqueue(xcopy_wq);
-+		transport_uninit_session(&xcopy_pt_sess);
+ 	r = pm_runtime_get_sync(dev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return 0;
 +	}
- }
  
- /*
+ 	seq_printf(m, "gpu recover\n");
+ 	amdgpu_device_gpu_recover(adev, NULL);
 -- 
 2.25.1
 
