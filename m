@@ -2,143 +2,95 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC56DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE782C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC119207DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC6ED20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgHUDBJ (ORCPT
+        id S1727116AbgHUDC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:01:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbgHUDBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:01:08 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1EF220732;
-        Fri, 21 Aug 2020 03:01:06 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 23:01:05 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
-Message-ID: <20200820230105.1f9651b7@oasis.local.home>
-In-Reply-To: <CANMq1KCpV+RKCqHsK-=Xeb+Vq28qdnBVF51rcga7m9-xjqNSCg@mail.gmail.com>
-References: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
-        <20200820170951.v4.3.I066d89f39023956c47fb0a42edf196b3950ffbf7@changeid>
-        <20200820102347.15d2f610@oasis.local.home>
-        <CANMq1KCoEZVj=sjxCqBhqLZKBab57+82=Rk_LN7fc3aCuNHMUw@mail.gmail.com>
-        <20200820203601.4f70bf98@oasis.local.home>
-        <CANMq1KAAgXG9MKMZ_D9zYFV-j0oVreA_AeSw-8FoyJgZ9eWQpg@mail.gmail.com>
-        <20200820215701.667f02b2@oasis.local.home>
-        <CANMq1KCpV+RKCqHsK-=Xeb+Vq28qdnBVF51rcga7m9-xjqNSCg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 20 Aug 2020 23:02:26 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:47752 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725852AbgHUDCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 23:02:24 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 564FE26ECB8ED6D33E92;
+        Fri, 21 Aug 2020 11:02:17 +0800 (CST)
+Received: from [10.174.61.242] (10.174.61.242) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Fri, 21 Aug 2020 11:02:16 +0800
+Subject: Re: [PATCH net-next] hinic: add debugfs support
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
+        <chiqijun@huawei.com>
+References: <20200820121432.23597-1-luobin9@huawei.com>
+ <20200820090203.3f56024b@kicinski-fedora-PC1C0HJN>
+From:   "luobin (L)" <luobin9@huawei.com>
+Message-ID: <b4ad6d8e-0760-bcea-56a3-dd8d3ffc8237@huawei.com>
+Date:   Fri, 21 Aug 2020 11:01:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200820090203.3f56024b@kicinski-fedora-PC1C0HJN>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.61.242]
+X-ClientProxiedBy: dggeme714-chm.china.huawei.com (10.1.199.110) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 10:39:02 +0800
-Nicolas Boichat <drinkcat@chromium.org> wrote:
-
-> I'm not sure how that helps? I mean, the use case you have in mind is
-> somebody reusing a distro/random config and not being able to use
-> trace_printk, right? If that config has CONFIG_DISABLE_TRACE_PRINTK=y,
-> then the developer will still need to flip that back.
+On 2020/8/21 0:02, Jakub Kicinski wrote:
+> On Thu, 20 Aug 2020 20:14:32 +0800 Luo bin wrote:
+>> +static int hinic_dbg_help(struct hinic_dev *nic_dev, const char *cmd_buf)
+>> +{
+>> +	netif_info(nic_dev, drv, nic_dev->netdev, "Available commands:\n");
+>> +	netif_info(nic_dev, drv, nic_dev->netdev, "sq info <queue id>\n");
+>> +	netif_info(nic_dev, drv, nic_dev->netdev, "sq wqe info <queue id> <wqe id>\n");
+>> +	netif_info(nic_dev, drv, nic_dev->netdev, "rq info <queue id>\n");
+>> +	netif_info(nic_dev, drv, nic_dev->netdev, "rq wqe info <queue id> <wqe id>\n");
+>> +	netif_info(nic_dev, drv, nic_dev->netdev, "sq ci table <queue id>\n");
+>> +	netif_info(nic_dev, drv, nic_dev->netdev, "rq cqe info <queue id> <cqe id>\n");
+>> +	netif_info(nic_dev, drv, nic_dev->netdev, "mac table\n");
+>> +	netif_info(nic_dev, drv, nic_dev->netdev, "global table\n");
+>> +	netif_info(nic_dev, drv, nic_dev->netdev, "func table\n");
+>> +	netif_info(nic_dev, drv, nic_dev->netdev, "port table\n");
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct hinic_dbg_cmd_info g_hinic_dbg_cmd[] = {
+>> +	{"help", hinic_dbg_help},
+>> +	{"sq info", hinic_dbg_get_sq_info},
+>> +	{"sq wqe info", hinic_dbg_get_sq_wqe_info},
+>> +	{"rq info", hinic_dbg_get_rq_info},
+>> +	{"rq wqe info", hinic_dbg_get_rq_wqe_info},
+>> +	{"sq ci table", hinic_dbg_get_ci_table},
+>> +	{"rq cqe info", hinic_dbg_get_rq_cqe_info},
+>> +	{"mac table", hinic_dbg_get_mac_table},
+>> +	{"global table", hinic_dbg_get_global_table},
+>> +	{"func table", hinic_dbg_get_function_table},
+>> +	{"port table", hinic_dbg_get_port_table},
+>> +};
 > 
-> Note that the option I'm added has default=y (_allow_ trace_printk),
-> so I don't think default y or default n really matters?
-
-Ideally, the production system doesn't have it set. It only sets it to
-make sure that it's clean before sending out. But then it can add it
-back before production. Yeah, it's pretty much cutting hairs between
-the two. I don't like either one.
-
-Really, if you are worried about this, just add your patch to your
-local tree. I'm not sure this is something that can be fixed upstream.
-
-Another idea is to add something like below, and build with:
-
- make CHECK_TRACE_PRINT=1
-
-This way it is a build command line option that causes the build to
-fail if trace_printk() is added.
-
-This way production systems can add this to make sure their kernels are
-free of trace_printk() but it doesn't affect the config that is used.
-
--- Steve
-
-[ Not even compiled tested! ]
-
-diff --git a/Makefile b/Makefile
-index 2057c92a6205..5714a738879d 100644
---- a/Makefile
-+++ b/Makefile
-@@ -91,6 +91,13 @@ else
-   Q = @
- endif
- 
-+ifeq ("$(origin CHECK_TRACE_PRINTK)", "command line")
-+  KBUILD_NO_TRACE_PRINTK = $(NO_TRACE_PRINTK)
-+endif
-+ifndef KBUILD_NO_TRACE_PRINTK
-+  KBUILD_NO_TRACE_PRINTK = 0
-+endif
-+
- # If the user is running make -s (silent mode), suppress echoing of
- # commands
- 
-@@ -839,6 +846,10 @@ KBUILD_AFLAGS	+= -gz=zlib
- KBUILD_LDFLAGS	+= --compress-debug-sections=zlib
- endif
- 
-+ifeq ($(KBUILD_NO_TRACE_PRINTK),1)
-+KBUILD_CFLAGS += -DNO_TRACE_PRINTK
-+endif
-+
- KBUILD_CFLAGS += $(DEBUG_CFLAGS)
- export DEBUG_CFLAGS
- 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 500def620d8f..bee432547d26 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -680,11 +680,14 @@ extern void tracing_stop(void);
- static inline __printf(1, 2)
- void ____trace_printk_check_format(const char *fmt, ...)
- {
-+#ifdef NO_TRACE_PRINTK
-+	extern void __no_trace_printk_on_build(void);
-+	__no_trace_printk_on_build();
-+#endif
- }
- #define __trace_printk_check_format(fmt, args...)			\
- do {									\
--	if (0)								\
--		____trace_printk_check_format(fmt, ##args);		\
-+	____trace_printk_check_format(fmt, ##args);			\
- } while (0)
- 
- /**
+> Please don't create command interfaces like this.
+> 
+> Instead create a read only file for objects you want to expose.
+> 
+> Split addition of each object into a separate patch and provide example
+> output in the commit message.
+> .
+> 
+Will fix. Thanks for your review.
