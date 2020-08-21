@@ -2,97 +2,84 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CBFC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EF3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99CB621734
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB03204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgHUFtE (ORCPT
+        id S1726993AbgHUFts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 01:49:04 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:4595 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgHUFtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 01:49:03 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BXrDW3DBnz9vD3p;
-        Fri, 21 Aug 2020 07:48:59 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id VpnWpAjDVMm5; Fri, 21 Aug 2020 07:48:59 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BXrDW28hTz9vD3n;
-        Fri, 21 Aug 2020 07:48:59 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 347958B87B;
-        Fri, 21 Aug 2020 07:49:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id OrIyz0STq1FM; Fri, 21 Aug 2020 07:49:00 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 479D18B75F;
-        Fri, 21 Aug 2020 07:48:59 +0200 (CEST)
-Subject: Re: [PATCH v5 6/8] mm: Move vmap_range from lib/ioremap.c to
- mm/vmalloc.c
-To:     Nicholas Piggin <npiggin@gmail.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zefan Li <lizefan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20200821044427.736424-1-npiggin@gmail.com>
- <20200821044427.736424-7-npiggin@gmail.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <75f426b3-fcaf-c8fc-65b8-a6f501bae1da@csgroup.eu>
-Date:   Fri, 21 Aug 2020 07:48:53 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200821044427.736424-7-npiggin@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        Fri, 21 Aug 2020 01:49:48 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:63924 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725844AbgHUFtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 01:49:46 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app3 (Coremail) with SMTP id cC_KCgD3Ed5jYD9fSKv7Ag--.61589S4;
+        Fri, 21 Aug 2020 13:49:27 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: atomisp: fix memleak in ia_css_stream_create
+Date:   Fri, 21 Aug 2020 13:49:16 +0800
+Message-Id: <20200821054920.13001-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgD3Ed5jYD9fSKv7Ag--.61589S4
+X-Coremail-Antispam: 1UD129KBjvdXoWruFyDKr4rCw48CrWkZFyxKrg_yoWfJFb_Cr
+        s3tw1xXr1Yyr15Cw1UtF48ZrySvwsI9r1vva1FkFWIkanF9Fy5ArWvvrW8Aa15Wr4agrZI
+        y3ykXF90kr17CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbI8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4rMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
+        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvj
+        fUOb18DUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhAAfsA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When aspect_ratio_crop_init() fails, curr_stream needs
+to be freed just like what we've done in the following
+error paths. However, current code is returning directly
+and ends up leaking memory.
 
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/staging/media/atomisp/pci/sh_css.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Le 21/08/2020 à 06:44, Nicholas Piggin a écrit :
-> This is a generic kernel virtual memory mapper, not specific to ioremap.
-> 
-> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-> ---
->   include/linux/vmalloc.h |   2 +
->   mm/ioremap.c            | 192 ----------------------------------------
->   mm/vmalloc.c            | 191 +++++++++++++++++++++++++++++++++++++++
->   3 files changed, 193 insertions(+), 192 deletions(-)
-> 
-> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-> index 787d77ad7536..e3590e93bfff 100644
-> --- a/include/linux/vmalloc.h
-> +++ b/include/linux/vmalloc.h
-> @@ -181,6 +181,8 @@ extern struct vm_struct *remove_vm_area(const void *addr);
->   extern struct vm_struct *find_vm_area(const void *addr);
->   
->   #ifdef CONFIG_MMU
-> +extern int vmap_range(unsigned long addr, unsigned long end, phys_addr_t phys_addr, pgprot_t prot,
-> +			unsigned int max_page_shift);
+diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
+index 54434c2dbaf9..8473e1437074 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css.c
++++ b/drivers/staging/media/atomisp/pci/sh_css.c
+@@ -9521,7 +9521,7 @@ ia_css_stream_create(const struct ia_css_stream_config *stream_config,
+ 	if (err)
+ 	{
+ 		IA_CSS_LEAVE_ERR(err);
+-		return err;
++		goto ERR;
+ 	}
+ #endif
+ 	for (i = 0; i < num_pipes; i++)
+-- 
+2.17.1
 
-extern keyword is useless on function prototypes and deprecated. Please 
-don't add new function prototypes with that keyword.
-
->   extern int map_kernel_range_noflush(unsigned long start, unsigned long size,
->   				    pgprot_t prot, struct page **pages);
->   int map_kernel_range(unsigned long start, unsigned long size, pgprot_t prot,
-
-Christophe
