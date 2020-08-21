@@ -2,98 +2,105 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75038C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A61020720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CAD02087D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:07:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="grlxyTPg"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="XZh+cG3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgHUJHD (ORCPT
+        id S1728152AbgHUJHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:07:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50702 "EHLO
+        Fri, 21 Aug 2020 05:07:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgHUJHC (ORCPT
+        with ESMTP id S1725965AbgHUJHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:07:02 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE92C061385;
-        Fri, 21 Aug 2020 02:07:02 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f5so597987plr.9;
-        Fri, 21 Aug 2020 02:07:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lpRfEAK9hizU8z+MYAdROsy4y7XmRdPj3BG7wTbZLZw=;
-        b=grlxyTPg/iyMdHs7mW+oLR6rh0bk0w5Ls5KRZqaoAaFp0LjCwJ7buqxLZLTlThUDNG
-         tzvM0MKOmcCIT5u6eDZpI3YjhBxLAJ8vLuqN1lHFnNyYkHMqb7SyZT9KvsiHE4grXAQ4
-         I4BdGNwGW6X5UdrbmMBiHkesLOrwhbVcP8BkFH0xUL8JxKPnyaG5aEx8kZRSvo+A12wK
-         +K5r5Nth0voQc8KbJl+6dOlYi4q6/MGuxe4P1dy1fYiaKDpOgvmw1u0VhFzBWJBVmd2k
-         6tjToZKd5NwF/yIeh0ZDhl18GnkHArtdzY9T5df2LnLtFo6u+wV1ffS9b7eeS9vdIjpt
-         V/eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lpRfEAK9hizU8z+MYAdROsy4y7XmRdPj3BG7wTbZLZw=;
-        b=QZcQaHcIrdn9/FdG5IJOgMnm7BpCjX3J5yGikkZvt/QePBr7EKB4PgufD5LSt6t8Fx
-         803yGgwfb/OHZV8QAsMqB9OkHjwoPCLF2YcpPq0uaJls8CKJWv5GongHpxs7H1VWFJBZ
-         1TssRSSLCeqj15cXyv06Vt49dig/XHts6EySAyMcUOe96dxP209NKDjJtc8jw4r66fR1
-         GVyEVwTtMtd/P+mb89f5DGgLuNnjrbpAZIlddtoQLVo26NYncpA6UFkHy6VP3HP/35T/
-         bEWCGhoy+7/OhaEbiDNegm41WwkIRV36zFZyXqYpOf842NI/+2D+LtAjq0xT35aZ9qat
-         JKCg==
-X-Gm-Message-State: AOAM531SOf2amG1SRxGKLfG5AKKzcxPvp2l5aKk4+IN/3aUE4IEPSkxf
-        7OG8G6YjTLTdRLXLdjnp3UzY5bICldAuNbFhLm8=
-X-Google-Smtp-Source: ABdhPJxcGz7B04L23FgStmA+C5YUh17LayGi0wW4N43S/c8dvT4rWSpO7MdM8lbbuwaa/qzB9+Qc/M9bxRj0WNOq5u0=
-X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr1765347pjb.129.1598000821832;
- Fri, 21 Aug 2020 02:07:01 -0700 (PDT)
+        Fri, 21 Aug 2020 05:07:18 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EED6C061385
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 02:07:18 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0eda003935e3317bb76801.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:da00:3935:e331:7bb7:6801])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F34BB1EC03A0;
+        Fri, 21 Aug 2020 11:07:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1598000836;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tFBtdIgFkDAtv391DKNWHLqjYSEZHMmZOnl+IsK8uiY=;
+        b=XZh+cG3LjuGCagyceQeWByAKv9iiIp9PqyomV5vaG8vWVeRxuiUcTTPT6AArLB+PEbEK7c
+        njnUtIsBZ6rRz57Eiz04IJ5ZSLZjHyF4jsv0ZRTOXu158ATSafn86rsG8TR+uulgVrEEQi
+        AGyAly8tnCAYvXI4kNLy8fengE+Ux0M=
+Date:   Fri, 21 Aug 2020 11:07:10 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Bae, Chang Seok" <chang.seok.bae@intel.com>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH -v2] x86/entry/64: Correct the comment over
+ SAVE_AND_SET_GSBASE
+Message-ID: <20200821090710.GE12181@zn.tnic>
+References: <20200820091544.26564-1-bp@alien8.de>
+ <6236F23E-B26A-4141-AD2E-9403CFF726D3@intel.com>
 MIME-Version: 1.0
-References: <20200820091537.490965042@linuxfoundation.org> <20200820091541.964627271@linuxfoundation.org>
- <20200821072123.GC23823@amd>
-In-Reply-To: <20200821072123.GC23823@amd>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 21 Aug 2020 12:06:45 +0300
-Message-ID: <CAHp75Vcbmc-PV-gQxuj9i8sAcFCzhJKe_qzEfrkUTZbnf3Vupg@mail.gmail.com>
-Subject: Re: [PATCH 4.19 83/92] mfd: dln2: Run event handler loop under spinlock
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6236F23E-B26A-4141-AD2E-9403CFF726D3@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:26 AM Pavel Machek <pavel@denx.de> wrote:
-> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >
-> > [ Upstream commit 3d858942250820b9adc35f963a257481d6d4c81d ]
-> >
-> > The event handler loop must be run with interrupts disabled.
-> > Otherwise we will have a warning:
-> ...
-> > Recently xHCI driver switched to tasklets in the commit 36dc01657b49
-> > ("usb: host: xhci: Support running urb giveback in tasklet
-> > context").
->
-> AFAICT, 36dc01657b49 is not included in 4.19.141, so this commit
-> should not be needed, either.
+On Thu, Aug 20, 2020 at 06:04:50PM +0000, Bae, Chang Seok wrote:
+> I think somehow the “MSR write” made confusion. Our conclusion was the 
+> same as Thomas' that no FENCE is needed here.
 
-I'm wondering if there are any other USB host controller drivers that
-use URB giveback in interrupt enabled context.
+Ok, here's v2 with a corrected comment:
+
+---
+From: Borislav Petkov <bp@suse.de>
+
+Add the proper explanation why an LFENCE is not needed in the FSGSBASE
+case.
+
+Fixes: c82965f9e530 ("x86/entry/64: Handle FSGSBASE enabled paranoid entry/exit")
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/entry/entry_64.S | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 26fc9b42fadc..5c5d234d968d 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -840,8 +840,9 @@ SYM_CODE_START_LOCAL(paranoid_entry)
+ 	 * retrieve and set the current CPUs kernel GSBASE. The stored value
+ 	 * has to be restored in paranoid_exit unconditionally.
+ 	 *
+-	 * The MSR write ensures that no subsequent load is based on a
+-	 * mispredicted GSBASE. No extra FENCE required.
++	 * The unconditional write to GS base below ensures that no subsequent
++	 * loads based on a mispredicted GS base can happen, therefore no LFENCE
++	 * is needed here.
+ 	 */
+ 	SAVE_AND_SET_GSBASE scratch_reg=%rax save_reg=%rbx
+ 	ret
+-- 
+2.21.0
+
+Thx.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
