@@ -2,92 +2,302 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D13C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75664C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2E6120724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432E4207CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=anastas.io header.i=@anastas.io header.b="M26UuQrQ"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="Nq3wXWbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgHUVAE (ORCPT
+        id S1726688AbgHUVBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:00:04 -0400
-Received: from alpha.anastas.io ([104.248.188.109]:47267 "EHLO
-        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726611AbgHUVAD (ORCPT
+        Fri, 21 Aug 2020 17:01:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgHUVBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:00:03 -0400
-X-Greylist: delayed 522 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Aug 2020 17:00:03 EDT
-Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by alpha.anastas.io (Postfix) with ESMTPSA id 616C07ECD8;
-        Fri, 21 Aug 2020 15:51:20 -0500 (CDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
-        t=1598043080; bh=3aXxNw1T7kdHi4tVgB2VciVb6/V2lhrq6znhBANHZfc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=M26UuQrQm8jPQgBKQNmE7/gc3QUIpQLE3JP7bkeox+74vKkCH06Ofnn06ZNyzLtmf
-         3S9Z+OdGy2PvCKk+c0dQPQoyFkmvt8acccvKt76J0MO5ONwaUCP+o22a33Vd/m+5g2
-         KfIuw9cEq/iyOr25uJE0BLGLsWQSNE8keBvzh+Cw2cWXEHDRC6oYt8KgjWVQ9pFMab
-         Tke5ZQW/VWJGqs+voAbjrFQnZyM2sIusApZsZvhG/pTlroWH0v1Y2QhpY5dX3qv/Ay
-         ZzF0PgVdpZZhfBbgZNhxBEoJk81cb4B3k3DsW8q+y8j2lZ+6XqN3jV6WdN9A/8G19Y
-         Vga/+fpo7uINg==
-From:   Shawn Anastasio <shawn@anastas.io>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, mpe@ellerman.id.au, oohall@gmail.com,
-        aik@ozlabs.ru
-Subject: [PATCH] powerpc/pseries: Add pcibios_default_alignment implementation
-Date:   Fri, 21 Aug 2020 15:51:15 -0500
-Message-Id: <20200821205115.50333-1-shawn@anastas.io>
+        Fri, 21 Aug 2020 17:01:33 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17CCEC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:01:32 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id g33so1560365pgb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NG3j+Njeqhjr/wMMFfSedllU1ygdUJrEzT0Q4vfVV1c=;
+        b=Nq3wXWbFOgwTSXRY8VbgBp1A47xX4DihiOSCw6ddhLn8zGhMUtIqLgvWxIxCq1baIU
+         ckuhvSHFMWkr8U8y2dr2rXc8+RE0JKgex9hR+8T63qPKEFfHqwS0hWO8jhDTUnwp0LgA
+         Fzrx4JQEzLdvFYTApgW0wMgS4Q4f6Bb/31lYhHpjuz2eF1AOW1KngAqEDDQ13MPNxprN
+         hAp3R+2eXMJ2MtPHlh7CV/UohYACeOHqGzVxgm6gmK2eVyLb9OVazr9n2KJT2KE8gTvm
+         48ug6QdLgBUm1ZIEge+vTTkaBttFZRFkKvRlW9P6+ERimBybq5hZ/cpwL7XSkBsNoDVv
+         D8Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NG3j+Njeqhjr/wMMFfSedllU1ygdUJrEzT0Q4vfVV1c=;
+        b=p1lmdx5n+Ou/Nr/9u5FT1d07TNvLqHXalMzeSuahjr2vZbosWrhksbaA/tbuAiR6N+
+         +Cuz2NT5uTVi3BXjJ8vwEDvyagtHth12e/FcGc9YbvvksxEasqDudN3YuMEOp7IiVi+Y
+         zj9qH9Hz0WvbPSeBhmx6o2uVPz/L4QwM1acGK6bkEn45dsH9WwQuQQxW9/adoHT6MWIS
+         kTwNKmR2Bjuv5rfb2J8KBZUovKeWi8zAEml4NfcN0YgY/gIa8M2xOwn5KxjXB900Bzml
+         qhiSdVRQtoxG7QT5f5rTXYUk4IHp6m9muIMVu1wy2gFKAWDDK9WpKxah+GkZz5v+Vutf
+         UvHA==
+X-Gm-Message-State: AOAM530pza675ch1tz7FwD9xoQkrIZydhqPTH9THr5Of4+85AW8WJVa9
+        zUmRse21ZsWco6RckdFzW/7YWg==
+X-Google-Smtp-Source: ABdhPJyb4YtnAwc73/hH/lA0DP42/T8bDzG8IXtoO3zGFsEPG0zhCDg0MLMv6eCLwWQSbi1BBTpcUA==
+X-Received: by 2002:a63:5a1e:: with SMTP id o30mr3608753pgb.62.1598043691321;
+        Fri, 21 Aug 2020 14:01:31 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.179])
+        by smtp.gmail.com with ESMTPSA id h9sm3682631pfq.18.2020.08.21.14.01.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Aug 2020 14:01:30 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 02:31:23 +0530
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH v3 4/9] media: vimc: Separate starting stream from
+ pipeline initialisation
+Message-ID: <20200821210123.GA28410@kaaira-HP-Pavilion-Notebook>
+References: <20200819180442.11630-1-kgupta@es.iitr.ac.in>
+ <20200819180442.11630-5-kgupta@es.iitr.ac.in>
+ <eb5d4259-fe77-b4f2-1e62-0f846420b7c2@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb5d4259-fe77-b4f2-1e62-0f846420b7c2@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement pcibios_default_alignment for pseries so that
-resources are page-aligned. The main benefit of this is being
-able to map any resource from userspace via mechanisms like VFIO.
+Hi,
 
-This is identical to powernv's implementation.
+On Fri, Aug 21, 2020 at 05:11:23PM +0200, Dafna Hirschfeld wrote:
+> 
+> 
+> Am 19.08.20 um 20:04 schrieb Kaaira Gupta:
+> > Separate the process of initialising pipeline array from starting
+> > streaming for all entities in path of a stream. This is needed because
+> > multiple streams can stream, but only one pipeline object is needed.
+> > 
+> > Process frames only for those entities in a pipeline which are
+> > streaming. This is known through their use counts.
+> > 
+> > Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> > ---
+> >   .../media/test-drivers/vimc/vimc-streamer.c   | 95 ++++++++++++++++---
+> >   1 file changed, 83 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/media/test-drivers/vimc/vimc-streamer.c
+> > index c1644d69686d..cc40ecabe95a 100644
+> > --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
+> > +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
+> > @@ -40,33 +40,30 @@ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
+> >   }
+> >   /**
+> > - * vimc_streamer_pipeline_init - Initializes the stream structure
+> > + * vimc_streamer_stream_start - Starts streaming for all entities
+> > + * in a stream
+> >    *
+> > - * @stream: the pointer to the stream structure to be initialized
+> >    * @ved:    the pointer to the vimc entity initializing the stream
+> >    *
+> > - * Initializes the stream structure. Walks through the entity graph to
+> > - * construct the pipeline used later on the streamer thread.
+> > - * Calls vimc_streamer_s_stream() to enable stream in all entities of
+> > - * the pipeline.
+> > + * Walks through the entity graph to call vimc_streamer_s_stream()
+> > + * to enable stream in all entities in path of a stream.
+> >    *
+> >    * Return: 0 if success, error code otherwise.
+> >    */
+> > -static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+> > -				       struct vimc_ent_device *ved)
+> > +static int vimc_streamer_stream_start(struct vimc_stream *stream,
+> > +				      struct vimc_ent_device *ved)
+> >   {
+> >   	struct media_entity *entity;
+> >   	struct video_device *vdev;
+> >   	struct v4l2_subdev *sd;
+> > +	int stream_size = 0;
+> >   	int ret = 0;
+> > -	stream->pipe_size = 0;
+> > -	while (stream->pipe_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
+> > +	while (stream_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
+> >   		if (!ved) {
+> >   			vimc_streamer_pipeline_terminate(stream);
+> >   			return -EINVAL;
+> >   		}
+> > -		stream->ved_pipeline[stream->pipe_size++] = ved;
+> >   		if (is_media_entity_v4l2_subdev(ved->ent)) {
+> >   			sd = media_entity_to_v4l2_subdev(ved->ent);
+> > @@ -104,6 +101,73 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+> >   					    entity);
+> >   			ved = video_get_drvdata(vdev);
+> >   		}
+> > +		stream_size++;
+> > +	}
+> > +
+> > +	vimc_streamer_pipeline_terminate(stream);
+> > +	return -EINVAL;
+> > +}
+> > +
+> > +/**
+> > + * vimc_streamer_pipeline_init - Initialises pipeline and pipe size
+> > + *
+> > + * @stream: the pointer to the stream structure
+> > + * @ved:    the pointer to the vimc entity initializing the stream pipeline
+> > + *
+> > + * Walks through the entity graph to initialise ved_pipeline and updates
+> > + * pipe_size too.
+> > + *
+> > + * Return: 0 if success, error code otherwise.
+> > + */
+> > +static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+> > +				       struct vimc_ent_device *ved)
+> > +{
+> > +	struct media_entity *entity;
+> > +	struct media_device *mdev;
+> > +	struct media_graph graph;
+> > +	struct video_device *vdev;
+> > +	struct v4l2_subdev *sd;
+> > +	int ret;
+> > +
+> > +	entity = ved->ent;
+> > +	mdev = entity->graph_obj.mdev;
+> > +
+> > +	ret = media_graph_walk_init(&graph, mdev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	media_graph_walk_start(&graph, entity);
+> > +
+> > +	/*
+> > +	 * Start pipeline array initialisation from RAW Capture only to get
+> > +	 * entities in the correct order of their frame processing.
+> > +	 */
+> > +	if (!strncmp(entity->name, "RGB", 3)) {
+> 
+> I don't understand this condition, way is it good for?
 
-Signed-off-by: Shawn Anastasio <shawn@anastas.io>
----
- arch/powerpc/platforms/pseries/pci.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+I have explained that later in the reply
 
-diff --git a/arch/powerpc/platforms/pseries/pci.c b/arch/powerpc/platforms/pseries/pci.c
-index 911534b89c85..6d922c096354 100644
---- a/arch/powerpc/platforms/pseries/pci.c
-+++ b/arch/powerpc/platforms/pseries/pci.c
-@@ -210,6 +210,11 @@ int pseries_pcibios_sriov_disable(struct pci_dev *pdev)
- }
- #endif
- 
-+static resource_size_t pseries_pcibios_default_alignment(void)
-+{
-+	return PAGE_SIZE;
-+}
-+
- static void __init pSeries_request_regions(void)
- {
- 	if (!isa_io_base)
-@@ -231,6 +236,8 @@ void __init pSeries_final_fixup(void)
- 
- 	eeh_show_enabled();
- 
-+	ppc_md.pcibios_default_alignment = pseries_pcibios_default_alignment;
-+
- #ifdef CONFIG_PCI_IOV
- 	ppc_md.pcibios_sriov_enable = pseries_pcibios_sriov_enable;
- 	ppc_md.pcibios_sriov_disable = pseries_pcibios_sriov_disable;
--- 
-2.28.0
+> 
+> I think the function should be generic and not assume names of entities
+> or specific topology.
 
+It doesn't assume the topology, rather it is in place just to make sure
+that the entities in ved_pipeline are in correct order.
+
+> 
+> 
+> > +		entity = media_graph_walk_next(&graph);
+> > +		mdev = entity->graph_obj.mdev;
+> > +		media_graph_walk_cleanup(&graph);
+> > +
+> > +		ret = media_graph_walk_init(&graph, mdev);
+> > +		if (ret)
+> > +			return ret;
+> > +		media_graph_walk_start(&graph, entity);
+> > +	}
+> > +
+> > +	while (stream->pipe_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
+> > +		if (is_media_entity_v4l2_subdev(entity)) {
+> > +			sd = media_entity_to_v4l2_subdev(entity);
+> > +			ved = v4l2_get_subdevdata(sd);
+> > +		} else {
+> > +			vdev = container_of(entity, struct video_device, entity);
+> > +			ved = video_get_drvdata(vdev);
+> > +		}
+> > +		stream->ved_pipeline[stream->pipe_size++] = ved;
+> > +		entity = media_graph_walk_next(&graph);
+> > +
+> > +		if (!strcmp(entity->name, stream->ved_pipeline[0]->ent->name)) {
+> 
+> I also don't understand this condition
+> 
+> > +			media_graph_walk_cleanup(&graph);
+> > +			return 0;
+> > +		}
+> >   	}
+> 
+> It is not clear what this function does, it looks like it adds to 'ved_pipeline'
+> all entities that are connected to the video node, in addition to the entities
+> that where there from previous calls, so some entities appear several times.
+
+This function returns all the entities in a pipe, weather they are
+streaming or not. For example, if only the RAW Capture 1 streams, or
+RGB/YUB capture streams, or both stream..in all three cases ved_pipeline
+will have the same entities, in exactly same order, and all will occur just once.
+Since media_graph_walk goes to each node of the graph, it returns back
+to the first one (as its a graph), hence the last condition, ie,
+
+	if (!strcmp(entity->name, stream->ved_pipeline[0]->ent->name)) {
+
+makes sure that the first entity is not added again to the array.
+
+First condition, ie 
+
+	if (!strncmp(entity->name, "RGB", 3)) {
+
+Just makes sure that the search starts at RGB capture only. This is
+because, in case of any other video node, the order of entities, as you
+have mentioned later in the mail, will not be desirable, ie it won't
+start at sensor and end at captures. So this condition just takes care
+that all the entities in ved_pipeline array are in correct order
+(starting at sensor, ending at captures).
+
+Thanks,
+Kaaira
+
+> 
+> I think there is no need to use the graph walk here but to access the source entity
+> in each iteration, the way done in vimc_streamer_stream_start
+> also.
+> I think the code should iterate here until it reaches an entity that is already streaming,
+> this means that the entity is already in the `ved_pipeline`, also you should make sure
+> that the sensor is the first entity that process a frame, therefore the sensor should be
+> at the end/start of the list of entities. Generally each entity should appear exactly once
+> in the 'ved_pipeline' array and the entities should be ordered such that when calling 'process_frame'
+> on one entity should be after calling 'process_frame' on its source entity.
+> maybe it is easyer to implement if 'ved_pipeline' is a linked list.
+> 
+> Thanks,
+> Dafna
+> 
+> >   	vimc_streamer_pipeline_terminate(stream);
+> > @@ -138,8 +202,11 @@ static int vimc_streamer_thread(void *data)
+> >   		for (i = stream->pipe_size - 1; i >= 0; i--) {
+> >   			ved = stream->ved_pipeline[i];
+> > -			ret = ved->process_frame(ved);
+> > +			if (atomic_read(&ved->use_count) == 0)
+> > +				continue;
+> > +
+> > +			ret = ved->process_frame(ved);
+> >   			if (ret)
+> >   				break;
+> >   		}
+> > @@ -179,6 +246,10 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
+> >   		if (stream->kthread)
+> >   			return 0;
+> > +		ret = vimc_streamer_stream_start(stream, ved);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> >   		ret = vimc_streamer_pipeline_init(stream, ved);
+> >   		if (ret)
+> >   			return ret;
+> > 
