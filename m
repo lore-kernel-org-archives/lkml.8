@@ -2,125 +2,129 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FD3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1392A20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F5820738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRp3sTQH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fsv4g5/t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728751AbgHURXC (ORCPT
+        id S1728920AbgHURXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:23:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42934 "EHLO
+        Fri, 21 Aug 2020 13:23:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728943AbgHURWg (ORCPT
+        with ESMTP id S1728714AbgHURWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 13:22:36 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B10BDC061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:22:35 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id si26so3153341ejb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:22:35 -0700 (PDT)
+        Fri, 21 Aug 2020 13:22:47 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F06C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:22:47 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id k25so1184967vsm.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:22:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AdW4l4y+iM1qKY++z28/TOIdzKNyMZQl4ooaFmGHdfc=;
-        b=KRp3sTQHUTn6VAQ4BNL2lYvDISsV0luB2w+t0clnejjXB0YBFEK5VoHLhoNohVByJ6
-         rSE35q3h8yr78ks8vROz/Wnb0SSB8d1tYO+rzl7YqYYluBsK+UmIlU2D96Zm9yCQLmSb
-         RcJynxEFjJfbW+WLozBNUTvUceq/2SrFSCAQXb/sKX9YdQ1o5IO5V8HEX6dKq018y0Jk
-         xKfKNrDhhYgFhxmmdVFyhsLEBJ2Lujzb2UH1pk7ncfzPnLmHzMgE5arUhJL5Ewxs5wN3
-         m4Nkg8JMA6ZQ8mbNazc9QkeVvM51/epDt0MxYY75HQ5hBwDMT3+J1PEyfpFbxKkRKGas
-         YLLw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rDqVNDY5Q+RZDqESGD0TGY14TPQ/cJSVcY4W2ZTOurU=;
+        b=fsv4g5/tYJjOZyeNAid6KP6IC/d+32IDs1B84c2++eXQf89w47tOGpLE8FXrjFv3/Y
+         jnlLa9noNsJIa4Elln1YeI9aod0vrZLaR52LTJzo0JMk3SyylMuj93Kk0KjI7YAs+pnz
+         RL/cnKuZ9cc9suLnmxGsHHPb9lBpp80bJcJI1TshbZV3bZKHYiyib1+xgGH3sIF6p027
+         kcTzZXQWPS+rYqmCxqRyzoKXiqJJfRcBxzq5Lx96V6fIR2YgRaFbyP9e0hkDx4GijMAG
+         qitSwMCHtXfcd4M4frAsJPIHOR6nLv2y9mJFaw4VrOy3QbWhfod2LsF52cyBWN1Flbtf
+         vnDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AdW4l4y+iM1qKY++z28/TOIdzKNyMZQl4ooaFmGHdfc=;
-        b=LK1S+71W5v6mecrBLbakITHjpJpcaW3nytA/3iqYAoiW8SXnY5odxz/A6HWpqJGrI+
-         OjXaobmn1u7uFE7Ma4fsJQc9jIXIIODXSYBSfLKKXpSHyQ3Uv+aHNps52L9jgiQa3Loc
-         obiWGMeXoYu9ZYUQpZ04AHMroACFF3gVRHWtEDs+ETjnnTFIjrbhsA9g1Lodj39rL0G8
-         X6x0qcNdY8ttLo5SigcdYH5X9w0GDVz5DvnfOTKE4ZCSxLOCTFF+xQIIbgFhobfY6qNy
-         pvMCmF0VokjhqifiGeH0qvL6N1bdIGCZtRPhfl2kkJf/jw1cS+m+Bj46LtS6GXGgYSO6
-         TXBg==
-X-Gm-Message-State: AOAM533gZkJlgfq3+9sXLAoW0FAxRC6sFMqz3RTbPZOJDHHdEATgQbNp
-        wgZlM3uXiEhxq8kyuV5jOCvbkxk6qQ==
-X-Google-Smtp-Source: ABdhPJyitTVZvaquw76+P6PTIMJyeM7VTts9kg+6BWDyKkhRHM5MxsqtNJhTTZq+qtea9tZSYZY96w==
-X-Received: by 2002:a17:906:a45:: with SMTP id x5mr3795801ejf.146.1598030554158;
-        Fri, 21 Aug 2020 10:22:34 -0700 (PDT)
-Received: from localhost.localdomain ([46.53.251.41])
-        by smtp.gmail.com with ESMTPSA id a19sm1595830ejg.116.2020.08.21.10.22.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 10:22:33 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 20:22:31 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     daniel.diaz@linaro.org, linux-kernel@vger.kernel.org,
-        rdunlap@infradead.org, sedat.dilek@gmail.com
-Subject: make defconfig (Re: +
- x86-defconfigs-explicitly-unset-config_64bit-in-i386_defconfig.patch added
- to -mm tree)
-Message-ID: <20200821172231.GA1444408@localhost.localdomain>
-References: <20200820212940.Kq1ky-JHH%akpm@linux-foundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rDqVNDY5Q+RZDqESGD0TGY14TPQ/cJSVcY4W2ZTOurU=;
+        b=ko6VWw5n12g1cPioqFVbo6QWuLXgLNCa3ukpqfyiCNAOlyNC9hE8MSmlNW91/UGimD
+         TV17T/eoEH4CUvrC+BYmpf08Kd8Ez/FI3GsnKMiWHM4nLOOmpE1rkUx8RerMnwWEUqNh
+         IeY+O0/rAEbL2eYNIZSJSvg6etp66rTpiIrZxM6qqFedG/95Z23aImQGbC89L50OGKHG
+         s7wKYPl9Hsd52lzhEo85vGH/XxrYPZuLFljrhlMGLZ/++9oa73sJrcfe9jJzA52L8NXn
+         0KcoCMb3fYPRZARNXRd+9myMbigEJM9kH6IAVMtjr+7I3QRNDC+ikbtGPIWYGbKSoA50
+         5DNg==
+X-Gm-Message-State: AOAM531hCzBpdiXr2Qmfl4U/dTGyB41j7JT/SY0vy2XFBhZRhbJnBArf
+        JzOEsXVLDkWfX1AJPzUB1xfCMZF+Si/Wc7kiXPykpQ==
+X-Google-Smtp-Source: ABdhPJzA6appk8Xhd4tm4AjN6izo2oLrkOILpz+oGjpaon/Hiqu27vcPQ3jAQ/sCmSWKBd2jYGp5pyBMjq8/f5OPO+c=
+X-Received: by 2002:a05:6102:189:: with SMTP id r9mr2590828vsq.239.1598030565992;
+ Fri, 21 Aug 2020 10:22:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200820212940.Kq1ky-JHH%akpm@linux-foundation.org>
+References: <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
+ <20200820140054.fdkbotd4tgfrqpe6@wittgenstein> <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
+ <87k0xtv0d4.fsf@x220.int.ebiederm.org> <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
+ <20200820162645.GP5033@dhcp22.suse.cz> <87r1s0txxe.fsf@x220.int.ebiederm.org>
+ <20200821111558.GG4546@redhat.com> <CAJuCfpF_GhTy5SCjxqyqTFUrJNaw3UGJzCi=WSCXfqPAcbThYg@mail.gmail.com>
+ <CAJuCfpG06_KLhQyg9N84bRQOdvG27uAZ2oBDEQPR-OnZeNJd1w@mail.gmail.com> <20200821163724.GC19445@redhat.com>
+In-Reply-To: <20200821163724.GC19445@redhat.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Fri, 21 Aug 2020 10:22:34 -0700
+Message-ID: <CAJuCfpGcmSmMc2zEBR-0FgbeZVre+Tbqmu04y8deEwySasvD3Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Tim Murray <timmurray@google.com>, mingo@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com,
+        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
+        adobriyan@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de,
+        John Johansen <john.johansen@canonical.com>,
+        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 02:29:40PM -0700, akpm@linux-foundation.org wrote:
-> Subject: x86/defconfigs: Explicitly unset CONFIG_64BIT in i386_defconfig
-> 
-> A recent refresh of the defconfigs got rid of the following (unset)
-> config:
-> 
->   # CONFIG_64BIT is not set
-> 
-> Innocuous as it seems, when the config file is saved again the
-> behavior is changed so that CONFIG_64BIT=y.
-> 
-> Currently,
-> 
->   $ make i386_defconfig
->   $ grep CONFIG_64BIT .config
->   CONFIG_64BIT=y
-> 
-> whereas previously (and with this patch):
-> 
->   $ make i386_defconfig
->   $ grep CONFIG_64BIT .config
->   # CONFIG_64BIT is not set
+On Fri, Aug 21, 2020 at 9:37 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> again, don't really understand...
+>
+> On 08/21, Suren Baghdasaryan wrote:
+> >
+> > Actually, reviewing again and considering where list_add_tail_rcu is
+> > happening, maybe the race with clone(CLONE_VM) does not introduce
+> > false negatives.
+>
+> I think it does... Whatever we check, mm_users or MMF_PROC_SHARED,
+> the task can do clone(CLONE_VM) right after the check.
 
-It is highly, highly, highly advisable to always pass ARCH when dealing
-with 32/64-bit archs:
+Ah, yes of course. I missed this same just like in the original patch.
 
-	+---------------------------------------+
-	|	make ARCH=x86_64 defconfig	|
-	|	make ARCH=i386 defconfig	|
-	+---------------------------------------+
+>
+> > However a false negative I think will happen when a
+> > task shares mm with another task and also has an additional thread.
+> > Shared mm will increment mm_users without adding to signal->live
+>
+> Yes,
+>
+> > and
+> > the additional thread will advance signal->live without adding to
+> > mm_users.
+>
+> No, please note that CLONE_THREAD requires CLONE_VM.
 
-The reason is that long ago ARCH was deduced from bitness of the system
-make was run on, so that
+My fault. Forgot that CLONE_VM means "share VM" and not "dup VM". Need
+some coffee.
+Thanks Oleg!
 
-	make allnoconfig
-
-gave 32-bit config on 32-but system and 64-bit on 64-bit system which is
-natural thing to do.
-
-During i386/x86_64 merge CONFIG_64BIT became user visible option!
-" make allnoconfig" started giving 32-bit config even on x86_64 and 64-bit
-defconfig and allmodconfig which it does to this day.
-
-Always passing ARCH is the only way to maintain sanity. I have shell
-alias to always pass ARCH=x86_64 so that bitness is both deterministic
-and can be overridden.
+>
+> Oleg.
+>
