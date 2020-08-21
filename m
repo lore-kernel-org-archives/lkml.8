@@ -2,141 +2,180 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D543EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A715F20791
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A46320658
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:05:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZkRrP7nn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgHUVDj convert rfc822-to-8bit (ORCPT
+        id S1726661AbgHUVFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:03:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbgHUVDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:03:37 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 169B72076E;
-        Fri, 21 Aug 2020 21:03:36 +0000 (UTC)
-Date:   Fri, 21 Aug 2020 17:03:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Joerg Vehlow <lkml@jv-coder.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Huang Ying <ying.huang@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Joerg Vehlow <joerg.vehlow@aox-tech.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [BUG RT] dump-capture kernel not executed for panic in
- interrupt context
-Message-ID: <20200821170334.73b52fdd@oasis.local.home>
-In-Reply-To: <20200821134753.9547695c9b782275be3c95b5@linux-foundation.org>
-References: <2c243f59-6d10-7abb-bab4-e7b1796cd54f@jv-coder.de>
-        <20200528084614.0c949e8d@gandalf.local.home>
-        <cbbf7926-148e-7acb-dc03-3f055d73364b@jv-coder.de>
-        <20200727163655.8c94c8e245637b62311f5053@linux-foundation.org>
-        <c6b095af-fc92-420f-303f-d2efd9f28873@jv-coder.de>
-        <20200821110848.6c3183d1@oasis.local.home>
-        <20200821134753.9547695c9b782275be3c95b5@linux-foundation.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 21 Aug 2020 17:05:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgHUVF1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 17:05:27 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D020C061573;
+        Fri, 21 Aug 2020 14:05:27 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id t6so3307483ljk.9;
+        Fri, 21 Aug 2020 14:05:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=OQXCUp29lb6BqjJO2CJAZWNuIsyksrXiOIVbI4SnuhQ=;
+        b=ZkRrP7nnSwu4H7WRZHwDY0FyeQx8taCAGN8U1bbJSDUf1hSWc3hA5TFEqucs6O/Hjt
+         teaEDF6S8VznfC7i1/bP6wgoUPgTBf27tV+PYZ2iApilhyzR+eWVvCheAUdlDammD5Sn
+         vM1fzGSQqoRtKeaQXZAnceSx+E4ThGH3nMM1Bzr68y9s0PICDu8b0C7/uAEE6reFAehT
+         iX1Ek/vucYWPbUq2stzMEtZTNzUudctC4KZhOwuWsro40NHqPdfBrSFewkogFD8BHJ3L
+         yDYrbfBh4cWd8IyyKdHuxOi9E8XMRSbmtGEgQxHDKlmFMZtuK75tMrQUZL12HWryInHY
+         QDlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=OQXCUp29lb6BqjJO2CJAZWNuIsyksrXiOIVbI4SnuhQ=;
+        b=jcfP50OuLjmZ4K7KDwghas6A5tgaxAEC9qDw95YOLwl9yJ0cwKDq6lKC38NYmFaeX9
+         9ftgTatSasiMq0ZKJl/CvKiGXzdXueFMvm6X0uW4juDjzoDCbW4otK17Y6Sl5buB2xMz
+         noPm0VaFE/zvJ3LOWoBW3s7tX9XgDa0WHW3mlesA47ui8ccKG7jsGm0TnjtO+zXRme+c
+         XmQW55ECTfenhLZ+1avccb5PTnk2cSiP4L3BSqudV6hRW5bi/cQbaqSYYabjBg7motfv
+         hfpuPUGQ1VIpGin63ZExbGr+PMfWbFJvFXsH0W/bcFb0HwZOHcx8UFEHANc1lFFl5T3p
+         sMuA==
+X-Gm-Message-State: AOAM530P6JvIWGBJdOLykJtmbJZ8pFBCZTR9UXTIiGAAWnRUY6uXPA01
+        UDUDwbyej1/xRayXdzFTmM01iLxGnHBANazyAJk=
+X-Google-Smtp-Source: ABdhPJzCS/hj1pS9gJUQ+V5IqVhP/2VC7dUNmb5w0LCazM/un1hjROKfAKKNio3MPeqKiKR89FuGnPBZ0QrWZt4JzjQ=
+X-Received: by 2002:a05:651c:82:: with SMTP id 2mr2380426ljq.2.1598043925659;
+ Fri, 21 Aug 2020 14:05:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20200821002804.546826-1-udippant@fb.com> <9e829756-e943-e9a8-82f2-1a27a55afeec@fb.com>
+ <d9df934c-4b64-1e28-cc7e-fb03939d687d@fb.com> <F6EEEFF4-F749-4D51-9366-1B1845EF0526@fb.com>
+ <732c9be0-cccd-c180-1c18-e7cfce24ac88@fb.com>
+In-Reply-To: <732c9be0-cccd-c180-1c18-e7cfce24ac88@fb.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 21 Aug 2020 14:05:13 -0700
+Message-ID: <CAADnVQJfAR5Z2zXsyRNbFikJ+Zx+sGi7ogTj4UhcC8gS=eKNjQ@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf 1/2] bpf: verifier: check for packet data access
+ based on target prog
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Udip Pant <udippant@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 13:47:53 -0700
-Andrew Morton <akpm@linux-foundation.org> wrote:
+On Fri, Aug 21, 2020 at 1:53 PM Yonghong Song <yhs@fb.com> wrote:
+>
+>
+>
+> On 8/21/20 12:07 PM, Udip Pant wrote:
+> >
+> >
+> > =EF=BB=BF> On 8/20/20, 11:17 PM, "Yonghong Song" <yhs@fb.com> wrote:
+> >>
+> >>
+> >>
+> >> On 8/20/20 11:13 PM, Yonghong Song wrote:
+> >>>
+> >>>
+> >>> On 8/20/20 5:28 PM, Udip Pant wrote:
+> >>>> While using dynamic program extension (of type BPF_PROG_TYPE_EXT), w=
+e
+> >>>> need to check the program type of the target program to grant the re=
+ad /
+> >>>> write access to the packet data.
+> >>>>
+> >>>> The BPF_PROG_TYPE_EXT type can be used to extend types such as XDP, =
+SKB
+> >>>> and others. Since the BPF_PROG_TYPE_EXT program type on itself is ju=
+st a
+> >>>> placeholder for those, we need this extended check for those target
+> >>>> programs to actually work while using this option.
+> >>>>
+> >>>> Tested this with a freplace xdp program. Without this patch, the
+> >>>> verifier fails with error 'cannot write into packet'.
+> >>>>
+> >>>> Signed-off-by: Udip Pant <udippant@fb.com>
+> >>>> ---
+> >>>>    kernel/bpf/verifier.c | 6 +++++-
+> >>>>    1 file changed, 5 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> >>>> index ef938f17b944..4d7604430994 100644
+> >>>> --- a/kernel/bpf/verifier.c
+> >>>> +++ b/kernel/bpf/verifier.c
+> >>>> @@ -2629,7 +2629,11 @@ static bool may_access_direct_pkt_data(struct
+> >>>> bpf_verifier_env *env,
+> >>>>                           const struct bpf_call_arg_meta *meta,
+> >>>>                           enum bpf_access_type t)
+> >>>>    {
+> >>>> -    switch (env->prog->type) {
+> >>>> +    struct bpf_prog *prog =3D env->prog;
+> >>>> +    enum bpf_prog_type prog_type =3D prog->aux->linked_prog ?
+> >>>> +          prog->aux->linked_prog->type : prog->type;
+> >>>
+> >>> I checked the verifier code. There are several places where
+> >>> prog->type is checked and EXT program type will behave differently
+> >>> from the linked program.
+> >>>
+> >>> Maybe abstract the the above logic to one static function like
+> >>>
+> >>> static enum bpf_prog_type resolved_prog_type(struct bpf_prog *prog)
+> >>> {
+> >>>       return prog->aux->linked_prog ? prog->aux->linked_prog->type
+> >>>                         : prog->type;
+> >>> }
+> >>>
+> >
+> > Sure.
+> >
+> >>> This function can then be used in different places to give the resolv=
+ed
+> >>> prog type.
+> >>>
+> >>> Besides here checking pkt access permission,
+> >>> another possible places to consider is return value
+> >>> in function check_return_code(). Currently,
+> >>> for EXT program, the result value can be anything. This may need to
+> >>> be enforced. Could you take a look? It could be others as well.
+> >>> You can take a look at verifier.c by searching "prog->type".
+> >>
+> >
+> > Yeah there are few other places in the verifier where it decides withou=
+t resolving for the 'extended' type. But I am not too sure if it makes sens=
+e to extend this logic as part of this commit. For example, as you mentione=
+d, in the check_return_code() it explicitly ignores the return type for the=
+ EXT prog (kernel/bpf/verifier.c#L7446).  Likewise, I noticed similar issue=
+ inside the check_ld_abs(), where it checks for may_access_skb(env->prog->t=
+ype).
+> >
+> > I'm happy to extend this logic there as well if deemed appropriate.
+>
+> Thanks. I would like to see the verifier parity between original program
+> and replace program. That is, if the original program and the replace
+> program are the same, they should be both either accepted or rejected
+> by verifier. Yes, this may imply more changes e.g., check_return_code()
+> or check_ld_abs() than your original patch.
+> Alexei or Daniel, what is your opinion on this?
 
-> On Fri, 21 Aug 2020 11:08:48 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Fri, 21 Aug 2020 12:25:33 +0200
-> > Joerg Vehlow <lkml@jv-coder.de> wrote:
-> >   
-> > > Hi Andrew and Others (please read at least the part with @RT developers),
-> > >   
-> > > > Yup, mutex_trylock() from interrupt is improper.  Well dang, that's a
-> > > > bit silly.  Presumably the 2006 spin_lock_mutex() wasn't taken with
-> > > > irqs-off.
-> > > >
-> > > > Ho hum, did you look at switching the kexec code back to the xchg
-> > > > approach?
-> > > >    
-> > > I looked into reverting to the xchg approach, but that seems to be
-> > > not a good solution anymore, because the mutex is used in many places,
-> > > a lot with waiting locks and I guess that would require spinning now,
-> > > if we do this with bare xchg.
-> > > 
-> > > Instead I thought about using a spinlock, because they are supposed
-> > > to be used in interrupt context as well, if I understand the documentation
-> > > correctly ([1]).
-> > > @RT developers
-> > > Unfortunately the rt patches seem to interpret it a bit different and
-> > > spin_trylock uses __rt_mutex_trylock again, with the same consequences as
-> > > with the current code.
-> > > 
-> > > I tried raw_spinlocks, but it looks like they result in a deadlock at
-> > > least in the rt kernel. Thiy may be because of memory allocations in the
-> > > critical sections, that are not allowed if I understand it correctly.
-> > > 
-> > > I have no clue how to fix it at this point.
-> > > 
-> > > Jörg
-> > > 
-> > > [1] https://kernel.readthedocs.io/en/sphinx-samples/kernel-locking.html  
-> > 
-> > There's only two places that wait on the mutex, and all other places
-> > try to get it, and if it fails, it simply exits.
-> > 
-> > What I would do is introduce a kexec_busy counter, and have something
-> > like this:
-> > 
-> > For the two locations that actually wait on the mutex:
-> > 
-> > loop:
-> > 	mutex_lock(&kexec_mutex);
-> > 	ret = atomic_inc_return(&kexec_busy);
-> > 	if (ret > 1) {
-> > 		/* Atomic context is busy on this counter, spin */
-> > 		atomic_dec(&kexec_busy);
-> > 		mutex_unlock(&kexec_mutex);
-> > 		goto loop;
-> > 	}
-> > 	[..]
-> > 	atomic_dec(&kexec_busy);
-> > 	mutex_unlock(&kexec_mutex);
-> > 
-> > And then all the other places that do the trylock:
-> > 
-> > 	cant_sleep();
-> > 	ret = atomic_inc_return(&kexec_busy);
-> > 	if (ret > 1) {
-> > 		atomic_dec(&kexec_busy);
-> > 		return;
-> > 	}
-> > 	[..]
-> > 	atomic_dec(&kexec_busy);  
-> 
-> Aw gee.  Hide all this in include/linux/rostedt_lock.h...
-
-Heh, if this was the way to go, I would have definitely recommended
-packaging that up in static inline functions in some local header. Not
-necessarily rostedt_lock.h, but I'll use that if people let me :-)
-
-> 
-> Sigh.  Is it too hard to make mutex_trylock() usable from interrupt
-> context?
-
-
-That's a question for Thomas and Peter Z.
-
--- Steve
+The set was already marked as 'changes requested' in patchworks.
+That's an indication that maintainers agree with the feedback :)
+In this particular case it certainly makes sense to address all cases
+instead of doing them one at a time.
