@@ -2,222 +2,199 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F4AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B7EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8EEB20702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:02:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029328;
-	bh=qyqwTQIk7XiYQuTBMvnvPBCOSvb10PS+nczVnbe08Hw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jhRcOpICg/AEeY9VzBChoBn0hmDNdUGHNUh8VY96RjEP6T1sLbZrom1AU/Gl7/fIw
-	 TJdIx8SUtrn53oc9q+GjVsUQhEZDFa8t1AgvW7NPTKJhYNU+jRq04+D6YDTRUcddpB
-	 LQvuMB1SDtdOJOFqze13RNGF4yc63m/9evKkWkrk=
+	by mail.kernel.org (Postfix) with ESMTP id 9427320702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:02:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgHURCH (ORCPT
+        id S1728650AbgHURCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:02:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbgHUQTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:19:19 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB463208DB;
-        Fri, 21 Aug 2020 16:18:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026711;
-        bh=qyqwTQIk7XiYQuTBMvnvPBCOSvb10PS+nczVnbe08Hw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EqrZctOBGyNeav0Gd4xgrvMNZ1dEs9Zyd0eXoJtazqOxvfEmqS5NXAgoavWXm//M2
-         cIzwssCwmHJG6JVDRXsCEmKu2xDxIQuzSrToY9Lv+r3r3u7j4Gnqa6mbADJHIFEgMb
-         OzrcI7xG/Z6yz/bBhghSG/2G0ZJK8YX7R9xSjh1M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Chinner <dchinner@redhat.com>,
-        Brian Foster <bfoster@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/38] xfs: Don't allow logging of XFS_ISTALE inodes
-Date:   Fri, 21 Aug 2020 12:17:48 -0400
-Message-Id: <20200821161807.348600-19-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
-References: <20200821161807.348600-1-sashal@kernel.org>
+        Fri, 21 Aug 2020 13:02:14 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:33665 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728515AbgHUQ5S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:57:18 -0400
+Received: by mail-io1-f72.google.com with SMTP id k4so1599518iop.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:57:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=CvdOFPnjNHrLGNI41Gkr86CDj4Nhfk/ve6MOWKCdqI4=;
+        b=E0XPouQ6OqPlASDJhXXgGNm3gfyZ032WUxfXbCkGEmaFqOniC5osvXl9VkZKCzCMKl
+         qV5770phPcksiGmRqF+kA93ZabzhBDSecAIg991p9OWTCooPGHoAqGBbI3bqI3aXFn48
+         Nx1pvmoAGp426r8sECJc+zlyLJ2+ULzROlwHbTSBPFWmUmwolvarOiaEne6oA4iTXM0N
+         HK3kZuwC7hERjuvyKZr1D45MiCUjTJXnmBDKrBri1/fy+GIqTBGfiANXXOFqqlRxwIQL
+         D5zhDQ6NqepAywelsmcsAF8NJQufjHrSGPANF6X4P9Kh6xFUNHgG0YJz+yMP/YnXI7sD
+         jXig==
+X-Gm-Message-State: AOAM531w1AJ0aNUtVA2kUd/pQ1yL+Rf1mNJf+F6k1u6Pd+W7818IugC/
+        yqK/xL/Y6xtVbdqF6N1pL+xQ0CCE0JyU5L1+Ne4Nkz87ZCe4
+X-Google-Smtp-Source: ABdhPJwnLF1JSEy/BMFUX+6YCPwWlT2I3/1MEUwTWHXay6Ld+7lOXwAvqjPm+aCGEqEPFfSv0pZNSEsbG7dgHORND7OVHFM/rb0+
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:d8c2:: with SMTP id l2mr3372145ilo.301.1598029036426;
+ Fri, 21 Aug 2020 09:57:16 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 09:57:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000eb21105ad66213f@google.com>
+Subject: KMSAN: uninit-value in cfb_imageblit
+From:   syzbot <syzbot+50bc4646cbe1b0a9a08b@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        glider@google.com, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+Hello,
 
-[ Upstream commit 96355d5a1f0ee6dcc182c37db4894ec0c29f1692 ]
+syzbot found the following issue on:
 
-In tracking down a problem in this patchset, I discovered we are
-reclaiming dirty stale inodes. This wasn't discovered until inodes
-were always attached to the cluster buffer and then the rcu callback
-that freed inodes was assert failing because the inode still had an
-active pointer to the cluster buffer after it had been reclaimed.
+HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=16e7dba1900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=50bc4646cbe1b0a9a08b
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
 
-Debugging the issue indicated that this was a pre-existing issue
-resulting from the way the inodes are handled in xfs_inactive_ifree.
-When we free a cluster buffer from xfs_ifree_cluster, all the inodes
-in cache are marked XFS_ISTALE. Those that are clean have nothing
-else done to them and so eventually get cleaned up by background
-reclaim. i.e. it is assumed we'll never dirty/relog an inode marked
-XFS_ISTALE.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-On journal commit dirty stale inodes as are handled by both
-buffer and inode log items to run though xfs_istale_done() and
-removed from the AIL (buffer log item commit) or the log item will
-simply unpin it because the buffer log item will clean it. What happens
-to any specific inode is entirely dependent on which log item wins
-the commit race, but the result is the same - stale inodes are
-clean, not attached to the cluster buffer, and not in the AIL. Hence
-inode reclaim can just free these inodes without further care.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+50bc4646cbe1b0a9a08b@syzkaller.appspotmail.com
 
-However, if the stale inode is relogged, it gets dirtied again and
-relogged into the CIL. Most of the time this isn't an issue, because
-relogging simply changes the inode's location in the current
-checkpoint. Problems arise, however, when the CIL checkpoints
-between two transactions in the xfs_inactive_ifree() deferops
-processing. This results in the XFS_ISTALE inode being redirtied
-and inserted into the CIL without any of the other stale cluster
-buffer infrastructure being in place.
+=====================================================
+BUG: KMSAN: uninit-value in fast_imageblit drivers/video/fbdev/core/cfbimgblt.c:256 [inline]
+BUG: KMSAN: uninit-value in cfb_imageblit+0x1c71/0x2a60 drivers/video/fbdev/core/cfbimgblt.c:300
+CPU: 1 PID: 32379 Comm: syz-executor.1 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x21c/0x280 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ fast_imageblit drivers/video/fbdev/core/cfbimgblt.c:256 [inline]
+ cfb_imageblit+0x1c71/0x2a60 drivers/video/fbdev/core/cfbimgblt.c:300
+ vga16fb_imageblit+0xda2/0x20c0 drivers/video/fbdev/vga16fb.c:1250
+ soft_cursor+0x12bc/0x13f0 drivers/video/fbdev/core/softcursor.c:74
+ bit_cursor+0x38c6/0x3a40 drivers/video/fbdev/core/bitblit.c:386
+ fbcon_cursor+0x195e/0x1a60 drivers/video/fbdev/core/fbcon.c:1411
+ hide_cursor+0xdd/0x560 drivers/tty/vt/vt.c:902
+ do_con_write+0x33c/0x15460 drivers/tty/vt/vt.c:2617
+ con_write+0x8e/0xe0 drivers/tty/vt/vt.c:3159
+ process_output_block drivers/tty/n_tty.c:595 [inline]
+ n_tty_write+0x167a/0x2230 drivers/tty/n_tty.c:2333
+ do_tty_write drivers/tty/tty_io.c:962 [inline]
+ tty_write+0x9fb/0x1610 drivers/tty/tty_io.c:1046
+ vfs_write+0x6a3/0x17c0 fs/read_write.c:576
+ ksys_write+0x275/0x500 fs/read_write.c:631
+ __do_sys_write fs/read_write.c:643 [inline]
+ __se_sys_write+0x92/0xb0 fs/read_write.c:640
+ __ia32_sys_write+0x4a/0x70 fs/read_write.c:640
+ do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
+ __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
+ do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
+ do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+RIP: 0023:0xf7f88549
+Code: Bad RIP value.
+RSP: 002b:00000000f55820cc EFLAGS: 00000296 ORIG_RAX: 0000000000000004
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000200000c0
+RDX: 0000000000000078 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
-Hence on journal commit, it simply gets unpinned, so it remains
-dirty in memory. Everything in inode writeback avoids XFS_ISTALE
-inodes so it can't be written back, and it is not tracked in the AIL
-so there's not even a trigger to attempt to clean the inode. Hence
-the inode just sits dirty in memory until inode reclaim comes along,
-sees that it is XFS_ISTALE, and goes to reclaim it. This reclaiming
-of a dirty inode caused use after free, list corruptions and other
-nasty issues later in this patchset.
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
+ __fb_pad_aligned_buffer include/linux/fb.h:655 [inline]
+ fb_pad_aligned_buffer+0x7c4/0x8e0 drivers/video/fbdev/core/fbmem.c:116
+ soft_cursor+0x1224/0x13f0 drivers/video/fbdev/core/softcursor.c:72
+ bit_cursor+0x38c6/0x3a40 drivers/video/fbdev/core/bitblit.c:386
+ fbcon_cursor+0x195e/0x1a60 drivers/video/fbdev/core/fbcon.c:1411
+ hide_cursor+0xdd/0x560 drivers/tty/vt/vt.c:902
+ do_con_write+0x33c/0x15460 drivers/tty/vt/vt.c:2617
+ con_write+0x8e/0xe0 drivers/tty/vt/vt.c:3159
+ process_output_block drivers/tty/n_tty.c:595 [inline]
+ n_tty_write+0x167a/0x2230 drivers/tty/n_tty.c:2333
+ do_tty_write drivers/tty/tty_io.c:962 [inline]
+ tty_write+0x9fb/0x1610 drivers/tty/tty_io.c:1046
+ vfs_write+0x6a3/0x17c0 fs/read_write.c:576
+ ksys_write+0x275/0x500 fs/read_write.c:631
+ __do_sys_write fs/read_write.c:643 [inline]
+ __se_sys_write+0x92/0xb0 fs/read_write.c:640
+ __ia32_sys_write+0x4a/0x70 fs/read_write.c:640
+ do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
+ __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
+ do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
+ do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
 
-Hence this patch addresses a violation of the "never log XFS_ISTALE
-inodes" caused by the deferops processing rolling a transaction
-and relogging a stale inode in xfs_inactive_free. It also adds a
-bunch of asserts to catch this problem in debug kernels so that
-we don't reintroduce this problem in future.
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
+ kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
+ __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
+ soft_cursor+0x7d7/0x13f0 drivers/video/fbdev/core/softcursor.c:70
+ bit_cursor+0x38c6/0x3a40 drivers/video/fbdev/core/bitblit.c:386
+ fbcon_cursor+0x195e/0x1a60 drivers/video/fbdev/core/fbcon.c:1411
+ hide_cursor+0xdd/0x560 drivers/tty/vt/vt.c:902
+ do_con_write+0x33c/0x15460 drivers/tty/vt/vt.c:2617
+ con_write+0x8e/0xe0 drivers/tty/vt/vt.c:3159
+ process_output_block drivers/tty/n_tty.c:595 [inline]
+ n_tty_write+0x167a/0x2230 drivers/tty/n_tty.c:2333
+ do_tty_write drivers/tty/tty_io.c:962 [inline]
+ tty_write+0x9fb/0x1610 drivers/tty/tty_io.c:1046
+ vfs_write+0x6a3/0x17c0 fs/read_write.c:576
+ ksys_write+0x275/0x500 fs/read_write.c:631
+ __do_sys_write fs/read_write.c:643 [inline]
+ __se_sys_write+0x92/0xb0 fs/read_write.c:640
+ __ia32_sys_write+0x4a/0x70 fs/read_write.c:640
+ do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
+ __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
+ do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
+ do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
 
-Reproducer for this issue was generic/558 on a v4 filesystem.
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
+ slab_alloc_node mm/slub.c:2839 [inline]
+ slab_alloc mm/slub.c:2848 [inline]
+ __kmalloc+0x312/0x410 mm/slub.c:3911
+ kmalloc include/linux/slab.h:560 [inline]
+ fbcon_set_font+0x5ad/0xfb0 drivers/video/fbdev/core/fbcon.c:2673
+ con_font_set drivers/tty/vt/vt.c:4571 [inline]
+ con_font_op+0x1e59/0x2290 drivers/tty/vt/vt.c:4636
+ vt_ioctl+0x99e/0x67c0 drivers/tty/vt/vt_ioctl.c:917
+ vt_compat_ioctl+0x59b/0x1040 drivers/tty/vt/vt_ioctl.c:1242
+ tty_compat_ioctl+0x74b/0x1660 drivers/tty/tty_io.c:2847
+ __do_compat_sys_ioctl fs/ioctl.c:847 [inline]
+ __se_compat_sys_ioctl+0x55f/0x1100 fs/ioctl.c:798
+ __ia32_compat_sys_ioctl+0x4a/0x70 fs/ioctl.c:798
+ do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
+ __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
+ do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
+ do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+=====================================================
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- fs/xfs/xfs_icache.c      |  3 ++-
- fs/xfs/xfs_inode.c       | 25 ++++++++++++++++++++++---
- fs/xfs/xfs_trans_inode.c |  2 ++
- 3 files changed, 26 insertions(+), 4 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 901f27ac94abc..56e9043bddc71 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -1127,7 +1127,7 @@ xfs_reclaim_inode(
- 			goto out_ifunlock;
- 		xfs_iunpin_wait(ip);
- 	}
--	if (xfs_iflags_test(ip, XFS_ISTALE) || xfs_inode_clean(ip)) {
-+	if (xfs_inode_clean(ip)) {
- 		xfs_ifunlock(ip);
- 		goto reclaim;
- 	}
-@@ -1214,6 +1214,7 @@ xfs_reclaim_inode(
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
- 	xfs_qm_dqdetach(ip);
- 	xfs_iunlock(ip, XFS_ILOCK_EXCL);
-+	ASSERT(xfs_inode_clean(ip));
- 
- 	__xfs_inode_free(ip);
- 	return error;
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index f2d06e1e49066..cd81d6d9848d1 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -1772,10 +1772,31 @@ xfs_inactive_ifree(
- 		return error;
- 	}
- 
-+	/*
-+	 * We do not hold the inode locked across the entire rolling transaction
-+	 * here. We only need to hold it for the first transaction that
-+	 * xfs_ifree() builds, which may mark the inode XFS_ISTALE if the
-+	 * underlying cluster buffer is freed. Relogging an XFS_ISTALE inode
-+	 * here breaks the relationship between cluster buffer invalidation and
-+	 * stale inode invalidation on cluster buffer item journal commit
-+	 * completion, and can result in leaving dirty stale inodes hanging
-+	 * around in memory.
-+	 *
-+	 * We have no need for serialising this inode operation against other
-+	 * operations - we freed the inode and hence reallocation is required
-+	 * and that will serialise on reallocating the space the deferops need
-+	 * to free. Hence we can unlock the inode on the first commit of
-+	 * the transaction rather than roll it right through the deferops. This
-+	 * avoids relogging the XFS_ISTALE inode.
-+	 *
-+	 * We check that xfs_ifree() hasn't grown an internal transaction roll
-+	 * by asserting that the inode is still locked when it returns.
-+	 */
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
--	xfs_trans_ijoin(tp, ip, 0);
-+	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
- 
- 	error = xfs_ifree(tp, ip);
-+	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
- 	if (error) {
- 		/*
- 		 * If we fail to free the inode, shut down.  The cancel
-@@ -1788,7 +1809,6 @@ xfs_inactive_ifree(
- 			xfs_force_shutdown(mp, SHUTDOWN_META_IO_ERROR);
- 		}
- 		xfs_trans_cancel(tp);
--		xfs_iunlock(ip, XFS_ILOCK_EXCL);
- 		return error;
- 	}
- 
-@@ -1806,7 +1826,6 @@ xfs_inactive_ifree(
- 		xfs_notice(mp, "%s: xfs_trans_commit returned error %d",
- 			__func__, error);
- 
--	xfs_iunlock(ip, XFS_ILOCK_EXCL);
- 	return 0;
- }
- 
-diff --git a/fs/xfs/xfs_trans_inode.c b/fs/xfs/xfs_trans_inode.c
-index 542927321a61b..ae453dd236a69 100644
---- a/fs/xfs/xfs_trans_inode.c
-+++ b/fs/xfs/xfs_trans_inode.c
-@@ -39,6 +39,7 @@ xfs_trans_ijoin(
- 
- 	ASSERT(iip->ili_lock_flags == 0);
- 	iip->ili_lock_flags = lock_flags;
-+	ASSERT(!xfs_iflags_test(ip, XFS_ISTALE));
- 
- 	/*
- 	 * Get a log_item_desc to point at the new item.
-@@ -90,6 +91,7 @@ xfs_trans_log_inode(
- 
- 	ASSERT(ip->i_itemp != NULL);
- 	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	ASSERT(!xfs_iflags_test(ip, XFS_ISTALE));
- 
- 	/*
- 	 * Don't bother with i_lock for the I_DIRTY_TIME check here, as races
--- 
-2.25.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
