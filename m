@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2199C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D5EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C2422BEA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F6D22BF3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030879;
-	bh=EXoawfmYWrSHVVtbX28ADzXQjEsgIgBnv+xyKHR6zSA=;
+	s=default; t=1598030886;
+	bh=K7rQBmF2o/HDSQ0ZPX0Bc+/MKqPqW6lr/a49UeaCeTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S4ulQok8+ZaNorFFRnTLdFLwic5MUG2U6pemXKNwqLj/UaIrlDZqSKgkqMs0JZATZ
-	 EKfi0nzanu74tTwgluyfLsTARc2hzb9HSuhE4Ah3P6yIN9B3DmMkdsq8RB3Ui1Sd1i
-	 jWsrZnaX3qHZYLtDy0fSenLl/Bc/cADuBK31WmfM=
+	b=rD/H2sDX5N3y5kM9T4lcZlPWKHxJY2U3gho5kZRBWsgNK1OperbpOcpRA5grxVcwt
+	 ++L+hPUdJMSWYYrz2DBu8aivSm5AmYRcNKJqaBGEbHRC7CFXYM4rqfxnNFohzYMMse
+	 LIf2CRzbTDakfcaBWpgpKr5PvipvveRTb9Hrisis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgHUR1x (ORCPT
+        id S1729193AbgHUR1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:27:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46396 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:27:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727030AbgHUQOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:14:49 -0400
+        id S1727061AbgHUQOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:14:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A487208DB;
-        Fri, 21 Aug 2020 16:14:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E503C22B49;
+        Fri, 21 Aug 2020 16:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026485;
-        bh=EXoawfmYWrSHVVtbX28ADzXQjEsgIgBnv+xyKHR6zSA=;
+        s=default; t=1598026488;
+        bh=K7rQBmF2o/HDSQ0ZPX0Bc+/MKqPqW6lr/a49UeaCeTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BFS+GZBLwhHmRd3/nTam8lNvMCLCeeyyC4g1rXwT+BMP6PsYfmwPMwEe+KdcUA4EJ
-         ES3f1L9o2HvhNkKDi22xUFn8M7apN7+fhNDgPN0tzA1kxOYtBLysTczQd3uq7L67CH
-         9Oaev54XQI4vmbsapJII3CuyFS9aaMopZoSDPB2U=
+        b=cqzEhMbTLZGQJvOkDu6lMpPq+qpJjNp5pGwMqMmi0xuvg/SSeAmKqFerWzZfN9HhJ
+         +vxnTHkiEh41sOqHVXOsUFcduTu9jmBSzd3YTKIsIyHaQsVEXjTkUfsGBM6xYGQTGF
+         kyfogkP04K9rUSho6RSVu+8LZ6LV1dIxn2nuPyQ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        JiangYu <lnsyyj@hotmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 17/62] scsi: target: tcmu: Fix crash on ARM during cmd completion
-Date:   Fri, 21 Aug 2020 12:13:38 -0400
-Message-Id: <20200821161423.347071-17-sashal@kernel.org>
+Cc:     Gwendal Grignou <gwendal@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 20/62] platform/chrome: cros_ec_sensorhub: Fix EC timestamp overflow
+Date:   Fri, 21 Aug 2020 12:13:41 -0400
+Message-Id: <20200821161423.347071-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -62,55 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Gwendal Grignou <gwendal@chromium.org>
 
-[ Upstream commit 5a0c256d96f020e4771f6fd5524b80f89a2d3132 ]
+[ Upstream commit e48bc01ed5adec203676c735365373b31c3c7600 ]
 
-If tcmu_handle_completions() has to process a padding shorter than
-sizeof(struct tcmu_cmd_entry), the current call to
-tcmu_flush_dcache_range() with sizeof(struct tcmu_cmd_entry) as length
-param is wrong and causes crashes on e.g. ARM, because
-tcmu_flush_dcache_range() in this case calls
-flush_dcache_page(vmalloc_to_page(start)); with start being an invalid
-address above the end of the vmalloc'ed area.
+EC is using 32 bit timestamps (us), and before converting it to 64bit
+they were not casted, so it would overflow every 4s.
+Regular overflow every ~70 minutes was not taken into account either.
 
-The fix is to use the minimum of remaining ring space and sizeof(struct
-tcmu_cmd_entry) as the length param.
-
-The patch was tested on kernel 4.19.118.
-
-See https://bugzilla.kernel.org/show_bug.cgi?id=208045#c10
-
-Link: https://lore.kernel.org/r/20200629093756.8947-1-bstroesser@ts.fujitsu.com
-Tested-by: JiangYu <lnsyyj@hotmail.com>
-Acked-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_user.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/platform/chrome/cros_ec_sensorhub_ring.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index 560bfec933bc3..1eb1fb0165cd5 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -1220,7 +1220,14 @@ static unsigned int tcmu_handle_completions(struct tcmu_dev *udev)
- 
- 		struct tcmu_cmd_entry *entry = (void *) mb + CMDR_OFF + udev->cmdr_last_cleaned;
- 
--		tcmu_flush_dcache_range(entry, sizeof(*entry));
-+		/*
-+		 * Flush max. up to end of cmd ring since current entry might
-+		 * be a padding that is shorter than sizeof(*entry)
-+		 */
-+		size_t ring_left = head_to_end(udev->cmdr_last_cleaned,
-+					       udev->cmdr_size);
-+		tcmu_flush_dcache_range(entry, ring_left < sizeof(*entry) ?
-+					ring_left : sizeof(*entry));
- 
- 		if (tcmu_hdr_get_op(entry->hdr.len_op) == TCMU_OP_PAD) {
- 			UPDATE_HEAD(udev->cmdr_last_cleaned,
+diff --git a/drivers/platform/chrome/cros_ec_sensorhub_ring.c b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+index 24e48d96ed766..b1c641c72f515 100644
+--- a/drivers/platform/chrome/cros_ec_sensorhub_ring.c
++++ b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+@@ -419,9 +419,7 @@ cros_ec_sensor_ring_process_event(struct cros_ec_sensorhub *sensorhub,
+ 			 * Disable filtering since we might add more jitter
+ 			 * if b is in a random point in time.
+ 			 */
+-			new_timestamp = fifo_timestamp -
+-					fifo_info->timestamp  * 1000 +
+-					in->timestamp * 1000;
++			new_timestamp = c - b * 1000 + a * 1000;
+ 			/*
+ 			 * The timestamp can be stale if we had to use the fifo
+ 			 * info timestamp.
 -- 
 2.25.1
 
