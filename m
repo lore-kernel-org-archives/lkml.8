@@ -2,84 +2,94 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D093C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBFDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCA520578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C527620578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:49:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EKKVqkng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgHUNsz (ORCPT
+        id S1728827AbgHUNtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:48:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51934 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727925AbgHUNsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:48:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 37F43B148;
-        Fri, 21 Aug 2020 13:49:12 +0000 (UTC)
-Date:   Fri, 21 Aug 2020 15:48:42 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>, akpm@linux-foundation.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, nao.horiguchi@gmail.com,
-        osalvador@suse.de, mike.kravetz@oracle.com
-Subject: Re: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead
- page charged
-Message-ID: <20200821134842.GF32537@dhcp22.suse.cz>
-References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200820145850.GA4622@lca.pw>
- <20200821080127.GD32537@dhcp22.suse.cz>
- <20200821123934.GA4314@lca.pw>
+        Fri, 21 Aug 2020 09:49:23 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48026 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727929AbgHUNtT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 09:49:19 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07LDnEiK126288;
+        Fri, 21 Aug 2020 08:49:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598017754;
+        bh=ykGFwxHybdYeyIYRyYFOG7cBotylhW0+qN5JBcDCze8=;
+        h=From:To:Subject:Date;
+        b=EKKVqknglKKs4/WV0lh5k1NRNIfGqeSAcIzei+g++30LVFte17ssRwqbqZPyJHeuX
+         zj19T0+23yPJPFDvRyVU+//cy/Zw63glNg3JwBM5olLFYKxAGUFMl9zgMV5TfxEKxi
+         fwCl0u7T7KFyMgBVniDa79Ptd83VmW4u6cda0DXc=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07LDnEFe098899;
+        Fri, 21 Aug 2020 08:49:14 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 21
+ Aug 2020 08:49:14 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 21 Aug 2020 08:49:14 -0500
+Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07LDnC1C035260;
+        Fri, 21 Aug 2020 08:49:13 -0500
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>,
+        <grygorii.strashko@ti.com>, <nsekhar@ti.com>,
+        <linux-omap@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [net v2 PATCH 1/2] net: ethernet: ti: cpsw: fix clean up of vlan mc entries for host port
+Date:   Fri, 21 Aug 2020 09:49:11 -0400
+Message-ID: <20200821134912.30008-1-m-karicheri2@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821123934.GA4314@lca.pw>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 21-08-20 08:39:37, Qian Cai wrote:
-> On Fri, Aug 21, 2020 at 10:01:27AM +0200, Michal Hocko wrote:
-> > On Thu 20-08-20 10:58:51, Qian Cai wrote:
-> > > On Tue, Aug 11, 2020 at 07:10:27PM +0800, Alex Shi wrote:
-> > > > Since readahead page is charged on memcg too, in theory we don't have to
-> > > > check this exception now. Before safely remove them all, add a warning
-> > > > for the unexpected !memcg.
-> > > > 
-> > > > Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> > > > Acked-by: Michal Hocko <mhocko@suse.com>
-> > > 
-> > > This will trigger,
-> > 
-> > Thanks for the report!
-> >  
-> > > [ 1863.916499] LTP: starting move_pages12
-> > > [ 1863.946520] page:000000008ccc1062 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1fd3c0
-> > > [ 1863.946553] head:000000008ccc1062 order:5 compound_mapcount:0 compound_pincount:0
-> > 
-> > Hmm, this is really unexpected. How did we get order-5 page here? Is
-> > this some special mappaing that sys_move_pages should just ignore?
-> 
-> Well, I thought everybody should be able to figure out where to find the LTP
-> tests source code at this stage to see what it does. Anyway, the test simply
-> migrate hugepages while soft offlining, so order 5 is expected as that is 2M
-> hugepage on powerpc (also reproduced on x86 below). It might be easier to
-> reproduce using our linux-mm random bug collection on NUMA systems.
+To flush the vid + mc entries from ALE, which is required when a VLAN
+interface is removed, driver needs to call cpsw_ale_flush_multicast()
+with ALE_PORT_HOST for port mask as these entries are added only for
+host port. Without this, these entries remain in the ALE table even
+after removing the VLAN interface. cpsw_ale_flush_multicast() calls
+cpsw_ale_flush_mcast which expects a port mask to do the job.
 
-OK, I must have missed that this was on ppc. The order makes more sense
-now. I will have a look at this next week.
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ v2: Dropped 3/3 and re-sending as it need more work
+ drivers/net/ethernet/ti/cpsw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks!
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 9b17bbbe102f..4a65edc5a375 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -1116,7 +1116,7 @@ static int cpsw_ndo_vlan_rx_kill_vid(struct net_device *ndev,
+ 				  HOST_PORT_NUM, ALE_VLAN, vid);
+ 	ret |= cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
+ 				  0, ALE_VLAN, vid);
+-	ret |= cpsw_ale_flush_multicast(cpsw->ale, 0, vid);
++	ret |= cpsw_ale_flush_multicast(cpsw->ale, ALE_PORT_HOST, vid);
+ err:
+ 	pm_runtime_put(cpsw->dev);
+ 	return ret;
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
