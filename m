@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1662FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC6AB20702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D3120702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029120;
-	bh=CdsX10OOX4aiQ4PMa0R+6rZknsSIDJsbXagb4me3NZk=;
+	s=default; t=1598029133;
+	bh=Bzvll3pCe1AMYSUjL6S0uyx9RSHYFXoynJQi99sQQyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R+sDVoZAU3exIdtUwjEWdVOrCF0T1Ge0RYxw/4nrsxtEt959ePjrA5anHbdmwnGZy
-	 X4SrZG6tEsrASD89+dDWlhih7Grr09qbp8Rp/+rO2l+H3sWWi5KD2HzMB8YvrJTEPm
-	 JbKQ4x30Ly3rBKyD7FI/1gNXPZde7ye7uijSSoHs=
+	b=NtwhSzZGFVG1LhVVf2rxKqzfFlnwjy16MvDaUHYwHSQEu5wI0eIMiDj7sO2HC3BYS
+	 omkVqV01NjlI/zW+7nOM19/QWP1XHRiaiidWZdPQTtyBxg+uy7QxvrlMsrG9HJ73Xt
+	 RWrmkcIu5++Ev79plfrlYaQSRnQp4k4g5qJ6Uez4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgHUQ6j (ORCPT
+        id S1728423AbgHUQ6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:58:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50096 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:58:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728306AbgHUQTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:19:35 -0400
+        id S1728290AbgHUQTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:19:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88A8A22D70;
-        Fri, 21 Aug 2020 16:18:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3918F22D0B;
+        Fri, 21 Aug 2020 16:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026726;
-        bh=CdsX10OOX4aiQ4PMa0R+6rZknsSIDJsbXagb4me3NZk=;
+        s=default; t=1598026723;
+        bh=Bzvll3pCe1AMYSUjL6S0uyx9RSHYFXoynJQi99sQQyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DIUCNNdNAEv5m3qJTu01SYnpiaO8fe4ezgdNKdf5Xqj5YeNnJai12GNRCxyLz9pNF
-         vrotIRnzl6wEmC+b42+WuUjVpha7/HFsqjYGGadt3wcEAd+vX3yCsHrRjLods72nqY
-         pHtAbche/xvX8WbZy84Og8m9sVSFmyhBiCMtjrsA=
+        b=OtT9/L3A9WXmC+eFn9UiBCuWzAaeyaOtKrjmAY0pbcXf+Bnf3acMgcstkbSwNeYEU
+         5GE/72pqaJPgLbuniZpA/DWhPn6v49+wJK/lih60xnwtiT24zmgn82oaiwy4gV0fhc
+         VkLhDmHv4o7h5XBnBITDc2GXgfeqiSIr04Z7C3Y8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 30/38] drm/nouveau/drm/noveau: fix reference count leak in nouveau_fbcon_open
-Date:   Fri, 21 Aug 2020 12:17:59 -0400
-Message-Id: <20200821161807.348600-30-sashal@kernel.org>
+Cc:     Ikjoon Jang <ikjn@chromium.org>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 28/38] HID: quirks: add NOGET quirk for Logitech GROUP
+Date:   Fri, 21 Aug 2020 12:17:57 -0400
+Message-Id: <20200821161807.348600-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
 References: <20200821161807.348600-1-sashal@kernel.org>
@@ -59,37 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Ikjoon Jang <ikjn@chromium.org>
 
-[ Upstream commit bfad51c7633325b5d4b32444efe04329d53297b2 ]
+[ Upstream commit 68f775ddd2a6f513e225f9a565b054ab48fef142 ]
 
-nouveau_fbcon_open() calls calls pm_runtime_get_sync() that
-increments the reference count. In case of failure, decrement the
-ref count before returning the error.
+Add HID_QUIRK_NOGET for Logitech GROUP device.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Logitech GROUP is a compound with camera and audio.
+When the HID interface in an audio device is requested to get
+specific report id, all following control transfers are stalled
+and never be restored back.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203419
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_fbcon.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fbcon.c b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-index 406cb99af7f21..d4fe52ec4c966 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-@@ -189,8 +189,10 @@ nouveau_fbcon_open(struct fb_info *info, int user)
- 	struct nouveau_fbdev *fbcon = info->par;
- 	struct nouveau_drm *drm = nouveau_drm(fbcon->helper.dev);
- 	int ret = pm_runtime_get_sync(drm->dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put(drm->dev->dev);
- 		return ret;
-+	}
- 	return 0;
- }
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 20530d8adfbb8..2c100b73d3fc1 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -756,6 +756,7 @@
+ #define USB_DEVICE_ID_LOGITECH_G27_WHEEL	0xc29b
+ #define USB_DEVICE_ID_LOGITECH_WII_WHEEL	0xc29c
+ #define USB_DEVICE_ID_LOGITECH_ELITE_KBD	0xc30a
++#define USB_DEVICE_ID_LOGITECH_GROUP_AUDIO	0x0882
+ #define USB_DEVICE_ID_S510_RECEIVER	0xc50c
+ #define USB_DEVICE_ID_S510_RECEIVER_2	0xc517
+ #define USB_DEVICE_ID_LOGITECH_CORDLESS_DESKTOP_LX500	0xc512
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index bdde16395b2ce..62f87f8bd9720 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -179,6 +179,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_GROUP_AUDIO), HID_QUIRK_NOGET },
  
+ 	{ 0 }
+ };
 -- 
 2.25.1
 
