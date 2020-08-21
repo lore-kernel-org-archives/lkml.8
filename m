@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED78C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 914142072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBB422072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GlR5zQFU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cEhj/1dX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgHUTpV (ORCPT
+        id S1726878AbgHUTpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:45:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36796 "EHLO
+        Fri, 21 Aug 2020 15:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbgHUToo (ORCPT
+        with ESMTP id S1726801AbgHUToo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 15:44:44 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4853C0617BF
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:44:29 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id j13so1248203pjd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:44:29 -0700 (PDT)
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E719C061387
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:44:30 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id kr4so1263469pjb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:44:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DuU6+2YeRUFxWKjj7Z5/wAYkCT2n/Otc0iy3c5gDK6c=;
-        b=GlR5zQFUZPyZN2xj2JZwbsd+nhmW4YrsAiNDspKlZSHIVFCaiwpu22zpQk8g1mPkD4
-         uL0gfTyd6RZ41fhOBJ8O7qPIY2yarQAieyWySyZtzw9F84HAFF/dGTHkR8qjcoeeFhLR
-         kxmlF5bkG7LX0OWEqpt9f6F/IKJimzW3fMjFQ=
+        bh=Iyu1hqfWZF/Rprc+orVpuMlUtMs4mrBdsJ6TcxbP7dg=;
+        b=cEhj/1dXziGzNz3rzCPAyy+0VKr4B6ufAh5DgKVx30rzDGb14ve/eXfOAOHLNwWMoJ
+         CdTN2XCZlucbNHybqLceeWOXF09o+ktLiVPykM1lpIJxxYeBbq0GUTQ6Y8QnLr5f8mJp
+         2Oh+xOILfK2AkARlkRq0fbM9ZA6auqArJxZb8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DuU6+2YeRUFxWKjj7Z5/wAYkCT2n/Otc0iy3c5gDK6c=;
-        b=qK4knpZSykrczYel3q1LAX1MxAmMtNlWPcPy9BIq1dEnePaOa1Id0Je5o5hOKv3Z2B
-         HAH/qcEFGpPOWL7IpkIC73FJJCUNzooVRlQu6Y6jDU4rAFgROs2G1StcZFQyIOaFHO4A
-         OrRWDZYMHXaIpfGqMCwPGfKcNzBS5C4N+gQzJA8u3MRjH5G0xSwzOPBBNp1lwnPE3OJN
-         ECeXgZz9wMv4UMDdgOvfQUl2xTBHyaTcJTdeI6vI3pfxA9miW1KKSJILU+2ZATkUZ89y
-         5n/ASK/be4DfcgVnyMm+IQw4CdbvHFGh3QfGL87iMICZBypAlnBWE0x03hcDsM68iHmr
-         BzhQ==
-X-Gm-Message-State: AOAM531BB6cP/gTlUEiciF/L95eQ/Ae8ZbsV+UoVler85eAinHJKXMSO
-        B8VIWShSaGT4UOAszdXA6C1gLg==
-X-Google-Smtp-Source: ABdhPJwhqJDgxru2YIkrhKiac4wFZ7e/7/Sgw8YpVmg5RV/C1Br7xa8dVv+HqKXZX/CaKWJr+nVfqg==
-X-Received: by 2002:a17:902:b686:: with SMTP id c6mr3542403pls.133.1598039069315;
-        Fri, 21 Aug 2020 12:44:29 -0700 (PDT)
+        bh=Iyu1hqfWZF/Rprc+orVpuMlUtMs4mrBdsJ6TcxbP7dg=;
+        b=HqQrRn6aJYFa7RxI9NVDJutmhwqTgxIgVuffjULAMQBAqdZQ6oYQ7dgdrkqx5TRgof
+         qM4795s68zI1gxyf+mctEE82Pl/9BlAd652Iwmbq9appfeQMC3L44iJY4ytnMW8h5eKk
+         28GkMwxcYda4qRGM1KQ//x8PeHvR5EkJxjGaZZSlPe2Ud5i4DKt6wfN7zq1iNj7lwRkZ
+         rtqccl8wQspy9a4Q+I8gQ869VRK3LTZqIpqiqsckEFRSjufUz1JyB4fGoEB6dwhjvwuI
+         lNa7pEmCG8zewDq0mx78jd4FS5u8dPci/b0ImBQhqiTU4/AAIdGHjXcxWfmmPz6Pc+J9
+         8HLA==
+X-Gm-Message-State: AOAM532cpUl9abj6X+MsQskXxjEergzdmDKmUiPocwRR6EMLrObOqwip
+        CEBgJqtOjHahyqvMiYF1M33Dsg==
+X-Google-Smtp-Source: ABdhPJzpIJZx9fWtR3JYrT9Hz00IB8Bbc5lbvCNlSB2U5AhmKzx1WV+9QjdpbeHcGVcZ/7aFyUdG+g==
+X-Received: by 2002:a17:90a:9d83:: with SMTP id k3mr3788859pjp.19.1598039070005;
+        Fri, 21 Aug 2020 12:44:30 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h5sm3442830pfq.146.2020.08.21.12.44.23
+        by smtp.gmail.com with ESMTPSA id z9sm3224171pfn.59.2020.08.21.12.44.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 21 Aug 2020 12:44:25 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Will Deacon <will@kernel.org>,
+Cc:     Kees Cook <keescook@chromium.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Ard Biesheuvel <ardb@kernel.org>,
@@ -74,9 +74,9 @@ Cc:     Kees Cook <keescook@chromium.org>, Will Deacon <will@kernel.org>,
         clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
         linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 11/29] arm64/build: Use common DISCARDS in linker script
-Date:   Fri, 21 Aug 2020 12:42:52 -0700
-Message-Id: <20200821194310.3089815-12-keescook@chromium.org>
+Subject: [PATCH v6 12/29] arm64/build: Add missing DWARF sections
+Date:   Fri, 21 Aug 2020 12:42:53 -0700
+Message-Id: <20200821194310.3089815-13-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821194310.3089815-1-keescook@chromium.org>
 References: <20200821194310.3089815-1-keescook@chromium.org>
@@ -87,40 +87,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the common DISCARDS rule for the linker script in an effort to
-regularize the linker script to prepare for warning on orphaned
-sections. Additionally clean up left-over no-op macros.
+Explicitly include DWARF sections when they're present in the build.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
-Acked-by: Will Deacon <will@kernel.org>
 ---
- arch/arm64/kernel/vmlinux.lds.S | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/vmlinux.lds.S | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index c2b8426bf4bd..082e9efa2b43 100644
+index 082e9efa2b43..16eb2ef806cd 100644
 --- a/arch/arm64/kernel/vmlinux.lds.S
 +++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -6,6 +6,7 @@
-  */
+@@ -239,6 +239,7 @@ SECTIONS
+ 	_end = .;
  
- #define RO_EXCEPTION_TABLE_ALIGN	8
-+#define RUNTIME_DISCARD_EXIT
+ 	STABS_DEBUG
++	DWARF_DEBUG
+ 	ELF_DETAILS
  
- #include <asm-generic/vmlinux.lds.h>
- #include <asm/cache.h>
-@@ -88,10 +89,8 @@ SECTIONS
- 	 * matching the same input section name.  There is no documented
- 	 * order of matching.
- 	 */
-+	DISCARDS
- 	/DISCARD/ : {
--		EXIT_CALL
--		*(.discard)
--		*(.discard.*)
- 		*(.interp .dynamic)
- 		*(.dynsym .dynstr .hash .gnu.hash)
- 	}
+ 	HEAD_SYMBOLS
 -- 
 2.25.1
 
