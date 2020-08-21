@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B74FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F26C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3705F20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17B920656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029862;
-	bh=ps+HJouMxS0MKhtsq4HA6ltIRrGt1y5G3/30b95tvho=;
+	s=default; t=1598029874;
+	bh=Zr0rNtHcW9RuHn2tfuAXqac+LKY+ORnkgNnF0ZsMDDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PbLyZX8yaTe/Yc3o9YTxnYeHLFD9NYi1t1QLoZFFoohKL6TlJ9ymg6nK1uEAyFA2g
-	 E4sQT9cjlqHsWcYKNi/xqRgILFtuvyo+l/HY01i83U6gEbAqr0puu/Mnkdq3jG/lqX
-	 jaqwW2V9bm35jXd1o7LCzZfa56dAFEqmQQcCSsSs=
+	b=Dl4l3ocPTp3xhyfgdNXWq2HTgW8Y+sjXXRGpRe7BJd5r+WXtP74isKQmgplY8WJ9N
+	 +oJx88oGdMHMIEKLkY98Sl/wUC9LHHd/iRhYnRuuwtUcvFna6H8wmliAkMJWJ5Z3UZ
+	 v84LrmBt53HlgT7EXwBHelcHyWGJVV4Pz1U4P7+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbgHURKr (ORCPT
+        id S1728808AbgHURLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:10:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:11:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726884AbgHUQRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:17:23 -0400
+        id S1728173AbgHUQRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:17:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B611F22BED;
-        Fri, 21 Aug 2020 16:17:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B29FE22B40;
+        Fri, 21 Aug 2020 16:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026639;
-        bh=ps+HJouMxS0MKhtsq4HA6ltIRrGt1y5G3/30b95tvho=;
+        s=default; t=1598026633;
+        bh=Zr0rNtHcW9RuHn2tfuAXqac+LKY+ORnkgNnF0ZsMDDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=haSSifytKtM35Pnc/TmoZQsKhRKRvTUfu8wO1XZnqlgTqVfoIW1sBIhlHBmHU9oOv
-         YO6LCXirOOFNFX3/6377Q4F4s6XgFBCQTewzbO2ZfQuQa74pUR1EzAbFakHiaAt8eQ
-         pBq4iLWdu9q1SYpAvGE+TVnMqD8qpiCIvBEBNDLM=
+        b=tQbFRcMrcvmvsZmzuteMmu8zNsMs25lDpOgGGCPLcROWaU7lhwRtmi45ViE43knF9
+         R0g4aB85plhlpjZ0WyT4ZAKywOJcYCTztipvZHhQoaTkOgzic78iGDsM82Wsr30E3u
+         NBtWPbZeQbznHqqgCL5D2luuq5/CMirOLFuJ+bwU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 12/48] blktrace: ensure our debugfs dir exists
-Date:   Fri, 21 Aug 2020 12:16:28 -0400
-Message-Id: <20200821161704.348164-12-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Jon Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 07/48] ASoC: tegra: Fix reference count leaks.
+Date:   Fri, 21 Aug 2020 12:16:23 -0400
+Message-Id: <20200821161704.348164-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161704.348164-1-sashal@kernel.org>
 References: <20200821161704.348164-1-sashal@kernel.org>
@@ -61,64 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit b431ef837e3374da0db8ff6683170359aaa0859c ]
+[ Upstream commit deca195383a6085be62cb453079e03e04d618d6e ]
 
-We make an assumption that a debugfs directory exists, but since
-this can fail ensure it exists before allowing blktrace setup to
-complete. Otherwise we end up stuffing blktrace files on the debugfs
-root directory. In the worst case scenario this *in theory* can create
-an eventual panic *iff* in the future a similarly named file is created
-prior on the debugfs root directory. This theoretical crash can happen
-due to a recursive removal followed by a specific dentry removal.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count if pm_runtime_put is not called in
+error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
 
-This doesn't fix any known crash, however I have seen the files
-go into the main debugfs root directory in cases where the debugfs
-directory was not created due to other internal bugs with blktrace
-now fixed.
-
-blktrace is also completely useless without this directory, so
-this ensures to userspace we only setup blktrace if the kernel
-can stuff files where they are supposed to go into.
-
-debugfs directory creations typically aren't checked for, and we have
-maintainers doing sweep removals of these checks, but since we need this
-check to ensure proper userspace blktrace functionality we make sure
-to annotate the justification for the check.
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20200613204422.24484-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ sound/soc/tegra/tegra30_ahub.c | 4 +++-
+ sound/soc/tegra/tegra30_i2s.c  | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index a4c8f9d9522e4..884333b9fc767 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -535,6 +535,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- #endif
- 		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+diff --git a/sound/soc/tegra/tegra30_ahub.c b/sound/soc/tegra/tegra30_ahub.c
+index 635eacbd28d47..156e3b9d613c6 100644
+--- a/sound/soc/tegra/tegra30_ahub.c
++++ b/sound/soc/tegra/tegra30_ahub.c
+@@ -643,8 +643,10 @@ static int tegra30_ahub_resume(struct device *dev)
+ 	int ret;
  
-+	/*
-+	 * As blktrace relies on debugfs for its interface the debugfs directory
-+	 * is required, contrary to the usual mantra of not checking for debugfs
-+	 * files or directories.
-+	 */
-+	if (IS_ERR_OR_NULL(dir)) {
-+		pr_warn("debugfs_dir not present for %s so skipping\n",
-+			buts->name);
-+		ret = -ENOENT;
-+		goto err;
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
 +	}
-+
- 	bt->dev = dev;
- 	atomic_set(&bt->dropped, 0);
- 	INIT_LIST_HEAD(&bt->running_list);
+ 	ret = regcache_sync(ahub->regmap_ahub);
+ 	ret |= regcache_sync(ahub->regmap_apbif);
+ 	pm_runtime_put(dev);
+diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
+index e6d548fa980b6..8894b7c16a01a 100644
+--- a/sound/soc/tegra/tegra30_i2s.c
++++ b/sound/soc/tegra/tegra30_i2s.c
+@@ -538,8 +538,10 @@ static int tegra30_i2s_resume(struct device *dev)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 	ret = regcache_sync(i2s->regmap);
+ 	pm_runtime_put(dev);
+ 
 -- 
 2.25.1
 
