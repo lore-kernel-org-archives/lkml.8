@@ -2,155 +2,110 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE447C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9186C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A812620732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE129207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:30:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Hy0FHAYU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgHUC3R (ORCPT
+        id S1727820AbgHUCaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:29:17 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10248 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727034AbgHUC3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:29:15 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 24B137376C1E225252C3;
-        Fri, 21 Aug 2020 10:29:13 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.200.57) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 21 Aug 2020 10:29:02 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <hch@lst.de>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
-        <will@kernel.org>, <ganapatrao.kulkarni@cavium.com>,
-        <catalin.marinas@arm.com>
-CC:     <iommu@lists.linux-foundation.org>, <linuxarm@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <huangdaode@huawei.com>,
-        Barry Song <song.bao.hua@hisilicon.com>
-Subject: [PATCH v6 0/2] make dma_alloc_coherent NUMA-aware by per-NUMA CMA
-Date:   Fri, 21 Aug 2020 14:26:13 +1200
-Message-ID: <20200821022615.28596-1-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
+        Thu, 20 Aug 2020 22:30:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbgHUCaB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 22:30:01 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D07C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:30:01 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id s23so304791qtq.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kxixIM+JhLr4CA8HoqUsdWcGyULPAwA0w4kNHnnJn1A=;
+        b=Hy0FHAYUHwZ20oV/pOQJKKBU/OvKWEerzQKj4850mMN+V8CMFEY07rnnnedLyrYg0q
+         m9/0gdjXPSdQsuDetvtAohK+SMRVE5G1bPDUYnV4BHQnCREgi5W3NZG6rT4+NxdyhaXa
+         Go0MySOwOkMLpRObZ2cHK8IxFpi7+ppMjR6otFAeFWnKbxMrB6jryIunkhMVPBT9lXLp
+         MCwomPdTJmX3lGnRTzt5HGdX3v7erA2+bSqjmouDm+98Lc2EPGw9wecO+qG2FBezKsjT
+         aSaCMJfGFmh6jC51FSn2wQGcOYoI9IYtmACMK111rR3mC0WEC2eM1UWssM0VG2rWVZH4
+         BaXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kxixIM+JhLr4CA8HoqUsdWcGyULPAwA0w4kNHnnJn1A=;
+        b=dv9A8Z4CRL6AznhBuab3dIcjlJtZQ0N/wcq8Y9pRfpMqG/uSwL02e3B8w/pcp+cxHF
+         zzhcX/36G6Ep7uGIjc64qq/DHPDUWjKZ5GuJR1CGLVufhl7qmVgBdTycVIzZEwWyQhV/
+         geNPeh6cXzfBSlCPlyjASmjihsfgCymtAF8m5929GrbzDkzQzzswX7jeQfiQ8Dh/dAV8
+         lz3c2Iwx2l2v2bfiCUV3wkjFB9L83D0kUrv3ms4A6O/S6qaUFW2MrzDPEPstlnDOWeDd
+         wr1XzTUl2FGpxyjrMVMr9Lbzswq28d5gCUHXo96h68RWnEpNVJbYVpe0AiZxGe1NgUoa
+         SMDA==
+X-Gm-Message-State: AOAM532prGr6VQdWOqi0CwME5rXqvz2UmozVM/07bkdbWnm0aPJjQ45Q
+        2zsjY7khRf7e2J1bRqK6qqU2KWzOx1gvlA==
+X-Google-Smtp-Source: ABdhPJwTx3iY7/ab8qofgNfAWK9Ql8cOfkmPqJ/mN8c915NdD76pU1z71GEvNiwPtSt3Yyp+MBSfHQ==
+X-Received: by 2002:ac8:6f62:: with SMTP id u2mr700661qtv.155.1597977000492;
+        Thu, 20 Aug 2020 19:30:00 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q34sm637000qtk.32.2020.08.20.19.29.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 19:29:59 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 22:29:57 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org, catalin.marinas@arm.com,
+        oleg@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH] mm/kmemleak: rely on rcu for task stack scanning
+Message-ID: <20200821022955.GD4622@lca.pw>
+References: <20200820203902.11308-1-dave@stgolabs.net>
+ <20200821002554.GB4622@lca.pw>
+ <20200821012750.qxiklfhuaryajvhn@linux-p48b>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.200.57]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821012750.qxiklfhuaryajvhn@linux-p48b>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ganapatrao Kulkarni has put some effort on making arm-smmu-v3 use local
-memory to save command queues[1]. I also did similar job in patch
-"iommu/arm-smmu-v3: allocate the memory of queues in local numa node"
-[2] while not realizing Ganapatrao has done that before.
+On Thu, Aug 20, 2020 at 06:27:50PM -0700, Davidlohr Bueso wrote:
+> On Thu, 20 Aug 2020, Qian Cai wrote:
+> 
+> > On Thu, Aug 20, 2020 at 01:39:02PM -0700, Davidlohr Bueso wrote:
+> > > kmemleak_scan() currently relies on the big tasklist_lock
+> > > hammer to stabilize iterating through the tasklist. Instead,
+> > > this patch proposes simply using rcu along with the rcu-safe
+> > > for_each_process_thread flavor (without changing scan semantics),
+> > > which doesn't make use of next_thread/p->thread_group and thus
+> > > cannot race with exit. Furthermore, any races with fork()
+> > > and not seeing the new child should be benign as it's not
+> > > running yet and can also be detected by the next scan.
+> > 
+> > It is not entirely clear to me what problem the patch is trying to solve. If
+> > this is about performance, we will probably need some number.
+> 
+> So in this case avoiding the tasklist_lock could prove beneficial for performance
+> considering the scan operation is done periodically. I have seen improvements
+> of 30%-ish when doing similar replacements on very pathological microbenchmarks
+> (ie stressing get/setpriority(2)).
+> 
+> However my main motivation is that it's one less user of the global lock,
+> something that Linus has long time wanted to see gone eventually (if ever)
+> even if the traditional fairness issues has been dealt with now with qrwlocks.
+> Of course this is a very long ways ahead. This patch also kills another user
+> of the deprecated tsk->thread_group.
 
-But it seems it is much better to make dma_alloc_coherent() to be
-inherently NUMA-aware on NUMA-capable systems.
+This makes thing clearer.
 
-Right now, smmu is using dma_alloc_coherent() to get memory to save queues
-and tables. Typically, on ARM64 server, there is a default CMA located at
-node0, which could be far away from node2, node3 etc.
-Saving queues and tables remotely will increase the latency of ARM SMMU
-significantly. For example, when SMMU is at node2 and the default global
-CMA is at node0, after sending a CMD_SYNC in an empty command queue, we
-have to wait more than 550ns for the completion of the command CMD_SYNC.
-However, if we save them locally, we only need to wait for 240ns.
-
-with per-numa CMA, smmu will get memory from local numa node to save command
-queues and page tables. that means dma_unmap latency will be shrunk much.
-
-Meanwhile, when iommu.passthrough is on, device drivers which call dma_
-alloc_coherent() will also get local memory and avoid the travel between
-numa nodes.
-
-I only have ARM64 server platforms to test, but I believe this patch will
-benefit X86 somehow. Hopefully, some X86 guys will bring it up on x86.
-
-[1] https://lists.linuxfoundation.org/pipermail/iommu/2017-October/024455.html
-[2] https://www.spinics.net/lists/iommu/msg44767.html
-
-
--v6:
- * rebase on top of 5.9-rc1
- * doc cleanup
-
--v5:
- refine code according to Christoph Hellwig's comments
- * remove Kconfig option for pernuma cma size;
- * add Kconfig option for pernuma cma enable;
- * code cleanup like line over 80 char
-
- I haven't removed the cma NULL check code in cma_alloc() as it requires
- a bundle of other changes. So I prefer to handle this issue separately.
-
--v4:
- * rebase on top of Christoph Hellwig's patch:
- [PATCH v2] dma-contiguous: cleanup dma_alloc_contiguous
- https://lore.kernel.org/linux-iommu/20200723120133.94105-1-hch@lst.de/
- * cleanup according to Christoph's comment
- * rebase on top of linux-next to avoid arch/arm64 conflicts
- * reserve cma by checking N_MEMORY rather than N_ONLINE
-
--v3:
-  * move to use page_to_nid() while freeing cma with respect to Robin's
-  comment, but this will only work after applying my below patch:
-  "mm/cma.c: use exact_nid true to fix possible per-numa cma leak"
-  https://marc.info/?l=linux-mm&m=159333034726647&w=2
-
-  * handle the case count <= 1 more properly according to Robin's
-  comment;
-
-  * add pernuma_cma parameter to support dynamic setting of per-numa
-  cma size;
-  ideally we can leverage the CMA_SIZE_MBYTES, CMA_SIZE_PERCENTAGE and
-  "cma=" kernel parameter and avoid a new paramter separately for per-
-  numa cma. Practically, it is really too complicated considering the
-  below problems:
-  (1) if we leverage the size of default numa for per-numa, we have to
-  avoid creating two cma with same size in node0 since default cma is
-  probably on node0.
-  (2) default cma can consider the address limitation for old devices
-  while per-numa cma doesn't support GFP_DMA and GFP_DMA32. all
-  allocations with limitation flags will fallback to default one.
-  (3) hard to apply CMA_SIZE_PERCENTAGE to per-numa. it is hard to
-  decide if the percentage should apply to the whole memory size
-  or only apply to the memory size of a specific numa node.
-  (4) default cma size has CMA_SIZE_SEL_MIN and CMA_SIZE_SEL_MAX, it
-  makes things even more complicated to per-numa cma.
-
-  I haven't figured out a good way to leverage the size of default cma
-  for per-numa cma. it seems a separate parameter for per-numa could
-  make life easier.
-
-  * move dma_pernuma_cma_reserve() after hugetlb_cma_reserve() to
-  reuse the comment before hugetlb_cma_reserve() with respect to
-  Robin's comment
-
--v2: 
-  * fix some issues reported by kernel test robot
-  * fallback to default cma while allocation fails in per-numa cma
-     free memory properly
-
-Barry Song (2):
-  dma-contiguous: provide the ability to reserve per-numa CMA
-  arm64: mm: reserve per-numa CMA to localize coherent dma buffers
-
- .../admin-guide/kernel-parameters.txt         |   9 ++
- arch/arm64/mm/init.c                          |   2 +
- include/linux/dma-contiguous.h                |   6 ++
- kernel/dma/Kconfig                            |  10 ++
- kernel/dma/contiguous.c                       | 100 ++++++++++++++++--
- 5 files changed, 117 insertions(+), 10 deletions(-)
-
--- 
-2.27.0
-
-
+Reviewed-by: Qian Cai <cai@lca.pw>
