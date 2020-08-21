@@ -7,139 +7,480 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E976C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0277C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC0D20702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A388B20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:49:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eCrDRDas"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UD7pE6QR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgHURtN (ORCPT
+        id S1726990AbgHURtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:49:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgHURtG (ORCPT
+        Fri, 21 Aug 2020 13:49:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47691 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726737AbgHURt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 13:49:06 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7B69C061575
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:49:05 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y206so1415395pfb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:49:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/GMuE4utOPjO8y1lqv+OxzSdgWvuN+Qw8CbwkSqlnRQ=;
-        b=eCrDRDas+JgyG8vEvUBUgIPw2N0eqtQG+RYzV7XhtoynuOnlhuZrdDQKbyFFclHrPn
-         41Z9Xw1JtPUYek4ggdgXpKsZFiJa3q15fhr1kziwDYEDNpfhigdXs7VY5AbnexGH6F6H
-         IR7D2Fb0exwgeUNMSrGrEH3RoaO/zxNkwt0yE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/GMuE4utOPjO8y1lqv+OxzSdgWvuN+Qw8CbwkSqlnRQ=;
-        b=GuASd9+pAMaN/Z5qtKD/onFKsVx7NiOc0DxZBomKihX7+1FHRPK5tGBBE3A9LNefYS
-         CCeY+bwfKpDE4xp2Cn1p08TA1Zmr9llVZdwTjSk739Msg1jQwpoCPfZe55Pg7alupjii
-         nb86nh2ARqptS6uIjJ0vfidL/cR1k9slQzmpDOhN5l4aMKnBTZV6vTIAjy+FXzEbsBUH
-         qBwlh6sXCUhLOrLSaRR3n51HS2lcXAWXayw72i4er0Lg2CfO7m+W0LZRsDmvA6F9iN+Y
-         GqfAitwfAI42Ec5j5C1NLPWfjEVc3ivVoRKVrr24UKr/BBLoVZU6F0LDSstxLUpOB73/
-         mFLQ==
-X-Gm-Message-State: AOAM5333RdHlV1hSd8BFCtsPyZRR9EOKy+ZoRoKgyBp7NFBcCFgbFFsC
-        k2HJsrowuyRhnP3vv1aivU+7sQ==
-X-Google-Smtp-Source: ABdhPJzUl78taPwahfjnA2wW/6wLLpPTFwhGbButfOHh+DcCELkk9TL4PVM8Ve4ZrX5sUSPgeYg/vQ==
-X-Received: by 2002:a63:cf03:: with SMTP id j3mr3144186pgg.14.1598032144842;
-        Fri, 21 Aug 2020 10:49:04 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c10sm3107533pfc.62.2020.08.21.10.49.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 10:49:03 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 10:49:02 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 29/36] x86/build: Enforce an empty .got.plt section
-Message-ID: <202008211047.9088D8571C@keescook>
-References: <20200731230820.1742553-1-keescook@chromium.org>
- <20200731230820.1742553-30-keescook@chromium.org>
- <20200801021248.GB2700342@rani.riverdale.lan>
+        Fri, 21 Aug 2020 13:49:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598032167;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TeRJHu0662VLXPvtU/jy83aL+Cwz4BNML2NzWX/irlQ=;
+        b=UD7pE6QRdIyEvR+okWcKI2S0TQVJLRf9pA2YKeZ5uWxzxrD+B6IB7zestPEl81IDsWQaBb
+        /b3ouiWsqMcR0jCopGF+M4CyYNJapEZ9kWjXIqB4lwqnSnbjD1FapQL8J/uV4NOvmGN0N4
+        P6mwYX/ua5gw2Srlnt99yazF7R3YmHE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-47-fbJr96iIOcqzHk06mAqa5Q-1; Fri, 21 Aug 2020 13:49:24 -0400
+X-MC-Unique: fbJr96iIOcqzHk06mAqa5Q-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 652941885D8F;
+        Fri, 21 Aug 2020 17:49:21 +0000 (UTC)
+Received: from Whitewolf.redhat.com (ovpn-113-71.rdu2.redhat.com [10.10.113.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F8C8756C0;
+        Fri, 21 Aug 2020 17:49:18 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Nirmoy Das <nirmoy.aiemd@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Dave Airlie <airlied@gmail.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Takashi Iwai <tiwai@suse.de>, James Jones <jajones@nvidia.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [RFC v3] drm/nouveau/kms: Search for encoders' connectors properly
+Date:   Fri, 21 Aug 2020 13:48:35 -0400
+Message-Id: <20200821174843.366083-1-lyude@redhat.com>
+In-Reply-To: <20200820183012.288794-7-lyude@redhat.com>
+References: <20200820183012.288794-7-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200801021248.GB2700342@rani.riverdale.lan>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 10:12:48PM -0400, Arvind Sankar wrote:
-> On Fri, Jul 31, 2020 at 04:08:13PM -0700, Kees Cook wrote:
-> > The .got.plt section should always be zero (or filled only with the
-> > linker-generated lazy dispatch entry). Enforce this with an assert and
-> > mark the section as NOLOAD. This is more sensitive than just blindly
-> > discarding the section.
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  arch/x86/kernel/vmlinux.lds.S | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> > index 0cc035cb15f1..7faffe7414d6 100644
-> > --- a/arch/x86/kernel/vmlinux.lds.S
-> > +++ b/arch/x86/kernel/vmlinux.lds.S
-> > @@ -414,8 +414,20 @@ SECTIONS
-> >  	ELF_DETAILS
-> >  
-> >  	DISCARDS
-> > -}
-> >  
-> > +	/*
-> > +	 * Make sure that the .got.plt is either completely empty or it
-> > +	 * contains only the lazy dispatch entries.
-> > +	 */
-> > +	.got.plt (NOLOAD) : { *(.got.plt) }
-> > +	ASSERT(SIZEOF(.got.plt) == 0 ||
-> > +#ifdef CONFIG_X86_64
-> > +	       SIZEOF(.got.plt) == 0x18,
-> > +#else
-> > +	       SIZEOF(.got.plt) == 0xc,
-> > +#endif
-> > +	       "Unexpected GOT/PLT entries detected!")
-> > +}
-> >  
-> >  #ifdef CONFIG_X86_32
-> >  /*
-> > -- 
-> > 2.25.1
-> > 
-> 
-> Is this actually needed? vmlinux is a position-dependent executable, and
-> it doesn't get linked with any shared libraries, so it should never have
-> a .got or .got.plt at all I think? Does it show up as an orphan without
-> this?
+While the way we find the associated connector for an encoder is just
+fine for legacy modesetting, it's not correct for nv50+ since that uses
+atomic modesetting. For reference, see the drm_encoder kdocs.
 
-Yup, I see this:
+Fix this by removing nouveau_encoder_connector_get(), and replacing it
+with nv04_encoder_get_connector(), nv50_outp_get_old_connector(), and
+nv50_outp_get_new_connector().
 
-/usr/bin/ld.bfd: warning: orphan section `.got.plt' from `arch/x86/kernel/head_64.o' being placed in section `.got.plt'
+v2:
+* Don't line-wrap for_each_(old|new)_connector_in_state in
+  nv50_outp_get_(old|new)_connector() - sravn
+v3:
+* Fix potential uninitialized usage of nv_connector (needs to be
+  initialized to NULL at the start). Thanks kernel test robot!
 
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
+---
+ drivers/gpu/drm/nouveau/dispnv04/dac.c      |  2 +-
+ drivers/gpu/drm/nouveau/dispnv04/dfp.c      |  7 +-
+ drivers/gpu/drm/nouveau/dispnv04/disp.c     | 18 +++++
+ drivers/gpu/drm/nouveau/dispnv04/disp.h     |  4 +
+ drivers/gpu/drm/nouveau/dispnv04/tvnv04.c   |  2 +-
+ drivers/gpu/drm/nouveau/dispnv04/tvnv17.c   |  2 +-
+ drivers/gpu/drm/nouveau/dispnv50/disp.c     | 87 +++++++++++++++++----
+ drivers/gpu/drm/nouveau/nouveau_connector.c | 14 ----
+ drivers/gpu/drm/nouveau/nouveau_encoder.h   |  6 +-
+ 9 files changed, 104 insertions(+), 38 deletions(-)
 
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/dac.c b/drivers/gpu/drm/nouveau/dispnv04/dac.c
+index ffdd447d87068..22d10f3285597 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/dac.c
++++ b/drivers/gpu/drm/nouveau/dispnv04/dac.c
+@@ -419,7 +419,7 @@ static void nv04_dac_commit(struct drm_encoder *encoder)
+ 	helper->dpms(encoder, DRM_MODE_DPMS_ON);
+ 
+ 	NV_DEBUG(drm, "Output %s is running on CRTC %d using output %c\n",
+-		 nouveau_encoder_connector_get(nv_encoder)->base.name,
++		 nv04_encoder_get_connector(nv_encoder)->base.name,
+ 		 nv_crtc->index, '@' + ffs(nv_encoder->dcb->or));
+ }
+ 
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/dfp.c b/drivers/gpu/drm/nouveau/dispnv04/dfp.c
+index f9f4482c79b54..42687ea2a4ca3 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/dfp.c
++++ b/drivers/gpu/drm/nouveau/dispnv04/dfp.c
+@@ -184,7 +184,8 @@ static bool nv04_dfp_mode_fixup(struct drm_encoder *encoder,
+ 				struct drm_display_mode *adjusted_mode)
+ {
+ 	struct nouveau_encoder *nv_encoder = nouveau_encoder(encoder);
+-	struct nouveau_connector *nv_connector = nouveau_encoder_connector_get(nv_encoder);
++	struct nouveau_connector *nv_connector =
++		nv04_encoder_get_connector(nv_encoder);
+ 
+ 	if (!nv_connector->native_mode ||
+ 	    nv_connector->scaling_mode == DRM_MODE_SCALE_NONE ||
+@@ -478,7 +479,7 @@ static void nv04_dfp_commit(struct drm_encoder *encoder)
+ 	helper->dpms(encoder, DRM_MODE_DPMS_ON);
+ 
+ 	NV_DEBUG(drm, "Output %s is running on CRTC %d using output %c\n",
+-		 nouveau_encoder_connector_get(nv_encoder)->base.name,
++		 nv04_encoder_get_connector(nv_encoder)->base.name,
+ 		 nv_crtc->index, '@' + ffs(nv_encoder->dcb->or));
+ }
+ 
+@@ -591,7 +592,7 @@ static void nv04_dfp_restore(struct drm_encoder *encoder)
+ 
+ 	if (nv_encoder->dcb->type == DCB_OUTPUT_LVDS) {
+ 		struct nouveau_connector *connector =
+-			nouveau_encoder_connector_get(nv_encoder);
++			nv04_encoder_get_connector(nv_encoder);
+ 
+ 		if (connector && connector->native_mode)
+ 			call_lvds_script(dev, nv_encoder->dcb, head,
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/disp.c b/drivers/gpu/drm/nouveau/dispnv04/disp.c
+index 900ab69df7e8f..3f046b917c85c 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv04/disp.c
+@@ -35,6 +35,24 @@
+ 
+ #include <nvif/if0004.h>
+ 
++struct nouveau_connector *
++nv04_encoder_get_connector(struct nouveau_encoder *encoder)
++{
++	struct drm_device *dev = to_drm_encoder(encoder)->dev;
++	struct drm_connector *connector;
++	struct drm_connector_list_iter conn_iter;
++	struct nouveau_connector *nv_connector = NULL;
++
++	drm_connector_list_iter_begin(dev, &conn_iter);
++	drm_for_each_connector_iter(connector, &conn_iter) {
++		if (connector->encoder == to_drm_encoder(encoder))
++			nv_connector = nouveau_connector(connector);
++	}
++	drm_connector_list_iter_end(&conn_iter);
++
++	return nv_connector;
++}
++
+ static void
+ nv04_display_fini(struct drm_device *dev, bool suspend)
+ {
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/disp.h b/drivers/gpu/drm/nouveau/dispnv04/disp.h
+index 495d3284e8766..5ace5e906949a 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/disp.h
++++ b/drivers/gpu/drm/nouveau/dispnv04/disp.h
+@@ -6,6 +6,8 @@
+ 
+ #include "nouveau_display.h"
+ 
++struct nouveau_encoder;
++
+ enum nv04_fp_display_regs {
+ 	FP_DISPLAY_END,
+ 	FP_TOTAL,
+@@ -93,6 +95,8 @@ nv04_display(struct drm_device *dev)
+ 
+ /* nv04_display.c */
+ int nv04_display_create(struct drm_device *);
++struct nouveau_connector *
++nv04_encoder_get_connector(struct nouveau_encoder *nv_encoder);
+ 
+ /* nv04_crtc.c */
+ int nv04_crtc_create(struct drm_device *, int index);
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/tvnv04.c b/drivers/gpu/drm/nouveau/dispnv04/tvnv04.c
+index b701a4d8fe760..3ba7b59580d59 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/tvnv04.c
++++ b/drivers/gpu/drm/nouveau/dispnv04/tvnv04.c
+@@ -172,7 +172,7 @@ static void nv04_tv_commit(struct drm_encoder *encoder)
+ 	helper->dpms(encoder, DRM_MODE_DPMS_ON);
+ 
+ 	NV_DEBUG(drm, "Output %s is running on CRTC %d using output %c\n",
+-		 nouveau_encoder_connector_get(nv_encoder)->base.name,
++		 nv04_encoder_get_connector(nv_encoder)->base.name,
+ 		 nv_crtc->index, '@' + ffs(nv_encoder->dcb->or));
+ }
+ 
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
+index 3a9489ed6544f..be28e7bd74903 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
++++ b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
+@@ -599,7 +599,7 @@ static void nv17_tv_commit(struct drm_encoder *encoder)
+ 	helper->dpms(encoder, DRM_MODE_DPMS_ON);
+ 
+ 	NV_INFO(drm, "Output %s is running on CRTC %d using output %c\n",
+-		nouveau_encoder_connector_get(nv_encoder)->base.name,
++		nv04_encoder_get_connector(nv_encoder)->base.name,
+ 		nv_crtc->index, '@' + ffs(nv_encoder->dcb->or));
+ }
+ 
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index c4d138f0ca054..82325ac2dd5ab 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -411,6 +411,40 @@ nv50_outp_atomic_check(struct drm_encoder *encoder,
+ 	return 0;
+ }
+ 
++struct nouveau_connector *
++nv50_outp_get_new_connector(struct nouveau_encoder *outp,
++			    struct drm_atomic_state *state)
++{
++	struct drm_connector *connector;
++	struct drm_connector_state *connector_state;
++	struct drm_encoder *encoder = to_drm_encoder(outp);
++	int i;
++
++	for_each_new_connector_in_state(state, connector, connector_state, i) {
++		if (connector_state->best_encoder == encoder)
++			return nouveau_connector(connector);
++	}
++
++	return NULL;
++}
++
++struct nouveau_connector *
++nv50_outp_get_old_connector(struct nouveau_encoder *outp,
++			    struct drm_atomic_state *state)
++{
++	struct drm_connector *connector;
++	struct drm_connector_state *connector_state;
++	struct drm_encoder *encoder = to_drm_encoder(outp);
++	int i;
++
++	for_each_old_connector_in_state(state, connector, connector_state, i) {
++		if (connector_state->best_encoder == encoder)
++			return nouveau_connector(connector);
++	}
++
++	return NULL;
++}
++
+ /******************************************************************************
+  * DAC
+  *****************************************************************************/
+@@ -552,16 +586,30 @@ nv50_audio_component_get_eld(struct device *kdev, int port, int dev_id,
+ 	struct nouveau_drm *drm = nouveau_drm(drm_dev);
+ 	struct drm_encoder *encoder;
+ 	struct nouveau_encoder *nv_encoder;
+-	struct nouveau_connector *nv_connector;
++	struct drm_connector *connector;
++	struct nouveau_connector *nv_connector = NULL;
+ 	struct nouveau_crtc *nv_crtc;
++	struct drm_connector_list_iter conn_iter;
+ 	int ret = 0;
+ 
+ 	*enabled = false;
++
+ 	drm_for_each_encoder(encoder, drm->dev) {
+ 		nv_encoder = nouveau_encoder(encoder);
+-		nv_connector = nouveau_encoder_connector_get(nv_encoder);
++
++		drm_connector_list_iter_begin(drm_dev, &conn_iter);
++		drm_for_each_connector_iter(connector, &conn_iter) {
++			if (connector->state->best_encoder == encoder) {
++				nv_connector = nouveau_connector(connector);
++				break;
++			}
++		}
++		drm_connector_list_iter_end(&conn_iter);
++		if (!nv_connector)
++			continue;
++
+ 		nv_crtc = nouveau_crtc(encoder->crtc);
+-		if (!nv_connector || !nv_crtc || nv_encoder->or != port ||
++		if (!nv_crtc || nv_encoder->or != port ||
+ 		    nv_crtc->index != dev_id)
+ 			continue;
+ 		*enabled = nv_encoder->audio;
+@@ -572,6 +620,7 @@ nv50_audio_component_get_eld(struct device *kdev, int port, int dev_id,
+ 		}
+ 		break;
+ 	}
++
+ 	return ret;
+ }
+ 
+@@ -665,7 +714,8 @@ nv50_audio_disable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc)
+ }
+ 
+ static void
+-nv50_audio_enable(struct drm_encoder *encoder, struct drm_display_mode *mode)
++nv50_audio_enable(struct drm_encoder *encoder, struct drm_atomic_state *state,
++		  struct drm_display_mode *mode)
+ {
+ 	struct nouveau_drm *drm = nouveau_drm(encoder->dev);
+ 	struct nouveau_encoder *nv_encoder = nouveau_encoder(encoder);
+@@ -686,7 +736,7 @@ nv50_audio_enable(struct drm_encoder *encoder, struct drm_display_mode *mode)
+ 				     (0x0100 << nv_crtc->index),
+ 	};
+ 
+-	nv_connector = nouveau_encoder_connector_get(nv_encoder);
++	nv_connector = nv50_outp_get_new_connector(nv_encoder, state);
+ 	if (!drm_detect_monitor_audio(nv_connector->edid))
+ 		return;
+ 
+@@ -723,7 +773,8 @@ nv50_hdmi_disable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc)
+ }
+ 
+ static void
+-nv50_hdmi_enable(struct drm_encoder *encoder, struct drm_display_mode *mode)
++nv50_hdmi_enable(struct drm_encoder *encoder, struct drm_atomic_state *state,
++		 struct drm_display_mode *mode)
+ {
+ 	struct nouveau_drm *drm = nouveau_drm(encoder->dev);
+ 	struct nouveau_encoder *nv_encoder = nouveau_encoder(encoder);
+@@ -752,7 +803,7 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct drm_display_mode *mode)
+ 	int ret;
+ 	int size;
+ 
+-	nv_connector = nouveau_encoder_connector_get(nv_encoder);
++	nv_connector = nv50_outp_get_new_connector(nv_encoder, state);
+ 	if (!drm_detect_hdmi_monitor(nv_connector->edid))
+ 		return;
+ 
+@@ -798,7 +849,7 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct drm_display_mode *mode)
+ 		+ args.pwr.vendor_infoframe_length;
+ 	nvif_mthd(&disp->disp->object, 0, &args, size);
+ 
+-	nv50_audio_enable(encoder, mode);
++	nv50_audio_enable(encoder, state, mode);
+ 
+ 	/* If SCDC is supported by the downstream monitor, update
+ 	 * divider / scrambling settings to what we programmed above.
+@@ -1573,7 +1624,8 @@ nv50_sor_update(struct nouveau_encoder *nv_encoder, u8 head,
+ }
+ 
+ static void
+-nv50_sor_disable(struct drm_encoder *encoder)
++nv50_sor_disable(struct drm_encoder *encoder,
++		 struct drm_atomic_state *state)
+ {
+ 	struct nouveau_encoder *nv_encoder = nouveau_encoder(encoder);
+ 	struct nouveau_crtc *nv_crtc = nouveau_crtc(nv_encoder->crtc);
+@@ -1601,7 +1653,8 @@ nv50_sor_disable(struct drm_encoder *encoder)
+ }
+ 
+ static void
+-nv50_sor_enable(struct drm_encoder *encoder)
++nv50_sor_enable(struct drm_encoder *encoder,
++		struct drm_atomic_state *state)
+ {
+ 	struct nouveau_encoder *nv_encoder = nouveau_encoder(encoder);
+ 	struct nouveau_crtc *nv_crtc = nouveau_crtc(encoder->crtc);
+@@ -1625,7 +1678,7 @@ nv50_sor_enable(struct drm_encoder *encoder)
+ 	u8 proto = NV507D_SOR_SET_CONTROL_PROTOCOL_CUSTOM;
+ 	u8 depth = NV837D_SOR_SET_CONTROL_PIXEL_DEPTH_DEFAULT;
+ 
+-	nv_connector = nouveau_encoder_connector_get(nv_encoder);
++	nv_connector = nv50_outp_get_new_connector(nv_encoder, state);
+ 	nv_encoder->crtc = encoder->crtc;
+ 
+ 	if ((disp->disp->object.oclass == GT214_DISP ||
+@@ -1652,7 +1705,7 @@ nv50_sor_enable(struct drm_encoder *encoder)
+ 			proto = NV507D_SOR_SET_CONTROL_PROTOCOL_SINGLE_TMDS_B;
+ 		}
+ 
+-		nv50_hdmi_enable(&nv_encoder->base.base, mode);
++		nv50_hdmi_enable(&nv_encoder->base.base, state, mode);
+ 		break;
+ 	case DCB_OUTPUT_LVDS:
+ 		proto = NV507D_SOR_SET_CONTROL_PROTOCOL_LVDS_CUSTOM;
+@@ -1693,7 +1746,7 @@ nv50_sor_enable(struct drm_encoder *encoder)
+ 		else
+ 			proto = NV887D_SOR_SET_CONTROL_PROTOCOL_DP_B;
+ 
+-		nv50_audio_enable(encoder, mode);
++		nv50_audio_enable(encoder, state, mode);
+ 		break;
+ 	default:
+ 		BUG();
+@@ -1706,8 +1759,8 @@ nv50_sor_enable(struct drm_encoder *encoder)
+ static const struct drm_encoder_helper_funcs
+ nv50_sor_help = {
+ 	.atomic_check = nv50_outp_atomic_check,
+-	.enable = nv50_sor_enable,
+-	.disable = nv50_sor_disable,
++	.atomic_enable = nv50_sor_enable,
++	.atomic_disable = nv50_sor_disable,
+ };
+ 
+ static void
+@@ -2066,7 +2119,7 @@ nv50_disp_atomic_commit_tail(struct drm_atomic_state *state)
+ 			  outp->clr.mask, outp->set.mask);
+ 
+ 		if (outp->clr.mask) {
+-			help->disable(encoder);
++			help->atomic_disable(encoder, state);
+ 			interlock[NV50_DISP_INTERLOCK_CORE] |= 1;
+ 			if (outp->flush_disable) {
+ 				nv50_disp_atomic_commit_wndw(state, interlock);
+@@ -2105,7 +2158,7 @@ nv50_disp_atomic_commit_tail(struct drm_atomic_state *state)
+ 			  outp->set.mask, outp->clr.mask);
+ 
+ 		if (outp->set.mask) {
+-			help->enable(encoder);
++			help->atomic_enable(encoder, state);
+ 			interlock[NV50_DISP_INTERLOCK_CORE] = 1;
+ 		}
+ 
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
+index e12957e6faa7c..1d5696c39792a 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.c
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
+@@ -391,20 +391,6 @@ find_encoder(struct drm_connector *connector, int type)
+ 	return NULL;
+ }
+ 
+-struct nouveau_connector *
+-nouveau_encoder_connector_get(struct nouveau_encoder *encoder)
+-{
+-	struct drm_device *dev = to_drm_encoder(encoder)->dev;
+-	struct drm_connector *drm_connector;
+-
+-	list_for_each_entry(drm_connector, &dev->mode_config.connector_list, head) {
+-		if (drm_connector->encoder == to_drm_encoder(encoder))
+-			return nouveau_connector(drm_connector);
+-	}
+-
+-	return NULL;
+-}
+-
+ static void
+ nouveau_connector_destroy(struct drm_connector *connector)
+ {
+diff --git a/drivers/gpu/drm/nouveau/nouveau_encoder.h b/drivers/gpu/drm/nouveau/nouveau_encoder.h
+index 6424cdcb4913f..b0e1dad2367d6 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_encoder.h
++++ b/drivers/gpu/drm/nouveau/nouveau_encoder.h
+@@ -113,7 +113,11 @@ enum drm_mode_status nv50_dp_mode_valid(struct drm_connector *,
+ 					unsigned *clock);
+ 
+ struct nouveau_connector *
+-nouveau_encoder_connector_get(struct nouveau_encoder *encoder);
++nv50_outp_get_new_connector(struct nouveau_encoder *outp,
++			    struct drm_atomic_state *state);
++struct nouveau_connector *
++nv50_outp_get_old_connector(struct nouveau_encoder *outp,
++			    struct drm_atomic_state *state);
+ 
+ int nv50_mstm_detect(struct nv50_mstm *, u8 dpcd[8], int allow);
+ void nv50_mstm_remove(struct nv50_mstm *);
 -- 
-Kees Cook
+2.26.2
+
