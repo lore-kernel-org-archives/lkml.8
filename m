@@ -2,143 +2,137 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C188C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83612C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63C972063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BBEE2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:35:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNwFlwjs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OfV+SpGv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgHUPeS (ORCPT
+        id S1728052AbgHUPfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:34:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54348 "EHLO
+        Fri, 21 Aug 2020 11:35:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbgHUPdi (ORCPT
+        with ESMTP id S1727802AbgHUPfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:33:38 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB2DDC061573;
-        Fri, 21 Aug 2020 08:33:37 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id v6so1849709ota.13;
-        Fri, 21 Aug 2020 08:33:37 -0700 (PDT)
+        Fri, 21 Aug 2020 11:35:37 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0087FC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:35:36 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ds1so975864pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:35:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0UODExHNr70hBlkw5NoS5M2zRCjpoudfpEgGYewpYzs=;
-        b=GNwFlwjsiQxOVZviBYqlzbDjeXaxMBoPCAKXZVtOFmIvyuZ+huJwdDvOja03AHtGt2
-         0KnvciGXYm9+XVry8EWqq5D4Z8/qAeFs9X6Q8s5guGEHnhbVGfFDdPbKcetmLnlZnhQF
-         S22FTMIHJoUzOJVOJczmL/WeK1fa6ogypu41P0M8KpkcioYvYbbfIGmtW186JpCNk5Eb
-         OGvEMDRxL94maTmzwF7Ct57rq9lsoXPW8ZleHDPUYl08ovc8zXQ53YoJMFaa12Qlk0Xn
-         dsrTdYHkqQex3f8K0IqoSQIxNAaRUTg3M4YyTLuHdbNaoAmfNgZil3wzjoKffSMnDf00
-         KCtA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=soERAZs9Qqj0stxZ21kcyBQ2mrcQaIYycZ2RGXP4UCc=;
+        b=OfV+SpGv14O8eiiPmbak3/VqcCOP9Svc+4+NW66iyBfeZw0VYn9jzvZx5zJ/Si9JoT
+         ie98uM6X+4gO7ltkaWyLLJ/ZLfDpilz/pNVH+ptOfmPx16/pJ4DFURvLiqHs+sgbLep8
+         BzoHATwNhB5btbStuIJQ9WkhhES9xSiuZ6+1Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0UODExHNr70hBlkw5NoS5M2zRCjpoudfpEgGYewpYzs=;
-        b=e7eWNYb5yiBMcNMHTiPjMX11ip9aaQiHHFC2hzuq065Rc3bzl+Y9MPKxx2rtogm+KK
-         ysNv69r/ac3shc3ynuQ5ovG3OBmZcinbEs/3qdgpnpyibGG4qVGLFvzZOR2rXznB1Fcb
-         A9RDNUGg/YFCt6siNryz9pxUTt2F8jDyBXeDeWDQZllQyWMo8b4PGNnLNWRa2jDmb+sU
-         DPfBZgPiITlCUWJknuTn39NDdif2I4xJr5qIMwFhfMKR5DPrmeQ1bxO2rkkMtmbel25B
-         w6Bqu+1q1a7zdQc/m3xUb5740EYgG3Qk9Im8gT3SRvI3VJq4WL9CJxcDx9OzoSGu2dhT
-         2AAA==
-X-Gm-Message-State: AOAM532/bGdpdKSFUQK41elDDTqG9BlgCimRZEa9EHn30EL5YubhkJnn
-        6Jc7w3Xlgt/A4Upr4vsNg6Kklqw1JGw7X3Celj4=
-X-Google-Smtp-Source: ABdhPJzTaWWS4KFsWhwVdexjyVS9FPsLuG66C3W4pSO1JfmW5mnH24nERLmoJY89ZSAcHLBxXqdy4UPcx98HFEllh6s=
-X-Received: by 2002:a05:6830:16d8:: with SMTP id l24mr2243264otr.89.1598024016342;
- Fri, 21 Aug 2020 08:33:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=soERAZs9Qqj0stxZ21kcyBQ2mrcQaIYycZ2RGXP4UCc=;
+        b=B7kjEuL3FJb35uJaeAp9hrKNvS38hSKyjQUzj22kVNmsaTDEoLLZ5xF+MTr1kkcKFX
+         SFTywDUX9bxQu4luaj2rGuezCaJVXrY1p/OLpe7q0pdASfO7qUlzUglgonWsIKMGr2Lv
+         fHzA5FHAFXKaHZAxpvvR6SUU/J7v7p8AF5+3iiy/f4zntIv4Mhgg/c1eOHnUttQBU/UP
+         WXXsmsNysrFqjjSCKUaB///RWRkjW0T0i2En4+K9p6cyV2ncrLfsVvWk7TULM2mUs6x4
+         UNyHi5OUjCYK15xMvKnzFgPiuPqXjMFlIveHyEJWJJmP13C5FvwGsSgrhS2uEyjinX3U
+         o8lw==
+X-Gm-Message-State: AOAM532FIkcJW6br7sPjpNtgCM9faisENYKnuy58wciFYp0onXTY66Yh
+        k8QLPmwIx2cJfhf5o9n7oYc1N1R7hHxSfA==
+X-Google-Smtp-Source: ABdhPJz5/8mxA1qiicGG2N+7IOeZNeMhwEcpWMGEM59KuhuEqOcUCsU/8VVBUQ8LHzl67/I3gKACyw==
+X-Received: by 2002:a17:90a:de83:: with SMTP id n3mr2784787pjv.62.1598024136533;
+        Fri, 21 Aug 2020 08:35:36 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id u8sm2200720pjy.35.2020.08.21.08.35.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 08:35:36 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, robdclark@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] drm: panel: simple: Add KD116N21-30NV-A010
+Date:   Fri, 21 Aug 2020 08:35:15 -0700
+Message-Id: <20200821083454.2.Idf25356dff4b36c62704188c3e3d39a2010d6f6a@changeid>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+In-Reply-To: <20200821083454.1.I61e6248813d797c9eeebfbb7019c713aa71c4419@changeid>
+References: <20200821083454.1.I61e6248813d797c9eeebfbb7019c713aa71c4419@changeid>
 MIME-Version: 1.0
-References: <20200821140836.3707282-1-tweek@google.com> <20200821140836.3707282-2-tweek@google.com>
-In-Reply-To: <20200821140836.3707282-2-tweek@google.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Fri, 21 Aug 2020 11:33:25 -0400
-Message-ID: <CAEjxPJ7TF8cq_C+rh08vmq-aBMTH8FFgQaREkgUWB7fqTQWtQw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] selinux: add tracepoint on audited events
-To:     =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
-Cc:     Paul Moore <paul@paul-moore.com>, Nick Kralevich <nnk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Peter Enderborg <peter.enderborg@sony.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:09 AM Thi=C3=A9baud Weksteen <tweek@google.com> =
-wrote:
->
-> The audit data currently captures which process and which target
-> is responsible for a denial. There is no data on where exactly in the
-> process that call occurred. Debugging can be made easier by being able to
-> reconstruct the unified kernel and userland stack traces [1]. Add a
-> tracepoint on the SELinux denials which can then be used by userland
-> (i.e. perf).
->
-> Although this patch could manually be added by each OS developer to
-> trouble shoot a denial, adding it to the kernel streamlines the
-> developers workflow.
->
-> It is possible to use perf for monitoring the event:
->   # perf record -e avc:selinux_audited -g -a
->   ^C
->   # perf report -g
->   [...]
->       6.40%     6.40%  audited=3D800000 tclass=3D4
->                |
->                   __libc_start_main
->                   |
->                   |--4.60%--__GI___ioctl
->                   |          entry_SYSCALL_64
->                   |          do_syscall_64
->                   |          __x64_sys_ioctl
->                   |          ksys_ioctl
->                   |          binder_ioctl
->                   |          binder_set_nice
->                   |          can_nice
->                   |          capable
->                   |          security_capable
->                   |          cred_has_capability.isra.0
->                   |          slow_avc_audit
->                   |          common_lsm_audit
->                   |          avc_audit_post_callback
->                   |          avc_audit_post_callback
->                   |
->
-> It is also possible to use the ftrace interface:
->   # echo 1 > /sys/kernel/debug/tracing/events/avc/selinux_audited/enable
->   # cat /sys/kernel/debug/tracing/trace
->   tracer: nop
->   entries-in-buffer/entries-written: 1/1   #P:8
->   [...]
->   dmesg-3624  [001] 13072.325358: selinux_denied: audited=3D800000 tclass=
-=3D4
->
-> The tclass value can be mapped to a class by searching
-> security/selinux/flask.h. The audited value is a bit field of the
-> permissions described in security/selinux/av_permissions.h for the
-> corresponding class.
->
-> [1] https://source.android.com/devices/tech/debug/native_stack_dump
->
-> Signed-off-by: Thi=C3=A9baud Weksteen <tweek@google.com>
-> Suggested-by: Joel Fernandes <joelaf@google.com>
-> Reviewed-by: Peter Enderborg <peter.enderborg@sony.com>
+Values come from the vendor and have been tested on hardware.
 
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ drivers/gpu/drm/panel/panel-simple.c | 31 ++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 4eabfdd3be2d..f499de71ab3d 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2341,6 +2341,34 @@ static const struct panel_desc ivo_m133nwf4_r0 = {
+ 	.connector_type = DRM_MODE_CONNECTOR_eDP,
+ };
+ 
++static const struct drm_display_mode kingdisplay_kd116n21_30nv_a010_mode = {
++	.clock = 81000,
++	.hdisplay = 1366,
++	.hsync_start = 1366 + 40,
++	.hsync_end = 1366 + 40 + 32,
++	.htotal = 1366 + 40 + 32 + 62,
++	.vdisplay = 768,
++	.vsync_start = 768 + 5,
++	.vsync_end = 768 + 5 + 5,
++	.vtotal = 768 + 5 + 5 + 122,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++};
++
++static const struct panel_desc kingdisplay_kd116n21_30nv_a010 = {
++	.modes = &kingdisplay_kd116n21_30nv_a010_mode,
++	.num_modes = 1,
++	.bpc = 6,
++	.size = {
++		.width = 256,
++		.height = 144,
++	},
++	.delay = {
++		.hpd_absent_delay = 200,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
++	.connector_type = DRM_MODE_CONNECTOR_eDP,
++};
++
+ static const struct display_timing koe_tx14d24vm1bpa_timing = {
+ 	.pixelclock = { 5580000, 5850000, 6200000 },
+ 	.hactive = { 320, 320, 320 },
+@@ -4047,6 +4075,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "ivo,m133nwf4-r0",
+ 		.data = &ivo_m133nwf4_r0,
++	}, {
++		.compatible = "kingdisplay,kd116n21-30nv-a010",
++		.data = &kingdisplay_kd116n21_30nv_a010,
+ 	}, {
+ 		.compatible = "koe,tx14d24vm1bpa",
+ 		.data = &koe_tx14d24vm1bpa,
+-- 
+2.28.0.297.g1956fa8f8d-goog
+
