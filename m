@@ -2,106 +2,103 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0970DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B70FC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C79D120724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65862207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJ6eae3W"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CI3QuJFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgHUViV (ORCPT
+        id S1726772AbgHUVlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54484 "EHLO
+        Fri, 21 Aug 2020 17:41:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgHUViT (ORCPT
+        with ESMTP id S1726746AbgHUVld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:38:19 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 543D7C061573;
-        Fri, 21 Aug 2020 14:38:19 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id df16so2734982edb.9;
-        Fri, 21 Aug 2020 14:38:18 -0700 (PDT)
+        Fri, 21 Aug 2020 17:41:33 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501CAC061575
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:41:31 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id q3so151109pls.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:41:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Gfug6M3OOZNJ6q8sApGDCaMBquL65QMuLFdwuuumNZA=;
-        b=jJ6eae3Ww+WWoXwtlu8P2VejAtCwIbkp1hM5FMDc4Zr/kaCcCRojMR7zI4Nhg7+yZW
-         ZBUofAil656eC9j0w0jL4lQVktpXNTm05+a2ZfkTTtBRkzXILrphQ69mH2Y28fQaMKU7
-         XRkWX/qyM33hcafGbIWzqz/FLGx5uvF64S5hv+B8feCw/QnKRBm9XsVSv/lAF1HqAoPx
-         Nh8SsXOgRvY+bGlhLpVMb3UuEhSy6pe1wYrVDTTqQPn1w6xxDLEsPSECpGSIukXGZYy0
-         D16/cbrmQ1yMi3uHC/qqCp0MchMfEEp6GCnqYmGe3tyQedwhCyCamdjMhAwMm2gxSHU8
-         dDtw==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=F0yFmC4o5irkuTq78iNlYXHaTPjakIi9tEh/7+FUKIk=;
+        b=CI3QuJFhdas1uPHKQRZ/jnrLw4Kr/inX1N05JNTX2u4ByKSVQl7LczGsrnVPCPZeNI
+         oCkvnCOnHMb6jGpU60zvsfhuOPVF0TXbU3S+cO2MoPet0oRsOQMcrmQFPxA/+nvPRuge
+         23CMJCS14hWv/fFqbupoXBwrirLGUqkxEcbgQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Gfug6M3OOZNJ6q8sApGDCaMBquL65QMuLFdwuuumNZA=;
-        b=iZlnEgO9Nc+bhNpX6kuoPeGrP/1TlVqDPlEi5IMm+QEMavk8/TZpXOZ86X9syJKJmF
-         pKmTO9GInRB/tlAN/Q/lwqSbbSZF8VbtVKm/val5z1V68SukWwFDmyy/5Fl+uEO25qam
-         4mXi2aNB2219cA91fgHUBadZYlZyK+YBzSwR8PHvX+0Rolazd1AsA8F+MPIZZ1KO6F26
-         8pGU5NwfxQ5v/bYpclV11QWGbLocGVUtiImwOLQaQqZhXlVLvEOv4OPzZBVH7aWFtX2o
-         4RqnjTwxLGykBQtE0vv5xAZXY2N6ExCxZ27MqExmHyWrHOJ7SkOFR5PZ1zXoQ0UVFUGn
-         a+MQ==
-X-Gm-Message-State: AOAM530eor/mAKMkFp2QNDB1mdHUx31pCL7I3tgXUVBIkIqzAnLNDr3P
-        PPC62UcZ/B/8xHmtDPfyLzw=
-X-Google-Smtp-Source: ABdhPJx9SolUSPU3K4hQ7fAGjLqRUXTKmcwsXFEYs/qMrfvB/XNPni7gUXanVwnJeBE6tcmYRQWomg==
-X-Received: by 2002:a50:935a:: with SMTP id n26mr4858258eda.107.1598045896089;
-        Fri, 21 Aug 2020 14:38:16 -0700 (PDT)
-Received: from localhost.localdomain ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id cq1sm1775762edb.95.2020.08.21.14.38.15
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=F0yFmC4o5irkuTq78iNlYXHaTPjakIi9tEh/7+FUKIk=;
+        b=j+PpktV7YEmBa5H9llnTRmzqAL5PJSq8RiY5LyHekNrX1RtPKjW0V6crwMvNFtXA5t
+         KW7Vs/IFGWHavviJddqncdS/bVmH0m+zOZ+cbGH/bS1t0gR6D9BL8WadgctTNaBTusr3
+         1Ir5k8XqYBN/CcLfFhGIBGvJbqY/srJtx/UsjFVjSE/FoL28IEsrewgoINcU7Ad+yubf
+         Ghhsag5nGLu486wSSRXQ27O4NBRiFtP1hCqBZlsveoytz53t7QHBO1W8T3EJ/Qey9YBV
+         Vd20W/ZgJaTBQHYOdNDRaOtZECdmGiDDoew7jCLSjxrkDgeS/qNzgjub42BGP1zGCXwg
+         iHyg==
+X-Gm-Message-State: AOAM533038oMor3nKbBuvaxTih8HmsuwXrV3RfIXFD0k821IMIZp/ssf
+        a/3jYotnYuJu8wGs8lqrhwrzQQ==
+X-Google-Smtp-Source: ABdhPJzTcvJN90Jptay3sh02aa3TTUvk2fKeSuuIeSH9liKZQG9ZvAd2U0zTN9VfhtPg9+tfKYribA==
+X-Received: by 2002:a17:902:9f92:: with SMTP id g18mr3993751plq.83.1598046090694;
+        Fri, 21 Aug 2020 14:41:30 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id y79sm3469576pfb.65.2020.08.21.14.41.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 14:38:15 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: add myself as maintainer for spi-fsl-dspi driver
-Date:   Sat, 22 Aug 2020 00:37:53 +0300
-Message-Id: <20200821213753.3143632-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 21 Aug 2020 14:41:29 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200821204921.32536-1-sibis@codeaurora.org>
+References: <20200821204921.32536-1-sibis@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] PM / Domains: Add GENPD_FLAG_NO_SUSPEND/RESUME flags
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     rjw@rjwysocki.net, agross@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        gregkh@linuxfoundation.org, pavel@ucw.cz, len.brown@intel.com,
+        rnayak@codeaurora.org, dianders@chromium.org, mka@chromium.org,
+        Sibi Sankar <sibis@codeaurora.org>
+To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
+        khilman@kernel.org, ulf.hansson@linaro.org
+Date:   Fri, 21 Aug 2020 14:41:28 -0700
+Message-ID: <159804608868.334488.2486130699850456264@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since I've introduced a fairly large diff to this driver since tag v5.4,
-I would like to avoid breakage for my use cases by getting a chance to
-be copied on newly submitted patches.
+Quoting Sibi Sankar (2020-08-21 13:49:20)
+> Add GENPD_FLAG_NO_SUSPEND/RESUME flags to instruct genpd to keep the
+> status of the PM domain unaltered during suspend/resume respectively.
+> The flags are aimed at power domains coupled to co-processors which
+> enter low-power modes independent to that of the application processor.
+>=20
+> Specifically the flags are to be used by the power domains exposed
+> by the AOSS QMP driver linked to modem, adsp, cdsp remoteprocs. These
+> power domains are used to notify the Always on Subsystem (AOSS) that
+> a particular co-processor is up. AOSS uses this information to wait
+> for the co-processors to suspend before starting its sleep sequence.
+> The application processor powers off these power domains only if the
+> co-processor has crashed or powered off and remains unaltered during
+> system suspend/resume.
 
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Why are these power domains instead of some QMP message sent during
+remote proc power up? If this has been discussed before feel free to
+disregard and please link to prior mailing list discussions.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index deaafb617361..d29fa11d7742 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6884,6 +6884,14 @@ L:	linuxppc-dev@lists.ozlabs.org
- S:	Maintained
- F:	drivers/dma/fsldma.*
- 
-+FREESCALE DSPI DRIVER
-+M:	Vladimir Oltean <olteanv@gmail.com>
-+L:	linux-spi@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-+F:	drivers/spi/spi-fsl-dspi.c
-+F:	include/linux/spi/spi-fsl-dspi.h
-+
- FREESCALE ENETC ETHERNET DRIVERS
- M:	Claudiu Manoil <claudiu.manoil@nxp.com>
- L:	netdev@vger.kernel.org
--- 
-2.25.1
-
+I find it odd that this is modeled as a power domain instead of some
+Qualcomm specific message that the remoteproc driver sends to AOSS. Is
+there some sort of benefit the driver gets from using the power domain
+APIs for this vs. using a custom API?
