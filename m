@@ -7,107 +7,112 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A4CC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF76C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD0220738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBEB20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X9QaBfV9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lXZJddLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgHUKf4 (ORCPT
+        id S1728370AbgHUKgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:35:56 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53012 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728123AbgHUKfS (ORCPT
+        Fri, 21 Aug 2020 06:36:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728320AbgHUKfg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:35:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598006116;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OKy/5qBO5o//LYJ+b8xL+LjmCbIRLl1gm4kTDHiwBRU=;
-        b=X9QaBfV9UtkGKENQvWpDhiboujweGYZTE92dUhMcI/ow+4kw4SKTEvUD4+lG+ZRU3RVQBE
-        uHaq9/jM2temy7+sp2JRu3w4AFeaqLl8quzrEOlKuQEkw6EXpR4KUYAdlSxEcWIRqnr3zF
-        6wIzfzwAtpBRoxJtUHL4bW9Ha0CwYbk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-133-2VGBU1yXNXyePjxSO5BEig-1; Fri, 21 Aug 2020 06:35:12 -0400
-X-MC-Unique: 2VGBU1yXNXyePjxSO5BEig-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 002AE80733A;
-        Fri, 21 Aug 2020 10:35:10 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-87.ams2.redhat.com [10.36.114.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9887C756DD;
-        Fri, 21 Aug 2020 10:35:04 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Julien Grall <julien@xen.org>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: [PATCH v1 4/5] xen/balloon: try to merge system ram resources
-Date:   Fri, 21 Aug 2020 12:34:30 +0200
-Message-Id: <20200821103431.13481-5-david@redhat.com>
-In-Reply-To: <20200821103431.13481-1-david@redhat.com>
-References: <20200821103431.13481-1-david@redhat.com>
+        Fri, 21 Aug 2020 06:35:36 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D8F5C061386
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:35:36 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id k12so1221683otr.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:35:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EfdWudG0h0q5CaIQdMWXtuPOgO5LF8y0CpSBc1t8Vmo=;
+        b=lXZJddLsySTWLGE+UKv+3I86NhQqIIkV25M4nrFxsyNqk9bRGqRcr/4gkY5vkypS3r
+         wOPaCUxWj0gLJv835VT/xORv9cX8tCUo6OPSPVTSyJeHT2tLG5KU8SaeHkzuAU8g9g3P
+         sB8dCJJ+xxPfWuX2xnQJgFAjw346ICZ01pnVE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EfdWudG0h0q5CaIQdMWXtuPOgO5LF8y0CpSBc1t8Vmo=;
+        b=RfqxEKu6RRcXQkLi5yA83jqMquD34Nl2SCyuu7b2XlwDTJIlP8a1n1lGcvdEqboEh7
+         E69QWJVlEZJGzjl0wHLIA3Fw3K7F8mIKGB1zkvoFXCmrrJeQLdpR+CoCxC5AHKz7WJli
+         z4gRctbtIp1eiiFPqaflxs3nl2pODMRq4RKrU4XhvQ8ctSv20geniWuBf6NUMRBkqKSM
+         +A4dE4ziSeAuc/eheH2X+faF3qpKwoahBn4rPkw1704mn5IY2aToDxV9bl1esmQ8CwJU
+         f+us6KUcnDHcBErgld/wq4FLTuZXLvLzhKYyqpICrM9J5O2dn5Exw5ajEOaxPZP597wC
+         aQGg==
+X-Gm-Message-State: AOAM532ODqBj/7pvKHqzVrWYO0h1T4M5LEDXwoVjpv9nxAZ5MJAZvjxF
+        j+Sp+SCKgBexI3ouO4OAlFHKOLKKMQRlevRi
+X-Google-Smtp-Source: ABdhPJwl9ZFVKWkTOiXwoZYPSAWzvG/od1mfAGxi4QDvY0yFxYFOxcpSNC4icbvUgMN/V1CkSpNUyQ==
+X-Received: by 2002:a05:6830:158a:: with SMTP id i10mr1505573otr.72.1598006133116;
+        Fri, 21 Aug 2020 03:35:33 -0700 (PDT)
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com. [209.85.167.170])
+        by smtp.gmail.com with ESMTPSA id r5sm297838otq.5.2020.08.21.03.35.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 03:35:32 -0700 (PDT)
+Received: by mail-oi1-f170.google.com with SMTP id l204so1135605oib.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:35:31 -0700 (PDT)
+X-Received: by 2002:a05:6808:196:: with SMTP id w22mr1229658oic.55.1598006131352;
+ Fri, 21 Aug 2020 03:35:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200713060842.471356-1-acourbot@chromium.org>
+ <20200713060842.471356-3-acourbot@chromium.org> <CAGb2v66rFAb6eczD=ct68b7Q60ZvFyMCRN6XdY-rUAbk6zVupw@mail.gmail.com>
+In-Reply-To: <CAGb2v66rFAb6eczD=ct68b7Q60ZvFyMCRN6XdY-rUAbk6zVupw@mail.gmail.com>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Fri, 21 Aug 2020 19:35:20 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MXZ4WoRcdpO42RAbBJZGdWteE76=jMM2HjTfMukUYf4Qg@mail.gmail.com>
+Message-ID: <CAPBb6MXZ4WoRcdpO42RAbBJZGdWteE76=jMM2HjTfMukUYf4Qg@mail.gmail.com>
+Subject: Re: [PATCH v3 02/16] dt-bindings: media: mtk-vcodec: document SCP node
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's reuse the new mechanism to merge system ram resources below the
-root. We are the only one hotplugging system ram (e.g., DIMMs don't apply),
-so this is safe to be used.
+On Mon, Jul 13, 2020 at 3:20 PM Chen-Yu Tsai <wens@kernel.org> wrote:
+>
+> On Mon, Jul 13, 2020 at 2:09 PM Alexandre Courbot <acourbot@chromium.org> wrote:
+> >
+> > The mediatek codecs can use either the VPU or the SCP as their interface
+> > to firmware. Reflect this in the DT bindings.
+> >
+> > Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> > Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
+> > ---
+> >  Documentation/devicetree/bindings/media/mediatek-vcodec.txt | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> > index b6b5dde6abd8..7aef0a4fe207 100644
+> > --- a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> > +++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> > @@ -19,7 +19,9 @@ Required properties:
+> >  - iommus : should point to the respective IOMMU block with master port as
+> >    argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> >    for details.
+> > -- mediatek,vpu : the node of video processor unit
+> > +One of the two following nodes:
+> > +- mediatek,vpu : the node of the video processor unit, if using VPU.
+> > +- mediatek,scp : the noode of the SCP unit, if using SCP.
+>
+>                          ^ typo / extra o
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Roger Pau Monné <roger.pau@citrix.com>
-Cc: Julien Grall <julien@xen.org>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/xen/balloon.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-index 37ffccda8bb87..5ec73f752b8a7 100644
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -338,6 +338,10 @@ static enum bp_state reserve_additional_memory(void)
- 	if (rc) {
- 		pr_warn("Cannot add additional memory (%i)\n", rc);
- 		goto err;
-+	} else {
-+		resource = NULL;
-+		/* Try to reduce the number of system ram resources. */
-+		merge_system_ram_resources(&iomem_resource);
- 	}
- 
- 	balloon_stats.total_pages += balloon_hotplug;
--- 
-2.26.2
-
+Fixed, thanks!
