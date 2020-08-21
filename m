@@ -2,140 +2,94 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D5CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D847AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 709752087D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:17:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u5imW/ob"
+	by mail.kernel.org (Postfix) with ESMTP id AA90F207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgHUJRv (ORCPT
+        id S1728079AbgHUJTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:17:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgHUJRt (ORCPT
+        Fri, 21 Aug 2020 05:19:03 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:33306 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbgHUJTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:17:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD962C061385;
-        Fri, 21 Aug 2020 02:17:49 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id d4so559975pjx.5;
-        Fri, 21 Aug 2020 02:17:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=FowiN7wGUIsFhFJkyzUhtvp+B7SgUmBl2oc4E8odKUg=;
-        b=u5imW/obXnthlptyuM+UmZMrIJpnkZhelXsiU1c0RPMDUbj3oQWZdP0i9N4UfPSleC
-         KfJ/OfpP0+MYveLl9IG5eAvuVZrZxxi0NB63ep5eZsz2hD99jBPZJQC0VkarKWVs7c+m
-         2qzbfQOKImRQONRgimycy8is1Ho47cs+XGHJRcTSTa4hnzhi3dqhZ9IphiTAgGSZykl7
-         36NmF4e8k7/DPRUQcxW4i/DonSqdJAtMDycWwa19T1Z8As5IMjLJkRXTbQ/JeOYi7YWk
-         YsMPSgpTyFyYHsflZ8QzTReDRcTciU7WF1+e39v+mZe8aV5axhVeFOzivWEOGNdQawP6
-         AAkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FowiN7wGUIsFhFJkyzUhtvp+B7SgUmBl2oc4E8odKUg=;
-        b=FGNivJNRu8Ap6dDiffaLT0JzahEKWmo36JrHQtCoXRRBildcW9WZ/y0JS1Gwk0aiQ8
-         anF//EJpJKPb8x+cKWq6XGLu36rXMszbEdnA+XdznfDKXLnZUxb2tYEmsjYQO6VWZdbN
-         meg8k0AnT6gkAUIwd5wvufYIzFcB+ICc6G98ahB/tTnDAxH19FgF8vUjUxDBA7GvEBHq
-         97pHpV4R/oylc56TC8sg//CPNUguymamRsAAisObl1hC9d/qiZa+x654zDY6lBR0NFLa
-         pIUL6FfxfzUeAwdNX5qAjqfhQO+00eK1tmh1OE6w1ghnGLKI06DHwUeBfMTBisfp1b+Y
-         wOIQ==
-X-Gm-Message-State: AOAM53050MGsIvoNDsrOdewfdwha5CygnJJAHr14l9m/dMWktcQ6W6vE
-        /t9n4T+3isHJFA3dqVnI962qF30Z/WU=
-X-Google-Smtp-Source: ABdhPJzNNdQKEjdNXXETsWvOfEIJS9o3AaeMqd6oRQlM6ML8PWimk/XtWQ755wUwRXMeFh9RI3JzRQ==
-X-Received: by 2002:a17:90a:ee08:: with SMTP id e8mr1840282pjy.86.1598001468857;
-        Fri, 21 Aug 2020 02:17:48 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id b26sm1961190pff.54.2020.08.21.02.17.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Aug 2020 02:17:48 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH] KVM: LAPIC: Don't kick vCPU which is injecting already-expired timer
-Date:   Fri, 21 Aug 2020 17:17:34 +0800
-Message-Id: <1598001454-11709-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 21 Aug 2020 05:19:03 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id BF1FD1C0BB4; Fri, 21 Aug 2020 11:19:00 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 11:19:00 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Dave Airlie <airlied@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.auld@intel.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [Intel-gfx] 5.9-rc1: graphics regression moved from -next to
+ mainline
+Message-ID: <20200821091900.hzbivycs5ky5d3iw@duo.ucw.cz>
+References: <20200817161132.GA4711@amd>
+ <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com>
+ <CAPM=9tw8LVWsuA6m_nkUDgm00iz2txYRNZY0b0WWZbyiUVzLEw@mail.gmail.com>
+ <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com>
+ <20200820092349.GA3792@amd>
+ <CAHk-=wjX=ck_u8uvp=PjGCQ3M9igE-yqyRPsJ54th1gQWpwMnA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="flaffuju4iqng467"
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjX=ck_u8uvp=PjGCQ3M9igE-yqyRPsJ54th1gQWpwMnA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
 
-The kick after setting KVM_REQ_PENDING_TIMER is used to handle the timer 
-fires on a different pCPU which vCPU is running on, we don't need this 
-kick when injecting already-expired timer, this kick is expensive since 
-memory barrier, rcu, preemption disable/enable operations. This patch 
-reduces the overhead by don't kick vCPU which is injecting already-expired 
-timer.
+--flaffuju4iqng467
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/lapic.c | 2 +-
- arch/x86/kvm/x86.c   | 5 +++--
- arch/x86/kvm/x86.h   | 2 +-
- 3 files changed, 5 insertions(+), 4 deletions(-)
+On Thu 2020-08-20 09:16:18, Linus Torvalds wrote:
+> On Thu, Aug 20, 2020 at 2:23 AM Pavel Machek <pavel@ucw.cz> wrote:
+> >
+> > Yes, it seems they make things work. (Chris asked for new patch to be
+> > tested, so I am switching to his kernel, but it survived longer than
+> > it usually does.)
+>=20
+> Ok, so at worst we know how to solve it, at best the reverts won't be
+> needed because Chris' patch will fix the issue properly.
+>=20
+> So I'll archive this thread, but remind me if this hasn't gotten
+> sorted out in the later rc's.
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 248095a..5b5ae66 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1642,7 +1642,7 @@ static void apic_timer_expired(struct kvm_lapic *apic, bool from_timer_fn)
- 	}
- 
- 	atomic_inc(&apic->lapic_timer.pending);
--	kvm_set_pending_timer(vcpu);
-+	kvm_set_pending_timer(vcpu, from_timer_fn);
- }
- 
- static void start_sw_tscdeadline(struct kvm_lapic *apic)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 599d732..2a45405 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1778,10 +1778,11 @@ static s64 get_kvmclock_base_ns(void)
- }
- #endif
- 
--void kvm_set_pending_timer(struct kvm_vcpu *vcpu)
-+void kvm_set_pending_timer(struct kvm_vcpu *vcpu, bool should_kick)
- {
- 	kvm_make_request(KVM_REQ_PENDING_TIMER, vcpu);
--	kvm_vcpu_kick(vcpu);
-+	if (should_kick)
-+		kvm_vcpu_kick(vcpu);
- }
- 
- static void kvm_write_wall_clock(struct kvm *kvm, gpa_t wall_clock)
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 995ab69..0eaae9c 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -246,7 +246,7 @@ static inline bool kvm_vcpu_latch_init(struct kvm_vcpu *vcpu)
- 	return is_smm(vcpu) || kvm_x86_ops.apic_init_signal_blocked(vcpu);
- }
- 
--void kvm_set_pending_timer(struct kvm_vcpu *vcpu);
-+void kvm_set_pending_timer(struct kvm_vcpu *vcpu, bool should_kick);
- void kvm_inject_realmode_interrupt(struct kvm_vcpu *vcpu, int irq, int inc_eip);
- 
- void kvm_write_tsc(struct kvm_vcpu *vcpu, struct msr_data *msr);
--- 
-2.7.4
+Yes, thank you, it seems we have a solution w/o the revert.
 
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--flaffuju4iqng467
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXz+RhAAKCRAw5/Bqldv6
+8uD4AJ9wxBkyX2NDdBB2rL/oeGMClEedJACglQjPofMhal5uP1yWgF+eVF2jZJc=
+=LW91
+-----END PGP SIGNATURE-----
+
+--flaffuju4iqng467--
