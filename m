@@ -4,98 +4,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1523C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73F1120748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B533520738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgHUCAD (ORCPT
+        id S1727093AbgHUCEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:00:03 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:53790 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727070AbgHUCAA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:00:00 -0400
-X-IronPort-AV: E=Sophos;i="5.76,335,1592841600"; 
-   d="scan'208";a="98365593"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 21 Aug 2020 09:59:58 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 0A8DF48990C1;
-        Fri, 21 Aug 2020 09:59:56 +0800 (CST)
-Received: from G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Fri, 21 Aug 2020 09:59:55 +0800
-Received: from localhost.localdomain (10.167.225.206) by
- G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Fri, 21 Aug 2020 09:59:55 +0800
-From:   Hao Li <lihao2018.fnst@cn.fujitsu.com>
-To:     <viro@zeniv.linux.org.uk>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lihao2018.fnst@cn.fujitsu.com>, <y-goto@fujitsu.com>
-Subject: [PATCH] fs: Kill DCACHE_DONTCACHE dentry even if DCACHE_REFERENCED is set
-Date:   Fri, 21 Aug 2020 09:59:53 +0800
-Message-ID: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.28.0
+        Thu, 20 Aug 2020 22:04:40 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10247 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726983AbgHUCEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 22:04:39 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7CF4D46E9A2671E94ED7;
+        Fri, 21 Aug 2020 10:04:36 +0800 (CST)
+Received: from DESKTOP-C3MD9UG.china.huawei.com (10.174.177.253) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 21 Aug 2020 10:04:27 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        dm-devel <dm-devel@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-bcache <linux-bcache@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH 1/1] block: move the PAGE_SECTORS definition into <linux/blkdev.h>
+Date:   Fri, 21 Aug 2020 10:03:45 +0800
+Message-ID: <20200821020345.3358-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 0A8DF48990C1.A0C10
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: lihao2018.fnst@cn.fujitsu.com
+X-Originating-IP: [10.174.177.253]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, DCACHE_REFERENCED prevents the dentry with DCACHE_DONTCACHE
-set from being killed, so the corresponding inode can't be evicted. If
-the DAX policy of an inode is changed, we can't make policy changing
-take effects unless dropping caches manually.
+There are too many PAGE_SECTORS definitions, and all of them are the
+same. It looks a bit of a mess. So why not move it into <linux/blkdev.h>,
+to achieve a basic and unique definition.
 
-This patch fixes this problem and flushes the inode to disk to prepare
-for evicting it.
-
-Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- fs/dcache.c | 3 ++-
- fs/inode.c  | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/block/brd.c           | 1 -
+ drivers/block/null_blk_main.c | 1 -
+ drivers/md/bcache/util.h      | 2 --
+ include/linux/blkdev.h        | 5 +++--
+ include/linux/device-mapper.h | 1 -
+ 5 files changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/fs/dcache.c b/fs/dcache.c
-index ea0485861d93..486c7409dc82 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -796,7 +796,8 @@ static inline bool fast_dput(struct dentry *dentry)
- 	 */
- 	smp_rmb();
- 	d_flags = READ_ONCE(dentry->d_flags);
--	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
-+	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED
-+			| DCACHE_DONTCACHE;
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index 2723a70eb855936..24c4687694b9f49 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -26,7 +26,6 @@
+ #include <linux/uaccess.h>
  
- 	/* Nothing to do? Dropping the reference was all we needed? */
- 	if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
-diff --git a/fs/inode.c b/fs/inode.c
-index 72c4c347afb7..5218a8aebd7f 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -1632,7 +1632,7 @@ static void iput_final(struct inode *inode)
- 	}
+ #define PAGE_SECTORS_SHIFT	(PAGE_SHIFT - SECTOR_SHIFT)
+-#define PAGE_SECTORS		(1 << PAGE_SECTORS_SHIFT)
  
- 	state = inode->i_state;
--	if (!drop) {
-+	if (!drop || (drop && (inode->i_state & I_DONTCACHE))) {
- 		WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
- 		spin_unlock(&inode->i_lock);
+ /*
+  * Each block ramdisk device has a radix_tree brd_pages of pages that stores
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 47a9dad880af2aa..0624a26b86453ce 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -12,7 +12,6 @@
+ #include "null_blk.h"
+ 
+ #define PAGE_SECTORS_SHIFT	(PAGE_SHIFT - SECTOR_SHIFT)
+-#define PAGE_SECTORS		(1 << PAGE_SECTORS_SHIFT)
+ #define SECTOR_MASK		(PAGE_SECTORS - 1)
+ 
+ #define FREE_BATCH		16
+diff --git a/drivers/md/bcache/util.h b/drivers/md/bcache/util.h
+index c029f7443190805..55196e0f37c32c6 100644
+--- a/drivers/md/bcache/util.h
++++ b/drivers/md/bcache/util.h
+@@ -15,8 +15,6 @@
+ 
+ #include "closure.h"
+ 
+-#define PAGE_SECTORS		(PAGE_SIZE / 512)
+-
+ struct closure;
+ 
+ #ifdef CONFIG_BCACHE_DEBUG
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index bb5636cc17b91a7..b068dfc5f2ef0ab 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -949,11 +949,12 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
+  * multiple of 512 bytes. Hence these two constants.
+  */
+ #ifndef SECTOR_SHIFT
+-#define SECTOR_SHIFT 9
++#define SECTOR_SHIFT		9
+ #endif
+ #ifndef SECTOR_SIZE
+-#define SECTOR_SIZE (1 << SECTOR_SHIFT)
++#define SECTOR_SIZE		(1 << SECTOR_SHIFT)
+ #endif
++#define PAGE_SECTORS		(PAGE_SIZE / SECTOR_SIZE)
+ 
+ /*
+  * blk_rq_pos()			: the current sector
+diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
+index 93096e524e43945..ffccce9b700c326 100644
+--- a/include/linux/device-mapper.h
++++ b/include/linux/device-mapper.h
+@@ -143,7 +143,6 @@ typedef size_t (*dm_dax_copy_iter_fn)(struct dm_target *ti, pgoff_t pgoff,
+ 		void *addr, size_t bytes, struct iov_iter *i);
+ typedef int (*dm_dax_zero_page_range_fn)(struct dm_target *ti, pgoff_t pgoff,
+ 		size_t nr_pages);
+-#define PAGE_SECTORS (PAGE_SIZE / 512)
+ 
+ void dm_error(const char *message);
  
 -- 
-2.28.0
-
+1.8.3
 
 
