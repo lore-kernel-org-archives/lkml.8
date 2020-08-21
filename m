@@ -2,104 +2,209 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46914C433E4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C22C433E3
 	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27033208E4
+	by mail.kernel.org (Postfix) with ESMTP id 0A29B208B3
 	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:45:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mV8MyBfw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HJhRdAdj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgHUDpJ (ORCPT
+        id S1727879AbgHUDpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:45:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgHUDpF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:45:05 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 672FBC061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 20:45:05 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id k4so301690ilr.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 20:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pjb3qXMqNGgbJ/lSuknPKaxC91VgiCH9RpbBjdcDS+8=;
-        b=mV8MyBfwdtBHyzYdMge8jfhsn0YXfWoqfrEOge4JH25XoMui3ok4QyrAfAHSRsxDUD
-         BbFoOhjLpPdqki5bLodj0gyNJif5RCd8HiuIHXg/rtUVRQfOaacVwr1i7upVDHR7DV47
-         ABbgHTY/zwpTVpqbyL2Rccs5IRsNy4N2lC2NMl6a8U1FTWRInZlBE0gv7Mf8fE83Ea60
-         bvmlXqd4QCjdqXHPvlv83QOdA1U4U/JgS3aS7rF4GCoNF0hg/sXgFB9bk08YuZ/PZbnw
-         Lj24IFQ3UUP1UNc7Fr5GwdXe8BoIMFMFVfqI4bTsaH4y2/VSJQPMj8BotrkS+lv3C8v7
-         dZOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pjb3qXMqNGgbJ/lSuknPKaxC91VgiCH9RpbBjdcDS+8=;
-        b=jQg6phyKf0EYlfS+Z/wu/ifzUH6F0S4mf4rj7xQKfGbhfNgEa+uDzuntdkZnNo3/6k
-         U+ca+KbclDYvQHwT1ygkmBxeOEVGJ78KLU/Dl41JcYKKrIKsbd4VnjxmRajxVY7Tjo99
-         f+o6lVHqnmKNJmjKVtyg8Vx37RtbcY4lFjUBkR1llMSC8dkD18GdkDKw3diEXIoBys3k
-         2HzvdIuJDp3dUXqsefpld6T9XSXP5/up0LinXrY0fhc8XrkbnOAu+1H3V7MmrB79Fva/
-         kfsSYcKIYIz/XunTqx2kCqsoFvNUB1ubrY1wtlgYX7os8ynas/x1MuYinSVd8Zpi+VH5
-         c+0w==
-X-Gm-Message-State: AOAM5335seHIY+F4qfLo+ZZvYNyAKmi2rjnxYiHhEcRUtN3xURNymCsU
-        oqQGQ1hzsrFWGHTqQUUI0qA=
-X-Google-Smtp-Source: ABdhPJyQO2gsgp9hegbJXCRacpvIWQr1eAIAyQvGnHxGPvbmUrWyvaCsC/lHY6qQXi/ljXI9Zed6fg==
-X-Received: by 2002:a92:2901:: with SMTP id l1mr949385ilg.306.1597981503759;
-        Thu, 20 Aug 2020 20:45:03 -0700 (PDT)
-Received: from localhost.localdomain (x-128-101-215-112.reshalls.umn.edu. [128.101.215.112])
-        by smtp.gmail.com with ESMTPSA id c90sm390227ilf.30.2020.08.20.20.45.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 20:45:03 -0700 (PDT)
-From:   George Acosta <acostag.ubuntu@gmail.com>
-To:     acostag.ubuntu@gmail.com
-Cc:     Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
+        Thu, 20 Aug 2020 23:45:04 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:20819 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727090AbgHUDpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 23:45:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597981502; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=OW2AZSzjeECH0FRhszUqd7yzqFYJ3Uvmi7lh2FY0IN0=; b=HJhRdAdj2TXCxNSBixeK4hEkOcGy7grChfbZSk0W6Hxrcb772J2l1JQ696rCLGsoioJ+oULX
+ 5W3qrG3rdNm7ayGfLJLiA3c5VHHU3krKyt+D7J8fJLMBklM5HaW1D0otvmjKxddOBhJoLSNL
+ SO82aOnS5neFF0l1xGCOWiRx2xM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f3f433dc3a55812b12abd32 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 Aug 2020 03:45:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D92D2C433AF; Fri, 21 Aug 2020 03:45:01 +0000 (UTC)
+Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tingwei)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 81ABDC433CA;
+        Fri, 21 Aug 2020 03:44:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 81ABDC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
+From:   Tingwei Zhang <tingwei@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mike Leach <mike.leach@linaro.org>
+Cc:     Tingwei Zhang <tingwei@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Kim Phillips <kim.phillips@arm.com>,
+        Mian Yousaf Kaukab <ykaukab@suse.de>, tsoni@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mao Jinlong <jinlmao@codeaurora.org>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] rapidio: fix get device imbalance on error
-Date:   Thu, 20 Aug 2020 22:44:57 -0500
-Message-Id: <20200821034458.22472-1-acostag.ubuntu@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH v10 00/24] coresight: allow to build coresight as modules
+Date:   Fri, 21 Aug 2020 11:44:21 +0800
+Message-Id: <20200821034445.967-1-tingwei@codeaurora.org>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the imbalance in mport_cdev_open.
-Call put_device in error path to balance the
-refcount that increased by the get_device.
+Allow to build coresight as modules. This gives developers the feasibility to
+test their code without reboot.
 
-Fixes: e8de370188d0 ("rapidio: add mport char device driver")
-Signed-off-by: George Acosta <acostag.ubuntu@gmail.com>
----
- drivers/rapidio/devices/rio_mport_cdev.c | 1 +
- 1 file changed, 1 insertion(+)
+This series is based on below two series.
 
-diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
-index c07ceec3c6d4..3b68e00eb40f 100644
---- a/drivers/rapidio/devices/rio_mport_cdev.c
-+++ b/drivers/rapidio/devices/rio_mport_cdev.c
-@@ -1908,6 +1908,7 @@ static int mport_cdev_open(struct inode *inode, struct file *filp)
- 			  sizeof(struct rio_event) * MPORT_EVENT_DEPTH,
- 			  GFP_KERNEL);
- 	if (ret < 0) {
-+		put_device(&chdev->dev);
- 		dev_err(&chdev->dev, DRV_NAME ": kfifo_alloc failed\n");
- 		ret = -ENOMEM;
- 		goto err_fifo;
+ - "coresight: allow to build components as modules"
+   https://lkml.org/lkml/2018/6/5/989
+ - "coresight: make drivers modular"
+   https://lkml.org/lkml/2020/1/17/468
+
+Change from v9:
+Fix warning reported by kernel test robot <lkp@intel.com>
+Rebase to coresight-next
+
+Change from v8:
+Protect etmdrvdata[] by modifying it on relevant CPU  (Mathieu and Suzuki)
+Grab the device before allocating memory for the node (Mathieu)
+Add author of coresight core driver (Mathieu)
+
+Change from v7:
+Depends on below change for ETM hotplug (Sai)
+https://lore.kernel.org/linux-arm-kernel/20200729051310.18436-1-saiprakash.ranjan@codeaurora.org/
+Add mutex lock to protect etmdrvdata[] (Suzuki)
+Add helper function coresight_get_ref()	(Suzuki)
+Reorg replicator and funnel change. Use two patches to support these
+two drivers. (Suzuki)
+Add fix tag to "coresight: etm: perf: Fix warning caused by etm_setup_aux
+failure" (Suzuki)
+Update author of "coresight: cti: Fix bug clearing sysfs links on callback"
+
+Change from v6:
+Correct module description for CATU (Mike)
+Check ect_ret equals 0 and set ect_enabled flag (Mike)
+Add Tested-by and Reviewed-by from Mike
+
+Change from v5:
+Add below CTI clean up change from Mike into series
+ -https://lists.linaro.org/pipermail/coresight/2020-July/004349.html
+Increase module reference count when enabling CTI device (Mike)
+
+Change from v4:
+Fix error handling in coresight_grab_devicei() (Greg)
+Add coresight: cti: Fix remove sysfs link error from Mike
+ -https://lists.linaro.org/pipermail/coresight/2020-July/004275.html
+Move cti_remove_conn_xrefs() into cti_remove() (Mike)
+Align patch subject to coresight: <component>: <description> (Mike)
+
+Change from v3:
+Rebase to coresight-next (Mike and Mathieu)
+Reorder try_get_module() (Suzuki)
+Clean up etmdrvdata[] in device remote path (Mike)
+Move cti_remove_conn_xrefs to cti_remove (Mike)
+
+Change from v2:
+Rebase to 5.8-rc5. Export coresight_add_sysfs_link and
+coresight_remove_sysfs_link
+Fix one cut and paste error on MODULE_DESCRIPTION of CTI
+
+Change from v1:
+Use try_module_get() to avoid module to be unloaded when device is used
+in active trace session. (Mathieu P)
+
+Change from above two series.
+This series adds the support to dynamically remove module when the device in
+that module is enabled and used by some trace path. It disables all trace
+paths with that device and release the trace path.
+
+Kim Phillips (8):
+  coresight: use IS_ENABLED for CONFIGs that may be modules
+  coresight: etm3x: allow etm3x to be built as a module
+  coresight: etm4x: allow etm4x to be built as a module
+  coresight: etb: allow etb to be built as a module
+  coresight: tpiu: allow tpiu to be built as a module
+  coresight: tmc: allow tmc to be built as a module
+  coresight: allow funnel driver to be built as module
+  coresight: allow replicator driver to be built as module
+
+Mian Yousaf Kaukab (2):
+  coresight: export global symbols
+  coresight: tmc-etr: add function to register catu ops
+
+Mike Leach (2):
+  coresight: cti: Fix remove sysfs link error
+  coresight: cti: Fix bug clearing sysfs links on callback
+
+Tingwei Zhang (12):
+  coresight: cpu_debug: add module name in Kconfig
+  coresight: cpu_debug: define MODULE_DEVICE_TABLE
+  coresight: add coresight prefix to barrier_pkt
+  coresight: add try_get_module() in coresight_grab_device()
+  coresight: stm: allow to build coresight-stm as a module
+  coresight: etm: perf: Fix warning caused by etm_setup_aux failure
+  coresight: cti: add function to register cti associate ops
+  coresight: cti: don't disable ect device if it's not enabled
+  coresight: cti: increase reference count when enabling cti
+  coresight: cti: allow cti to be built as a module
+  coresight: catu: allow catu drivers to be built as modules
+  coresight: allow the coresight core driver to be built as a module
+
+ drivers/hwtracing/coresight/Kconfig           |  54 ++++--
+ drivers/hwtracing/coresight/Makefile          |  22 +--
+ drivers/hwtracing/coresight/coresight-catu.c  |  37 ++++-
+ drivers/hwtracing/coresight/coresight-catu.h  |   2 -
+ .../{coresight.c => coresight-core.c}         | 154 +++++++++++++++---
+ .../hwtracing/coresight/coresight-cpu-debug.c |   2 +
+ .../{coresight-cti.c => coresight-cti-core.c} |  67 ++++++--
+ drivers/hwtracing/coresight/coresight-etb10.c |  28 +++-
+ .../hwtracing/coresight/coresight-etm-perf.c  |  13 +-
+ .../hwtracing/coresight/coresight-etm-perf.h  |   5 +-
+ ...resight-etm3x.c => coresight-etm3x-core.c} |  28 +++-
+ ...resight-etm4x.c => coresight-etm4x-core.c} |  84 +++++++---
+ .../hwtracing/coresight/coresight-funnel.c    |  64 +++++++-
+ .../hwtracing/coresight/coresight-platform.c  |   1 +
+ drivers/hwtracing/coresight/coresight-priv.h  |  24 ++-
+ .../coresight/coresight-replicator.c          |  65 +++++++-
+ drivers/hwtracing/coresight/coresight-stm.c   |  20 ++-
+ drivers/hwtracing/coresight/coresight-sysfs.c |   2 +
+ .../{coresight-tmc.c => coresight-tmc-core.c} |  25 ++-
+ .../hwtracing/coresight/coresight-tmc-etf.c   |   2 +-
+ .../hwtracing/coresight/coresight-tmc-etr.c   |  21 ++-
+ drivers/hwtracing/coresight/coresight-tmc.h   |   3 +
+ drivers/hwtracing/coresight/coresight-tpiu.c  |  20 ++-
+ include/linux/coresight.h                     |   3 +-
+ 24 files changed, 636 insertions(+), 110 deletions(-)
+ rename drivers/hwtracing/coresight/{coresight.c => coresight-core.c} (92%)
+ rename drivers/hwtracing/coresight/{coresight-cti.c => coresight-cti-core.c} (94%)
+ rename drivers/hwtracing/coresight/{coresight-etm3x.c => coresight-etm3x-core.c} (97%)
+ rename drivers/hwtracing/coresight/{coresight-etm4x.c => coresight-etm4x-core.c} (96%)
+ rename drivers/hwtracing/coresight/{coresight-tmc.c => coresight-tmc-core.c} (95%)
+
 -- 
-2.17.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
