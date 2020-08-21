@@ -2,179 +2,108 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F117AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1E5C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5BC12076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3EF2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:24:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BZjKFFxJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JqXFZxUa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgHUAWq (ORCPT
+        id S1726976AbgHUAYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 20:22:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54114 "EHLO
+        Thu, 20 Aug 2020 20:24:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgHUAWm (ORCPT
+        with ESMTP id S1726873AbgHUAYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 20:22:42 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72CF7C061386
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:22:42 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id m8so199436pfh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:22:41 -0700 (PDT)
+        Thu, 20 Aug 2020 20:24:35 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747A9C061386
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:24:35 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id r7so7798vsq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:24:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=JaBnFv8JsCcvYIQ4zapld4yeibcuyrja8X9nWizMp1c=;
-        b=BZjKFFxJrYWLpgWAWQWZDBKLRAci51Q0Su8FjO3iUEFzlyOhqLFNPsvuxixamwrRLs
-         lKZGGf7rLwn47tLUO42ClFCzMBDXdfLXL78W50n+2ZlXdKXDTdRlU5lXHXAw4nbEdKSF
-         UHZOlE43W/n9/caF6jnniuToGVFUgwElEfn7A=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BoAPkEBYmaAIeDj9u6a/t+uZROJQ/iwEEZfJhamo64s=;
+        b=JqXFZxUaR/8edlUJGUO52Awch269UfrFWNvGMK93mUQOAETx/sKo1/K+IKzZlbPPtD
+         FC/yyhxo6uamcC86ikY+GhWAxl94o5iyrh5gjd+wyoJ1XvkEU6IC31LGvsGdpHUoOwyk
+         AtSEo/NfokfaIWnbailAuvhfcA62QkSvHEBw0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=JaBnFv8JsCcvYIQ4zapld4yeibcuyrja8X9nWizMp1c=;
-        b=PrVG50qVPCVcK1RIfPZF3cZ/iKiug6NgUnEtWkJ5I+P3//mNGYZM4c92mZD7Mx5zHp
-         PYlGRmnv3Rc5YR/U4PBi4pXm+wenHaLwCKSs9E4pItzIVRNP2dAHT9sJnYyeY7scaQoa
-         nKW8470kGC7NXbLMThFufIQW6gu5BFf2k7piVcYEg7SvcncMlLEMYpA/MzezUWniyMLV
-         IjUVZ9KqYjGAdofasU65hB1LazcbNh89yOsRujMKqGIAF1Y0csEHzNUYptCs/ajfbBm/
-         z9yxfxhVZpZyKyqxObxX8TM+dF52JucIEg648+bjKCQ5ep0OSon0b2Cpvcvnjwbx/k25
-         6ibg==
-X-Gm-Message-State: AOAM533M05P2kSx8LmvyS/OkE4j5JV8jOixDYyU5fS88bySoey++TUNT
-        6AcSQk0H72TucbHqFOjTcSmcuA==
-X-Google-Smtp-Source: ABdhPJzVcoX75PGXe53amp5g/BCyz0Rr5NOS371Xm2m4glOupRHFGrjG7hJOP7n5c9L/t/5QY67Ssg==
-X-Received: by 2002:a63:925d:: with SMTP id s29mr449060pgn.423.1597969361170;
-        Thu, 20 Aug 2020 17:22:41 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id x127sm249376pfd.86.2020.08.20.17.22.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 17:22:40 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BoAPkEBYmaAIeDj9u6a/t+uZROJQ/iwEEZfJhamo64s=;
+        b=IvouclHOCx0OQovpzToY3yHQf+UbMSajgnzUzGzqIQwXB/Gbu5Hj/5M0OVeOVpzbe0
+         5AHxOJcVW71yzpsSp0jef3Sd/ZS6SUeo6LLgd3BGsfvPCoruJn1mc4DnOaTzIyk7Rzmi
+         RMuNRQXuJLYrLCLbHvTFL5DayE9xaeZ9HeF+AaVkZMU6x0ktB0jmbTNQOApmvglDhAgT
+         MDG/kDaMlNb1XKuDQqKmsF34iBG3n2Tdxaq3QNyxCBn48bHLPWj2IbUQRHM3UMbBcrYy
+         ZHwLMqMpOkKG/mSW9RSYD10oZ3yZIH0St/RsUSpafJ5aJXjjtMZvK6Xh22FzfBCx/39g
+         qB4A==
+X-Gm-Message-State: AOAM530veBELqYLonQLP/NNpyZvvrNL2COowwVVR3Pk4ZuIBxn43yYCS
+        INaZxIgzelBedEMVo/9IddVtuBgkQCVchAqtLfCJLw==
+X-Google-Smtp-Source: ABdhPJx/yetjbX/WSG35PdaTz5v2waeZIWjLe8s9fIBDzpDbJM8KU73V2Tv8PSUGfRhPQCUybR6SXd+XY7xll5u83vw=
+X-Received: by 2002:a67:f787:: with SMTP id j7mr343336vso.79.1597969473610;
+ Thu, 20 Aug 2020 17:24:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200820103522.26242-3-rojay@codeaurora.org>
-References: <20200820103522.26242-1-rojay@codeaurora.org> <20200820103522.26242-3-rojay@codeaurora.org>
-Subject: Re: [PATCH V2 2/2] i2c: i2c-qcom-geni: Add shutdown callback for i2c
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     dianders@chromium.org, saiprakash.ranjan@codeaurora.org,
-        gregkh@linuxfoundation.org, mka@chromium.org,
-        akashast@codeaurora.org, msavaliy@qti.qualcomm.com,
-        skakit@codeaurora.org, rnayak@codeaurora.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        Roja Rani Yarubandi <rojay@codeaurora.org>
-To:     Roja Rani Yarubandi <rojay@codeaurora.org>, wsa@kernel.org
-Date:   Thu, 20 Aug 2020 17:22:39 -0700
-Message-ID: <159796935923.334488.7479152222902825306@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+References: <20200819125832.v2.1.Ie8f0689ec9f449203328b37409d1cf06b565f331@changeid>
+In-Reply-To: <20200819125832.v2.1.Ie8f0689ec9f449203328b37409d1cf06b565f331@changeid>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 21 Aug 2020 08:24:22 +0800
+Message-ID: <CANMq1KC3BC4bbh9YF1r3nfOAJgQp4mVZJ11_77cwFJY9fGK-Dg@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: sdhci-acpi: Fix HS400 tuning for AMDI0040
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     adrian.hunter@intel.com, Akshu.Agrawal@amd.com, chris.wang@amd.com,
+        Nehal-bakulchandra.Shah@amd.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Roja Rani Yarubandi (2020-08-20 03:35:22)
-> If the hardware is still accessing memory after SMMU translation
-> is disabled (as part of smmu shutdown callback), then the
-> IOVAs (I/O virtual address) which it was using will go on the bus
-> as the physical addresses which will result in unknown crashes
-> like NoC/interconnect errors.
->=20
-> So, implement shutdown callback to i2c driver to unmap DMA mappings
-> during system "reboot" or "shutdown".
->=20
-> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+On Thu, Aug 20, 2020 at 3:00 AM Raul E Rangel <rrangel@chromium.org> wrote:
+>
+> The AMD eMMC Controller can only use the tuned clock while in HS200 and
+> HS400 mode. If we switch to a different mode, we need to disable the
+> tuned clock. If we have previously performed tuning and switch back to
+> HS200 or HS400, we can re-enable the tuned clock.
+>
+> Previously the tuned clock was not getting disabled when switching to
+> DDR52 which is part of the HS400 tuning sequence.
+>
+> Fixes: 34597a3f60b1 ("mmc: sdhci-acpi: Add support for ACPI HID of AMD Controller with HS400")
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 > ---
+>
+> Changes in v2:
+> - Added static to amd_sdhci_execute_tuning
+>
+>  drivers/mmc/host/sdhci-acpi.c | 68 +++++++++++++++++++++++++++++------
+>  1 file changed, 58 insertions(+), 10 deletions(-)
+[snip]
+> +               /* DLL is only required for HS400 */
+> +               if (host->timing == MMC_TIMING_MMC_HS400 &&
+> +                   !amd_host->dll_enabled) {
+> +                       trace_printk("%s: Enabling DLL\n", __func__);
 
-I'd still put a Fixes tag because it's fixing the driver when someone
-runs shutdown.
+Please do not use trace_printk in production code [1,2], it is only
+meant for debug use. Consider using dev_dbg.
 
-> Changes in V2:
->  - As per Stephen's comments added seperate function for stop transfer,
->    fixed minor nitpicks.
->=20
->  drivers/i2c/busses/i2c-qcom-geni.c | 43 ++++++++++++++++++++++++++++++
->  include/linux/qcom-geni-se.h       |  5 ++++
->  2 files changed, 48 insertions(+)
->=20
-> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-=
-qcom-geni.c
-> index 1fda5c7c2cfc..d07f2f33bb75 100644
-> --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> @@ -486,6 +486,28 @@ static int geni_i2c_xfer(struct i2c_adapter *adap,
->         return ret;
->  }
-> =20
-> +static void geni_i2c_stop_xfer(struct geni_i2c_dev *gi2c)
-> +{
-> +       u32 val;
-> +       struct geni_se *se =3D &gi2c->se;
-> +
-> +       val =3D readl_relaxed(gi2c->se.base + SE_DMA_DEBUG_REG0);
-> +       if (val & DMA_TX_ACTIVE) {
-> +               geni_i2c_abort_xfer(gi2c);
-> +               gi2c->cur_wr =3D 0;
-> +               if (gi2c->err)
-> +                       geni_i2c_tx_fsm_rst(gi2c);
-> +               geni_se_tx_dma_unprep(se, gi2c->tx_dma, gi2c->xfer_len);
-> +       }
-> +       if (val & DMA_RX_ACTIVE) {
-> +               geni_i2c_abort_xfer(gi2c);
-> +               gi2c->cur_rd =3D 0;
-> +               if (gi2c->err)
-> +                       geni_i2c_rx_fsm_rst(gi2c);
-> +               geni_se_rx_dma_unprep(se, gi2c->rx_dma, gi2c->xfer_len);
-> +       }
-> +}
-> +
->  static u32 geni_i2c_func(struct i2c_adapter *adap)
->  {
->         return I2C_FUNC_I2C | (I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUIC=
-K);
-> @@ -617,6 +639,26 @@ static int geni_i2c_remove(struct platform_device *p=
-dev)
->         return 0;
->  }
-> =20
-> +static void geni_i2c_shutdown(struct platform_device *pdev)
-> +{
-> +       int ret;
-> +       u32 dma;
-> +       struct geni_i2c_dev *gi2c =3D platform_get_drvdata(pdev);
-> +       struct geni_se *se =3D &gi2c->se;
-> +
-> +       ret =3D pm_runtime_get_sync(gi2c->se.dev);
-> +       if (ret < 0) {
-> +               dev_err(gi2c->se.dev, "Failed to resume device: %d\n", re=
-t);
-> +               return;
-> +       }
-> +
-> +       dma =3D readl_relaxed(se->base + SE_GENI_DMA_MODE_EN);
-> +       if (dma)
-> +               geni_i2c_stop_xfer(gi2c);
+[1] https://elixir.bootlin.com/linux/v5.8/source/kernel/trace/trace.c#L3158
+[2] https://elixir.bootlin.com/linux/v5.8/source/include/linux/kernel.h#L766
 
-Any reason the if (dma) check isn't inside geni_i2c_stop_xfer()?
-Checking for dma and then bailing out early should work and keep the
-logic in one function. Then the pm_runtime_sync() call could go in there
-too and if (!dma) goto out. This assumes that we're going to call
-geni_i2c_stop_xfer() from somewhere else, like if a transfer times out
-or something?
-
-> +
-> +       pm_runtime_put_sync_suspend(gi2c->se.dev);
-> +}
-> +
->  static int __maybe_unused geni_i2c_runtime_suspend(struct device *dev)
->  {
->         int ret;
+> +                       sdhci_acpi_amd_hs400_dll(host);
+> +                       amd_host->dll_enabled = true;
+> +               }
+>         }
