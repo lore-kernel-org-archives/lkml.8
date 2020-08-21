@@ -2,138 +2,154 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18C7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73E4D207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 940B8207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:06:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQeLM2ab"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XM5WiqUM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgHUQGY (ORCPT
+        id S1726793AbgHUQGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:06:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59284 "EHLO
+        Fri, 21 Aug 2020 12:06:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgHUQFn (ORCPT
+        with ESMTP id S1726548AbgHUQG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:05:43 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 048E3C061573;
-        Fri, 21 Aug 2020 09:05:43 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u20so1298576pfn.0;
-        Fri, 21 Aug 2020 09:05:42 -0700 (PDT)
+        Fri, 21 Aug 2020 12:06:27 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63DA5C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:06:27 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id a13so1064716vso.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:06:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=wapcx/5Vbh5G639AQDnOiyGrJZXaNQ8MTw86eBzSth4=;
-        b=TQeLM2abya+0luxj7HKY8kjrGpvsQOQb7hLsKu7wcSQ53pUVeHHBqDWbwhLpWqyCQo
-         2Hcyhj+QSe126y2yZWjYu2bxy+OXc6TG6xZd4dPFlk2d06V05bkGqBXUjQz1zcyJk/DP
-         651R54ipy9IstrkDRDpsqxm6PXlTD+1LxtS4CCEqaBQ4XR3ePQUtfIaDtR9UIJr8Do3A
-         exbBJDmjDT4lfc5HjXehWx2SApo9psgKlC78TsTh7KBv81soMzOKrKf3ikGKmc6msDAl
-         h+gYub/StWGMQSLC4a0Gdg+P6AW3PZrBA9uOaFSLhFSL/QEEZvclEg4V3SZiTawYiy2B
-         AC2Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b7LMvTJRCBEy3uOnWRZT0zK9P07GM4iF4nxCqVfim8k=;
+        b=XM5WiqUM8GbZZWeaOuKkTmam3WvoxctYZV5DRa4dkgylCOr+Rseuisg062z5LgeG1P
+         cJco8xFaQWvWV6H3T8sJ69chqVgjazfM6SdYNODrXvyRCEDvLw4btsIpd5YUgypTUdml
+         RkmTqQ2iD7gVLxv/e3DZyo47BC2INp7QfIxaOytfUXR5OSBrGLA6OP+8fHfHPkbiUfgp
+         pvjPpGCCaZ71NEql+Gt2TnaXEJwgpYPyKjP7H0voySET5Ym5fEno9kR2UG63FDovPsl/
+         0neZla1O0l+BnfvPd39VsViQUkTk2cLtmnx38rn9B5h47bipQXkmULEYWC0iNy2DdzTw
+         31Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=wapcx/5Vbh5G639AQDnOiyGrJZXaNQ8MTw86eBzSth4=;
-        b=cboC4WAqR5fNzDib+4WFue9QkX+9bnjC9PI1HuJq7nigd+eu2CARPxv/rxxlgjO0kO
-         eVQ7FSYOkDre0BbRr3jiLijCYwxwX15Mlz8s5EseCuXrsck8825pizL92HiLmzG9fKg4
-         zxCv/I6yVsza9eskSmAhQjpqfouI4Sy8XgksBoanI4ezAWT2jWyxttWs6twsm4RpxLmn
-         S5KWfdok0EzBAKe5N9L3Wo9kCqyGHZ2iNAQ3aC7SJyJVcqyrAx2/tOzk+ck6/bSluzXs
-         Pa06WhhRxk4K7MBiZ8J3mNS5QEAh2fgpFdq5l4ITnefWLNDzmhQSTe9JLlwi1ns08/8l
-         pV5Q==
-X-Gm-Message-State: AOAM530lJDHMxAX8a1Yu2RxVLoJ99vCS1DPXd300FJmsI1QIgYDoQwBn
-        G1/y8F5Jwn1cZQ3RGUdXOgY=
-X-Google-Smtp-Source: ABdhPJx/NdttpYzCAL4MKwJ9Rj5q/al1KK3HvjwJptRJw92UrEyk3IkxiX8LfzHQNcRQgmFKRKonmw==
-X-Received: by 2002:a63:5c8:: with SMTP id 191mr2708428pgf.244.1598025942564;
-        Fri, 21 Aug 2020 09:05:42 -0700 (PDT)
-Received: from localhost (61-68-212-105.tpgi.com.au. [61.68.212.105])
-        by smtp.gmail.com with ESMTPSA id e26sm2920498pfj.197.2020.08.21.09.05.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 09:05:42 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 02:05:35 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v6 11/12] mm/vmalloc: Hugepage vmalloc mappings
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>, linux-mm@kvack.org
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Zefan Li <lizefan@huawei.com>
-References: <20200821151216.1005117-1-npiggin@gmail.com>
-        <20200821151216.1005117-12-npiggin@gmail.com>
-        <1e001c2c-6c47-21a9-e920-caf78933b713@gmail.com>
-In-Reply-To: <1e001c2c-6c47-21a9-e920-caf78933b713@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b7LMvTJRCBEy3uOnWRZT0zK9P07GM4iF4nxCqVfim8k=;
+        b=HfWYmimHIUyn1YSE/xEaaWJtmXYjNP8PEHlRsCMYtmphiwj5is25AuA/4dhrX7h/cZ
+         iblm+Lz9AtEdBQu3Fs71/2nvS7RMTH/okFKbPE3c8d3PqoixGmeINqwDtokd8JzkJanA
+         bEMZ4ohT0FMw3XxhBathBwte99OZ/UDORQwS8dsXRNtBzdCAfiNordro52KbiUp3F5A+
+         +R5MAnxtHXj07Vfm/WGMV+TvDeFq7zyCSHmkPgQFd9UTPyyPpZbLd8sLOVB1azA98oSL
+         jgSVIu7t7T2ihlC68RxtPKgC9XcWiKVID5A6KhhGlwGxFFc/dbP7Ql45fJDpYFyB4MPA
+         nc2g==
+X-Gm-Message-State: AOAM531rU4xXw96ivqkM8EpPM3QsrQlbtjOflF9Y7RC03IM2z9S3/BtZ
+        h2ZChv3XMeKDZOqbdtPglX9kP/ZmEW0maCJrICghVQ==
+X-Google-Smtp-Source: ABdhPJwJp9Y7eAvqM2EcEoZSaYF8tzqoAMXUXqdQJN+Vexb2/46sXF/P38JLaCGmhGPvKT+DFFarr66O1p/K/nONX9o=
+X-Received: by 2002:a67:ff92:: with SMTP id v18mr2543591vsq.221.1598025985891;
+ Fri, 21 Aug 2020 09:06:25 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <1598025275.jd6s9py77x.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <87d03lxysr.fsf@x220.int.ebiederm.org> <20200820132631.GK5033@dhcp22.suse.cz>
+ <20200820133454.ch24kewh42ax4ebl@wittgenstein> <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
+ <20200820140054.fdkbotd4tgfrqpe6@wittgenstein> <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
+ <87k0xtv0d4.fsf@x220.int.ebiederm.org> <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
+ <20200820162645.GP5033@dhcp22.suse.cz> <87r1s0txxe.fsf@x220.int.ebiederm.org>
+ <20200821111558.GG4546@redhat.com> <CAJuCfpF_GhTy5SCjxqyqTFUrJNaw3UGJzCi=WSCXfqPAcbThYg@mail.gmail.com>
+In-Reply-To: <CAJuCfpF_GhTy5SCjxqyqTFUrJNaw3UGJzCi=WSCXfqPAcbThYg@mail.gmail.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Fri, 21 Aug 2020 09:06:14 -0700
+Message-ID: <CAJuCfpG06_KLhQyg9N84bRQOdvG27uAZ2oBDEQPR-OnZeNJd1w@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Tim Murray <timmurray@google.com>, mingo@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com,
+        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
+        adobriyan@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de,
+        John Johansen <john.johansen@canonical.com>,
+        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Eric Dumazet's message of August 22, 2020 1:38 am:
->=20
-> On 8/21/20 8:12 AM, Nicholas Piggin wrote:
->> Support huge page vmalloc mappings. Config option HAVE_ARCH_HUGE_VMALLOC
->> enables support on architectures that define HAVE_ARCH_HUGE_VMAP and
->> supports PMD sized vmap mappings.
->>=20
->> vmalloc will attempt to allocate PMD-sized pages if allocating PMD size =
-or
->> larger, and fall back to small pages if that was unsuccessful.
->>=20
->> Allocations that do not use PAGE_KERNEL prot are not permitted to use hu=
-ge
->> pages, because not all callers expect this (e.g., module allocations vs
->> strict module rwx).
->>=20
->> This reduces TLB misses by nearly 30x on a `git diff` workload on a 2-no=
-de
->> POWER9 (59,800 -> 2,100) and reduces CPU cycles by 0.54%.
->>=20
->> This can result in more internal fragmentation and memory overhead for a
->> given allocation, an option nohugevmalloc is added to disable at boot.
->>=20
->>
->=20
-> Thanks for working on this stuff, I tried something similar in the past,
-> but could not really do more than a hack.
-> ( https://lkml.org/lkml/2016/12/21/285 )
+On Fri, Aug 21, 2020 at 8:28 AM Suren Baghdasaryan <surenb@google.com> wrote:
+>
+> On Fri, Aug 21, 2020 at 4:16 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > On 08/20, Eric W. Biederman wrote:
+> > >
+> > > That said if we are going for a small change why not:
+> > >
+> > >       /*
+> > >        * Make sure we will check other processes sharing the mm if this is
+> > >        * not vfrok which wants its own oom_score_adj.
+> > >        * pin the mm so it doesn't go away and get reused after task_unlock
+> > >        */
+> > >       if (!task->vfork_done) {
+> > >               struct task_struct *p = find_lock_task_mm(task);
+> > >
+> > >               if (p) {
+> > > -                     if (atomic_read(&p->mm->mm_users) > 1) {
+> > > +                     if (atomic_read(&p->mm->mm_users) > p->signal->nr_threads) {
+> >
+> > In theory this needs a barrier to avoid the race with do_exit(). And I'd
+> > suggest to use signal->live, I think signal->nr_threads should die...
+> > Something like
+> >
+> >         bool probably_has_other_mm_users(tsk)
+> >         {
+> >                 return  atomic_read_acquire(&tsk->mm->mm_users) >
+> >                         atomic_read(&tsk->signal->live);
+> >         }
+> >
+> > The barrier implied by _acquire ensures that if we race with the exiting
+> > task and see the result of exit_mm()->mmput(mm), then we must also see
+> > the result of atomic_dec_and_test(signal->live).
+> >
+> > Either way, if we want to fix the race with clone(CLONE_VM) we need other
+> > changes.
+>
+> The way I understand this condition in __set_oom_adj() sync logic is
+> that we would be ok with false positives (when we loop unnecessarily)
+> but we can't tolerate false negatives (when oom_score_adj gets out of
+> sync). With the clone(CLONE_VM) race not addressed we are allowing
+> false negatives and IMHO that's not acceptable because it creates a
+> possibility for userspace to get an inconsistent picture. When
+> developing the patch I did think about using (p->mm->mm_users >
+> p->signal->nr_threads) condition and had to reject it due to that
+> reason.
+>
 
-Oh nice. It might be possible to do some ideas from your patch
-still. Higher order pages smaller than PMD size, or the memory
-policy stuff, perhaps.
+Actually, reviewing again and considering where list_add_tail_rcu is
+happening, maybe the race with clone(CLONE_VM) does not introduce
+false negatives. However a false negative I think will happen when a
+task shares mm with another task and also has an additional thread.
+Shared mm will increment mm_users without adding to signal->live and
+the additional thread will advance signal->live without adding to
+mm_users. As a result these increments will balance themselves and
+(mm->mm_users > signal->live) condition will yield false negative.
 
-> Note that __init alloc_large_system_hash() is used at boot time,
-> when NUMA policy is spreading allocations over all NUMA nodes.
->=20
-> This means that on a dual node system, a hash table should be 50/50 sprea=
-d.
->=20
-> With your patch, if a hashtable is exactly the size of one huge page,
-> the location of this hashtable will be not balanced, this might have some
-> unwanted impact.
-
-In that case it shouldn't because it divides by the number of nodes,
-but it will in general have a bit larger granularity in balancing than
-smaller pages of course.
-
-There's probably a better way to size these important hashes on NUMA. I
-suspect most of the time you have a NUMA machine you actually would
-prefer to use large pages now, even if it means taking up to 2MB more
-memory per node per hash. It's not a great amount and the allocation=20
-size is rather arbitrary anyway.
-
-Thanks,
-Nick
+> >
+> > Oleg.
+> >
