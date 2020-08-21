@@ -2,303 +2,111 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C406C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91F4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21ADF20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB36C20735
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:23:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EMHAgV5I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgKxm2H3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgHUSVs (ORCPT
+        id S1726336AbgHUSX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:21:48 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:42958 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725831AbgHUSVV (ORCPT
+        Fri, 21 Aug 2020 14:23:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgHUSXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:21:21 -0400
-Received: from tusharsu-Ubuntu.lan (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7A7D020B490F;
-        Fri, 21 Aug 2020 11:21:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A7D020B490F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598034079;
-        bh=uWkHzR0ZcqR9l/na6Wym14QYTHMQuhcrOfLOMA/iGiQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EMHAgV5IDY/3C0x3ia5Y0d2ylArOVJMHBaUlGWXWEhro5sJboXYUje3LtFyw00XjO
-         dbHk02UU4JnJMtjcCe34K9mMC9SiwDjR+a3lU38Topi7SEQAq0cpTeAG/UQ5sJepsM
-         INKitX4QfjSO3IF/t4+VvsC46+8eABshRtl9YYdw=
-From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
-To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com, agk@redhat.com, snitzer@redhat.com,
-        gmazyland@gmail.com
-Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
-        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com
-Subject: [PATCH v2 3/3] IMA: define IMA hook to measure critical data from kernel components
-Date:   Fri, 21 Aug 2020 11:21:07 -0700
-Message-Id: <20200821182107.5328-4-tusharsu@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200821182107.5328-1-tusharsu@linux.microsoft.com>
-References: <20200821182107.5328-1-tusharsu@linux.microsoft.com>
+        Fri, 21 Aug 2020 14:23:25 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2749C061573;
+        Fri, 21 Aug 2020 11:23:25 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u128so1472981pfb.6;
+        Fri, 21 Aug 2020 11:23:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=z1l3J4HIwjaymDbG87bFgQjdS5UWloioib/q8SREpNk=;
+        b=jgKxm2H3dmu91ou+hWH8jUo90teTDoqJUzE5K8yC/yLdQLabVo8lvwe+4EVvpoXPQU
+         Pt4fDERjlsRuMxDC+VG61rkO/ycOm3z5g28ZSgI5p8a7NU8zrV8+8uMR0Nb8t4+JYPyQ
+         dbDcmhE9V/Y0PLo2xz1IlAF9C4b3GlSmwLONidpWrXM+srwAMoYyAmhyPdG0Spa9Htlv
+         51FbgUjiYjWYCIfop+HWnyy4Ue9Kv+VE0SoRmnIu9/04cVHOYhzSrleeTi2eFZ4gHOZb
+         b8aBSl3nVs3Eu7pyeVkY5uVHwjUlf16mAvu2aqnbMy9OSq4Ybdrl96jJDdYlyGo+HlRm
+         /3aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=z1l3J4HIwjaymDbG87bFgQjdS5UWloioib/q8SREpNk=;
+        b=nCQnjlT+PRlq2nHA/rr0tYQsq5bUO4PCd7E2cfNhTKhLyEwhOgV6YSdGUwPnmtIOQ5
+         xlmC0/f/XuVaJTvbQ0EvJDKGvoFrYSTDA5zjuS+aFvVQxEFZfvYQLQhpQmcqCbF1faj1
+         mxmUT1friyVBM0BKlbtbJ6PSB3mtxZ6Mh8KbVoEdEQfsmHqbNdVxsFdYUY2X+13q88M/
+         ywSAW+1xVofQmqJX0S3zBrgHVq2XMnq0lYtoTfElxbmeZtlPFJGdoEj+KQqlynCWyKSs
+         BB+6GdD5i+LsAi/PYFIZIMBgi1E2nJcIq3MQCwqxYKyfQo5XJzL7Ec82h822ffO70F/1
+         VJVA==
+X-Gm-Message-State: AOAM533u2BOuLQU8OeXukj7b9HbYAF7WBjH4rN9QWEg3a59EXHi5x9XQ
+        JgNhhVYWuhMG3zv75/z9r4g=
+X-Google-Smtp-Source: ABdhPJzJuiD3ixxA6vJ/NRGlFHb2PXkNQM1SMpjW6/zkgEg4SKvYZ5jB7O5yS6IHs9iQlIHpZAf9Ew==
+X-Received: by 2002:a63:955d:: with SMTP id t29mr3122232pgn.135.1598034205068;
+        Fri, 21 Aug 2020 11:23:25 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:8791])
+        by smtp.gmail.com with ESMTPSA id h19sm2494976pjv.41.2020.08.21.11.23.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 11:23:24 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 11:23:21 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org
+Subject: Re: [PATCH bpf-next v4 28/30] bpf: eliminate rlimit-based memory
+ accounting infra for bpf maps
+Message-ID: <20200821182321.dtkf5wpi4pukbq3w@ast-mbp.dhcp.thefacebook.com>
+References: <20200821150134.2581465-1-guro@fb.com>
+ <20200821150134.2581465-29-guro@fb.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821150134.2581465-29-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, IMA does not provide a generic function to kernel components
-to measure their data. A generic function provided by IMA would
-enable various parts of the kernel with easier and faster on-boarding to
-use IMA infrastructure, would avoid code duplication, and consistent
-usage of IMA policy CRITICAL_DATA+data_sources across the kernel.
+On Fri, Aug 21, 2020 at 08:01:32AM -0700, Roman Gushchin wrote:
+>  
+> diff --git a/tools/testing/selftests/bpf/progs/map_ptr_kern.c b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+> index 473665cac67e..49d1dcaf7999 100644
+> --- a/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+> +++ b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+> @@ -26,17 +26,12 @@ __u32 g_line = 0;
+>  		return 0;	\
+>  })
+>  
+> -struct bpf_map_memory {
+> -	__u32 pages;
+> -} __attribute__((preserve_access_index));
+> -
+>  struct bpf_map {
+>  	enum bpf_map_type map_type;
+>  	__u32 key_size;
+>  	__u32 value_size;
+>  	__u32 max_entries;
+>  	__u32 id;
+> -	struct bpf_map_memory memory;
+>  } __attribute__((preserve_access_index));
 
-Define a generic IMA function ima_measure_critical_data() to measure
-data from various kernel components. Limit the measurement to the
-components that are specified in the IMA policy - 
-CRITICAL_DATA+data_sources.
-Update process_buffer_measurement() to return the status code of the
-operation.
-Introduce a boolean parameter measure_buf_hash to support measuring
-hash of a buffer, instead of the buffer itself. This is useful when
-the buffer being measured is too large, which may result in bloated
-IMA logs.
+hmm. Did you build selftests?
 
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
----
- include/linux/ima.h                          | 11 ++++
- security/integrity/ima/ima.h                 |  7 ++-
- security/integrity/ima/ima_appraise.c        |  2 +-
- security/integrity/ima/ima_asymmetric_keys.c |  2 +-
- security/integrity/ima/ima_main.c            | 65 +++++++++++++++++---
- security/integrity/ima/ima_queue_keys.c      |  3 +-
- 6 files changed, 75 insertions(+), 15 deletions(-)
-
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index d15100de6cdd..136fc02580db 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -26,6 +26,10 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- extern void ima_post_path_mknod(struct dentry *dentry);
- extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
- extern void ima_kexec_cmdline(int kernel_fd, const void *buf, int size);
-+extern int ima_measure_critical_data(const char *event_name,
-+				     const char *event_data_source,
-+				     const void *buf, int buf_len,
-+				     bool measure_buf_hash);
- 
- #ifdef CONFIG_IMA_KEXEC
- extern void ima_add_kexec_buffer(struct kimage *image);
-@@ -104,6 +108,13 @@ static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
- }
- 
- static inline void ima_kexec_cmdline(int kernel_fd, const void *buf, int size) {}
-+static inline int ima_measure_critical_data(const char *event_name,
-+					    const char *event_data_source,
-+					    const void *buf, int buf_len,
-+					    bool measure_buf_hash)
-+{
-+	return -EOPNOTSUPP;
-+}
- #endif /* CONFIG_IMA */
- 
- #ifndef CONFIG_IMA_KEXEC
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 0f4209a92bfb..00b84052c8f1 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -266,9 +266,10 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
- 			   struct evm_ima_xattr_data *xattr_value,
- 			   int xattr_len, const struct modsig *modsig, int pcr,
- 			   struct ima_template_desc *template_desc);
--void process_buffer_measurement(struct inode *inode, const void *buf, int size,
--				const char *eventname, enum ima_hooks func,
--				int pcr, const char *func_data);
-+int process_buffer_measurement(struct inode *inode, const void *buf, int size,
-+			       const char *eventname, enum ima_hooks func,
-+			       int pcr, const char *func_data,
-+			       bool measure_buf_hash);
- void ima_audit_measurement(struct integrity_iint_cache *iint,
- 			   const unsigned char *filename);
- int ima_alloc_init_template(struct ima_event_data *event_data,
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index 372d16382960..20adffe5bf58 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -336,7 +336,7 @@ int ima_check_blacklist(struct integrity_iint_cache *iint,
- 		if ((rc == -EPERM) && (iint->flags & IMA_MEASURE))
- 			process_buffer_measurement(NULL, digest, digestsize,
- 						   "blacklisted-hash", NONE,
--						   pcr, NULL);
-+						   pcr, NULL, false);
- 	}
- 
- 	return rc;
-diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-index 1c68c500c26f..a74095793936 100644
---- a/security/integrity/ima/ima_asymmetric_keys.c
-+++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -60,5 +60,5 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
- 	 */
- 	process_buffer_measurement(NULL, payload, payload_len,
- 				   keyring->description, KEY_CHECK, 0,
--				   keyring->description);
-+				   keyring->description, false);
- }
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index c870fd6d2f83..a889bf40cb7e 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -733,17 +733,21 @@ int ima_load_data(enum kernel_load_data_id id)
-  * @func: IMA hook
-  * @pcr: pcr to extend the measurement
-  * @func_data: private data specific to @func, can be NULL.
-+ * @measure_buf_hash: if set to true - will measure hash of the buf,
-+ *                    instead of buf
-  *
-  * Based on policy, the buffer is measured into the ima log.
-  */
--void process_buffer_measurement(struct inode *inode, const void *buf, int size,
--				const char *eventname, enum ima_hooks func,
--				int pcr, const char *func_data)
-+int process_buffer_measurement(struct inode *inode, const void *buf, int size,
-+			       const char *eventname, enum ima_hooks func,
-+			       int pcr, const char *func_data,
-+			       bool measure_buf_hash)
- {
- 	int ret = 0;
- 	const char *audit_cause = "ENOMEM";
- 	struct ima_template_entry *entry = NULL;
- 	struct integrity_iint_cache iint = {};
-+	struct integrity_iint_cache digest_iint = {};
- 	struct ima_event_data event_data = {.iint = &iint,
- 					    .filename = eventname,
- 					    .buf = buf,
-@@ -752,13 +756,13 @@ void process_buffer_measurement(struct inode *inode, const void *buf, int size,
- 	struct {
- 		struct ima_digest_data hdr;
- 		char digest[IMA_MAX_DIGEST_SIZE];
--	} hash = {};
-+	} hash = {}, digest_hash = {};
- 	int violation = 0;
- 	int action = 0;
- 	u32 secid;
- 
- 	if (!ima_policy_flag)
--		return;
-+		return 0;
- 
- 	/*
- 	 * Both LSM hooks and auxilary based buffer measurements are
-@@ -772,7 +776,7 @@ void process_buffer_measurement(struct inode *inode, const void *buf, int size,
- 		action = ima_get_action(inode, current_cred(), secid, 0, func,
- 					&pcr, &template, func_data);
- 		if (!(action & IMA_MEASURE))
--			return;
-+			return 0;
- 	}
- 
- 	if (!pcr)
-@@ -787,7 +791,7 @@ void process_buffer_measurement(struct inode *inode, const void *buf, int size,
- 			pr_err("template %s init failed, result: %d\n",
- 			       (strlen(template->name) ?
- 				template->name : template->fmt), ret);
--			return;
-+			return ret;
- 		}
- 	}
- 
-@@ -801,6 +805,24 @@ void process_buffer_measurement(struct inode *inode, const void *buf, int size,
- 		goto out;
- 	}
- 
-+	if (measure_buf_hash) {
-+		digest_iint.ima_hash = &digest_hash.hdr;
-+		digest_iint.ima_hash->algo = ima_hash_algo;
-+		digest_iint.ima_hash->length = hash_digest_size[ima_hash_algo];
-+
-+		ret = ima_calc_buffer_hash(hash.hdr.digest,
-+					   iint.ima_hash->length,
-+					   digest_iint.ima_hash);
-+		if (ret < 0) {
-+			audit_cause = "digest_hashing_error";
-+			goto out;
-+		}
-+
-+		event_data.iint = &digest_iint;
-+		event_data.buf = hash.hdr.digest;
-+		event_data.buf_len = iint.ima_hash->length;
-+	}
-+
- 	ret = ima_alloc_init_template(&event_data, &entry, template);
- 	if (ret < 0) {
- 		audit_cause = "alloc_entry";
-@@ -819,7 +841,7 @@ void process_buffer_measurement(struct inode *inode, const void *buf, int size,
- 					func_measure_str(func),
- 					audit_cause, ret, 0, ret);
- 
--	return;
-+	return ret;
- }
- 
- /**
-@@ -842,10 +864,35 @@ void ima_kexec_cmdline(int kernel_fd, const void *buf, int size)
- 		return;
- 
- 	process_buffer_measurement(file_inode(f.file), buf, size,
--				   "kexec-cmdline", KEXEC_CMDLINE, 0, NULL);
-+				   "kexec-cmdline", KEXEC_CMDLINE, 0, NULL,
-+				   false);
- 	fdput(f);
- }
- 
-+/**
-+ * ima_measure_critical_data - measure critical data
-+ * @event_name: name for the given data
-+ * @event_data_source: name of the event data source
-+ * @buf: pointer to buffer containing data to measure
-+ * @buf_len: length of buffer(in bytes)
-+ * @measure_buf_hash: if set to true - will measure hash of the buf,
-+ *                    instead of buf
-+ *
-+ * Buffers can only be measured, not appraised.
-+ */
-+int ima_measure_critical_data(const char *event_name,
-+			      const char *event_data_source,
-+			      const void *buf, int buf_len,
-+			      bool measure_buf_hash)
-+{
-+	if (!event_name || !event_data_source || !buf || !buf_len)
-+		return -EINVAL;
-+
-+	return process_buffer_measurement(NULL, buf, buf_len, event_name,
-+					  CRITICAL_DATA, 0, event_data_source,
-+					  measure_buf_hash);
-+}
-+
- static int __init init_ima(void)
- {
- 	int error;
-diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
-index 69a8626a35c0..c2f2ad34f9b7 100644
---- a/security/integrity/ima/ima_queue_keys.c
-+++ b/security/integrity/ima/ima_queue_keys.c
-@@ -162,7 +162,8 @@ void ima_process_queued_keys(void)
- 						   entry->payload_len,
- 						   entry->keyring_name,
- 						   KEY_CHECK, 0,
--						   entry->keyring_name);
-+						   entry->keyring_name,
-+						   false);
- 		list_del(&entry->list);
- 		ima_free_key_entry(entry);
- 	}
--- 
-2.17.1
-
+progs/map_ptr_kern.c:45:14: error: no member named 'memory' in 'struct bpf_map'
+        VERIFY(map->memory.pages > 0);
+               ~~~  ^
+progs/map_ptr_kern.c:25:8: note: expanded from macro 'VERIFY'
