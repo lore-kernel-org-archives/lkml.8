@@ -2,143 +2,165 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB70C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC01C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 829BB2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:41:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597992096;
-	bh=zx1WG7372o1PzR/3ixloWF65ocSDbw/i79bZ5GZdrto=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=xMvpnWGEIvzRbvSl7iOXrYxmPe5OVzubW5O/UZe3D5WE2Nix27ZSFxvfXk8jCdS1A
-	 VAMR0bR+Od03IjJL52/2nNqCxL9DERNQDl9Yo+vsQCUtc60v26jEQQAq8jIFCT1OGX
-	 P8H2tV4i9cO6zdDlYtMwwZ3Yw3s4AFBrhVrgZy04=
+	by mail.kernel.org (Postfix) with ESMTP id C49D420732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgHUGlf (ORCPT
+        id S1727808AbgHUGn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:41:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45490 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 02:43:27 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:47244 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbgHUGle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 02:41:34 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9264120732;
-        Fri, 21 Aug 2020 06:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597992093;
-        bh=zx1WG7372o1PzR/3ixloWF65ocSDbw/i79bZ5GZdrto=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nCS0QGqwHdGXyMA8O6IaQbCQy5vQjpcWkIhd7UOSwZhj0uuEnctoc32wMXe8S0kYC
-         2rd7swzD7dTpFszzAkbNKv6OXKk4xogU1K4YCSZMzlNm5ZHQmBGB05xrckmugfsvMn
-         MXgS9xMSR9WBCRnjRAzxWvn30UaYU60NVWTonAUI=
-Date:   Fri, 21 Aug 2020 01:47:20 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] mwifiex: Use fallthrough pseudo-keyword
-Message-ID: <20200821064720.GA22182@embeddedor>
+        id S1727006AbgHUGn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 02:43:26 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BXsRG1c4HzB09ZS;
+        Fri, 21 Aug 2020 08:43:22 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id JnZ1DZp-S4_A; Fri, 21 Aug 2020 08:43:22 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BXsRG0SVFzB09ZP;
+        Fri, 21 Aug 2020 08:43:22 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 08B3F8B888;
+        Fri, 21 Aug 2020 08:43:23 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id egnliL8Qt-GL; Fri, 21 Aug 2020 08:43:22 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 761948B886;
+        Fri, 21 Aug 2020 08:43:22 +0200 (CEST)
+Subject: Re: [PATCH v2 3/6] powerpc/32s: Only leave NX unset on segments used
+ for modules
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+To:     Andreas Schwab <schwab@linux-m68k.org>
+Cc:     Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1593428200.git.christophe.leroy@csgroup.eu>
+ <7172c0f5253419315e434a1816ee3d6ed6505bc0.1593428200.git.christophe.leroy@csgroup.eu>
+ <87eeo1kmet.fsf@igel.home> <6c480b23-297a-4f3d-daff-962a01b0b54c@csgroup.eu>
+Message-ID: <075dbbdd-46cf-ee95-0c2e-a7b567faa176@csgroup.eu>
+Date:   Fri, 21 Aug 2020 06:43:18 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <6c480b23-297a-4f3d-daff-962a01b0b54c@csgroup.eu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1].
 
-[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/wireless/marvell/mwifiex/cfg80211.c | 8 ++++----
- drivers/net/wireless/marvell/mwifiex/ie.c       | 2 +-
- drivers/net/wireless/marvell/mwifiex/scan.c     | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+On 08/21/2020 05:11 AM, Christophe Leroy wrote:
+> 
+> 
+> Le 21/08/2020 à 00:00, Andreas Schwab a écrit :
+>> On Jun 29 2020, Christophe Leroy wrote:
+>>
+>>> Instead of leaving NX unset on all segments above the start
+>>> of vmalloc space, only leave NX unset on segments used for
+>>> modules.
+>>
+>> I'm getting this crash:
+>>
+>> kernel tried to execute exec-protected page (f294b000) - exploit 
+>> attempt (uid: 0)
+>> BUG: Unable to handle kernel instruction fetch
+>> Faulting instruction address: 0xf294b000
+>> Oops: Kernel access of bad area, sig: 11 [#1]
+>> BE PAGE_SIZE=4K MMU=Hash PowerMac
+>> Modules linked in: pata_macio(+)
+>> CPU: 0 PID: 87 Comm: udevd Not tainted 5.8.0-rc2-test #49
+>> NIP:  f294b000 LR: 0005c60 CTR: f294b000
+>> REGS: f18d9cc0 TRAP: 0400  Not tainted  (5.8.0-rc2-test)
+>> MSR:  10009032 <E,ME,IR,DR,RI>  CR: 84222422  XER: 20000000
+>> GPR00: c0005c14 f18d9d78 ef30ca20 00000000 ef0000e0 c00993d0 ef6da038 
+>> 0000005e
+>> GPR08: c09050b8 c08b0000 00000000 f18d9d78 44222422 10072070 00000000 
+>> 0fefaca4
+>> GPR16: 1006a00c f294d50b 00000120 00000124 c0096ea8 0000000e ef2776c0 
+>> ef2776e4
+>> GPR24: f18fd6e8 00000001 c086fe64 c086fe04 00000000 c08b0000 f294b000 
+>> ffffffff
+>> NIP [f294b000] pata_macio_init+0x0/0xc0 [pata_macio]
+>> LR [c0005c60] do_one_initcall+0x6c/0x160
+>> Call Trace:
+>> [f18d9d78] [c0005c14] do_one_initcall+0x20/0x160 (unreliable)
+>> [f18d9dd8] [c009a22c] do_init_module+0x60/0x1c0
+>> [f18d9df8] [c00993d8] load_module+0x16a8/0x1c14
+>> [f18d9ea8] [c0099aa4] sys_finit_module+0x8c/0x94
+>> [f18d9f38] [c0012174] ret_from_syscall+0x0/0x34
+>> --- interrupt: c01 at 0xfdb4318
+>>     LR = 0xfeee9c0
+>> Instruction dump:
+>> XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
+>> XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX <3d20c08b> 3d40c086 9421ffe0 8129106c
+>> ---[ end trace 85a98cc836109871 ]---
+>>
+> 
+> Please try the patch at 
+> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/07884ed033c31e074747b7eb8eaa329d15db07ec.1596641219.git.christophe.leroy@csgroup.eu/ 
+> 
+> 
+> And if you are using KAsan, also take 
+> https://patchwork.ozlabs.org/project/linuxppc-dev/patch/6eddca2d5611fd57312a88eae31278c87a8fc99d.1596641224.git.christophe.leroy@csgroup.eu/ 
+> 
+> 
+> Allthough I have some doubt that it will fix it, because the faulting 
+> instruction address is at 0xf294b000 which is within the vmalloc area. 
+> In the likely case the patch doesn't fix the issue, can you provide your 
+> .config and a dump of /sys/kernel/debug/powerpc/segment_registers (You 
+> have to have CONFIG_PPC_PTDUMP enabled for that) and also the below part 
+> from boot log.
+> 
+> [    0.000000] Memory: 509556K/524288K available (7088K kernel code, 
+> 592K rwdata, 1304K rodata, 356K init, 803K bss, 14732K reserved, 0K 
+> cma-reserved)
+> [    0.000000] Kernel virtual memory layout:
+> [    0.000000]   * 0xff7ff000..0xfffff000  : fixmap
+> [    0.000000]   * 0xff7fd000..0xff7ff000  : early ioremap
+> [    0.000000]   * 0xe1000000..0xff7fd000  : vmalloc & ioremap
+> 
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-index 96848fa0e417..a6b9dc6700b1 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-@@ -1163,7 +1163,7 @@ mwifiex_cfg80211_change_virtual_intf(struct wiphy *wiphy,
- 		case NL80211_IFTYPE_UNSPECIFIED:
- 			mwifiex_dbg(priv->adapter, INFO,
- 				    "%s: kept type as IBSS\n", dev->name);
--			/* fall through */
-+			fallthrough;
- 		case NL80211_IFTYPE_ADHOC:	/* This shouldn't happen */
- 			return 0;
- 		default:
-@@ -1194,7 +1194,7 @@ mwifiex_cfg80211_change_virtual_intf(struct wiphy *wiphy,
- 		case NL80211_IFTYPE_UNSPECIFIED:
- 			mwifiex_dbg(priv->adapter, INFO,
- 				    "%s: kept type as STA\n", dev->name);
--			/* fall through */
-+			fallthrough;
- 		case NL80211_IFTYPE_STATION:	/* This shouldn't happen */
- 			return 0;
- 		default:
-@@ -1217,7 +1217,7 @@ mwifiex_cfg80211_change_virtual_intf(struct wiphy *wiphy,
- 		case NL80211_IFTYPE_UNSPECIFIED:
- 			mwifiex_dbg(priv->adapter, INFO,
- 				    "%s: kept type as AP\n", dev->name);
--			/* fall through */
-+			fallthrough;
- 		case NL80211_IFTYPE_AP:		/* This shouldn't happen */
- 			return 0;
- 		default:
-@@ -1257,7 +1257,7 @@ mwifiex_cfg80211_change_virtual_intf(struct wiphy *wiphy,
- 		case NL80211_IFTYPE_UNSPECIFIED:
- 			mwifiex_dbg(priv->adapter, INFO,
- 				    "%s: kept type as P2P\n", dev->name);
--			/* fall through */
-+			fallthrough;
- 		case NL80211_IFTYPE_P2P_CLIENT:
- 		case NL80211_IFTYPE_P2P_GO:
- 			return 0;
-diff --git a/drivers/net/wireless/marvell/mwifiex/ie.c b/drivers/net/wireless/marvell/mwifiex/ie.c
-index 811abe963af2..40e99eaf5a30 100644
---- a/drivers/net/wireless/marvell/mwifiex/ie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/ie.c
-@@ -374,7 +374,7 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
- 						    (const u8 *)hdr,
- 						    token_len))
- 				break;
--			/* fall through */
-+			fallthrough;
- 		default:
- 			if (ie_len + token_len > IEEE_MAX_IE_SIZE) {
- 				err = -EINVAL;
-diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-index 2fb69a590bd8..c2a685f63e95 100644
---- a/drivers/net/wireless/marvell/mwifiex/scan.c
-+++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -1328,7 +1328,7 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
- 
- 		case WLAN_EID_CHANNEL_SWITCH:
- 			bss_entry->chan_sw_ie_present = true;
--			/* fall through */
-+			fallthrough;
- 		case WLAN_EID_PWR_CAPABILITY:
- 		case WLAN_EID_TPC_REPORT:
- 		case WLAN_EID_QUIET:
--- 
-2.27.0
 
+I found the issue, when VMALLOC_END is above 0xf0000000, 
+ALIGN(VMALLOC_END, SZ_256M) is 0 so the test is always false.
+
+The below change should fix it.
+
+diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
+index 82ae9e06a773..d426eaf76bb0 100644
+--- a/arch/powerpc/mm/book3s32/mmu.c
++++ b/arch/powerpc/mm/book3s32/mmu.c
+@@ -194,12 +194,12 @@ static bool is_module_segment(unsigned long addr)
+  #ifdef MODULES_VADDR
+  	if (addr < ALIGN_DOWN(MODULES_VADDR, SZ_256M))
+  		return false;
+-	if (addr >= ALIGN(MODULES_END, SZ_256M))
++	if (addr > ALIGN(MODULES_END, SZ_256M) - 1)
+  		return false;
+  #else
+  	if (addr < ALIGN_DOWN(VMALLOC_START, SZ_256M))
+  		return false;
+-	if (addr >= ALIGN(VMALLOC_END, SZ_256M))
++	if (addr > ALIGN(VMALLOC_END, SZ_256M) - 1)
+  		return false;
+  #endif
+  	return true;
+
+
+Christophe
