@@ -2,136 +2,210 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C3DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90911C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B87207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:01:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NYUuyiJ/"
+	by mail.kernel.org (Postfix) with ESMTP id 6AAF120578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgHUPBv (ORCPT
+        id S1727840AbgHUPCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:01:51 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:23889 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727973AbgHUPBk (ORCPT
+        Fri, 21 Aug 2020 11:02:03 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:36417 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727994AbgHUPAk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:01:40 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 07LF0ju7023139
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:01:39 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=b/m5jWY1NbB4mxmmhibq7W4S7wqq8/R+eSlON0WCK34=;
- b=NYUuyiJ/yVdtAru3/p6Tc+HshT06BF5//TC+IsoT/pFwATlbPu8qlPw2oDMJdbKpR5KW
- m5ypMTKv4fvpOhEUQ26VF8oTh5n4rbZTyPOQkHt1LyUsASr6TG4JfmS0AiRnXLsPSL1+
- 0s4K8O1IN43Yxu2ozEvp8tjUpe/CI1tDOMM= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 331hcc11ve-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:01:39 -0700
-Received: from intmgw001.41.prn1.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 21 Aug 2020 08:01:38 -0700
-Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id 2BA5F3441049; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
-To:     <bpf@vger.kernel.org>
-CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next v4 02/30] bpf: memcg-based memory accounting for bpf progs
-Date:   Fri, 21 Aug 2020 08:01:06 -0700
-Message-ID: <20200821150134.2581465-3-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
-References: <20200821150134.2581465-1-guro@fb.com>
+        Fri, 21 Aug 2020 11:00:40 -0400
+Received: from lhopital-XPS-13-9360.home (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
+        (Authenticated sender: kevin.lhopital@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPA id EA35E100007;
+        Fri, 21 Aug 2020 15:00:37 +0000 (UTC)
+From:   =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= 
+        <kevin.lhopital@bootlin.com>
+To:     linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mripard@kernel.org, wens@csie.org, yong.deng@magewell.com,
+        p.zabel@pengutronix.de, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com,
+        =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= 
+        <kevin.lhopital@bootlin.com>
+Subject: [PATCH 7/7] [NOT FOR MERGE] ARM: dts: sun8i: a83t: bananapi-m3: Enable OV8865 camera
+Date:   Fri, 21 Aug 2020 16:59:35 +0200
+Message-Id: <20200821145935.20346-8-kevin.lhopital@bootlin.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
- priorityscore=1501 suspectscore=38 clxscore=1015 bulkscore=0
- mlxlogscore=518 lowpriorityscore=0 phishscore=0 impostorscore=0
- adultscore=0 mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008210141
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include memory used by bpf programs into the memcg-based accounting.
-This includes the memory used by programs itself, auxiliary data
-and statistics.
+The Bananapi M3 supports a camera module which includes an
+OV8865 sensor connected via the parallel CSI interface and
+an OV8865 sensor connected via MIPI CSI-2.
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
+The I2C2 bus is shared by the two sensors as well as active-low
+reset signal but each sensor has it own shutdown line.
+
+The I2c address for the OV8865 is 0x36.
+
+The bus type is hardcoded to 4 due to the lack of available
+define usable in the device-tree.
+
+Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>
 ---
- kernel/bpf/core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 99 ++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index ed0b3578867c..021fff2df81b 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -77,7 +77,7 @@ void *bpf_internal_load_pointer_neg_helper(const struct=
- sk_buff *skb, int k, uns
-=20
- struct bpf_prog *bpf_prog_alloc_no_stats(unsigned int size, gfp_t gfp_ex=
-tra_flags)
- {
--	gfp_t gfp_flags =3D GFP_KERNEL | __GFP_ZERO | gfp_extra_flags;
-+	gfp_t gfp_flags =3D GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
- 	struct bpf_prog_aux *aux;
- 	struct bpf_prog *fp;
-=20
-@@ -86,7 +86,7 @@ struct bpf_prog *bpf_prog_alloc_no_stats(unsigned int s=
-ize, gfp_t gfp_extra_flag
- 	if (fp =3D=3D NULL)
- 		return NULL;
-=20
--	aux =3D kzalloc(sizeof(*aux), GFP_KERNEL | gfp_extra_flags);
-+	aux =3D kzalloc(sizeof(*aux), GFP_KERNEL_ACCOUNT | gfp_extra_flags);
- 	if (aux =3D=3D NULL) {
- 		vfree(fp);
- 		return NULL;
-@@ -104,7 +104,7 @@ struct bpf_prog *bpf_prog_alloc_no_stats(unsigned int=
- size, gfp_t gfp_extra_flag
-=20
- struct bpf_prog *bpf_prog_alloc(unsigned int size, gfp_t gfp_extra_flags=
-)
- {
--	gfp_t gfp_flags =3D GFP_KERNEL | __GFP_ZERO | gfp_extra_flags;
-+	gfp_t gfp_flags =3D GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
- 	struct bpf_prog *prog;
- 	int cpu;
-=20
-@@ -217,7 +217,7 @@ void bpf_prog_free_linfo(struct bpf_prog *prog)
- struct bpf_prog *bpf_prog_realloc(struct bpf_prog *fp_old, unsigned int =
-size,
- 				  gfp_t gfp_extra_flags)
- {
--	gfp_t gfp_flags =3D GFP_KERNEL | __GFP_ZERO | gfp_extra_flags;
-+	gfp_t gfp_flags =3D GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
- 	struct bpf_prog *fp;
- 	u32 pages, delta;
- 	int ret;
---=20
-2.26.2
+diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+index 9d34eabba121..f7839094695e 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+@@ -85,6 +85,38 @@
+ 		};
+ 	};
+ 
++	reg_ov8865_avdd: ov8865-avdd {
++		compatible = "regulator-fixed";
++		regulator-name = "ov8865-avdd";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		vin-supply = <&reg_dldo4>;
++	};
++
++	reg_ov8865_dovdd: ov8865-dovdd {
++		compatible = "regulator-fixed";
++		regulator-name = "ov8865-dovdd";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		vin-supply = <&reg_dldo4>;
++	};
++
++	reg_ov8865_afvdd: ov8865-afvdd {
++		compatible = "regulator-fixed";
++		regulator-name = "ov8865-afvdd";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		vin-supply = <&reg_dldo4>;
++	};
++
++	reg_ov8865_vdd2: ov8865-vdd2 {
++		compatible = "regulator-fixed";
++		regulator-name = "ov8865-vdd2";
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1200000>;
++		vin-supply = <&reg_eldo1>;
++	};
++
+ 	reg_usb1_vbus: reg-usb1-vbus {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "usb1-vbus";
+@@ -115,10 +147,59 @@
+ 	cpu-supply = <&reg_dcdc3>;
+ };
+ 
++&ccu {
++	assigned-clocks = <&ccu CLK_CSI_MCLK>;
++	assigned-clock-parents = <&osc24M>;
++	assigned-clock-rates = <24000000>;
++};
++
++&csi {
++	pinctrl-names = "default";
++	status = "okay";
++};
++
++&csi_in {
++	mipi_csi2_from_ov8865: endpoint {
++		remote-endpoint = <&ov8865_to_mipi_csi2>;
++		clock-lanes = <0>;
++		data-lanes = <1 2 3 4>;
++		bus-type = <4>;
++	};
++};
++
+ &de {
+ 	status = "okay";
+ };
+ 
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pe_pins>;
++	status = "okay";
++
++	ov8865: camera@36 {
++		compatible = "ovti,ov8865";
++		reg = <0x36>;
++		clocks = <&ccu CLK_CSI_MCLK>;
++		clock-names ="xclk";
++		AVDD-supply = <&reg_ov8865_avdd>;
++		DOVDD-supply = <&reg_ov8865_dovdd>;
++		VDD2-supply = <&reg_ov8865_vdd2>;
++		AFVDD-supply = <&reg_ov8865_afvdd>;
++		powerdown-gpios = <&pio 4 17 GPIO_ACTIVE_LOW>; /* PE17 */
++		reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
++		rotation = <180>;
++
++		port {
++			ov8865_to_mipi_csi2: endpoint {
++				remote-endpoint = <&mipi_csi2_from_ov8865>;
++				data-lanes = <1 2 3 4>;
++				clock-lanes = <0>;
++				bus-type = <4>; /* V4L2_FWNODE_BUS_TYPE_CSI2_DPHY */
++			};
++		};
++	};
++};
++
+ &ehci0 {
+ 	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
+ 	status = "okay";
+@@ -191,6 +272,11 @@
+ 	status = "okay";
+ };
+ 
++&pio {
++	pinctrl-names = "default";
++	pinctrl-0 = <&csi_mclk_pin>;
++};
++
+ &r_cir {
+ 	clock-frequency = <3000000>;
+ 	status = "okay";
+@@ -327,11 +413,24 @@
+ 	regulator-name = "vcc-pd";
+ };
+ 
++&reg_dldo4 {
++	regulator-always-on;
++	regulator-min-microvolt = <2800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "avdd-csi";
++};
++
+ &reg_drivevbus {
+ 	regulator-name = "usb0-vbus";
+ 	status = "okay";
+ };
+ 
++&reg_eldo1 {
++	regulator-min-microvolt = <1200000>;
++	regulator-max-microvolt = <1200000>;
++	regulator-name = "dvdd-csi-r";
++};
++
+ &reg_fldo1 {
+ 	regulator-min-microvolt = <1080000>;
+ 	regulator-max-microvolt = <1320000>;
+-- 
+2.17.1
 
