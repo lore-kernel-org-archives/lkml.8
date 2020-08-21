@@ -2,105 +2,141 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDAFC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F27C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A09A02075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD3720738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598036623;
-	bh=KFrUKI/xkQWwpy87dXjZHNLyICaGFwTl8vubHKQOh8c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nZgszMKveDs3XNUT7Eq5SE1V523jmZEyg1QCNAcMXq7X+ZIWafMUSA+rFDk/QB/A4
-	 44JCdKGjpjBe5PcZeImvFfQwY1otflvBWeU8ljYX0U3SKdMwYTrtdBNuKJ8KIHC5MZ
-	 9+WOA8AbHYPnQm6P7y/IqWmGI0i3qvIdRkUr9SOE=
+	s=default; t=1598036744;
+	bh=Id6R7u3ib9v/1/U8w2giTzJxHZLLpKGgT5f81aloJQY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zVS5L1iodMZyWhnljgBN9+Cu3+Bz4q8jPvpXhRGS1EYX36gm2LB8gULAn5bAyvUHE
+	 lMA9AhMlkF1sDEfNbO6PdHTuave3XhC39uVhKtGUoJ/Ut8ALfN1bnT4oePXq41Ba0z
+	 o06yTHNFkQdkhfxLus/5k6o+GB3EnK63wnVJJa2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgHUTDX (ORCPT
+        id S1726466AbgHUTFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:03:23 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:62808 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgHUTC4 (ORCPT
+        Fri, 21 Aug 2020 15:05:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgHUTFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:02:56 -0400
-Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 07LJ23eT027595;
-        Sat, 22 Aug 2020 04:02:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 07LJ23eT027595
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598036525;
-        bh=DyUxhByC5o5hgSX6EDv5IVyqWsClHjdMK/ZV+YDLY8I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h07vOh/wBtWbLyuCquTttTnX5O1S/Z+7Z0Qkskvxj6Zo7hCiNU4EminTfdrQCCxig
-         Vo7ycScQluiIx51DZoCyVCSObbQuWTo4ElCp8RY7FAgb/fEvqNBGIxn7y5shWOAr1g
-         mprth8lB/2ANgeUfRYmI/BSGfc4W2SPjGIULAIfI2y90QZFL7I8BMGOqHP64K+1Mke
-         2UUeYf+LrFPy8ujCYBVs3mME6h6YA2iKWRCQqRPiHRTb/4Rfwt8K4uQmx0j+6wjJbm
-         NmHdFbsdllbz28S9Inrpi+T7wbMgnVxVWYtxu4nY7FLTPW1EJg+4aKz8UQFI/F8Lb+
-         ryBpapCh9gEyg==
-X-Nifty-SrcIP: [126.90.211.135]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Nathan Huckleberry <nhuck@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Roeder <tmroeder@google.com>,
-        clang-built-linux@googlegroups.com,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/9] gen_compile_commands: parse only the first line of .*.cmd files
-Date:   Sat, 22 Aug 2020 04:01:51 +0900
-Message-Id: <20200821190159.1033740-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821190159.1033740-1-masahiroy@kernel.org>
-References: <20200821190159.1033740-1-masahiroy@kernel.org>
+        Fri, 21 Aug 2020 15:05:42 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2311C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:05:41 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id g6so2977353ljn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:05:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nYAilJKJE/Ww6fPETY0UsPcqYTSdX+KcqzOQ2SZHjHk=;
+        b=govgPlM5hnPkSEwfWGUIYxRmIaYCCF2bJTE78xBfzEYFWIPnokbR5UlRZzXwtuMDBP
+         3GiSRxTe+MNLCrhfBipl0worTfXzuhdTvTP6Gg+IWnDBkSdWt5veGPtmhC5r57CVxwrS
+         LCil9FpOzP42GhiX+Lc1tk9QZDcIjKIcMjeTQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nYAilJKJE/Ww6fPETY0UsPcqYTSdX+KcqzOQ2SZHjHk=;
+        b=uXHMsnmYb6IuX+YOClWXZBKWyD6g/i5KNhZTws0QwFwrE3f9rtIy2eQ/nDWcwm8OB/
+         P+dIcW/m9JfzrUzGLe+57a+TOzUmASby5ClZwTeKQG0BYSLBhL8xaqd3AwZliSN7fRsa
+         wqfODZBQQQ20qElnp5ktgsnuQo/lMSr6Mtd9bgSshEPIjo/6UfWss6BHdJr5oByrgps9
+         Jwvww07iZiYGD0AseB9jo4FyIU9Aps8uDNBqOuYcFyOZ0LoNIWR8UDB7b1iMyQUpKZv6
+         c8j+sfpG1A75yuZwkxYx6Gh3vRLuD0wlAD4WSkdY4Tti2nMB1RkrU7SdwY64VWv9+bPF
+         Uehg==
+X-Gm-Message-State: AOAM532W7ip4yw7SnTmmamEW+0toVT/mmRZ7MIW09nsgjkPqCzCetsdk
+        nEDHDpbGj7gWXIR00WgH1wU97iNS/rzjYA==
+X-Google-Smtp-Source: ABdhPJxuAyvSezu1Wnlo/pz3YudXdushqM7Uw8Hd1p4QvruV89W6Q9o4ukLFmHP6N+cm6OaQRX480w==
+X-Received: by 2002:a2e:91d4:: with SMTP id u20mr1993730ljg.87.1598036739724;
+        Fri, 21 Aug 2020 12:05:39 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id l19sm545227lfg.61.2020.08.21.12.05.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 12:05:36 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id v9so3003275ljk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 12:05:36 -0700 (PDT)
+X-Received: by 2002:a2e:545:: with SMTP id 66mr2338287ljf.285.1598036735955;
+ Fri, 21 Aug 2020 12:05:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAHk-=wit7LDr0tA2eVn7yHHEH76oK=Lfm3tTs8_JxO8XEED4_g@mail.gmail.com>
+ <CAHk-=wifRg0pDhufQFasWa7G3sMHbG0nahnm5yRwvTKpKU9g4A@mail.gmail.com>
+ <20200811214255.GE6353@xz-x1> <CAHk-=wiVN-+P1vOCSMyfGwYQD3hF7A18OJyXgpiMwGDfMaU+8w@mail.gmail.com>
+ <20200820215449.GB358043@xz-x1> <CAHk-=wjGzOjsfmX1Dc=yz6o_+62w4wcTVXX_hia9sHLfsCoxjg@mail.gmail.com>
+ <20200821101333.GA3432@quack2.suse.cz> <CAHk-=whXfL5DtinS42dgtNu6i+xchK_VP+XLprQbu_og2J5Dkw@mail.gmail.com>
+ <20200821154756.GC3432@quack2.suse.cz> <CAHk-=wj-pfzKf3JDe9fr4o_nKYXJXfuYAMFCajwhy0YYYri4Fw@mail.gmail.com>
+ <20200821180848.GA11376@xz-x1> <CAHk-=wj3fY2dch7Ah-MLbJcfU3buoXgJnwc1zWFSjVujSd39GA@mail.gmail.com>
+In-Reply-To: <CAHk-=wj3fY2dch7Ah-MLbJcfU3buoXgJnwc1zWFSjVujSd39GA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 21 Aug 2020 12:05:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj5Oyg0LeAxSw_vizerm=sLd=sHfcVecZMKPZn6kNbbXA@mail.gmail.com>
+Message-ID: <CAHk-=wj5Oyg0LeAxSw_vizerm=sLd=sHfcVecZMKPZn6kNbbXA@mail.gmail.com>
+Subject: Re: [PATCH v3] mm/gup: Allow real explicit breaking of COW
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Jan Kara <jack@suse.cz>, Andrea Arcangeli <aarcange@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        "Maya B . Gokhale" <gokhale2@llnl.gov>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After the allmodconfig build, this script takes about 5 sec on my
-machine. Most of the run-time is consumed for needless regex matching.
+On Fri, Aug 21, 2020 at 11:23 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> But the PageKsm() page_count() issue I didn't even realize. That worries me.
 
-We know the format of .*.cmd file; the first line is the build command.
-There is no need to parse the rest.
+Well, the fix is simple, although I don't love the magic PageKsm
+semantics that hide it from the page count.
 
-With this optimization, now it runs 4 times faster.
+But since (a) a Ksm page is presumably normally shared (ie things like
+all zeroes) and (b) copying should always be safe, just do that.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
----
+The case we *used* to have with trying to reuse the KSM page seems
+like it's not just adding complexity, it's optimizing for entirely the
+wrong case.
 
-Changes in v2:
-  - Remove the unneeded variable 'line'
+Check both before and after getting the page lock, for the same reason
+we do it for the page count.
 
- scripts/gen_compile_commands.py | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+The logic there matches the "reuse swap page", but while that old
+logic may have made sense 20 years ago, the swap cache case should be
+*so* rare these days that it feels completely pointless to try to
+reuse it.
 
-diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
-index c458696ef3a7..1bcf33a93cb9 100755
---- a/scripts/gen_compile_commands.py
-+++ b/scripts/gen_compile_commands.py
-@@ -125,11 +125,8 @@ def main():
-             filepath = os.path.join(dirpath, filename)
- 
-             with open(filepath, 'rt') as f:
--                for line in f:
--                    result = line_matcher.match(line)
--                    if not result:
--                        continue
--
-+                result = line_matcher.match(f.readline())
-+                if result:
-                     try:
-                         entry = process_line(directory, dirpath,
-                                              result.group(1), result.group(2))
--- 
-2.25.1
+Aggressively doing a new allocation, copy, and freeing the old swap
+cache page is quite possibly cheaper than taking the page lock anyway,
+but more importantly, it's not a case that should normally trigger in
+the first place.
 
+That said, looking at this code again, I get the feeling that the
+mapcount check is pointless.
+
+Afaik, page_count() should always be larger than page_mapcount(), so
+if mapcount is > 1, then we'd have caught it with the page_count()
+check.
+
+Hmm? Am I popssibly missing some other subtle special case?
+
+Are there any THP issues? Again, doing the copy should always be the
+safe thing to do, and since we get the page lock for the reuse case I
+think we're ok on that front.
+
+What else possible special cases could we hit?
+
+                Linus
