@@ -2,322 +2,126 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4BAC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CACC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2FC207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F5D920758
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 02:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="PrjjwNbL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kb+OKV7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgHUCkM (ORCPT
+        id S1727050AbgHUCmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:40:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47122 "EHLO
+        Thu, 20 Aug 2020 22:42:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgHUCkK (ORCPT
+        with ESMTP id S1726741AbgHUCma (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:40:10 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58C82C061386
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:40:10 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id x6so676269ybp.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:40:10 -0700 (PDT)
+        Thu, 20 Aug 2020 22:42:30 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0386C061386
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:42:28 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id g20so137402uan.7
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 19:42:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=6rVnCt2FiXUsIQwKt4IS0oDsX5R26yFSWMp0JwpugAM=;
-        b=PrjjwNbLpjEcouLaubzzmkf1YoUpSYJ76d+sUzpngrlbCj38SsXmzSZuebI1R2YobP
-         TWDUVkrxk/el+cRjo+a8ggnKQs5L3iY2t8IdcePzvS/wAbNoAhtyBoKgZPwuF2wS4kqK
-         BbPdOrgmPhwN9H0WybWAD7NwdR90Tu1Z3u1RVhS+GcZiQXsXKjJCXKVIfPEm9Lnq04FI
-         n3egQ2Yu/GJ9lV4tDZc9ARtnhszPrdzwyGnToVOf0dHD9ufI6W3IcpwpzjKVqsNWvVdU
-         gJ4nZ4lKqx05goksC9oFH+DLrG0/vgFC5vQMUlMNQ5chsgQ1QldcqF4IxBb3TxJIxxZw
-         r6jA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KRcYINGeMrkJsnhAghPntwftY8YIQTJq9q8O02Dazyc=;
+        b=Kb+OKV7DQOGsISDsb7ycGgBlHZrAF4j+ubIx9mrQK2Af0qCfrWhkHaXe9SDOd6C2Wz
+         xwlxyuo8RO6ENNuOn6U98HAigUM7CS6hiMIUGJkmnwijoXvc/kFLN/oUVAHbRcuhdUfs
+         SObv7Y3Cbn1hrzcGDCUIrUz42utYsodAo4bhA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=6rVnCt2FiXUsIQwKt4IS0oDsX5R26yFSWMp0JwpugAM=;
-        b=O0T/QQ5bQccBEu+bpDRkLfmwVan+L+j8XI5dB7A8p6iqywJKkIi5fE00COJ52BWzZv
-         oujArnppgcgfm1MzEAnMYpQgAmjdBk5fLuoVkp2jN99jzrbtUcjbJbQ9Wmt5MDr9rzqf
-         6lLGvC1HuN/neM4Y3OthT/MpGC1+oiQvqkamns5fayyV8jKIOlibP9fGLG72drJH6NoR
-         Xs/V1qPOV7Fofd+jU4QjwWsS1G9Rv17oCyTb/lany78h3ktB8rVJNmbI1ieGwPQAncxC
-         wByHkx+YzRfWrP7L1bI3iG/GRBD1o9RaGb6zjtZkQLJH8DAUtKQyPSTQFEb+dCl+SOtp
-         0AYA==
-X-Gm-Message-State: AOAM532dFmKlz0ctxAQ1CoOZUBB2Qs5BhMEQSW4voB2pqbhPCFhqFDna
-        VdbTU05yr9/p3nvIDTyLPWwy4OPmyXY+
-X-Google-Smtp-Source: ABdhPJymeydRCNhqTc9JDCu7EK2Zww/It0EmyhFBLUMikcKGejKs9CISdL7RwXxT2mg84ReiP2IdYUTP7HZ7
-X-Received: from furquan.mtv.corp.google.com ([2620:15c:202:1:7220:84ff:fe09:13a4])
- (user=furquan job=sendgmr) by 2002:a25:414:: with SMTP id 20mr967624ybe.97.1597977609596;
- Thu, 20 Aug 2020 19:40:09 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 19:40:06 -0700
-In-Reply-To: <20200820224551.GX1665100@dtor-ws>
-Message-Id: <20200821024006.3399663-1-furquan@google.com>
-Mime-Version: 1.0
-References: <20200820224551.GX1665100@dtor-ws>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH v2] drivers: input: Use single i2c_transfer transaction when
- using RM_CMD_BANK_SWITCH
-From:   Furquan Shaikh <furquan@google.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        adurbin@google.com, Furquan Shaikh <furquan@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KRcYINGeMrkJsnhAghPntwftY8YIQTJq9q8O02Dazyc=;
+        b=S0wTDoicmJeGKxRgDnjo80pfEQsNpRCFWtQOwnehc0VxvS3UJr5rsNTGiCNJaKHn5T
+         7R1X9nq2x2rk0XtRMW2ABOu6YUxva+XVxCcIarSo+hWAV7Hk4xwhVUxXKoYY8cKq+cql
+         EQq2WpW8Uh+t9UFTZ5wuZ4F0NyYQyikGKSwD6d6gF+KvErdrgyyTqNhTYLFjnAkYEnya
+         ie8xlPPMP/y0CG5Yaq81Obgsgc7xwggOCZGBhN6YCXpdCLsHif4TnX079sAmRGgMCW10
+         FCgn3AgWgcis7BpRB/Lx5UBq/KGCcgmU8cC+8MioPocS0AQHtSR0nHuKOt8GnIgsTXhS
+         SA9w==
+X-Gm-Message-State: AOAM530s60oFulJJyRUfz+pm5+ilfPsL4VPHM+AtiMPrQBuXdbam8LEU
+        W0xlDWwKFvJKAWuMgAOpNum04c852I/2Cre/DwAFPeyYwvcfqA==
+X-Google-Smtp-Source: ABdhPJwQSw+Mu7CDu/qPHEFFWNOTIiJKWxzRL5Kpq8hObaORvbMqMUkA/5RlPy0vT3897R9VKdnBNAYTanM1LbNkPrA=
+X-Received: by 2002:ab0:41:: with SMTP id 59mr392357uai.40.1597977745886; Thu,
+ 20 Aug 2020 19:42:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
+ <20200820170951.v4.3.I066d89f39023956c47fb0a42edf196b3950ffbf7@changeid>
+ <20200820102347.15d2f610@oasis.local.home> <CANMq1KCoEZVj=sjxCqBhqLZKBab57+82=Rk_LN7fc3aCuNHMUw@mail.gmail.com>
+ <20200820203601.4f70bf98@oasis.local.home> <CANMq1KAAgXG9MKMZ_D9zYFV-j0oVreA_AeSw-8FoyJgZ9eWQpg@mail.gmail.com>
+ <20200820215701.667f02b2@oasis.local.home> <f9d33bcaa2eda680752205d3c3690cb6bc421730.camel@perches.com>
+In-Reply-To: <f9d33bcaa2eda680752205d3c3690cb6bc421730.camel@perches.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 21 Aug 2020 10:42:14 +0800
+Message-ID: <CANMq1KDYBbtrrCw6YUeoAPeHyet3L7qM3di9zmULDDRaQR_fZA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
+To:     Joe Perches <joe@perches.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On an AMD chromebook, where the same I2C bus is shared by both Raydium
-touchscreen and a trackpad device, it is observed that interleaving of
-I2C messages when `raydium_i2c_read_message()` is called leads to the
-Raydium touch IC reporting incorrect information. This is the sequence
-that was observed to result in the above issue:
+On Fri, Aug 21, 2020 at 10:36 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Thu, 2020-08-20 at 21:57 -0400, Steven Rostedt wrote:
+> > On Fri, 21 Aug 2020 09:39:19 +0800
+> > Nicolas Boichat <drinkcat@chromium.org> wrote:
+> []
+> > > Some other approaches/ideas:
+> > >  1. Filter all lkml messages that contain trace_printk. Already found
+> > > 1 instance, and I can easily reply to those with a semi-canned answer,
+> > > if I remember to check that filter regularly (not sustainable in the
+> > > long run...).
+> >
+> > Added Joe Perches to the thread.
+> >
+> > We can update checkpatch.pl to complain about a trace_printk() that it
+> > finds in the added code.
+>
+> Why?
+>
+> I don't see much value in a trace_printk checkpatch warning.
+> tracing is still dependent on CONFIG_TRACING otherwise
+> trace_printk is an if (0)
+>
+> ELI5 please.
 
-* I2C write to Raydium device for RM_CMD_BANK_SWITCH
-* I2C write to trackpad device
-* I2C read from trackpad device
-* I2C write to Raydium device for setting address
-* I2C read from Raydium device >>>> This provides incorrect
-  information
+This is my "new" canned answer to this:
 
-This change adds a new helper function `raydium_i2c_xfer()` that
-performs I2C transactions to the Raydium device. It uses the register
-address to decide if RM_CMD_BANK_SWITCH header needs to be sent to the
-device (i.e. if register address is greater than 255, then bank switch
-header is sent before the rest of the transaction). Additionally, it
-ensures that all the I2C operations performed as part of
-`raydium_i2c_xfer()` are done as a single i2c_transfer. This
-guarantees that no other transactions are initiated to any other
-device on the same bus in between. Additionally,
-`raydium_i2c_{send|read}*` functions are refactored to use this new
-helper function.
+Please do not use trace_printk in production code [1,2], it is only
+meant for debug use. Consider using trace events, or dev_dbg.
+[1] https://elixir.bootlin.com/linux/v5.8/source/kernel/trace/trace.c#L3158
+[2] https://elixir.bootlin.com/linux/v5.8/source/include/linux/kernel.h#L766
 
-Verified with the patch across multiple reboots (>100) that the
-information reported by the Raydium  touchscreen device during probe
-is correct.
+I also had arguments in patch 2/3 notes:
 
-Signed-off-by: Furquan Shaikh <furquan@google.com>
+There's at least 3 reasons that I can come up with:
+ 1. trace_printk introduces some overhead. [some users, e.g.
+Android/Chrome OS, want CONFIG_TRACING but _not_ that extra overhead]
+ 2. If the kernel keeps adding always-enabled trace_printk, it will be
+much harder for developers to make use of trace_printk for debugging.
+ 3. People may assume that trace_printk is for debugging only, and may
+accidentally output sensitive data (theoretical at this stage).
 
----
-v2: Added a new helper function raydium_i2c_xfer so that all read and
-send transfers are handled using the same path. This helper function
-uses register address > 255 to decide whether to send
-RM_CMD_BANK_SWITCH command. Additionally, __packed keyword is moved
-to be placed after the structure defintion.
-
- drivers/input/touchscreen/raydium_i2c_ts.c | 132 +++++++++------------
- 1 file changed, 58 insertions(+), 74 deletions(-)
-
-diff --git a/drivers/input/touchscreen/raydium_i2c_ts.c b/drivers/input/touchscreen/raydium_i2c_ts.c
-index fe245439adee..261e4a290836 100644
---- a/drivers/input/touchscreen/raydium_i2c_ts.c
-+++ b/drivers/input/touchscreen/raydium_i2c_ts.c
-@@ -51,6 +51,7 @@
- 
- /* Touch relative info */
- #define RM_MAX_RETRIES		3
-+#define RM_RETRY_DELAY_MS	20
- #define RM_MAX_TOUCH_NUM	10
- #define RM_BOOT_DELAY_MS	100
- 
-@@ -136,114 +137,98 @@ struct raydium_data {
- 	bool wake_irq_enabled;
- };
- 
--static int raydium_i2c_send(struct i2c_client *client,
--			    u8 addr, const void *data, size_t len)
-+static int raydium_i2c_xfer(struct i2c_client *client, u32 addr, void *data,
-+				size_t len, bool is_read)
- {
--	u8 *buf;
--	int tries = 0;
--	int ret;
--
--	buf = kmalloc(len + 1, GFP_KERNEL);
--	if (!buf)
--		return -ENOMEM;
--
--	buf[0] = addr;
--	memcpy(buf + 1, data, len);
--
--	do {
--		ret = i2c_master_send(client, buf, len + 1);
--		if (likely(ret == len + 1))
--			break;
--
--		msleep(20);
--	} while (++tries < RM_MAX_RETRIES);
--
--	kfree(buf);
--
--	if (unlikely(ret != len + 1)) {
--		if (ret >= 0)
--			ret = -EIO;
--		dev_err(&client->dev, "%s failed: %d\n", __func__, ret);
--		return ret;
--	}
-+	struct raydium_bank_switch_header {
-+		u8 cmd;
-+		__be32 be_addr;
-+	} __packed header = {
-+		.cmd = RM_CMD_BANK_SWITCH,
-+		.be_addr = cpu_to_be32(addr),
-+	};
- 
--	return 0;
--}
-+	u8 reg_addr = addr & 0xff;
- 
--static int raydium_i2c_read(struct i2c_client *client,
--			    u8 addr, void *data, size_t len)
--{
- 	struct i2c_msg xfer[] = {
-+		{
-+			.addr = client->addr,
-+			.len = sizeof(header),
-+			.buf = (u8 *)&header,
-+		},
- 		{
- 			.addr = client->addr,
- 			.len = 1,
--			.buf = &addr,
-+			.buf = &reg_addr,
- 		},
- 		{
- 			.addr = client->addr,
--			.flags = I2C_M_RD,
- 			.len = len,
- 			.buf = data,
-+			.flags = is_read ? I2C_M_RD : 0,
- 		}
- 	};
-+
-+	/*
-+	 * If address is greater than 255, then RM_CMD_BANK_SWITCH needs to be
-+	 * sent first. Else, skip the header i.e. xfer[0].
-+	 */
-+	int xfer_start_idx = (addr > 0xff) ? 0 : 1;
-+	size_t xfer_count = ARRAY_SIZE(xfer) - xfer_start_idx;
- 	int ret;
- 
--	ret = i2c_transfer(client->adapter, xfer, ARRAY_SIZE(xfer));
--	if (unlikely(ret != ARRAY_SIZE(xfer)))
--		return ret < 0 ? ret : -EIO;
-+	ret = i2c_transfer(client->adapter, &xfer[xfer_start_idx], xfer_count);
-+	if (likely(ret == xfer_count))
-+		return 0;
- 
--	return 0;
-+	return -EIO;
- }
- 
--static int raydium_i2c_read_message(struct i2c_client *client,
--				    u32 addr, void *data, size_t len)
-+static int raydium_i2c_send(struct i2c_client *client, u32 addr,
-+				const void *data, size_t len)
- {
--	__be32 be_addr;
-+	int tries = 0;
-+	int ret;
-+
-+	do {
-+		ret = raydium_i2c_xfer(client, addr, (void *)data, len, false);
-+		if (likely(ret == 0))
-+			return 0;
-+
-+		msleep(RM_RETRY_DELAY_MS);
-+	} while (++tries < RM_MAX_RETRIES);
-+
-+	dev_err(&client->dev, "%s failed\n", __func__);
-+	return -EIO;
-+}
-+
-+static int raydium_i2c_read(struct i2c_client *client, u32 addr, void *data,
-+				size_t len)
-+{
-+	int ret;
- 	size_t xfer_len;
--	int error;
- 
- 	while (len) {
- 		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
-+		ret = raydium_i2c_xfer(client, addr, data, len, true);
- 
--		be_addr = cpu_to_be32(addr);
--
--		error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
--					 &be_addr, sizeof(be_addr));
--		if (!error)
--			error = raydium_i2c_read(client, addr & 0xff,
--						 data, xfer_len);
--		if (error)
--			return error;
-+		if (unlikely(ret != 0))
-+			return ret;
- 
- 		len -= xfer_len;
- 		data += xfer_len;
- 		addr += xfer_len;
- 	}
--
- 	return 0;
- }
- 
--static int raydium_i2c_send_message(struct i2c_client *client,
--				    u32 addr, const void *data, size_t len)
--{
--	__be32 be_addr = cpu_to_be32(addr);
--	int error;
--
--	error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
--				 &be_addr, sizeof(be_addr));
--	if (!error)
--		error = raydium_i2c_send(client, addr & 0xff, data, len);
--
--	return error;
--}
--
- static int raydium_i2c_sw_reset(struct i2c_client *client)
- {
- 	const u8 soft_rst_cmd = 0x01;
- 	int error;
- 
--	error = raydium_i2c_send_message(client, RM_RESET_MSG_ADDR,
--					 &soft_rst_cmd, sizeof(soft_rst_cmd));
-+	error = raydium_i2c_send(client, RM_RESET_MSG_ADDR, &soft_rst_cmd,
-+					sizeof(soft_rst_cmd));
- 	if (error) {
- 		dev_err(&client->dev, "software reset failed: %d\n", error);
- 		return error;
-@@ -295,9 +280,8 @@ static int raydium_i2c_query_ts_info(struct raydium_data *ts)
- 		if (error)
- 			continue;
- 
--		error = raydium_i2c_read_message(client,
--						 le32_to_cpu(query_bank_addr),
--						 &ts->info, sizeof(ts->info));
-+		error = raydium_i2c_read(client, le32_to_cpu(query_bank_addr),
-+						&ts->info, sizeof(ts->info));
- 		if (error)
- 			continue;
- 
-@@ -834,7 +818,7 @@ static irqreturn_t raydium_i2c_irq(int irq, void *_dev)
- 	if (ts->boot_mode != RAYDIUM_TS_MAIN)
- 		goto out;
- 
--	error = raydium_i2c_read_message(ts->client, ts->data_bank_addr,
-+	error = raydium_i2c_read(ts->client, ts->data_bank_addr,
- 					 ts->report_data, ts->pkg_size);
- 	if (error)
- 		goto out;
--- 
-2.28.0.297.g1956fa8f8d-goog
-
+(we'll need to summarize that somehow if we want to add to checkpatch.pl)
