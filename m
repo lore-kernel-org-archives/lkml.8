@@ -2,136 +2,127 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED241C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FC6C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4F8F2076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:28:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hzi2czJb"
+	by mail.kernel.org (Postfix) with ESMTP id 360EC2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:29:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgHUA2f (ORCPT
+        id S1727095AbgHUA3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 20:28:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53839 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727031AbgHUA20 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 20:28:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597969704;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=L3JIlPvsMRwkM1mgCcR4mBSnOH7ubXhXyleqb1KzD8U=;
-        b=hzi2czJb/h7wsN3T9CCJrMYXiByc1oVK7P3bAU5mcwCCi0D1C1gQUc5vYN1zb0qYJuAGLJ
-        p2cZ35p2jTLsMRi4ph309hgKcQKiK4jpNRLLZsnEa7CpIg1U2qP7pBOHFOFCPQMgv1iVEI
-        EPSF3EHG9OwS6kEBG6HJ36fFZ61oaTs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-563-e07Wxl8qNreqFdkVdHJf3g-1; Thu, 20 Aug 2020 20:28:23 -0400
-X-MC-Unique: e07Wxl8qNreqFdkVdHJf3g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C95BA1074649;
-        Fri, 21 Aug 2020 00:28:21 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.3.128.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4ED4A10098A7;
-        Fri, 21 Aug 2020 00:28:12 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 20:28:10 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Gao Xiang <hsiangkao@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        Eric Sandeen <esandeen@redhat.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by
- mistake
-Message-ID: <20200821002810.GA3096383@optiplex-lnx>
-References: <20200820045323.7809-1-hsiangkao@redhat.com>
- <20200820233446.GB7728@dread.disaster.area>
+        Thu, 20 Aug 2020 20:29:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:49090 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726735AbgHUA3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 20:29:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E07930E;
+        Thu, 20 Aug 2020 17:29:01 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09B773F71F;
+        Thu, 20 Aug 2020 17:28:52 -0700 (PDT)
+Subject: Re: [PATCH 12/18] iommu/tegra-gart: Add IOMMU_DOMAIN_DMA support
+To:     Dmitry Osipenko <digetx@gmail.com>, hch@lst.de, joro@8bytes.org,
+        linux@armlinux.org.uk
+Cc:     will@kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, vdumpa@nvidia.com,
+        matthias.bgg@gmail.com, yong.wu@mediatek.com,
+        geert+renesas@glider.be, magnus.damm@gmail.com, t-kristo@ti.com,
+        s-anna@ti.com, laurent.pinchart@ideasonboard.com,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1597931875.git.robin.murphy@arm.com>
+ <516b33118d489e56499ff8c64c019709b744110c.1597931876.git.robin.murphy@arm.com>
+ <081f7532-9ca0-0af3-35a1-cbaba0782237@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <3a132bb0-f2e6-6f8d-6d0c-bc925dd23f06@arm.com>
+Date:   Fri, 21 Aug 2020 01:28:49 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820233446.GB7728@dread.disaster.area>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <081f7532-9ca0-0af3-35a1-cbaba0782237@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 09:34:46AM +1000, Dave Chinner wrote:
-> On Thu, Aug 20, 2020 at 12:53:23PM +0800, Gao Xiang wrote:
-> > SWP_FS is used to make swap_{read,write}page() go through
-> > the filesystem, and it's only used for swap files over
-> > NFS. So, !SWP_FS means non NFS for now, it could be either
-> > file backed or device backed. Something similar goes with
-> > legacy SWP_FILE.
-> > 
-> > So in order to achieve the goal of the original patch,
-> > SWP_BLKDEV should be used instead.
-> > 
-> > FS corruption can be observed with SSD device + XFS +
-> > fragmented swapfile due to CONFIG_THP_SWAP=y.
-> > 
-> > I reproduced the issue with the following details:
-> > 
-> > Environment:
-> > QEMU + upstream kernel + buildroot + NVMe (2 GB)
-> > 
-> > Kernel config:
-> > CONFIG_BLK_DEV_NVME=y
-> > CONFIG_THP_SWAP=y
+On 2020-08-20 21:16, Dmitry Osipenko wrote:
+> 20.08.2020 18:08, Robin Murphy пишет:
+>> Now that arch/arm is wired up for default domains and iommu-dma,
+>> implement the corresponding driver-side support for DMA domains.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>>   drivers/iommu/tegra-gart.c | 17 ++++++++++++-----
+>>   1 file changed, 12 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
+>> index fac720273889..e081387080f6 100644
+>> --- a/drivers/iommu/tegra-gart.c
+>> +++ b/drivers/iommu/tegra-gart.c
+>> @@ -9,6 +9,7 @@
+>>   
+>>   #define dev_fmt(fmt)	"gart: " fmt
+>>   
+>> +#include <linux/dma-iommu.h>
+>>   #include <linux/io.h>
+>>   #include <linux/iommu.h>
+>>   #include <linux/moduleparam.h>
+>> @@ -145,16 +146,22 @@ static struct iommu_domain *gart_iommu_domain_alloc(unsigned type)
+>>   {
+>>   	struct iommu_domain *domain;
 > 
-> Ok, so at it's core this is a swap file extent versus THP swap
-> cluster alignment issue?
+> Hello, Robin!
 > 
-> > diff --git a/mm/swapfile.c b/mm/swapfile.c
-> > index 6c26916e95fd..2937daf3ca02 100644
-> > --- a/mm/swapfile.c
-> > +++ b/mm/swapfile.c
-> > @@ -1074,7 +1074,7 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
-> >  			goto nextsi;
-> >  		}
-> >  		if (size == SWAPFILE_CLUSTER) {
-> > -			if (!(si->flags & SWP_FS))
-> > +			if (si->flags & SWP_BLKDEV)
-> >  				n_ret = swap_alloc_cluster(si, swp_entries);
-> >  		} else
-> >  			n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
+> Tegra20 GART isn't a real IOMMU, but a small relocation aperture. We
+> would only want to use it for a temporal mappings (managed by GPU
+> driver) for the time while GPU hardware is busy and working with a
+> sparse DMA buffers, the driver will take care of unmapping the sparse
+> buffers once GPU work is finished [1]. In a case of contiguous DMA
+> buffers, we want to bypass the IOMMU and use buffer's phys address
+> because GART aperture is small and all buffers simply can't fit into
+> GART for a complex GPU operations that involve multiple buffers [2][3].
+> The upstream GPU driver still doesn't support GART, but eventually it
+> needs to be changed.
 > 
-> IOWs, if you don't make this change, does the corruption problem go
-> away if you align swap extents in iomap_swapfile_add_extent() to
-> (SWAPFILE_CLUSTER * PAGE_SIZE) instead of just PAGE_SIZE?
+> [1]
+> https://github.com/grate-driver/linux/blob/master/drivers/gpu/drm/tegra/gart.c#L489
 > 
+> [2]
+> https://github.com/grate-driver/linux/blob/master/drivers/gpu/drm/tegra/gart.c#L542
+> 
+> [3]
+> https://github.com/grate-driver/linux/blob/master/drivers/gpu/drm/tegra/uapi/patching.c#L90
+> 
+>> -	if (type != IOMMU_DOMAIN_UNMANAGED)
+>> +	if (type != IOMMU_DOMAIN_UNMANAGED && type != IOMMU_DOMAIN_DMA)
+>>   		return NULL;
+> 
+> Will a returned NULL tell to IOMMU core that implicit domain shouldn't
+> be used? Is it possible to leave this driver as-is?
 
-I suspect that will have to come with the 3rd, and final, part of the THP_SWAP
-work Intel is doing. Right now, basically, all that's accomplished is deferring 
-the THP split step when swapping out, so this change is what we need to
-avoid stomping outside the file extent boundaries.
+The aim of this patch was just to make the conversion without functional 
+changes wherever possible, i.e. maintain an equivalent to the existing 
+ARM behaviour of allocating its own implicit domains for everything. It 
+doesn't represent any judgement of whether that was ever appropriate for 
+this driver in the first place ;)
 
+Hopefully my other reply already covered the degree of control drivers 
+can have with proper default domains, but do shout if anything wasn't clear.
 
-> I.e. if the swapfile extents are aligned correctly to huge page swap
-> cluster size and alignment, does the swap clustering optimisations
-> for swapping THP pages work correctly? And, if so, is there any
-> performance benefit we get from enabling proper THP swap clustering
-> on swapfiles?
->
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
-> 
-
+Cheers,
+Robin.
