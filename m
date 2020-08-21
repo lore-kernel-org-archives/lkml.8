@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A378C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFAC820702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D7B120656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029805;
-	bh=cr/3P276TajFgjlHWochPoapZ3OClIaQlPQIS20Tusc=;
+	s=default; t=1598029813;
+	bh=ruq5kshuWTRTFeOWoXMJfwIyv19Lf6HI+P4YcFiPdoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ed60Ho77FCZewNl5fYm5fCdeb+OgRPoFniKmOoDFoYR/RoEdQS6h1Sffel7ZN0eQ5
-	 1cyp0KKgi1gWE8JmQDE9ghihAlsD01AnFeLy6MNlh6cezz3exuA0bkr8U6puBB8d1q
-	 zKYzT8D8qg9iLmbysd2Knh1PKaYuOkRax05y5UXo=
+	b=gAITqshkmz0rcduXLkJvKPPazBFGhTxUq8otprSj510z51lMDxli2QluInryK+5ur
+	 15Dhg28N8nribYAx7xJTnQyPdnWPgSGo+Pa85tSvNNu027uzGGFfaa6DRmuLdamzBJ
+	 Umo6T7ee7h9G9PanBgUSgu5puT9vl7EW1bipyedg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgHURKC (ORCPT
+        id S1728708AbgHURKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:10:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:10:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgHUQRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726542AbgHUQRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:17:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F28B22BEF;
-        Fri, 21 Aug 2020 16:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB2CE20FC3;
+        Fri, 21 Aug 2020 16:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026641;
-        bh=cr/3P276TajFgjlHWochPoapZ3OClIaQlPQIS20Tusc=;
+        s=default; t=1598026650;
+        bh=ruq5kshuWTRTFeOWoXMJfwIyv19Lf6HI+P4YcFiPdoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MJdm+8KwLQ8fg6kaiqbFjKnMi8QrZRyeSHFkbR9oGTQDE46QiwASxAq24clsb1m9i
-         kqBjYtiZn4SHDZ752NESHEtURc2MYfsAJDwr+nbfnd69khRCV6rTL1kXifs3X+sMUF
-         druQ4d5wg8g/EoJdGYUhXKNh0uAV9I5vby7cOMB0=
+        b=ppWpKCLKuNo9eM/3Kv/dZ4nWp9AoxdQNT5BtPxMorUBUkH2DTo/cVBqguo0gY0Dtj
+         e8IZa38qazSKqt4OSVRWiSIWDWL1V+AbrnUPQxE94Jgz6JsAKot+MyaqdikX1G2w3i
+         74IVJHT3OEk7PlXkmDxayZ/iCnx6pTzia1B2Y/J4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        JiangYu <lnsyyj@hotmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 13/48] scsi: target: tcmu: Fix crash on ARM during cmd completion
-Date:   Fri, 21 Aug 2020 12:16:29 -0400
-Message-Id: <20200821161704.348164-13-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 21/48] drm/amdgpu/display: fix ref count leak when pm_runtime_get_sync fails
+Date:   Fri, 21 Aug 2020 12:16:37 -0400
+Message-Id: <20200821161704.348164-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161704.348164-1-sashal@kernel.org>
 References: <20200821161704.348164-1-sashal@kernel.org>
@@ -62,55 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 5a0c256d96f020e4771f6fd5524b80f89a2d3132 ]
+[ Upstream commit f79f94765f8c39db0b7dec1d335ab046aac03f20 ]
 
-If tcmu_handle_completions() has to process a padding shorter than
-sizeof(struct tcmu_cmd_entry), the current call to
-tcmu_flush_dcache_range() with sizeof(struct tcmu_cmd_entry) as length
-param is wrong and causes crashes on e.g. ARM, because
-tcmu_flush_dcache_range() in this case calls
-flush_dcache_page(vmalloc_to_page(start)); with start being an invalid
-address above the end of the vmalloc'ed area.
+The call to pm_runtime_get_sync increments the counter even in case of
+failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-The fix is to use the minimum of remaining ring space and sizeof(struct
-tcmu_cmd_entry) as the length param.
-
-The patch was tested on kernel 4.19.118.
-
-See https://bugzilla.kernel.org/show_bug.cgi?id=208045#c10
-
-Link: https://lore.kernel.org/r/20200629093756.8947-1-bstroesser@ts.fujitsu.com
-Tested-by: JiangYu <lnsyyj@hotmail.com>
-Acked-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_user.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index a497e7c1f4fcc..1de341a65a18a 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -1220,7 +1220,14 @@ static unsigned int tcmu_handle_completions(struct tcmu_dev *udev)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+index ece55c8fa6733..cda0a76a733d3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+@@ -719,8 +719,10 @@ amdgpu_connector_lvds_detect(struct drm_connector *connector, bool force)
  
- 		struct tcmu_cmd_entry *entry = (void *) mb + CMDR_OFF + udev->cmdr_last_cleaned;
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
  
--		tcmu_flush_dcache_range(entry, sizeof(*entry));
-+		/*
-+		 * Flush max. up to end of cmd ring since current entry might
-+		 * be a padding that is shorter than sizeof(*entry)
-+		 */
-+		size_t ring_left = head_to_end(udev->cmdr_last_cleaned,
-+					       udev->cmdr_size);
-+		tcmu_flush_dcache_range(entry, ring_left < sizeof(*entry) ?
-+					ring_left : sizeof(*entry));
+ 	if (encoder) {
+@@ -857,8 +859,10 @@ amdgpu_connector_vga_detect(struct drm_connector *connector, bool force)
  
- 		if (tcmu_hdr_get_op(entry->hdr.len_op) == TCMU_OP_PAD) {
- 			UPDATE_HEAD(udev->cmdr_last_cleaned,
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	encoder = amdgpu_connector_best_single_encoder(connector);
+@@ -980,8 +984,10 @@ amdgpu_connector_dvi_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
+@@ -1330,8 +1336,10 @@ amdgpu_connector_dp_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
 -- 
 2.25.1
 
