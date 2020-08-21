@@ -2,182 +2,169 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3195CC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B7FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17D7420720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CE920720
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:09:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N57ygES0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgHUSGf (ORCPT
+        id S1726846AbgHUSI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:06:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37500 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbgHUSGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:06:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 31E40AD3A;
-        Fri, 21 Aug 2020 18:06:58 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 170D31E1312; Fri, 21 Aug 2020 20:06:29 +0200 (CEST)
-Date:   Fri, 21 Aug 2020 20:06:29 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
+        Fri, 21 Aug 2020 14:08:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58177 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725885AbgHUSIz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 14:08:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598033333;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9qHpOFDNeqWufuoItwhQ7elzxQPkm2GnHd+vVY9RCMg=;
+        b=N57ygES0JzS32FQeva2wDMX+eamEPysjiQKB0oloaquyzzxGccBbUXzsVuYMeOtg0Kw6oc
+        mqk/2GnomLzl6dyylxATlSF6yvrqWQ2lr/fPs7NZQGjkenkwUZoZSjcHxIa4glKy2nqYyD
+        hMO0O1Sjb2CuzPGD3uol57feWdmX0jk=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-317-zPgKvQ1JP-mal8a8Bebz4Q-1; Fri, 21 Aug 2020 14:08:51 -0400
+X-MC-Unique: zPgKvQ1JP-mal8a8Bebz4Q-1
+Received: by mail-qv1-f71.google.com with SMTP id i4so1767735qvv.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:08:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9qHpOFDNeqWufuoItwhQ7elzxQPkm2GnHd+vVY9RCMg=;
+        b=a10gX72jvi+9XDylR94nuxSI0NJVGY4H/ApjYwKrEvxcns1ej6xo8ZGx9ZNpkYO5v9
+         PhiVwi5+CBwJ/X6BxGRDqlVJS/2Nko/09WRX/aQ2/HHoiUQm84Vq1UMq7eyg0mANigW+
+         4pk9D36TOplllGY6r4B6Nn4igz2yHz8NtFR1fi8X/Vnqy0pran3wKG5O/S10pZbCBsaf
+         GkRboOjqUqkrlBgaTfA2CAoRI+GCdbe9tN6WyQtuZPN11rkGDEPu8Kq7wTwvpFSmjDPF
+         og6zf1oweXRcYFgl0mncMey/AZoD2hzjmP7cdCJm0lc1CGivxDS4ey4jSeVcoBI+4XIc
+         Fy1g==
+X-Gm-Message-State: AOAM530atJMbsR2QC88dvQdCcWQZiovRAmQXAgB0fpBXL4e92OjthDwQ
+        Q2jzf09cvBl4OBHq4oVamdHeq5ZjKkhOxNQjrP9/GtnWR8voCcBOI/2iRf3gID5oL697dk4Prpf
+        UQClehGWtNzMwIp6GrXQ6K3Dq
+X-Received: by 2002:ac8:78d:: with SMTP id l13mr3914546qth.188.1598033330991;
+        Fri, 21 Aug 2020 11:08:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwZnyUSBfDk5h+qyqxQ5TQrLX1+luZJQgUY+iSfxjhpOqd8iPytAYSJRCAyz64H2gj08AUcOg==
+X-Received: by 2002:ac8:78d:: with SMTP id l13mr3914531qth.188.1598033330702;
+        Fri, 21 Aug 2020 11:08:50 -0700 (PDT)
+Received: from xz-x1 (bras-vprn-toroon474qw-lp130-11-70-53-122-15.dsl.bell.ca. [70.53.122.15])
+        by smtp.gmail.com with ESMTPSA id t8sm2780673qtc.50.2020.08.21.11.08.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 11:08:49 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 14:08:48 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jan Kara <jack@suse.cz>, Andrea Arcangeli <aarcange@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/7] mm: Add an 'end' parameter to find_get_entries
-Message-ID: <20200821180629.GF3432@quack2.suse.cz>
-References: <20200819150555.31669-1-willy@infradead.org>
- <20200819150555.31669-4-willy@infradead.org>
- <20200821160759.GE3432@quack2.suse.cz>
- <20200821163306.GW17456@casper.infradead.org>
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        "Maya B . Gokhale" <gokhale2@llnl.gov>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>
+Subject: Re: [PATCH v3] mm/gup: Allow real explicit breaking of COW
+Message-ID: <20200821180848.GA11376@xz-x1>
+References: <CAHk-=wit7LDr0tA2eVn7yHHEH76oK=Lfm3tTs8_JxO8XEED4_g@mail.gmail.com>
+ <CAHk-=wifRg0pDhufQFasWa7G3sMHbG0nahnm5yRwvTKpKU9g4A@mail.gmail.com>
+ <20200811214255.GE6353@xz-x1>
+ <CAHk-=wiVN-+P1vOCSMyfGwYQD3hF7A18OJyXgpiMwGDfMaU+8w@mail.gmail.com>
+ <20200820215449.GB358043@xz-x1>
+ <CAHk-=wjGzOjsfmX1Dc=yz6o_+62w4wcTVXX_hia9sHLfsCoxjg@mail.gmail.com>
+ <20200821101333.GA3432@quack2.suse.cz>
+ <CAHk-=whXfL5DtinS42dgtNu6i+xchK_VP+XLprQbu_og2J5Dkw@mail.gmail.com>
+ <20200821154756.GC3432@quack2.suse.cz>
+ <CAHk-=wj-pfzKf3JDe9fr4o_nKYXJXfuYAMFCajwhy0YYYri4Fw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="envbJBWh7q8WU6mo"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200821163306.GW17456@casper.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=wj-pfzKf3JDe9fr4o_nKYXJXfuYAMFCajwhy0YYYri4Fw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---envbJBWh7q8WU6mo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri 21-08-20 17:33:06, Matthew Wilcox wrote:
-> On Fri, Aug 21, 2020 at 06:07:59PM +0200, Jan Kara wrote:
-> > On Wed 19-08-20 16:05:51, Matthew Wilcox (Oracle) wrote:
-> > > This simplifies the callers and leads to a more efficient implementation
-> > > since the XArray has this functionality already.
-> > > 
-> > > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> > 
-> > The patch looks good to me. Just I'd note that you could drop some:
-> > 
-> > 	if (index >= end)
-> > 		break;
-> > 
-> > checks in shmem_undo_range() as well.
+On Fri, Aug 21, 2020 at 10:00:59AM -0700, Linus Torvalds wrote:
+> On Fri, Aug 21, 2020 at 8:48 AM Jan Kara <jack@suse.cz> wrote:
+> >
+> > I was more concerned about the case where you decide to writeably map (i.e.
+> > wp_page_reuse() path) a PageKsm() page.
 > 
-> Oh yes, missed a couple ;-)  Thanks, I'll add.
+> Yeah, so I think what I do is stricter than what we used to do - any
+> KSM page will never be re-used, simply because the KSM part will have
+> incremented the page count.
+
+IIUC, Jan wanted to point out the fact that KSM didn't increase page count for
+stable pages (reasons are above get_ksm_page()).
+
 > 
-> > In the past I was considering moving find_get_entries() to the same API as
-> > find_get_pages_range() has (which is essentially what you do now, but I
-> > also had 'start' to be a pgoff_t * so that we can return there where the
-> > iteration ended in the range). But in the end I've decided the churn is not
-> > worth the few removed lines and didn't push the patch in the end. What you
-> > did in this patch seems to be a reasonable middle-ground :)
+> So as far as I can tell, with that patch we will never ever share
+> except for the "I really am the _only_ user of the page, there are no
+> KSM or swap cache pages" case.
 > 
-> I did look at that, but since we're returning the indices, we don't _need_
-> to update the index here.
+> That's the whole point of the patch. Get rid of all the games. If
+> there is *any* possible other use - be it KSM or swap cache or
+> *anything*, we don't try to re-use it.
 > 
-> I have some other ideas for this family of interfaces, but I'm trying
-> to get the THP work off my plate before getting distracted by that ;-)
+> > And also here I was more concerned that page_mapcount != 1 || page_count !=
+> > 1 check could be actually a weaker check than what reuse_swap_page() does.
+> 
+> If that is the case, then yes, that would be a problem.
+> 
+> But really, if page_count() == 1, then we're the only possible thing
+> that holds that page. Nothing else can have a reference to it - by
+> definition.
 
-I have one thing which I wanted to do for a long time but never got to it.
-IMHO the pagevec abstraction makes the loops unnecessarily complex. I'd
-rather have helpers like:
+Do we still at least need to check the swap count if PageSwapCache(page)?
 
-for_each_mapping_page(mapping, page, start, end)
+Besides a complete cleanup, I'm now thinking whether we should use a smaller
+change like below.  IMHO we can still simplify the ksm special case before
+taking the page lock. Since ksm page should be rare in general, then it seems
+not worth it to let every single cow to check against it:
 
-or
+diff --git a/mm/memory.c b/mm/memory.c
+index 602f4283122f..b852d393bcc7 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2928,9 +2928,6 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
+         */
+        if (PageAnon(vmf->page)) {
+                int total_map_swapcount;
+-               if (PageKsm(vmf->page) && (PageSwapCache(vmf->page) ||
+-                                          page_count(vmf->page) != 1))
+-                       goto copy;
+                if (!trylock_page(vmf->page)) {
+                        get_page(vmf->page);
+                        pte_unmap_unlock(vmf->pte, vmf->ptl);
+@@ -2946,6 +2943,10 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
+                        }
+                        put_page(vmf->page);
+                }
++               if (page_count(vmf->page) != 1) {
++                       unlock_page(vmf->page);
++                       goto copy;
++               }
+                if (PageKsm(vmf->page)) {
+                        bool reused = reuse_ksm_page(vmf->page, vmf->vma,
+                                                     vmf->address);
 
-for_each_mapping_entry(mapping, entry, index, start, end)
+So we check page_count() (which covers KSM or normal pages) after we've got the
+page lock, while we keep all the rest.  It's also safe for the removed
+condition of PageSwapCache() && PageKsm() because reuse_ksm_page() later on
+will check PageSwapCache() again.
 
-and hide all the pagevec magic inside those. And it's even not that hard to
-do including the handling of premature exit from the loop - sample
-userspace code is attached...
+Thanks,
 
-									Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Peter Xu
 
---envbJBWh7q8WU6mo
-Content-Type: text/x-c; charset=us-ascii
-Content-Disposition: attachment; filename="pvec_looping.c"
-
-#include <stdio.h>
-
-#define PAGEVEC_SIZE 15
-
-struct pagevec {
-	unsigned char nr;
-	int vals[PAGEVEC_SIZE];
-};
-
-struct pagevec_iter {
-	unsigned char idx;
-	int last_index;
-	struct pagevec pvec;
-};
-
-void pagevec_release(struct pagevec *pvec)
-{
-	int i;
-
-	for (i = 0; i < pvec->nr; i++)
-		printf("Freeing val %d\n", pvec->vals[i]);
-	pvec->nr = 0;
-}
-
-int pagevec_lookup(struct pagevec *pvec, void *mapping, int *start, int end)
-{
-	int i;
-
-	for (i = 0; i < PAGEVEC_SIZE && *start < 29; i++) {
-		pvec->vals[pvec->nr++] = 100 + *start;
-		(*start)++;
-	}
-	return pvec->nr;
-}
-
-static inline int get_next_pvec_val(struct pagevec_iter *pvec_i, void *mapping,
-				    int end)
-{
-	if (pvec_i->idx >= pvec_i->pvec.nr) {
-		pagevec_release(&pvec_i->pvec);
-		if (!pagevec_lookup(&pvec_i->pvec, mapping, &pvec_i->last_index,
-				    end))
-			return 0;
-		pvec_i->idx = 0;
-	}
-	return pvec_i->pvec.vals[pvec_i->idx++];
-}
-
-void pagevec_release_iter(struct pagevec_iter *pvec_i)
-{
-	pagevec_release(&pvec_i->pvec);
-}
-
-#define for_each_page(mapping, page, start, end)			\
-	for (struct pagevec_iter pvec_i					\
-		__attribute__ ((cleanup (pagevec_release_iter))) = {	\
-			.idx = 0, .last_index = start, .pvec = { .nr = 0 } }; \
-	     (page = get_next_pvec_val(&pvec_i, mapping, end));)
-
-int main(void)
-{
-	int page;
-
-	for_each_page(NULL, page, 5, 32) {
-		printf("Seeing val %d\n", page);
-		if (page > 122)
-			break;
-	}
-	return 0;
-}
-
---envbJBWh7q8WU6mo--
