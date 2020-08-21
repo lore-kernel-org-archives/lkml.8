@@ -2,178 +2,157 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9403C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93090214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kC1IqvAM"
+	by mail.kernel.org (Postfix) with ESMTP id 034C720724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597988434;
+	bh=zRCjuahUes6jERrX4goHO80ytxWyRaqKLIhIomFNSjg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dSyNhovD3KzAKBBRCZYFa+U+1/JuSlkwVGK20233okB6a+I0ds6O4WO9Kxx7NzsfS
+	 0KAiGpy1iwifM6HATrOQ5jjG2S1IvDIJu+e6t0LeTjKF6VDMi8yS2GeCJheuZTOErZ
+	 TZtxx4Fn+3WMOvgF5924QUP0UGA1ClbXHAb86tqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgHUFkW (ORCPT
+        id S1726813AbgHUFkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 01:40:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44582 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726002AbgHUFkV (ORCPT
+        Fri, 21 Aug 2020 01:40:31 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39523 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgHUFk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 01:40:21 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07L5XCl5090697;
-        Fri, 21 Aug 2020 01:40:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : in-reply-to : references : date : message-id : mime-version :
- content-type; s=pp1; bh=Ndo/wsx4DSB4NS1qTcy70CYie2hiXo+pQWCA3AYcodM=;
- b=kC1IqvAM5r4XXMf/s2qI10NTJ4ckElK6fMNK9TX++qH4j9PgLCEPAQ+iOW0oPdOJ+1xV
- 72Oq457P/uvGmSgJNBd/qa3CCGl1mwTDbbJidAnaK6Ifv5e0aPlYj8Qe2Dr4wFUbJpM+
- Ie5xprReXIBaX30t0arLIdoBP4qJszqgvV64YVtiZsWLmS3VF+PASzYt0QOhzXyo5hfY
- iNK9JrfxOiANpZJFSK8dBS3czrE9SMMrVb6Gxq787Z/NU/YL1Vh2ltjYEtavwKNFnX5c
- v1faFNkDsEmfBgJSTwYX38gQ7B/v+B7ocUv0PjaBJpsOdG2hjpS2dEFk+a0YRwnJsSv1 vg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33273psd6a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 01:40:01 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07L5Y4w4095720;
-        Fri, 21 Aug 2020 01:40:01 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33273psd5t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 01:40:01 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07L5YqaP029166;
-        Fri, 21 Aug 2020 05:39:59 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01wdc.us.ibm.com with ESMTP id 3304tm1ns2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 05:39:59 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07L5dwv61639074
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 05:39:58 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD5766A04F;
-        Fri, 21 Aug 2020 05:39:58 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 46F1A6A04D;
-        Fri, 21 Aug 2020 05:39:54 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.102.2.201])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Aug 2020 05:39:53 +0000 (GMT)
-X-Mailer: emacs 27.1 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, luto@amacapital.net, axboe@kernel.dk,
-        keescook@chromium.org, torvalds@linux-foundation.org,
-        jannh@google.com, will@kernel.org, hch@lst.de, npiggin@gmail.com,
-        mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v3] mm: Fix kthread_use_mm() vs TLB invalidate
-In-Reply-To: <20200721154106.GE10769@hirez.programming.kicks-ass.net>
-References: <20200721154106.GE10769@hirez.programming.kicks-ass.net>
-Date:   Fri, 21 Aug 2020 11:09:51 +0530
-Message-ID: <87y2m8muag.fsf@linux.ibm.com>
+        Fri, 21 Aug 2020 01:40:28 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g75so626716wme.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 22:40:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GYy21gsBobrfE+n697gXaTEDTqhXl3ZvlItxvgDKUpg=;
+        b=FxlrkUB/rGQMiwWReE7tiuSH2pDuN2H8yLnmV4+g5CTbN32NcU6zruJfczSeHiDlzT
+         VNsFJFiqUTZi3FZNVOIx7rQCq2TmsGsEuo+wOzCE0GFd7qC2/lspUEp3dNW8xsNInR6U
+         oBYh0uoIGYn6sLARp0iiypWgVG16gNLPW6vDbeb0jNLF0qKPBYQsT9x8G2qrQFe+lhvw
+         qf5WciCiyjsMe15FA70O73XjkRNVqXiTTiYfsfqcIBw/jAc9pJlVnJDntPSqT6MHi3hz
+         HCWwQpk1PrjQy+wGa5jZU7a6JdkUMrdKrsSfHWyKu/t5Xb3RRKvfUY/J5/nyQS3uc793
+         mokQ==
+X-Gm-Message-State: AOAM532TPuVhf58e+0J64dPRtEU9uUJwKJnQbSpriaLiq7gg6zcX+3C0
+        xZB98R6J7qWXsPpkP5PFJUg=
+X-Google-Smtp-Source: ABdhPJyKwq7JDwgNVczIaowypJVZ0FDSzLrM9VMY1YsL5y6vs+Zgx/KETjQQwLwGckNGQ1ngq5R/uQ==
+X-Received: by 2002:a1c:ab06:: with SMTP id u6mr1228329wme.172.1597988426324;
+        Thu, 20 Aug 2020 22:40:26 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id s20sm2220457wmh.21.2020.08.20.22.40.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Aug 2020 22:40:25 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 07:40:23 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Markus Mayer <markus.mayer@broadcom.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] memory: brcmstb_dpfe: fix array index out of bounds
+Message-ID: <20200821054023.GA3906@kozik-lap>
+References: <20200821010333.20436-1-mmayer@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_05:2020-08-19,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
- malwarescore=0 suspectscore=0 mlxlogscore=687 impostorscore=0 mlxscore=0
- lowpriorityscore=0 phishscore=0 spamscore=0 priorityscore=1501 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210052
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200821010333.20436-1-mmayer@broadcom.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-
-> For SMP systems using IPI based TLB invalidation, looking at
-> current->active_mm is entirely reasonable. This then presents the
-> following race condition:
->
->
->   CPU0			CPU1
->
->   flush_tlb_mm(mm)	use_mm(mm)
->     <send-IPI>
-> 			  tsk->active_mm = mm;
-> 			  <IPI>
-> 			    if (tsk->active_mm == mm)
-> 			      // flush TLBs
-> 			  </IPI>
-> 			  switch_mm(old_mm,mm,tsk);
->
->
-> Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
-> because the IPI lands before we actually switched.
->
-> Avoid this by disabling IRQs across changing ->active_mm and
-> switch_mm().
->
-> [ There are all sorts of reasons this might be harmless for various
-> architecture specific reasons, but best not leave the door open at
-> all. ]
-
-
-Do we have similar race with exec_mmap()? I am looking at exec_mmap()
-runnning parallel to do_exit_flush_lazy_tlb(). We can get
-
-	if (current->active_mm == mm) {
-
-true and if we don't disable irq around updating tsk->mm/active_mm we
-can end up doing mmdrop on wrong mm?
-
->
-> Cc: stable@kernel.org
-> Reported-by: Andy Lutomirski <luto@amacapital.net>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+On Thu, Aug 20, 2020 at 06:03:33PM -0700, Markus Mayer wrote:
+> We would overrun the error_text array if we hit a TIMEOUT condition,
+> because we were using the error code "ETIMEDOUT" (which is 110) as an
+> array index.
+> 
+> We fix the problem by correcting the array index and by providing a
+> function to retrieve error messages rather than accessing the array
+> directly. The function includes a bounds check that prevents the array
+> from being overrun.
+> 
+> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
 > ---
->
-> Sorry, I dropped the ball on this and only found it because I was
-> looking at the whole membarrier things vs use_mm().
->
->
->  kernel/kthread.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/kthread.c b/kernel/kthread.c
-> index 1d9e2fdfd67a..7221dcbffef3 100644
-> --- a/kernel/kthread.c
-> +++ b/kernel/kthread.c
-> @@ -1241,13 +1241,15 @@ void kthread_use_mm(struct mm_struct *mm)
->  	WARN_ON_ONCE(tsk->mm);
+> 
+> This patch was prepared in response to https://lkml.org/lkml/2020/8/18/505.
+> 
+>  drivers/memory/brcmstb_dpfe.c | 23 ++++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/memory/brcmstb_dpfe.c b/drivers/memory/brcmstb_dpfe.c
+> index 81abc4a98a27..a986a849f58e 100644
+> --- a/drivers/memory/brcmstb_dpfe.c
+> +++ b/drivers/memory/brcmstb_dpfe.c
+> @@ -190,11 +190,6 @@ struct brcmstb_dpfe_priv {
+>  	struct mutex lock;
+>  };
 >  
->  	task_lock(tsk);
-> +	local_irq_disable();
->  	active_mm = tsk->active_mm;
->  	if (active_mm != mm) {
->  		mmgrab(mm);
->  		tsk->active_mm = mm;
+> -static const char * const error_text[] = {
+> -	"Success", "Header code incorrect", "Unknown command or argument",
+> -	"Incorrect checksum", "Malformed command", "Timed out",
+> -};
+> -
+>  /*
+>   * Forward declaration of our sysfs attribute functions, so we can declare the
+>   * attribute data structures early.
+> @@ -307,6 +302,20 @@ static const struct dpfe_api dpfe_api_v3 = {
+>  	},
+>  };
+>  
+> +static const char * const get_error_text(unsigned int i)
+
+The pointer itself is returned by value and you cannot return a const
+value. I mean, you can but it does not have an effect. Only pointed
+memory should be const (const const char*).
+
+Best regards,
+Krzysztof
+
+
+> +{
+> +	static const char * const error_text[] = {
+> +		"Success", "Header code incorrect",
+> +		"Unknown command or argument", "Incorrect checksum",
+> +		"Malformed command", "Timed out", "Unknown error",
+> +	};
+> +
+> +	if (unlikely(i >= ARRAY_SIZE(error_text)))
+> +		i = ARRAY_SIZE(error_text) - 1;
+> +
+> +	return error_text[i];
+> +}
+> +
+>  static bool is_dcpu_enabled(struct brcmstb_dpfe_priv *priv)
+>  {
+>  	u32 val;
+> @@ -446,7 +455,7 @@ static int __send_command(struct brcmstb_dpfe_priv *priv, unsigned int cmd,
 >  	}
->  	tsk->mm = mm;
-> -	switch_mm(active_mm, mm, tsk);
-> +	switch_mm_irqs_off(active_mm, mm, tsk);
-> +	local_irq_enable();
->  	task_unlock(tsk);
->  #ifdef finish_arch_post_lock_switch
->  	finish_arch_post_lock_switch();
-> @@ -1276,9 +1278,11 @@ void kthread_unuse_mm(struct mm_struct *mm)
+>  	if (resp != 0) {
+>  		mutex_unlock(&priv->lock);
+> -		return -ETIMEDOUT;
+> +		return -ffs(DCPU_RET_ERR_TIMEDOUT);
+>  	}
 >  
->  	task_lock(tsk);
->  	sync_mm_rss(mm);
-> +	local_irq_disable();
->  	tsk->mm = NULL;
->  	/* active_mm is still 'mm' */
->  	enter_lazy_tlb(mm, tsk);
-> +	local_irq_enable();
->  	task_unlock(tsk);
+>  	/* Compute checksum over the message */
+> @@ -695,7 +704,7 @@ static ssize_t generic_show(unsigned int command, u32 response[],
+>  
+>  	ret = __send_command(priv, command, response);
+>  	if (ret < 0)
+> -		return sprintf(buf, "ERROR: %s\n", error_text[-ret]);
+> +		return sprintf(buf, "ERROR: %s\n", get_error_text(-ret));
+>  
+>  	return 0;
 >  }
->  EXPORT_SYMBOL_GPL(kthread_unuse_mm);
+> -- 
+> 2.17.1
+> 
