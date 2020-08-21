@@ -2,210 +2,114 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A09C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D156C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80970207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29878207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:04:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="SFQ3Sp3N"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ck0zWUoa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgHUKCx (ORCPT
+        id S1728473AbgHUKEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:02:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59252 "EHLO
+        Fri, 21 Aug 2020 06:04:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgHUKCs (ORCPT
+        with ESMTP id S1727006AbgHUKEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:02:48 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05700C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:02:30 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v12so1191840ljc.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:02:30 -0700 (PDT)
+        Fri, 21 Aug 2020 06:04:34 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F4DC061385
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:04:33 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id u24so1066262oic.7
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:04:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0zq6O6XNtbvMJ85OSmttR2Y1SxK+5YaiE+8rmcNArx0=;
-        b=SFQ3Sp3NHvIsGDthPzkjEFDi8Tet3ENIUgQ6XH9GFtNUt78oPw4osTvSZkyOmPV4Fu
-         1IPyt2I/vq4sN9mMoDFgBLEXJ10S0cvBzw252bZLDhZMpuOre2P2AEiLHe1eEN7Ur7G6
-         ek/cAepg4rRlYhGsQLqtkGuxZ/thXGAnSB5ec=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PzOnOH+BwzHErNBhtFUOMqnorNGKoQrz50xMPPMcSsw=;
+        b=ck0zWUoaOlJkW8mZ2Nq4AFoSPwnGvCphFy8dxOWofUw+Pt7wV5qATxkMEP0DcAFOE2
+         k/oUm/4pSgN5N6cQwX9FgA4H4gkLUB5bxXyCzZBYV9039vZfTWpItmp3dfP889zd5Xsn
+         sA8rqjj89NCllixwZLkeEsYc/NVSuNzGpGgPf2+lB+AET0XsojtX9ZMUHFFG2VN3N6Mz
+         GqNxYVzQoFOMEmDKOpB/C5Y4+rlCn+R83ftJ5J1rgYETqx82p/3H9DYK1Ndn4yGLsTWN
+         SWzEVHYRxPjguJmL1XOGyhJRTT2CS7zkREqRnOllqxjDDR4WFaFoWph1hOY7SdnIB4Y7
+         wCFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0zq6O6XNtbvMJ85OSmttR2Y1SxK+5YaiE+8rmcNArx0=;
-        b=qiSc0XRe3kPaxtHzPqvwkHlBA0xwY/yh7+FnNSB4dyqqdald0+5xG4ALfaFi8f07ls
-         Qs8lfz7yAz1SP3V1cGMrc3Jmr6KGwaapwxVSqHiJjRrqOyG6D+gY2pNJ79sTncZLG0Ne
-         2XvGeYPT2WjqgkR1pKZf8FcWdCJgqmEMVzfqp4DTgOGqbudT83A9ZYzJkqGTAzfyoBT7
-         LxTC6W32iaT5/VkP5dJD+45F8Wc6ytO60qjCjEmZmaNFtQ1+zblnCPhh6VOncLYTte7b
-         UiG6+j8NOlh5TIP95aUUTY11BNcZ642WhQt/auA3zHJG0Zku6zDGWNneTBRbEWuNEhC8
-         KTag==
-X-Gm-Message-State: AOAM530LCcyCQlhj5niGaRcjGPAt6ox9ig1bVkdAuuNBrXdfpTFzh5ow
-        mFCNsaVgabRwG1CC+ChmVxHABg==
-X-Google-Smtp-Source: ABdhPJwABrPiP6Y65sRymDtE7PCvbRbx4RnVMkhd2+a8xd7U4712s3LREP06ZoJ4hF8AiWPmYWk1Wg==
-X-Received: by 2002:a2e:7c18:: with SMTP id x24mr1131278ljc.402.1598004148054;
-        Fri, 21 Aug 2020 03:02:28 -0700 (PDT)
-Received: from cloudflare.com ([176.221.114.230])
-        by smtp.gmail.com with ESMTPSA id g11sm288215lfc.46.2020.08.21.03.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 03:02:27 -0700 (PDT)
-From:   Jakub Sitnicki <jakub@cloudflare.com>
-To:     linux-doc@vger.kernel.org
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@cloudflare.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Subject: [PATCH] bpf: sk_lookup: Add user documentation
-Date:   Fri, 21 Aug 2020 12:02:26 +0200
-Message-Id: <20200821100226.403844-1-jakub@cloudflare.com>
-X-Mailer: git-send-email 2.25.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PzOnOH+BwzHErNBhtFUOMqnorNGKoQrz50xMPPMcSsw=;
+        b=fjlCOZvscF72lActb4Q0LXmLaNqKQFAH844ei2msSH3XIHr1rmxF+LoHUWtu2d4TVf
+         Q8zvAQK42ImdchE5nYFtIyV+FEz8VxMxt615znIt2PwN6M8/oxpil/Im5Yyxd0vbp5JG
+         nU5VJfVLvcYQpvvC1l9iKaD3ICv4CIVtF8aw2XG5OzO2Dv7I5TuHVvmLuPjKOGrcU8KM
+         Gd8nvuwXqKV44z9AKCJ2M+9MENLBzU5CaK3eiL1xMWoqJnKfv/O4mFTGTTfRGuVlIv1F
+         1Kj1z81n3AAj23YNJQkJRzpbL63jRuVN16LtKDFUBaoVUGNOZsmkR/pIXUbUK4a6WVA3
+         w9Mg==
+X-Gm-Message-State: AOAM531vRK19m45mYibUZTLndWmNl+0Fq/oU1KKDkr43l2g1f/KfRdbD
+        TgZ1Qbfp1jIYYpd94EJbpPPW5wHuFKoXgw8fKtgxxMXt5GE=
+X-Google-Smtp-Source: ABdhPJy5HBasxRQV6tmNMPtVnLj9jZfqP/MsUp0/4w8q2hRzZa7YhoFvwvi2/AhPWOUoKXXX7oddsx3w9DVUiW7duXo=
+X-Received: by 2002:aca:d8c5:: with SMTP id p188mr1166001oig.47.1598004273133;
+ Fri, 21 Aug 2020 03:04:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200814111221.5813-1-jorge@foundries.io> <20200821062121.GA1020247@jade>
+ <20200821063657.GA20356@trex>
+In-Reply-To: <20200821063657.GA20356@trex>
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+Date:   Fri, 21 Aug 2020 12:04:22 +0200
+Message-ID: <CAHUa44GCpVFGf0U=N0XghiZJWiNBHOrYW4P_JMp3uyoz_7PWzg@mail.gmail.com>
+Subject: Re: [PATCHv9] drivers: optee: allow op-tee to access devices on the
+ i2c bus
+To:     "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
+Cc:     Sumit Garg <sumit.garg@linaro.org>, ricardo@foundries.io,
+        Michael Scott <mike@foundries.io>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Describe the purpose of BPF sk_lookup program, how it can be attached, when
-it gets invoked, and what information gets passed to it. Point the reader
-to examples and further documentation.
+On Fri, Aug 21, 2020 at 8:37 AM Jorge Ramirez-Ortiz, Foundries
+<jorge@foundries.io> wrote:
+>
+> On 21/08/20, Jens Wiklander wrote:
+> > On Fri, Aug 14, 2020 at 01:12:21PM +0200, Jorge Ramirez-Ortiz wrote:
+> > > Some secure elements like NXP's SE050 sit on I2C buses. For OP-TEE to
+> > > control this type of cryptographic devices it needs coordinated access
+> > > to the bus, so collisions and RUNTIME_PM dont get in the way.
+> > >
+> > > This trampoline driver allow OP-TEE to access them.
+> > >
+> > > Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+> > > ---
+> > > v9: params return value must be written before optee_msg_to_param is called
+> > > v8: review fixes:
+> > >     fix types and add TEEC_ERROR_NOT_SUPPORTED to GP errors
+> > > v7: add support for ten bit i2c slave addressing
+> > > v6: compile out if CONFIG_I2C not enabled
+> > > v5: alphabetic order of includes
+> > > v4: remove unnecessary extra line in optee_msg.h
+> > > v3: use from/to msg param to support all types of memory
+> > >     modify OPTEE_MSG_RPC_CMD_I2C_TRANSFER message id
+> > >
+> > >  drivers/tee/optee/optee_msg.h     | 21 +++++++
+> > >  drivers/tee/optee/optee_private.h |  1 +
+> > >  drivers/tee/optee/rpc.c           | 95 +++++++++++++++++++++++++++++++
+> > >  3 files changed, 117 insertions(+)
+> >
+> > Looks good. Did you test this with the recently merged
+> > https://github.com/OP-TEE/optee_os/pull/4033 ?
+> >
+>
+> yes, I did retest and it is good.
 
-Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
----
- Documentation/bpf/index.rst          |  1 +
- Documentation/bpf/prog_sk_lookup.rst | 98 ++++++++++++++++++++++++++++
- 2 files changed, 99 insertions(+)
- create mode 100644 Documentation/bpf/prog_sk_lookup.rst
+Good. I'm picking this up.
 
-diff --git a/Documentation/bpf/index.rst b/Documentation/bpf/index.rst
-index 7df2465fd108..4f2874b729c3 100644
---- a/Documentation/bpf/index.rst
-+++ b/Documentation/bpf/index.rst
-@@ -52,6 +52,7 @@ Program types
-    prog_cgroup_sysctl
-    prog_flow_dissector
-    bpf_lsm
-+   prog_sk_lookup
- 
- 
- Map types
-diff --git a/Documentation/bpf/prog_sk_lookup.rst b/Documentation/bpf/prog_sk_lookup.rst
-new file mode 100644
-index 000000000000..85a305c19bcd
---- /dev/null
-+++ b/Documentation/bpf/prog_sk_lookup.rst
-@@ -0,0 +1,98 @@
-+.. SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+
-+=====================
-+BPF sk_lookup program
-+=====================
-+
-+BPF sk_lookup program type (``BPF_PROG_TYPE_SK_LOOKUP``) introduces programmability
-+into the socket lookup performed by the transport layer when a packet is to be
-+delivered locally.
-+
-+When invoked BPF sk_lookup program can select a socket that will receive the
-+incoming packet by calling the ``bpf_sk_assign()`` BPF helper function.
-+
-+Hooks for a common attach point (``BPF_SK_LOOKUP``) exist for both TCP and UDP.
-+
-+Motivation
-+==========
-+
-+BPF sk_lookup program type was introduced to address setup scenarios where
-+binding sockets to an address with ``bind()`` socket call is impractical, such
-+as:
-+
-+1. receiving connections on a range of IP addresses, e.g. 192.0.2.0/24, when
-+   binding to a wildcard address ``INADRR_ANY`` is not possible due to a port
-+   conflict,
-+2. receiving connections on all or a wide range of ports, i.e. an L7 proxy use
-+   case.
-+
-+Such setups would require creating and ``bind()``'ing one socket to each of the
-+IP address/port in the range, leading to resource consumption and potential
-+latency spikes during socket lookup.
-+
-+Attachment
-+==========
-+
-+BPF sk_lookup program can be attached to a network namespace with
-+``bpf(BPF_LINK_CREATE, ...)`` syscall using the ``BPF_SK_LOOKUP`` attach type and a
-+netns FD as attachment ``target_fd``.
-+
-+Multiple programs can be attached to one network namespace. Programs will be
-+invoked in the same order as they were attached.
-+
-+Hooks
-+=====
-+
-+The attached BPF sk_lookup programs run whenever the transport layer needs to
-+find a listening (TCP) or an unconnected (UDP) socket for an incoming packet.
-+
-+Incoming traffic to established (TCP) and connected (UDP) sockets is delivered
-+as usual without triggering the BPF sk_lookup hook.
-+
-+The attached BPF programs must return with either ``SK_PASS`` or ``SK_DROP``
-+verdict code. As for other BPF program types that are network filters,
-+``SK_PASS`` signifies that the socket lookup should continue on to regular
-+hashtable-based lookup, while ``SK_DROP`` causes the transport layer to drop the
-+packet.
-+
-+A BPF sk_lookup program can also select a socket to receive the packet by
-+calling ``bpf_sk_assign()`` BPF helper. Typically, the program looks up a socket
-+in a map holding sockets, such as ``SOCKMAP`` or ``SOCKHASH``, and passes a
-+``struct bpf_sock *`` to ``bpf_sk_assign()`` helper to record the
-+selection. Selecting a socket only takes effect if the program has terminated
-+with ``SK_PASS`` code.
-+
-+When multiple programs are attached, the end result is determined from return
-+codes of all the programs according to the following rules:
-+
-+1. If any program returned ``SK_PASS`` and selected a valid socket, the socket
-+   is used as the result of the socket lookup.
-+2. If more than one program returned ``SK_PASS`` and selected a socket, the last
-+   selection takes effect.
-+3. If any program returned ``SK_DROP``, and no program returned ``SK_PASS`` and
-+   selected a socket, socket lookup fails.
-+4. If all programs returned ``SK_PASS`` and none of them selected a socket,
-+   socket lookup continues on.
-+
-+API
-+===
-+
-+In its context, an instance of ``struct bpf_sk_lookup``, BPF sk_lookup program
-+receives information about the packet that triggered the socket lookup. Namely:
-+
-+* IP version (``AF_INET`` or ``AF_INET6``),
-+* L4 protocol identifier (``IPPROTO_TCP`` or ``IPPROTO_UDP``),
-+* source and destination IP address,
-+* source and destination L4 port,
-+* the socket that has been selected with ``bpf_sk_assign()``.
-+
-+Refer to ``struct bpf_sk_lookup`` declaration in ``linux/bpf.h`` user API
-+header, and `bpf-helpers(7)
-+<https://man7.org/linux/man-pages/man7/bpf-helpers.7.html>`_ man-page section
-+for ``bpf_sk_assign()`` for details.
-+
-+Example
-+=======
-+
-+See ``tools/testing/selftests/bpf/prog_tests/sk_lookup.c`` for the reference
-+implementation.
--- 
-2.25.4
-
+Thanks,
+Jens
