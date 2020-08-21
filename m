@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4306CC433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D585C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 214E1208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26AF214F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030782;
-	bh=cAA9DlpTrMCDJIGEUfaf/cn0vOGig3xNSRqqtLuzOrk=;
+	s=default; t=1598030789;
+	bh=Z5woOFrn9WcoiLa0uM8U8LX6zAA+NteviTzChyljI7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Am4gxx4FK+EggR6wucQ742E/XxFarDSuxD7seFpukiiQkplPajpf/JaZt0kz528wY
-	 x0OUm7i+CMGPWsxk/QL+GkUkP0mzfiMi13zc0I5yLwZSbLp5QPL8STfkALIU4sS6A0
-	 +18AL4V2qEuajWgfYpRhj4XwK+cjP/GeRq5Xaxk4=
+	b=Fo/ke793ZtgXdPN7TtL7DLb7YJgWnVD48LijlpP2RKfbT5YVmk+2jn/6uwMVmhw1p
+	 P1uG8z9SBRHowso9K+x+REfW5rZRydN0lOfEpBLDJuLrrJCJSCCGaiOjVrq3c6Xhtc
+	 UPVaUVtM3sEApBGmsY5Zn/VSWIl3+8ORE6IQ7K3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgHUQPG (ORCPT
+        id S1729012AbgHUR00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:15:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46158 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:26:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgHUQO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:14:28 -0400
+        id S1727849AbgHUQPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:15:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B080F20FC3;
-        Fri, 21 Aug 2020 16:14:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEB9622B43;
+        Fri, 21 Aug 2020 16:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026467;
-        bh=cAA9DlpTrMCDJIGEUfaf/cn0vOGig3xNSRqqtLuzOrk=;
+        s=default; t=1598026509;
+        bh=Z5woOFrn9WcoiLa0uM8U8LX6zAA+NteviTzChyljI7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gqZoTbqmHnmWf3P8egcLnf02Ilzyi8eyHCPK+8myUC2OK3dJjfNv7jU5vW4dmHEKi
-         SJsdGCG2GzOlQ2hLf7e+5UCHnbbRMQjDMBSm19+QhpC5Rss2aS9xwfOaAHp1vtcMXW
-         AEkD3dE6thmRzPL4cJPLnsfmjO0U3R+GJG27SdMU=
+        b=DY9IhwL2JyK5t7WJYWvDGfb1y1WQqQ3PkiLFtp+j7436GEDxbzHxxDz2g/kaNYEwb
+         DWi5qofgnt9zMIENyRMFaYLrcbejLNeGydtbCMTDcnbFqPTLLVG5mFuhxBEm0JFAuh
+         MvE92CY5H8ocaVI7sEMZjbKln+dkCrROQNnCKSDI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.8 02/62] ALSA: pci: delete repeated words in comments
-Date:   Fri, 21 Aug 2020 12:13:23 -0400
-Message-Id: <20200821161423.347071-2-sashal@kernel.org>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 36/62] MIPS: KVM: Limit Trap-and-Emulate to MIPS32R2 only
+Date:   Fri, 21 Aug 2020 12:13:57 -0400
+Message-Id: <20200821161423.347071-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -58,118 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-[ Upstream commit c7fabbc51352f50cc58242a6dc3b9c1a3599849b ]
+[ Upstream commit 01edc5e76ecfecf9a79eec2658f6146ef47bc816 ]
 
-Drop duplicated words in sound/pci/.
-{and, the, at}
+After tons of fixes to get Trap-and-Emulate build on Loongson64,
+I've got panic on host machine when trying to run a VM.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/r/20200806021926.32418-1-rdunlap@infradead.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+I found that it can never work on 64bit systems. Revewing the
+code, it looks like R6 can't supportrd by TE as well.
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-Id: <20200710063047.154611-3-jiaxun.yang@flygoat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/cs46xx/cs46xx_lib.c       | 2 +-
- sound/pci/cs46xx/dsp_spos_scb_lib.c | 2 +-
- sound/pci/hda/hda_codec.c           | 2 +-
- sound/pci/hda/hda_generic.c         | 2 +-
- sound/pci/hda/patch_sigmatel.c      | 2 +-
- sound/pci/ice1712/prodigy192.c      | 2 +-
- sound/pci/oxygen/xonar_dg.c         | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+ arch/mips/Kconfig     | 1 +
+ arch/mips/kvm/Kconfig | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/cs46xx/cs46xx_lib.c b/sound/pci/cs46xx/cs46xx_lib.c
-index a080d63a9b456..4490dd7469d99 100644
---- a/sound/pci/cs46xx/cs46xx_lib.c
-+++ b/sound/pci/cs46xx/cs46xx_lib.c
-@@ -766,7 +766,7 @@ static void snd_cs46xx_set_capture_sample_rate(struct snd_cs46xx *chip, unsigned
- 		rate = 48000 / 9;
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 6fee1a133e9d6..2efc34ed94ebe 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -2202,6 +2202,7 @@ endchoice
  
- 	/*
--	 *  We can not capture at at rate greater than the Input Rate (48000).
-+	 *  We can not capture at a rate greater than the Input Rate (48000).
- 	 *  Return an error if an attempt is made to stray outside that limit.
- 	 */
- 	if (rate > 48000)
-diff --git a/sound/pci/cs46xx/dsp_spos_scb_lib.c b/sound/pci/cs46xx/dsp_spos_scb_lib.c
-index 6b536fc23ca62..1f90ca723f4df 100644
---- a/sound/pci/cs46xx/dsp_spos_scb_lib.c
-+++ b/sound/pci/cs46xx/dsp_spos_scb_lib.c
-@@ -1716,7 +1716,7 @@ int cs46xx_iec958_pre_open (struct snd_cs46xx *chip)
- 	struct dsp_spos_instance * ins = chip->dsp_spos_instance;
+ config KVM_GUEST
+ 	bool "KVM Guest Kernel"
++	depends on CPU_MIPS32_R2
+ 	depends on BROKEN_ON_SMP
+ 	help
+ 	  Select this option if building a guest kernel for KVM (Trap & Emulate)
+diff --git a/arch/mips/kvm/Kconfig b/arch/mips/kvm/Kconfig
+index 2bf02d849a3a8..032b3fca6cbba 100644
+--- a/arch/mips/kvm/Kconfig
++++ b/arch/mips/kvm/Kconfig
+@@ -37,10 +37,11 @@ choice
  
- 	if ( ins->spdif_status_out & DSP_SPDIF_STATUS_OUTPUT_ENABLED ) {
--		/* remove AsynchFGTxSCB and and PCMSerialInput_II */
-+		/* remove AsynchFGTxSCB and PCMSerialInput_II */
- 		cs46xx_dsp_disable_spdif_out (chip);
+ config KVM_MIPS_TE
+ 	bool "Trap & Emulate"
++	depends on CPU_MIPS32_R2
+ 	help
+ 	  Use trap and emulate to virtualize 32-bit guests in user mode. This
+ 	  does not require any special hardware Virtualization support beyond
+-	  standard MIPS32/64 r2 or later, but it does require the guest kernel
++	  standard MIPS32 r2 or later, but it does require the guest kernel
+ 	  to be configured with CONFIG_KVM_GUEST=y so that it resides in the
+ 	  user address segment.
  
- 		/* save state */
-diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-index 803978d69e3c4..ea7f16dd1f73c 100644
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -3427,7 +3427,7 @@ EXPORT_SYMBOL_GPL(snd_hda_set_power_save);
-  * @nid: NID to check / update
-  *
-  * Check whether the given NID is in the amp list.  If it's in the list,
-- * check the current AMP status, and update the the power-status according
-+ * check the current AMP status, and update the power-status according
-  * to the mute status.
-  *
-  * This function is supposed to be set or called from the check_power_status
-diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
-index f4e9d9445e18f..201a3b6b0b0f6 100644
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -813,7 +813,7 @@ static void activate_amp_in(struct hda_codec *codec, struct nid_path *path,
- 	}
- }
- 
--/* sync power of each widget in the the given path */
-+/* sync power of each widget in the given path */
- static hda_nid_t path_power_update(struct hda_codec *codec,
- 				   struct nid_path *path,
- 				   bool allow_powerdown)
-diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
-index a608d0486ae49..2bea11d62d3e9 100644
---- a/sound/pci/hda/patch_sigmatel.c
-+++ b/sound/pci/hda/patch_sigmatel.c
-@@ -832,7 +832,7 @@ static int stac_auto_create_beep_ctls(struct hda_codec *codec,
- 	static const struct snd_kcontrol_new beep_vol_ctl =
- 		HDA_CODEC_VOLUME(NULL, 0, 0, 0);
- 
--	/* check for mute support for the the amp */
-+	/* check for mute support for the amp */
- 	if ((caps & AC_AMPCAP_MUTE) >> AC_AMPCAP_MUTE_SHIFT) {
- 		const struct snd_kcontrol_new *temp;
- 		if (spec->anabeep_nid == nid)
-diff --git a/sound/pci/ice1712/prodigy192.c b/sound/pci/ice1712/prodigy192.c
-index 8df14f63b10df..096ec76f53046 100644
---- a/sound/pci/ice1712/prodigy192.c
-+++ b/sound/pci/ice1712/prodigy192.c
-@@ -32,7 +32,7 @@
-  *		  Experimentally I found out that only a combination of
-  *		  OCKS0=1, OCKS1=1 (128fs, 64fs output) and ice1724 -
-  *		  VT1724_MT_I2S_MCLK_128X=0 (256fs input) yields correct
-- *		  sampling rate. That means the the FPGA doubles the
-+ *		  sampling rate. That means that the FPGA doubles the
-  *		  MCK01 rate.
-  *
-  *	Copyright (c) 2003 Takashi Iwai <tiwai@suse.de>
-diff --git a/sound/pci/oxygen/xonar_dg.c b/sound/pci/oxygen/xonar_dg.c
-index c3f8721624cd4..b90421a1d909a 100644
---- a/sound/pci/oxygen/xonar_dg.c
-+++ b/sound/pci/oxygen/xonar_dg.c
-@@ -29,7 +29,7 @@
-  *   GPIO 4 <- headphone detect
-  *   GPIO 5 -> enable ADC analog circuit for the left channel
-  *   GPIO 6 -> enable ADC analog circuit for the right channel
-- *   GPIO 7 -> switch green rear output jack between CS4245 and and the first
-+ *   GPIO 7 -> switch green rear output jack between CS4245 and the first
-  *             channel of CS4361 (mechanical relay)
-  *   GPIO 8 -> enable output to speakers
-  *
 -- 
 2.25.1
 
