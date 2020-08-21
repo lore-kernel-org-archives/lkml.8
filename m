@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B153C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D04FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC0FF20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2229020732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:22:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PFfBR0q9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s+sG018p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgHUKWR (ORCPT
+        id S1728687AbgHUKWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:22:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33922 "EHLO
+        Fri, 21 Aug 2020 06:22:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728372AbgHUKVo (ORCPT
+        with ESMTP id S1728595AbgHUKWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:21:44 -0400
+        Fri, 21 Aug 2020 06:22:02 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F081C061386
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:21:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ADF7C061385;
+        Fri, 21 Aug 2020 03:22:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=AdGrrqMQ6rl4GO9VH7qBKAFNd8P/sp+D3lGhXAJHb0E=; b=PFfBR0q97nsq2AgRr88rFkr1/t
-        /GP2kJ/mUBeuxLKe/1G22OTPvFjA3QcLxpxXs+Cme8g+6C7NDmTHqUlM/NOy8g0JsnIcjj99oW17r
-        fVtHhHv64ESSP7XjbsF9kAxPlEH4vW8NUO71B7wK95SPqI+dCn5mEzaJWJ4NP8BPOQKMjo0Xij7qE
-        I6fsAswDQxBrBsLchvx51k3q4sFzRVqtuliFGCnPqXwSr9kHbVrwkhHzlsgEC0dA9HWSIW1HHzt9N
-        0EcSNzQKLMfS4tljL1GcCszIlbShXPwolKN6Zm+DWB7UjPcuNfKQPhQCPuidGUm1X+EjMjR2IXlMu
-        64dJCEZA==;
+        bh=9cui8yGpBY2ZOyPniSDNd2mkKvm1A1hT7OP8vChaDSw=; b=s+sG018piBoUSrJYYiI17oi/2i
+        G/KdWVCn5CDUvgQsDatmzXnqfvvD14Uo9gGciSh+LO2Chlf4wx1OueDa1bPw8wEwvbJV/7SEbt1uZ
+        2Kb5G4JvEwSzpVLZty0BEDzNz/hCqssZvnIh8LuvgoWnjqwVwzQttKsiHwriY6fjnpAHMdCcdUeDu
+        I+n3nruu7fqHiqqIKjCTZfx0K/o9WFGCPaG8sLiCnc/JSb/2eJKvFS/j4JQ1K5D7/9EeMSsXbnGOA
+        Kks8sK1el7GnYx6bbHcxwx3y/UY9+8IRHQ9vC0ecmBOvENQhGX+HUzbm9KyGyWkJwuYWs1+4177mp
+        8AJEwyQw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k94An-0003G1-1I; Fri, 21 Aug 2020 10:21:25 +0000
+        id 1k94Ao-0003GA-26; Fri, 21 Aug 2020 10:21:26 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 719673059C6;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 66DDC302526;
         Fri, 21 Aug 2020 12:21:24 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 5CD572C8FF369; Fri, 21 Aug 2020 12:21:24 +0200 (CEST)
-Message-ID: <20200821102052.969925934@infradead.org>
+        id 5268F2B628998; Fri, 21 Aug 2020 12:21:24 +0200 (CEST)
+Message-ID: <20200821102052.792381982@infradead.org>
 User-Agent: quilt/0.66
-Date:   Fri, 21 Aug 2020 11:39:16 +0200
+Date:   Fri, 21 Aug 2020 11:39:13 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org, Kyle Huey <me@kylehuey.com>,
@@ -67,8 +67,8 @@ Cc:     linux-kernel@vger.kernel.org, Kyle Huey <me@kylehuey.com>,
         Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Daniel Thompson <daniel.thompson@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2 4/8] x86/debug: Remove handle_debug(.user) argument
+        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
+Subject: [PATCH v2 1/8] x86/debug: Allow a single level of #DB recursion
 References: <20200821093912.815135402@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -77,70 +77,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The handle_debug(.user) argument is used to terminate the #DB handler
-early for the INT1-from-kernel case, since the kernel doesn't use
-INT1.
+From: Andy Lutomirski <luto@kernel.org>
 
-Remove the argument and handle this explicitly in #DB-from-kernel.
+Trying to clear DR7 around a #DB from usermode malfunctions if we
+schedule when delivering SIGTRAP.  Rather than trying to define a
+special no-recursion region, just allow a single level of recursion.
+We do the same thing for NMI, and it hasn't caused any problems yet.
 
+Fixes: 9f58fdde95c9 ("x86/db: Split out dr6/7 handling")
+Reported-by: Kyle Huey <me@kylehuey.com>
+Debugged-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/8b9bd05f187231df008d48cf818a6a311cbd5c98.1597882384.git.luto@kernel.org
 ---
- arch/x86/kernel/traps.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ arch/x86/kernel/traps.c |   65 ++++++++++++++++++++++--------------------------
+ 1 file changed, 31 insertions(+), 34 deletions(-)
 
 --- a/arch/x86/kernel/traps.c
 +++ b/arch/x86/kernel/traps.c
-@@ -783,25 +783,18 @@ static __always_inline unsigned long deb
-  *
-  * May run on IST stack.
-  */
--static void handle_debug(struct pt_regs *regs, unsigned long dr6, bool user)
-+static void handle_debug(struct pt_regs *regs, unsigned long dr6)
+@@ -729,20 +729,9 @@ static bool is_sysenter_singlestep(struc
+ #endif
+ }
+ 
+-static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
++static __always_inline unsigned long debug_read_clear_dr6(void)
  {
- 	struct task_struct *tsk = current;
- 	bool user_icebp;
- 	int si_code;
+-	/*
+-	 * Disable breakpoints during exception handling; recursive exceptions
+-	 * are exceedingly 'fun'.
+-	 *
+-	 * Since this function is NOKPROBE, and that also applies to
+-	 * HW_BREAKPOINT_X, we can't hit a breakpoint before this (XXX except a
+-	 * HW_BREAKPOINT_W on our stack)
+-	 *
+-	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
+-	 * includes the entry stack is excluded for everything.
+-	 */
+-	*dr7 = local_db_save();
++	unsigned long dr6;
  
  	/*
--	 * If DR6 is zero, no point in trying to handle it. The kernel is
--	 * not using INT1.
--	 */
--	if (!user && !dr6)
--		return;
--
--	/*
- 	 * If dr6 has no reason to give us about the origin of this trap,
- 	 * then it's very likely the result of an icebp/int01 trap.
- 	 * User wants a sigtrap for that.
+ 	 * The Intel SDM says:
+@@ -755,15 +744,12 @@ static __always_inline void debug_enter(
+ 	 *
+ 	 * Keep it simple: clear DR6 immediately.
  	 */
--	user_icebp = user && !dr6;
-+	user_icebp = !dr6;
+-	get_debugreg(*dr6, 6);
++	get_debugreg(dr6, 6);
+ 	set_debugreg(0, 6);
+ 	/* Filter out all the reserved bits which are preset to 1 */
+-	*dr6 &= ~DR6_RESERVED;
+-}
++	dr6 &= ~DR6_RESERVED;
  
- 	/* Store the virtualized DR6 value */
- 	tsk->thread.debugreg6 = dr6;
-@@ -874,7 +867,13 @@ static __always_inline void exc_debug_ke
- 	if (kprobe_debug_handler(regs))
- 		goto out;
+-static __always_inline void debug_exit(unsigned long dr7)
+-{
+-	local_db_restore(dr7);
++	return dr6;
+ }
  
--	handle_debug(regs, dr6, false);
+ /*
+@@ -863,6 +849,18 @@ static void handle_debug(struct pt_regs
+ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
+ 					     unsigned long dr6)
+ {
 +	/*
-+	 * The kernel doesn't use INT1
++	 * Disable breakpoints during exception handling; recursive exceptions
++	 * are exceedingly 'fun'.
++	 *
++	 * Since this function is NOKPROBE, and that also applies to
++	 * HW_BREAKPOINT_X, we can't hit a breakpoint before this (XXX except a
++	 * HW_BREAKPOINT_W on our stack)
++	 *
++	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
++	 * includes the entry stack is excluded for everything.
 +	 */
-+	if (!dr6)
-+		goto out;
-+
-+	handle_debug(regs, dr6);
++	unsigned long dr7 = local_db_save();
+ 	bool irq_state = idtentry_enter_nmi(regs);
+ 	instrumentation_begin();
  
- out:
+@@ -883,6 +881,8 @@ static __always_inline void exc_debug_ke
+ 
  	instrumentation_end();
-@@ -904,7 +903,7 @@ static __always_inline void exc_debug_us
+ 	idtentry_exit_nmi(regs, irq_state);
++
++	local_db_restore(dr7);
+ }
+ 
+ static __always_inline void exc_debug_user(struct pt_regs *regs,
+@@ -894,6 +894,15 @@ static __always_inline void exc_debug_us
+ 	 */
+ 	WARN_ON_ONCE(!user_mode(regs));
+ 
++	/*
++	 * NB: We can't easily clear DR7 here because
++	 * idtentry_exit_to_usermode() can invoke ptrace, schedule, access
++	 * user memory, etc.  This means that a recursive #DB is possible.  If
++	 * this happens, that #DB will hit exc_debug_kernel() and clear DR7.
++	 * Since we're not on the IST stack right now, everything will be
++	 * fine.
++	 */
++
  	irqentry_enter_from_user_mode(regs);
  	instrumentation_begin();
  
--	handle_debug(regs, dr6, true);
-+	handle_debug(regs, dr6);
+@@ -907,36 +916,24 @@ static __always_inline void exc_debug_us
+ /* IST stack entry */
+ DEFINE_IDTENTRY_DEBUG(exc_debug)
+ {
+-	unsigned long dr6, dr7;
+-
+-	debug_enter(&dr6, &dr7);
+-	exc_debug_kernel(regs, dr6);
+-	debug_exit(dr7);
++	exc_debug_kernel(regs, debug_read_clear_dr6());
+ }
  
- 	instrumentation_end();
- 	irqentry_exit_to_user_mode(regs);
+ /* User entry, runs on regular task stack */
+ DEFINE_IDTENTRY_DEBUG_USER(exc_debug)
+ {
+-	unsigned long dr6, dr7;
+-
+-	debug_enter(&dr6, &dr7);
+-	exc_debug_user(regs, dr6);
+-	debug_exit(dr7);
++	exc_debug_user(regs, debug_read_clear_dr6());
+ }
+ #else
+ /* 32 bit does not have separate entry points. */
+ DEFINE_IDTENTRY_RAW(exc_debug)
+ {
+-	unsigned long dr6, dr7;
+-
+-	debug_enter(&dr6, &dr7);
++	unsigned long dr6 = debug_read_clear_dr6();
+ 
+ 	if (user_mode(regs))
+ 		exc_debug_user(regs, dr6);
+ 	else
+ 		exc_debug_kernel(regs, dr6);
+-
+-	debug_exit(dr7);
+ }
+ #endif
+ 
 
 
