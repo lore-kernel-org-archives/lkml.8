@@ -2,78 +2,86 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE527C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA65C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8C4120738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:47:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="juC3rw6m"
+	by mail.kernel.org (Postfix) with ESMTP id E256E20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:49:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgHUHrp (ORCPT
+        id S1728137AbgHUHs7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:47:45 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55462 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbgHUHro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:47:44 -0400
-Received: from zn.tnic (p200300ec2f0eda00b4e1d8975031aaf0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:da00:b4e1:d897:5031:aaf0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 522451EC013E;
-        Fri, 21 Aug 2020 09:47:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1597996063;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=x0qqa/IvqrLY60Nv10kXxs4ZIliJBY04I896OOhUGRs=;
-        b=juC3rw6mRkclVIO9LDa0WrzWnTCqKSyhGOm2CZ5oQY1OW1o37YT2e/7Q/fzIblYhrqVhXM
-        cAzBNBKLHa+HLide6l50783CgJZIn/YZbkq+OmkwWjwMTgzUOMiDlUaNEiKoBboXSnGqd/
-        aXtqVIr/+gWx0Una9QOIpG/Md4MpqeI=
-Date:   Fri, 21 Aug 2020 09:47:43 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Chang Seok Bae <chang.seok.bae@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH] x86/entry/64: Disallow RDPID in paranoid entry if KVM is
- enabled
-Message-ID: <20200821074743.GB12181@zn.tnic>
-References: <20200821025050.32573-1-sean.j.christopherson@intel.com>
+        Fri, 21 Aug 2020 03:48:59 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60985 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbgHUHs6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 03:48:58 -0400
+Received: from [2001:67c:670:100:3ad5:47ff:feaf:1a17] (helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k91nD-000287-Le; Fri, 21 Aug 2020 09:48:55 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k91nC-0006r7-JA; Fri, 21 Aug 2020 09:48:54 +0200
+Message-ID: <ce211ce5b10024aec1ff03e4a2abe1b46a71e8ff.camel@pengutronix.de>
+Subject: Re: [PATCH 4.9 196/212] gpu: ipu-v3: image-convert: Combine
+ rotate/no-rotate irq handlers
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Date:   Fri, 21 Aug 2020 09:48:54 +0200
+In-Reply-To: <20200821073440.GB1681156@kroah.com>
+References: <20200820091602.251285210@linuxfoundation.org>
+         <20200820091612.258939813@linuxfoundation.org> <20200821070216.GB23823@amd>
+         <e586d38120241447df58818c1f9e3c04e5068972.camel@pengutronix.de>
+         <20200821073440.GB1681156@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200821025050.32573-1-sean.j.christopherson@intel.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 07:50:50PM -0700, Sean Christopherson wrote:
-> +	 * Disallow RDPID if KVM is enabled as it may consume a guest's TSC_AUX
-> +	 * if an NMI arrives in KVM's run loop.  KVM loads guest's TSC_AUX on
-> +	 * VM-Enter and may not restore the host's value until the CPU returns
-> +	 * to userspace, i.e. KVM depends on the kernel not using TSC_AUX.
->  	 */
+On Fri, 2020-08-21 at 09:34 +0200, Greg Kroah-Hartman wrote:
+> On Fri, Aug 21, 2020 at 09:10:30AM +0200, Philipp Zabel wrote:
+> > Hi,
+> > 
+> > On Fri, 2020-08-21 at 09:02 +0200, Pavel Machek wrote:
+> > > Hi!
+> > > 
+> > > > From: Steve Longerbeam <slongerbeam@gmail.com>
+> > > > 
+> > > > [ Upstream commit 0f6245f42ce9b7e4d20f2cda8d5f12b55a44d7d1 ]
+> > > > 
+> > > > Combine the rotate_irq() and norotate_irq() handlers into a single
+> > > > eof_irq() handler.
+> > > 
+> > > AFAICT this is preparation for next patch, not a backfix. And actual
+> > > fix patch is not there for 4.19, so this can be dropped, too.
+                                ^^^^^^ 4.9
+> > 
+> > You are right, this patch is preparation for commit 0f6245f42ce9 ("gpu:
+> > ipu-v3: image-convert: Wait for all EOFs before completing a tile").
+> 
+> Which is included in this patch series...
 
-And frankly, this is really unfair. The kernel should be able to use any
-MSR. IOW, KVM needs to be fixed here. I'm sure it context-switches other
-MSRs so one more MSR is not a big deal.
+It didn't hit my inbox for the v4.9 series, I can't see it on lore
+either:
 
--- 
-Regards/Gruss,
-    Boris.
+https://lore.kernel.org/stable/20200820091602.251285210@linuxfoundation.org/
 
-https://people.kernel.org/tglx/notes-about-netiquette
+regards
+Philipp
