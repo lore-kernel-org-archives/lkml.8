@@ -2,162 +2,156 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A39C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D565F2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 667A52054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:40:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oiLRwa4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgHUTjM (ORCPT
+        id S1726627AbgHUTkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:39:12 -0400
-Received: from smtprelay0165.hostedemail.com ([216.40.44.165]:52098 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725831AbgHUTjL (ORCPT
+        Fri, 21 Aug 2020 15:40:42 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7347 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725831AbgHUTkk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:39:11 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 5763C8384365;
-        Fri, 21 Aug 2020 19:39:09 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: rod43_3d0fd782703b
-X-Filterd-Recvd-Size: 3830
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 21 Aug 2020 19:39:08 +0000 (UTC)
-Message-ID: <1ad67130d11ae089fbc46fd373e1e019e1de06f8.camel@perches.com>
-Subject: Re: [PATCH v2 02/10] fs/ntfs3: Add initialization of super block
-From:   Joe Perches <joe@perches.com>
-To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Cc:     Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Date:   Fri, 21 Aug 2020 12:39:06 -0700
-In-Reply-To: <caddbe41eaef4622aab8bac24934eed1@paragon-software.com>
-References: <caddbe41eaef4622aab8bac24934eed1@paragon-software.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Fri, 21 Aug 2020 15:40:40 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4023290001>; Fri, 21 Aug 2020 12:40:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 21 Aug 2020 12:40:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 21 Aug 2020 12:40:39 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Aug
+ 2020 19:40:39 +0000
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
+ by HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Fri, 21 Aug 2020 19:40:39 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jFytsqJhySf6aS0TFaxeKLUQQsNwtIyY+PwwXytjg5xAH60LJkzF7cW+TeMyRWSTIovNXjlGvNVdSJiDY2WksOLNs5Zu5WDJIKG0imssx8o7lyc99nJg+fdbNZYx8cy0xuMIxZ1j4ndMiTKbWzGv0IgjP8SaCrlxtKqyrwaRjSlEtt5O1ooC6hvjzOg2Kj6ANO0h8RXun4fOBzbXpukYGapHBpX5DbTFbRtCemTyhfiDU5tmFJ7K3omNOHuidsgVZZNBKooszyFMFJwikyqalM/RH+3t9vXT43ZcrFx+Uk7FBgkizwUimE2rqHmGF2ObIcNIJOEo4gUW2MjKQ7JSUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ms5lYmj2yDKCLP7wuU52VEwOMm2Nng+ahlfTRaofbJo=;
+ b=ExiLCWcxjywAKoCunHBeIToo/ZTochAnDPi8nbl4Z4XDC4c+a3Hv71xRyYtBUn4n1G+niPV7+XucCO3sHu2Kb6U+gz2VL89LFvUz/zCnfM+qNuxnTkvSLXOsrizctl0qEOsm5CoIPdoDW38+0AwZ9XORWwYTaFPtoTyG2EZmVHDIoP6rDs9JDzkO0gnA4r8RqsYLP0LO5wbFAtC8P/dvm3jiNlUS2db1X3KVjoQoqRaI1C2ow7Q9AaOCfmm1xYhLUlhVMUOGYbtSvN1Yt9TLylZM8hQnWO1MUFlrr/bfIpLnvd0UjxJ85Mc5yswQF+35V7nZ/9QPMU1ZpalWnoLB9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB1340.namprd12.prod.outlook.com (2603:10b6:3:76::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Fri, 21 Aug
+ 2020 19:40:37 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3305.025; Fri, 21 Aug 2020
+ 19:40:37 +0000
+Date:   Fri, 21 Aug 2020 16:40:36 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Sasha Levin <sashal@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Gal Pressman <galpress@amazon.com>,
+        Shadi Ammouri <sammouri@amazon.com>,
+        Yossi Leybovich <sleybo@amazon.com>,
+        <linux-rdma@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 5.8 55/62] RDMA/efa: Add EFA 0xefa1 PCI ID
+Message-ID: <20200821194036.GB2811093@nvidia.com>
+References: <20200821161423.347071-1-sashal@kernel.org>
+ <20200821161423.347071-55-sashal@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200821161423.347071-55-sashal@kernel.org>
+X-ClientProxiedBy: MN2PR12CA0028.namprd12.prod.outlook.com
+ (2603:10b6:208:a8::41) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by MN2PR12CA0028.namprd12.prod.outlook.com (2603:10b6:208:a8::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Fri, 21 Aug 2020 19:40:37 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k9Ctw-00BnNf-HK; Fri, 21 Aug 2020 16:40:36 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ca920675-5509-4c94-c09e-08d8460a1438
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1340:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB13404B84E6B0492237F85BD0C25B0@DM5PR12MB1340.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:741;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5re0c6DNrvSH4aA9itG9jjVbrAUZfbH/zerGOR8X68owfxdg4YZVfG/5gZ6/O9p6rVvZ+Ya3LwuG8ML0sYVwWeHR201HYhNcnGnSYBCHSX/3WjL1gcXIjLHPQ2zY1tSwKV4prf6mFSoFKlCv03gkCVvfkE8NIbJ3dbt+mi7213dGMSyRPKCff22dP5fGXm4VUnCRzXNLUQePudcZYb1XHudfm7KsUfCj/vMCwDyOVKMw/EdpT2EEr9jX1d95t3YXDqdIe0R8V0a4naZ7LZyaU0ZV4c1a2mHBzcY8JBu7xcC9ZHAHF2jlweld4oyDt+lKGKGc/ecrmMs3TtvKwIoOAKLWaTKBrZg/vMi6UDCiYsWda3kbYf/IU9JgwTnFpQb8cFdBTSwgNniRkPaaUqHksQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(366004)(39860400002)(396003)(9786002)(8936002)(966005)(54906003)(9746002)(478600001)(36756003)(86362001)(4744005)(83380400001)(8676002)(4326008)(33656002)(1076003)(426003)(2906002)(5660300002)(6916009)(186003)(66946007)(66556008)(316002)(26005)(2616005)(66476007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: iEagGQ948LTNmcg/xFxjLNiUK8LotzoYYFnwEvvfuH/FlOMcGYR8zNKc1oqI9/TsGVwCzgNGzQ10pvbLfGbrmztCOkZVNY8v3QufhPxhzv16LtuVA83Z1+NjW3eo1G/SI6H9QVyIY64wN5PnQlnZLmCp8dKrIL6K59ncn7/YRbXANS25d+J3zsdoY0KxY/xuP0NrRILxYKQwX90wsIyaoYjJ5EIBPEyMFr65FFyBGvZvqpaVj7JBUsrAfD3RA3P+yavjbojSA1fL/Mjij+0HbQke3QKQ3mFyfXWw+NwMvD636ibHcRIVXFUCvkPJOdfhrF9LmAZ1Lz9QX4ioRztMGiMfHFkpVHjnASPiLH38kYHneOUSDJgWIxjCC8qrv4RNYuRE6vmWsIgh8yNQG74Prba2Q8lwhhWCkJltDLSsoXDKKVaTq0CQZg9i/v+V8lqi0ykdqxW+BXxLZw4QhnqxiB6ujRm0gRy8LhzJ92AxXcLk9f4ENsRvUK2a6GkvneYF0joenno2NP2Eq4YtK9De2As5QIpwKy6wzwtMc6rfZmpBg/2u6FlJ++gvW7k0idEmDe7bkEwumgNO+af7A56QXwxjZ6E6skQuvhkYIlRp1kk4CnSBxHChcl4J96hQHQDVN/Ag3j97M36Ukx+4WZLCrA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca920675-5509-4c94-c09e-08d8460a1438
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 19:40:37.7535
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xzLxorYioUpua+bX4t8nuBbPXgrZHpIVFhdkv3vgRTPKIWMGSnfHD+88XaXmertW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1340
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598038825; bh=ms5lYmj2yDKCLP7wuU52VEwOMm2Nng+ahlfTRaofbJo=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
+         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=oiLRwa4h5x6SymRZHDvRBy6cjGBP5DQPbiiqsT1xwToVm6Os4CX4Ua5nXDCQoFB0C
+         qPy3bXbfrdMHtmYwQ+DRU5ZkVUqabAg5spRKd+Uwl6fQu2AVcGq5ujt0xmVOnfdo4q
+         dpbgGqzZ8kACHts//v3p6ceDK3IVdGaIPCLFQa8Pk85bIqRNwUtkfD+KAkBlYoknU0
+         kvhU7j+6r6hD2iDqkJPCbZfvXMTWdLgNGNvCblhBKVPw8eD7BZ96LnvDfVkbXNN8YR
+         8ksKyIcd86RdiosjZq1BX8YTmaMfcPjpa81MpVNtPGU98us9r0P2eP5YwK1I5dDRZq
+         7R8N49n9/LThw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-08-21 at 16:25 +0000, Konstantin Komarov wrote:
-> Initialization of super block for fs/ntfs3
-[]
-> diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
-[]
-> +
-> +/**
-> + * ntfs_trace() - print preformated ntfs specific messages.
-> + */
-> +void __ntfs_trace(const struct super_block *sb, const char *level,
-> +		  const char *fmt, ...)
+On Fri, Aug 21, 2020 at 12:14:16PM -0400, Sasha Levin wrote:
+> From: Gal Pressman <galpress@amazon.com>
+> 
+> [ Upstream commit d4f9cb5c5b224dca3ff752c1bb854250bf114944 ]
+> 
+> Add support for 0xefa1 devices.
+> 
+> Link: https://lore.kernel.org/r/20200722140312.3651-5-galpress@amazon.com
+> Reviewed-by: Shadi Ammouri <sammouri@amazon.com>
+> Reviewed-by: Yossi Leybovich <sleybo@amazon.com>
+> Signed-off-by: Gal Pressman <galpress@amazon.com>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/infiniband/hw/efa/efa_main.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 
-This is a printk mechanism.
+Wait, what? Why is this being autosel'd?
 
-I suggest renaming this __ntfs_trace function to ntfs_printk
-as there is a naming expectation conflict with the tracing
-subsystem.
+This needs to be the last patch in a series enabling support for this
+chip, it will badly break this driver to pick it out of sequence!!
 
-> +{
-> +	struct va_format vaf;
-> +	va_list args;
-> +
-> +	va_start(args, fmt);
-> +	vaf.fmt = fmt;
-> +	vaf.va = &args;
-> +	if (!sb)
-> +		printk("%sntfs3: %pV", level, &vaf);
-> +	else
-> +		printk("%sntfs3: %s: %pV", level, sb->s_id, &vaf);
-> +	va_end(args);
-> +}
-
-Also it would be rather smaller overall object code to
-change the macros and uses to embed the KERN_<LEVEL> into
-the format and remove the const char *level argument.
-
-Use printk_get_level to retrieve the level from the format.
-
-see fs/f2fs/super.c for an example.
-
-This could be something like the below with a '\n' addition
-to the format string to ensure that messages are properly
-terminated and cannot be interleaved by other subsystems
-content that might be in another simultaneously running
-thread starting with KERN_CONT.
-
-void ntfs_printk(const struct super_block *sb, const char *fmt, ...)
-{
-	struct va_format vaf;
-	va_list args;
-	int level;
-
-	va_start(args, fmt);
-
-	level = printk_get_level(fmt);
-	vaf.fmt = printk_skip_level(fmt);
-	vaf.va = &args;
-	if (!sb)
-		printk("%c%cntfs3: %pV\n",
-		       KERN_SOH_ASCII, level, &vaf);
-	else
-		printk("%c%cntfs3: %s: %pV\n",
-		       KERN_SOH_ASCII, level, sbi->sb->s_id, &vaf);
-
-	va_end(args);
-}
-
-> +
-> +/* prints info about inode using dentry case if */
-> +void __ntfs_inode_trace(struct inode *inode, const char *level, const char *fmt,
-
-ntfs_inode_printk
-
-> +			...)
-> +{
-> +	struct super_block *sb = inode->i_sb;
-> +	ntfs_sb_info *sbi = sb->s_fs_info;
-> +	struct dentry *dentry;
-> +	const char *name = "?";
-> +	char buf[48];
-> +	va_list args;
-> +	struct va_format vaf;
-> +
-> +	if (!__ratelimit(&sbi->ratelimit))
-> +		return;
-> +
-> +	dentry = d_find_alias(inode);
-> +	if (dentry) {
-> +		spin_lock(&dentry->d_lock);
-> +		name = (const char *)dentry->d_name.name;
-> +	} else {
-> +		snprintf(buf, sizeof(buf), "r=%lx", inode->i_ino);
-> +		name = buf;
-> +	}
-> +
-> +	va_start(args, fmt);
-> +	vaf.fmt = fmt;
-> +	vaf.va = &args;
-> +	printk("%s%s on %s: %pV", level, name, sb->s_id, &vaf);
-> +	va_end(args);
-> +
-> +	if (dentry) {
-> +		spin_unlock(&dentry->d_lock);
-> +		dput(dentry);
-> +	}
-> +}
-
-Remove level and use printk_get_level as above.
-Format string should use '\n' termination here too.
-
-
+Jason
