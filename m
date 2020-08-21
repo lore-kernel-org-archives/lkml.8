@@ -2,87 +2,265 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F106C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A6DC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02EA0207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:07:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qTzxO5uk"
+	by mail.kernel.org (Postfix) with ESMTP id B32E8214F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgHUGHS (ORCPT
+        id S1727807AbgHUGH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:07:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgHUGHR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 02:07:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5694C061385;
-        Thu, 20 Aug 2020 23:07:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=csBfSNWoqycX+qwrSd8VYEM/dpU2DB6oNeP8NG+28Xc=; b=qTzxO5ukJYkNNSGikvE5RnQCsQ
-        +KhwGfIq6hKk3uBbnfLAgUR6FOhqgOt59pJRlc0mbEP8P4TjhIuEZGm4ZoWQ5tHFIPDTLxVx3sE7F
-        7xfpj0y+M3F4xbaUxu+WQAk/K7vicbV335ik6f4aVmA5z0XxD5zPq3ld4vSv42DrYWQMkfC7lXOEC
-        69UtcSsu2hfM4jhvRLl5r/P8l8UgaIOV0jsqM9XRd7i9P//Oowm/NKHFN800e6HDD2igBVHRvF79f
-        8hsaUc3M6hvOlT4S5EGBd2yDs1FLYAilAgstS28qEoeSxvHfcH49rBEXEKfH2ZwQSLRl2YgW+zm76
-        BaSKRdoA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k90Cl-0000M6-0v; Fri, 21 Aug 2020 06:07:11 +0000
-Date:   Fri, 21 Aug 2020 07:07:10 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Cc:     hch@infradead.org, darrick.wong@oracle.com,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        riteshh@linux.ibm.com, linux-block@vger.kernel.org
-Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
-Message-ID: <20200821060710.GC31091@infradead.org>
-References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
+        Fri, 21 Aug 2020 02:07:56 -0400
+Received: from mga05.intel.com ([192.55.52.43]:28726 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgHUGHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 02:07:54 -0400
+IronPort-SDR: 01wy1fbkMkqI3AWfmxowQztTkZPf7EqAP6DupBgS/+42rYAb0BN6j4Zu+89gqzlPzHvRilD2Sq
+ iAeSo6BJU3Tg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="240292014"
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="240292014"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 23:07:53 -0700
+IronPort-SDR: zS3Q+hWnsEQSYSpZK5bV44jbsl8hcdicGfMIFVWItfHEDnDnloLkqbEVDEYMiTiPxuKugdxVF0
+ N2Ex83FLmAsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="335231840"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Aug 2020 23:07:54 -0700
+Received: from [10.214.149.100] (rtanwar-MOBL.gar.corp.intel.com [10.214.149.100])
+        by linux.intel.com (Postfix) with ESMTP id 7604E580279;
+        Thu, 20 Aug 2020 23:07:50 -0700 (PDT)
+Subject: Re: [PATCH v8 2/2] Add PWM fan controller driver for LGM SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com
+References: <cover.1597898872.git.rahul.tanwar@linux.intel.com>
+ <b6d0a65625a2bc231c649c970c0a1af1ff3a5dd5.1597898872.git.rahul.tanwar@linux.intel.com>
+ <20200820105255.GB1891694@smile.fi.intel.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <ae472e72-8727-b62b-4fc7-f62aa41cafbc@linux.intel.com>
+Date:   Fri, 21 Aug 2020 14:07:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200820105255.GB1891694@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 03:58:41PM +0530, Anju T Sudhakar wrote:
-> From: Ritesh Harjani <riteshh@linux.ibm.com>
-> 
-> __bio_try_merge_page() may return same_page = 1 and merged = 0. 
-> This could happen when bio->bi_iter.bi_size + len > UINT_MAX. 
-> Handle this case in iomap_add_to_ioend() by incrementing write_count.
-> This scenario mostly happens where we have too much dirty data accumulated. 
-> 
-> w/o the patch we hit below kernel warning,
 
-I think this is better fixed in the block layer rather than working
-around the problem in the callers.  Something like this:
+Hi Andy,
 
-diff --git a/block/bio.c b/block/bio.c
-index c63ba04bd62967..ef321cd1072e4e 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -879,8 +879,10 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
- 		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
- 
- 		if (page_is_mergeable(bv, page, len, off, same_page)) {
--			if (bio->bi_iter.bi_size > UINT_MAX - len)
-+			if (bio->bi_iter.bi_size > UINT_MAX - len) {
-+				*same_page = false;
- 				return false;
-+			}
- 			bv->bv_len += len;
- 			bio->bi_iter.bi_size += len;
- 			return true;
+On 20/8/2020 6:52 pm, Andy Shevchenko wrote:
+> On Thu, Aug 20, 2020 at 12:50:46PM +0800, Rahul Tanwar wrote:
+>> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+>> This PWM controller does not have any other consumer, it is a
+>> dedicated PWM controller for fan attached to the system. Add
+>> driver for this PWM fan controller.
+> ...
+>
+>> +config PWM_INTEL_LGM
+>> +	tristate "Intel LGM PWM support"
+>> +	depends on OF && HAS_IOMEM
+>> +	depends on X86 || COMPILE_TEST
+> For better test coverage you may rewrite this
+>
+> 	depends on HAS_IOMEM
+> 	depends on (OF && X86) || COMPILE_TEST
+
+Sure, will update.
+
+>> +	select REGMAP_MMIO
+>> +	help
+>> +	  Generic PWM fan controller driver for LGM SoC.
+>> +
+>> +	  To compile this driver as a module, choose M here: the module
+>> +	  will be called pwm-intel-lgm.
+> ...
+>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+> This should be mod_devicetable.h.
+
+Well noted.
+
+>> +#include <linux/pwm.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/reset.h>
+> ...
+>
+>> +#define LGM_PWM_PERIOD_2WIRE_NSECS	40000000
+> NSECS -> NS
+> 40000000 -> (40 * NSEC_PER_MSEC)
+
+Well noted.
+
+> ...
+>
+>> +	if (state->polarity != PWM_POLARITY_NORMAL ||
+>> +	    state->period < pc->period)
+> It can be one line.
+
+Ok.
+
+>> +		return -EINVAL;
+> ...
+>
+>> +	if (!state->enabled) {
+>> +		ret = lgm_pwm_enable(chip, 0);
+>> +		return ret;
+> What is the point?
+
+I guess you mean to change it to return lgm_pwm_enable(chip, 0);
+Will do, thanks.
+
+>> +	}
+> ...
+>
+>> +	ret = lgm_pwm_enable(chip, 1);
+>> +
+>> +	return ret;
+> Ditto.
+>
+> ...
+>
+>> +	state->duty_cycle = DIV_ROUND_UP(duty * pc->period,
+>> +					 LGM_PWM_MAX_DUTY_CYCLE);
+> One line?
+
+Ok.
+
+> ...
+>
+>> +	struct lgm_pwm_chip *pc;
+>> +	struct device *dev = &pdev->dev;
+> Use reversed xmas tree order.
+
+Sure, will update.
+
+>> +	void __iomem *io_base;
+>> +	int ret;
+> ...
+>
+>> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
+>> +	if (IS_ERR(pc->regmap)) {
+>> +		ret = PTR_ERR(pc->regmap);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err(dev, "failed to init register map: %pe\n",
+>> +				pc->regmap);
+>> +		return ret;
+> dev_err_probe()
+
+Will update. Thanks.
+
+>> +	}
+> ...
+>
+>> +	pc->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(pc->clk)) {
+>> +		ret = PTR_ERR(pc->clk);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err(dev, "failed to get clock: %pe\n", pc->clk);
+>> +		return ret;
+> Ditto.
+>
+>> +	}
+>> +
+>> +	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
+>> +	if (IS_ERR(pc->rst)) {
+>> +		ret = PTR_ERR(pc->rst);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err(dev, "failed to get reset control: %pe\n",
+>> +				pc->rst);
+>> +		return ret;
+> Ditto.
+>
+>> +	}
+>> +
+>> +	ret = reset_control_deassert(pc->rst);
+>> +	if (ret) {
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err(dev, "cannot deassert reset control: %pe\n",
+>> +				ERR_PTR(ret));
+>> +		return ret;
+> Ditto.
+>
+>> +	}
+> ...
+>
+>> +	ret = clk_prepare_enable(pc->clk);
+> Wrap it with devm_add_action_or_reset(). Same for reset_control_deassert().
+> You probably can even put them under one function.
+
+I did some study and research for using devm_add_action_or_reset(). But
+still i have some doubts. Below steps is what i intend to do in order to
+switch to using this API. Please do review and let me know it is ok and
+i am not missing anything else. Thanks.
+
+1. Call reset_control_assert()
+2. Call clk_prepare_enable()
+3. Call pwmchip_add()
+4. Call devm_add_action_or_reset(dev, my_action, pc)
+5. Remove explicit calls to unprepare/reset_control_assert from probe in
+failure cases.
+6. static void my_action(void *pc)
+   {
+      pwmchip_remove(&pc->chip);
+      clk_disable_upprepare(pc->clk);
+      reset_control_assert(pc->rst);
+   }
+7. Remove platform_driver.remove() entirely.
+
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to enable clock\n");
+>> +		reset_control_assert(pc->rst);
+>> +		return ret;
+>> +	}
+> ...
+>
+>> +	ret = pwmchip_add(&pc->chip);
+>> +	if (ret < 0) {
+> Does ' < 0' have any meaning?
+
+I use < 0 because this API's return code is mentioned as below:
+Returns: 0 on success or a negative error code on failure.
+Also, all other PWM drivers check for <0 for this call.
+
+>> +		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
+>> +		clk_disable_unprepare(pc->clk);
+>> +		reset_control_assert(pc->rst);
+>> +		return ret;
+>> +	}
+> ...
+>
+>> +	ret = pwmchip_remove(&pc->chip);
+>> +	if (ret < 0)
+> Ditto.
+
+Same as above.
+
+>> +		return ret;
+Thanks.
+
+Regards,
+Rahul
+
