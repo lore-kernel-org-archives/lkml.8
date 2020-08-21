@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2396C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1044DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A45C20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29BA20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030185;
-	bh=NZ1zbKrwo5IZCErTAktS1k3LZeAW/QGyONeoRh3BaGs=;
+	s=default; t=1598030189;
+	bh=xTayRYR+0/7bfA/ll1+zs0Ae21gKdBtoCwtMXuu8Mts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZhiLLWmqHrTdLnbgLlfLP64qgW0I2FbcKumrwJIpS9hOZ0XgrQ9PTbFWcnViJ7npL
-	 7IvATJmQMcI7Inr1feg8Li1V22lC4KuR09xrpJLm8QxepNREefKvSe6koPTnzFJOYz
-	 nIwvQaqoYixQ+9dVm67cxgdblznKtWur09ik28AE=
+	b=0mKRJJwgEfZPX022vEqsU52P2JlrogCxRXeJX2UwuHDdexr8iVP8KDiHOheM0NEvt
+	 NSU+OtkFDzqNI37TzU5pMQHkWN4Vs/sp1Oe9YJbYSjcreRa4Q1bjaIHNr1zkho8xLg
+	 VEBRA3q0zMENwkNRrvlh6YzqsW0pQWtuYv6rwsfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgHURQX (ORCPT
+        id S1728328AbgHURQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:16:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:16:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728090AbgHUQQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:16:34 -0400
+        id S1728088AbgHUQQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:16:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 722E222BEB;
-        Fri, 21 Aug 2020 16:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5084A208DB;
+        Fri, 21 Aug 2020 16:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026594;
-        bh=NZ1zbKrwo5IZCErTAktS1k3LZeAW/QGyONeoRh3BaGs=;
+        s=default; t=1598026593;
+        bh=xTayRYR+0/7bfA/ll1+zs0Ae21gKdBtoCwtMXuu8Mts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T0AolvIssbvG74Ggc0PO63MYwlCtD2QjBmJTrIGPgwz7DAwvKUCs7QCW+kaUroLPB
-         zJr/klGu6px2mldQwHY4G2dmmXb/zBlNekscWFH8aCprUVw5Q0br6EKVW+4F0AXmCR
-         py2+QWbXahfBV7K1CqI6alU9/621IyOS5WaCj8oc=
+        b=zSnZvAQN/tekEP1EWGLirpKzzhkSQ70ATb7vdocdxK5ROl6sGpv+KEZJ0s4UpVLv4
+         QJHWTljyKfgwkuOBgxYLt3VBmCUmuy178nafDUV7JFUOCT5LpyCEvIsUPtjaMWU05v
+         tFV98bhH/OrHXmH6ml5w/KvkIJbZymg1v9CVlfIc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yangbo Lu <yangbo.lu@nxp.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 38/61] ARM: dts: ls1021a: output PPS signal on FIPER2
-Date:   Fri, 21 Aug 2020 12:15:22 -0400
-Message-Id: <20200821161545.347622-38-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 37/61] PCI: Fix pci_create_slot() reference count leak
+Date:   Fri, 21 Aug 2020 12:15:21 -0400
+Message-Id: <20200821161545.347622-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
 References: <20200821161545.347622-1-sashal@kernel.org>
@@ -61,49 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangbo Lu <yangbo.lu@nxp.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 5656bb3857c4904d1dec6e1b8f876c1c0337274e ]
+[ Upstream commit 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5 ]
 
-The timer fixed interval period pulse generator register
-is used to generate periodic pulses. The down count
-register loads the value programmed in the fixed period
-interval (FIPER). At every tick of the timer accumulator
-overflow, the counter decrements by the value of
-TMR_CTRL[TCLK_PERIOD]. It generates a pulse when the down
-counter value reaches zero. It reloads the down counter
-in the cycle following a pulse.
+kobject_init_and_add() takes a reference even when it fails.  If it returns
+an error, kobject_put() must be called to clean up the memory associated
+with the object.
 
-To use the TMR_FIPER register to generate desired periodic
-pulses. The value should programmed is,
-desired_period - tclk_period
+When kobject_init_and_add() fails, call kobject_put() instead of kfree().
 
-Current tmr-fiper2 value is to generate 100us periodic pulses.
-(But the value should have been 99995, not 99990. The tclk_period is 5.)
-This patch is to generate 1 second periodic pulses with value
-999999995 programmed which is more desired by user.
+b8eb718348b8 ("net-sysfs: Fix reference count leak in
+rx|netdev_queue_add_kobject") fixed a similar problem.
 
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Link: https://lore.kernel.org/r/20200528021322.1984-1-wu000273@umn.edu
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ls1021a.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/slot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 760a68c163c83..b2ff27af090ec 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -772,7 +772,7 @@ ptp_clock@2d10e00 {
- 			fsl,tmr-prsc    = <2>;
- 			fsl,tmr-add     = <0xaaaaaaab>;
- 			fsl,tmr-fiper1  = <999999995>;
--			fsl,tmr-fiper2  = <99990>;
-+			fsl,tmr-fiper2  = <999999995>;
- 			fsl,max-adj     = <499999999>;
- 			fsl,extts-fifo;
- 		};
+diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+index cc386ef2fa122..3861505741e6d 100644
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -268,13 +268,16 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+ 	slot_name = make_slot_name(name);
+ 	if (!slot_name) {
+ 		err = -ENOMEM;
++		kfree(slot);
+ 		goto err;
+ 	}
+ 
+ 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
+ 				   "%s", slot_name);
+-	if (err)
++	if (err) {
++		kobject_put(&slot->kobj);
+ 		goto err;
++	}
+ 
+ 	INIT_LIST_HEAD(&slot->list);
+ 	list_add(&slot->list, &parent->slots);
+@@ -293,7 +296,6 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+ 	mutex_unlock(&pci_slot_mutex);
+ 	return slot;
+ err:
+-	kfree(slot);
+ 	slot = ERR_PTR(err);
+ 	goto out;
+ }
 -- 
 2.25.1
 
