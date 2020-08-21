@@ -2,94 +2,119 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B149BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2146C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8057E20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:24:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="owR7eiVg"
+	by mail.kernel.org (Postfix) with ESMTP id D882320738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgHUHYq (ORCPT
+        id S1728025AbgHUH1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:24:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgHUHYp (ORCPT
+        Fri, 21 Aug 2020 03:27:23 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:50300 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727854AbgHUH1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:24:45 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57060C061385;
-        Fri, 21 Aug 2020 00:24:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zz8fZZdhH+JJC5yy6EdzQ8wTU5OLIvBo+26qAJBzST8=; b=owR7eiVgwxP6repaAN6OZzTsKU
-        ALgQR0Z0DDdZr34Clu2uH0hSy8Doug989grf/jXukUqXF4BpdX5TWGhDflwZzJdfqdD2zBTGk2t1T
-        wwyYfMQOsKkLYmhRPrhoJBZhNwP4zUIfEaXbKDFgzp+xeKdsxf+vi8y8YNJNid+1fWkyyotxjg1DH
-        fQ7fRgHy261s466smafmg63VozhZUGLIhj3XdSjRBZjS3uuYTTehwFlHOtW0mNaM6iY3eeGmbAKS/
-        VVzAXuYIBFkpr8mcdS8DuwcmzRz7C016IlIgCXBBRndxV+LTMuzwgMaUAfHUzFZe0vKv6PKIGr+Kl
-        TN5b3bEQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k91PO-0004lQ-2r; Fri, 21 Aug 2020 07:24:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 59090303271;
-        Fri, 21 Aug 2020 09:24:14 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3EC922B410945; Fri, 21 Aug 2020 09:24:14 +0200 (CEST)
-Date:   Fri, 21 Aug 2020 09:24:14 +0200
-From:   peterz@infradead.org
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>,
-        Chang Seok Bae <chang.seok.bae@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH] x86/entry/64: Disallow RDPID in paranoid entry if KVM is
- enabled
-Message-ID: <20200821072414.GH1362448@hirez.programming.kicks-ass.net>
-References: <20200821025050.32573-1-sean.j.christopherson@intel.com>
+        Fri, 21 Aug 2020 03:27:23 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 9404C1C0BE2; Fri, 21 Aug 2020 09:27:18 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 09:27:18 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Denis Efremov <efremov@linux.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH 4.19 90/92] drm/radeon: fix fb_div check in
+ ni_init_smc_spll_table()
+Message-ID: <20200821072718.GD23823@amd>
+References: <20200820091537.490965042@linuxfoundation.org>
+ <20200820091542.324851351@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="6WlEvdN9Dv0WHSBl"
 Content-Disposition: inline
-In-Reply-To: <20200821025050.32573-1-sean.j.christopherson@intel.com>
+In-Reply-To: <20200820091542.324851351@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 07:50:50PM -0700, Sean Christopherson wrote:
-> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-> index 70dea93378162..fd915c46297c5 100644
-> --- a/arch/x86/entry/entry_64.S
-> +++ b/arch/x86/entry/entry_64.S
-> @@ -842,8 +842,13 @@ SYM_CODE_START_LOCAL(paranoid_entry)
->  	 *
->  	 * The MSR write ensures that no subsequent load is based on a
->  	 * mispredicted GSBASE. No extra FENCE required.
-> +	 *
-> +	 * Disallow RDPID if KVM is enabled as it may consume a guest's TSC_AUX
-> +	 * if an NMI arrives in KVM's run loop.  KVM loads guest's TSC_AUX on
-> +	 * VM-Enter and may not restore the host's value until the CPU returns
-> +	 * to userspace, i.e. KVM depends on the kernel not using TSC_AUX.
->  	 */
-> -	SAVE_AND_SET_GSBASE scratch_reg=%rax save_reg=%rbx
-> +	SAVE_AND_SET_GSBASE scratch_reg=%rax save_reg=%rbx no_rdpid=IS_ENABLED(CONFIG_KVM)
->  	ret
 
-With distro configs that's going to be a guaranteed no_rdpid. Also with
-a grand total of 0 performance numbers that RDPID is even worth it, I'd
-suggest to just unconditionally remove that thing. Simpler code
-all-around.
+--6WlEvdN9Dv0WHSBl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> From: Denis Efremov <efremov@linux.com>
+>=20
+> commit f29aa08852e1953e461f2d47ab13c34e14bc08b3 upstream.
+>=20
+> clk_s is checked twice in a row in ni_init_smc_spll_table().
+> fb_div should be checked instead.
+>=20
+> Fixes: 69e0b57a91ad ("drm/radeon/kms: add dpm support for cayman (v5)")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+No, this is wrong.
+
+We already have the fix in -stable, as:
+
+commit a083deda0b4179fb6780bc53d900794c4952339f
+Author: Denis Efremov <efremov@linux.com>
+Date:   Mon Jun 22 23:31:22 2020 +0300
+
+    drm/radeon: fix fb_div check in ni_init_smc_spll_table()
+
+    commit 35f760b44b1b9cb16a306bdcc7220fbbf78c4789 upstream.
+
+Result is that we now convert _second_ copy clk_s check, and check
+fb_div twice. This introduces error, rather than fixing one.
+
+Best regards,
+								Pavel
+
+> +++ b/drivers/gpu/drm/radeon/ni_dpm.c
+> @@ -2123,7 +2123,7 @@ static int ni_init_smc_spll_table(struct
+>  		if (p_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_PDIV_MASK >> SMC_NISLANDS_SP=
+LL_DIV_TABLE_PDIV_SHIFT))
+>  			ret =3D -EINVAL;
+> =20
+> -		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SP=
+LL_DIV_TABLE_CLKS_SHIFT))
+> +		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_=
+SPLL_DIV_TABLE_FBDIV_SHIFT))
+>  			ret =3D -EINVAL;
+> =20
+>  		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_=
+SPLL_DIV_TABLE_FBDIV_SHIFT))
+>=20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--6WlEvdN9Dv0WHSBl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8/d1YACgkQMOfwapXb+vJR7wCfXp94AdeIyd/cGYuRr34ZF/Ao
+7yUAn1m1fTd3YyI88ZpKhBsppm3xUnoA
+=AfIV
+-----END PGP SIGNATURE-----
+
+--6WlEvdN9Dv0WHSBl--
