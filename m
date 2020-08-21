@@ -2,390 +2,174 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9616C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99711C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 847702075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B46F2078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hKX6+2z9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bartavi.nl header.i=@bartavi.nl header.b="DU9mh1XJ";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bartavi.nl header.i=@bartavi.nl header.b="DU9mh1XJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgHUO2y (ORCPT
+        id S1727116AbgHUOct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 10:28:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59734 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727123AbgHUO2s (ORCPT
+        Fri, 21 Aug 2020 10:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgHUOcs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 10:28:48 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LER7QR030815;
-        Fri, 21 Aug 2020 10:28:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=AIr0krHtySX330UJYHqhrO9p46eIJWxHy6x3jCSssWM=;
- b=hKX6+2z9iWhy+gGfo3t+GLTF8u147m1/MAEpSCXY9KXowAiceVsS09krQfmQg3/KPW0e
- akJa8er+y8betG7LJZEYeIiMNZo4Sv4zJUFpR78lRk9HQx/YTKjFm9FJ3ouR1UANLIIR
- iwuQvC4Q70kTKAX302ojFubThoTjXxbdYU8qRPEhlcA5ZoL43P9C8RlC+JAtzJQL0t3a
- qfaxsAc0Tv5acqM/uXPg+1R+lmwk9Ok4rXb6GLwYpoplUP/EVxE9NFQ4GauXKKGHemkf
- EPv4aFf8xUmdHRzMGUNscwEsPaXOgirTNcTNKGxq0iFb4tU5JLcWAkNlbS9QF8ae/sRO Iw== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 332f0cj1bb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 10:28:12 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LEP0Oe018796;
-        Fri, 21 Aug 2020 14:28:10 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 3304bujqwr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 14:28:10 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LEQcgg63242524
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 14:26:38 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1291611C050;
-        Fri, 21 Aug 2020 14:28:08 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 71B3811C052;
-        Fri, 21 Aug 2020 14:28:06 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.145.34.219])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 21 Aug 2020 14:28:06 +0000 (GMT)
-Date:   Fri, 21 Aug 2020 17:28:04 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Barry Song <song.bao.hua@hisilicon.com>
-Cc:     hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        will@kernel.org, ganapatrao.kulkarni@cavium.com,
-        catalin.marinas@arm.com, akpm@linux-foundation.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        prime.zeng@hisilicon.com, huangdaode@huawei.com,
-        linuxarm@huawei.com,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Steve Capper <steve.capper@arm.com>
-Subject: Re: [PATCH v7 1/3] dma-contiguous: provide the ability to reserve
- per-numa CMA
-Message-ID: <20200821142804.GR969206@linux.ibm.com>
-References: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
- <20200821113355.6140-2-song.bao.hua@hisilicon.com>
+        Fri, 21 Aug 2020 10:32:48 -0400
+X-Greylist: delayed 350 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 21 Aug 2020 07:32:47 PDT
+Received: from outbound.soverin.net (outbound.soverin.net [IPv6:2a01:4f8:fff0:2d:8::218])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CDFFC061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 07:32:47 -0700 (PDT)
+Received: from smtp.soverin.net (unknown [10.10.3.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by outbound.soverin.net (Postfix) with ESMTPS id B364E600DF
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:32:44 +0000 (UTC)
+Received: from smtp.soverin.net (smtp.soverin.net [159.69.232.142]) by soverin.net
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=bartavi.nl; s=soverin;
+        t=1598020364; bh=d0d600mOuaRwk2pd+47jPHrWgSsBHwS+AdjY8auuIFg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DU9mh1XJfCzkIeIPZ/tDrqZYOiCUDn/IlEIS9+wx9R2UbcyBiriGizc0mLmB0Yb24
+         lyQUATO0rV6bCAzidrNLcsOdsZAkWZk+lcuE++2kqot1JZE6BwH1BGMgl6CcnrXhcR
+         42nhr2Elg9wZ7hLo7lV9fFMsgBCLqpeeH0BaBKVp8MzOUZSQdM4jwiW+vmm/fbbt5s
+         HLuCp2uvcU8QDET3DDrKCt/MspFA/fX0Pj2CAwpEPQKXL7uh+MR8aGCzHKhylw2UWP
+         DKkj2Mm7BiZ0kM2gjFIeS4NgqSOv97MnFVxMgyNEpDhXlI0Y5PVF8uHC4oh06ZA8yk
+         2cbw8bfMCT0ag==
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=bartavi.nl; s=soverin;
+        t=1598020364; bh=d0d600mOuaRwk2pd+47jPHrWgSsBHwS+AdjY8auuIFg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DU9mh1XJfCzkIeIPZ/tDrqZYOiCUDn/IlEIS9+wx9R2UbcyBiriGizc0mLmB0Yb24
+         lyQUATO0rV6bCAzidrNLcsOdsZAkWZk+lcuE++2kqot1JZE6BwH1BGMgl6CcnrXhcR
+         42nhr2Elg9wZ7hLo7lV9fFMsgBCLqpeeH0BaBKVp8MzOUZSQdM4jwiW+vmm/fbbt5s
+         HLuCp2uvcU8QDET3DDrKCt/MspFA/fX0Pj2CAwpEPQKXL7uh+MR8aGCzHKhylw2UWP
+         DKkj2Mm7BiZ0kM2gjFIeS4NgqSOv97MnFVxMgyNEpDhXlI0Y5PVF8uHC4oh06ZA8yk
+         2cbw8bfMCT0ag==
+From:   Bart Groeneveld <avi@bartavi.nl>
+To:     linux-kernel@vger.kernel.org
+Cc:     Bart Groeneveld <avi@bartavi.nl>
+Subject: [PATCH] net: Use standardized (IANA) local port range
+Date:   Fri, 21 Aug 2020 16:32:41 +0200
+Message-Id: <20200821143241.46798-1-avi@bartavi.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821113355.6140-2-song.bao.hua@hisilicon.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
- mlxlogscore=999 adultscore=0 malwarescore=0 suspectscore=5 mlxscore=0
- spamscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210125
+X-Virus-Scanned: clamav-milter 0.102.4 at c03mi01
+X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 11:33:53PM +1200, Barry Song wrote:
-> Right now, drivers like ARM SMMU are using dma_alloc_coherent() to get
-> coherent DMA buffers to save their command queues and page tables. As
-> there is only one default CMA in the whole system, SMMUs on nodes other
-> than node0 will get remote memory. This leads to significant latency.
-> 
-> This patch provides per-numa CMA so that drivers like SMMU can get local
-> memory. Tests show localizing CMA can decrease dma_unmap latency much.
-> For instance, before this patch, SMMU on node2  has to wait for more than
-> 560ns for the completion of CMD_SYNC in an empty command queue; with this
-> patch, it needs 240ns only.
-> 
-> A positive side effect of this patch would be improving performance even
-> further for those users who are worried about performance more than DMA
-> security and use iommu.passthrough=1 to skip IOMMU. With local CMA, all
-> drivers can get local coherent DMA buffers.
-> 
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Cc: Steve Capper <steve.capper@arm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> ---
->  -v7: with respect to Will's comments
->  * move to use for_each_online_node
->  * add description if users don't specify pernuma_cma
->  * provide default value for CONFIG_DMA_PERNUMA_CMA
-> 
->  .../admin-guide/kernel-parameters.txt         |  11 ++
->  include/linux/dma-contiguous.h                |   6 ++
->  kernel/dma/Kconfig                            |  11 ++
->  kernel/dma/contiguous.c                       | 100 ++++++++++++++++--
->  4 files changed, 118 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index bdc1f33fd3d1..c609527fc35a 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -599,6 +599,17 @@
->  			altogether. For more information, see
->  			include/linux/dma-contiguous.h
->  
-> +	pernuma_cma=nn[MG]
+IANA specifies User ports as 1024-49151,
+and Private ports (local/ephemeral/dynamic/w/e) as 49152-65535 [1].
 
-Maybe cma_pernuma or cma_pernode?
+This means Linux uses 32768-49151 'illegally'.
+This is not just a matter of following specifications:
+IANA actually assigns numbers in this range [1].
 
-> +			[ARM64,KNL]
-> +			Sets the size of kernel per-numa memory area for
-> +			contiguous memory allocations. A value of 0 disables
-> +			per-numa CMA altogether. And If this option is not
-> +			specificed, the default value is 0.
-> +			With per-numa CMA enabled, DMA users on node nid will
-> +			first try to allocate buffer from the pernuma area
-> +			which is located in node nid, if the allocation fails,
-> +			they will fallback to the global default memory area.
-> +
->  	cmo_free_hint=	[PPC] Format: { yes | no }
->  			Specify whether pages are marked as being inactive
->  			when they are freed.  This is used in CMO environments
-> diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
-> index 03f8e98e3bcc..fe55e004f1f4 100644
-> --- a/include/linux/dma-contiguous.h
-> +++ b/include/linux/dma-contiguous.h
-> @@ -171,6 +171,12 @@ static inline void dma_free_contiguous(struct device *dev, struct page *page,
->  
->  #endif
->  
-> +#ifdef CONFIG_DMA_PERNUMA_CMA
-> +void dma_pernuma_cma_reserve(void);
-> +#else
-> +static inline void dma_pernuma_cma_reserve(void) { }
-> +#endif
-> +
->  #endif
->  
->  #endif
-> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-> index 847a9d1fa634..c38979d45b13 100644
-> --- a/kernel/dma/Kconfig
-> +++ b/kernel/dma/Kconfig
-> @@ -118,6 +118,17 @@ config DMA_CMA
->  	  If unsure, say "n".
->  
->  if  DMA_CMA
-> +
-> +config DMA_PERNUMA_CMA
-> +	bool "Enable separate DMA Contiguous Memory Area for each NUMA Node"
-> +	default NUMA && ARM64
-> +	help
-> +	  Enable this option to get pernuma CMA areas so that devices like
-> +	  ARM64 SMMU can get local memory by DMA coherent APIs.
-> +
-> +	  You can set the size of pernuma CMA by specifying "pernuma_cma=size"
-> +	  on the kernel's command line.
-> +
->  comment "Default contiguous memory area size:"
->  
->  config CMA_SIZE_MBYTES
-> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-> index cff7e60968b9..0383c9b86715 100644
-> --- a/kernel/dma/contiguous.c
-> +++ b/kernel/dma/contiguous.c
-> @@ -69,6 +69,19 @@ static int __init early_cma(char *p)
->  }
->  early_param("cma", early_cma);
->  
-> +#ifdef CONFIG_DMA_PERNUMA_CMA
-> +
-> +static struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
-> +static phys_addr_t pernuma_size_bytes __initdata;
-> +
-> +static int __init early_pernuma_cma(char *p)
-> +{
-> +	pernuma_size_bytes = memparse(p, &p);
-> +	return 0;
-> +}
-> +early_param("pernuma_cma", early_pernuma_cma);
-> +#endif
-> +
->  #ifdef CONFIG_CMA_SIZE_PERCENTAGE
->  
->  static phys_addr_t __init __maybe_unused cma_early_percent_memory(void)
-> @@ -96,6 +109,34 @@ static inline __maybe_unused phys_addr_t cma_early_percent_memory(void)
->  
->  #endif
->  
-> +#ifdef CONFIG_DMA_PERNUMA_CMA
-> +void __init dma_pernuma_cma_reserve(void)
-> +{
-> +	int nid;
-> +
-> +	if (!pernuma_size_bytes)
-> +		return;
-> +
-> +	for_each_online_node(nid) {
-> +		int ret;
-> +		char name[20];
-> +		struct cma **cma = &dma_contiguous_pernuma_area[nid];
-> +
-> +		snprintf(name, sizeof(name), "pernuma%d", nid);
-> +		ret = cma_declare_contiguous_nid(0, pernuma_size_bytes, 0, 0,
-> +						 0, false, name, cma, nid);
-> +		if (ret) {
-> +			pr_warn("%s: reservation failed: err %d, node %d", __func__,
-> +				ret, nid);
-> +			continue;
-> +		}
-> +
-> +		pr_debug("%s: reserved %llu MiB on node %d\n", __func__,
-> +			(unsigned long long)pernuma_size_bytes / SZ_1M, nid);
-> +	}
-> +}
-> +#endif
-> +
->  /**
->   * dma_contiguous_reserve() - reserve area(s) for contiguous memory handling
->   * @limit: End address of the reserved memory (optional, 0 for any).
-> @@ -228,23 +269,44 @@ static struct page *cma_alloc_aligned(struct cma *cma, size_t size, gfp_t gfp)
->   * @size:  Requested allocation size.
->   * @gfp:   Allocation flags.
->   *
-> - * This function allocates contiguous memory buffer for specified device. It
-> - * tries to use device specific contiguous memory area if available, or the
-> - * default global one.
-> + * tries to use device specific contiguous memory area if available, or it
-> + * tries to use per-numa cma, if the allocation fails, it will fallback to
-> + * try default global one.
->   *
-> - * Note that it byapss one-page size of allocations from the global area as
-> - * the addresses within one page are always contiguous, so there is no need
-> - * to waste CMA pages for that kind; it also helps reduce fragmentations.
-> + * Note that it bypass one-page size of allocations from the per-numa and
-> + * global area as the addresses within one page are always contiguous, so
-> + * there is no need to waste CMA pages for that kind; it also helps reduce
-> + * fragmentations.
->   */
->  struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
->  {
-> +#ifdef CONFIG_DMA_PERNUMA_CMA
-> +	int nid = dev_to_node(dev);
-> +#endif
-> +
->  	/* CMA can be used only in the context which permits sleeping */
->  	if (!gfpflags_allow_blocking(gfp))
->  		return NULL;
->  	if (dev->cma_area)
->  		return cma_alloc_aligned(dev->cma_area, size, gfp);
-> -	if (size <= PAGE_SIZE || !dma_contiguous_default_area)
-> +	if (size <= PAGE_SIZE)
-> +		return NULL;
-> +
-> +#ifdef CONFIG_DMA_PERNUMA_CMA
-> +	if (nid != NUMA_NO_NODE && !(gfp & (GFP_DMA | GFP_DMA32))) {
-> +		struct cma *cma = dma_contiguous_pernuma_area[nid];
+I understand that Linux uses 61000-65535 for masquarading/NAT [2],
+so I left the high value at 60999.
+This means the high value still does not follow the specification,
+but it also doesn't conflict with it.
 
-It could be that for some node reservation failedm than
-dma_contiguous_pernuma_area[nid] would be NULL.
-I'd add a fallback to another node here.
+This change will effectively halve the available ephemeral ports,
+increasing the risk of port exhaustion. But:
+a) I don't think that warrants ignoring standards.
+	Consider for example setting up a (corporate) firewall blocking
+	all unknown external services.
+	It will only allow outgoing trafiic at port 80,443 and 49152-65535.
+	A Linux computer behind such a firewall will not be able to connect
+	to *any* external service *half of the time*.
+	Of course, the firewall can be adjusted to also allow 32768-49151,
+	but that allows computers to use some services against the policy.
+b) It is only an issue with more than 11848 *outgoing* connections.
+	I think that is a niche case (I know, citation needed, but still).
+	If someone finds themselves in such a niche case,
+	they can still modify ip_local_port_range.
 
-> +		struct page *page;
-> +
-> +		if (cma) {
-> +			page = cma_alloc_aligned(cma, size, gfp);
-> +			if (page)
-> +				return page;
-> +		}
-> +	}
-> +#endif
+This patch keeps the low and high value at different parity,
+as to optimize port assignment [3].
 
-I think the selection of the area can be put in a helper funciton and
-then here we just try to allocate from the selected area. E.g.
+[1]: https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.txt
+[2]: https://marc.info/?l=linux-kernel&m=117900026927289
+[3]: See for example commit 1580ab63fc9a03593072cc5656167a75c4f1d173
 
-static struct cma* dma_get_cma_area(struct device *dev)
-{
-#ifdef CONFIG_DMA_PERNUMA_CMA
-	int nid = dev_to_node(dev);
-	struct cma *cma = dma_contiguous_pernuma_area[nid];
+Signed-off-by: Bart Groeneveld <avi@bartavi.nl>
+---
+ Documentation/networking/ip-sysctl.rst | 4 ++--
+ net/ipv4/af_inet.c                     | 2 +-
+ net/ipv4/inet_connection_sock.c        | 2 +-
+ net/ipv4/inet_hashtables.c             | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-	if (!cma)
-		/* select cma from another node */ ;
-		
-	return cma;
-#else
-	return dma_contiguous_default_area;
-#endif
-}
-
-struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
-{
-	struct cma *cma;
-	...
-
-
-	cma = dma_get_cma_area(dev);
-	if (!cma)
-		return NULL;
-
-	return cma_alloc_aligned(cma, size, gfp);
-}	
+diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
+index 837d51f9e1fa..5048b326f773 100644
+--- a/Documentation/networking/ip-sysctl.rst
++++ b/Documentation/networking/ip-sysctl.rst
+@@ -1024,7 +1024,7 @@ ip_local_port_range - 2 INTEGERS
+ 	If possible, it is better these numbers have different parity
+ 	(one even and one odd value).
+ 	Must be greater than or equal to ip_unprivileged_port_start.
+-	The default values are 32768 and 60999 respectively.
++	The default values are 49152 and 60999 respectively.
  
-> +	if (!dma_contiguous_default_area)
->  		return NULL;
-> +
->  	return cma_alloc_aligned(dma_contiguous_default_area, size, gfp);
->  }
->  
-> @@ -261,9 +323,27 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
->   */
->  void dma_free_contiguous(struct device *dev, struct page *page, size_t size)
->  {
-> -	if (!cma_release(dev_get_cma_area(dev), page,
-> -			 PAGE_ALIGN(size) >> PAGE_SHIFT))
-> -		__free_pages(page, get_order(size));
-
-Here as well, dev_get_cma_area() can be replaced with, say
-dma_get_dev_cma_area(dev, page) that will hide the below logic.
-
-> +	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-> +
-> +	/* if dev has its own cma, free page from there */
-> +	if (dev->cma_area) {
-> +		if (cma_release(dev->cma_area, page, count))
-> +			return;
-> +	} else {
-> +		/*
-> +		 * otherwise, page is from either per-numa cma or default cma
-> +		 */
-> +#ifdef CONFIG_DMA_PERNUMA_CMA
-> +		if (cma_release(dma_contiguous_pernuma_area[page_to_nid(page)],
-> +					page, count))
-> +			return;
-> +#endif
-> +		if (cma_release(dma_contiguous_default_area, page, count))
-> +			return;
-> +	}
-> +
-> +	/* not in any cma, free from buddy */
-> +	__free_pages(page, get_order(size));
->  }
->  
->  /*
-> -- 
-> 2.27.0
-> 
-> 
-
+ ip_local_reserved_ports - list of comma separated ranges
+ 	Specify the ports which are reserved for known third-party
+@@ -1047,7 +1047,7 @@ ip_local_reserved_ports - list of comma separated ranges
+ 	ip_local_port_range, e.g.::
+ 
+ 	    $ cat /proc/sys/net/ipv4/ip_local_port_range
+-	    32000	60999
++	    49152	60999
+ 	    $ cat /proc/sys/net/ipv4/ip_local_reserved_ports
+ 	    8080,9148
+ 
+diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
+index 4307503a6f0b..f95a9ffffdc9 100644
+--- a/net/ipv4/af_inet.c
++++ b/net/ipv4/af_inet.c
+@@ -1838,7 +1838,7 @@ static __net_init int inet_init_net(struct net *net)
+ 	 * Set defaults for local port range
+ 	 */
+ 	seqlock_init(&net->ipv4.ip_local_ports.lock);
+-	net->ipv4.ip_local_ports.range[0] =  32768;
++	net->ipv4.ip_local_ports.range[0] =  49152;
+ 	net->ipv4.ip_local_ports.range[1] =  60999;
+ 
+ 	seqlock_init(&net->ipv4.ping_group_range.lock);
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index b457dd2d6c75..322bcfce0737 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -196,7 +196,7 @@ inet_csk_find_open_port(struct sock *sk, struct inet_bind_bucket **tb_ret, int *
+ 	attempt_half = (sk->sk_reuse == SK_CAN_REUSE) ? 1 : 0;
+ other_half_scan:
+ 	inet_get_local_port_range(net, &low, &high);
+-	high++; /* [32768, 60999] -> [32768, 61000[ */
++	high++; /* [49152, 60999] -> [49152, 61000[ */
+ 	if (high - low < 4)
+ 		attempt_half = 0;
+ 	if (attempt_half) {
+diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
+index 239e54474b65..547b95a4891a 100644
+--- a/net/ipv4/inet_hashtables.c
++++ b/net/ipv4/inet_hashtables.c
+@@ -695,7 +695,7 @@ int __inet_hash_connect(struct inet_timewait_death_row *death_row,
+ 	l3mdev = inet_sk_bound_l3mdev(sk);
+ 
+ 	inet_get_local_port_range(net, &low, &high);
+-	high++; /* [32768, 60999] -> [32768, 61000[ */
++	high++; /* [49152, 60999] -> [49152, 61000[ */
+ 	remaining = high - low;
+ 	if (likely(remaining > 1))
+ 		remaining &= ~1U;
 -- 
-Sincerely yours,
-Mike.
+2.28.0
+
