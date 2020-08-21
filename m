@@ -7,55 +7,60 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4734C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EB6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA742063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A882063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgHUH6M (ORCPT
+        id S1728420AbgHUH6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:58:12 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:49998 "EHLO fornost.hmeau.com"
+        Fri, 21 Aug 2020 03:58:25 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:50026 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728377AbgHUH5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:57:45 -0400
+        id S1728147AbgHUH6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 03:58:23 -0400
 Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
         by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1k91vX-00040i-77; Fri, 21 Aug 2020 17:57:32 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 21 Aug 2020 17:57:31 +1000
-Date:   Fri, 21 Aug 2020 17:57:31 +1000
+        id 1k91wE-00043T-76; Fri, 21 Aug 2020 17:58:15 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 21 Aug 2020 17:58:14 +1000
+Date:   Fri, 21 Aug 2020 17:58:14 +1000
 From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Jorge Ramirez-Ortiz <jorge@foundries.io>
-Cc:     sumit.garg@linaro.org, jens.wiklander@linaro.org, mpm@selenic.com,
-        arnd@arndb.de, ricardo@foundries.io, mike@foundries.io,
-        gregkh@linuxfoundation.org, op-tee@lists.trustedfirmware.org,
+To:     trix@redhat.com
+Cc:     mpm@selenic.com, arnd@arndb.de, gregkh@linuxfoundation.org,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 1/2] hwrng: optee: handle unlimited data rates
-Message-ID: <20200821075731.GI25143@gondor.apana.org.au>
-References: <20200806100010.20509-1-jorge@foundries.io>
+Subject: Re: [PATCH] hwrng : cleanup initialization
+Message-ID: <20200821075814.GL25143@gondor.apana.org.au>
+References: <20200809150423.31557-1-trix@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200806100010.20509-1-jorge@foundries.io>
+In-Reply-To: <20200809150423.31557-1-trix@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 12:00:09PM +0200, Jorge Ramirez-Ortiz wrote:
-> Data rates of MAX_UINT32 will schedule an unnecessary one jiffy
-> timeout on the call to msleep. Avoid this scenario by using 0 as the
-> unlimited data rate.
+On Sun, Aug 09, 2020 at 08:04:23AM -0700, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
 > 
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
-> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+> clang static analysis reports this problem
+> 
+> intel-rng.c:333:2: warning: Assigned value is garbage or undefined
+>         void __iomem *mem = mem;
+>         ^~~~~~~~~~~~~~~~~   ~~~
+> 
+> Because mem is assigned before it is used, this is not
+> a real problem.  But the initialization is strange and not
+> needed, so remove it.
+> 
+> Signed-off-by: Tom Rix <trix@redhat.com>
 > ---
->  drivers/char/hw_random/optee-rng.c | 2 +-
+>  drivers/char/hw_random/intel-rng.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 
-All applied.  Thanks.
+Patch applied.  Thanks.
 -- 
 Email: Herbert Xu <herbert@gondor.apana.org.au>
 Home Page: http://gondor.apana.org.au/~herbert/
