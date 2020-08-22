@@ -2,119 +2,192 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA713C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A69C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D099E2071A
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB8E2071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:21:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CR22qrcQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725913AbgHVERX (ORCPT
+        id S1727003AbgHVEVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 00:17:23 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:39919 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgHVERW (ORCPT
+        Sat, 22 Aug 2020 00:21:19 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14458 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgHVEVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 00:17:22 -0400
-Received: by mail-il1-f197.google.com with SMTP id i66so2796260ile.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 21:17:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=M0A2TpQMGIAZuK7E9ejd89o2KGRDiCUliGdbVXaZX8w=;
-        b=IesukoAGdUgmtvTr+9SYCjQMTbelaxHqRGhp0lliKq36b0HIFcVnUsH82RJwt1xE6b
-         xGVX/Gv+G6XhWvm2k6kkui5OVr4Nqd4Gx+X8VrEu4FrviiCxcTeeoOrahUMACIyBhi/8
-         KycuA4i/ow9C/8DyZ0AwuMGNh0PsKNTXuSsaFdJWGAeAzcq0tRuE9qEC4SjWo4l776nk
-         4+wVBZ8cJBkzmNkCKhQTZUcA9u6icjAUxjc0eEr6kps4afU5Ie1RxvH0ZW+bwhbgKp/I
-         XojzsXgs6bau+Dr9CpJI6otsblEOHfW5YWcaTqFHE1KuwWJ8UuxT3PBEdSqPKzo2eN9g
-         CTSA==
-X-Gm-Message-State: AOAM533JmTdDitrt2f07u0whZMsK/gklykpO3089Trku/JelzSs3ZPG/
-        wLCpJqgdC77lLRxqgksfrZN8ZtxPPY5R7cmq4tOyGNU2cEun
-X-Google-Smtp-Source: ABdhPJxm9rRM3bX8xphfAlh0Y255hGLZm0G5ZJZ8nOYXspIdQJlvK9RlCIsZnXgtcnZeavfHotAMbvvyEOb0SZbp+YrkHju2eyPZ
+        Sat, 22 Aug 2020 00:21:06 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f409cbd0000>; Fri, 21 Aug 2020 21:19:10 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 21 Aug 2020 21:21:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 21 Aug 2020 21:21:06 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 22 Aug
+ 2020 04:21:05 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sat, 22 Aug 2020 04:21:05 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.94.162]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f409d310002>; Fri, 21 Aug 2020 21:21:05 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Jeff Layton <jlayton@kernel.org>,
+        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <ceph-devel@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 0/5] bio: Direct IO: convert to pin_user_pages_fast()
+Date:   Fri, 21 Aug 2020 21:20:54 -0700
+Message-ID: <20200822042059.1805541-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:de4:: with SMTP id m4mr4481823ilj.156.1598069841130;
- Fri, 21 Aug 2020 21:17:21 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 21:17:21 -0700
-In-Reply-To: <000000000000e8f42805ad5d136c@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000034fc2105ad6fa1ba@google.com>
-Subject: Re: KASAN: use-after-free Write in vcs_read
-From:   syzbot <syzbot+ad1f53726c3bd11180cb@syzkaller.appspotmail.com>
-To:     gregkh@linuxfoundation.org, jirislaby@kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598069950; bh=iXBAhlDsGHGJ0BL2z0xZCdQ0KPj09q9n3S14YFuk7Lw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=CR22qrcQtjZToR+Y4AXxJBXCfRczkFv9gLGIEHhDFMLUu4lf6rgLvtPhciCvG0fvf
+         8JMCctIFdDTWGAzXzUKbKnyYt6PwVt10412J6p/kV+Y0t4d87XeRWNvV7rAJ2JgP31
+         d/5x/ygntRNdZv7aMmnGbKeHHcc0OCfwjSwvgZMX+1lVs78tO1hDzy8fykG7Hz3ok1
+         mw6vWF1LW8LjO7d+e41OQ4iw21XaLGKwEc023ZXuR+EN1hRFez1kp1TmDXy5s91Yv8
+         Yy8oSMjNVP/9FDFofUWl7D5rayjXLwB32kN+Y8cF+l0u4qTOBIqNxYvbqe1Xo9DjGq
+         kGQPDLQF/puTQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+Hi,
 
-HEAD commit:    494d311a Add linux-next specific files for 20200821
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12454db1900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a61d44f28687f508
-dashboard link: https://syzkaller.appspot.com/bug?extid=ad1f53726c3bd11180cb
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16704b7e900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1588a046900000
+This converts the Direct IO block/bio layer over to use FOLL_PIN pages
+(those acquired via pin_user_pages*()). This effectively converts
+several file systems (ext4, for example) that use the common Direct IO
+routines. See "Remaining work", below for a bit more detail there.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ad1f53726c3bd11180cb@syzkaller.appspotmail.com
+Quite a few approaches have been considered over the years. This one is
+inspired by Christoph Hellwig's July, 2019 observation that there are
+only 5 ITER_ types, and we can simplify handling of them for Direct IO
+[1]. After working through how bio submission and completion works, I
+became convinced that this is the simplest and cleanest approach to
+conversion.
 
-==================================================================
-BUG: KASAN: use-after-free in vcs_read_buf drivers/tty/vt/vc_screen.c:357 [inline]
-BUG: KASAN: use-after-free in vcs_read+0xaa7/0xb40 drivers/tty/vt/vc_screen.c:449
-Write of size 2 at addr ffff888093948000 by task syz-executor760/6850
+Not content to let well enough alone, I then continued on to the
+unthinkable: adding a new flag to struct bio, whose "short int" flags
+field was full, thuse triggering an expansion of the field from 16, to
+32 bits. This allows for a nice assertion in bio_release_pages(), that
+the bio page release mechanism matches the page acquisition mechanism.
+This is especially welcome for a change that affects a lot of callers
+and could really make a mess if there is a bug somewhere.
 
-CPU: 0 PID: 6850 Comm: syz-executor760 Not tainted 5.9.0-rc1-next-20200821-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- vcs_read_buf drivers/tty/vt/vc_screen.c:357 [inline]
- vcs_read+0xaa7/0xb40 drivers/tty/vt/vc_screen.c:449
- do_loop_readv_writev fs/read_write.c:734 [inline]
- do_loop_readv_writev fs/read_write.c:721 [inline]
- do_iter_read+0x48e/0x6e0 fs/read_write.c:955
- vfs_readv+0xe5/0x150 fs/read_write.c:1073
- do_preadv fs/read_write.c:1165 [inline]
- __do_sys_preadv fs/read_write.c:1215 [inline]
- __se_sys_preadv fs/read_write.c:1210 [inline]
- __x64_sys_preadv+0x231/0x310 fs/read_write.c:1210
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x441259
-Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 1b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffb3e6b7d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441259
-RDX: 0000000000000006 RSI: 0000000020001b00 RDI: 0000000000000003
-RBP: 00000000006cb018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000402000
-R13: 0000000000402090 R14: 0000000000000000 R15: 0000000000000000
+I'm unable to spot any performance implications, either theoretically or
+via (rather light) performance testing, from enlarging bio.bi_flags, but
+I suspect that there are maybe still valid reasons for having such a
+tiny bio.bi_flags field. I just have no idea what they are. (Hardware
+that knows the size of a bio? No, because there would be obvious
+build-time assertions, and comments about such a constraint.) Anyway, I
+can drop that patch if it seems like too much cost for too little
+benefit.
 
-The buggy address belongs to the page:
-page:000000006b61c24f refcount:0 mapcount:-128 mapping:0000000000000000 index:0x0 pfn:0x93948
-flags: 0xfffe0000000000()
-raw: 00fffe0000000000 ffffea00029cd508 ffffea00024f3848 0000000000000000
-raw: 0000000000000000 0000000000000000 00000000ffffff7f 0000000000000000
-page dumped because: kasan: bad access detected
+And finally, as long as we're all staring at the iter_iov code, I'm
+including a nice easy ceph patch, that removes one more caller of
+iter_iov_get_pages().
 
-Memory state around the buggy address:
- ffff888093947f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff888093947f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff888093948000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                   ^
- ffff888093948080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff888093948100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
+Design notes =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+This whole approach depends on certain concepts:
+
+1) Each struct bio instance must not mix different types of pages:
+FOLL_PIN and non-FOLL_PIN pages. (By FOLL_PIN I'm referring to pages
+that were acquired and pinned via pin_user_page*() routines.)
+Fortunately, this is already an enforced constraint for bio's, as
+evidenced by the existence and use of BIO_NO_PAGE_REF.
+
+2) Christoph Hellwig's July, 2019 observation that there are
+only 5 ITER_ types, and we can simplify handling of them for Direct IO
+[1]. Accordingly, this series implements the following pseudocode:
+
+Direct IO behavior:
+
+    ITER_IOVEC:
+        pin_user_pages_fast();
+        break;
+
+    ITER_KVEC:    // already elevated page refcount, leave alone
+    ITER_BVEC:    // already elevated page refcount, leave alone
+    ITER_PIPE:    // just, no :)
+    ITER_DISCARD: // discard
+        return -EFAULT or -ENVALID;
+
+...which works for callers that already have sorted out which case they
+are in. Such as, Direct IO in the block/bio layers.
+
+Now, this does leave ITER_KVEC and ITER_BVEC unconverted, but on the
+other hand, it's not clear that these are actually affected in the real
+world, by the get_user_pages()+filesystem interaction problems of [2].
+If it turns out to matter, then those can be handled too, but it's just
+more refactoring and surgery to do so.
+
+Testing
+=3D=3D=3D=3D=3D=3D=3D
+
+Performance: no obvious regressions from running fio (direct=3D1: Direct
+IO) on both SSD and NVMe drives.
+
+Functionality: selected non-destructive bare metal xfstests on xfs,
+ext4, btrfs, orangefs filesystems, plus LTP tests.
+
+Note that I have only a single x86 64-bit test machine, though.
+
+Remaining work
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Non-converted call sites for iter_iov_get_pages*() at the
+moment include: net, crypto, cifs, ceph, vhost, fuse, nfs/direct,
+vhost/scsi.
+
+About-to-be-converted sites (in a subsequent patch) are: Direct IO for
+filesystems that use the generic read/write functions.
+
+[1] https://lore.kernel.org/kvm/20190724061750.GA19397@infradead.org/
+
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
+
+
+John Hubbard (5):
+  iov_iter: introduce iov_iter_pin_user_pages*() routines
+  mm/gup: introduce pin_user_page()
+  bio: convert get_user_pages_fast() --> pin_user_pages_fast()
+  bio: introduce BIO_FOLL_PIN flag
+  fs/ceph: use pipe_get_pages_alloc() for pipe
+
+ block/bio.c               | 29 +++++++------
+ block/blk-map.c           |  7 +--
+ fs/ceph/file.c            |  3 +-
+ fs/direct-io.c            | 30 ++++++-------
+ fs/iomap/direct-io.c      |  2 +-
+ include/linux/blk_types.h |  5 ++-
+ include/linux/mm.h        |  2 +
+ include/linux/uio.h       |  9 +++-
+ lib/iov_iter.c            | 91 +++++++++++++++++++++++++++++++++++++--
+ mm/gup.c                  | 30 +++++++++++++
+ 10 files changed, 169 insertions(+), 39 deletions(-)
+
+--=20
+2.28.0
 
