@@ -2,114 +2,98 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C20AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 19:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B30B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 19:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C37F2078A
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 19:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91413207CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 19:59:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afpLZoVb"
+	dkim=pass (2048-bit key) header.d=tfz-net.20150623.gappssmtp.com header.i=@tfz-net.20150623.gappssmtp.com header.b="aBihwtoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgHVToI (ORCPT
+        id S1728718AbgHVT7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 15:44:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33130 "EHLO
+        Sat, 22 Aug 2020 15:59:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbgHVToF (ORCPT
+        with ESMTP id S1728654AbgHVT7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 15:44:05 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75CC8C061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 12:44:05 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id o4so908964wrn.0
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 12:44:05 -0700 (PDT)
+        Sat, 22 Aug 2020 15:59:21 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D9DEC061574
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 12:59:20 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id t14so4823112wmi.3
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 12:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+y66MqggCakjVuRG4cFz30VjWieYM9CuDcuOFxkR0Z0=;
-        b=afpLZoVb9S8UX5sZ9/41+hXwLGbgiEtiHOm6f0p2P8Oh3Af7Yx/no4zrBKzKnt0F0f
-         PPIT2K/9GZAWs+wbhuu+TJwBZ6LEfRYnHvZkTfv64n7pZrcffX0YS/x5cTaijqlkLzZP
-         mKJR9PFZG+yGLfMKAMdJc1mackvLjGEjbz/zDBoz0qUeFGlQwPfhnSoiwq8//Z9UlFNn
-         O/MvoekqmF7B2xPoXRW2cYPtM3YApr7keQHyrArRZHDI2VQmH060XReevrwNCxSlfr9i
-         GY9+091wIX9sfA+wZSOhUMdgB7fs5OKUTLNqWZBlqnGeandc5Snv8rrJU3MZk9+ODRaa
-         qQgw==
+        d=tfz-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tdwBhPhtCsN/JQvKp7YTOpn4Lpk5w39RK5RYDO92HW4=;
+        b=aBihwtoX6UoEawRpRhnhZTU/EV/u5sm2Bvg49HAx4AffL36z8qH992WqOJtRoW7ijR
+         +Pa72oGUyYoEONL6qFHeziXobK/N2EfK1x2OAjX+fs7acb2Nkj/PdUQD2Hlami5+GC/j
+         Mtmp+9aL7T5iitXJ2GjTxw0Er2lI81dIGxt4QJ15/4MVXVrV1sQ3zWZz3gy3PVbt5+vL
+         PfoeXezTX2KvpLiqe8sbsK48nlPJzOPnY2m5QoeBSK1Gd/QO/kYbQJ05kK7PlKvjFiQM
+         xXncdZVpykLqVTam6OQDiP4UjJjJF8MVPndp4iUVoN0nIIjrB54j81WX5xu8/6DYiVzI
+         na6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+y66MqggCakjVuRG4cFz30VjWieYM9CuDcuOFxkR0Z0=;
-        b=HDH9C8f8Y1roMO98y/GtnDxjGSC0KJoSKGJTDED1asN3wQBg/7x61WmFXiAcEbGPvT
-         47vYexDlUfeYPRk61V32AJc6U1SB5ngNSfD+UvGHISjXnqUCn+tByP42LJaaqDAIMmGw
-         1OX0hogFiTNZ5Mqlwv56VJ9s4fqfnVMnzeXNYB12eiR4NEBgVxlwwoP4Z2aI0LGrp/Hk
-         IHGFRiAOfJJismyDxJxhJhhf4pRnP0mQHxFG+LHjU9ebYn+QIIN3bvHitmx7DMrSYIxp
-         HZQ9quTSqpUOvYClyf5iqgZ1F5qSLQzEn9Fa69KnqT/b56nloQ7VuU6XKsI6UdAsDFeL
-         lvRA==
-X-Gm-Message-State: AOAM531tBBHtWPwUWPI80cvqbPS3LWYKW2zqN9RD4ZyOIJzw/n5DpmXB
-        ccAzj8XXLSrsRgAAMPdvxvY=
-X-Google-Smtp-Source: ABdhPJwt5n+lLcPAY7wmuVOEPNfgK98a5ZJcSYZj6v5ca19sNHLgGR7JEhitIeLWdduX+y2ESbJtEg==
-X-Received: by 2002:a5d:5485:: with SMTP id h5mr3181435wrv.247.1598125442919;
-        Sat, 22 Aug 2020 12:44:02 -0700 (PDT)
-Received: from tsnow (IGLD-83-130-62-237.inter.net.il. [83.130.62.237])
-        by smtp.gmail.com with ESMTPSA id k7sm3692908wrv.72.2020.08.22.12.43.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Aug 2020 12:44:02 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 22:43:50 +0300
-From:   Tomer Samara <tomersamara98@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Riley Andrews <riandrews@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Hridya Valsaraju <hridya@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] staging: android: Remove BUG from ion_system_heap.c
-Message-ID: <f554a891fb433e830403091e21fe288924c5c74d.1598125227.git.tomersamara98@gmail.com>
-References: <cover.1598125227.git.tomersamara98@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tdwBhPhtCsN/JQvKp7YTOpn4Lpk5w39RK5RYDO92HW4=;
+        b=AnyoLoq9RrAVIhwRmfTiP+ofFa5Rj+uBgbTV0XoApyiC9sSDQncfFLWCIcfboMo0PT
+         CidpiaBZQE1RqezLan/vAIdQD6REh0XWvyST4Z8ZETLwF/3Uc7A6G+1jRC+a0YGTYHk+
+         a05oRdlTMk/g7SUCDi0NqXlEhL6NLm9bDEVMTkjsnjRK8CKVL4n9FoAQbD/IgOutfyY3
+         TvE9FhbX1eUv/tP0xA3y0sT+aacslsAsNcONxwfXkPqAzonjJ8kbkOVs73Td9r3qYsR6
+         oMgZAT95ZP5meVx4g2f6BbJeDNqbqlDalNTtpVk11E6lQkRsFRAETYHTTsCYyp+Od1gC
+         8D+w==
+X-Gm-Message-State: AOAM531O4Oy/dt6IUdNQgYwF+P7QvDSw939/kEo/5mGvWh9ZLOB5T2MV
+        gUHPV413D+Iaery3UqcXn+RKIMRDLSm5f+iAUh+5/Q==
+X-Google-Smtp-Source: ABdhPJw0/K42CFhQrPnxt7ZAtulKyqck4MJDWapHs8CJeNnb0ySgc12eotg4a5/z2JRlvwYhiXck+CNjPUkFxDAQW7o=
+X-Received: by 2002:a7b:c308:: with SMTP id k8mr9273324wmj.90.1598126358713;
+ Sat, 22 Aug 2020 12:59:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1598125227.git.tomersamara98@gmail.com>
+References: <20200815182344.7469-1-kalou@tfz.net> <20200822032827.6386-1-kalou@tfz.net>
+ <20200822032827.6386-2-kalou@tfz.net> <20200822.123650.1479943925913245500.davem@davemloft.net>
+In-Reply-To: <20200822.123650.1479943925913245500.davem@davemloft.net>
+From:   Pascal Bouchareine <kalou@tfz.net>
+Date:   Sat, 22 Aug 2020 12:59:08 -0700
+Message-ID: <CAGbU3_nRMbe8Syo3OHw6B4LXUheGiXXcLcaEQe0EAFTAB7xgng@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] net: socket: implement SO_DESCRIPTION
+To:     David Miller <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove BUG() from ion_sytem_heap.c
+Thank you,
 
-this fix the following checkpatch issue:
-Avoid crashing the kernel - try using WARN_ON &
-recovery code ratherthan BUG() or BUG_ON().
+On Sat, Aug 22, 2020 at 12:36 PM David Miller <davem@davemloft.net> wrote:
+> > We ignore optlen and constrain the string to a static max size
+> >
+> > Signed-off-by: Pascal Bouchareine <kalou@tfz.net>
+>
+> This change is really a non-starter unless the information gets
+> published somewhere where people actually look at dumped sockets, and
+> that's inet_diag and friends.
 
-Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
----
- drivers/staging/android/ion/ion_system_heap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Would it make sense to also make UDIAG_SHOW_NAME use sk_description?
+(And keep the existing change - setsockopt + show_fd_info via
+/proc/.../fdinfo/..)
 
-diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
-index eac0632ab4e8..00d6154aec34 100644
---- a/drivers/staging/android/ion/ion_system_heap.c
-+++ b/drivers/staging/android/ion/ion_system_heap.c
-@@ -30,7 +30,7 @@ static int order_to_index(unsigned int order)
- 	for (i = 0; i < NUM_ORDERS; i++)
- 		if (order == orders[i])
- 			return i;
--	BUG();
-+	/* This is impossible. */
- 	return -1;
- }
- 
--- 
-2.25.1
+I would feel like adding a pid information (and what else am I missing
+here) to inet_diag might also be a good improvement then?
 
+I understand that users have to scan /proc to find the FDs, matching
+the inode number for the socket to find the owning process today.
+
+If that's of interest I can explore that too
