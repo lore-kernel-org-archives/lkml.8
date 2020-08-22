@@ -2,106 +2,123 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93783C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC7FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EED620738
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:17:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RMEHyVTG"
+	by mail.kernel.org (Postfix) with ESMTP id 7513A20738
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgHVMQw (ORCPT
+        id S1727957AbgHVMU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 08:16:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26716 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726704AbgHVMQv (ORCPT
+        Sat, 22 Aug 2020 08:20:26 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:33968 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726920AbgHVMUY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 08:16:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598098609;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s1PhZ9//qAtXW+wBZ1G+cKJixVit0c5kcvX8lH+2smM=;
-        b=RMEHyVTGCor9U8vZKExK2be91MdptBbl60VnTdp8r0x96GnPfNAl3+PszeNYWYmnmWMp8V
-        wLIG/XDifdOugW18769zugOhRtFNq6keojn60i8/MsmqMS5Jgj2dOrRGKUhlrCzmLDAikV
-        /DgCI7TxMK8nG9QFUOSffMOFiUalWQk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-474-d0lPOpulONucBFQHxX5_vg-1; Sat, 22 Aug 2020 08:16:48 -0400
-X-MC-Unique: d0lPOpulONucBFQHxX5_vg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E7C91DE14;
-        Sat, 22 Aug 2020 12:16:47 +0000 (UTC)
-Received: from darcari.bos.csb (ovpn-113-99.rdu2.redhat.com [10.10.113.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A3C4B7B41F;
-        Sat, 22 Aug 2020 12:16:46 +0000 (UTC)
-Subject: Re: [PATCH] tools/power turbostat: fix output formatting for ACPI CST
- enumeration
-To:     Len Brown <lenb@kernel.org>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200810144330.75613-1-darcari@redhat.com>
- <CAJvTdKms-sO=Qvpnhe4OjE48gXHPzDKbT0i5vK2QuDCxZTt_+Q@mail.gmail.com>
-From:   David Arcari <darcari@redhat.com>
-Organization: Red Hat
-Message-ID: <d8f50a6a-be68-f92b-e15f-c9f70335643f@redhat.com>
-Date:   Sat, 22 Aug 2020 08:16:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAJvTdKms-sO=Qvpnhe4OjE48gXHPzDKbT0i5vK2QuDCxZTt_+Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Sat, 22 Aug 2020 08:20:24 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-270-qZwqjJrpPHqWcJjZWqiVug-1; Sat, 22 Aug 2020 13:20:19 +0100
+X-MC-Unique: qZwqjJrpPHqWcJjZWqiVug-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sat, 22 Aug 2020 13:20:18 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sat, 22 Aug 2020 13:20:18 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Nick Desaulniers' <ndesaulniers@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Masahiro Yamada <masahiroy@kernel.org>
+CC:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        "Eli Friedman" <efriedma@quicinc.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Kees Cook" <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        "Vamshi K Sthambamkadi" <vamshi.k.sthambamkadi@gmail.com>
+Subject: RE: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+Thread-Topic: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+Thread-Index: AQHWeBjoCHxBBIXDc0qCyrHmyOJpJ6lD/ZLw
+Date:   Sat, 22 Aug 2020 12:20:17 +0000
+Message-ID: <ad72b37c132e41f6a74766c27a27d7f6@AcuMS.aculab.com>
+References: <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
+ <20200818202407.GA3143683@rani.riverdale.lan>
+ <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
+ <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
+ <20200818214146.GA3196105@rani.riverdale.lan>
+ <df6c1da4-b910-ecb8-0de2-6156dd651be6@rasmusvillemoes.dk>
+ <20200820175617.GA604994@rani.riverdale.lan>
+ <CAHk-=whn91ar+EbcBXQb9UXad00Q5WjU-TCB6UBzVba682a4ew@mail.gmail.com>
+ <20200821172935.GA1411923@rani.riverdale.lan>
+ <CAHk-=wi8vdb+wo-DACDpSijYfAbCs135YcnnAbRhGJcU+A=-+Q@mail.gmail.com>
+ <20200821195712.GB1475504@rani.riverdale.lan>
+ <CAHk-=wgXHhN5MSOLeE_7rMPoGknrSxmOOJVLBa4jkz38J4gHgg@mail.gmail.com>
+ <CAKwvOdnHZfVz8grK-SD6jTT1ggQNQ-RRduRdAG0nShqeitpgpg@mail.gmail.com>
+In-Reply-To: <CAKwvOdnHZfVz8grK-SD6jTT1ggQNQ-RRduRdAG0nShqeitpgpg@mail.gmail.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Len,
-
-Thanks for the quick turn around.  My apologies for not checking the tree before 
-sending a follow-up email.
-
-If you decide you prefer to change intel_idle - I'd be happy to do the work if 
-you'd like.  Just let me know.
-
-Thanks,
-
--Dave
-
-
-On 8/21/20 2:23 PM, Len Brown wrote:
-> Hi Dave,
-> 
-> I think this is fine.
-> Indeed, I actually went ahead and applied it a week or so ago.
-> 
-> the only alternative that I can think of is actually shortening the
-> ACPI C-state names in the intel_idle driver -- which is still an
-> option.  It would not be the first time we have tweaked the names used
-> in that driver to make tools more happy...
-> 
-> My apology for neglecting to send you an ACK.
-> I had intended to send my queued series to the list, which would
-> suffice for all the ACKs, but that send and the subsequent push got
-> delayed by this and that.  So I'll try to ack as I go, so it is clear
-> at any time where a patch stands.
-> 
-> thanks!
-> 
-> Len Brown, Intel Open Source Technology Center
-> 
+PiBGb3IgbW9yZSBjb250ZXh0IGZvciBmb2xrcyBhdCBob21lIGVhdGluZyBwb3Bjb3JuIGFuZCBl
+bmpveWluZyB0aGUNCj4gc2hvdzogaHR0cHM6Ly9naXRodWIuY29tL0NsYW5nQnVpbHRMaW51eC9s
+aW51eC9pc3N1ZXMvODc2I2lzc3VlY29tbWVudC02MTMwNDk0ODAuDQo+IEFuZCB0aGF0IHdhcyBz
+cGVjaWZpY2FsbHkgd2l0aCBLQVNBTiBlbmFibGVkIGFuZCBkb2Vzbid0IGFwcGVhciB0byBiZQ0K
+PiBjb21tb24gYmVoYXZpb3IgaW4gY2xhbmcgb3RoZXJ3aXNlIChoaWdoZXIgdGhyZXNob2xkKS4g
+V2h5IHRoZQ0KPiBoZXVyaXN0aWNzIGNoYW5nZSBmb3Igd2hlbiBpdCBzZWVtcyB0byBiZSBtb3Jl
+IHByb2ZpdGFibGUgdG8gcm9sbA0KPiBhc3NpZ25tZW50IG9mIGNvbnRpZ3VvdXMgbWVtYmVycyBv
+ZiB0aGUgc2FtZSBzdHJ1Y3QgdG8gdGhlIHNhbWUgdmFsdWUNCj4gaW50byBhIG1lbXNldCwgYW5k
+IDIgbG9uZ3Mgc2VlbXMgdG8gYmUgdGhlIHRocmVzaG9sZCBmb3IgS0FTQU4sIEkNCj4gZG9uJ3Qg
+a25vdy4gIEJ1dCBJIGFncmVlIHRoYXQgc2hvdWxkIGJlIGZpeGVkIG9uIHRoZSBjb21waWxlciBz
+aWRlLA0KPiB3aGljaCBpcyB3aHkgSSBoYXZlbid0IGJlZW4gcHVzaGluZyB0aGUga2VybmVsIHdv
+cmthcm91bmQuDQoNCkdpdmVuIHg4NiBoYXMgaXMgYSBzaW1wbGUgMy1pbnN0cnVjdGlvbiBsb29w
+IGZvciBtZW1zZXQNCnRoYXQgd2lsbCBkbyAxIHdyaXRlL2Nsb2NrICh0aGUgbWF4IG9uIGN1cnJl
+bnQgY3B1KSBJDQpkb3VidCBpdCBpcyBldmVyIHdvcnRoIG5vdCBpbmxpbmluZyBtZW1zZXQoKS4N
+ClRoZSBvbmx5IHJlYWwgc3BlY2lhbCBjYXNlIGlzIGxlbmd0aHMgPCA4Lg0KDQpGb3IgS0FTQU4g
+SSB3b25kZXIgaWYgc29tZXRoaW5nIGlzIHN0b3BwaW5nIGl0IGlubGluaW5nIG1lbXNldCgpPw0K
+U28gd2hhdCB1c3VhbGx5IGhhcHBlbnMgaXMgdGhlIHR3byBzdG9yZXMgZ2V0IGNvbnZlcnRlZCB0
+byBtZW1zZXQoKQ0KYW5kIHRoZW4gdGhlIG1lbXNldCgpIGdldHMgaW5saW5lZCBiYWNrIHRvIHR3
+byBzdG9yZXM/DQoNCk9UT0ggYWxsIHRoaXMgZmFmZmluZyBmb3IgbWVtc2V0IGFuZCBtZW1jcHkg
+aXMgcHJvYmFibHkgYQ0Kd2FzdGUgb2YgdGltZS4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQg
+QWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVz
+LCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
