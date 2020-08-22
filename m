@@ -2,204 +2,131 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA384C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EBDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B696820720
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D389520720
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:36:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598070989;
+	bh=m+lMNTAn9L0TnxApkYtp6tZTE4TcZtruUEdBi7kkAOs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Q1U+hWp0djP2FavrOmRZFI+Gh4yseyGxqzYNT1ioWosDdCeFaxLqbeWgX+xdKLTr3
+	 3Pvue8dBx3Cvo/2Raa4z5LAOexS/tB3jJc26dmnwyurj/0UiEZ/cNNKh9TRhhT2J+q
+	 jqAFkPtjHnLumSBM8wtUDBwIOwkQaFCQsPzsi3Tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgHVEfZ (ORCPT
+        id S1726113AbgHVEg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 00:35:25 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:63061 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgHVEfZ (ORCPT
+        Sat, 22 Aug 2020 00:36:27 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:39210 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbgHVEg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 00:35:25 -0400
-Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07M4Yrhk074116;
-        Sat, 22 Aug 2020 13:34:53 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav106.sakura.ne.jp);
- Sat, 22 Aug 2020 13:34:53 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav106.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07M4Yq9E074110
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sat, 22 Aug 2020 13:34:53 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: [RFC PATCH] pipe: make pipe_release() deferrable.
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        syzbot <syzbot+96cc7aba7e969b1d305c@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <00000000000045b3fe05abcced2f@google.com>
- <fc097a54-0384-9d21-323f-c3ca52cdb956@I-love.SAKURA.ne.jp>
- <CAHk-=wj15SDiHjP2wPiC=Ru-RrUjOuT4AoULj6N_9pVvSXaWiw@mail.gmail.com>
- <20200807053148.GA10409@redhat.com>
- <e673cccb-1b67-802a-84e3-6aeea4513a09@i-love.sakura.ne.jp>
- <20200810192941.GA16925@redhat.com>
- <d1e83b55-eb09-45e0-95f1-ece41251b036@i-love.sakura.ne.jp>
- <dc9b2681-3b84-eb74-8c88-3815beaff7f8@i-love.sakura.ne.jp>
-Message-ID: <7ba35ca4-13c1-caa3-0655-50d328304462@i-love.sakura.ne.jp>
-Date:   Sat, 22 Aug 2020 13:34:49 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Sat, 22 Aug 2020 00:36:27 -0400
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 07M4a58T012181;
+        Sat, 22 Aug 2020 13:36:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 07M4a58T012181
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1598070966;
+        bh=rSIgi0UFKz69QzH3NpYejP9Y0Myj8ahAjyAwuXUo0y4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nETSiJ6G6e6j50F+eXPO8/miIYXOGdWH4Ef8B76Up44da4sP4jb3TAlLPoeKlm1zx
+         msSWTYvBneihW/i4sQHK4Y1Kv2c5SaAGFF6Z9EWvnF8jlbTeuQ3w26116Jk4D0rh0m
+         U5BvGOvvBQ7Jw2l7GLXUVkwOCAuSHJeRmQNLDjoZDBY+iJ5tX38C9KRJM7+bT0OErw
+         NK4m/CsMKc2DcAYByiKXTveqBu76/oTFMIJkbsdrbkLrSKH+4Ftvo7Djj7Ex68jBHN
+         q7tnXzF7a3YYi924zJkh8eqGgHFJRpxNyEVXkHrnnYPuJK6K5kVReGZ25QAFxC7jWm
+         mMoEDHTwUfG+Q==
+X-Nifty-SrcIP: [209.85.221.170]
+Received: by mail-vk1-f170.google.com with SMTP id l184so867816vki.10;
+        Fri, 21 Aug 2020 21:36:06 -0700 (PDT)
+X-Gm-Message-State: AOAM533oO3bTo5QM5RHstUr+BEQi9SeHQLIN+hB2QTTgc65qMrnZhN4N
+        Xbw7EX3LzaV1at2KtrU1+LQqnGSJgtqNm8h9CLE=
+X-Google-Smtp-Source: ABdhPJzA8U5Km+A7DbPsH2kycxln5g6rCYtMQmeGygnvwm3V8T21s6b9QpSavI1akPmpTW1XMXlpoFetD3AvG6BOloA=
+X-Received: by 2002:a1f:7347:: with SMTP id o68mr3766544vkc.26.1598070964727;
+ Fri, 21 Aug 2020 21:36:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <dc9b2681-3b84-eb74-8c88-3815beaff7f8@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200821190159.1033740-1-masahiroy@kernel.org>
+ <20200821190159.1033740-7-masahiroy@kernel.org> <CAKwvOdn9ZfvC4dzuVnxc_a52JFn_q1ewOWwZZD5b9=izeEayKQ@mail.gmail.com>
+In-Reply-To: <CAKwvOdn9ZfvC4dzuVnxc_a52JFn_q1ewOWwZZD5b9=izeEayKQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 22 Aug 2020 13:35:25 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASt-PnF6gaEoS-8nNjrReszWAeS02_4XNLQtE9wv8w2AQ@mail.gmail.com>
+Message-ID: <CAK7LNASt-PnF6gaEoS-8nNjrReszWAeS02_4XNLQtE9wv8w2AQ@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] gen_compile_commands: move directory walk to a
+ generator function
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Tom Roeder <tmroeder@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot is reporting hung task at pipe_write() [1], for __pipe_lock() from
-pipe_write() by task-A can be blocked forever waiting for
-handle_userfault() from copy_page_from_iter() from pipe_write() by task-B
-to complete and call __pipe_unlock().
+On Sat, Aug 22, 2020 at 9:41 AM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
 
-Since the problem is that we can't enforce task-B to immediately complete
-handle_userfault() (this is effectively returning to userspace with locks
-held), we won't be able to avoid this hung task report unless we convert
-all pipe locks to killable (because khungtaskd does not warn stalling
-killable waits).
-
-Linus Torvalds commented that we could introduce timeout for
-handle_userfault(), and Andrea Arcangeli responded that too short timeout
-can cause problems (e.g. breaking qemu's live migration) [2], and we can't
-guarantee that khungtaskd's timeout is longer than timeout for
-multiple handle_userfault() events.
-
-Since Andrea commented that we will be able to avoid this hung task report
-if we convert pipe locks to killable, I tried a feasibility test [3].
-While it is not difficult to make some of pipe locks killable, there
-are subtle or complicated locations (e.g. pipe_wait() users).
-
-syzbot already reported that even pipe_release() is subjected to this hung
-task report [4]. While the cause of [4] is that splice() from pipe to file
-hit an infinite busy loop bug after holding pipe lock, it is a sign that
-we have to care about __pipe_lock() in pipe_release() even if pipe_read()
-or pipe_write() is stalling due to page fault handling.
-
-Therefore, this patch tries to convert __pipe_lock() in pipe_release() to
-killable, by deferring to a workqueue context when __pipe_lock_killable()
-failed.
-
-(a) Do you think that we can make all pipe locks killable?
-(b) Do you think that we can introduce timeout for handling page faults?
-(c) Do you think that we can avoid page faults with pipe locks held?
-
-[1] https://syzkaller.appspot.com/bug?id=ab3d277fa3b068651edb7171a1aa4f78e5eacf78
-[2] https://lkml.kernel.org/r/CAHk-=wj15SDiHjP2wPiC=Ru-RrUjOuT4AoULj6N_9pVvSXaWiw@mail.gmail.com
-[3] https://lkml.kernel.org/r/dc9b2681-3b84-eb74-8c88-3815beaff7f8@i-love.sakura.ne.jp
-[4] https://syzkaller.appspot.com/bug?id=2ccac875e85dc852911a0b5b788ada82dc0a081e
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- fs/pipe.c | 55 ++++++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 48 insertions(+), 7 deletions(-)
-
-diff --git a/fs/pipe.c b/fs/pipe.c
-index 60dbee457143..a64c7fc1794f 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -87,6 +87,11 @@ static inline void __pipe_lock(struct pipe_inode_info *pipe)
- 	mutex_lock_nested(&pipe->mutex, I_MUTEX_PARENT);
- }
- 
-+static inline int __pipe_lock_killable(struct pipe_inode_info *pipe)
-+{
-+	return mutex_lock_killable_nested(&pipe->mutex, I_MUTEX_PARENT);
-+}
-+
- static inline void __pipe_unlock(struct pipe_inode_info *pipe)
- {
- 	mutex_unlock(&pipe->mutex);
-@@ -714,15 +719,12 @@ static void put_pipe_info(struct inode *inode, struct pipe_inode_info *pipe)
- 		free_pipe_info(pipe);
- }
- 
--static int
--pipe_release(struct inode *inode, struct file *file)
-+/* Caller holds pipe->mutex. */
-+static void do_pipe_release(struct inode *inode, struct pipe_inode_info *pipe, fmode_t f_mode)
- {
--	struct pipe_inode_info *pipe = file->private_data;
--
--	__pipe_lock(pipe);
--	if (file->f_mode & FMODE_READ)
-+	if (f_mode & FMODE_READ)
- 		pipe->readers--;
--	if (file->f_mode & FMODE_WRITE)
-+	if (f_mode & FMODE_WRITE)
- 		pipe->writers--;
- 
- 	/* Was that the last reader or writer, but not the other side? */
-@@ -732,9 +734,48 @@ pipe_release(struct inode *inode, struct file *file)
- 		kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
- 		kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
- 	}
-+}
-+
-+struct pipe_release_data {
-+	struct work_struct work;
-+	struct inode *inode;
-+	struct pipe_inode_info *pipe;
-+	fmode_t f_mode;
-+};
-+
-+static void deferred_pipe_release(struct work_struct *work)
-+{
-+	struct pipe_release_data *w = container_of(work, struct pipe_release_data, work);
-+	struct inode *inode = w->inode;
-+	struct pipe_inode_info *pipe = w->pipe;
-+
-+	__pipe_lock(pipe);
-+	do_pipe_release(inode, pipe, w->f_mode);
- 	__pipe_unlock(pipe);
- 
- 	put_pipe_info(inode, pipe);
-+	iput(inode); /* pipe_release() called ihold(inode). */
-+	kfree(w);
-+}
-+
-+static int pipe_release(struct inode *inode, struct file *file)
-+{
-+	struct pipe_inode_info *pipe = file->private_data;
-+	struct pipe_release_data *w;
-+
-+	if (likely(__pipe_lock_killable(pipe) == 0)) {
-+		do_pipe_release(inode, pipe, file->f_mode);
-+		__pipe_unlock(pipe);
-+		put_pipe_info(inode, pipe);
-+		return 0;
-+	}
-+	w = kmalloc(sizeof(*w), GFP_KERNEL | __GFP_NOFAIL);
-+	ihold(inode); /* deferred_pipe_release() will call iput(inode). */
-+	w->inode = inode;
-+	w->pipe = pipe;
-+	w->f_mode = file->f_mode;
-+	INIT_WORK(&w->work, deferred_pipe_release);
-+	queue_work(system_wq, &w->work);
- 	return 0;
- }
- 
--- 
-2.18.4
+> > +    for path in paths:
+> > +        cmdfiles = cmdfiles_in_dir(path)
+> > +
+> > +        for cmdfile in cmdfiles:
+>
+> If `cmdfiles` is never referenced again, please make this:
+>
+> for cmdfile in cmdfiles_in_dir(path):
 
 
+I intentionally wrote in this way
+because in the next commit,
+cmdfiles will be selectively set.
+
+
+
+
+
+> With those 2 changes feel free to add my
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+>
+> > +            with open(cmdfile, 'rt') as f:
+> >                  result = line_matcher.match(f.readline())
+> >                  if result:
+> >                      try:
+> > -                        entry = process_line(directory,
+> > -                                             result.group(1), result.group(2))
+> > +                        entry = process_line(directory, result.group(1),
+> > +                                             result.group(2))
+> >                          compile_commands.append(entry)
+> >                      except ValueError as err:
+> >                          logging.info('Could not add line from %s: %s',
+> > -                                     filepath, err)
+> > +                                     cmdfile, err)
+> >
+> >      with open(output, 'wt') as f:
+> >          json.dump(compile_commands, f, indent=2, sort_keys=True)
+> > --
+> > 2.25.1
+> >
+>
+>
+> --
+> Thanks,
+> ~Nick Desaulniers
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CAKwvOdn9ZfvC4dzuVnxc_a52JFn_q1ewOWwZZD5b9%3DizeEayKQ%40mail.gmail.com.
+
+
+
+--
+Best Regards
+Masahiro Yamada
