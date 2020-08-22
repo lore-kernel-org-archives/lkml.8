@@ -2,532 +2,198 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E14AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 00:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B04C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 00:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8E1207DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 00:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 360962072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 00:41:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hEu+kARb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BPob3zYc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbgHVAis (ORCPT
+        id S1726863AbgHVAln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 20:38:48 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:39342 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbgHVAip (ORCPT
+        Fri, 21 Aug 2020 20:41:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbgHVAll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 20:38:45 -0400
-Received: from tusharsu-Ubuntu.lan (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9F15020B490A;
-        Fri, 21 Aug 2020 17:38:42 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9F15020B490A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598056723;
-        bh=Qrvm+rclRWKXxhbSYfek1NzBHbJnm+Kehj6MefY5y8k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hEu+kARbcDWXL4vBX5wNEA0qK6HBYGpu0r4B2kFP+yF+Uflhf8o6JxPmiM1xPCvcI
-         ZFy4g6mrKpY7oZO4ZtClnj7idWfHF8YDVLd1gySxKSTvCYlXENeUHkR9mvrAX2Scdi
-         J2DuMvj/9jjuLPjYJrZetJCfcI75fVxHfdkgF49A=
-From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
-To:     zohar@linux.ibm.com, agk@redhat.com, snitzer@redhat.com,
-        gmazyland@gmail.com
-Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
-        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com
-Subject: [PATCH v2 1/2] dm-devel: collect target data and submit to IMA to measure
-Date:   Fri, 21 Aug 2020 17:38:33 -0700
-Message-Id: <20200822003834.5696-2-tusharsu@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200822003834.5696-1-tusharsu@linux.microsoft.com>
-References: <20200822003834.5696-1-tusharsu@linux.microsoft.com>
+        Fri, 21 Aug 2020 20:41:41 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9778BC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 17:41:41 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id nv17so1531195pjb.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 17:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fpYkI6juAqMAAUVTQTHgpzHvlncEIWGwTCUc4UiA+NQ=;
+        b=BPob3zYcwMB6bxh5Xy6HCPZOVzXpbXZAgORVwjpTTFMl/+hIoRgP9u9snUEd9ytwFN
+         s/q8EexxPFJub6RCY0iCxBddroqjCnamTLaAwUGB0FQMR26DoQw8m08wSGK1JaZ8dlr1
+         heVWZFhGKYkNuDcIsSP8YLSPQdUW0jZqvSPH1Hct1nc4y9b/hRyCxzw7jhRi1xoAOQ3M
+         kbDAT57Xcz90ARycJCQYCjG/exCHnyD6Eh1HczygMhm7xr6zFsRGEVr6YWmUqZ3lwY1N
+         SeJA8GohX+mwfQ3wFBnGbkeZxSt1zlJHv/5gqVkDZvrLYeOYLMrFwxIzl/AxByz4ISkl
+         eAZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fpYkI6juAqMAAUVTQTHgpzHvlncEIWGwTCUc4UiA+NQ=;
+        b=qP9lGep0xwnqH3FU89nFwDqMI2NpvkFO8PdlWAPuPBZLEL04gJhlfnhNYEpRAx+U3G
+         AbWkjPrfA14Ygz9/cLOXyl6u/7BJVMOZuOghoKXXMgcNxvsGryiOpqn+jTcKx1HQfs8D
+         GY984ZN0W1llFCetmBREWNCom+YkHHBoYt3+L6sQTzCAk2NisNYjxJkBxg2kPRIfAsYy
+         VLNyNsHd2Bfm9ZrvCOd+gkHgAzOgez31+OvLExvBBC1sAVzlCUsdwXJpstKT9gHF5XQS
+         dsSVY0N9ZD2DaH4yjudY1ula+D7fC/VcEuX3KO4e/Dn39LrVre0DUfgYyHZyLCodJAEs
+         cmMQ==
+X-Gm-Message-State: AOAM5308/sH+ZQk03JETzbHdFrbB4uPXleAkmDAYR/Cf8r//G1WilytJ
+        3zSrfsUmBUqmCw2e6N2QAg4UjBTRf4oQ7cEbhcdaYw==
+X-Google-Smtp-Source: ABdhPJxoznNG5mzZHJrBMDgeBePlf0XMcl7O3f+wmRk2kidEeZfhAnaAXZGPhl91K2hWHb7ldgHVUhfIVJs2bwaN4e4=
+X-Received: by 2002:a17:902:cb91:: with SMTP id d17mr4204225ply.223.1598056899804;
+ Fri, 21 Aug 2020 17:41:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200821190159.1033740-1-masahiroy@kernel.org> <20200821190159.1033740-7-masahiroy@kernel.org>
+In-Reply-To: <20200821190159.1033740-7-masahiroy@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 21 Aug 2020 17:41:28 -0700
+Message-ID: <CAKwvOdn9ZfvC4dzuVnxc_a52JFn_q1ewOWwZZD5b9=izeEayKQ@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] gen_compile_commands: move directory walk to a
+ generator function
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Tom Roeder <tmroeder@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the device-mapper targets to take advantage of IMA's measuring and
-quoting abilities, and for enabling remote attestation for device-mapper
-targets, device-mapper needs to provide the functionality to
-consistently measure target data using ima_measure_critical_data()
-function provided by IMA. A generic set of functions at device-mapper
-layer would enable the measurement structure to be uniform across
-targets, and avoid code duplication. It will also make on-boarding
-easier and faster for targets that want to use IMA infrastructure for
-measurements, quoting, and remote attestation. The uniform measurement
-structure across targets would also help the remote attestation services
-to consistently process, across targets, the measurement to be attested.
+On Fri, Aug 21, 2020 at 12:02 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Currently, this script walks under the specified directory (default to
+> the current directory), then parses all .cmd files found.
+>
+> Split it into a separate helper function because the next commit will
+> add more helpers to pick up .cmd files associated with given file(s).
+>
+> There is no point to build and return a huge list at once. I used a
+> generator so it works in the for-loop with less memory.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+> Changes in v2:
+>   - New patch
+>
+>  scripts/gen_compile_commands.py | 44 ++++++++++++++++++++++++---------
+>  1 file changed, 32 insertions(+), 12 deletions(-)
+>
+> diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
+> index 3ed958b64658..6dec7e2c4098 100755
+> --- a/scripts/gen_compile_commands.py
+> +++ b/scripts/gen_compile_commands.py
+> @@ -33,6 +33,7 @@ def parse_arguments():
+>          log_level: A logging level to filter log output.
+>          directory: The work directory where the objects were built
+>          output: Where to write the compile-commands JSON file.
+> +        paths: The list of directories to handle to find .cmd files
 
-Implement a set of functions at device-mapper layer to manage the data
-coming from various device-mapper targets to be measured by IMA.
+Punctuation: please add a period.
 
-Provide the functionality for various tasks - initialize the necessary
-data structures, add the data to the list of key-value pairs to be be
-measured, reset the list if needed (e.g. in error/retry cases), and
-finally pass it on to device-mapper layer, to be measured by IMA.
+>      """
+>      usage = 'Creates a compile_commands.json database from kernel .cmd files'
+>      parser = argparse.ArgumentParser(description=usage)
+> @@ -56,7 +57,28 @@ def parse_arguments():
+>
+>      return (args.log_level,
+>              os.path.abspath(args.directory),
+> -            args.output)
+> +            args.output,
+> +            [args.directory])
+> +
+> +
+> +def cmdfiles_in_dir(directory):
+> +    """Generate the iterator of .cmd files found under the directory.
+> +
+> +    Walk under the given directory, and yield every .cmd file found.
+> +
+> +    Args:
+> +        directory: The directory to search for .cmd files.
+> +
+> +    Yields:
+> +        The path to a .cmd file.
+> +    """
+> +
+> +    filename_matcher = re.compile(_FILENAME_PATTERN)
+> +
+> +    for dirpath, _, filenames in os.walk(directory):
+> +        for filename in filenames:
+> +            if filename_matcher.match(filename):
+> +                yield os.path.join(dirpath, filename)
+>
+>
+>  def process_line(root_directory, command_prefix, file_path):
+> @@ -94,31 +116,29 @@ def process_line(root_directory, command_prefix, file_path):
+>
+>  def main():
+>      """Walks through the directory and finds and parses .cmd files."""
+> -    log_level, directory, output = parse_arguments()
+> +    log_level, directory, output, paths = parse_arguments()
+>
+>      level = getattr(logging, log_level)
+>      logging.basicConfig(format='%(levelname)s: %(message)s', level=level)
+>
+> -    filename_matcher = re.compile(_FILENAME_PATTERN)
+>      line_matcher = re.compile(_LINE_PATTERN)
+>
+>      compile_commands = []
+> -    for dirpath, _, filenames in os.walk(directory):
+> -        for filename in filenames:
+> -            if not filename_matcher.match(filename):
+> -                continue
+> -            filepath = os.path.join(dirpath, filename)
+>
+> -            with open(filepath, 'rt') as f:
+> +    for path in paths:
+> +        cmdfiles = cmdfiles_in_dir(path)
+> +
+> +        for cmdfile in cmdfiles:
 
-Ensure the functionality is generic and implemented at device-mapper
-layer, so that any device-mapper target can use it to measure its data
-through IMA.
+If `cmdfiles` is never referenced again, please make this:
 
-Also make sure the functionality is non-intrusive/best effort for the
-targets using it. The errors in managing the list to be measured, and
-the actual errors in the measurement should not disrupt the core
-functionality of the targets.
+for cmdfile in cmdfiles_in_dir(path):
 
-Protect the list of key value pairs to be measured for a given target,
-by putting it under critical sections - so that multi-threaded targets
-can safely use the list to append the data from different threads, for
-measurements and quoting.
+With those 2 changes feel free to add my
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Compute the last measurement's hash and store it internally, so that
-unnecessary duplicate data is not sent to IMA for measurement.
+> +            with open(cmdfile, 'rt') as f:
+>                  result = line_matcher.match(f.readline())
+>                  if result:
+>                      try:
+> -                        entry = process_line(directory,
+> -                                             result.group(1), result.group(2))
+> +                        entry = process_line(directory, result.group(1),
+> +                                             result.group(2))
+>                          compile_commands.append(entry)
+>                      except ValueError as err:
+>                          logging.info('Could not add line from %s: %s',
+> -                                     filepath, err)
+> +                                     cmdfile, err)
+>
+>      with open(output, 'wt') as f:
+>          json.dump(compile_commands, f, indent=2, sort_keys=True)
+> --
+> 2.25.1
+>
 
-Divide the functionality into 5 main functions:
-(1) dm_ima_init_measurements(): Use it to initialize device-mapper
-target's IMA measurement list. It should abstract the necessary data
-initialization from the device-mapper target apps.
 
-(2) dm_ima_append_measurement_list(): Use it to append the key-value
-pair to the existing list of key-value pairs to measure.
-
-(3) dm_ima_finalize_and_measure(): Use it to measure the key-value pair
-list for a given target, and finally release the resources held by the
-list for that specific target.
-
-Note that the data given by the target for a given device would be
-sent to IMA subsystem for measurement only if it has changed since the
-last time it was measured.
-
-(4) dm_ima_reset_measurement_list(): Use it to reset device-mapper
-target's ima measurement list, by releasing the resources held by the
-list. Use it if the measurements list need to be reset after
-dm_ima_init_measurements() and before calling
-dm_ima_finalize_and_measure().
-
-This can be needed in scenarios like recovering from error paths and
-retrying measurements and quoting again.
-
-(5) dm_ima_exit_measurements(): Use it during the destruction of the
-target - to release the resources held for measurement. This is useful
-to protect the kernel from possible resource leaks when the target adds
-data for measurements using dm_ima_append_measurement_list(), but gets
-destroyed before calling dm_ima_finalize_and_measure().
-
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
----
- drivers/md/Makefile           |   1 +
- drivers/md/dm-ima.c           | 298 ++++++++++++++++++++++++++++++++++
- include/linux/device-mapper.h |  60 +++++++
- 3 files changed, 359 insertions(+)
- create mode 100644 drivers/md/dm-ima.c
-
-diff --git a/drivers/md/Makefile b/drivers/md/Makefile
-index 31840f95cd40..cedecddec7a2 100644
---- a/drivers/md/Makefile
-+++ b/drivers/md/Makefile
-@@ -74,6 +74,7 @@ obj-$(CONFIG_DM_LOG_WRITES)	+= dm-log-writes.o
- obj-$(CONFIG_DM_INTEGRITY)	+= dm-integrity.o
- obj-$(CONFIG_DM_ZONED)		+= dm-zoned.o
- obj-$(CONFIG_DM_WRITECACHE)	+= dm-writecache.o
-+obj-$(CONFIG_IMA)		+= dm-ima.o
- 
- ifeq ($(CONFIG_DM_INIT),y)
- dm-mod-objs			+= dm-init.o
-diff --git a/drivers/md/dm-ima.c b/drivers/md/dm-ima.c
-new file mode 100644
-index 000000000000..2651e5c88395
---- /dev/null
-+++ b/drivers/md/dm-ima.c
-@@ -0,0 +1,298 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2020 Microsoft Corporation
-+ *
-+ * Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-+ *
-+ * File: dm-ima.c
-+ *       Enables IMA measurements for DM targets
-+ */
-+
-+#include "dm-core.h"
-+
-+#include <linux/ima.h>
-+#include <linux/device-mapper.h>
-+#include <crypto/hash.h>
-+#include <linux/crypto.h>
-+#include <crypto/hash_info.h>
-+
-+#define DM_MSG_PREFIX "ima"
-+
-+static int dm_compute_buffer_hash(void *buf,
-+				  size_t buf_len,
-+				  void **buf_hash,
-+				  int *buf_hash_len)
-+{
-+	struct crypto_shash *tfm;
-+	struct shash_desc *desc = NULL;
-+	void *digest = NULL;
-+	int desc_size;
-+	int digest_size;
-+	int ret = 0;
-+
-+	tfm = crypto_alloc_shash("sha256", 0, 0);
-+	if (IS_ERR(tfm))
-+		return PTR_ERR(tfm);
-+
-+	desc_size = crypto_shash_descsize(tfm) + sizeof(*desc);
-+	digest_size = crypto_shash_digestsize(tfm);
-+
-+	digest = kmalloc(digest_size, GFP_KERNEL);
-+	if (!digest) {
-+		ret = -ENOMEM;
-+		goto error;
-+	}
-+
-+	desc = kzalloc(desc_size, GFP_KERNEL);
-+	if (!desc) {
-+		ret = -ENOMEM;
-+		goto error;
-+	}
-+
-+	desc->tfm = tfm;
-+
-+	ret = crypto_shash_digest(desc, buf, buf_len, digest);
-+	if (ret < 0)
-+		goto error;
-+
-+	*buf_hash_len = digest_size;
-+	*buf_hash = digest;
-+	digest = NULL;
-+
-+error:
-+	kfree(desc);
-+	kfree(digest);
-+
-+	crypto_free_shash(tfm);
-+
-+	return ret;
-+}
-+
-+static void dm_release_ima_measurements(struct list_head
-+					*ima_kv_list)
-+{
-+	struct ima_keyval *cur_keyval, *tmp_keyval;
-+
-+	list_for_each_entry_safe(cur_keyval,
-+				 tmp_keyval,
-+				 ima_kv_list,
-+				 kv_list) {
-+
-+		list_del(&cur_keyval->kv_list);
-+		kzfree(cur_keyval->key);
-+		kzfree(cur_keyval->val);
-+		kfree(cur_keyval);
-+	}
-+}
-+
-+void dm_ima_init_measurements(struct target_type *tt)
-+{
-+	INIT_LIST_HEAD(&tt->ima_kv_list);
-+	mutex_init(&tt->ima_lock);
-+	tt->ima_last_buf_hash = NULL;
-+	tt->ima_last_buf_hash_len = 0;
-+}
-+EXPORT_SYMBOL(dm_ima_init_measurements);
-+
-+void dm_ima_reset_measurement_list(struct target_type *tt)
-+{
-+	LIST_HEAD(temp_list);
-+
-+	if (!tt) {
-+		DMERR("invalid argument, target_type");
-+		return;
-+	}
-+
-+	mutex_lock(&tt->ima_lock);
-+	list_cut_before(&temp_list, &tt->ima_kv_list, &tt->ima_kv_list);
-+	mutex_unlock(&tt->ima_lock);
-+
-+	dm_release_ima_measurements(&temp_list);
-+}
-+EXPORT_SYMBOL(dm_ima_reset_measurement_list);
-+
-+void dm_ima_append_measurement_list(struct target_type *tt,
-+				  const char *key,
-+				  const void *val,
-+				  unsigned int val_len)
-+{
-+	struct ima_keyval *cur_keyval = NULL;
-+	int r = 0;
-+
-+	if (!tt || !key || !val || val_len == 0) {
-+		r = -EINVAL;
-+		goto error;
-+	}
-+
-+	cur_keyval = kzalloc(sizeof(*cur_keyval), GFP_KERNEL);
-+	if (!cur_keyval) {
-+		r = -ENOMEM;
-+		goto error;
-+	}
-+
-+	cur_keyval->key = kstrdup(key, GFP_KERNEL);
-+	if (!cur_keyval->key) {
-+		r = -ENOMEM;
-+		goto error;
-+	}
-+
-+	cur_keyval->val_len = val_len;
-+	cur_keyval->val = kmemdup(val, val_len, GFP_KERNEL);
-+	if (!cur_keyval->val) {
-+		r = -ENOMEM;
-+		goto error;
-+	}
-+
-+	INIT_LIST_HEAD(&cur_keyval->kv_list);
-+
-+	mutex_lock(&tt->ima_lock);
-+	list_add(&cur_keyval->kv_list, &tt->ima_kv_list);
-+	mutex_unlock(&tt->ima_lock);
-+
-+	return;
-+
-+error:
-+	if (cur_keyval) {
-+		kzfree(cur_keyval->key);
-+		kzfree(cur_keyval->val);
-+	}
-+	kfree(cur_keyval);
-+
-+	DMERR("failed to append IMA measurement list %d", r);
-+}
-+EXPORT_SYMBOL(dm_ima_append_measurement_list);
-+
-+void dm_ima_finalize_and_measure(struct target_type *tt,
-+				 const char *buf_desc,
-+				 bool measure_buf_hash)
-+{
-+	char *evt_name = NULL, *evt_src = NULL, *equ = "=", *sep = ";";
-+	void *buf = NULL, *buf_hash = NULL, *last_buf_hash = NULL;
-+	struct ima_keyval *cur_keyval = NULL, *tmp_keyval = NULL;
-+	int cursor = 0, buf_len = 0, cur_keyname_len = 0;
-+	int l_sep = strlen(sep), l_equ = strlen(equ);
-+	int r = 0, hr = 0, mr = 0;
-+	int buf_hash_len = 0;
-+	struct timespec64 ts;
-+	LIST_HEAD(temp_list);
-+
-+
-+	if (!tt) {
-+		r = -EINVAL;
-+		goto out;
-+	}
-+
-+	mutex_lock(&tt->ima_lock);
-+	if (!list_empty(&tt->ima_kv_list))
-+		list_cut_before(&temp_list,
-+				&tt->ima_kv_list,
-+				&tt->ima_kv_list);
-+	else
-+		r = -EINVAL;
-+
-+	last_buf_hash = tt->ima_last_buf_hash;
-+	tt->ima_last_buf_hash = NULL;
-+	tt->ima_last_buf_hash_len = 0;
-+	mutex_unlock(&tt->ima_lock);
-+
-+	if (r)
-+		goto out;
-+
-+	list_for_each_entry_safe(cur_keyval,
-+				 tmp_keyval,
-+				 &temp_list,
-+				 kv_list)
-+		buf_len += strlen(cur_keyval->key) + l_equ +
-+			   cur_keyval->val_len + l_sep;
-+
-+	if (!buf_len) {
-+		r = -EINVAL;
-+		goto out;
-+	}
-+
-+	buf = kzalloc(buf_len, GFP_KERNEL);
-+	if (!buf) {
-+		r = -ENOMEM;
-+		goto out;
-+	}
-+
-+	list_for_each_entry_safe(cur_keyval,
-+				 tmp_keyval,
-+				 &temp_list,
-+				 kv_list) {
-+		cur_keyname_len = strlen(cur_keyval->key);
-+		memcpy(buf+cursor, cur_keyval->key, cur_keyname_len);
-+		cursor += cur_keyname_len;
-+		memcpy(buf+cursor, equ, l_equ);
-+		cursor += l_equ;
-+		memcpy(buf+cursor, cur_keyval->val, cur_keyval->val_len);
-+		cursor += cur_keyval->val_len;
-+		memcpy(buf+cursor, sep, l_sep);
-+		cursor += l_sep;
-+	}
-+
-+	hr = dm_compute_buffer_hash(buf, buf_len, &buf_hash, &buf_hash_len);
-+
-+	if (!hr && buf_hash && last_buf_hash)
-+		mr = memcmp(buf_hash, last_buf_hash, buf_hash_len);
-+
-+	if (hr || mr || !last_buf_hash) {
-+		ktime_get_real_ts64(&ts);
-+
-+		evt_src = kasprintf(GFP_KERNEL, "dm-%s", tt->name);
-+		if (!evt_src) {
-+			r = -ENOMEM;
-+			goto out;
-+		}
-+
-+		evt_name = kasprintf(GFP_KERNEL, "%lld:%09ld:%s%s%s",
-+				     ts.tv_sec,
-+				     ts.tv_nsec,
-+				     evt_src,
-+				     buf_desc ? ":" : "",
-+				     buf_desc ? buf_desc : "");
-+
-+		if (!evt_name) {
-+			r = -ENOMEM;
-+			goto out;
-+		}
-+
-+		ima_measure_critical_data((const char *)evt_name,
-+					  (const char *)evt_src,
-+					  (const void *)buf,
-+					  buf_len,
-+					  measure_buf_hash);
-+
-+		kzfree(last_buf_hash);
-+
-+		mutex_lock(&tt->ima_lock);
-+		tt->ima_last_buf_hash = buf_hash;
-+		tt->ima_last_buf_hash_len = buf_hash_len;
-+		mutex_unlock(&tt->ima_lock);
-+
-+		buf_hash = NULL;
-+	}
-+
-+	dm_release_ima_measurements(&temp_list);
-+out:
-+	if (r)
-+		DMERR("failed to measure DM target data through IMA %d", r);
-+
-+	kfree(evt_src);
-+	kzfree(evt_name);
-+	kzfree(buf);
-+	kzfree(buf_hash);
-+}
-+EXPORT_SYMBOL(dm_ima_finalize_and_measure);
-+
-+void dm_ima_exit_measurements(struct target_type *tt)
-+{
-+	dm_ima_reset_measurement_list(tt);
-+	kzfree(tt->ima_last_buf_hash);
-+	mutex_destroy(&tt->ima_lock);
-+}
-+EXPORT_SYMBOL(dm_ima_exit_measurements);
-+
-+MODULE_AUTHOR("Tushar Sugandhi <tusharsu@linux.microsoft.com>");
-+MODULE_DESCRIPTION("Enables IMA measurements for DM targets");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
-index 8750f2dc5613..5d59bc18ce32 100644
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -164,6 +164,18 @@ int dm_get_device(struct dm_target *ti, const char *path, fmode_t mode,
- 		  struct dm_dev **result);
- void dm_put_device(struct dm_target *ti, struct dm_dev *d);
- 
-+/*
-+ * Information about IMA measurement data entry
-+ */
-+#ifdef CONFIG_IMA
-+struct ima_keyval {
-+	char *key;
-+	void *val;
-+	unsigned int val_len;
-+	struct list_head kv_list;
-+};
-+#endif
-+
- /*
-  * Information about a target type
-  */
-@@ -199,6 +211,13 @@ struct target_type {
- 	dm_dax_copy_iter_fn dax_copy_to_iter;
- 	dm_dax_zero_page_range_fn dax_zero_page_range;
- 
-+#ifdef CONFIG_IMA
-+	/* For ima measurements*/
-+	struct list_head ima_kv_list;
-+	void *ima_last_buf_hash;
-+	int ima_last_buf_hash_len;
-+	struct mutex ima_lock;
-+#endif
- 	/* For internal device-mapper use. */
- 	struct list_head list;
- };
-@@ -543,6 +562,47 @@ struct dm_table *dm_swap_table(struct mapped_device *md,
-  */
- void *dm_vcalloc(unsigned long nmemb, unsigned long elem_size);
- 
-+/*-----------------------------------------------------------------
-+ * Functions for ima measurements.
-+ *-----------------------------------------------------------------
-+ */
-+#ifdef CONFIG_IMA
-+void dm_ima_init_measurements(struct target_type *tt);
-+
-+/*
-+ * Reset device mapper target's ima measurement list.
-+ * If the measurements list need to be reset after dm_ima_init_measurements()
-+ * and before calling dm_ima_finalize_and_measure(), this function should
-+ * be called. This can be needed in scenarios like recovering from error
-+ * paths and retrying measurements again.
-+ */
-+void dm_ima_reset_measurement_list(struct target_type *tt);
-+
-+void dm_ima_append_measurement_list(struct target_type *tt,
-+				    const char *key,
-+				    const void *val,
-+				    unsigned int val_length);
-+
-+void dm_ima_finalize_and_measure(struct target_type *tt,
-+				 const char *buf_desc,
-+				 bool measure_buf_hash);
-+
-+void dm_ima_exit_measurements(struct target_type *tt);
-+#else
-+static inline void dm_ima_init_measurements(struct target_type *tt) {}
-+
-+static inline void dm_ima_reset_measurement_list(struct target_type *tt) {}
-+
-+static inline void dm_ima_append_measurement_list(struct target_type *tt,
-+						  const char *key,
-+						  const void *val,
-+						  unsigned int val_length) {}
-+
-+static inline void dm_ima_finalize_and_measure(struct target_type *tt,
-+					       const char *buf_desc,
-+					       bool measure_buf_hash) {}
-+static inline void dm_ima_exit_measurements(struct target_type *tt) {}
-+#endif /* CONFIG_IMA */
- /*-----------------------------------------------------------------
-  * Macros.
-  *---------------------------------------------------------------*/
 -- 
-2.17.1
-
+Thanks,
+~Nick Desaulniers
