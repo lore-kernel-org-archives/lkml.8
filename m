@@ -2,145 +2,100 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABA1C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BD7C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 948212072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0B1207C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hjDRi5ed"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dxPZCYC3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgHVOWo (ORCPT
+        id S1728191AbgHVOYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 10:22:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39378 "EHLO
+        Sat, 22 Aug 2020 10:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728120AbgHVOWg (ORCPT
+        with ESMTP id S1728083AbgHVOYa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 10:22:36 -0400
+        Sat, 22 Aug 2020 10:24:30 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D956C061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 07:22:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D399C061573;
+        Sat, 22 Aug 2020 07:24:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=Behx2+G7awWW4jnBTF/jygxIW6A3yPzIrp17SFRqVqc=; b=hjDRi5edBluxfwJnws6LF5Hqkx
-        ZTKxJ5/rFm0fWjLxc1LSoVcwFKhALO56BKFsn4ngrPkIq8OlHByhYY0FGaR3mhQpuAJTuuAd63XWi
-        GAI1447k0v4cDPECfEt18s7zRZeJbICKeiWX9/JLUtty2adx1yjslFZEngLy2QI0XPukqp9SldhxD
-        LE/RScFZZs1TsMgBjY+lZz3B2sdCF1yaPf+6ga352d7BO3RJitBRGgBBSt9hCLD32gF3OdWQ4pQL6
-        BR0Dsmy9FZ1ECXYEj6f5qR02okh9uKDFgplRV5SkYzgqzqhFH45n9yYlM+6Pl7GOqpAb85b8HfVzT
-        mIu2PylA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k9UPf-0000QB-Lx; Sat, 22 Aug 2020 14:22:31 +0000
-Subject: Re: [PATCH v4 2/2] staging: android: Remove BUG from
- ion_system_heap.c
-To:     Tomer Samara <tomersamara98@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Arve_Hj=c3=b8nnev=c3=a5g?= <arve@android.com>,
-        Riley Andrews <riandrews@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Hridya Valsaraju <hridya@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1598023523.git.tomersamara98@gmail.com>
- <a39407f84031eaeed5e65a7aab515a079edf5fcc.1598023524.git.tomersamara98@gmail.com>
- <3eba90dc-128f-49da-41a6-81494653d535@infradead.org>
- <20200822093421.GA6631@tsnow>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <39092d50-d0fc-d142-1775-4b40194b02f5@infradead.org>
-Date:   Sat, 22 Aug 2020 07:22:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ziVrtHuskBWF9ypal/1WBcVweEFCA3J4y+bn9Uri5QU=; b=dxPZCYC3vPECjpySRlVCFu9lj9
+        6KpchwFE5B+EPezXNGoPG+DjRa/cqSS1VIeiz+lPML/ow41KUDczTOTKL1ZJCXna2bqGSpLWD5qx1
+        fDRorEOrmoFY5XuqDObl9m7puFKnkzFgnieTCVAzHtoqVXXo8zZ1hAn4QJRxmP0JwDltahGcQUfho
+        Pquo0gCPdRm4qkascWIH7i9YSrXNgj8KC9SNftxZJpW7ZSoxfZqp+sB86OaMcLgkofQV/kV5CCMgz
+        0X81sf2z82HQQu8zV4z38yjdWKgadChBZz277Vav+mPlRSYkmNVdMpfDeaP7cPsRQqbMjJSoKi+So
+        3RHBs8Jg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9URK-0000V1-Kl; Sat, 22 Aug 2020 14:24:14 +0000
+Date:   Sat, 22 Aug 2020 15:24:14 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "yukuai (C)" <yukuai3@huawei.com>,
+        Gao Xiang <hsiangkao@redhat.com>, darrick.wong@oracle.com,
+        david@fromorbit.com, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yi.zhang@huawei.com
+Subject: Re: [RFC PATCH V3] iomap: add support to track dirty state of sub
+ pages
+Message-ID: <20200822142414.GY17456@casper.infradead.org>
+References: <20200819120542.3780727-1-yukuai3@huawei.com>
+ <20200819125608.GA24051@xiangao.remote.csb>
+ <43dc04bf-17bb-9f15-4f1c-dfd6c47c3fb1@huawei.com>
+ <20200821061234.GE31091@infradead.org>
+ <20200821133657.GU17456@casper.infradead.org>
+ <20200822060345.GD17129@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200822093421.GA6631@tsnow>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200822060345.GD17129@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/22/20 2:34 AM, Tomer Samara wrote:
-> On Fri, Aug 21, 2020 at 09:25:26AM -0700, Randy Dunlap wrote:
->> On 8/21/20 8:28 AM, Tomer Samara wrote:
->>> Remove BUG() from ion_sytem_heap.c
->>>
->>> this fix the following checkpatch issue:
->>> Avoid crashing the kernel - try using WARN_ON &
->>> recovery code ratherthan BUG() or BUG_ON().
->>>
->>> Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
->>> ---
->>>  drivers/staging/android/ion/ion_system_heap.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
->>> index eac0632ab4e8..00d6154aec34 100644
->>> --- a/drivers/staging/android/ion/ion_system_heap.c
->>> +++ b/drivers/staging/android/ion/ion_system_heap.c
->>> @@ -30,7 +30,7 @@ static int order_to_index(unsigned int order)
->>>  	for (i = 0; i < NUM_ORDERS; i++)
->>>  		if (order == orders[i])
->>>  			return i;
->>> -	BUG();
->>> +	/* This is impossible. */
->>>  	return -1;
->>>  }
->>
->> Hi,
->> Please explain why this is impossible.
->>
->> If some caller calls order_to_index(5), it will return -1, yes?
->>
->> -- 
->> ~Randy
->>
+On Sat, Aug 22, 2020 at 07:03:45AM +0100, Christoph Hellwig wrote:
+> On Fri, Aug 21, 2020 at 02:36:57PM +0100, Matthew Wilcox wrote:
+> > On Fri, Aug 21, 2020 at 07:12:34AM +0100, Christoph Hellwig wrote:
+> > > iomap sets PagePrivate if a iomap_page structure is allocated.  Right
+> > > now that means for all pages on a file system with a block size smaller
+> > > than the page size, although I hope we reduce that scope a little.
+> > 
+> > I was thinking about that.  Is there a problem where we initially allocate
+> > the page with a contiguous extent larger than the page, then later need
+> > to write the page to a pair of extents?
+> > 
+> > If we're doing an unshare operation, then we know our src and dest iomaps
+> > and can allocate the iop then.  But if we readahead, we don't necessarily
+> > know our eventual dest.  So the conditions for skipping allocating an
+> > iop are tricky to be sure we'll never need it.
 > 
-> As Dan Carpenter says here https://lkml.kernel.org/lkml/cover.1597865771.git.tomersamara98@gmail.com/T/#mc790b91029565b1bb0cb87997b39007d9edb6e04.
-> After looking at callers we see that order_to_index called from 2 functions:
-> - alloc_buffer_page called from alloc_largest_available which 
->   loop over all legit order nubmers
->   ( Flow:
->    alloc_largest_available-->alloc_buffer_page-->order_to_index
->   )
+> So with the current codebase (that is without your THP work that I need
+> to re-review) the decision should be pretty easy:
 > 
-> - free_buffer_page takes the order using compound_order, which return 0 or
->   the order number for the page, this function has 2 callers too,
->   ion_system_heap_allocate (which called it in case of failure at sg_alloc_table,
->   thus calling from this flow will no casue error) and ion_system_heap_free
->   (which will be called on every sg table in the buffer that allocated good,
->   meaning from this flow also error will not be created).
->   ( Flows:
->    ion_system_heap_free     --> free_buffer_page --> order_to_index
->    ion_system_heap_allocate --> free_buffer_page --> order_to_index
->   )
+>  - check if block size >= PAGE, and if yes don't allocate
+>  - check if the extent fully covers the page, and if yes don't allocate
 > 
-> Of course if some user will use this function with wrong order number he will be able to get this -1.
-> So should I remove this comment and resotre the error checks?
+> Now with THP we'd just need to check the thp size instead of the page
+> above and be fine, or do I miss something?
 
-I think so, but that's just an opinion.
+The case I was worrying about:
 
-> Btw, this is the same reason that I dropped the error check at ion_page_pool_shrink, so should I restore here also?
+fill a filesystem so that free space is very fragmented
+readahead into a hole
+hole is large, don't allocate an iop
+writeback the page
+don't have an iop, can't track the write count
 
-IMO yes.
-
-Getting rid of BUG()s is a good goal, but usually it's not so easy.
-
-thanks.
--- 
-~Randy
-
+I'd be fine with choosing to allocate an iop later (and indeed I do that
+as part of the THP work).  But does this scenario make you think of any
+other corner cases?
