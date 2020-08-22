@@ -2,146 +2,116 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 21:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3424FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 21:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98916207CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 21:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062CE207CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 21:18:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WmOc7Bz7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T1mixKM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgHVVRM (ORCPT
+        id S1728749AbgHVVSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 17:17:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728729AbgHVVRK (ORCPT
+        Sat, 22 Aug 2020 17:18:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34858 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728729AbgHVVSu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 17:17:10 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3163DC061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 14:17:10 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id s15so2174256qvv.7
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 14:17:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yH1SIT4I5zLgF08JR3jAcoSi73lF2BBLmlCMe56jsJo=;
-        b=WmOc7Bz7Ll32cJhJcDO8Amc0lOJNVGAQOmwCLqbShhlht+9RXiGjKwioLIQm2VxblT
-         oVSNEzdtWuoETaf32KrZjilxTsTacWAyu5BGiAO3MlccJihCcpI1RS5xZYvJv37rENtT
-         v2q0DcJQmQtGk2Y8NHalFQnTTO1h4vL62tpUE7VUIjgkQI7Xu4JJMBtdY19AleMXhaJ2
-         s4x/L2mSKiNBuIYOeOVaIV0oJsd9YagzCvrmeximBMRYaRxD550EpJ5NqSNwSan16Xq2
-         7HaF+iLSuU0VJMR9C5gwNEd839GWAe2vESnQfyI9bOfumJq5qdGRJkBrBgAdqUXLXP7R
-         4TSA==
+        Sat, 22 Aug 2020 17:18:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598131129;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=xZbAofBMByOnbSpYAqNdbUjqwUWCsauk/KwtU8NifwA=;
+        b=T1mixKM4Ng1luVw/b9wqS3X1esdUb4aYS5gx53XKr54hCwbF1cKReCBORybFJJLSzuSsFb
+        iibQy/OHy4ayuk6+Y/KvNDsCcBPy1IrV8/D7RQeFUwpTLTKw/5VbxgBT4msBG13/9dup6s
+        /upxTatFsquVVV/yPle66ocYQ3XT+Ak=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-151-1YhT63wgM-mI2ZtLK8UJDw-1; Sat, 22 Aug 2020 17:18:47 -0400
+X-MC-Unique: 1YhT63wgM-mI2ZtLK8UJDw-1
+Received: by mail-qt1-f197.google.com with SMTP id w30so3934243qte.14
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 14:18:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=yH1SIT4I5zLgF08JR3jAcoSi73lF2BBLmlCMe56jsJo=;
-        b=N5dhRWt1Hj5/BYYYSgjg97JKUTs+lmQf2oQ8pg/ges8ZfdQpG5RB2fecL8zdDDm2A9
-         NuQFYRMgCCnu/ev5Au71rBz/LSb0zDmviJLLvz5kHGgkL3WZpT2OuLTWZL51UCojdw1m
-         iYLQEaUWw2o7lbhG54wlWVCZ6buUim8vrjivIh62JjkxYJKXAJbLss5rVFHGkbNPi7Lw
-         Oq+VXAr3pQeP8m6QWVrg5DL7qxo5K/w0HmsddETci4bErCdJ7In1LVy/YjvTG32r/pHG
-         aD4z6Qd+pDTRMe+405Ab0b+9YkjWOCH8Lw68ha0QaJ3B+iewoXLfqgeE9dhXnPO48kDU
-         9www==
-X-Gm-Message-State: AOAM530RfBQebtZGNl5C0fGULlWm/yj5aiFkglsFiSqmHgUor5d3rfDN
-        4EbudGC+8jjDDI+Y7BMx21A=
-X-Google-Smtp-Source: ABdhPJwjNi+ES1CrZ733NWVLYu1PbPaQ6BDXUBNDcLu79c+WXJGoazGsBsPoD55tvoqSD3OHmyOl2A==
-X-Received: by 2002:ad4:576c:: with SMTP id r12mr7992606qvx.232.1598131028339;
-        Sat, 22 Aug 2020 14:17:08 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id j31sm6736810qtb.63.2020.08.22.14.17.06
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xZbAofBMByOnbSpYAqNdbUjqwUWCsauk/KwtU8NifwA=;
+        b=I15WiWw9iWayTjILjy0rf2puoCUm0SfdDsB4JlJt3tGsMkQDyVnxRwI2meixyzwPqL
+         GHqd852uCV9ZD/TX//dfZGS9EWJrmDfcdmJHBfmGHxNcM1EGltnoBQUOH3AX3qx/L84p
+         YmjmO08iq8wPqPYeTcDeyNHeHEm8efB+ivcsjalo2IlLwhSpyEUHq1pTjJ0SImNWT7NA
+         vxQ2UGxQkGwd4o42TXzkgpkVZpOESCJQhQc9SMr5llKOLp3cKWNrUtILp84KLsvdlY1h
+         H9x9h2Qo1O4IQvklEjnj6fNgkjwa5QaCsyX3ZIEO/qXmcUzxylejpnbX4y3i+vYqJqBq
+         96uA==
+X-Gm-Message-State: AOAM533zeAMpXBTk5EkoyzyLgMVZbntG0y1vVOcTjfEoY4iKhaAHV2R4
+        SjsvFGKTI9Siv8Dr6ART2/9PIts4AVKsLA4cmm4yHwqk0NSRAF18xxaR+ki4tVVQbXYI2rvS43C
+        LrJLNQnKouIapvShHa4FgwbON
+X-Received: by 2002:ae9:ef8d:: with SMTP id d135mr7890573qkg.477.1598131126775;
+        Sat, 22 Aug 2020 14:18:46 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzwOwTBkOcs9B9ZoClJFFqyUHPmzql1g+XIUrsy9bwJ//6dtk1AXOnzS6+XQU+OJaT51bVUSA==
+X-Received: by 2002:ae9:ef8d:: with SMTP id d135mr7890563qkg.477.1598131126468;
+        Sat, 22 Aug 2020 14:18:46 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id x23sm5173752qkj.4.2020.08.22.14.18.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Aug 2020 14:17:07 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sat, 22 Aug 2020 17:17:05 -0400
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
-Message-ID: <20200822211705.GA1382515@rani.riverdale.lan>
-References: <20200820130641.GA536306@rani.riverdale.lan>
- <87zh6ohm03.fsf@nanos.tec.linutronix.de>
- <20200821230435.GA56974@rani.riverdale.lan>
- <CAKwvOdkoB+fT9tt7vgg1R6J-NEr77EWP5X8nFat_L-HvEzWGzA@mail.gmail.com>
- <87eenzqzmr.fsf@nanos.tec.linutronix.de>
- <20200822035552.GA104886@rani.riverdale.lan>
- <20200822084133.GL28786@gate.crashing.org>
- <CA+icZUVf9a8LC2Mf0cFymYQfALWs6bVfR1v1nRbxKaLAyU6NkQ@mail.gmail.com>
- <CA+icZUWGHo3mkN4=ZYeU37p8KJhxTXS5QKcAvq_HaqTHmFkw2g@mail.gmail.com>
- <CANiq72=3iOh5Z_rboZf-_GUpBE2LUUv3yPKOVNN_XmaNswdNSw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CANiq72=3iOh5Z_rboZf-_GUpBE2LUUv3yPKOVNN_XmaNswdNSw@mail.gmail.com>
+        Sat, 22 Aug 2020 14:18:45 -0700 (PDT)
+From:   trix@redhat.com
+To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [PATCH] usb: storage: initialize variable
+Date:   Sat, 22 Aug 2020 14:18:39 -0700
+Message-Id: <20200822211839.5117-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 08:17:32PM +0200, Miguel Ojeda wrote:
-> On Sat, Aug 22, 2020 at 11:52 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> >
-> > I am asking myself who is using such ancient compilers?
-> 
-> There are many users/companies using older versions of compilers,
-> kernels and everything. GCC <= 4.9 will still be used/supported (by
-> third parties) for a handful of years at least.
-> 
-> However, the important question is whether those users/companies care
-> about running the latest kernels. Many of those definitely do not want
-> to touch their kernel either. For those that do, there are several
-> longterms to pick from that still support 4.9, as well as other
-> workarounds.
-> 
-> Thus I am usually in favor of raising the minimum whenever new hacks
-> are required to be added. On the other hand, we already raised the
-> version twice this year and it is not clear to me what is the minimum
-> version we would need to go for to ensure this does not bite us.
-> 
-> > If this is a real problem with GCC version <= 5, so can this be moved
-> > to a GCC specific include header-file?
-> > Thinking of include/linux/compiler-gcc.h or
-> > include/linux/compiler_types.h with a GCC-VERSION check?
-> 
-> That would be better if it can be done, yes.
-> 
-> Cheers,
-> Miguel
+From: Tom Rix <trix@redhat.com>
 
-The fix landed in gcc 6.5, 7.3 and 8.1. The bug is presumably quite
-difficult to actually trigger. As a sample data point, I verified that
-7.1 vs 7.1+fix have no differences on 32-bit and 64-bit x86 defconfigs,
-on current mainline.
+clang static analysis reports this representative problem
 
-Assuming we don't want to risk removing force_order, I'd suggest
-- make it an input/output operand, so it enforces ordering fully.
-- either restrict it to gcc < 8, or just provide a proper definition in
-  some file (maybe arch/x86/kernel/cpu/common.c)?
+transport.c:495:15: warning: Assigned value is garbage or
+  undefined
+        length_left -= partial;
+                   ^  ~~~~~~~
+partial is set only when usb_stor_bulk_transfer_sglist()
+is successful.
 
-Thanks.
+So initialize to partial to 0.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/usb/storage/transport.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/storage/transport.c b/drivers/usb/storage/transport.c
+index 238a8088e17f..ce920851b1f2 100644
+--- a/drivers/usb/storage/transport.c
++++ b/drivers/usb/storage/transport.c
+@@ -461,7 +461,7 @@ static int usb_stor_bulk_transfer_sglist(struct us_data *us, unsigned int pipe,
+ int usb_stor_bulk_srb(struct us_data* us, unsigned int pipe,
+ 		      struct scsi_cmnd* srb)
+ {
+-	unsigned int partial;
++	unsigned int partial = 0;
+ 	int result = usb_stor_bulk_transfer_sglist(us, pipe, scsi_sglist(srb),
+ 				      scsi_sg_count(srb), scsi_bufflen(srb),
+ 				      &partial);
+@@ -484,7 +484,7 @@ int usb_stor_bulk_transfer_sg(struct us_data* us, unsigned int pipe,
+ 		void *buf, unsigned int length_left, int use_sg, int *residual)
+ {
+ 	int result;
+-	unsigned int partial;
++	unsigned int partial = 0;
+ 
+ 	/* are we scatter-gathering? */
+ 	if (use_sg) {
+-- 
+2.18.1
+
