@@ -2,109 +2,121 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAE5E20720
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CE2207CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598097613;
-	bh=3ypmi0qUMEIrlt/O92KkV5e04xRnvSyenkQ1DMhjfGE=;
+	s=default; t=1598097690;
+	bh=Fv4Qd3FUTWdI//LGlPoIGhYu1vZGuwybWUAHYMZzSBI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FQivrIezsbSSDapqIpVwEiJMHWKlo1uYAaKSSUSHC1y2h5D1KNuKT252Zi0eimfzH
-	 p4m0BNbXEG3wLkZNp+QfxIp2aohGoo14ctGirBOucdk4aBDi9AU8ytlWwT3rpwOBV6
-	 AfHjXAC12O8Bqp2vKtMG8dyXon7bcRv7wDEljwzA=
+	b=D9pU7RzKVJQ71FarItwSrX8wjMzP8KyxOE6607Gt96rsGWRChl1MrRnA0R0EBGoju
+	 4OHW6U/jmLBMFZx4i/8sxF5LP3nUctX1Q9kdTUibePmM6TR/DUkAvifvk0u05FRDrI
+	 FIH+irpsI3wpy4QAaPkkieBt31hIuaS15tGBTcP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgHVL4o (ORCPT
+        id S1727935AbgHVMB2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 07:56:44 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37588 "EHLO
+        Sat, 22 Aug 2020 08:01:28 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52642 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgHVL4k (ORCPT
+        with ESMTP id S1726704AbgHVMB0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 07:56:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x9so233806wmi.2
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 04:56:39 -0700 (PDT)
+        Sat, 22 Aug 2020 08:01:26 -0400
+Received: by mail-wm1-f65.google.com with SMTP id x5so4172362wmi.2;
+        Sat, 22 Aug 2020 05:01:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hvbjMBf8wiATslO6Ak2k4c/lPw2aiLp5EPMz+Nzt5l0=;
-        b=C7GXAC3zSsCooawrM6IFNpgo8gqtYuqmRXf3hHwAO3mHFxLQ0TDHdEmHcsv9DTvADj
-         tRDdSD88nqxOUDSeexVPGPTAY2lrEu+ldNwetcBG573URhrklI4rOgFQ+T06fnABF3HF
-         7CPlpo0gFNDbI8G7L6zcV4TV31RjodpgA48bSdPNZy7LFi+6Ffr1VkXdrmbGSRAbnC2/
-         Esci67f1tVynmE4kQnNVBn1VIL+5IlGRgChyQg30N2Vbn8I4HEyf/yht0YJfbREs2h4o
-         w5JRGHs0Vj/YUVWNvkocsHI6abHDZ6kLv1NiBh8ecBaHNSfISEOhaFA5IGmhHvVswhNR
-         l9tQ==
-X-Gm-Message-State: AOAM531w2/acLzASENFSpm6M0Xr8mAnXXo864v4YBZmjgm5VBigocGEy
-        Jd6OPK+WMrcVUPEA6+95yGg=
-X-Google-Smtp-Source: ABdhPJwDh3nTnOl0xu5tFSjniSyxEVyd29s+HNxPR6jSSloTXuvrIa4AxAjUxTWQbtNs0cHSZarczQ==
-X-Received: by 2002:a1c:ed15:: with SMTP id l21mr7483728wmh.56.1598097398629;
-        Sat, 22 Aug 2020 04:56:38 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=bPouFZMIl7dlHwQoDaxlb/Nq4wtVCEDrmFr3ebXaAIM=;
+        b=l9gzW/BWHb8fmrsHN4ZkWsslyiB6i73egwzcGCrvzZEzBj0DZXnVnacONUbvDjpE74
+         fzFaT1DUgwcbk3ziLnLXHCpCXySNj0h74Og9QtUS8rocUDJnx9ssR8TwpsZT04QpMp93
+         8kyyIaVhGIgTga+WoKrzmDzcryGIaPuqJYZ6ufb0m4dlpsCRWjzSalN7uXWuwnEwhCJ3
+         ZFvXZ3ePtDj0SZ0I+y4lC0ELLEk7pe11L7YKO3q5/5braxHzllOLYUQ0WQVCdcVatKsg
+         J5M8+Jlz8ZJ9vXGFIUlXRZHPYU8Y/VSMzCP+X49eUMNYZ2teqYwOOGS12tm4vh3cZAf7
+         3Gcw==
+X-Gm-Message-State: AOAM531OSkGIzv5Y4XIdwvbUPbS12X2nJUoNHCo/Pr5wtlFXy4AgG0lI
+        R9keu5ouQhhZy4L/kT6lh6I=
+X-Google-Smtp-Source: ABdhPJz8YNXzvqgyYb9UZGsKJDnt9kosXNPfPc3M7afStiua+EoML1ySc0g9dWYlQxwULI4DhYxdGg==
+X-Received: by 2002:a05:600c:2d1:: with SMTP id 17mr7391901wmn.15.1598097683955;
+        Sat, 22 Aug 2020 05:01:23 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id 145sm13188159wma.20.2020.08.22.04.56.37
+        by smtp.googlemail.com with ESMTPSA id t14sm10442478wrv.14.2020.08.22.05.01.22
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 22 Aug 2020 04:56:38 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 13:56:36 +0200
+        Sat, 22 Aug 2020 05:01:23 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 14:01:21 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Markus Mayer <markus.mayer@broadcom.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] memory: brcmstb_dpfe: fix array index out of bounds
-Message-ID: <20200822115636.GA19975@kozik-lap>
-References: <20200821165221.32267-1-mmayer@broadcom.com>
+To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
+Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+Subject: Re: [PATCH v2 1/9] spi: spi-s3c64xx: swap s3c64xx_spi_set_cs() and
+ s3c64xx_enable_datapath()
+Message-ID: <20200822120121.GA20423@kozik-lap>
+References: <20200821161401.11307-1-l.stelmach@samsung.com>
+ <CGME20200821161405eucas1p1d43a5970c6a26389cd506aab5f986bc8@eucas1p1.samsung.com>
+ <20200821161401.11307-2-l.stelmach@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200821165221.32267-1-mmayer@broadcom.com>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200821161401.11307-2-l.stelmach@samsung.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 09:52:21AM -0700, Markus Mayer wrote:
-> We would overrun the error_text array if we hit a TIMEOUT condition,
-> because we were using the error code "ETIMEDOUT" (which is 110) as an
-> array index.
-> 
-> We fix the problem by correcting the array index and by providing a
-> function to retrieve error messages rather than accessing the array
-> directly. The function includes a bounds check that prevents the array
-> from being overrun.
-> 
-> This patch was prepared in response to
->     https://lkml.org/lkml/2020/8/18/505.
-> 
-> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+On Fri, Aug 21, 2020 at 06:13:53PM +0200, Łukasz Stelmach wrote:
+> This and the next patch fix issues with DMA transfers bigger than
 
-Your Signed-off-by does not match From field. Please run
-scripts/checkpatch on every patch you send.
+Just:
+"Fix issues with DMA transfers..."
 
-I fixed it up, assuming markus.mayer@broadcom.com is the valid email
-address.
+The order of patches could change when applying and backporting.
 
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
-> 
-> Changes since v1:
->     - Added link of the coverity report to the commit message.
->     - Added Florian's ack.
->     - Removed second "const" from get_error_text() return type
-
-Florian was so kind to provide you with necessary tags - Fixes and
-Reported-by. Always include them on resubmit of patches.
-
-Thanks, applied.
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
 Best regards,
 Krzysztof
 
+
+> 512 bytes on Exynos3250. Without the patches such transfers fail
+> to complete. This solution to the problem is found in the vendor kernel
+> for ARTIK5 boards based on Exynos3250.
+> 
+> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> ---
+>  drivers/spi/spi-s3c64xx.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+> index 924b24441789..26c7cb79cd78 100644
+> --- a/drivers/spi/spi-s3c64xx.c
+> +++ b/drivers/spi/spi-s3c64xx.c
+> @@ -685,11 +685,11 @@ static int s3c64xx_spi_transfer_one(struct spi_master *master,
+>  		sdd->state &= ~RXBUSY;
+>  		sdd->state &= ~TXBUSY;
+>  
+> -		s3c64xx_enable_datapath(sdd, xfer, use_dma);
+> -
+>  		/* Start the signals */
+>  		s3c64xx_spi_set_cs(spi, true);
+>  
+> +		s3c64xx_enable_datapath(sdd, xfer, use_dma);
+> +
+>  		spin_unlock_irqrestore(&sdd->lock, flags);
+>  
+>  		if (use_dma)
+> -- 
+> 2.26.2
+> 
