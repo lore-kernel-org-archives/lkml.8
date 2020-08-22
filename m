@@ -2,117 +2,108 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A56C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 13:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 13:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1DE20720
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 13:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033662078D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 13:39:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="AAedyF8n"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UGQ9y/Eb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w/Gyd2vd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgHVNSE (ORCPT
+        id S1728131AbgHVNjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 09:18:04 -0400
-Received: from crapouillou.net ([89.234.176.41]:33100 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727936AbgHVNSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 09:18:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1598102280; h=from:from:sender:reply-to:subject:subject:date:date:
+        Sat, 22 Aug 2020 09:39:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbgHVNjE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 09:39:04 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9217FC061575;
+        Sat, 22 Aug 2020 06:39:03 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 13:39:01 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598103542;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4HMc1bAlqxjLY0caVMFS7c2Dub0R07mbOwtzpAcZugY=;
-        b=AAedyF8nqEUuvwcMWGUZ8v6H7z14p0wZnPPhVfHtNYpnbASXvlQZ3bvpmr7kMdK0r2dnw8
-        /4hQfbjynPLB3w2/u0ttQob6UuOAOpnwE/sraaGZRBWQLJlxbrVML8TGVmC1HEXg5+jLqT
-        r+6EJOAqvb4VN36p23fh6mUVGhjw8TI=
-Date:   Sat, 22 Aug 2020 15:17:49 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 00/13] MIPS: Convert Ingenic to a generic board
-To:     "Maciej W. Rozycki" <macro@linux-mips.org>
-Cc:     Zhou Yanjie <zhouyanjie@wanyeetech.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>, od@zcrc.me,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        =?UTF-8?b?5ryG6bmP5oyv?= <aric.pzqi@ingenic.com>,
-        dongsheng.qiu@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, xuwanhao@wanyeetech.com
-Message-Id: <PLVGFQ.TBOPD0BSHD5L1@crapouillou.net>
-In-Reply-To: <alpine.LFD.2.21.2008220310130.3460685@eddie.linux-mips.org>
-References: <20200803170124.231110-1-paul@crapouillou.net>
-        <ab985296-8441-4006-210d-a71503bd01f0@wanyeetech.com>
-        <L8DPEQ.71Z8YA0QXBJA@crapouillou.net>
-        <alpine.LFD.2.21.2008211949220.3460685@eddie.linux-mips.org>
-        <4SSFFQ.3I498N5I41LP3@crapouillou.net>
-        <alpine.LFD.2.21.2008220310130.3460685@eddie.linux-mips.org>
+        bh=7zd678ZKKZ255D+lweXntG7O+/mmZ8NMsjf48ukNw5I=;
+        b=UGQ9y/Ebi31TXEKWekiQvM4QooQqc4O/CNs1IOJFEra4X1DVYEWR9SUOVMwEpcp6DG3252
+        EyTo+0kesYSxU087uXVVw0/X5f1HXe22lDGOe9Ajk6Iln+7D5BePXhmePUv1an2jj6mab6
+        iDFAOIYJ7twI2Gj37yUmljYNrMscrlZ5NxCRKZ2x990KabmYGAx+ECTOGzdLTa9yJ1jPWV
+        yvuFhmFaXI6+/Rh40kWmFYl/wGbgOqmPxyDim/w0yRPsuh0d1wPt3rZ4QlOUksbbP4HmWi
+        9Wf4bT0pikpTPhTO8R6M1PptWtHXGvScIKCved2jkqb/8pP1KDrjdMDMrjBykg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598103542;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7zd678ZKKZ255D+lweXntG7O+/mmZ8NMsjf48ukNw5I=;
+        b=w/Gyd2vd2/vTrVonUimC9cbtmBzNaUoEi8zM6omyfK9dQF3nPXLF26K9S+Q8cfV5tnhRBh
+        R3GoxGaFLLn5vUDg==
+From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: efi/urgent] efi/x86: Mark kernel rodata non-executable for mixed mode
+Cc:     <stable@vger.kernel.org>, Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200717194526.3452089-1-nivedita@alum.mit.edu>
+References: <20200717194526.3452089-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <159810354148.3192.13677289427486753048.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the efi/urgent branch of tip:
 
+Commit-ID:     c8502eb2d43b6b9b1dc382299a4d37031be63876
+Gitweb:        https://git.kernel.org/tip/c8502eb2d43b6b9b1dc382299a4d37031be63876
+Author:        Arvind Sankar <nivedita@alum.mit.edu>
+AuthorDate:    Fri, 17 Jul 2020 15:45:26 -04:00
+Committer:     Ard Biesheuvel <ardb@kernel.org>
+CommitterDate: Thu, 20 Aug 2020 11:18:36 +02:00
 
-Le sam. 22 ao=FBt 2020 =E0 3:29, Maciej W. Rozycki <macro@linux-mips.org>=20
-a =E9crit :
-> Hi Paul,
->=20
->>  > FAOD <cpu-feature-overrides.h> is not a hack, but an optimisation=20
->> measure
->>  > so that features known to be hardwired for a given machine/CPU do=20
->> not have
->>  > to be dynamically queried every time referred.  In some cases=20
->> that results
->>  > in large portions of code being optimised away by the compiler as=20
->> well.
->>=20
->>  Fair enough. Bloat-o-meter reports about ~100 KiB saved when that=20
->> file is
->>  present. But we can't use it in a generic kernel, unfortunately.
->=20
->  Well, run-time patching might be an alternative to get the best of=20
-> both
-> worlds, but someone would have to reimplement our feature selection=20
-> system
-> to use it.
+efi/x86: Mark kernel rodata non-executable for mixed mode
 
-Would run-time patching allow to drop dead code?
+When remapping the kernel rodata section RO in the EFI pagetables, the
+protection flags that were used for the text section are being reused,
+but the rodata section should not be marked executable.
 
->>  > The hardcoded value for a feature defined in=20
->> <cpu-feature-overrides.h>
->>  > always has to be the same as one in the corresponding bit of the=20
->> `options'
->>  > member of `struct cpuinfo_mips', in this case MIPS_CPU_TLBINV.
->>=20
->>  In theory yes, in practice the CPU detection code is lagging=20
->> behind...
->=20
->  I wasn't aware of that.  In that case it has been a design abuse=20
-> which
-> has been missed by the maintainer when accepting patches.  It used to=20
-> be
-> the case that run-time detection was accurate and overrides were=20
-> rather
-> lazily added.
->=20
->  Also I note Ingenic must have had a CPU erratum if our=20
-> `decode_configs'
-> doesn't just work, as the interpretation of CP0.Config[5:0] registers=20
-> has
-> been architectural and mandatory, and that for a reason.  It's only=20
-> legacy
-> MIPS I-IV processors that should require special attention here.
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Link: https://lore.kernel.org/r/20200717194526.3452089-1-nivedita@alum.mit.edu
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ arch/x86/platform/efi/efi_64.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Yes, Ingenic CPUs have a few bloopers here and there...
-
--Paul
-
-
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index 413583f..6af4da1 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -259,6 +259,8 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 	npages = (__end_rodata - __start_rodata) >> PAGE_SHIFT;
+ 	rodata = __pa(__start_rodata);
+ 	pfn = rodata >> PAGE_SHIFT;
++
++	pf = _PAGE_NX | _PAGE_ENC;
+ 	if (kernel_map_pages_in_pgd(pgd, pfn, rodata, npages, pf)) {
+ 		pr_err("Failed to map kernel rodata 1:1\n");
+ 		return 1;
