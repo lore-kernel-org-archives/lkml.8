@@ -2,162 +2,137 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E587DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 06:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50201C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 06:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C59F520825
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 06:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC8420825
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 06:17:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="KnDAM6vk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L64oCmJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgHVGQn (ORCPT
+        id S1727049AbgHVGRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 02:16:43 -0400
-Received: from mout.gmx.net ([212.227.15.15]:46905 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725863AbgHVGQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 02:16:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1598076989;
-        bh=Pds2nMEdMqJGmiN8TaXP+FYbIXOVvaSmTp36080KACw=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
-        b=KnDAM6vkKh2/9L58XEF/UYN8Q1S0PXbNotY7T3ktmxy7dzQ+fIFQfAcQCorWmCIjm
-         bw3yo1thRmLkvvsxgeZPG/fC8OtHO3N0ombjn3R+6dQyIp2cPlKJWrx1XvY0sKOkmO
-         rdmZXLazgKfuGNq7CQLIerw3Jv6tvhxuRGDymVcc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.223.54.124]) by mail.gmx.com
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1Mk0JW-1ktNsT1jzs-00kMlr; Sat, 22 Aug 2020 08:16:29 +0200
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 75AE5800D6; Sat, 22 Aug 2020 08:16:25 +0200 (CEST)
-From:   Sven Joachim <svenjoac@gmx.de>
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-References: <20200729212721.1ee4eef8@canb.auug.org.au>
-        <87ft8lwxes.fsf@turtle.gmx.de>
-        <CAMzD94Rz4NYnhheS8SmuL14MNM4VGxOnAW-WZ9k1JEqrbwyrvw@mail.gmail.com>
-Date:   Sat, 22 Aug 2020 08:16:25 +0200
-In-Reply-To: <CAMzD94Rz4NYnhheS8SmuL14MNM4VGxOnAW-WZ9k1JEqrbwyrvw@mail.gmail.com>
-        (Brian Vazquez's message of "Fri, 21 Aug 2020 09:23:17 -0700")
-Message-ID: <87y2m7gq86.fsf@turtle.gmx.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1.50 (gnu/linux)
+        Sat, 22 Aug 2020 02:17:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbgHVGRc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 02:17:32 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58116C061573;
+        Fri, 21 Aug 2020 23:17:32 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id d4so1730586pjx.5;
+        Fri, 21 Aug 2020 23:17:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/vsXxIYoH9IaQYN9SpjWFRYwceGPVmhGBMx9DqjyaCA=;
+        b=L64oCmJwVTF5reQ8SOLuTTPV5gWEEEMC3h4StMqJ/EiQJARv55oVXDUXfzd+w37xOD
+         +SR4p/LCjf/oTjg7I0kSn3FjUj6ItqeG0NgHsdf6ddPCIL56bA4AICnDxat0uUL7F0Fm
+         owaLo2KopE49AXej+lF9qgFrlzmK88Vl+rporEN0WgZbciioS/Q3KOR8hstjeeKibBfw
+         Ws1Jk7l/rvaMXw0oqiC3lVyM55xzPaOCvhF1ZjSwcJdu00MRWI9Le8JEOlh3Cl9k+qtQ
+         lBry93n7hIk62FDZB6krMEjuiv8YTxK8cuZwTJm8bWvmomWkYjGGC3+YLmEfBpZuMIDw
+         AJeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/vsXxIYoH9IaQYN9SpjWFRYwceGPVmhGBMx9DqjyaCA=;
+        b=sVWikr68DxWX4UAmmJ7EqKuUPdQCsbMsBd+x8CfySyJsjki/JBVuRFUmRVd6HTNj9v
+         1k9WIMrFo97Gal10tMwd33vqB8WB0Cl0EiYtn3aCZwOAPwYYL3K3aDvtusmVtzUiCaXL
+         nvlBCCQWt7fvTmaX7VZTol738+cU+G9Cu47u5YvP6pOp7D0gUPQYE+uDFf+fD+6ZF6rM
+         H/kHZRzOe72k3DQZmogKy7d4cx/a5SWp8ggWQ01CdR33g7fWc9RFQk7tyRxIrOy6VszZ
+         s6jJyQOp/Hl6PAF1d6QeU+0aaNP23/IorIHDOdckVZkbP3inyVK+bdllSybHefNNoQj8
+         JhlA==
+X-Gm-Message-State: AOAM533wLBIQLZKCZEKUWO9PjfgKHp3cmSJMVEtaDWxsl2GSyONdMPeB
+        2pzb4LG8VCildAKUbGovQ2ns5Wx78A==
+X-Google-Smtp-Source: ABdhPJz/zvfXAXwavjIE33/xdQA79vArlk5b5NzTPeQs2PGpP78M3V+Cqm13Pa0hBcfjKK7ft/9phw==
+X-Received: by 2002:a17:90a:17ab:: with SMTP id q40mr5286180pja.28.1598077050740;
+        Fri, 21 Aug 2020 23:17:30 -0700 (PDT)
+Received: from madhuparna-HP-Notebook ([2402:3a80:cfa:ae3e:f998:8f12:465c:736b])
+        by smtp.gmail.com with ESMTPSA id t2sm4500370pfb.123.2020.08.21.23.17.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Aug 2020 23:17:30 -0700 (PDT)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Sat, 22 Aug 2020 11:47:25 +0530
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     madhuparnabhowmik10@gmail.com, Bruce Chang <brucechang@via.com.tw>,
+        Harald Welte <HaraldWelte@viatech.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ldv-project@linuxtesting.org, andrianov@ispras.ru
+Subject: Re: [PATCH] drivers: mmc: host: via-sdmmc: Fix data race bug
+Message-ID: <20200822061725.GA7141@madhuparna-HP-Notebook>
+References: <20200803072857.8880-1-madhuparnabhowmik10@gmail.com>
+ <CAPDyKFo2njN6bU+VqpuHPpHDx4+ZkuoNRZVb0a0EjGBi9uXa7g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Provags-ID: V03:K1:vXMPwaa+GWBvgfx31Fh6V/bMiIMoiS8S+gl3mgGSj199RHnhCOX
- L8E71us4f9DvfWkSzMw4W1001t8xAt11HCeskYJa55GfHcTWfVVGflM/8DjckK32WkWM+yL
- MYUDKGcq6NGSrjwtvs3taO2PBg9o4HLA23+TDRemfhq4T/Io+xDvNM/HL/v7nc16jMUu08e
- gNlFdLYx6RFPKy3qbgExw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:V8drswwBsOE=:cNNLwN/v9CH3zRXLNN9gln
- 2sfXCSHGM8/OaV5hjhzS8tPyImxRIThNQlaDAXUMdB5IfZre69tAzs5/pRjIw/riJUUD3mp1J
- vRBx+YdMKuVUM4ieR7fHs46Ohbqfxh1ahbB58Z155YZ92fPySnomhlF4ITqTqkzci3pDETajc
- scgc+z54PKUgghEo0AmoRTi/Xdo6ScIZ+KQZymzYL59HscsjNaviyhYNIYN2BcYjpY3CcImFB
- 0Q0e1y0532vRBbXa+iZTZm0mZfwUK8blPO0MlyNaLfDCcoIv3MMlH4k440Hsw7+1Kb1W6k9vu
- nDC34pONadhbg0bDXFMFClHqrg3ZqnaEwdU75ZOKyu82b0fNjQOJHE991xjZLxw5WZC1/fz8s
- kerjT2Buu86GYEQGYqzYy72Z5XLJ+HuzMC1lHwQpKrEcTavZzt7vC/Lr/h6dnYbZld9lSaUUy
- IzOct6FYlJVefslSX78JviXjRJhMZ+RK6I+4eRkLi9Haj4BqTzaMgRcl4M9bP1i89P0K7YkHd
- UF+bgpMzN3UyyF4HOlHBfcc5bcSkCKkKm4mfkvsQ/McrStQm/mwYERGfUt0OIbnQvgAs7mJRk
- U4sPVTCvT1OqMfpimKnul+YEQglHj9FT/mvJRJYWygekSU3Php1hzRzSTrShwbyJeCxPPfEj3
- TmxE+vIi7iFvISpryQ0fC8bfcV6JF2qDxt82Y2tRtYFL8jmpyGPw3/8oSzwxW/WA990XO1PjK
- xUV2l2vubBj5DFHarn9PGMth3IKNf+KxfvF6nPpk9FCAY+hvwUEQhCoPFiDxQwrrqRDf2fhLv
- CVvZLyCYPJl7m1hIdIe+fVF8lttnIiGiikuTVSF2bxhDwJcyDfH3KMdFmHvUvR2Kn63MIlRXM
- dNFYJAiFaC0SK6SSlZ/8tEXFfgb8vZ63F+XgmJkfdwUS+H+NJc9KTBWEd9BS4gL0NrUjpAtAS
- sWd+VwGvZDd4BfQhOq8OvxTvPMkQjDyy0BTikpWPoe2eW006l/UiPFhGrxKquIT4JUH9/ntz+
- G0wHEZm0BAhblXhX8G3lLft2REica24vsi0p0aJppyDsBYjJ8lC+XPSZYbGnZxt2rBSchFdGx
- +WWAaZsBNZdyICryIqZaz9YhdLmf0U4EG5Tw6azegmBKBhTGbbBYqmQU/NwvYHJwSxSLIJ8Om
- eV1HQ5lfnyqy1vfntXtReyLKJdiyoydQvGx8nOz20FOsdz0ddieq2ICmDDsHHd603kF7oBjhr
- bs6fCkHtv5D9BIiQK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFo2njN6bU+VqpuHPpHDx4+ZkuoNRZVb0a0EjGBi9uXa7g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-21 09:23 -0700, Brian Vazquez wrote:
-
-> Hi Sven,
+On Fri, Aug 21, 2020 at 02:48:37PM +0200, Ulf Hansson wrote:
+> On Mon, 3 Aug 2020 at 09:29, <madhuparnabhowmik10@gmail.com> wrote:
+> >
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >
+> > via_save_pcictrlreg() should be called with host->lock held
+> > as it writes to pm_pcictrl_reg, otherwise there can be a race
+> > condition between via_sd_suspend() and via_sdc_card_detect().
+> > The same pattern is used in the function via_reset_pcictrl()
+> > as well, where via_save_pcictrlreg() is called with host->lock
+> > held.
+> >
+> > Found by Linux Driver Verification project (linuxtesting.org).
+> >
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> This doesn't apply to my mmc tree, can you please rebase and submit a
+> new version.
 >
-> Sorry for the late reply, did you still see this after:
-> https://patchwork.ozlabs.org/project/netdev/patch/20200803131948.41736-1-yuehaibing@huawei.com/
-> ??
+Sure, I have rebased it to v5.9-rc1, please have a look.
 
-That patch is apparently already in 5.9-rc1 as commit 80fbbb1672e7, so
-yes I'm still seeing it.
+Thanks,
+Madhuparna
 
-Cheers,
-       Sven
-
-> On Mon, Aug 17, 2020 at 12:21 AM Sven Joachim <svenjoac@gmx.de> wrote:
->
->> On 2020-07-29 21:27 +1000, Stephen Rothwell wrote:
->>
->> > Hi all,
->> >
->> > After merging the net-next tree, today's linux-next build (i386
->> defconfig)
->> > failed like this:
->> >
->> > x86_64-linux-gnu-ld: net/core/fib_rules.o: in function
->> `fib_rules_lookup':
->> > fib_rules.c:(.text+0x5c6): undefined reference to `fib6_rule_match'
->> > x86_64-linux-gnu-ld: fib_rules.c:(.text+0x5d8): undefined reference to
->> `fib6_rule_match'
->> > x86_64-linux-gnu-ld: fib_rules.c:(.text+0x64d): undefined reference to
->> `fib6_rule_action'
->> > x86_64-linux-gnu-ld: fib_rules.c:(.text+0x662): undefined reference to
->> `fib6_rule_action'
->> > x86_64-linux-gnu-ld: fib_rules.c:(.text+0x67a): undefined reference to
->> `fib6_rule_suppress'
->> > x86_64-linux-gnu-ld: fib_rules.c:(.text+0x68d): undefined reference to
->> `fib6_rule_suppress'
->>
->> FWIW, I saw these errors in 5.9-rc1 today, so the fix in commit
->> 41d707b7332f ("fib: fix fib_rules_ops indirect calls wrappers") was
->> apparently not sufficient.
->>
->> ,----
->> | $ grep IPV6 .config
->> | CONFIG_IPV6=m
->> | # CONFIG_IPV6_ROUTER_PREF is not set
->> | # CONFIG_IPV6_OPTIMISTIC_DAD is not set
->> | # CONFIG_IPV6_MIP6 is not set
->> | # CONFIG_IPV6_ILA is not set
->> | # CONFIG_IPV6_VTI is not set
->> | CONFIG_IPV6_SIT=m
->> | # CONFIG_IPV6_SIT_6RD is not set
->> | CONFIG_IPV6_NDISC_NODETYPE=y
->> | CONFIG_IPV6_TUNNEL=m
->> | CONFIG_IPV6_MULTIPLE_TABLES=y
->> | # CONFIG_IPV6_SUBTREES is not set
->> | # CONFIG_IPV6_MROUTE is not set
->> | # CONFIG_IPV6_SEG6_LWTUNNEL is not set
->> | # CONFIG_IPV6_SEG6_HMAC is not set
->> | # CONFIG_IPV6_RPL_LWTUNNEL is not set
->> | # CONFIG_NF_SOCKET_IPV6 is not set
->> | # CONFIG_NF_TPROXY_IPV6 is not set
->> | # CONFIG_NF_DUP_IPV6 is not set
->> | # CONFIG_NF_REJECT_IPV6 is not set
->> | # CONFIG_NF_LOG_IPV6 is not set
->> | CONFIG_NF_DEFRAG_IPV6=m
->> `----
->>
->> > Caused by commit
->> >
->> >   b9aaec8f0be5 ("fib: use indirect call wrappers in the most common
->> fib_rules_ops")
->> >
->> > # CONFIG_IPV6_MULTIPLE_TABLES is not set
->> >
->> > I have reverted that commit for today.
->>
->> Cheers,
->>        Sven
->>
+> Kind regards
+> Uffe
+> 
+> > ---
+> >  drivers/mmc/host/via-sdmmc.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/mmc/host/via-sdmmc.c b/drivers/mmc/host/via-sdmmc.c
+> > index ef95bce50889..e4d8126cd4e5 100644
+> > --- a/drivers/mmc/host/via-sdmmc.c
+> > +++ b/drivers/mmc/host/via-sdmmc.c
+> > @@ -1259,11 +1259,14 @@ static void via_init_sdc_pm(struct via_crdr_mmc_host *host)
+> >  static int via_sd_suspend(struct pci_dev *pcidev, pm_message_t state)
+> >  {
+> >         struct via_crdr_mmc_host *host;
+> > +       unsigned long flags;
+> >
+> >         host = pci_get_drvdata(pcidev);
+> >
+> > +       spin_lock_irqsave(&host->lock, flags);
+> >         via_save_pcictrlreg(host);
+> >         via_save_sdcreg(host);
+> > +       spin_unlock_irqrestore(&host->lock, flags);
+> >
+> >         pci_save_state(pcidev);
+> >         pci_enable_wake(pcidev, pci_choose_state(pcidev, state), 0);
+> > --
+> > 2.17.1
+> >
