@@ -2,146 +2,139 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706A1C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E713C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 476D920732
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:56:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDd+bpkQ"
+	by mail.kernel.org (Postfix) with ESMTP id 729FD20732
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgHVDz6 (ORCPT
+        id S1725912AbgHVEBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 23:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbgHVDz4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 23:55:56 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61910C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 20:55:56 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id e5so2699498qth.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 20:55:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sis1RtWjjJmCniMLQ4buZziqruFCYDRbS5Oahbaa7xE=;
-        b=XDd+bpkQppuofPbNYUrPg19hMiwkgibTgQkz9I7rtaHJW4k4dOIK6n6m4QMtEzqJTX
-         hPjz8BZFzLJqvXdh2w92mRO2niHkFK/EwJSyysUgtyPMnLj+cjz2mH4n3JYG37c0MxgA
-         Thou7c9mb2LK3ITMKPOTJCkzJNt+X5G7Djt/o2isimi06X2e26QPf+VjH5ZIOFpLqM0+
-         tregyYR3KQ8uY/Uww05P/wTWCpq/nWyPb5ZLwBidyH/kUedfaVJke9aFgTOB56Ak5oLU
-         wROdMx83wa/7O5oSFEDgUyHGSnChZy8Z3iHr+VfB7EehKFCCnVX5JtQw/k8TLsbcCwcD
-         SbeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=sis1RtWjjJmCniMLQ4buZziqruFCYDRbS5Oahbaa7xE=;
-        b=UWWkS1W3HtmA5o2qdd0N8RoDDWlkrYen/QBt9b7y6oLG2PwDpWRre2YDEhJYqYp1FX
-         99406vrhrAOBjwCmQc8dVMNLUizogQgLjh3mRHzgh1jcpCXw/1cDs2xZB+ipqn06IREj
-         SntOMh2t+iSwoINiYtj43dHJjHWbC/yRaY7/NbslW/Q2ZbEX3w8xIpJRHOW2VgOXFX3b
-         u6yVxnaG/Rr/KUyB6GaNTLLNByNbGtRKB/PGPm2B4rdqm12v6CsykLY/3v1auo71rZol
-         R4btR1h0GSCVhR5zFs7uvN6Ev1+Mz49ovVHfxD1PHAFCPVz7ZnoO22FjlBl+l82FWEUS
-         yzOQ==
-X-Gm-Message-State: AOAM532jHpR5UEBzaWzBj47LM+uPJwa95BSYiS6V3ghiBJc2pu74JpIR
-        oW1r26JKWdBERnFali0elqI=
-X-Google-Smtp-Source: ABdhPJxedn35Qz4LQohp3bn4561WJJkK6OamAOW8s6BY7Xrm3YhxZ9mcKnY5123/ZDctX5hciqMNxQ==
-X-Received: by 2002:ac8:1adc:: with SMTP id h28mr5386850qtk.153.1598068555057;
-        Fri, 21 Aug 2020 20:55:55 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id q34sm4396912qtk.32.2020.08.21.20.55.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 20:55:54 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 21 Aug 2020 23:55:52 -0400
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
-Message-ID: <20200822035552.GA104886@rani.riverdale.lan>
-References: <CAKwvOdnOh3H3ga2qpTktywvcgfXW5QJaB7r4XMhigmDzLhDNeA@mail.gmail.com>
- <87h7t6tpye.fsf@nanos.tec.linutronix.de>
- <20200813173701.GC4295@paulmck-ThinkPad-P72>
- <20200813180933.GA532283@rani.riverdale.lan>
- <875z9dioll.fsf@nanos.tec.linutronix.de>
- <20200820130641.GA536306@rani.riverdale.lan>
- <87zh6ohm03.fsf@nanos.tec.linutronix.de>
- <20200821230435.GA56974@rani.riverdale.lan>
- <CAKwvOdkoB+fT9tt7vgg1R6J-NEr77EWP5X8nFat_L-HvEzWGzA@mail.gmail.com>
- <87eenzqzmr.fsf@nanos.tec.linutronix.de>
+        Sat, 22 Aug 2020 00:01:16 -0400
+Received: from mga17.intel.com ([192.55.52.151]:41402 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725300AbgHVEBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 00:01:16 -0400
+IronPort-SDR: yUu/cx37u8efnEV/L08bDndAWiX+xQj219NXoVRS8CBOOpm1bZC7pNK4mGaVRURiRsmNtvwSwe
+ oqT6Wm/8Asfg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="135742831"
+X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
+   d="scan'208";a="135742831"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 21:01:15 -0700
+IronPort-SDR: az/BSV7RSyZiBINLupZ52ug5lb0TI9qqa2rKE/pCL8zqRRJ579VSDUbWOtN+3nvF/BVZOPCYbT
+ zlOpPpkOZn0w==
+X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
+   d="scan'208";a="498728955"
+Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 21:01:15 -0700
+Date:   Fri, 21 Aug 2020 21:01:14 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH] KVM: LAPIC: Don't kick vCPU which is injecting
+ already-expired timer
+Message-ID: <20200822040114.GF4769@sjchrist-ice>
+References: <1598001454-11709-1-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87eenzqzmr.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <1598001454-11709-1-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 02:43:08AM +0200, Thomas Gleixner wrote:
-> On Fri, Aug 21 2020 at 16:16, Nick Desaulniers wrote:
-> > On Fri, Aug 21, 2020 at 4:04 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >> On Fri, Aug 21, 2020 at 02:37:48AM +0200, Thomas Gleixner wrote:
-> >> The gcc bug I linked to earlier is only fixed in gcc-6 onwards. Is that
-> >
-> > (based on https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82602#c14)
-> >
-> >> good enough to remove force_order? I can test gcc-4.9 and gcc-5 to check
-> >> if it would currently have any impact.
+On Fri, Aug 21, 2020 at 05:17:34PM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
 > 
-> And that test tells you what exactly? That your particular build of
-> those compilers does not have the problem. A truly scientific approach.
+> The kick after setting KVM_REQ_PENDING_TIMER is used to handle the timer 
+> fires on a different pCPU which vCPU is running on, we don't need this 
+> kick when injecting already-expired timer, this kick is expensive since 
+> memory barrier, rcu, preemption disable/enable operations. This patch 
+> reduces the overhead by don't kick vCPU which is injecting already-expired 
+> timer.
 
-More that the current kernel code doesn't have that problem, but yeah,
-it might creep in later.
-
+This should also call out the VMX preemption timer case, which also passes
+from_timer_fn=false but doesn't need a kick because kvm_lapic_expired_hv_timer()
+is called from the target vCPU.
+ 
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/lapic.c | 2 +-
+>  arch/x86/kvm/x86.c   | 5 +++--
+>  arch/x86/kvm/x86.h   | 2 +-
+>  3 files changed, 5 insertions(+), 4 deletions(-)
 > 
-> > I think checking the disassemblies with a pre-gcc-6 would be good
-> > enough then; that bug isn't specific to this particular case.
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 248095a..5b5ae66 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -1642,7 +1642,7 @@ static void apic_timer_expired(struct kvm_lapic *apic, bool from_timer_fn)
+>  	}
+>  
+>  	atomic_inc(&apic->lapic_timer.pending);
+> -	kvm_set_pending_timer(vcpu);
+> +	kvm_set_pending_timer(vcpu, from_timer_fn);
+
+My vote would be to open code kvm_set_pending_timer() here and drop the
+helper, i.e.
+
+	kvm_make_request(KVM_REQ_PENDING_TIMER, vcpu);
+	if (from_timer_fn)
+		kvm_vcpu_kick(vcpu);
+
+with that and an updated changelog:
+
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+
+>  }
+>  
+>  static void start_sw_tscdeadline(struct kvm_lapic *apic)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 599d732..2a45405 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1778,10 +1778,11 @@ static s64 get_kvmclock_base_ns(void)
+>  }
+>  #endif
+>  
+> -void kvm_set_pending_timer(struct kvm_vcpu *vcpu)
+> +void kvm_set_pending_timer(struct kvm_vcpu *vcpu, bool should_kick)
+>  {
+>  	kvm_make_request(KVM_REQ_PENDING_TIMER, vcpu);
+> -	kvm_vcpu_kick(vcpu);
+> +	if (should_kick)
+> +		kvm_vcpu_kick(vcpu);
+>  }
+>  
+>  static void kvm_write_wall_clock(struct kvm *kvm, gpa_t wall_clock)
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 995ab69..0eaae9c 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -246,7 +246,7 @@ static inline bool kvm_vcpu_latch_init(struct kvm_vcpu *vcpu)
+>  	return is_smm(vcpu) || kvm_x86_ops.apic_init_signal_blocked(vcpu);
+>  }
+>  
+> -void kvm_set_pending_timer(struct kvm_vcpu *vcpu);
+> +void kvm_set_pending_timer(struct kvm_vcpu *vcpu, bool should_kick);
+>  void kvm_inject_realmode_interrupt(struct kvm_vcpu *vcpu, int irq, int inc_eip);
+>  
+>  void kvm_write_tsc(struct kvm_vcpu *vcpu, struct msr_data *msr);
+> -- 
+> 2.7.4
 > 
-> What? I clearly want a statement from the GCC people that this won't
-> happen on pre gcc6 compilers and not just some 'works for me' statement
-> based on a randomly picked compiler build.
-
-Presumably also from clang that the compiler does have protections
-against this, as opposed to doesn't happen today.
-
-> 
-> Thanks,
-> 
->         tglx
-
-Cc Segher.
-
-Segher, we were looking at gcc PR82602, where IRA could reorder volatile
-asm's (reported on ARM). The fix was backported to gcc-6. Do you know if
-there is any reason the problem couldn't occur on x86 on older gcc
-without the fix?
-
-Thanks.
-
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82602
