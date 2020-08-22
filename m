@@ -2,123 +2,70 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A935C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AA5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 17:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED2A207DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56902078D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 17:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbgHVQyr (ORCPT
+        id S1728301AbgHVRFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 12:54:47 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39660 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727856AbgHVQyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 12:54:46 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3EC1FE4389AFD1442589;
-        Sun, 23 Aug 2020 00:54:43 +0800 (CST)
-Received: from DESKTOP-8N3QUD5.china.huawei.com (10.67.102.173) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Sun, 23 Aug 2020 00:54:35 +0800
-From:   Guohua Zhong <zhongguohua1@huawei.com>
-To:     <christophe.leroy@csgroup.eu>
-CC:     <benh@kernel.crashing.org>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <mpe@ellerman.id.au>, <nixiaoming@huawei.com>, <paulus@samba.org>,
-        <stable@vger.kernel.org>, <wangle6@huawei.com>,
-        <zhongguohua1@huawei.com>
-Subject: =?UTF-8?q?Re=EF=BC=9ARe=3A=20=5BPATCH=5D=20powerpc=3A=20Fix=20a=20bug=20in=20=5F=5Fdiv64=5F32=20if=20divisor=20is=20zero?=
-Date:   Sun, 23 Aug 2020 00:54:33 +0800
-Message-ID: <20200822165433.58228-1-zhongguohua1@huawei.com>
-X-Mailer: git-send-email 2.21.0.windows.1
-In-Reply-To: <8dedfcce-04e0-ec7d-6af5-ec1d6d8602b0@csgroup.eu>
-References: <8dedfcce-04e0-ec7d-6af5-ec1d6d8602b0@csgroup.eu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.102.173]
-X-CFilter-Loop: Reflected
+        Sat, 22 Aug 2020 13:05:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726534AbgHVRFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 13:05:07 -0400
+Received: from localhost (173-25-40-8.client.mchsi.com [173.25.40.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 606ED2072D;
+        Sat, 22 Aug 2020 17:05:07 +0000 (UTC)
+From:   Clark Williams <williams@redhat.com>
+Subject: [ANNOUNCE] 4.14.194-rt93
+Date:   Sat, 22 Aug 2020 17:04:20 -0000
+Message-ID: <159811586094.330999.6304055427779310413@theseus.lan>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <daniel.wagner@suse.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Clark Williams <williams@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->In generic version in lib/math/div64.c, there is no checking of 'base' 
->either.
->Do we really want to add this check in the powerpc version only ?
+Hello RT-list!
 
->The only user of __div64_32() is do_div() in 
->include/asm-generic/div64.h. Wouldn't it be better to do the check there ?
+I'm pleased to announce the 4.14.194-rt93 stable release.
 
->Christophe
+You can get this release via the git tree at:
 
-Yet, I have noticed that there is no checking of 'base' in these functions.
-But I am not sure how to check is better.As we know that the result is 
-undefined when divisor is zero. It maybe good to print error and dump stack.
- Let the process to know that the divisor is zero by sending SIGFPE. 
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-diff --git a/include/asm-generic/div64.h b/include/asm-generic/div64.h
-index a3b98c86f077..161c656ee3ee 100644
---- a/include/asm-generic/div64.h
-+++ b/include/asm-generic/div64.h
-@@ -43,6 +43,11 @@
- # define do_div(n,base) ({                                     \
-        uint32_t __base = (base);                               \
-        uint32_t __rem;                                         \
-+ if (unlikely(base == 0)) {                          \
-+         pr_err("do_div base=%d\n",base);            \
-+         dump_stack();                               \
-+         force_sig(SIGFPE);                          \
-+ }      
+  branch: v4.14-rt
+  Head SHA1: 12bc7963be92af2155fb661bea9f3a420338b54d
+
+Or to build 4.14.194-rt93 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.14.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.14.194.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.194-rt93.patch.xz
 
 
-Then it also needto add this checking in functions of
-div64_s64(), div64_u64(), div64_u64_rem(), div_s64_rem and div_u64_rem () 
-in include/linux/math64.h
+You can also build from 4.14.193-rt92 by applying the incremental patch:
 
-+ if (unlikely(divisor == 0)) {
-+         pr_err("%s divisor=0\n",__func__);
-+         dump_stack();
-+         force_sig(SIGFPE);
-+ }
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/incr/patch-4.14.193-rt92-rt93.patch.xz
 
-Guohua
-
->>  	lwz	r5,0(r3)	# get the dividend into r5/r6
->>  	lwz	r6,4(r3)
->>  	cmplw	r5,r4
->>@@ -52,6 +55,7 @@ __div64_32:
->>  4:	stw	r7,0(r3)	# return the quotient in *r3
->>  	stw	r8,4(r3)
->>  	mr	r3,r6		# return the remainder in r3
->>+5:					# return if divisor r4 is zero
->>  	blr
->>  
->>  /*
->>diff --git a/arch/powerpc/lib/div64.S b/arch/powerpc/lib/div64.S
->>index 3d5426e7dcc4..1cc9bcabf678 100644
->>--- a/arch/powerpc/lib/div64.S
->>+++ b/arch/powerpc/lib/div64.S
->>@@ -13,6 +13,9 @@
->>  #include <asm/processor.h>
->>  
->>  _GLOBAL(__div64_32)
->>+	li	r9,0
->>+	cmplw	r4,r9	# check if divisor r4 is zero
->>+	beq	5f			# jump to label 5 if r4(divisor) is zero
->>  	lwz	r5,0(r3)	# get the dividend into r5/r6
->>  	lwz	r6,4(r3)
->>  	cmplw	r5,r4
->>@@ -52,4 +55,5 @@ _GLOBAL(__div64_32)
->>  4:	stw	r7,0(r3)	# return the quotient in *r3
->>  	stw	r8,4(r3)
->>  	mr	r3,r6		# return the remainder in r3
->>+5:					# return if divisor r4 is zero
->>  	blr
->>
-
+Enjoy!
+Clark
