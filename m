@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 15:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6784C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 15:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB8E207DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 15:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA0022072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 15:09:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TreoCnNR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbE1w7oD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgHVPJQ (ORCPT
+        id S1728348AbgHVPJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 11:09:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46590 "EHLO
+        Sat, 22 Aug 2020 11:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728196AbgHVPJJ (ORCPT
+        with ESMTP id S1728255AbgHVPJN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 11:09:09 -0400
+        Sat, 22 Aug 2020 11:09:13 -0400
 Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98D0AC061575;
-        Sat, 22 Aug 2020 08:09:08 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id kr4so2091713pjb.2;
-        Sat, 22 Aug 2020 08:09:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E33C3C061573;
+        Sat, 22 Aug 2020 08:09:12 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q1so2076143pjd.1;
+        Sat, 22 Aug 2020 08:09:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aWfg/p1bEEsF9VR7qbKwXbT4prM1ax9SkBLPqSVouws=;
-        b=TreoCnNRUV59m5H5mc54POb5e9AKUfujBJtw6CIU7DJ7TlGxX+yWWCP90io+UvOhtI
-         6lN6VARFlIqBKPqYLlaGNDPnM9Q3+Fsd5EiE77WcG1FjMNbhUiTgw+eHU9Odthuh81lh
-         BY+V/CK+INs+HgCEm8drPMVSUzhSMeEGuR33FpIiedWXcilR1XxjcbF3SHrkRzPyH56f
-         baurpXfeJMVOEuh5wP4ETfaQXhStCqc6nMOycfWwUbB7ksdW8nnvtGzXBBKHgb2FTwet
-         3BqxDuzR3/1LGrjg1flO1cB++9SUh1+CP3TNx9S7/0sxZxUkPvbe+FsBqSSJfHyMphfn
-         oGiw==
+        bh=tyw6vA6yQNsN/wIQW/tyNI4Wu5/Dv3Pgq6wDKg4/E3s=;
+        b=YbE1w7oD6AZf3nS8X/ngNno+kA8Zo52fmQNdcS18SCftss1D3yFLglNwe+oipf8jOX
+         DRFtnMAZWNojSnWzlc/n6pDvWWDbgcQwFYYCml+QMVZGfqO3RzcIRiXLGa0Nsm3se4oe
+         Fei6MpahuQeRmntgo9MrDRT//+440ZakOLhqTIEGfW696V25d3fA/s0NxNA0bmIH2OVi
+         LuKWw37yjwTZp14MPJNrDNSPou2msXBze3NnXQcnsLezWul4nMFMXOIvi8+w1NM6PWyK
+         zF+G4NS6A5QAswGttxfG3mb6YYzOK+QKMl30yPAs9o7g1KjIoAVhN7zodbgq6HqskgA+
+         FeIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=aWfg/p1bEEsF9VR7qbKwXbT4prM1ax9SkBLPqSVouws=;
-        b=b9XiuoU01BLGuQCJyVU7COCO63YBASXCjsW+yLXpfiaadDIZAWLvIyOGXVF6Ua9Zi0
-         O0dl4j89f+7vKnWr7MXBPd5CBlChMVmynVrsXglu3q2Xypy3fJFwdmKiFhpo6xqit3P5
-         jOh6VmR12aEE++2BBzw5TlqWTwVC+PSemthapbl1LtwbHi/9cJjI7dL0EEZaODcBHMmh
-         5exK9XgJRa98DQRmoCL93dPa1hSrX0TxfhcOUxBVk9wTkYFSYR4DiC2KBgLNEU3jIebX
-         MACGmRk6SBiVnmXi3cyi/2mRC6bXy1Q43zApustOTwepFICziL6DWL/2rTJX/BSg/WuT
-         CqxQ==
-X-Gm-Message-State: AOAM530a2WubOv2eTbJYYvgmlyKjMt6OBlgTKiKlXrytfMOMr8nsERbb
-        x9FPIS/3CN9WdEadDKYWY/U=
-X-Google-Smtp-Source: ABdhPJys2OLCfUIKzWTMevNyztH0683b7F8X4R7+XyRTVJJiiPVel4kLEjsxFqZHvK3QajGoT+87wA==
-X-Received: by 2002:a17:90b:154:: with SMTP id em20mr6778169pjb.173.1598108948143;
-        Sat, 22 Aug 2020 08:09:08 -0700 (PDT)
+        bh=tyw6vA6yQNsN/wIQW/tyNI4Wu5/Dv3Pgq6wDKg4/E3s=;
+        b=FjD7n+67SrhlkyqQxKEtQktzsWGKn2qaadHj2+SqqwxqTNeVYYF44RDfadUX6fgSfA
+         T8ksI+2dP3ZlpeB6rBg7KIV00Kod0aa140hLzIP7nD8CGvqW3jgmkZNCh+AzUvmNoz1g
+         bGEtBMlKZnWFTBoYY+zNkFsVq9PiTWQD8r7k3Lkv0hlQ1KAVvuppRWFwLPeywExmVImA
+         l53EXmTkk9LDgMHHbG4+hIx0XepPAFagARdVqpcZxVv67ujJF2MqVNZffwkT/Uj8fbV7
+         fsK+8Jv6Qsa2g2f3p/bjW7KUp7ZGQiSB1ucbMBI3U1cdWT/dGPNwP9bkXWBuWo0ge27m
+         Ol3w==
+X-Gm-Message-State: AOAM533atrtWbfc6eOwW5/GQ17svOWi2srKAnHOChznVaKjXixAFzTj2
+        I5HGZxMorzWKvw8TI05au5o=
+X-Google-Smtp-Source: ABdhPJyVbAW/pyqe68An3ewBWq6iwe7ykVWD8BuDS3ND+hrizcTTwB7VQ11E/eWTtXdShmZOKg5Xpw==
+X-Received: by 2002:a17:902:7605:: with SMTP id k5mr6513045pll.122.1598108952417;
+        Sat, 22 Aug 2020 08:09:12 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n18sm5066040pgd.91.2020.08.22.08.09.07
+        by smtp.gmail.com with ESMTPSA id l9sm5331944pgg.29.2020.08.22.08.09.11
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 22 Aug 2020 08:09:07 -0700 (PDT)
+        Sat, 22 Aug 2020 08:09:12 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
@@ -72,11 +72,10 @@ Cc:     Jonathan Cameron <jic23@kernel.org>,
         Prashant Malani <pmalani@chromium.org>,
         linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Brian Norris <briannorris@chromium.org>
-Subject: [PATCH v5 4/7] pwm: cros-ec: Accept more error codes from cros_ec_cmd_xfer_status
-Date:   Sat, 22 Aug 2020 08:08:54 -0700
-Message-Id: <20200822150857.205775-5-linux@roeck-us.net>
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v5 7/7] pwm: cros-ec: Simplify EC error handling
+Date:   Sat, 22 Aug 2020 08:08:57 -0700
+Message-Id: <20200822150857.205775-8-linux@roeck-us.net>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200822150857.205775-1-linux@roeck-us.net>
 References: <20200822150857.205775-1-linux@roeck-us.net>
@@ -88,88 +87,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit c5cd2b47b203 ("platform/chrome: cros_ec_proto: Report command
-not supported") we can no longer assume that cros_ec_cmd_xfer_status()
-reports -EPROTO for all errors returned by the EC itself. A follow-up
-patch will change cros_ec_cmd_xfer_status() to report additional errors
-reported by the EC as distinguished Linux error codes.
+With enhanced error reporting from cros_ec_cmd_xfer_status() in place,
+we can fully use it and no longer rely on EC error codes.
 
-Handle this change by no longer assuming that only -EPROTO is used
-to report all errors returned by the EC itself. Instead, support both
-the old and the new error codes.
-
-Add a comment describing cros_ec_num_pwms() to explain its functionality.
-
-Cc: Gwendal Grignou <gwendal@chromium.org>
-Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc: Prashant Malani <pmalani@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
 Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Brian Norris <briannorris@chromium.org>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
-v5: Added Uwe's Acked-by: tag
-v4: Added comments describing cros_ec_num_pwms() in more detail
-    Added Thierry's Acked-by: tag
-v3: Added patch
+v5: Added Brian's Reviewed-by: tag
+    Added Uwe's Acked-by: tag
+v4: Added patch to series
 
- drivers/pwm/pwm-cros-ec.c | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+ drivers/pwm/pwm-cros-ec.c | 26 ++++----------------------
+ 1 file changed, 4 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
-index 09c08dee099e..94d3dff9b0e5 100644
+index 94d3dff9b0e5..c1c337969e4e 100644
 --- a/drivers/pwm/pwm-cros-ec.c
 +++ b/drivers/pwm/pwm-cros-ec.c
-@@ -204,6 +204,11 @@ static const struct pwm_ops cros_ec_pwm_ops = {
- 	.owner		= THIS_MODULE,
- };
+@@ -81,8 +81,7 @@ static int cros_ec_pwm_set_duty(struct cros_ec_device *ec, u8 index, u16 duty)
+ 	return cros_ec_cmd_xfer_status(ec, msg);
+ }
  
-+/*
-+ * Determine the number of supported PWMs. The EC does not return the number
-+ * of PWMs it supports directly, so we have to read the pwm duty cycle for
-+ * subsequent channels until we get an error.
-+ */
- static int cros_ec_num_pwms(struct cros_ec_device *ec)
+-static int __cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index,
+-				  u32 *result)
++static int cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index)
  {
- 	int i, ret;
-@@ -213,20 +218,30 @@ static int cros_ec_num_pwms(struct cros_ec_device *ec)
- 		u32 result = 0;
+ 	struct {
+ 		struct cros_ec_command msg;
+@@ -107,19 +106,12 @@ static int __cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index,
+ 	params->index = index;
  
- 		ret = __cros_ec_pwm_get_duty(ec, i, &result);
--		/* We want to parse EC protocol errors */
--		if (ret < 0 && !(ret == -EPROTO && result))
--			return ret;
+ 	ret = cros_ec_cmd_xfer_status(ec, msg);
+-	if (result)
+-		*result = msg->result;
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	return resp->duty;
+ }
+ 
+-static int cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index)
+-{
+-	return __cros_ec_pwm_get_duty(ec, index, NULL);
+-}
 -
+ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			     const struct pwm_state *state)
+ {
+@@ -215,28 +207,18 @@ static int cros_ec_num_pwms(struct cros_ec_device *ec)
+ 
+ 	/* The index field is only 8 bits */
+ 	for (i = 0; i <= U8_MAX; i++) {
+-		u32 result = 0;
+-
+-		ret = __cros_ec_pwm_get_duty(ec, i, &result);
++		ret = cros_ec_pwm_get_duty(ec, i);
  		/*
  		 * We look for SUCCESS, INVALID_COMMAND, or INVALID_PARAM
  		 * responses; everything else is treated as an error.
-+		 * The EC error codes either map to -EOPNOTSUPP / -EINVAL,
-+		 * or -EPROTO is returned and the EC error is in the result
-+		 * field. Check for both.
+-		 * The EC error codes either map to -EOPNOTSUPP / -EINVAL,
+-		 * or -EPROTO is returned and the EC error is in the result
+-		 * field. Check for both.
++		 * The EC error codes map to -EOPNOTSUPP and -EINVAL,
++		 * so check for those.
  		 */
--		if (result == EC_RES_INVALID_COMMAND)
-+		switch (ret) {
-+		case -EOPNOTSUPP:	/* invalid command */
+ 		switch (ret) {
+ 		case -EOPNOTSUPP:	/* invalid command */
  			return -ENODEV;
--		else if (result == EC_RES_INVALID_PARAM)
-+		case -EINVAL:		/* invalid parameter */
+ 		case -EINVAL:		/* invalid parameter */
  			return i;
--		else if (result)
-+		case -EPROTO:
-+			/* Old or new error return code: Handle both */
-+			if (result == EC_RES_INVALID_COMMAND)
-+				return -ENODEV;
-+			else if (result == EC_RES_INVALID_PARAM)
-+				return i;
- 			return -EPROTO;
-+		default:
-+			if (ret < 0)
-+				return ret;
-+			break;
-+		}
- 	}
- 
- 	return U8_MAX;
+-		case -EPROTO:
+-			/* Old or new error return code: Handle both */
+-			if (result == EC_RES_INVALID_COMMAND)
+-				return -ENODEV;
+-			else if (result == EC_RES_INVALID_PARAM)
+-				return i;
+-			return -EPROTO;
+ 		default:
+ 			if (ret < 0)
+ 				return ret;
 -- 
 2.17.1
 
