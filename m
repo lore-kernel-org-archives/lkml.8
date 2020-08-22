@@ -2,250 +2,84 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AC8C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B971520738
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF2820738
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgHVJis (ORCPT
+        id S1727785AbgHVJkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 05:38:48 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:54562 "EHLO
+        Sat, 22 Aug 2020 05:40:04 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:54676 "EHLO
         asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHVJir (ORCPT
+        with ESMTP id S1725864AbgHVJkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 05:38:47 -0400
+        Sat, 22 Aug 2020 05:40:02 -0400
 Received: from ravnborg.org (unknown [188.228.123.71])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 24DA880516;
-        Sat, 22 Aug 2020 11:38:42 +0200 (CEST)
-Date:   Sat, 22 Aug 2020 11:38:40 +0200
+        by asavdk4.altibox.net (Postfix) with ESMTPS id D0C6C80516;
+        Sat, 22 Aug 2020 11:40:00 +0200 (CEST)
+Date:   Sat, 22 Aug 2020 11:39:59 +0200
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        drinkcat@chromium.org, Jonas Karlman <jonas@kwiboo.se>,
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>, drinkcat@chromium.org,
+        Jonas Karlman <jonas@kwiboo.se>,
         David Airlie <airlied@linux.ie>,
         Neil Armstrong <narmstrong@baylibre.com>,
-        dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         Andrzej Hajda <a.hajda@samsung.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         hsinyi@chromium.org, matthias.bgg@gmail.com,
         Collabora Kernel ML <kernel@collabora.com>
 Subject: Re: [PATCH 3/3] drm/bridge: ps8640: Rework power state handling
-Message-ID: <20200822093840.GC430436@ravnborg.org>
+Message-ID: <20200822093959.GD430436@ravnborg.org>
 References: <20200615205320.790334-1-enric.balletbo@collabora.com>
  <20200615205320.790334-4-enric.balletbo@collabora.com>
+ <20200620214225.GD74146@ravnborg.org>
+ <0220cfe5-2ac9-2d8b-529d-bb1a61478395@collabora.com>
+ <20200624070738.GA1807736@ravnborg.org>
+ <20b2f097-d789-3f5a-cd7e-3701669f43cb@collabora.com>
+ <5af757da-87ec-c0d1-374d-0a69401e09a3@collabora.com>
+ <20200821113809.GA283294@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200615205320.790334-4-enric.balletbo@collabora.com>
+In-Reply-To: <20200821113809.GA283294@ravnborg.org>
 X-CMAE-Score: 0
 X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
         a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=QX4gbG5DAAAA:8 a=e5mUnYsNAAAA:8
-        a=gsnspH9XThcp_ju6__IA:9 a=CjuIK1q_8ugA:10 a=AbAUZ8qAyYyZVLSsDulk:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+        a=kj9zAlcOel0A:10 a=aBBcIbYZM5gs4jnWP7QA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 10:53:20PM +0200, Enric Balletbo i Serra wrote:
-> The get_edid() callback can be triggered anytime by an ioctl, i.e
-> 
->   drm_mode_getconnector (ioctl)
->     -> drm_helper_probe_single_connector_modes
->        -> drm_bridge_connector_get_modes
->           -> ps8640_bridge_get_edid
-> 
-> Actually if the bridge pre_enable() function was not called before
-> get_edid(), the driver will not be able to get the EDID properly and
-> display will not work until a second get_edid() call is issued and if
-> pre_enable() is called before. The side effect of this, for example, is
-> that you see anything when `Frecon` starts, neither the splash screen,
-> until the graphical session manager starts.
-> 
-> To fix this we need to make sure that all we need is enabled before
-> reading the EDID. This means the following:
-> 
-> 1. If get_edid() is called before having the device powered we need to
->    power on the device. In such case, the driver will power off again the
->    device.
-> 
-> 2. If get_edid() is called after having the device powered, all should
->    just work. We added a powered flag in order to avoid recurrent calls
->    to ps8640_bridge_poweron() and unneeded delays.
-> 
-> 3. This seems to be specific for this device, but we need to make sure
->    the panel is powered on before do a power on cycle on this device.
->    Otherwise the device fails to retrieve the EDID.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
-> 
->  drivers/gpu/drm/bridge/parade-ps8640.c | 79 ++++++++++++++++++++++++--
->  1 file changed, 73 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
-> index 9f7b7a9c53c52..ca651480891df 100644
-> --- a/drivers/gpu/drm/bridge/parade-ps8640.c
-> +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
-> @@ -65,6 +65,7 @@ struct ps8640 {
->  	struct regulator_bulk_data supplies[2];
->  	struct gpio_desc *gpio_reset;
->  	struct gpio_desc *gpio_powerdown;
-> +	bool powered;
->  };
->  
->  static inline struct ps8640 *bridge_to_ps8640(struct drm_bridge *e)
-> @@ -91,13 +92,25 @@ static int ps8640_bridge_vdo_control(struct ps8640 *ps_bridge,
->  	return 0;
->  }
->  
-> -static void ps8640_pre_enable(struct drm_bridge *bridge)
-> +static void ps8640_bridge_poweron(struct ps8640 *ps_bridge)
->  {
-> -	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
->  	struct i2c_client *client = ps_bridge->page[PAGE2_TOP_CNTL];
-> +	struct drm_bridge *panel;
->  	unsigned long timeout;
->  	int ret, status;
->  
-> +	if (ps_bridge->powered)
-> +		return;
-> +
-> +	/*
-> +	 * That seems to be specific to this chip, and a weird behaviour, but
-> +	 * we need to call drm_panel_prepare before issuing a poweron cycle. If
-> +	 * we don't do this, the chip is not able to read properly the EDID.
-> +	 */
-> +	panel = ps_bridge->panel_bridge;
-> +	if (panel->funcs && panel->funcs->pre_enable)
-> +		panel->funcs->pre_enable(panel);
-> +
->  	ret = regulator_bulk_enable(ARRAY_SIZE(ps_bridge->supplies),
->  				    ps_bridge->supplies);
->  	if (ret < 0) {
-> @@ -164,6 +177,8 @@ static void ps8640_pre_enable(struct drm_bridge *bridge)
->  		goto err_regulators_disable;
->  	}
->  
-> +	ps_bridge->powered = true;
-> +
->  	return;
->  
->  err_regulators_disable:
-> @@ -171,12 +186,13 @@ static void ps8640_pre_enable(struct drm_bridge *bridge)
->  			       ps_bridge->supplies);
->  }
->  
-> -static void ps8640_post_disable(struct drm_bridge *bridge)
-> +static void ps8640_bridge_poweroff(struct ps8640 *ps_bridge)
->  {
-> -	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-> +	struct drm_bridge *panel;
->  	int ret;
->  
-> -	ps8640_bridge_vdo_control(ps_bridge, DISABLE);
-> +	if (!ps_bridge->powered)
-> +		return;
->  
->  	gpiod_set_value(ps_bridge->gpio_reset, 1);
->  	gpiod_set_value(ps_bridge->gpio_powerdown, 1);
-> @@ -184,6 +200,32 @@ static void ps8640_post_disable(struct drm_bridge *bridge)
->  				     ps_bridge->supplies);
->  	if (ret < 0)
->  		DRM_ERROR("cannot disable regulators %d\n", ret);
-> +
-> +	panel = ps_bridge->panel_bridge;
-> +	if (panel->funcs && panel->funcs->post_disable)
-> +		panel->funcs->post_disable(panel);
-> +
-> +	ps_bridge->powered = false;
-> +}
-> +
-> +static void ps8640_pre_enable(struct drm_bridge *bridge)
-> +{
-> +	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-> +	int ret;
-> +
-> +	ps8640_bridge_poweron(ps_bridge);
-> +
-> +	ret = ps8640_bridge_vdo_control(ps_bridge, DISABLE);
-> +	if (ret < 0)
-> +		ps8640_bridge_poweroff(ps_bridge);
-> +}
-> +
-> +static void ps8640_post_disable(struct drm_bridge *bridge)
-> +{
-> +	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-> +
-> +	ps8640_bridge_vdo_control(ps_bridge, DISABLE);
-> +	ps8640_bridge_poweroff(ps_bridge);
->  }
-
 Hi Enric.
 
-Would is be possible to use drm_bridge_chain_pre_enable()
-and drm_bridge_chain_post_disable() rather than hardcoding
-the dependencies here.
-The the already present logic to handle a bridged chain is used
-when pre_enable and post_disable.
-Seems better to use the present logic to handle bridged chains if
-possible. And it should simplify this logic a bit too.
+On Fri, Aug 21, 2020 at 01:38:09PM +0200, Sam Ravnborg wrote:
+> Hi Enric.
+> 
+> > 
+> > Let me reformulate the question for if it was not clear.
+> > 
+> > What I did is be able to read the EDID every time userspace asks for it (so
+> > kernel enables all the required) and Sam is proposing to just fail if all is not
+> > setup. I can obviously do this but my question is, at which point I should leave
+> > all the logic enabled to be able to read the EDID (after probe?, after
+> > pre_enable, after enable?) It is not clear for me from the API.
+> 
+> I am not clear if my suggestion is a good suggestion.
+> 
+> I recall I saw something similar in another bridge driver.
+
+I have noew checked - and there is several bridge drivers that
+do a power_on to read get_edid - so I was mistaken. Sorry!
 
 	Sam
-
->  
->  static int ps8640_bridge_attach(struct drm_bridge *bridge,
-> @@ -249,9 +291,34 @@ static struct edid *ps8640_bridge_get_edid(struct drm_bridge *bridge,
->  					   struct drm_connector *connector)
->  {
->  	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-> +	bool poweroff = !ps_bridge->powered;
-> +	struct edid *edid;
-> +
-> +	/*
-> +	 * When we end calling get_edid() triggered by an ioctl, i.e
-> +	 *
-> +	 *   drm_mode_getconnector (ioctl)
-> +	 *     -> drm_helper_probe_single_connector_modes
-> +	 *        -> drm_bridge_connector_get_modes
-> +	 *           -> ps8640_bridge_get_edid
-> +	 *
-> +	 * We need to make sure that what we need is enabled before reading
-> +	 * EDID, for this chip, we need to do a full poweron, otherwise it will
-> +	 * fail.
-> +	 */
-> +	ps8640_bridge_poweron(ps_bridge);
->  
-> -	return drm_get_edid(connector,
-> +	edid = drm_get_edid(connector,
->  			    ps_bridge->page[PAGE0_DP_CNTL]->adapter);
-> +
-> +	/*
-> +	 * If we call the get_edid() function without having enabled the chip
-> +	 * before, return the chip to its original power state.
-> +	 */
-> +	if (poweroff)
-> +		ps8640_bridge_poweroff(ps_bridge);
-> +
-> +	return edid;
->  }
->  
->  static const struct drm_bridge_funcs ps8640_bridge_funcs = {
-> -- 
-> 2.27.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
