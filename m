@@ -7,78 +7,76 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D56C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 13:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 13:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32625207DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 13:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482182078D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 13:17:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C4Y072XU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CgEAJmXJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgHVNOC (ORCPT
+        id S1728052AbgHVNRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 09:14:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57032 "EHLO
+        Sat, 22 Aug 2020 09:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728083AbgHVNN5 (ORCPT
+        with ESMTP id S1727936AbgHVNRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 09:13:57 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A27C061575
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 06:13:56 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id f193so2430749pfa.12
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 06:13:56 -0700 (PDT)
+        Sat, 22 Aug 2020 09:17:22 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0EC1C061574
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 06:17:22 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id g6so93909pjl.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 06:17:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=xQFZ3Sv5y18I7wZ9EvV1kNK7LL9SLdrdcRtoUoCFnvA=;
-        b=C4Y072XUAIYZyfmRrshf5l95PKNCWRwbELitDleGUvIdERcUpFcVgCGYWWXxXo3+vG
-         8BPaFHw/m1aeMNF8psDMprEv/tZXx39vj8amuMaLWdebvAPjysgxNmt9sgLSGkgHWp3B
-         jAxXX1Y8EbBER6csHNYJU8QIxOfMbOMxBINcNC+g+re1je9Nf3dv3BOl7mseXgz0Hjnu
-         uSyzMi3CyCgojgN13U2OTkpESZnzjTZHY+oZpPCO3Vjw2KnMMb7QaRtY2DmA2zTyxVFy
-         y3bYbFtml8cHTQYaSw+yThBfrEO0DpO9OZMCcddOhggEtsLenCi93krz/vdgD6d5nbsP
-         3+sQ==
+        bh=uvSBHWeP6GEaswZL6yzDoYivAMYOOsA1ly+Tj65rYYY=;
+        b=CgEAJmXJoAaa21ok3qK45ifn1N3OO5xyOxP8uOCth76qK95hh7O6T3U6NNt8sgRW/l
+         y5O28MwukNJvBDEbfqHr+e4Y4b848of6dpD3g/SjED5ypsou4MsUfCyEEGJMSBiLGEvv
+         P1qjWBylcXMNht1OYekpnKO2j3QrdmlZNqNfKCYeETelZohRERd9qy7qhHR4PieF7qm/
+         UCABdjqWJ5P3EFtGl+auwiJTbuaLm3KkJzYA4bjUVpzDAxZYdx8FTWEBBNHPRm99ZOj9
+         rhYPgebhNpPeoqVY8EVqG7iXvZO2Ug4sXx7ytxNMqC2WmEppeP++PggLcODkhl4KoF+j
+         rm8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xQFZ3Sv5y18I7wZ9EvV1kNK7LL9SLdrdcRtoUoCFnvA=;
-        b=gDLMDXcx8N/qP+xg6M+aM6KtbsHHAOya8tQwA5HBkjLAje3XvIKweb2GMV1yMVPMVf
-         V7xvEFfIYXnIRzv9w8QgyN4ULYcehMh1I2ztcDs/9h4X5LwcJhuPBv38XCNhFeCLOFKO
-         KS/8R3qwDsfUuRKaXKjR4NKNlTEFbvxXWdXjqhBQPxukuqUk1IzDSomU5CtVdzWzKscz
-         S/u18hpUQGxg04ARQmx6XJ1t4kunsDBQYZtavDZsyG2SaIxaTKIYEPKQAPdC7NUT3nVm
-         rh70NMmDLGlZw8hozEYvcTfGTCtUmraym5RnQn1EJ/nzqM6/zgzbWkRoRkWkuEgSOmg8
-         yr0g==
-X-Gm-Message-State: AOAM530zm6xWr4gN1P1kWpuKwSxpVkJoHl2yAwl6XFg0J9ONIcrxQEXw
-        DkBlNk+7Gc5RX5SRwSVfw4eQ
-X-Google-Smtp-Source: ABdhPJyRlCojM5NMEXP9w3XIS/sCcanKf8LrNsIJpeQOfBQ0femryhqcgTQIORPf0+wab+FZ1K3W0A==
-X-Received: by 2002:aa7:8a0d:: with SMTP id m13mr6118466pfa.13.1598102035821;
-        Sat, 22 Aug 2020 06:13:55 -0700 (PDT)
+        bh=uvSBHWeP6GEaswZL6yzDoYivAMYOOsA1ly+Tj65rYYY=;
+        b=pYNx13iGVZ2bpLjYFiOP1KslOPVHmIq86cr1CGZchoCwweCN5qYunt024HVNJKCMF3
+         320o3HPdO47lfRMTC3dkfLWFXyt+dpD+sZtQKE4upWThXF1z+csDRw4HwjzIUbUGfoki
+         sVvcDOB43Xk/obuM/7BzNPo/0Sx2nH4xJeAh7KeXAuQ3hqa/3s5/EcmGumtxW5grKq8R
+         oEDdlbzb1zjSIZffkjHB7Dczn7q/ASe7+Ea2nPLCaPRVEqEaC5+4X42a4dTxSgeEVTs3
+         HmxnLq4U+3ryU6Q1Pb996mxgW8h85N5FCKCcYOBDkmDjY1ni7+mD/n/AFwRIK7T7JITk
+         uyFA==
+X-Gm-Message-State: AOAM531eZSHANxKuOVwX+Bui5lzrS+C/RKrIUgLTwE72CJgSEFfqhmd4
+        xgDQp78xy3W5k+PhivBUeQt7
+X-Google-Smtp-Source: ABdhPJwOsJeYk9LimzE2AZ60+CzIaTmvSKan9nOgwRtOiiLzpEkTuKvaoO/bku3P7PmyV3WaS5680w==
+X-Received: by 2002:a17:902:6b45:: with SMTP id g5mr2394152plt.163.1598102242150;
+        Sat, 22 Aug 2020 06:17:22 -0700 (PDT)
 Received: from Mani-XPS-13-9360 ([2409:4072:6d94:5e90:8021:8773:d646:5b0b])
-        by smtp.gmail.com with ESMTPSA id ha17sm580529pjb.6.2020.08.22.06.13.46
+        by smtp.gmail.com with ESMTPSA id q6sm4482757pjr.20.2020.08.22.06.17.16
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 22 Aug 2020 06:13:54 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 18:43:43 +0530
+        Sat, 22 Aug 2020 06:17:21 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 18:47:12 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] Add initial support for ATC260x PMICs
-Message-ID: <20200822131343.GA5954@Mani-XPS-13-9360>
-References: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
- <20200821222653.GA2255465@BV030612LT>
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v5 0/3] Add Actions Semi Owl family sirq support
+Message-ID: <20200822131712.GB5954@Mani-XPS-13-9360>
+References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200821222653.GA2255465@BV030612LT>
+In-Reply-To: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -87,112 +85,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Cristi,
 
-Thanks for the series! I'll take a look soon but there is a quick comment
-below.
-
-On Sat, Aug 22, 2020 at 01:26:53AM +0300, Cristian Ciocaltea wrote:
-> I have just realized I had omitted the changelog - sorry:
+On Wed, Aug 19, 2020 at 07:37:55PM +0300, Cristian Ciocaltea wrote:
+> This patch series adds support for the external interrupt controller
+> (SIRQ) found in the Actions Semi Owl family of SoC's (S500, S700 and
+> S900). The controller handles up to 3 external interrupt lines through
+> dedicated SIRQ pins.
 > 
-> Changes in v2:
-> - Reworked MFD core & I2C driver
->   * Integrated Lee's feedback
->   * Added support for using the regmap within atomic contexts
->   * Added support for ATC2603C chip variant
->   * Reorganized KConfig entries
-> - Improved regulator driver
->   * Added support for ATC2603C variant
->   * Used helper macros for more compact specification of regulator_desc items
->   * Added more regulator capabilities
-> - Added power controller driver
->   * Provides system poweroff/reboot functionalities
->   * Requires support for I2C Atomic transfers in the Owl driver (already submitted)
-> - Added onkey driver: exposes the power button as an input device
-> - Added yaml binding doc
-> - Rebased patchset on kernel v5.9-rc1
+> This is a rework of the patch series submitted some time ago by 
+> Parthiban Nallathambi: 
+> https://lore.kernel.org/lkml/20181126100356.2840578-1-pn@denx.de/
 > 
-> Kind regards,
-> Cristi
-> 
-> On Sat, Aug 22, 2020 at 01:19:46AM +0300, Cristian Ciocaltea wrote:
-> > This is re-spin of the patch series submitted some time ago by Mani,
-> > who added initial support (MFD core and regulators) for the Actions
-> > Semi ATC260x PMICs:
-> > https://lore.kernel.org/lkml/20190617155011.15376-1-manivannan.sadhasivam@linaro.org/
-> > 
-> > The ATC260x family of PMICs integrates Audio Codec, Power management,
-> > Clock generation and GPIO controller blocks. There are currently 3
-> > variants: ATC2603A, ATC2603C and ATC2609A.
-> > 
-> > In addition to the ATC2609A regulator functionality provided that time,
-> > this patchset adds support for the ATC2603C variant, together with some
-> > new functionalities for both chips: power controller and onkey input.
-> > The ATC2603A variant remains unsupported for the moment.
-> > 
-> > This has been tested on RoseapplePi, a SBC based on the Action Semi S500
-> > SoC, which integrates ATC2603C PMIC. An initial support for this board
-> > has been already submitted:
-> > https://lore.kernel.org/lkml/cover.1592123160.git.cristian.ciocaltea@gmail.com/
-> > 
-> > Please note that enabling the ATC260x PMICs on the compatible Actions
-> > Semi Owl SoC based boards depends on the following:
-> > 
-> > * Actions Semi SIRQ driver (for PMIC DTS setup):
-> >   https://lore.kernel.org/lkml/cover.1597852360.git.cristian.ciocaltea@gmail.com/
-> > 
-> > * I2C Atomic transfers in Actions Semi Owl driver (for proper operation
-> >   of the power controller driver):
-> >   https://lore.kernel.org/lkml/b086ef6d355d9730c839359e15eb06175283e323.1596485741.git.cristian.ciocaltea@gmail.com/
-> >   
-> > Thanks,
-> > Cristi
-> > 
-> > Cristian Ciocaltea (6):
-> >   dt-bindings: mfd: Add Actions Semi ATC260x PMIC binding
-> >   mfd: Add MFD driver for ATC260x PMICs
-> >   regulator: Add regulator driver for ATC260x PMICs
 
-You need to preserve my authorship for above two patches. Adding the signed-off-by
-is not enough.
-
-> >   power: reset: Add poweroff driver for ATC260x PMICs
-> >   input: atc260x: Add onkey driver for ATC260x PMICs
-> >   MAINTAINERS: Add entry for ATC260x PMIC
-
-I think this one too.
+You need to preserve the authorship while reposting the patches. If you'd
+like to take the authorship intentionally then please explain the reason in
+cover letter.
 
 Thanks,
 Mani
 
-> > 
-> >  .../bindings/mfd/actions,atc260x.yaml         | 221 ++++++++
-> >  MAINTAINERS                                   |  12 +
-> >  drivers/input/misc/Kconfig                    |  11 +
-> >  drivers/input/misc/Makefile                   |   2 +-
-> >  drivers/input/misc/atc260x-onkey.c            | 304 +++++++++++
-> >  drivers/mfd/Kconfig                           |  18 +
-> >  drivers/mfd/Makefile                          |   3 +
-> >  drivers/mfd/atc260x-core.c                    | 290 ++++++++++
-> >  drivers/mfd/atc260x-i2c.c                     |  73 +++
-> >  drivers/power/reset/Kconfig                   |   8 +-
-> >  drivers/power/reset/Makefile                  |   1 +
-> >  drivers/power/reset/atc260x-poweroff.c        | 274 ++++++++++
-> >  drivers/regulator/Kconfig                     |   8 +
-> >  drivers/regulator/Makefile                    |   1 +
-> >  drivers/regulator/atc260x-regulator.c         | 511 ++++++++++++++++++
-> >  include/linux/mfd/atc260x/atc2603c.h          | 281 ++++++++++
-> >  include/linux/mfd/atc260x/atc2609a.h          | 308 +++++++++++
-> >  include/linux/mfd/atc260x/core.h              |  86 +++
-> >  18 files changed, 2410 insertions(+), 2 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/actions,atc260x.yaml
-> >  create mode 100644 drivers/input/misc/atc260x-onkey.c
-> >  create mode 100644 drivers/mfd/atc260x-core.c
-> >  create mode 100644 drivers/mfd/atc260x-i2c.c
-> >  create mode 100644 drivers/power/reset/atc260x-poweroff.c
-> >  create mode 100644 drivers/regulator/atc260x-regulator.c
-> >  create mode 100644 include/linux/mfd/atc260x/atc2603c.h
-> >  create mode 100644 include/linux/mfd/atc260x/atc2609a.h
-> >  create mode 100644 include/linux/mfd/atc260x/core.h
-> > 
-> > -- 
-> > 2.28.0
-> > 
+> Please note I have dropped, for the moment, the S700 related patches 
+> since I do not own a compatible hardware for testing. I'm using instead
+> an S500 SoC based board for which I have already provided the initial
+> support:
+> https://lore.kernel.org/lkml/cover.1592123160.git.cristian.ciocaltea@gmail.com/
+> 
+> The SIRQ controller support is a prerequisite of the soon to be submitted
+> MFD driver for the Actions Semi ATC260x PMICs.
+> 
+> Thanks and regards,
+> Cristi
+> 
+> Changes in v5:
+> - Integrated Marc's review (more details in the driver patch changelog)
+> - Rebased patch series on v5.9-rc1
+> 
+> Changes in v4:
+> - Simplified the DTS structure:
+>   * dropped 'actions,sirq-shared-reg' node, now the differentiation
+>     between SoC variants is handled now via the compatible property
+>   * dropped 'actions,sirq-reg-offset', now controller base address in
+>     DTS points to SIRQ0 register, so no additional information is
+>     required for S500 and S700, while for S900 SoC the offsets of SIRQ1
+>     and SIRQ2 regs are provided by the driver
+>   * 'actions,ext-irq-range' was replaced with 'actions,ext-interrupts',
+>     an array of the GIC interrupts triggered by the controller
+> - Fixed wrong INTC_EXTCTL_TYPE_MASK definition
+> - Removed redundant irq_fwspec checks in owl_sirq_domain_alloc()
+> - Improved error handling in owl_sirq_of_init()
+> - Added yaml binding document
+> - Dropped S700 related DTS patches for lack of testing hardware:
+>   * arm64: dts: actions: Add sirq node for Actions Semi S700
+>   * arm64: dts: actions: s700-cubieboard7: Enable SIRQ
+> - Updated MAINTAINERS
+> - Rebased patchset on kernel v5.8
+> - Cosmetic changes
+>  * Ordered include statements alphabetically
+>  * Added comment to owl_sirq_set_type() describing conversion of falling
+>    edge or active low signals
+>  * Replaced IRQF_TRIGGER_* with corresponding IRQ_TYPE_* variants
+>  * Ensured data types and function naming are consistent regarding the
+>    'owl_sirq' prefix
+> 
+> Changes in v3 (Parthiban Nallathambi):
+> - Set default operating frequency to 24MHz
+> - Falling edge and Low Level interrupts translated to rising edge and high level
+> - Introduced common function with lock handling for register read and write
+> - Used direct GIC interrupt number for interrupt local hwirq and finding offset
+> using DT entry (range) when registers are shared 
+> - Changed irq_ack to irq_eoi
+> - Added translation method for irq_domain_ops
+> - Clearing interrupt pending based on bitmask for edge triggered
+> - Added pinctrl definition for sirq for cubieboard7. This depends on,
+> https://lore.kernel.org/patchwork/patch/1012859/
+> 
+> Changes in v2 (Parthiban Nallathambi):
+> - Added SIRQ as hierarchical chip
+>         GIC <----> SIRQ <----> External interrupt controller/Child devices
+> - Device binding updates with vendor prefix
+> - Register sharing handled globally and common init sequence/data for all
+> actions SoC family
+> 
+> Cristian Ciocaltea (3):
+>   dt-bindings: interrupt-controller: Add Actions SIRQ controller binding
+>   irqchip: Add Actions Semi Owl SIRQ controller
+>   MAINTAINERS: Add entries for Actions Semi Owl SIRQ controller
+> 
+>  .../actions,owl-sirq.yaml                     |  68 ++++
+>  MAINTAINERS                                   |   2 +
+>  drivers/irqchip/Makefile                      |   1 +
+>  drivers/irqchip/irq-owl-sirq.c                | 347 ++++++++++++++++++
+>  4 files changed, 418 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
+>  create mode 100644 drivers/irqchip/irq-owl-sirq.c
+> 
+> -- 
+> 2.28.0
+> 
