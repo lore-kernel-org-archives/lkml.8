@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C122C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 19:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C20AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 19:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15A132078A
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 19:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C37F2078A
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 19:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E4a7p3u+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afpLZoVb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbgHVTnY (ORCPT
+        id S1728722AbgHVToI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 15:43:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33020 "EHLO
+        Sat, 22 Aug 2020 15:44:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbgHVTnX (ORCPT
+        with ESMTP id S1728639AbgHVToF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 15:43:23 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62765C061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 12:43:23 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o21so4815667wmc.0
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 12:43:23 -0700 (PDT)
+        Sat, 22 Aug 2020 15:44:05 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75CC8C061573
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 12:44:05 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id o4so908964wrn.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 12:44:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=bDeHhD/5z6aaFlItq04V8HlPaMZcoXhz68jm6W6MONk=;
-        b=E4a7p3u+k/VHbSDKvo+vWFDgHYz75Y8+NmMpZQGWE5shPjdmZTRi24d7YVdsF6YAFZ
-         zrYn1oTQeDaXMki76OWmSBV9Vyn6OIAazfgRl3Y0NYfr5L1R+JueMY7PulbAUEYYTnHP
-         ae9Ipw2x67GtWT1+eQBwo51wObjS5xBprbcXr5Dk6a7ZvOmo8xGQzaJpAGeuS5F/Bakt
-         W2r1VFpkF83+xZm5nurZsceL67OmWE3bi/pV6mNiCNI0Ok94JeIWh2+8BeX5Zs6ltUDK
-         chaMncvuVVyxcbzBUTXB2oy0iwh0lEjDBuVexS9xnCBznQ715CgWQ+2HK3ir/iMCELyV
-         jBzA==
+        bh=+y66MqggCakjVuRG4cFz30VjWieYM9CuDcuOFxkR0Z0=;
+        b=afpLZoVb9S8UX5sZ9/41+hXwLGbgiEtiHOm6f0p2P8Oh3Af7Yx/no4zrBKzKnt0F0f
+         PPIT2K/9GZAWs+wbhuu+TJwBZ6LEfRYnHvZkTfv64n7pZrcffX0YS/x5cTaijqlkLzZP
+         mKJR9PFZG+yGLfMKAMdJc1mackvLjGEjbz/zDBoz0qUeFGlQwPfhnSoiwq8//Z9UlFNn
+         O/MvoekqmF7B2xPoXRW2cYPtM3YApr7keQHyrArRZHDI2VQmH060XReevrwNCxSlfr9i
+         GY9+091wIX9sfA+wZSOhUMdgB7fs5OKUTLNqWZBlqnGeandc5Snv8rrJU3MZk9+ODRaa
+         qQgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=bDeHhD/5z6aaFlItq04V8HlPaMZcoXhz68jm6W6MONk=;
-        b=bPaZOn7C/mY9svg4RdNr3Ply7nlN+XvMrWjIJBWuIDV9z8JsM8lYvQ8LRJJE28HcuF
-         iM+VJ6gXfRW2BNZ5EXZgtYvcFE3Vdatt4/N3BRtkuAX7MH8ooVLZMiqH40eXQHWxJ83v
-         xX9NOmlZ5Sq3FDhN2ndUYR6pkupqsQiLwsWaYwbF+BYqCu0ZV4S6Y+NJcPsm7xwbC+pr
-         FCoWnx4yjSTtk4xXntUKbx98GfH/x31VD+GnUNTfCNpgb+9rvnjdKGtY30hh1FzkKeUR
-         4UvGWFw3Err62Jktib0PW7V0IzMfvlxbNQDfX2SvBv2/MqVgPHK/4JEvyhTRQ6TDY47e
-         9Iqw==
-X-Gm-Message-State: AOAM533I7qLIyLNwqRV+Srm423vBkso23Iyj/w9cXaK3Q+Vr0cBi60Wj
-        +ZVEFJMZdiBU8eQcoiKEiS8=
-X-Google-Smtp-Source: ABdhPJwnnkIT5/uCftHhMXqn1D4NcYSiQuuoKXX9omd0RYEa9lVbqCbaGzyn1xpBO11hX4gU7y3p3w==
-X-Received: by 2002:a1c:28d5:: with SMTP id o204mr9837747wmo.104.1598125402082;
-        Sat, 22 Aug 2020 12:43:22 -0700 (PDT)
+        bh=+y66MqggCakjVuRG4cFz30VjWieYM9CuDcuOFxkR0Z0=;
+        b=HDH9C8f8Y1roMO98y/GtnDxjGSC0KJoSKGJTDED1asN3wQBg/7x61WmFXiAcEbGPvT
+         47vYexDlUfeYPRk61V32AJc6U1SB5ngNSfD+UvGHISjXnqUCn+tByP42LJaaqDAIMmGw
+         1OX0hogFiTNZ5Mqlwv56VJ9s4fqfnVMnzeXNYB12eiR4NEBgVxlwwoP4Z2aI0LGrp/Hk
+         IHGFRiAOfJJismyDxJxhJhhf4pRnP0mQHxFG+LHjU9ebYn+QIIN3bvHitmx7DMrSYIxp
+         HZQ9quTSqpUOvYClyf5iqgZ1F5qSLQzEn9Fa69KnqT/b56nloQ7VuU6XKsI6UdAsDFeL
+         lvRA==
+X-Gm-Message-State: AOAM531tBBHtWPwUWPI80cvqbPS3LWYKW2zqN9RD4ZyOIJzw/n5DpmXB
+        ccAzj8XXLSrsRgAAMPdvxvY=
+X-Google-Smtp-Source: ABdhPJwt5n+lLcPAY7wmuVOEPNfgK98a5ZJcSYZj6v5ca19sNHLgGR7JEhitIeLWdduX+y2ESbJtEg==
+X-Received: by 2002:a5d:5485:: with SMTP id h5mr3181435wrv.247.1598125442919;
+        Sat, 22 Aug 2020 12:44:02 -0700 (PDT)
 Received: from tsnow (IGLD-83-130-62-237.inter.net.il. [83.130.62.237])
-        by smtp.gmail.com with ESMTPSA id z12sm12968394wrp.20.2020.08.22.12.43.11
+        by smtp.gmail.com with ESMTPSA id k7sm3692908wrv.72.2020.08.22.12.43.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Aug 2020 12:43:21 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 22:43:02 +0300
+        Sat, 22 Aug 2020 12:44:02 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 22:43:50 +0300
 From:   Tomer Samara <tomersamara98@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
@@ -74,8 +74,8 @@ Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
         Suren Baghdasaryan <surenb@google.com>,
         devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 1/2] staging: android: Remove BUG_ON from ion_page_pool.c
-Message-ID: <aaea4be2ab36395e70f759f3b6976782fe2acfa1.1598125227.git.tomersamara98@gmail.com>
+Subject: [PATCH v5 2/2] staging: android: Remove BUG from ion_system_heap.c
+Message-ID: <f554a891fb433e830403091e21fe288924c5c74d.1598125227.git.tomersamara98@gmail.com>
 References: <cover.1598125227.git.tomersamara98@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -86,48 +86,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BUG_ON() is removed at ion_page_pool.c
+Remove BUG() from ion_sytem_heap.c
 
-Fixes the following issue:
-Avoid crashing the kernel - try using WARN_ON & recovery code ratherthan BUG() or BUG_ON().
+this fix the following checkpatch issue:
+Avoid crashing the kernel - try using WARN_ON &
+recovery code ratherthan BUG() or BUG_ON().
 
 Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
 ---
- drivers/staging/android/ion/ion_page_pool.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/staging/android/ion/ion_system_heap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/android/ion/ion_page_pool.c b/drivers/staging/android/ion/ion_page_pool.c
-index 0198b886d906..fa764299f004 100644
---- a/drivers/staging/android/ion/ion_page_pool.c
-+++ b/drivers/staging/android/ion/ion_page_pool.c
-@@ -46,11 +46,9 @@ static struct page *ion_page_pool_remove(struct ion_page_pool *pool, bool high)
- 	struct page *page;
- 
- 	if (high) {
--		BUG_ON(!pool->high_count);
- 		page = list_first_entry(&pool->high_items, struct page, lru);
- 		pool->high_count--;
- 	} else {
--		BUG_ON(!pool->low_count);
- 		page = list_first_entry(&pool->low_items, struct page, lru);
- 		pool->low_count--;
- 	}
-@@ -65,8 +63,6 @@ struct page *ion_page_pool_alloc(struct ion_page_pool *pool)
- {
- 	struct page *page = NULL;
- 
--	BUG_ON(!pool);
--
- 	mutex_lock(&pool->mutex);
- 	if (pool->high_count)
- 		page = ion_page_pool_remove(pool, true);
-@@ -82,8 +78,6 @@ struct page *ion_page_pool_alloc(struct ion_page_pool *pool)
- 
- void ion_page_pool_free(struct ion_page_pool *pool, struct page *page)
- {
--	BUG_ON(pool->order != compound_order(page));
--
- 	ion_page_pool_add(pool, page);
+diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
+index eac0632ab4e8..00d6154aec34 100644
+--- a/drivers/staging/android/ion/ion_system_heap.c
++++ b/drivers/staging/android/ion/ion_system_heap.c
+@@ -30,7 +30,7 @@ static int order_to_index(unsigned int order)
+ 	for (i = 0; i < NUM_ORDERS; i++)
+ 		if (order == orders[i])
+ 			return i;
+-	BUG();
++	/* This is impossible. */
+ 	return -1;
  }
  
 -- 
