@@ -2,136 +2,86 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2816C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 11:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 11:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0962075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 11:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5893C20738
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 11:35:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AD5+qjO5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QPH6iu1f";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TnP9JVmR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgHVLfb (ORCPT
+        id S1728007AbgHVLfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 07:35:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52892 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726920AbgHVLfB (ORCPT
+        Sat, 22 Aug 2020 07:35:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33434 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgHVLfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 07:35:01 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07MBVdhD140106;
-        Sat, 22 Aug 2020 07:34:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=JoSzpGKZktZepI2WPW3YZ+KFJZY13W5BEURnHztssno=;
- b=AD5+qjO5XeP7yzRYtq/pOrQ3FlvYZHWTv4V5hIFNuLvqHJWjsDCjeIw4/VhpdgonM4Vf
- ZHYhpiKYojal7JCM0Mi/QgFyXaAbAOF9VeAA/OdtN9V6jRFW1vBCIuBHsID7h5X1t2k1
- n8xpi7Bkrhc0WKEmmuEulioLVpZYnsUp0z4GqwtbpRW+I0uEAw4qS7kZpXuMhCfaGkeU
- gbrhYhXM9a54Qsvh2yVF8AXIAuipgFFx8tdmUzKXiAdrHlOc7YeutJH/ssKidPbxTznt
- K1S0VLT0gd6MODYV6+FPmxCpGdSL9UaUWx+9bo9+YKHzGV2PkhxqtLnHJIDySNUQYa19 BQ== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 332yj2tvgx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 22 Aug 2020 07:34:54 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07MBX3W7021785;
-        Sat, 22 Aug 2020 11:34:52 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 332utsrara-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 22 Aug 2020 11:34:52 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07MBXKqE64618988
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 22 Aug 2020 11:33:20 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5B69052054;
-        Sat, 22 Aug 2020 11:34:50 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.33.217])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id EB9825204E;
-        Sat, 22 Aug 2020 11:34:48 +0000 (GMT)
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-To:     linux-ext4@vger.kernel.org
-Cc:     jack@suse.cz, tytso@mit.edu,
-        Dan Williams <dan.j.williams@intel.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ritesh Harjani <riteshh@linux.ibm.com>
-Subject: [PATCHv2 3/3] ext4: Optimize ext4 DAX overwrites
-Date:   Sat, 22 Aug 2020 17:04:37 +0530
-Message-Id: <e455ec054a295d9ffde41b8ec1183325f0426162.1598094830.git.riteshh@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1598094830.git.riteshh@linux.ibm.com>
-References: <cover.1598094830.git.riteshh@linux.ibm.com>
+        Sat, 22 Aug 2020 07:35:13 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598096111;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
+        bh=VrTlXfTQ0mr2r4PG9tHDj5g5/zcZ7e5Apyec8R4JO80=;
+        b=QPH6iu1f2Q5BcdlrzLVmIwbKY+XxWNDtVWxVQQhfdCPvKNJpjUqVVBU3R7Ug0j43YfWjlW
+        G1YHJ0uMze7bIVDoVAKvGpAzH5QhcC/0jTEfVYDa99032n/tyPUdLLpvteJImeYKTL2dS9
+        OtkkGU+gKHeCDf86yY6D8B3UAePYSJIgEp3/12u5Td/LJg4+ivzZ65KWFsDmEKKVtlzSVT
+        6P06fovRtEVhB/u0eT6qSlv8vRNVwjCjlOhP6GXM5CT7yRmobl1hYvZkPIZ0+T/DsQdpey
+        k13Mzq0lI1cx/eym0XEAS0ScTmL9grRKngwWaEyteyskV8FPr4brgjBObiD+KA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598096111;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
+        bh=VrTlXfTQ0mr2r4PG9tHDj5g5/zcZ7e5Apyec8R4JO80=;
+        b=TnP9JVmRGc0tq/EbKUL718L8usNdSBujbufvse1Z4S/5Tk/xcMFzpptVbjoIYFZW5ZRYPD
+        DeaOeD/dXFJQoQBQ==
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH] genirq/proc: Show percpu irq affinity
+In-Reply-To: <aa537126-4646-08e2-6bea-833f71b20ade@huawei.com>
+Date:   Sat, 22 Aug 2020 13:35:10 +0200
+Message-ID: <87mu2moqvl.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-22_07:2020-08-21,2020-08-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- phishscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015
- mlxlogscore=792 adultscore=0 mlxscore=0 suspectscore=1 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008220120
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently in case of DAX, we are starting a journal txn everytime for
-IOMAP_WRITE case. This can be optimized away in case of an overwrite
-(where the blocks were already allocated).
+On Sat, Aug 22 2020 at 17:33, Yunfeng Ye wrote:
+> On 2020/8/13 16:27, Thomas Gleixner wrote:
+> For example, the cmdline "irqaffinity=3D0,1,126,127" on the 128 cores sys=
+tem=EF=BC=9A
+>
+> [root@localhost ~]# cat /proc/irq/4/smp_affinity_list
+> 0-1,126-127
+>
+> The irq 4 is "arch_timer" interrupt, which is a percpu interrupt.
+>
+> So is it necessary to show the percpu irq affinity correct?
 
-This could give a significant performance boost for multi-threaded writes
-specially random writes.
-On PPC64 VM with simulated pmem device, ~10x perf improvement could be
-seen in random writes (overwrite). Also bcoz this optimizes away the
-spinlock contention during jbd2 slab cache allocation (jbd2_journal_handle)
-On x86 VM, ~2x perf improvement was observed.
+Yes, it makes sense to do so, but you used the wrong check. The correct
+one is:
 
-Reported-by: Dan Williams <dan.j.williams@intel.com>
-Suggested-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
----
- fs/ext4/inode.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+irq_settings_is_per_cpu_devid()
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 10dd470876b3..c18009c91e68 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -3437,6 +3437,14 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 	map.m_len = min_t(loff_t, (offset + length - 1) >> blkbits,
- 			  EXT4_MAX_LOGICAL_BLOCK) - map.m_lblk + 1;
- 
-+	/*
-+	 * In case of DAX write, we check if this is overwrite request, to avoid
-+	 * starting a journal txn in ext4_iomap_alloc()
-+	 */
-+	if ((flags & IOMAP_WRITE) && IS_DAX(inode) &&
-+	    ext4_overwrite_io(inode, &map, true))
-+		goto out_set;
-+
- 	if (flags & IOMAP_WRITE)
- 		ret = ext4_iomap_alloc(inode, &map, flags);
- 	else
-@@ -3444,9 +3452,8 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 
- 	if (ret < 0)
- 		return ret;
--
-+out_set:
- 	ext4_set_iomap(inode, iomap, &map, offset, length);
--
- 	return 0;
- }
- 
--- 
-2.25.4
+which will not wreckage the output for other per cpu marked interrupts
+which never set the percpu_affinity pointer with the obvious
+consequences... The pointer would need a NULL check in any case, but it
+might be more straight forward to update affinity when percpu_affinity
+is initialized. Haven't looked in detail though.
 
+Thanks,
+
+        tglx
