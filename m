@@ -2,89 +2,100 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B987C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 05:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 05:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 059142072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 05:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B552072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 05:59:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uu3Ewgd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgHVF7d (ORCPT
+        id S1726935AbgHVF7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 01:59:33 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:21190 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725863AbgHVF7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 01:59:32 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Sat, 22 Aug 2020 13:58:59
- +0800 (GMT+08:00)
-X-Originating-IP: [10.192.85.18]
-Date:   Sat, 22 Aug 2020 13:58:59 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     =?UTF-8?Q?H=C3=A5kon_Bugge?= <haakon.bugge@oracle.com>
-Cc:     kjlu@umn.edu, "Doug Ledford" <dledford@redhat.com>,
-        "Jason Gunthorpe" <jgg@ziepe.ca>,
-        "Yishai Hadas" <yishaih@mellanox.com>,
-        "Leon Romanovsky" <leon@kernel.org>,
-        "Michel Lespinasse" <walken@google.com>,
-        "Ariel Elior" <ariel.elior@marvell.com>,
-        "Michal Kalderon" <michal.kalderon@marvell.com>,
-        "OFED mailing list" <linux-rdma@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] IB/uverbs: Fix memleak in ib_uverbs_add_one
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.12 build 20200616(0f5d8152)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <E59593D2-E7F5-4D41-B6DC-B8B8C55241CE@oracle.com>
-References: <20200821081013.4762-1-dinghao.liu@zju.edu.cn>
- <E59593D2-E7F5-4D41-B6DC-B8B8C55241CE@oracle.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Sat, 22 Aug 2020 01:59:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbgHVF7z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 01:59:55 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A6AC061573;
+        Fri, 21 Aug 2020 22:59:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=h+trC/HFYHTtnms24Fdz8ZD6MASZ+P+qyAQTjFOZVOQ=; b=uu3Ewgd5xA1nrmnuegWRC86I0V
+        hX6VMzisu4f0KzokVIPvdMeWUKqWDupDzu9096rLLSEmldU5CdaVNhEhVgFDJ+x4uPWwXc0NHWckr
+        v94umLDkxLD6fBdlpHfpe2tSNZovuafeeVllqhA5Od9WqZDzFKMQIk4dD/kUPtwsbXREX/AZV6jeP
+        qaFTXYjylvYy2zt21l4oeLG+pggGtYZ0r4ESUWiQOTFYXrxbSO/QtZyNuu3pDBbAvE3wNOXBY4QXX
+        aAOpJH0HrvR92rK6kpJTjtcsO5uh8QhXnYwCvhs2xvr9tNBH9v4FZWQWbjuQiHST8VYq1z6xwqLWj
+        uoDISxWA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9MZ9-0004bj-LQ; Sat, 22 Aug 2020 05:59:47 +0000
+Date:   Sat, 22 Aug 2020 06:59:47 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     Yu Kuai <yukuai3@huawei.com>, hch@infradead.org,
+        darrick.wong@oracle.com, david@fromorbit.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [PATCH 2/3] iomap: Use bitmap ops to set uptodate bits
+Message-ID: <20200822055947.GB17129@infradead.org>
+References: <20200821124424.GQ17456@casper.infradead.org>
+ <20200821124606.10165-1-willy@infradead.org>
+ <20200821124606.10165-2-willy@infradead.org>
 MIME-Version: 1.0
-Message-ID: <152fbf70.7b.17414bfaa7c.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgBn6PwjtEBfKnIzAQ--.39571W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhAAssz
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbAIS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
-        6r4UMIAIbVACI402YVCY1x02628vn2kIc2xKxwCS07vE7I0Y64k_MIAIbVCY0x0Ix7I2Y4
-        AK64vIr41lV2xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY
-        6xC20s026xCaFVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s
-        026x8GjcxK67AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0
-        I7IYx2IY67AKxVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIAIbV
-        CI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-        V2xY6IIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821124606.10165-2-willy@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAKPiA+IE9uIDIxIEF1ZyAyMDIwLCBhdCAxMDoxMCwgRGluZ2hhbyBMaXUgPGRpbmdoYW8ubGl1
-QHpqdS5lZHUuY24+IHdyb3RlOgo+ID4gCj4gPiBXaGVuIGlkYV9hbGxvY19tYXgoKSBmYWlscywg
-dXZlcmJzX2RldiBzaG91bGQgYmUgZnJlZWQKPiA+IGp1c3QgbGlrZSB3aGVuIGluaXRfc3JjdV9z
-dHJ1Y3QoKSBmYWlscy4gSXQncyB0aGUgc2FtZQo+ID4gZm9yIHRoZSBlcnJvciBwYXRocyBhZnRl
-ciB0aGlzIGNhbGwuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IERpbmdoYW8gTGl1IDxkaW5naGFv
-LmxpdUB6anUuZWR1LmNuPgo+ID4gLS0tCj4gPiBkcml2ZXJzL2luZmluaWJhbmQvY29yZS91dmVy
-YnNfbWFpbi5jIHwgMSArCj4gPiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPiA+IAo+
-ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW5maW5pYmFuZC9jb3JlL3V2ZXJic19tYWluLmMgYi9k
-cml2ZXJzL2luZmluaWJhbmQvY29yZS91dmVyYnNfbWFpbi5jCj4gPiBpbmRleCAzNzc5NGQ4OGIx
-ZjMuLmM2YjRlM2UyYWZmNiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvaW5maW5pYmFuZC9jb3Jl
-L3V2ZXJic19tYWluLmMKPiA+ICsrKyBiL2RyaXZlcnMvaW5maW5pYmFuZC9jb3JlL3V2ZXJic19t
-YWluLmMKPiA+IEBAIC0xMTcwLDYgKzExNzAsNyBAQCBzdGF0aWMgaW50IGliX3V2ZXJic19hZGRf
-b25lKHN0cnVjdCBpYl9kZXZpY2UgKmRldmljZSkKPiA+IAkJaWJfdXZlcmJzX2NvbXBfZGV2KHV2
-ZXJic19kZXYpOwo+ID4gCXdhaXRfZm9yX2NvbXBsZXRpb24oJnV2ZXJic19kZXYtPmNvbXApOwo+
-ID4gCXB1dF9kZXZpY2UoJnV2ZXJic19kZXYtPmRldik7Cj4gPiArCWtmcmVlKHV2ZXJic19kZXYp
-Owo+IAo+IElzbid0IHRoaXMgdGFrZW4gY2FyZSBvZiBieSB0aGUgKnJlbGVhc2UqIGZ1bmN0aW9u
-IHBvaW50ZXIsIHdoaWNoIGhhcHBlbnMgdG8gYmUgaWJfdXZlcmJzX3JlbGVhc2VfZGV2KCkgPwo+
-IAoKWW91IGFyZSByaWdodCwgdGhhbmsgeW91IGZvciBwb2ludGluZyBvdXQgdGhhdCEKClJlZ2Fy
-ZHMsCkRpbmdoYW8K
+On Fri, Aug 21, 2020 at 01:46:05PM +0100, Matthew Wilcox (Oracle) wrote:
+> Now that the bitmap is protected by a spinlock, we can use the
+> more efficient bitmap ops instead of individual test/set bit ops.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  fs/iomap/buffered-io.c | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index 639d54a4177e..dbf9572dabe9 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -134,19 +134,11 @@ iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
+>  	struct inode *inode = page->mapping->host;
+>  	unsigned first = off >> inode->i_blkbits;
+>  	unsigned last = (off + len - 1) >> inode->i_blkbits;
+> -	bool uptodate = true;
+>  	unsigned long flags;
+> -	unsigned int i;
+>  
+>  	spin_lock_irqsave(&iop->uptodate_lock, flags);
+> -	for (i = 0; i < i_blocks_per_page(inode, page); i++) {
+> -		if (i >= first && i <= last)
+> -			set_bit(i, iop->uptodate);
+> -		else if (!test_bit(i, iop->uptodate))
+> -			uptodate = false;
+> -	}
+> -
+> -	if (uptodate)
+> +	bitmap_set(iop->uptodate, first, last - first + 1);
+> +	if (bitmap_full(iop->uptodate, i_blocks_per_page(inode, page)))
+>  		SetPageUptodate(page);
+>  	spin_unlock_irqrestore(&iop->uptodate_lock, flags);
+
+Can you respin this to be based on current Linus' tree without
+i_blocks_per_page?  With that it looks good:
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
