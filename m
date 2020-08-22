@@ -7,67 +7,85 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DE5C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C05C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A353207CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1866C20738
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598099036;
-	bh=L4CMNRidGTUoMkmtjPhiJ/HLx4ECOZsldZc0oqf287M=;
+	s=default; t=1598099225;
+	bh=5KaXnJRlpYm63xTnyOYPDtGnseb/+gEdDxWJpGGk2GM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XnZics2awgYTMLWSxWskGIHk6rOfOryzoxe3ULHRPbBo6V58CFXLJEPUdxaG1fV89
-	 1LBwMzI6CMFLKICKC+pZ4B4nyL5Nyl+g2LH3l6ATN5oXRyxbeblCDuXg6yOdzc823N
-	 5D9FhBJh1KKRakIPtaPl9LUOb7JR12T9tiiMg9eo=
+	b=d0mppKvrSf/XuoJGooD4UU2a9Wws16+z5y+kWsZDy+UQExcyfaTunhFDbrR6mRX4Q
+	 VA1skIWfKLJpz0AkCpzB03AxMsEJLwYRgpjWx/J9yVFnJ7ZdO8R+qNamcdejFFirX0
+	 ij+IZtXMvca9H7rxO4m3uHgp2/g3kC0BcUrFutTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgHVMXx (ORCPT
+        id S1728008AbgHVM1D convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 08:23:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgHVMXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 08:23:50 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD70A20738;
-        Sat, 22 Aug 2020 12:23:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598099029;
-        bh=L4CMNRidGTUoMkmtjPhiJ/HLx4ECOZsldZc0oqf287M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n0migo/1208Xx01PFLCgdx4IXUB31RhPpXB6jfzIqCZfH+L8H9Ssead6FfXACEfzl
-         OoCIxheoIK2fK14Flge9Qy9/Ietb5MjMbho4Q0RnJnzdSaw3PwY2ElxSsveI389xpl
-         sTIUyTM79oFZsWiFYflwbtxnRi+XuEZjC1CmtuDA=
-Date:   Sat, 22 Aug 2020 20:23:44 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, aisheng.dong@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH] ARM: dts: imx7ulp: Correct gpio ranges
-Message-ID: <20200822122344.GI27575@dragon>
-References: <1596441684-30127-1-git-send-email-Anson.Huang@nxp.com>
+        Sat, 22 Aug 2020 08:27:03 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42822 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727900AbgHVM1B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 08:27:01 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d16so4286014wrq.9;
+        Sat, 22 Aug 2020 05:27:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ZGKQZE5UXURzH01fkYYDy2bGkaVf9EVp2rSo9uoV0wE=;
+        b=r/Tsfp2nJIJ9qtTMzO6aGHwf5iMGkPgywAjGTBmpW6RJsMh/lwXrfqdWs/006BK3AT
+         mE7KIHjxt8bB4po/mch4PdoW9fOUqqPNy05UTi7fbvXCbyZwY77JIi7HrVvKFzFFBOWF
+         65sYvj3WQP+9m01SLtrtJKh9isdWg/vFuFC9UCGQZ0C8AZNchiKMLez8fHvLXxi4q66X
+         QKv4HqZ6HJ4p8/PYRb32CjPupZxCfUa6FAC8U5k3i5nxmp2YJvCMe6oSOAOmmn0pR1tf
+         QGzg5O04KtbUYSTXwv8sYURxE8WxtEg+yuN/0BHBwbKpwt4jkcg0ZApLpPhi4QT80OqZ
+         ztAw==
+X-Gm-Message-State: AOAM531cbC29LYb/W1nvurB3+D6aTLldWaJNS+woyWRRDOWG3v2dZdHU
+        yQKDwSH9fb+GeKFWe8y3QR4=
+X-Google-Smtp-Source: ABdhPJyBd0nGmaoVqrTgj3M+s2WQBh+tWnxc6i8aNBW22rL2BI87rZcBtBqLNC8VxJaUARBFzs7dCQ==
+X-Received: by 2002:a5d:5086:: with SMTP id a6mr6881355wrt.304.1598099219712;
+        Sat, 22 Aug 2020 05:26:59 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id n24sm11141916wmi.36.2020.08.22.05.26.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 22 Aug 2020 05:26:59 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 14:26:56 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
+Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+Subject: Re: [PATCH v2 5/9] spi: spi-s3c64xx: Fix doc comment for struct
+ s3c64xx_spi_driver_data
+Message-ID: <20200822122656.GD20423@kozik-lap>
+References: <20200821161401.11307-1-l.stelmach@samsung.com>
+ <CGME20200821161406eucas1p121553719d4e9cc020d2c557a69000f0c@eucas1p1.samsung.com>
+ <20200821161401.11307-6-l.stelmach@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1596441684-30127-1-git-send-email-Anson.Huang@nxp.com>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200821161401.11307-6-l.stelmach@samsung.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 04:01:24PM +0800, Anson Huang wrote:
-> Correct gpio ranges according to i.MX7ULP pinctrl driver:
+On Fri, Aug 21, 2020 at 06:13:57PM +0200, Łukasz Stelmach wrote:
+> Remove descriptions for non-existent fields and fix indentation.
 > 
-> gpio_ptc: ONLY pin 0~19 are available;
-> gpio_ptd: ONLY pin 0~11 are available;
-> gpio_pte: ONLY pin 0~15 are available;
-> gpio_ptf: ONLY pin 0~19 are available;
-> 
-> Fixes: 20434dc92c05 ("ARM: dts: imx: add common imx7ulp dtsi support")
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> ---
+>  drivers/spi/spi-s3c64xx.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 
-Applied, thanks.
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Best regards,
+Krzysztof
+
