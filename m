@@ -2,186 +2,64 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C59C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEFFC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7814E2072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:18:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MrXlcl0E"
+	by mail.kernel.org (Postfix) with ESMTP id B432820738
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728510AbgHVQS3 (ORCPT
+        id S1728406AbgHVQUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 12:18:29 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:38689 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728446AbgHVQRo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 12:17:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598113064; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=MUq3BG5FnyYbGkwQnnveP8oZCDd//ZTVeH0v1GFdYps=; b=MrXlcl0E+w4V9pd6M4qXgJwgF+OmLozSrR6xyYXf/oYbGP9nR2R07sR0Tu8QBvJyL3VHH3sT
- w780FfDl/Iw7aPBr+hstvwsZkjRsUTtemIONJQ4OuCUWI40FL7Sq81QlVFbbhzMa1dT4oFPH
- nQv6M8uy3xp5gHfkO2x1h8Dd6dM=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f41451e28b64cff02bb5933 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 22 Aug 2020 16:17:34
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 91CCCC433CB; Sat, 22 Aug 2020 16:17:34 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8192BC433C6;
-        Sat, 22 Aug 2020 16:17:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8192BC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     bjorn.andersson@linaro.org, maz@kernel.org,
-        linus.walleij@linaro.org, swboyd@chromium.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v5 3/6] genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
-Date:   Sat, 22 Aug 2020 21:46:58 +0530
-Message-Id: <1598113021-4149-4-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
+        Sat, 22 Aug 2020 12:20:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59068 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728255AbgHVQUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 12:20:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id CCAF7AFF2;
+        Sat, 22 Aug 2020 16:21:09 +0000 (UTC)
+Date:   Sat, 22 Aug 2020 18:20:38 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Joerg Roedel <joro@8bytes.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        Pavel Machek <pavel@ucw.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Airlie <airlied@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Vrabel <david.vrabel@citrix.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm: Track page table modifications in
+ __apply_to_page_range()
+Message-ID: <20200822162038.GQ3354@suse.de>
+References: <20200821123746.16904-1-joro@8bytes.org>
+ <20200821153412.5902e4ed0699615d8de4a595@linux-foundation.org>
+ <159805314945.32652.6355592202796435703@build.alporthouse.com>
+ <159809591535.32652.4016790228519688343@build.alporthouse.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159809591535.32652.4016790228519688343@build.alporthouse.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An interrupt that is disabled/masked but set for wakeup still
-needs to be able to wake up the system from sleep states like
-"suspend to RAM".
+On Sat, Aug 22, 2020 at 12:31:55PM +0100, Chris Wilson wrote:
+> The active ingredient was
+> 
+> 7f0a002b5a21 ("x86/mm: remove vmalloc faulting")
 
-Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag. If this flag
-is set wake irqs will get enabled/unmasked on suspend entry by
-invoking .irq_enable/.irq_unmask callback of irqchip.
+Right, that is what bisection will point to. Thanks for collecting all
+the info and updating the commit message!
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- include/linux/irq.h  | 41 ++++++++++++++++++++++-------------------
- kernel/irq/debugfs.c |  1 +
- kernel/irq/pm.c      |  7 ++++++-
- 3 files changed, 29 insertions(+), 20 deletions(-)
+Regards,
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 1b7f4df..752eb9a 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -545,27 +545,30 @@ struct irq_chip {
- /*
-  * irq_chip specific flags
-  *
-- * IRQCHIP_SET_TYPE_MASKED:	Mask before calling chip.irq_set_type()
-- * IRQCHIP_EOI_IF_HANDLED:	Only issue irq_eoi() when irq was handled
-- * IRQCHIP_MASK_ON_SUSPEND:	Mask non wake irqs in the suspend path
-- * IRQCHIP_ONOFFLINE_ENABLED:	Only call irq_on/off_line callbacks
-- *				when irq enabled
-- * IRQCHIP_SKIP_SET_WAKE:	Skip chip.irq_set_wake(), for this irq chip
-- * IRQCHIP_ONESHOT_SAFE:	One shot does not require mask/unmask
-- * IRQCHIP_EOI_THREADED:	Chip requires eoi() on unmask in threaded mode
-- * IRQCHIP_SUPPORTS_LEVEL_MSI	Chip can provide two doorbells for Level MSIs
-- * IRQCHIP_SUPPORTS_NMI:	Chip can deliver NMIs, only for root irqchips
-+ * IRQCHIP_SET_TYPE_MASKED:           Mask before calling chip.irq_set_type()
-+ * IRQCHIP_EOI_IF_HANDLED:            Only issue irq_eoi() when irq was handled
-+ * IRQCHIP_MASK_ON_SUSPEND:           Mask non wake irqs in the suspend path
-+ * IRQCHIP_ONOFFLINE_ENABLED:         Only call irq_on/off_line callbacks
-+ *                                    when irq enabled
-+ * IRQCHIP_SKIP_SET_WAKE:             Skip chip.irq_set_wake(), for this irq chip
-+ * IRQCHIP_ONESHOT_SAFE:              One shot does not require mask/unmask
-+ * IRQCHIP_EOI_THREADED:              Chip requires eoi() on unmask in threaded mode
-+ * IRQCHIP_SUPPORTS_LEVEL_MSI:        Chip can provide two doorbells for Level MSIs
-+ * IRQCHIP_SUPPORTS_NMI:              Chip can deliver NMIs, only for root irqchips
-+ * IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND:  Invoke .irq_enable/.irq_unmask for wake irqs
-+ *                                    in the suspend path
-  */
- enum {
--	IRQCHIP_SET_TYPE_MASKED		= (1 <<  0),
--	IRQCHIP_EOI_IF_HANDLED		= (1 <<  1),
--	IRQCHIP_MASK_ON_SUSPEND		= (1 <<  2),
--	IRQCHIP_ONOFFLINE_ENABLED	= (1 <<  3),
--	IRQCHIP_SKIP_SET_WAKE		= (1 <<  4),
--	IRQCHIP_ONESHOT_SAFE		= (1 <<  5),
--	IRQCHIP_EOI_THREADED		= (1 <<  6),
--	IRQCHIP_SUPPORTS_LEVEL_MSI	= (1 <<  7),
--	IRQCHIP_SUPPORTS_NMI		= (1 <<  8),
-+	IRQCHIP_SET_TYPE_MASKED			= (1 <<  0),
-+	IRQCHIP_EOI_IF_HANDLED			= (1 <<  1),
-+	IRQCHIP_MASK_ON_SUSPEND			= (1 <<  2),
-+	IRQCHIP_ONOFFLINE_ENABLED		= (1 <<  3),
-+	IRQCHIP_SKIP_SET_WAKE			= (1 <<  4),
-+	IRQCHIP_ONESHOT_SAFE			= (1 <<  5),
-+	IRQCHIP_EOI_THREADED			= (1 <<  6),
-+	IRQCHIP_SUPPORTS_LEVEL_MSI		= (1 <<  7),
-+	IRQCHIP_SUPPORTS_NMI			= (1 <<  8),
-+	IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND	= (1 <<  9),
- };
- 
- #include <linux/irqdesc.h>
-diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
-index b95ff5d..ab4f637 100644
---- a/kernel/irq/debugfs.c
-+++ b/kernel/irq/debugfs.c
-@@ -57,6 +57,7 @@ static const struct irq_bit_descr irqchip_flags[] = {
- 	BIT_MASK_DESCR(IRQCHIP_EOI_THREADED),
- 	BIT_MASK_DESCR(IRQCHIP_SUPPORTS_LEVEL_MSI),
- 	BIT_MASK_DESCR(IRQCHIP_SUPPORTS_NMI),
-+	BIT_MASK_DESCR(IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND),
- };
- 
- static void
-diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
-index c6c7e18..2cc800b 100644
---- a/kernel/irq/pm.c
-+++ b/kernel/irq/pm.c
-@@ -69,12 +69,17 @@ void irq_pm_remove_action(struct irq_desc *desc, struct irqaction *action)
- 
- static bool suspend_device_irq(struct irq_desc *desc)
- {
-+	unsigned long chipflags = irq_desc_get_chip(desc)->flags;
-+
- 	if (!desc->action || irq_desc_is_chained(desc) ||
- 	    desc->no_suspend_depth)
- 		return false;
- 
- 	if (irqd_is_wakeup_set(&desc->irq_data)) {
- 		irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
-+
-+		if (chipflags & IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND)
-+			irq_enable(desc);
- 		/*
- 		 * We return true here to force the caller to issue
- 		 * synchronize_irq(). We need to make sure that the
-@@ -93,7 +98,7 @@ static bool suspend_device_irq(struct irq_desc *desc)
- 	 * chip level. The chip implementation indicates that with
- 	 * IRQCHIP_MASK_ON_SUSPEND.
- 	 */
--	if (irq_desc_get_chip(desc)->flags & IRQCHIP_MASK_ON_SUSPEND)
-+	if (chipflags & IRQCHIP_MASK_ON_SUSPEND)
- 		mask_irq(desc);
- 	return true;
- }
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+	Joerg
