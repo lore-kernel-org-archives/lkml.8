@@ -2,117 +2,133 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC0BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 18:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7C3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 18:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3332C206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 18:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0612075E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 18:33:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzbGnIT7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pZkK4jeo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgHVSaO (ORCPT
+        id S1728625AbgHVSds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 14:30:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49648 "EHLO
+        Sat, 22 Aug 2020 14:33:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbgHVSaN (ORCPT
+        with ESMTP id S1727893AbgHVSdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 14:30:13 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23779C061573;
-        Sat, 22 Aug 2020 11:30:13 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id bo3so6691813ejb.11;
-        Sat, 22 Aug 2020 11:30:13 -0700 (PDT)
+        Sat, 22 Aug 2020 14:33:47 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E0BC061573;
+        Sat, 22 Aug 2020 11:33:46 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id m20so4528547eds.2;
+        Sat, 22 Aug 2020 11:33:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pmwc657VcF17LG5ED0cRlkWCOFELPP7RKTL6nAzRSO4=;
-        b=hzbGnIT7kuQhlZTtyKqN8mazgBdpUn6VDHVcpom3d86maYFG4Ciq36TAS/OrXwYFyv
-         Dy7NF0lCN/LCyzeS04r7gOdvDc8VodGRJ5uzu6/N++R4NuZfOitsO8vtSklQ8pNVrW9H
-         2AX20gLnHdCAbnyPKUwCZ7d4TVkd+pY7h2aPz6ECU1W12ObAfRMJ2XCGukjjOje/3UIK
-         JQx5R1trcmwTV0PyXTurNRafPXECqoQ0s+amai5NsJS3JGl3j0IdhG/n9iXUqu9jbOfS
-         Ek0JGbdAbpkF3HjiUQMLMyNXE2jQjD1R+vS5ydVmWqTBCfMDcLejfK4XBHocIR6sdC1O
-         rm7g==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gjUEZM3lBlIm0cVrAjftDy1KM/TMOAosVCGT9uQgxg4=;
+        b=pZkK4jeoOTURv+2V3If9ZnNx88Ch1Pyco91gvp0Tz3SHWoEIaP5fcIW/2tuAQ1cnQL
+         JzaeMXTT+LX3rtb+Xy1tLGGbjX8E/qU/nzLN79Q4rdWD1sEGdT6ud7hHDXX5XPm5fG+Z
+         B6R0dayfA5zntmMyaETOElUe3PMHEa1gnLhaSWfzymdrix/6JT7idR9iBq6Q9OyzX5kk
+         ghbZjG6bKAma7z5k7WbPgRMXXhvYy63QSbJ0DmDY/gcwp/BZrqDo0zCS4K2g3oL839cT
+         ycXmD+DK82xdjKfaZ39f/gUWxqWPvX4JkEzCh3SUQaimQTUaNO4HqXsXQGllYN/t0oI2
+         9wAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pmwc657VcF17LG5ED0cRlkWCOFELPP7RKTL6nAzRSO4=;
-        b=DvPWwGDUEt0gQTsb+ga35h0RDUDCnWAO93sFhDlQMtHMlpt46Xrvw6W7NozIVf24mU
-         Wr3hsTx+FHD+jEXQWK6GKME/UgyJ2o9Lh/FieBfY6AkfsQWW3Q8N3YbD/8yucMvIT7Sr
-         +QGY/SY1YQIU2bTdCK1h7HussfHtNfhdgTviRRthM1Xj3vkXPVZrJ0FfVJlltyyWB3DL
-         VMqsFkiplJDIHR5zoERtb7pZ1agkCH8mLvLVQx7z6M36K+IPmt1BHfwO6Q8tLWqdzoGO
-         BJ9eepy6uGCHcoNjPbeQ3yEVyikig79yyZ0Nshq+x+qVvxJElHa96yeG529UycogkxcP
-         wgWA==
-X-Gm-Message-State: AOAM5308DGXs6mve577KemIp4r/LcY31PIZ02DFkii/s7PAohRLrCqJb
-        XY9bxmDMKoSGuiuMyBSAiQZPXq1h7WY=
-X-Google-Smtp-Source: ABdhPJwKFRd7cNh4F6FJ82WpJg5kVdluNhakye9NZ1+MXdzeZweG9ZDTOG3uXo7fzD7j60X9WGSymA==
-X-Received: by 2002:a17:906:401b:: with SMTP id v27mr8277695ejj.300.1598121011480;
-        Sat, 22 Aug 2020 11:30:11 -0700 (PDT)
-Received: from debian64.daheim (p4fd09171.dip0.t-ipconnect.de. [79.208.145.113])
-        by smtp.gmail.com with ESMTPSA id i26sm3406551edv.70.2020.08.22.11.30.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gjUEZM3lBlIm0cVrAjftDy1KM/TMOAosVCGT9uQgxg4=;
+        b=GyLcrQwmkkjiK+7jKg3z25oMzhLtyrANeuqGmcDsNzXNh16IvztHYVme0en7TbQmf4
+         j6YKku1NAiY/Ge5hvKorbNIhUrijn4qIC10RUZejrTuv+1H+jb49+S5n5hzMvEXkB6KE
+         aoDoe6xWy/KtIlDWto48uV2MQdQH4puByxLy2jDVkRaH5dQzuuayMaY4eg1+vGLX2SbX
+         WXq47LMqhJT42bY4Yp8YwvxcT1sc3TpBjPAMBYU/YeXssxKDIoDDxqvUYQH4E4JY1/g2
+         Xr5UocCcHkp6j4KKlbTeRObuWm0hJk6cleRIqFtVTjkfVdNl/99zUhy1LvM7r0lCCD7I
+         F0lw==
+X-Gm-Message-State: AOAM532IupCbFu+s1tlqZaqbbnxrjlS0tRwMFNcHbFfHQYg9AIPeThdg
+        hGiBy3XsZBSfmnE4fnTfjmw=
+X-Google-Smtp-Source: ABdhPJwHuJ6YunThrHWhYkKjSCk17dLUii9bv6xPRyBeI+2Cvwo9c4dSoPimWu4tWZNkonYWS04kyg==
+X-Received: by 2002:a05:6402:1016:: with SMTP id c22mr3888099edu.89.1598121225104;
+        Sat, 22 Aug 2020 11:33:45 -0700 (PDT)
+Received: from skbuf ([86.126.22.216])
+        by smtp.gmail.com with ESMTPSA id p12sm3390837edt.27.2020.08.22.11.33.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Aug 2020 11:30:10 -0700 (PDT)
-Received: from localhost.daheim ([127.0.0.1])
-        by debian64.daheim with esmtp (Exim 4.94)
-        (envelope-from <chunkeey@gmail.com>)
-        id 1k9YHC-0006WS-6L; Sat, 22 Aug 2020 20:30:04 +0200
-Subject: Re: [PATCH 00/32] Set 2: Rid W=1 warnings in Wireless
-To:     Lee Jones <lee.jones@linaro.org>, kvalo@codeaurora.org,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20200821071644.109970-1-lee.jones@linaro.org>
-From:   Christian Lamparter <chunkeey@gmail.com>
-Message-ID: <a3915e15-0583-413f-1fcf-7cb9933ec0bf@gmail.com>
-Date:   Sat, 22 Aug 2020 20:30:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Sat, 22 Aug 2020 11:33:44 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 21:33:42 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qiang Zhao <qiang.zhao@nxp.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        tanveer <tanveer.alam@puresoftware.com>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
+Message-ID: <20200822183342.6sdhp6yq6i7yvdia@skbuf>
+References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
 MIME-Version: 1.0
-In-Reply-To: <20200821071644.109970-1-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-21 09:16, Lee Jones wrote:
-> This set is part of a larger effort attempting to clean-up W=1
-> kernel builds, which are currently overwhelmingly riddled with
-> niggly little warnings.
->
-I see that after our discussion about the carl9170 change in this
-thread following your patch: <https://lkml.org/lkml/2020/8/14/291>
+On Fri, Aug 21, 2020 at 06:40:29PM +0530, kuldip dwivedi wrote:
+> Currently fsl DSPI driver has support of DT only. Adding ACPI
+> support to the drive so that it can be used by UEFI firmware
+> boot in ACPI mode. This driver will be probed if any firmware
+> will expose HID "NXP0005" in DSDT table.
+> 
+> Signed-off-by: tanveer <tanveer.alam@puresoftware.com>
+> Signed-off-by: kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
+> ---
+>  drivers/spi/spi-fsl-dspi.c | 91 +++++++++++++++++++++++++++++---------
+>  1 file changed, 69 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> index 91c6affe139c..7100a8a0a30e 100644
+> --- a/drivers/spi/spi-fsl-dspi.c
+> +++ b/drivers/spi/spi-fsl-dspi.c
+> @@ -1070,6 +1072,12 @@ static void dspi_cleanup(struct spi_device *spi)
+>  	kfree(chip);
+>  }
+>  
+> +static const struct acpi_device_id fsl_dspi_acpi_ids[] = {
+> +	{ "NXP0005", .driver_data = (kernel_ulong_t)&devtype_data[LS2085A], },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(acpi, fsl_dspi_acpi_ids);
+> +
 
-you decided the best way to address our requirements, was to "drop"
-your patch from the series, instead of just implementing the requested 
-changes. :(
+Just noticed this now.
+So for device tree, spi-fsl-dspi supports the following compatibles:
 
-> There are quite a few W=1 warnings in the Wireless.  My plan
-> is to work through all of them over the next few weeks.
-> Hopefully it won't be too long before drivers/net/wireless
-> builds clean with W=1 enabled.
+fsl,vf610-dspi
+fsl,ls1021a-v1.0-dspi
+fsl,ls1012a-dspi
+fsl,ls1028a-dspi
+fsl,ls1043a-dspi
+fsl,ls1046a-dspi
+fsl,ls2080a-dspi
+fsl,ls2085a-dspi
+fsl,lx2160a-dspi
 
-Just a parting note for your consideration:
+Depending on the compatible string, the driver knows whether to use DMA
+or XSPI mode, and what the FIFO size is.
 
-Since 5.7 [0], it has become rather easy to also compile the linux 
-kernel with clang and the LLVM Utilities.
-<https://www.kernel.org/doc/html/latest/kbuild/llvm.html>
+Now, of course not all of the above SoCs are going to support ACPI, but
+it is reasonable to expect that more than one will. And in that case,
+the driver should still be able to know on what SoC it's running,
+because for example LS1043A doesn't support DMA, and LS2085A doesn't
+support XSPI.
 
-I hope this information can help you to see beyond that one-unamed 
-"compiler" bias there... I wish you the best of luck in your endeavors.
+How is this dealt with in ACPI?
 
-Christian
-
-[0] 
-<https://www.phoronix.com/scan.php?page=news_item&px=Linux-5.7-Kbuild-Easier-LLVM>
+Thanks,
+-Vladimir
