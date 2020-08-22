@@ -2,100 +2,61 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF216C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 930292072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:17:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="n888TFnR"
+	by mail.kernel.org (Postfix) with ESMTP id 7D82B207DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgHVQRv (ORCPT
+        id S1728466AbgHVQR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 12:17:51 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:38689 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728413AbgHVQR0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 12:17:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598113045; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=V0xix9bTrnr0rzWfLd22/svLdXIQflVHhuDhuX8rBWA=; b=n888TFnRuqCt/0HoYXqfWEe2E1mq/WIerP1bnGBO7NzCVsHABrmc3PIrvF+Bi/c2K2pvkfeu
- MMaWjsw8+eslwHtFNeCZHtKm39ahyRrbSz5hiow6fSniMpfsGGCG16dklisNJCAgd9dNqvew
- 9fW2W8m/aSwNFtFDJ+8B561h+Xg=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f414514f274ac2b6c32e0cc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 22 Aug 2020 16:17:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 53E4EC43395; Sat, 22 Aug 2020 16:17:24 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1C45BC43391;
-        Sat, 22 Aug 2020 16:17:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1C45BC43391
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     bjorn.andersson@linaro.org, maz@kernel.org,
-        linus.walleij@linaro.org, swboyd@chromium.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v5 1/6] pinctrl: qcom: Set IRQCHIP_SET_TYPE_MASKED and IRQCHIP_MASK_ON_SUSPEND flags
-Date:   Sat, 22 Aug 2020 21:46:56 +0530
-Message-Id: <1598113021-4149-2-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
+        Sat, 22 Aug 2020 12:17:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58506 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728417AbgHVQRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 12:17:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id DC0BEAFF2;
+        Sat, 22 Aug 2020 16:18:09 +0000 (UTC)
+Date:   Sat, 22 Aug 2020 18:17:41 +0200
+Message-ID: <s5h4koubqoq.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Connor McAdams <conmanx360@gmail.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/20] ALSA: hda/ca0132 - Add bass redirection controls.
+In-Reply-To: <20200821185239.26133-6-conmanx360@gmail.com>
+References: <20200821185239.26133-1-conmanx360@gmail.com>
+        <20200821185239.26133-6-conmanx360@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs during
-suspend and mask before setting irq type.
+On Fri, 21 Aug 2020 20:52:22 +0200,
+Connor McAdams wrote:
+> 
+> +static int ca0132_alt_add_bass_redirection_crossover(struct hda_codec *codec)
+> +{
+> +	const char *namestr = "Output: Bass Redirection Playback Volume";
+> +	struct snd_kcontrol_new knew =
+> +		HDA_CODEC_VOLUME_MONO(namestr, BASS_REDIRECTION_XOVER, 1, 0,
+> +				HDA_OUTPUT);
 
-Masking before changing type should make sure any spurious interrupt is not
-detected during this operation.
+This is no ideal name string for a control element, too.
+Better to omit "Output:" prefix at least.
 
-Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index a2567e7..1c23f5c 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -1243,6 +1243,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
- 	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
- 	pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
- 	pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
-+	pctrl->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND |
-+				IRQCHIP_SET_TYPE_MASKED;
- 
- 	np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
- 	if (np) {
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+thanks,
 
+Takashi
