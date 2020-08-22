@@ -2,120 +2,130 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B1CC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09CD7207C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67384207C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjRC2XO6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUQziiOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgHVJXa (ORCPT
+        id S1727063AbgHVJXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 05:23:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
+        Sat, 22 Aug 2020 05:23:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHVJXa (ORCPT
+        with ESMTP id S1725864AbgHVJXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 05:23:30 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18DC2C061573;
-        Sat, 22 Aug 2020 02:23:30 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id v15so2134841pgh.6;
-        Sat, 22 Aug 2020 02:23:30 -0700 (PDT)
+        Sat, 22 Aug 2020 05:23:34 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83CC5C061573
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 02:23:34 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id l84so3664089oig.10
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 02:23:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aI39wUQrT4gwVKkfiPc/6BrYsBsFxtTiYiQuKGUyQNc=;
-        b=BjRC2XO6ziRv5s9rs7O7otCwVIpQS+qXELx0bfeHcgi7yZMg4ZDjYCKCzeE3cSrn7J
-         h4rt+xfTU7u3rEtLqLTGv/nx/hmTQOJM5YZIJH2l2TP+6Z9sWo6O0X+LDYXWfDrGHZFJ
-         Aha7B53M6BI+GRJorY7VSNxeD7kQ82nnZeclcZICDoVEFKn1GwaFbFkmNZvRVFMWjcLk
-         ygWjIEK/hsHVLQbtAM+aq9UkdYx1spA51nTnAHVL+b+nu1B6VMIIY2vW6F6KkIXUIwfb
-         zzBeU9UXeVKXTAmxcK+hVjZq4b7zZxDNIi/Q55A/2LmnGUHt45k1x0ry0jfeNHoWkAZA
-         RlQg==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=HXml0ksMnzvv0PRQAiLA54DGPaMuEoNWDNqurufgFqc=;
+        b=AUQziiOpLs7N4SZ+gDZAYjJxm3LXmSdWYH7qbJJUJ6dRrBh2p7H6ceokvgdCT6iR1Y
+         RzRW7aOOgRZl2uwtIQz1CXHY3i5Sn4eTL2rciBvcpYhEgZoElwzhfpicxRjnZKvwxWBN
+         Rr7yGJi8Ndgcjh/RRcf6sDS+chSmNNd86C22BjZXiWPQfRcYLC0j1NWtavYcS2AoyCPn
+         ICG5vWq8fLfDKLtDrdq/MLfYMFa5nD2tyiWlvfoi+F/HqxUBBWO4LxjFprlw8VeRkT+3
+         fIshfOzQzGy4UVv5S4ShHx9c0Ps20+WVGywxZgoBwBPss3+4zpq8c6lRhP9W0nEEOud8
+         CXSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aI39wUQrT4gwVKkfiPc/6BrYsBsFxtTiYiQuKGUyQNc=;
-        b=CgHdDhIh1TS0kOaQCWSKo5f9MMBiPgtCe34Ot5b9FLpy85E60P42c3Ho1ivcEvN91D
-         1VpE3vHAoSGx0dZSsBBK93Ql6tOFuwkHoCSqpyNBJwFhCGgeg5W6T5gYJfoQSKYLBLQQ
-         IUynCCG1hnGubSITmGiqqfD9ckIVHOir9PqexS+rYPNHv/UBN9P8Jj8A996B4Wy36oS5
-         VUfqcfOn/K75uspeAo+z07KFcHeclMI0SpP0/QEQpu9noidie69ZttrQr6TtSkFsiX+9
-         iILXAviE1S9UYRBa42Uq+HCt6YCjqSftcpwzlRSOwnbsyDXg2fa6nvfkqfzgY4ncTv5r
-         UKBA==
-X-Gm-Message-State: AOAM530GjCK3lEzGRl/2h0i12UvH0QXuoh/M21OwH0Eax+WbibpkuHpb
-        mW8Gb9htfwPYzl8BIrQ5U4nTBETIynx/wJRmXlH3svQkzGKsfw==
-X-Google-Smtp-Source: ABdhPJz4qAwL/hficWhPP7/Q7Cn9/sFEW/U3BO4PJc8qZ0j+3vpx+hdgMhcqDNRluDgzEX2ahyveuiGTLzTTJBe0Qco=
-X-Received: by 2002:a62:c319:: with SMTP id v25mr5537864pfg.130.1598088209565;
- Sat, 22 Aug 2020 02:23:29 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=HXml0ksMnzvv0PRQAiLA54DGPaMuEoNWDNqurufgFqc=;
+        b=E2Abf//Rkje+HU8d3bOI3BktKHyrccOC9tY3q1dSSuDLltvMf+fRVh/WoBqB8kDRwb
+         juJeBp3nXbZW840T4iVlG+TXRwLgZwYJmxUs9vxkNFf6PEnyBzNVRyeX6ol2BNjED56o
+         0J6JyBlPMHZ3MM9UjLk/Cq9P+Fq5DzDVOJKYchiWklMoWQXOfkZECYixQ/x3eNDbeJ9k
+         iuKGTorCZmiVJw2fnUdjrv8g5lLyGFd2vNHyHfQvH3HirGiLcXk++OtnybuSfhOmnjMG
+         jo/tEmQKaGReFuzGIZFmpSTaGk7fo3dNq19lCcIhpNIDFnYbGuYfXC2wDvK9A7DyoHMd
+         DfeA==
+X-Gm-Message-State: AOAM5335r3HKbZ1M1shf7V/XYgVxdkbczUJStMGqyzmidQWWPHIGEyej
+        kBz+iMEZHpyDzzAyIv5itycJ9Jz2MgCFLVfZ/54=
+X-Google-Smtp-Source: ABdhPJyYzMqqJ5iIG3OiSuDBhMH+/5T4EJSfWsASkkoSZDm+wjfZ+0Xn4EX4uMvhQ1laDl0gYUVxOJBry4Dsb9d/XSs=
+X-Received: by 2002:aca:acd5:: with SMTP id v204mr523966oie.35.1598088213901;
+ Sat, 22 Aug 2020 02:23:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1598001442.git.rahul.tanwar@linux.intel.com>
- <fedf5d1ace7c389a5fc0116865b9b88aa3ddeaa5.1598001442.git.rahul.tanwar@linux.intel.com>
- <20200821105618.GO1891694@smile.fi.intel.com> <d8c85de1-dacf-e8eb-6e49-131d007f3a6b@linux.intel.com>
-In-Reply-To: <d8c85de1-dacf-e8eb-6e49-131d007f3a6b@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 22 Aug 2020 12:23:12 +0300
-Message-ID: <CAHp75Vc1=_SeYHtQvXrV+G-b5t4vWS6ga3s_Zmez7rQPORWr7w@mail.gmail.com>
-Subject: Re: [PATCH v9 2/2] Add PWM fan controller driver for LGM SoC
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com, rtanwar@maxlinear.com
+References: <87h7t6tpye.fsf@nanos.tec.linutronix.de> <20200813173701.GC4295@paulmck-ThinkPad-P72>
+ <20200813180933.GA532283@rani.riverdale.lan> <875z9dioll.fsf@nanos.tec.linutronix.de>
+ <20200820130641.GA536306@rani.riverdale.lan> <87zh6ohm03.fsf@nanos.tec.linutronix.de>
+ <20200821230435.GA56974@rani.riverdale.lan> <CAKwvOdkoB+fT9tt7vgg1R6J-NEr77EWP5X8nFat_L-HvEzWGzA@mail.gmail.com>
+ <87eenzqzmr.fsf@nanos.tec.linutronix.de> <20200822035552.GA104886@rani.riverdale.lan>
+ <20200822084133.GL28786@gate.crashing.org>
+In-Reply-To: <20200822084133.GL28786@gate.crashing.org>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Sat, 22 Aug 2020 11:23:21 +0200
+Message-ID: <CA+icZUVf9a8LC2Mf0cFymYQfALWs6bVfR1v1nRbxKaLAyU6NkQ@mail.gmail.com>
+Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 8:25 AM Tanwar, Rahul
-<rahul.tanwar@linux.intel.com> wrote:
-> On 21/8/2020 6:56 pm, Andy Shevchenko wrote:
-> > On Fri, Aug 21, 2020 at 05:32:11PM +0800, Rahul Tanwar wrote:
+On Sat, Aug 22, 2020 at 10:42 AM Segher Boessenkool
+<segher@kernel.crashing.org> wrote:
+>
+> Hi Arvind,
+>
+> On Fri, Aug 21, 2020 at 11:55:52PM -0400, Arvind Sankar wrote:
+> > Cc Segher.
+> >
+> > Segher, we were looking at gcc PR82602, where IRA could reorder volatile
+> > asm's (reported on ARM). The fix was backported to gcc-6.
+>
+> I know ;-)
+>
+> > Do you know if
+> > there is any reason the problem couldn't occur on x86 on older gcc
+> > without the fix?
+>
+> No, I see no particular reason, at least GCC 5 seems vulnerable.  (The
+> GCC 5 release branch was closed at the time this bug report was made,
+> already).  There is no reason I see why it would work on x86 but fail
+> elsewhere, either.
+>
 
+[1] says:
+
+Current Minimal Requirements
 ...
+====================== ===============  ========================================
+        Program        Minimal version       Command to check the version
+====================== ===============  ========================================
+GNU C                  4.9              gcc --version
 
-> >> +#include <linux/bitfield.h>
-> >> +#include <linux/clk.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of_device.h>
-> > We haven't settle this yet...
->
-> I investigated more about it. I was getting build error because we were
-> relying on of_device.h for including platform_device.h. You are right that
-> we are not using anything from of_device.h. So i removed of_device.h from
-> driver and added include <linux/platform_device.h> & build is ok.
->
-> Regarding mod_devicetable.h header, it gets included indirectly from
-> <linux/pwm.h> which includes of.h which includes mod_devicetable.h. So i
-> think no point including it again in the driver.
+- Sedat -
 
-Ideally you should include all headers you have direct users of.
-mod_devicetable.h is exactly one and I doubt the pwm.h should include
-it, but it's another story.
-
-There are, of course, some cases when not all required because there
-is a guarantee that upper one includes lower one. For example, if you
-use bitops.h there is no need to include bits.h.
-
-> >> +#include <linux/pwm.h>
-> >> +#include <linux/regmap.h>
-> >> +#include <linux/reset.h>
-
--- 
-With Best Regards,
-Andy Shevchenko
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/changes.rst#n32
