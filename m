@@ -2,126 +2,173 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F506C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1057F2078D
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:54:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FQkQhG80"
+	by mail.kernel.org (Postfix) with ESMTP id E44472078D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:57:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598108236;
+	bh=7tU2JSwdAxQ3AStTHU9D1r/ibInF+JSBrnPYfQDWEzg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=W4Qd5aREXpmImJXDs/i55x7cQI2mMNNVgKgO0igqnZl+w2z67O80M1nYUJppA7iZi
+	 QJvc8c6w9psYVqnsrMqJgar4vaw/bTTwhtif1sXH11ngU0JCvhjS7O2CkLwmlqa9os
+	 BzQzQ6e9I/Dwmm+fgdwRtEOGnjXauEkOQx2wK2FY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgHVOyi (ORCPT
+        id S1728203AbgHVO5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 10:54:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgHVOyf (ORCPT
+        Sat, 22 Aug 2020 10:57:16 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:47418 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbgHVO5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 10:54:35 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 317FAC061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 07:54:35 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id t10so5943319ejs.8
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 07:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Mbzm5gpuiwO9tFrWmdPpY3arq5Fa+qKMjnEd29bPLpQ=;
-        b=FQkQhG808JI0eCeL5TQ57rNtCCg1AYXnUaZ+z+bIXDm0JphY/3kTObu2x7RD3HTTTE
-         J/4DdcSBvZEl3HzlW99RxNL4Ctxtq7j2efM5diD9FiLMYPYVjnlCzbrlPS7Reu+anrxL
-         fbO+3Lp90y+V28Qscu0lHKi06nifW+YbDpIJo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Mbzm5gpuiwO9tFrWmdPpY3arq5Fa+qKMjnEd29bPLpQ=;
-        b=YRsnNDChMJf5r8wXQJ9Qgffy/bY4pJNM4pGrZ43rnKbMiTkLQzB4PCuIGL0x5VCrJB
-         8o9K3dfDBeTbBpialsLNhvlkhC913c+x3tNJI4JVBpz6eQjQB3ioBXy+FVTebgqsnqS8
-         LuJe/15C6AMSKEz3tj/l8x9OyyceqkkG3CNncPYpxN8bgRQtMjQdYzAhu7vOBnt86zYb
-         DKY65jYPj1jWkGFEDyjmhD9vW3aW0mRBPuvR35VzAgWPfoo+5WeiMfaOczY5xwX/5D4p
-         IYYUhSxdQ/3tTO4vz/PLDEZYI6jBhsMV8UbVbILYU0DeXWwL1bMsRc7n7a1+waarBLQY
-         zZSQ==
-X-Gm-Message-State: AOAM530dopCs9m0cBxJXUSRpZsCd2FgLzszdRhwP6Ve1VBqi2QdCdhgQ
-        6qZjjC9ptNgubpxWW4pNNt22dZoDKthqcA==
-X-Google-Smtp-Source: ABdhPJyuSfw/p8c522bCWjAlgES5+36RBN5LqoPq+r4wvbfJTaw2YpAqmLu1YfdgDkFPerPWnTijiQ==
-X-Received: by 2002:a17:906:f905:: with SMTP id lc5mr7370044ejb.340.1598108073606;
-        Sat, 22 Aug 2020 07:54:33 -0700 (PDT)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com. [209.85.221.49])
-        by smtp.gmail.com with ESMTPSA id 24sm3013746edx.35.2020.08.22.07.54.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Aug 2020 07:54:33 -0700 (PDT)
-Received: by mail-wr1-f49.google.com with SMTP id l2so4516082wrc.7
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 07:54:32 -0700 (PDT)
-X-Received: by 2002:adf:ec4f:: with SMTP id w15mr7016601wrn.385.1598108072233;
- Sat, 22 Aug 2020 07:54:32 -0700 (PDT)
+        Sat, 22 Aug 2020 10:57:12 -0400
+Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 07MEuKVV025434;
+        Sat, 22 Aug 2020 23:56:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 07MEuKVV025434
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1598108185;
+        bh=jH2tLSORRhlXDuP+7ApdPBfQ1QixQf9c+4qwpQLm8xk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XCcHsUJFon+sjkDt/sF4cmBipK+M3z/uIpLS97rIiAkegFB/PmFLCO9s5n3J0M284
+         xAEpaVQ5VVF89hevHo9UOPOh7aQnhYAQWigyPMoUbeY420NAt2pFqrBnMuDehvvKLa
+         U4wTGK5tizgqR+nB3Zly+6Qhswx1nj6aR38oyJT0n2OEdTkEpzascAzoEHHrIkx1yw
+         c/KzjmsIPt5fjDqBcho33KO5IXp5z6zQ/KvRgTbk6ndnP0Vt+Yfh2P6UY8DHsSjQeb
+         SFneOkEnH5qn5sxeDsyeKN90E8i6VMruuDSBnCw35rzRjkIaczSXmllJ4+AgLffAn2
+         vi7f/IJeSfpgQ==
+X-Nifty-SrcIP: [126.90.211.135]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Nathan Huckleberry <nhuck@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Roeder <tmroeder@google.com>,
+        clang-built-linux@googlegroups.com,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 06/10] gen_compile_commands: move directory walk to a generator function
+Date:   Sat, 22 Aug 2020 23:56:14 +0900
+Message-Id: <20200822145618.1222514-7-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200822145618.1222514-1-masahiroy@kernel.org>
+References: <20200822145618.1222514-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-References: <CGME20200821161407eucas1p249e4833b8839f717cc2a496ab43bb8a2@eucas1p2.samsung.com>
- <20200821161401.11307-1-l.stelmach@samsung.com> <20200821161401.11307-8-l.stelmach@samsung.com>
-In-Reply-To: <20200821161401.11307-8-l.stelmach@samsung.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Sat, 22 Aug 2020 16:54:19 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5DKCsDOQXcaAqB0h8V8rdo_EcBevgkPO1LzU7FZJ+r_hg@mail.gmail.com>
-Message-ID: <CAAFQd5DKCsDOQXcaAqB0h8V8rdo_EcBevgkPO1LzU7FZJ+r_hg@mail.gmail.com>
-Subject: Re: [PATCH v2 7/9] spi: spi-s3c64xx: Ensure cur_speed holds actual
- clock value
-To:     linux-spi@vger.kernel.org
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 6:14 PM =C5=81ukasz Stelmach <l.stelmach@samsung.co=
-m> wrote:
->
-> cur_speed is used to calculate transfer timeout and needs to be
-> set to the actual value of (half) the clock speed for precise
-> calculations.
->
-> Cc: Tomasz Figa <tfiga@chromium.org>
+Currently, this script walks under the specified directory (default to
+the current directory), then parses all .cmd files found.
 
-As we talked on IRC, Lukasz forgot to add:
+Split it into a separate helper function because the next commit will
+add more helpers to pick up .cmd files associated with given file(s).
 
-Suggested-by: Tomasz Figa <tomasz.figa@gmail.com>
+There is no point to build and return a huge list at once. I used a
+generator so it works in the for-loop with less memory.
 
-Would be nice if it could be added when (and if) applying.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+---
 
-> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
-> ---
->  drivers/spi/spi-s3c64xx.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-> index 02de734b8ab1..89c162efe355 100644
-> --- a/drivers/spi/spi-s3c64xx.c
-> +++ b/drivers/spi/spi-s3c64xx.c
-> @@ -626,6 +626,7 @@ static int s3c64xx_spi_config(struct s3c64xx_spi_driv=
-er_data *sdd)
->                 ret =3D clk_set_rate(sdd->src_clk, sdd->cur_speed * 2);
->                 if (ret)
->                         return ret;
-> +               sdd->cur_speed =3D clk_get_rate(sdd->src_clk) / 2;
->         } else {
->                 /* Configure Clock */
->                 val =3D readl(regs + S3C64XX_SPI_CLK_CFG);
-> --
-> 2.26.2
->
+Changes in v3:
+  - Add the missing punctuation in the comment
+
+Changes in v2:
+  - New patch
+
+ scripts/gen_compile_commands.py | 44 ++++++++++++++++++++++++---------
+ 1 file changed, 32 insertions(+), 12 deletions(-)
+
+diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
+index 71a0630ae188..e45f17be8817 100755
+--- a/scripts/gen_compile_commands.py
++++ b/scripts/gen_compile_commands.py
+@@ -33,6 +33,7 @@ def parse_arguments():
+         log_level: A logging level to filter log output.
+         directory: The work directory where the objects were built.
+         output: Where to write the compile-commands JSON file.
++        paths: The list of directories to handle to find .cmd files.
+     """
+     usage = 'Creates a compile_commands.json database from kernel .cmd files'
+     parser = argparse.ArgumentParser(description=usage)
+@@ -56,7 +57,28 @@ def parse_arguments():
+ 
+     return (args.log_level,
+             os.path.abspath(args.directory),
+-            args.output)
++            args.output,
++            [args.directory])
++
++
++def cmdfiles_in_dir(directory):
++    """Generate the iterator of .cmd files found under the directory.
++
++    Walk under the given directory, and yield every .cmd file found.
++
++    Args:
++        directory: The directory to search for .cmd files.
++
++    Yields:
++        The path to a .cmd file.
++    """
++
++    filename_matcher = re.compile(_FILENAME_PATTERN)
++
++    for dirpath, _, filenames in os.walk(directory):
++        for filename in filenames:
++            if filename_matcher.match(filename):
++                yield os.path.join(dirpath, filename)
+ 
+ 
+ def process_line(root_directory, command_prefix, file_path):
+@@ -95,31 +117,29 @@ def process_line(root_directory, command_prefix, file_path):
+ 
+ def main():
+     """Walks through the directory and finds and parses .cmd files."""
+-    log_level, directory, output = parse_arguments()
++    log_level, directory, output, paths = parse_arguments()
+ 
+     level = getattr(logging, log_level)
+     logging.basicConfig(format='%(levelname)s: %(message)s', level=level)
+ 
+-    filename_matcher = re.compile(_FILENAME_PATTERN)
+     line_matcher = re.compile(_LINE_PATTERN)
+ 
+     compile_commands = []
+-    for dirpath, _, filenames in os.walk(directory):
+-        for filename in filenames:
+-            if not filename_matcher.match(filename):
+-                continue
+-            filepath = os.path.join(dirpath, filename)
+ 
+-            with open(filepath, 'rt') as f:
++    for path in paths:
++        cmdfiles = cmdfiles_in_dir(path)
++
++        for cmdfile in cmdfiles:
++            with open(cmdfile, 'rt') as f:
+                 result = line_matcher.match(f.readline())
+                 if result:
+                     try:
+-                        entry = process_line(directory,
+-                                             result.group(1), result.group(2))
++                        entry = process_line(directory, result.group(1),
++                                             result.group(2))
+                         compile_commands.append(entry)
+                     except ValueError as err:
+                         logging.info('Could not add line from %s: %s',
+-                                     filepath, err)
++                                     cmdfile, err)
+ 
+     with open(output, 'wt') as f:
+         json.dump(compile_commands, f, indent=2, sort_keys=True)
+-- 
+2.25.1
+
