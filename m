@@ -2,224 +2,116 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DA6C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0025DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8644820720
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:12:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598065945;
-	bh=hGoezdrkh4sII/nHF2fboHQKomchjb0dkCFbuaS/NOU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dKYnLLU/F0ZTk59HUXd98dpX/vshSNrOewqu/5no0pyDVDoMy20ieNOHIXtYPAHoN
-	 58yiXzbYTWFw/QBDLfnuMEPxXRaDOC+/garZxBLczJuu3PKfWBJ6Dnb4YgR+VB+B+t
-	 2MJfyDU10Sj5eed1NywOkszOQonMxsrhpFMMlJjQ=
+	by mail.kernel.org (Postfix) with ESMTP id D3FC1206BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:19:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgHVDMX (ORCPT
+        id S1726858AbgHVDTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 23:12:23 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:20388 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgHVDMW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 23:12:22 -0400
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 07M3C6oI009886;
-        Sat, 22 Aug 2020 12:12:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 07M3C6oI009886
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598065927;
-        bh=e6RWKtFs9pXYjYTAelrwYfwInM31ujnRzIsZ4gq7lr8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PAglR8Gf4Qpp5orx6k6EYdPounaaKf7hVEUsb6LmAEaeITJ/xGDjOnVvjQOrDCjgo
-         hPTpo44GcQSAddHwTeER5P/b2YA7whRzwVhGKQVKOJrKW/5Kext5lIXCrqotqc1i6w
-         kKGXjvO0Xmafwxnx2PzlRKc/3rGL6aMSUBPLiFNOakrXWpUq3nuKoyfrmBsa7Cyb//
-         6LG+znByYT2v+TezoHdZq2cdfdkCvzgEW4t02y37AckkSozH7TGGXXvbORAq4XjvWc
-         w1GQPXHCvb+hPiCKcUDUmAY97HZ8PPtFZEUgSw25lAR/GfvEJp+do/Du8uRWJ3E3xj
-         mrJp/DWb90wRQ==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id q68so1108399uaq.0;
-        Fri, 21 Aug 2020 20:12:06 -0700 (PDT)
-X-Gm-Message-State: AOAM530lDRiGb92zi4cqsmDUfyfjrd+13FGqMJm1ogAMM6dOj1sTw2nJ
-        dEpnQNV+HBIQBybgmaF+Ex4UmzegVOe3DDHiaKA=
-X-Google-Smtp-Source: ABdhPJxH1FB70/rsWAiTm0tLd5eU9ysIMG2MV5hQEhw9BJb7Zvk08j60pBDUm+v4TgXiTW8ZpZjYdnSGl2DMf6vZUsI=
-X-Received: by 2002:ab0:623:: with SMTP id f32mr3507228uaf.121.1598065925547;
- Fri, 21 Aug 2020 20:12:05 -0700 (PDT)
+        Fri, 21 Aug 2020 23:19:47 -0400
+Received: from mga01.intel.com ([192.55.52.88]:34834 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726387AbgHVDTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 23:19:46 -0400
+IronPort-SDR: 6/X+SwjcC5WduVc1s22KoT0eg/GZYgxICdFCkd0Jedvq4x+WfQExjny3VQgcV1Rra4/7wmqtSR
+ QcQ7+MAgJ0KQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="173712482"
+X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
+   d="scan'208";a="173712482"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 20:19:46 -0700
+IronPort-SDR: hoTSc/bh+DjYbmyVgsOYlBx8a3lPw/XjD3OMG+dOJ3TjFGJEi7ydF/mUdX5nuplykBs9cqCchR
+ a9RDPKHsGMeg==
+X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
+   d="scan'208";a="473265588"
+Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 20:19:45 -0700
+Date:   Fri, 21 Aug 2020 20:19:44 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] KVM: x86: introduce KVM_MEM_PCI_HOLE memory
+Message-ID: <20200822031944.GA4769@sjchrist-ice>
+References: <20200807141232.402895-1-vkuznets@redhat.com>
+ <20200807141232.402895-3-vkuznets@redhat.com>
+ <20200814023139.GB4845@linux.intel.com>
+ <20200814102850-mutt-send-email-mst@kernel.org>
+ <20200817163207.GC22407@linux.intel.com>
+ <20200820214407-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-References: <20200821190159.1033740-1-masahiroy@kernel.org>
- <20200821190159.1033740-8-masahiroy@kernel.org> <CAKwvOdmR=VeR0=LUgXCwnpK9LH90_itzv627wBEK4hCroBEW9Q@mail.gmail.com>
-In-Reply-To: <CAKwvOdmR=VeR0=LUgXCwnpK9LH90_itzv627wBEK4hCroBEW9Q@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 22 Aug 2020 12:11:28 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS6k5zGMHyWa=jCKo6HZf1AXq5_qtMmgY2cvet9y3u-Rg@mail.gmail.com>
-Message-ID: <CAK7LNAS6k5zGMHyWa=jCKo6HZf1AXq5_qtMmgY2cvet9y3u-Rg@mail.gmail.com>
-Subject: Re: [PATCH v2 7/9] gen_compile_commands: support *.o, *.a,
- modules.order in positional argument
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Tom Roeder <tmroeder@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820214407-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 9:59 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Fri, Aug 21, 2020 at 12:02 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > This script currently searches the specified directory for .cmd files.
-> > One drawback is it may contain stale .cmd files after you rebuild the
-> > kernel several times without 'make clean'.
-> >
-> > This commit supports *.o, *.a, and modules.order as positional
-> > parameters. If such files are given, they are parsed to collect
-> > associated .cmd files. I added a generator helper for each of them.
-> >
-> > This feature is useful to get the list of active .cmd files from the
-> > last build, and will be used by the next commit to wire up the
-> > compile_commands.json rule to the Makefile.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
-> >
-> > Changes in v2:
-> >   - Separate the file parser into generator functions
-> >   - Use 'obj' instead of 'object' because 'object' is a built-in function
-> >   - I think using 'file' is OK because it is not a built-in function in Python3
-> >     (https://docs.python.org/3/library/functions.html)
-> >     Anyway, the variable 'file' is no longer used in this version
-> >   - Keep the previous work-flow to allow to search the given directory
-> >
-> >  scripts/gen_compile_commands.py | 100 ++++++++++++++++++++++++++++++--
-> >  1 file changed, 96 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
-> > index 6dec7e2c4098..65859e6044b5 100755
-> > --- a/scripts/gen_compile_commands.py
-> > +++ b/scripts/gen_compile_commands.py
-> > @@ -12,6 +12,7 @@ import json
-> >  import logging
-> >  import os
-> >  import re
-> > +import subprocess
-> >
-> >  _DEFAULT_OUTPUT = 'compile_commands.json'
-> >  _DEFAULT_LOG_LEVEL = 'WARNING'
-> > @@ -32,8 +33,9 @@ def parse_arguments():
-> >      Returns:
-> >          log_level: A logging level to filter log output.
-> >          directory: The work directory where the objects were built
-> > +        ar: Command used for parsing .a archives
-> >          output: Where to write the compile-commands JSON file.
-> > -        paths: The list of directories to handle to find .cmd files
-> > +        paths: The list of files/directories to handle to find .cmd files
-> >      """
-> >      usage = 'Creates a compile_commands.json database from kernel .cmd files'
-> >      parser = argparse.ArgumentParser(description=usage)
-> > @@ -53,12 +55,21 @@ def parse_arguments():
-> >      parser.add_argument('--log_level', choices=_VALID_LOG_LEVELS,
-> >                          default=_DEFAULT_LOG_LEVEL, help=log_level_help)
-> >
-> > +    ar_help = 'command used for parsing .a archives'
-> > +    parser.add_argument('-a', '--ar', type=str, default='ar', help=ar_help)
->
-> If there's a default, doesn't that mean it's no longer required? I
-> think it should be required.  For a clang specific tool, we'd prefer
-> the default to be llvm-ar anyways.
+On Thu, Aug 20, 2020 at 09:46:25PM -0400, Michael S. Tsirkin wrote:
+> On Mon, Aug 17, 2020 at 09:32:07AM -0700, Sean Christopherson wrote:
+> > On Fri, Aug 14, 2020 at 10:30:14AM -0400, Michael S. Tsirkin wrote:
+> > > On Thu, Aug 13, 2020 at 07:31:39PM -0700, Sean Christopherson wrote:
+> > > > > @@ -2318,6 +2338,11 @@ static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
+> > > > >  	int r;
+> > > > >  	unsigned long addr;
+> > > > >  
+> > > > > +	if (unlikely(slot && (slot->flags & KVM_MEM_PCI_HOLE))) {
+> > > > > +		memset(data, 0xff, len);
+> > > > > +		return 0;
+> > > > > +	}
+> > > > 
+> > > > This feels wrong, shouldn't we be treating PCI_HOLE as MMIO?  Given that
+> > > > this is performance oriented, I would think we'd want to leverage the
+> > > > GPA from the VMCS instead of doing a full translation.
+> > > > 
+> > > > That brings up a potential alternative to adding a memslot flag.  What if
+> > > > we instead add a KVM_MMIO_BUS device similar to coalesced MMIO?  I think
+> > > > it'd be about the same amount of KVM code, and it would provide userspace
+> > > > with more flexibility, e.g. I assume it would allow handling even writes
+> > > > wholly within the kernel for certain ranges and/or use cases, and it'd
+> > > > allow stuffing a value other than 0xff (though I have no idea if there is
+> > > > a use case for this).
+> > > 
+> > > I still think down the road the way to go is to map
+> > > valid RO page full of 0xff to avoid exit on read.
+> > > I don't think a KVM_MMIO_BUS device will allow this, will it?
+> > 
+> > No, it would not, but adding KVM_MEM_PCI_HOLE doesn't get us any closer to
+> > solving that problem either.
+> 
+> I'm not sure why. Care to elaborate?
 
-A good point.
-I want to set reasonable values as default where possible.
-'llvm-ar' is better.
+The bulk of the code in this series would get thrown away if KVM_MEM_PCI_HOLE
+were reworked to be backed by a physical page.  If we really want a physical
+page, then let's use a physical page from the get-go.
 
-I will change it.
+I realize I suggested the specialized MMIO idea, but that's when I thought the
+primary motivation was memory, not performance.
 
+> > What if we add a flag to allow routing all GFNs in a memslot to a single
+> > HVA?
+> 
+> An issue here would be this breaks attempts to use a hugepage for this.
 
+What are the performance numbers of hugepage vs. aggressively prefetching
+SPTEs?  Note, the unbounded prefetching from the original RFC won't fly,
+but prefetching 2mb ranges might be reasonable.
 
-> > +
-> > +def cmdfiles_for_modorder(modorder):
-> > +    """Generate the iterator of .cmd files associated with the modules.order.
-> > +
-> > +    Parse the given modules.order, and yield every .cmd file used to build the
-> > +    contained modules.
-> > +
-> > +    Args:
-> > +        modorder: The modules.order file to parse
-> > +
-> > +    Yields:
-> > +        The path to every .cmd file found
-> > +    """
-> > +    with open(modorder) as f:
-> > +        for line in f:
-> > +            ko = line.rstrip()
-> > +            base, ext = os.path.splitext(ko)
->
-> below in main() you check the file extension with endswith().  Would
-> it be good to be consistent between the two?
-
-I want to re-use 'base' to convert
-the *.ko into *.mod
-
-path/to/my/driver.ko
--> path/to/my/driver.mod
-
-
-I think using os.path.split()
-is good for checking the valid suffix,
-and replaceing it with '.mod'.
-
-
-
-
-
-
-> > +            if ext != '.ko':
-> > +                sys.exit('{}: module path must end with .ko'.format(ko))
-> > +            mod = base + '.mod'
-> > +           # The first line of *.mod lists the objects that compose the module.
-> > +            with open(mod) as m:
-> > +                for obj in m.readline().split():
-> > +                    yield to_cmdfile(obj)
-> > +
-> > +
-> >  def process_line(root_directory, command_prefix, file_path):
-> >      """Extracts information from a .cmd line and creates an entry from it.
-> >
-> > @@ -116,7 +194,7 @@ def process_line(root_directory, command_prefix, file_path):
-> >
-> >  def main():
-> >      """Walks through the directory and finds and parses .cmd files."""
-> > -    log_level, directory, output, paths = parse_arguments()
-> > +    log_level, directory, output, ar, paths = parse_arguments()
-> >
-> >      level = getattr(logging, log_level)
-> >      logging.basicConfig(format='%(levelname)s: %(message)s', level=level)
-> > @@ -126,7 +204,21 @@ def main():
-> >      compile_commands = []
-> >
-> >      for path in paths:
-> > -        cmdfiles = cmdfiles_in_dir(path)
-> > +        # If 'path' is a directory, handle all .cmd files under it.
-> > +        # Otherwise, handle .cmd files associated with the file.
-> > +        # Most of built-in objects are linked via archives (built-in.a or lib.a)
-> > +        # but some are linked to vmlinux directly.
-> > +        # Modules are lis
->
-> ^ was this comment cut off?
-
-Oops, I will fix it.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Reraising an earlier unanswered question, is enlightening the guest an
+option for this use case?
