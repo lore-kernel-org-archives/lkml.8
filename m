@@ -2,192 +2,130 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFABC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35512C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F16E621734
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAqfwrLV"
+	by mail.kernel.org (Postfix) with ESMTP id 0F59E207CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgHVD0c (ORCPT
+        id S1726947AbgHVD2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 23:26:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgHVD03 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 23:26:29 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26469C061573;
-        Fri, 21 Aug 2020 20:26:29 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id x2so2090791ybf.12;
-        Fri, 21 Aug 2020 20:26:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e3KUgvt6sSnX04F6ibo9AqBx5odUZST7DyZqqmSjO20=;
-        b=MAqfwrLVswMUgSrzrx+QQ2qeKwiUCsS/66co0S4k5CUGimUp/hsMRQWv1KH0Jn58GN
-         +0JHGPjyDmUhXnedFa67yGwdbTAMfv+7VfPCrn6jyx5IRGrqwjrTX7DK5pGF2saZHMml
-         KAUos4XmSeYNWxiD4CgCu5VXvg/4jYfrUkyfjpACzxc6F6/oUcEDiU8EAmfHJEoFCy9J
-         W2xsCqFm1dZ4FpUAX95Frxp6FyL29X91xoWK+q+pojWr2UvDrblckWm5V/uUODlBhk0U
-         khxmCak20vNF7o5UO2HsMxdt46P5rklgQEh78sAb9WBHel8na6hc5IWJhfSFB2V68fzO
-         t2PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e3KUgvt6sSnX04F6ibo9AqBx5odUZST7DyZqqmSjO20=;
-        b=i466kdhsCahs5K2gDuEywGq6vAryCn/hwiSA/ymj7tvym4TawmU+IgBc7SzhYpAezv
-         pnCmMtco3si5RxDEhnnLsOwGMfoAqLgzu38fT+zPllCjpclyolXjXY+JpZNyhicl3FHO
-         YvyqorPmSUIt/tx7qcgB6lp0K5xd7cw0hj4mAUxSHF24HNoOrw7qny62ESbBXIeDUiyK
-         OF4RPn3XVzXwSDQNoC4ME7hH2s6PV3DeNhXw8saPqkCfAe9EsdcKRMqcg7Qfv8Tab5VU
-         4y6avO+wt8AYl5iXZeGHo8sSwSSclR3ZwgeGD1K6Qtz1N2J2Grb6Exb/U3TTng248XU8
-         A2Ow==
-X-Gm-Message-State: AOAM5328P52lmoxbZ7WyN4N4Sx72BcMMDO1OO7MKI7rqOB/7vx07NLso
-        zB+uh7oapIkl0VNJeEactUpd+YZ8H044+t57OIU=
-X-Google-Smtp-Source: ABdhPJykrI0EbamFIRGoAJO39IttOQl5xJ9XQaV6NSctZQ4N8rzHPwSSgk7P3+UJwJwwojvwgko8vLqa2KWL43jv1ZY=
-X-Received: by 2002:a25:d84a:: with SMTP id p71mr8334283ybg.347.1598066788386;
- Fri, 21 Aug 2020 20:26:28 -0700 (PDT)
+        Fri, 21 Aug 2020 23:28:18 -0400
+Received: from mga06.intel.com ([134.134.136.31]:34089 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726387AbgHVD2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 23:28:16 -0400
+IronPort-SDR: P2scfH/5s7YMOzHGQSjHvKjCVIjAbA8M36yW95HBmoRUlaQ6pP7pKVAOza3TmRlX1a8KEZkMIR
+ lD9SsQ7u8QQw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="217211107"
+X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
+   d="scan'208";a="217211107"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 20:28:15 -0700
+IronPort-SDR: nsM4aCt2i5lvTdCGU7pXH7jlQrUjfp44RDbCGqRMWk9MTj5iDgwwXx9dd0Tb+1RZAt/DwterPF
+ 8johV+E/B4Mw==
+X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
+   d="scan'208";a="280417981"
+Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 20:28:15 -0700
+Date:   Fri, 21 Aug 2020 20:28:13 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Chenyi Qiang <chenyi.qiang@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 2/7] KVM: VMX: Expose IA32_PKRS MSR
+Message-ID: <20200822032813.GC4769@sjchrist-ice>
+References: <20200807084841.7112-1-chenyi.qiang@intel.com>
+ <20200807084841.7112-3-chenyi.qiang@intel.com>
+ <CALMp9eQiyRxJ0jkvVi+fWMZcDQbvyCcuTwH1wrYV-u_E004Bhg@mail.gmail.com>
+ <34b083be-b9d5-fd85-b42d-af0549e3b002@intel.com>
+ <CALMp9eS=dO7=JvvmGp-nt-LBO9evH-bLd2LQMO9wdYJ5V6S0_Q@mail.gmail.com>
+ <268b0ee4-e56f-981c-c03e-6dca8a4e99da@intel.com>
+ <CALMp9eSAkzGPp4zPVakypR1McSJtJ1x4j1zAAj1sM1bHxd01zg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-7-haoluo@google.com>
-In-Reply-To: <20200819224030.1615203-7-haoluo@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 21 Aug 2020 20:26:17 -0700
-Message-ID: <CAEf4BzZY2LyJvF9HCdAzHM7WG26GO0qqX=Wc6EiXArks=kmazA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 6/8] bpf: Introduce bpf_per_cpu_ptr()
-To:     Hao Luo <haoluo@google.com>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eSAkzGPp4zPVakypR1McSJtJ1x4j1zAAj1sM1bHxd01zg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 3:42 PM Hao Luo <haoluo@google.com> wrote:
->
-> Add bpf_per_cpu_ptr() to help bpf programs access percpu vars.
-> bpf_per_cpu_ptr() has the same semantic as per_cpu_ptr() in the kernel
-> except that it may return NULL. This happens when the cpu parameter is
-> out of range. So the caller must check the returned value.
->
-> Signed-off-by: Hao Luo <haoluo@google.com>
-> ---
+On Tue, Aug 18, 2020 at 11:23:47AM -0700, Jim Mattson wrote:
+> On Tue, Aug 18, 2020 at 12:28 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
+> >
+> >
+> >
+> > On 8/14/2020 1:31 AM, Jim Mattson wrote:
+> > > On Wed, Aug 12, 2020 at 10:42 PM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
+> > >>
+> > >>
+> > >>
+> > >> On 8/13/2020 5:21 AM, Jim Mattson wrote:
+> > >>> On Fri, Aug 7, 2020 at 1:46 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
+> > >>>>
+> > >>>> Protection Keys for Supervisor Pages (PKS) uses IA32_PKRS MSR (PKRS) at
+> > >>>> index 0x6E1 to allow software to manage supervisor protection key
+> > >>>> rights. For performance consideration, PKRS intercept will be disabled
+> > >>>> so that the guest can access the PKRS without VM exits.
+> > >>>> PKS introduces dedicated control fields in VMCS to switch PKRS, which
+> > >>>> only does the retore part. In addition, every VM exit saves PKRS into
+> > >>>> the guest-state area in VMCS, while VM enter won't save the host value
+> > >>>> due to the expectation that the host won't change the MSR often. Update
+> > >>>> the host's value in VMCS manually if the MSR has been changed by the
+> > >>>> kernel since the last time the VMCS was run.
+> > >>>> The function get_current_pkrs() in arch/x86/mm/pkeys.c exports the
+> > >>>> per-cpu variable pkrs_cache to avoid frequent rdmsr of PKRS.
+> > >>>>
+> > >>>> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
+> > >>>> ---
+> > >>>
+> > >>>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> > >>>> index 11e4df560018..df2c2e733549 100644
+> > >>>> --- a/arch/x86/kvm/vmx/nested.c
+> > >>>> +++ b/arch/x86/kvm/vmx/nested.c
+> > >>>> @@ -289,6 +289,7 @@ static void vmx_sync_vmcs_host_state(struct vcpu_vmx *vmx,
+> > >>>>           dest->ds_sel = src->ds_sel;
+> > >>>>           dest->es_sel = src->es_sel;
+> > >>>>    #endif
+> > >>>> +       dest->pkrs = src->pkrs;
+> > >>>
+> > >>> Why isn't this (and other PKRS code) inside the #ifdef CONFIG_X86_64?
+> > >>> PKRS isn't usable outside of long mode, is it?
+> > >>>
+> > >>
+> > >> Yes, I'm also thinking about whether to put all pks code into
+> > >> CONFIG_X86_64. The kernel implementation also wrap its pks code inside
+> > >> CONFIG_ARCH_HAS_SUPERVISOR_PKEYS which has dependency with CONFIG_X86_64.
+> > >> However, maybe this can help when host kernel disable PKS but the guest
+> > >> enable it. What do you think about this?
+> > >
+> > > I see no problem in exposing PKRS to the guest even if the host
+> > > doesn't have CONFIG_ARCH_HAS_SUPERVISOR_PKEYS.
+> > >
+> >
+> > Yes, but I would prefer to keep it outside CONFIG_X86_64. PKS code has
+> > several code blocks and putting them under x86_64 may end up being a
+> > mess. In addition, PKU KVM related code isn't under CONFIG_X86_64 as
+> > well. So, is it really necessary to put inside?
+> 
+> I'll let someone who actually cares about the i386 build answer that question.
 
-The logic looks correct, few naming nits, but otherwise:
-
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-
->  include/linux/bpf.h      |  3 ++
->  include/linux/btf.h      | 11 +++++++
->  include/uapi/linux/bpf.h | 14 +++++++++
->  kernel/bpf/btf.c         | 10 -------
->  kernel/bpf/verifier.c    | 64 ++++++++++++++++++++++++++++++++++++++--
->  kernel/trace/bpf_trace.c | 18 +++++++++++
->  6 files changed, 107 insertions(+), 13 deletions(-)
->
-> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> index 55f694b63164..613404beab33 100644
-> --- a/include/linux/bpf.h
-> +++ b/include/linux/bpf.h
-> @@ -268,6 +268,7 @@ enum bpf_arg_type {
->         ARG_PTR_TO_ALLOC_MEM,   /* pointer to dynamically allocated memory */
->         ARG_PTR_TO_ALLOC_MEM_OR_NULL,   /* pointer to dynamically allocated memory or NULL */
->         ARG_CONST_ALLOC_SIZE_OR_ZERO,   /* number of allocated bytes requested */
-> +       ARG_PTR_TO_PERCPU_BTF_ID,       /* pointer to in-kernel percpu type */
->  };
->
->  /* type of values returned from helper functions */
-> @@ -281,6 +282,7 @@ enum bpf_return_type {
->         RET_PTR_TO_SOCK_COMMON_OR_NULL, /* returns a pointer to a sock_common or NULL */
->         RET_PTR_TO_ALLOC_MEM_OR_NULL,   /* returns a pointer to dynamically allocated memory or NULL */
->         RET_PTR_TO_BTF_ID_OR_NULL,      /* returns a pointer to a btf_id or NULL */
-> +       RET_PTR_TO_MEM_OR_BTF_OR_NULL,  /* returns a pointer to a valid memory or a btf_id or NULL */
-
-I know it's already very long, but still let's use BTF_ID consistently
-
->  };
->
->  /* eBPF function prototype used by verifier to allow BPF_CALLs from eBPF programs
-> @@ -360,6 +362,7 @@ enum bpf_reg_type {
->         PTR_TO_RDONLY_BUF_OR_NULL, /* reg points to a readonly buffer or NULL */
->         PTR_TO_RDWR_BUF,         /* reg points to a read/write buffer */
->         PTR_TO_RDWR_BUF_OR_NULL, /* reg points to a read/write buffer or NULL */
-> +       PTR_TO_PERCPU_BTF_ID,    /* reg points to percpu kernel type */
->  };
->
-
-[...]
-
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index 468376f2910b..c7e49a102ed2 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -3415,6 +3415,19 @@ union bpf_attr {
->   *             A non-negative value equal to or less than *size* on success,
->   *             or a negative error in case of failure.
->   *
-> + * void *bpf_per_cpu_ptr(const void *ptr, u32 cpu)
-> + *     Description
-> + *             Take the address of a percpu ksym and return a pointer pointing
-> + *             to the variable on *cpu*. A ksym is an extern variable decorated
-> + *             with '__ksym'. A ksym is percpu if there is a global percpu var
-> + *             (either static or global) defined of the same name in the kernel.
-
-The function signature has "ptr", not "ksym", but the description is
-using "ksym". please make them consistent (might name param
-"percpu_ptr")
-
-> + *
-> + *             bpf_per_cpu_ptr() has the same semantic as per_cpu_ptr() in the
-> + *             kernel, except that bpf_per_cpu_ptr() may return NULL. This
-> + *             happens if *cpu* is larger than nr_cpu_ids. The caller of
-> + *             bpf_per_cpu_ptr() must check the returned value.
-> + *     Return
-> + *             A generic pointer pointing to the variable on *cpu*.
->   */
-
-[...]
-
-> +       } else if (arg_type == ARG_PTR_TO_PERCPU_BTF_ID) {
-> +               expected_type = PTR_TO_PERCPU_BTF_ID;
-> +               if (type != expected_type)
-> +                       goto err_type;
-> +               if (!reg->btf_id) {
-> +                       verbose(env, "Helper has zero btf_id in R%d\n", regno);
-
-nit: "invalid btf_id"?
-
-> +                       return -EACCES;
-> +               }
-> +               meta->ret_btf_id = reg->btf_id;
->         } else if (arg_type == ARG_PTR_TO_BTF_ID) {
->                 expected_type = PTR_TO_BTF_ID;
->                 if (type != expected_type)
-> @@ -4904,6 +4918,30 @@ static int check_helper_call(struct bpf_verifier_env *env, int func_id, int insn
->                 regs[BPF_REG_0].type = PTR_TO_MEM_OR_NULL;
->                 regs[BPF_REG_0].id = ++env->id_gen;
->                 regs[BPF_REG_0].mem_size = meta.mem_size;
-
-[...]
+Ha, I care about the i386 build to the extent that it doesn't break.  I
+don't care at all shaving cycles/memory for things like this.  Given how
+long some KVM i386 bugs have gone unnoticed I'm not sure there's anyone that
+cares about KVM i386 these days :-)
