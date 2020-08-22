@@ -2,127 +2,113 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25688C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE542071A
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 101EF207CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598068319;
+	bh=3hIC6oRMGaUVHp80xG0vx5OQ9SD78ONNbz0W0ALeSwg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=q+carwb0CcEJUuHmQpl7X/dlfwNhLVmXUMOYyqTGQ6tcF1l3EpzykB2WcxPIV/T/Y
+	 AkjVbUoC6EW8RVf7VrcLfuWU5WWI4VvXrWbDe0V/aNuL/F7MXlt1tQpXJRcdObxVx6
+	 NplKW5JW77Vmu6bUtprLw9wkWcxbmBC9wgWu0SXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgHVDku (ORCPT
+        id S1726971AbgHVDv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 23:40:50 -0400
-Received: from mga18.intel.com ([134.134.136.126]:27132 "EHLO mga18.intel.com"
+        Fri, 21 Aug 2020 23:51:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726588AbgHVDkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 23:40:49 -0400
-IronPort-SDR: XI8iZwOPVRae2SmO+ZrWvqBwxj/r8G/3aocDDZ2He1icgfqhzknynFypuWlhlsC39tZyYJlNQt
- CGEdwDtgDiog==
-X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="143314513"
-X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
-   d="scan'208";a="143314513"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 20:40:48 -0700
-IronPort-SDR: mOIn+FLsb6AuSFKJaaWlUZqjfnGTlLWwIYCCjdzZV6hPJlZXc7LShklM3zKdnwjO/NhfmTI97Y
- 6923My5/k4Fw==
-X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
-   d="scan'208";a="401644126"
-Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 20:40:47 -0700
-Date:   Fri, 21 Aug 2020 20:40:46 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KVM: VMX: fix crash cleanup when KVM wasn't used
-Message-ID: <20200822034046.GE4769@sjchrist-ice>
-References: <20200401081348.1345307-1-vkuznets@redhat.com>
- <CALMp9eROXAOg_g=R8JRVfywY7uQXzBtVxKJYXq0dUcob-BfR-g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eROXAOg_g=R8JRVfywY7uQXzBtVxKJYXq0dUcob-BfR-g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1726734AbgHVDv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 23:51:56 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B6E720720;
+        Sat, 22 Aug 2020 03:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598068315;
+        bh=3hIC6oRMGaUVHp80xG0vx5OQ9SD78ONNbz0W0ALeSwg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=b7FxcmUVmfN2xqBPz340ulOe/XVSHR1MiU9xpeeaPdZHxS9vz4pUHKgNOmHzMsWdI
+         329/g50Jv8wzcvUyrJ6y7b7lCfOXhfTqhhQ+F8qGxN56DpcoWHovn+DqN4azIYpKWe
+         R849KB9bd5vjxDb+inkYQypN25eBC2PbnWxzixOw=
+Date:   Fri, 21 Aug 2020 20:51:54 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Pascal Bouchareine <kalou@tfz.net>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        "Alexey Dobriyan" <adobriyan@gmail.com>,
+        "Al Viro" <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v2 1/2] mm: add GFP mask param to strndup_user
+Message-Id: <20200821205154.365e230dbf6f2b93a47443c4@linux-foundation.org>
+In-Reply-To: <20200822032827.6386-1-kalou@tfz.net>
+References: <20200815182344.7469-1-kalou@tfz.net>
+        <20200822032827.6386-1-kalou@tfz.net>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 01:08:22PM -0700, Jim Mattson wrote:
-> On Wed, Apr 1, 2020 at 1:13 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> > ---
-> >  arch/x86/kvm/vmx/vmx.c | 12 +++++++-----
-> >  1 file changed, 7 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 3aba51d782e2..39a5dde12b79 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -2257,10 +2257,6 @@ static int hardware_enable(void)
-> >             !hv_get_vp_assist_page(cpu))
-> >                 return -EFAULT;
-> >
-> > -       INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-> > -       INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
-> > -       spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
-> > -
-> >         r = kvm_cpu_vmxon(phys_addr);
-> >         if (r)
-> >                 return r;
-> > @@ -8006,7 +8002,7 @@ module_exit(vmx_exit);
-> >
-> >  static int __init vmx_init(void)
-> >  {
-> > -       int r;
-> > +       int r, cpu;
-> >
-> >  #if IS_ENABLED(CONFIG_HYPERV)
-> >         /*
-> > @@ -8060,6 +8056,12 @@ static int __init vmx_init(void)
-> >                 return r;
-> >         }
-> >
-> > +       for_each_possible_cpu(cpu) {
-> > +               INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-> > +               INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
-> > +               spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
-> > +       }
-> 
-> Just above this chunk, we have:
-> 
-> r = vmx_setup_l1d_flush(vmentry_l1d_flush_param);
-> if (r) {
->         vmx_exit();
-> ...
-> 
-> If we take that early exit, because vmx_setup_l1d_flush() fails, we
-> won't initialize loaded_vmcss_on_cpu. However, vmx_exit() calls
-> kvm_exit(), which calls on_each_cpu(hardware_disable_nolock, NULL, 1).
-> Hardware_disable_nolock() then calls kvm_arch_hardware_disable(),
-> which calls kvm_x86_ops.hardware_disable() [the vmx.c
-> hardware_disable()], which calls vmclear_local_loaded_vmcss().
-> 
-> I believe that vmclear_local_loaded_vmcss() will then try to
-> dereference a NULL pointer, since per_cpu(loaded_vmcss_on_cpu, cpu) is
-> uninitialzed.
+On Fri, 21 Aug 2020 20:28:26 -0700 Pascal Bouchareine <kalou@tfz.net> wrote:
 
-I agree the code is a mess (kvm_init() and kvm_exit() included), but I'm
-pretty sure hardware_disable_nolock() is guaranteed to be a nop as it's
-impossible for kvm_usage_count to be non-zero if vmx_init() hasn't
-finished.
+> Let caller specify allocation.
+> Preserve existing calls with GFP_USER.
+> 
+>  21 files changed, 65 insertions(+), 43 deletions(-)
 
-> >  #ifdef CONFIG_KEXEC_CORE
-> >         rcu_assign_pointer(crash_vmclear_loaded_vmcss,
-> >                            crash_vmclear_local_loaded_vmcss);
-> > --
-> > 2.25.1
-> >
+Why change all existing callsites so that one callsite can pass in a
+different gfp_t?
+
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index 1ca609f66fdf..3d94ba811f4b 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -326,7 +326,7 @@ static __poll_t dma_buf_poll(struct file *file, poll_table *poll)
+>   */
+>  static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+>  {
+> -	char *name = strndup_user(buf, DMA_BUF_NAME_LEN);
+> +	char *name = strndup_user(buf, DMA_BUF_NAME_LEN, GFP_USER);
+>  	long ret = 0;
+
+Wouldn't
+
+#include <linux/gfp.h>
+
+char *__strndup_user(const char __user *s, long n, gfp_t gfp);
+
+static inline char *strndup_user(const char __user *s, long n)
+{
+	return __strndup_user(s, n, GFP_USER);
+}
+
+be simpler?
+
+
+
+Also...
+
+why does strndup_user() use GFP_USER?  Nobody will be mapping the
+resulting strings into user pagetables (will they?).  This was done by
+Al's 6c2c97a24f096e32, which doesn't have a changelog :(
+
+
+In [patch 2/2],
+
++	desc = strndup_user(user_desc, SK_MAX_DESC_SIZE, GFP_KERNEL_ACCOUNT);
+
+if GFP_USER is legit then shouldn't this be GFP_USER_ACCOUNT (ie,
+GFP_USER|__GFP_ACCOUNT)?
+
