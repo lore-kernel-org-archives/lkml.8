@@ -2,332 +2,278 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFBEC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 00:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA5BC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 00:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62D8A2067C
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 00:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143272067C
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 00:59:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="R1awGzlL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O0MPFknx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgHVAvv (ORCPT
+        id S1726875AbgHVA7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 20:51:51 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12514 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbgHVAvs (ORCPT
+        Fri, 21 Aug 2020 20:59:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbgHVA7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 20:51:48 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f406be40000>; Fri, 21 Aug 2020 17:50:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 21 Aug 2020 17:51:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 21 Aug 2020 17:51:44 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 22 Aug
- 2020 00:51:30 +0000
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
- by HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Sat, 22 Aug 2020 00:51:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KMErCBhW3gJRYgPUa+HqLDaC5ktjr61Um7H1mAzpZSuh2x3FXZpb9UM2JbDxfuI5LteKd+8F0q7DMPFza4T9itYqxwg3RX+HiqeZ26NHzgOzbNKx6l+5U+m3OOp8dwOO0pT7WHd4dvxubFjiIULw9sPMQpzfdSd+iLsoeL9LKYI0wR59gEwciZ2gYxbaaE67FRh2L17bt8XDPh2suEaDMh0BTG/QEOTNboxe2k2/94fjiM0xZe8x5HGr91GdlaQedzuHe3H/jlYtdXWD4QyRUcO/Yd3yv4r8L4XJOmt0ZxI/Lu3VfyC9WC9jOrsQUBnZyCs1Dg3tnFydjJ5V/pUaug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vmKRgHAjKBTAe1pS7uJzz3jnoc0a8CBoae5U2/hIlCo=;
- b=ONQcdxoeTFM3L59N37DjL1MQYnYqI+OijVfdXBEKhsD1vjMTmoMp7Odoik3MThhpCCUAKgJrdgvKVTMbFfABe0iZ/CyCS6SFsXxYK63nWF5trTho+qx2vWYusVdxpwHkXgnb1nIdEGTIijvTyvFx2Vzm3lc8rYJhRFvThrpVyQrzssRdcbmKeHGKuStbLG7RBWcGZTzDdaFfF/jcKciEMfbCuwKXXrwa3LzDkwcw1eSyqeB+vipPKtZZh2pTegSFI/QzyFWvwSThk//1xIN3BvQ/KqE7RBgPuZ5dL7mTFjF8JifZXCnb7M+mWfCSOzbeXT22bSBJYcBJmw+AZ3OSXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR1201MB0107.namprd12.prod.outlook.com (2603:10b6:4:55::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Sat, 22 Aug
- 2020 00:51:28 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3305.025; Sat, 22 Aug 2020
- 00:51:28 +0000
-Date:   Fri, 21 Aug 2020 21:51:25 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     LKML <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-        Marc Zyngier <maz@kernel.org>, Megha Dey <megha.dey@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Jacob Pan" <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        <iommu@lists.linux-foundation.org>, <linux-hyperv@vger.kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "Jon Derrick" <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        "Stephen Hemminger" <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        "Dimitri Sivanich" <sivanich@hpe.com>, Russ Anderson <rja@hpe.com>,
-        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [patch RFC 38/38] irqchip: Add IMS array driver - NOT FOR MERGING
-Message-ID: <20200822005125.GB1152540@nvidia.com>
-References: <20200821002424.119492231@linutronix.de>
- <20200821002949.049867339@linutronix.de>
- <20200821124547.GY1152540@nvidia.com>
- <874kovsrvk.fsf@nanos.tec.linutronix.de>
- <20200821201705.GA2811871@nvidia.com>
- <87pn7jr27z.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <87pn7jr27z.fsf@nanos.tec.linutronix.de>
-X-ClientProxiedBy: BL0PR02CA0057.namprd02.prod.outlook.com
- (2603:10b6:207:3d::34) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Fri, 21 Aug 2020 20:59:48 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2766BC061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 17:59:48 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id u20so1909495pfn.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 17:59:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wMClZMLlnIVxwC0OX/YJqw846WceChHdY8h9nnyWNwk=;
+        b=O0MPFknxyxwnjaYELL5AsKcISclqIjVHZwyIqMV6CvXBwfdiKyrijCO1D+s9z07YMv
+         carMmTfSiC0QBlztpwDj6OOj0b5NCgh48JCoFg1F1f/yjyZQas5G4KDIdvfF7loBaFxJ
+         SNESxXM6R/HSm1Cmxxu92NCT9RcGj7UjfM/d8Lrh0GH1cj2SMAg6SKO9UDRmCV6Y3PPb
+         MFM7HRCc3M3s7LDXrF3c4PKr+uGGhbdfXz7i5iG2HvxPnQ52O6ErDLEpPHN3pkxdGaoU
+         P4hoiNcKoQzDEq5LEJRCEJaOa96dedqLy8moHFqzhmPrJr0OgM6NDpWvRt+0y+JuFtvv
+         iJew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wMClZMLlnIVxwC0OX/YJqw846WceChHdY8h9nnyWNwk=;
+        b=pVYsTPJqC6pYl4eBBfnnsWtpc4yhnSeEAi09dn3TTvDiZUC8sY7ZOOgfNuHz3Mq2UV
+         ZXQde9TDoRWxAzdR+778Rmu5kdLLB6wphq+wQjSRWWEVLiUZ9TgrNS2P5L8YqPYDpZTo
+         yHzQML+CF8HPAieA0fv8n4+lDqEfyUNUioS/9PefXsBDKN84gZqh778IqI3fpbhmVy+x
+         1SZIAEk0IbmW5EYSXujbMWLOf2TE0btiPUXrHzLHxR5t8FLtYzfFo4lu3M+Sg7G5JZ1E
+         iPHB7YUh8qQ/vieKIX4ha7BbJFT7muXQsg91bF+gb3aOquNVcTYnsLvNUfc4eLTLzxpD
+         n5jA==
+X-Gm-Message-State: AOAM5334OwLSGLQI1gXK1Rrd582MB7pH61FAl+W7UIe8m3xD3qYUO2XF
+        EDkUDEDliUr2K9WDuyeV32h2r83HV5ILji5YGUD51A==
+X-Google-Smtp-Source: ABdhPJzzypM5an0tesYLO2xDp0D/NDrENlucCRy53aLYG/ywXPSsris885MK2sKtvx61gmxWlfhgKIMAE8gm2AGGYac=
+X-Received: by 2002:a63:7d8:: with SMTP id 207mr4183460pgh.263.1598057985426;
+ Fri, 21 Aug 2020 17:59:45 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BL0PR02CA0057.namprd02.prod.outlook.com (2603:10b6:207:3d::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Sat, 22 Aug 2020 00:51:27 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k9Hkj-00Bw2P-Hk; Fri, 21 Aug 2020 21:51:25 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c20e2de0-dd18-4c97-eeda-08d846358092
-X-MS-TrafficTypeDiagnostic: DM5PR1201MB0107:
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR1201MB0107B6DE6992C787288F9AFDC2580@DM5PR1201MB0107.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Cgqe2Tl1HPMmlbcyDG7yJXDCgOoBh7ZNS9a8ukgIId5pwgVD8kUCGJVQJtbR/Pmtr32ZkUvvijKqVWgeGgwXJiKU9rypMZTqY4nUA3MEQLAUZHsN1nn71xNAjozwO0Ma4SFE3Q7ZArLitRC7Zoi76GLA54p7xhbINTx2hrRh67x66UiA/CFYA7sI8m3sIgsirsN+vN9J51NQ2uUHzaW6x5intVqV+Q3vq4xsQg6VZ7TEytnxaz6AqmWGVm2RiyegJWFvdnJqi9jkXJW6b3wQFHdI5vhbVKx9z7QYUQ+rq0FuvUSTlDKn9Tpajn7SOP2bbMhA5K/PH2VNyEQkmvg3Vw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(83380400001)(186003)(2616005)(426003)(1076003)(26005)(86362001)(8936002)(2906002)(66946007)(33656002)(66476007)(5660300002)(54906003)(6916009)(9786002)(4326008)(36756003)(7406005)(9746002)(7416002)(316002)(8676002)(478600001)(66556008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: wZlvJWtNvEY7PWDU3VfRClQDWOTs61uCq74aNOG2Kp3d+dcSuSfVVZ0/Ps+gdISill3bhTVri+CIQm/S/UG8g+IwtWX+0DvOu1zfGB1Jj/J3RVYpD9KRXRDVUj05NCsWzRSlijWXVcQprJ6sweEuXN9/zwoV6wJhDUGW3zborBQNLmCIP94K7AkujuS/Ss3XnVaKuH7SsLPTzzAFAPnipZa6R1pIBuCy0HQ2qzbg7vLbdGEu3nO0qj0GRghovhQhR1XWacg4h9klQqj/NGr4DgWmheELR0xYKQSCNmAKpyT+FWeIJhg8yVEDfzAxRD/TH9Yyw6ixvMGUXcuGhV3D0F9zJdoh29IXmRiAB5MMbbLpRG7g0fftA9x+olFBLNqL/+enT7D9KSi8+h8aR52xt9YsobnyGiXG16I4Vwss4f9i/6lOkY4JNS71JFWQ0mvEbV0X5ohR6jpMIcRc92Ndpg8bziMyKSvCc0rw2z0FuiwfRKd3mgZRVyPw/JlHnZERdaH5YI2GV4x1zhokP5pSY7L7ypY9tDliKndsuXYfsV3aacwGi0u1XypN13xarhyougip/rUQcbILkjtUPifOSPnq3UAQuFtw2wQQLcX/fVcsIeMG58JrPQbmguTQYGQe57rQiGQbt8K2kswReUtTdg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: c20e2de0-dd18-4c97-eeda-08d846358092
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2020 00:51:28.5774
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pFPn3MZj4mTOY2+hYLVO7I0Vpl/cCkzk07hwFaeaCwPI71leePwQgKBZ42oVEy8i
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0107
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598057444; bh=vmKRgHAjKBTAe1pS7uJzz3jnoc0a8CBoae5U2/hIlCo=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-LD-Processed:
-         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=R1awGzlLu/cfIVgbQmF8lRnaucOSen15jQ+WAEr/E9ucr7UCkaGU+k2xEgk6em5q5
-         IGYa96JRGuSlh7TZ1KdIRdggWyIDwE9z0urPdjM51V9kJJlDcWaGloLfA2hBYm1Hng
-         rnfjwiy1lBbQPmR8pTA7zrn8iHykJbFr30rKFglxiszGBnaCBwWmyGZD5VPmsiOTXG
-         KbwkpvIWZNAn70Ly75+aVSzTxcOeYmeKIXFhw34Rajy15EQ1VGoMcTZv8jsQvs60eW
-         UKKBvo/S1U+TkLuJZ4vP0rK1UIXRa2bgng2VsM7o3I4MF48BLLfa0yo6hZtKHFn74P
-         jzvy9TiBMRz2A==
+References: <20200821190159.1033740-1-masahiroy@kernel.org> <20200821190159.1033740-8-masahiroy@kernel.org>
+In-Reply-To: <20200821190159.1033740-8-masahiroy@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 21 Aug 2020 17:59:33 -0700
+Message-ID: <CAKwvOdmR=VeR0=LUgXCwnpK9LH90_itzv627wBEK4hCroBEW9Q@mail.gmail.com>
+Subject: Re: [PATCH v2 7/9] gen_compile_commands: support *.o, *.a,
+ modules.order in positional argument
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Tom Roeder <tmroeder@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 01:47:12AM +0200, Thomas Gleixner wrote:
-> On Fri, Aug 21 2020 at 17:17, Jason Gunthorpe wrote:
-> > On Fri, Aug 21, 2020 at 09:47:43PM +0200, Thomas Gleixner wrote:
-> >> So if I understand correctly then the queue memory where the MSI
-> >> descriptor sits is in RAM.
-> >
-> > Yes, IMHO that is the whole point of this 'IMS' stuff. If devices
-> > could have enough on-die memory then they could just use really big
-> > MSI-X tables. Currently due to on-die memory constraints mlx5 is
-> > limited to a few hundred MSI-X vectors.
-> 
-> Right, that's the limit of a particular device, but nothing prevents you
-> to have a larger table on a new device.
+On Fri, Aug 21, 2020 at 12:02 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> This script currently searches the specified directory for .cmd files.
+> One drawback is it may contain stale .cmd files after you rebuild the
+> kernel several times without 'make clean'.
+>
+> This commit supports *.o, *.a, and modules.order as positional
+> parameters. If such files are given, they are parsed to collect
+> associated .cmd files. I added a generator helper for each of them.
+>
+> This feature is useful to get the list of active .cmd files from the
+> last build, and will be used by the next commit to wire up the
+> compile_commands.json rule to the Makefile.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+> Changes in v2:
+>   - Separate the file parser into generator functions
+>   - Use 'obj' instead of 'object' because 'object' is a built-in function
+>   - I think using 'file' is OK because it is not a built-in function in Python3
+>     (https://docs.python.org/3/library/functions.html)
+>     Anyway, the variable 'file' is no longer used in this version
+>   - Keep the previous work-flow to allow to search the given directory
+>
+>  scripts/gen_compile_commands.py | 100 ++++++++++++++++++++++++++++++--
+>  1 file changed, 96 insertions(+), 4 deletions(-)
+>
+> diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
+> index 6dec7e2c4098..65859e6044b5 100755
+> --- a/scripts/gen_compile_commands.py
+> +++ b/scripts/gen_compile_commands.py
+> @@ -12,6 +12,7 @@ import json
+>  import logging
+>  import os
+>  import re
+> +import subprocess
+>
+>  _DEFAULT_OUTPUT = 'compile_commands.json'
+>  _DEFAULT_LOG_LEVEL = 'WARNING'
+> @@ -32,8 +33,9 @@ def parse_arguments():
+>      Returns:
+>          log_level: A logging level to filter log output.
+>          directory: The work directory where the objects were built
+> +        ar: Command used for parsing .a archives
+>          output: Where to write the compile-commands JSON file.
+> -        paths: The list of directories to handle to find .cmd files
+> +        paths: The list of files/directories to handle to find .cmd files
+>      """
+>      usage = 'Creates a compile_commands.json database from kernel .cmd files'
+>      parser = argparse.ArgumentParser(description=usage)
+> @@ -53,12 +55,21 @@ def parse_arguments():
+>      parser.add_argument('--log_level', choices=_VALID_LOG_LEVELS,
+>                          default=_DEFAULT_LOG_LEVEL, help=log_level_help)
+>
+> +    ar_help = 'command used for parsing .a archives'
+> +    parser.add_argument('-a', '--ar', type=str, default='ar', help=ar_help)
 
-Well, physics are a problem.. The SRAM to store the MSI vectors costs
-die space and making the chip die larger is not an option. So the
-question is what do you throw out of the chip to get a 10-20x increase
-in MSI SRAM?
+If there's a default, doesn't that mean it's no longer required? I
+think it should be required.  For a clang specific tool, we'd prefer
+the default to be llvm-ar anyways.
 
-This is why using host memory is so appealing. It is
-economically/functionally better.
+> +
+> +    paths_help = ('directories to search or files to parse '
+> +                  '(files should be *.o, *.a, or modules.order). '
+> +                  'If nothing is specified, the current directory is searched')
+> +    parser.add_argument('paths', type=str, nargs='*', help=paths_help)
+> +
+>      args = parser.parse_args()
+>
+>      return (args.log_level,
+>              os.path.abspath(args.directory),
+>              args.output,
+> -            [args.directory])
+> +            args.ar,
+> +            args.paths if len(args.paths) > 0 else [args.directory])
+>
+>
+>  def cmdfiles_in_dir(directory):
+> @@ -81,6 +92,73 @@ def cmdfiles_in_dir(directory):
+>                  yield os.path.join(dirpath, filename)
+>
+>
+> +def to_cmdfile(path):
+> +    """Return the path of .cmd file used for the given build artifact
+> +
+> +    Args:
+> +        Path: file path
+> +
+> +    Returns:
+> +        The path to .cmd file
+> +    """
+> +    dir, base = os.path.split(path)
+> +    return os.path.join(dir, '.' + base + '.cmd')
+> +
+> +
+> +def cmdfiles_for_o(obj):
+> +    """Generate the iterator of .cmd files associated with the object
+> +
+> +    Yield the .cmd file used to build the given object
+> +
+> +    Args:
+> +        obj: The object path
+> +
+> +    Yields:
+> +        The path to .cmd file
+> +    """
+> +    yield to_cmdfile(obj)
+> +
+> +
+> +def cmdfiles_for_a(archive, ar):
+> +    """Generate the iterator of .cmd files associated with the archive.
+> +
+> +    Parse the given archive, and yield every .cmd file used to build it.
+> +
+> +    Args:
+> +        archive: The archive to parse
+> +
+> +    Yields:
+> +        The path to every .cmd file found
+> +    """
+> +    for obj in subprocess.check_output([ar, '-t', archive]).decode().split():
+> +        yield to_cmdfile(obj)
+> +
+> +
+> +def cmdfiles_for_modorder(modorder):
+> +    """Generate the iterator of .cmd files associated with the modules.order.
+> +
+> +    Parse the given modules.order, and yield every .cmd file used to build the
+> +    contained modules.
+> +
+> +    Args:
+> +        modorder: The modules.order file to parse
+> +
+> +    Yields:
+> +        The path to every .cmd file found
+> +    """
+> +    with open(modorder) as f:
+> +        for line in f:
+> +            ko = line.rstrip()
+> +            base, ext = os.path.splitext(ko)
 
-I'm going to guess other HW is in the same situation, virtualization
-is really pushing up the number of required IRQs.
+below in main() you check the file extension with endswith().  Would
+it be good to be consistent between the two?
 
-> >> How is that supposed to work if interrupt remapping is disabled?
-> >
-> > The best we can do is issue a command to the device and spin/sleep
-> > until completion. The device will serialize everything internally.
-> >
-> > If the device has died the driver has code to detect and trigger a
-> > PCI function reset which will definitely stop the interrupt.
-> 
-> If that interrupt is gone into storm mode for some reason then this will
-> render your machine unusable before you can do that.
+> +            if ext != '.ko':
+> +                sys.exit('{}: module path must end with .ko'.format(ko))
+> +            mod = base + '.mod'
+> +           # The first line of *.mod lists the objects that compose the module.
+> +            with open(mod) as m:
+> +                for obj in m.readline().split():
+> +                    yield to_cmdfile(obj)
+> +
+> +
+>  def process_line(root_directory, command_prefix, file_path):
+>      """Extracts information from a .cmd line and creates an entry from it.
+>
+> @@ -116,7 +194,7 @@ def process_line(root_directory, command_prefix, file_path):
+>
+>  def main():
+>      """Walks through the directory and finds and parses .cmd files."""
+> -    log_level, directory, output, paths = parse_arguments()
+> +    log_level, directory, output, ar, paths = parse_arguments()
+>
+>      level = getattr(logging, log_level)
+>      logging.basicConfig(format='%(levelname)s: %(message)s', level=level)
+> @@ -126,7 +204,21 @@ def main():
+>      compile_commands = []
+>
+>      for path in paths:
+> -        cmdfiles = cmdfiles_in_dir(path)
+> +        # If 'path' is a directory, handle all .cmd files under it.
+> +        # Otherwise, handle .cmd files associated with the file.
+> +        # Most of built-in objects are linked via archives (built-in.a or lib.a)
+> +        # but some are linked to vmlinux directly.
+> +        # Modules are lis
 
-Yes, but in general the HW design is to have one-shot interrupts, it
-would have to be well off the rails to storm. The kind of off the
-rails where it could also be doing crazy stuff on PCI-E that would be
-very harmful.
+^ was this comment cut off?
 
-> > So, the implementation of these functions would be to push any change
-> > onto a command queue, trigger the device to DMA the command, spin/sleep
-> > until the device returns a response and then continue on. If the
-> > device doesn't return a response in a time window then trigger a WQ to
-> > do a full device reset.
-> 
-> I really don't want to do that with the irq descriptor lock held or in
-> case of affinity from the interrupt handler as we have to do with PCI
-> MSI/MSI-X due to the horrors of the X86 interrupt delivery trainwreck.
-> Also you cannot call into command queue code from interrupt disabled and
-> interrupt descriptor lock held sections. You can try, but lockdep will
-> yell at you immediately.
 
-Yes, I wouldn't want to do this from an IRQ.
+> +        if os.path.isdir(path):
+> +            cmdfiles = cmdfiles_in_dir(path)
+> +        elif path.endswith('.o'):
+> +            cmdfiles = cmdfiles_for_o(path)
+> +        elif path.endswith('.a'):
+> +            cmdfiles = cmdfiles_for_a(path, ar)
+> +        elif path.endswith('modules.order'):
+> +            cmdfiles = cmdfiles_for_modorder(path)
+> +        else:
+> +            sys.exit('{}: unknown file type'.format(path))
+>
+>          for cmdfile in cmdfiles:
+>              with open(cmdfile, 'rt') as f:
+> --
+> 2.25.1
+>
 
-> One question is whether the device can see partial updates to that
-> memory due to the async 'swap' of context from the device CPU.
 
-It is worse than just partial updates.. The device operation is much
-more like you'd imagine a CPU cache. There could be copies of the RAM
-in the device for long periods of time, dirty data in the device that
-will flush back to CPU RAM overwriting CPU changes, etc.
-
-Without involving the device there is just no way to create data
-consistency, and no way to change the data from the CPU. 
-
-This is the down side of having device data in the RAM. It cannot be
-so simple as 'just fetch it every time before you use it' as
-performance would be horrible.
-
-> irq chips have already a mechanism in place to deal with stuff which
-> cannot be handled from within the irq descriptor spinlock held and
-> interrupt disabled section.
-> 
-> The mechanism was invented to deal with interrupt chips which are
-> connected to i2c, spi, etc.. The access to an interrupt chip control
-> register has to queue stuff on the bus and wait for completion.
-> Obviously not what you can do from interrupt disabled, raw spinlock held
-> context either.
-
-Ah intersting, sounds like the right parts! I didn't know about this..
-
-> Now coming back to affinity setting. I'd love to avoid adding the bus
-> lock magic to those interfaces because until now they can be called and
-> are called from atomic contexts. And obviously none of the devices which
-> use the buslock magic support affinity setting because they all deliver
-> a single interrupt to a demultiplex interrupt and that one is usually
-> sitting at the CPU level where interrupt steering works.
-> 
-> If we really can get away with atomically updating the message as
-> outlined above and just let it happen at some point in the future then
-> most problems are solved, except for the nastyness of CPU hotplug.
-
-Since we can't avoid a device command, I'm think more along the lines
-of having the affinity update trigger an async WQ to issue the command
-from a thread context. Since it doesn't need to be synchronous it can
-make it out 'eventually'.
-
-I suppose the core code could provide this as a service? Sort of a
-varient of the other lazy things above?
-
-> But that's actually a non issue. Nothing prevents us from having an
-> early 'migrate interrupts away from the outgoing CPU hotplug state'
-> which runs in thread context and can therefore utilize the buslock
-> mechanism. Actually I was thinking about that for other reasons already.
-
-That would certainly work well, seems like it fits with the other
-lazy/sleeping stuff above as well.
-
-> >> If interrupt remapping is enabled then both are trivial because then the
-> >> irq chip can delegate everything to the parent chip, i.e. the remapping
-> >> unit.
-> >
-> > I did like this notion that IRQ remapping could avoid the overhead of
-> > spin/spleep. Most of the use cases we have for this will require the
-> > IOMMU anyhow.
-> 
-> You still need to support !remap scenarios I fear.
-
-For x86 I think we could accept linking this to IOMMU, if really
-necessary.
-
-But it would have to work with ARM - is remapping a x86 only thing?
-Does ARM put the affinity in the GIC tables not in the MSI data?
-
-> Let me summarize what I think would be the sane solution for this:
-> 
->   1) Utilize atomic writes for either all 16 bytes or reorder the bytes
->      and update 8 bytes atomically which is sufficient as the wide
->      address is only used with irq remapping and the MSI message in the
->      device is never changed after startup.
-
-Sadly not something the device can manage due to data coherence
-
->   2) No requirement for issuing a command for regular migration
->      operations as they have no requirements to be synchronous.
-> 
->      Eventually store some state to force a reload on the next regular
->      queue operation.
-
-Would the async version above be OK?
-
->   3) No requirement for issuing a command for mask and unmask operations.
->      The core code uses and handles lazy masking already. So if the
->      hardware causes the lazyness, so be it.
-
-This lazy masking thing sounds good, I'm totally unfamiliar with it
-though.
-
->   4) Issue commands for startup and teardown as they need to be
->      synchronous
-
-Yep
-
->   5) Have an early migration state for CPU hotunplug which issues a
->      command from appropriate context. That would even allow to handle
->      queue shutdown for managed interrupts when the last CPU in the
->      managed affinity set goes down. Restart of such a managed interrupt
->      when the first CPU in an affinity set comes online again would only
->      need minor modifications of the existing code to make it work.
-
-Yep
-
-> Thoughts?
-
-This email is super helpful, I definately don't know all these corners
-of the IRQ subsystem as my past with it has mostly been SOC stuff that
-isn't as complicated!
-
+--
 Thanks,
-Jason
+~Nick Desaulniers
