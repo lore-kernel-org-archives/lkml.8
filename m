@@ -2,126 +2,423 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,WEIRD_QUOTING autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C30CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD604C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14A712072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CDD8221E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:18:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Up+yuEpB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nrr2PwMW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgHVUOd (ORCPT
+        id S1727885AbgHVUSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 16:14:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38024 "EHLO
+        Sat, 22 Aug 2020 16:18:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgHVUOc (ORCPT
+        with ESMTP id S1726391AbgHVUSR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 16:14:32 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA8CC061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 13:14:31 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id i26so4629483edv.4
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 13:14:31 -0700 (PDT)
+        Sat, 22 Aug 2020 16:18:17 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39004C061573;
+        Sat, 22 Aug 2020 13:18:17 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id b22so4676844oic.8;
+        Sat, 22 Aug 2020 13:18:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b3S7oC1Twn6qwXgk96qofdNf+3p8VebwTcX/dFv2iHs=;
-        b=Up+yuEpB5QPjIBwhbe0qEEQdm96yXGMJbLrdrnzZVujZKXwYvFMimR8SX2Td6P+sgt
-         GXXFaap6/SIv66pClr8Pc+K96hTjWJNDFJyRvo6cywkgs6VwsUYNS7WSXwXLtaVHlhgF
-         GaX2Pmt0DZLdzipOlcItCADOL5abG5A0FhgYE=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=IrvWMbRaBjlBXqzVtKvd8PEKWaMUDe6szad3MKsMnjA=;
+        b=Nrr2PwMW6lT90b2MPnPBIAoTrTHdy5akG/dgYHFMflU1gC7yzzwbrBn5oV9SyMDq0/
+         O+AbvR21FT89xObOt7my6IOG/Cp+/cNPeKdKYSq178PBLeRt6VnjNmGtt6YShadkhRQz
+         /2HbuZ0n801beHyuM7KBp8GvnG3SVZkUy8TJI8ECEvjdiOaD//D2lWXUwxDL8Vb8rxsW
+         MRZvta6dRC1XWzDR4gWdvIiKXmC1f79QDNro+O3Yh3SOWz0eg8HE4Qql2JrEsRa6MX/8
+         f3HCAXvqEEcXDotdhgFqoKVzXE8/4CUg0vdonzaZn2AdTsRBoB6mnFJsmUVla2C3g6b7
+         8egA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b3S7oC1Twn6qwXgk96qofdNf+3p8VebwTcX/dFv2iHs=;
-        b=TLu/C3+Ptz40naXSbd4fc4ym11K/LjBCEvXXRJl2bk4CnHGDhOOj4zBizYabFQbMed
-         QZdMhRqa789PEmQLwz1+lVO2atl4PluH2IaImtFXrh/Gt6Gf2KjolICoGabsiEVOMylZ
-         qRQs2PpRUXFEvCSA5k94Na7LU0/zIcpD8BRZVoT0SfrHaOByRW4ZZ1Wnwhp3jYEWlMnD
-         AcVWoKVLdI13fwTzrEb0H+dRUZqQXTmpSX/FfhaopK01+lBs+MhX2m397z77MpNunhT3
-         HfAobKtGICjWUmRf9HgmAxqXxYVkLMsri1QVPCGjjzGglmab+PSkSXsZHADQUTYo9lpz
-         ABBQ==
-X-Gm-Message-State: AOAM530AU1LNjNmSzge5Uf7hD8oDPOvenDCJfnF1OK+RY4B/kRumH59k
-        2e6b5rW/sEop4GT85x/YGpQOLoHCe8BZhOKVS3zdeA==
-X-Google-Smtp-Source: ABdhPJwPf2hRNUhR7uuAqiiHV40WfBxtCrtceR0pSDIA9ysl7cfqK1Q7F7vFdn6VkhcrGXmyNFNckDQuSyUYPUt/fpg=
-X-Received: by 2002:a50:e809:: with SMTP id e9mr8625270edn.133.1598127270246;
- Sat, 22 Aug 2020 13:14:30 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=IrvWMbRaBjlBXqzVtKvd8PEKWaMUDe6szad3MKsMnjA=;
+        b=hESpiJdraY12k3tkWRSqPn1oaSpj0XK2bINxcqu2Ni63j/m3SnVvqmWxcrLjoBfKEK
+         OjUzgyaJ7C+3O1fqkdNg/Yk2eKs1UjOuqMdk7jFzANLOYrMOahSondEjj5OX5DFBPtOJ
+         lKn3CjV6mDRK0RefAednl5LgGsb7a7JQTt+VouZroqzD/Hsr1KoQOHs4LPxxWCX6Njro
+         HawdORu2VAqv0YBrWUN3Qr8ukvKbsyCnmrXUUhy3r+JT/idizzTwC0GxB7OdkmxcmKNa
+         8aFHvBPBW0k+lvIRw7P0r7pmcIOCxbKOMMBriC1SdkzzxewsXKDBMv5YUK2zPgDd67mV
+         dckg==
+X-Gm-Message-State: AOAM530sqKRnZoErX788BRnfxyQm387hZrAT0g0VldO5uru/axJYrikv
+        UY8iOhmGRm7wFRkrLGsYNDzacFB62qjVMYstDvg=
+X-Google-Smtp-Source: ABdhPJyE3BzP+zHvBakJKObgBUP5lhKGT5EV331Y9TJYel+YbQtDqxlUhV+BO1Hal58BqInAjJy4lR3YYHMmYBQKiJE=
+X-Received: by 2002:aca:cd56:: with SMTP id d83mr5783327oig.177.1598127496523;
+ Sat, 22 Aug 2020 13:18:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200821165221.32267-1-mmayer@broadcom.com> <20200822115636.GA19975@kozik-lap>
- <CAGt4E5t-GCPdU_W9U=627o5Xtx_MybFEM254FZF2HZ6VYPr7bg@mail.gmail.com> <20200822164619.GA24669@kozik-lap>
-In-Reply-To: <20200822164619.GA24669@kozik-lap>
-From:   Markus Mayer <mmayer@broadcom.com>
-Date:   Sat, 22 Aug 2020 13:14:19 -0700
-Message-ID: <CAGt4E5t=xNnOHAK3JM9kUGzGqbysDCsW5YmEXzVF9OBSUgPECA@mail.gmail.com>
-Subject: Re: [PATCH v2] memory: brcmstb_dpfe: fix array index out of bounds
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
+References: <159680892602.29015.6551860260436544999.stgit@warthog.procyon.org.uk>
+ <159680897140.29015.15318866561972877762.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159680897140.29015.15318866561972877762.stgit@warthog.procyon.org.uk>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Sat, 22 Aug 2020 22:18:04 +0200
+Message-ID: <CAKgNAkhO25O5JgZ4BmZgW2RG=E71PVQH6Prz9fc_tKw2og4Bvw@mail.gmail.com>
+Subject: Re: [PATCH 5/5] Add manpage for fsconfig(2)
+To:     David Howells <dhowells@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 22 Aug 2020 at 09:46, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+Hello David,
+
+On Fri, 7 Aug 2020 at 16:03, David Howells <dhowells@redhat.com> wrote:
 >
-> On Sat, Aug 22, 2020 at 09:40:59AM -0700, Markus Mayer wrote:
-> > On Sat, 22 Aug 2020 at 04:56, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > On Fri, Aug 21, 2020 at 09:52:21AM -0700, Markus Mayer wrote:
-> > > > We would overrun the error_text array if we hit a TIMEOUT condition,
-> > > > because we were using the error code "ETIMEDOUT" (which is 110) as an
-> > > > array index.
-> > > >
-> > > > We fix the problem by correcting the array index and by providing a
-> > > > function to retrieve error messages rather than accessing the array
-> > > > directly. The function includes a bounds check that prevents the array
-> > > > from being overrun.
-> > > >
-> > > > This patch was prepared in response to
-> > > >     https://lkml.org/lkml/2020/8/18/505.
-> > > >
-> > > > Signed-off-by: Markus Mayer <mmayer@broadcom.com>
-> > >
-> > > Your Signed-off-by does not match From field. Please run
-> > > scripts/checkpatch on every patch you send.
-> > >
-> > > I fixed it up, assuming markus.mayer@broadcom.com is the valid email
-> > > address.
-> >
-> > No. I have always been using mmayer@broadcom.com since it is shorter.
-> > That's also what's in the MAINTAINERS file. Please change it back. I
-> > accidentally used the long form for one of my e-mail replies which is
-> > where the confusion must have originated.
+> Add a manual page to document the fsconfig() system call.
 >
-> I'll drop the patch then. You need to resend with SoB matching email.
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> ---
+>
+>  man2/fsconfig.2 |  282 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 282 insertions(+)
+>  create mode 100644 man2/fsconfig.2
+>
+> diff --git a/man2/fsconfig.2 b/man2/fsconfig.2
+> new file mode 100644
+> index 000000000..32f0bce13
+> --- /dev/null
+> +++ b/man2/fsconfig.2
+> @@ -0,0 +1,282 @@
+> +'\" t
+> +.\" Copyright (c) 2020 David Howells <dhowells@redhat.com>
+> +.\"
+> +.\" %%%LICENSE_START(VERBATIM)
+> +.\" Permission is granted to make and distribute verbatim copies of this
+> +.\" manual provided the copyright notice and this permission notice are
+> +.\" preserved on all copies.
+> +.\"
+> +.\" Permission is granted to copy and distribute modified versions of this
+> +.\" manual under the conditions for verbatim copying, provided that the
+> +.\" entire resulting derived work is distributed under the terms of a
+> +.\" permission notice identical to this one.
+> +.\"
+> +.\" Since the Linux kernel and libraries are constantly changing, this
+> +.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+> +.\" responsibility for errors or omissions, or for damages resulting from
+> +.\" the use of the information contained herein.  The author(s) may not
+> +.\" have taken the same level of care in the production of this manual,
+> +.\" which is licensed free of charge, as they might when working
+> +.\" professionally.
+> +.\"
+> +.\" Formatted or processed versions of this manual, if unaccompanied by
+> +.\" the source, must acknowledge the copyright and authors of this work.
+> +.\" %%%LICENSE_END
+> +.\"
+> +.TH FSCONFIG 2 2020-08-07 "Linux" "Linux Programmer's Manual"
+> +.SH NAME
+> +fsconfig \- Filesystem parameterisation
+> +.SH SYNOPSIS
+> +.nf
+> +.B #include <sys/types.h>
+> +.br
 
-Oh, I am starting to see what's happening here. This is new and
-apparently due to some changes with the mail server setup on our end.
+Remove all instances of ".br" here in the SYNOPSIS. They aren't needed.
 
-I have this in my patch file:
+> +.B #include <sys/mount.h>
+> +.br
+> +.B #include <unistd.h>
+> +.br
+> +.B #include <sys/mount.h>
+> +.PP
+> +.BI "int fsconfig(int *" fd ", unsigned int " cmd ", const char *" key ,
+> +.br
+> +.BI "             const void __user *" value ", int " aux ");"
+> +.br
+> +.BI
+> +.fi
+> +.PP
+> +.IR Note :
+> +There is no glibc wrapper for this system call.
+> +.SH DESCRIPTION
+> +.PP
+> +.BR fsconfig ()
+> +is used to supply parameters to and issue commands against a filesystem
+> +configuration context as set up by
+> +.BR fsopen (2)
+> +or
+> +.BR fspick (2).
+> +The context is supplied attached to the file descriptor specified by
+> +.I fd
+> +argument.
+> +.PP
+> +The
+> +.I cmd
+> +argument indicates the command to be issued, where some of the commands simply
+> +supply parameters to the context.  The meaning of
+> +.IR key ", " value " and " aux
+> +are command-dependent; unless required for the command, these should be set to
+> +NULL or 0.
+> +.PP
+> +The available commands are:
+> +.TP
+> +.B FSCONFIG_SET_FLAG
+> +Set the parameter named by
+> +.IR key
+> +to true.  This may incur error
 
-$ head 0001-memory-brcmstb_dpfe-fix-array-index-out-of-bounds.patch
-From 6b424772d4c84fa56474b2522d0d3ed6b2b2b360 Mon Sep 17 00:00:00 2001
-From: Markus Mayer <mmayer@broadcom.com>
-Date: Fri, 21 Aug 2020 08:56:52 -0700
+s/incur error/fail with the error/
+(and below as well please)
 
-Sending patches like this used to work. Clearly our SMTP server has
-now taken it upon itself to rewrite the sender e-mail address. I
-wasn't expecting that. Let me look into it. Sorry for the hassle. It
-was not intentional.
+> +.B EINVAL
+> +if the parameter requires an argument.
+> +.TP
+> +.B FSCONFIG_SET_STRING
+> +Set the parameter named by
+> +.I key
+> +to a string.  This may incur error
+> +.B EINVAL
+> +if the parser doesn't want a parameter here, wants a non-string or the string
+> +cannot be interpreted appropriately.
+> +.I value
+> +points to a NUL-terminated string.
+> +.TP
+> +.B FSCONFIG_SET_BINARY
+> +Set the parameter named by
+> +.I key
+> +to be a binary blob argument.  This may cause
+> +.B EINVAL
+> +to be returned if the filesystem parser isn't expecting a binary blob and it
+> +can't be converted to something usable.
+> +.I value
+> +points to the data and
+> +.I aux
+> +indicates the size of the data.
+> +.TP
+> +.B FSCONFIG_SET_PATH
+> +Set the parameter named by
+> +.I key
+> +to the object at the provided path.
+> +.I value
+> +should point to a NULL-terminated pathname string and aux may indicate
+> +.B AT_FDCWD
+> +or a file descriptor indicating a directory from which to begin a relative
+> +pathwalk.  This may return any errors incurred by the pathwalk and may return
 
-Regards,
--Markus
+"pathwalk" is not a standard term (at least not for user-space
+programmers). What do you mean with this term, and can you replace all
+instances please.
 
-> Best regards,
-> Krzysztof
+> +.B EINVAL
+> +if the parameter isn't expecting a path.
+> +.IP
+> +Note that FSCONFIG_SET_STRING can be used instead, implying AT_FDCWD.
+> +.TP
+> +.B FSCONFIG_SET_PATH_EMPTY
+> +As FSCONFIG_SET_PATH, but with
+> +.B AT_EMPTY_PATH
+> +applied to the pathwalk.
+> +.TP
+> +.B FSCONFIG_SET_FD
+> +Set the parameter named by
+> +.I key
+> +to the file descriptor specified by
+> +.IR aux .
+> +This will incur
+> +.B EINVAL
+> +if the parameter doesn't expect a file descriptor or
+> +.B EBADF
+> +if the file descriptor is invalid.
+> +.IP
+> +Note that FSCONFIG_SET_STRING can be used instead with the file descriptor
+> +passed as a decimal string.
+> +.TP
+> +.B FSCONFIG_CMD_CREATE
+> +This command causes the filesystem to take the parameters set in the context
+> +and to try to create filesystem representation in the kernel.  If it can share
+> +an existing one, it may do that instead if the filesystem type and parameters
+> +permit that.
+
+Too many pronouns ("It", "one", "it", "that"). Could you replace at
+least some of them with nouns please.
+
+> This is intended for use with
+> +.BR fsopen (2).
+> +.TP
+> +.B FSCONFIG_CMD_RECONFIGURE
+> +This command causes the filesystem to apply the parameters set in the context
+> +to an already existing filesystem representation in memory and to alter it.
+> +This is intended for use with
+> +.BR fspick (2),
+> +but may also by used against the context created by
+> +.BR fsopen()
+> +after
+> +.BR fsmount (2)
+> +has been called on it.
+> +
+> +.\"________________________________________________________
+
+Please remove above two lines
+
+> +.SH EXAMPLES
+> +.PP
+> +.in +4n
+> +.nf
+> +fsconfig(sfd, FSCONFIG_SET_FLAG, "ro", NULL, 0);
+> +
+> +fsconfig(sfd, FSCONFIG_SET_STRING, "user_xattr", "false", 0);
+> +
+> +fsconfig(sfd, FSCONFIG_SET_BINARY, "ms_pac", pac_buffer, pac_size);
+> +
+> +fsconfig(sfd, FSCONFIG_SET_PATH, "journal", "/dev/sdd4", AT_FDCWD);
+> +
+> +dirfd = open("/dev/", O_PATH);
+> +fsconfig(sfd, FSCONFIG_SET_PATH, "journal", "sdd4", dirfd);
+> +
+> +fd = open("/overlays/mine/", O_PATH);
+> +fsconfig(sfd, FSCONFIG_SET_PATH_EMPTY, "lower_dir", "", fd);
+> +
+> +pipe(pipefds);
+> +fsconfig(sfd, FSCONFIG_SET_FD, "fd", NULL, pipefds[1]);
+> +.fi
+> +.in
+> +.PP
+> +
+> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Please remove above 5 lines.
+
+> +.SH RETURN VALUE
+> +On success, the function returns 0.  On error, \-1 is returned, and
+> +.I errno
+> +is set appropriately.
+> +.SH ERRORS
+> +The error values given below result from filesystem type independent
+> +errors.
+> +Each filesystem type may have its own special errors and its
+> +own special behavior.
+> +See the Linux kernel source code for details.
+> +.TP
+> +.B EACCES
+> +A component of a path was not searchable.
+> +(See also
+> +.BR path_resolution (7).)
+> +.TP
+> +.B EACCES
+> +Mounting a read-only filesystem was attempted without specifying the
+> +.RB ' ro '
+> +parameter.
+> +.TP
+> +.B EACCES
+> +A specified block device is located on a filesystem mounted with the
+> +.B MS_NODEV
+> +option.
+> +.\" mtk: Probably: write permission is required for MS_BIND, with
+> +.\" the error EPERM if not present; CAP_DAC_OVERRIDE is required.
+> +.TP
+> +.B EBADF
+> +The file descriptor given by
+> +.I fd
+> +or possibly by
+> +.I aux
+> +(depending on the command) is invalid.
+> +.TP
+> +.B EBUSY
+> +The context attached to
+> +.I fd
+> +is in the wrong state for the given command.
+> +.TP
+> +.B EBUSY
+> +The filesystem representation cannot be reconfigured read-only because it still
+> +holds files open for writing.
+> +.TP
+> +.B EFAULT
+> +One of the pointer arguments points outside the user address space.
+> +.TP
+> +.B EINVAL
+> +.I fd
+> +does not refer to a filesystem configuration context.
+> +.TP
+> +.B EINVAL
+> +One of the source parameters referred to an invalid superblock.
+> +.TP
+> +.B ELOOP
+> +Too many links encountered during pathname resolution.
+> +.TP
+> +.B ENAMETOOLONG
+> +A path name was longer than
+> +.BR MAXPATHLEN .
+> +.TP
+> +.B ENOENT
+> +A pathname was empty or had a nonexistent component.
+> +.TP
+> +.B ENOMEM
+> +The kernel could not allocate sufficient memory to complete the call.
+> +.TP
+> +.B ENOTBLK
+> +Once of the parameters does not refer to a block device (and a device was
+
+s/Once/One/
+
+> +required).
+> +.TP
+> +.B ENOTDIR
+> +.IR pathname ,
+> +or a prefix of
+> +.IR source ,
+> +is not a directory.
+> +.TP
+> +.B EOPNOTSUPP
+> +The command given by
+> +.I cmd
+> +was not valid.
+> +.TP
+> +.B ENXIO
+> +The major number of a block device parameter is out of range.
+> +.TP
+> +.B EPERM
+> +The caller does not have the required privileges.
+> +.SH CONFORMING TO
+> +These functions are Linux-specific and should not be used in programs intended
+> +to be portable.
+> +.SH VERSIONS
+> +.BR fsconfig ()
+> +was added to Linux in kernel 5.1.
+
+5.2!
+
+> +.SH NOTES
+> +Glibc does not (yet) provide a wrapper for the
+> +.BR fsconfig ()
+> +system call; call it using
+> +.BR syscall (2).
+> +.SH SEE ALSO
+> +.BR mountpoint (1),
+> +.BR fsmount (2),
+> +.BR fsopen (2),
+> +.BR fspick (2),
+> +.BR mount_namespaces (7),
+> +.BR path_resolution (7)
+
+David, this is just my first round of comments. Could you please also
+carefully check the pages to see what is out of date. I've already
+pointed out a few obvious that I would have hope you might have caught
+already before submitting, and perhaps there are others also.
+
+Thanks,
+
+Michael
+
+--
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
