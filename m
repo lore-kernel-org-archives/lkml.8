@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6B6C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A76B4C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20F6620720
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8824720720
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgHVEmR (ORCPT
+        id S1726998AbgHVEmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 00:42:17 -0400
-Received: from mga11.intel.com ([192.55.52.93]:62111 "EHLO mga11.intel.com"
+        Sat, 22 Aug 2020 00:42:21 -0400
+Received: from mga11.intel.com ([192.55.52.93]:62114 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726414AbgHVEmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725840AbgHVEmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 22 Aug 2020 00:42:10 -0400
-IronPort-SDR: Bd5xfcJjOo1huN9NdWgzi+ipkyMgC1M45J5A4BHXPbFVukWJBWBcK1cB78kxjkz+Xv911SdWn4
- SGopv4DxGj1g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="153275283"
+IronPort-SDR: fVSt6qW7t56PouEtv0eYWPHnAIHkYgoi42c4uz+g8J4wtYOC1Y2/BRIGDC+IvUTPTk+aFVuajK
+ 0vJg05kgX3Qg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="153275287"
 X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
-   d="scan'208";a="153275283"
+   d="scan'208";a="153275287"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 21:42:01 -0700
-IronPort-SDR: 8i4hGeGeesJiGDSiCZhdtYrmz2gqvJ4jJAcmw6zUUM2qkDD8wA/cLpsxbnaCvXVmpeFryGgsYM
- ySOF44knnNHg==
+IronPort-SDR: griWtDcJu82w9E+SGCJUbsLhzP1NJ6oVRQ6OMPvx3UflMk7vkzDwFSCtrgD8EdkjVUk+48o7Qq
+ b0xXQG4a6W9w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
-   d="scan'208";a="327943118"
+   d="scan'208";a="327943130"
 Received: from glacier.sc.intel.com ([10.3.62.63])
-  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 21:42:00 -0700
+  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 21:42:01 -0700
 From:   Rajmohan Mani <rajmohan.mani@intel.com>
 To:     Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
@@ -53,9 +53,9 @@ To:     Darren Hart <dvhart@infradead.org>,
         linux-usb@vger.kernel.org
 Cc:     pmalani@chromium.org, bleung@chromium.org,
         Rajmohan Mani <rajmohan.mani@intel.com>
-Subject: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager (IOM) driver
-Date:   Fri, 21 Aug 2020 21:05:06 -0700
-Message-Id: <20200822040508.23510-2-rajmohan.mani@intel.com>
+Subject: [PATCH v2 3/3] usb: typec: intel_pmc_mux: Support for device role (UFP)
+Date:   Fri, 21 Aug 2020 21:05:08 -0700
+Message-Id: <20200822040508.23510-4-rajmohan.mani@intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200822040508.23510-1-rajmohan.mani@intel.com>
 References: <20200822040508.23510-1-rajmohan.mani@intel.com>
@@ -66,225 +66,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Input Output Manager (IOM) is part of the Tiger Lake SoC that
-configures the Type-C Sub System (TCSS). IOM is a micro controller
-that handles Type-C topology, configuration and PM functions of
-various Type-C devices connected on the platform.
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-This driver helps read relevant information such as Type-C port
-status (whether a device is connected to a Type-C port or not) and
-the activity type on the Type-C ports (such as USB, Display Port,
-Thunderbolt), for consumption by other drivers.
+This adds support for device data role, and data role
+swapping. The driver no longer relies on the cached role, as
+it may not be valid (for example after bootup). Instead, the
+role is always checked by readding the port status from IOM.
 
-Currently intel_iom_port_status() API is exported by this driver,
-that has information about the Type-C port status and port activity
-type.
+Note. After this, the orientation is always only cached, so
+the driver does not support scenario where the role is set
+before orientation. It means the typec drivers must always
+set the orientation first before role.
 
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
 ---
- drivers/platform/x86/Kconfig                | 16 ++++
- drivers/platform/x86/Makefile               |  1 +
- drivers/platform/x86/intel_iom.c            | 95 +++++++++++++++++++++
- include/linux/platform_data/x86/intel_iom.h | 49 +++++++++++
- 4 files changed, 161 insertions(+)
- create mode 100644 drivers/platform/x86/intel_iom.c
- create mode 100644 include/linux/platform_data/x86/intel_iom.h
+ drivers/usb/typec/mux/intel_pmc_mux.c | 67 ++++++++++++++-------------
+ 1 file changed, 34 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 40219bba6801..f09b4b525ea5 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -837,6 +837,22 @@ config INTEL_INT0002_VGPIO
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called intel_int0002_vgpio.
+diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
+index c758d6113c41..d4ee7132227b 100644
+--- a/drivers/usb/typec/mux/intel_pmc_mux.c
++++ b/drivers/usb/typec/mux/intel_pmc_mux.c
+@@ -191,9 +191,6 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
+ 		return pmc_usb_mux_dp_hpd(port, state->data);
+ 	}
  
-+config INTEL_IOM
-+	tristate "Intel Input Output Manager (IOM) driver"
-+	depends on ACPI && PCI
-+	help
-+	  This driver helps read relevant information such as Type-C port
-+	  status (whether a device is connected to a Type-C port or not)
-+	  and the activity type on the Type-C ports (such as USB, Display
-+	  Port, Thunderbolt), for consumption by other drivers.
+-	if (data->status & DP_STATUS_IRQ_HPD)
+-		return pmc_usb_mux_dp_hpd(port, state->data);
+-
+ 	req.usage = PMC_USB_ALT_MODE;
+ 	req.usage |= port->usb3_port << PMC_USB_MSG_USB3_PORT_SHIFT;
+ 	req.mode_type = PMC_USB_MODE_TYPE_DP << PMC_USB_MODE_TYPE_SHIFT;
+@@ -312,39 +309,52 @@ static int pmc_usb_mux_safe_state(struct pmc_usb_port *port)
+ 	return pmc_usb_command(port, &msg, sizeof(msg));
+ }
+ 
+-static int pmc_usb_connect(struct pmc_usb_port *port)
++static int pmc_usb_disconnect(struct pmc_usb_port *port)
+ {
++	struct typec_displayport_data data = { };
+ 	u8 msg[2];
+ 
+-	if (port->iom_status & IOM_PORT_STATUS_CONNECTED)
++	if (!(port->iom_status & IOM_PORT_STATUS_CONNECTED))
+ 		return 0;
+ 
+-	msg[0] = PMC_USB_CONNECT;
++	/* Clear DisplayPort HPD if it's still asserted. */
++	if (IOM_PORT_HPD_ASSERTED(port->iom_status))
++		pmc_usb_mux_dp_hpd(port, &data);
 +
-+	  Currently intel_iom_port_status() API is exported by this driver,
-+	  that has information about the Type-C port status and port activity
-+	  type.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called intel_iom.
-+
- config INTEL_MENLOW
- 	tristate "Thermal Management driver for Intel menlow platform"
- 	depends on ACPI_THERMAL
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 5f823f7eff45..b44f706074c3 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -77,6 +77,7 @@ intel_cht_int33fe-objs			:= intel_cht_int33fe_common.o \
- 					   intel_cht_int33fe_microb.o
- obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
- obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
-+obj-$(CONFIG_INTEL_IOM)			+= intel_iom.o
- obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
- obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
- obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
-diff --git a/drivers/platform/x86/intel_iom.c b/drivers/platform/x86/intel_iom.c
-new file mode 100644
-index 000000000000..cda7716410c6
---- /dev/null
-+++ b/drivers/platform/x86/intel_iom.c
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel Core SoC Input Output Manager (IOM) driver.
-+ *
-+ * This driver provides access to the Input Output Manager (IOM) (that
-+ * is part of Tiger Lake SoC) registers that can be used to know about
-+ * Type-C Sub System related information (such as Type-C port status,
-+ * activity type on Type-C ports).
-+ *
-+ * Copyright (C) 2020, Intel Corporation
-+ * Author: Rajmohan Mani <rajmohan.mani@intel.com>
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_data/x86/intel_iom.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#define IOM_PORT_STATUS_OFFSET				0x560
-+
-+struct intel_iom {
-+	struct device *dev;
-+	void __iomem *regbar;
-+};
-+
-+static struct intel_iom *iom;
-+
-+/**
-+ * intel_iom_port_status() - Get status bits for the Type-C port
-+ * @port: Type-C port number
-+ * @status: pointer to receive the status bits
-+ *
-+ * Returns 0 on success, error otherwise.
-+ */
-+int intel_iom_port_status(u8 port, u32 *status)
-+{
-+	void __iomem *reg;
-+
-+	if (!iom || !iom->dev || !iom->regbar)
-+		return -ENODEV;
-+
-+	if (!status || (port > IOM_MAX_PORTS - 1))
++	msg[0] = PMC_USB_DISCONNECT;
+ 	msg[0] |= port->usb3_port << PMC_USB_MSG_USB3_PORT_SHIFT;
+ 
+ 	msg[1] = port->usb2_port << PMC_USB_MSG_USB2_PORT_SHIFT;
+-	msg[1] |= hsl_orientation(port) << PMC_USB_MSG_ORI_HSL_SHIFT;
+-	msg[1] |= sbu_orientation(port) << PMC_USB_MSG_ORI_AUX_SHIFT;
+ 
+ 	return pmc_usb_command(port, msg, sizeof(msg));
+ }
+ 
+-static int pmc_usb_disconnect(struct pmc_usb_port *port)
++static int pmc_usb_connect(struct pmc_usb_port *port, enum usb_role role)
+ {
+-	struct typec_displayport_data data = { };
++	u8 ufp = role == USB_ROLE_DEVICE ? 1 : 0;
+ 	u8 msg[2];
++	int ret;
+ 
+-	if (!(port->iom_status & IOM_PORT_STATUS_CONNECTED))
+-		return 0;
++	if (port->orientation == TYPEC_ORIENTATION_NONE)
 +		return -EINVAL;
+ 
+-	/* Clear DisplayPort HPD if it's still asserted. */
+-	if (IOM_PORT_HPD_ASSERTED(port->iom_status))
+-		pmc_usb_mux_dp_hpd(port, &data);
++	if (port->iom_status & IOM_PORT_STATUS_CONNECTED) {
++		if (port->role == role || port->role == USB_ROLE_NONE)
++			return 0;
+ 
+-	msg[0] = PMC_USB_DISCONNECT;
++		/* Role swap */
++		ret = pmc_usb_disconnect(port);
++		if (ret)
++			return ret;
++	}
 +
-+	reg = iom->regbar + IOM_PORT_STATUS_OFFSET + IOM_REG_LEN * port;
-+
-+	*status = ioread32(reg);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(intel_iom_port_status);
-+
-+static int intel_iom_probe(struct platform_device *pdev)
-+{
-+	void __iomem *addr;
-+
-+	/* only one IOM device is supported */
-+	if (iom)
-+		return -EBUSY;
-+
-+	iom = devm_kzalloc(&pdev->dev, sizeof(*iom), GFP_KERNEL);
-+	if (!iom)
-+		return -ENOMEM;
-+
-+	addr = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(addr))
-+		return PTR_ERR(addr);
-+
-+	iom->regbar = addr;
-+	iom->dev = &pdev->dev;
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id intel_iom_acpi_ids[] = {
-+	{ "INTC1072" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, intel_iom_acpi_ids);
-+
-+static struct platform_driver intel_iom_driver = {
-+	.probe = intel_iom_probe,
-+	.driver = {
-+		.name = "intel_iom",
-+		.acpi_match_table = intel_iom_acpi_ids,
-+	},
-+};
-+
-+module_platform_driver_probe(intel_iom_driver, intel_iom_probe);
-+
-+MODULE_AUTHOR("Rajmohan Mani <rajmohan.mani@intel.com>");
-+MODULE_DESCRIPTION("Intel IOM driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/platform_data/x86/intel_iom.h b/include/linux/platform_data/x86/intel_iom.h
-new file mode 100644
-index 000000000000..e4c9a305e7a9
---- /dev/null
-+++ b/include/linux/platform_data/x86/intel_iom.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _PLATFORM_DATA_X86_INTEL_IOM_H_
-+#define _PLATFORM_DATA_X86_INTEL_IOM_H_
-+
-+#include <linux/bits.h>
-+#include <linux/types.h>
-+
-+/* Input Output Manager (IOM) PORT STATUS */
-+#define IOM_PORT_STATUS_ACTIVITY_TYPE_MASK		GENMASK(9, 6)
-+#define IOM_PORT_STATUS_ACTIVITY_TYPE_SHIFT		0x06
-+#define IOM_PORT_STATUS_ACTIVITY_TYPE_USB		0x03
-+/* activity type: Safe Mode */
-+#define IOM_PORT_STATUS_ACTIVITY_TYPE_SAFE_MODE		0x04
-+/* activity type: Display Port */
-+#define IOM_PORT_STATUS_ACTIVITY_TYPE_DP		0x05
-+/* activity type: Display Port Multi Function Device */
-+#define IOM_PORT_STATUS_ACTIVITY_TYPE_DP_MFD		0x06
-+/* activity type: Thunderbolt */
-+#define IOM_PORT_STATUS_ACTIVITY_TYPE_TBT		0x07
-+#define IOM_PORT_STATUS_ACTIVITY_TYPE_ALT_MODE_USB	0x0c
-+#define IOM_PORT_STATUS_ACTIVITY_TYPE_ALT_MODE_TBT_USB	0x0d
-+/* Upstream Facing Port Information */
-+#define IOM_PORT_STATUS_UFP				BIT(10)
-+/* Display Port Hot Plug Detect status */
-+#define IOM_PORT_STATUS_DHPD_HPD_STATUS_MASK		GENMASK(13, 12)
-+#define IOM_PORT_STATUS_DHPD_HPD_STATUS_SHIFT		0x0c
-+#define IOM_PORT_STATUS_DHPD_HPD_STATUS_ASSERT		0x01
-+#define IOM_PORT_STATUS_DHPD_HPD_SOURCE_TBT		BIT(14)
-+#define IOM_PORT_STATUS_CONNECTED			BIT(31)
-+
-+#define IOM_MAX_PORTS					4
-+/* Register length in bytes */
-+#define IOM_REG_LEN					4
-+
-+#ifdef CONFIG_ACPI
-+
-+int intel_iom_port_status(u8 port, u32 *status);
-+
-+#else
-+
-+int intel_iom_port_status(struct intel_iom *iom, u8 port, u32 *status)
-+{
-+	return 0;
-+}
-+
-+#endif
-+
-+#endif /* _PLATFORM_DATA_X86_INTEL_IOM_H_ */
++	msg[0] = PMC_USB_CONNECT;
+ 	msg[0] |= port->usb3_port << PMC_USB_MSG_USB3_PORT_SHIFT;
+ 
+ 	msg[1] = port->usb2_port << PMC_USB_MSG_USB2_PORT_SHIFT;
++	msg[1] |= ufp << PMC_USB_MSG_UFP_SHIFT;
++	msg[1] |= hsl_orientation(port) << PMC_USB_MSG_ORI_HSL_SHIFT;
++	msg[1] |= sbu_orientation(port) << PMC_USB_MSG_ORI_AUX_SHIFT;
+ 
+ 	return pmc_usb_command(port, msg, sizeof(msg));
+ }
+@@ -365,7 +375,7 @@ pmc_usb_mux_set(struct typec_mux *mux, struct typec_mux_state *state)
+ 	if (state->mode == TYPEC_STATE_SAFE)
+ 		return pmc_usb_mux_safe_state(port);
+ 	if (state->mode == TYPEC_STATE_USB)
+-		return pmc_usb_connect(port);
++		return pmc_usb_connect(port, port->role);
+ 
+ 	if (state->alt) {
+ 		switch (state->alt->svid) {
+@@ -380,7 +390,7 @@ pmc_usb_mux_set(struct typec_mux *mux, struct typec_mux_state *state)
+ 			/* REVISIT: Try with usb3_port set to 0? */
+ 			break;
+ 		case TYPEC_MODE_USB3:
+-			return pmc_usb_connect(port);
++			return pmc_usb_connect(port, port->role);
+ 		case TYPEC_MODE_USB4:
+ 			return pmc_usb_mux_usb4(port, state);
+ 		}
+@@ -401,13 +411,6 @@ static int pmc_usb_set_orientation(struct typec_switch *sw,
+ 
+ 	port->orientation = orientation;
+ 
+-	if (port->role) {
+-		if (orientation == TYPEC_ORIENTATION_NONE)
+-			return pmc_usb_disconnect(port);
+-		else
+-			return pmc_usb_connect(port);
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -420,16 +423,14 @@ static int pmc_usb_set_role(struct usb_role_switch *sw, enum usb_role role)
+ 	if (ret)
+ 		return ret;
+ 
+-	port->role = role;
++	if (role == USB_ROLE_NONE)
++		ret = pmc_usb_disconnect(port);
++	else
++		ret = pmc_usb_connect(port, role);
+ 
+-	if (port->orientation) {
+-		if (role == USB_ROLE_NONE)
+-			return pmc_usb_disconnect(port);
+-		else
+-			return pmc_usb_connect(port);
+-	}
++	port->role = role;
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int pmc_usb_register_port(struct pmc_usb *pmc, int index,
 -- 
 2.20.1
 
