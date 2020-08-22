@@ -2,133 +2,103 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 18:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA88EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 18:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0612075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 18:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ACB32072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 18:40:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pZkK4jeo"
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="JIuR50Ie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgHVSds (ORCPT
+        id S1728607AbgHVSk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 14:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbgHVSdr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 14:33:47 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E0BC061573;
-        Sat, 22 Aug 2020 11:33:46 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id m20so4528547eds.2;
-        Sat, 22 Aug 2020 11:33:46 -0700 (PDT)
+        Sat, 22 Aug 2020 14:40:26 -0400
+Received: from mail-db8eur05on2102.outbound.protection.outlook.com ([40.107.20.102]:64640
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727893AbgHVSkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 14:40:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NAK2BTRLMVjLhGZAJB/m8uzMPL8qz504mZAbeRpvQAhKnS1rezICiLa3MVELnWffGPqqIy4U8bovcWmPyO78W85xAYbo+/DRzXqoC6eHrVjuuEEaf9uZtp0Wo+xHa2UViRydVF0SolkNCAyKEark1Qyv8DxkKK1i8KCxCdh9YeV2T1k9s5pUTk7htM7hX88+oQjwgX/b3NaC9TVXv464AUmnt8T0N4s0LoUW3b9GtAzQpomtdcSDr21SI4qY6L3nz2BmIVg2YlRX4vgmwhE1tKJUxQxib+kfWm7Uu5d+1O1Yx26xcHUb3jt5SyxW5N8+rSohjqWpHgR6Trw7yu/TmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P7e9DXab0C7FV73IGFp8IKIvFmfRDtIio7OZvp9Gto8=;
+ b=ONBA4SMUfhGMLzmC+gpP8tqy1AaoWDot8DMIeEiDXi3HuJmCpYKn8LOFJerljRysv0TN209hcv32hyrOhAHSPCr0vEWUndp4qiZPTx6bF5m9JPzTXlp6sBD95lTlF8xqgn7tIWeCh7hjFGIXPWTm8Dhsnw7+LVNUHVxvA67MfUFTQSgD16sl8fgRr1oYQ5j5eFRNHcuDgJifQsXXcoeHARIdfa6wFL81R3gUAEBVebZYBT7us6SFYl28x3lk0AIPXyI8jUnmVv1yy54etabiEWXqkmI/1RAoVCONSzps4ScnG9/qZD8QI4B/7/4exjQSpwQJiD1NLPMAgDbIE+tFYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gjUEZM3lBlIm0cVrAjftDy1KM/TMOAosVCGT9uQgxg4=;
-        b=pZkK4jeoOTURv+2V3If9ZnNx88Ch1Pyco91gvp0Tz3SHWoEIaP5fcIW/2tuAQ1cnQL
-         JzaeMXTT+LX3rtb+Xy1tLGGbjX8E/qU/nzLN79Q4rdWD1sEGdT6ud7hHDXX5XPm5fG+Z
-         B6R0dayfA5zntmMyaETOElUe3PMHEa1gnLhaSWfzymdrix/6JT7idR9iBq6Q9OyzX5kk
-         ghbZjG6bKAma7z5k7WbPgRMXXhvYy63QSbJ0DmDY/gcwp/BZrqDo0zCS4K2g3oL839cT
-         ycXmD+DK82xdjKfaZ39f/gUWxqWPvX4JkEzCh3SUQaimQTUaNO4HqXsXQGllYN/t0oI2
-         9wAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gjUEZM3lBlIm0cVrAjftDy1KM/TMOAosVCGT9uQgxg4=;
-        b=GyLcrQwmkkjiK+7jKg3z25oMzhLtyrANeuqGmcDsNzXNh16IvztHYVme0en7TbQmf4
-         j6YKku1NAiY/Ge5hvKorbNIhUrijn4qIC10RUZejrTuv+1H+jb49+S5n5hzMvEXkB6KE
-         aoDoe6xWy/KtIlDWto48uV2MQdQH4puByxLy2jDVkRaH5dQzuuayMaY4eg1+vGLX2SbX
-         WXq47LMqhJT42bY4Yp8YwvxcT1sc3TpBjPAMBYU/YeXssxKDIoDDxqvUYQH4E4JY1/g2
-         Xr5UocCcHkp6j4KKlbTeRObuWm0hJk6cleRIqFtVTjkfVdNl/99zUhy1LvM7r0lCCD7I
-         F0lw==
-X-Gm-Message-State: AOAM532IupCbFu+s1tlqZaqbbnxrjlS0tRwMFNcHbFfHQYg9AIPeThdg
-        hGiBy3XsZBSfmnE4fnTfjmw=
-X-Google-Smtp-Source: ABdhPJwHuJ6YunThrHWhYkKjSCk17dLUii9bv6xPRyBeI+2Cvwo9c4dSoPimWu4tWZNkonYWS04kyg==
-X-Received: by 2002:a05:6402:1016:: with SMTP id c22mr3888099edu.89.1598121225104;
-        Sat, 22 Aug 2020 11:33:45 -0700 (PDT)
-Received: from skbuf ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id p12sm3390837edt.27.2020.08.22.11.33.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Aug 2020 11:33:44 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 21:33:42 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qiang Zhao <qiang.zhao@nxp.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        tanveer <tanveer.alam@puresoftware.com>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
-Message-ID: <20200822183342.6sdhp6yq6i7yvdia@skbuf>
-References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P7e9DXab0C7FV73IGFp8IKIvFmfRDtIio7OZvp9Gto8=;
+ b=JIuR50IesvjXFPaenhtqw+Ue8UUE7wbD7xNunKGDesEdRFAq3UBQdKyurJFyBDNsHQ8DyF5RdS9H7JFZztj8Ga9LxeB4MBa5Jby4Hlsh7V1d5mH0K3mTFxsQLnx0r2Uto2K3M/JW4NFXpZfKugX7vxwyhn6vETMX5FN34oa0aqM=
+Received: from DB8PR02MB5468.eurprd02.prod.outlook.com (2603:10a6:10:ef::22)
+ by DB8PR02MB5739.eurprd02.prod.outlook.com (2603:10a6:10:e7::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Sat, 22 Aug
+ 2020 18:40:22 +0000
+Received: from DB8PR02MB5468.eurprd02.prod.outlook.com
+ ([fe80::95e1:b3c:ddde:4c32]) by DB8PR02MB5468.eurprd02.prod.outlook.com
+ ([fe80::95e1:b3c:ddde:4c32%4]) with mapi id 15.20.3305.025; Sat, 22 Aug 2020
+ 18:40:22 +0000
+From:   Tomer Tayar <ttayar@habana.ai>
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        SW_Drivers <SW_Drivers@habana.ai>
+Subject: RE: [PATCH 2/2] habanalabs: update GAUDI hardware specs
+Thread-Topic: [PATCH 2/2] habanalabs: update GAUDI hardware specs
+Thread-Index: AQHWeKCad7SNepDj50+vLr4FvlVIT6lEddWA
+Date:   Sat, 22 Aug 2020 18:40:22 +0000
+Message-ID: <DB8PR02MB5468E756C9F873ADFFE94256D2580@DB8PR02MB5468.eurprd02.prod.outlook.com>
+References: <20200822162335.21295-1-oded.gabbay@gmail.com>
+ <20200822162335.21295-2-oded.gabbay@gmail.com>
+In-Reply-To: <20200822162335.21295-2-oded.gabbay@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
+x-originating-ip: [89.139.189.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 50f64731-cb32-4df0-0320-08d846cad3b3
+x-ms-traffictypediagnostic: DB8PR02MB5739:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR02MB5739141837A15D560FD91452D2580@DB8PR02MB5739.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mD7e3kdbD+g62qb052F8qibaZxiQR2IKDvXHeHVBNda3+y2Wafw98273g0NayIqXaUgVOjw753oudad9uIDjlFwYc/+S0nnIvp4/ADmnj+j8I2xtN7pLtE5QrHxi3bNaQy6Q9uzmFg16Oj5Rf3pM4shSyopZzx1g+7qEe2vDf7gVuOdvUSy+ATMux0k7jLidSMQKEJbFR8cWrYtHFJDOTs+ecbninRPnpNGPdecmpcCj5dAYS3ih9JINBhdabkOrtJbn3dLwnI5rcBR/uWwroGvkepKOmQB+tGoS+8PMpyXkYuu6VAvksHO9T52n2cRCi6yo5/+02OiS+qjPh6gP8g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5468.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(396003)(39840400004)(366004)(136003)(86362001)(6636002)(55016002)(9686003)(76116006)(66476007)(66556008)(64756008)(66446008)(66946007)(110136005)(316002)(2906002)(478600001)(53546011)(186003)(6506007)(26005)(33656002)(7696005)(71200400001)(8936002)(558084003)(8676002)(52536014)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 7xRS0OzNn/eIj+Uu8hJsw57yX8t/clsp3DAQFpXgq4m/AWc27tWwvC5NXpRXfAV0JaJ6pJDtVHVMb51Vl+32Unq5BcjKzLBMtOAhLO5EojZLnjRWMX2+twRhQXwTG2Nzs7Hobq04JI+wqtPWP3RocGWtvSLR2pIg0FkQdIBIHeFqwWwLuNJZcztbl5nvsMadxCPEztk2yuGvXchrVDTcQJlPDnK+G5hDciWn9buhxM0CMhOSafwP/nlMzE82xivrL4qOJoiGEIhZTnTf9hH/g6kFzKY4YwBbAfK1RNW2uikrN5KOvjLNTv0bl+MjF7erdK1YLSlACCQnwcLFcCxWGc7sZNz+h2uNc8aV4xbOQ/PZ/eC+G13GpsgZqfLeR1vNkg7nF4a0PxJTuDGuAxoGy/0yQhTgk/N88hLtdZunhlRxWh3bw1q+qrxnvVvmdDnxIn6I/DwoUpqrgL/Gqw40T3s7z4CVk2cutWJsbL529LDL0OGwqIx4t8+pIgZCSI4JxRSjnoC+RoiF6nCVt/GVu4Ci6FcoEsd27AJEF1F9Q9W6D3Xt75xE/ozylHfYpcJtughaDNrw59AWxddbReN7LXpnd6aVGHAnsClUFa41vas55O8lgnvY+0EwxYE8kAirZLGp8qyQTfDsyGtT57QShw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5468.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50f64731-cb32-4df0-0320-08d846cad3b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2020 18:40:22.1467
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZZFP+SBSwLa0L2FJstq4iZWCMTecH7XJWOWU8N6pChQYKWyH0+vxGUKhq3TcQASTERwqA+NZn88BJ7b5uDt0vg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5739
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 06:40:29PM +0530, kuldip dwivedi wrote:
-> Currently fsl DSPI driver has support of DT only. Adding ACPI
-> support to the drive so that it can be used by UEFI firmware
-> boot in ACPI mode. This driver will be probed if any firmware
-> will expose HID "NXP0005" in DSDT table.
-> 
-> Signed-off-by: tanveer <tanveer.alam@puresoftware.com>
-> Signed-off-by: kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
-> ---
->  drivers/spi/spi-fsl-dspi.c | 91 +++++++++++++++++++++++++++++---------
->  1 file changed, 69 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> index 91c6affe139c..7100a8a0a30e 100644
-> --- a/drivers/spi/spi-fsl-dspi.c
-> +++ b/drivers/spi/spi-fsl-dspi.c
-> @@ -1070,6 +1072,12 @@ static void dspi_cleanup(struct spi_device *spi)
->  	kfree(chip);
->  }
->  
-> +static const struct acpi_device_id fsl_dspi_acpi_ids[] = {
-> +	{ "NXP0005", .driver_data = (kernel_ulong_t)&devtype_data[LS2085A], },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(acpi, fsl_dspi_acpi_ids);
-> +
+On Sat, Aug 22, 2020 at 19:24 Oded Gabbay <oded.gabbay@gmail.com> wrote:
+> Add define for the 2 MME slave engines.
+>=20
+> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 
-Just noticed this now.
-So for device tree, spi-fsl-dspi supports the following compatibles:
-
-fsl,vf610-dspi
-fsl,ls1021a-v1.0-dspi
-fsl,ls1012a-dspi
-fsl,ls1028a-dspi
-fsl,ls1043a-dspi
-fsl,ls1046a-dspi
-fsl,ls2080a-dspi
-fsl,ls2085a-dspi
-fsl,lx2160a-dspi
-
-Depending on the compatible string, the driver knows whether to use DMA
-or XSPI mode, and what the FIFO size is.
-
-Now, of course not all of the above SoCs are going to support ACPI, but
-it is reasonable to expect that more than one will. And in that case,
-the driver should still be able to know on what SoC it's running,
-because for example LS1043A doesn't support DMA, and LS2085A doesn't
-support XSPI.
-
-How is this dealt with in ACPI?
-
-Thanks,
--Vladimir
+Reviewed-by: Tomer Tayar <ttayar@habana.ai>
