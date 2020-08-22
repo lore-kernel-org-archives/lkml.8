@@ -2,192 +2,242 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC81C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 23:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5E0C433E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 23:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85C1F206B5
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 23:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B139C206B5
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 23:05:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VY/TWFNJ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y94EU2S4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgHVXFT (ORCPT
+        id S1728251AbgHVXFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 19:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgHVXFT (ORCPT
+        Sat, 22 Aug 2020 19:05:35 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4177 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgHVXFd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 19:05:19 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE15AC061573;
-        Sat, 22 Aug 2020 16:05:17 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id m20so4975928eds.2;
-        Sat, 22 Aug 2020 16:05:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2Fpwogtsb8NGet/9oeWKnkv+ON3vD5cWlFlPhK4b0pk=;
-        b=VY/TWFNJYwEBGSFmB855o1i9sz1IzgZKm3lUxnLXUie8J/srUwF+A0uaE3cPaylP+2
-         qJ5XB6qMdiGbkgiapFi1+HzxVhrz8noLOVTykooRgf/xsUrvbAIoXLyeb759/eNmJgci
-         agVVK1j5RR/60xocQJyUU+m/RqtlI+cCUz1e7R2Z1No0lHA/HKLxr/Y4/nlQ6+snV0T8
-         FMer8eq3bYpIr0eQEgL97J/bswbGK4HUvf03Z31PomdqKBLlYU0f3OJ42mA2g7HQ8xX9
-         DlS0AYYGQGDHRy7ageKAbX1+o3Wk7iGHnsmYjjAbqOPQsMU0jnO8/aOf+ptmgeN50nlJ
-         Vxnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2Fpwogtsb8NGet/9oeWKnkv+ON3vD5cWlFlPhK4b0pk=;
-        b=hkig9ci8OfTs9eaKLN1sfPUK52acDol85JW5Y9DNolqBhvd5KbtKzR6ivIr4RVq3kd
-         FQ3EbPGnfBUW9XiCIIb/QRryzlmMjRhxtXtpFioV5b06awpkaaNNJMjaq8zLX/yOYDoe
-         sNPQ2Dp37qI8GRLpWMt/MsR/RV0ryaYb8vT/umVYSu3BXPTxDz9q/aWptHsv6K76ZjyG
-         8+mxMwLvT5zceZNkXCsVkpM33UXdHkeNwtSvKhOTR8AfmVi7u6or9RdjAJVsRt2C25Dx
-         RWssz8QQLU3xYLhjWXsOv0P/90YJwMMuBStgGSdgEkilfwKDD8723VS+IqXlRuJr9Q1J
-         LAtg==
-X-Gm-Message-State: AOAM531YWv8kplfSX5zAG8IsAceB15dBdESSt/UfPbUrz0TGVwqAoGSI
-        riWZdbc8gzBuwyRI/8PFmoc=
-X-Google-Smtp-Source: ABdhPJzjZpBkLXFOtvZZoBfrQJVlw0sie6RZD0ECwJErzc05Hv0HcFVAw0DamE6gu+iZizm2xo0GAg==
-X-Received: by 2002:a05:6402:168c:: with SMTP id a12mr3199388edv.275.1598137516401;
-        Sat, 22 Aug 2020 16:05:16 -0700 (PDT)
-Received: from BV030612LT ([188.24.159.61])
-        by smtp.gmail.com with ESMTPSA id z10sm4195099eje.122.2020.08.22.16.05.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Aug 2020 16:05:15 -0700 (PDT)
-Date:   Sun, 23 Aug 2020 02:05:13 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v5 0/3] Add Actions Semi Owl family sirq support
-Message-ID: <20200822230513.GA2260050@BV030612LT>
-References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
- <20200822131712.GB5954@Mani-XPS-13-9360>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Sat, 22 Aug 2020 19:05:33 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f41a4460000>; Sat, 22 Aug 2020 16:03:34 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 22 Aug 2020 16:05:31 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 22 Aug 2020 16:05:31 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 22 Aug
+ 2020 23:05:16 +0000
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.173)
+ by HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Sat, 22 Aug 2020 23:05:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LzINHS2lB5VMQo1z+V0vLZnWz2fUT2nfYWoAcgxBOf816fMUUdhlAI568xjHHKsEUYr5C0/WApdt8erU1vwik2cVoiMxnbq1Xt58VSA6ZSlMy52b5MESsEWz/j5YB6z/VZlMcjOP6iy5yqK9vUtQtr7ZXIVxhpvUZTdwZZfj0lz6KxIsxTf51vjZRmMJuVH4SmiBEVtd+Dq78f2LVBbuBvst+iO7masCRlyVlMmILm8stncnjp5xEaJYzZrCavECSpaVyXxTtMhE8cLztEs5BOEP58FUNvQKv+zwp60rRDAPycNDQjWWb3kwpE+upTUwWOPX3M+Lsfy6nECLPr39Sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WUU7i885Q6+sCrSRdJX4f1HK+ORpbXNg4XTyZno15Gc=;
+ b=E/47vkxo8RsRwavW/QoHsdQNqv6jU+IlMJL8A3gdjs/NA8iptaVcf5V8urp8pWlVeHo3PguCTs2CbFp1PeJ4GeYwp0ydGdRVw/3tiBnXadMpx59EBWIY2v+YBmBZvMTtpbQiY7D8leNU6/SnNV9wtylhB1HWMFdmMUf1UuqWxLC/Tz0nc0xlbhv6gYQWhrCcLQmaiGYqoE+2/4ONfX6tDDeWG2yoYYJ5MyzG5bsuQxJnancpIWF2ggMYlwjEm4ugBYIOqvV8BSDU4zKS7d2WZXcXYZyw20hnoIc0c4M7LmXNl2QNOaBlFFQbPA+HFh8+D9EUHzdfOPj5L1ZSShMvUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB3209.namprd12.prod.outlook.com (2603:10b6:5:184::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Sat, 22 Aug
+ 2020 23:05:14 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3305.025; Sat, 22 Aug 2020
+ 23:05:13 +0000
+Date:   Sat, 22 Aug 2020 20:05:11 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     LKML <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, Megha Dey <megha.dey@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Jacob Pan" <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        <iommu@lists.linux-foundation.org>, <linux-hyperv@vger.kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "Jon Derrick" <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Stephen Hemminger" <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        "Dimitri Sivanich" <sivanich@hpe.com>, Russ Anderson <rja@hpe.com>,
+        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "Stefano Stabellini" <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [patch RFC 38/38] irqchip: Add IMS array driver - NOT FOR MERGING
+Message-ID: <20200822230511.GD1152540@nvidia.com>
+References: <20200821002424.119492231@linutronix.de>
+ <20200821002949.049867339@linutronix.de>
+ <20200821124547.GY1152540@nvidia.com>
+ <874kovsrvk.fsf@nanos.tec.linutronix.de>
+ <20200821201705.GA2811871@nvidia.com>
+ <87pn7jr27z.fsf@nanos.tec.linutronix.de>
+ <20200822005125.GB1152540@nvidia.com>
+ <874kovqx8q.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200822131712.GB5954@Mani-XPS-13-9360>
+In-Reply-To: <874kovqx8q.fsf@nanos.tec.linutronix.de>
+X-ClientProxiedBy: MN2PR19CA0026.namprd19.prod.outlook.com
+ (2603:10b6:208:178::39) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by MN2PR19CA0026.namprd19.prod.outlook.com (2603:10b6:208:178::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Sat, 22 Aug 2020 23:05:12 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k9cZT-00CHyg-1B; Sat, 22 Aug 2020 20:05:11 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4eb8662e-4148-46c3-2467-08d846efd2c5
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3209:
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM6PR12MB32092F6117C81D2DF59165FAC2580@DM6PR12MB3209.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: AjV8yxqty3rsW8NWUaLx8IbeTDv3k5w3Wv/EZJ5hk7ElVaVq9LLJld7WJhfKFrBxBcKtAGl+XuPIlyA1TyiDPOR/0XmZkS1onG6Th9oIeN0LHLAoyNKTAmlnpfNj9+rX82ic247YTNFkxKHDiXU3/dOlE9Rkt5aRw9A1tM6PEpu4FWLT75psGooHk+kPj6UUAv28CSPGKNgMp9e2KWEdq4qoa4kylJQv2QWxMj267iSNhYzWsvGPbVoZ1xl4/8JdBP4QMSkiRDvhb2k7L7oBSDKrb8s4jo/wj/1+tzQbTs66kmbjueYet4/OnOhuK+Au0S/EFyGehRzeVOvSVIOJ8A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(376002)(39850400004)(366004)(396003)(1076003)(478600001)(36756003)(5660300002)(54906003)(8676002)(8936002)(316002)(2906002)(186003)(26005)(9746002)(9786002)(7406005)(7416002)(2616005)(4326008)(83380400001)(426003)(66556008)(66476007)(66946007)(86362001)(6916009)(33656002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: FtuYeEFCAY1e9xhPDY8977O+plfZWclp5v1ybdJXcX5rwoIdZLXuYgfw+hHPc0lxvCNXnsO9jTuVAavIJQgjalGGn+nUwsYE7bRKBDxicoHhZQue5SNzzgYNRHcniUxkAs4BZavHdQyrt40JSTHXqBj5H+SvGJjqYRn2i7MBcaa3h8HbvQSfWqjx6XjaCvE7E+U1bvoJF7kXnKs0M6YbnAWZ8Ho3MfkPshBedXfMMLbCBeUCLxkWGA8Vwcn3AXsP7vb4BYmnOzgJOBJspvBL5rDPyepvFXf3JmxjioR01BGin2fdpCgsUdiSDV1E6nyZCbpn5zhipJA1TSeh24yV3Lsm1lm87AkIvB987r6lbDWFa0wtEjCDmN4dPOCfmzhxlG7+4r+Ld75Uk6RAi9wXZ2bQAE4J9SvSxc6bZW1AZDjTHuYhK7kR5z77xNpsWIihEfHgYYxoFlB6jFqls4X3R/T6usTjXQ2DO20hLQ5yiYyPgfNy64yhW1ipSlOyKd/Rax1csBZlRepQ5ExdXz5Z8RfvLRkXbIXGN2tuNntgJPwPQVCuCKM99qfa60r2Z+APlnwwocJgSVQsJBb6suJF4aXftitKgPXsf7QUQjY3U5ybVtfOFAQI1QSc4t/lnpx2VF4SpX/1vF6XDW5mlRXuug==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4eb8662e-4148-46c3-2467-08d846efd2c5
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2020 23:05:13.7138
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NORN6ASWCk+71Ok3Hqa96b1B/xj8faAUeVYznBOI6PKv/slsVCviurbfpSdfUEVW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3209
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598137415; bh=WUU7i885Q6+sCrSRdJX4f1HK+ORpbXNg4XTyZno15Gc=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-LD-Processed:
+         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
+         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
+         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+         X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=Y94EU2S4jeRtrpmTUhyNtkuVBxTovfAoqlGA+Fs/99cdGCK8Fe3KU3STgXL66lcvs
+         UVoSoqgc9MdZxF7Flv58RJAG7dJ9MT5CLHa1qccBoF+0U+O6mXwxUUzD8nejxkAZnX
+         tp6etExJ6qtMZcatI0L1HWfYTOiAnpUmgYqnVIzmvAAT63NziAC9Q5zimuShHN28+x
+         gnEpP/OrSkMsXtJS/ymuZm9vfnXGdl0fiFOzGkbeTv/W3kAXyD/UDfFXebZGpu86zW
+         Vodu75IC1SkYbIwOfqp/f2c4Cb0QfL/W0wYE+vkRohhLG+/V17+GGptPPb4lMIItSV
+         MPGc3wVCdwoEg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mani,
-
-On Sat, Aug 22, 2020 at 06:47:12PM +0530, Manivannan Sadhasivam wrote:
-> Hi Cristi,
+On Sat, Aug 22, 2020 at 03:34:45AM +0200, Thomas Gleixner wrote:
+> >> One question is whether the device can see partial updates to that
+> >> memory due to the async 'swap' of context from the device CPU.
+> >
+> > It is worse than just partial updates.. The device operation is much
+> > more like you'd imagine a CPU cache. There could be copies of the RAM
+> > in the device for long periods of time, dirty data in the device that
+> > will flush back to CPU RAM overwriting CPU changes, etc.
 > 
-> On Wed, Aug 19, 2020 at 07:37:55PM +0300, Cristian Ciocaltea wrote:
-> > This patch series adds support for the external interrupt controller
-> > (SIRQ) found in the Actions Semi Owl family of SoC's (S500, S700 and
-> > S900). The controller handles up to 3 external interrupt lines through
-> > dedicated SIRQ pins.
-> > 
-> > This is a rework of the patch series submitted some time ago by 
-> > Parthiban Nallathambi: 
-> > https://lore.kernel.org/lkml/20181126100356.2840578-1-pn@denx.de/
-> > 
+> TBH, that's insane. You clearly want to think about this some
+> more. If
+
+I think this general design is around 15 years old, across a healthy
+number of silicon generations, and rather a lager number of shipped
+devices. People have thought about it :)
+
+> you swap out device state and device control state then you definitly
+> want to have regions which are read only from the device POV and never
+> written back. 
+
+It is not as useful as you'd think - the issue with atomicity of
+update still largely prevents doing much useful from the CPU, and to
+make any CPU side changes visible a device command would still be
+needed to synchronize the internal state to that modified memory.
+
+So, CPU centric updates would cover a very limited number of
+operations, and a device command is required anyhow. Little is
+actually gained.
+
+> The MSI msg store clearly belongs into that category.
+> But that's not restricted to the MSI msg store, there is certainly other
+> stuff which never wants to be written back by the device.
+
+To get a design where you'd be able to run everything from a CPU
+atomic context that can't trigger a WQ..
+
+New silicon would have to implement some MSI-only 'cache' that can
+invalidate entries based on a simple MemWr TLP.
+
+Then the affinity update would write to the host memory, then send a
+MemWr to the device to trigger invalidate.
+
+As a silicon design it might work, but it means existing devices can't
+be used with this dev_msi. It is also the sort of thing that would
+need a standard document to have any hope of multiple vendors fitting
+into it. Eg at PCI-SIG or something.
+
+> If you don't do that then you simply can't write to that space from the
+> CPU and you have to transport this kind information always via command
+> queues.
+
+Yes, exactly. This is part of the architectural design of the device,
+has been for a long time. Has positives and negatives.
+
+> > I suppose the core code could provide this as a service? Sort of a
+> > varient of the other lazy things above?
 > 
-> You need to preserve the authorship while reposting the patches. If you'd
-> like to take the authorship intentionally then please explain the reason in
-> cover letter.
-> 
-> Thanks,
-> Mani
+> Kinda. That needs a lot of thought for the affinity setting stuff
+> because it can be called from contexts which do not allow that. It's
+> solvable though, but I clearly need to stare at the corner cases for a
+> while.
 
-Thanks for pointing this out, I was not aware of the procedure - this is
-actually my very first repost. Could you please indicate how should I
-proceed to fix this? I had absolutely no intention to take the authorship..
+If possible, this would be ideal, as we could use the dev_msi on a big
+installed base of existing HW.
 
-Sorry for the mistake,
-Cristi
+I suspect other HW can probably fit into this too as the basic
+ingredients should be fairly widespread.
 
-> > Please note I have dropped, for the moment, the S700 related patches 
-> > since I do not own a compatible hardware for testing. I'm using instead
-> > an S500 SoC based board for which I have already provided the initial
-> > support:
-> > https://lore.kernel.org/lkml/cover.1592123160.git.cristian.ciocaltea@gmail.com/
-> > 
-> > The SIRQ controller support is a prerequisite of the soon to be submitted
-> > MFD driver for the Actions Semi ATC260x PMICs.
-> > 
-> > Thanks and regards,
-> > Cristi
-> > 
-> > Changes in v5:
-> > - Integrated Marc's review (more details in the driver patch changelog)
-> > - Rebased patch series on v5.9-rc1
-> > 
-> > Changes in v4:
-> > - Simplified the DTS structure:
-> >   * dropped 'actions,sirq-shared-reg' node, now the differentiation
-> >     between SoC variants is handled now via the compatible property
-> >   * dropped 'actions,sirq-reg-offset', now controller base address in
-> >     DTS points to SIRQ0 register, so no additional information is
-> >     required for S500 and S700, while for S900 SoC the offsets of SIRQ1
-> >     and SIRQ2 regs are provided by the driver
-> >   * 'actions,ext-irq-range' was replaced with 'actions,ext-interrupts',
-> >     an array of the GIC interrupts triggered by the controller
-> > - Fixed wrong INTC_EXTCTL_TYPE_MASK definition
-> > - Removed redundant irq_fwspec checks in owl_sirq_domain_alloc()
-> > - Improved error handling in owl_sirq_of_init()
-> > - Added yaml binding document
-> > - Dropped S700 related DTS patches for lack of testing hardware:
-> >   * arm64: dts: actions: Add sirq node for Actions Semi S700
-> >   * arm64: dts: actions: s700-cubieboard7: Enable SIRQ
-> > - Updated MAINTAINERS
-> > - Rebased patchset on kernel v5.8
-> > - Cosmetic changes
-> >  * Ordered include statements alphabetically
-> >  * Added comment to owl_sirq_set_type() describing conversion of falling
-> >    edge or active low signals
-> >  * Replaced IRQF_TRIGGER_* with corresponding IRQ_TYPE_* variants
-> >  * Ensured data types and function naming are consistent regarding the
-> >    'owl_sirq' prefix
-> > 
-> > Changes in v3 (Parthiban Nallathambi):
-> > - Set default operating frequency to 24MHz
-> > - Falling edge and Low Level interrupts translated to rising edge and high level
-> > - Introduced common function with lock handling for register read and write
-> > - Used direct GIC interrupt number for interrupt local hwirq and finding offset
-> > using DT entry (range) when registers are shared 
-> > - Changed irq_ack to irq_eoi
-> > - Added translation method for irq_domain_ops
-> > - Clearing interrupt pending based on bitmask for edge triggered
-> > - Added pinctrl definition for sirq for cubieboard7. This depends on,
-> > https://lore.kernel.org/patchwork/patch/1012859/
-> > 
-> > Changes in v2 (Parthiban Nallathambi):
-> > - Added SIRQ as hierarchical chip
-> >         GIC <----> SIRQ <----> External interrupt controller/Child devices
-> > - Device binding updates with vendor prefix
-> > - Register sharing handled globally and common init sequence/data for all
-> > actions SoC family
-> > 
-> > Cristian Ciocaltea (3):
-> >   dt-bindings: interrupt-controller: Add Actions SIRQ controller binding
-> >   irqchip: Add Actions Semi Owl SIRQ controller
-> >   MAINTAINERS: Add entries for Actions Semi Owl SIRQ controller
-> > 
-> >  .../actions,owl-sirq.yaml                     |  68 ++++
-> >  MAINTAINERS                                   |   2 +
-> >  drivers/irqchip/Makefile                      |   1 +
-> >  drivers/irqchip/irq-owl-sirq.c                | 347 ++++++++++++++++++
-> >  4 files changed, 418 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> >  create mode 100644 drivers/irqchip/irq-owl-sirq.c
-> > 
-> > -- 
-> > 2.28.0
-> > 
+Even a restricted version for situations where affinity does not need
+a device update would possibly be interesting (eg x86 IOMMU remap, ARM
+GIC, etc)
+
+> OTOH, in normal operation for MSI interrupts (edge type) masking is not
+> used at all and just restricted to the startup teardown.
+
+Yeah, at least this device doesn't need masking at runtime, just
+startup/teardown and affinity update.
+
+Thanks,
+Jason
