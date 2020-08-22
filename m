@@ -2,119 +2,141 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 22:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B450C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 22:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFE00206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 22:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598133629;
-	bh=26/N8+mvdu6vlbNFTien1WtTQ3gb3dU7NGk55H9qbcg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=E4i+EytM/iOnnEDvUgDAlckjJy14rltcUC4njMlsxIt5wv+frYuQxVAiXwzmxco+w
-	 njw68FCtQX+9URUSmFNZp4JzdD56O0HZocJS2/Ctv3f3LmlJCGTTdoe64zTnUSOXwj
-	 T8njN34bAkbqq8BYBs4P1JG9xkJ7WP2BdusY6ARU=
+	by mail.kernel.org (Postfix) with ESMTP id 36182206B5
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 22:20:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QjOSkyFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgHVV7w (ORCPT
+        id S1727887AbgHVWUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 17:59:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbgHVV7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 17:59:51 -0400
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E38B2078A
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 21:59:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598133590;
-        bh=26/N8+mvdu6vlbNFTien1WtTQ3gb3dU7NGk55H9qbcg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XqoYxwF1bwXh/iSy5GpGXceIJHdU3M6lfgzq0M1F6S1AzgrK+fMdw8yLVzBtisc5x
-         e6lsVvnJMZOER4PR+5pNh1ARBTvU4q7mQsEANhNkEm/vkpA9s2mgGHGbWxNwke6z0L
-         +dlKJyuQBeyj/BC6RLr2VbPRTlnxcJr/poHOeBYs=
-Received: by mail-wm1-f51.google.com with SMTP id f18so3560852wmc.0
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 14:59:50 -0700 (PDT)
-X-Gm-Message-State: AOAM5318VhA8aCASyReqKH44g+Dj5ny0FJImhbfcIsZXIbShos73fhEO
-        WFqL4JuX0iI6p0VI7rtFhup/2SUWkP9fYBOiah3ACQ==
-X-Google-Smtp-Source: ABdhPJx8zYLtQI9PtVOSnI3R8T+8esNH3luXDKza2exG6DLlTSdqFPsxQ/yBNmt1hQvaBDz7uJ7L04rqy528U7jIwUk=
-X-Received: by 2002:a7b:ca48:: with SMTP id m8mr127503wml.36.1598133588918;
- Sat, 22 Aug 2020 14:59:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <881de09e786ab93ce56ee4a2437ba2c308afe7a9.1593795633.git.luto@kernel.org>
- <159388495037.4006.7851835406474127743.tip-bot2@tip-bot2> <20200820102344.GP2674@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200820102344.GP2674@hirez.programming.kicks-ass.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 22 Aug 2020 14:59:37 -0700
-X-Gmail-Original-Message-ID: <CALCETrVFQuMcUgfDkREGFHSSF9UW5yy4UuNZSpjw1962eSvLyw@mail.gmail.com>
-Message-ID: <CALCETrVFQuMcUgfDkREGFHSSF9UW5yy4UuNZSpjw1962eSvLyw@mail.gmail.com>
-Subject: Re: [tip: x86/urgent] x86/entry, selftests: Further improve user
- entry sanity checks
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 22 Aug 2020 18:20:34 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:35332 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726535AbgHVWUe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 18:20:34 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 351DB30C025;
+        Sat, 22 Aug 2020 15:17:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 351DB30C025
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1598134669;
+        bh=UE3OyB8A4aT6f2xa9aoBVeB/WeSuw2wDk5Slp6DChN4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QjOSkyFx/Bo5SsYRp4S8KdoovPrvxELm0640AcgBnECK21w8sMfWvt7av7IIWpakr
+         3QNNFu3pUjwpjQ8hdkuzMF1kHP93U8PQJfBwAIUbc6vdWiRn5fbAh9wQ4plkT1NfbD
+         AeLy4IEm9Xbu+IX3WcnzmN4qgHQgPZr4JrNgLKnk=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 8ACAF14008E;
+        Sat, 22 Aug 2020 15:20:30 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        james.quinlan@broadcom.com
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1] PCI: pcie_bus_config can be set at build time
+Date:   Sat, 22 Aug 2020 18:20:20 -0400
+Message-Id: <20200822222021.37166-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 3:24 AM <peterz@infradead.org> wrote:
->
-> On Sat, Jul 04, 2020 at 05:49:10PM -0000, tip-bot2 for Andy Lutomirski wrote:
->
-> > diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-> > index f392a8b..e83b3f1 100644
-> > --- a/arch/x86/entry/common.c
-> > +++ b/arch/x86/entry/common.c
-> > @@ -49,6 +49,23 @@
-> >  static void check_user_regs(struct pt_regs *regs)
-> >  {
-> >       if (IS_ENABLED(CONFIG_DEBUG_ENTRY)) {
-> > +             /*
-> > +              * Make sure that the entry code gave us a sensible EFLAGS
-> > +              * register.  Native because we want to check the actual CPU
-> > +              * state, not the interrupt state as imagined by Xen.
-> > +              */
-> > +             unsigned long flags = native_save_fl();
-> > +             WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
-> > +                                   X86_EFLAGS_NT));
->
-> This triggers with AC|TF on my !SMAP enabled machine.
->
-> something like so then?
->
-> diff --git a/arch/x86/include/asm/entry-common.h b/arch/x86/include/asm/entry-common.h
-> index a8f9315b9eae..76410964585f 100644
-> --- a/arch/x86/include/asm/entry-common.h
-> +++ b/arch/x86/include/asm/entry-common.h
-> @@ -18,8 +18,15 @@ static __always_inline void arch_check_user_regs(struct pt_regs *regs)
->                  * state, not the interrupt state as imagined by Xen.
->                  */
->                 unsigned long flags = native_save_fl();
-> -               WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
-> -                                     X86_EFLAGS_NT));
-> +               unsigned long mask = X86_EFLAGS_DF | X86_EFLAGS_NT;
-> +
-> +               /*
-> +                * For !SMAP hardware we patch out CLAC on entry.
-> +                */
-> +               if (boot_cpu_has(X86_FEATURE_SMAP))
-> +                       mask |= X86_EFLAGS_AC;
-> +
-> +               WARN_ON_ONCE(flags & mask);
->
->                 /* We think we came from user mode. Make sure pt_regs agrees. */
->                 WARN_ON_ONCE(!user_mode(regs));
+The Kconfig is modified so that the pcie_bus_config setting can be done at
+build time in the same manner as the CONFIG_PCIEASPM_XXXX choice.  The
+pci_bus_config setting may still be overridden by the bootline param.
 
-LGTM.
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+---
+ drivers/pci/Kconfig | 40 ++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.c   | 12 ++++++++++++
+ 2 files changed, 52 insertions(+)
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 4bef5c2bae9f..efe69b0d9f7f 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -187,6 +187,46 @@ config PCI_HYPERV
+ 	  The PCI device frontend driver allows the kernel to import arbitrary
+ 	  PCI devices from a PCI backend to support PCI driver domains.
+ 
++choice
++	prompt "PCIE default bus config setting"
++	default PCIE_BUS_DEFAULT
++	depends on PCI
++	help
++	  One of the following choices will set the pci_bus_config at
++	  compile time.  This will still be overridden by the appropriate
++	  pci bootline parameter.
++
++config PCIE_BUS_TUNE_OFF
++	bool "Tune Off"
++	depends on PCI
++	help
++	  Use the BIOS defaults; doesn't touch MPS at all.
++
++config PCIE_BUS_DEFAULT
++	bool "Default"
++	depends on PCI
++	help
++	  Ensure MPS matches upstream bridge.
++
++config PCIE_BUS_SAFE
++	bool "Safe"
++	depends on PCI
++	help
++	  Use largest MPS boot-time devices support.
++
++config PCIE_BUS_PERFORMANCE
++	bool "Performance"
++	depends on PCI
++	help
++	  Use MPS and MRRS for best performance.
++
++config PCIE_BUS_PEER2PEER
++	bool "Peer2peer"
++	depends on PCI
++	help
++	  Set MPS = 128 for all devices.
++endchoice
++
+ source "drivers/pci/hotplug/Kconfig"
+ source "drivers/pci/controller/Kconfig"
+ source "drivers/pci/endpoint/Kconfig"
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a458c46d7e39..49b66ba7c874 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -101,7 +101,19 @@ unsigned long pci_hotplug_mmio_pref_size = DEFAULT_HOTPLUG_MMIO_PREF_SIZE;
+ #define DEFAULT_HOTPLUG_BUS_SIZE	1
+ unsigned long pci_hotplug_bus_size = DEFAULT_HOTPLUG_BUS_SIZE;
+ 
++
++/* PCIE bus config, can be overridden by bootline param */
++#ifdef CONFIG_PCIE_BUS_TUNE_OFF
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_TUNE_OFF;
++#elif defined CONFIG_PCIE_BUS_SAFE
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_SAFE;
++#elif defined CONFIG_PCIE_BUS_PERFORMANCE
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_PERFORMANCE;
++#elif defined CONFIG_PCIE_BUS_PEER2PEER
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_PEER2PEER;
++#else
+ enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_DEFAULT;
++#endif
+ 
+ /*
+  * The default CLS is used if arch didn't set CLS explicitly and not
+-- 
+2.17.1
+
