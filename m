@@ -2,186 +2,62 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB14C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A143F2072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:27:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WD1y4zXx"
+	by mail.kernel.org (Postfix) with ESMTP id D22472072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:29:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgHVH1O (ORCPT
+        id S1727768AbgHVH3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 03:27:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgHVH1K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 03:27:10 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71569C061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 00:27:10 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id oz20so216617ejb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 00:27:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mDR0zrvaETchAvJrcviqkk7cP258seKos1RRZO2tCNY=;
-        b=WD1y4zXxFKdPhrJDo7FZF18V8FXHdZAuQzKOqvwg5t4cC+zK1OJ0lfC/t6NmK+O6GG
-         NWICiBh3SfaXsrWidpT/L8d81C880rZzPxlK3xjlS6gvz8POZsgYaj1nm5h7681zVqSV
-         SaLXPjSsR0MQQbKtVGF/UuK00EXO3tq9Z/BrHW4scNC3phcxBiqQTa+lRN2e+V9gs4H1
-         Yh0+8sRw+4LfFgKuIyivx/UOICrzE7utfUuUFiRTd9EMaBWno18Zrmjq/MLKR0zOFkuv
-         /2SWots2svp9DZ+wH63o3IPnu84631NxD5XC0nxh1ZI8AtBGWMS0XSZwKSEVmSpYiYil
-         LnnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mDR0zrvaETchAvJrcviqkk7cP258seKos1RRZO2tCNY=;
-        b=Mo3qZ6IWZ0GmQaxmHUNe9BjHlM+EjfRmAQJXmimZaIu/uWJ7Fe0dDP3czfnFNiLQdP
-         I4tbYfSXgL7Euhp6cmwMWFcSSkq9JRlVuWDwXHEjjA2c1fa1wB18SFxSCcuIeYy6slPo
-         oToGDI/GYDQWtlAOra3zDdgGu9ADlG1Zb1KIsNH+Xqc2VF69GtGE+Lf7jMXcsut0FetM
-         g3Etxry6BKT4Fh+7HmoXgjctGpcey76t8rwssMsWXaMrBKCslDDZZdPosvM3tGGagM/N
-         ogjZxtwpG7gjbVBulZrMN98tWGHxaSzLJmhwVNtZ2ou6AJLPKXr7W2BpAEO+li0XWd5r
-         Uh6Q==
-X-Gm-Message-State: AOAM533IXjH+KpPLCfrjC5kxzyPXGuHV4BzIZf/QSEyv4C/N5bziw+0b
-        ekB+OrEm2+PgtmeOVdM5ebP7hLtO5tEjbAPlOyJb8g==
-X-Google-Smtp-Source: ABdhPJwqITtid7OZmHUh//eLVchaGbXrP+3xlPPoyAXWuYCMSciXM8P9U/0GBYjVHb5ptGJivZ8In0FV5V+vGZBpmgc=
-X-Received: by 2002:a17:906:5902:: with SMTP id h2mr6586238ejq.423.1598081228742;
- Sat, 22 Aug 2020 00:27:08 -0700 (PDT)
+        Sat, 22 Aug 2020 03:29:11 -0400
+Received: from elvis.franken.de ([193.175.24.41]:56090 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbgHVH3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 03:29:11 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1k9Nxc-0001FX-00; Sat, 22 Aug 2020 09:29:08 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 93687C0D90; Sat, 22 Aug 2020 09:25:10 +0200 (CEST)
+Date:   Sat, 22 Aug 2020 09:25:10 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the mips-fixes
+ tree
+Message-ID: <20200822072510.GA4657@alpha.franken.de>
+References: <20200822101706.6cb19f1f@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-6-haoluo@google.com>
- <29b8358f-64fb-9e82-acb0-20b5922afc81@fb.com> <CAEf4BzbmOnv1W4p2F6Ke8W_Gwi-QjtsOW8MFSifVoiaRY8jNVg@mail.gmail.com>
-In-Reply-To: <CAEf4BzbmOnv1W4p2F6Ke8W_Gwi-QjtsOW8MFSifVoiaRY8jNVg@mail.gmail.com>
-From:   Hao Luo <haoluo@google.com>
-Date:   Sat, 22 Aug 2020 00:26:57 -0700
-Message-ID: <CA+khW7iLW-KsrfBS2a+OOMU4i72sHiNeSzkAnXoidW7gwaMaLA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 5/8] bpf/selftests: ksyms_btf to test typed ksyms
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Yonghong Song <yhs@fb.com>, Networking <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200822101706.6cb19f1f@canb.auug.org.au>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 4:03 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Thu, Aug 20, 2020 at 10:32 AM Yonghong Song <yhs@fb.com> wrote:
-> >
-> >
-> >
-> > On 8/19/20 3:40 PM, Hao Luo wrote:
-> > > Selftests for typed ksyms. Tests two types of ksyms: one is a struct,
-> > > the other is a plain int. This tests two paths in the kernel. Struct
-> > > ksyms will be converted into PTR_TO_BTF_ID by the verifier while int
-> > > typed ksyms will be converted into PTR_TO_MEM.
-> > >
-> > > Signed-off-by: Hao Luo <haoluo@google.com>
-> > > ---
-> > >   .../selftests/bpf/prog_tests/ksyms_btf.c      | 77 +++++++++++++++++++
-> > >   .../selftests/bpf/progs/test_ksyms_btf.c      | 23 ++++++
-> > >   2 files changed, 100 insertions(+)
-> > >   create mode 100644 tools/testing/selftests/bpf/prog_tests/ksyms_btf.c
-> > >   create mode 100644 tools/testing/selftests/bpf/progs/test_ksyms_btf.c
-> > >
-> > > diff --git a/tools/testing/selftests/bpf/prog_tests/ksyms_btf.c b/tools/testing/selftests/bpf/prog_tests/ksyms_btf.c
-> > > new file mode 100644
-> > > index 000000000000..1dad61ba7e99
-> > > --- /dev/null
-> > > +++ b/tools/testing/selftests/bpf/prog_tests/ksyms_btf.c
-> > > @@ -0,0 +1,77 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/* Copyright (c) 2020 Google */
-> > > +
-> > > +#include <test_progs.h>
-> > > +#include <bpf/libbpf.h>
-> > > +#include <bpf/btf.h>
-> > > +#include "test_ksyms_btf.skel.h"
-> > > +
-> > > +static int duration;
-> > > +
-> > > +static __u64 kallsyms_find(const char *sym)
-> > > +{
-> > > +     char type, name[500];
-> > > +     __u64 addr, res = 0;
-> > > +     FILE *f;
-> > > +
-> > > +     f = fopen("/proc/kallsyms", "r");
-> > > +     if (CHECK(!f, "kallsyms_fopen", "failed to open: %d\n", errno))
-> > > +             return 0;
-> >
-> > could you check whether libbpf API can provide this functionality for
-> > you? As far as I know, libbpf does parse /proc/kallsyms.
->
-> No need to use libbpf's implementation. We already have
-> kallsyms_find() in prog_tests/ksyms.c and a combination of
-> load_kallsyms() + ksym_get_addr() in trace_helpers.c. It would be good
-> to switch to one implementation for both prog_tests/ksyms.c and this
-> one.
->
-Ack. I can do some refactoring. The least thing that I can do is
-moving kallsyms_find() to a header for both prog_tests/ksyms.c and
-this test to use.
+On Sat, Aug 22, 2020 at 10:17:06AM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Commit
+> 
+>   1697ee6e540a ("Revert "MIPS: op_model_mipsxx: Fix non-executable code bug"")
+> 
+> is missing a Signed-off-by from its author and committer.
+> 
+> Reverts are commits too.
 
->
-> > > diff --git a/tools/testing/selftests/bpf/progs/test_ksyms_btf.c b/tools/testing/selftests/bpf/progs/test_ksyms_btf.c
-> > > new file mode 100644
-> > > index 000000000000..e04e31117f84
-> > > --- /dev/null
-> > > +++ b/tools/testing/selftests/bpf/progs/test_ksyms_btf.c
-> > > @@ -0,0 +1,23 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/* Copyright (c) 2020 Google */
-> > > +
-> > > +#include "vmlinux.h"
-> > > +
-> > > +#include <bpf/bpf_helpers.h>
-> > > +
-> > > +__u64 out__runqueues = -1;
-> > > +__u64 out__bpf_prog_active = -1;
-> > > +
-> > > +extern const struct rq runqueues __ksym; /* struct type global var. */
-> > > +extern const int bpf_prog_active __ksym; /* int type global var. */
-> > > +
-> > > +SEC("raw_tp/sys_enter")
-> > > +int handler(const void *ctx)
-> > > +{
-> > > +     out__runqueues = (__u64)&runqueues;
-> > > +     out__bpf_prog_active = (__u64)&bpf_prog_active;
-> > > +
->
-> You didn't test accessing any of the members of runqueues, because BTF
-> only has per-CPU variables, right? Adding global/static variables was
-> adding too much data to BTF or something like that, is that right?
->
+d'oh, it's fixed now.
 
-Right. With some experiments, I found the address of a percpu variable
-doesn't necessarily point to a valid structure. So it doesn't make
-sense to dereference runqueues and access its members. However, right
-now there are only percpu variables encoded in BTF, so I can't test
-accessing members of general global/static variables unfortunately.
+Thomas.
 
-Hao
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
