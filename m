@@ -8,58 +8,57 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D89C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FDCF2071A
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7621A2071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:28:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxsqS8Pr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpkbiRSU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbgHVE2h (ORCPT
+        id S1726548AbgHVE2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 00:28:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60842 "EHLO
+        Sat, 22 Aug 2020 00:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgHVE2Y (ORCPT
+        with ESMTP id S1725924AbgHVE22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 00:28:24 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 890C7C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 21:28:24 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id q93so1656738pjq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 21:28:24 -0700 (PDT)
+        Sat, 22 Aug 2020 00:28:28 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A23CC061575
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 21:28:27 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id b11so1785966pld.7
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 21:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=aOT5t5tsGk7zRkfUzo++dr5YPDmf2c1MUVXVEa0SPao=;
-        b=rxsqS8Pri0Qn5Ds/DSubiRLLrZ4K+SYlbOi4VVrpZ8DYheYQemgKiTMN0HKrAkNaNG
-         UKIlmhhC30qGforLqflJRG84EP/bpSnmc3UilciUq08oxv1K7pCMFMTdysN1hA/VgHXk
-         sr2gcZF+jTB1A4NwBXm1mtbkhalu01RDSjxoeBFjalhZTWMEoFiKIBIPlAS/f4ksgmvk
-         Q01C++UaDK/zxG2BauSnyV4II4mmvj2TjEpaP8iWoL18U7D1SM/iaIXrTfBE/OLnlq30
-         X9ezI8seJUQzlq4jWyNMpqUMo/QoKJ14raVkgZRw7iIGeMUAVoMZAS6fqBLibjaidGKI
-         gwaQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=9a68/00xVDfWhCk0KWge9jUwRDiLi6HmNKJEmgRAHiY=;
+        b=CpkbiRSUSpLGQOuoc2Viqt2XTjXRNuivKEOQruYK7qwuXfY6p/xyYUYypYQoaF+rSO
+         znFYqNTMmOlbtyhO/JhdncNBoY2Hg/cS1cblsIuZ5ozVZCru5MefZMUwlQVQdGUe3N46
+         v+KPm3xQlSb3HUff7PyN72oYA4Ukx8LKt0dFZLGm/+7P4hHyunWB0icBNSxj8wON6MnN
+         z1hlzOUauW6zz/5aG5aRMGgpDUjA0H/5RS8+pO95l86hU+dAPEJoFwzaEN5EmcWlUvW7
+         FRd1f35ehMC8mvHu22Zr6hpZWJnqAPtAaIFLTIUj6RgoP8Z56k6O3eMTwVsTCDLkcqzf
+         wwIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aOT5t5tsGk7zRkfUzo++dr5YPDmf2c1MUVXVEa0SPao=;
-        b=hxftA5s5DL33A/ryMAG7soJgMZkVlQWQQE6Z80Bd5ce2qDIlfIZolpWbwvxTVPo8b2
-         lTxDVUMdVlz8rjfIcJsSCFyPk1YbIvr82ln0rO6WT1N7Hife1VJyBtZva/UXwpV5wKTG
-         rlAP0prpkAFpRvyO9N1Pp52q5vKfCKV6NF3SbmnCBCH4WZl1RExtsuSXhHaI0FtN37k+
-         fkdjN+9/FGu+Q1aEE5ouSXDKnaYXAjPML5M1AbsXfCrzLYiaAmkzT2mB02ZvYW9XVgh/
-         JeijPfgXpu3kQun9mtgtJYQrreajIo6CKXplA92gH7kupRgXHbAIrriOgFYGTwZi1ES2
-         Qj8g==
-X-Gm-Message-State: AOAM533lSFUpe353UbgD+keR30/mK3XG2CHQgcWgoNPl0rVQRUm438b2
-        aCSBLHHoKxZV9IxCYWtPcag=
-X-Google-Smtp-Source: ABdhPJwQZqduhA5Sqkeshos1ceV39Qc74CqyJ4sHhm2xbB00DhuIm77th+n707XKkjffOZ+s4R0hzA==
-X-Received: by 2002:a17:90a:9c3:: with SMTP id 61mr638955pjo.191.1598070503753;
-        Fri, 21 Aug 2020 21:28:23 -0700 (PDT)
+         :references;
+        bh=9a68/00xVDfWhCk0KWge9jUwRDiLi6HmNKJEmgRAHiY=;
+        b=kKSHEsyEh0qmX3Q88cYK+C4iW7Iok5dEGpugjlOpMB7JTAzbJCks0Y/XOsmhYxS/6K
+         h7VTSn9FXiRg5RKtXvmVG4rsueehCTh+sLCLk/EVJmOjoY2zUVbLwxBjNkwVhEwrCMg5
+         6QfcZCLY7N4+Ei1HELYHSl0d9VTRQhhEUxpfycV6RjSD55NWZUdtKaH9efJ58YwaxeEU
+         vt/svagR6rs5Ti7BMLvAhVshP5PsHN9VLkxmbZmi8buMLP4BznwTFLKDa7dwqOYXyVps
+         Cxp0GC+Hr5frrMzmjazA6fkw/crjdOLeQJaiAjMQ7jqJbQRRT9eduUs4jv6RJI8YEUqN
+         hvcg==
+X-Gm-Message-State: AOAM531kLraZBTZRDbbBUkd6yAPaLecyXC9UtZvM7XQ0VWu1+OikQQ71
+        0swbYznbrsGfy3C7pb+MZ90=
+X-Google-Smtp-Source: ABdhPJzgZhT64gcRugAJIx6tuMzCBxZZ3lNph/UBNJS805XELjgC/Bx7+Se976if+OoY8n+6lTVUOg==
+X-Received: by 2002:a17:90a:bd15:: with SMTP id y21mr4882777pjr.144.1598070506752;
+        Fri, 21 Aug 2020 21:28:26 -0700 (PDT)
 Received: from jacob-builder.jf.intel.com ([192.55.55.43])
-        by smtp.gmail.com with ESMTPSA id q5sm3341582pgi.31.2020.08.21.21.28.22
+        by smtp.gmail.com with ESMTPSA id q5sm3341582pgi.31.2020.08.21.21.28.25
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Aug 2020 21:28:23 -0700 (PDT)
+        Fri, 21 Aug 2020 21:28:26 -0700 (PDT)
 From:   Jacob Pan <jacob.pan.linux@gmail.com>
 X-Google-Original-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 To:     iommu@lists.linux-foundation.org,
@@ -71,660 +70,750 @@ To:     iommu@lists.linux-foundation.org,
 Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
         Raj Ashok <ashok.raj@intel.com>,
         Eric Auger <eric.auger@redhat.com>, Wu Hao <hao.wu@intel.com>
-Subject: [PATCH v2 1/9] docs: Document IO Address Space ID (IOASID) APIs
-Date:   Fri, 21 Aug 2020 21:35:10 -0700
-Message-Id: <1598070918-21321-2-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v2 3/9] iommu/ioasid: Introduce ioasid_set APIs
+Date:   Fri, 21 Aug 2020 21:35:12 -0700
+Message-Id: <1598070918-21321-4-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1598070918-21321-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1598070918-21321-1-git-send-email-jacob.jun.pan@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IOASID is used to identify address spaces that can be targeted by device
-DMA. It is a system-wide resource that is essential to its many users.
-This document is an attempt to help developers from all vendors navigate
-the APIs. At this time, ARM SMMU and Intel’s Scalable IO Virtualization
-(SIOV) enabled platforms are the primary users of IOASID. Examples of
-how SIOV components interact with IOASID APIs are provided in that many
-APIs are driven by the requirements from SIOV.
+ioasid_set was introduced as an arbitrary token that are shared by a
+group of IOASIDs. For example, if IOASID #1 and #2 are allocated via the
+same ioasid_set*, they are viewed as to belong to the same set.
+
+For guest SVA usages, system-wide IOASID resources need to be
+partitioned such that VMs can have its own quota and being managed
+separately. ioasid_set is the perfect candidate for meeting such
+requirements. This patch redefines and extends ioasid_set with the
+following new fields:
+- Quota
+- Reference count
+- Storage of its namespace
+- The token is stored in the new ioasid_set but with optional types
+
+ioasid_set level APIs are introduced that wires up these new data.
+Existing users of IOASID APIs are converted where a host IOASID set is
+allocated for bare-metal usage.
 
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- Documentation/ioasid.rst | 618 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 618 insertions(+)
- create mode 100644 Documentation/ioasid.rst
+ drivers/iommu/intel/iommu.c |  27 ++-
+ drivers/iommu/intel/pasid.h |   1 +
+ drivers/iommu/intel/svm.c   |   8 +-
+ drivers/iommu/ioasid.c      | 390 +++++++++++++++++++++++++++++++++++++++++---
+ include/linux/ioasid.h      |  82 ++++++++--
+ 5 files changed, 465 insertions(+), 43 deletions(-)
 
-diff --git a/Documentation/ioasid.rst b/Documentation/ioasid.rst
-new file mode 100644
-index 000000000000..b6a8cdc885ff
---- /dev/null
-+++ b/Documentation/ioasid.rst
-@@ -0,0 +1,618 @@
-+.. ioasid:
-+
-+=====================================
-+IO Address Space ID
-+=====================================
-+
-+IOASID is a generic name for PCIe Process Address ID (PASID) or ARM
-+SMMU sub-stream ID. An IOASID identifies an address space that DMA
-+requests can target.
-+
-+The primary use cases for IOASID are Shared Virtual Address (SVA) and
-+IO Virtual Address (IOVA). However, the requirements for IOASID
-+management can vary among hardware architectures.
-+
-+This document covers the generic features supported by IOASID
-+APIs. Vendor-specific use cases are also illustrated with Intel's VT-d
-+based platforms as the first example.
-+
-+.. contents:: :local:
-+
-+Glossary
-+========
-+PASID - Process Address Space ID
-+
-+IOASID - IO Address Space ID (generic term for PCIe PASID and
-+sub-stream ID in SMMU)
-+
-+SVA/SVM - Shared Virtual Addressing/Memory
-+
-+ENQCMD - New Intel X86 ISA for efficient workqueue submission [1]
-+
-+DSA - Intel Data Streaming Accelerator [2]
-+
-+VDCM - Virtual device composition module [3]
-+
-+SIOV - Intel Scalable IO Virtualization
-+
-+
-+Key Concepts
-+============
-+
-+IOASID Set
-+-----------
-+An IOASID set is a group of IOASIDs allocated from the system-wide
-+IOASID pool. An IOASID set is created and can be identified by a
-+token of u64. Refer to IOASID set APIs for more details.
-+
-+IOASID set is particularly useful for guest SVA where each guest could
-+have its own IOASID set for security and efficiency reasons.
-+
-+IOASID Set Private ID (SPID)
-+----------------------------
-+SPIDs are introduced as IOASIDs within its set. Each SPID maps to a
-+system-wide IOASID but the namespace of SPID is within its IOASID
-+set. SPIDs can be used as guest IOASIDs where each guest could do
-+IOASID allocation from its own pool and map them to host physical
-+IOASIDs. SPIDs are particularly useful for supporting live migration
-+where decoupling guest and host physical resources are necessary.
-+
-+For example, two VMs can both allocate guest PASID/SPID #101 but map to
-+different host PASIDs #201 and #202 respectively as shown in the
-+diagram below.
-+::
-+
-+ .------------------.    .------------------.
-+ |   VM 1           |    |   VM 2           |
-+ |                  |    |                  |
-+ |------------------|    |------------------|
-+ | GPASID/SPID 101  |    | GPASID/SPID 101  |
-+ '------------------'    -------------------'     Guest
-+ __________|______________________|______________________
-+           |                      |               Host
-+           v                      v
-+ .------------------.    .------------------.
-+ | Host IOASID 201  |    | Host IOASID 202  |
-+ '------------------'    '------------------'
-+ |   IOASID set 1   |    |   IOASID set 2   |
-+ '------------------'    '------------------'
-+
-+Guest PASID is treated as IOASID set private ID (SPID) within an
-+IOASID set, mappings between guest and host IOASIDs are stored in the
-+set for inquiry.
-+
-+IOASID APIs
-+===========
-+To get the IOASID APIs, users must #include <linux/ioasid.h>. These APIs
-+serve the following functionalities:
-+
-+  - IOASID allocation/Free
-+  - Group management in the form of ioasid_set
-+  - Private data storage and lookup
-+  - Reference counting
-+  - Event notification in case of state change
-+
-+IOASID Set Level APIs
-+--------------------------
-+For use cases such as guest SVA it is necessary to manage IOASIDs at
-+a group level. For example, VMs may allocate multiple IOASIDs for
-+guest process address sharing (vSVA). It is imperative to enforce
-+VM-IOASID ownership such that malicious guest cannot target DMA
-+traffic outside its own IOASIDs, or free an active IOASID belong to
-+another VM.
-+::
-+
-+ struct ioasid_set *ioasid_alloc_set(void *token, ioasid_t quota, u32 type)
-+
-+ int ioasid_adjust_set(struct ioasid_set *set, int quota);
-+
-+ void ioasid_set_get(struct ioasid_set *set)
-+
-+ void ioasid_set_put(struct ioasid_set *set)
-+
-+ void ioasid_set_get_locked(struct ioasid_set *set)
-+
-+ void ioasid_set_put_locked(struct ioasid_set *set)
-+
-+ int ioasid_set_for_each_ioasid(struct ioasid_set *sdata,
-+                                void (*fn)(ioasid_t id, void *data),
-+				void *data)
-+
-+
-+IOASID set concept is introduced to represent such IOASID groups. Each
-+IOASID set is created with a token which can be one of the following
-+types:
-+
-+ - IOASID_SET_TYPE_NULL (Arbitrary u64 value)
-+ - IOASID_SET_TYPE_MM (Set token is a mm_struct)
-+
-+The explicit MM token type is useful when multiple users of an IOASID
-+set under the same process need to communicate about their shared IOASIDs.
-+E.g. An IOASID set created by VFIO for one guest can be associated
-+with the KVM instance for the same guest since they share a common mm_struct.
-+
-+The IOASID set APIs serve the following purposes:
-+
-+ - Ownership/permission enforcement
-+ - Take collective actions, e.g. free an entire set
-+ - Event notifications within a set
-+ - Look up a set based on token
-+ - Quota enforcement
-+
-+Individual IOASID APIs
-+----------------------
-+Once an ioasid_set is created, IOASIDs can be allocated from the set.
-+Within the IOASID set namespace, set private ID (SPID) is supported. In
-+the VM use case, SPID can be used for storing guest PASID.
-+
-+::
-+
-+ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
-+                       void *private);
-+
-+ int ioasid_get(struct ioasid_set *set, ioasid_t ioasid);
-+
-+ void ioasid_put(struct ioasid_set *set, ioasid_t ioasid);
-+
-+ int ioasid_get_locked(struct ioasid_set *set, ioasid_t ioasid);
-+
-+ void ioasid_put_locked(struct ioasid_set *set, ioasid_t ioasid);
-+
-+ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-+                   bool (*getter)(void *));
-+
-+ ioasid_t ioasid_find_by_spid(struct ioasid_set *set, ioasid_t spid)
-+
-+ int ioasid_attach_data(struct ioasid_set *set, ioasid_t ioasid,
-+                        void *data);
-+ int ioasid_attach_spid(struct ioasid_set *set, ioasid_t ioasid,
-+                        ioasid_t ssid);
-+
-+
-+Notifications
-+-------------
-+An IOASID may have multiple users, each user may have hardware context
-+associated with an IOASID. When the status of an IOASID changes,
-+e.g. an IOASID is being freed, users need to be notified such that the
-+associated hardware context can be cleared, flushed, and drained.
-+
-+::
-+
-+ int ioasid_register_notifier(struct ioasid_set *set, struct
-+                              notifier_block *nb)
-+
-+ void ioasid_unregister_notifier(struct ioasid_set *set,
-+                                 struct notifier_block *nb)
-+
-+ int ioasid_register_notifier_mm(struct mm_struct *mm, struct
-+                                 notifier_block *nb)
-+
-+ void ioasid_unregister_notifier_mm(struct mm_struct *mm, struct
-+                                    notifier_block *nb)
-+
-+ int ioasid_notify(ioasid_t ioasid, enum ioasid_notify_val cmd,
-+                   unsigned int flags)
-+
-+
-+Events
-+~~~~~~
-+Notification events are pertinent to individual IOASIDs, they can be
-+one of the following:
-+
-+ - ALLOC
-+ - FREE
-+ - BIND
-+ - UNBIND
-+
-+Ordering
-+~~~~~~~~
-+Ordering is supported by IOASID notification priorities as the
-+following (in ascending order):
-+
-+::
-+
-+ enum ioasid_notifier_prios {
-+	IOASID_PRIO_LAST,
-+	IOASID_PRIO_IOMMU,
-+	IOASID_PRIO_DEVICE,
-+	IOASID_PRIO_CPU,
-+ };
-+
-+The typical use case is when an IOASID is freed due to an exception, DMA
-+source should be quiesced before tearing down other hardware contexts
-+in the system. This will reduce the churn in handling faults. DMA work
-+submission is performed by the CPU which is granted higher priority than
-+devices.
-+
-+
-+Scopes
-+~~~~~~
-+There are two types of notifiers in IOASID core: system-wide and
-+ioasid_set-wide.
-+
-+System-wide notifier is catering for users that need to handle all
-+IOASIDs in the system. E.g. The IOMMU driver handles all IOASIDs.
-+
-+Per ioasid_set notifier can be used by VM specific components such as
-+KVM. After all, each KVM instance only cares about IOASIDs within its
-+own set.
-+
-+
-+Atomicity
-+~~~~~~~~~
-+IOASID notifiers are atomic due to spinlocks used inside the IOASID
-+core. For tasks cannot be completed in the notifier handler, async work
-+can be submitted to complete the work later as long as there is no
-+ordering requirement.
-+
-+Reference counting
-+------------------
-+IOASID lifecycle management is based on reference counting. Users of
-+IOASID intend to align lifecycle with the IOASID need to hold
-+reference of the IOASID. IOASID will not be returned to the pool for
-+allocation until all references are dropped. Calling ioasid_free()
-+will mark the IOASID as FREE_PENDING if the IOASID has outstanding
-+reference. ioasid_get() is not allowed once an IOASID is in the
-+FREE_PENDING state.
-+
-+Event notifications are used to inform users of IOASID status change.
-+IOASID_FREE event prompts users to drop their references after
-+clearing its context.
-+
-+For example, on VT-d platform when an IOASID is freed, teardown
-+actions are performed on KVM, device driver, and IOMMU driver.
-+KVM shall register notifier block with::
-+
-+ static struct notifier_block pasid_nb_kvm = {
-+	.notifier_call = pasid_status_change_kvm,
-+	.priority      = IOASID_PRIO_CPU,
-+ };
-+
-+VDCM driver shall register notifier block with::
-+
-+ static struct notifier_block pasid_nb_vdcm = {
-+	.notifier_call = pasid_status_change_vdcm,
-+	.priority      = IOASID_PRIO_DEVICE,
-+ };
-+
-+In both cases, notifier blocks shall be registered on the IOASID set
-+such that *only* events from the matching VM is received.
-+
-+If KVM attempts to register notifier block before the IOASID set is
-+created for the MM token, the notifier block will be placed on a
-+pending list inside IOASID core. Once the token matching IOASID set
-+is created, IOASID will register the notifier block automatically.
-+IOASID core does not replay events for the existing IOASIDs in the
-+set. For IOASID set of MM type, notification blocks can be registered
-+on empty sets only. This is to avoid lost events.
-+
-+IOMMU driver shall register notifier block on global chain::
-+
-+ static struct notifier_block pasid_nb_vtd = {
-+	.notifier_call = pasid_status_change_vtd,
-+	.priority      = IOASID_PRIO_IOMMU,
-+ };
-+
-+Custom allocator APIs
-+---------------------
-+
-+::
-+
-+ int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
-+
-+ void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
-+
-+Allocator Choices
-+~~~~~~~~~~~~~~~~~
-+IOASIDs are allocated for both host and guest SVA/IOVA usage. However,
-+allocators can be different. For example, on VT-d guest PASID
-+allocation must be performed via a virtual command interface which is
-+emulated by VMM.
-+
-+IOASID core has the notion of "custom allocator" such that guest can
-+register virtual command allocator that precedes the default one.
-+
-+Namespaces
-+~~~~~~~~~~
-+IOASIDs are limited system resources that default to 20 bits in
-+size. Since each device has its own table, theoretically the namespace
-+can be per device also. However, for security reasons sharing PASID
-+tables among devices are not good for isolation. Therefore, IOASID
-+namespace is system-wide.
-+
-+There are also other reasons to have this simpler system-wide
-+namespace. Take VT-d as an example, VT-d supports shared workqueue
-+and ENQCMD[1] where one IOASID could be used to submit work on
-+multiple devices that are shared with other VMs. This requires IOASID
-+to be system-wide. This is also the reason why guests must use an
-+emulated virtual command interface to allocate IOASID from the host.
-+
-+
-+Life cycle
-+==========
-+This section covers IOASID lifecycle management for both bare-metal
-+and guest usages. In bare-metal SVA, MMU notifier is directly hooked
-+up with IOMMU driver, therefore the process address space (MM)
-+lifecycle is aligned with IOASID.
-+
-+However, guest MMU notifier is not available to host IOMMU driver,
-+when guest MM terminates unexpectedly, the events have to go through
-+VFIO and IOMMU UAPI to reach host IOMMU driver. There are also more
-+parties involved in guest SVA, e.g. on Intel VT-d platform, IOASIDs
-+are used by IOMMU driver, KVM, VDCM, and VFIO.
-+
-+Native IOASID Life Cycle (VT-d Example)
-+---------------------------------------
-+
-+The normal flow of native SVA code with Intel Data Streaming
-+Accelerator(DSA) [2] as example:
-+
-+1. Host user opens accelerator FD, e.g. DSA driver, or uacce;
-+2. DSA driver allocate WQ, do sva_bind_device();
-+3. IOMMU driver calls ioasid_alloc(), then bind PASID with device,
-+   mmu_notifier_get()
-+4. DMA starts by DSA driver userspace
-+5. DSA userspace close FD
-+6. DSA/uacce kernel driver handles FD.close()
-+7. DSA driver stops DMA
-+8. DSA driver calls sva_unbind_device();
-+9. IOMMU driver does unbind, clears PASID context in IOMMU, flush
-+   TLBs. mmu_notifier_put() called.
-+10. mmu_notifier.release() called, IOMMU SVA code calls ioasid_free()*
-+11. The IOASID is returned to the pool, reclaimed.
-+
-+::
-+
-+   * With ENQCMD, PASID used on VT-d is not released in mmu_notifier() but
-+     mmdrop(). mmdrop comes after FD close. Should not matter.
-+     If the user process dies unexpectedly, Step #10 may come before
-+     Step #5, in between, all DMA faults discarded. PRQ responded with
-+     code INVALID REQUEST.
-+
-+During the normal teardown, the following three steps would happen in
-+order:
-+
-+1. Device driver stops DMA request
-+2. IOMMU driver unbinds PASID and mm, flush all TLBs, drain in-flight
-+   requests.
-+3. IOASID freed
-+
-+Exception happens when process terminates *before* device driver stops
-+DMA and call IOMMU driver to unbind. The flow of process exists are as
-+follows:
-+
-+::
-+
-+   do_exit() {
-+	exit_mm() {
-+		mm_put();
-+		exit_mmap() {
-+			intel_invalidate_range() //mmu notifier
-+			tlb_finish_mmu()
-+			mmu_notifier_release(mm) {
-+				intel_iommu_release() {
-+   [2]					intel_iommu_teardown_pasid();
-+                                        intel_iommu_flush_tlbs();
-+				}
-+				// tlb_invalidate_range cb removed
-+			}
-+			unmap_vmas();
-+                        free_pgtables(); // IOMMU cannot walk PGT after this
-+		};
-+	}
-+	exit_files(tsk) {
-+		close_files() {
-+			dsa_close();
-+   [1]			dsa_stop_dma();
-+                        intel_svm_unbind_pasid(); //nothing to do
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index a3a0b5c8921d..5813eeaa5edb 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -42,6 +42,7 @@
+ #include <linux/crash_dump.h>
+ #include <linux/numa.h>
+ #include <linux/swiotlb.h>
++#include <linux/ioasid.h>
+ #include <asm/irq_remapping.h>
+ #include <asm/cacheflush.h>
+ #include <asm/iommu.h>
+@@ -103,6 +104,9 @@
+  */
+ #define INTEL_IOMMU_PGSIZES	(~0xFFFUL)
+ 
++/* PASIDs used by host SVM */
++struct ioasid_set *host_pasid_set;
++
+ static inline int agaw_to_level(int agaw)
+ {
+ 	return agaw + 2;
+@@ -3103,8 +3107,8 @@ static void intel_vcmd_ioasid_free(ioasid_t ioasid, void *data)
+ 	 * Sanity check the ioasid owner is done at upper layer, e.g. VFIO
+ 	 * We can only free the PASID when all the devices are unbound.
+ 	 */
+-	if (ioasid_find(NULL, ioasid, NULL)) {
+-		pr_alert("Cannot free active IOASID %d\n", ioasid);
++	if (IS_ERR(ioasid_find(host_pasid_set, ioasid, NULL))) {
++		pr_err("Cannot free IOASID %d, not in system set\n", ioasid);
+ 		return;
+ 	}
+ 	vcmd_free_pasid(iommu, ioasid);
+@@ -3288,6 +3292,19 @@ static int __init init_dmars(void)
+ 	if (ret)
+ 		goto free_iommu;
+ 
++	/* PASID is needed for scalable mode irrespective to SVM */
++	if (intel_iommu_sm) {
++		ioasid_install_capacity(intel_pasid_max_id);
++		/* We should not run out of IOASIDs at boot */
++		host_pasid_set = ioasid_alloc_set(NULL, PID_MAX_DEFAULT,
++						IOASID_SET_TYPE_NULL);
++		if (IS_ERR_OR_NULL(host_pasid_set)) {
++			pr_err("Failed to enable host PASID allocator %lu\n",
++				PTR_ERR(host_pasid_set));
++			intel_iommu_sm = 0;
 +		}
 +	}
-+   }
 +
-+   mmdrop() /* some random time later, lazy mm user */ {
-+   	mm_free_pgd();
-+        destroy_context(mm); {
-+   [3]	        ioasid_free();
+ 	/*
+ 	 * for each drhd
+ 	 *   enable fault log
+@@ -5149,7 +5166,7 @@ static void auxiliary_unlink_device(struct dmar_domain *domain,
+ 	domain->auxd_refcnt--;
+ 
+ 	if (!domain->auxd_refcnt && domain->default_pasid > 0)
+-		ioasid_free(domain->default_pasid);
++		ioasid_free(host_pasid_set, domain->default_pasid);
+ }
+ 
+ static int aux_domain_add_dev(struct dmar_domain *domain,
+@@ -5167,7 +5184,7 @@ static int aux_domain_add_dev(struct dmar_domain *domain,
+ 		int pasid;
+ 
+ 		/* No private data needed for the default pasid */
+-		pasid = ioasid_alloc(NULL, PASID_MIN,
++		pasid = ioasid_alloc(host_pasid_set, PASID_MIN,
+ 				     pci_max_pasids(to_pci_dev(dev)) - 1,
+ 				     NULL);
+ 		if (pasid == INVALID_IOASID) {
+@@ -5210,7 +5227,7 @@ static int aux_domain_add_dev(struct dmar_domain *domain,
+ 	spin_unlock(&iommu->lock);
+ 	spin_unlock_irqrestore(&device_domain_lock, flags);
+ 	if (!domain->auxd_refcnt && domain->default_pasid > 0)
+-		ioasid_free(domain->default_pasid);
++		ioasid_free(host_pasid_set, domain->default_pasid);
+ 
+ 	return ret;
+ }
+diff --git a/drivers/iommu/intel/pasid.h b/drivers/iommu/intel/pasid.h
+index c9850766c3a9..ccdc23446015 100644
+--- a/drivers/iommu/intel/pasid.h
++++ b/drivers/iommu/intel/pasid.h
+@@ -99,6 +99,7 @@ static inline bool pasid_pte_is_present(struct pasid_entry *pte)
+ }
+ 
+ extern u32 intel_pasid_max_id;
++extern struct ioasid_set *host_pasid_set;
+ int intel_pasid_alloc_id(void *ptr, int start, int end, gfp_t gfp);
+ void intel_pasid_free_id(int pasid);
+ void *intel_pasid_lookup_id(int pasid);
+diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+index 37a9beabc0ca..634e191ca2c3 100644
+--- a/drivers/iommu/intel/svm.c
++++ b/drivers/iommu/intel/svm.c
+@@ -551,7 +551,7 @@ intel_svm_bind_mm(struct device *dev, int flags, struct svm_dev_ops *ops,
+ 			pasid_max = intel_pasid_max_id;
+ 
+ 		/* Do not use PASID 0, reserved for RID to PASID */
+-		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
++		svm->pasid = ioasid_alloc(host_pasid_set, PASID_MIN,
+ 					  pasid_max - 1, svm);
+ 		if (svm->pasid == INVALID_IOASID) {
+ 			kfree(svm);
+@@ -568,7 +568,7 @@ intel_svm_bind_mm(struct device *dev, int flags, struct svm_dev_ops *ops,
+ 		if (mm) {
+ 			ret = mmu_notifier_register(&svm->notifier, mm);
+ 			if (ret) {
+-				ioasid_free(svm->pasid);
++				ioasid_free(host_pasid_set, svm->pasid);
+ 				kfree(svm);
+ 				kfree(sdev);
+ 				goto out;
+@@ -586,7 +586,7 @@ intel_svm_bind_mm(struct device *dev, int flags, struct svm_dev_ops *ops,
+ 		if (ret) {
+ 			if (mm)
+ 				mmu_notifier_unregister(&svm->notifier, mm);
+-			ioasid_free(svm->pasid);
++			ioasid_free(host_pasid_set, svm->pasid);
+ 			kfree(svm);
+ 			kfree(sdev);
+ 			goto out;
+@@ -655,7 +655,7 @@ static int intel_svm_unbind_mm(struct device *dev, int pasid)
+ 			kfree_rcu(sdev, rcu);
+ 
+ 			if (list_empty(&svm->devs)) {
+-				ioasid_free(svm->pasid);
++				ioasid_free(host_pasid_set, svm->pasid);
+ 				if (svm->mm)
+ 					mmu_notifier_unregister(&svm->notifier, svm->mm);
+ 				list_del(&svm->list);
+diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+index 5f63af07acd5..f73b3dbfc37a 100644
+--- a/drivers/iommu/ioasid.c
++++ b/drivers/iommu/ioasid.c
+@@ -1,22 +1,58 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+  * I/O Address Space ID allocator. There is one global IOASID space, split into
+- * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
+- * free IOASIDs with ioasid_alloc and ioasid_free.
++ * subsets. Users create a subset with ioasid_alloc_set, then allocate/free IDs
++ * with ioasid_alloc and ioasid_free.
+  */
+-#include <linux/ioasid.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/xarray.h>
++#include <linux/ioasid.h>
++
++static DEFINE_XARRAY_ALLOC(ioasid_sets);
++enum ioasid_state {
++	IOASID_STATE_INACTIVE,
++	IOASID_STATE_ACTIVE,
++	IOASID_STATE_FREE_PENDING,
++};
+ 
++/**
++ * struct ioasid_data - Meta data about ioasid
++ *
++ * @id:		Unique ID
++ * @users	Number of active users
++ * @state	Track state of the IOASID
++ * @set		Meta data of the set this IOASID belongs to
++ * @private	Private data associated with the IOASID
++ * @rcu		For free after RCU grace period
++ */
+ struct ioasid_data {
+ 	ioasid_t id;
+ 	struct ioasid_set *set;
++	refcount_t users;
++	enum ioasid_state state;
+ 	void *private;
+ 	struct rcu_head rcu;
+ };
+ 
++/* Default to PCIe standard 20 bit PASID */
++#define PCI_PASID_MAX 0x100000
++static ioasid_t ioasid_capacity = PCI_PASID_MAX;
++static ioasid_t ioasid_capacity_avail = PCI_PASID_MAX;
++
++void ioasid_install_capacity(ioasid_t total)
++{
++	ioasid_capacity = ioasid_capacity_avail = total;
++}
++EXPORT_SYMBOL_GPL(ioasid_install_capacity);
++
++ioasid_t ioasid_get_capacity()
++{
++	return ioasid_capacity;
++}
++EXPORT_SYMBOL_GPL(ioasid_get_capacity);
++
+ /*
+  * struct ioasid_allocator_data - Internal data structure to hold information
+  * about an allocator. There are two types of allocators:
+@@ -306,11 +342,23 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+ {
+ 	struct ioasid_data *data;
+ 	void *adata;
+-	ioasid_t id;
++	ioasid_t id = INVALID_IOASID;
++
++	spin_lock(&ioasid_allocator_lock);
++	/* Check if the IOASID set has been allocated and initialized */
++	if (WARN_ON(xa_load(&ioasid_sets, set->sid) != set)) {
++		pr_warn("Invalid set\n");
++		goto done_unlock;
 +	}
-+   }
 +
-+As shown in the list above, step #2 could happen before
-+#1. Unrecoverable(UR) faults could happen between #2 and #1.
++	if (set->quota <= set->nr_ioasids) {
++		pr_err("IOASID set %d out of quota %d\n", set->sid, set->quota);
++		goto done_unlock;
++	}
+ 
+ 	data = kzalloc(sizeof(*data), GFP_ATOMIC);
+ 	if (!data)
+-		return INVALID_IOASID;
++		goto done_unlock;
+ 
+ 	data->set = set;
+ 	data->private = private;
+@@ -319,7 +367,6 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+ 	 * Custom allocator needs allocator data to perform platform specific
+ 	 * operations.
+ 	 */
+-	spin_lock(&ioasid_allocator_lock);
+ 	adata = active_allocator->flags & IOASID_ALLOCATOR_CUSTOM ? active_allocator->ops->pdata : data;
+ 	id = active_allocator->ops->alloc(min, max, adata);
+ 	if (id == INVALID_IOASID) {
+@@ -335,42 +382,339 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+ 		goto exit_free;
+ 	}
+ 	data->id = id;
++	data->state = IOASID_STATE_ACTIVE;
++	refcount_set(&data->users, 1);
 +
-+Also notice that TLB invalidation occurs at mmu_notifier
-+invalidate_range callback as well as the release callback. The reason
-+is that release callback will delete IOMMU driver from the notifier
-+chain which may skip invalidate_range() calls during the exit path.
++	/* Store IOASID in the per set data */
++	if (xa_err(xa_store(&set->xa, id, data, GFP_ATOMIC))) {
++		pr_err("Failed to ioasid %d in set %d\n", id, set->sid);
++		goto exit_free;
++	}
++	set->nr_ioasids++;
++	goto done_unlock;
+ 
+-	spin_unlock(&ioasid_allocator_lock);
+-	return id;
+ exit_free:
+-	spin_unlock(&ioasid_allocator_lock);
+ 	kfree(data);
+-	return INVALID_IOASID;
++done_unlock:
++	spin_unlock(&ioasid_allocator_lock);
++	return id;
+ }
+ EXPORT_SYMBOL_GPL(ioasid_alloc);
+ 
++static void ioasid_do_free(struct ioasid_data *data)
++{
++	struct ioasid_data *ioasid_data;
++	struct ioasid_set *sdata;
 +
-+To avoid unnecessary reporting of UR fault, IOMMU driver shall disable
-+fault reporting after free and before unbind.
++	active_allocator->ops->free(data->id, active_allocator->ops->pdata);
++	/* Custom allocator needs additional steps to free the xa element */
++	if (active_allocator->flags & IOASID_ALLOCATOR_CUSTOM) {
++		ioasid_data = xa_erase(&active_allocator->xa, data->id);
++		kfree_rcu(ioasid_data, rcu);
++	}
 +
-+Guest IOASID Life Cycle (VT-d Example)
-+--------------------------------------
-+Guest IOASID life cycle starts with guest driver open(), this could be
-+uacce or individual accelerator driver such as DSA. At FD open,
-+sva_bind_device() is called which triggers a series of actions.
++	sdata = xa_load(&ioasid_sets, data->set->sid);
++	if (!sdata) {
++		pr_err("No set %d for IOASID %d\n", data->set->sid,
++		       data->id);
++		return;
++	}
++	xa_erase(&sdata->xa, data->id);
++	sdata->nr_ioasids--;
++}
 +
-+The example below is an illustration of *normal* operations that
-+involves *all* the SW components in VT-d. The flow can be simpler if
-+no ENQCMD is supported.
++static void ioasid_free_locked(struct ioasid_set *set, ioasid_t ioasid)
++{
++	struct ioasid_data *data;
 +
-+::
++	data = xa_load(&active_allocator->xa, ioasid);
++	if (!data) {
++		pr_err("Trying to free unknown IOASID %u\n", ioasid);
++		return;
++	}
 +
-+     VFIO        IOMMU        KVM        VDCM        IOASID       Ref
-+   ..................................................................
-+   1             ioasid_register_notifier/_mm()
-+   2 ioasid_alloc()                                               1
-+   3 bind_gpasid()
-+   4             iommu_bind()->ioasid_get()                       2
-+   5             ioasid_notify(BIND)
-+   6                          -> ioasid_get()                     3
-+   7                          -> vmcs_update_atomic()
-+   8 mdev_write(gpasid)
-+   9                                    hpasid=
-+   10                                   find_by_spid(gpasid)      4
-+   11                                   vdev_write(hpasid)
-+   12 -------- GUEST STARTS DMA --------------------------
-+   13 -------- GUEST STOPS DMA --------------------------
-+   14 mdev_clear(gpasid)
-+   15                                   vdev_clear(hpasid)
-+   16                                   ioasid_put()               3
-+   17 unbind_gpasid()
-+   18            iommu_ubind()
-+   19            ioasid_notify(UNBIND)
-+   20                          -> vmcs_update_atomic()
-+   21                          -> ioasid_put()                     2
-+   22 ioasid_free()                                                1
-+   23            ioasid_put()                                      0
-+   24                                                 Reclaimed
-+   -------------- New Life Cycle Begin ----------------------------
-+   1  ioasid_alloc()                                  ->           1
++	if (data->set != set) {
++		pr_warn("Cannot free IOASID %u due to set ownership\n", ioasid);
++		return;
++	}
++	data->state = IOASID_STATE_FREE_PENDING;
 +
-+   Note: IOASID Notification Events: FREE, BIND, UNBIND
++	if (!refcount_dec_and_test(&data->users))
++		return;
 +
-+Exception cases arise when a guest crashes or a malicious guest
-+attempts to cause disruption on the host system. The fault handling
-+rules are:
++	ioasid_do_free(data);
++}
 +
-+1. IOASID free must *always* succeed.
-+2. An inactive period may be required before the freed IOASID is
-+   reclaimed. During this period, consumers of IOASID perform cleanup.
-+3. Malfunction is limited to the guest owned resources for all
-+   programming errors.
+ /**
+- * ioasid_free - Free an IOASID
+- * @ioasid: the ID to remove
++ * ioasid_free - Drop reference on an IOASID. Free if refcount drops to 0,
++ *               including free from its set and system-wide list.
++ * @set:	The ioasid_set to check permission with. If not NULL, IOASID
++ *		free will fail if the set does not match.
++ * @ioasid:	The IOASID to remove
+  */
+-void ioasid_free(ioasid_t ioasid)
++void ioasid_free(struct ioasid_set *set, ioasid_t ioasid)
+ {
+-	struct ioasid_data *ioasid_data;
++	spin_lock(&ioasid_allocator_lock);
++	ioasid_free_locked(set, ioasid);
++	spin_unlock(&ioasid_allocator_lock);
++}
++EXPORT_SYMBOL_GPL(ioasid_free);
+ 
++/**
++ * ioasid_alloc_set - Allocate a new IOASID set for a given token
++ *
++ * @token:	Unique token of the IOASID set, cannot be NULL
++ * @quota:	Quota allowed in this set. Only for new set creation
++ * @flags:	Special requirements
++ *
++ * IOASID can be limited system-wide resource that requires quota management.
++ * If caller does not wish to enforce quota, use IOASID_SET_NO_QUOTA flag.
++ *
++ * Token will be stored in the ioasid_set returned. A reference will be taken
++ * upon finding a matching set or newly created set.
++ * IOASID allocation within the set and other per set operations will use
++ * the retured ioasid_set *.
++ *
++ */
++struct ioasid_set *ioasid_alloc_set(void *token, ioasid_t quota, int type)
++{
++	struct ioasid_set *sdata;
++	unsigned long index;
++	ioasid_t id;
 +
-+The primary source of exception is when the following are out of
-+order:
++	if (type >= IOASID_SET_TYPE_NR)
++		return ERR_PTR(-EINVAL);
 +
-+1. Start/Stop of DMA activity
-+   (Guest device driver, mdev via VFIO)
-+2. Setup/Teardown of IOMMU PASID context, IOTLB, DevTLB flushes
-+   (Host IOMMU driver bind/unbind)
-+3. Setup/Teardown of VMCS PASID translation table entries (KVM) in
-+   case of ENQCMD
-+4. Programming/Clearing host PASID in VDCM (Host VDCM driver)
-+5. IOASID alloc/free (Host IOASID)
++	/*
++	 * Need to check space available if we share system-wide quota.
++	 * TODO: we may need to support quota free sets in the future.
++	 */
+ 	spin_lock(&ioasid_allocator_lock);
+-	ioasid_data = xa_load(&active_allocator->xa, ioasid);
+-	if (!ioasid_data) {
+-		pr_err("Trying to free unknown IOASID %u\n", ioasid);
++	if (quota > ioasid_capacity_avail) {
++		pr_warn("Out of IOASID capacity! ask %d, avail %d\n",
++			quota, ioasid_capacity_avail);
++		sdata = ERR_PTR(-ENOSPC);
+ 		goto exit_unlock;
+ 	}
+ 
+-	active_allocator->ops->free(ioasid, active_allocator->ops->pdata);
+-	/* Custom allocator needs additional steps to free the xa element */
+-	if (active_allocator->flags & IOASID_ALLOCATOR_CUSTOM) {
+-		ioasid_data = xa_erase(&active_allocator->xa, ioasid);
+-		kfree_rcu(ioasid_data, rcu);
++	/*
++	 * Token is only unique within its types but right now we have only
++	 * mm type. If we have more token types, we have to match type as well.
++	 */
++	switch (type) {
++	case IOASID_SET_TYPE_MM:
++		/* Search existing set tokens, reject duplicates */
++		xa_for_each(&ioasid_sets, index, sdata) {
++			if (sdata->token == token &&
++				sdata->type == IOASID_SET_TYPE_MM) {
++				sdata = ERR_PTR(-EEXIST);
++				goto exit_unlock;
++			}
++		}
++		break;
++	case IOASID_SET_TYPE_NULL:
++		if (!token)
++			break;
++		fallthrough;
++	default:
++		pr_err("Invalid token and IOASID type\n");
++		sdata = ERR_PTR(-EINVAL);
++		goto exit_unlock;
+ 	}
+ 
++	/* REVISIT: may support set w/o quota, use system available */
++	if (!quota) {
++		sdata = ERR_PTR(-EINVAL);
++		goto exit_unlock;
++	}
 +
-+VFIO is the *only* user-kernel interface, which is ultimately
-+responsible for exception handlings.
++	sdata = kzalloc(sizeof(*sdata), GFP_ATOMIC);
++	if (!sdata) {
++		sdata = ERR_PTR(-ENOMEM);
++		goto exit_unlock;
++	}
 +
-+#1 is processed the same way as the assigned device today based on
-+device file descriptors and events. There is no special handling.
++	if (xa_alloc(&ioasid_sets, &id, sdata,
++			XA_LIMIT(0, ioasid_capacity_avail - quota),
++			GFP_ATOMIC)) {
++		kfree(sdata);
++		sdata = ERR_PTR(-ENOSPC);
++		goto exit_unlock;
++	}
 +
-+#3 is based on bind/unbind events emitted by #2.
++	sdata->token = token;
++	sdata->type = type;
++	sdata->quota = quota;
++	sdata->sid = id;
++	refcount_set(&sdata->ref, 1);
 +
-+#4 is naturally aligned with IOASID life cycle in that an illegal
-+guest PASID programming would fail in obtaining reference of the
-+matching host IOASID.
++	/*
++	 * Per set XA is used to store private IDs within the set, get ready
++	 * for ioasid_set private ID and system-wide IOASID allocation
++	 * results.
++	 */
++	xa_init_flags(&sdata->xa, XA_FLAGS_ALLOC);
++	ioasid_capacity_avail -= quota;
 +
-+#5 is similar to #4. The fault will be reported to the user if PASID
-+used in the ENQCMD is not set up in VMCS PASID translation table.
+ exit_unlock:
+ 	spin_unlock(&ioasid_allocator_lock);
 +
-+Therefore, the remaining out of order problem is between #2 and
-+#5. I.e. unbind vs. free. More specifically, free before unbind.
++	return sdata;
+ }
+-EXPORT_SYMBOL_GPL(ioasid_free);
++EXPORT_SYMBOL_GPL(ioasid_alloc_set);
 +
-+IOASID notifier and refcounting are used to ensure order. Following
-+a publisher-subscriber pattern where:
++void ioasid_set_get_locked(struct ioasid_set *set)
++{
++	if (WARN_ON(xa_load(&ioasid_sets, set->sid) != set)) {
++		pr_warn("Invalid set data\n");
++		return;
++	}
 +
-+- Publishers: VFIO & IOMMU
-+- Subscribers: KVM, VDCM, IOMMU
++	refcount_inc(&set->ref);
++}
++EXPORT_SYMBOL_GPL(ioasid_set_get_locked);
 +
-+IOASID notifier is atomic which requires subscribers to do quick
-+handling of the event in the atomic context. Workqueue can be used for
-+any processing that requires thread context. IOASID reference must be
-+acquired before receiving the FREE event. The reference must be
-+dropped at the end of the processing in order to return the IOASID to
-+the pool.
++void ioasid_set_get(struct ioasid_set *set)
++{
++	spin_lock(&ioasid_allocator_lock);
++	ioasid_set_get_locked(set);
++	spin_unlock(&ioasid_allocator_lock);
++}
++EXPORT_SYMBOL_GPL(ioasid_set_get);
 +
-+Let's examine the IOASID life cycle again when free happens *before*
-+unbind. This could be a result of misbehaving guests or crash. Assuming
-+VFIO cannot enforce unbind->free order. Notice that the setup part up
-+until step #12 is identical to the normal case, the flow below starts
-+with step 13.
++void ioasid_set_put_locked(struct ioasid_set *set)
++{
++	struct ioasid_data *entry;
++	unsigned long index;
 +
-+::
++	if (WARN_ON(xa_load(&ioasid_sets, set->sid) != set)) {
++		pr_warn("Invalid set data\n");
++		return;
++	}
 +
-+     VFIO        IOMMU        KVM        VDCM        IOASID       Ref
-+   ..................................................................
-+   13 -------- GUEST STARTS DMA --------------------------
-+   14 -------- *GUEST MISBEHAVES!!!* ----------------
-+   15 ioasid_free()
-+   16                                             ioasid_notify(FREE)
-+   17                                             mark_ioasid_inactive[1]
-+   18                          kvm_nb_handler(FREE)
-+   19                          vmcs_update_atomic()
-+   20                          ioasid_put_locked()   ->           3
-+   21                                   vdcm_nb_handler(FREE)
-+   22            iomm_nb_handler(FREE)
-+   23 ioasid_free() returns[2]          schedule_work()           2
-+   24            schedule_work()        vdev_clear_wk(hpasid)
-+   25            teardown_pasid_wk()
-+   26                                   ioasid_put() ->           1
-+   27            ioasid_put()                                     0
-+   28                                                 Reclaimed
-+   29 unbind_gpasid()
-+   30            iommu_unbind()->ioasid_find() Fails[3]
-+   -------------- New Life Cycle Begin ----------------------------
++	if (!refcount_dec_and_test(&set->ref)) {
++		pr_debug("%s: IOASID set %d has %d users\n",
++			__func__, set->sid, refcount_read(&set->ref));
++		return;
++	}
 +
-+Note:
++	/* The set is already empty, we just destroy the set. */
++	if (xa_empty(&set->xa))
++		goto done_destroy;
 +
-+1. By marking IOASID inactive at step #17, no new references can be
-+   held. ioasid_get/find() will return -ENOENT;
-+2. After step #23, all events can go out of order. Shall not affect
-+   the outcome.
-+3. IOMMU driver fails to find private data for unbinding. If unbind is
-+   called after the same IOASID is allocated for the same guest again,
-+   this is a programming error. The damage is limited to the guest
-+   itself since unbind performs permission checking based on the
-+   IOASID set associated with the guest process.
++	/*
++	 * Free all PASIDs from system-wide IOASID pool, all subscribers gets
++	 * notified and do cleanup of their own.
++	 * Note that some references of the IOASIDs within the set can still
++	 * be held after the free call. This is OK in that the IOASIDs will be
++	 * marked inactive, the only operations can be done is ioasid_put.
++	 * No need to track IOASID set states since there is no reclaim phase.
++	 */
++	xa_for_each(&set->xa, index, entry) {
++		ioasid_free_locked(set, index);
++		/* Free from per set private pool */
++		xa_erase(&set->xa, index);
++	}
 +
-+KVM PASID Translation Table Updates
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+Per VM PASID translation table is maintained by KVM in order to
-+support ENQCMD in the guest. The table contains host-guest PASID
-+translations to be consumed by CPU ucode. The synchronization of the
-+PASID states depends on VFIO/IOMMU driver, where IOCTL and atomic
-+notifiers are used. KVM must register IOASID notifier per VM instance
-+during launch time. The following events are handled:
++done_destroy:
++	/* Return the quota back to system pool */
++	ioasid_capacity_avail += set->quota;
++	kfree_rcu(set, rcu);
 +
-+1. BIND/UNBIND
-+2. FREE
++	/*
++	 * Token got released right away after the ioasid_set is freed.
++	 * If a new set is created immediately with the newly released token,
++	 * it will not allocate the same IOASIDs unless they are reclaimed.
++	 */
++	xa_erase(&ioasid_sets, set->sid);
++}
++EXPORT_SYMBOL_GPL(ioasid_set_put_locked);
 +
-+Rules:
++/**
++ * ioasid_set_put - Drop a reference to the IOASID set. Free all IOASIDs within
++ *                  the set if there are no more users.
++ *
++ * @set:	The IOASID set ID to be freed
++ *
++ * If refcount drops to zero, all IOASIDs allocated within the set will be
++ * freed.
++ */
++void ioasid_set_put(struct ioasid_set *set)
++{
++	spin_lock(&ioasid_allocator_lock);
++	ioasid_set_put_locked(set);
++	spin_unlock(&ioasid_allocator_lock);
++}
++EXPORT_SYMBOL_GPL(ioasid_set_put);
 +
-+1. Multiple devices can bind with the same PASID, this can be different PCI
-+   devices or mdevs within the same PCI device. However, only the
-+   *first* BIND and *last* UNBIND emit notifications.
-+2. IOASID code is responsible for ensuring the correctness of H-G
-+   PASID mapping. There is no need for KVM to validate the
-+   notification data.
-+3. When UNBIND happens *after* FREE, KVM will see error in
-+   ioasid_get() even when the reclaim is not done. IOMMU driver will
-+   also avoid sending UNBIND if the PASID is already FREE.
-+4. When KVM terminates *before* FREE & UNBIND, references will be
-+   dropped for all host PASIDs.
++/**
++ * ioasid_adjust_set - Adjust the quota of an IOASID set
++ * @set:	IOASID set to be assigned
++ * @quota:	Quota allowed in this set
++ *
++ * Return 0 on success. If the new quota is smaller than the number of
++ * IOASIDs already allocated, -EINVAL will be returned. No change will be
++ * made to the existing quota.
++ */
++int ioasid_adjust_set(struct ioasid_set *set, int quota)
++{
++	int ret = 0;
 +
-+VDCM PASID Programming
-+~~~~~~~~~~~~~~~~~~~~~~
-+VDCM composes virtual devices and exposes them to the guests. When
-+the guest allocates a PASID then program it to the virtual device, VDCM
-+intercepts the programming attempt then program the matching host
-+PASID on to the hardware.
-+Conversely, when a device is going away, VDCM must be informed such
-+that PASID context on the hardware can be cleared. There could be
-+multiple mdevs assigned to different guests in the same VDCM. Since
-+the PASID table is shared at PCI device level, lazy clearing is not
-+secure. A malicious guest can attack by using newly freed PASIDs that
-+are allocated by another guest.
++	spin_lock(&ioasid_allocator_lock);
++	if (set->nr_ioasids > quota) {
++		pr_err("New quota %d is smaller than outstanding IOASIDs %d\n",
++			quota, set->nr_ioasids);
++		ret = -EINVAL;
++		goto done_unlock;
++	}
 +
-+By holding a reference of the PASID until VDCM cleans up the HW context,
-+it is guaranteed that PASID life cycles do not cross within the same
-+device.
++	if (quota >= ioasid_capacity_avail) {
++		ret = -ENOSPC;
++		goto done_unlock;
++	}
 +
++	/* Return the delta back to system pool */
++	ioasid_capacity_avail += set->quota - quota;
 +
-+Reference
-+====================================================
-+1. https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
++	/*
++	 * May have a policy to prevent giving all available IOASIDs
++	 * to one set. But we don't enforce here, it should be in the
++	 * upper layers.
++	 */
++	set->quota = quota;
 +
-+2. https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
++done_unlock:
++	spin_unlock(&ioasid_allocator_lock);
 +
-+3. https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
++	return ret;
++}
++EXPORT_SYMBOL_GPL(ioasid_adjust_set);
++
++/**
++ * ioasid_set_for_each_ioasid - Iterate over all the IOASIDs within the set
++ *
++ * Caller must hold a reference of the set and handles its own locking.
++ */
++int ioasid_set_for_each_ioasid(struct ioasid_set *set,
++			       void (*fn)(ioasid_t id, void *data),
++			       void *data)
++{
++	struct ioasid_data *entry;
++	unsigned long index;
++	int ret = 0;
++
++	if (xa_empty(&set->xa)) {
++		pr_warn("No IOASIDs in the set %d\n", set->sid);
++		return -ENOENT;
++	}
++
++	xa_for_each(&set->xa, index, entry) {
++		fn(index, data);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(ioasid_set_for_each_ioasid);
+ 
+ /**
+  * ioasid_find - Find IOASID data
+diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+index 9c44947a68c8..412d025d440e 100644
+--- a/include/linux/ioasid.h
++++ b/include/linux/ioasid.h
+@@ -10,8 +10,35 @@ typedef unsigned int ioasid_t;
+ typedef ioasid_t (*ioasid_alloc_fn_t)(ioasid_t min, ioasid_t max, void *data);
+ typedef void (*ioasid_free_fn_t)(ioasid_t ioasid, void *data);
+ 
++/* IOASID set types */
++enum ioasid_set_type {
++	IOASID_SET_TYPE_NULL = 1, /* Set token is NULL */
++	IOASID_SET_TYPE_MM,	  /* Set token is a mm_struct,
++				   * i.e. associated with a process
++				   */
++	IOASID_SET_TYPE_NR,
++};
++
++/**
++ * struct ioasid_set - Meta data about ioasid_set
++ * @type:	Token types and other features
++ * @token:	Unique to identify an IOASID set
++ * @xa:		XArray to store ioasid_set private IDs, can be used for
++ *		guest-host IOASID mapping, or just a private IOASID namespace.
++ * @quota:	Max number of IOASIDs can be allocated within the set
++ * @nr_ioasids	Number of IOASIDs currently allocated in the set
++ * @sid:	ID of the set
++ * @ref:	Reference count of the users
++ */
+ struct ioasid_set {
+-	int dummy;
++	void *token;
++	struct xarray xa;
++	int type;
++	int quota;
++	int nr_ioasids;
++	int sid;
++	refcount_t ref;
++	struct rcu_head rcu;
+ };
+ 
+ /**
+@@ -29,31 +56,64 @@ struct ioasid_allocator_ops {
+ 	void *pdata;
+ };
+ 
+-#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
+-
+ #if IS_ENABLED(CONFIG_IOASID)
++void ioasid_install_capacity(ioasid_t total);
++ioasid_t ioasid_get_capacity(void);
++struct ioasid_set *ioasid_alloc_set(void *token, ioasid_t quota, int type);
++int ioasid_adjust_set(struct ioasid_set *set, int quota);
++void ioasid_set_get_locked(struct ioasid_set *set);
++void ioasid_set_put_locked(struct ioasid_set *set);
++void ioasid_set_put(struct ioasid_set *set);
++
+ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+ 		      void *private);
+-void ioasid_free(ioasid_t ioasid);
+-void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+-		  bool (*getter)(void *));
++void ioasid_free(struct ioasid_set *set, ioasid_t ioasid);
++
++bool ioasid_is_active(ioasid_t ioasid);
++
++void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid, bool (*getter)(void *));
++int ioasid_attach_data(ioasid_t ioasid, void *data);
+ int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
+ void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
+-int ioasid_attach_data(ioasid_t ioasid, void *data);
+-
++void ioasid_is_in_set(struct ioasid_set *set, ioasid_t ioasid);
++int ioasid_set_for_each_ioasid(struct ioasid_set *sdata,
++			       void (*fn)(ioasid_t id, void *data),
++			       void *data);
+ #else /* !CONFIG_IOASID */
++static inline void ioasid_install_capacity(ioasid_t total)
++{
++}
++
++static inline ioasid_t ioasid_get_capacity(void)
++{
++	return 0;
++}
++
+ static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
+ 				    ioasid_t max, void *private)
+ {
+ 	return INVALID_IOASID;
+ }
+ 
+-static inline void ioasid_free(ioasid_t ioasid)
++static inline void ioasid_free(struct ioasid_set *set, ioasid_t ioasid)
++{
++}
++
++static inline bool ioasid_is_active(ioasid_t ioasid)
++{
++	return false;
++}
++
++static inline struct ioasid_set *ioasid_alloc_set(void *token, ioasid_t quota, int type)
++{
++	return ERR_PTR(-ENOTSUPP);
++}
++
++static inline void ioasid_set_put(struct ioasid_set *set)
+ {
+ }
+ 
+-static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+-				bool (*getter)(void *))
++static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid, bool (*getter)(void *))
+ {
+ 	return NULL;
+ }
 -- 
 2.7.4
 
