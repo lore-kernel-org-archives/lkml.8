@@ -2,158 +2,120 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A36C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 02:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C78C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 02:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC25920735
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 02:32:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="Kwe2X1e+"
+	by mail.kernel.org (Postfix) with ESMTP id E263020735
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 02:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgHVCcR (ORCPT
+        id S1726751AbgHVCcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 22:32:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbgHVCcR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 22:32:17 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70984C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 19:32:15 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id f5so1710488plr.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 19:32:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LEKRnglK6Uw5vxRZV01eNKU9EnkH3odhoU8NXOrchRo=;
-        b=Kwe2X1e+pe5e2Smxnnt4OKAS4Ceex4ZLHfHs161gOt2iJpQrGPtapwFL9QRpTGWi/u
-         wTSZPUnkUgUq1HZ9rm2O1yI/E8CBMi6hciV6525pCD/S5bH5Ng4pjhFU/dASjTi3uvlK
-         8QUn9mgyngwxCkQNITQEagjuM3dHiBRdkY8PNeBY792p1MBby/c1wyFuBNjNXjATeMbB
-         KNSSBHvJrKuS+DYoo7AamOZyZN+Te3D8R3kP/VvhvCxZUXONAlMXNbJrF3gGFq4nDcQ0
-         pzA7GcR7FxnjWbDq0vg2UeJ3SHgpntkKVOhZcm9+JHnXigpblqfpxlckgv9FW1L4twVd
-         WuoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LEKRnglK6Uw5vxRZV01eNKU9EnkH3odhoU8NXOrchRo=;
-        b=lcSVKNgiXaoeJDwfd+zfpozrc/174RDyrwmOrNVntcHx5yQvICdrXvNstOq4OrZt5u
-         4deqpg44Bt94xGKpkPUI6QIEawGDbYBu2TzM6EdKdNSBriAxchpbFnNnvcDQb0C/1XU/
-         hULfSmC1peQRV3hl100iYXRW2d6rXYCJffMGls8I4ZpbvjUw6MxhafzrKboUfQbxvylj
-         2ObpChrEs3kJ4N6LQ0yfwdC61rtiegKTgjHtWhed5vlIkUJo+eHrpnORdBmAdcduDh4w
-         jsy/u5Z4h2mfmkTOT+0IkREDTW1k068SYjuPFG38XtqBvHn0jB8pKXQLo+cVQ1vFzMEx
-         ZbDA==
-X-Gm-Message-State: AOAM533Burzh5olaMzPzc9OMttP6i+eor1y5g2SsguaVRE+OFwpSAkxF
-        XGaHB37EtdRrfdWq7W8Kinp7lSUz+q7d6XVvRHy2Og==
-X-Google-Smtp-Source: ABdhPJxplZCmjgZ1oMazNqpuXGIO2mVoG1RLOeQlDFVEMREPxsFs97gSocjw/blLkKw4Yj840979EPyREh4NE0jffQo=
-X-Received: by 2002:a17:90b:611:: with SMTP id gb17mr4794443pjb.229.1598063534893;
- Fri, 21 Aug 2020 19:32:14 -0700 (PDT)
+        Fri, 21 Aug 2020 22:32:24 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35918 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726627AbgHVCcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 22:32:23 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 08E845D8E658A6DDE47C;
+        Sat, 22 Aug 2020 10:32:19 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.253) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Sat, 22 Aug 2020
+ 10:32:11 +0800
+Subject: Re: [PATCH v4 00/23] device-dax: Support sub-dividing soft-reserved
+ ranges
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     David Hildenbrand <david@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Ard Biesheuvel" <ardb@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "Joao Martins" <joao.m.martins@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ben Skeggs" <bskeggs@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jason Gunthorpe <jgg@mellanox.com>, Jia He <justin.he@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        "Brice Goglin" <Brice.Goglin@inria.fr>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>
+References: <159643094279.4062302.17779410714418721328.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <c59111f9-7c94-8b9e-2b8c-4cb96b9aa848@redhat.com>
+ <CAPcyv4j8-5nWU5GPDBoFicwR84qM=hWRtd78DkcCg4PW-8i6Vg@mail.gmail.com>
+ <20200821162134.97d551c6fe45b489992841a8@linux-foundation.org>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <a78c341d-db88-afd8-abfa-b997eb094b0e@huawei.com>
+Date:   Sat, 22 Aug 2020 10:32:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20200820031933.46025-1-songmuchun@bytedance.com>
- <20200821212843.180dc6f2f417e60cff2b886c@kernel.org> <20200821222847.7d0730e4b193c3ea8da6bae2@kernel.org>
-In-Reply-To: <20200821222847.7d0730e4b193c3ea8da6bae2@kernel.org>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Sat, 22 Aug 2020 10:31:36 +0800
-Message-ID: <CAMZfGtVjenzLTLWPx7maoh2wbtiBjzqOD8Ckbzwf=LAx1GiCPA@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] kprobes: Fix kill kprobe which has been
- marked as gone
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, songliubraving@fb.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chengming Zhou <zhouchengming@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200821162134.97d551c6fe45b489992841a8@linux-foundation.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.177.253]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 9:28 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> On Fri, 21 Aug 2020 21:28:43 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> > Hi Muchun,
-> >
-> > On Thu, 20 Aug 2020 11:19:33 +0800
-> > Muchun Song <songmuchun@bytedance.com> wrote:
-> >
-> > > If a kprobe is marked as gone, we should not kill it again. Otherwise,
-> > > we can disarm the kprobe more than once. In that case, the statistics
-> > > of kprobe_ftrace_enabled can unbalance which can lead to that kprobe
-> > > do not work.
-> > >
-> >
-> > Good catch! Hmm, I think we also need an assertion in
-> > kill_kprobe() so that p is already gone. Anyway, this looks good to me.
-> >
-> > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> >
-> > Thanks!
-> >
-> > > Fixes: 0cb2f1372baa ("kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler")
->
-> BTW, this fixes older bug than this commit.
->
-> Fixes: e8386a0cb22f ("kprobes: support probing module __exit function")
-
-Yeah, it's right. Thanks.
-
->
-> Thank you,
->
-> > > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > > Co-developed-by: Chengming Zhou <zhouchengming@bytedance.com>
-> > > Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-> > > ---
-> > >  kernel/kprobes.c | 6 +++++-
-> > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > > index d36e2b017588..7bac3ea44ff4 100644
-> > > --- a/kernel/kprobes.c
-> > > +++ b/kernel/kprobes.c
-> > > @@ -2422,7 +2422,10 @@ static int kprobes_module_callback(struct notifier_block *nb,
-> > >     mutex_lock(&kprobe_mutex);
-> > >     for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
-> > >             head = &kprobe_table[i];
-> > > -           hlist_for_each_entry(p, head, hlist)
-> > > +           hlist_for_each_entry(p, head, hlist) {
-> > > +                   if (kprobe_gone(p))
-> > > +                           continue;
-> > > +
-> > >                     if (within_module_init((unsigned long)p->addr, mod) ||
-> > >                         (checkcore &&
-> > >                          within_module_core((unsigned long)p->addr, mod))) {
-> > > @@ -2439,6 +2442,7 @@ static int kprobes_module_callback(struct notifier_block *nb,
-> > >                              */
-> > >                             kill_kprobe(p);
-> > >                     }
-> > > +           }
-> > >     }
-> > >     if (val == MODULE_STATE_GOING)
-> > >             remove_module_kprobe_blacklist(mod);
-> > > --
-> > > 2.11.0
-> > >
-> >
-> >
-> > --
-> > Masami Hiramatsu <mhiramat@kernel.org>
->
->
-> --
-> Masami Hiramatsu <mhiramat@kernel.org>
 
 
+On 8/22/2020 7:21 AM, Andrew Morton wrote:
+> On Wed, 19 Aug 2020 18:53:57 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+> 
+>>> I think I am missing some important pieces. Bear with me.
+>>
+>> No worries, also bear with me, I'm going to be offline intermittently
+>> until at least mid-September. Hopefully Joao and/or Vishal can jump in
+>> on this discussion.
+> 
+> Ordinarily I'd prefer a refresh&resend for 2+ week-old series such as
+> this.
+> 
+> But given that v4 all applies OK and that Dan has pending outages, I'll
+> scoop up this version, even though at least one change has been suggested.
+> 
+> Also, this series has killed Zhen Lei's little cleanup
+> (http://lkml.kernel.org/r/20200817065926.2239-1-thunder.leizhen@huawei.com).
+> I don't think the affected code was moved elsewhere, so I'll drop that
+> patch.
 
--- 
-Yours,
-Muchun
+OK, this patch is really optional.
+
+> 
+> 
+> .
+> 
+
