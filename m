@@ -2,155 +2,99 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 05:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971B8C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 05:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B9F2072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 05:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598073281;
-	bh=ZrLyIFhxQbPGoUXJQNTV4pXYSYZgaYGJ1pQ4xCkgKxc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bMwpyuTIXtry13c+XhGVuCtxBya6aCEhJStputEjMD7iTY3kFcIQsFwgmp78lU3YA
-	 GSkFsbiJRaswHkrfd1OLLzRlzze8wo6tWQwpti37gzHOEbmCq6OUPWexZe/Aht4cDq
-	 kMI2qgr5Ov3BiPixrQdB6Jk/KLg55vFSwr+CWAbU=
+	by mail.kernel.org (Postfix) with ESMTP id 7F82420724
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 05:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbgHVFOj (ORCPT
+        id S1726531AbgHVFVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 01:14:39 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:53380 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgHVFOi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 01:14:38 -0400
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 07M5EFXM021249;
-        Sat, 22 Aug 2020 14:14:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 07M5EFXM021249
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598073256;
-        bh=4FjA6DiNrgZGC6Vw0nWpQF20KUNU2N4bk2zh75rtHw0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=abWVB3xa5jOHzBS5UTEgfM9975axbclzHit69E0DdZsttOiNYxICAw+jn+C6zZCg8
-         tvmQBvTuj9o2M/K5P4mcrr9BJkJPQe4tAmMKHobrljbISuwm2ZrBH/IJSu2ih7gbVX
-         yVNQAFyHz5ui8pamhpPIKLMCmMkDZsTvigVBqVkwokx4eR6jO8l0aJiGdX6b+MvCn3
-         7gcVmjh4DcV1BwWwLwpYStq5FwVTFxqye+lqS9YM/92K8ytGy1phX6kmBgzuA6LV1s
-         k+BBQoQVdZOCSA1INLtZG6UFYCWYB5FRBig0gzUCjtmWefwy+wUjFP1v/iS9sfYskh
-         deRTZ9a0aF67A==
-X-Nifty-SrcIP: [209.85.221.178]
-Received: by mail-vk1-f178.google.com with SMTP id s81so886434vkb.3;
-        Fri, 21 Aug 2020 22:14:16 -0700 (PDT)
-X-Gm-Message-State: AOAM530abFoFobUGbAtwMflQMC1PpR9DlVz1FDSdFKPxwt8mN7aeW/4S
-        7rGTIPt7uK83OaapsmPWAnjVyanevqUridJ31lw=
-X-Google-Smtp-Source: ABdhPJzEUYgjZNj9Kt5YBK/Q6C4u/AK4jmBzy5Fg3fSDwg7ixaVTsnJThSpwhdZEajfjuMCpFNiPTwxef96YWVpf4GY=
-X-Received: by 2002:a1f:8f52:: with SMTP id r79mr3870370vkd.96.1598073254960;
- Fri, 21 Aug 2020 22:14:14 -0700 (PDT)
+        Sat, 22 Aug 2020 01:21:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:31199 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725811AbgHVFVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 01:21:33 -0400
+IronPort-SDR: /tgECFdLSz61qZ4rt/WqgVHIIGVNmxu8azP01t3xuApMr09oFS7l8wOcmpIN8WKrqZMWqqV/Ui
+ jkF0KmEewaEA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="219954727"
+X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
+   d="scan'208";a="219954727"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 22:21:33 -0700
+IronPort-SDR: w+1lVZezxPiYtIAfwBALW9KJ6hUs7BWHPRIy8uzlAaArGVbklPYIzdYbBPISVJZxENsW3sWluk
+ sE62Ty4DVTCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
+   d="scan'208";a="311634014"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 21 Aug 2020 22:21:33 -0700
+Received: from [10.214.149.112] (rtanwar-MOBL.gar.corp.intel.com [10.214.149.112])
+        by linux.intel.com (Postfix) with ESMTP id C15CE58081E;
+        Fri, 21 Aug 2020 22:21:29 -0700 (PDT)
+Subject: Re: [PATCH v9 2/2] Add PWM fan controller driver for LGM SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com
+References: <cover.1598001442.git.rahul.tanwar@linux.intel.com>
+ <fedf5d1ace7c389a5fc0116865b9b88aa3ddeaa5.1598001442.git.rahul.tanwar@linux.intel.com>
+ <20200821105618.GO1891694@smile.fi.intel.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <d8c85de1-dacf-e8eb-6e49-131d007f3a6b@linux.intel.com>
+Date:   Sat, 22 Aug 2020 13:21:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200820220955.3325555-1-ndesaulniers@google.com>
-In-Reply-To: <20200820220955.3325555-1-ndesaulniers@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 22 Aug 2020 14:13:38 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQO9sKw=7RLPSnsChddrwNCc_si-XgSDQcGHTSxeq4_Pg@mail.gmail.com>
-Message-ID: <CAK7LNAQO9sKw=7RLPSnsChddrwNCc_si-XgSDQcGHTSxeq4_Pg@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: add -fuse-ld=lld to KBUILD_HOSTLDFLAGS when LLVM=1
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     stable <stable@vger.kernel.org>,
-        Matthias Maennich <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200821105618.GO1891694@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 7:10 AM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
+
+Hi Andy,
+
+On 21/8/2020 6:56 pm, Andy Shevchenko wrote:
+> On Fri, Aug 21, 2020 at 05:32:11PM +0800, Rahul Tanwar wrote:
+>> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+>> This PWM controller does not have any other consumer, it is a
+>> dedicated PWM controller for fan attached to the system. Add
+>> driver for this PWM fan controller.
+> ...
 >
-> While moving Android kernels over to use LLVM=1, we observe the failure
-> when building in a hermetic docker image:
->   HOSTCC  scripts/basic/fixdep
-> clang: error: unable to execute command: Executable "ld" doesn't exist!
->
-> The is because the build of the host utility fixdep builds the fixdep
-> executable in one step by invoking the compiler as the driver, rather
-> than individual compile then link steps.
->
-> Clang when configured from source defaults to use the system's linker,
-> and not LLVM's own LLD, unless the CMake config
-> -DCLANG_DEFAULT_LINKER='lld' is set when configuring a build of clang
-> itself.
->
-> Don't rely on the compiler's implicit default linker; be explicit.
+>> +#include <linux/bitfield.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+> We haven't settle this yet...
 
+I investigated more about it. I was getting build error because we were
+relying on of_device.h for including platform_device.h. You are right that
+we are not using anything from of_device.h. So i removed of_device.h from
+driver and added include <linux/platform_device.h> & build is ok.
 
-I do not understand this patch.
+Regarding mod_devicetable.h header, it gets included indirectly from
+<linux/pwm.h> which includes of.h which includes mod_devicetable.h. So i
+think no point including it again in the driver.
 
-The host compiler should be able to link executables
-without any additional settings.
+Regards,
+Rahul
 
-So, can you link a hello world program
-in your docker?
+>> +#include <linux/pwm.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/reset.h>
 
-masahiro@zoe:~$ cat test.c
-#include <stdio.h>
-int main(void)
-{
-        printf("helloworld\n");
-        return 0;
-}
-masahiro@zoe:~$ clang test.c
-
-
-If this fails, your environment is broken.
-
-Just do  -DCLANG_DEFAULT_LINKER='lld'
-if you know GNU ld is missing in your docker environment.
-
-
-
-
-
-
-
-
-> Cc: stable@vger.kernel.org
-> Fixes: commit a0d1c951ef08 ("kbuild: support LLVM=1 to switch the default tools to Clang/LLVM")
-> Reported-by: Matthias Maennich <maennich@google.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  Makefile | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Makefile b/Makefile
-> index def590b743a9..b4e93b228a26 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -436,6 +436,7 @@ OBJDUMP             = llvm-objdump
->  READELF                = llvm-readelf
->  OBJSIZE                = llvm-size
->  STRIP          = llvm-strip
-> +KBUILD_HOSTLDFLAGS     += -fuse-ld=lld
->  else
->  CC             = $(CROSS_COMPILE)gcc
->  LD             = $(CROSS_COMPILE)ld
-> --
-> 2.28.0.297.g1956fa8f8d-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200820220955.3325555-1-ndesaulniers%40google.com.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
