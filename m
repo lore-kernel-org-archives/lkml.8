@@ -2,208 +2,96 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0422FC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D08A420724
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:04:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AtiHmTov"
+	by mail.kernel.org (Postfix) with ESMTP id A0EC020724
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:07:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgHVHEo (ORCPT
+        id S1727091AbgHVHHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 03:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgHVHEl (ORCPT
+        Sat, 22 Aug 2020 03:07:37 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:29709 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726856AbgHVHHg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 03:04:41 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC705C061575
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 00:04:40 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id i26so3416341edv.4
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 00:04:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fwfunudANjOoTZXdPkqCPqeCMIZCPPl9JuhA1bl5pBw=;
-        b=AtiHmTovOFzL0yalRrqMCdj2asvK/1cxQIlCX37p5Ym1vHLaK5/uyoXDO5PV0Cynn4
-         dUM/RyqHAU8i3IVnpbxyAy5dQVFN3g1WwEgsnZVzWq2wHi8GnA8hZpnKmhaHNY1HPo7I
-         NFWTu98Pw2ehMm3Mg9FVtUzRJ8xGKoxA8Cto7R84r8AZJDA4CVjbhQHT8pSBZ0sVyoEx
-         P3xULHzA0ZOWuFJmDb5bDK2gJCPGMIn+ihEgGD4GwaiL75StGkLVdp9+E8TrJT4jSIF+
-         WslnbwaP1YImU7zqbBh5iEYHAe5d1z08fGQSgSaPSylBFep6M6IalNYNsDlgFB5hK0MK
-         ncYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fwfunudANjOoTZXdPkqCPqeCMIZCPPl9JuhA1bl5pBw=;
-        b=MbPz1iAi9K+1ZROZG/yk65GD0af1rGKxQf85wnmlVvZJ2Bvmcqe6JnQpatOnJ8t1d8
-         pCNimAX6GLdPRvHuWM2Bv7a/LG1HGzdkc4Xw9IPjv7VXMwnt2qEESXOsii/Vh68MmbCA
-         Z/rSjb+cvybo8xYtIPsKenH6kQeZIGiH+6aUiMK4XK7rAj53W5f4Z+ztd0AbkXgx1hEC
-         haLmw9I+YZe7vZpNaOotyc1dci+VFNdWSqg2aolydNgiysIDP8TLazEFkMLjzXJ4a+3f
-         XXcdZzBfMAQUO/uTRDzw7l9rb1y3E+O1CIxY7iEeRHtdJVes+iw+wrhYr68FuSqV6+m2
-         iddw==
-X-Gm-Message-State: AOAM531ub7+EOOX1k7TBOrL9WN7uxAf1VtarWoajCIdKNlyJR0Kci2pg
-        I4ZDdH35CSvPJOremIW8FiQ4413nF2eZlDrzUrswbw==
-X-Google-Smtp-Source: ABdhPJxYY8CRHDb7qzuMzF83Z04DfNrYhMMudL5DibJuxlaN0+NROigEgLH3AQp37MMKbZJaEeSrr6V8kf9TiBhN0P4=
-X-Received: by 2002:a05:6402:30a5:: with SMTP id df5mr6082918edb.18.1598079878906;
- Sat, 22 Aug 2020 00:04:38 -0700 (PDT)
+        Sat, 22 Aug 2020 03:07:36 -0400
+X-IronPort-AV: E=Sophos;i="5.76,339,1592863200"; 
+   d="scan'208";a="464294685"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2020 09:07:34 +0200
+Date:   Sat, 22 Aug 2020 09:07:34 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Joe Perches <joe@perches.com>
+cc:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        kernel-janitors <kernel-janitors@vger.kernel.org>,
+        kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cocci <cocci@systeme.lip6.fr>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Whitcroft <apw@shadowen.org>
+Subject: Re: [Cocci] coccinelle: Convert comma to semicolons (was Re: [PATCH]
+ checkpatch: Add test for comma use that should be semicolon)
+In-Reply-To: <3836b482434bd0b9a609959d3696cc6113a93f2f.camel@perches.com>
+Message-ID: <alpine.DEB.2.22.394.2008220905460.3150@hadrien>
+References: <20200818184107.f8af232fb58b17160c570874@linux-foundation.org>  <3bf27caf462007dfa75647b040ab3191374a59de.camel@perches.com>  <b0fd63e4b379eda69ee85ab098353582b8c054bb.camel@perches.com>  <alpine.DEB.2.22.394.2008201021400.2524@hadrien> 
+ <a5713d8597065ef986f780499428fcc4cd31c003.camel@perches.com>  <alpine.DEB.2.22.394.2008201856110.2524@hadrien>  <744af177c09f8ce22c99d6e1df458bced558518b.camel@perches.com>  <162653.1598067338@turing-police>
+ <3836b482434bd0b9a609959d3696cc6113a93f2f.camel@perches.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-4-haoluo@google.com>
- <d50a1530-9a9f-45b2-5aba-05fe4b895fbc@fb.com> <CAEf4BzZmLUcw4M16U6w-s2Zd6KbsuY4dzzkeEBx9CejetT5BwQ@mail.gmail.com>
- <CA+khW7jZc=p50eGUb6kLUq00bq8C_JmN2pJcu66uMUu3aL7=ZQ@mail.gmail.com> <CAEf4Bzb70CYZMYXEW0RO+S99xG4iwr9BQmGhD4ymWkwq_NR=6Q@mail.gmail.com>
-In-Reply-To: <CAEf4Bzb70CYZMYXEW0RO+S99xG4iwr9BQmGhD4ymWkwq_NR=6Q@mail.gmail.com>
-From:   Hao Luo <haoluo@google.com>
-Date:   Sat, 22 Aug 2020 00:04:27 -0700
-Message-ID: <CA+khW7hQh8E8p=BAb=3WTD=0JTP_AX2x6wZp-QMQqwoQ2rgG-g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 3/8] bpf: Introduce help function to validate
- ksym's type.
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Yonghong Song <yhs@fb.com>, Networking <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323329-12852889-1598080054=:3150"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ah, I see bpf_core_types_are_compat() after sync'ing my local repo. It
-seems the perfect fit for my use case. I only found the
-btf_equal_xxx() defined in btf.c when posting these patches. I can
-test and use bpf_core_types_are_compat() in v2. Thanks for pointing it
-out and explaining the public APIs.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hao
+--8323329-12852889-1598080054=:3150
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-On Fri, Aug 21, 2020 at 7:43 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Fri, Aug 21, 2020 at 5:43 PM Hao Luo <haoluo@google.com> wrote:
+
+
+On Fri, 21 Aug 2020, Joe Perches wrote:
+
+> On Fri, 2020-08-21 at 23:35 -0400, Valdis Klētnieks wrote:
+> > On Fri, 21 Aug 2020 18:08:08 -0700, Joe Perches said:
+> > > (forwarding on to kernel-janitors/mentees and kernelnewbies)
+> > >
+> > > Just fyi for anyone that cares:
+> > >
+> > > A janitorial task for someone might be to use Julia's coccinelle
+> > > script below to convert the existing instances of commas that
+> > > separate statements into semicolons.
 > >
-> > On Fri, Aug 21, 2020 at 2:50 PM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Thu, Aug 20, 2020 at 10:22 AM Yonghong Song <yhs@fb.com> wrote:
-> > > >
-> > > >
-> > > >
-> > > > On 8/19/20 3:40 PM, Hao Luo wrote:
-> > > > > For a ksym to be safely dereferenced and accessed, its type defined in
-> > > > > bpf program should basically match its type defined in kernel. Implement
-> > > > > a help function for a quick matching, which is used by libbpf when
-> > > > > resolving the kernel btf_id of a ksym.
-> > > > >
-> > > > > Signed-off-by: Hao Luo <haoluo@google.com>
-> > > > > ---
-> > [...]
-> > > > > +/*
-> > > > > + * Match a ksym's type defined in bpf programs against its type encoded in
-> > > > > + * kernel btf.
-> > > > > + */
-> > > > > +bool btf_ksym_type_match(const struct btf *ba, __u32 id_a,
-> > > > > +                      const struct btf *bb, __u32 id_b)
-> > > > > +{
-> > >
-> > > [...]
-> > >
-> > > > > +                     }
-> > > > > +             }
-> > > >
-> > > > I am wondering whether this is too strict and how this can co-work with
-> > > > CO-RE. Forcing users to write almost identical structure definition to
-> > > > the underlying kernel will not be user friendly and may not work cross
-> > > > kernel versions even if the field user cares have not changed.
-> > > >
-> > > > Maybe we can relax the constraint here. You can look at existing
-> > > > libbpf CO-RE code.
-> > >
-> > > Right. Hao, can you just re-use bpf_core_types_are_compat() instead?
-> > > See if semantics makes sense, but I think it should. BPF CO-RE has
-> > > been permissive in terms of struct size and few other type aspects,
-> > > because it handles relocations so well. This approach allows to not
-> > > have to exactly match all possible variations of some struct
-> > > definition, which is a big problem with ever-changing kernel data
-> > > structures.
-> > >
+> > Note that you need to *really* check for possible changes in semantics.
+> > It's *usually* OK to do that, but sometimes it's not...
 > >
-> > I have to say I hate myself writing another type comparison instead of
-> > reusing the existing one. The issue is that when bpf_core_types_compat
-> > compares names, it uses t1->name_off == t2->name_off. It is also used
->
-> Huh? Are we talking about the same bpf_core_types_are_compat() (there
-> is no bpf_core_types_compat, I think it's a typo)?
-> bpf_core_types_are_compat() doesn't even compare any name, so I'm not
-> sure what you are talking about. Some of btf_dedup functions do string
-> comparisons using name_off directly, but that's a special and very
-> careful case, it's not relevant here.
->
->
-> > in bpf_equal_common(). In my case, because these types are from two
-> > different BTFs, their name_off are not expected to be the same, right?
-> > I didn't find a good solution to refactor before posting this patch. I
->
-> bpf_core_types_are_compat() didn't land until this week, so you must
-> be confusing something. Please take another look.
->
-> > think I can adapt bpf_core_type_compat() and pay more attention to
-> > CO-RE.
+> > for (i=0; i++, last++; !last) {
 > >
-> > > >
-> > > > > +             break;
-> > > > > +     }
-> > >
-> > > [...]
-> > >
-> > > > > +
-> > > > >   struct btf_ext_sec_setup_param {
-> > > > >       __u32 off;
-> > > > >       __u32 len;
-> > > > > diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
-> > > > > index 91f0ad0e0325..5ef220e52485 100644
-> > > > > --- a/tools/lib/bpf/btf.h
-> > > > > +++ b/tools/lib/bpf/btf.h
-> > > > > @@ -52,6 +52,8 @@ LIBBPF_API int btf__get_map_kv_tids(const struct btf *btf, const char *map_name,
-> > > > >                                   __u32 expected_key_size,
-> > > > >                                   __u32 expected_value_size,
-> > > > >                                   __u32 *key_type_id, __u32 *value_type_id);
-> > > > > +LIBBPF_API bool btf_ksym_type_match(const struct btf *ba, __u32 id_a,
-> > > > > +                                 const struct btf *bb, __u32 id_b);
-> > > > >
-> > > > >   LIBBPF_API struct btf_ext *btf_ext__new(__u8 *data, __u32 size);
-> > > > >   LIBBPF_API void btf_ext__free(struct btf_ext *btf_ext);
-> > > >
-> > > > The new API function should be added to libbpf.map.
-> > >
-> > > My question is why does this even have to be a public API?
-> >
-> > I can fix. Please pardon my ignorance, what is the difference between
-> > public and internal APIs? I wasn't sure, so used it improperly.
+> > changing that comma to a ; will break the compile.  In other cases, it can
+> > introduce subtle bugs.
 >
-> public APIs are those that users of libbpf are supposed to use,
-> internal one is just for libbpf internal use. The former can't change,
-> the latter can be refactor as much as we need to.
+> True enough for a general statement, though the coccinelle
+> script Julia provided does not change a single instance of
+> for loop expressions with commas.
 >
-> >
-> > Thanks,
-> > Hao
+> As far as I can tell, no logic defect is introduced by the
+> script at all.
+
+The script has a rule to ensure that what is changed is part of a top
+level statement that has the form e1, e2;.  I put that in to avoid
+transforming cases where the comma is the body of a macro, but it protects
+against for loop headers as well.
+
+julia
+--8323329-12852889-1598080054=:3150--
