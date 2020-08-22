@@ -2,139 +2,210 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF23DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77926C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4492078D
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:07:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=puresoftware-com.20150623.gappssmtp.com header.i=@puresoftware-com.20150623.gappssmtp.com header.b="j22PzrSX"
+	by mail.kernel.org (Postfix) with ESMTP id 5A9C72072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgHVOHe (ORCPT
+        id S1728114AbgHVOTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 10:07:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbgHVOHc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 10:07:32 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C6FDC061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 07:07:31 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id i26so3919928edv.4
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 07:07:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=puresoftware-com.20150623.gappssmtp.com; s=20150623;
-        h=return-receipt-to:from:references:in-reply-to:mime-version
-         :thread-index:disposition-notification-to:date:message-id:subject:to
-         :cc;
-        bh=Zfgk8dyvwVv5/BR9Ue01YxFjydKGHjpfZPQCE6N5dCY=;
-        b=j22PzrSXJp7S9KTi4ai9+3RJnFl3jhWm5OLVtMbJt84BPAMXR7zE+e7KtUoQcIHuo/
-         rok6cCAq/8Fcvjo3T0USmhKgJQ2JMM0AbuXuu0TDNn5GknrmE/fO0WuVSL3o7LCwfwbw
-         sXQjsu2oHLRCGPscTa+rewdcWlLSZVAo72qXeIWCMAR+WAne2IAPmiWI6Henwq2kTKSY
-         Qx33SS6iDCE08N2sAR8wzvTikBmNDMC2VSyC2W+SSC6ZnqtfLsYPCgf7EzSJmOXwOVsn
-         jxj1TXwD7saodxUJyXPE8ivHjFNbzPZJ7jt+se0lU/72N+15nmKEnxXTA6NXvI5CyQxv
-         Iv4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:return-receipt-to:from:references:in-reply-to
-         :mime-version:thread-index:disposition-notification-to:date
-         :message-id:subject:to:cc;
-        bh=Zfgk8dyvwVv5/BR9Ue01YxFjydKGHjpfZPQCE6N5dCY=;
-        b=m2y3SqSlD3xLPfQverKI6drpFNi32RYjKEdNSoGIEGXwFh6ngHHHTmzWF0xgxB6wJ2
-         6hJ7F63pGqXq3M9G31/BAACvg9J1RRTjysdadjnya2Dd+gHq/eQDLiRySQm4AIYTZlxR
-         BfFzJJxRR+bfAa5lOKS4lc+ZCU9Sn2kXEvpaTzBSoelgxtfYtvo+I7iShv/AEHEBdrNr
-         RshBDVKod52snA/30V1zIIpCO5tnrqCqqNPOjEi89y5RP6oLcZYk6g5CuH94w1uJdujX
-         R/pi9nreveylFZlq1IGahZb1fiCJCUtFHGDfKsk3Y8oWhh7jj2HXU8Awr+eKEr9cRMyP
-         4GFg==
-X-Gm-Message-State: AOAM530oR4RXUoF9mMejw1s4hnnZB+kqqnE/J/cBEFI3ats/1e0ArmiA
-        JMrmZayfzRZQ1zGEojet5lwXrx9T/2RxTHLoUYjNBQ==
-X-Google-Smtp-Source: ABdhPJxQ0ysFnTuqs9rgaiQ8b/3EFOcOhfeR7EJ3S37mninIiktIStaqJRUNfY9yq9MPVRaLzvh+IMG+UFtQxxDqzhk=
-X-Received: by 2002:a05:6402:1d17:: with SMTP id dg23mr7429245edb.198.1598105246846;
- Sat, 22 Aug 2020 07:07:26 -0700 (PDT)
-From:   Kuldip Dwivedi <kuldip.dwivedi@puresoftware.com>
-References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com> <20200821140718.GH4870@sirena.org.uk>
-In-Reply-To: <20200821140718.GH4870@sirena.org.uk>
+        Sat, 22 Aug 2020 10:19:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60122 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727899AbgHVOTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 10:19:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D6EE5ABE9;
+        Sat, 22 Aug 2020 14:19:40 +0000 (UTC)
+Subject: Re: [patch RFC 00/38] x86, PCI, XEN, genirq ...: Prepare for device
+ MSI
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200821002424.119492231@linutronix.de>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <863e2e57-97a4-5625-4aaf-901092e673b1@suse.com>
+Date:   Sat, 22 Aug 2020 16:19:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQF7/ycK6cTpjLXBKD+ruXNZEs6GEAE4wSq+qe9WNoA=
-Date:   Sat, 22 Aug 2020 19:37:25 +0530
-Message-ID: <c810740d75f64e308fd362e6c6a5f437@mail.gmail.com>
-Subject: RE: [PATCH] spi: spi-fsl-dspi: Add ACPI support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qiang Zhao <qiang.zhao@nxp.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        Tanveer Alam <tanveer.alam@puresoftware.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200821002424.119492231@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Mark Brown <broonie@kernel.org>
-> Sent: Friday, August 21, 2020 7:37 PM
-> To: kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
-> Cc: linux-spi@vger.kernel.org; linux-kernel@vger.kernel.org; Qiang Zhao
-> <qiang.zhao@nxp.com>; Pankaj Bansal <pankaj.bansal@nxp.com>; Varun Sethi
-> <V.Sethi@nxp.com>; tanveer <tanveer.alam@puresoftware.com>
-> Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
->
-> On Fri, Aug 21, 2020 at 06:40:29PM +0530, kuldip dwivedi wrote:
->
-> > +static const struct acpi_device_id fsl_dspi_acpi_ids[] = {
-> > +	{ "NXP0005", .driver_data =
-(kernel_ulong_t)&devtype_data[LS2085A], },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, fsl_dspi_acpi_ids);
->
-> Does NXP know about this ID assignment from their namespace?  ACPI IDs
-should
-> be namespaced by whoever's assigning the ID to avoid collisions.
-Yes, I got HID from NXP only.
->
-> > -		ret = of_property_read_u32(np, "spi-num-chipselects",
-&cs_num);
-> > +		if (is_acpi_node(pdev->dev.fwnode))
-> > +			ret = device_property_read_u32(&pdev->dev,
-> > +					"spi-num-chipselects", &cs_num);
-> > +		else
-> > +			ret = of_property_read_u32(np,
-> > +					"spi-num-chipselects", &cs_num);
->
-> The whole point with the device property API is that it works with both
-DT and ACPI
-> without needing separate parsing, though in this case I'm wondering why
-we'd
-> need to specify this in an ACPI system at all?
-Understood. Will take care in v2 PATCH
->
-> > -		of_property_read_u32(np, "bus-num", &bus_num);
-> > +		if (is_acpi_node(pdev->dev.fwnode)) {
-> > +			ret = device_property_read_u32(&pdev->dev,
-> > +							"bus-num",
-&bus_num);
->
-> This is a bad idea for DT and I can't understand why you'd carry it over
-for ACPI -
-> why would an ACPI system ever care about this?  It's Linux internal at
-the best of
-> times.
-Will take care in v2 PATCH
->
-> It looks like you've done this by simply adding these device property
-alternatives
-> for every DT property.  This isn't how that API is intended to be used
-and suggests
-> that this isn't a thought through, idiomatic ACPI binding.  I'd suggest
-looking at the
-> Synquacer driver for an example of how this would normally be done, I'd
-expect
-> your ACPI code to look very much like theirs.
+On 21.08.20 02:24, Thomas Gleixner wrote:
+> First of all, sorry for the horrible long Cc list, which was
+> unfortunately unavoidable as this touches the world and some more.
+> 
+> This patch series aims to provide a base to support device MSI (non
+> PCI based) in a halfways architecture independent way.
+> 
+> It's a mixed bag of bug fixes, cleanups and general improvements which
+> are worthwhile independent of the device MSI stuff. Unfortunately this
+> also comes with an evil abuse of the irqdomain system to coerce XEN on
+> x86 into compliance without rewriting XEN from scratch.
+> 
+> As discussed in length in this mail thread:
+> 
+>    https://lore.kernel.org/r/87h7tcgbs2.fsf@nanos.tec.linutronix.de
+> 
+> the initial attempt of piggypacking device MSI support on platform MSI
+> is doomed for various reasons, but creating independent interrupt
+> domains for these upcoming magic PCI subdevices which are not PCI, but
+> might be exposed as PCI devices is not as trivial as it seems.
+> 
+> The initially suggested and evaluated approach of extending platform
+> MSI turned out to be the completely wrong direction and in fact
+> platform MSI should be rewritten on top of device MSI or completely
+> replaced by it.
+> 
+> One of the main issues is that x86 does not support the concept of irq
+> domains associations stored in device::msi_domain and still relies on
+> the arch_*_msi_irqs() fallback implementations which has it's own set
+> of problems as outlined in
+> 
+>    https://lore.kernel.org/r/87bljg7u4f.fsf@nanos.tec.linutronix.de/
+> 
+> in the very same thread.
+> 
+> The main obstacle of storing that pointer is XEN which has it's own
+> historical notiion of handling PCI MSI interupts.
+> 
+> This series tries to address these issues in several steps:
+> 
+>   1) Accidental bug fixes
+> 	iommu/amd: Prevent NULL pointer dereference
+> 
+>   2) Janitoring
+> 	x86/init: Remove unused init ops
+> 
+>   3) Simplification of the x86 specific interrupt allocation mechanism
+> 
+> 	x86/irq: Rename X86_IRQ_ALLOC_TYPE_MSI* to reflect PCI dependency
+> 	x86/irq: Add allocation type for parent domain retrieval
+> 	iommu/vt-d: Consolidate irq domain getter
+> 	iommu/amd: Consolidate irq domain getter
+> 	iommu/irq_remapping: Consolidate irq domain lookup
+> 
+>   4) Consolidation of the X86 specific interrupt allocation mechanism to be as close
+>      as possible to the generic MSI allocation mechanism which allows to get rid
+>      of quite a bunch of x86'isms which are pointless
+> 
+> 	x86/irq: Prepare consolidation of irq_alloc_info
+> 	x86/msi: Consolidate HPET allocation
+> 	x86/ioapic: Consolidate IOAPIC allocation
+> 	x86/irq: Consolidate DMAR irq allocation
+> 	x86/irq: Consolidate UV domain allocation
+> 	PCI: MSI: Rework pci_msi_domain_calc_hwirq()
+> 	x86/msi: Consolidate MSI allocation
+> 	x86/msi: Use generic MSI domain ops
+> 
+>    5) x86 specific cleanups to remove the dependency on arch_*_msi_irqs()
+> 
+> 	x86/irq: Move apic_post_init() invocation to one place
+> 	z86/pci: Reducde #ifdeffery in PCI init code
+> 	x86/irq: Initialize PCI/MSI domain at PCI init time
+> 	irqdomain/msi: Provide DOMAIN_BUS_VMD_MSI
+> 	PCI: vmd: Mark VMD irqdomain with DOMAIN_BUS_VMD_MSI
+> 	PCI: MSI: Provide pci_dev_has_special_msi_domain() helper
+> 	x86/xen: Make xen_msi_init() static and rename it to xen_hvm_msi_init()
+> 	x86/xen: Rework MSI teardown
+> 	x86/xen: Consolidate XEN-MSI init
+> 	irqdomain/msi: Allow to override msi_domain_alloc/free_irqs()
+> 	x86/xen: Wrap XEN MSI management into irqdomain
+> 	iommm/vt-d: Store irq domain in struct device
+> 	iommm/amd: Store irq domain in struct device
+> 	x86/pci: Set default irq domain in pcibios_add_device()
+> 	PCI/MSI: Allow to disable arch fallbacks
+> 	x86/irq: Cleanup the arch_*_msi_irqs() leftovers
+> 	x86/irq: Make most MSI ops XEN private
+> 
+>      This one is paving the way to device MSI support, but it comes
+>      with an ugly and evil hack. The ability of overriding the default
+>      allocation/free functions of an MSI irq domain is useful in general as
+>      (hopefully) demonstrated with the device MSI POC, but the abuse
+>      in context of XEN is evil. OTOH without enough XENology and without
+>      rewriting XEN from scratch wrapping XEN MSI handling into a pseudo
+>      irq domain is a reasonable step forward for mere mortals with severly
+>      limited XENology. One day the XEN folks might make it a real irq domain.
+>      Perhaps when they have to support the same mess on other architectures.
+>      Hope dies last...
+> 
+>      At least the mechanism to override alloc/free turned out to be useful
+>      for implementing the base infrastructure for device MSI. So it's not a
+>      completely lost case.
+> 
+>    6) X86 specific preparation for device MSI
+> 
+>         x86/irq: Add DEV_MSI allocation type
+>         x86/msi: Let pci_msi_prepare() handle non-PCI MSI
+> 
+>    7) Generic device MSI infrastructure
+> 
+>         platform-msi: Provide default irq_chip:ack
+>         platform-msi: Add device MSI infrastructure
+> 
+>    8) Infrastructure for and a POC of an IMS (Interrupt Message
+>       Storm) irq domain and irqchip implementation
+> 
+>         irqdomain/msi: Provide msi_alloc/free_store() callbacks
+>         irqchip: Add IMS array driver - NOT FOR MERGING
+> 
+> The whole lot is also available from git:
+> 
+>     git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git device-msi
+> 
+> This has been tested on Intel/AMD/KVM but lacks testing on:
+> 
+>      - HYPERV (-ENODEV)
+>      - VMD enabled systems (-ENODEV)
+>      - XEN (-ENOCLUE)
+
+Tested to work in Xen dom0. Network is running fine with eth0 MSI
+interrupts being routed through Xen.
+
+You can add my:
+
+Tested-by: Juergen Gross <jgross@suse.com>
+
+
+Juergen
