@@ -2,137 +2,192 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EA0C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFABC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B65D2071A
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598066748;
-	bh=xlhQkGmI3gqs8Rn+xfQZmEbO8eg97WedoOV5mkmLgZg=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Qy8A9Jr+gTwdLJL5Nm793foWeF0S1jIu67tWHsoHZ3gvPW+R8ed/gTies2dlxQWKI
-	 l0bBRpCz/b+LXPOVyf+gSwSvA2rcIYXwTvTILYruH0gnu1Y5uCAekd3Qb57z1oC0Qp
-	 1LQ+88A+609Y+K08AiBqKtqf+kqynl0f4yH58tnE=
+	by mail.kernel.org (Postfix) with ESMTP id F16E621734
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAqfwrLV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgHVDZq (ORCPT
+        id S1726939AbgHVD0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 23:25:46 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:33522 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgHVDZp (ORCPT
+        Fri, 21 Aug 2020 23:26:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbgHVD03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 23:25:45 -0400
-Received: by mail-il1-f193.google.com with SMTP id r13so3058395iln.0;
-        Fri, 21 Aug 2020 20:25:44 -0700 (PDT)
+        Fri, 21 Aug 2020 23:26:29 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26469C061573;
+        Fri, 21 Aug 2020 20:26:29 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id x2so2090791ybf.12;
+        Fri, 21 Aug 2020 20:26:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e3KUgvt6sSnX04F6ibo9AqBx5odUZST7DyZqqmSjO20=;
+        b=MAqfwrLVswMUgSrzrx+QQ2qeKwiUCsS/66co0S4k5CUGimUp/hsMRQWv1KH0Jn58GN
+         +0JHGPjyDmUhXnedFa67yGwdbTAMfv+7VfPCrn6jyx5IRGrqwjrTX7DK5pGF2saZHMml
+         KAUos4XmSeYNWxiD4CgCu5VXvg/4jYfrUkyfjpACzxc6F6/oUcEDiU8EAmfHJEoFCy9J
+         W2xsCqFm1dZ4FpUAX95Frxp6FyL29X91xoWK+q+pojWr2UvDrblckWm5V/uUODlBhk0U
+         khxmCak20vNF7o5UO2HsMxdt46P5rklgQEh78sAb9WBHel8na6hc5IWJhfSFB2V68fzO
+         t2PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=qSqyCkB8+mSR0rZwtTlPRNJYmpR982y/9gGfbXhSmyM=;
-        b=B4Ad5fd0AybT41vd0oQZqajw7EyzUnyIxhgsemWMw8ArsdZ2QJWaCnmdWu+7fZHw5O
-         LipRByrPI9ig5ypU8DyQRYw5Q/GcAfRmM3z0/aNJEXXw+CxKJT+vagB16A7M5JjrjI5p
-         IlPHSTdpFX3b3xN8Rtn7oCmvYC00/Qi3sl3vGsZX4gBGVw/+8xlQ0GSxUiBIf7S0GGhj
-         uBWJW2aBMK799KnDyo2GuK/g798p66pLNoEx79tw2SsY71hNowsPy9ZDj5ruxtZ4LyDA
-         XmpEjg8YzsrtPie5XVvAC9VRevGUxr3RG/4I9FV4wn2fr1qOimjgR4ci6aL6RYWJTqZj
-         nfxg==
-X-Gm-Message-State: AOAM5321t6yKeZJxo5Pju6QVWiV1BeLIBf9LJznrnDpc1RDE1++ryoTj
-        ek9zp4hmQs8WmH7HxC+YQg==
-X-Google-Smtp-Source: ABdhPJyrjLJDcHhwycd/UHxrLz/TRh62kzDFH4kLAmu7MDEwiPhBoLX59cpjoDc69tBscL/O8b2GrA==
-X-Received: by 2002:a92:1b85:: with SMTP id f5mr4699106ill.308.1598066744001;
-        Fri, 21 Aug 2020 20:25:44 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id a9sm2415256iol.9.2020.08.21.20.25.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 20:25:43 -0700 (PDT)
-Received: (nullmailer pid 2217434 invoked by uid 1000);
-        Sat, 22 Aug 2020 03:25:40 -0000
-Date:   Fri, 21 Aug 2020 21:25:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [GIT PULL] Devicetree fixes for v5.9, take 2
-Message-ID: <20200822032540.GA2215775@bogus>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e3KUgvt6sSnX04F6ibo9AqBx5odUZST7DyZqqmSjO20=;
+        b=i466kdhsCahs5K2gDuEywGq6vAryCn/hwiSA/ymj7tvym4TawmU+IgBc7SzhYpAezv
+         pnCmMtco3si5RxDEhnnLsOwGMfoAqLgzu38fT+zPllCjpclyolXjXY+JpZNyhicl3FHO
+         YvyqorPmSUIt/tx7qcgB6lp0K5xd7cw0hj4mAUxSHF24HNoOrw7qny62ESbBXIeDUiyK
+         OF4RPn3XVzXwSDQNoC4ME7hH2s6PV3DeNhXw8saPqkCfAe9EsdcKRMqcg7Qfv8Tab5VU
+         4y6avO+wt8AYl5iXZeGHo8sSwSSclR3ZwgeGD1K6Qtz1N2J2Grb6Exb/U3TTng248XU8
+         A2Ow==
+X-Gm-Message-State: AOAM5328P52lmoxbZ7WyN4N4Sx72BcMMDO1OO7MKI7rqOB/7vx07NLso
+        zB+uh7oapIkl0VNJeEactUpd+YZ8H044+t57OIU=
+X-Google-Smtp-Source: ABdhPJykrI0EbamFIRGoAJO39IttOQl5xJ9XQaV6NSctZQ4N8rzHPwSSgk7P3+UJwJwwojvwgko8vLqa2KWL43jv1ZY=
+X-Received: by 2002:a25:d84a:: with SMTP id p71mr8334283ybg.347.1598066788386;
+ Fri, 21 Aug 2020 20:26:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-7-haoluo@google.com>
+In-Reply-To: <20200819224030.1615203-7-haoluo@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 21 Aug 2020 20:26:17 -0700
+Message-ID: <CAEf4BzZY2LyJvF9HCdAzHM7WG26GO0qqX=Wc6EiXArks=kmazA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 6/8] bpf: Introduce bpf_per_cpu_ptr()
+To:     Hao Luo <haoluo@google.com>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Wed, Aug 19, 2020 at 3:42 PM Hao Luo <haoluo@google.com> wrote:
+>
+> Add bpf_per_cpu_ptr() to help bpf programs access percpu vars.
+> bpf_per_cpu_ptr() has the same semantic as per_cpu_ptr() in the kernel
+> except that it may return NULL. This happens when the cpu parameter is
+> out of range. So the caller must check the returned value.
+>
+> Signed-off-by: Hao Luo <haoluo@google.com>
+> ---
 
-Please pull another set of DT fixes.
+The logic looks correct, few naming nits, but otherwise:
 
-Rob
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
+>  include/linux/bpf.h      |  3 ++
+>  include/linux/btf.h      | 11 +++++++
+>  include/uapi/linux/bpf.h | 14 +++++++++
+>  kernel/bpf/btf.c         | 10 -------
+>  kernel/bpf/verifier.c    | 64 ++++++++++++++++++++++++++++++++++++++--
+>  kernel/trace/bpf_trace.c | 18 +++++++++++
+>  6 files changed, 107 insertions(+), 13 deletions(-)
+>
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index 55f694b63164..613404beab33 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -268,6 +268,7 @@ enum bpf_arg_type {
+>         ARG_PTR_TO_ALLOC_MEM,   /* pointer to dynamically allocated memory */
+>         ARG_PTR_TO_ALLOC_MEM_OR_NULL,   /* pointer to dynamically allocated memory or NULL */
+>         ARG_CONST_ALLOC_SIZE_OR_ZERO,   /* number of allocated bytes requested */
+> +       ARG_PTR_TO_PERCPU_BTF_ID,       /* pointer to in-kernel percpu type */
+>  };
+>
+>  /* type of values returned from helper functions */
+> @@ -281,6 +282,7 @@ enum bpf_return_type {
+>         RET_PTR_TO_SOCK_COMMON_OR_NULL, /* returns a pointer to a sock_common or NULL */
+>         RET_PTR_TO_ALLOC_MEM_OR_NULL,   /* returns a pointer to dynamically allocated memory or NULL */
+>         RET_PTR_TO_BTF_ID_OR_NULL,      /* returns a pointer to a btf_id or NULL */
+> +       RET_PTR_TO_MEM_OR_BTF_OR_NULL,  /* returns a pointer to a valid memory or a btf_id or NULL */
 
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+I know it's already very long, but still let's use BTF_ID consistently
 
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+>  };
+>
+>  /* eBPF function prototype used by verifier to allow BPF_CALLs from eBPF programs
+> @@ -360,6 +362,7 @@ enum bpf_reg_type {
+>         PTR_TO_RDONLY_BUF_OR_NULL, /* reg points to a readonly buffer or NULL */
+>         PTR_TO_RDWR_BUF,         /* reg points to a read/write buffer */
+>         PTR_TO_RDWR_BUF_OR_NULL, /* reg points to a read/write buffer or NULL */
+> +       PTR_TO_PERCPU_BTF_ID,    /* reg points to percpu kernel type */
+>  };
+>
 
-are available in the Git repository at:
+[...]
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.9-2
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index 468376f2910b..c7e49a102ed2 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -3415,6 +3415,19 @@ union bpf_attr {
+>   *             A non-negative value equal to or less than *size* on success,
+>   *             or a negative error in case of failure.
+>   *
+> + * void *bpf_per_cpu_ptr(const void *ptr, u32 cpu)
+> + *     Description
+> + *             Take the address of a percpu ksym and return a pointer pointing
+> + *             to the variable on *cpu*. A ksym is an extern variable decorated
+> + *             with '__ksym'. A ksym is percpu if there is a global percpu var
+> + *             (either static or global) defined of the same name in the kernel.
 
-for you to fetch changes up to 5cd841d2676a702e5f79a8bacbfbae3bfc2411f7:
+The function signature has "ptr", not "ksym", but the description is
+using "ksym". please make them consistent (might name param
+"percpu_ptr")
 
-  dt-bindings: vendor-prefixes: Remove trailing whitespace (2020-08-21 16:27:57 -0600)
+> + *
+> + *             bpf_per_cpu_ptr() has the same semantic as per_cpu_ptr() in the
+> + *             kernel, except that bpf_per_cpu_ptr() may return NULL. This
+> + *             happens if *cpu* is larger than nr_cpu_ids. The caller of
+> + *             bpf_per_cpu_ptr() must check the returned value.
+> + *     Return
+> + *             A generic pointer pointing to the variable on *cpu*.
+>   */
 
-----------------------------------------------------------------
-Devicetree fixes for v5.9, take 2:
+[...]
 
-- Restore range parsing error check
+> +       } else if (arg_type == ARG_PTR_TO_PERCPU_BTF_ID) {
+> +               expected_type = PTR_TO_PERCPU_BTF_ID;
+> +               if (type != expected_type)
+> +                       goto err_type;
+> +               if (!reg->btf_id) {
+> +                       verbose(env, "Helper has zero btf_id in R%d\n", regno);
 
-- Workaround PCI range parsing with missing 'device_type' now required
+nit: "invalid btf_id"?
 
-- Correct description of 'phy-connection-type'
+> +                       return -EACCES;
+> +               }
+> +               meta->ret_btf_id = reg->btf_id;
+>         } else if (arg_type == ARG_PTR_TO_BTF_ID) {
+>                 expected_type = PTR_TO_BTF_ID;
+>                 if (type != expected_type)
+> @@ -4904,6 +4918,30 @@ static int check_helper_call(struct bpf_verifier_env *env, int func_id, int insn
+>                 regs[BPF_REG_0].type = PTR_TO_MEM_OR_NULL;
+>                 regs[BPF_REG_0].id = ++env->id_gen;
+>                 regs[BPF_REG_0].mem_size = meta.mem_size;
 
-- Fix erroneous matching on 'snps,dw-pcie' by 'intel,lgm-pcie' schema
-
-- A couple of grammar and whitespace fixes
-
-- Update Shawn Guo's email
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      of/address: check for invalid range.cpu_addr
-
-Fabio Estevam (1):
-      dt-bindings: Use Shawn Guo's preferred e-mail for i.MX bindings
-
-Geert Uytterhoeven (2):
-      dt: writing-schema: Miscellaneous grammar fixes
-      dt-bindings: vendor-prefixes: Remove trailing whitespace
-
-Madalin Bucur (1):
-      dt-bindings: net: correct description of phy-connection-type
-
-Marc Zyngier (1):
-      of: address: Work around missing device_type property in pcie nodes
-
-Rob Herring (1):
-      dt-bindings: PCI: intel,lgm-pcie: Fix matching on all snps,dw-pcie instances
-
- .../devicetree/bindings/clock/imx23-clock.yaml      |  2 +-
- .../devicetree/bindings/clock/imx28-clock.yaml      |  2 +-
- .../devicetree/bindings/gpio/gpio-mxs.yaml          |  2 +-
- Documentation/devicetree/bindings/i2c/i2c-mxs.yaml  |  2 +-
- .../devicetree/bindings/mmc/fsl-imx-esdhc.yaml      |  2 +-
- Documentation/devicetree/bindings/mmc/mxs-mmc.yaml  |  2 +-
- .../bindings/net/ethernet-controller.yaml           |  3 ++-
- .../devicetree/bindings/pci/intel-gw-pcie.yaml      |  8 ++++++++
- Documentation/devicetree/bindings/pwm/mxs-pwm.yaml  |  2 +-
- .../devicetree/bindings/spi/fsl-imx-cspi.yaml       |  2 +-
- .../devicetree/bindings/thermal/imx-thermal.yaml    |  2 +-
- .../devicetree/bindings/vendor-prefixes.yaml        |  2 +-
- Documentation/devicetree/writing-schema.rst         |  4 ++--
- drivers/of/address.c                                | 21 ++++++++++++++++++++-
- 14 files changed, 42 insertions(+), 14 deletions(-)
+[...]
