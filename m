@@ -2,156 +2,157 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F681C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A17E9207CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E708D2072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598129208;
+	bh=Kd7l0YZwvYXyMb0V4y9MVfSiHY89saiwsHZKWk69C4I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IH868bvohuuVbsF+/aqD8IFTIcUF/DUkaoEPVuwzeZbIuOHYZoPWj+YQQM/oO7qLK
+	 EAMnj5dLO/3No0vyvtW5nrJaUlxqrrkay0YBbca+yun95DXGSTF9Ssb7kUtxvVYv7s
+	 s/mWNPXyQbM/36pMJCYR/DTAI0iicn2tTP5Crf3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgHVUjd (ORCPT
+        id S1728132AbgHVUqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 16:39:33 -0400
-Received: from smtprelay0117.hostedemail.com ([216.40.44.117]:35838 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727835AbgHVUjc (ORCPT
+        Sat, 22 Aug 2020 16:46:47 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34227 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbgHVUqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 16:39:32 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 02671100E7B43;
-        Sat, 22 Aug 2020 20:39:31 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: camp61_0b0be6b27044
-X-Filterd-Recvd-Size: 4345
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 22 Aug 2020 20:39:29 +0000 (UTC)
-Message-ID: <ae154f9a96a710157f9b402ba21c6888c855dd1e.camel@perches.com>
-Subject: Re: [PATCH net-next] net: Remove unnecessary intermediate variables
-From:   Joe Perches <joe@perches.com>
-To:     David Miller <davem@davemloft.net>, Jianlin.Lv@arm.com
-Cc:     netdev@vger.kernel.org, kuba@kernel.org, Song.Zhu@arm.com,
-        linux-kernel@vger.kernel.org
-Date:   Sat, 22 Aug 2020 13:39:28 -0700
-In-Reply-To: <20200822.123315.787815838209253525.davem@davemloft.net>
-References: <20200822020431.125732-1-Jianlin.Lv@arm.com>
-         <20200822.123315.787815838209253525.davem@davemloft.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Sat, 22 Aug 2020 16:46:45 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f7so5055046wrw.1
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 13:46:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9Gr2xPffZVQRfoQAWmaOU6SNPwZWSiCj059azzpqn7w=;
+        b=OaMVT4EbdV4RWjYta1ctqhMWRCb41FVGDOarUyEFyjmrQjur9o3+VWYe4fy1bnEWuT
+         xNtR0QCPTJH1opM3Kw8Jio7P2f/Nc/rT6bT+BVvY3/gstIOBBkFGRThFTmvXBAOCSP5a
+         zTBoq2y5pvb2szWgvSY56DoJW40Gtgs+hDx/VTX+nGPtsGOBVQdd9wHnYQbQYxfCYPK4
+         6pPBQd4f9ZhBkKhHw4AyoKwcVmEWs3ml9SUdxm1peJrsnpGce/C3rG/523E4NM1njtq8
+         wysnC3moLaCegXaeuKUyeIWFMxpN6egVySqmUfRdBvkWkYthqbTEHF5neCARuXXCeNiK
+         LFIw==
+X-Gm-Message-State: AOAM531EryB4/CmHmIxmubMhOH+3cBGwvbuplBfbmxhWLX+dlxxEIc8i
+        2KfsgaKxP43EfxLlX2xCBP0=
+X-Google-Smtp-Source: ABdhPJzJ7F1ohCnzWKk78wVbBNfSi0oqyaDYqHUrkCC9qOsbkeGL9hUiLgDPy+LNElntvl6nwoGmmw==
+X-Received: by 2002:adf:e7c9:: with SMTP id e9mr8503345wrn.10.1598129202990;
+        Sat, 22 Aug 2020 13:46:42 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id j24sm14532716wrb.49.2020.08.22.13.46.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 22 Aug 2020 13:46:42 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 22:46:40 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Markus Mayer <mmayer@broadcom.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] memory: brcmstb_dpfe: fix array index out of bounds
+Message-ID: <20200822204640.GA8064@kozik-lap>
+References: <20200821165221.32267-1-mmayer@broadcom.com>
+ <20200822115636.GA19975@kozik-lap>
+ <CAGt4E5t-GCPdU_W9U=627o5Xtx_MybFEM254FZF2HZ6VYPr7bg@mail.gmail.com>
+ <20200822164619.GA24669@kozik-lap>
+ <CAGt4E5t=xNnOHAK3JM9kUGzGqbysDCsW5YmEXzVF9OBSUgPECA@mail.gmail.com>
+ <81b2ad54-d4ef-cf98-886c-61c79e4cac62@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <81b2ad54-d4ef-cf98-886c-61c79e4cac62@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-08-22 at 12:33 -0700, David Miller wrote:
-> From: Jianlin Lv <Jianlin.Lv@arm.com>
-> Date: Sat, 22 Aug 2020 10:04:31 +0800
+On Sat, Aug 22, 2020 at 01:21:47PM -0700, Florian Fainelli wrote:
 > 
-> > It is not necessary to use src/dst as an intermediate variable for
-> > assignment operation; Delete src/dst intermediate variables to avoid
-> > unnecessary variable declarations.
+> 
+> On 8/22/2020 1:14 PM, Markus Mayer wrote:
+> > On Sat, 22 Aug 2020 at 09:46, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > 
+> > > On Sat, Aug 22, 2020 at 09:40:59AM -0700, Markus Mayer wrote:
+> > > > On Sat, 22 Aug 2020 at 04:56, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > > > 
+> > > > > On Fri, Aug 21, 2020 at 09:52:21AM -0700, Markus Mayer wrote:
+> > > > > > We would overrun the error_text array if we hit a TIMEOUT condition,
+> > > > > > because we were using the error code "ETIMEDOUT" (which is 110) as an
+> > > > > > array index.
+> > > > > > 
+> > > > > > We fix the problem by correcting the array index and by providing a
+> > > > > > function to retrieve error messages rather than accessing the array
+> > > > > > directly. The function includes a bounds check that prevents the array
+> > > > > > from being overrun.
+> > > > > > 
+> > > > > > This patch was prepared in response to
+> > > > > >      https://lkml.org/lkml/2020/8/18/505.
+> > > > > > 
+> > > > > > Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+> > > > > 
+> > > > > Your Signed-off-by does not match From field. Please run
+> > > > > scripts/checkpatch on every patch you send.
+> > > > > 
+> > > > > I fixed it up, assuming markus.mayer@broadcom.com is the valid email
+> > > > > address.
+> > > > 
+> > > > No. I have always been using mmayer@broadcom.com since it is shorter.
+> > > > That's also what's in the MAINTAINERS file. Please change it back. I
+> > > > accidentally used the long form for one of my e-mail replies which is
+> > > > where the confusion must have originated.
+> > > 
+> > > I'll drop the patch then. You need to resend with SoB matching email.
 > > 
-> > Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
+> > Oh, I am starting to see what's happening here. This is new and
+> > apparently due to some changes with the mail server setup on our end.
+> > 
+> > I have this in my patch file:
+> > 
+> > $ head 0001-memory-brcmstb_dpfe-fix-array-index-out-of-bounds.patch
+> >  From 6b424772d4c84fa56474b2522d0d3ed6b2b2b360 Mon Sep 17 00:00:00 2001
+> > From: Markus Mayer <mmayer@broadcom.com>
+> > Date: Fri, 21 Aug 2020 08:56:52 -0700
+
+Which means your patch actually passed checkpatch on your computer so my
+comment about running it was not smart... :)
+
+> > Sending patches like this used to work. Clearly our SMTP server has
+> > now taken it upon itself to rewrite the sender e-mail address. I
+> > wasn't expecting that. Let me look into it. Sorry for the hassle. It
+> > was not intentional.
 > 
-> It keeps the line lengths within reasonable length, so these local
-> variables are fine.
-> 
-> Also, the appropriate subsystem prefix for this patch should be "vxlan: "
-> not "net: " in your Subject line.  If someone is skimming the shortlog
-> in 'git' how will they tell where exactly in the networking your change
-> is being made?
-> 
-> Anyways, I'm not applying this, thanks.
+> Yes, if you used to use the SMTP relay server which did not require
+> authentication for internal hosts, and now you use smtp.gmail.com with your
+> broadcom.com username, the SMTP server will rewrite the From: to match the
+> username used to authenticate with the server.
 
-It _might_ be slightly faster to use inlines
-instead so there's less copy of 16 byte structs
-on the ipv6 side.
+Markus' patch did not go via GMail.  It was the Broadcom server which
+mangled the things.  The email headers:
 
-It's slightly smaller object code.
----
- drivers/net/vxlan.c | 46 ++++++++++++++++++++++++++--------------------
- 1 file changed, 26 insertions(+), 20 deletions(-)
+  Received: by mail.kernel.org (Postfix)
+  Received: from rnd-relay.smtp.broadcom.com (rnd-relay.smtp.broadcom.com [192.19.229.170])
+          by mail.kernel.org (Postfix) with ESMTPS id D5B3B20702
+  Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+  Received: from lbrmn-mmayer.ric.broadcom.net (lbrmn-mmayer.ric.broadcom.net [10.136.28.150])
+  From: Markus Mayer <markus.mayer@broadcom.com>
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index b9fefe27e3e8..e0ea246b3678 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -95,7 +95,25 @@ static inline bool vxlan_collect_metadata(struct vxlan_sock *vs)
- 	       ip_tunnel_collect_metadata();
- }
- 
-+static __always_inline
-+void vxlan_use_v4_addrs(struct ip_tunnel_info *info,
-+			union vxlan_addr *remote_ip,
-+			union vxlan_addr *local_ip)
-+{
-+	info->key.u.ipv4.src = remote_ip->sin.sin_addr.s_addr;
-+	info->key.u.ipv4.dst = local_ip->sin.sin_addr.s_addr;
-+}
-+
- #if IS_ENABLED(CONFIG_IPV6)
-+static __always_inline
-+void vxlan_use_v6_addrs(struct ip_tunnel_info *info,
-+			union vxlan_addr *remote_ip,
-+			union vxlan_addr *local_ip)
-+{
-+	info->key.u.ipv6.src = remote_ip->sin6.sin6_addr;
-+	info->key.u.ipv6.dst = local_ip->sin6.sin6_addr;
-+}
-+
- static inline
- bool vxlan_addr_equal(const union vxlan_addr *a, const union vxlan_addr *b)
- {
-@@ -2724,17 +2742,11 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 		ndst = &rt->dst;
- 		err = skb_tunnel_check_pmtu(skb, ndst, VXLAN_HEADROOM,
- 					    netif_is_any_bridge_port(dev));
--		if (err < 0) {
-+		if (err < 0)
- 			goto tx_error;
--		} else if (err) {
--			if (info) {
--				struct in_addr src, dst;
--
--				src = remote_ip.sin.sin_addr;
--				dst = local_ip.sin.sin_addr;
--				info->key.u.ipv4.src = src.s_addr;
--				info->key.u.ipv4.dst = dst.s_addr;
--			}
-+		if (err) {	/* newly built encapsulation length */
-+			if (info)
-+				vxlan_use_v4_addrs(info, &remote_ip, &local_ip);
- 			vxlan_encap_bypass(skb, vxlan, vxlan, vni, false);
- 			dst_release(ndst);
- 			goto out_unlock;
-@@ -2780,17 +2792,11 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
- 
- 		err = skb_tunnel_check_pmtu(skb, ndst, VXLAN6_HEADROOM,
- 					    netif_is_any_bridge_port(dev));
--		if (err < 0) {
-+		if (err < 0)
- 			goto tx_error;
--		} else if (err) {
--			if (info) {
--				struct in6_addr src, dst;
--
--				src = remote_ip.sin6.sin6_addr;
--				dst = local_ip.sin6.sin6_addr;
--				info->key.u.ipv6.src = src;
--				info->key.u.ipv6.dst = dst;
--			}
-+		if (err) {	/* newly built encapsulation length */
-+			if (info)
-+				vxlan_use_v6_addrs(info, &remote_ip, &local_ip);
- 
- 			vxlan_encap_bypass(skb, vxlan, vxlan, vni, false);
- 			dst_release(ndst);
+Neither kernel.org nor my final server (Gmail) cares about usernames in
+From fields of some specific domain.
 
+I guess you could try configure you git send email to use email of
+"markus.mayer" while keeping Author "mmayer".  You have to configure git
+send email for this and such configuration results in proper two "From"
+fields which maybe smtp broadcom won't change.
 
+Best regards,
+Krzysztof
