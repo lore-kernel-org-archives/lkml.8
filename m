@@ -7,31 +7,30 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0955C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43702C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C95A206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF7720724
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:33:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Ep+wl6yA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="BriWF3t3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgHVQdc (ORCPT
+        id S1728606AbgHVQdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 12:33:32 -0400
-Received: from crapouillou.net ([89.234.176.41]:48722 "EHLO crapouillou.net"
+        Sat, 22 Aug 2020 12:33:42 -0400
+Received: from crapouillou.net ([89.234.176.41]:48762 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbgHVQdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 12:33:31 -0400
+        id S1728514AbgHVQdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 12:33:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1598113990; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1598113992; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+         content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VOADsf+zkaa1JPcnuwuK9JFkqtkUN121yhXN3FKMvOY=;
-        b=Ep+wl6yA0yE8XujoZQ6btOAQ279oBjOy45Ow/JBcHJtGy5ZXQHk1rDrRbfBxqe5B1V3Y7X
-        UIarEkz8KvQXNQBOHnV5IqTdgWr+47DruOJek+25sNNWrGEQQfrw0iUoi8k4EihXyPgVmO
-        KCPinisdWvjOh/ix6gwIUVhWYNRGyT8=
+        bh=8PRTP+GttRbJXj9uz8wD1O1UnEM1+wUPJ8xznVdIxxk=;
+        b=BriWF3t3gW5FkF2IqXWbsYeCpqQ/5n0rASe4pX7rDxQEKZW+mVDt+O8OtdJgkak105fOag
+        kWLVuTMcGVJpsL7V6dSOOI0cUc2L52UAQwWQh9l6Zhi0luER5v56qeC3XoHKYZgRY45nOL
+        tUsLPw0hdK5PPZ2QLFnyJK+tjB2Op8A=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -47,374 +46,377 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 3/6] drm: Add SPI DBI host driver
-Date:   Sat, 22 Aug 2020 18:32:47 +0200
-Message-Id: <20200822163250.63664-4-paul@crapouillou.net>
+Subject: [PATCH v2 4/6] drm/tiny: Add TinyDRM for DSI/DBI panels
+Date:   Sat, 22 Aug 2020 18:32:48 +0200
+Message-Id: <20200822163250.63664-5-paul@crapouillou.net>
 In-Reply-To: <20200822163250.63664-1-paul@crapouillou.net>
 References: <20200822163250.63664-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver will register a DBI host driver for panels connected over
-SPI.
+The new API function mipi_dsi_maybe_register_tiny_driver() is supposed
+to be called by DSI/DBI panel drivers at the end of their probe.
 
-DBI types c1 and c3 are supported. C1 is a SPI protocol with 9 bits per
-word, with the data/command information in the 9th (MSB) bit. C3 is a
-SPI protocol with 8 bits per word, with the data/command information
-carried by a separate GPIO.
+If it is detected that the panel is not connected to any controller,
+because it has no port #0 node in Device Tree that points back to it,
+then a TinyDRM driver is registered with it.
 
-v2: - Move ouside of drivers/gpu/drm/bridge/
-    - The client drivers should now use module_mipi_dbi_spi_driver().
-      This ensures that the panel drivers can probe from the DSI/DBI
-      bus, as well as from the SPI bus, using a shared OF match table.
+This TinyDRM driver expects that a DCS-compliant protocol is used by the
+DSI/DBI panel and can only be used with these.
+
+v2: No change
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/gpu/drm/Kconfig            |   8 +
- drivers/gpu/drm/Makefile           |   1 +
- drivers/gpu/drm/drm_mipi_dbi_spi.c | 247 +++++++++++++++++++++++++++++
- include/drm/drm_mipi_dbi_spi.h     |  42 +++++
- 4 files changed, 298 insertions(+)
- create mode 100644 drivers/gpu/drm/drm_mipi_dbi_spi.c
- create mode 100644 include/drm/drm_mipi_dbi_spi.h
+ drivers/gpu/drm/tiny/Kconfig    |   8 +
+ drivers/gpu/drm/tiny/Makefile   |   1 +
+ drivers/gpu/drm/tiny/tiny-dsi.c | 266 ++++++++++++++++++++++++++++++++
+ include/drm/drm_mipi_dsi.h      |  19 +++
+ 4 files changed, 294 insertions(+)
+ create mode 100644 drivers/gpu/drm/tiny/tiny-dsi.c
 
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index 147d61b9674e..932c7bcaeff0 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -32,6 +32,14 @@ config DRM_MIPI_DSI
- 	bool
- 	depends on DRM
+diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
+index 2b6414f0fa75..b62427b88dfe 100644
+--- a/drivers/gpu/drm/tiny/Kconfig
++++ b/drivers/gpu/drm/tiny/Kconfig
+@@ -28,6 +28,14 @@ config DRM_GM12U320
+ 	 This is a KMS driver for projectors which use the GM12U320 chipset
+ 	 for video transfer over USB2/3, such as the Acer C120 mini projector.
  
-+config DRM_MIPI_DBI_SPI
-+	tristate "SPI host support for MIPI DBI"
-+	depends on DRM && OF && SPI
-+	select DRM_MIPI_DSI
++config TINYDRM_DSI
++	tristate "DRM support for generic DBI/DSI display panels"
++	depends on DRM && DRM_MIPI_DSI
 +	select DRM_MIPI_DBI
++	select DRM_KMS_CMA_HELPER
 +	help
-+	  Enable this option to support DBI panels connected over SPI.
++	  DRM driver for generic DBI/DSI display panels
 +
- config DRM_DP_AUX_CHARDEV
- 	bool "DRM DP AUX Interface"
- 	depends on DRM
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index 2f31579f91d4..8c60448a3ee5 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -60,6 +60,7 @@ obj-$(CONFIG_DRM_DEBUG_SELFTEST) += selftests/
- obj-$(CONFIG_DRM)	+= drm.o
- obj-$(CONFIG_DRM_MIPI_DBI) += drm_mipi_dbi.o
- obj-$(CONFIG_DRM_MIPI_DSI) += drm_mipi_dsi.o
-+obj-$(CONFIG_DRM_MIPI_DBI_SPI) += drm_mipi_dbi_spi.o
- obj-$(CONFIG_DRM_PANEL_ORIENTATION_QUIRKS) += drm_panel_orientation_quirks.o
- obj-y			+= arm/
- obj-$(CONFIG_DRM_TTM)	+= ttm/
-diff --git a/drivers/gpu/drm/drm_mipi_dbi_spi.c b/drivers/gpu/drm/drm_mipi_dbi_spi.c
+ config TINYDRM_HX8357D
+ 	tristate "DRM support for HX8357D display panels"
+ 	depends on DRM && SPI
+diff --git a/drivers/gpu/drm/tiny/Makefile b/drivers/gpu/drm/tiny/Makefile
+index 6ae4e9e5a35f..2bfee13347a5 100644
+--- a/drivers/gpu/drm/tiny/Makefile
++++ b/drivers/gpu/drm/tiny/Makefile
+@@ -2,6 +2,7 @@
+ 
+ obj-$(CONFIG_DRM_CIRRUS_QEMU)		+= cirrus.o
+ obj-$(CONFIG_DRM_GM12U320)		+= gm12u320.o
++obj-$(CONFIG_TINYDRM_DSI)		+= tiny-dsi.o
+ obj-$(CONFIG_TINYDRM_HX8357D)		+= hx8357d.o
+ obj-$(CONFIG_TINYDRM_ILI9225)		+= ili9225.o
+ obj-$(CONFIG_TINYDRM_ILI9341)		+= ili9341.o
+diff --git a/drivers/gpu/drm/tiny/tiny-dsi.c b/drivers/gpu/drm/tiny/tiny-dsi.c
 new file mode 100644
-index 000000000000..a7eaf3125a17
+index 000000000000..b24d49836125
 --- /dev/null
-+++ b/drivers/gpu/drm/drm_mipi_dbi_spi.c
-@@ -0,0 +1,247 @@
++++ b/drivers/gpu/drm/tiny/tiny-dsi.c
+@@ -0,0 +1,266 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * MIPI Display Bus Interface (DBI) SPI support
++ * TinyDRM driver for standard DSI/DBI panels
 + *
-+ * Copyright 2016 Noralf Trønnes
 + * Copyright 2020 Paul Cercueil <paul@crapouillou.net>
 + */
 +
-+#include <linux/gpio/consumer.h>
++#include <linux/dma-mapping.h>
 +#include <linux/module.h>
-+#include <linux/spi/spi.h>
 +
++#include <drm/drm_atomic_helper.h>
++#include <drm/drm_damage_helper.h>
++#include <drm/drm_drv.h>
++#include <drm/drm_fb_helper.h>
++#include <drm/drm_fourcc.h>
++#include <drm/drm_gem_cma_helper.h>
++#include <drm/drm_gem_framebuffer_helper.h>
 +#include <drm/drm_mipi_dbi.h>
 +#include <drm/drm_mipi_dsi.h>
++#include <drm/drm_modeset_helper.h>
++#include <drm/drm_panel.h>
++#include <drm/drm_probe_helper.h>
 +
 +#include <video/mipi_display.h>
 +
-+struct dbi_spi {
-+	struct mipi_dsi_host host;
-+	struct mipi_dsi_host_ops host_ops;
++struct tiny_dsi {
++	struct drm_device drm;
++	struct drm_connector connector;
++	struct drm_simple_display_pipe pipe;
 +
-+	struct spi_device *spi;
-+	struct gpio_desc *dc;
-+	struct mutex cmdlock;
-+
-+	unsigned int current_bus_type;
-+
-+	/**
-+	 * @tx_buf9: Buffer used for Option 1 9-bit conversion
-+	 */
-+	void *tx_buf9;
-+
-+	/**
-+	 * @tx_buf9_len: Size of tx_buf9.
-+	 */
-+	size_t tx_buf9_len;
++	struct mipi_dsi_device *dsi;
++	struct drm_panel *panel;
 +};
 +
-+static inline struct dbi_spi *host_to_dbi_spi(struct mipi_dsi_host *host)
++#define mipi_dcs_command(dsi, cmd, seq...) \
++({ \
++	u8 d[] = { seq }; \
++	mipi_dsi_dcs_write(dsi, cmd, d, ARRAY_SIZE(d)); \
++})
++
++static inline struct tiny_dsi *drm_to_tiny_dsi(struct drm_device *drm)
 +{
-+	return container_of(host, struct dbi_spi, host);
++	return container_of(drm, struct tiny_dsi, drm);
 +}
 +
-+static ssize_t dbi_spi1_transfer(struct mipi_dsi_host *host,
-+				 const struct mipi_dsi_msg *msg)
++static void tiny_dsi_fb_dirty(struct drm_framebuffer *fb, struct drm_rect *rect)
 +{
-+	struct dbi_spi *dbi = host_to_dbi_spi(host);
-+	struct spi_device *spi = dbi->spi;
-+	struct spi_transfer tr = {
-+		.bits_per_word = 9,
-+	};
-+	const u8 *src8 = msg->tx_buf;
-+	struct spi_message m;
-+	size_t max_chunk, chunk;
-+	size_t len = msg->tx_len;
-+	bool cmd_byte = true;
-+	unsigned int i;
-+	u16 *dst16;
-+	int ret;
++	struct drm_gem_object *gem = drm_gem_fb_get_obj(fb, 0);
++	struct drm_gem_cma_object *cma_obj = to_drm_gem_cma_obj(gem);
++	struct tiny_dsi *priv = drm_to_tiny_dsi(fb->dev);
++	unsigned int height = rect->y2 - rect->y1;
++	unsigned int width = rect->x2 - rect->x1;
++	bool fb_convert;
++	int idx, ret;
++	void *tr;
 +
-+	tr.speed_hz = mipi_dbi_spi_cmd_max_speed(spi, len);
-+	dst16 = dbi->tx_buf9;
++	if (!drm_dev_enter(fb->dev, &idx))
++		return;
 +
-+	max_chunk = min(dbi->tx_buf9_len / 2, len);
++	DRM_DEBUG_KMS("Flushing [FB:%d] " DRM_RECT_FMT "\n", fb->base.id, DRM_RECT_ARG(rect));
 +
-+	spi_message_init_with_transfers(&m, &tr, 1);
-+	tr.tx_buf = dst16;
++	fb_convert = width != fb->width || height != fb->height
++		|| fb->format->format == DRM_FORMAT_XRGB8888;
++	if (fb_convert) {
++		tr = kzalloc(width * height * 2, GFP_KERNEL);
 +
-+	while (len) {
-+		chunk = min(len, max_chunk);
-+
-+		for (i = 0; i < chunk; i++) {
-+			dst16[i] = *src8++;
-+
-+			/* Bit 9: 0 means command, 1 means data */
-+			if (!cmd_byte)
-+				dst16[i] |= BIT(9);
-+
-+			cmd_byte = false;
-+		}
-+
-+		tr.len = chunk * 2;
-+		len -= chunk;
-+
-+		ret = spi_sync(spi, &m);
++		/* TODO: swap pixels if needed */
++		ret = mipi_dbi_buf_copy(tr, fb, rect, false);
 +		if (ret)
-+			return ret;
++			goto err_msg;
++	} else {
++		tr = cma_obj->vaddr;
 +	}
 +
-+	return 0;
-+}
++	mipi_dcs_command(priv->dsi, MIPI_DCS_SET_COLUMN_ADDRESS,
++			 (rect->x1 >> 8) & 0xff, rect->x1 & 0xff,
++			 (rect->x2 >> 8) & 0xff, rect->x2 & 0xff);
++	mipi_dcs_command(priv->dsi, MIPI_DCS_SET_PAGE_ADDRESS,
++			 (rect->y1 >> 8) & 0xff, rect->y1 & 0xff,
++			 (rect->y2 >> 8) & 0xff, rect->y2 & 0xff);
 +
-+static ssize_t dbi_spi3_transfer(struct mipi_dsi_host *host,
-+				 const struct mipi_dsi_msg *msg)
-+{
-+	struct dbi_spi *dbi = host_to_dbi_spi(host);
-+	struct spi_device *spi = dbi->spi;
-+	const u8 *buf = msg->tx_buf;
-+	unsigned int bpw = 8;
-+	u32 speed_hz;
-+	ssize_t ret;
-+
-+	/* for now we only support sending messages, not receiving */
-+	if (msg->rx_len)
-+		return -EINVAL;
-+
-+	gpiod_set_value_cansleep(dbi->dc, 0);
-+
-+	speed_hz = mipi_dbi_spi_cmd_max_speed(spi, 1);
-+	ret = mipi_dbi_spi_transfer(spi, speed_hz, 8, buf, 1);
-+	if (ret || msg->tx_len == 1)
-+		return ret;
-+
-+	if (buf[0] == MIPI_DCS_WRITE_MEMORY_START)
-+		bpw = 16;
-+
-+	gpiod_set_value_cansleep(dbi->dc, 1);
-+	speed_hz = mipi_dbi_spi_cmd_max_speed(spi, msg->tx_len - 1);
-+
-+	ret = mipi_dbi_spi_transfer(spi, speed_hz, bpw,
-+				    &buf[1], msg->tx_len - 1);
++	ret = mipi_dsi_dcs_write(priv->dsi, MIPI_DCS_WRITE_MEMORY_START,
++				 tr, width * height * 2);
++err_msg:
 +	if (ret)
-+		return ret;
++		dev_err_once(fb->dev->dev, "Failed to update display %d\n", ret);
 +
-+	return msg->tx_len;
++	if (fb_convert)
++		kfree(tr);
++	drm_dev_exit(idx);
 +}
 +
-+static ssize_t dbi_spi_transfer(struct mipi_dsi_host *host,
-+				const struct mipi_dsi_msg *msg)
++static void tiny_dsi_enable(struct drm_simple_display_pipe *pipe,
++			    struct drm_crtc_state *crtc_state,
++			    struct drm_plane_state *plane_state)
 +{
-+	struct dbi_spi *dbi = host_to_dbi_spi(host);
++	struct tiny_dsi *priv = drm_to_tiny_dsi(pipe->crtc.dev);
 +
-+	switch (dbi->current_bus_type) {
-+	case MIPI_DCS_BUS_TYPE_DBI_SPI_C1:
-+		return dbi_spi1_transfer(host, msg);
-+	case MIPI_DCS_BUS_TYPE_DBI_SPI_C3:
-+		return dbi_spi3_transfer(host, msg);
-+	default:
-+		dev_err(&dbi->spi->dev, "Unknown transfer type\n");
-+		return -EINVAL;
-+	}
++	drm_panel_enable(priv->panel);
 +}
 +
-+static int dbi_spi_attach(struct mipi_dsi_host *host,
-+			  struct mipi_dsi_device *dsi)
++static void tiny_dsi_disable(struct drm_simple_display_pipe *pipe)
 +{
-+	struct dbi_spi *dbi = host_to_dbi_spi(host);
++	struct tiny_dsi *priv = drm_to_tiny_dsi(pipe->crtc.dev);
 +
-+	dbi->current_bus_type = dsi->bus_type;
-+
-+	if (dbi->current_bus_type == MIPI_DCS_BUS_TYPE_DBI_SPI_C1) {
-+		dbi->tx_buf9_len = SZ_16K;
-+
-+		dbi->tx_buf9 = kmalloc(dbi->tx_buf9_len, GFP_KERNEL);
-+		if (!dbi->tx_buf9)
-+			return -ENOMEM;
-+	}
-+
-+	return 0;
++	drm_panel_disable(priv->panel);
 +}
 +
-+static int dbi_spi_detach(struct mipi_dsi_host *host,
-+			  struct mipi_dsi_device *dsi)
++static void tiny_dsi_update(struct drm_simple_display_pipe *pipe,
++			    struct drm_plane_state *old_state)
 +{
-+	struct dbi_spi *dbi = host_to_dbi_spi(host);
++	struct drm_plane_state *state = pipe->plane.state;
++	struct drm_rect rect;
 +
-+	kfree(dbi->tx_buf9);
-+	dbi->tx_buf9_len = 0;
-+
-+	return 0; /* Nothing to do */
++	if (drm_atomic_helper_damage_merged(old_state, state, &rect))
++		tiny_dsi_fb_dirty(state->fb, &rect);
 +}
 +
-+static void dbi_spi_host_unregister(void *d)
++static const struct drm_simple_display_pipe_funcs tiny_dsi_pipe_funcs = {
++	.enable = tiny_dsi_enable,
++	.disable = tiny_dsi_disable,
++	.update = tiny_dsi_update,
++	.prepare_fb = drm_gem_fb_simple_display_pipe_prepare_fb,
++};
++
++static int tiny_dsi_connector_get_modes(struct drm_connector *connector)
 +{
-+	mipi_dsi_host_unregister(d);
++	struct tiny_dsi *priv = drm_to_tiny_dsi(connector->dev);
++
++	return drm_panel_get_modes(priv->panel, connector);
 +}
 +
-+int drm_mipi_dbi_spi_probe(struct spi_device *spi)
++static const struct drm_connector_helper_funcs tiny_dsi_connector_hfuncs = {
++	.get_modes = tiny_dsi_connector_get_modes,
++};
++
++static const struct drm_connector_funcs tiny_dsi_connector_funcs = {
++	.reset = drm_atomic_helper_connector_reset,
++	.fill_modes = drm_helper_probe_single_connector_modes,
++	.destroy = drm_connector_cleanup,
++	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
++};
++
++static const uint32_t tiny_dsi_formats[] = {
++	DRM_FORMAT_RGB565,
++	DRM_FORMAT_XRGB8888,
++};
++
++static const struct drm_mode_config_funcs tiny_dsi_mode_config_funcs = {
++	.fb_create = drm_gem_fb_create_with_dirty,
++	.atomic_check = drm_atomic_helper_check,
++	.atomic_commit = drm_atomic_helper_commit,
++};
++
++DEFINE_DRM_GEM_CMA_FOPS(tiny_dsi_fops);
++
++static struct drm_driver tiny_dsi_driver = {
++	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
++	.name			= "tiny-dsi",
++	.desc			= "Tiny DSI",
++	.date			= "20200605",
++	.major			= 1,
++	.minor			= 0,
++
++	.fops			= &tiny_dsi_fops,
++	DRM_GEM_CMA_DRIVER_OPS,
++};
++
++static void tiny_dsi_remove(void *drm)
 +{
-+	struct device *dev = &spi->dev;
-+	struct mipi_dsi_device_info info = { };
-+	struct mipi_dsi_device *dsi;
-+	struct dbi_spi *dbi;
++	drm_dev_unplug(drm);
++	drm_atomic_helper_shutdown(drm);
++}
++
++int mipi_dsi_register_tiny_driver(struct mipi_dsi_device *dsi)
++{
++	struct device *dev = &dsi->dev;
++	struct drm_device *drm;
++	struct tiny_dsi *priv;
++	static const uint64_t modifiers[] = {
++		DRM_FORMAT_MOD_LINEAR,
++		DRM_FORMAT_MOD_INVALID
++	};
 +	int ret;
-+
-+	dbi = devm_kzalloc(dev, sizeof(*dbi), GFP_KERNEL);
-+	if (!dbi)
-+		return -ENOMEM;
-+
-+	dbi->host.dev = dev;
-+	dbi->host.ops = &dbi->host_ops;
-+	dbi->spi = spi;
-+	spi_set_drvdata(spi, dbi);
-+
-+	dbi->dc = devm_gpiod_get_optional(dev, "dc", GPIOD_OUT_LOW);
-+	if (IS_ERR(dbi->dc)) {
-+		dev_err(dev, "Failed to get gpio 'dc'\n");
-+		return PTR_ERR(dbi->dc);
-+	}
-+
-+	if (spi_is_bpw_supported(spi, 9))
-+		dbi->host.bus_types |= MIPI_DCS_BUS_TYPE_DBI_SPI_C1;
-+	if (dbi->dc)
-+		dbi->host.bus_types |= MIPI_DCS_BUS_TYPE_DBI_SPI_C3;
-+
-+	if (!dbi->host.bus_types) {
-+		dev_err(dev, "Neither Type1 nor Type3 are supported\n");
-+		return -EINVAL;
-+	}
-+
-+	dbi->host_ops.transfer = dbi_spi_transfer;
-+	dbi->host_ops.attach = dbi_spi_attach;
-+	dbi->host_ops.detach = dbi_spi_detach;
-+
-+	mutex_init(&dbi->cmdlock);
-+
-+	ret = mipi_dsi_host_register(&dbi->host);
-+	if (ret) {
-+		dev_err(dev, "Unable to register DSI host\n");
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(dev, dbi_spi_host_unregister,
-+				       &dbi->host);
-+	if (ret)
-+		return ret;
 +
 +	/*
-+	 * Register our own node as a MIPI DSI device.
-+	 * This ensures that the panel driver will be probed.
++	 * Even though it's not the SPI device that does DMA (the master does),
++	 * the dma mask is necessary for the dma_alloc_wc() in
++	 * drm_gem_cma_create(). The dma_addr returned will be a physical
++	 * address which might be different from the bus address, but this is
++	 * not a problem since the address will not be used.
++	 * The virtual address is used in the transfer and the SPI core
++	 * re-maps it on the SPI master device using the DMA streaming API
++	 * (spi_map_buf()).
 +	 */
-+	info.channel = 0;
-+	info.node = of_node_get(dev->of_node);
-+
-+	dsi = mipi_dsi_device_register_full(&dbi->host, &info);
-+	if (IS_ERR(dsi)) {
-+		dev_err(dev, "Failed to add DSI device\n");
-+		return PTR_ERR(dsi);
++	if (!dev->coherent_dma_mask) {
++		ret = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(32));
++		if (ret) {
++			dev_warn(dev, "Failed to set dma mask %d\n", ret);
++			return ret;
++		}
 +	}
++
++	priv = devm_drm_dev_alloc(dev, &tiny_dsi_driver, struct tiny_dsi, drm);
++	if (!priv)
++		return ret;
++
++	priv->dsi = dsi;
++	drm = &priv->drm;
++
++	priv->panel = of_drm_find_panel(dev->of_node);
++	if (IS_ERR(priv->panel)) {
++		dev_err(dev, "Unable to find panel\n");
++		return PTR_ERR(priv->panel);
++	}
++
++	drm_mode_config_init(drm);
++
++	drm->mode_config.preferred_depth = 16;
++
++	drm->mode_config.funcs = &tiny_dsi_mode_config_funcs;
++	drm->mode_config.min_width = 0;
++	drm->mode_config.min_height = 0;
++	drm->mode_config.max_width = 4096;
++	drm->mode_config.max_height = 4096;
++
++	drm_connector_helper_add(&priv->connector, &tiny_dsi_connector_hfuncs);
++	ret = drm_connector_init(drm, &priv->connector, &tiny_dsi_connector_funcs,
++				 DRM_MODE_CONNECTOR_DSI);
++	if (ret) {
++		dev_err(dev, "Unable to init connector\n");
++		return ret;
++	}
++
++	ret = drm_simple_display_pipe_init(drm, &priv->pipe, &tiny_dsi_pipe_funcs,
++					   tiny_dsi_formats, ARRAY_SIZE(tiny_dsi_formats),
++					   modifiers, &priv->connector);
++	if (ret) {
++		dev_err(dev, "Unable to init display pipe\n");
++		return ret;
++	}
++
++	drm_plane_enable_fb_damage_clips(&priv->pipe.plane);
++
++	drm_mode_config_reset(drm);
++
++	ret = drm_dev_register(drm, 0);
++	if (ret) {
++		dev_err(dev, "Failed to register DRM driver\n");
++		return ret;
++	}
++
++	ret = devm_add_action_or_reset(dev, tiny_dsi_remove, drm);
++	if (ret)
++		return ret;
++
++	drm_fbdev_generic_setup(drm, 0);
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(drm_mipi_dbi_spi_probe);
++EXPORT_SYMBOL_GPL(mipi_dsi_register_tiny_driver);
 +
-+MODULE_DESCRIPTION("DBI SPI bus driver");
++MODULE_DESCRIPTION("DSI/DBI TinyDRM driver");
 +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
 +MODULE_LICENSE("GPL");
-diff --git a/include/drm/drm_mipi_dbi_spi.h b/include/drm/drm_mipi_dbi_spi.h
-new file mode 100644
-index 000000000000..ed3b040b1e4e
---- /dev/null
-+++ b/include/drm/drm_mipi_dbi_spi.h
-@@ -0,0 +1,42 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * MIPI Display Bus Interface (DBI) LCD controller support
-+ *
-+ * Copyright 2016 Noralf Trønnes
-+ */
+diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
+index 802644c4c0c4..ee9538633943 100644
+--- a/include/drm/drm_mipi_dsi.h
++++ b/include/drm/drm_mipi_dsi.h
+@@ -10,6 +10,7 @@
+ #define __DRM_MIPI_DSI_H__
+ 
+ #include <linux/device.h>
++#include <linux/of_graph.h>
+ 
+ struct mipi_dsi_host;
+ struct mipi_dsi_device;
+@@ -350,4 +351,22 @@ void mipi_dsi_driver_unregister(struct mipi_dsi_driver *driver);
+ 	module_driver(__mipi_dsi_driver, mipi_dsi_driver_register, \
+ 			mipi_dsi_driver_unregister)
+ 
++#if IS_ENABLED(CONFIG_TINYDRM_DSI)
++int mipi_dsi_register_tiny_driver(struct mipi_dsi_device *dsi);
++#else
++static inline int mipi_dsi_register_tiny_driver(struct mipi_dsi_device *dsi)
++{
++	return 0;
++}
++#endif
 +
-+#ifndef __DRM_MIPI_DBI_SPI_H
-+#define __DRM_MIPI_DBI_SPI_H
++static inline int mipi_dsi_maybe_register_tiny_driver(struct mipi_dsi_device *dsi)
++{
++	/* Register the TinyDRM DSI/DBI driver if the panel has no controller */
++	if (!of_graph_get_port_by_id(dsi->dev.of_node, 0))
++		return mipi_dsi_register_tiny_driver(dsi);
 +
-+#include <drm/drm_mipi_dsi.h>
-+#include <linux/spi/spi.h>
++	return 0;
++}
 +
-+int drm_mipi_dbi_spi_probe(struct spi_device *spi);
-+
-+#define module_mipi_dbi_spi_driver(__mipi_dbi_driver, __mipi_dbi_match_table) \
-+	static struct spi_driver __mipi_dbi_driver##_spi __maybe_unused = { \
-+		.driver = { \
-+			.name = #__mipi_dbi_driver "_spi", \
-+			.of_match_table = __mipi_dbi_match_table, \
-+		}, \
-+		.probe = drm_mipi_dbi_spi_probe, \
-+	}; \
-+	static int __mipi_dbi_driver##_module_init(void) \
-+	{ \
-+		if (IS_ENABLED(CONFIG_DRM_MIPI_DBI_SPI)) { \
-+			int err = spi_register_driver(&__mipi_dbi_driver##_spi); \
-+			if (err) \
-+				return err; \
-+		} \
-+		return mipi_dsi_driver_register(&__mipi_dbi_driver); \
-+	} \
-+	static void __mipi_dbi_driver##_module_exit(void) \
-+	{ \
-+		mipi_dsi_driver_unregister(&__mipi_dbi_driver); \
-+		if (IS_ENABLED(CONFIG_DRM_MIPI_DBI_SPI)) \
-+			spi_unregister_driver(&__mipi_dbi_driver##_spi); \
-+	} \
-+	module_init(__mipi_dbi_driver##_module_init); \
-+	module_exit(__mipi_dbi_driver##_module_exit)
-+
-+#endif /* __DRM_MIPI_DBI_SPI_H */
+ #endif /* __DRM_MIPI_DSI__ */
 -- 
 2.28.0
 
