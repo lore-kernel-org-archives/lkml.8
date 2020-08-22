@@ -2,68 +2,115 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37456C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BF4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F210207CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9DCB20720
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598100131;
-	bh=PcEbuY1tMJFLuQznEtfgM3cYcbdw9Klc6NZA+4mCA0o=;
+	s=default; t=1598100213;
+	bh=RYd+GVqUEfT5JPQYe4AT1kahmjElEZxFWRZSc5UU2wI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nc31qHhX8a0BQ2wpHXYXjy4cNiIE/HXubrQKbIxESHriqvTFkHrybIADegyVlPoSz
-	 E7mmx3JG1KcTHTntka0wLmgCugEBQEnBQZ9/5fL0s2bloR+ZSoQQGOQGgAGzULbOYI
-	 myi9Axt9d90cNun7+gEb/53yHI032R94xKc91naM=
+	b=UzjB4CDGngXSCIeIj21V98bCDOnNnKF90BCM4AI3xovOjdpamwZaCNKW8U/bSstGe
+	 2K9cruQFR1Ysdnpsz3EGZuchYZnPPkiNppmW4dVrCiMrbZ9Ew0R32uLi3Z9LDKCXma
+	 NLPeL5rjJ+7N28MULPk4/rJRUkCgGrnTZXI20S2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgHVMmJ (ORCPT
+        id S1728030AbgHVMnb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 08:42:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727827AbgHVMmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 08:42:09 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5881020720;
-        Sat, 22 Aug 2020 12:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598100129;
-        bh=PcEbuY1tMJFLuQznEtfgM3cYcbdw9Klc6NZA+4mCA0o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ii6BpWdJyzx+67QqHjvAgA7F+Nsy2r603EcPHYaQ84JipcKvdWYh4JQUDLzihHWlV
-         zmlVMY2oTpPZEeMIdWBc0l9RVCU/kZOv7qKa/3Lix7SuKJb0GxqBCPsiAX/dfe4knK
-         UYzkOrzHIWfKb2xnr8g48jZSPGZTSAQd0y/MXB4Y=
-Date:   Sat, 22 Aug 2020 20:42:04 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: Support headphone and
- microphone detection
-Message-ID: <20200822124203.GL27575@dragon>
-References: <1596623944-3104-1-git-send-email-shengjiu.wang@nxp.com>
+        Sat, 22 Aug 2020 08:43:31 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46249 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727827AbgHVMna (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 08:43:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r15so4284381wrp.13;
+        Sat, 22 Aug 2020 05:43:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=WBNSRxvyAb/qQZAkHTrrLM5INeMErpw4ZMaPgiAVFYc=;
+        b=NPGRsV3lU9KQ/PJOVDEAWuy9khYOyotMACJOnIMgyIGDcqFHtU3xwev68NCn61pLV4
+         KkOw/+kpzX3i6DDmpfZPXTkCgazlYZmOPCT9kzdGis6E82u8IGg2qDrPSV71W9uqD4Tm
+         BudUSdiy2eSkuLYKJb9Jkrd96H+q//e95A/4oaM6gBAob5D53XV/gSjz7mQvgaRP/t2F
+         J+4nh+a2dqvX+03WpoNlluqYPc5IaQ01v3rPUKLzUVr+GwYVbfie6fkf9m5q8Gg+1IL2
+         4JUJZXM1LY80m3I0gSlHlAGPTYO3E4LUMA5ReELM3phWeHhVhVc4qQ0M7SwxVgjG3x4N
+         TCrw==
+X-Gm-Message-State: AOAM530mZoGY5tVy84yjNtQdoubpRTOM7gB7/PKxLoBQG/XJBWou08dC
+        nIkq2uXwqm2eZsRVjVoOUS8=
+X-Google-Smtp-Source: ABdhPJwdJA/5sEK6TGoZ7ND8qtNuotIocdqMiW4JOZohKvT3Lpi0KdwHGvSd1Cm5w504EjRKD/ptuQ==
+X-Received: by 2002:adf:c64d:: with SMTP id u13mr7206988wrg.114.1598100208370;
+        Sat, 22 Aug 2020 05:43:28 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id d14sm11074673wre.44.2020.08.22.05.43.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 22 Aug 2020 05:43:27 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 14:43:25 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
+Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v2 7/9] spi: spi-s3c64xx: Ensure cur_speed holds actual
+ clock value
+Message-ID: <20200822124325.GF20423@kozik-lap>
+References: <20200821161401.11307-1-l.stelmach@samsung.com>
+ <CGME20200821161407eucas1p249e4833b8839f717cc2a496ab43bb8a2@eucas1p2.samsung.com>
+ <20200821161401.11307-8-l.stelmach@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1596623944-3104-1-git-send-email-shengjiu.wang@nxp.com>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200821161401.11307-8-l.stelmach@samsung.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 06:39:04PM +0800, Shengjiu Wang wrote:
-> Add "DMIC" rounting, headphone and microphone detect gpio for sound
-> card, then output sound can switch between headphone and speaker.
-> input sound can switch between DMIC and AMIC.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+On Fri, Aug 21, 2020 at 06:13:59PM +0200, Łukasz Stelmach wrote:
+> cur_speed is used to calculate transfer timeout and needs to be
+> set to the actual value of (half) the clock speed for precise
+> calculations.
 
-Applied, thanks.
+If you need this only for timeout calculation just divide it in
+s3c64xx_wait_for_dma(). Otherwise why only if (cmu) case is updated?
+
+You are also affecting here not only timeout but
+s3c64xx_enable_datapath() which is not mentioned in commit log. In other
+words, this looks wrong.
+
+Best regards,
+Krzysztof
+
+> 
+> Cc: Tomasz Figa <tfiga@chromium.org>
+> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> ---
+>  drivers/spi/spi-s3c64xx.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+> index 02de734b8ab1..89c162efe355 100644
+> --- a/drivers/spi/spi-s3c64xx.c
+> +++ b/drivers/spi/spi-s3c64xx.c
+> @@ -626,6 +626,7 @@ static int s3c64xx_spi_config(struct s3c64xx_spi_driver_data *sdd)
+>  		ret = clk_set_rate(sdd->src_clk, sdd->cur_speed * 2);
+>  		if (ret)
+>  			return ret;
+> +		sdd->cur_speed = clk_get_rate(sdd->src_clk) / 2;
+>  	} else {
+>  		/* Configure Clock */
+>  		val = readl(regs + S3C64XX_SPI_CLK_CFG);
+> -- 
+> 2.26.2
+> 
