@@ -2,88 +2,114 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7684BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 06:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBFBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 06:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53CFA20724
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 06:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501F820825
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 06:15:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YFinHTUT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmcE3FxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgHVGD5 (ORCPT
+        id S1726717AbgHVGPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 02:03:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47242 "EHLO
+        Sat, 22 Aug 2020 02:15:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbgHVGD5 (ORCPT
+        with ESMTP id S1725863AbgHVGPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 02:03:57 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10940C061573;
-        Fri, 21 Aug 2020 23:03:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5ZgY/U1iVg+3jisCfQNlmsyKgaxMuNdaR6xO9fxM6gE=; b=YFinHTUTd5c0dUeAhB8oS/o0nb
-        Itis78LvLaQxSkFfwPsWiCcXiVlFj9DSfXcNhyakT3bkK3x1gMCAhXAHPLVmhbteQegFfNLnXC/u6
-        nKaxul1BmV4yE3QwDdT2shsiKZxIRVLa6bnk0zl7Vdzi05vYeIV11RRrJQ5HDZmUsyrlyp8haFXPZ
-        dEwvzXFuw5+GOqRKx+9tfd4TlvW64imhfTBw/moKqXojcy5rwj3ThhP6wr+jw8kt5NA2vEY6oIhez
-        dJ0AdmO7NPX90CpbhWiMOhRMmgDtiC/4dNa2SFKW85okoQPWu34EzhYMXT5RVTgtl5dv/SJ4AMq0k
-        af+azxig==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k9Mcz-0004to-L3; Sat, 22 Aug 2020 06:03:45 +0000
-Date:   Sat, 22 Aug 2020 07:03:45 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "yukuai (C)" <yukuai3@huawei.com>,
-        Gao Xiang <hsiangkao@redhat.com>, darrick.wong@oracle.com,
-        david@fromorbit.com, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com
-Subject: Re: [RFC PATCH V3] iomap: add support to track dirty state of sub
- pages
-Message-ID: <20200822060345.GD17129@infradead.org>
-References: <20200819120542.3780727-1-yukuai3@huawei.com>
- <20200819125608.GA24051@xiangao.remote.csb>
- <43dc04bf-17bb-9f15-4f1c-dfd6c47c3fb1@huawei.com>
- <20200821061234.GE31091@infradead.org>
- <20200821133657.GU17456@casper.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821133657.GU17456@casper.infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        Sat, 22 Aug 2020 02:15:38 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 934A8C061573;
+        Fri, 21 Aug 2020 23:15:38 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p37so2018709pgl.3;
+        Fri, 21 Aug 2020 23:15:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=fifKzZY0qdLJQEBEXEYD5nOp3Oo8eoTT9qv7E8Okxdc=;
+        b=gmcE3FxIz1pTECEv7Ib3E7T5Q1/clFxcPTQ82pECSXX1SBdFSS5sh/vs46N2nrXOnH
+         55F5ds+g1H5UhDYGIb2+nAybwJU/vbLnkQ26WLuCPcAkGQjv2oMuAnSfL6v72sSxTlqF
+         kO0rrOydaddclOE4zgsWILDjGVC2o+r4DNt/xbr8d+i9dpCEYnL/+Pu/4ukYCIRSlvO8
+         YWWMS8sPSpiBX1cWDmxDSXDyfpvItqh1lrS3ml2zDTa3d3uEtRNjSzmMOsxEPWD5HbT+
+         WmEdwWDoAqi+cxXB3IkjhCVjgi6wseVq84mV5As01fXgiZS6KejhjyT3WPyIAk6Di9Bi
+         ZGRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fifKzZY0qdLJQEBEXEYD5nOp3Oo8eoTT9qv7E8Okxdc=;
+        b=AKxZs/sRQzEwvxb6AcBssqJI9d+9zmOdp2FPuPlM8S5JMFWDihbRavZbd+UMcmRpMA
+         9sNoJHB6wOiCbGv1yYsl2oyKoQ9WkVN+2Biqi6aUGMMr81+/PzPG1+LjnWOwMERHpwD+
+         oCwwUqLFyzgHLvOvKKsd4iHG17Xgc/Miz6oaZZpKiegn8ehN+RYJ5mP17nf5ZsNP5FE9
+         zFSlvcLjF0GKnGtNzaRUKem/C5+/7vnkHnwjluMEKUC7CkFatxmi96Ctm5/+EVeiB2oh
+         WM4L3yC+EKpNqf9EPqCYgRUU8scXUqPWna5R1b/YkRhYhbe/aT65xiYFE1XzsS5ddL44
+         BZGQ==
+X-Gm-Message-State: AOAM531Ktg68fvRiqrC/BZ93ypcmAPhBcy09ZRwJh0Qj7/V82tsy7/Py
+        oNp46WqM26QhV59KKwJNdukrY/A1fg==
+X-Google-Smtp-Source: ABdhPJz5qi9VrfyPvyxtw7BqJcL/06LNMaxTH7wjLMfxubkMec2ovTR9LavX0xdm50tnrICSb3/XZQ==
+X-Received: by 2002:a62:5fc6:: with SMTP id t189mr5222464pfb.138.1598076938059;
+        Fri, 21 Aug 2020 23:15:38 -0700 (PDT)
+Received: from localhost.localdomain ([2402:3a80:cfa:ae3e:f998:8f12:465c:736b])
+        by smtp.gmail.com with ESMTPSA id y20sm4440244pfn.183.2020.08.21.23.15.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 23:15:37 -0700 (PDT)
+From:   madhuparnabhowmik10@gmail.com
+To:     brucechang@via.com.tw, HaraldWelte@viatech.com,
+        ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrianov@ispras.ru, ldv-project@linuxtesting.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH v2] drivers: mmc: host: via-sdmmc: Fix data race bug
+Date:   Sat, 22 Aug 2020 11:45:28 +0530
+Message-Id: <20200822061528.7035-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 02:36:57PM +0100, Matthew Wilcox wrote:
-> On Fri, Aug 21, 2020 at 07:12:34AM +0100, Christoph Hellwig wrote:
-> > iomap sets PagePrivate if a iomap_page structure is allocated.  Right
-> > now that means for all pages on a file system with a block size smaller
-> > than the page size, although I hope we reduce that scope a little.
-> 
-> I was thinking about that.  Is there a problem where we initially allocate
-> the page with a contiguous extent larger than the page, then later need
-> to write the page to a pair of extents?
-> 
-> If we're doing an unshare operation, then we know our src and dest iomaps
-> and can allocate the iop then.  But if we readahead, we don't necessarily
-> know our eventual dest.  So the conditions for skipping allocating an
-> iop are tricky to be sure we'll never need it.
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-So with the current codebase (that is without your THP work that I need
-to re-review) the decision should be pretty easy:
+via_save_pcictrlreg() should be called with host->lock held
+as it writes to pm_pcictrl_reg, otherwise there can be a race
+condition between via_sd_suspend() and via_sdc_card_detect().
+The same pattern is used in the function via_reset_pcictrl()
+as well, where via_save_pcictrlreg() is called with host->lock
+held.
 
- - check if block size >= PAGE, and if yes don't allocate
- - check if the extent fully covers the page, and if yes don't allocate
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Now with THP we'd just need to check the thp size instead of the page
-above and be fine, or do I miss something?
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+v2: Rebase v5.9-rc1
+
+ drivers/mmc/host/via-sdmmc.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/mmc/host/via-sdmmc.c b/drivers/mmc/host/via-sdmmc.c
+index 49dab9f42b6d..9b755ea0fa03 100644
+--- a/drivers/mmc/host/via-sdmmc.c
++++ b/drivers/mmc/host/via-sdmmc.c
+@@ -1257,11 +1257,14 @@ static void __maybe_unused via_init_sdc_pm(struct via_crdr_mmc_host *host)
+ static int __maybe_unused via_sd_suspend(struct device *dev)
+ {
+ 	struct via_crdr_mmc_host *host;
++	unsigned long flags;
+ 
+ 	host = dev_get_drvdata(dev);
+ 
++	spin_lock_irqsave(&host->lock, flags);
+ 	via_save_pcictrlreg(host);
+ 	via_save_sdcreg(host);
++	spin_unlock_irqrestore(&host->lock, flags);
+ 
+ 	device_wakeup_enable(dev);
+ 
+-- 
+2.17.1
+
