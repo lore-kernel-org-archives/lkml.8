@@ -2,203 +2,124 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C32DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 18:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46639C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 18:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2012075E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 18:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D897206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 18:20:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ZzKR/6/c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dw2ML1fF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgHVSGL (ORCPT
+        id S1728472AbgHVSRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 14:06:11 -0400
-Received: from mout.web.de ([217.72.192.78]:36971 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbgHVSGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 14:06:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1598119542;
-        bh=vqmZKLUdXbY5nwzVsXWwpkYlcF0MgWyETqIDMvEK2ww=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=ZzKR/6/ctlwHlJ+B28X6VlpEnegRzTpXiAGfGQMsD1dhBBn03OFRSHJFABWsEFvXP
-         mgJriW375kzkUZcKEcZ6QAMl33u9ib5JayD0V8qYNwQGcpSy+wX1t1YCqbB2CiCPAS
-         T9syv0ZV3e1UoUxDubXFRvId3j0rt9AVB025Ehws=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.10.10] ([88.215.87.113]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LzsKN-1kehgj0lTn-0150pp; Sat, 22
- Aug 2020 20:05:42 +0200
-Subject: Re: [RESEND PATCH v3 5/8] mtd: spi-nor: cadence-quadspi: Handle probe
- deferral while requesting DMA channel
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, simon.k.r.goldschmidt@gmail.com,
-        dinguyen@kernel.org, marex@denx.de
-References: <20200601070444.16923-1-vigneshr@ti.com>
- <20200601070444.16923-6-vigneshr@ti.com>
-From:   Jan Kiszka <jan.kiszka@web.de>
-Autocrypt: addr=jan.kiszka@web.de; prefer-encrypt=mutual; keydata=
- xsDhBEq0i8QRBAD2wOxlC9m/8t/vqjm1U9yQCT6OJ2Wbv/qys9DYM0CvcOTDMWQwmV1/VsZj
- KR5YgB5NPt+To7X6x5cjz15AGnx5Fb8Wnrq8EF9ZfHMwb7YMx1LdPYPDnXr37wE3XupFmkHB
- Mes4htyX7Dz8LvKDLnli4IsAmWG+kV1JI6LWKXLpSwCg8JRq4SWoB4VCQxbH3GjntgvwNc8D
- /2q5Dj0urJ7s7sdXhrH0hcFkpSFRmU5Yd6MCwcbFHm2paL5gqVjNNUUwDBKAL9eZaQVIHKwC
- 44BvNGO2gcQ26R3AuCHUQ+pZHg34tok1JCNZ6IEZccb+33Qq0qbcDMJJiDYp7ppp6ozifvc4
- YaqJECX48IydxfE9+41oV7T5vNAzA/QL/UMJyTnu5jiOXcyn5iFQw535lXkwKsqeXzCowLho
- HICZ2jITJPdTT/+9pGWwMQqST/SS35Tx4EnS3z2BWsNMCLuXCPkxF1elaMJqMfMJxFD8rAgS
- 9GK6zP6fJlsA1wq/UvKSL8v4QPOnTNCVOsyqJVasGV0ZPcDfcj+ClNO4zR5KYW4gS2lzemth
- IDxqYW4ua2lzemthQHdlYi5kZT7CYwQTEQIAIwIbIwYLCQgHAwIEFQIIAwQWAgMBAh4BAheA
- BQJOpoNtAhkBAAoJEIrUrG965ecUOPUAoK+Rh12KgCjplHAS0AoiGKwGOuq7AKDEVnBtRAoy
- VRvp3lOlOx+P2Ay56M7BTQRKtIvEEAgA2/PlX6oyi7dToH0CJCHq0eKmZaa7CmGaVnxyeepK
- vIfiM8n8Td76AbG64fjREMwgSpb4F/UytF3z/03tj4e49W/zKjbBRB2/wmFRlZBC9crg22Q+
- bgvMOsxnC6uHXaWN8fL+jVei/5OoHOoFqaMsX8EvploitlI/BPj+VgW26jksf3YZyk1hncls
- Z/IYhXzgRmVJo4RiTW/YLQAkwndwc+fKPa/IYLEDW1Jc4kNLoK0P90b45zju0hpl0C00pVOR
- TOtzFK9G5Ha7qOAWJfAVJORHKAkkvwftf3hkpPdLyvZUWRHXvUexmA61fLvDBAFhRxYGD8t5
- gz88SF5Tzq+0ywADBQf/YSkaYrEslPWiCA2wU6EW0yaqBQAobFsOMvsufJ6o2ntq5Ncq37VI
- 3KCT67eHPE9x+zPcENoZWsRrC9S9PCf1LOsi7ybZsR13AJqDFlRzJZ4klh9QwgwFZxUBzOdI
- vttwzG1QkzHx06RKZluFYpPF3DRduSMukdIJ2wmWCU+ohB+mYefe65JGjYQfHVs8mgYVFOPx
- bRea9VJACCMuspoZWpj43UdR1lLLyIUFYz+jqcPW7Hd/GTIw4N67pYl0dwPDmFd4ohJ5g4Zp
- q61toNysBGEuEm5GCcn0VmGtQpSYnR5cVm5b2yPz4bIuFOSuZUo/l7vitdY0iy0/wvKbBC+N
- K8JJBBgRAgAJBQJKtIvEAhsMAAoJEIrUrG965ecULvAAoKGvxs5T3IhyQT8I8sMsyAvCE4wH
- AJ46S16yab+OxNkvOeoOEX0EnHVHaA==
-Message-ID: <6c8d9bff-3a67-0e6c-d4d1-36b7ed5007b9@web.de>
-Date:   Sat, 22 Aug 2020 20:05:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Sat, 22 Aug 2020 14:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727856AbgHVSRp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 14:17:45 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A321C061573
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 11:17:45 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w14so5303443ljj.4
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 11:17:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YChPTRKYweJBRwXhiNVWgynaCPUMI1IPuQnqYEi2Wg8=;
+        b=dw2ML1fF7uUxx5dE3FtnoIC3IlzZ4yvUnt7ERurdXFGa8xvZOjMuqt4bV4FZF+S34y
+         diFBoi9qJB2SV4CGMHVmvCj/9AbxfXoiV8AbcX5gQp12dbtSqTdJpzNgdgh0wm0JwWZU
+         fPBoIvDpgKqFmICWN0JqXZKRlriGP0/3N6/vTF2tSOz6Jzxv7h9zBgvLJqD14L5JpjIJ
+         iXlvhX31/z59sLPN9w1753eO10V5uvSVigO1HcpuQNya2rQKgZtij06t+aR63TvyAnFk
+         FZwC7gIvDBFkPe15qaxOiNNpCDVyx+RTJDMbe5eOw4iUcMxVfvv7y9npUprd8ecclLk2
+         ioyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YChPTRKYweJBRwXhiNVWgynaCPUMI1IPuQnqYEi2Wg8=;
+        b=kKnNCZXYTLeD2uGONVbPwRUmlCeK5a2UQRGy931LZBO93GM1IuPYG58ASmk/yZK4Jh
+         ovcfaBApaaQN/CTUi14KZzyy8A2iB/hyBR0Bpez+SlOYZQzBzAzZMY+3VJZc+8UAkPOZ
+         LvSfcc8zt/6MjZHjx08tt6MSGZTUyx/3ZAch1cT5EFXLdAuVs1jLc1Z5HbALqwJ1kzRg
+         jjvlyH4MX2BEmDl27KXflPg5JLdon2X4HWtJ52iDZ1v9leixUVkbPjG7VcIC22N+PEpI
+         orSsAOT6DKJZ+dr9omjYbVgajbZfbcWDARZoBcrXHKvtK7YURkNUPtQ4h/ljYOFVR9yR
+         triQ==
+X-Gm-Message-State: AOAM531/I3bSpnn5kEanrYVeE++dtCKNYPFOHi53gVS1UneLyrCCxrcV
+        SA+G8KpzDOXakhoFPsCy61sjoko0AxzIEvVkSAo=
+X-Google-Smtp-Source: ABdhPJyW3/ywjLfNkLgZFgGY/QCzXsNe1mtqqdjbbtXxMehshBtljXf9+wiK+SBMXDTq6coCJsTvcN7HZjCPHB6iDos=
+X-Received: by 2002:a2e:920c:: with SMTP id k12mr4301931ljg.29.1598120263649;
+ Sat, 22 Aug 2020 11:17:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200601070444.16923-6-vigneshr@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:hCenLna7MCOUeAI4+VL4obs74pBpCBkM2pUpeokFBIpNPqVJ7qy
- llQeNekQUK5OXczTRJBvmPs+UzMi/4pD4Y8FHsK9HHHskJNM2nyQaQ4tq5ELxNSRqes+ZAT
- ltdjbF7sO1HoTFPg/P17RBEDc4KPdMa7mltzRyFlDIxT6PDcf5/fmxi7Zd205yYgTA+MmDo
- y9UZr3F9IxKy+Eb5kaZ7Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9vTPYbFEIxQ=:8pKaq0Z+7gRBXOHP6GHeFA
- dAofbuZvE5RoqmyvfCdCZM+24s9bj6Z5oJYfT0345t7m6SLQMauGhzKZqklvm4i6c/GV9QBSG
- sfwcC1xFAzZ5hA0ALKygWHVBrLeLad1av6hXxU8JQJroU/WekFSWuiBtW1E0IFlW2tzfA+PnI
- Bc2QfmsoghZ1/5r9zWaDgpZ1NVJBpA/l9Fxvw/8T8yt7q2G1w9E5/T78MQsyMlza7XHG7QFKM
- qztOYxEpvdoMFqqZVo608Qc8+A1b1XR+UFccW2MSulPcOQyrOfSiekwAbjD5MIGS/mmzmjEoF
- B8r/56oIjMtaRwtW9tf6GIq3tgOK8C8ORfnhzIdkRuEaOgUKiPiPH1roIlhsVZuBSRVvDi6pc
- 3RRmUAJCyv/k26Lpzy3q6BZqKc05OfjPT8YmDirybjgkpiSG8+Pu4GLKocvaAmkzKZKxbSmCj
- AT+Kc2SpWodQVkb/0AlxuAujJk4jO5u7cRXHd+eLhnkv9mXz/pdyUT3NKcvTrKtl8ZrStvs3h
- a5xt11T0coRylvnXTc1vZx2TCTYO6clyqpOUm3/vOWT+5zRmeKJhbtTdLvPhnBD358Jfn3E6u
- fKe4GuHM1X2EXWLq61eaxv2yGnWwImGJuqBHPkosbFaEUHzBvyhVJPeNXykmE0n8MnmQqVYHu
- ioAqtC+tiP2wNxHO30R8xjuOLWN8G+zPzj3MBPgI4DlfXa98RQNCKVcaT3UhVCZIK0oG6Pyp2
- 579NFkUhd1XiDW72QQhPl+754JvVctF8pdt2jPzQwtOah2qQ3OVW52wOcNFN2OqBG2s0Edq/R
- RjmJSijHgxI7NUN5ZDrExqFuMCndFxqa/6Yw5ErVjlf56HfGv2GfjG7Djm9q0s4dttJWzHjTV
- Ts9xl+WavNOz3imnIxQ//c6+cwkeOv5iMw/6Wt9mPSvaURq2Q9E4IWqdSRruD8b0cIoI9ZVOg
- rwly8JwA7cxIv1ZuwYje7QPRwcjk1/Ug1xkNjd7q1kkCkZHnPZIJm9DSDWFz15spHmBPKOZ5I
- tsiYKq/9DeAsK0DUFod0MVMANtLhMhH5lgUcvtYEutLRsHrhsrabyASsHzObJJ9EzUzukp7zc
- A0RtD6h7BSR/ApxodoGZoBUHieIBABIto+kZ5nf13MGgfpJsGVJ11qrOklF7Tg1DgbQg6PgCK
- 77O+JRwyz0fpPVYb9+Qvf9ABVVL/w1QFBvMMgThEt0Qns+pCZUIs4vb8FHWMC0UrMkGaIjqFP
- sXBHGcCTXdDoxgJmGdHqL8rgAkyOkQP4OKTE9Uw==
+References: <87h7t6tpye.fsf@nanos.tec.linutronix.de> <20200813173701.GC4295@paulmck-ThinkPad-P72>
+ <20200813180933.GA532283@rani.riverdale.lan> <875z9dioll.fsf@nanos.tec.linutronix.de>
+ <20200820130641.GA536306@rani.riverdale.lan> <87zh6ohm03.fsf@nanos.tec.linutronix.de>
+ <20200821230435.GA56974@rani.riverdale.lan> <CAKwvOdkoB+fT9tt7vgg1R6J-NEr77EWP5X8nFat_L-HvEzWGzA@mail.gmail.com>
+ <87eenzqzmr.fsf@nanos.tec.linutronix.de> <20200822035552.GA104886@rani.riverdale.lan>
+ <20200822084133.GL28786@gate.crashing.org> <CA+icZUVf9a8LC2Mf0cFymYQfALWs6bVfR1v1nRbxKaLAyU6NkQ@mail.gmail.com>
+ <CA+icZUWGHo3mkN4=ZYeU37p8KJhxTXS5QKcAvq_HaqTHmFkw2g@mail.gmail.com>
+In-Reply-To: <CA+icZUWGHo3mkN4=ZYeU37p8KJhxTXS5QKcAvq_HaqTHmFkw2g@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Sat, 22 Aug 2020 20:17:32 +0200
+Message-ID: <CANiq72=3iOh5Z_rboZf-_GUpBE2LUUv3yPKOVNN_XmaNswdNSw@mail.gmail.com>
+Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Segher Boessenkool <segher@kernel.crashing.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.06.20 09:04, Vignesh Raghavendra wrote:
-> dma_request_chan_by_mask() can throw EPROBE_DEFER if DMA provider
-> is not yet probed. Currently driver just falls back to using PIO mode
-> (which is less efficient) in this case. Instead return probe deferral
-> error as is so that driver will be re probed once DMA provider is
-> available.
+On Sat, Aug 22, 2020 at 11:52 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
 >
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> ---
->  .../mtd/spi-nor/controllers/cadence-quadspi.c  | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/mtd/spi-nor/controllers/cadence-quadspi.c b/drivers=
-/mtd/spi-nor/controllers/cadence-quadspi.c
-> index 608ca657ff7f5..0570ebca135a9 100644
-> --- a/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-> +++ b/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-> @@ -1169,7 +1169,7 @@ static void cqspi_controller_init(struct cqspi_st =
-*cqspi)
->  	cqspi_controller_enable(cqspi, 1);
->  }
->
-> -static void cqspi_request_mmap_dma(struct cqspi_st *cqspi)
-> +static int cqspi_request_mmap_dma(struct cqspi_st *cqspi)
->  {
->  	dma_cap_mask_t mask;
->
-> @@ -1178,11 +1178,16 @@ static void cqspi_request_mmap_dma(struct cqspi_=
-st *cqspi)
->
->  	cqspi->rx_chan =3D dma_request_chan_by_mask(&mask);
->  	if (IS_ERR(cqspi->rx_chan)) {
-> -		dev_err(&cqspi->pdev->dev, "No Rx DMA available\n");
-> +		int ret =3D PTR_ERR(cqspi->rx_chan);
-> +
-> +		if (ret !=3D -EPROBE_DEFER)
-> +			dev_err(&cqspi->pdev->dev, "No Rx DMA available\n");
->  		cqspi->rx_chan =3D NULL;
-> -		return;
-> +		return ret;
->  	}
->  	init_completion(&cqspi->rx_dma_complete);
-> +
-> +	return 0;
->  }
->
->  static const struct spi_nor_controller_ops cqspi_controller_ops =3D {
-> @@ -1269,8 +1274,11 @@ static int cqspi_setup_flash(struct cqspi_st *cqs=
-pi, struct device_node *np)
->  			dev_dbg(nor->dev, "using direct mode for %s\n",
->  				mtd->name);
->
-> -			if (!cqspi->rx_chan)
-> -				cqspi_request_mmap_dma(cqspi);
-> +			if (!cqspi->rx_chan) {
-> +				ret =3D cqspi_request_mmap_dma(cqspi);
-> +				if (ret =3D=3D -EPROBE_DEFER)
-> +					goto err;
-> +			}
->  		}
->  	}
->
->
+> I am asking myself who is using such ancient compilers?
 
-This seem to break reading the SPI flash on our IOT2050 [1] (didn't test
-the eval board yet).
+There are many users/companies using older versions of compilers,
+kernels and everything. GCC <= 4.9 will still be used/supported (by
+third parties) for a handful of years at least.
 
-Without that commit, read happens via PIO, and that works. With the
-commit, the pattern
+However, the important question is whether those users/companies care
+about running the latest kernels. Many of those definitely do not want
+to touch their kernel either. For those that do, there are several
+longterms to pick from that still support 4.9, as well as other
+workarounds.
 
-with open("out.bin", "wb") as out:
-    pos =3D 0
-    while pos < 2:
-        with open("/dev/mtd0", "rb") as mtd:
-           mtd.seek(pos * 0x10000)
-           out.write(mtd.read(0x10000))
-        pos +=3D 1
+Thus I am usually in favor of raising the minimum whenever new hacks
+are required to be added. On the other hand, we already raised the
+version twice this year and it is not clear to me what is the minimum
+version we would need to go for to ensure this does not bite us.
 
-gives the wrong result for the second block while
+> If this is a real problem with GCC version <= 5, so can this be moved
+> to a GCC specific include header-file?
+> Thinking of include/linux/compiler-gcc.h or
+> include/linux/compiler_types.h with a GCC-VERSION check?
 
-with open("out2.bin", "wb") as out:
-    with open("/dev/mtd0", "rb") as mtd:
-        out.write(mtd.read(0x20000))
+That would be better if it can be done, yes.
 
-(or "mtd_debug read") is fine.
-
-What could be the reason? Our DTBs and k3-am654-base-board.dtb had some
-deviations /wrt the ospi node, but aligning ours to the base board made
-no difference.
-
-Jan
-
-[1] https://github.com/siemens/linux/commits/jan/iot2050
+Cheers,
+Miguel
