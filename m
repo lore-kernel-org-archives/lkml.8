@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D2EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 10:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C61C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 10:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C259C207C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 10:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4E0207C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 10:10:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="Rl8f/F6Y"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="sbrMXZZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgHVKHL (ORCPT
+        id S1727775AbgHVKKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 06:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56584 "EHLO
+        Sat, 22 Aug 2020 06:10:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgHVKHJ (ORCPT
+        with ESMTP id S1725991AbgHVKKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 06:07:09 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7017C061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 03:07:09 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id r4so1997178pls.2
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 03:07:09 -0700 (PDT)
+        Sat, 22 Aug 2020 06:10:02 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D466EC061573
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 03:10:02 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f193so2290111pfa.12
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 03:10:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Aa48DBY0aJOFWuBCNzDmeJzk3GQ3hREgEgyb7wV2YEE=;
-        b=Rl8f/F6YxLChPCJJFyhRLD1RkN1p1VKrB6Uh/4l5aIpwklUnuwMcuH6I5bL58bOUNG
-         0L369yH2w9xxQ0XTj3vcMBTXA/QFREdLt052qy5yOF49BNVp4vvm8kOmQ9zjhVrrN36C
-         I6Vym+v8L1QS7I+0BKT+fcqckMednLZ9mr1tkum8LYzw7GnzGu88Hdk72LZ7IsqTfX4Q
-         QEyrm35gzzEoqMtlVCdtWwWf2xQkYpmzpffp5BROQBWK/WGEoWa83SiUSntvNuz1CMvC
-         as9NIWrwpIx3w61wTbnOBa7jY6N1yaL2lfrwfEn8mDqB+s4kBA14FtWQI+QK2zKlVjz5
-         q52Q==
+        bh=cXjQrR/T5raX6AbUhraqTEHMJAZC5hVfvFOW6Ij5a2g=;
+        b=sbrMXZZja9pgMpu13x9qyBHH1xr73SDaZxOZAVCxAzX5XIrfglhdk6XRzI/vsa/NZB
+         5BlK0LDP/Tx5rw7E+wQQ7nO4zCNy/KorUqJTl3r20ZhILXbIw/WYxdxwq0EVfb0jUYxx
+         E0uM6IeyqD42KMjVVrOQH9zGcrz6FirrBWY3BNG/GEHF/XOg4glt8GIdUQna4ntCg5fH
+         XToUmucK4QGNrHGUTkjSErY/D/XwXqvCbS41AQzRvTT77XPz0gFs7ea3UBPUvY5LHIRq
+         yqI9kzPk7iXBdikExpV5eIhm/F6RdJif1A0aCzM7wyyVcJTlhalt0ldAkZNdWfxwTzPC
+         5vYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=Aa48DBY0aJOFWuBCNzDmeJzk3GQ3hREgEgyb7wV2YEE=;
-        b=NCL4uJ32rqJIDe7wYlAjR6zzjoTAAxb5XC7A+N/vAMiyMCuift6BDI1asz0UL7MfZ9
-         C5uLQloPDnZVu9N+3GZWO8NE1cw8YWRASAXGS2ygYO7Y6aR2pGUQ/3QuE2GYuWQzU54j
-         BZN/1b3UAFLo1Za431fpt86G3MklUuS3Lf0/cEZV+ziY8QZov6WfH+vedboaAib5krZh
-         I3bTB6esfkDta6/MzyY6PoE0U1GMPbiwwD4I2Z4JwIvlwVbQDRXVuTu3ciT+8VTRjway
-         Zeir+aAbQpUFAuBy71ZGNxvJERvUqVi30ab+fZGPZspHYvxLGIFOnBx+/nQbr1Yn75j8
-         IAWw==
-X-Gm-Message-State: AOAM5315HqsNgdy+vcXZCVvqsNQLbK5uHxGdn1rQ75cPjij+8sGYEh9E
-        cix5K5iROS0vV/n0emU/fdStBXLQKTwRPg==
-X-Google-Smtp-Source: ABdhPJxEvnP6sH7WSORoERGGH2SJ+rcHTyo/b/DegD0raVO5wfJYZEvRFc3knr6IGtNMDj+XluXXKQ==
-X-Received: by 2002:a17:90a:9a84:: with SMTP id e4mr5355582pjp.205.1598090828497;
-        Sat, 22 Aug 2020 03:07:08 -0700 (PDT)
+        bh=cXjQrR/T5raX6AbUhraqTEHMJAZC5hVfvFOW6Ij5a2g=;
+        b=t1DqfanNNRIQtw8Vq3LXSIi7xZ9UIr5gh3O+3pQqpLjlEfiexhybtvx9o9C9ZzrQWk
+         BuoPPKqYI+vRv18yi5y1LAg5FPmKY4VjOV42/4ZoG1fT+UEChKmlu52FbC2cHXRQrRat
+         dFQSQdQhCvET3L6DjTX6f6Xa1V600yUHOUcKLDaVZPt+mtlRkVCn73t7iUyOchuNpF1n
+         /yGxJsxAdy5chLiKWD5bjTNSixXlph5dJFhrxuv8kunlAXrbWgjt6kIymaPIiJDT/hTD
+         CqBN4qBqpVQ2fRJ8NSFHOOYyDTGpiKEnDOEaNK5vPxzbCBKF6jx55kaCp29njs7kImGB
+         uEVw==
+X-Gm-Message-State: AOAM532CYwjgNTEcm8g/L/SwP7xb+lOw0dO7E02hoF4SQJTWfR8+eDab
+        /s4u4giVvWTeuPKt+CV3J01fxT12rxJieg==
+X-Google-Smtp-Source: ABdhPJwHP3q9+tPT/jVR+WUuXEvNsRSwHYeMpeuYX6s/lzdmsY9nqauGT3RQg1Xm3ZYs27w+0yoeRQ==
+X-Received: by 2002:aa7:984e:: with SMTP id n14mr5772635pfq.272.1598091002040;
+        Sat, 22 Aug 2020 03:10:02 -0700 (PDT)
 Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
-        by smtp.gmail.com with ESMTPSA id h7sm3992388pjc.15.2020.08.22.03.07.02
+        by smtp.gmail.com with ESMTPSA id b20sm5281994pfo.88.2020.08.22.03.09.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Aug 2020 03:07:07 -0700 (PDT)
-Subject: Re: [PATCH v1 02/10] powerpc/kernel/iommu: Align size for
- IOMMU_PAGE_SIZE on iommu_*_coherent()
+        Sat, 22 Aug 2020 03:10:01 -0700 (PDT)
+Subject: Re: [PATCH v1 03/10] powerpc/kernel/iommu: Use largepool as a last
+ resort when !largealloc
 To:     Leonardo Bras <leobras.c@gmail.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -75,7 +75,7 @@ To:     Leonardo Bras <leobras.c@gmail.com>,
         David Dai <zdai@linux.vnet.ibm.com>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 References: <20200817234033.442511-1-leobras.c@gmail.com>
- <20200817234033.442511-3-leobras.c@gmail.com>
+ <20200817234033.442511-4-leobras.c@gmail.com>
 From:   Alexey Kardashevskiy <aik@ozlabs.ru>
 Autocrypt: addr=aik@ozlabs.ru; keydata=
  mQINBE+rT0sBEADFEI2UtPRsLLvnRf+tI9nA8T91+jDK3NLkqV+2DKHkTGPP5qzDZpRSH6mD
@@ -150,12 +150,12 @@ Autocrypt: addr=aik@ozlabs.ru; keydata=
  c7E5M+/NpslPCmYnDjs5qg0/3ihh6XuOGggZQOqrYPC3PnsNs3NxirwOkVPQgO6mXxpuifvJ
  DG9EMkK8IBXnLulqVk54kf7fE0jT/d8RTtJIA92GzsgdK2rpT1MBKKVffjRFGwN7nQVOzi4T
  XrB5p+6ML7Bd84xOEGsj/vdaXmz1esuH7BOZAGEZfLRCHJ0GVCSssg==
-Message-ID: <7b9640e0-568f-1470-40f4-a3ccec8abcf2@ozlabs.ru>
-Date:   Sat, 22 Aug 2020 20:07:00 +1000
+Message-ID: <75fb1e8b-2506-ffd8-64af-4abfefe03d2f@ozlabs.ru>
+Date:   Sat, 22 Aug 2020 20:09:55 +1000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200817234033.442511-3-leobras.c@gmail.com>
+In-Reply-To: <20200817234033.442511-4-leobras.c@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -167,91 +167,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 18/08/2020 09:40, Leonardo Bras wrote:
-> Both iommu_alloc_coherent() and iommu_free_coherent() assume that once
-> size is aligned to PAGE_SIZE it will be aligned to IOMMU_PAGE_SIZE.
-
-The only case when it is not aligned is when IOMMU_PAGE_SIZE > PAGE_SIZE
-which is unlikely but not impossible, we could configure the kernel for
-4K system pages and 64K IOMMU pages I suppose. Do we really want to do
-this here, or simply put WARN_ON(tbl->it_page_shift > PAGE_SHIFT)?
-Because if we want the former (==support), then we'll have to align the
-size up to the bigger page size when allocating/zeroing system pages,
-etc. Bigger pages are not the case here as I understand it.
-
-
+> As of today, doing iommu_range_alloc() only for !largealloc (npages <= 15)
+> will only be able to use 3/4 of the available pages, given pages on
+> largepool  not being available for !largealloc.
 > 
-> Update those functions to guarantee alignment with requested size
-> using IOMMU_PAGE_ALIGN() before doing iommu_alloc() / iommu_free().
+> This could mean some drivers not being able to fully use all the available
+> pages for the DMA window.
 > 
-> Also, on iommu_range_alloc(), replace ALIGN(n, 1 << tbl->it_page_shift)
-> with IOMMU_PAGE_ALIGN(n, tbl), which seems easier to read.
+> Add pages on largepool as a last resort for !largealloc, making all pages
+> of the DMA window available.
 > 
 > Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
 > ---
->  arch/powerpc/kernel/iommu.c | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
+>  arch/powerpc/kernel/iommu.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
 > diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
-> index 9704f3f76e63..d7086087830f 100644
+> index d7086087830f..7f603d4e62d4 100644
 > --- a/arch/powerpc/kernel/iommu.c
 > +++ b/arch/powerpc/kernel/iommu.c
-> @@ -237,10 +237,9 @@ static unsigned long iommu_range_alloc(struct device *dev,
->  	}
+> @@ -261,6 +261,15 @@ static unsigned long iommu_range_alloc(struct device *dev,
+>  			pass++;
+>  			goto again;
 >  
->  	if (dev)
-> -		boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
-> -				      1 << tbl->it_page_shift);
-> +		boundary_size = IOMMU_PAGE_ALIGN(dma_get_seg_boundary(dev) + 1, tbl);
-
-
-Run checkpatch.pl, should complain about a long line.
-
-
->  	else
-> -		boundary_size = ALIGN(1UL << 32, 1 << tbl->it_page_shift);
-> +		boundary_size = IOMMU_PAGE_ALIGN(1UL << 32, tbl);
->  	/* 4GB boundary for iseries_hv_alloc and iseries_hv_map */
->  
->  	n = iommu_area_alloc(tbl->it_map, limit, start, npages, tbl->it_offset,
-> @@ -858,6 +857,7 @@ void *iommu_alloc_coherent(struct device *dev, struct iommu_table *tbl,
->  	unsigned int order;
->  	unsigned int nio_pages, io_order;
->  	struct page *page;
-> +	size_t size_io = size;
->  
->  	size = PAGE_ALIGN(size);
->  	order = get_order(size);
-> @@ -884,8 +884,9 @@ void *iommu_alloc_coherent(struct device *dev, struct iommu_table *tbl,
->  	memset(ret, 0, size);
->  
->  	/* Set up tces to cover the allocated range */
-> -	nio_pages = size >> tbl->it_page_shift;
-> -	io_order = get_iommu_order(size, tbl);
-> +	size_io = IOMMU_PAGE_ALIGN(size_io, tbl);
-> +	nio_pages = size_io >> tbl->it_page_shift;
-> +	io_order = get_iommu_order(size_io, tbl);
->  	mapping = iommu_alloc(dev, tbl, ret, nio_pages, DMA_BIDIRECTIONAL,
->  			      mask >> tbl->it_page_shift, io_order, 0);
->  	if (mapping == DMA_MAPPING_ERROR) {
-> @@ -900,11 +901,11 @@ void iommu_free_coherent(struct iommu_table *tbl, size_t size,
->  			 void *vaddr, dma_addr_t dma_handle)
->  {
->  	if (tbl) {
-> -		unsigned int nio_pages;
-> +		size_t size_io = IOMMU_PAGE_ALIGN(size, tbl);
-> +		unsigned int nio_pages = size_io >> tbl->it_page_shift;
->  
-> -		size = PAGE_ALIGN(size);
-> -		nio_pages = size >> tbl->it_page_shift;
->  		iommu_free(tbl, dma_handle, nio_pages);
+> +		} else if (pass == tbl->nr_pools + 1) {
+> +			/* Last resort: try largepool */
+> +			spin_unlock(&pool->lock);
+> +			pool = &tbl->large_pool;
+> +			spin_lock(&pool->lock);
+> +			pool->hint = pool->start;
+> +			pass++;
+> +			goto again;
 > +
 
-Unrelated new line.
+
+A nit: unnecessary new line.
 
 
->  		size = PAGE_ALIGN(size);
->  		free_pages((unsigned long)vaddr, get_order(size));
->  	}
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+
+
+
+>  		} else {
+>  			/* Give up */
+>  			spin_unlock_irqrestore(&(pool->lock), flags);
 > 
 
 -- 
