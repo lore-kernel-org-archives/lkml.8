@@ -2,130 +2,233 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,
+	DATE_IN_FUTURE_06_12,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D254C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71755C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1486C207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:45:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="an3zsBPE"
+	by mail.kernel.org (Postfix) with ESMTP id 52695207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgHUPpn (ORCPT
+        id S1727926AbgHUPqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:45:43 -0400
-Received: from mail-dm6nam11on2100.outbound.protection.outlook.com ([40.107.223.100]:20321
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        Fri, 21 Aug 2020 11:46:15 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10253 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725828AbgHUPpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:45:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WkhEEDTeZRT9QS1RyaQ49PUCrNv14g8ImZJyI1V9Wy3k/xEiEjHh8464FmYSt32SV9U4cMjEZGCyeDsS6J+EPLwkWDp89Onlsr/aE8uDVk/yDjX030mWxwek5XiTO2NhW1gJUDpAXwuj3bEXi7AJoZS+55hwZUmh43AGDpcVf/ePhajy2/xfuBSrzQXQKTqNvzBHCT4uZ1L9bAB2nAmZHPLyvydvmKMhOcwjBQ+jyEVM0jadvK3teywl5Ad5Nu5buDyWKMhDyQ2ykT9IiwRt/SxAdIl3CxambLEMqCXs6EDjG6EFj+n5r6gUGHCtAFbVhgi4rGrKlcEJ3FZpbwFRLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W0ejjOk18+N+7QCXAqYxlzLriK5fvHkZ5rMabb4wmRg=;
- b=oH2f+5eis21ZbqEygD1Ov+BzR2sPHnE5yPdoHbUOE7BNW+zbZ17QPkU4Bdc4atneLAhBKsk3b4iUf5S/PLHzPOxxqZpj6d9yOx4ph7jyrblRffUMfpS9XbvzzSrwFMUxb8HDtcykeY3qmfc0OWpZkyFrGz+c2actSrCZuDxhPXTN9LQWgML3Sn3p0IuQTvrqGEYzFr46HeVCG+v0B7yETMX7xeGDKr0OaJCzqO0WlxpraY8+pmdRx+5EKPhKE7MJVudw17A+xQ5jAZ4r1eiB9AApqLG7ZL4ls8kLta+u1uGvN4dQpa3GOP44lshWemnvK8gaAvA8s+14ij5N/giqag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W0ejjOk18+N+7QCXAqYxlzLriK5fvHkZ5rMabb4wmRg=;
- b=an3zsBPEkWXCcAk3F+164dKXV1himdhiV4IbycxDB2VmSFn+8O5+u3UvtS8UdguVC4A5uT6JjEe7mtvW2k0zM8F3dvXLvFSJpxPMh3pu0fPRGMzB0F2b0/iG4V6Z1ZCP5PqSIFWFLB1Grq6JA3ygFjMO9NT62OelNv+nv0j+6jY=
-Received: from SN6PR2101MB1056.namprd21.prod.outlook.com (2603:10b6:805:6::17)
- by SN4PR2101MB0879.namprd21.prod.outlook.com (2603:10b6:803:51::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.8; Fri, 21 Aug
- 2020 15:45:38 +0000
-Received: from SN6PR2101MB1056.namprd21.prod.outlook.com
- ([fe80::b8fd:8dac:8dbc:56fb]) by SN6PR2101MB1056.namprd21.prod.outlook.com
- ([fe80::b8fd:8dac:8dbc:56fb%7]) with mapi id 15.20.3326.002; Fri, 21 Aug 2020
- 15:45:38 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Vineeth Pillai <viremana@linux.microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] hv_utils: drain the timesync packets on
- onchannelcallback
-Thread-Topic: [PATCH v2] hv_utils: drain the timesync packets on
- onchannelcallback
-Thread-Index: AQHWd8/6M2ElbkS+5E62FizkrLVASqlCtEYA
-Date:   Fri, 21 Aug 2020 15:45:38 +0000
-Message-ID: <SN6PR2101MB10564E82C6F9628D8745FA84D75B0@SN6PR2101MB1056.namprd21.prod.outlook.com>
-References: <20200821152849.99517-1-viremana@linux.microsoft.com>
-In-Reply-To: <20200821152849.99517-1-viremana@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-08-21T15:45:36Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=641b905d-9337-4b4c-8000-7fbd81e843eb;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: linux.microsoft.com; dkim=none (message not signed)
- header.d=none;linux.microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8c0fea56-4fe6-452f-7c80-08d845e9407d
-x-ms-traffictypediagnostic: SN4PR2101MB0879:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN4PR2101MB0879B4AE5C1C50506B6503DBD75B0@SN4PR2101MB0879.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8W4BL4oIZnCG+rbs6jKBPCUcIjwOSIUAGf4Hj9+4CaXKW3vkGAcysF38Xx1rTlvfyBZf0wzynh+4xpEhUSNLXuFZCFJnYJQESTaEJms9GHchc1ypP2ty8wW9nV5Uaj6splE1oNNGkaA4JsbYGlxIBt70A+LeVZdoiPxLCKh2nt4/zQOdJUE9FOtmwXlJ5shF+weVFjyQ6KBetCKaEHmWEzkg/gjdMKTtZU4tjt0o7JB0XCjkbBqmFHuLVGKs/9L6tK441sF86Q+mC6PefJNHFdZcy+r1GWavSy3mexf2ASdYQVuSDWUgGfPPrRJjlFuE
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1056.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(396003)(376002)(366004)(39860400002)(110136005)(7696005)(316002)(478600001)(5660300002)(8676002)(8936002)(4744005)(71200400001)(54906003)(6506007)(86362001)(52536014)(55016002)(186003)(66446008)(82950400001)(83380400001)(64756008)(2906002)(33656002)(4326008)(9686003)(26005)(82960400001)(10290500003)(66946007)(66556008)(66476007)(8990500004)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: z3XOcgezIuWOribw3GO1AHu/IPlKLAD2gN2HRSCZ9p+AMplmXh2GEHocAbGkMapMblE5QeO+G+NaCZ74KjBv9TfSanL7BLvbj5y/ROUW01TRks5AJqZ0XIoqUX6NrSHjmUyJi5gFIQzafX4pnMbcdqkFwevMBTCO8NjIjqceduww+GHeCtkNvlWhEnuK+EKR/d46TrgX3kKeTrVux+e/+5ENFas0Dw0hf0toC2Kv6D8M88UXCPsn3GNSBgpEy1pwF/cWSpuDI86WC18AI5n2U3BdSQJVn0WYf74XxcnuVisutdLZjT2R0Mv5fqeSqY0SqYv3/b8cywVPHJ9RVn3dvPcxOqgMaaHvQ+H1jLxhGIQNdLFL1KYygXRm5GaEvdM7IpB5wIcuN8jbC5A9LRlrDRAdz1LCQkVG2XRQA8YPC8xt8CWMinsZrig6qKDkeoHG/lz8QTogoAGZdp+2aceda2U9jvOq/yaRlsH8WsBJDW0Cu2ISsRJSypI67Br6TDN1zv6WHtpdN2CPXRzlds+JfOD/NmDEH93oMu047FhFk7Pe/4rQeHRDRJ0LCJ0z2DhUXautpGOyxuKJU314PJOpCZH61JAhmtcadn4UCWNly1GTTYNfbOzTLOQTKepZCsY3HxOEIBSSDW7MeqQlcLWclg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1725828AbgHUPqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 11:46:11 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 54A0117A4900C0881F6B;
+        Fri, 21 Aug 2020 23:46:07 +0800 (CST)
+Received: from huawei.com (10.151.151.249) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Fri, 21 Aug 2020
+ 23:45:57 +0800
+From:   Dongjiu Geng <gengdongjiu@huawei.com>
+To:     <mingo@redhat.com>, <peterz@infradead.org>,
+        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
+        <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>,
+        <bsegall@google.com>, <mgorman@suse.de>,
+        <thara.gopinath@linaro.org>, <pauld@redhat.com>,
+        <vincent.donnefort@arm.com>, <rdunlap@infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: [PATCH v2] sched: Add trace for task wake up latency and leave running time
+Date:   Sat, 22 Aug 2020 00:08:14 +0000
+Message-ID: <20200822000814.33189-1-gengdongjiu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR2101MB1056.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c0fea56-4fe6-452f-7c80-08d845e9407d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2020 15:45:38.3388
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5oxP8KHwJknIyu3HiolT5WeMiL8JDmd+96BwbtbhaiGKbyD6mRWvWVw+Py4Oa4Xp747wADKUvzFVnxPLOA12+kj1BA2193Do+CxqAkhiRWQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR2101MB0879
+Content-Type: text/plain
+X-Originating-IP: [10.151.151.249]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: viremana@linux.microsoft.com Sent: Friday, August 21, 2020 8:29 AM
->=20
-> There could be instances where a system stall prevents the timesync
-> packaets to be consumed. And this might lead to more than one packet
-> pending in the ring buffer. Current code empties one packet per callback
-> and it might be a stale one. So drain all the packets from ring buffer
-> on each callback.
->=20
-> Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
-> ---
->=20
->  v2:
->     - s/pr_warn/pr_warn_once/
->=20
-> ---
->  drivers/hv/hv_util.c | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
+1) The perf event sched_switch is used to record scheduling tracks,
+   which consumes a large amount of CPU resources and disk space.
+   Therefore, a mechanism is required to record only the scheduling
+   delay greater than a certain threshold. This patch supports this
+   feature. For example, if the threshold is 10 ms, you can run the
+   following command to only record the scheduling track with the
+   scheduling delay greater than 10 ms.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+   echo 'time > 10000000' > /sys/kernel/debug/tracing/events/sched/sched_wakeup_latency/filter
+   echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wakeup_latency/enable
+
+2) Similarly, when tune performance, we usually want to know which
+   tasks are not running for a long time that is greater than a
+   certain threshold, Use the following commands can easily implement
+   it.
+
+   echo 'time > 10000000' > /sys/kernel/debug/tracing/events/sched/sched_leave_running_time/filter
+   echo 1 > /sys/kernel/debug/tracing/events/sched/sched_leave_running_time/enable
+
+Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
+---
+ include/linux/sched.h        |  7 ++++
+ include/trace/events/sched.h | 66 ++++++++++++++++++++++++++++++++++++
+ kernel/sched/core.c          | 20 +++++++++++
+ 3 files changed, 93 insertions(+)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 93ecd930efd3..edb622c40a90 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1324,6 +1324,13 @@ struct task_struct {
+ 	/* CPU-specific state of this task: */
+ 	struct thread_struct		thread;
+ 
++	/* Task wake up time stamp */
++	u64				ts_wakeup;
++	/* Previous task switch out time stamp */
++	u64				pre_ts_end;
++	/* Next task switch in time stamp */
++	u64				next_ts_start;
++	bool				wakeup_state;
+ 	/*
+ 	 * WARNING: on x86, 'thread_struct' contains a variable-sized
+ 	 * structure.  It *MUST* be at the end of 'task_struct'.
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index fec25b9cfbaf..e99c6d573a42 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -183,6 +183,72 @@ TRACE_EVENT(sched_switch,
+ 		__entry->next_comm, __entry->next_pid, __entry->next_prio)
+ );
+ 
++DECLARE_EVENT_CLASS(sched_latency_template,
++
++	TP_PROTO(bool preempt,
++		 struct task_struct *prev,
++		 struct task_struct *next,
++		 u64 time),
++
++	TP_ARGS(preempt, prev, next, time),
++
++	TP_STRUCT__entry(
++		__array(	char,	prev_comm,	TASK_COMM_LEN	)
++		__field(	pid_t,	prev_pid			)
++		__field(	int,	prev_prio			)
++		__field(	long,	prev_state			)
++		__array(	char,	next_comm,	TASK_COMM_LEN	)
++		__field(	pid_t,	next_pid			)
++		__field(	int,	next_prio			)
++		__field(	u64,	time				)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
++		__entry->prev_pid	= prev->pid;
++		__entry->prev_prio	= prev->prio;
++		__entry->prev_state	= __trace_sched_switch_state(preempt, prev);
++		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
++		__entry->next_pid	= next->pid;
++		__entry->next_prio	= next->prio;
++		__entry->time		= time;
++		/* XXX SCHED_DEADLINE */
++	),
++
++	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d passed time=%llu (ns)",
++		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
++
++		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
++		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
++				{ TASK_INTERRUPTIBLE, "S" },
++				{ TASK_UNINTERRUPTIBLE, "D" },
++				{ __TASK_STOPPED, "T" },
++				{ __TASK_TRACED, "t" },
++				{ EXIT_DEAD, "X" },
++				{ EXIT_ZOMBIE, "Z" },
++				{ TASK_PARKED, "P" },
++				{ TASK_DEAD, "I" }) :
++		  "R",
++
++		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
++		__entry->next_comm, __entry->next_pid, __entry->next_prio,
++		__entry->time)
++);
++
++DEFINE_EVENT(sched_latency_template, sched_wakeup_latency,
++	TP_PROTO(bool preempt,
++		 struct task_struct *prev,
++		 struct task_struct *next,
++		 u64 time),
++	TP_ARGS(preempt, prev, next, time));
++
++DEFINE_EVENT(sched_latency_template, sched_leave_running_time,
++	TP_PROTO(bool preempt,
++		 struct task_struct *prev,
++		 struct task_struct *next,
++		 u64 time),
++	TP_ARGS(preempt, prev, next, time));
++
+ /*
+  * Tracepoint for a task being migrated:
+  */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8471a0f7eb32..b5a1928dc948 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2464,6 +2464,8 @@ static void ttwu_do_wakeup(struct rq *rq, struct task_struct *p, int wake_flags,
+ {
+ 	check_preempt_curr(rq, p, wake_flags);
+ 	p->state = TASK_RUNNING;
++	p->ts_wakeup = local_clock();
++	p->wakeup_state = true;
+ 	trace_sched_wakeup(p);
+ 
+ #ifdef CONFIG_SMP
+@@ -2846,6 +2848,8 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 		success = 1;
+ 		trace_sched_waking(p);
+ 		p->state = TASK_RUNNING;
++		p->ts_wakeup = local_clock();
++		p->wakeup_state = true;
+ 		trace_sched_wakeup(p);
+ 		goto out;
+ 	}
+@@ -3299,6 +3303,9 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
+ 	plist_node_init(&p->pushable_tasks, MAX_PRIO);
+ 	RB_CLEAR_NODE(&p->pushable_dl_tasks);
+ #endif
++	p->ts_wakeup = 0;
++	p->wakeup_state = false;
++	p->pre_ts_end = p->next_ts_start = 0;
+ 	return 0;
+ }
+ 
+@@ -3355,6 +3362,8 @@ void wake_up_new_task(struct task_struct *p)
+ 	post_init_entity_util_avg(p);
+ 
+ 	activate_task(rq, p, ENQUEUE_NOCLOCK);
++	p->ts_wakeup = local_clock();
++	p->wakeup_state = true;
+ 	trace_sched_wakeup_new(p);
+ 	check_preempt_curr(rq, p, WF_FORK);
+ #ifdef CONFIG_SMP
+@@ -4521,8 +4530,19 @@ static void __sched notrace __schedule(bool preempt)
+ 
+ 		psi_sched_switch(prev, next, !task_on_rq_queued(prev));
+ 
++		next->next_ts_start = prev->pre_ts_end = local_clock();
++
+ 		trace_sched_switch(preempt, prev, next);
+ 
++		if (next->ts_wakeup && next->wakeup_state) {
++			trace_sched_wakeup_latency(preempt, prev, next,
++				next->next_ts_start - next->ts_wakeup);
++			next->wakeup_state = false;
++		}
++
++		trace_sched_leave_running_time(preempt, prev,
++			next, next->next_ts_start - next->pre_ts_end);
++
+ 		/* Also unlocks the rq: */
+ 		rq = context_switch(rq, prev, next, &rf);
+ 	} else {
+-- 
+2.17.1
+
