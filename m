@@ -2,116 +2,137 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0025DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EA0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3FC1206BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B65D2071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:25:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598066748;
+	bh=xlhQkGmI3gqs8Rn+xfQZmEbO8eg97WedoOV5mkmLgZg=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Qy8A9Jr+gTwdLJL5Nm793foWeF0S1jIu67tWHsoHZ3gvPW+R8ed/gTies2dlxQWKI
+	 l0bBRpCz/b+LXPOVyf+gSwSvA2rcIYXwTvTILYruH0gnu1Y5uCAekd3Qb57z1oC0Qp
+	 1LQ+88A+609Y+K08AiBqKtqf+kqynl0f4yH58tnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgHVDTr (ORCPT
+        id S1726884AbgHVDZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 23:19:47 -0400
-Received: from mga01.intel.com ([192.55.52.88]:34834 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbgHVDTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 23:19:46 -0400
-IronPort-SDR: 6/X+SwjcC5WduVc1s22KoT0eg/GZYgxICdFCkd0Jedvq4x+WfQExjny3VQgcV1Rra4/7wmqtSR
- QcQ7+MAgJ0KQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="173712482"
-X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
-   d="scan'208";a="173712482"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 20:19:46 -0700
-IronPort-SDR: hoTSc/bh+DjYbmyVgsOYlBx8a3lPw/XjD3OMG+dOJ3TjFGJEi7ydF/mUdX5nuplykBs9cqCchR
- a9RDPKHsGMeg==
-X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
-   d="scan'208";a="473265588"
-Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 20:19:45 -0700
-Date:   Fri, 21 Aug 2020 20:19:44 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] KVM: x86: introduce KVM_MEM_PCI_HOLE memory
-Message-ID: <20200822031944.GA4769@sjchrist-ice>
-References: <20200807141232.402895-1-vkuznets@redhat.com>
- <20200807141232.402895-3-vkuznets@redhat.com>
- <20200814023139.GB4845@linux.intel.com>
- <20200814102850-mutt-send-email-mst@kernel.org>
- <20200817163207.GC22407@linux.intel.com>
- <20200820214407-mutt-send-email-mst@kernel.org>
+        Fri, 21 Aug 2020 23:25:46 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33522 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgHVDZp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 23:25:45 -0400
+Received: by mail-il1-f193.google.com with SMTP id r13so3058395iln.0;
+        Fri, 21 Aug 2020 20:25:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=qSqyCkB8+mSR0rZwtTlPRNJYmpR982y/9gGfbXhSmyM=;
+        b=B4Ad5fd0AybT41vd0oQZqajw7EyzUnyIxhgsemWMw8ArsdZ2QJWaCnmdWu+7fZHw5O
+         LipRByrPI9ig5ypU8DyQRYw5Q/GcAfRmM3z0/aNJEXXw+CxKJT+vagB16A7M5JjrjI5p
+         IlPHSTdpFX3b3xN8Rtn7oCmvYC00/Qi3sl3vGsZX4gBGVw/+8xlQ0GSxUiBIf7S0GGhj
+         uBWJW2aBMK799KnDyo2GuK/g798p66pLNoEx79tw2SsY71hNowsPy9ZDj5ruxtZ4LyDA
+         XmpEjg8YzsrtPie5XVvAC9VRevGUxr3RG/4I9FV4wn2fr1qOimjgR4ci6aL6RYWJTqZj
+         nfxg==
+X-Gm-Message-State: AOAM5321t6yKeZJxo5Pju6QVWiV1BeLIBf9LJznrnDpc1RDE1++ryoTj
+        ek9zp4hmQs8WmH7HxC+YQg==
+X-Google-Smtp-Source: ABdhPJyrjLJDcHhwycd/UHxrLz/TRh62kzDFH4kLAmu7MDEwiPhBoLX59cpjoDc69tBscL/O8b2GrA==
+X-Received: by 2002:a92:1b85:: with SMTP id f5mr4699106ill.308.1598066744001;
+        Fri, 21 Aug 2020 20:25:44 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id a9sm2415256iol.9.2020.08.21.20.25.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 20:25:43 -0700 (PDT)
+Received: (nullmailer pid 2217434 invoked by uid 1000);
+        Sat, 22 Aug 2020 03:25:40 -0000
+Date:   Fri, 21 Aug 2020 21:25:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: [GIT PULL] Devicetree fixes for v5.9, take 2
+Message-ID: <20200822032540.GA2215775@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200820214407-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 09:46:25PM -0400, Michael S. Tsirkin wrote:
-> On Mon, Aug 17, 2020 at 09:32:07AM -0700, Sean Christopherson wrote:
-> > On Fri, Aug 14, 2020 at 10:30:14AM -0400, Michael S. Tsirkin wrote:
-> > > On Thu, Aug 13, 2020 at 07:31:39PM -0700, Sean Christopherson wrote:
-> > > > > @@ -2318,6 +2338,11 @@ static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
-> > > > >  	int r;
-> > > > >  	unsigned long addr;
-> > > > >  
-> > > > > +	if (unlikely(slot && (slot->flags & KVM_MEM_PCI_HOLE))) {
-> > > > > +		memset(data, 0xff, len);
-> > > > > +		return 0;
-> > > > > +	}
-> > > > 
-> > > > This feels wrong, shouldn't we be treating PCI_HOLE as MMIO?  Given that
-> > > > this is performance oriented, I would think we'd want to leverage the
-> > > > GPA from the VMCS instead of doing a full translation.
-> > > > 
-> > > > That brings up a potential alternative to adding a memslot flag.  What if
-> > > > we instead add a KVM_MMIO_BUS device similar to coalesced MMIO?  I think
-> > > > it'd be about the same amount of KVM code, and it would provide userspace
-> > > > with more flexibility, e.g. I assume it would allow handling even writes
-> > > > wholly within the kernel for certain ranges and/or use cases, and it'd
-> > > > allow stuffing a value other than 0xff (though I have no idea if there is
-> > > > a use case for this).
-> > > 
-> > > I still think down the road the way to go is to map
-> > > valid RO page full of 0xff to avoid exit on read.
-> > > I don't think a KVM_MMIO_BUS device will allow this, will it?
-> > 
-> > No, it would not, but adding KVM_MEM_PCI_HOLE doesn't get us any closer to
-> > solving that problem either.
-> 
-> I'm not sure why. Care to elaborate?
+Linus,
 
-The bulk of the code in this series would get thrown away if KVM_MEM_PCI_HOLE
-were reworked to be backed by a physical page.  If we really want a physical
-page, then let's use a physical page from the get-go.
+Please pull another set of DT fixes.
 
-I realize I suggested the specialized MMIO idea, but that's when I thought the
-primary motivation was memory, not performance.
+Rob
 
-> > What if we add a flag to allow routing all GFNs in a memslot to a single
-> > HVA?
-> 
-> An issue here would be this breaks attempts to use a hugepage for this.
 
-What are the performance numbers of hugepage vs. aggressively prefetching
-SPTEs?  Note, the unbounded prefetching from the original RFC won't fly,
-but prefetching 2mb ranges might be reasonable.
+The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
 
-Reraising an earlier unanswered question, is enlightening the guest an
-option for this use case?
+  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.9-2
+
+for you to fetch changes up to 5cd841d2676a702e5f79a8bacbfbae3bfc2411f7:
+
+  dt-bindings: vendor-prefixes: Remove trailing whitespace (2020-08-21 16:27:57 -0600)
+
+----------------------------------------------------------------
+Devicetree fixes for v5.9, take 2:
+
+- Restore range parsing error check
+
+- Workaround PCI range parsing with missing 'device_type' now required
+
+- Correct description of 'phy-connection-type'
+
+- Fix erroneous matching on 'snps,dw-pcie' by 'intel,lgm-pcie' schema
+
+- A couple of grammar and whitespace fixes
+
+- Update Shawn Guo's email
+
+----------------------------------------------------------------
+Colin Ian King (1):
+      of/address: check for invalid range.cpu_addr
+
+Fabio Estevam (1):
+      dt-bindings: Use Shawn Guo's preferred e-mail for i.MX bindings
+
+Geert Uytterhoeven (2):
+      dt: writing-schema: Miscellaneous grammar fixes
+      dt-bindings: vendor-prefixes: Remove trailing whitespace
+
+Madalin Bucur (1):
+      dt-bindings: net: correct description of phy-connection-type
+
+Marc Zyngier (1):
+      of: address: Work around missing device_type property in pcie nodes
+
+Rob Herring (1):
+      dt-bindings: PCI: intel,lgm-pcie: Fix matching on all snps,dw-pcie instances
+
+ .../devicetree/bindings/clock/imx23-clock.yaml      |  2 +-
+ .../devicetree/bindings/clock/imx28-clock.yaml      |  2 +-
+ .../devicetree/bindings/gpio/gpio-mxs.yaml          |  2 +-
+ Documentation/devicetree/bindings/i2c/i2c-mxs.yaml  |  2 +-
+ .../devicetree/bindings/mmc/fsl-imx-esdhc.yaml      |  2 +-
+ Documentation/devicetree/bindings/mmc/mxs-mmc.yaml  |  2 +-
+ .../bindings/net/ethernet-controller.yaml           |  3 ++-
+ .../devicetree/bindings/pci/intel-gw-pcie.yaml      |  8 ++++++++
+ Documentation/devicetree/bindings/pwm/mxs-pwm.yaml  |  2 +-
+ .../devicetree/bindings/spi/fsl-imx-cspi.yaml       |  2 +-
+ .../devicetree/bindings/thermal/imx-thermal.yaml    |  2 +-
+ .../devicetree/bindings/vendor-prefixes.yaml        |  2 +-
+ Documentation/devicetree/writing-schema.rst         |  4 ++--
+ drivers/of/address.c                                | 21 ++++++++++++++++++++-
+ 14 files changed, 42 insertions(+), 14 deletions(-)
