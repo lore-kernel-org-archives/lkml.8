@@ -2,115 +2,89 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC77C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7E2C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5132078D
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CD62078D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="E04jO1Xa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="WEBOQpoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbgHVEs2 (ORCPT
+        id S1726502AbgHVEuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 00:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbgHVEs1 (ORCPT
+        Sat, 22 Aug 2020 00:50:18 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:11649 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbgHVEuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 00:48:27 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3762C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 21:48:26 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id b66so1349552wmb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 21:48:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8EpfXuOfl5Lc4X03a/2NthXamDtm3ZTxJlpaERf1P2M=;
-        b=E04jO1XaLwTEoC5F7ckK/3aQt1ozC0Fcmt/b8GJiWlnGHUdQBoV46zHaqX8lhyuA6t
-         61+o8lWe+YunryUin42fuZz646fxNWnJy0TAxA/h6js4kvJ1SF9qesCf7SuIuuoB8HGl
-         AVSzLN/Orw0rBpLQpmsY/cxB9ued9UHWTnUR4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8EpfXuOfl5Lc4X03a/2NthXamDtm3ZTxJlpaERf1P2M=;
-        b=to+NpobgG81gjda5CGzDzbUAnz/4IK3dO7UzaZx0gCGYCRQeigxv4i2rQydboyhtB7
-         Rbh3hjyDsjiShHkNVTdUepVIA/b5OVQcV/ifvx4LhS49DXIFyda7iNeFeO/Ix34MDxsa
-         MglVkpBeN2nVoVxRRCOd7Ea8PnAj8wzDy9jva06z0Tlf30/H+BkvFgcod2FOosYrDjZl
-         W8QU/w13wgvpuloWuW2P2rBtbGOxtkPpGrZ98Sw6bkYlSiHYog+yL12wGLpcbcdZPxNs
-         2hDn/EGXpRXQeK4oaO4QGQ8Z2Z4ciVuJfcC0t49iy6k4gGRPaJtsZQcbZ1oRnGS8sLCy
-         RiUw==
-X-Gm-Message-State: AOAM531zTCaZfYcRuCaDMeESjSxgckwC+Go2pr4ZGJATPxzaqeedKqYB
-        yKN4cysmV+PCN2IPGS7pgFVB3gXZ4q2RRS33gfGPmQ==
-X-Google-Smtp-Source: ABdhPJw7xCkJoXDkG4cyA0Eab/W2Nf7VdU8EymJP8iNVywtv1/Z8GU515lX7IbfzvyLf86zSlVJwlLuih6meBwQ3rx0=
-X-Received: by 2002:a7b:c10d:: with SMTP id w13mr6535376wmi.2.1598071704261;
- Fri, 21 Aug 2020 21:48:24 -0700 (PDT)
+        Sat, 22 Aug 2020 00:50:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598071815;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=7jcMal0RXGcmBo3zYahrDP9hAL12aQjPjkXNusGqm2g=;
+        b=WEBOQpoXY4w/YsRh/1uCZQ1TZp0zSN3qc4BTFtOEhqzHfKdEmQYcc8RXd/eedD5Odm
+        H+q6vwlfX60M6RoCQKVRp8m12qx+7gWmoxey04JOG7f/NjkgDkqtuuBGCL+RKvy0bipZ
+        iGb5lpD1lrFdM0xuwsrFa2l7WSlyVDXiJBSFaC+la7E9zThX4G1SkG3+KXiNerDFBVIL
+        nKOob0h2fjk3/gW64/qdytZz4039ATLneyQ+lDjLe9+x/sObxyQRj/a6NhgnC1fLR/Uc
+        8zZYzEB6MD2xFKK8MJPA8jXOOyO/Bdqahi/qdezxL+S9Kl4MzXRjFhoV/6maBxLX44Up
+        6zLA==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xm0dNS3IdRAZAL+p6A=="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id 002e9aw7M4nRLT1
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sat, 22 Aug 2020 06:49:27 +0200 (CEST)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>
+Subject: Re: [PATCH v33 01/12] Linux Random Number Generator
+Date:   Sat, 22 Aug 2020 06:49:27 +0200
+Message-ID: <5635338.lOV4Wx5bFT@positron.chronox.de>
+In-Reply-To: <202008220336.BQnuDlaK%lkp@intel.com>
+References: <7836152.NyiUUSuA9g@positron.chronox.de> <202008220336.BQnuDlaK%lkp@intel.com>
 MIME-Version: 1.0
-References: <20200819034231.20726-1-mark-pk.tsai@mediatek.com> <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
-In-Reply-To: <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Sat, 22 Aug 2020 13:48:13 +0900
-Message-ID: <CAFr9PXni=BmDY6_iuJPnYb3d6XB1VrxE6WP3YtSBxT6NciZMMA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] irqchip: irq-mst: Add MStar interrupt controller support
-To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Cc:     Marc Zyngier <maz@kernel.org>, alix.wu@mediatek.com,
-        DTML <devicetree@vger.kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yj.chiang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark-PK,
+Am Freitag, 21. August 2020, 21:42:17 CEST schrieb kernel test robot:
 
-On Thu, 20 Aug 2020 at 00:38, Mark-PK Tsai <mark-pk.tsai@mediatek.com> wrote:
->
-> Add MStar interrupt controller support using hierarchy irq
-> domain.
->
-> Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Hi,
+> 
+>    hppa-linux-ld: lib/random32.o: in function `prandom_u32':
+> >> (.text+0x318): undefined reference to `__tracepoint_prandom_u32'
+> >> hppa-linux-ld: (.text+0x31c): undefined reference to
+> >> `__tracepoint_prandom_u32' hppa-linux-ld:
+> >> lib/random32.o:(__jump_table+0x8): undefined reference to
+> >> `__tracepoint_prandom_u32'
 
-I've integrated this version into my MStar/SigmaStar tree and tested
-on an MStar MSC313E
-based board (BreadBee) and I'm happy to say it seems to be working:
+This is caused by the fact that the LRNG code does not include trace/events/
+random.h. However, a patch to lib/random32.c now requires this file to be 
+included and creating a tracepoint. I.e. lib/random32.c code now relies on 
+some other code to create the necessary hook.
 
-$ cat /proc/interrupts
-          CPU0
-17:       1219     GIC-0  29 Level     arch_timer
-18:          0     GIC-0  30 Level     arch_timer
-21:          0     GIC-0  42 Level     arm-pmu
-24:          0  mst-intc  44 Level     1f002400.rtc
-30:          0  mst-intc   2 Level     1f006000.wdt
-31:          0  mst-intc   0 Level     1f006040.timer
-32:          0  mst-intc   1 Level     1f006080.timer
-33:          0  mst-intc  12 Level     1f0060c0.timer
-34:          0  mst-intc  40 Level     1f200400.bdma
-35:       3977  mst-intc  41 Level     1f200400.bdma
-37:        196  mst-intc  34 Level     ttyS0
-40:          0  mst-intc  30 Level     soc:usbphy@0
-<snip>
+I have added the include and will provide it with the next release although I 
+am not sure lib/random32.c should rely on some other code to create its 
+dependencies.
 
-So here's my tested by:
+Ciao
+Stephan
 
-Tested-by: Daniel Palmer <daniel@thingy.jp>
 
-I don't think your series contained an update to MAINTAINERS.
-If/when you add this could you add my address above as a reviewer so
-I'm in the loop if anyone makes changes to this going forward?
-
-Thanks,
-
-Daniel
