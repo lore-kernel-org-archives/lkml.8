@@ -2,233 +2,88 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F00B5C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 08:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D012C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 08:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA63E20825
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 08:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5C320825
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 08:20:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="poKvZtY+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgHVIUJ (ORCPT
+        id S1727024AbgHVIUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 04:20:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10307 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725877AbgHVIUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 04:20:08 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E9B837DAAECB4A8D3726;
-        Sat, 22 Aug 2020 16:20:04 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Sat, 22 Aug 2020
- 16:19:55 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
-        <bfields@fieldses.org>, <chuck.lever@oracle.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <arnd@arndb.de>
-CC:     <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linmiaohe@huawei.com>
-Subject: [PATCH] sunrpc: Convert to use the preferred fallthrough macro
-Date:   Sat, 22 Aug 2020 04:18:49 -0400
-Message-ID: <20200822081849.41907-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Sat, 22 Aug 2020 04:20:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgHVIUs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 04:20:48 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97228C061573;
+        Sat, 22 Aug 2020 01:20:48 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id q1so1810565pjd.1;
+        Sat, 22 Aug 2020 01:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tcUFMfCVC9uRonruJhKq5CJkq15cD+sb6a8YuyisFTg=;
+        b=poKvZtY+iUmeR6J2SALMSuIGQnbmyETzuLIoti5vhJ7voGBjdZYXc7lXMIBfUt1YK4
+         BA1jT75UesDLBq8n1LoTP1au0nD4veNThjg2fj91Esp7FlRj0HifR8zxCF13xC0tdDLJ
+         RZxJf8hux9XFYVvw2APbivJzRaQMdUhzvX1FEPBA1d9vQBlrCO0sAQmJm9baeedHvns5
+         aEj1ywsoahOB4G0SHTk1kBxPiO+ujZGl9SatmGWXKgJcltXWvJ0Tn2yXJY5iKic0pvzl
+         eBiHy16g4XLHGxpJe8yb5RAr1K6AlHrgaXiUIKreW7MFmaJQ1NZAAaclP9dl0Ndtv2uI
+         0Kjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tcUFMfCVC9uRonruJhKq5CJkq15cD+sb6a8YuyisFTg=;
+        b=lwzOwczJDMisPiz7VcCkQ/keQle63NrWf9uhfIcezNGI3R+bBKZ8HqHua+X2skcb+U
+         04AUhT8uTvAB+7y11cEhuUrTm5+YnKo9O2kfsY69x0Bu/m8WeX2BpzrEPZL7XtaLQUSQ
+         sBp8gexVEpuxOMneca2D3XlahR4QCcT87EtEKIJhknpfNx7dcqHmfjfdhxmjPTZrlnfV
+         wRSngE8NFK0e4O6n+/7+VcTqL1w5/fchRNAbVU9evifCOh8+XEgmF2mKhR4YGwgfn4Dl
+         VOv5Uw1Dv+3esDy7PubuIQTvQpJeHpyDNd9fRIwOUf1Tai3m8BPjiDFhl10CUuunR0df
+         86Qw==
+X-Gm-Message-State: AOAM5337AJrYvz/S8yotd1Sgu3CCM0gDZOtOq+ZnLjPBT1JpbrmhOMs0
+        IkUP68TgRHawQQ4plNqg7xZZX8tDIeb66ybKZTooxupF8kQhlA==
+X-Google-Smtp-Source: ABdhPJwI/pKVJMO6ZczrtwKfg7OQcEo1CCZy7LQforpcGnrAxL0obcnO4w6p2wZ1bBqrDoN3GGnUMZiSugBD1lz1wow=
+X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr5648971pjb.129.1598084447750;
+ Sat, 22 Aug 2020 01:20:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+References: <20200821181433.17653-1-kenneth.t.chan@gmail.com> <20200822072949.GR3544863@nataraja>
+In-Reply-To: <20200822072949.GR3544863@nataraja>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 22 Aug 2020 11:20:31 +0300
+Message-ID: <CAHp75Vd+0EsP7g_Q9Q29YjdQaz23s0ach_rCXPZLCG2uoik=Ew@mail.gmail.com>
+Subject: Re: [PATCH 0/9] platform/x86: panasonic-laptop: add optical drive,
+ brightness and battery charging threshold
+To:     Harald Welte <laforge@gnumonks.org>
+Cc:     Kenneth Chan <kenneth.t.chan@gmail.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the uses of fallthrough comments to fallthrough macro.
+On Sat, Aug 22, 2020 at 10:53 AM Harald Welte <laforge@gnumonks.org> wrote:
+>
+> Dear Keneth and Linux kernel developers,
+>
+> as I have discontinued maintenance of the panasonic-laptop driver (and
+> recently sent a related MAINTAINERS update to that fact), I would like
+> to suggest Kenneth as the new maintainer for this driver.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- net/sunrpc/auth_gss/gss_krb5_wrap.c |  2 +-
- net/sunrpc/clnt.c                   | 22 +++++++++++-----------
- net/sunrpc/xprt.c                   |  2 +-
- net/sunrpc/xprtrdma/verbs.c         |  2 +-
- net/sunrpc/xprtsock.c               |  8 ++++----
- 5 files changed, 18 insertions(+), 18 deletions(-)
+Kenneth may send a corresponding MAINTAINERS update which you may Acknowledge.
 
-diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
-index 90b8329fef82..8b300b74a722 100644
---- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
-@@ -137,7 +137,7 @@ gss_krb5_make_confounder(char *p, u32 conflen)
- 	switch (conflen) {
- 	case 16:
- 		*q++ = i++;
--		/* fall through */
-+		fallthrough;
- 	case 8:
- 		*q++ = i++;
- 		break;
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index a91d1cdad9d7..62e0b6c1e8cf 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1702,7 +1702,7 @@ call_reserveresult(struct rpc_task *task)
- 	switch (status) {
- 	case -ENOMEM:
- 		rpc_delay(task, HZ >> 2);
--		/* fall through */
-+		fallthrough;
- 	case -EAGAIN:	/* woken up; retry */
- 		task->tk_action = call_retry_reserve;
- 		return;
-@@ -1759,13 +1759,13 @@ call_refreshresult(struct rpc_task *task)
- 		/* Use rate-limiting and a max number of retries if refresh
- 		 * had status 0 but failed to update the cred.
- 		 */
--		/* fall through */
-+		fallthrough;
- 	case -ETIMEDOUT:
- 		rpc_delay(task, 3*HZ);
--		/* fall through */
-+		fallthrough;
- 	case -EAGAIN:
- 		status = -EACCES;
--		/* fall through */
-+		fallthrough;
- 	case -EKEYEXPIRED:
- 		if (!task->tk_cred_retry)
- 			break;
-@@ -2132,7 +2132,7 @@ call_connect_status(struct rpc_task *task)
- 			rpc_force_rebind(clnt);
- 			goto out_retry;
- 		}
--		/* fall through */
-+		fallthrough;
- 	case -ECONNRESET:
- 	case -ECONNABORTED:
- 	case -ENETDOWN:
-@@ -2146,7 +2146,7 @@ call_connect_status(struct rpc_task *task)
- 			break;
- 		/* retry with existing socket, after a delay */
- 		rpc_delay(task, 3*HZ);
--		/* fall through */
-+		fallthrough;
- 	case -EADDRINUSE:
- 	case -ENOTCONN:
- 	case -EAGAIN:
-@@ -2228,7 +2228,7 @@ call_transmit_status(struct rpc_task *task)
- 		 */
- 	case -ENOBUFS:
- 		rpc_delay(task, HZ>>2);
--		/* fall through */
-+		fallthrough;
- 	case -EBADSLT:
- 	case -EAGAIN:
- 		task->tk_action = call_transmit;
-@@ -2247,7 +2247,7 @@ call_transmit_status(struct rpc_task *task)
- 			rpc_call_rpcerror(task, task->tk_status);
- 			return;
- 		}
--		/* fall through */
-+		fallthrough;
- 	case -ECONNRESET:
- 	case -ECONNABORTED:
- 	case -EADDRINUSE:
-@@ -2313,7 +2313,7 @@ call_bc_transmit_status(struct rpc_task *task)
- 		break;
- 	case -ENOBUFS:
- 		rpc_delay(task, HZ>>2);
--		/* fall through */
-+		fallthrough;
- 	case -EBADSLT:
- 	case -EAGAIN:
- 		task->tk_status = 0;
-@@ -2380,7 +2380,7 @@ call_status(struct rpc_task *task)
- 		 * were a timeout.
- 		 */
- 		rpc_delay(task, 3*HZ);
--		/* fall through */
-+		fallthrough;
- 	case -ETIMEDOUT:
- 		break;
- 	case -ECONNREFUSED:
-@@ -2391,7 +2391,7 @@ call_status(struct rpc_task *task)
- 		break;
- 	case -EADDRINUSE:
- 		rpc_delay(task, 3*HZ);
--		/* fall through */
-+		fallthrough;
- 	case -EPIPE:
- 	case -EAGAIN:
- 		break;
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index 6ba9d5842629..5a8e47bbfb9f 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1623,7 +1623,7 @@ void xprt_alloc_slot(struct rpc_xprt *xprt, struct rpc_task *task)
- 	case -EAGAIN:
- 		xprt_add_backlog(xprt, task);
- 		dprintk("RPC:       waiting for request slot\n");
--		/* fall through */
-+		fallthrough;
- 	default:
- 		task->tk_status = -EAGAIN;
- 	}
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 75c646743df3..3f86d039875c 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -268,7 +268,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
- 	case RDMA_CM_EVENT_DEVICE_REMOVAL:
- 		pr_info("rpcrdma: removing device %s for %pISpc\n",
- 			ep->re_id->device->name, sap);
--		/* fall through */
-+		fallthrough;
- 	case RDMA_CM_EVENT_ADDR_CHANGE:
- 		ep->re_connect_status = -ENODEV;
- 		goto disconnected;
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index c57aef829403..554e1bb4c1c7 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -885,7 +885,7 @@ static int xs_local_send_request(struct rpc_rqst *req)
- 	default:
- 		dprintk("RPC:       sendmsg returned unrecognized error %d\n",
- 			-status);
--		/* fall through */
-+		fallthrough;
- 	case -EPIPE:
- 		xs_close(xprt);
- 		status = -ENOTCONN;
-@@ -1436,7 +1436,7 @@ static void xs_tcp_state_change(struct sock *sk)
- 		xprt->connect_cookie++;
- 		clear_bit(XPRT_CONNECTED, &xprt->state);
- 		xs_run_error_worker(transport, XPRT_SOCK_WAKE_DISCONNECT);
--		/* fall through */
-+		fallthrough;
- 	case TCP_CLOSING:
- 		/*
- 		 * If the server closed down the connection, make sure that
-@@ -2202,7 +2202,7 @@ static int xs_tcp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
- 	switch (ret) {
- 	case 0:
- 		xs_set_srcport(transport, sock);
--		/* fall through */
-+		fallthrough;
- 	case -EINPROGRESS:
- 		/* SYN_SENT! */
- 		if (xprt->reestablish_timeout < XS_TCP_INIT_REEST_TO)
-@@ -2255,7 +2255,7 @@ static void xs_tcp_setup_socket(struct work_struct *work)
- 	default:
- 		printk("%s: connect returned unhandled error %d\n",
- 			__func__, status);
--		/* fall through */
-+		fallthrough;
- 	case -EADDRNOTAVAIL:
- 		/* We're probably in TIME_WAIT. Get rid of existing socket,
- 		 * and retry
+
 -- 
-2.19.1
-
+With Best Regards,
+Andy Shevchenko
