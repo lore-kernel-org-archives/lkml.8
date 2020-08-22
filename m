@@ -2,145 +2,164 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6391C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 17:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E560C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 17:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE12520724
+	by mail.kernel.org (Postfix) with ESMTP id DDE73207DA
 	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 17:29:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CyzzVdrL"
+	dkim=pass (2048-bit key) header.d=iram.es header.i=@iram.es header.b="YM7Tx+o3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgHVRYo (ORCPT
+        id S1728368AbgHVR0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 13:24:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbgHVRYl (ORCPT
+        Sat, 22 Aug 2020 13:26:41 -0400
+Received: from outbound1mad.lav.puc.rediris.es ([130.206.19.138]:39830 "EHLO
+        mx01.puc.rediris.es" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727856AbgHVR0j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 13:24:41 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDCC5C061574
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 10:24:40 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id u6so2822381ybf.1
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 10:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ybp0wdgwE7m9j8jixPB61E8yqwGFeg6+ew/47T57D0o=;
-        b=CyzzVdrLb4+Di2Q82/n6W8bIEwv+gyrNgjc3gNatd0WH9dSMwLzeoHOQcaP2ZulTRH
-         cgQlF7UrUmPBGQpFj6JM0zhCOe5UyX1rFc/wM6kXOPH4nayVKOfAhD85ilcnH/H259nq
-         Q7Vn9tCeavcxyuzl48XZ+PUVb4b6ZMHKeu7tVctIoQ0405BH5xO419VnQZoOFpTX4H4U
-         aKiMAvA9E0+3sRIH1CNG7ZGQy+sJPzT5c7Qtc+I8E/JYNwXl6/Gc7QOkkWe9XU1g0nFp
-         LLXImfLVVFSO3AVTVcoGQymM8TIkiil6x7l6//J2gaHIOTbi3By0uzZBg2uKQfYJAQTD
-         sZ3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ybp0wdgwE7m9j8jixPB61E8yqwGFeg6+ew/47T57D0o=;
-        b=dTPGQ3JM0DSy4C568UM8edauPtGZGBLgPeeZWXS0vYZyEXYrTlmcxXJMRDDgpN8QUc
-         CRgDY+zj0Ds4685WLKwKmKZRAd7AE52EvAfgjXCaCtNG1UfFVvDIjeYxe67jGIKgpLGt
-         jwfk2e+gMYD4pL5aVAycTSrRqy08y24WFUGxCRzcw5BWKGuuCa31VvItzfCeD3CZBj2/
-         eR51YsYRPsgYfmPeFWYqcWiA2dETglAY7wLxiqtgcThFwad0ynOZc3K6MXsa1X6tAHZA
-         ZMdw4L17DUK4Q2NhD2CzbWjm/74yky360SOopn/S8jKMSy9cjKI5YOgTxLs6EvmGKsKU
-         CzBw==
-X-Gm-Message-State: AOAM5333oEcro8VTyOdnDO6eOvSW4oVx5IVJxC1UpJlWIjN0r6s4SrHo
-        7lHQWj5f1kFcLowWSlJManLWXDefErd7QFl9rjNidA==
-X-Google-Smtp-Source: ABdhPJyW7KS0bCwQao0Y7XCz3TxaSaQqRZlcUsVf1D3hf/HKOKjnycp7x/ig9SIyHskner0ztnwekd1Hf7I4HNWizhU=
-X-Received: by 2002:a25:ae43:: with SMTP id g3mr11157254ybe.459.1598117078768;
- Sat, 22 Aug 2020 10:24:38 -0700 (PDT)
+        Sat, 22 Aug 2020 13:26:39 -0400
+Received: from mta-out01.sim.rediris.es (mta-out01.sim.rediris.es [130.206.24.43])
+        by mx01.puc.rediris.es  with ESMTP id 07MHPaoF008452-07MHPaoH008452
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Sat, 22 Aug 2020 19:25:36 +0200
+Received: from mta-out01.sim.rediris.es (localhost.localdomain [127.0.0.1])
+        by mta-out01.sim.rediris.es (Postfix) with ESMTPS id 31DE3303A2C0;
+        Sat, 22 Aug 2020 19:25:36 +0200 (CEST)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mta-out01.sim.rediris.es (Postfix) with ESMTP id 1EBFE303A2C1;
+        Sat, 22 Aug 2020 19:25:36 +0200 (CEST)
+X-Amavis-Modified: Mail body modified (using disclaimer) -
+        mta-out01.sim.rediris.es
+Received: from mta-out01.sim.rediris.es ([127.0.0.1])
+        by localhost (mta-out01.sim.rediris.es [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Ti7X22fnqMYW; Sat, 22 Aug 2020 19:25:35 +0200 (CEST)
+Received: from lt-gp.iram.es (32.236.223.87.dynamic.jazztel.es [87.223.236.32])
+        by mta-out01.sim.rediris.es (Postfix) with ESMTPA id DFFD9303A2C0;
+        Sat, 22 Aug 2020 19:25:34 +0200 (CEST)
+Date:   Sat, 22 Aug 2020 19:25:24 +0200
+From:   Gabriel Paubert <paubert@iram.es>
+To:     Guohua Zhong <zhongguohua1@huawei.com>
+Cc:     christophe.leroy@csgroup.eu, nixiaoming@huawei.com,
+        wangle6@huawei.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        paulus@samba.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: =?utf-8?B?UmXvvJpSZQ==?= =?utf-8?Q?=3A?= [PATCH] powerpc: Fix a
+ bug in __div64_32 if divisor is zero
+Message-ID: <20200822172524.GA5451@lt-gp.iram.es>
+References: <8dedfcce-04e0-ec7d-6af5-ec1d6d8602b0@csgroup.eu>
+ <20200822165433.58228-1-zhongguohua1@huawei.com>
 MIME-Version: 1.0
-References: <CANN689HMLC4uKCjztqfZsDO7pPbsvViOQQ_HDWWYU4=8cZbKvQ@mail.gmail.com>
- <20200822163909.GR1362448@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200822163909.GR1362448@hirez.programming.kicks-ass.net>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Sat, 22 Aug 2020 10:24:25 -0700
-Message-ID: <CANN689HSUgvJX0bH=V56YfOJ4CYKLo2KA-9GP-wghhc9td=dUw@mail.gmail.com>
-Subject: Re: Lockdep question regarding two-level locks
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200822165433.58228-1-zhongguohua1@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=iram.es; s=DKIM; c=relaxed/relaxed;
+ h=date:from:to:cc:subject:message-id:references:mime-version:content-type;
+ bh=x/y1wL+17mpmDeW+i59qqK9LJ4zkB0EVEHsZvWq7Xuc=;
+ b=YM7Tx+o3yeRzZ24WpGQ68/Dn0Vooij0NNhm/+FJzbgwQy6T9vdYp+Yh+oz4fGx0EK4c1Kus4JhBr
+        rAYk/lgyba3RtpryBaOxbfc7ErnTw3mwwFtfPdQ8JJcwdeydZOAC9Xf3FjQlbvOsStvKiQQNw79T
+        B7xaevQgDJ74uTknT8d/ysRwB5bgMxhaKHJDMqEHfKWKVw86u7BjuerZAfHQC7GhqNnRmuHtfgv0
+        8HWNNJpEOOqYpA0mx42xBUrfCIaoOvIX9M2RIHDG/YH69PVW0l1S5oBH/zFl4k81OWEsijloIl8o
+        6hn1+2iB2HP/mWD64Irwzofrj084a7Xj+utXdQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 9:39 AM <peterz@infradead.org> wrote:
-> On Sat, Aug 22, 2020 at 09:04:09AM -0700, Michel Lespinasse wrote:
-> > Hi,
-> >
-> > I am wondering about how to describe the following situation to lockdep:
-> >
-> > - lock A would be something that's already implemented (a mutex or
-> > possibly a spinlock).
-> > - lock B is a range lock, which I would be writing the code for
-> > (including lockdep hooks). I do not expect lockdep to know about range
-> > locking, but I want it to treat lock B like any other and detect lock
-> > ordering issues related to it.
-> > - lock A protects a number of structures, including lock B's list of
-> > locked ranges, but other structures as well.
-> > - lock A is intended to be held for only short periods of time, lock
-> > B's ranges might be held for longer.
->
-> That's the 'normal' state for blocking locks, no?
->
-> See how both struct mutex and struct rw_semaphore have internal locks.
+On Sun, Aug 23, 2020 at 12:54:33AM +0800, Guohua Zhong wrote:
+> >In generic version in lib/math/div64.c, there is no checking of 'base' 
+> >either.
+> >Do we really want to add this check in the powerpc version only ?
+> 
+> >The only user of __div64_32() is do_div() in 
+> >include/asm-generic/div64.h. Wouldn't it be better to do the check there ?
+> 
+> >Christophe
+> 
+> Yet, I have noticed that there is no checking of 'base' in these functions.
+> But I am not sure how to check is better.As we know that the result is 
+> undefined when divisor is zero. It maybe good to print error and dump stack.
+>  Let the process to know that the divisor is zero by sending SIGFPE. 
+> 
+> diff --git a/include/asm-generic/div64.h b/include/asm-generic/div64.h
+> index a3b98c86f077..161c656ee3ee 100644
+> --- a/include/asm-generic/div64.h
+> +++ b/include/asm-generic/div64.h
+> @@ -43,6 +43,11 @@
+>  # define do_div(n,base) ({                                     \
+>         uint32_t __base = (base);                               \
+>         uint32_t __rem;                                         \
+> + if (unlikely(base == 0)) {                          \
+> +         pr_err("do_div base=%d\n",base);            \
+> +         dump_stack();                               \
+> +         force_sig(SIGFPE);                          \
+> + }      
+> 
 
-Right (note that I already have an implementation of my range lock
-('B') along these lines, with a low-level lock ('A') tucked into it
-and all the expected lockdep support).
+I suspect this will generate a strong reaction. SIGFPE is for user space
+instruction attempting a division by zero. A division by zero in the
+kernel is a kernel bug, period, and you don't want to kill a user
+process for this reason.
 
-> > Usage would be along the following lines:
-> >
-> > acquire:
-> > A_lock();
-> > // might access data protected by A here
-> > bool blocked = B_lock(range); // must be called under lock A; will
-> > release lock A if blocking on B.
-> > // might access data protected by A here (especially to re-validate in
-> > case A was released while blocking on B...)
-> > A_unlock()
-> >
-> > release:
-> > A_lock()
-> > // might access data protected by A here
-> > A_B_unlock(range); // must be called under lock A; releases locks A and B.
->
-> up_{read,write}() / mutex_unlock() release 'B', the actual lock, early,
-> and then take 'A', the internal lock, to actually implement the release.
->
-> That way lockdep doesn't see the B-A order :-)
->
-> > There might also be other places that need to lock A for a short time,
-> > either inside and outside of lock B.
->
-> Any cases that aren't covered by the current implementation of rwsems ?
+If it happens in an interrupt, the context of the kernel may not even be
+related to the current process.
 
-My issue is that I have other data, unrelated to B, which frequently
-needs to be accessed or updated at just the same points where we are
-acquiring or releasing B.
+Many other architectures (x86 for example) already trigger an exception
+on a division by zero but the handler will find that the exception
+happened in kernel context and generate an Oops, not raise a signal in a
+(possibly innocent) userland process.
 
-(to go into use cases: that data would be the vma rbtree and per-MM
-statistics; one may want to find a free gap between vmas before range
-locking it, or take vmas in and out of the rbtree as we acquire or
-release a lock on the corresponding address range, etc...)
+	Gabriel
 
-As the accesses to that data tend to naturally align with the places
-where we take or release the B lock, it is tempting to expose A to the
-caller so that A can protect additional data not directly related to
-B. It seems like changing B's internal lock into a public one which
-the caller would take and release explicitly around B calls would be
-straighforward, but it causes issues as lockdep doesn't understand
-that construct...
+> Then it also needto add this checking in functions of
+> div64_s64(), div64_u64(), div64_u64_rem(), div_s64_rem and div_u64_rem () 
+> in include/linux/math64.h
+> 
+> + if (unlikely(divisor == 0)) {
+> +         pr_err("%s divisor=0\n",__func__);
+> +         dump_stack();
+> +         force_sig(SIGFPE);
+> + }
+> 
+> Guohua
+> 
+> >>  	lwz	r5,0(r3)	# get the dividend into r5/r6
+> >>  	lwz	r6,4(r3)
+> >>  	cmplw	r5,r4
+> >>@@ -52,6 +55,7 @@ __div64_32:
+> >>  4:	stw	r7,0(r3)	# return the quotient in *r3
+> >>  	stw	r8,4(r3)
+> >>  	mr	r3,r6		# return the remainder in r3
+> >>+5:					# return if divisor r4 is zero
+> >>  	blr
+> >>  
+> >>  /*
+> >>diff --git a/arch/powerpc/lib/div64.S b/arch/powerpc/lib/div64.S
+> >>index 3d5426e7dcc4..1cc9bcabf678 100644
+> >>--- a/arch/powerpc/lib/div64.S
+> >>+++ b/arch/powerpc/lib/div64.S
+> >>@@ -13,6 +13,9 @@
+> >>  #include <asm/processor.h>
+> >>  
+> >>  _GLOBAL(__div64_32)
+> >>+	li	r9,0
+> >>+	cmplw	r4,r9	# check if divisor r4 is zero
+> >>+	beq	5f			# jump to label 5 if r4(divisor) is zero
+> >>  	lwz	r5,0(r3)	# get the dividend into r5/r6
+> >>  	lwz	r6,4(r3)
+> >>  	cmplw	r5,r4
+> >>@@ -52,4 +55,5 @@ _GLOBAL(__div64_32)
+> >>  4:	stw	r7,0(r3)	# return the quotient in *r3
+> >>  	stw	r8,4(r3)
+> >>  	mr	r3,r6		# return the remainder in r3
+> >>+5:					# return if divisor r4 is zero
+> >>  	blr
+> >>
+> 
+ 
 
--- 
-Michel "Walken" Lespinasse
-A program is never fully debugged until the last user dies.
