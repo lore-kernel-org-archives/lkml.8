@@ -2,278 +2,508 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA5BC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 00:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C782EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 01:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 143272067C
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 00:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E63F206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 01:00:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O0MPFknx"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="H9Be0ClH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgHVA7v (ORCPT
+        id S1726923AbgHVBA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 20:59:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgHVA7s (ORCPT
+        Fri, 21 Aug 2020 21:00:27 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:42286 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbgHVBAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 20:59:48 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2766BC061574
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 17:59:48 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id u20so1909495pfn.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 17:59:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wMClZMLlnIVxwC0OX/YJqw846WceChHdY8h9nnyWNwk=;
-        b=O0MPFknxyxwnjaYELL5AsKcISclqIjVHZwyIqMV6CvXBwfdiKyrijCO1D+s9z07YMv
-         carMmTfSiC0QBlztpwDj6OOj0b5NCgh48JCoFg1F1f/yjyZQas5G4KDIdvfF7loBaFxJ
-         SNESxXM6R/HSm1Cmxxu92NCT9RcGj7UjfM/d8Lrh0GH1cj2SMAg6SKO9UDRmCV6Y3PPb
-         MFM7HRCc3M3s7LDXrF3c4PKr+uGGhbdfXz7i5iG2HvxPnQ52O6ErDLEpPHN3pkxdGaoU
-         P4hoiNcKoQzDEq5LEJRCEJaOa96dedqLy8moHFqzhmPrJr0OgM6NDpWvRt+0y+JuFtvv
-         iJew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wMClZMLlnIVxwC0OX/YJqw846WceChHdY8h9nnyWNwk=;
-        b=pVYsTPJqC6pYl4eBBfnnsWtpc4yhnSeEAi09dn3TTvDiZUC8sY7ZOOgfNuHz3Mq2UV
-         ZXQde9TDoRWxAzdR+778Rmu5kdLLB6wphq+wQjSRWWEVLiUZ9TgrNS2P5L8YqPYDpZTo
-         yHzQML+CF8HPAieA0fv8n4+lDqEfyUNUioS/9PefXsBDKN84gZqh778IqI3fpbhmVy+x
-         1SZIAEk0IbmW5EYSXujbMWLOf2TE0btiPUXrHzLHxR5t8FLtYzfFo4lu3M+Sg7G5JZ1E
-         iPHB7YUh8qQ/vieKIX4ha7BbJFT7muXQsg91bF+gb3aOquNVcTYnsLvNUfc4eLTLzxpD
-         n5jA==
-X-Gm-Message-State: AOAM5334OwLSGLQI1gXK1Rrd582MB7pH61FAl+W7UIe8m3xD3qYUO2XF
-        EDkUDEDliUr2K9WDuyeV32h2r83HV5ILji5YGUD51A==
-X-Google-Smtp-Source: ABdhPJzzypM5an0tesYLO2xDp0D/NDrENlucCRy53aLYG/ywXPSsris885MK2sKtvx61gmxWlfhgKIMAE8gm2AGGYac=
-X-Received: by 2002:a63:7d8:: with SMTP id 207mr4183460pgh.263.1598057985426;
- Fri, 21 Aug 2020 17:59:45 -0700 (PDT)
+        Fri, 21 Aug 2020 21:00:25 -0400
+Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id EBB5720B4908;
+        Fri, 21 Aug 2020 18:00:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EBB5720B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598058023;
+        bh=qUxIXuxoXvcaFuTpJdW33NdQub7TT2xabQizBhSkHsg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=H9Be0ClHZ2TS3Z1mC0P1iEb8IOgKkgGK5dBJi0NwDw+DucksTES0+f5FG4YTa6aEW
+         kJwoZtkdwT9nKNx6iygl8F2ii0xKZOIIWfsHiqT3cqs5EAehDvgB8Qqubvbojqh9hE
+         NdRgAsX7zadU0GUQb23PFPwKQJZiomh5z0VZg/W0=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com
+Cc:     tyhicks@linux.microsoft.com, tusharsu@linux.microsoft.com,
+        sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] SELinux: Measure state and hash of policy using IMA
+Date:   Fri, 21 Aug 2020 18:00:18 -0700
+Message-Id: <20200822010018.19453-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200821190159.1033740-1-masahiroy@kernel.org> <20200821190159.1033740-8-masahiroy@kernel.org>
-In-Reply-To: <20200821190159.1033740-8-masahiroy@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 21 Aug 2020 17:59:33 -0700
-Message-ID: <CAKwvOdmR=VeR0=LUgXCwnpK9LH90_itzv627wBEK4hCroBEW9Q@mail.gmail.com>
-Subject: Re: [PATCH v2 7/9] gen_compile_commands: support *.o, *.a,
- modules.order in positional argument
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Tom Roeder <tmroeder@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 12:02 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> This script currently searches the specified directory for .cmd files.
-> One drawback is it may contain stale .cmd files after you rebuild the
-> kernel several times without 'make clean'.
->
-> This commit supports *.o, *.a, and modules.order as positional
-> parameters. If such files are given, they are parsed to collect
-> associated .cmd files. I added a generator helper for each of them.
->
-> This feature is useful to get the list of active .cmd files from the
-> last build, and will be used by the next commit to wire up the
-> compile_commands.json rule to the Makefile.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
-> Changes in v2:
->   - Separate the file parser into generator functions
->   - Use 'obj' instead of 'object' because 'object' is a built-in function
->   - I think using 'file' is OK because it is not a built-in function in Python3
->     (https://docs.python.org/3/library/functions.html)
->     Anyway, the variable 'file' is no longer used in this version
->   - Keep the previous work-flow to allow to search the given directory
->
->  scripts/gen_compile_commands.py | 100 ++++++++++++++++++++++++++++++--
->  1 file changed, 96 insertions(+), 4 deletions(-)
->
-> diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
-> index 6dec7e2c4098..65859e6044b5 100755
-> --- a/scripts/gen_compile_commands.py
-> +++ b/scripts/gen_compile_commands.py
-> @@ -12,6 +12,7 @@ import json
->  import logging
->  import os
->  import re
-> +import subprocess
->
->  _DEFAULT_OUTPUT = 'compile_commands.json'
->  _DEFAULT_LOG_LEVEL = 'WARNING'
-> @@ -32,8 +33,9 @@ def parse_arguments():
->      Returns:
->          log_level: A logging level to filter log output.
->          directory: The work directory where the objects were built
-> +        ar: Command used for parsing .a archives
->          output: Where to write the compile-commands JSON file.
-> -        paths: The list of directories to handle to find .cmd files
-> +        paths: The list of files/directories to handle to find .cmd files
->      """
->      usage = 'Creates a compile_commands.json database from kernel .cmd files'
->      parser = argparse.ArgumentParser(description=usage)
-> @@ -53,12 +55,21 @@ def parse_arguments():
->      parser.add_argument('--log_level', choices=_VALID_LOG_LEVELS,
->                          default=_DEFAULT_LOG_LEVEL, help=log_level_help)
->
-> +    ar_help = 'command used for parsing .a archives'
-> +    parser.add_argument('-a', '--ar', type=str, default='ar', help=ar_help)
+Critical data structures of security modules are currently not measured.
+Therefore an attestation service, for instance, would not be able to
+attest whether the security modules are always operating with the policies
+and configuration that the system administrator had setup. The policies
+and configuration for the security modules could be tampered with by
+rogue user mode agents or modified through some inadvertent actions on
+the system. Measuring such critical data would enable an attestation
+service to reliably assess the security configuration of the system.
 
-If there's a default, doesn't that mean it's no longer required? I
-think it should be required.  For a clang specific tool, we'd prefer
-the default to be llvm-ar anyways.
+SELinux configuration and policy are some of the critical data for this
+security module that needs to be measured. This measurement can be used
+by an attestation service, for instance, to verify if the configuration
+and policies have been setup correctly and that they haven't been tampered
+with at runtime.
 
-> +
-> +    paths_help = ('directories to search or files to parse '
-> +                  '(files should be *.o, *.a, or modules.order). '
-> +                  'If nothing is specified, the current directory is searched')
-> +    parser.add_argument('paths', type=str, nargs='*', help=paths_help)
-> +
->      args = parser.parse_args()
->
->      return (args.log_level,
->              os.path.abspath(args.directory),
->              args.output,
-> -            [args.directory])
-> +            args.ar,
-> +            args.paths if len(args.paths) > 0 else [args.directory])
->
->
->  def cmdfiles_in_dir(directory):
-> @@ -81,6 +92,73 @@ def cmdfiles_in_dir(directory):
->                  yield os.path.join(dirpath, filename)
->
->
-> +def to_cmdfile(path):
-> +    """Return the path of .cmd file used for the given build artifact
-> +
-> +    Args:
-> +        Path: file path
-> +
-> +    Returns:
-> +        The path to .cmd file
-> +    """
-> +    dir, base = os.path.split(path)
-> +    return os.path.join(dir, '.' + base + '.cmd')
-> +
-> +
-> +def cmdfiles_for_o(obj):
-> +    """Generate the iterator of .cmd files associated with the object
-> +
-> +    Yield the .cmd file used to build the given object
-> +
-> +    Args:
-> +        obj: The object path
-> +
-> +    Yields:
-> +        The path to .cmd file
-> +    """
-> +    yield to_cmdfile(obj)
-> +
-> +
-> +def cmdfiles_for_a(archive, ar):
-> +    """Generate the iterator of .cmd files associated with the archive.
-> +
-> +    Parse the given archive, and yield every .cmd file used to build it.
-> +
-> +    Args:
-> +        archive: The archive to parse
-> +
-> +    Yields:
-> +        The path to every .cmd file found
-> +    """
-> +    for obj in subprocess.check_output([ar, '-t', archive]).decode().split():
-> +        yield to_cmdfile(obj)
-> +
-> +
-> +def cmdfiles_for_modorder(modorder):
-> +    """Generate the iterator of .cmd files associated with the modules.order.
-> +
-> +    Parse the given modules.order, and yield every .cmd file used to build the
-> +    contained modules.
-> +
-> +    Args:
-> +        modorder: The modules.order file to parse
-> +
-> +    Yields:
-> +        The path to every .cmd file found
-> +    """
-> +    with open(modorder) as f:
-> +        for line in f:
-> +            ko = line.rstrip()
-> +            base, ext = os.path.splitext(ko)
+Measure SELinux configuration, policy capabilities settings, and the hash
+of the loaded policy by calling the IMA hook ima_measure_critical_data().
+Since the size of the loaded policy can be quite large, hash of the policy
+is measured instead of the entire policy to avoid bloating the IMA log.
 
-below in main() you check the file extension with endswith().  Would
-it be good to be consistent between the two?
+Enable early boot measurement for SELinux in IMA since SELinux
+initializes its state and policy before custom IMA policy is loaded.
 
-> +            if ext != '.ko':
-> +                sys.exit('{}: module path must end with .ko'.format(ko))
-> +            mod = base + '.mod'
-> +           # The first line of *.mod lists the objects that compose the module.
-> +            with open(mod) as m:
-> +                for obj in m.readline().split():
-> +                    yield to_cmdfile(obj)
-> +
-> +
->  def process_line(root_directory, command_prefix, file_path):
->      """Extracts information from a .cmd line and creates an entry from it.
->
-> @@ -116,7 +194,7 @@ def process_line(root_directory, command_prefix, file_path):
->
->  def main():
->      """Walks through the directory and finds and parses .cmd files."""
-> -    log_level, directory, output, paths = parse_arguments()
-> +    log_level, directory, output, ar, paths = parse_arguments()
->
->      level = getattr(logging, log_level)
->      logging.basicConfig(format='%(levelname)s: %(message)s', level=level)
-> @@ -126,7 +204,21 @@ def main():
->      compile_commands = []
->
->      for path in paths:
-> -        cmdfiles = cmdfiles_in_dir(path)
-> +        # If 'path' is a directory, handle all .cmd files under it.
-> +        # Otherwise, handle .cmd files associated with the file.
-> +        # Most of built-in objects are linked via archives (built-in.a or lib.a)
-> +        # but some are linked to vmlinux directly.
-> +        # Modules are lis
+Sample measurement of SELinux state and hash of the policy:
 
-^ was this comment cut off?
+10 e32e...5ac3 ima-buf sha256:86e8...4594 selinux-state-1595389364:287899386 696e697469616c697a65643d313b656e61626c65643d313b656e666f7263696e673d303b636865636b72657170726f743d313b6e6574776f726b5f706565725f636f6e74726f6c733d313b6f70656e5f7065726d733d313b657874656e6465645f736f636b65745f636c6173733d313b616c776179735f636865636b5f6e6574776f726b3d303b6367726f75705f7365636c6162656c3d313b6e6e705f6e6f737569645f7472616e736974696f6e3d313b67656e66735f7365636c6162656c5f73796d6c696e6b733d303
+10 9e81...0857 ima-buf sha256:4941...68fc selinux-policy-hash-1597335667:462051628 8d1d...1834
 
+To verify the measurement check the following:
 
-> +        if os.path.isdir(path):
-> +            cmdfiles = cmdfiles_in_dir(path)
-> +        elif path.endswith('.o'):
-> +            cmdfiles = cmdfiles_for_o(path)
-> +        elif path.endswith('.a'):
-> +            cmdfiles = cmdfiles_for_a(path, ar)
-> +        elif path.endswith('modules.order'):
-> +            cmdfiles = cmdfiles_for_modorder(path)
-> +        else:
-> +            sys.exit('{}: unknown file type'.format(path))
->
->          for cmdfile in cmdfiles:
->              with open(cmdfile, 'rt') as f:
-> --
-> 2.25.1
->
+Execute the following command to extract the measured data
+from the IMA log for SELinux configuration (selinux-state).
 
+  grep -m 1 "selinux-state" /sys/kernel/security/integrity/ima/ascii_runtime_measurements | cut -d' ' -f 6 | xxd -r -p
 
---
-Thanks,
-~Nick Desaulniers
+The output should be the list of key-value pairs. For example,
+ initialized=1;enabled=1;enforcing=0;checkreqprot=1;network_peer_controls=1;open_perms=1;extended_socket_class=1;always_check_network=0;cgroup_seclabel=1;nnp_nosuid_transition=1;genfs_seclabel_symlinks=0;
+
+To verify the measured data with the current SELinux state:
+
+ => enabled should be set to 1 if /sys/fs/selinux folder exists,
+    0 otherwise
+
+For other entries, compare the integer value in the files
+ => /sys/fs/selinux/enforce
+ => /sys/fs/selinux/checkreqprot
+And, each of the policy capabilities files under
+ => /sys/fs/selinux/policy_capabilities
+
+For selinux-policy-hash, the hash of SELinux policy is included
+in the IMA log entry.
+
+To verify the measured data with the current SELinux policy run
+the following commands and verify the output hash values match.
+
+  sha256sum /sys/fs/selinux/policy | cut -d' ' -f 1
+
+  grep -m 1 "selinux-policy-hash" /sys/kernel/security/integrity/ima/ascii_runtime_measurements | cut -d' ' -f 6
+
+This patch is dependent on the following patch series:
+	https://patchwork.kernel.org/patch/11709527/
+	https://patchwork.kernel.org/patch/11730193/
+	https://patchwork.kernel.org/patch/11730757/
+
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Reported-by: kernel test robot <lkp@intel.com> # error: implicit declaration of function 'vfree'
+Reported-by: kernel test robot <lkp@intel.com> # error: implicit declaration of function 'crypto_alloc_shash'
+Reported-by: kernel test robot <lkp@intel.com> # sparse: symbol 'security_read_selinux_policy' was not declared. Should it be static?
+---
+ security/integrity/ima/Kconfig      |   3 +-
+ security/selinux/Makefile           |   2 +
+ security/selinux/hooks.c            |   1 +
+ security/selinux/include/security.h |  15 +++
+ security/selinux/measure.c          | 149 ++++++++++++++++++++++++++++
+ security/selinux/selinuxfs.c        |   3 +
+ security/selinux/ss/services.c      |  71 +++++++++++--
+ 7 files changed, 233 insertions(+), 11 deletions(-)
+ create mode 100644 security/selinux/measure.c
+
+diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+index bc2adab7bae2..e4fb1761d64a 100644
+--- a/security/integrity/ima/Kconfig
++++ b/security/integrity/ima/Kconfig
+@@ -324,8 +324,7 @@ config IMA_MEASURE_ASYMMETRIC_KEYS
+ 
+ config IMA_QUEUE_EARLY_BOOT_DATA
+ 	bool
+-	depends on IMA_MEASURE_ASYMMETRIC_KEYS
+-	depends on SYSTEM_TRUSTED_KEYRING
++	depends on SECURITY_SELINUX || (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING)
+ 	default y
+ 
+ config IMA_SECURE_AND_OR_TRUSTED_BOOT
+diff --git a/security/selinux/Makefile b/security/selinux/Makefile
+index 4d8e0e8adf0b..83d512116341 100644
+--- a/security/selinux/Makefile
++++ b/security/selinux/Makefile
+@@ -16,6 +16,8 @@ selinux-$(CONFIG_NETLABEL) += netlabel.o
+ 
+ selinux-$(CONFIG_SECURITY_INFINIBAND) += ibpkey.o
+ 
++selinux-$(CONFIG_IMA) += measure.o
++
+ ccflags-y := -I$(srctree)/security/selinux -I$(srctree)/security/selinux/include
+ 
+ $(addprefix $(obj)/,$(selinux-y)): $(obj)/flask.h
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index efa6108b1ce9..5521dfc1900b 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -7394,6 +7394,7 @@ int selinux_disable(struct selinux_state *state)
+ 	}
+ 
+ 	selinux_mark_disabled(state);
++	selinux_measure_state(state);
+ 
+ 	pr_info("SELinux:  Disabled at runtime.\n");
+ 
+diff --git a/security/selinux/include/security.h b/security/selinux/include/security.h
+index b0e02cfe3ce1..77f42d9b544b 100644
+--- a/security/selinux/include/security.h
++++ b/security/selinux/include/security.h
+@@ -222,16 +222,31 @@ static inline bool selinux_policycap_genfs_seclabel_symlinks(void)
+ 	return state->policycap[POLICYDB_CAPABILITY_GENFS_SECLABEL_SYMLINKS];
+ }
+ 
++static inline bool selinux_checkreqprot(const struct selinux_state *state)
++{
++	return READ_ONCE(state->checkreqprot);
++}
++
+ int security_mls_enabled(struct selinux_state *state);
+ int security_load_policy(struct selinux_state *state,
+ 			 void *data, size_t len);
+ int security_read_policy(struct selinux_state *state,
+ 			 void **data, size_t *len);
++int security_read_policy_kernel(struct selinux_state *state,
++				void **data, size_t *len);
+ size_t security_policydb_len(struct selinux_state *state);
+ 
+ int security_policycap_supported(struct selinux_state *state,
+ 				 unsigned int req_cap);
+ 
++#ifdef CONFIG_IMA
++extern void selinux_measure_state(struct selinux_state *selinux_state);
++#else
++static inline void selinux_measure_state(struct selinux_state *selinux_state)
++{
++}
++#endif
++
+ #define SEL_VEC_MAX 32
+ struct av_decision {
+ 	u32 allowed;
+diff --git a/security/selinux/measure.c b/security/selinux/measure.c
+new file mode 100644
+index 000000000000..33594c92f35c
+--- /dev/null
++++ b/security/selinux/measure.c
+@@ -0,0 +1,149 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Measure SELinux state using IMA subsystem.
++ */
++#include <linux/vmalloc.h>
++#include <linux/ktime.h>
++#include <linux/ima.h>
++#include "security.h"
++
++/*
++ * This function creates an unique name by appending the timestamp to
++ * the given string. This string is passed as "event name" to the IMA
++ * hook to measure the given SELinux data.
++ *
++ * The data provided by SELinux to the IMA subsystem for measuring may have
++ * already been measured (for instance the same state existed earlier).
++ * But for SELinux the current data represents a state change and hence
++ * needs to be measured again. To enable this, pass an unique "Event Name"
++ * to the IMA hook so that IMA subsystem will always measure the given data.
++ *
++ * For example,
++ * At time T0 SELinux data to be measured is "foo". IMA measures it.
++ * At time T1 the data is changed to "bar". IMA measures it.
++ * At time T2 the data is changed to "foo" again. IMA will not measure it
++ * (since it was already measured) unless the event name, for instance,
++ * is different in this call.
++ */
++static char *selinux_event_name(const char *name_prefix)
++{
++	char *event_name = NULL;
++	struct timespec64 cur_time;
++
++	ktime_get_real_ts64(&cur_time);
++	event_name = kasprintf(GFP_KERNEL, "%s-%lld:%09ld", name_prefix,
++			       cur_time.tv_sec, cur_time.tv_nsec);
++	if (!event_name) {
++		pr_err("%s: event name not allocated.\n", __func__);
++		return NULL;
++	}
++
++	return event_name;
++}
++
++static int read_selinux_state(char **state_str, int *state_str_len,
++			      struct selinux_state *state)
++{
++	char *buf, *str_fmt = "%s=%d;";
++	int i, buf_len, curr;
++	bool initialized = selinux_initialized(state);
++	bool enabled = !selinux_disabled(state);
++	bool enforcing = enforcing_enabled(state);
++	bool checkreqprot = selinux_checkreqprot(state);
++
++	buf_len = snprintf(NULL, 0, str_fmt, "initialized", initialized);
++	buf_len += snprintf(NULL, 0, str_fmt, "enabled", enabled);
++	buf_len += snprintf(NULL, 0, str_fmt, "enforcing", enforcing);
++	buf_len += snprintf(NULL, 0, str_fmt, "checkreqprot", checkreqprot);
++
++	for (i = 0; i < __POLICYDB_CAPABILITY_MAX; i++) {
++		buf_len += snprintf(NULL, 0, str_fmt,
++				    selinux_policycap_names[i],
++				    state->policycap[i]);
++	}
++	++buf_len;
++
++	buf = kzalloc(buf_len, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	curr = snprintf(buf, buf_len, str_fmt,
++			"initialized", initialized);
++	curr += snprintf((buf + curr), (buf_len - curr), str_fmt,
++			 "enabled", enabled);
++	curr += snprintf((buf + curr), (buf_len - curr), str_fmt,
++			 "enforcing", enforcing);
++	curr += snprintf((buf + curr), (buf_len - curr), str_fmt,
++			 "checkreqprot", checkreqprot);
++
++	for (i = 0; i < __POLICYDB_CAPABILITY_MAX; i++) {
++		curr += snprintf((buf + curr), (buf_len - curr), str_fmt,
++				 selinux_policycap_names[i],
++				 state->policycap[i]);
++	}
++
++	*state_str = buf;
++	*state_str_len = curr;
++
++	return 0;
++}
++
++void selinux_measure_state(struct selinux_state *state)
++{
++	void *policy = NULL;
++	char *state_event_name = NULL;
++	char *policy_event_name = NULL;
++	char *state_str = NULL;
++	size_t policy_len;
++	int state_str_len, rc = 0;
++	bool initialized = selinux_initialized(state);
++
++	rc = read_selinux_state(&state_str, &state_str_len, state);
++	if (rc) {
++		pr_err("%s: Failed to read selinux state.\n", __func__);
++		return;
++	}
++
++	/*
++	 * Get an unique string for measuring the current SELinux state.
++	 */
++	state_event_name = selinux_event_name("selinux-state");
++	if (!state_event_name) {
++		pr_err("%s: Event name for state not allocated.\n",
++		       __func__);
++		rc = -ENOMEM;
++		goto out;
++	}
++
++	rc = ima_measure_critical_data(state_event_name, "selinux",
++				       state_str, state_str_len, false);
++	if (rc)
++		goto out;
++
++	/*
++	 * Measure SELinux policy only after initialization is completed.
++	 */
++	if (!initialized)
++		goto out;
++
++	rc = security_read_policy_kernel(state, &policy, &policy_len);
++	if (rc)
++		goto out;
++
++	policy_event_name = selinux_event_name("selinux-policy-hash");
++	if (!policy_event_name) {
++		pr_err("%s: Event name for policy not allocated.\n",
++		       __func__);
++		rc = -ENOMEM;
++		goto out;
++	}
++
++	rc = ima_measure_critical_data(policy_event_name, "selinux",
++				       policy, policy_len, true);
++
++out:
++	kfree(state_event_name);
++	kfree(policy_event_name);
++	kfree(state_str);
++	vfree(policy);
++}
+diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
+index 4781314c2510..6d46eaef5c92 100644
+--- a/security/selinux/selinuxfs.c
++++ b/security/selinux/selinuxfs.c
+@@ -173,6 +173,7 @@ static ssize_t sel_write_enforce(struct file *file, const char __user *buf,
+ 			from_kuid(&init_user_ns, audit_get_loginuid(current)),
+ 			audit_get_sessionid(current));
+ 		enforcing_set(state, new_value);
++		selinux_measure_state(state);
+ 		if (new_value)
+ 			avc_ss_reset(state->avc, 0);
+ 		selnl_notify_setenforce(new_value);
+@@ -678,6 +679,8 @@ static ssize_t sel_write_checkreqprot(struct file *file, const char __user *buf,
+ 
+ 	fsi->state->checkreqprot = new_value ? 1 : 0;
+ 	length = count;
++
++	selinux_measure_state(fsi->state);
+ out:
+ 	kfree(page);
+ 	return length;
+diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+index ef0afd878bfc..3978c804c361 100644
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -2182,6 +2182,7 @@ int security_load_policy(struct selinux_state *state, void *data, size_t len)
+ 		selinux_status_update_policyload(state, seqno);
+ 		selinux_netlbl_cache_invalidate();
+ 		selinux_xfrm_notify_policyload();
++		selinux_measure_state(state);
+ 		return 0;
+ 	}
+ 
+@@ -2270,6 +2271,7 @@ int security_load_policy(struct selinux_state *state, void *data, size_t len)
+ 	selinux_status_update_policyload(state, seqno);
+ 	selinux_netlbl_cache_invalidate();
+ 	selinux_xfrm_notify_policyload();
++	selinux_measure_state(state);
+ 
+ 	rc = 0;
+ 	goto out;
+@@ -2941,6 +2943,7 @@ int security_set_bools(struct selinux_state *state, u32 len, int *values)
+ 		selnl_notify_policyload(seqno);
+ 		selinux_status_update_policyload(state, seqno);
+ 		selinux_xfrm_notify_policyload();
++		selinux_measure_state(state);
+ 	}
+ 	return rc;
+ }
+@@ -3720,14 +3723,23 @@ int security_netlbl_sid_to_secattr(struct selinux_state *state,
+ }
+ #endif /* CONFIG_NETLABEL */
+ 
++static int security_read_policy_len(struct selinux_state *state, size_t *len)
++{
++	if (!selinux_initialized(state))
++		return -EINVAL;
++
++	*len = security_policydb_len(state);
++	return 0;
++}
++
+ /**
+- * security_read_policy - read the policy.
++ * security_read_selinux_policy - read the policy.
+  * @data: binary policy data
+  * @len: length of data in bytes
+  *
+  */
+-int security_read_policy(struct selinux_state *state,
+-			 void **data, size_t *len)
++static int security_read_selinux_policy(struct selinux_state *state,
++					void **data, size_t *len)
+ {
+ 	struct policydb *policydb = &state->ss->policydb;
+ 	int rc;
+@@ -3736,12 +3748,6 @@ int security_read_policy(struct selinux_state *state,
+ 	if (!selinux_initialized(state))
+ 		return -EINVAL;
+ 
+-	*len = security_policydb_len(state);
+-
+-	*data = vmalloc_user(*len);
+-	if (!*data)
+-		return -ENOMEM;
+-
+ 	fp.data = *data;
+ 	fp.len = *len;
+ 
+@@ -3754,5 +3760,52 @@ int security_read_policy(struct selinux_state *state,
+ 
+ 	*len = (unsigned long)fp.data - (unsigned long)*data;
+ 	return 0;
++}
++
++/**
++ * security_read_policy - read the policy.
++ * @data: binary policy data
++ * @len: length of data in bytes
++ *
++ */
++int security_read_policy(struct selinux_state *state,
++			 void **data, size_t *len)
++{
++	int rc;
++
++	rc = security_read_policy_len(state, len);
++	if (rc)
++		return rc;
++
++	*data = vmalloc_user(*len);
++	if (!*data)
++		return -ENOMEM;
++
++	return security_read_selinux_policy(state, data, len);
++}
++
++/**
++ * security_read_policy_kernel - read the policy.
++ * @data: binary policy data
++ * @len: length of data in bytes
++ *
++ * Allocates kernel memory for reading SELinux policy.
++ * This function is for internal use only and should not
++ * be used for returning data to user space
++ *
++ */
++int security_read_policy_kernel(struct selinux_state *state,
++				void **data, size_t *len)
++{
++	int rc;
++
++	rc = security_read_policy_len(state, len);
++	if (rc)
++		return rc;
++
++	*data = vmalloc(*len);
++	if (!*data)
++		return -ENOMEM;
+ 
++	return security_read_selinux_policy(state, data, len);
+ }
+-- 
+2.28.0
+
