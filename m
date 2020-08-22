@@ -2,227 +2,166 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69889C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 974AE20720
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4213420720
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:03:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="LFH7dq46"
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="VKB+t35U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgHVDCA (ORCPT
+        id S1726839AbgHVDDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 23:02:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47600 "EHLO
+        Fri, 21 Aug 2020 23:03:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgHVDB5 (ORCPT
+        with ESMTP id S1726387AbgHVDDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 23:01:57 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DBB7C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 20:01:57 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id s16so2652213qtn.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 20:01:57 -0700 (PDT)
+        Fri, 21 Aug 2020 23:03:30 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52A88C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 20:03:29 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id bs17so3206928edb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 20:03:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:subject:message-id:mime-version:content-disposition;
-        bh=FWsoHq1nutPT8JV7CuIelWuDNWJa/Pzi1Ayj6/nx3mc=;
-        b=LFH7dq46xjHzIlv0mUXdLTUOI4My3LQ20jPxNWGFQHoHzkHyShe7+BBbv/GExR4FX0
-         wSYfjgzqV+LOGjDq3rlIoGZIi7jJ+osMrDOmFWMvpki8pRFWi1lLRtAXkhTGzWsyokcf
-         mH8/O1L/A2gn/2s9YlgWPmD1egxRn4IsllzfI=
+        d=kylehuey.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0RW8fmxrc/Tuk54ldRQbS//KunL/5Kwenn69hnksJ9o=;
+        b=VKB+t35UvT7NJfgovMpHu4a0D0ezU7EolNcMzfHUYvht8IPJa70MXR7BQ+a+aNrarq
+         o7ZS/gwlVHMkyQbEKxLu4bw0xejiJbIMYyFfVGsvnZ4tKEOAwvQrQN0Xg0TRctriHIAO
+         XCWLeqnBd7ENRqDKwy1Z9qvsoZSa8fzqgnkO5QThaYKl7xqqCr+h0jzVpKFpwu/heCDd
+         Caa3v32319FhmjdB3hiSuRfYKUJkzxORgi6mZmzJd+zqzuTnooZeONLUOhhR6Eyw0zsv
+         HfSAS+AuSI39Nh24hKJ8zi6RVFDonfSLez/H+1ADMfRuqjvCImQW95PeOQDIDEyeogQm
+         YyKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=FWsoHq1nutPT8JV7CuIelWuDNWJa/Pzi1Ayj6/nx3mc=;
-        b=WYGPwZqclah3Qv3Bn0Dfoqo9YEKjYf/JM4Bo6LHpckQFCr7M43dk4NuP23tUtIQRJI
-         s1q/JHU8P8p0qhJVM/6UcIfEFRVN0mGLakBrYj2UlyzI9N5XG4j83CcSopSZtfbli4To
-         yEcTOY9eqwejFjPTu35Oq53UvSiMLky79s/G5XMH11oVs0ExphsKJMeA8I2GYy8WhtJO
-         pfrgrRdAH3c/ErCjMrvD7+cE+EX/RqzAXZVrSzA7rhEGtcKq5kd2qJumWB2pRJQM598I
-         AnrojqpmGabF9eWOayHH8RCaS29MlIf3O/wI/ONsvEn1xOZ24dyXhFphErhOwQuyBzGn
-         eOtA==
-X-Gm-Message-State: AOAM5339zIC/BcBaOSoTr/k6yvXWpUc0NGAyQpzGAmXkWGGSvxEAqAZW
-        qypfsafXHoKkvJOH9QaWKuLzuA==
-X-Google-Smtp-Source: ABdhPJzW3MctcP4ZxF8JVoFH4r1WyAMfsvqAXrwMchAY1m2eiyB6ilE3ZqFRyN7RfENIteJ8iIsswg==
-X-Received: by 2002:ac8:6d0f:: with SMTP id o15mr5274095qtt.121.1598065316418;
-        Fri, 21 Aug 2020 20:01:56 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id k55sm4347111qtf.17.2020.08.21.20.01.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 20:01:55 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 23:01:55 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        JulienDesfossez@google.com, jdesfossez@digitalocean.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>, joel@joelfernandes.org,
-        vineethrp@gmail.com, Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        chris.hyser@oracle.com, dhaval.giani@gmail.com, paulmck@kernel.org,
-        joshdon@google.com, xii@google.com, haoluo@google.com,
-        bsegall@google.com
-Subject: [RFC] Design proposal for upstream core-scheduling interface
-Message-ID: <20200822030155.GA414063@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0RW8fmxrc/Tuk54ldRQbS//KunL/5Kwenn69hnksJ9o=;
+        b=XhiTSH/8xk+T2RVMdL3D44wvVLESgEmU+XKCPF5dVPPMVzo7mLPl6JysHOgd5wt6zG
+         bXMhmh2xZnwhSakAcFsBZxOlUY7BebaamygdXXCAYe/ZNaK+6xBZlJkKHs8oY5wJNccc
+         haCXcVoTC4q8ZzMzs7um10iMuJfNfRiSsZeRUSTYbP2bjN2YOVR9Pg4nXcNTvwE4ZnIw
+         Usy2A4WzK1JlIGSnvtrzVv48WolNXo3+l9GLYRyk9WxS2okshNr3sJsZT3jRQGRMHvWr
+         gQ22W/uc1fSPjs5I+uZjtbKF40PqpYyx4dQWyPj9v8B2lnDY+Fn5EDXcGeXvMpcqv/e1
+         GGKg==
+X-Gm-Message-State: AOAM533g4Kvdv1qz7VPojW3Z5gCPO78aOa9pU/q8xSQJYBGQ8aPsL656
+        POXL2Y/UfWgzUYz/BdMivrN+iF1gCkgpGQP47GpeHw==
+X-Google-Smtp-Source: ABdhPJwDsrbZWUV78Yms3gkSAj0WKh9pyOAOlnRsQYbRPvBlIk6t8bsvBmL9rtzTVmfT8qSZQV6Uiys/RXD/rQrh21w=
+X-Received: by 2002:a05:6402:13c4:: with SMTP id a4mr5777622edx.108.1598065407767;
+ Fri, 21 Aug 2020 20:03:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAP045AqiT75B9o5OV+SJT8uTzo7A55Y1BxjNcaSuxtm5EoAxaQ@mail.gmail.com>
+ <139EF22C-FA09-42B8-BC31-E858CE5970B1@amacapital.net>
+In-Reply-To: <139EF22C-FA09-42B8-BC31-E858CE5970B1@amacapital.net>
+From:   Kyle Huey <me@kylehuey.com>
+Date:   Fri, 21 Aug 2020 20:03:16 -0700
+Message-ID: <CAP045AqZjh0T-FrrcfTHcpda51OxTg-Ks3iRGhZa==6bn20SFQ@mail.gmail.com>
+Subject: Re: [REGRESSION] x86/cpu fsgsbase breaks TLS in 32 bit rr tracees on
+ a 64 bit system
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     "Bae, Chang Seok" <chang.seok.bae@intel.com>,
+        "Robert O'Callahan" <rocallahan@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-Core-scheduling aims to allow making it safe for more than 1 task that trust
-each other to safely share hyperthreads within a CPU core [1]. This results
-in a performance improvement for workloads that can benefit from using
-hyperthreading safely while limiting core-sharing when it is not safe.
+On Fri, Aug 21, 2020 at 7:53 PM Andy Lutomirski <luto@amacapital.net> wrote=
+:
+>
+>
+>
+> > On Aug 21, 2020, at 2:33 PM, Kyle Huey <me@kylehuey.com> wrote:
+> >
+> > =EF=BB=BFOn Fri, Aug 21, 2020 at 1:08 PM Bae, Chang Seok
+> > <chang.seok.bae@intel.com> wrote:
+> >>
+> >>
+> >>>> On Aug 20, 2020, at 21:41, Kyle Huey <me@kylehuey.com> wrote:
+> >>>
+> >>> On the x86-64 5.9-rc1 TLS is completely broken in 32 bit tracees when
+> >>> running under rr[0]. Booting the kernel with `nofsgsbase` fixes it an=
+d
+> >>> I bisected to https://git.kernel.org/pub/scm/linux/kernel/git/torvald=
+s/linux.git/commit/?h=3Dv5.8&id=3D673903495c85137791d5820d690229efe09c8f7b.
+> >>>
+> >>> STR:
+> >>> 1. Build rr from source by
+> >>> a. git clone https://github.com/mozilla/rr
+> >>> b. mkdir rr/obj
+> >>> c. cd rr/obj
+> >>> d. cmake ..
+> >>> e. make -j16
+> >>> 2. Run the simple 32 bit tracee outside of rr with `./bin/simple_32`.
+> >>> It should print a message and exit cleanly.
+> >>> 3. Run it under rr with `./bin/rr ./bin/simple_32`.
+> >>>
+> >>> It should behave the same way, but with fsgsbase enabled it will
+> >>> segfault. The `simple_32` binary is a simple "hello world" type
+> >>> program but it does link to pthreads, so pre-main code attempts to
+> >>> access TLS variables.
+> >>>
+> >>> The interplay between 32 bit and 64 bit TLS is dark magic to me
+> >>> unfortunately so this is all the useful information I have.
+> >>
+> >> As I run it and collect the ptrace logs, it starts to set FSBASE with
+> >> some numbers, e.g. 140632147826496, and then later attempts to set GS
+> >> with 99 through putreg(), not putreg32().
+> >>
+> >> With FSGSBASE, the FS/GS base is decoupled from the selector. Andy
+> >> made putreg32() to retain the old behavior, fetching FS/GS base
+> >> according to the index, but the putreg() does not do. So, rr probably
+> >> relies on the old behavior as observed to setting the GS index only.
+> >> But it was previously considered to be okay with this comment [1]:
+> >>
+> >>   "Our modifications to fs/gs/fs_base/gs_base are always either a)
+> >>    setting values that the kernel set during recording to make them
+> >>    happen during replay or b) emulating PTRACE_SET_REGS that a tracee
+> >>    ptracer tried to set on another tracee. Either way I think the
+> >>    effects are going to be the same as what would happen if the
+> >>    program were run without rr."
+> >>
+> >> It is not straightforward to go into the rr internal to me. Robert,
+> >> any thought?
+> >
+> > Hmm. When we are running a 32 bit tracee in a 64 bit build of rr we
+> > internally convert between the 32 bit and 64 bit user_regs_structs[0]
+> > at the ptrace boundary. This does not preserve the fs/gsbase (because
+> > there is no fs/gsbase in the 32 bit user_regs_struct, of course).
+> >
+> > 40c45904f818c1f6555294ca27afc5fda4f09e68 added magic for a 32 bit
+> > tracer tracing a 32 bit tracee on a 64 bit kernel, but it looks like a
+> > 64 bit tracer tracing a 32 bit tracee on a 64 bit kernel *is* now
+> > expected to preserve the fs/gsbase values (or die, in our case).
+> >
+> > Is that correct?
+>
+> I was certainly not expecting rr to do this, and I thought I had asked in=
+ advance.  What exact ptrace() calls are you doing here?  Is this POKEUSER =
+or something else?  Breaking rr is at least impolite, and I=E2=80=99d like =
+to fix this.
 
-Currently no universally agreed set of interface exists and companies have
-been hacking up their own interface to make use of the patches. This post
-aims to list usecases which I got after talking to various people at Google
-and Oracle. After which actual development of code to add interfaces can follow.
+I believe we are PTRACE_GETREGSing and later PTRACE_SETREGSing, but
+doing the latter with garbage for fs/gs_base for a 32 bit tracee. That
+didn't used to matter (because those values were completely ignored
+for a 32 bit tracee) but now it does.
 
-The below text uses the terms cookie and tag interchangeably. Further, cookie
-of 0 is assumed to indicate a trusted process - such as kernel threads or
-system daemons. By default, if nothing is tagged then everything is
-considered trusted since the scheduler assumes all tasks are a match for each
-other.
+There's a good case that that's our fault and I'm happy to spend my
+"don't break userspace" points somewhere else ;)
 
-Usecase 1: Google's cloud group tags CGroups with a 32-bit integer. This
-int32 is split into 2 parts, the color and the id. The color can only be set
-by privileged processes and the id can be set by anyone. The CGroup structure
-looks like:
-
-   A         B
-  / \      / \ \ 
- C   D    E  F  G
-
-Here A and B are container CGroups for 2 jobs are assigned a color by a
-privileged daemon. The job itself has more sub-CGroups within (for ex, B has
-E, F and G). When these sub-CGroups are spawned, they inherit the color from
-the parent. An unprivileged user can then set an id for the sub-CGroup
-without the knowledge of the privileged daemon if it desires to add further
-isolation. This setting of id can be an unprivileged operation because the
-root daemon has already isolated A and B.
-
-Usecase 2: Chrome browser - tagging renderers. In Chrome, each tab opened
-spawns a renderer. A renderer is a sandboxed process and it is assumed it
-could run arbitrary code (Javascript etc). When a renderer is created, a
-prctl call is made to tag the renderer. Every thread that is spawned by the
-renderer is also tagged. Essentially this turns SMT off for the renderer, but
-still gives a performance boost due to privileged system threads being able
-to share a core. The tagging also forbids the renderer from sharing a core
-with privileged system processes. In the future, we plan to allow threads to
-share a core as well (especially once we get syscall-isolation upstreamed.
-Patches were posted recently for the same [2]).
-
-Usecase 3: ChromeOS VMs - each vCPU thread that is created by the VMM is
-tagged thus disallowing core sharing between the vCPU thread and any other
-thread on the system. This is because such VMs may run arbitrary user code
-and attack both the guest and the host systems sharing the core.
-
-Usecase 4: Oracle - Setting a sub-CGroup as trusted (cookie 0). Chris Hyser
-talked to me on IRC that in a CGroup hierarcy, some CGroups should be allowed
-to not have to share its parent's CGroup tag. In fact, it should be allowed to
-untag the child CGroup if needed thus allowing them to share a core with
-trusted tasks. Others have had similar requirements.
-
-Proposal for tagging
---------------------
-We have to support both CGroup and non-CGroup users. CGroup may be overkill
-for some and the CGroup v2 unified hierarchy may be too inflexible.
-Regardless, we must support CGroup due its easy of use and existing users.
-
-For Usecase #1
-----------
-Usecase #1 requires a 2-level tagging mechanism. I propose 2 new files
-to the CPU controller:
-- tag : a boolean (0/1). If set, this CGroup and all sub-CGroups will be
-  tagged.  (In the kernel, the cookie will be derived from the pointer value
-  of a ref-counted cookie object.). If reset, then the CGroup will inherit
-  the parent CGroup's cookie if there is one.
-
-- color : The ref-counted object will be aligned say to a 256-byte boundary
-  (for example), then the lower 8 bits of the pointer can be used to specify
-  color. Together, the pointer with the color will form a cookie used by the
-  scheduler.
-
-Note that if 2 CGroups belong to 2 different tagged hierarchies, then setting
-their color to be the same does not imply that the 2 groups will share a
-core. This is key.  Also, to support usecase #4, we could add a third tag
-value -- 2, along with the usual 0 and 1 to suggest that the CGroup can share
-a core with cookie-0 tasks (Chris Hyser feel free to add any more comments
-here).
-
-For Usecase #2
---------------
-We could add an interface that Peter suggested where 2 PIDs A and B want to
-share a core. So if A wants to share a core with B, then it issues
-prctl(SET_CORE_SHARE, B). ptrace_may_access() can be used to restrict access.
-For renderers though, we want to likely allow a renderer to share a core
-exclusive with only threads within a renderer and no one else. To support
-this, renderer A could simply issue prctl(SET_CORE_SHARE, A).
-
-For Usecase #3
---------------
-By default, all threads within a process will share a core. This makes the
-most sense because threads in a process share the same virtual address space.
-However, for virtual machines in ChromeOS, we would like vCPU threads to not
-share a core with other vCPU threads as mentioned above. To support this,
-when a vCPU thread is forked, a new clone flag - CLONE_NEW_CORE_TAG could be
-introduced to cause the forked thread to not share a core with its parent.
-This could also support usecase #2 in the future (instead of prctl, a new
-renderer being forked can simply be passed CLONE_NEW_CORE_TAG which will tag the
-forked process or thread even if the forking process is not tagged).
-
-Other considerations:
-- To share a core anyway even if tags don't match: If we assume that the only
-  purpose of core-scheduling is to enforce security, then if the kernel knows
-  that CPUs are not vulnerable then cores can be shared anyway, whether the
-  tasks are tagged or not (Suggested-by PeterZ).
-
-- Addition of a new CGroup controller: Instead of CPU controller, it may be
-  better to add a new CGroup controller in case the CPU controller is not
-  attached to some parts of the hierarchy and it is still desirable to use
-  CGroup interface for core tagging.
-
-- Co-existence of CGroup with prctl/clone. The prctl/clone tagging should
-  always be made to override CGroup. For this purpose, I propose a new
-  'tasks_no_cg_tag' or a similar file in the CGroup controller. This file
-  will list all tasks that don't associate with the CGroup's tag. NOTE: I am not
-  sure yet how this new file will work with prctl/clone-tagging of individual
-  threads in a non-thread-mode CGroup v2 usage.
-
-- Differences in tagging of a forked task (!CLONE_THREAD): If a process is
-  a part of a CGroup and is forked, then the child process is automatically
-  added to that CGroup. If such CGroup was tagged before, then the child is
-  automatically tagged. However, it may be desired to give the child its own
-  tag. In this case also, the earlier CLONE_NEW_CORE_TAG flag can be used to
-  achieve this behavior. If the forking process was not a part of a CGroup
-  but got a tag through other means before, then by default a !CLONE_THREAD
-  fork would imply CLONE_NEW_CORE_TAG. However, to turns this off, a
-  CLONE_CORE_TAG flag can be added (forking process's tag will be inheritted
-  by the child).
-
-Let me know your thoughts and looking forward to a good LPC MC discussion!
-
-thanks,
-
- - Joel
-
-[1] https://lwn.net/Articles/780703/
-[2] https://lwn.net/Articles/828889/
-
+- Kyle
