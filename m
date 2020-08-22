@@ -2,223 +2,115 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76B4C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC77C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8824720720
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5132078D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:48:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="E04jO1Xa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgHVEmV (ORCPT
+        id S1726059AbgHVEs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 00:42:21 -0400
-Received: from mga11.intel.com ([192.55.52.93]:62114 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbgHVEmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 00:42:10 -0400
-IronPort-SDR: fVSt6qW7t56PouEtv0eYWPHnAIHkYgoi42c4uz+g8J4wtYOC1Y2/BRIGDC+IvUTPTk+aFVuajK
- 0vJg05kgX3Qg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="153275287"
-X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
-   d="scan'208";a="153275287"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 21:42:01 -0700
-IronPort-SDR: griWtDcJu82w9E+SGCJUbsLhzP1NJ6oVRQ6OMPvx3UflMk7vkzDwFSCtrgD8EdkjVUk+48o7Qq
- b0xXQG4a6W9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
-   d="scan'208";a="327943130"
-Received: from glacier.sc.intel.com ([10.3.62.63])
-  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 21:42:01 -0700
-From:   Rajmohan Mani <rajmohan.mani@intel.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jithu Joseph <jithu.joseph@intel.com>,
-        =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Cc:     pmalani@chromium.org, bleung@chromium.org,
-        Rajmohan Mani <rajmohan.mani@intel.com>
-Subject: [PATCH v2 3/3] usb: typec: intel_pmc_mux: Support for device role (UFP)
-Date:   Fri, 21 Aug 2020 21:05:08 -0700
-Message-Id: <20200822040508.23510-4-rajmohan.mani@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200822040508.23510-1-rajmohan.mani@intel.com>
-References: <20200822040508.23510-1-rajmohan.mani@intel.com>
+        Sat, 22 Aug 2020 00:48:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbgHVEs1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 00:48:27 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3762C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 21:48:26 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id b66so1349552wmb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 21:48:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8EpfXuOfl5Lc4X03a/2NthXamDtm3ZTxJlpaERf1P2M=;
+        b=E04jO1XaLwTEoC5F7ckK/3aQt1ozC0Fcmt/b8GJiWlnGHUdQBoV46zHaqX8lhyuA6t
+         61+o8lWe+YunryUin42fuZz646fxNWnJy0TAxA/h6js4kvJ1SF9qesCf7SuIuuoB8HGl
+         AVSzLN/Orw0rBpLQpmsY/cxB9ued9UHWTnUR4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8EpfXuOfl5Lc4X03a/2NthXamDtm3ZTxJlpaERf1P2M=;
+        b=to+NpobgG81gjda5CGzDzbUAnz/4IK3dO7UzaZx0gCGYCRQeigxv4i2rQydboyhtB7
+         Rbh3hjyDsjiShHkNVTdUepVIA/b5OVQcV/ifvx4LhS49DXIFyda7iNeFeO/Ix34MDxsa
+         MglVkpBeN2nVoVxRRCOd7Ea8PnAj8wzDy9jva06z0Tlf30/H+BkvFgcod2FOosYrDjZl
+         W8QU/w13wgvpuloWuW2P2rBtbGOxtkPpGrZ98Sw6bkYlSiHYog+yL12wGLpcbcdZPxNs
+         2hDn/EGXpRXQeK4oaO4QGQ8Z2Z4ciVuJfcC0t49iy6k4gGRPaJtsZQcbZ1oRnGS8sLCy
+         RiUw==
+X-Gm-Message-State: AOAM531zTCaZfYcRuCaDMeESjSxgckwC+Go2pr4ZGJATPxzaqeedKqYB
+        yKN4cysmV+PCN2IPGS7pgFVB3gXZ4q2RRS33gfGPmQ==
+X-Google-Smtp-Source: ABdhPJw7xCkJoXDkG4cyA0Eab/W2Nf7VdU8EymJP8iNVywtv1/Z8GU515lX7IbfzvyLf86zSlVJwlLuih6meBwQ3rx0=
+X-Received: by 2002:a7b:c10d:: with SMTP id w13mr6535376wmi.2.1598071704261;
+ Fri, 21 Aug 2020 21:48:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200819034231.20726-1-mark-pk.tsai@mediatek.com> <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
+In-Reply-To: <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Sat, 22 Aug 2020 13:48:13 +0900
+Message-ID: <CAFr9PXni=BmDY6_iuJPnYb3d6XB1VrxE6WP3YtSBxT6NciZMMA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] irqchip: irq-mst: Add MStar interrupt controller support
+To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Cc:     Marc Zyngier <maz@kernel.org>, alix.wu@mediatek.com,
+        DTML <devicetree@vger.kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, yj.chiang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Hi Mark-PK,
 
-This adds support for device data role, and data role
-swapping. The driver no longer relies on the cached role, as
-it may not be valid (for example after bootup). Instead, the
-role is always checked by readding the port status from IOM.
+On Thu, 20 Aug 2020 at 00:38, Mark-PK Tsai <mark-pk.tsai@mediatek.com> wrote:
+>
+> Add MStar interrupt controller support using hierarchy irq
+> domain.
+>
+> Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
 
-Note. After this, the orientation is always only cached, so
-the driver does not support scenario where the role is set
-before orientation. It means the typec drivers must always
-set the orientation first before role.
+I've integrated this version into my MStar/SigmaStar tree and tested
+on an MStar MSC313E
+based board (BreadBee) and I'm happy to say it seems to be working:
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
----
- drivers/usb/typec/mux/intel_pmc_mux.c | 67 ++++++++++++++-------------
- 1 file changed, 34 insertions(+), 33 deletions(-)
+$ cat /proc/interrupts
+          CPU0
+17:       1219     GIC-0  29 Level     arch_timer
+18:          0     GIC-0  30 Level     arch_timer
+21:          0     GIC-0  42 Level     arm-pmu
+24:          0  mst-intc  44 Level     1f002400.rtc
+30:          0  mst-intc   2 Level     1f006000.wdt
+31:          0  mst-intc   0 Level     1f006040.timer
+32:          0  mst-intc   1 Level     1f006080.timer
+33:          0  mst-intc  12 Level     1f0060c0.timer
+34:          0  mst-intc  40 Level     1f200400.bdma
+35:       3977  mst-intc  41 Level     1f200400.bdma
+37:        196  mst-intc  34 Level     ttyS0
+40:          0  mst-intc  30 Level     soc:usbphy@0
+<snip>
 
-diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
-index c758d6113c41..d4ee7132227b 100644
---- a/drivers/usb/typec/mux/intel_pmc_mux.c
-+++ b/drivers/usb/typec/mux/intel_pmc_mux.c
-@@ -191,9 +191,6 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
- 		return pmc_usb_mux_dp_hpd(port, state->data);
- 	}
- 
--	if (data->status & DP_STATUS_IRQ_HPD)
--		return pmc_usb_mux_dp_hpd(port, state->data);
--
- 	req.usage = PMC_USB_ALT_MODE;
- 	req.usage |= port->usb3_port << PMC_USB_MSG_USB3_PORT_SHIFT;
- 	req.mode_type = PMC_USB_MODE_TYPE_DP << PMC_USB_MODE_TYPE_SHIFT;
-@@ -312,39 +309,52 @@ static int pmc_usb_mux_safe_state(struct pmc_usb_port *port)
- 	return pmc_usb_command(port, &msg, sizeof(msg));
- }
- 
--static int pmc_usb_connect(struct pmc_usb_port *port)
-+static int pmc_usb_disconnect(struct pmc_usb_port *port)
- {
-+	struct typec_displayport_data data = { };
- 	u8 msg[2];
- 
--	if (port->iom_status & IOM_PORT_STATUS_CONNECTED)
-+	if (!(port->iom_status & IOM_PORT_STATUS_CONNECTED))
- 		return 0;
- 
--	msg[0] = PMC_USB_CONNECT;
-+	/* Clear DisplayPort HPD if it's still asserted. */
-+	if (IOM_PORT_HPD_ASSERTED(port->iom_status))
-+		pmc_usb_mux_dp_hpd(port, &data);
-+
-+	msg[0] = PMC_USB_DISCONNECT;
- 	msg[0] |= port->usb3_port << PMC_USB_MSG_USB3_PORT_SHIFT;
- 
- 	msg[1] = port->usb2_port << PMC_USB_MSG_USB2_PORT_SHIFT;
--	msg[1] |= hsl_orientation(port) << PMC_USB_MSG_ORI_HSL_SHIFT;
--	msg[1] |= sbu_orientation(port) << PMC_USB_MSG_ORI_AUX_SHIFT;
- 
- 	return pmc_usb_command(port, msg, sizeof(msg));
- }
- 
--static int pmc_usb_disconnect(struct pmc_usb_port *port)
-+static int pmc_usb_connect(struct pmc_usb_port *port, enum usb_role role)
- {
--	struct typec_displayport_data data = { };
-+	u8 ufp = role == USB_ROLE_DEVICE ? 1 : 0;
- 	u8 msg[2];
-+	int ret;
- 
--	if (!(port->iom_status & IOM_PORT_STATUS_CONNECTED))
--		return 0;
-+	if (port->orientation == TYPEC_ORIENTATION_NONE)
-+		return -EINVAL;
- 
--	/* Clear DisplayPort HPD if it's still asserted. */
--	if (IOM_PORT_HPD_ASSERTED(port->iom_status))
--		pmc_usb_mux_dp_hpd(port, &data);
-+	if (port->iom_status & IOM_PORT_STATUS_CONNECTED) {
-+		if (port->role == role || port->role == USB_ROLE_NONE)
-+			return 0;
- 
--	msg[0] = PMC_USB_DISCONNECT;
-+		/* Role swap */
-+		ret = pmc_usb_disconnect(port);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	msg[0] = PMC_USB_CONNECT;
- 	msg[0] |= port->usb3_port << PMC_USB_MSG_USB3_PORT_SHIFT;
- 
- 	msg[1] = port->usb2_port << PMC_USB_MSG_USB2_PORT_SHIFT;
-+	msg[1] |= ufp << PMC_USB_MSG_UFP_SHIFT;
-+	msg[1] |= hsl_orientation(port) << PMC_USB_MSG_ORI_HSL_SHIFT;
-+	msg[1] |= sbu_orientation(port) << PMC_USB_MSG_ORI_AUX_SHIFT;
- 
- 	return pmc_usb_command(port, msg, sizeof(msg));
- }
-@@ -365,7 +375,7 @@ pmc_usb_mux_set(struct typec_mux *mux, struct typec_mux_state *state)
- 	if (state->mode == TYPEC_STATE_SAFE)
- 		return pmc_usb_mux_safe_state(port);
- 	if (state->mode == TYPEC_STATE_USB)
--		return pmc_usb_connect(port);
-+		return pmc_usb_connect(port, port->role);
- 
- 	if (state->alt) {
- 		switch (state->alt->svid) {
-@@ -380,7 +390,7 @@ pmc_usb_mux_set(struct typec_mux *mux, struct typec_mux_state *state)
- 			/* REVISIT: Try with usb3_port set to 0? */
- 			break;
- 		case TYPEC_MODE_USB3:
--			return pmc_usb_connect(port);
-+			return pmc_usb_connect(port, port->role);
- 		case TYPEC_MODE_USB4:
- 			return pmc_usb_mux_usb4(port, state);
- 		}
-@@ -401,13 +411,6 @@ static int pmc_usb_set_orientation(struct typec_switch *sw,
- 
- 	port->orientation = orientation;
- 
--	if (port->role) {
--		if (orientation == TYPEC_ORIENTATION_NONE)
--			return pmc_usb_disconnect(port);
--		else
--			return pmc_usb_connect(port);
--	}
--
- 	return 0;
- }
- 
-@@ -420,16 +423,14 @@ static int pmc_usb_set_role(struct usb_role_switch *sw, enum usb_role role)
- 	if (ret)
- 		return ret;
- 
--	port->role = role;
-+	if (role == USB_ROLE_NONE)
-+		ret = pmc_usb_disconnect(port);
-+	else
-+		ret = pmc_usb_connect(port, role);
- 
--	if (port->orientation) {
--		if (role == USB_ROLE_NONE)
--			return pmc_usb_disconnect(port);
--		else
--			return pmc_usb_connect(port);
--	}
-+	port->role = role;
- 
--	return 0;
-+	return ret;
- }
- 
- static int pmc_usb_register_port(struct pmc_usb *pmc, int index,
--- 
-2.20.1
+So here's my tested by:
 
+Tested-by: Daniel Palmer <daniel@thingy.jp>
+
+I don't think your series contained an update to MAINTAINERS.
+If/when you add this could you add my address above as a reviewer so
+I'm in the loop if anyone makes changes to this going forward?
+
+Thanks,
+
+Daniel
