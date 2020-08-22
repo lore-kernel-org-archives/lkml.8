@@ -2,161 +2,224 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9359C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DA6C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A12C82063A
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8644820720
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:12:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598065945;
+	bh=hGoezdrkh4sII/nHF2fboHQKomchjb0dkCFbuaS/NOU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dKYnLLU/F0ZTk59HUXd98dpX/vshSNrOewqu/5no0pyDVDoMy20ieNOHIXtYPAHoN
+	 58yiXzbYTWFw/QBDLfnuMEPxXRaDOC+/garZxBLczJuu3PKfWBJ6Dnb4YgR+VB+B+t
+	 2MJfyDU10Sj5eed1NywOkszOQonMxsrhpFMMlJjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgHVDFr (ORCPT
+        id S1726747AbgHVDMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 23:05:47 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38318 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726387AbgHVDFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 23:05:47 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A9F3D65E5144998DEE4F;
-        Sat, 22 Aug 2020 11:05:44 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 22 Aug 2020 11:05:36 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <serge@hallyn.com>, <jmorris@namei.org>, <zohar@linux.ibm.com>,
-        <dmitry.kasatkin@gmail.com>, <casey@schaufler-ca.com>,
-        <takedakn@nttdata.co.jp>, <penguin-kernel@I-love.SAKURA.ne.jp>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-integrity@vger.kernel.org>
-CC:     <wangle6@huawei.com>, <nixiaoming@huawei.com>
-Subject: [PATCH] security: fix some spelling mistakes in the comments by codespell
-Date:   Sat, 22 Aug 2020 11:05:34 +0800
-Message-ID: <20200822030534.2577-1-nixiaoming@huawei.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 21 Aug 2020 23:12:23 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:20388 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbgHVDMW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 23:12:22 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 07M3C6oI009886;
+        Sat, 22 Aug 2020 12:12:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 07M3C6oI009886
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1598065927;
+        bh=e6RWKtFs9pXYjYTAelrwYfwInM31ujnRzIsZ4gq7lr8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PAglR8Gf4Qpp5orx6k6EYdPounaaKf7hVEUsb6LmAEaeITJ/xGDjOnVvjQOrDCjgo
+         hPTpo44GcQSAddHwTeER5P/b2YA7whRzwVhGKQVKOJrKW/5Kext5lIXCrqotqc1i6w
+         kKGXjvO0Xmafwxnx2PzlRKc/3rGL6aMSUBPLiFNOakrXWpUq3nuKoyfrmBsa7Cyb//
+         6LG+znByYT2v+TezoHdZq2cdfdkCvzgEW4t02y37AckkSozH7TGGXXvbORAq4XjvWc
+         w1GQPXHCvb+hPiCKcUDUmAY97HZ8PPtFZEUgSw25lAR/GfvEJp+do/Du8uRWJ3E3xj
+         mrJp/DWb90wRQ==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id q68so1108399uaq.0;
+        Fri, 21 Aug 2020 20:12:06 -0700 (PDT)
+X-Gm-Message-State: AOAM530lDRiGb92zi4cqsmDUfyfjrd+13FGqMJm1ogAMM6dOj1sTw2nJ
+        dEpnQNV+HBIQBybgmaF+Ex4UmzegVOe3DDHiaKA=
+X-Google-Smtp-Source: ABdhPJxH1FB70/rsWAiTm0tLd5eU9ysIMG2MV5hQEhw9BJb7Zvk08j60pBDUm+v4TgXiTW8ZpZjYdnSGl2DMf6vZUsI=
+X-Received: by 2002:ab0:623:: with SMTP id f32mr3507228uaf.121.1598065925547;
+ Fri, 21 Aug 2020 20:12:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+References: <20200821190159.1033740-1-masahiroy@kernel.org>
+ <20200821190159.1033740-8-masahiroy@kernel.org> <CAKwvOdmR=VeR0=LUgXCwnpK9LH90_itzv627wBEK4hCroBEW9Q@mail.gmail.com>
+In-Reply-To: <CAKwvOdmR=VeR0=LUgXCwnpK9LH90_itzv627wBEK4hCroBEW9Q@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 22 Aug 2020 12:11:28 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS6k5zGMHyWa=jCKo6HZf1AXq5_qtMmgY2cvet9y3u-Rg@mail.gmail.com>
+Message-ID: <CAK7LNAS6k5zGMHyWa=jCKo6HZf1AXq5_qtMmgY2cvet9y3u-Rg@mail.gmail.com>
+Subject: Re: [PATCH v2 7/9] gen_compile_commands: support *.o, *.a,
+ modules.order in positional argument
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Tom Roeder <tmroeder@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ecurity/commoncap.c: capabilties ==> capabilities
-security/lsm_audit.c: programers ==> programmers
-security/tomoyo/audit.c: stuct ==> struct
-security/tomoyo/common.c: Poiter ==> Pointer
-security/smack/smack_lsm.c: overriden ==> overridden overridden
-security/smack/smackfs.c: overriden ==> overridden
-security/integrity/ima/ima_template_lib.c: algoritm ==> algorithm
+On Sat, Aug 22, 2020 at 9:59 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Fri, Aug 21, 2020 at 12:02 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > This script currently searches the specified directory for .cmd files.
+> > One drawback is it may contain stale .cmd files after you rebuild the
+> > kernel several times without 'make clean'.
+> >
+> > This commit supports *.o, *.a, and modules.order as positional
+> > parameters. If such files are given, they are parsed to collect
+> > associated .cmd files. I added a generator helper for each of them.
+> >
+> > This feature is useful to get the list of active .cmd files from the
+> > last build, and will be used by the next commit to wire up the
+> > compile_commands.json rule to the Makefile.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> > Changes in v2:
+> >   - Separate the file parser into generator functions
+> >   - Use 'obj' instead of 'object' because 'object' is a built-in function
+> >   - I think using 'file' is OK because it is not a built-in function in Python3
+> >     (https://docs.python.org/3/library/functions.html)
+> >     Anyway, the variable 'file' is no longer used in this version
+> >   - Keep the previous work-flow to allow to search the given directory
+> >
+> >  scripts/gen_compile_commands.py | 100 ++++++++++++++++++++++++++++++--
+> >  1 file changed, 96 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
+> > index 6dec7e2c4098..65859e6044b5 100755
+> > --- a/scripts/gen_compile_commands.py
+> > +++ b/scripts/gen_compile_commands.py
+> > @@ -12,6 +12,7 @@ import json
+> >  import logging
+> >  import os
+> >  import re
+> > +import subprocess
+> >
+> >  _DEFAULT_OUTPUT = 'compile_commands.json'
+> >  _DEFAULT_LOG_LEVEL = 'WARNING'
+> > @@ -32,8 +33,9 @@ def parse_arguments():
+> >      Returns:
+> >          log_level: A logging level to filter log output.
+> >          directory: The work directory where the objects were built
+> > +        ar: Command used for parsing .a archives
+> >          output: Where to write the compile-commands JSON file.
+> > -        paths: The list of directories to handle to find .cmd files
+> > +        paths: The list of files/directories to handle to find .cmd files
+> >      """
+> >      usage = 'Creates a compile_commands.json database from kernel .cmd files'
+> >      parser = argparse.ArgumentParser(description=usage)
+> > @@ -53,12 +55,21 @@ def parse_arguments():
+> >      parser.add_argument('--log_level', choices=_VALID_LOG_LEVELS,
+> >                          default=_DEFAULT_LOG_LEVEL, help=log_level_help)
+> >
+> > +    ar_help = 'command used for parsing .a archives'
+> > +    parser.add_argument('-a', '--ar', type=str, default='ar', help=ar_help)
+>
+> If there's a default, doesn't that mean it's no longer required? I
+> think it should be required.  For a clang specific tool, we'd prefer
+> the default to be llvm-ar anyways.
 
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
----
- security/commoncap.c                      | 2 +-
- security/integrity/ima/ima_template_lib.c | 2 +-
- security/lsm_audit.c                      | 2 +-
- security/smack/smack_lsm.c                | 2 +-
- security/smack/smackfs.c                  | 2 +-
- security/tomoyo/audit.c                   | 2 +-
- security/tomoyo/common.c                  | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+A good point.
+I want to set reasonable values as default where possible.
+'llvm-ar' is better.
 
-diff --git a/security/commoncap.c b/security/commoncap.c
-index 59bf3c1674c8..2c3a0f1b6876 100644
---- a/security/commoncap.c
-+++ b/security/commoncap.c
-@@ -1046,7 +1046,7 @@ int cap_task_fix_setuid(struct cred *new, const struct cred *old, int flags)
- 		break;
- 
- 	case LSM_SETID_FS:
--		/* juggle the capabilties to follow FSUID changes, unless
-+		/* juggle the capabilities to follow FSUID changes, unless
- 		 * otherwise suppressed
- 		 *
- 		 * FIXME - is fsuser used for all CAP_FS_MASK capabilities?
-diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-index c022ee9e2a4e..9513564ee0b2 100644
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -231,7 +231,7 @@ static int ima_eventdigest_init_common(const u8 *digest, u32 digestsize,
- 	 * digest formats:
- 	 *  - DATA_FMT_DIGEST: digest
- 	 *  - DATA_FMT_DIGEST_WITH_ALGO: [<hash algo>] + ':' + '\0' + digest,
--	 *    where <hash algo> is provided if the hash algoritm is not
-+	 *    where <hash algo> is provided if the hash algorithm is not
- 	 *    SHA1 or MD5
- 	 */
- 	u8 buffer[CRYPTO_MAX_ALG_NAME + 2 + IMA_MAX_DIGEST_SIZE] = { 0 };
-diff --git a/security/lsm_audit.c b/security/lsm_audit.c
-index 53d0d183db8f..a0ff2e441069 100644
---- a/security/lsm_audit.c
-+++ b/security/lsm_audit.c
-@@ -212,7 +212,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
- 	char comm[sizeof(current->comm)];
- 
- 	/*
--	 * To keep stack sizes in check force programers to notice if they
-+	 * To keep stack sizes in check force programmers to notice if they
- 	 * start making this union too large!  See struct lsm_network_audit
- 	 * as an example of how to deal with large data.
- 	 */
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 8c0893eb5aa8..960d4641239c 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -1784,7 +1784,7 @@ static int smack_file_send_sigiotask(struct task_struct *tsk,
- 	 */
- 	file = container_of(fown, struct file, f_owner);
- 
--	/* we don't log here as rc can be overriden */
-+	/* we don't log here as rc can be overridden */
- 	blob = smack_file(file);
- 	skp = *blob;
- 	rc = smk_access(skp, tkp, MAY_DELIVER, NULL);
-diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
-index 9c4308077574..5c581ec814ac 100644
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -111,7 +111,7 @@ struct smack_known *smack_syslog_label;
- /*
-  * Ptrace current rule
-  * SMACK_PTRACE_DEFAULT    regular smack ptrace rules (/proc based)
-- * SMACK_PTRACE_EXACT      labels must match, but can be overriden with
-+ * SMACK_PTRACE_EXACT      labels must match, but can be overridden with
-  *			   CAP_SYS_PTRACE
-  * SMACK_PTRACE_DRACONIAN  lables must match, CAP_SYS_PTRACE has no effect
-  */
-diff --git a/security/tomoyo/audit.c b/security/tomoyo/audit.c
-index 3c96e8402e94..b51bad121c11 100644
---- a/security/tomoyo/audit.c
-+++ b/security/tomoyo/audit.c
-@@ -311,7 +311,7 @@ static LIST_HEAD(tomoyo_log);
- /* Lock for "struct list_head tomoyo_log". */
- static DEFINE_SPINLOCK(tomoyo_log_lock);
- 
--/* Length of "stuct list_head tomoyo_log". */
-+/* Length of "struct list_head tomoyo_log". */
- static unsigned int tomoyo_log_count;
- 
- /**
-diff --git a/security/tomoyo/common.c b/security/tomoyo/common.c
-index 4bee32bfe16d..38bdc0ffc312 100644
---- a/security/tomoyo/common.c
-+++ b/security/tomoyo/common.c
-@@ -2608,7 +2608,7 @@ ssize_t tomoyo_read_control(struct tomoyo_io_buffer *head, char __user *buffer,
- /**
-  * tomoyo_parse_policy - Parse a policy line.
-  *
-- * @head: Poiter to "struct tomoyo_io_buffer".
-+ * @head: Pointer to "struct tomoyo_io_buffer".
-  * @line: Line to parse.
-  *
-  * Returns 0 on success, negative value otherwise.
+I will change it.
+
+
+
+> > +
+> > +def cmdfiles_for_modorder(modorder):
+> > +    """Generate the iterator of .cmd files associated with the modules.order.
+> > +
+> > +    Parse the given modules.order, and yield every .cmd file used to build the
+> > +    contained modules.
+> > +
+> > +    Args:
+> > +        modorder: The modules.order file to parse
+> > +
+> > +    Yields:
+> > +        The path to every .cmd file found
+> > +    """
+> > +    with open(modorder) as f:
+> > +        for line in f:
+> > +            ko = line.rstrip()
+> > +            base, ext = os.path.splitext(ko)
+>
+> below in main() you check the file extension with endswith().  Would
+> it be good to be consistent between the two?
+
+I want to re-use 'base' to convert
+the *.ko into *.mod
+
+path/to/my/driver.ko
+-> path/to/my/driver.mod
+
+
+I think using os.path.split()
+is good for checking the valid suffix,
+and replaceing it with '.mod'.
+
+
+
+
+
+
+> > +            if ext != '.ko':
+> > +                sys.exit('{}: module path must end with .ko'.format(ko))
+> > +            mod = base + '.mod'
+> > +           # The first line of *.mod lists the objects that compose the module.
+> > +            with open(mod) as m:
+> > +                for obj in m.readline().split():
+> > +                    yield to_cmdfile(obj)
+> > +
+> > +
+> >  def process_line(root_directory, command_prefix, file_path):
+> >      """Extracts information from a .cmd line and creates an entry from it.
+> >
+> > @@ -116,7 +194,7 @@ def process_line(root_directory, command_prefix, file_path):
+> >
+> >  def main():
+> >      """Walks through the directory and finds and parses .cmd files."""
+> > -    log_level, directory, output, paths = parse_arguments()
+> > +    log_level, directory, output, ar, paths = parse_arguments()
+> >
+> >      level = getattr(logging, log_level)
+> >      logging.basicConfig(format='%(levelname)s: %(message)s', level=level)
+> > @@ -126,7 +204,21 @@ def main():
+> >      compile_commands = []
+> >
+> >      for path in paths:
+> > -        cmdfiles = cmdfiles_in_dir(path)
+> > +        # If 'path' is a directory, handle all .cmd files under it.
+> > +        # Otherwise, handle .cmd files associated with the file.
+> > +        # Most of built-in objects are linked via archives (built-in.a or lib.a)
+> > +        # but some are linked to vmlinux directly.
+> > +        # Modules are lis
+>
+> ^ was this comment cut off?
+
+Oops, I will fix it.
+
+
+
 -- 
-2.27.0
-
+Best Regards
+Masahiro Yamada
