@@ -2,100 +2,81 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BD7C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD0B1207C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:24:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dxPZCYC3"
+	by mail.kernel.org (Postfix) with ESMTP id 6ED48206B5
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgHVOYc (ORCPT
+        id S1728172AbgHVOdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 10:24:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728083AbgHVOYa (ORCPT
+        Sat, 22 Aug 2020 10:33:31 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:37199 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728019AbgHVOdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 10:24:30 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D399C061573;
-        Sat, 22 Aug 2020 07:24:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ziVrtHuskBWF9ypal/1WBcVweEFCA3J4y+bn9Uri5QU=; b=dxPZCYC3vPECjpySRlVCFu9lj9
-        6KpchwFE5B+EPezXNGoPG+DjRa/cqSS1VIeiz+lPML/ow41KUDczTOTKL1ZJCXna2bqGSpLWD5qx1
-        fDRorEOrmoFY5XuqDObl9m7puFKnkzFgnieTCVAzHtoqVXXo8zZ1hAn4QJRxmP0JwDltahGcQUfho
-        Pquo0gCPdRm4qkascWIH7i9YSrXNgj8KC9SNftxZJpW7ZSoxfZqp+sB86OaMcLgkofQV/kV5CCMgz
-        0X81sf2z82HQQu8zV4z38yjdWKgadChBZz277Vav+mPlRSYkmNVdMpfDeaP7cPsRQqbMjJSoKi+So
-        3RHBs8Jg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k9URK-0000V1-Kl; Sat, 22 Aug 2020 14:24:14 +0000
-Date:   Sat, 22 Aug 2020 15:24:14 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "yukuai (C)" <yukuai3@huawei.com>,
-        Gao Xiang <hsiangkao@redhat.com>, darrick.wong@oracle.com,
-        david@fromorbit.com, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com
-Subject: Re: [RFC PATCH V3] iomap: add support to track dirty state of sub
- pages
-Message-ID: <20200822142414.GY17456@casper.infradead.org>
-References: <20200819120542.3780727-1-yukuai3@huawei.com>
- <20200819125608.GA24051@xiangao.remote.csb>
- <43dc04bf-17bb-9f15-4f1c-dfd6c47c3fb1@huawei.com>
- <20200821061234.GE31091@infradead.org>
- <20200821133657.GU17456@casper.infradead.org>
- <20200822060345.GD17129@infradead.org>
+        Sat, 22 Aug 2020 10:33:31 -0400
+Received: from callcc.thunk.org (pool-108-49-65-20.bstnma.fios.verizon.net [108.49.65.20])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 07MEXR2U014993
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 22 Aug 2020 10:33:27 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id DDDB442010C; Sat, 22 Aug 2020 10:33:26 -0400 (EDT)
+Date:   Sat, 22 Aug 2020 10:33:26 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-ext4@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ext4: flag as supporting buffered async reads
+Message-ID: <20200822143326.GC199705@mit.edu>
+References: <fb90cc2d-b12c-738f-21a4-dd7a8ae0556a@kernel.dk>
+ <20200818181117.GA34125@mit.edu>
+ <990cc101-d4a1-f346-fe78-0fb5b963b406@kernel.dk>
+ <20c844c8-b649-3250-ff5b-b7420f72ff38@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200822060345.GD17129@infradead.org>
+In-Reply-To: <20c844c8-b649-3250-ff5b-b7420f72ff38@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 07:03:45AM +0100, Christoph Hellwig wrote:
-> On Fri, Aug 21, 2020 at 02:36:57PM +0100, Matthew Wilcox wrote:
-> > On Fri, Aug 21, 2020 at 07:12:34AM +0100, Christoph Hellwig wrote:
-> > > iomap sets PagePrivate if a iomap_page structure is allocated.  Right
-> > > now that means for all pages on a file system with a block size smaller
-> > > than the page size, although I hope we reduce that scope a little.
+On Fri, Aug 21, 2020 at 03:26:35PM -0600, Jens Axboe wrote:
+> >>> Resending this one, as I've been carrying it privately since May. The
+> >>> necessary bits are now upstream (and XFS/btrfs equiv changes as well),
+> >>> please consider this one for 5.9. Thanks!
+> >>
+> >> The necessary commit only hit upstream as of 5.9-rc1, unless I'm
+> >> missing something?  It's on my queue to send to Linus once I get my
+> >> (late) ext4 primary pull request for 5.9.
 > > 
-> > I was thinking about that.  Is there a problem where we initially allocate
-> > the page with a contiguous extent larger than the page, then later need
-> > to write the page to a pair of extents?
-> > 
-> > If we're doing an unshare operation, then we know our src and dest iomaps
-> > and can allocate the iop then.  But if we readahead, we don't necessarily
-> > know our eventual dest.  So the conditions for skipping allocating an
-> > iop are tricky to be sure we'll never need it.
+> > Right, it went in at the start of the merge window for 5.9. Thanks Ted!
 > 
-> So with the current codebase (that is without your THP work that I need
-> to re-review) the decision should be pretty easy:
-> 
->  - check if block size >= PAGE, and if yes don't allocate
->  - check if the extent fully covers the page, and if yes don't allocate
-> 
-> Now with THP we'd just need to check the thp size instead of the page
-> above and be fine, or do I miss something?
+> Didn't see it in the queue that just sent in, is it still queued up?
 
-The case I was worrying about:
+It wasn't in the queue which I queued up because that was based on
+5.8-rc4.  Linus was a bit grumpy (fairly so) because it was late, and
+that's totally on me.
 
-fill a filesystem so that free space is very fragmented
-readahead into a hole
-hole is large, don't allocate an iop
-writeback the page
-don't have an iop, can't track the write count
+He has said that he's going to start ignoring pull requests that
+aren't fixes only if this becomes a pattern, so while I can send him
+another pull request which will just have that one change, there are
+no guarantees he's going to take it at this late date.
 
-I'd be fine with choosing to allocate an iop later (and indeed I do that
-as part of the THP work).  But does this scenario make you think of any
-other corner cases?
+Sorry, when you sent me the commit saying that the changes that were
+needed were already upstream on August 3rd, I thought that meant that
+they were aready in Linus's tree.  I should have checked and noticed
+that that in fact "ext4: flag as supporting buffered async reads"
+wasn't compiling against Linus's upstream tree, so I didn't realize
+this needed to be handled as a special case during the merge window.
+
+Cheers,
+
+					- Ted
