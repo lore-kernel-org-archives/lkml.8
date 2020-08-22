@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C30CC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8CE2207CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04BB2072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598097690;
-	bh=Fv4Qd3FUTWdI//LGlPoIGhYu1vZGuwybWUAHYMZzSBI=;
+	s=default; t=1598097732;
+	bh=GuOBu4Fctwk8bFcST8rKgsRijydFEh3DndcxoPdJYmQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D9pU7RzKVJQ71FarItwSrX8wjMzP8KyxOE6607Gt96rsGWRChl1MrRnA0R0EBGoju
-	 4OHW6U/jmLBMFZx4i/8sxF5LP3nUctX1Q9kdTUibePmM6TR/DUkAvifvk0u05FRDrI
-	 FIH+irpsI3wpy4QAaPkkieBt31hIuaS15tGBTcP8=
+	b=FTLvcDkDCUg387jWWXXdxOP1jbiAhQed9JxEgkRB8ingrl7SXnrXadDkPHc3jRoCf
+	 JOSTvb/S1/AARyHLlFfx1hnTIKaGt8Wmfsh2RYSadEZEMrSmQcD/Ucflbc3aDYw/uc
+	 foj11EH2fkFTUWNUpxeTmRZf3yFt+NJ1os458sAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgHVMB2 convert rfc822-to-8bit (ORCPT
+        id S1727950AbgHVMCL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 08:01:28 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52642 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbgHVMB0 (ORCPT
+        Sat, 22 Aug 2020 08:02:11 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34634 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbgHVMCK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 08:01:26 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x5so4172362wmi.2;
-        Sat, 22 Aug 2020 05:01:24 -0700 (PDT)
+        Sat, 22 Aug 2020 08:02:10 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f7so4292125wrw.1;
+        Sat, 22 Aug 2020 05:02:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=bPouFZMIl7dlHwQoDaxlb/Nq4wtVCEDrmFr3ebXaAIM=;
-        b=l9gzW/BWHb8fmrsHN4ZkWsslyiB6i73egwzcGCrvzZEzBj0DZXnVnacONUbvDjpE74
-         fzFaT1DUgwcbk3ziLnLXHCpCXySNj0h74Og9QtUS8rocUDJnx9ssR8TwpsZT04QpMp93
-         8kyyIaVhGIgTga+WoKrzmDzcryGIaPuqJYZ6ufb0m4dlpsCRWjzSalN7uXWuwnEwhCJ3
-         ZFvXZ3ePtDj0SZ0I+y4lC0ELLEk7pe11L7YKO3q5/5braxHzllOLYUQ0WQVCdcVatKsg
-         J5M8+Jlz8ZJ9vXGFIUlXRZHPYU8Y/VSMzCP+X49eUMNYZ2teqYwOOGS12tm4vh3cZAf7
-         3Gcw==
-X-Gm-Message-State: AOAM531OSkGIzv5Y4XIdwvbUPbS12X2nJUoNHCo/Pr5wtlFXy4AgG0lI
-        R9keu5ouQhhZy4L/kT6lh6I=
-X-Google-Smtp-Source: ABdhPJz8YNXzvqgyYb9UZGsKJDnt9kosXNPfPc3M7afStiua+EoML1ySc0g9dWYlQxwULI4DhYxdGg==
-X-Received: by 2002:a05:600c:2d1:: with SMTP id 17mr7391901wmn.15.1598097683955;
-        Sat, 22 Aug 2020 05:01:23 -0700 (PDT)
+        bh=p0ZOKsEqxYq/dPyLynSj5muBJYzE12r6/FPqjVWhV2g=;
+        b=SVTdbNm3laPeYq9J/L5nbIO9qS17jbprrBBWgsVNpINIB5N81nK6sHfzZ4zRzKhiII
+         aZuGDeo73a8NJ06lpN2LqIIPQ/BLgcZRTSLNvYnqcLGB10RvXOxQh0P2uidhn3Kq3yep
+         b0TmloQtrm0Q478ti6jFpGMWGpTAONWyduR2Bpl/dZ/PjAt6sXQK3gB9rWTMk9iz0n5V
+         gU45gy1dxz/pN8FXcqB2dXrpzI2NYQZkRd9W9FKJLLk81PnGfKKuPAXWWJeX6No7OtOE
+         +PUHjhD+dEHvAtJ+E2hqloSipOTeZ8dtCP7B+Me7fSzkYeJCJgmK1IUxD5inFj3+PosH
+         t23Q==
+X-Gm-Message-State: AOAM532IhAm65vjsSTzNJLd4DGCctZZ9OcEgIn2qiParsf3ChidA0mgY
+        Hf7Az6BeVt0jThKaKep3wukNHI+6X0A=
+X-Google-Smtp-Source: ABdhPJy5UUAZ3T9VbAJOJ37DrVQjyWvVvEecaUSRg9dpRET6qAoAdpQ0JXGawzzsyd5oN9xtEV1S2Q==
+X-Received: by 2002:adf:ee11:: with SMTP id y17mr1711828wrn.294.1598097728326;
+        Sat, 22 Aug 2020 05:02:08 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id t14sm10442478wrv.14.2020.08.22.05.01.22
+        by smtp.googlemail.com with ESMTPSA id t12sm2980175wrm.61.2020.08.22.05.02.07
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 22 Aug 2020 05:01:23 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 14:01:21 +0200
+        Sat, 22 Aug 2020 05:02:07 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 14:02:05 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
 Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
@@ -59,30 +59,27 @@ Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
         linux-samsung-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [PATCH v2 1/9] spi: spi-s3c64xx: swap s3c64xx_spi_set_cs() and
- s3c64xx_enable_datapath()
-Message-ID: <20200822120121.GA20423@kozik-lap>
+Subject: Re: [PATCH v2 2/9] spi: spi-s3s64xx: Add S3C64XX_SPI_QUIRK_CS_AUTO
+ for Exynos3250
+Message-ID: <20200822120205.GB20423@kozik-lap>
 References: <20200821161401.11307-1-l.stelmach@samsung.com>
- <CGME20200821161405eucas1p1d43a5970c6a26389cd506aab5f986bc8@eucas1p1.samsung.com>
- <20200821161401.11307-2-l.stelmach@samsung.com>
+ <CGME20200821161405eucas1p20aad659cd41bc4f56d5123d3c63394f0@eucas1p2.samsung.com>
+ <20200821161401.11307-3-l.stelmach@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200821161401.11307-2-l.stelmach@samsung.com>
+In-Reply-To: <20200821161401.11307-3-l.stelmach@samsung.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 06:13:53PM +0200, Łukasz Stelmach wrote:
-> This and the next patch fix issues with DMA transfers bigger than
+On Fri, Aug 21, 2020 at 06:13:54PM +0200, Łukasz Stelmach wrote:
+> This and the previous patch fix issues with DMA transfers bigger than
 
-Just:
-"Fix issues with DMA transfers..."
-
-The order of patches could change when applying and backporting.
+"Fix issues with DMA..."
 
 Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
@@ -90,33 +87,27 @@ Best regards,
 Krzysztof
 
 
-> 512 bytes on Exynos3250. Without the patches such transfers fail
-> to complete. This solution to the problem is found in the vendor kernel
-> for ARTIK5 boards based on Exynos3250.
+> 512 bytes on Exynos3250. Without the patches such transfers fail.
+> 
+> The vendor kernel for ARTIK5 handles CS in a simmilar way.
 > 
 > Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
 > ---
->  drivers/spi/spi-s3c64xx.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/spi/spi-s3c64xx.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 > diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-> index 924b24441789..26c7cb79cd78 100644
+> index 26c7cb79cd78..22bf8c75580a 100644
 > --- a/drivers/spi/spi-s3c64xx.c
 > +++ b/drivers/spi/spi-s3c64xx.c
-> @@ -685,11 +685,11 @@ static int s3c64xx_spi_transfer_one(struct spi_master *master,
->  		sdd->state &= ~RXBUSY;
->  		sdd->state &= ~TXBUSY;
+> @@ -1379,6 +1379,7 @@ static struct s3c64xx_spi_port_config exynos4_spi_port_config = {
+>  	.tx_st_done	= 25,
+>  	.high_speed	= true,
+>  	.clk_from_cmu	= true,
+> +	.quirks		=  S3C64XX_SPI_QUIRK_CS_AUTO,
+>  };
 >  
-> -		s3c64xx_enable_datapath(sdd, xfer, use_dma);
-> -
->  		/* Start the signals */
->  		s3c64xx_spi_set_cs(spi, true);
->  
-> +		s3c64xx_enable_datapath(sdd, xfer, use_dma);
-> +
->  		spin_unlock_irqrestore(&sdd->lock, flags);
->  
->  		if (use_dma)
+>  static struct s3c64xx_spi_port_config exynos7_spi_port_config = {
 > -- 
 > 2.26.2
 > 
