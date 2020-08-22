@@ -2,138 +2,177 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC82C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A080C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 08:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E900D214F1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:55:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSzSqkuk"
+	by mail.kernel.org (Postfix) with ESMTP id 6232C2072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 08:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgHVHzV (ORCPT
+        id S1727836AbgHVIDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 03:55:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727802AbgHVHzU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 03:55:20 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D20C061573;
-        Sat, 22 Aug 2020 00:55:20 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id u6so2303998ybf.1;
-        Sat, 22 Aug 2020 00:55:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3FGIc23gIcAL+scd1gVHTER4ApVxnptisLCy0nOA3ec=;
-        b=RSzSqkuk2hxMrHDgNEpuWCYiDfGZ3ACWe7ZA3ruJMeA/Y1jKDRp2N7eo+K+HWkuOhT
-         NEcgA6U5EZ4g9jrmuDDYJ0DsiA7/FYDxn5Xb7wvxwT5aguFaEuF3VCxgfovw8q00cD1i
-         V1hPb1wxj3LBqItsJYj0Rw7VzzMLfjgN48w9XQM33H3lzwL2rpXw4uA/JOzicBnQ1zyT
-         5NzldIftdoAo9G3m/c9gFEBsTu0D4LTmeLNgYvb8etkJViKZvvJ3hmTeHq+I8Im5DxLJ
-         a8teefzkh2SOisuAnh4eXkzwDO07XgfG1v996L6RAHFY94ECcBvIUHBQB00bIQDYqIdJ
-         JT4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3FGIc23gIcAL+scd1gVHTER4ApVxnptisLCy0nOA3ec=;
-        b=gVPLfIz4RPt+AjN5bPhwkZe2tFtjhc2VphtVUT2C5OScSTas1GwVOLyMDYefoq4iqJ
-         ss5kQPEtYaFhHGqypHUnvJ0XIlIckZhtLImAprD96m5LwNdQh68n1Ui/Z06LJ7o+v/ht
-         0liPYi5irNEWaM8PNEAXnhdAHdJZsGc/T4EUxXYLu+XHRIImpJRlOZg5pppy/49F5/as
-         h10IHzK1iG5bL7mUl8ZxCpr/BTn9zRi5bd+WaTRAK36dOCg3eX7btHHOJz4LkCsNbFLX
-         NS0Kd0uv1HomdZHVEzNGqTk5VhV3cgt6atiygTpOY8wbdrHo/39G+a1qeVMploQlpLyf
-         xeJw==
-X-Gm-Message-State: AOAM533cFpRr2doHB+ILD2Gsqf9hC+JSQBut+z++UqpqjWTiuXBitrmS
-        ASLwd88UK8wDKcMub6HEzrd8c0DlmUqgsx2BC7U=
-X-Google-Smtp-Source: ABdhPJwlkJniKwUnZRzObGLsXHNYy3Kczys5fZJbeSKZ6lFpfoqfikT6wmGUzFODlcdPWsMox3Zwhh+ziW5xQAAFHIo=
-X-Received: by 2002:a25:bc50:: with SMTP id d16mr7987916ybk.230.1598082919371;
- Sat, 22 Aug 2020 00:55:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-7-haoluo@google.com>
- <CAEf4BzZY2LyJvF9HCdAzHM7WG26GO0qqX=Wc6EiXArks=kmazA@mail.gmail.com>
- <CAEf4BzZ+uqE73tM6W1vXyc-hu6fB8B9ZNniq-XHYhFDjhHg9gA@mail.gmail.com> <CA+khW7jQmdw-TZMnST_rBcQWmxZ_eVw4ja+nsrqCM9HSkeWaXQ@mail.gmail.com>
-In-Reply-To: <CA+khW7jQmdw-TZMnST_rBcQWmxZ_eVw4ja+nsrqCM9HSkeWaXQ@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Sat, 22 Aug 2020 00:55:08 -0700
-Message-ID: <CAEf4BzZwtpvBSE=00XyHGr2p2OD6X_rwnntwvSZBjGvZUEZKCA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 6/8] bpf: Introduce bpf_per_cpu_ptr()
-To:     Hao Luo <haoluo@google.com>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 22 Aug 2020 04:03:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34720 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727103AbgHVIDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 04:03:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 091FFAC79;
+        Sat, 22 Aug 2020 08:03:29 +0000 (UTC)
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: Paravirt: remove remaining pieces of paravirt
+Date:   Sat, 22 Aug 2020 10:02:51 +0200
+Message-Id: <20200822080251.65555-1-tsbogend@alpha.franken.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 12:49 AM Hao Luo <haoluo@google.com> wrote:
->
-> On Fri, Aug 21, 2020 at 8:31 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Fri, Aug 21, 2020 at 8:26 PM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Wed, Aug 19, 2020 at 3:42 PM Hao Luo <haoluo@google.com> wrote:
-> > > >
-> > > > Add bpf_per_cpu_ptr() to help bpf programs access percpu vars.
-> > > > bpf_per_cpu_ptr() has the same semantic as per_cpu_ptr() in the kernel
-> > > > except that it may return NULL. This happens when the cpu parameter is
-> > > > out of range. So the caller must check the returned value.
-> > > >
-> > > > Signed-off-by: Hao Luo <haoluo@google.com>
-> > > > ---
-> > >
-> > > The logic looks correct, few naming nits, but otherwise:
-> > >
-> > > Acked-by: Andrii Nakryiko <andriin@fb.com>
-> > >
-> > > >  include/linux/bpf.h      |  3 ++
-> > > >  include/linux/btf.h      | 11 +++++++
-> > > >  include/uapi/linux/bpf.h | 14 +++++++++
-> > > >  kernel/bpf/btf.c         | 10 -------
-> > > >  kernel/bpf/verifier.c    | 64 ++++++++++++++++++++++++++++++++++++++--
-> > > >  kernel/trace/bpf_trace.c | 18 +++++++++++
-> > > >  6 files changed, 107 insertions(+), 13 deletions(-)
-> [...]
-> >
-> > btw, having bpf_this_cpu_ptr(const void *ptr) seems worthwhile as well, WDYT?
-> >
->
-> It's probably not a good idea, IMHO. How does it interact with
-> preemption? Should we treat it as __this_cpu_ptr()? If so, I feel it's
-> easy to be misused, if the bpf program is called in a preemptible
-> context.
->
-> Btw, is bpf programs always called with preemption disabled? How about
-> interrupts? I haven't thought about these questions before but I think
-> they matter as we start to have more ways for bpf programs to interact
-> with the kernel.
+Commit 35546aeede8e ("MIPS: Retire kvm paravirt") removed
+kvm paravirt support, but missed arch/mips/include/mach-paravirt.
+Remove it as well.
 
-non-sleepable BPF is always disabling CPU migration, so there is no
-problem with this_cpu_ptr. For sleepable not sure, but we can disable
-this helper for sleepable BPF programs, if that's a problem.
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+---
+ .../asm/mach-paravirt/cpu-feature-overrides.h      | 35 ---------------
+ arch/mips/include/asm/mach-paravirt/irq.h          | 19 --------
+ .../include/asm/mach-paravirt/kernel-entry-init.h  | 52 ----------------------
+ 3 files changed, 106 deletions(-)
+ delete mode 100644 arch/mips/include/asm/mach-paravirt/cpu-feature-overrides.h
+ delete mode 100644 arch/mips/include/asm/mach-paravirt/irq.h
+ delete mode 100644 arch/mips/include/asm/mach-paravirt/kernel-entry-init.h
 
->
-> Best,
-> Hao
+diff --git a/arch/mips/include/asm/mach-paravirt/cpu-feature-overrides.h b/arch/mips/include/asm/mach-paravirt/cpu-feature-overrides.h
+deleted file mode 100644
+index 23ecf816daa7..000000000000
+--- a/arch/mips/include/asm/mach-paravirt/cpu-feature-overrides.h
++++ /dev/null
+@@ -1,35 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2013 Cavium, Inc.
+- */
+-#ifndef __ASM_MACH_PARAVIRT_CPU_FEATURE_OVERRIDES_H
+-#define __ASM_MACH_PARAVIRT_CPU_FEATURE_OVERRIDES_H
+-
+-#define cpu_has_4kex		1
+-#define cpu_has_3k_cache	0
+-#define cpu_has_tx39_cache	0
+-#define cpu_has_counter		1
+-#define cpu_has_llsc		1
+-/*
+- * We Disable LL/SC on non SMP systems as it is faster to disable
+- * interrupts for atomic access than a LL/SC.
+- */
+-#ifdef CONFIG_SMP
+-# define kernel_uses_llsc	1
+-#else
+-# define kernel_uses_llsc	0
+-#endif
+-
+-#ifdef CONFIG_CPU_CAVIUM_OCTEON
+-#define cpu_dcache_line_size()	128
+-#define cpu_icache_line_size()	128
+-#define cpu_has_octeon_cache	1
+-#define cpu_has_4k_cache	0
+-#else
+-#define cpu_has_4k_cache	1
+-#endif
+-
+-#endif /* __ASM_MACH_PARAVIRT_CPU_FEATURE_OVERRIDES_H */
+diff --git a/arch/mips/include/asm/mach-paravirt/irq.h b/arch/mips/include/asm/mach-paravirt/irq.h
+deleted file mode 100644
+index 9b4d35eca977..000000000000
+--- a/arch/mips/include/asm/mach-paravirt/irq.h
++++ /dev/null
+@@ -1,19 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2013 Cavium, Inc.
+- */
+-#ifndef __ASM_MACH_PARAVIRT_IRQ_H__
+-#define  __ASM_MACH_PARAVIRT_IRQ_H__
+-
+-#define NR_IRQS 64
+-#define MIPS_CPU_IRQ_BASE 1
+-
+-#define MIPS_IRQ_PCIA (MIPS_CPU_IRQ_BASE + 8)
+-
+-#define MIPS_IRQ_MBOX0 (MIPS_CPU_IRQ_BASE + 32)
+-#define MIPS_IRQ_MBOX1 (MIPS_CPU_IRQ_BASE + 33)
+-
+-#endif /* __ASM_MACH_PARAVIRT_IRQ_H__ */
+diff --git a/arch/mips/include/asm/mach-paravirt/kernel-entry-init.h b/arch/mips/include/asm/mach-paravirt/kernel-entry-init.h
+deleted file mode 100644
+index c9f5769dfc8f..000000000000
+--- a/arch/mips/include/asm/mach-paravirt/kernel-entry-init.h
++++ /dev/null
+@@ -1,52 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2013 Cavium, Inc
+- */
+-#ifndef __ASM_MACH_PARAVIRT_KERNEL_ENTRY_H
+-#define __ASM_MACH_PARAVIRT_KERNEL_ENTRY_H
+-
+-#define CP0_EBASE $15, 1
+-
+-	.macro  kernel_entry_setup
+-#ifdef CONFIG_SMP
+-	mfc0	t0, CP0_EBASE
+-	andi	t0, t0, 0x3ff		# CPUNum
+-	beqz	t0, 1f
+-	# CPUs other than zero goto smp_bootstrap
+-	j	smp_bootstrap
+-#endif /* CONFIG_SMP */
+-
+-1:
+-	.endm
+-
+-/*
+- * Do SMP slave processor setup necessary before we can safely execute
+- * C code.
+- */
+-	.macro  smp_slave_setup
+-	mfc0	t0, CP0_EBASE
+-	andi	t0, t0, 0x3ff		# CPUNum
+-	slti	t1, t0, NR_CPUS
+-	bnez	t1, 1f
+-2:
+-	di
+-	wait
+-	b	2b			# Unknown CPU, loop forever.
+-1:
+-	PTR_LA	t1, paravirt_smp_sp
+-	PTR_SLL	t0, PTR_SCALESHIFT
+-	PTR_ADDU t1, t1, t0
+-3:
+-	PTR_L	sp, 0(t1)
+-	beqz	sp, 3b			# Spin until told to proceed.
+-
+-	PTR_LA	t1, paravirt_smp_gp
+-	PTR_ADDU t1, t1, t0
+-	sync
+-	PTR_L	gp, 0(t1)
+-	.endm
+-
+-#endif /* __ASM_MACH_PARAVIRT_KERNEL_ENTRY_H */
+-- 
+2.16.4
+
