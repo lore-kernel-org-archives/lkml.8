@@ -2,176 +2,86 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 01:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B972FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 02:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56F0120735
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 01:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598061410;
-	bh=ZCTVb66SyAkueDcBaVCRwX24U9q+XP+D2oBby5ugtZE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Mo6ZzC6CT/P7N934WeR9GwmWOzx3QXS3F9URitMDFZ1gFPGe0hu6fSAnyhn1vd73e
-	 g1b3SlzmzO0dM/zaNyGYbOboBf7AIy4mE4CKk6XWBG9LL/kzQIhziQRvXncO7qcoRI
-	 Fj00vsz/Mhp2t/s4K0AWk3FMm+soadgxaCiMfs4g=
+	by mail.kernel.org (Postfix) with ESMTP id 96B5F20732
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 02:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgHVB4p (ORCPT
+        id S1726542AbgHVCEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 21:56:45 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:26066 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbgHVB4o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 21:56:44 -0400
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 07M1uRqE012037;
-        Sat, 22 Aug 2020 10:56:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 07M1uRqE012037
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598061388;
-        bh=q3L66YZXyG50TUDwrxJ74OdS8uQta7H1te/B0BYs9zU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XraiQyZsUu0Jn/HCfncWFKXxMCA9EFMDQL+EtMWOdkAWvtb6sLRESg572S7cau/2M
-         OqgJKAFqNZRl1EVTZXRG1W0bOw4CIzBrDrli6nxVk2CUeBqaRYx9PErN3lZ8pUq8RV
-         47iNrEIIhav6hl1MyDpcC+tqLkuBVnnsaUT0Mq9gHy4j8wvpwNrNcV5wgXJfytyr7f
-         C6YxwNBhzeZ8XisYjK6mI0SvHSs8OAcdiI3gXZb5uxNRoEKQMKc1jO2xSYjsygrWI7
-         viGycatXEBb3lvqERXWVGKTIpMzAHB7ie0eaP2hmqOshnYH67UOi8l8uZkj6PT65pX
-         bgF6xvdCyfr+A==
-X-Nifty-SrcIP: [209.85.221.169]
-Received: by mail-vk1-f169.google.com with SMTP id r197so803284vkf.13;
-        Fri, 21 Aug 2020 18:56:28 -0700 (PDT)
-X-Gm-Message-State: AOAM532MigHR3uf7jI4+RJnor2YddPd1qlrZNEZL3UCy/iiM5HX47MKQ
-        K/iLC4kBXB8w1Om056vp50H075V2PE1NmG7qDBw=
-X-Google-Smtp-Source: ABdhPJz0rXXcQvD+bIW8QJzYQGf5IQgfFZcImslJWk0nYuyJBlx6z3U/YI4b8+QHR71PYqjIrnjn0K8nnLkiRGHiSmA=
-X-Received: by 2002:a1f:eac1:: with SMTP id i184mr3803919vkh.66.1598061386864;
- Fri, 21 Aug 2020 18:56:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200821190159.1033740-1-masahiroy@kernel.org>
- <20200821190159.1033740-5-masahiroy@kernel.org> <CAKwvOdnCZ7ao55Zdh3qkJQzudOwhkPFPOY802Emx3o7GMDdCwA@mail.gmail.com>
-In-Reply-To: <CAKwvOdnCZ7ao55Zdh3qkJQzudOwhkPFPOY802Emx3o7GMDdCwA@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 22 Aug 2020 10:55:50 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR+ZdwCg7Dcg3BR5YysxzeraEHMAVsHuez5znwjoN+1pQ@mail.gmail.com>
-Message-ID: <CAK7LNAR+ZdwCg7Dcg3BR5YysxzeraEHMAVsHuez5znwjoN+1pQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/9] gen_compile_commands: reword the help message of
- -d option
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Tom Roeder <tmroeder@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 21 Aug 2020 22:04:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:41752 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbgHVCEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 22:04:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57F3B31B;
+        Fri, 21 Aug 2020 19:04:45 -0700 (PDT)
+Received: from net-arm-thunderx2-02.shanghai.arm.com (net-arm-thunderx2-02.shanghai.arm.com [10.169.210.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4119D3F66B;
+        Fri, 21 Aug 2020 19:04:43 -0700 (PDT)
+From:   Jianlin Lv <Jianlin.Lv@arm.com>
+To:     netdev@vger.kernel.org
+Cc:     davem@davemloft.net, kuba@kernel.org, Song.Zhu@arm.com,
+        Jianlin.Lv@arm.com, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: Remove unnecessary intermediate variables
+Date:   Sat, 22 Aug 2020 10:04:31 +0800
+Message-Id: <20200822020431.125732-1-Jianlin.Lv@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 9:29 AM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> On Fri, Aug 21, 2020 at 12:02 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > I think the help message of the -d option is somewhat misleading.
-> >
-> >   Path to the kernel source directory to search (defaults to the working directory)
-> >
-> > The part "kernel source directory" is the source of the confusion.
-> > Some people misunderstand as if this script did not support separate
-> > output directories.
-> >
-> > Actually, this script also works for out-of-tree builds. You can
-> > use the -d option to point to the object output directory, not to
-> > the source directory. It should match to the O= option used in the
-> > previous kernel build, and then appears in the "directory" field of
-> > compile_commands.json.
-> >
-> > Reword the help message.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
-> >
-> > Changes in v2:
-> >   - New patch
-> >
-> >  scripts/gen_compile_commands.py | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
-> > index 1b9899892d99..5f6318da01a2 100755
-> > --- a/scripts/gen_compile_commands.py
-> > +++ b/scripts/gen_compile_commands.py
-> > @@ -31,13 +31,13 @@ def parse_arguments():
-> >
-> >      Returns:
-> >          log_level: A logging level to filter log output.
-> > -        directory: The directory to search for .cmd files.
-> > +        directory: The work directory where the objects were built
->
-> Punctuation (add a period `.`).
+It is not necessary to use src/dst as an intermediate variable for
+assignment operation; Delete src/dst intermediate variables to avoid
+unnecessary variable declarations.
 
-Will fix.
+Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
+---
+ drivers/net/vxlan.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-
-> >          output: Where to write the compile-commands JSON file.
-> >      """
-> >      usage = 'Creates a compile_commands.json database from kernel .cmd files'
-> >      parser = argparse.ArgumentParser(description=usage)
-> >
-> > -    directory_help = ('Path to the kernel source directory to search '
-> > +    directory_help = ('specify the output directory used for the kernel build '
->
-> Capitalization (specify -> Specify)
-
-
-
-
-The help message of -h starts with a lower case.
-The others start with a capital letter.
-
-It would be better if "show this help message and exit"
-started with a capital letter. But, it comes from the
-library, so I do not know how to change it.
-
-I changed our code to make it consistent, but
-starting them with a capital letter is a preferred style,
-I can do as you suggest.
-
-
-Currently, the help looks like follows:
-
----------------->8-----------------------
-masahiro@oscar:~/ref/linux$ ./scripts/gen_compile_commands.py  -h
-usage: gen_compile_commands.py [-h] [-d DIRECTORY] [-o OUTPUT]
-                               [--log_level LOG_LEVEL]
-
-Creates a compile_commands.json database from kernel .cmd files
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -d DIRECTORY, --directory DIRECTORY
-                        Path to the kernel source directory to search
-                        (defaults to the working directory)
-  -o OUTPUT, --output OUTPUT
-                        The location to write compile_commands.json
-                        (defaults to compile_commands.json in the search
-                        directory)
-  --log_level LOG_LEVEL
-                        The level of log messages to produce (one of
-                        DEBUG, INFO, WARNING, ERROR, CRITICAL; defaults to
-                        WARNING)
----------------->8-----------------------
-
-
-
-Thanks.
-
-
+diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
+index b9fefe27e3e8..c00ca01ebe76 100644
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2728,12 +2728,8 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
+ 			goto tx_error;
+ 		} else if (err) {
+ 			if (info) {
+-				struct in_addr src, dst;
+-
+-				src = remote_ip.sin.sin_addr;
+-				dst = local_ip.sin.sin_addr;
+-				info->key.u.ipv4.src = src.s_addr;
+-				info->key.u.ipv4.dst = dst.s_addr;
++				info->key.u.ipv4.src = remote_ip.sin.sin_addr.s_addr;
++				info->key.u.ipv4.dst = local_ip.sin.sin_addr.s_addr;
+ 			}
+ 			vxlan_encap_bypass(skb, vxlan, vxlan, vni, false);
+ 			dst_release(ndst);
+@@ -2784,12 +2780,8 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
+ 			goto tx_error;
+ 		} else if (err) {
+ 			if (info) {
+-				struct in6_addr src, dst;
+-
+-				src = remote_ip.sin6.sin6_addr;
+-				dst = local_ip.sin6.sin6_addr;
+-				info->key.u.ipv6.src = src;
+-				info->key.u.ipv6.dst = dst;
++				info->key.u.ipv6.src = remote_ip.sin6.sin6_addr;
++				info->key.u.ipv6.dst = local_ip.sin6.sin6_addr;
+ 			}
+ 
+ 			vxlan_encap_bypass(skb, vxlan, vxlan, vni, false);
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
