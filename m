@@ -2,217 +2,142 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B03C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 01:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D487FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 01:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7FFB20735
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 01:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1DC20720
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 01:40:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gqWN4ew2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mLsFSzy6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="TGR+lsyK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgHVBet (ORCPT
+        id S1726473AbgHVBkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 21:34:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59850 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgHVBet (ORCPT
+        Fri, 21 Aug 2020 21:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgHVBkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 21:34:49 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598060086;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nz/9GcEZiJRVQwppT3u/3DMX1VmX3CDhMpuuU+KPrYE=;
-        b=gqWN4ew2Hp5FmAu1u6jlph8fiR/xZUN1x/TLB/mxoFPnUshdgAyFhWycpVI19otyAM1sWt
-        gPgJUlXHnWBEIa931+Xhft5Z2XxoKuGlb/QrhkWREFGG8Xk+8hsyst9INoQDycby6ix9ZW
-        Blm1MGNuQM86txgUGZavEyIxV2dXZbdkEf9SPds63RNu9Gv8PSQFjJJN5ho7QBhKScw9Sz
-        3hp0K9hzzmPwdTAMsqCtc7AG8/zjpKpnCn+S+rh0lJO5lEwSO01IPTMdgxXnPkLRkNkbz0
-        eGI2HfBsqEGmmwV9mhldpn0Z8Ky03jTnLPrydZFQBLRyQez69Da0h2LoQ7BX7A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598060086;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nz/9GcEZiJRVQwppT3u/3DMX1VmX3CDhMpuuU+KPrYE=;
-        b=mLsFSzy6Tm79Wj6LjfFtlF7l657qdrqbOGQMqRhab6Wim8XLycKBLp0q/HdnaiLDDx4/kT
-        vB2su76TijRGjPDg==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Marc Zyngier <maz@kernel.org>, Megha Dey <megha.dey@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [patch RFC 38/38] irqchip: Add IMS array driver - NOT FOR MERGING
-In-Reply-To: <20200822005125.GB1152540@nvidia.com>
-References: <20200821002424.119492231@linutronix.de> <20200821002949.049867339@linutronix.de> <20200821124547.GY1152540@nvidia.com> <874kovsrvk.fsf@nanos.tec.linutronix.de> <20200821201705.GA2811871@nvidia.com> <87pn7jr27z.fsf@nanos.tec.linutronix.de> <20200822005125.GB1152540@nvidia.com>
-Date:   Sat, 22 Aug 2020 03:34:45 +0200
-Message-ID: <874kovqx8q.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 21 Aug 2020 21:40:24 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0C2C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 18:40:24 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id w17so3981276ybl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 18:40:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=yI2W6XOAECLWWz1vxp8A2D0OjzZ6EM2hcqCHiaj5HuY=;
+        b=TGR+lsyK3bcOwfDOvhbrkZPJhPT7NSLH+l9HfLzVxRnJO1cucaMAPrlFYr3SollIVB
+         Q8DeGaUQyFQvckXiCZEFjkV5oPHLtoTDNqSua0q1QHpQj/OSZZBuzhelPf5BC0OXuUmg
+         C3MSmkgDFvDVUOA1UBzE67AwHnDAbZSHmxKKibDFE3HhAhaWaigNxMlKUUVCLRCE9Ooy
+         9K6pNdw5tZvtjXf8NB/d8SmutZT3n+SIjFoRnCq1PgHNOpgJBfpLct7R0F1hptU0G8TE
+         PdO0h47aCJjsJsbOztR74D4U42GTILnjnM91A43CkbHk/G79/cZXSb0BoiBPDno+MK0z
+         zsHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=yI2W6XOAECLWWz1vxp8A2D0OjzZ6EM2hcqCHiaj5HuY=;
+        b=cDI2DPuAtUkQ1mfX4ls0h+anNqs5t1pYs97QHzsvdB557iHxS0uInj7lWbdC7K1cdo
+         YGvoXG/S4Nj4rXPI/rbSFpXwLpVLyphi7IYP2UOd8Gemw6OkEL1AvF3O9pRndBk+Pqjw
+         j89iZCiMiuGkEL6qGbGiAq16iifXhMuYw5YbM5PvIyM9RedrrYwbpPzHfM2gMm3pEJ+g
+         6Yz7ScE7AksGa6XJZg10VRROSzBbpDA4mVdPBM/y6CoWFuqEwlWQvR+BoEG09cdo2v66
+         v5z69QGU3fhuqCogAhoVUDBnIx95KQvw0BUCbdqNKSITpKK6EPkBogv0sGkNvVG2OSSX
+         2wPQ==
+X-Gm-Message-State: AOAM5305kqdKBIGvStyjbxPRyCUagfWkg3nFO+v3t/NJ2BuEwK+du49P
+        Lg2GanD4H9bBY0CF+YoEOAk7QUyLJeLvZDppQg==
+X-Google-Smtp-Source: ABdhPJyMbZ5EQZgoIAE5xx9h3TpYZZz10xRs8x2nvbqmtq7u7p4MrurW+Xl6HKu/QGhj9B4xBqwrRRAqe6zZStZSjw==
+X-Received: from lg.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:29dd])
+ (user=lokeshgidra job=sendgmr) by 2002:a5b:c44:: with SMTP id
+ d4mr6981423ybr.488.1598060423377; Fri, 21 Aug 2020 18:40:23 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 18:40:16 -0700
+Message-Id: <20200822014018.913868-1-lokeshgidra@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH v2 0/2] Control over userfaultfd kernel-fault handling
+From:   Lokesh Gidra <lokeshgidra@google.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, Peter Xu <peterx@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Biggers <ebiggers@kernel.com>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Daniel Colascione <dancol@dancol.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, kaleshsingh@google.com,
+        calin@google.com, surenb@google.com, nnk@google.com,
+        jeffv@google.com, kernel-team@android.com,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Shaohua Li <shli@fb.com>, Jerome Glisse <jglisse@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Nitin Gupta <nigupta@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jason,
+This patch series is split from [1]. The other series enables SELinux
+support for userfaultfd file descriptors so that its creation and
+movement can be controlled.
 
-On Fri, Aug 21 2020 at 21:51, Jason Gunthorpe wrote:
-> On Sat, Aug 22, 2020 at 01:47:12AM +0200, Thomas Gleixner wrote:
->> > If the device has died the driver has code to detect and trigger a
->> > PCI function reset which will definitely stop the interrupt.
->> 
->> If that interrupt is gone into storm mode for some reason then this will
->> render your machine unusable before you can do that.
->
-> Yes, but in general the HW design is to have one-shot interrupts, it
-> would have to be well off the rails to storm. The kind of off the
-> rails where it could also be doing crazy stuff on PCI-E that would be
-> very harmful.
+It has been demonstrated on various occasions that suspending kernel
+code execution for an arbitrary amount of time at any access to
+userspace memory (copy_from_user()/copy_to_user()/...) can be exploited
+to change the intended behavior of the kernel. For instance, handling
+page faults in kernel-mode using userfaultfd has been exploited in [2, 3].
+Likewise, FUSE, which is similar to userfaultfd in this respect, has been
+exploited in [4, 5] for similar outcome.
 
-Yeah. One shot should prevent most of the wreckage. I just wanted to
-spell it out.
+This small patch series adds a new flag to userfaultfd(2) that allows
+callers to give up the ability to handle kernel-mode faults with the
+resulting UFFD file object. It then adds a 'user-mode only' option to
+the unprivileged_userfaultfd sysctl knob to require unprivileged
+callers to use this new flag.
 
->> One question is whether the device can see partial updates to that
->> memory due to the async 'swap' of context from the device CPU.
->
-> It is worse than just partial updates.. The device operation is much
-> more like you'd imagine a CPU cache. There could be copies of the RAM
-> in the device for long periods of time, dirty data in the device that
-> will flush back to CPU RAM overwriting CPU changes, etc.
+The purpose of this new interface is to decrease the chance of an
+unprivileged userfaultfd user taking advantage of userfaultfd to
+enhance security vulnerabilities by lengthening the race window in
+kernel code.
 
-TBH, that's insane. You clearly want to think about this some more. If
-you swap out device state and device control state then you definitly
-want to have regions which are read only from the device POV and never
-written back. The MSI msg store clearly belongs into that category.
-But that's not restricted to the MSI msg store, there is certainly other
-stuff which never wants to be written back by the device.
+[1] https://lore.kernel.org/lkml/20200211225547.235083-1-dancol@google.com/
+[2] https://duasynt.com/blog/linux-kernel-heap-spray
+[3] https://duasynt.com/blog/cve-2016-6187-heap-off-by-one-exploit
+[4] https://googleprojectzero.blogspot.com/2016/06/exploiting-recursion-in-linux-kernel_20.html
+[5] https://bugs.chromium.org/p/project-zero/issues/detail?id=808
 
-If you don't do that then you simply can't write to that space from the
-CPU and you have to transport this kind information always via command
-queues.
+Changes since v1:
 
-But that does not make sense. It's trivial enough to have
+  - Added external references to the threats from allowing unprivileged
+    users to handle page faults from kernel-mode.
+  - Removed the new sysctl knob restricting handling of page
+    faults from kernel-mode, and added an option for the same
+    in the existing 'unprivileged_userfaultfd' knob.
 
-    | RO state |
-    | RW state |
+Lokesh Gidra (2):
+  Add UFFD_USER_MODE_ONLY
+  Add user-mode only option to unprivileged_userfaultfd sysctl knob
 
-and on swap in the whole thing is DMA'd into the device and on swap out
-only the RW state part. It's not rocket science and makes a huge amount
-of sense.
+ Documentation/admin-guide/sysctl/vm.rst | 10 +++++++---
+ fs/userfaultfd.c                        | 17 ++++++++++++++---
+ include/uapi/linux/userfaultfd.h        |  9 +++++++++
+ kernel/sysctl.c                         |  2 +-
+ 4 files changed, 31 insertions(+), 7 deletions(-)
 
-> Without involving the device there is just no way to create data
-> consistency, and no way to change the data from the CPU. 
->
-> This is the down side of having device data in the RAM. It cannot be
-> so simple as 'just fetch it every time before you use it' as
-> performance would be horrible.
+-- 
+2.28.0.297.g1956fa8f8d-goog
 
-That's clear, but with a proper seperation like the above and some extra
-mechanism which allows you to tickle a relaod of 'RO state' you can
-avoid quite some of the problems which you create otherwise.
-
->> If we really can get away with atomically updating the message as
->> outlined above and just let it happen at some point in the future then
->> most problems are solved, except for the nastyness of CPU hotplug.
->
-> Since we can't avoid a device command, I'm think more along the lines
-> of having the affinity update trigger an async WQ to issue the command
-> from a thread context. Since it doesn't need to be synchronous it can
-> make it out 'eventually'.
->
-> I suppose the core code could provide this as a service? Sort of a
-> varient of the other lazy things above?
-
-Kinda. That needs a lot of thought for the affinity setting stuff
-because it can be called from contexts which do not allow that. It's
-solvable though, but I clearly need to stare at the corner cases for a
-while.
-
-> But it would have to work with ARM - is remapping a x86 only thing?
-
-No. ARM64 has that as well.
-
-> Does ARM put the affinity in the GIC tables not in the MSI data?
-
-IIRC, yes.
-
->> Let me summarize what I think would be the sane solution for this:
->> 
->>   1) Utilize atomic writes for either all 16 bytes or reorder the bytes
->>      and update 8 bytes atomically which is sufficient as the wide
->>      address is only used with irq remapping and the MSI message in the
->>      device is never changed after startup.
->
-> Sadly not something the device can manage due to data coherence
-
-I disagree :)
-
->>   2) No requirement for issuing a command for regular migration
->>      operations as they have no requirements to be synchronous.
->> 
->>      Eventually store some state to force a reload on the next regular
->>      queue operation.
->
-> Would the async version above be OK?
-
-Async is fine in any variant (except for hotplug). Though having an
-async WQ or whatever there needs some thought.
-
->>   3) No requirement for issuing a command for mask and unmask operations.
->>      The core code uses and handles lazy masking already. So if the
->>      hardware causes the lazyness, so be it.
->
-> This lazy masking thing sounds good, I'm totally unfamiliar with it
-> though.
-
-It's used to avoid irq chip (often MMIO) access in scenarios where
-disable/enable of an interrupt line happens with high frequency. Serial
-has that issue. So we mark it disabled, but do not mask it and the core
-can handle that and masks it once an interrupt comes in in masked
-state. That obviously does not work out of the box to protect against
-not disabled but masked state, but conceptually it's a similar problem
-and can be made work without massive changes. 
-
-OTOH, in normal operation for MSI interrupts (edge type) masking is not
-used at all and just restricted to the startup teardown.
-
-But I clearly need to think about it with a more awake brain some more.
-
-> This email is super helpful, I definately don't know all these corners
-> of the IRQ subsystem as my past with it has mostly been SOC stuff that
-> isn't as complicated!
-
-It's differently complicated and not less horrible :)
-
-Thanks,
-
-        tglx
