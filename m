@@ -2,120 +2,120 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C678DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B1CC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE983207C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09CD7207C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:23:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjRC2XO6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgHVJXL (ORCPT
+        id S1726995AbgHVJXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 05:23:11 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:53058 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHVJXL (ORCPT
+        Sat, 22 Aug 2020 05:23:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgHVJXa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 05:23:11 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 1FB0180516;
-        Sat, 22 Aug 2020 11:23:08 +0200 (CEST)
-Date:   Sat, 22 Aug 2020 11:23:06 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        drinkcat@chromium.org, Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        hsinyi@chromium.org, matthias.bgg@gmail.com,
-        Collabora Kernel ML <kernel@collabora.com>
-Subject: Re: [PATCH 2/3] drm/bridge: ps8640: Print an error if VDO control
- fails
-Message-ID: <20200822092306.GB430436@ravnborg.org>
-References: <20200615205320.790334-1-enric.balletbo@collabora.com>
- <20200615205320.790334-3-enric.balletbo@collabora.com>
+        Sat, 22 Aug 2020 05:23:30 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18DC2C061573;
+        Sat, 22 Aug 2020 02:23:30 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id v15so2134841pgh.6;
+        Sat, 22 Aug 2020 02:23:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aI39wUQrT4gwVKkfiPc/6BrYsBsFxtTiYiQuKGUyQNc=;
+        b=BjRC2XO6ziRv5s9rs7O7otCwVIpQS+qXELx0bfeHcgi7yZMg4ZDjYCKCzeE3cSrn7J
+         h4rt+xfTU7u3rEtLqLTGv/nx/hmTQOJM5YZIJH2l2TP+6Z9sWo6O0X+LDYXWfDrGHZFJ
+         Aha7B53M6BI+GRJorY7VSNxeD7kQ82nnZeclcZICDoVEFKn1GwaFbFkmNZvRVFMWjcLk
+         ygWjIEK/hsHVLQbtAM+aq9UkdYx1spA51nTnAHVL+b+nu1B6VMIIY2vW6F6KkIXUIwfb
+         zzBeU9UXeVKXTAmxcK+hVjZq4b7zZxDNIi/Q55A/2LmnGUHt45k1x0ry0jfeNHoWkAZA
+         RlQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aI39wUQrT4gwVKkfiPc/6BrYsBsFxtTiYiQuKGUyQNc=;
+        b=CgHdDhIh1TS0kOaQCWSKo5f9MMBiPgtCe34Ot5b9FLpy85E60P42c3Ho1ivcEvN91D
+         1VpE3vHAoSGx0dZSsBBK93Ql6tOFuwkHoCSqpyNBJwFhCGgeg5W6T5gYJfoQSKYLBLQQ
+         IUynCCG1hnGubSITmGiqqfD9ckIVHOir9PqexS+rYPNHv/UBN9P8Jj8A996B4Wy36oS5
+         VUfqcfOn/K75uspeAo+z07KFcHeclMI0SpP0/QEQpu9noidie69ZttrQr6TtSkFsiX+9
+         iILXAviE1S9UYRBa42Uq+HCt6YCjqSftcpwzlRSOwnbsyDXg2fa6nvfkqfzgY4ncTv5r
+         UKBA==
+X-Gm-Message-State: AOAM530GjCK3lEzGRl/2h0i12UvH0QXuoh/M21OwH0Eax+WbibpkuHpb
+        mW8Gb9htfwPYzl8BIrQ5U4nTBETIynx/wJRmXlH3svQkzGKsfw==
+X-Google-Smtp-Source: ABdhPJz4qAwL/hficWhPP7/Q7Cn9/sFEW/U3BO4PJc8qZ0j+3vpx+hdgMhcqDNRluDgzEX2ahyveuiGTLzTTJBe0Qco=
+X-Received: by 2002:a62:c319:: with SMTP id v25mr5537864pfg.130.1598088209565;
+ Sat, 22 Aug 2020 02:23:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615205320.790334-3-enric.balletbo@collabora.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=QX4gbG5DAAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
-        a=cf3U8Ll1wViUF6FddlcA:9 a=CjuIK1q_8ugA:10 a=AbAUZ8qAyYyZVLSsDulk:22
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
+References: <cover.1598001442.git.rahul.tanwar@linux.intel.com>
+ <fedf5d1ace7c389a5fc0116865b9b88aa3ddeaa5.1598001442.git.rahul.tanwar@linux.intel.com>
+ <20200821105618.GO1891694@smile.fi.intel.com> <d8c85de1-dacf-e8eb-6e49-131d007f3a6b@linux.intel.com>
+In-Reply-To: <d8c85de1-dacf-e8eb-6e49-131d007f3a6b@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 22 Aug 2020 12:23:12 +0300
+Message-ID: <CAHp75Vc1=_SeYHtQvXrV+G-b5t4vWS6ga3s_Zmez7rQPORWr7w@mail.gmail.com>
+Subject: Re: [PATCH v9 2/2] Add PWM fan controller driver for LGM SoC
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com, rtanwar@maxlinear.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 10:53:19PM +0200, Enric Balletbo i Serra wrote:
-> Print an error message inside ps8640_bridge_vdo_control() function when
-> it fails so we can simplify a bit the callers, they will only need to
-> check the error code.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+On Sat, Aug 22, 2020 at 8:25 AM Tanwar, Rahul
+<rahul.tanwar@linux.intel.com> wrote:
+> On 21/8/2020 6:56 pm, Andy Shevchenko wrote:
+> > On Fri, Aug 21, 2020 at 05:32:11PM +0800, Rahul Tanwar wrote:
 
-> ---
-> 
->  drivers/gpu/drm/bridge/parade-ps8640.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
-> index ce3e8b2da8c9b..9f7b7a9c53c52 100644
-> --- a/drivers/gpu/drm/bridge/parade-ps8640.c
-> +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
-> @@ -82,8 +82,11 @@ static int ps8640_bridge_vdo_control(struct ps8640 *ps_bridge,
->  	ret = i2c_smbus_write_i2c_block_data(client, PAGE3_SET_ADD,
->  					     sizeof(vdo_ctrl_buf),
->  					     vdo_ctrl_buf);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		DRM_ERROR("failed to %sable VDO: %d\n",
-> +			  ctrl == ENABLE ? "en" : "dis", ret);
->  		return ret;
-> +	}
->  
->  	return 0;
->  }
-> @@ -150,10 +153,8 @@ static void ps8640_pre_enable(struct drm_bridge *bridge)
->  	}
->  
->  	ret = ps8640_bridge_vdo_control(ps_bridge, ENABLE);
-> -	if (ret) {
-> -		DRM_ERROR("failed to enable VDO: %d\n", ret);
-> +	if (ret)
->  		goto err_regulators_disable;
-> -	}
->  
->  	/* Switch access edp panel's edid through i2c */
->  	ret = i2c_smbus_write_byte_data(client, PAGE2_I2C_BYPASS,
-> @@ -175,9 +176,7 @@ static void ps8640_post_disable(struct drm_bridge *bridge)
->  	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
->  	int ret;
->  
-> -	ret = ps8640_bridge_vdo_control(ps_bridge, DISABLE);
-> -	if (ret < 0)
-> -		DRM_ERROR("failed to disable VDO: %d\n", ret);
-> +	ps8640_bridge_vdo_control(ps_bridge, DISABLE);
->  
->  	gpiod_set_value(ps_bridge->gpio_reset, 1);
->  	gpiod_set_value(ps_bridge->gpio_powerdown, 1);
-> -- 
-> 2.27.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+...
+
+> >> +#include <linux/bitfield.h>
+> >> +#include <linux/clk.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/of_device.h>
+> > We haven't settle this yet...
+>
+> I investigated more about it. I was getting build error because we were
+> relying on of_device.h for including platform_device.h. You are right that
+> we are not using anything from of_device.h. So i removed of_device.h from
+> driver and added include <linux/platform_device.h> & build is ok.
+>
+> Regarding mod_devicetable.h header, it gets included indirectly from
+> <linux/pwm.h> which includes of.h which includes mod_devicetable.h. So i
+> think no point including it again in the driver.
+
+Ideally you should include all headers you have direct users of.
+mod_devicetable.h is exactly one and I doubt the pwm.h should include
+it, but it's another story.
+
+There are, of course, some cases when not all required because there
+is a guarantee that upper one includes lower one. For example, if you
+use bitops.h there is no need to include bits.h.
+
+> >> +#include <linux/pwm.h>
+> >> +#include <linux/regmap.h>
+> >> +#include <linux/reset.h>
+
+-- 
+With Best Regards,
+Andy Shevchenko
