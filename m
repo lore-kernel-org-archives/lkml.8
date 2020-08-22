@@ -2,112 +2,125 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 10:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B91C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 10:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6745720714
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 10:49:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="itHGOg+Z"
+	by mail.kernel.org (Postfix) with ESMTP id B3AEE2067C
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 10:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598093880;
+	bh=BqxYd2pOokGPeK4LyapSM4x47jhdQWKuct76BNr8mIQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Cx+aaCUzLj0mKQTc3QsAciCF+flzc+EvzE9W6oAKI1m9lTbXU9Dufqar3sqopopS8
+	 sSifOqJOGvsndYszjol6Mh3x0JnSy3R0SpqoSvW8FDUUdz69rTUHdKKqfdNnMxT569
+	 EqY5YGQWpxIY3IyjAkAfN8yutf1XCuZP2GeTCVP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgHVKtS (ORCPT
+        id S1727919AbgHVK57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 06:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgHVKtQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 06:49:16 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BCD4C061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 03:49:16 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C84E329E;
-        Sat, 22 Aug 2020 12:49:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598093351;
-        bh=6ZFChGwd762tCp/370F4TKuD3RwxOvJ1DZ6OuHN5zuE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=itHGOg+ZIvnoNWi+pGYY56X7MbWkLwzzVhseWqf3t6LdEpx0eM0qu9Jwnx1mYU0LA
-         inxtDv8xCDX5FDPhV299gaj36blqWuqmApICGtJHTi6PcK+Pcqg05ap06jxodZY3WJ
-         RWte8cGrZs4xZQcPxiSDaIOA9a2tzD2ic4DSQcLI=
-Date:   Sat, 22 Aug 2020 13:48:52 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/omap: Fix runtime PM imbalance in dsi_runtime_get
-Message-ID: <20200822104852.GA5966@pendragon.ideasonboard.com>
-References: <20200821074506.32359-1-dinghao.liu@zju.edu.cn>
- <5123d7ae-f491-d2d2-788d-b5250ae9e31d@ti.com>
+        Sat, 22 Aug 2020 06:57:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727877AbgHVK5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 06:57:02 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F13392067C;
+        Sat, 22 Aug 2020 10:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598093821;
+        bh=BqxYd2pOokGPeK4LyapSM4x47jhdQWKuct76BNr8mIQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KCE5cT2m3bt54RR8mfuyBOBzCYm9tlrUYymZbKgaCgKyPLtp3qhH4mZZFff1Xp61x
+         QhGBRFCkeZLTy4UX/i+UuuzVGrrNuHKgo+lDWgxu2PJitsVvrp2EwmmU/c7Jlli82s
+         zN9hWOcmruSVKMoE9P/3uGRmEsa++M2UnqAykypk=
+Date:   Sat, 22 Aug 2020 11:56:54 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        michal.simek@xilinx.com, git@xilinx.com, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        anandash@xilinx.com
+Subject: Re: [PATCH] iio: Fixed IIO_VAL_FRACTIONAL calcuation for negative
+ values
+Message-ID: <20200822115654.0d7f716f@archlinux>
+In-Reply-To: <1597946984-25844-1-git-send-email-anand.ashok.dumbre@xilinx.com>
+References: <1597946984-25844-1-git-send-email-anand.ashok.dumbre@xilinx.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5123d7ae-f491-d2d2-788d-b5250ae9e31d@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomi,
+On Thu, 20 Aug 2020 11:09:44 -0700
+Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com> wrote:
 
-On Fri, Aug 21, 2020 at 03:06:59PM +0300, Tomi Valkeinen wrote:
-> On 21/08/2020 10:45, Dinghao Liu wrote:
-> > pm_runtime_get_sync() increments the runtime PM usage counter
-> > even when it returns an error code. However, users of
-> > dsi_runtime_get(), a direct wrapper of pm_runtime_get_sync(),
-> > assume that PM usage counter will not change on error. Thus a
-> > pairing decrement is needed on the error handling path to keep
-> > the counter balanced.
-> > 
-> > Fixes: 4fbafaf371be7 ("OMAP: DSS2: Use PM runtime & HWMOD support")
-> > Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> > ---
-> >  drivers/gpu/drm/omapdrm/dss/dsi.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/omapdrm/dss/dsi.c b/drivers/gpu/drm/omapdrm/dss/dsi.c
-> > index eeccf40bae41..973bfa14a104 100644
-> > --- a/drivers/gpu/drm/omapdrm/dss/dsi.c
-> > +++ b/drivers/gpu/drm/omapdrm/dss/dsi.c
-> > @@ -1112,8 +1112,11 @@ static int dsi_runtime_get(struct dsi_data *dsi)
-> >  	DSSDBG("dsi_runtime_get\n");
-> >  
-> >  	r = pm_runtime_get_sync(dsi->dev);
-> > -	WARN_ON(r < 0);
-> > -	return r < 0 ? r : 0;
-> > +	if (WARN_ON(r < 0)) {
-> > +		pm_runtime_put_noidle(dsi->dev);
-> > +		return r;
-> > +	}
-> > +	return 0;
-> >  }
+> This patch fixes IIO_VAL_FRACTIONAL calculation for negative
+> values where the exponent is 0.
 > 
-> Thanks! Good catch. I think this is broken in all the other modules in omapdrm too (e.g. dispc.c,
-> venc.c, etc).
+> Signed-off-by: Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
+Hi,
+
+I would thrown in an example for this description. 
+Also useful to know if there is a existing driver that is broken
+and hence we need to backport this.
+If that is the case, please try to figure out an appropriate fixes
+tag.
+
+Comments inline + the email footer issue needs sorting out.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/industrialio-core.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 > 
-> Would you like to update the patch to cover the whole omapdrm?
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index f72c2dc..cd43b17 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -554,6 +554,7 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
+>  {
+>         unsigned long long tmp;
+>         int tmp0, tmp1;
+> +       s64 tmp2;
+>         bool scale_db = false;
+> 
+>         switch (type) {
+> @@ -576,10 +577,13 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
+>                 else
+>                         return snprintf(buf, len, "%d.%09u", vals[0], vals[1]);
+>         case IIO_VAL_FRACTIONAL:
+> -               tmp = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
+> +               tmp2 = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
+>                 tmp1 = vals[1];
+> -               tmp0 = (int)div_s64_rem(tmp, 1000000000, &tmp1);
+> -               return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
+> +               tmp0 = (int)div_s64_rem(tmp2, 1000000000, &tmp1);
+> +               if ((tmp2 < 0) && (tmp0 == 0))
+> +                       return snprintf(buf, len, "-%d.%09u", tmp0, abs(tmp1));
 
-Just for yoru information, there has been quite a few similar patches
-submitted all across the kernel. I believe this is an issue of the
-pm_runtime_get_sync() API, which really shouldn't require a put() when
-it fails. For drivers that really don't expect pm_runtime_get_sync() to
-fail (no I2C access to a regulator for instance, only SoC-internal
-operations) I've instead decided to ignore the error completely. I don't
-think poluting the whole kernel code base with this kind of "fixes" is a
-good idea.
+Given tmp0 == 0, this might be clearer as
+			  return snprintf(buf, len, "-0.%09u", abs(tmp1));
 
--- 
-Regards,
+> +               else
+> +                       return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
+>         case IIO_VAL_FRACTIONAL_LOG2:
+>                 tmp = shift_right((s64)vals[0] * 1000000000LL, vals[1]);
+>                 tmp0 = (int)div_s64_rem(tmp, 1000000000LL, &tmp1);
+> --
+> 2.7.4
+> 
+> This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
 
-Laurent Pinchart
+As Andy said, this footer is a problem...  
