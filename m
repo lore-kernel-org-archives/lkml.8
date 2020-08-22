@@ -2,130 +2,107 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D2DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67384207C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUQziiOp"
+	by mail.kernel.org (Postfix) with ESMTP id AF11720738
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgHVJXh (ORCPT
+        id S1726730AbgHVJdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 05:23:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHVJXe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 05:23:34 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83CC5C061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 02:23:34 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id l84so3664089oig.10
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 02:23:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=HXml0ksMnzvv0PRQAiLA54DGPaMuEoNWDNqurufgFqc=;
-        b=AUQziiOpLs7N4SZ+gDZAYjJxm3LXmSdWYH7qbJJUJ6dRrBh2p7H6ceokvgdCT6iR1Y
-         RzRW7aOOgRZl2uwtIQz1CXHY3i5Sn4eTL2rciBvcpYhEgZoElwzhfpicxRjnZKvwxWBN
-         Rr7yGJi8Ndgcjh/RRcf6sDS+chSmNNd86C22BjZXiWPQfRcYLC0j1NWtavYcS2AoyCPn
-         ICG5vWq8fLfDKLtDrdq/MLfYMFa5nD2tyiWlvfoi+F/HqxUBBWO4LxjFprlw8VeRkT+3
-         fIshfOzQzGy4UVv5S4ShHx9c0Ps20+WVGywxZgoBwBPss3+4zpq8c6lRhP9W0nEEOud8
-         CXSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=HXml0ksMnzvv0PRQAiLA54DGPaMuEoNWDNqurufgFqc=;
-        b=E2Abf//Rkje+HU8d3bOI3BktKHyrccOC9tY3q1dSSuDLltvMf+fRVh/WoBqB8kDRwb
-         juJeBp3nXbZW840T4iVlG+TXRwLgZwYJmxUs9vxkNFf6PEnyBzNVRyeX6ol2BNjED56o
-         0J6JyBlPMHZ3MM9UjLk/Cq9P+Fq5DzDVOJKYchiWklMoWQXOfkZECYixQ/x3eNDbeJ9k
-         iuKGTorCZmiVJw2fnUdjrv8g5lLyGFd2vNHyHfQvH3HirGiLcXk++OtnybuSfhOmnjMG
-         jo/tEmQKaGReFuzGIZFmpSTaGk7fo3dNq19lCcIhpNIDFnYbGuYfXC2wDvK9A7DyoHMd
-         DfeA==
-X-Gm-Message-State: AOAM5335r3HKbZ1M1shf7V/XYgVxdkbczUJStMGqyzmidQWWPHIGEyej
-        kBz+iMEZHpyDzzAyIv5itycJ9Jz2MgCFLVfZ/54=
-X-Google-Smtp-Source: ABdhPJyYzMqqJ5iIG3OiSuDBhMH+/5T4EJSfWsASkkoSZDm+wjfZ+0Xn4EX4uMvhQ1laDl0gYUVxOJBry4Dsb9d/XSs=
-X-Received: by 2002:aca:acd5:: with SMTP id v204mr523966oie.35.1598088213901;
- Sat, 22 Aug 2020 02:23:33 -0700 (PDT)
+        Sat, 22 Aug 2020 05:33:52 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55860 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725864AbgHVJdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 05:33:51 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 08303A10FBACB14A5A30
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 17:33:50 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.157) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Sat, 22 Aug 2020
+ 17:33:40 +0800
+Subject: Re: [PATCH] genirq/proc: Show percpu irq affinity
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     <linux-kernel@vger.kernel.org>, Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>
+References: <fcb0ae13-95b0-37d3-c1f9-44727e0f2ce8@huawei.com>
+ <874kp754s6.fsf@nanos.tec.linutronix.de>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <aa537126-4646-08e2-6bea-833f71b20ade@huawei.com>
+Date:   Sat, 22 Aug 2020 17:33:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <87h7t6tpye.fsf@nanos.tec.linutronix.de> <20200813173701.GC4295@paulmck-ThinkPad-P72>
- <20200813180933.GA532283@rani.riverdale.lan> <875z9dioll.fsf@nanos.tec.linutronix.de>
- <20200820130641.GA536306@rani.riverdale.lan> <87zh6ohm03.fsf@nanos.tec.linutronix.de>
- <20200821230435.GA56974@rani.riverdale.lan> <CAKwvOdkoB+fT9tt7vgg1R6J-NEr77EWP5X8nFat_L-HvEzWGzA@mail.gmail.com>
- <87eenzqzmr.fsf@nanos.tec.linutronix.de> <20200822035552.GA104886@rani.riverdale.lan>
- <20200822084133.GL28786@gate.crashing.org>
-In-Reply-To: <20200822084133.GL28786@gate.crashing.org>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Sat, 22 Aug 2020 11:23:21 +0200
-Message-ID: <CA+icZUVf9a8LC2Mf0cFymYQfALWs6bVfR1v1nRbxKaLAyU6NkQ@mail.gmail.com>
-Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <874kp754s6.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.177.157]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 10:42 AM Segher Boessenkool
-<segher@kernel.crashing.org> wrote:
->
-> Hi Arvind,
->
-> On Fri, Aug 21, 2020 at 11:55:52PM -0400, Arvind Sankar wrote:
-> > Cc Segher.
-> >
-> > Segher, we were looking at gcc PR82602, where IRA could reorder volatile
-> > asm's (reported on ARM). The fix was backported to gcc-6.
->
-> I know ;-)
->
-> > Do you know if
-> > there is any reason the problem couldn't occur on x86 on older gcc
-> > without the fix?
->
-> No, I see no particular reason, at least GCC 5 seems vulnerable.  (The
-> GCC 5 release branch was closed at the time this bug report was made,
-> already).  There is no reason I see why it would work on x86 but fail
-> elsewhere, either.
->
 
-[1] says:
 
-Current Minimal Requirements
-...
-====================== ===============  ========================================
-        Program        Minimal version       Command to check the version
-====================== ===============  ========================================
-GNU C                  4.9              gcc --version
+On 2020/8/13 16:27, Thomas Gleixner wrote:
+> Yunfeng Ye <yeyunfeng@huawei.com> writes:
+> 
+>> When the "affinity=" cmdline parameter is configured,
+> 
+> There is no such parameter.
+> 
+>> the interrupt affinity displayed in the proc directory does not match
+>> with that of the the percu interrupt, and the percu interrupt uses
+>> desc->percu_affinity.
+> 
+> And when the non-existing parameter is not on the command line then
+> irq->affinity is showing the correct value magically?
+> 
+> Definitely not: It's unconditionally showing irq->affinity and that is
+> pretty unlikely to match irq->percpu_affinity in any case.
+> 
+Sorry，it is "irqaffinity=" cmdline parameter. it will set irq_default_affinity
+mask. if the interrupt is not the managed irq, the irq_desc will use
+irq_default_affinity as default affinity.
 
-- Sedat -
+For example, the cmdline "irqaffinity=0,1,126,127" on the 128 cores system：
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/changes.rst#n32
+[root@localhost ~]# cat /proc/irq/4/smp_affinity_list
+0-1,126-127
+
+The irq 4 is "arch_timer" interrupt, which is a percpu interrupt.
+
+So is it necessary to show the percpu irq affinity correct?
+
+thanks.
+
+>> diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+>> index 32c071d7bc03..b9d0fa87b4b4 100644
+>> --- a/kernel/irq/proc.c
+>> +++ b/kernel/irq/proc.c
+>> @@ -52,6 +52,8 @@ static int show_irq_affinity(int type, struct seq_file *m)
+>>  	case AFFINITY:
+>>  	case AFFINITY_LIST:
+>>  		mask = desc->irq_common_data.affinity;
+>> +		if (irqd_is_per_cpu(&desc->irq_data))
+>> +			mask = desc->percpu_affinity;
+> 
+> This breaks all architecture which mark interrupts as per CPU without
+> using the partition mechanism resulting in a NULL pointer dereference.
+> 
+Yes, it is a problem.
+
+> Thanks,
+> 
+>         tglx
+> 
+> .
+> 
+
