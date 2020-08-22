@@ -2,88 +2,103 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4D6C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCBCD20825
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:39:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598071145;
-	bh=u0ARyHoe/q0GF5AUrK5En0djwtUiP/IUJLs7gd5smHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jp9uiF0f0j83Zsoh7upfc8jVDqGYcRlAOsJmGsogEW+t2Ek5hFC3xNip0EToWGuyn
-	 zlUGoeFnH8kuNptGTGLFaRuJrwHIvSn8UYNL8KC1dJuN+FDf4zzClKtYBGY4N5GlrX
-	 BTQB5CgcDSdkz8RwnW4zYw4QFRVBSjXk0HSZ1n8Q=
+	by mail.kernel.org (Postfix) with ESMTP id 8945F21734
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 04:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726086AbgHVEjE (ORCPT
+        id S1726698AbgHVEmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 00:39:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38846 "EHLO mail.kernel.org"
+        Sat, 22 Aug 2020 00:42:03 -0400
+Received: from mga11.intel.com ([192.55.52.93]:62111 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbgHVEjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 00:39:03 -0400
-Received: from dragon (unknown [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EB9420720;
-        Sat, 22 Aug 2020 04:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598071142;
-        bh=u0ARyHoe/q0GF5AUrK5En0djwtUiP/IUJLs7gd5smHw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ivXyupBicmYnhkyJ4QjTa+EJuNcACyQJ1wc8vV1N/R3vm0AT9JaJ2uC+5wegLetxd
-         MFFhEmJfiNIDpLwsIHJWI13VZX8fmIMvYHT3gtiWw4TlT/XiFFTVjYDYnTzH0qGi7k
-         7Phu/exZ3JiYgy3gf4igNt4dr1dX2CuX54rkW7n0=
-Date:   Sat, 22 Aug 2020 12:38:48 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, aisheng.dong@nxp.com,
-        arnd@arndb.de, peng.fan@nxp.com, abel.vesa@nxp.com,
-        fugang.duan@nxp.com, daniel.baluta@nxp.com, yuehaibing@huawei.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V9 0/6] Support building i.MX ARMv8 platforms clock
- driver as module
-Message-ID: <20200822043847.GE27575@dragon>
-References: <1596072174-16358-1-git-send-email-Anson.Huang@nxp.com>
+        id S1725840AbgHVEmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 00:42:02 -0400
+IronPort-SDR: L5cWrMKeTLKA+Ql7C8AaxVuaFgEuQJe2/QT6SFAkOg5BTHZzkciTnp/ykw8j2GoZofVgWD9vsC
+ Ob758+GcXEEw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="153275278"
+X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
+   d="scan'208";a="153275278"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 21:42:00 -0700
+IronPort-SDR: /wRozzR/+pHnFL1sLFEhDuh29wmyHAaIIjcALqJySqFz31V/w+W3Lh2NcT1oZa6hhrPaDMdhMM
+ grwt4A3mgmHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
+   d="scan'208";a="327943115"
+Received: from glacier.sc.intel.com ([10.3.62.63])
+  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 21:42:00 -0700
+From:   Rajmohan Mani <rajmohan.mani@intel.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jithu Joseph <jithu.joseph@intel.com>,
+        =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org
+Cc:     pmalani@chromium.org, bleung@chromium.org,
+        Rajmohan Mani <rajmohan.mani@intel.com>
+Subject: [PATCH v2 0/3] Add Intel Input Output Manager driver 
+Date:   Fri, 21 Aug 2020 21:05:05 -0700
+Message-Id: <20200822040508.23510-1-rajmohan.mani@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596072174-16358-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 09:22:48AM +0800, Anson Huang wrote:
-> Nowdays, there are more and more requirements of building SoC specific drivers as
-> modules, such as Android GKI (generic kernel image), this patch set supports building
-> i.MX ARMv8 SoCs clock drivers as modules,
-> 
-> The CLK_IMXxxx is introduced for i.MX ARMv7 platforms in order to make the build options
-> aligned, the reason why i.MX ARMv7 platforms clock driver do NOT support module build
-> and COMPILE_TEST is because, some drivers like i.MX GPT timer driver depends on clock
-> driver to be ready before it, GPT driver uses TIMER_OF_DECLARE(), while i.MX6/7 clock
-> drivers use CLK_OF_DECLARE(), and GPT driver is critical for i.MX6/7 platforms kernel
-> boot up, so GPT driver needs to be changed to support loadable clock driver first,
-> then the i.MX6/7 clock drivers can support loadable module, this will be done later.
-> 
-> Changes since V8:
-> 	- explicitly include linux/bits.h in patch #1.
-> 
-> Anson Huang (6):
->   clk: imx6sl: Use BIT(x) to avoid shifting signed 32-bit value by 31
->     bits
->   clk: composite: Export clk_hw_register_composite()
->   clk: imx: Support building i.MX common clock driver as module
->   clk: imx: Add clock configuration for ARMv7 platforms
->   clk: imx8m: Support module build
->   clk: imx8qxp: Support building i.MX8QXP clock driver as module
+Hi,
 
-Applied all, thanks.
+This patch series add support for Intel Input Output Manager (IOM)
+driver, which is leveraged by the Intel PMC USB mux control driver.
+
+changes from v1:
+- Included device role (UFP) support patch from Heikki to this series.
+- Addressed Greg's comments on v1 with below changes
+- Used per-instance variable for struct intel_iom
+- Removed struct device *dev inside probe function
+- Removed dev_set_drvdata() inside probe function
+- Added NULL pointer check on struct intel_iom * as well as members
+  dev and regbar, inside intel_iom_port_status(), to protect against
+  calls to this API before driver gets probed.
+- Limit support to only one IOM device
+- Removed intel_iom_get()/intel_iom_put() calls, as the dependency through
+  Kconfig is enough to prevent the IOM driver from unloading, when used
+  by callers.
+
+Heikki Krogerus (2):
+  usb: typec: intel_pmc_mux: Check the port status before connect
+  usb: typec: intel_pmc_mux: Support for device role (UFP)
+
+Rajmohan Mani (1):
+  platform/x86: Add Intel Input Output Manager (IOM) driver
+
+ drivers/platform/x86/Kconfig                |  16 +++
+ drivers/platform/x86/Makefile               |   1 +
+ drivers/platform/x86/intel_iom.c            |  95 +++++++++++++++
+ drivers/usb/typec/mux/Kconfig               |   1 +
+ drivers/usb/typec/mux/intel_pmc_mux.c       | 124 ++++++++++++++------
+ include/linux/platform_data/x86/intel_iom.h |  49 ++++++++
+ 6 files changed, 251 insertions(+), 35 deletions(-)
+ create mode 100644 drivers/platform/x86/intel_iom.c
+ create mode 100644 include/linux/platform_data/x86/intel_iom.h
+
+-- 
+2.20.1
+
