@@ -2,138 +2,196 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 01:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C7EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 01:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF4CB207CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 01:06:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="efIZt6zU"
+	by mail.kernel.org (Postfix) with ESMTP id 1D14E207CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 01:08:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgHVBGg (ORCPT
+        id S1726977AbgHVBIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 21:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbgHVBGf (ORCPT
+        Fri, 21 Aug 2020 21:08:13 -0400
+Received: from smtprelay0096.hostedemail.com ([216.40.44.96]:39152 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726817AbgHVBIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 21:06:35 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1382FC061574
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 18:06:34 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s15so1780689pgc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 18:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QvEU7Ij1K+X8291+Yrk9PiVxlfdObr5ZQisT4NFhZNE=;
-        b=efIZt6zUmqOZ9nGEWAH3HLXnOkJ1XKpvNGcZTjACHZa4oj0oZW+VdMx5lXDBAjkVMC
-         JSMsmPLyn1gwCYwDhmA9M8136Q4b7dj6gnXfKBY07V2jLg8+KzFvi9kvbyknT9w/xV/K
-         uH40SAmaF7ZxDtqU5rxUW2M74ao5un4AYrW/212KebK17mHZH/2+xBQxE3WlWlv9SVlV
-         F96VwFhZme/tqpuFFcAiRIaJfRoQwtLdaFWF0dZTDSmAFE71AOGUbZKZgVQVmlE7H50J
-         51t1SPiCQCJSLXqfOKLE3BagBlThhXWQWRnk4W8y6VvEMVac8SbS14OTGfyadzs2i2yh
-         MmWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QvEU7Ij1K+X8291+Yrk9PiVxlfdObr5ZQisT4NFhZNE=;
-        b=P9FdLpoTlw+lamyR3TGHrx1p+qqFNJLzxp2vinFPZ2AjqK9If7XrISxExTsxdGQxmK
-         BI/ZAFWrfh5LgN4IkedNWHsjuUH/sV6ug5rX+3NvCaYmhcVKJTulMhG2qS0xhA6Ndu7t
-         Usf0CU/NLPkE16hdSk8w8hYaQt8w9Xo5wjIcXlmAdpvnDshrCI7ck6VvbmqlrRboCVQt
-         HxVMt0yltctdXi8VmnunLStWqIQQxbu4kbWD4yZHoJyywXtVnXc/Dk2qKqZau6U4RmTI
-         TIioFXkWWzFbGl1bMSC0Kx8NBImr1ckBC6Qr2KVAQTQD30mTuU018CJsfJuVZSkd6qUp
-         /7XA==
-X-Gm-Message-State: AOAM530g23o29nial+OdlXtdnHeIVkqO/1YG0icuNXhNr6TyeH9fWwFU
-        Tymx9M7hjsy45OXlLDcC1AD6Wf1FrkBbInXA+uYb8A==
-X-Google-Smtp-Source: ABdhPJxS+man2Ode7yHztpLxdSiuVXjRfbwMrX0R4e4rHnjteiqRne9BSmci4DzM/oYX2ZZVEoLXnxUmHXTswiNJq9E=
-X-Received: by 2002:a05:6a00:14d0:: with SMTP id w16mr4506224pfu.39.1598058393938;
- Fri, 21 Aug 2020 18:06:33 -0700 (PDT)
+        Fri, 21 Aug 2020 21:08:12 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 88C7D100E7B45;
+        Sat, 22 Aug 2020 01:08:11 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: wound83_2f0234b2703d
+X-Filterd-Recvd-Size: 5026
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 22 Aug 2020 01:08:09 +0000 (UTC)
+Message-ID: <744af177c09f8ce22c99d6e1df458bced558518b.camel@perches.com>
+Subject: Re: [Cocci] coccinelle: Convert comma to semicolons (was Re:
+ [PATCH] checkpatch: Add test for comma use that should be semicolon)
+From:   Joe Perches <joe@perches.com>
+To:     Julia Lawall <julia.lawall@inria.fr>,
+        kernel-janitors <kernel-janitors@vger.kernel.org>,
+        kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        cocci <cocci@systeme.lip6.fr>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Whitcroft <apw@shadowen.org>
+Date:   Fri, 21 Aug 2020 18:08:08 -0700
+In-Reply-To: <alpine.DEB.2.22.394.2008201856110.2524@hadrien>
+References: <20200818184107.f8af232fb58b17160c570874@linux-foundation.org>
+          <3bf27caf462007dfa75647b040ab3191374a59de.camel@perches.com>
+          <b0fd63e4b379eda69ee85ab098353582b8c054bb.camel@perches.com>
+          <alpine.DEB.2.22.394.2008201021400.2524@hadrien>
+         <a5713d8597065ef986f780499428fcc4cd31c003.camel@perches.com>
+         <alpine.DEB.2.22.394.2008201856110.2524@hadrien>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-References: <20200821190159.1033740-1-masahiroy@kernel.org>
-In-Reply-To: <20200821190159.1033740-1-masahiroy@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 21 Aug 2020 18:06:22 -0700
-Message-ID: <CAKwvOdkUfOnzWH1d7-qAP-PFvkLeahoA8jZdkZEp4-PNFXL_JA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] kbuild: clang-tidy
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Tom Roeder <tmroeder@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 12:02 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> I improved gen_compile_commands.py,
-> then rebased Nathan's v7 [1] on top of them.
-> To save time, I modified the Makefile part.
-> No change for run-clang-tools.py
->
-> "make clang-tidy" should work in-tree build,
-> out-of-tree build (O=), and external module build (M=).
->
-> This version keeps the previous work-flow.
-> You can still manually run scripts/gen_compile_commands.json
->
-> 'make compile_commands.json' or 'make clang-tidy' is handier
-> for most cases. As Nick noted, there is 3 % loss of the coverage.
->
-> If you need the full compilation database that covers all the
-> compiled C files, please run the script manually.
->
-> [1] https://patchwork.kernel.org/patch/11687833/
+(forwarding on to kernel-janitors/mentees and kernelnewbies)
 
-Thank you for the work that went into this series.  The only reason I
-started focusing on compiling the kernel with Clang 3.5 years ago was
-that I simply wanted to run scan-build (clang's static analyzer,
-enabled by this series) on the kernel to find bugs to start
-contributing fixes for.  Turned out compiling the kernel with Clang
-was a prerequisite, and I've been distracted with that ever since.
-Thank you both for completing this journey.
+Just fyi for anyone that cares:
 
->
-> Masahiro Yamada (8):
->   gen_compile_commands: parse only the first line of .*.cmd files
->   gen_compile_commands: use choices for --log_levels option
->   gen_compile_commands: do not support .cmd files under tools/ directory
->   gen_compile_commands: reword the help message of -d option
->   gen_compile_commands: make -o option independent of -d option
->   gen_compile_commands: move directory walk to a generator function
->   gen_compile_commands: support *.o, *.a, modules.order in positional
->     argument
->   kbuild: wire up the build rule of compile_commands.json to Makefile
->
-> Nathan Huckleberry (1):
->   Makefile: Add clang-tidy and static analyzer support to makefile
->
->  MAINTAINERS                                 |   1 +
->  Makefile                                    |  45 +++-
->  scripts/clang-tools/gen_compile_commands.py | 245 ++++++++++++++++++++
->  scripts/clang-tools/run-clang-tools.py      |  74 ++++++
->  scripts/gen_compile_commands.py             | 151 ------------
->  5 files changed, 361 insertions(+), 155 deletions(-)
->  create mode 100755 scripts/clang-tools/gen_compile_commands.py
->  create mode 100755 scripts/clang-tools/run-clang-tools.py
->  delete mode 100755 scripts/gen_compile_commands.py
->
-> --
-> 2.25.1
->
+A janitorial task for someone might be to use Julia's coccinelle
+script below to convert the existing instances of commas that
+separate statements into semicolons.
+
+https://lore.kernel.org/lkml/alpine.DEB.2.22.394.2008201856110.2524@hadrien/
+
+On Thu, 2020-08-20 at 19:03 +0200, Julia Lawall wrote:
+> > > I have a bunch of variations of this that are more complicated than I
+> > > would have expected.  One shorter variant that I have is:
+> > > 
+> > > @@
+> > > expression e1,e2;
+> > > statement S;
+> > > @@
+> > > 
+> > >  S
+> > >  e1
+> > > -,
+> > > +;
+> > >   (<+... e2 ...+>);
+> > > 
+> > > This will miss cases where the first statement is the comma thing.  But I
+> > > think it is possible to improve this now.  I will check.
+> > 
+> > Hi Julia.
+> > 
+> > Right, thanks, this adds a dependency on a statement
+> > before the expression.  Any stragglers would be easily
+> > found using slightly different form.
+> > There are not very many of these in linux kernel.
+> > 
+> > Another nicety would be to allow the s/,/;/ conversion to
+> > find both b and c in this sequence:
+> > 	a = 1;
+> > 	b = 2,
+> > 	c = 3,
+> > 	d = 4;
+> > without running the script multiple times.
+> > There are many dozen uses of this style in linux kernel.
+> > 
+> > I tried variants of adding a comma after the e2 expression,
+> > but cocci seems to have parsing problems with:
+> > 
+> > @@
+> > expression e1;
+> > expression e2;
+> > @@
+> > 	e1
+> > -	,
+> > +	;
+> > 	e2,
+> 
+> This doesn't work because it's not a valid expression.
+> 
+> The problem is solved by doing:
+> 
+>   e1
+> - ,
+> + ;
+>   e2
+>   ... when any
+> 
+> But that doesn't work in the current version of Coccinelle.  I have fixed
+> the problem, though and it will work shortly.
+> 
+> > I do appreciate that coccinelle adds braces for multiple
+> > expression comma use after an if.
+> > 
+> > i.e.:
+> > 	if (foo)
+> > 		a = 1, b = 2;
+> > becomes
+> > 	if (foo) {
+> > 		a = 1; b = 2;
+> > 	}
+> 
+> I wasn't sure what was wanted for such things.  Should b = 2 now be on a
+> separate line?
+> 
+> I took the strategy of avoiding the problem and leaving those cases as is.
+> That also solves the LIST_HEAD problem.  But if it is wanted to change
+> these commas under ifs, then that is probably possible too.
+> 
+> My current complete solution is as follows.  The first rule avoids changing
+> commas in macros, where thebody of the macro is just an expression.  The
+> second rule uses position variables to ensure that the two expression are
+> on different lines.
+> 
+> @r@
+> expression e1,e2;
+> statement S;
+> position p;
+> @@
+> 
+> e1 ,@S@p e2;
+> 
+> @@
+> expression e1,e2;
+> position p1;
+> position p2 :
+>     script:ocaml(p1) { not((List.hd p1).line_end = (List.hd p2).line) };
+> statement S;
+> position r.p;
+> @@
+> 
+> e1@p1
+> -,@S@p
+> +;
+> e2@p2
+> ... when any
+> 
+> The generated patch is below.
+> 
+> julia
+> 
+> diff -u -p a/drivers/reset/hisilicon/reset-hi3660.c b/drivers/reset/hisilicon/reset-hi3660.c
+> --- a/drivers/reset/hisilicon/reset-hi3660.c
+> +++ b/drivers/reset/hisilicon/reset-hi3660.c
+> @@ -89,7 +89,7 @@ static int hi3660_reset_probe(struct pla
+>  		return PTR_ERR(rc->map);
+>  	}
+> 
+> -	rc->rst.ops = &hi3660_reset_ops,
+> +	rc->rst.ops = &hi3660_reset_ops;
+>  	rc->rst.of_node = np;
+>  	rc->rst.of_reset_n_cells = 2;
+>  	rc->rst.of_xlate = hi3660_reset_xlate;
+
+The rest of the changes are in the link above...
 
 
--- 
-Thanks,
-~Nick Desaulniers
