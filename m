@@ -2,112 +2,62 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B811C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE682054F
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598129800;
-	bh=1Ouo9lBkRxl2lIJqUM+PEFkOCZsXsgOxYJDD21YUBqE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JCCJC9yrOLsO1YpdpWUVERnY/RHR+YZImjU3/hcdKQYcl2l1p8sIdE3xDeDPnklbS
-	 vIhTdluPUUUuL20MUPURglf+wW73IMWNzyJ9rYKwJmbzMChAVlqz7vKsLHGraW4OZt
-	 eLxOA8PcclxAbsT/OUi6hWBo9RuqqRnjT0eXeCvY=
+	by mail.kernel.org (Postfix) with ESMTP id 7DF082054F
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgHVU4j (ORCPT
+        id S1728505AbgHVU7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 16:56:39 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46532 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgHVU4i (ORCPT
+        Sat, 22 Aug 2020 16:59:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgHVU7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 16:56:38 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r15so5000607wrp.13
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 13:56:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=msxGa2IzZ+LQXZdwx/mj0NMbaUdlVNLfYIuR/2n+dNk=;
-        b=XbgovlSVK6qG6W7KXkkHFQbsrVJEMA8XdhGh70yi4rGImSzg3rDdY1+L3mbArsPEXM
-         xKx0DG4phbzRUeopLsBQd4rTnZslSV9G7XorhJL2pp8roh/6nwNqElBB9c4Wiyl06jEJ
-         6UEnLvAtItZbkrTAnZU9axs94DRf3B5M6YHtIKVOiRs3AaCRv5bSewSMgLCeU7QpiZGU
-         Y1JltBxIE6NM7Eau8LgEcC+ZIHtGhVqca692+utUYdUwNoimrytLcD8NnMRvB8yQsPiB
-         rs1LfButh29a5nfwHoPCREviAXPhtEEaeCOdaZm2o0jvNi7rHPLexJHEw4oYF9aS0110
-         v1xg==
-X-Gm-Message-State: AOAM530i8Vk6UixwGdanJhgIbBEO/HgVLzRhoLHpSU44O3yjYqqmHbyk
-        oBwpk6jJfrfkKyUCBiGmKGk=
-X-Google-Smtp-Source: ABdhPJxvXYFo8xjpn3BGJ6lHN0doaw/yA/+qpEQwDwyFBU5mHN+qOQsObLghzXpjaevzPBbYVgvfSA==
-X-Received: by 2002:a5d:4dcb:: with SMTP id f11mr4076853wru.9.1598129796472;
-        Sat, 22 Aug 2020 13:56:36 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id h5sm14754940wrc.97.2020.08.22.13.56.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 22 Aug 2020 13:56:35 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 22:56:33 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Markus Mayer <mmayer@broadcom.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] memory: brcmstb_dpfe: fix array index out of bounds
-Message-ID: <20200822205633.GA8809@kozik-lap>
-References: <20200822205000.15841-1-mmayer@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200822205000.15841-1-mmayer@broadcom.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sat, 22 Aug 2020 16:59:48 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD04EC061573;
+        Sat, 22 Aug 2020 13:59:48 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4D27211E49A9D;
+        Sat, 22 Aug 2020 13:42:58 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 13:59:41 -0700 (PDT)
+Message-Id: <20200822.135941.1718174258763815012.davem@davemloft.net>
+To:     joe@perches.com
+Cc:     Jianlin.Lv@arm.com, netdev@vger.kernel.org, kuba@kernel.org,
+        Song.Zhu@arm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: Remove unnecessary intermediate variables
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <ae154f9a96a710157f9b402ba21c6888c855dd1e.camel@perches.com>
+References: <20200822020431.125732-1-Jianlin.Lv@arm.com>
+        <20200822.123315.787815838209253525.davem@davemloft.net>
+        <ae154f9a96a710157f9b402ba21c6888c855dd1e.camel@perches.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 22 Aug 2020 13:42:58 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 01:50:00PM -0700, Markus Mayer wrote:
-> We would overrun the error_text array if we hit a TIMEOUT condition,
-> because we were using the error code "ETIMEDOUT" (which is 110) as an
-> array index.
-> 
-> We fix the problem by correcting the array index and by providing a
-> function to retrieve error messages rather than accessing the array
-> directly. The function includes a bounds check that prevents the array
-> from being overrun.
-> 
-> This patch was prepared in response to
->     https://lkml.org/lkml/2020/8/18/505.
-> 
-> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> Fixes: 2f330caff577 ("memory: brcmstb: Add driver for DPFE")
-> Reported-by: Colin Ian King <colin.king@canonical.com>
-> ---
-> 
-> Changes since v2:
->     - Added "Fixes:" and "Reported-by:"
->     - Fixed "From" address
->     - No changes to the code
-> 
-> Changes since v1:
->     - Added link of the coverity report to the commit message.
->     - Added Florian's ack.
->     - Removed second "const" from get_error_text() return type
->       (thanks to the kernel test robot).
-> 
->  drivers/memory/brcmstb_dpfe.c | 23 ++++++++++++++++-------
->  1 file changed, 16 insertions(+), 7 deletions(-)
+From: Joe Perches <joe@perches.com>
+Date: Sat, 22 Aug 2020 13:39:28 -0700
 
-"From" and SoB look good now.
+> It _might_ be slightly faster to use inlines
 
-Thanks, applied.
+We are not using the inline directive in foo.c files and are letting
+the compiler decide.
 
-Best regards,
-Krzysztof
+Please don't give out advice like this.
 
+Thank you.
