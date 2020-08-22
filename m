@@ -2,340 +2,103 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,WEIRD_QUOTING autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5793C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83B9020855
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC662072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 20:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5B0XHjC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZo9Hubt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgHVUFv (ORCPT
+        id S1727114AbgHVUGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 16:05:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36624 "EHLO
+        Sat, 22 Aug 2020 16:06:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgHVUFu (ORCPT
+        with ESMTP id S1725932AbgHVUGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 16:05:50 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1221FC061573;
-        Sat, 22 Aug 2020 13:05:50 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id v13so4650560oiv.13;
-        Sat, 22 Aug 2020 13:05:50 -0700 (PDT)
+        Sat, 22 Aug 2020 16:06:43 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAAEBC061573;
+        Sat, 22 Aug 2020 13:06:42 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id y2so5483069ljc.1;
+        Sat, 22 Aug 2020 13:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=Rhb8zoMaj7j/ezMOk1MqqzRZF+F99xWaFA/zqFb3LTk=;
-        b=N5B0XHjCOFjTtBvQDKlDC0R/Fze/GV8DXPCtz2ykzJmq5yE7B8+KIZjbbRlhjFkNR9
-         a3mkHhi4xbMiKlTB6rJpltPdSQG98M0GRN+j/rbkHeeUk//Wl9RooN+4k5wdPaTIvpZG
-         IS+qAWCYnEd1IpocYLG05s/ZvxUtFG2LnQsA8FwkKIBF+693CiDjjv/+XEApyrIoJcLX
-         V06DmKwS7w5UqhjOygdIvI85YH94IahGlQANpJkzRpH2deCIy19Yf+t9wKoD1YaYhHVU
-         no49psKZSqb7Kk5v2xJKNX8EUaMLvr+MjnF1aWfZWZIYibuCM2fbC1k76pWxQVq9uYoa
-         ZcHQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U7TSDixHb61TOsN7YB6xR3mupClY/fil07Cu6O4z/P8=;
+        b=XZo9Hubtg90BHUH/LA0I+mSm8INq3oP0rpHN3LBRlLwzRP8j4Fg8IjzvLANObOEr3K
+         AH3T2NRc4jcRmBb242RURj98giG3uq3kmS8X0KBAVllBWKDdz/gyLKo9GT1DeWVwB0d6
+         rtGkFlaHZreQRO62e7luNpPIG+S/oJafQPmTLwKp8KXmY3BEZcYMFOGY+RSPusJFUmO3
+         0xTDe0hiE905kI5gnrRYArTaJJBH4fcNsN9H07ayUZoka94ydYSurSxdkNQ0LrAi3vFD
+         ChIvocCTQ/S9eh5z0x7YJybK3FYl/YZxOvm1W/HaLEMhhhqJjDCP+jZ8NR7RyVT16nhk
+         Hj7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=Rhb8zoMaj7j/ezMOk1MqqzRZF+F99xWaFA/zqFb3LTk=;
-        b=MsHsQtYGmEVdnxHIoqfyRBS73UZTZuM/K7pgKU6rTcyZRfphfkSejmGnqjl/h61hGS
-         o1RSNqmcmEF3B2Q+zDEdrriDQDWib+MaOhlxLL6uoXzEfGNI+W3ieR+lF8uMx/cTqusu
-         uely2ioRm5wfzfUJr489jlWqDmiU7xOAWj35uqpN2Ygo30nXW+/4BpsCEtysCfLAnHHK
-         By99caK4FP+b3VUfcEQIoAwcig3nJw3MkpYi7F90Ab042E/RI7YNEXQ06crKE67Jlr3U
-         f3ZI+UqhBQSThr04rou5vVbvBp09APBOAJxHvfdPoYdAu+DtwVzShlrr6C0xN++EBl5K
-         TrTQ==
-X-Gm-Message-State: AOAM530Y44IG6Hdzoy1AyYLnEvb+eSOVHte/RNVFZ7YCT9dFShefsmsR
-        D1r3cS3a5ffuVYcJdWYUrsrVIKrltICnJLhxk+s=
-X-Google-Smtp-Source: ABdhPJy5zJFy0TE8jQUKTerSL7VQThWDNKSQCS36ZSpfKdobh+6pLIXR9VLk3vOqs1jOAMaiVeCUoDe7//80s2Qkpqw=
-X-Received: by 2002:a05:6808:b36:: with SMTP id t22mr5574884oij.159.1598126749064;
- Sat, 22 Aug 2020 13:05:49 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U7TSDixHb61TOsN7YB6xR3mupClY/fil07Cu6O4z/P8=;
+        b=cZ1uWwcusHFxMjLdTZmNgQlSQ+PgSWowGHYi8h9WO/XV+Aq/0cBcnnnuZu/qO3iHpV
+         qPd7h0tuTaC6cpEECn/fUGmxOB1W+JchKWO6rmOXkf8zVA6uSgQLVXjIYZnDpqeDfrvW
+         pZohIJWczQberHRKydRHOEzPrywsEKGO3bbLIsYmEgZ0KKZIYigHH3CJoYW7hLogoP7j
+         i415c7DbKvWAw7eS37ozqN6oYvGQTIvHj3MX1FRN4h6igOPJX52byAbOTXcysOliWQg5
+         gvwbcoTZFjbN34w3zy7L19EyBLqJajrk5Sw6yct4CO5WdX+3BGrXFtParki3FXK1NqDJ
+         pgrQ==
+X-Gm-Message-State: AOAM531zGMLz5DvKOVYvBsS1irM6zphJO/VamuC7ip2a78Q+6oycpIKm
+        H4kpzyWGVxZd+Pvs/NUQeBragdExgZcvKc7/pEo=
+X-Google-Smtp-Source: ABdhPJwetRYxbDxlrQLlGNw1QkPN7UuMZbC6Sx7Ub10S257Sd9sSSwhaNepGYWww9YyYTyXoEH6+5HxXU5WorRnOsuY=
+X-Received: by 2002:a2e:b0d2:: with SMTP id g18mr3988714ljl.136.1598126801417;
+ Sat, 22 Aug 2020 13:06:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <159680892602.29015.6551860260436544999.stgit@warthog.procyon.org.uk>
- <159680895624.29015.1515546306605977725.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159680895624.29015.1515546306605977725.stgit@warthog.procyon.org.uk>
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Sat, 22 Aug 2020 22:05:37 +0200
-Message-ID: <CAKgNAkjPL=86+UTTvWYa3asTxfpKHEv=39ePfsj0W9V5QD71Vg@mail.gmail.com>
-Subject: Re: [PATCH 3/5] Add manpage for fspick(2)
-To:     David Howells <dhowells@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+References: <20200817030401.3124855-1-cphealy@gmail.com> <CAOMZO5DNS0jgc5aryzHvcViVUDZCVF+NMMf_RG2EB28p8Z0Ghw@mail.gmail.com>
+In-Reply-To: <CAOMZO5DNS0jgc5aryzHvcViVUDZCVF+NMMf_RG2EB28p8Z0Ghw@mail.gmail.com>
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Sat, 22 Aug 2020 13:06:30 -0700
+Message-ID: <CAFXsbZph08Zd1p+91x+RA5Y8Oo56YTTeRAHopFi2+ciOme3CZg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx7d-zii-rmu2: fix rgmii phy-mode for ksz9031 phy
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello David,
-
-On Fri, 7 Aug 2020 at 16:02, David Howells <dhowells@redhat.com> wrote:
+On Sat, Aug 22, 2020 at 12:59 PM Fabio Estevam <festevam@gmail.com> wrote:
 >
-> Add a manual page to document the fspick() system call.
+> Hi Chris,
 >
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> ---
+> On Mon, Aug 17, 2020 at 12:04 AM Chris Healy <cphealy@gmail.com> wrote:
+> >
+> > From: Chris Healy <cphealy@gmail.com>
+> >
+> > Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
+> > KSZ9031 PHY") the networking is broken on the imx7d-zii-rmu2 board.
+> >
+> > Fix it by switching to phy-mode = "rgmii-id".
 >
->  man2/fspick.2 |  195 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 195 insertions(+)
->  create mode 100644 man2/fspick.2
+> The patch looks good, but the commit log could be improved to explain
+> more about the reason for the breakage.
 >
-> diff --git a/man2/fspick.2 b/man2/fspick.2
-> new file mode 100644
-> index 000000000..24242b98b
-> --- /dev/null
-> +++ b/man2/fspick.2
-> @@ -0,0 +1,195 @@
-> +'\" t
-> +.\" Copyright (c) 2020 David Howells <dhowells@redhat.com>
-> +.\"
-> +.\" %%%LICENSE_START(VERBATIM)
-> +.\" Permission is granted to make and distribute verbatim copies of this
-> +.\" manual provided the copyright notice and this permission notice are
-> +.\" preserved on all copies.
-> +.\"
-> +.\" Permission is granted to copy and distribute modified versions of this
-> +.\" manual under the conditions for verbatim copying, provided that the
-> +.\" entire resulting derived work is distributed under the terms of a
-> +.\" permission notice identical to this one.
-> +.\"
-> +.\" Since the Linux kernel and libraries are constantly changing, this
-> +.\" manual page may be incorrect or out-of-date.  The author(s) assume no
-> +.\" responsibility for errors or omissions, or for damages resulting from
-> +.\" the use of the information contained herein.  The author(s) may not
-> +.\" have taken the same level of care in the production of this manual,
-> +.\" which is licensed free of charge, as they might when working
-> +.\" professionally.
-> +.\"
-> +.\" Formatted or processed versions of this manual, if unaccompanied by
-> +.\" the source, must acknowledge the copyright and authors of this work.
-> +.\" %%%LICENSE_END
-> +.\"
-> +.TH FSPICK 2 2020-08-07 "Linux" "Linux Programmer's Manual"
-> +.SH NAME
-> +fspick \- Select filesystem for reconfiguration
-> +.SH SYNOPSIS
-> +.nf
-> +.B #include <sys/types.h>
-> +.br
+> Please check commit 0672d22a19244 ("ARM: dts: imx: Fix the AR803X
+> phy-mode") as a reference.
 
-Remove all instances of ".br" here in the SYNOPSIS. They aren't needed
-(because of the .nf above).
-
-> +.B #include <sys/mount.h>
-> +.br
-> +.B #include <unistd.h>
-> +.br
-> +.BR "#include <fcntl.h>           " "/* Definition of AT_* constants */"
-> +.PP
-> +.BI "int fspick(int " dirfd ", const char *" pathname ", unsigned int " flags );
-> +.fi
-> +.PP
-> +.IR Note :
-> +There is no glibc wrapper for this system call.
-> +.SH DESCRIPTION
-> +.PP
-> +.BR fspick ()
-> +creates a new filesystem configuration context within the kernel and attaches a
-> +pre-existing superblock to it so that it can be reconfigured (similar to
-> +.BR mount (8)
-> +with the "-o remount" option).  The configuration context is marked as being in
-> +reconfiguration mode and attached to a file descriptor, which is returned to
-> +the caller.  This can be marked close-on-exec by setting
-
-s/This/The file descriptor/
-
-> +.B FSPICK_CLOEXEC
-> +in
-> +.IR flags .
-> +.PP
-> +The target is whichever superblock backs the object determined by
-> +.IR dfd ", " pathname " and " flags .
-> +The following can be set in
-> +.I flags
-> +to control the pathwalk to that object:
-> +.TP
-> +.B FSPICK_SYMLINK_NOFOLLOW
-> +Don't follow symbolic links in the terminal component of the path.
-
-Better: s/terminal/final/
-
-> +.TP
-> +.B FSPICK_NO_AUTOMOUNT
-> +Don't follow automounts in the terminal component of the path.
-
-Better: s/terminal/final/
-
-> +.TP
-> +.B FSPICK_EMPTY_PATH
-> +Allow an empty string to be specified as the pathname.  This allows
-> +.I dirfd
-> +to specify a path exactly.
-
-The use of "path" in the above line is "off"; dirfd is a file
-descriptor. Can you reword?
-
-> +.PP
-> +After calling fspick(), the file descriptor should be passed to the
-> +.BR fsconfig (2)
-> +system call, using that to specify the desired changes to filesystem and
-> +security parameters.
-> +.PP
-> +When the parameters are all set, the
-> +.BR fsconfig ()
-> +system call should then be called again with
-> +.B FSCONFIG_CMD_RECONFIGURE
-> +as the command argument to effect the reconfiguration.
-> +.PP
-> +After the reconfiguration has taken place, the context is wiped clean (apart
-> +from the superblock attachment, which remains) and can be reused to make
-> +another reconfiguration.
-> +.PP
-> +The file descriptor also serves as a channel by which more comprehensive error,
-> +warning and information messages may be retrieved from the kernel using
-> +.BR read (2).
-> +
-> +
-> +.\"________________________________________________________
-
-Please remove above three lines.
-
-> +.SS Message Retrieval Interface
-> +The context file descriptor may be queried for message strings at any time by
-> +calling
-> +.BR read (2)
-> +on the file descriptor.  This will return formatted messages that are prefixed
-> +to indicate their class:
-> +.TP
-> +\fB"e <message>"\fP
-> +An error message string was logged.
-> +.TP
-> +\fB"i <message>"\fP
-> +An informational message string was logged.
-> +.TP
-> +\fB"w <message>"\fP
-> +An warning message string was logged.
-> +.PP
-> +Messages are removed from the queue as they're read and the queue has a limited
-> +depth, so it's possible for some to get lost.
-
-s/depth/length/ (or "size").
-
-And, what is the limit? It would be helpful to give the reader a clue.
-
-> +
-> +.\"________________________________________________________
-
-Please remove above two lines.
-
-> +.SH EXAMPLES
-> +To illustrate the process, here's an example whereby this can be used to
-> +reconfigure a filesystem:
-> +.PP
-> +.in +4n
-> +.nf
-> +sfd = fspick(AT_FDCWD, "/mnt", FSPICK_NO_AUTOMOUNT | FSPICK_CLOEXEC);
-> +fsconfig(sfd, FSCONFIG_SET_FLAG, "ro", NULL, 0);
-> +fsconfig(sfd, FSCONFIG_SET_STRING, "user_xattr", "false", 0);
-> +fsconfig(sfd, FSCONFIG_CMD_RECONFIGURE, NULL, NULL, 0);
-> +.fi
-> +.in
-> +.PP
-> +
-> +
-> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-> +.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-Please remove above *six* lines.
-
-> +.SH RETURN VALUE
-> +On success, the function returns a file descriptor.  On error, \-1 is returned,
-> +and
-> +.I errno
-> +is set appropriately.
-> +.SH ERRORS
-> +The error values given below result from filesystem type independent
-> +errors.
-> +Each filesystem type may have its own special errors and its
-
-s/Each/Additionally, each/ ?
-
-> +own special behavior.
-> +See the Linux kernel source code for details.
-> +.TP
-> +.B EACCES
-> +A component of a path was not searchable.
-> +(See also
-> +.BR path_resolution (7).)
-> +.TP
-> +.B EFAULT
-> +.I pathname
-> +points outside the user address space.
-> +.TP
-> +.B EINVAL
-> +.I flags
-> +includes an undefined value.
-> +.TP
-> +.B ELOOP
-> +Too many links encountered during pathname resolution.
-> +.TP
-> +.B EMFILE
-> +The system has too many open files to create more.
-> +.TP
-> +.B ENFILE
-> +The process has too many open files to create more.
-> +.TP
-> +.B ENAMETOOLONG
-> +A pathname was longer than
-> +.BR MAXPATHLEN .
-> +.TP
-> +.B ENOENT
-> +A pathname was empty or had a nonexistent component.
-> +.TP
-> +.B ENOMEM
-> +The kernel could not allocate sufficient memory to complete the call.
-> +.TP
-> +.B EPERM
-> +The caller does not have the required privileges.
-> +.SH CONFORMING TO
-> +These functions are Linux-specific and should not be used in programs intended
-> +to be portable.
-> +.SH VERSIONS
-> +.BR fsopen "(), " fsmount "() and " fspick ()
-> +were added to Linux in kernel 5.1.
-
-5.2!
-
-> +.SH NOTES
-> +Glibc does not (yet) provide a wrapper for the
-> +.BR fspick "()"
-> +system call; call it using
-> +.BR syscall (2).
-> +.SH SEE ALSO
-> +.BR mountpoint (1),
-> +.BR fsconfig (2),
-> +.BR fsopen (2),
-> +.BR path_resolution (7),
-> +.BR mount (8)
-
-Thanks,
-
-Michael
-
-
---
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Sounds good, I'll improve the commit log in v2.
