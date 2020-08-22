@@ -7,84 +7,70 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0CDC433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E62CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5C020720
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE99207CD
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 12:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598100279;
-	bh=Y4DWmUZUUPm/9a/OVw5Yj+wqdTSrwWiLyfMroihIYRw=;
+	s=default; t=1598100482;
+	bh=bAJMzC297RSNvnS+KubnO+QEOy7vDWbN3uDCkxE6IRw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g7zbHIzSBQbz7pu9FFAGBq5zWV/eHKlIQnikvBk7gNDVc7yOz82T0KvrFUZ/oJKp4
-	 2DRQlW+rA7rrtFocmyNbSn7xOF3gCP28f9GxqXNK2xOo1O2wRcJjEn5XtKOqrtJB5J
-	 dvhEWND3izfX8nJlFvW/1VywHx98NK3hToIHQxM0=
+	b=edumgm2D6gT2u6uuk1r3pk/1WORTc8K/HQLV68kEKZ3d5xX6VNlXUb+t5TjxwPObK
+	 hfg9/0NnMbcCCjpuUFqQwrpRgWP1DDafsr0FvXYEpZ9684BpG5aYerwf/mSU85Fr9I
+	 RbyY6j07WQKX7Ibr+Gg02uYVDNGh7ef2Q9srCt0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgHVMoi convert rfc822-to-8bit (ORCPT
+        id S1728061AbgHVMsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 08:44:38 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43895 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbgHVMog (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 08:44:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a15so4306270wrh.10;
-        Sat, 22 Aug 2020 05:44:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=FetylycVAb2VdmXFV8OSnaxjVdiLE5dOceTQeBcYszc=;
-        b=rp/xoSP7varLCLv2XnQvqFws7MXEJ2d/CHvfL6Z3D6GEk5v57yyFOoiw39m5xn360D
-         COO62WLjEYpMVrFzlK2PCcZGdvbFlcIAH+JzROvRgIovKahjFOYlRVHZWMFcI1cG3pD5
-         OMtyDdRYfcTgH3KGpZQsHRKTLwx9AOOriuvd5GfgszirJ0ZPn2Rkgc37+u8HiDLaiMpV
-         UieAC02hcBGEIFRIddZhlqdk+lMZY6bz7pS+ePYomma/tA550SFywTFocbW1LiJL86q/
-         ZspWBi7rTrRcwhrHcuYxagxBfa1y4XkjaVwjqWY0pcQ1sY5xGgwU0jQ1fCLaXk2j5gWQ
-         Ndaw==
-X-Gm-Message-State: AOAM533PYn6HfgQu12NGvmt8iZQyAGXCXTctkoxqEhFuk3omEAZz8aMQ
-        YX2wXSqkrl/bDUFZs6D8UOA=
-X-Google-Smtp-Source: ABdhPJxomFoNz2Jn4UGmWCgyq4C/fViPiWfYwBoRb4XshfTNnJSn61Q/pXbf5c6nzHiRoADEShdSmg==
-X-Received: by 2002:a5d:6505:: with SMTP id x5mr6812637wru.336.1598100274718;
-        Sat, 22 Aug 2020 05:44:34 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id h5sm8809466wrt.31.2020.08.22.05.44.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 22 Aug 2020 05:44:34 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 14:44:31 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
-Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [PATCH v2 9/9] spi: spi-s3c64xx: Turn on interrupts upon resume
-Message-ID: <20200822124431.GH20423@kozik-lap>
-References: <20200821161401.11307-1-l.stelmach@samsung.com>
- <CGME20200821161408eucas1p196aa4b954b3d19ad1b89a48dbbe41fbc@eucas1p1.samsung.com>
- <20200821161401.11307-10-l.stelmach@samsung.com>
+        Sat, 22 Aug 2020 08:48:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727827AbgHVMsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 08:48:00 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 023FD2072D;
+        Sat, 22 Aug 2020 12:47:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598100479;
+        bh=bAJMzC297RSNvnS+KubnO+QEOy7vDWbN3uDCkxE6IRw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i99FZ7U+HsPIslKptQRSOfRrX5oV07MAhU/rP7AjT8wiC8JSvRBn6UgAHoEy7xY05
+         S28JvUPeRodczgj1OeMxUlwMKqO0ZBNiDxA9iXWwKVslli0gOTdTwqqVZg7iIHITgw
+         Pkrnf1xwoaBmb9MDcRK0c8pkU17mq6NX6MUbsMqw=
+Date:   Sat, 22 Aug 2020 20:47:54 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCHv1] ARM: dts/imx6q-bx50v3: Add IRQ support for internal
+ switch
+Message-ID: <20200822124753.GA30094@dragon>
+References: <20200805135817.391409-1-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200821161401.11307-10-l.stelmach@samsung.com>
+In-Reply-To: <20200805135817.391409-1-sebastian.reichel@collabora.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 06:14:01PM +0200, Łukasz Stelmach wrote:
-> s3c64xx_spi_hwinit() disables interrupts. In s3c64xx_spi_probe() after
-> calling s3c64xx_spi_hwinit() they are enabled with the following call.
+On Wed, Aug 05, 2020 at 03:58:17PM +0200, Sebastian Reichel wrote:
+> This adds missing interrupt support for the internal Marvell
+> switch, so that the kernel does not have to keep polling the
+> PHYs on the bit-banged MDIO bus all the time.
 > 
-> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
-> ---
->  drivers/spi/spi-s3c64xx.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Changed subject prefix to 'ARM: dts: imx6q-bx50v3: ...', and applied the
+patch.
 
-Best regards,
-Krzysztof
+Shawn
