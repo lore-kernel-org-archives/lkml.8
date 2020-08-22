@@ -2,68 +2,75 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77926C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9C72072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6452072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 14:22:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="Wbkz2zA+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgHVOTP (ORCPT
+        id S1728141AbgHVOWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 10:19:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60122 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727899AbgHVOTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 10:19:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D6EE5ABE9;
-        Sat, 22 Aug 2020 14:19:40 +0000 (UTC)
-Subject: Re: [patch RFC 00/38] x86, PCI, XEN, genirq ...: Prepare for device
- MSI
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200821002424.119492231@linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <863e2e57-97a4-5625-4aaf-901092e673b1@suse.com>
-Date:   Sat, 22 Aug 2020 16:19:09 +0200
+        Sat, 22 Aug 2020 10:22:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728120AbgHVOWc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 10:22:32 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4115C061574
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 07:22:31 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a5so4481034wrm.6
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 07:22:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=5HFVo2zL2bsI/Q9rxIrK2pe3dbH+0GlhbWJVp1cCskk=;
+        b=Wbkz2zA+bdCvXZ3rsLg7F0NkvvbKjFGx0Fwa3Zu06+1hpw2dEm/jvRid8vhtlSNfB+
+         aPl3Pdn9/iqjpCH7R5fz7LUKdSff29/ZZ8IO7KLS9eYLANNWtwOapGpYfZCcxcOqhyDn
+         jE/LbyZE93/5JI/BDmGC4H+QaqEu4NudgYpbk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5HFVo2zL2bsI/Q9rxIrK2pe3dbH+0GlhbWJVp1cCskk=;
+        b=PieRhOjav8LiwSJSC5/1g1WoWtILE1DZiDmm64AGCxV44l3NaViLrAeHti8EYk8HS4
+         O/01gA/NDbycUwc0kYGDBG4EYUm+P1UNzkMuFWqY+BcDSqNq6KZYqtn6CTVQPF9U/NFj
+         1HkqFle0cutVOrqgThvzEzFMROFG5m2AB6EeyseQgGRSfAtCfZ+PktBKdXuZO4cmkedL
+         KJrTcsyYdu+E1coIEybl2GTss7PfdAn3Bd2PnX/b7+KKqsRj4KOrJ2MuFs5ZZpp3RCpx
+         RyobVzBV6e0VC1XdksOmdxTSHapJ3P+3EvyYZ60TBL2dEDn645Sq/oQf1pXNQGxj2Z2x
+         zIEw==
+X-Gm-Message-State: AOAM530kc6IkFUrUiwxjhLRW0kxq2+7cauL4Mbhx1JbjPjVVnAUtQ0qt
+        eOGRx2AhyPgeEbmOjpDpYPecQA==
+X-Google-Smtp-Source: ABdhPJzJZyqNjdHMGQ/nkBrB4dh3Vqvf0CzIf2KNRQ9WTeuU0RPG+NzYRmOQyJdoAUhibiQ2J5s+Rw==
+X-Received: by 2002:adf:e60a:: with SMTP id p10mr5303146wrm.295.1598106149913;
+        Sat, 22 Aug 2020 07:22:29 -0700 (PDT)
+Received: from [192.168.0.101] ([79.134.173.43])
+        by smtp.googlemail.com with ESMTPSA id p17sm13328547wra.81.2020.08.22.07.22.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Aug 2020 07:22:28 -0700 (PDT)
+Subject: Re: general protection fault in fib_check_nexthop
+To:     syzbot <syzbot+55a3e617aaf04b962a3e@syzkaller.appspotmail.com>,
+        davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org,
+        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        yoshfuji@linux-ipv6.org
+References: <00000000000086e96005ad5d17a7@google.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <6d82801a-8704-9198-67d6-12927e21f0fd@cumulusnetworks.com>
+Date:   Sat, 22 Aug 2020 17:22:21 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200821002424.119492231@linutronix.de>
+In-Reply-To: <00000000000086e96005ad5d17a7@google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -72,140 +79,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.08.20 02:24, Thomas Gleixner wrote:
-> First of all, sorry for the horrible long Cc list, which was
-> unfortunately unavoidable as this touches the world and some more.
+On 8/21/20 9:10 AM, syzbot wrote:
+> Hello,
 > 
-> This patch series aims to provide a base to support device MSI (non
-> PCI based) in a halfways architecture independent way.
+> syzbot found the following issue on:
 > 
-> It's a mixed bag of bug fixes, cleanups and general improvements which
-> are worthwhile independent of the device MSI stuff. Unfortunately this
-> also comes with an evil abuse of the irqdomain system to coerce XEN on
-> x86 into compliance without rewriting XEN from scratch.
+> HEAD commit:    18445bf4 Merge tag 'spi-fix-v5.9-rc1' of git://git.kernel...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=162cbd7a900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=a0437fdd630bee11
+> dashboard link: https://syzkaller.appspot.com/bug?extid=55a3e617aaf04b962a3e
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> userspace arch: i386
 > 
-> As discussed in length in this mail thread:
-> 
->    https://lore.kernel.org/r/87h7tcgbs2.fsf@nanos.tec.linutronix.de
-> 
-> the initial attempt of piggypacking device MSI support on platform MSI
-> is doomed for various reasons, but creating independent interrupt
-> domains for these upcoming magic PCI subdevices which are not PCI, but
-> might be exposed as PCI devices is not as trivial as it seems.
-> 
-> The initially suggested and evaluated approach of extending platform
-> MSI turned out to be the completely wrong direction and in fact
-> platform MSI should be rewritten on top of device MSI or completely
-> replaced by it.
-> 
-> One of the main issues is that x86 does not support the concept of irq
-> domains associations stored in device::msi_domain and still relies on
-> the arch_*_msi_irqs() fallback implementations which has it's own set
-> of problems as outlined in
-> 
->    https://lore.kernel.org/r/87bljg7u4f.fsf@nanos.tec.linutronix.de/
-> 
-> in the very same thread.
-> 
-> The main obstacle of storing that pointer is XEN which has it's own
-> historical notiion of handling PCI MSI interupts.
-> 
-> This series tries to address these issues in several steps:
-> 
->   1) Accidental bug fixes
-> 	iommu/amd: Prevent NULL pointer dereference
-> 
->   2) Janitoring
-> 	x86/init: Remove unused init ops
-> 
->   3) Simplification of the x86 specific interrupt allocation mechanism
-> 
-> 	x86/irq: Rename X86_IRQ_ALLOC_TYPE_MSI* to reflect PCI dependency
-> 	x86/irq: Add allocation type for parent domain retrieval
-> 	iommu/vt-d: Consolidate irq domain getter
-> 	iommu/amd: Consolidate irq domain getter
-> 	iommu/irq_remapping: Consolidate irq domain lookup
-> 
->   4) Consolidation of the X86 specific interrupt allocation mechanism to be as close
->      as possible to the generic MSI allocation mechanism which allows to get rid
->      of quite a bunch of x86'isms which are pointless
-> 
-> 	x86/irq: Prepare consolidation of irq_alloc_info
-> 	x86/msi: Consolidate HPET allocation
-> 	x86/ioapic: Consolidate IOAPIC allocation
-> 	x86/irq: Consolidate DMAR irq allocation
-> 	x86/irq: Consolidate UV domain allocation
-> 	PCI: MSI: Rework pci_msi_domain_calc_hwirq()
-> 	x86/msi: Consolidate MSI allocation
-> 	x86/msi: Use generic MSI domain ops
-> 
->    5) x86 specific cleanups to remove the dependency on arch_*_msi_irqs()
-> 
-> 	x86/irq: Move apic_post_init() invocation to one place
-> 	z86/pci: Reducde #ifdeffery in PCI init code
-> 	x86/irq: Initialize PCI/MSI domain at PCI init time
-> 	irqdomain/msi: Provide DOMAIN_BUS_VMD_MSI
-> 	PCI: vmd: Mark VMD irqdomain with DOMAIN_BUS_VMD_MSI
-> 	PCI: MSI: Provide pci_dev_has_special_msi_domain() helper
-> 	x86/xen: Make xen_msi_init() static and rename it to xen_hvm_msi_init()
-> 	x86/xen: Rework MSI teardown
-> 	x86/xen: Consolidate XEN-MSI init
-> 	irqdomain/msi: Allow to override msi_domain_alloc/free_irqs()
-> 	x86/xen: Wrap XEN MSI management into irqdomain
-> 	iommm/vt-d: Store irq domain in struct device
-> 	iommm/amd: Store irq domain in struct device
-> 	x86/pci: Set default irq domain in pcibios_add_device()
-> 	PCI/MSI: Allow to disable arch fallbacks
-> 	x86/irq: Cleanup the arch_*_msi_irqs() leftovers
-> 	x86/irq: Make most MSI ops XEN private
-> 
->      This one is paving the way to device MSI support, but it comes
->      with an ugly and evil hack. The ability of overriding the default
->      allocation/free functions of an MSI irq domain is useful in general as
->      (hopefully) demonstrated with the device MSI POC, but the abuse
->      in context of XEN is evil. OTOH without enough XENology and without
->      rewriting XEN from scratch wrapping XEN MSI handling into a pseudo
->      irq domain is a reasonable step forward for mere mortals with severly
->      limited XENology. One day the XEN folks might make it a real irq domain.
->      Perhaps when they have to support the same mess on other architectures.
->      Hope dies last...
-> 
->      At least the mechanism to override alloc/free turned out to be useful
->      for implementing the base infrastructure for device MSI. So it's not a
->      completely lost case.
-> 
->    6) X86 specific preparation for device MSI
-> 
->         x86/irq: Add DEV_MSI allocation type
->         x86/msi: Let pci_msi_prepare() handle non-PCI MSI
-> 
->    7) Generic device MSI infrastructure
-> 
->         platform-msi: Provide default irq_chip:ack
->         platform-msi: Add device MSI infrastructure
-> 
->    8) Infrastructure for and a POC of an IMS (Interrupt Message
->       Storm) irq domain and irqchip implementation
-> 
->         irqdomain/msi: Provide msi_alloc/free_store() callbacks
->         irqchip: Add IMS array driver - NOT FOR MERGING
-> 
-> The whole lot is also available from git:
-> 
->     git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git device-msi
-> 
-> This has been tested on Intel/AMD/KVM but lacks testing on:
-> 
->      - HYPERV (-ENODEV)
->      - VMD enabled systems (-ENODEV)
->      - XEN (-ENOCLUE)
 
-Tested to work in Xen dom0. Network is running fine with eth0 MSI
-interrupts being routed through Xen.
+#syz dup: general protection fault in fib_dump_info (2)
 
-You can add my:
-
-Tested-by: Juergen Gross <jgross@suse.com>
-
-
-Juergen
