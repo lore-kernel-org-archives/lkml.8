@@ -2,97 +2,119 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E4AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 21:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 22:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35EFD2086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 21:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE00206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 22:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598133629;
+	bh=26/N8+mvdu6vlbNFTien1WtTQ3gb3dU7NGk55H9qbcg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=E4i+EytM/iOnnEDvUgDAlckjJy14rltcUC4njMlsxIt5wv+frYuQxVAiXwzmxco+w
+	 njw68FCtQX+9URUSmFNZp4JzdD56O0HZocJS2/Ctv3f3LmlJCGTTdoe64zTnUSOXwj
+	 T8njN34bAkbqq8BYBs4P1JG9xkJ7WP2BdusY6ARU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgHVVZp (ORCPT
+        id S1728246AbgHVV7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 17:25:45 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36176 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgHVVZo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 17:25:44 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 391521C0BB0; Sat, 22 Aug 2020 23:25:42 +0200 (CEST)
-Date:   Sat, 22 Aug 2020 23:25:41 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Joerg Roedel <joro@8bytes.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Airlie <airlied@redhat.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Vrabel <david.vrabel@citrix.com>,
-        Joerg Roedel <jroedel@suse.de>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] mm: Track page table modifications in
- __apply_to_page_range()
-Message-ID: <20200822212541.GB14071@amd>
-References: <20200821123746.16904-1-joro@8bytes.org>
- <20200821133548.be58a3b0881b41a32759fa04@linux-foundation.org>
- <159804301810.32652.14249776487575415877@build.alporthouse.com>
+        Sat, 22 Aug 2020 17:59:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726535AbgHVV7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 17:59:51 -0400
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E38B2078A
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 21:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598133590;
+        bh=26/N8+mvdu6vlbNFTien1WtTQ3gb3dU7NGk55H9qbcg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XqoYxwF1bwXh/iSy5GpGXceIJHdU3M6lfgzq0M1F6S1AzgrK+fMdw8yLVzBtisc5x
+         e6lsVvnJMZOER4PR+5pNh1ARBTvU4q7mQsEANhNkEm/vkpA9s2mgGHGbWxNwke6z0L
+         +dlKJyuQBeyj/BC6RLr2VbPRTlnxcJr/poHOeBYs=
+Received: by mail-wm1-f51.google.com with SMTP id f18so3560852wmc.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 14:59:50 -0700 (PDT)
+X-Gm-Message-State: AOAM5318VhA8aCASyReqKH44g+Dj5ny0FJImhbfcIsZXIbShos73fhEO
+        WFqL4JuX0iI6p0VI7rtFhup/2SUWkP9fYBOiah3ACQ==
+X-Google-Smtp-Source: ABdhPJx8zYLtQI9PtVOSnI3R8T+8esNH3luXDKza2exG6DLlTSdqFPsxQ/yBNmt1hQvaBDz7uJ7L04rqy528U7jIwUk=
+X-Received: by 2002:a7b:ca48:: with SMTP id m8mr127503wml.36.1598133588918;
+ Sat, 22 Aug 2020 14:59:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
-Content-Disposition: inline
-In-Reply-To: <159804301810.32652.14249776487575415877@build.alporthouse.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <881de09e786ab93ce56ee4a2437ba2c308afe7a9.1593795633.git.luto@kernel.org>
+ <159388495037.4006.7851835406474127743.tip-bot2@tip-bot2> <20200820102344.GP2674@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200820102344.GP2674@hirez.programming.kicks-ass.net>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 22 Aug 2020 14:59:37 -0700
+X-Gmail-Original-Message-ID: <CALCETrVFQuMcUgfDkREGFHSSF9UW5yy4UuNZSpjw1962eSvLyw@mail.gmail.com>
+Message-ID: <CALCETrVFQuMcUgfDkREGFHSSF9UW5yy4UuNZSpjw1962eSvLyw@mail.gmail.com>
+Subject: Re: [tip: x86/urgent] x86/entry, selftests: Further improve user
+ entry sanity checks
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-tip-commits@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 20, 2020 at 3:24 AM <peterz@infradead.org> wrote:
+>
+> On Sat, Jul 04, 2020 at 05:49:10PM -0000, tip-bot2 for Andy Lutomirski wrote:
+>
+> > diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+> > index f392a8b..e83b3f1 100644
+> > --- a/arch/x86/entry/common.c
+> > +++ b/arch/x86/entry/common.c
+> > @@ -49,6 +49,23 @@
+> >  static void check_user_regs(struct pt_regs *regs)
+> >  {
+> >       if (IS_ENABLED(CONFIG_DEBUG_ENTRY)) {
+> > +             /*
+> > +              * Make sure that the entry code gave us a sensible EFLAGS
+> > +              * register.  Native because we want to check the actual CPU
+> > +              * state, not the interrupt state as imagined by Xen.
+> > +              */
+> > +             unsigned long flags = native_save_fl();
+> > +             WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
+> > +                                   X86_EFLAGS_NT));
+>
+> This triggers with AC|TF on my !SMAP enabled machine.
+>
+> something like so then?
+>
+> diff --git a/arch/x86/include/asm/entry-common.h b/arch/x86/include/asm/entry-common.h
+> index a8f9315b9eae..76410964585f 100644
+> --- a/arch/x86/include/asm/entry-common.h
+> +++ b/arch/x86/include/asm/entry-common.h
+> @@ -18,8 +18,15 @@ static __always_inline void arch_check_user_regs(struct pt_regs *regs)
+>                  * state, not the interrupt state as imagined by Xen.
+>                  */
+>                 unsigned long flags = native_save_fl();
+> -               WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
+> -                                     X86_EFLAGS_NT));
+> +               unsigned long mask = X86_EFLAGS_DF | X86_EFLAGS_NT;
+> +
+> +               /*
+> +                * For !SMAP hardware we patch out CLAC on entry.
+> +                */
+> +               if (boot_cpu_has(X86_FEATURE_SMAP))
+> +                       mask |= X86_EFLAGS_AC;
+> +
+> +               WARN_ON_ONCE(flags & mask);
+>
+>                 /* We think we came from user mode. Make sure pt_regs agrees. */
+>                 WARN_ON_ONCE(!user_mode(regs));
 
---3uo+9/B/ebqu+fSQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+LGTM.
 
-Hi!
-> > > The __apply_to_page_range() function is also used to change and/or
-> > > allocate page-table pages in the vmalloc area of the address space.
-> > > Make sure these changes get synchronized to other page-tables in the
-> > > system by calling arch_sync_kernel_mappings() when necessary.
-> >=20
-> > There's no description here of the user-visible effects of the bug.=20
-> > Please always provide this, especially when proposing a -stable
-> > backport.  Take pity upon all the downstream kernel maintainers who are
-> > staring at this wondering whether they should risk adding it to their
-> > kernels.
->=20
-> The impact appears limited to x86-32, where apply_to_page_range may miss
-> updating the PMD. That leads to explosions in drivers like
-
-Is this alone supposed to fix my problems with graphics on Thinkpad
-X60? Let me try...
-
-Best regards,
-								Pavel
-							=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---3uo+9/B/ebqu+fSQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl9BjVUACgkQMOfwapXb+vLhDwCgsB41bHFj++LVnm2DkfXOTwEm
-k7UAoLObJuOLmCfuoVbRfRzOInnL8XTV
-=ayRy
------END PGP SIGNATURE-----
-
---3uo+9/B/ebqu+fSQ--
+Acked-by: Andy Lutomirski <luto@kernel.org>
