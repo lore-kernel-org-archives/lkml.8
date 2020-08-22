@@ -2,144 +2,186 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1184C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB14C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 766D72072D
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A143F2072D
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:27:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Sa0LMs4O"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WD1y4zXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgHVHYN (ORCPT
+        id S1727077AbgHVH1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 03:24:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59544 "EHLO
+        Sat, 22 Aug 2020 03:27:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbgHVHYM (ORCPT
+        with ESMTP id S1725975AbgHVH1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 03:24:12 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9572C061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 00:24:11 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id a65so184546wme.5
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 00:24:11 -0700 (PDT)
+        Sat, 22 Aug 2020 03:27:10 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71569C061573
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 00:27:10 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id oz20so216617ejb.5
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 00:27:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6U5VsJiOvwoKSeq8i4SuBH869R0qJJNwlA5i8UJmv1c=;
-        b=Sa0LMs4O1BZWbNh3nc5ZpOwo02B8a7BK8f+0ItUxGWaVjd1/HeuQ6pFw29icSNit0s
-         8F7F3s4PFk1JZdoofJE9yfiXjt4JaqRawIb070HzoKXkjcpicNGelRZ6lT7T9Ro4IhVJ
-         9g4feFl5nvjEryKQCXa/rteuljT/8vyJLClT0MFqZxKvUdH3CQBYmX80B9KrHRAaLdwT
-         Ypg9K5W7CmVJ16bOEvWMzfcursbZmvo8tm7crzf23CZVtWbfMP34spRIqbom/91ujtbx
-         9AZw5traqujfA+aZOmsXnYhAn9Yujm3aAFJioeBcrMG9ODmk5KrHZlrK4EzycqLcI54l
-         b0Yw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mDR0zrvaETchAvJrcviqkk7cP258seKos1RRZO2tCNY=;
+        b=WD1y4zXxFKdPhrJDo7FZF18V8FXHdZAuQzKOqvwg5t4cC+zK1OJ0lfC/t6NmK+O6GG
+         NWICiBh3SfaXsrWidpT/L8d81C880rZzPxlK3xjlS6gvz8POZsgYaj1nm5h7681zVqSV
+         SaLXPjSsR0MQQbKtVGF/UuK00EXO3tq9Z/BrHW4scNC3phcxBiqQTa+lRN2e+V9gs4H1
+         Yh0+8sRw+4LfFgKuIyivx/UOICrzE7utfUuUFiRTd9EMaBWno18Zrmjq/MLKR0zOFkuv
+         /2SWots2svp9DZ+wH63o3IPnu84631NxD5XC0nxh1ZI8AtBGWMS0XSZwKSEVmSpYiYil
+         LnnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6U5VsJiOvwoKSeq8i4SuBH869R0qJJNwlA5i8UJmv1c=;
-        b=YX3pil+7Fer9ydsbXiojyhQBnkBJ1baUUylBj3te1dSSPX5Ub8e+AEj7aT/WCUD+UJ
-         +0N61FuxctoKMU9PaE6EPDfciyhuyRTWLRCFKqaFoFVTRI2n9mwC/BnjHf645icOBavn
-         W+oppvdTA7aeFQQHVGP/fQHigQm/b7EeFGUQOhnBHfqPY7/Bs1RlzBYcK08FMsg2pKho
-         BKQaRbXEEOZMKBE0CCCAiYChjXekTg9pOzCAOxRyOYa5DAX3KcB0qmZhctYN1ME8DLS9
-         ii1JaO+j/TMVlFNMnZk2iCrTbAsIlP0E+HuAT6n4aSCC29Pklv4lXjQgb/k5D3UW1J0+
-         6ZRQ==
-X-Gm-Message-State: AOAM533vmG5s9nQa2zgEEP25/tuVCaT7nkkclLpRMiZpUNiVXGUlqgcs
-        gGNEs4p1HT96UA4UWci7BMI=
-X-Google-Smtp-Source: ABdhPJyRBVyMKS2GcuAZNOEqvh9FAmdOz8jtI4OqOQe3emis8LaXL9BkGNqvsSEBqWMr0YvffLTREg==
-X-Received: by 2002:a7b:cc11:: with SMTP id f17mr7427469wmh.21.1598081050315;
-        Sat, 22 Aug 2020 00:24:10 -0700 (PDT)
-Received: from [192.168.1.20] (host86-161-135-137.range86-161.btcentralplus.com. [86.161.135.137])
-        by smtp.googlemail.com with ESMTPSA id i4sm8615188wrw.26.2020.08.22.00.24.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Aug 2020 00:24:09 -0700 (PDT)
-Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on
- Intel NUC boxes
-From:   Chris Clayton <chris2553@googlemail.com>
-To:     =?UTF-8?B?5ZCz5piK5r6EIFJpY2t5?= <ricky_wu@realtek.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "philquadra@gmail.com" <philquadra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <862172f0-cd23-800c-27b1-27cb49e99099@googlemail.com>
- <a9a94d7f-4873-7a10-4911-f3c760257c5c@googlemail.com>
- <5729c72bbc2740d3917619c85e2fde58@realtek.com>
- <20200804074831.GB1761483@kroah.com>
- <11e224ca299b48f1bea07082f2ff7c00@realtek.com>
- <0afbd711-0bda-d9a3-138d-5c713b4e2ed9@googlemail.com>
- <19de15c2f07d447dace6bea483d38159@realtek.com>
- <152ef6c0-f3c0-bb67-4175-adced3c720cd@googlemail.com>
- <e1c295f28e3d4bdd8c78dfd3a5ed398c@realtek.com>
- <68b9bdd2-a05e-7fb0-ec9a-70b03e0c5289@googlemail.com>
- <20da8b4b-8426-9568-c0f1-4d1c2006c53f@googlemail.com>
-Message-ID: <29b12ecc-6e5c-8c1a-942b-ad23a95d020a@googlemail.com>
-Date:   Sat, 22 Aug 2020 08:24:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:80.0) Gecko/20100101
- Thunderbird/80.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mDR0zrvaETchAvJrcviqkk7cP258seKos1RRZO2tCNY=;
+        b=Mo3qZ6IWZ0GmQaxmHUNe9BjHlM+EjfRmAQJXmimZaIu/uWJ7Fe0dDP3czfnFNiLQdP
+         I4tbYfSXgL7Euhp6cmwMWFcSSkq9JRlVuWDwXHEjjA2c1fa1wB18SFxSCcuIeYy6slPo
+         oToGDI/GYDQWtlAOra3zDdgGu9ADlG1Zb1KIsNH+Xqc2VF69GtGE+Lf7jMXcsut0FetM
+         g3Etxry6BKT4Fh+7HmoXgjctGpcey76t8rwssMsWXaMrBKCslDDZZdPosvM3tGGagM/N
+         ogjZxtwpG7gjbVBulZrMN98tWGHxaSzLJmhwVNtZ2ou6AJLPKXr7W2BpAEO+li0XWd5r
+         Uh6Q==
+X-Gm-Message-State: AOAM533IXjH+KpPLCfrjC5kxzyPXGuHV4BzIZf/QSEyv4C/N5bziw+0b
+        ekB+OrEm2+PgtmeOVdM5ebP7hLtO5tEjbAPlOyJb8g==
+X-Google-Smtp-Source: ABdhPJwqITtid7OZmHUh//eLVchaGbXrP+3xlPPoyAXWuYCMSciXM8P9U/0GBYjVHb5ptGJivZ8In0FV5V+vGZBpmgc=
+X-Received: by 2002:a17:906:5902:: with SMTP id h2mr6586238ejq.423.1598081228742;
+ Sat, 22 Aug 2020 00:27:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20da8b4b-8426-9568-c0f1-4d1c2006c53f@googlemail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-6-haoluo@google.com>
+ <29b8358f-64fb-9e82-acb0-20b5922afc81@fb.com> <CAEf4BzbmOnv1W4p2F6Ke8W_Gwi-QjtsOW8MFSifVoiaRY8jNVg@mail.gmail.com>
+In-Reply-To: <CAEf4BzbmOnv1W4p2F6Ke8W_Gwi-QjtsOW8MFSifVoiaRY8jNVg@mail.gmail.com>
+From:   Hao Luo <haoluo@google.com>
+Date:   Sat, 22 Aug 2020 00:26:57 -0700
+Message-ID: <CA+khW7iLW-KsrfBS2a+OOMU4i72sHiNeSzkAnXoidW7gwaMaLA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 5/8] bpf/selftests: ksyms_btf to test typed ksyms
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Yonghong Song <yhs@fb.com>, Networking <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 21, 2020 at 4:03 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Thu, Aug 20, 2020 at 10:32 AM Yonghong Song <yhs@fb.com> wrote:
+> >
+> >
+> >
+> > On 8/19/20 3:40 PM, Hao Luo wrote:
+> > > Selftests for typed ksyms. Tests two types of ksyms: one is a struct,
+> > > the other is a plain int. This tests two paths in the kernel. Struct
+> > > ksyms will be converted into PTR_TO_BTF_ID by the verifier while int
+> > > typed ksyms will be converted into PTR_TO_MEM.
+> > >
+> > > Signed-off-by: Hao Luo <haoluo@google.com>
+> > > ---
+> > >   .../selftests/bpf/prog_tests/ksyms_btf.c      | 77 +++++++++++++++++++
+> > >   .../selftests/bpf/progs/test_ksyms_btf.c      | 23 ++++++
+> > >   2 files changed, 100 insertions(+)
+> > >   create mode 100644 tools/testing/selftests/bpf/prog_tests/ksyms_btf.c
+> > >   create mode 100644 tools/testing/selftests/bpf/progs/test_ksyms_btf.c
+> > >
+> > > diff --git a/tools/testing/selftests/bpf/prog_tests/ksyms_btf.c b/tools/testing/selftests/bpf/prog_tests/ksyms_btf.c
+> > > new file mode 100644
+> > > index 000000000000..1dad61ba7e99
+> > > --- /dev/null
+> > > +++ b/tools/testing/selftests/bpf/prog_tests/ksyms_btf.c
+> > > @@ -0,0 +1,77 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/* Copyright (c) 2020 Google */
+> > > +
+> > > +#include <test_progs.h>
+> > > +#include <bpf/libbpf.h>
+> > > +#include <bpf/btf.h>
+> > > +#include "test_ksyms_btf.skel.h"
+> > > +
+> > > +static int duration;
+> > > +
+> > > +static __u64 kallsyms_find(const char *sym)
+> > > +{
+> > > +     char type, name[500];
+> > > +     __u64 addr, res = 0;
+> > > +     FILE *f;
+> > > +
+> > > +     f = fopen("/proc/kallsyms", "r");
+> > > +     if (CHECK(!f, "kallsyms_fopen", "failed to open: %d\n", errno))
+> > > +             return 0;
+> >
+> > could you check whether libbpf API can provide this functionality for
+> > you? As far as I know, libbpf does parse /proc/kallsyms.
+>
+> No need to use libbpf's implementation. We already have
+> kallsyms_find() in prog_tests/ksyms.c and a combination of
+> load_kallsyms() + ksym_get_addr() in trace_helpers.c. It would be good
+> to switch to one implementation for both prog_tests/ksyms.c and this
+> one.
+>
+Ack. I can do some refactoring. The least thing that I can do is
+moving kallsyms_find() to a header for both prog_tests/ksyms.c and
+this test to use.
 
+>
+> > > diff --git a/tools/testing/selftests/bpf/progs/test_ksyms_btf.c b/tools/testing/selftests/bpf/progs/test_ksyms_btf.c
+> > > new file mode 100644
+> > > index 000000000000..e04e31117f84
+> > > --- /dev/null
+> > > +++ b/tools/testing/selftests/bpf/progs/test_ksyms_btf.c
+> > > @@ -0,0 +1,23 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/* Copyright (c) 2020 Google */
+> > > +
+> > > +#include "vmlinux.h"
+> > > +
+> > > +#include <bpf/bpf_helpers.h>
+> > > +
+> > > +__u64 out__runqueues = -1;
+> > > +__u64 out__bpf_prog_active = -1;
+> > > +
+> > > +extern const struct rq runqueues __ksym; /* struct type global var. */
+> > > +extern const int bpf_prog_active __ksym; /* int type global var. */
+> > > +
+> > > +SEC("raw_tp/sys_enter")
+> > > +int handler(const void *ctx)
+> > > +{
+> > > +     out__runqueues = (__u64)&runqueues;
+> > > +     out__bpf_prog_active = (__u64)&bpf_prog_active;
+> > > +
+>
+> You didn't test accessing any of the members of runqueues, because BTF
+> only has per-CPU variables, right? Adding global/static variables was
+> adding too much data to BTF or something like that, is that right?
+>
 
-Hi Ricky.
+Right. With some experiments, I found the address of a percpu variable
+doesn't necessarily point to a valid structure. So it doesn't make
+sense to dereference runqueues and access its members. However, right
+now there are only percpu variables encoded in BTF, so I can't test
+accessing members of general global/static variables unfortunately.
 
-On 05/08/2020 13:48, Chris Clayton wrote:
-> Hi Ricky
-<snip>
->>
->> Ah, OK. I'll prepare the patch and send it to you once I've tested it.
->>
-> 
-> Please see the patch included below. As you suggested, it removes the code that does the OC power down on card readers
-> that are not members of your A series. The patch is against a fresh pull of Linus's tree this morning
-> (v5.8-2768-g4da9f3302615).
-> 
-> I've tested the resultant kernel on my Intel NUC6CAYH box (which contains an NUC66AYB board) and the rts5229 works fine.
-> I've also tested it on my laptop which also has a card reader supported by the rtsx_pci driver (an RTL8411B) and that
-> also works fine.
-> 
-> As I mentioned yesterday, I think it's a candidate for the 5.4 ans 5.7 stable series.
-> 
-> Thanks for your patience!
-> 
-> Chris
-> 
-> Signed-off-by: Chris Clayton <chris2553@googlemail.com>
-> 
-> --- a/drivers/misc/cardreader/rtsx_pcr.c        2020-08-05 07:10:21.752072515 +0100
-> +++ b/drivers/misc/cardreader/rtsx_pcr.c        2020-08-05 07:11:05.568074278 +0100
-> @@ -1172,10 +1172,6 @@ void rtsx_pci_init_ocp(struct rtsx_pcr *
->                         rtsx_pci_write_register(pcr, REG_OCPGLITCH,
->                                 SD_OCP_GLITCH_MASK, pcr->hw_param.ocp_glitch);
->                         rtsx_pci_enable_ocp(pcr);
-> -               } else {
-> -                       /* OC power down */
-> -                       rtsx_pci_write_register(pcr, FPDCTL, OC_POWER_DOWN,
-> -                               OC_POWER_DOWN);
->                 }
->         }
->  }
-> 
-> 
-
-Is there some problem with my patch? If you are too busy to deal with it, perhaps I can submit directly it to Greg/Arnd.
-
-Thanks
-
-Chris
+Hao
