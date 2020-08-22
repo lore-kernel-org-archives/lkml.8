@@ -2,85 +2,80 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AA6C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B94E1206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6879120724
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 16:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598114220;
+	bh=dfGnt+5ykVIU/FKUhQ2ZU0csLC2jXSrfImGzu3SlobE=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=0ao2rqErOFQdx2MXbgVy5cH8zCK4oOGiH6DsI5aQ3YUTCneaFPHoOHh5AyEyDlzFr
+	 avMnJFtB/HPHdVw8qK/uEfdoURk+48SzFHou27IuQDC4JszWkbb6hTQl1xHw0cdtlM
+	 Fwn6H0QGmKks/H9uTvZIQTNUfyfFmUwEl27Wl7OA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgHVQeR (ORCPT
+        id S1728494AbgHVQg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 12:34:17 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:38276 "EHLO vps0.lunn.ch"
+        Sat, 22 Aug 2020 12:36:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728630AbgHVQeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 12:34:16 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1k9WT2-00AlKV-4c; Sat, 22 Aug 2020 18:34:08 +0200
-Date:   Sat, 22 Aug 2020 18:34:08 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Mickey Rachamim <mickeyr@marvell.com>
-Cc:     Vadym Kochan <vadym.kochan@plvision.eu>,
-        Jonathan McDowell <noodles@earth.li>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [EXT] Re: [net-next v4 1/6] net: marvell: prestera: Add driver
- for Prestera family ASIC devices
-Message-ID: <20200822163408.GG2347062@lunn.ch>
-References: <20200727122242.32337-1-vadym.kochan@plvision.eu>
- <20200727122242.32337-2-vadym.kochan@plvision.eu>
- <20200813080322.GH21409@earth.li>
- <20200814082054.GD17795@plvision.eu>
- <20200814120536.GA26106@earth.li>
- <20200814122744.GF17795@plvision.eu>
- <20200814131815.GA2238071@lunn.ch>
- <20200820083131.GA28129@plvision.eu>
- <BN6PR18MB1587EB225C6B80BF35A44EBFBA5A0@BN6PR18MB1587.namprd18.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN6PR18MB1587EB225C6B80BF35A44EBFBA5A0@BN6PR18MB1587.namprd18.prod.outlook.com>
+        id S1727856AbgHVQg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 12:36:58 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5769C206C0;
+        Sat, 22 Aug 2020 16:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598114218;
+        bh=dfGnt+5ykVIU/FKUhQ2ZU0csLC2jXSrfImGzu3SlobE=;
+        h=From:To:Subject:Date:From;
+        b=VtoK6mSENvhmAMvISv5x+bJ2DnA5oyFI0rfuKfuxKeuc1SAIPWaD6V/IKivGTYJK0
+         J59OBL4HpDhg7gWLPCaL62PO66FtWhN4RHfw9Sa+cSJ7QdfhJy/4h+NsVMGm852PC1
+         A7ZQVtIvaqWpoY1YXxlM+V255D+JGEP1qjZMM9OU=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] memory: samsung: exynos5422-dmc: add missing kerneldoc for dmc_opp_table
+Date:   Sat, 22 Aug 2020 18:36:46 +0200
+Message-Id: <20200822163646.24202-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 10:00:21AM +0000, Mickey Rachamim wrote:
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> > ASIC device specific handling is serviced by the firmware, current
-> > driver's logic does not have PP specific code and relies on the FW
-> > ABI which is PP-generic, and it looks like this how it should work
-> > for boards with other ASICs, of course these boards should follow
-> > the Marvell's Switchdev board design.  >
->
-> All Marvell Prestera (DX) devices are all based on CPSS SDK. This is one SDK 
-> and one build procedure that enables the Prestera driver to support all devices. 
-> This unified support enables us (and our customers) to have one SW 
-> implementation that will support variety of Prestera devices in same build/real-time 
-> execution. 
-> This approach also lead us with the implementation of the Prestera Switchdev drivers.
-> As having detailed familiarity (20Y) with Marvell Prestera old/current/future devices - 
-> this approach will be kept strictly also on the future.
+---
 
-So if i understand this correctly, the compatibility is not to
-Prestera, but to the firmware running on the Prestera? You want to
-express a compatibility to the ABI this firmware supports for the
-switchdev driver to use?
+To be squashed with https://lore.kernel.org/linux-samsung-soc/20200822163218.21857-3-krzk@kernel.org/T/#u
+---
+ drivers/memory/samsung/exynos5422-dmc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-	  Andrew
+diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
+index a9d04bd31603..4961a565c462 100644
+--- a/drivers/memory/samsung/exynos5422-dmc.c
++++ b/drivers/memory/samsung/exynos5422-dmc.c
+@@ -98,6 +98,8 @@ MODULE_PARM_DESC(irqmode, "Enable IRQ mode (0=off [default], 1=on)");
+ 
+ /**
+  * struct dmc_opp_table - Operating level desciption
++ * @freq_hz:		target frequency in Hz
++ * @volt_uv:		target voltage in uV
+  *
+  * Covers frequency and voltage settings of the DMC operating mode.
+  */
+-- 
+2.17.1
+
