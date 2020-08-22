@@ -2,171 +2,221 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C207FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C18C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2023207DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A620B207DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 09:56:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="Hy08vYzb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W8f//rSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgHVJxz (ORCPT
+        id S1727008AbgHVJ4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 05:53:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54534 "EHLO
+        Sat, 22 Aug 2020 05:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHVJxx (ORCPT
+        with ESMTP id S1726169AbgHVJ4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 05:53:53 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B510C061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 02:53:53 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q93so1776405pjq.0
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 02:53:53 -0700 (PDT)
+        Sat, 22 Aug 2020 05:56:35 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F853C061575
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 02:56:34 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id r11so2276400pfl.11
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 02:56:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AA4QvqZ8G3UUgWk56L6siBEVYBlQ7DKtEof4BU/gmnM=;
-        b=Hy08vYzbJ2PXLCKeaQ8gMOUe5NEBsJHKUF3pXyca6ilV/ucXow/JiUg6qZKy2iL14I
-         4gM6qgv9d3Hpktgt722p6TTGFt9m5EXNQWFQafd65aD8q5URNVlW4HuD/16xYbKayopp
-         ppWSbM5gpm2h9jQRzRfPHuYv/ChyvWGH8OfGw2uD3QLz9ZSrPvrSKxrGK12c1/Ve2YEv
-         ydDNukJRr3Fp2rWaQX/jLpgaFtKouvt9pvF/qC7uxQcnpvKiUh0FIuuDU/JY3dBA77Ak
-         +xaQ5ef9Ten+QwSHX+Y9gdq+4py32DSzTve84iV272hi//du1s++RPXnNKIMwLBVwEGa
-         pl2g==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=l7aXGPl3X/xYs2Q5GHfUvsQEQDqjScmIL2WkfrO0/J8=;
+        b=W8f//rSHBcdDDAsG8jkW4n1pEPAn1sCr5nT9WKxAhYBi0vghHRt9UfcuHgFpsACI5U
+         C+z3wyhYGlhD9oeb4NKk28esSNgGE1m8J27cZUHtOD3HjttEpDu2TeIDuaAkeGDJOIXe
+         miAifO1v8Sg8eQJdQKLA6W26EUxo1pVleApV0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AA4QvqZ8G3UUgWk56L6siBEVYBlQ7DKtEof4BU/gmnM=;
-        b=hGpwMT7ov/3tpZnd6DEHVLd9uTGGnrbvYthY6j1CYiLLE9XduIG2VmHBbPCRJNAl65
-         aPI9Tq9R6btij3SgkzJr0JarFSbce2VIg+6Evi0uHL/Lt0BlUgkmYmOkisVMJn60Idme
-         8AQk3Tgu/FgZ/Kb31meRpboIDxdNJ74km3LT94FxiNRaUbGIMjzZ71owG3CVvl3pzoY+
-         rkYVl0FFyJUeN8qpYEQAScLdnN7NZ3magGBP4q3E0zhORALkSDIbk9pwFs29DEQ2DmnP
-         2/8BaSsgYm4HNVY8+8c25z4JELQEHsKcK8mzSo5H2u41DyoLAf0TN4S+izPsarI4Emd3
-         AoLA==
-X-Gm-Message-State: AOAM531/CXxu6ELubkCC3LmwpneAL9X2G8aCVMexWhMo9KRO8WfZyW3M
-        f64Z20wFdt98sqbBQlb/w8nmtw==
-X-Google-Smtp-Source: ABdhPJwCdC0vX5RwrRTQazcUNEUWzmuBbBvU1mkKSWh2/76IuEPrmpkdMhhiFvoPI3tn7Nm5ZeXcFw==
-X-Received: by 2002:a17:902:b714:: with SMTP id d20mr5636180pls.103.1598090031269;
-        Sat, 22 Aug 2020 02:53:51 -0700 (PDT)
-Received: from localhost.localdomain ([103.136.220.72])
-        by smtp.gmail.com with ESMTPSA id a13sm4972397pfo.49.2020.08.22.02.53.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 22 Aug 2020 02:53:50 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     mike.kravetz@oracle.com, akpm@linux-foundation.org
-Cc:     npiggin@suse.de, agl@us.ibm.com, ak@linux.intel.com,
-        nacc@us.ibm.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH] mm/hugetlb: Fix a race between hugetlb sysctl handlers
-Date:   Sat, 22 Aug 2020 17:53:28 +0800
-Message-Id: <20200822095328.61306-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=l7aXGPl3X/xYs2Q5GHfUvsQEQDqjScmIL2WkfrO0/J8=;
+        b=j2PJ7tINE5TOeLXfQASm1mSaHZfwtgp8ifRQpJRg6MyQRix/npr2hZ2ScA0buN/2AF
+         Y6bpOpv+5FbvYuMT3yLypeol0Qgr4z4gfSHrsQ4WFhyy4oa9MJup8P5SyZ7xcGNvs7/F
+         P5NFpQn4zn2P9aygKsEXxHBZGzF8VcsNWDUW+/yaghEPLScoF1+TPAeGxrhI2MaPB5aZ
+         zzt6x5AoJXr7FqFKawujSArDTj1LyOsNPiqkO1apJdetHyEBkQrQrKKhnSvvSPU7jTSm
+         bOffIZuS5g5GrFu0wE1rJ54NSeNjlReOSO/TN8U+hpClRINKDhWb5mpaml/zxZJ0yepB
+         J8wA==
+X-Gm-Message-State: AOAM53125cyK4I+kp7lFS4nt4XJ5GeMbBLKSkIGc0v32uipsK3pGNsma
+        ETbvOi5OF9wT1zhY0+Ou6VEuTQ==
+X-Google-Smtp-Source: ABdhPJypEzdvrBsNRY5wsHrDoJm1bHtjRZ4Qj+zqHGfH90ZVYoUQxjdEVGi8eLw5I6wC8PvJhUxBGA==
+X-Received: by 2002:aa7:8a08:: with SMTP id m8mr5770969pfa.135.1598090193532;
+        Sat, 22 Aug 2020 02:56:33 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:a28c:fdff:fef0:49dd])
+        by smtp.gmail.com with ESMTPSA id e23sm4240486pgb.79.2020.08.22.02.56.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Aug 2020 02:56:32 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 02:56:31 -0700
+From:   Prashant Malani <pmalani@chromium.org>
+To:     Rajmohan Mani <rajmohan.mani@intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jithu Joseph <jithu.joseph@intel.com>,
+        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, bleung@chromium.org
+Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
+ (IOM) driver
+Message-ID: <20200822095631.GB2553024@google.com>
+References: <20200822040508.23510-1-rajmohan.mani@intel.com>
+ <20200822040508.23510-2-rajmohan.mani@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200822040508.23510-2-rajmohan.mani@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a race between the assignment of `table->data` and write value
-to the pointer of `table->data` in the __do_proc_doulongvec_minmax().
-Fix this by duplicating the `table`, and only update the duplicate of
-it. And introduce a helper of proc_hugetlb_doulongvec_minmax() to
-simplify the code.
+Hi Rajmohan,
 
-The following oops was seen:
+On Fri, Aug 21, 2020 at 09:05:06PM -0700, Rajmohan Mani wrote:
+> Input Output Manager (IOM) is part of the Tiger Lake SoC that
+> configures the Type-C Sub System (TCSS). IOM is a micro controller
+> that handles Type-C topology, configuration and PM functions of
+> various Type-C devices connected on the platform.
+> 
+> This driver helps read relevant information such as Type-C port
+> status (whether a device is connected to a Type-C port or not) and
+> the activity type on the Type-C ports (such as USB, Display Port,
+> Thunderbolt), for consumption by other drivers.
+> 
+> Currently intel_iom_port_status() API is exported by this driver,
+> that has information about the Type-C port status and port activity
+> type.
+> 
+> Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+> ---
 
-    BUG: kernel NULL pointer dereference, address: 0000000000000000
-    #PF: supervisor instruction fetch in kernel mode
-    #PF: error_code(0x0010) - not-present page
-    Code: Bad RIP value.
-    ...
-    Call Trace:
-     ? set_max_huge_pages+0x3da/0x4f0
-     ? alloc_pool_huge_page+0x150/0x150
-     ? proc_doulongvec_minmax+0x46/0x60
-     ? hugetlb_sysctl_handler_common+0x1c7/0x200
-     ? nr_hugepages_store+0x20/0x20
-     ? copy_fd_bitmaps+0x170/0x170
-     ? hugetlb_sysctl_handler+0x1e/0x20
-     ? proc_sys_call_handler+0x2f1/0x300
-     ? unregister_sysctl_table+0xb0/0xb0
-     ? __fd_install+0x78/0x100
-     ? proc_sys_write+0x14/0x20
-     ? __vfs_write+0x4d/0x90
-     ? vfs_write+0xef/0x240
-     ? ksys_write+0xc0/0x160
-     ? __ia32_sys_read+0x50/0x50
-     ? __close_fd+0x129/0x150
-     ? __x64_sys_write+0x43/0x50
-     ? do_syscall_64+0x6c/0x200
-     ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Perhaps include a version log of changes since v1?
+> diff --git a/drivers/platform/x86/intel_iom.c b/drivers/platform/x86/intel_iom.c
+> new file mode 100644
+> index 000000000000..cda7716410c6
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_iom.c
+> +int intel_iom_port_status(u8 port, u32 *status)
+> +{
+> +	void __iomem *reg;
+> +
+> +	if (!iom || !iom->dev || !iom->regbar)
 
-Fixes: e5ff215941d5 ("hugetlb: multiple hstates for multiple page sizes")
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- mm/hugetlb.c | 27 +++++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
+Do we need to check for !iom->dev and !iom->regbar? Is there a valid
+situation where iom != NULL but iom->dev and/or iom->regbar == NULL?
+Sounds like it shouldn't, but I may be missing something.
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index a301c2d672bf..818d6125af49 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3454,6 +3454,23 @@ static unsigned int allowed_mems_nr(struct hstate *h)
- }
- 
- #ifdef CONFIG_SYSCTL
-+static int proc_hugetlb_doulongvec_minmax(struct ctl_table *table, int write,
-+					  void *buffer, size_t *length,
-+					  loff_t *ppos, unsigned long *out)
-+{
-+	struct ctl_table dup_table;
-+
-+	/*
-+	 * In order to avoid races with __do_proc_doulongvec_minmax(), we
-+	 * can duplicate the @table and alter the duplicate of it.
-+	 */
-+	dup_table = *table;
-+	dup_table.data = out;
-+	dup_table.maxlen = sizeof(unsigned long);
-+
-+	return proc_doulongvec_minmax(&dup_table, write, buffer, length, ppos);
-+}
-+
- static int hugetlb_sysctl_handler_common(bool obey_mempolicy,
- 			 struct ctl_table *table, int write,
- 			 void *buffer, size_t *length, loff_t *ppos)
-@@ -3465,9 +3482,8 @@ static int hugetlb_sysctl_handler_common(bool obey_mempolicy,
- 	if (!hugepages_supported())
- 		return -EOPNOTSUPP;
- 
--	table->data = &tmp;
--	table->maxlen = sizeof(unsigned long);
--	ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
-+	ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
-+					     &tmp);
- 	if (ret)
- 		goto out;
- 
-@@ -3510,9 +3526,8 @@ int hugetlb_overcommit_handler(struct ctl_table *table, int write,
- 	if (write && hstate_is_gigantic(h))
- 		return -EINVAL;
- 
--	table->data = &tmp;
--	table->maxlen = sizeof(unsigned long);
--	ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
-+	ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
-+					     &tmp);
- 	if (ret)
- 		goto out;
- 
--- 
-2.11.0
+> +		return -ENODEV;
+> +
+> +	if (!status || (port > IOM_MAX_PORTS - 1))
+
+I think parentheses around "port > IOM_MAX_PORT - 1" aren't required.
+> +		return -EINVAL;
+> +
+> +	reg = iom->regbar + IOM_PORT_STATUS_OFFSET + IOM_REG_LEN * port;
+> +
+> +	*status = ioread32(reg);
+
+Perhaps just inline reg within the parentheses?
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(intel_iom_port_status);
+> +
+> +static int intel_iom_probe(struct platform_device *pdev)
+> +{
+> +	void __iomem *addr;
+> +
+> +	/* only one IOM device is supported */
+
+Minor nit: s/only/Only
+> +	if (iom)
+> +		return -EBUSY;
+> +
+> +	iom = devm_kzalloc(&pdev->dev, sizeof(*iom), GFP_KERNEL);
+> +	if (!iom)
+> +		return -ENOMEM;
+> +
+> +	addr = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(addr))
+> +		return PTR_ERR(addr);
+> +
+> +	iom->regbar = addr;
+> +	iom->dev = &pdev->dev;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct acpi_device_id intel_iom_acpi_ids[] = {
+> +	{ "INTC1072" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, intel_iom_acpi_ids);
+> +
+> +static struct platform_driver intel_iom_driver = {
+> +	.probe = intel_iom_probe,
+
+nit: I generally see ".probe" listed below ".driver".
+> +	.driver = {
+> +		.name = "intel_iom",
+> +		.acpi_match_table = intel_iom_acpi_ids,
+> +	},
+> +};
+> +
+> +module_platform_driver_probe(intel_iom_driver, intel_iom_probe);
+> +
+> +MODULE_AUTHOR("Rajmohan Mani <rajmohan.mani@intel.com>");
+> +MODULE_DESCRIPTION("Intel IOM driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/platform_data/x86/intel_iom.h b/include/linux/platform_data/x86/intel_iom.h
+> new file mode 100644
+> index 000000000000..e4c9a305e7a9
+> --- /dev/null
+> +++ b/include/linux/platform_data/x86/intel_iom.h
+> @@ -0,0 +1,49 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef _PLATFORM_DATA_X86_INTEL_IOM_H_
+> +#define _PLATFORM_DATA_X86_INTEL_IOM_H_
+> +
+> +
+> +#define IOM_MAX_PORTS					4
+> +/* Register length in bytes */
+> +#define IOM_REG_LEN					4
+
+Do these two #define's need to be in the header, instead of directly in
+intel_iom.c ?
+
+> +
+> +#ifdef CONFIG_ACPI
+> +
+> +int intel_iom_port_status(u8 port, u32 *status);
+> +
+> +#else
+> +
+> +int intel_iom_port_status(struct intel_iom *iom, u8 port, u32 *status)
+
+Should the function signature be the same as the #ifdef case?
+
+Best regards,
+
+-Prashant
 
