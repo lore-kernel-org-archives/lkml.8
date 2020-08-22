@@ -2,166 +2,161 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69889C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9359C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4213420720
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:03:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="VKB+t35U"
+	by mail.kernel.org (Postfix) with ESMTP id A12C82063A
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 03:05:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgHVDDd (ORCPT
+        id S1726876AbgHVDFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 23:03:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgHVDDa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 23:03:30 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52A88C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 20:03:29 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id bs17so3206928edb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 20:03:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0RW8fmxrc/Tuk54ldRQbS//KunL/5Kwenn69hnksJ9o=;
-        b=VKB+t35UvT7NJfgovMpHu4a0D0ezU7EolNcMzfHUYvht8IPJa70MXR7BQ+a+aNrarq
-         o7ZS/gwlVHMkyQbEKxLu4bw0xejiJbIMYyFfVGsvnZ4tKEOAwvQrQN0Xg0TRctriHIAO
-         XCWLeqnBd7ENRqDKwy1Z9qvsoZSa8fzqgnkO5QThaYKl7xqqCr+h0jzVpKFpwu/heCDd
-         Caa3v32319FhmjdB3hiSuRfYKUJkzxORgi6mZmzJd+zqzuTnooZeONLUOhhR6Eyw0zsv
-         HfSAS+AuSI39Nh24hKJ8zi6RVFDonfSLez/H+1ADMfRuqjvCImQW95PeOQDIDEyeogQm
-         YyKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0RW8fmxrc/Tuk54ldRQbS//KunL/5Kwenn69hnksJ9o=;
-        b=XhiTSH/8xk+T2RVMdL3D44wvVLESgEmU+XKCPF5dVPPMVzo7mLPl6JysHOgd5wt6zG
-         bXMhmh2xZnwhSakAcFsBZxOlUY7BebaamygdXXCAYe/ZNaK+6xBZlJkKHs8oY5wJNccc
-         haCXcVoTC4q8ZzMzs7um10iMuJfNfRiSsZeRUSTYbP2bjN2YOVR9Pg4nXcNTvwE4ZnIw
-         Usy2A4WzK1JlIGSnvtrzVv48WolNXo3+l9GLYRyk9WxS2okshNr3sJsZT3jRQGRMHvWr
-         gQ22W/uc1fSPjs5I+uZjtbKF40PqpYyx4dQWyPj9v8B2lnDY+Fn5EDXcGeXvMpcqv/e1
-         GGKg==
-X-Gm-Message-State: AOAM533g4Kvdv1qz7VPojW3Z5gCPO78aOa9pU/q8xSQJYBGQ8aPsL656
-        POXL2Y/UfWgzUYz/BdMivrN+iF1gCkgpGQP47GpeHw==
-X-Google-Smtp-Source: ABdhPJwDsrbZWUV78Yms3gkSAj0WKh9pyOAOlnRsQYbRPvBlIk6t8bsvBmL9rtzTVmfT8qSZQV6Uiys/RXD/rQrh21w=
-X-Received: by 2002:a05:6402:13c4:: with SMTP id a4mr5777622edx.108.1598065407767;
- Fri, 21 Aug 2020 20:03:27 -0700 (PDT)
+        Fri, 21 Aug 2020 23:05:47 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38318 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726387AbgHVDFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 23:05:47 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A9F3D65E5144998DEE4F;
+        Sat, 22 Aug 2020 11:05:44 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.189.174) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 22 Aug 2020 11:05:36 +0800
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+To:     <serge@hallyn.com>, <jmorris@namei.org>, <zohar@linux.ibm.com>,
+        <dmitry.kasatkin@gmail.com>, <casey@schaufler-ca.com>,
+        <takedakn@nttdata.co.jp>, <penguin-kernel@I-love.SAKURA.ne.jp>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-integrity@vger.kernel.org>
+CC:     <wangle6@huawei.com>, <nixiaoming@huawei.com>
+Subject: [PATCH] security: fix some spelling mistakes in the comments by codespell
+Date:   Sat, 22 Aug 2020 11:05:34 +0800
+Message-ID: <20200822030534.2577-1-nixiaoming@huawei.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <CAP045AqiT75B9o5OV+SJT8uTzo7A55Y1BxjNcaSuxtm5EoAxaQ@mail.gmail.com>
- <139EF22C-FA09-42B8-BC31-E858CE5970B1@amacapital.net>
-In-Reply-To: <139EF22C-FA09-42B8-BC31-E858CE5970B1@amacapital.net>
-From:   Kyle Huey <me@kylehuey.com>
-Date:   Fri, 21 Aug 2020 20:03:16 -0700
-Message-ID: <CAP045AqZjh0T-FrrcfTHcpda51OxTg-Ks3iRGhZa==6bn20SFQ@mail.gmail.com>
-Subject: Re: [REGRESSION] x86/cpu fsgsbase breaks TLS in 32 bit rr tracees on
- a 64 bit system
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     "Bae, Chang Seok" <chang.seok.bae@intel.com>,
-        "Robert O'Callahan" <rocallahan@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.189.174]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 7:53 PM Andy Lutomirski <luto@amacapital.net> wrote=
-:
->
->
->
-> > On Aug 21, 2020, at 2:33 PM, Kyle Huey <me@kylehuey.com> wrote:
-> >
-> > =EF=BB=BFOn Fri, Aug 21, 2020 at 1:08 PM Bae, Chang Seok
-> > <chang.seok.bae@intel.com> wrote:
-> >>
-> >>
-> >>>> On Aug 20, 2020, at 21:41, Kyle Huey <me@kylehuey.com> wrote:
-> >>>
-> >>> On the x86-64 5.9-rc1 TLS is completely broken in 32 bit tracees when
-> >>> running under rr[0]. Booting the kernel with `nofsgsbase` fixes it an=
-d
-> >>> I bisected to https://git.kernel.org/pub/scm/linux/kernel/git/torvald=
-s/linux.git/commit/?h=3Dv5.8&id=3D673903495c85137791d5820d690229efe09c8f7b.
-> >>>
-> >>> STR:
-> >>> 1. Build rr from source by
-> >>> a. git clone https://github.com/mozilla/rr
-> >>> b. mkdir rr/obj
-> >>> c. cd rr/obj
-> >>> d. cmake ..
-> >>> e. make -j16
-> >>> 2. Run the simple 32 bit tracee outside of rr with `./bin/simple_32`.
-> >>> It should print a message and exit cleanly.
-> >>> 3. Run it under rr with `./bin/rr ./bin/simple_32`.
-> >>>
-> >>> It should behave the same way, but with fsgsbase enabled it will
-> >>> segfault. The `simple_32` binary is a simple "hello world" type
-> >>> program but it does link to pthreads, so pre-main code attempts to
-> >>> access TLS variables.
-> >>>
-> >>> The interplay between 32 bit and 64 bit TLS is dark magic to me
-> >>> unfortunately so this is all the useful information I have.
-> >>
-> >> As I run it and collect the ptrace logs, it starts to set FSBASE with
-> >> some numbers, e.g. 140632147826496, and then later attempts to set GS
-> >> with 99 through putreg(), not putreg32().
-> >>
-> >> With FSGSBASE, the FS/GS base is decoupled from the selector. Andy
-> >> made putreg32() to retain the old behavior, fetching FS/GS base
-> >> according to the index, but the putreg() does not do. So, rr probably
-> >> relies on the old behavior as observed to setting the GS index only.
-> >> But it was previously considered to be okay with this comment [1]:
-> >>
-> >>   "Our modifications to fs/gs/fs_base/gs_base are always either a)
-> >>    setting values that the kernel set during recording to make them
-> >>    happen during replay or b) emulating PTRACE_SET_REGS that a tracee
-> >>    ptracer tried to set on another tracee. Either way I think the
-> >>    effects are going to be the same as what would happen if the
-> >>    program were run without rr."
-> >>
-> >> It is not straightforward to go into the rr internal to me. Robert,
-> >> any thought?
-> >
-> > Hmm. When we are running a 32 bit tracee in a 64 bit build of rr we
-> > internally convert between the 32 bit and 64 bit user_regs_structs[0]
-> > at the ptrace boundary. This does not preserve the fs/gsbase (because
-> > there is no fs/gsbase in the 32 bit user_regs_struct, of course).
-> >
-> > 40c45904f818c1f6555294ca27afc5fda4f09e68 added magic for a 32 bit
-> > tracer tracing a 32 bit tracee on a 64 bit kernel, but it looks like a
-> > 64 bit tracer tracing a 32 bit tracee on a 64 bit kernel *is* now
-> > expected to preserve the fs/gsbase values (or die, in our case).
-> >
-> > Is that correct?
->
-> I was certainly not expecting rr to do this, and I thought I had asked in=
- advance.  What exact ptrace() calls are you doing here?  Is this POKEUSER =
-or something else?  Breaking rr is at least impolite, and I=E2=80=99d like =
-to fix this.
+ecurity/commoncap.c: capabilties ==> capabilities
+security/lsm_audit.c: programers ==> programmers
+security/tomoyo/audit.c: stuct ==> struct
+security/tomoyo/common.c: Poiter ==> Pointer
+security/smack/smack_lsm.c: overriden ==> overridden overridden
+security/smack/smackfs.c: overriden ==> overridden
+security/integrity/ima/ima_template_lib.c: algoritm ==> algorithm
 
-I believe we are PTRACE_GETREGSing and later PTRACE_SETREGSing, but
-doing the latter with garbage for fs/gs_base for a 32 bit tracee. That
-didn't used to matter (because those values were completely ignored
-for a 32 bit tracee) but now it does.
+Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+---
+ security/commoncap.c                      | 2 +-
+ security/integrity/ima/ima_template_lib.c | 2 +-
+ security/lsm_audit.c                      | 2 +-
+ security/smack/smack_lsm.c                | 2 +-
+ security/smack/smackfs.c                  | 2 +-
+ security/tomoyo/audit.c                   | 2 +-
+ security/tomoyo/common.c                  | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
 
-There's a good case that that's our fault and I'm happy to spend my
-"don't break userspace" points somewhere else ;)
+diff --git a/security/commoncap.c b/security/commoncap.c
+index 59bf3c1674c8..2c3a0f1b6876 100644
+--- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -1046,7 +1046,7 @@ int cap_task_fix_setuid(struct cred *new, const struct cred *old, int flags)
+ 		break;
+ 
+ 	case LSM_SETID_FS:
+-		/* juggle the capabilties to follow FSUID changes, unless
++		/* juggle the capabilities to follow FSUID changes, unless
+ 		 * otherwise suppressed
+ 		 *
+ 		 * FIXME - is fsuser used for all CAP_FS_MASK capabilities?
+diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
+index c022ee9e2a4e..9513564ee0b2 100644
+--- a/security/integrity/ima/ima_template_lib.c
++++ b/security/integrity/ima/ima_template_lib.c
+@@ -231,7 +231,7 @@ static int ima_eventdigest_init_common(const u8 *digest, u32 digestsize,
+ 	 * digest formats:
+ 	 *  - DATA_FMT_DIGEST: digest
+ 	 *  - DATA_FMT_DIGEST_WITH_ALGO: [<hash algo>] + ':' + '\0' + digest,
+-	 *    where <hash algo> is provided if the hash algoritm is not
++	 *    where <hash algo> is provided if the hash algorithm is not
+ 	 *    SHA1 or MD5
+ 	 */
+ 	u8 buffer[CRYPTO_MAX_ALG_NAME + 2 + IMA_MAX_DIGEST_SIZE] = { 0 };
+diff --git a/security/lsm_audit.c b/security/lsm_audit.c
+index 53d0d183db8f..a0ff2e441069 100644
+--- a/security/lsm_audit.c
++++ b/security/lsm_audit.c
+@@ -212,7 +212,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
+ 	char comm[sizeof(current->comm)];
+ 
+ 	/*
+-	 * To keep stack sizes in check force programers to notice if they
++	 * To keep stack sizes in check force programmers to notice if they
+ 	 * start making this union too large!  See struct lsm_network_audit
+ 	 * as an example of how to deal with large data.
+ 	 */
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 8c0893eb5aa8..960d4641239c 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -1784,7 +1784,7 @@ static int smack_file_send_sigiotask(struct task_struct *tsk,
+ 	 */
+ 	file = container_of(fown, struct file, f_owner);
+ 
+-	/* we don't log here as rc can be overriden */
++	/* we don't log here as rc can be overridden */
+ 	blob = smack_file(file);
+ 	skp = *blob;
+ 	rc = smk_access(skp, tkp, MAY_DELIVER, NULL);
+diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+index 9c4308077574..5c581ec814ac 100644
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -111,7 +111,7 @@ struct smack_known *smack_syslog_label;
+ /*
+  * Ptrace current rule
+  * SMACK_PTRACE_DEFAULT    regular smack ptrace rules (/proc based)
+- * SMACK_PTRACE_EXACT      labels must match, but can be overriden with
++ * SMACK_PTRACE_EXACT      labels must match, but can be overridden with
+  *			   CAP_SYS_PTRACE
+  * SMACK_PTRACE_DRACONIAN  lables must match, CAP_SYS_PTRACE has no effect
+  */
+diff --git a/security/tomoyo/audit.c b/security/tomoyo/audit.c
+index 3c96e8402e94..b51bad121c11 100644
+--- a/security/tomoyo/audit.c
++++ b/security/tomoyo/audit.c
+@@ -311,7 +311,7 @@ static LIST_HEAD(tomoyo_log);
+ /* Lock for "struct list_head tomoyo_log". */
+ static DEFINE_SPINLOCK(tomoyo_log_lock);
+ 
+-/* Length of "stuct list_head tomoyo_log". */
++/* Length of "struct list_head tomoyo_log". */
+ static unsigned int tomoyo_log_count;
+ 
+ /**
+diff --git a/security/tomoyo/common.c b/security/tomoyo/common.c
+index 4bee32bfe16d..38bdc0ffc312 100644
+--- a/security/tomoyo/common.c
++++ b/security/tomoyo/common.c
+@@ -2608,7 +2608,7 @@ ssize_t tomoyo_read_control(struct tomoyo_io_buffer *head, char __user *buffer,
+ /**
+  * tomoyo_parse_policy - Parse a policy line.
+  *
+- * @head: Poiter to "struct tomoyo_io_buffer".
++ * @head: Pointer to "struct tomoyo_io_buffer".
+  * @line: Line to parse.
+  *
+  * Returns 0 on success, negative value otherwise.
+-- 
+2.27.0
 
-- Kyle
