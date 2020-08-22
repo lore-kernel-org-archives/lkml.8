@@ -2,140 +2,61 @@ Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C219FC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8C9B208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D643208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 07:52:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgHVHuY (ORCPT
+        id S1727843AbgHVHwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 03:50:24 -0400
-Received: from mga02.intel.com ([134.134.136.20]:33916 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727775AbgHVHuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 03:50:24 -0400
-IronPort-SDR: W5h7VT3T+gc5vtPrSh273OogaHPIDCwPGEzBSGpooHPL66oWH0rQ9HCjFQAhgmXHa+thT5fTX3
- OiTM6bL5TW4Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="143469007"
-X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
-   d="scan'208";a="143469007"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2020 00:50:23 -0700
-IronPort-SDR: v5Ws/XgJ9SmB5zZ64wt8iuEJY5wufiKZ/iEGZycaoBNttyy73FShNkoBMC57+RO34l9WuyYFfl
- bclKvLCN6NXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
-   d="scan'208";a="327965594"
-Received: from lkp-server01.sh.intel.com (HELO 91ed66e1ca04) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 22 Aug 2020 00:50:22 -0700
-Received: from kbuild by 91ed66e1ca04 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k9OI9-0001c1-JQ; Sat, 22 Aug 2020 07:50:21 +0000
-Date:   Sat, 22 Aug 2020 15:50:16 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- 72cc80705122926b2717ad420abc6e135c453768
-Message-ID: <5f40ce38.wlo9HUstKxN2E+eb%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 22 Aug 2020 03:52:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbgHVHwo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 03:52:44 -0400
+X-Greylist: delayed 1349 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 22 Aug 2020 00:52:43 PDT
+Received: from ganesha.gnumonks.org (ganesha.gnumonks.org [IPv6:2001:780:45:1d:225:90ff:fe52:c662])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BADFAC061573;
+        Sat, 22 Aug 2020 00:52:43 -0700 (PDT)
+Received: from uucp by ganesha.gnumonks.org with local-bsmtp (Exim 4.89)
+        (envelope-from <laforge@gnumonks.org>)
+        id 1k9NyW-0001MY-7W; Sat, 22 Aug 2020 09:30:04 +0200
+Received: from laforge by localhost.localdomain with local (Exim 4.94)
+        (envelope-from <laforge@gnumonks.org>)
+        id 1k9NyH-00Ftt6-AZ; Sat, 22 Aug 2020 09:29:49 +0200
+Date:   Sat, 22 Aug 2020 09:29:49 +0200
+From:   Harald Welte <laforge@gnumonks.org>
+To:     Kenneth Chan <kenneth.t.chan@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/9] platform/x86: panasonic-laptop: add optical drive,
+ brightness and battery charging threshold
+Message-ID: <20200822072949.GR3544863@nataraja>
+References: <20200821181433.17653-1-kenneth.t.chan@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200821181433.17653-1-kenneth.t.chan@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: 72cc80705122926b2717ad420abc6e135c453768  rcu: Remove unused "cpu" parameter from rcu_report_qs_rdp()
+Dear Keneth and Linux kernel developers,
 
-elapsed time: 721m
+as I have discontinued maintenance of the panasonic-laptop driver (and
+recently sent a related MAINTAINERS update to that fact), I would like
+to suggest Kenneth as the new maintainer for this driver.
 
-configs tested: 69
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-mips                           ip28_defconfig
-x86_64                           allyesconfig
-arm                            mmp2_defconfig
-h8300                    h8300h-sim_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20200820
-i386                 randconfig-a004-20200820
-i386                 randconfig-a005-20200820
-i386                 randconfig-a003-20200820
-i386                 randconfig-a006-20200820
-i386                 randconfig-a001-20200820
-x86_64               randconfig-a015-20200820
-x86_64               randconfig-a012-20200820
-x86_64               randconfig-a016-20200820
-x86_64               randconfig-a014-20200820
-x86_64               randconfig-a011-20200820
-x86_64               randconfig-a013-20200820
-i386                 randconfig-a013-20200820
-i386                 randconfig-a012-20200820
-i386                 randconfig-a011-20200820
-i386                 randconfig-a016-20200820
-i386                 randconfig-a014-20200820
-i386                 randconfig-a015-20200820
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Regards,
+	Harald
+-- 
+- Harald Welte <laforge@gnumonks.org>           http://laforge.gnumonks.org/
+============================================================================
+"Privacy in residential applications is a desirable marketing option."
+                                                  (ETSI EN 300 175-7 Ch. A6)
