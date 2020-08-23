@@ -2,212 +2,84 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B368C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 11:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F32FC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 11:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBF3C2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 11:11:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r/uHLHLc"
+	by mail.kernel.org (Postfix) with ESMTP id 7535C2072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 11:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgHWLLn (ORCPT
+        id S1726971AbgHWLMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 07:11:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgHWLLl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 07:11:41 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F31C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 04:11:41 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k13so2851681plk.13
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 04:11:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YD5/tuFYylE3nC+kaxG7wk/ch1daemiPGvCKQ4+XnlA=;
-        b=r/uHLHLc0D6/uJVINt9TdWu+C6BXWithiVksrkI4fB+2FGyqtizWwEO1P/m4quH4Oh
-         aj7EsOBbthGl2Qn8esLJ4eTi/7hEGo0Y7UpKDyuaFSRyqRtdurBfx0F4I4Z6LV096xMB
-         L+oB7aaQ/wqE0H+N5QFMq8/g3WDA33XuiJPjMcA6lallOaik72bV7tXyvlhn9DQvKNKT
-         aL6zFvr8z7mJmtkSnJJJvlv7Iib2kBZ3uw1bYKEHc/94czRC7nIsZ8H5+SNlvJ2ziB8P
-         31YsdyPHTgQV5l5pY4sYi7i0L5VT9P53P64WSEoTFETZnhwZIspgJAeP3dmi3LtpOVK4
-         ITnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YD5/tuFYylE3nC+kaxG7wk/ch1daemiPGvCKQ4+XnlA=;
-        b=h5Ktr8tqo4X7YW9hutlBhTl9dPAcr5YciEOTI45lXvSk62z4f7f/yfjvjt2MUzCqfk
-         EWpUED26Hmz6plGRjKdJxkwE5EeoM7VFUPhwI9iFygc1OZ5fwryxBxtgWzzO1GrkUeBE
-         oyj3I4YOCYTlXuT90dDYcK8Lm8J2tzdj320JEXdOnz7tlFzuUtZyy0nuUyAS/6+kS9FW
-         aHNcCEM3OF8zt8OfC26pcw74cmcmhU2bYZQ2BoUfNf/KI+ILuOyXhUKSPlC2Wq4zkv/0
-         4kduizIsQPFQ0V4G4Vgx2+ErlapO5xqHyoYAB090GJlxLJKSo780Jzakytio/1PUg+Ty
-         w3aQ==
-X-Gm-Message-State: AOAM533rj3I9h8z7K+F2g9ZQJmNi3cSOXxmbnfMLkbNt8quyMuZ6P0NA
-        Kcq87u3YZ2qHJ/vLxrWZTC0=
-X-Google-Smtp-Source: ABdhPJzw3HwJpr98RnKtRy3ePimjZzv0hGYfy+RZngPcHf7xQkpvvRQTAOYJQ7QEylLr9uxSR5s9BQ==
-X-Received: by 2002:a17:90a:450d:: with SMTP id u13mr727702pjg.99.1598181100513;
-        Sun, 23 Aug 2020 04:11:40 -0700 (PDT)
-Received: from rapsodo.Rapsodo.com ([101.100.171.87])
-        by smtp.gmail.com with ESMTPSA id d5sm6625157pjw.18.2020.08.23.04.11.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2020 04:11:39 -0700 (PDT)
-From:   Thirumalesha Narasimhappa <nthirumalesha7@gmail.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Shivamurthy Shastri <sshivamurthy@micron.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Thirumalesha Narasimhappa <nthirumalesha7@gmail.com>
-Subject: [PATCH v2] mtd: spinand: micron: add support for MT29F2G01AAAED
-Date:   Sun, 23 Aug 2020 19:14:10 +0800
-Message-Id: <20200823111410.13049-1-nthirumalesha7@gmail.com>
+        Sun, 23 Aug 2020 07:12:42 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:29458 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726371AbgHWLMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 07:12:40 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app3 (Coremail) with SMTP id cC_KCgA3j_UOT0JfVMcUAw--.64248S4;
+        Sun, 23 Aug 2020 19:12:17 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Platform: OLPC: Fix memleak in olpc_ec_probe
+Date:   Sun, 23 Aug 2020 19:12:11 +0800
+Message-Id: <20200823111214.24030-1-dinghao.liu@zju.edu.cn>
 X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgA3j_UOT0JfVMcUAw--.64248S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7XryUCrWrKry5JFykWw43Awb_yoWfWFcEkw
+        40yFW7WrWkurZ0qF1jkFy3CryI93Z8WFn7XF43t3WSy345Z3WYk398ZFWfuw45GrZIkry7
+        C3yUWry3CryfGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4kMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_
+        Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
+        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+        7VUbeT5PUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhABDsc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MT29F2G01AAAED is a single die, 2Gb Micron SPI NAND Flash with 4-bit
-ECC
+When devm_regulator_register() fails, ec should be
+freed just like when olpc_ec_cmd() fails.
 
-Signed-off-by: Thirumalesha Narasimhappa <nthirumalesha7@gmail.com>
+Fixes: 231c0c216172a ("Platform: OLPC: Add a regulator for the DCON")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
- v2: removed SPINAND_SELECT_TARGET as per the comments & fixed typo errors
+ drivers/platform/olpc/olpc-ec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- drivers/mtd/nand/spi/micron.c | 78 +++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
-
-diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
-index 5d370cfcdaaa..c21ca395d657 100644
---- a/drivers/mtd/nand/spi/micron.c
-+++ b/drivers/mtd/nand/spi/micron.c
-@@ -18,6 +18,9 @@
- #define MICRON_STATUS_ECC_4TO6_BITFLIPS	(3 << 4)
- #define MICRON_STATUS_ECC_7TO8_BITFLIPS	(5 << 4)
+diff --git a/drivers/platform/olpc/olpc-ec.c b/drivers/platform/olpc/olpc-ec.c
+index 190e4a6186ef..f64b82824db2 100644
+--- a/drivers/platform/olpc/olpc-ec.c
++++ b/drivers/platform/olpc/olpc-ec.c
+@@ -439,7 +439,9 @@ static int olpc_ec_probe(struct platform_device *pdev)
+ 								&config);
+ 	if (IS_ERR(ec->dcon_rdev)) {
+ 		dev_err(&pdev->dev, "failed to register DCON regulator\n");
+-		return PTR_ERR(ec->dcon_rdev);
++		err = PTR_ERR(ec->dcon_rdev);
++		kfree(ec);
++		return err;
+ 	}
  
-+/* For Micron MT29F2G01AAAED Device */
-+#define MICRON_STATUS_ECC_1TO4_BITFLIPS	(1 << 4)
-+
- #define MICRON_CFG_CR			BIT(0)
- 
- /*
-@@ -44,6 +47,19 @@ static SPINAND_OP_VARIANTS(update_cache_variants,
- 		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
- 		SPINAND_PROG_LOAD(false, 0, NULL, 0));
- 
-+/* Micron  MT29F2G01AAAED Device */
-+static SPINAND_OP_VARIANTS(read_cache_variants_mt29f2g01aaaed,
-+		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
-+
-+static SPINAND_OP_VARIANTS(write_cache_variants_mt29f2g01aaaed,
-+		SPINAND_PROG_LOAD(true, 0, NULL, 0));
-+
-+static SPINAND_OP_VARIANTS(update_cache_variants_mt29f2g01aaaed,
-+		SPINAND_PROG_LOAD(false, 0, NULL, 0));
-+
- static int micron_8_ooblayout_ecc(struct mtd_info *mtd, int section,
- 				  struct mtd_oob_region *region)
- {
-@@ -69,11 +85,41 @@ static int micron_8_ooblayout_free(struct mtd_info *mtd, int section,
- 	return 0;
- }
- 
-+static int mt29f2g01aaaed_ooblayout_ecc(struct mtd_info *mtd, int section,
-+					struct mtd_oob_region *region)
-+{
-+	if (section >= 4)
-+		return -ERANGE;
-+
-+	region->offset = (section * 16) + 8;
-+	region->length = 8;
-+
-+	return 0;
-+}
-+
-+static int mt29f2g01aaaed_ooblayout_free(struct mtd_info *mtd, int section,
-+					 struct mtd_oob_region *region)
-+{
-+	if (section >= 4)
-+		return -ERANGE;
-+
-+	/* Reserve 2 bytes for the BBM. */
-+	region->offset = (section * 16) + 2;
-+	region->length = 6;
-+
-+	return 0;
-+}
-+
- static const struct mtd_ooblayout_ops micron_8_ooblayout = {
- 	.ecc = micron_8_ooblayout_ecc,
- 	.free = micron_8_ooblayout_free,
- };
- 
-+static const struct mtd_ooblayout_ops mt29f2g01aaaed_ooblayout = {
-+	.ecc = mt29f2g01aaaed_ooblayout_ecc,
-+	.free = mt29f2g01aaaed_ooblayout_free,
-+};
-+
- static int micron_select_target(struct spinand_device *spinand,
- 				unsigned int target)
- {
-@@ -114,6 +160,27 @@ static int micron_8_ecc_get_status(struct spinand_device *spinand,
- 	return -EINVAL;
- }
- 
-+static int mt29f2g01aaaed_ecc_get_status(struct spinand_device *spinand,
-+					 u8 status)
-+{
-+	switch (status & MICRON_STATUS_ECC_MASK) {
-+	case STATUS_ECC_NO_BITFLIPS:
-+		return 0;
-+
-+	case STATUS_ECC_UNCOR_ERROR:
-+		return -EBADMSG;
-+
-+	/* 1 to 4-bit error detected and corrected */
-+	case MICRON_STATUS_ECC_1TO4_BITFLIPS:
-+		return 4;
-+
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- static const struct spinand_info micron_spinand_table[] = {
- 	/* M79A 2Gb 3.3V */
- 	SPINAND_INFO("MT29F2G01ABAGD",
-@@ -217,6 +284,17 @@ static const struct spinand_info micron_spinand_table[] = {
- 		     SPINAND_ECCINFO(&micron_8_ooblayout,
- 				     micron_8_ecc_get_status),
- 		     SPINAND_SELECT_TARGET(micron_select_target)),
-+	/* M69A 2Gb 3.3V */
-+	SPINAND_INFO("MT29F2G01AAAED",
-+		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x9F),
-+		     NAND_MEMORG(1, 2048, 64, 64, 2048, 80, 2, 1, 1),
-+		     NAND_ECCREQ(4, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants_mt29f2g01aaaed,
-+					      &write_cache_variants_mt29f2g01aaaed,
-+					      &update_cache_variants_mt29f2g01aaaed),
-+		     0,
-+		     SPINAND_ECCINFO(&mt29f2g01aaaed_ooblayout,
-+				     mt29f2g01aaaed_ecc_get_status),
- };
- 
- static int micron_spinand_init(struct spinand_device *spinand)
+ 	ec->dbgfs_dir = olpc_ec_setup_debugfs();
 -- 
 2.17.1
 
