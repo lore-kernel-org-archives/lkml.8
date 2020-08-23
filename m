@@ -2,258 +2,121 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF56EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 02:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04794C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 02:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97F232078D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 02:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D715B20724
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 02:25:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgYnjdt7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgHWCT6 convert rfc822-to-8bit (ORCPT
+        id S1726948AbgHWCZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 22:19:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37716 "EHLO
+        Sat, 22 Aug 2020 22:25:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgHWCTz (ORCPT
+        with ESMTP id S1725906AbgHWCZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 22:19:55 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F0E7C061573;
-        Sat, 22 Aug 2020 19:19:54 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BEED511E4577C;
-        Sat, 22 Aug 2020 19:03:04 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 19:19:48 -0700 (PDT)
-Message-Id: <20200822.191948.1640751494477385125.davem@davemloft.net>
-To:     torvalds@linux-foundation.org
-CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT] Networking
-From:   David Miller <davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-15
-Content-Transfer-Encoding: 8BIT
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 22 Aug 2020 19:03:04 -0700 (PDT)
+        Sat, 22 Aug 2020 22:25:40 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69B2EC061573;
+        Sat, 22 Aug 2020 19:25:40 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q1so2458836pjd.1;
+        Sat, 22 Aug 2020 19:25:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HjidLqGbJG8Me/D9pV5CMHOfGHdBLM7VaSZt6TwM0nE=;
+        b=dgYnjdt7h1nUl7wOnJltPzk+Dxnmy5hZxJcDdq6KydTszr1V744le1tP/k4zmkv5vP
+         z9OuSt/5za8/BFs1vOnN45xhJJ83SkFvFUyMYMLs5HRq0f0GGkn+Jf8QJw3/xcVO1juZ
+         7TNhl41/LuPQPz1O+TPVDOZvpOju6x6dk5hPLgSz4wTIaZnXU6BCispY4OgHRJFBOhF5
+         ZXTUN6kEmJo7WoBim8voAy1ZskQQJYoyNkuFYO7ldLF8HtJ1vrKM1J6aZTbP2ihA2BSr
+         jfy5VRJSUh59tMB7dCbpg09/Vz8VpphV8f+yrUktpncOpCHpLL3XPxYa1ZERdJhqGj3I
+         cJLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HjidLqGbJG8Me/D9pV5CMHOfGHdBLM7VaSZt6TwM0nE=;
+        b=qj+szFQ8rRHXa1+zuycdq4cPvHOfbxEQ2XQ3cfVC5NkMEGQcThygbnRq+phO7wk4vB
+         /+qrZA22jukXT8Eqw/Po1U1j4gSJvyft7/WPSGkAjhiLiGv5EsNuaPsBY3gMgPSBkx5h
+         TinrmZERGu99Wl0+97tWfnvatT9h8bds34Zkfdi3Oagb4de7LoW65YHWPNh//xQXDce7
+         w3GS9bd3itnbEQ6Y6xJzT7L8IOUQRrzAV3iSEwBWmRWCPSMi8+Z/u+EXlNA1/PXrUmgE
+         Z/yJikPGxt3wuzEe++atJT26HPEy2C+UlxmZdIcAWUU5qZK1Up8qzaxn87Lns7w1NrBV
+         HkUQ==
+X-Gm-Message-State: AOAM530Ind4r+D3RWexCHEVvhBbcucW5MApjTZqOIjpR0V0LZzgjY/6b
+        wXa0CLgdmqcD/fFnzwIMGt8=
+X-Google-Smtp-Source: ABdhPJxfJxPaPZgx5Zokq/Cplk371Fn6Oi9EjWoRwwJVJwvZyj9XKCjxZFA/4EUkVrZ5rm5mM2F8fw==
+X-Received: by 2002:a17:902:b098:: with SMTP id p24mr45366plr.255.1598149539171;
+        Sat, 22 Aug 2020 19:25:39 -0700 (PDT)
+Received: from localhost.localdomain.com ([2605:e000:160b:911f:722f:a74:437d:fd3c])
+        by smtp.gmail.com with ESMTPSA id k8sm6177710pgt.54.2020.08.22.19.25.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Aug 2020 19:25:38 -0700 (PDT)
+From:   Chris Healy <cphealy@gmail.com>
+X-Google-Original-From: Chris Healy <cphealy@gmail.com
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        andrew@lunn.ch, philippe.schenker@toradex.com,
+        linux@rempel-privat.de, davem@davemloft.net,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, davidjoshuasim@gmail.com
+Cc:     Chris Healy <cphealy@gmail.com>
+Subject: [PATCH v2] ARM: dts: imx7d-zii-rmu2: fix rgmii phy-mode for ksz9031 phy
+Date:   Sat, 22 Aug 2020 19:25:05 -0700
+Message-Id: <20200823022505.196825-1-cphealy@gmail.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Chris Healy <cphealy@gmail.com>
 
-Nothing earth shattering here, lots of small fixes (f.e. missing RCU
-protection, bad ref counting, missing memset(), etc.) all over the
-place:
+Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
+KSZ9031 PHY") the networking is broken on the imx7d-zii-rmu2 board.
 
-1) Use get_file_rcu() in task_file iterator, from Yonghong Song.
+The end result is that network receive behaviour is marginal with lots of
+RX CRC errors experienced and NFS frequently failing.
 
-2) There are two ways to set remote source MAC addresses in macvlan
-   driver, but only one of which validates things properly.  Fix
-   this.  From Alvin ¦ipraga.
+Quoting the explanation from Andrew Lunn in commit 0672d22a19244 
+("ARM: dts: imx: Fix the AR803X phy-mode"):
+   
+"The problem here is, all the DTs were broken since day 0. However,
+because the PHY driver was also broken, nobody noticed and it
+worked. Now that the PHY driver has been fixed, all the bugs in the
+DTs now become an issue"
 
-3) Missing of_node_put() in gianfar probing, from Sumera Priyadarsini.
+Fix it by switching to phy-mode = "rgmii-id".
 
-4) Preserve device wanted feature bits across multiple netlink ethtool
-   requests, from Maxim Mikityanskiy.
+Fixes: bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+Signed-off-by: Chris Healy <cphealy@gmail.com>
+---
+ arch/arm/boot/dts/imx7d-zii-rmu2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-5) Fix rcu_sched stall in task and task_file bpf iterators, from
-   Yonghong Song.
+diff --git a/arch/arm/boot/dts/imx7d-zii-rmu2.dts b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
+index e5e20b07f184..7cb6153fc650 100644
+--- a/arch/arm/boot/dts/imx7d-zii-rmu2.dts
++++ b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
+@@ -58,7 +58,7 @@ &fec1 {
+ 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
+ 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+ 	assigned-clock-rates = <0>, <100000000>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-handle = <&fec1_phy>;
+ 	status = "okay";
+ 
+-- 
+2.26.2
 
-6) Avoid reset after device destroy in ena driver, from Shay Agroskin.
-
-7) Missing memset() in netlink policy export reallocation path, from
-   Johannes Berg.
-
-8) Fix info leak in __smc_diag_dump(), from Peilin Ye.
-
-9) Decapsulate ECN properly for ipv6 in ipv4 tunnels, from Mark
-   Tomlinson.
-
-10) Fix number of data stream negotiation in SCTP, from David Laight.
-
-11) Fix double free in connection tracker action module, from Alaa
-    Hleihel.
-
-12) Don't allow empty NHA_GROUP attributes, from Nikolay Aleksandrov.
-
-Please pull, thanks a lot!
-
-The following changes since commit 06a4ec1d9dc652e17ee3ac2ceb6c7cf6c2b75cdd:
-
-  Merge tag 'pstore-v5.9-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux (2020-08-17 17:15:23 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git 
-
-for you to fetch changes up to eeaac3634ee0e3f35548be35275efeca888e9b23:
-
-  net: nexthop: don't allow empty NHA_GROUP (2020-08-22 12:39:55 -0700)
-
-----------------------------------------------------------------
-Alaa Hleihel (1):
-      net/sched: act_ct: Fix skb double-free in tcf_ct_handle_fragments() error flow
-
-Alvin ¦ipraga (1):
-      macvlan: validate setting of multiple remote source MAC addresses
-
-Andrii Nakryiko (2):
-      libbpf: Fix build on ppc64le architecture
-      bpf: xdp: Fix XDP mode when no mode flags specified
-
-Colin Ian King (2):
-      net: mscc: ocelot: remove duplicate "the the" phrase in Kconfig text
-      net: ipv4: remove duplicate "the the" phrase in Kconfig text
-
-David Laight (1):
-      net: sctp: Fix negotiation of the number of data streams.
-
-David S. Miller (6):
-      Merge branch 'sfc-more-EF100-fixes'
-      Merge branch 'cxgb4-Fix-ethtool-selftest-flits-calculation'
-      Merge branch 'ethtool-netlink-bug-fixes'
-      Merge branch 'Bug-fixes-for-ENA-ethernet-driver'
-      Merge branch 'hv_netvsc-Some-fixes-for-the-select_queue'
-      Merge git://git.kernel.org/.../bpf/bpf
-
-Edward Cree (5):
-      sfc: really check hash is valid before using it
-      sfc: take correct lock in ef100_reset()
-      sfc: null out channel->rps_flow_id after freeing it
-      sfc: don't free_irq()s if they were never requested
-      sfc: fix build warnings on 32-bit
-
-Ganji Aravind (2):
-      cxgb4: Fix work request size calculation for loopback test
-      cxgb4: Fix race between loopback and normal Tx path
-
-Geert Uytterhoeven (1):
-      dt-bindings: net: renesas, ether: Improve schema validation
-
-Haiyang Zhang (2):
-      hv_netvsc: Remove "unlikely" from netvsc_select_queue
-      hv_netvsc: Fix the queue_mapping in netvsc_vf_xmit()
-
-Jiri Olsa (1):
-      tools/resolve_btfids: Fix sections with wrong alignment
-
-Jiri Wiesner (1):
-      bonding: fix active-backup failover for current ARP slave
-
-Johannes Berg (1):
-      netlink: fix state reallocation in policy export
-
-Kaige Li (1):
-      net: phy: mscc: Fix a couple of spelling mistakes "spcified" -> "specified"
-
-Mark Tomlinson (1):
-      gre6: Fix reception with IP6_TNL_F_RCV_DSCP_COPY
-
-Maxim Mikityanskiy (3):
-      ethtool: Fix preserving of wanted feature bits in netlink interface
-      ethtool: Account for hw_features in netlink interface
-      ethtool: Don't omit the netlink reply if no features were changed
-
-Miaohe Lin (1):
-      net: handle the return value of pskb_carve_frag_list() correctly
-
-Min Li (1):
-      ptp: ptp_clockmatrix: use i2c_master_send for i2c write
-
-Nikolay Aleksandrov (1):
-      net: nexthop: don't allow empty NHA_GROUP
-
-Peilin Ye (1):
-      net/smc: Prevent kernel-infoleak in __smc_diag_dump()
-
-Sebastian Andrzej Siewior (1):
-      net: atlantic: Use readx_poll_timeout() for large timeout
-
-Shay Agroskin (3):
-      net: ena: Prevent reset after device destruction
-      net: ena: Change WARN_ON expression in ena_del_napi_in_range()
-      net: ena: Make missed_tx stat incremental
-
-Sumera Priyadarsini (1):
-      net: gianfar: Add of_node_put() before goto statement
-
-Tobias Klauser (1):
-      bpf: Fix two typos in uapi/linux/bpf.h
-
-Toke Høiland-Jørgensen (1):
-      libbpf: Fix map index used in error message
-
-Tom Rix (1):
-      net: dsa: b53: check for timeout
-
-Veronika Kabatova (1):
-      selftests/bpf: Remove test_align leftovers
-
-Wang Hai (1):
-      net: gemini: Fix missing free_netdev() in error path of gemini_ethernet_port_probe()
-
-Xin Long (2):
-      ipv6: some fixes for ipv6_dev_find()
-      tipc: call rcu_read_lock() in tipc_aead_encrypt_done()
-
-Yauheni Kaliuta (1):
-      bpf: selftests: global_funcs: Check err_str before strstr
-
-Yonghong Song (4):
-      bpf: Use get_file_rcu() instead of get_file() for task_file iterator
-      bpf: Fix a rcu_sched stall issue with bpf task/task_file iterator
-      bpf: Avoid visit same object multiple times
-      bpftool: Handle EAGAIN error code properly in pids collection
-
- Documentation/devicetree/bindings/net/renesas,ether.yaml   | 22 +++++++++++++++-------
- drivers/net/bonding/bond_main.c                            | 18 ++++++++++++++++--
- drivers/net/dsa/b53/b53_common.c                           |  2 ++
- drivers/net/dsa/ocelot/Kconfig                             |  2 +-
- drivers/net/ethernet/amazon/ena/ena_netdev.c               | 35 ++++++++++++++++++-----------------
- drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c  |  4 ++--
- drivers/net/ethernet/chelsio/cxgb4/sge.c                   | 10 +++++++---
- drivers/net/ethernet/cortina/gemini.c                      |  4 +---
- drivers/net/ethernet/freescale/gianfar.c                   |  4 +++-
- drivers/net/ethernet/sfc/ef100.c                           |  8 ++++----
- drivers/net/ethernet/sfc/ef100_nic.c                       | 10 ++++++----
- drivers/net/ethernet/sfc/net_driver.h                      |  2 ++
- drivers/net/ethernet/sfc/nic.c                             |  4 ++++
- drivers/net/ethernet/sfc/rx_common.c                       |  1 +
- drivers/net/hyperv/netvsc_drv.c                            |  4 ++--
- drivers/net/macvlan.c                                      | 21 +++++++++++++++++----
- drivers/net/phy/mscc/mscc_main.c                           |  4 ++--
- drivers/ptp/ptp_clockmatrix.c                              | 56 +++++++++++++++++++++++++++++++++++++++++++-------------
- drivers/ptp/ptp_clockmatrix.h                              |  2 ++
- include/net/addrconf.h                                     |  3 ++-
- include/uapi/linux/bpf.h                                   | 10 +++++-----
- kernel/bpf/bpf_iter.c                                      | 15 ++++++++++++++-
- kernel/bpf/task_iter.c                                     |  6 ++++--
- net/core/dev.c                                             | 14 ++++++++------
- net/core/skbuff.c                                          | 10 +++++++---
- net/ethtool/features.c                                     | 19 ++++++++++---------
- net/ipv4/Kconfig                                           | 14 +++++++-------
- net/ipv4/nexthop.c                                         |  5 ++++-
- net/ipv6/addrconf.c                                        | 60 +++++++++++++++++++++++-------------------------------------
- net/ipv6/ip6_tunnel.c                                      | 10 +++++++++-
- net/netlink/policy.c                                       |  3 +++
- net/sched/act_ct.c                                         |  2 +-
- net/sctp/stream.c                                          |  6 ++++--
- net/smc/smc_diag.c                                         | 16 +++++++++-------
- net/tipc/crypto.c                                          |  2 ++
- net/tipc/udp_media.c                                       |  8 +++-----
- tools/bpf/bpftool/pids.c                                   |  2 ++
- tools/bpf/resolve_btfids/main.c                            | 36 ++++++++++++++++++++++++++++++++++++
- tools/include/uapi/linux/bpf.h                             | 10 +++++-----
- tools/lib/bpf/btf_dump.c                                   |  2 +-
- tools/lib/bpf/libbpf.c                                     |  2 +-
- tools/testing/selftests/bpf/.gitignore                     |  1 -
- tools/testing/selftests/bpf/Makefile                       |  2 +-
- tools/testing/selftests/bpf/prog_tests/test_global_funcs.c |  2 +-
- 44 files changed, 310 insertions(+), 163 deletions(-)
