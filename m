@@ -2,67 +2,122 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A67C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C39A20656
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:39:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598207995;
-	bh=wUEzJlCj0tzuAwLBp+VHZU4GT6SbFkLT9+6d6UJLMvU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=mR1IQr120yzqCc3N7n+yuqzmDRg44L81s+lYqp0Jdtu5izkdakYeyrvNOUw47bMDb
-	 QpfCb47X/Vovai9+b05skyd81hLrmKlsBzOo1ul3SxcJCoPwJHOty6LHA8Vd99HCAc
-	 XMtslxz3zD2aakR7LOUy584iWX81px9jNl10VY7Q=
+	by mail.kernel.org (Postfix) with ESMTP id D316A20706
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:51:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+y2mGrE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgHWSjx (ORCPT
+        id S1726324AbgHWSvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 14:39:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbgHWSjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 14:39:23 -0400
-Subject: Re: [GIT pull] perf/urgent for v5.9-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598207963;
-        bh=wUEzJlCj0tzuAwLBp+VHZU4GT6SbFkLT9+6d6UJLMvU=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=VnEKrDrHk8tRXBETFf+BbfeDftbNCtT5Qf1tW6hskgYrqYV35H8kW4SeVxeWzg/11
-         hu353z9M0mQikCGIwue7Zqteg2oHWcBC2kfjfCD4FENqKwT3mc5q7/ldeJZQyiZTG3
-         gGXCPkuiHaTIRsG/Q/Bx8KPeV+87Eb+ZlGgxpvUc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <159817113641.5783.13356693197176111647.tglx@nanos>
-References: <159817113401.5783.14776307451257171431.tglx@nanos> <159817113641.5783.13356693197176111647.tglx@nanos>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <159817113641.5783.13356693197176111647.tglx@nanos>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2020-08-23
-X-PR-Tracked-Commit-Id: 24633d901ea44fe99bc9a2d01a3881fa097b78b3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cea05c192b07b82a770816fc9d06031403cea164
-Message-Id: <159820796316.12134.11093397585934051637.pr-tracker-bot@kernel.org>
-Date:   Sun, 23 Aug 2020 18:39:23 +0000
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
+        Sun, 23 Aug 2020 14:51:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgHWSvI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 14:51:08 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE5BCC061573;
+        Sun, 23 Aug 2020 11:51:07 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id s14so3158592plp.4;
+        Sun, 23 Aug 2020 11:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=wyU9tpC675HB0ixAAkXh4+zgCwIcMMcXIhj+1AOnOR8=;
+        b=T+y2mGrEVr3tz7PLuTgcYkJwIC5IeEx/hSpwak1i56n6onfu7wNEQacYGOUsksCnSK
+         gIlJQAsHS+JwZ5GaMMJbKk6TLlk90nA61uboFEsGFaUNEKNjyQc0eOiusrgcuSz27dmD
+         Em8M9lUKz4Mjqcgp2V2oHAW7Lkz5wxsAb0fc4d/uCFZ+1R5XQdYFLHwEjNvXp39WmEC8
+         owsUxAW2xm4CkegIi0/KuYVAYGKdq8u9XcrwR0p/rX3w1l6AObuM2w2tEnos07ulT974
+         x2AlLnStHMVE5GPytevXmWOJsnguZsjstl5C4mRWPW1sSEXuqAu11MK7r7OiN5km2n72
+         2KwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wyU9tpC675HB0ixAAkXh4+zgCwIcMMcXIhj+1AOnOR8=;
+        b=ECP/VQcBXv51qGvf1gOU5a8vgzybtULBAmJZnoYay+gQYfNIrLuP0R3vtQsV8hWt9i
+         KLrxBJDYHl2WXYScEnWh66nxcWBD4vsJQhlZM2p6EEozKLsEmjyRoya50wvCG6eymyZc
+         mvRBTELmxcTQoQvzKwSOxuJ9IX3cWOPEdpKxems+zCUeWDMLvQp1a7Cn6EPbQAenda9p
+         Z8nqrV54q5tVbUnIMPc8LaGEjjQUwRphJsNVLA8wQ/Qe3iaPKQHnvI8l+oYDOJ6kC2k/
+         Gkjjta4cx2/OvRsgyOuhGQxljgo2y3Na30PfYjbWshRXwc+3o/4CLoIUWqg1Gg2ZSO5U
+         zCiA==
+X-Gm-Message-State: AOAM533Mnkl2Dg2uz3CszpxSrhhv/N3j1hQCXGnOk21mnq6/Y2yUDAQ+
+        KjqTgNuj/PbnZ2ozPf2p7Yw=
+X-Google-Smtp-Source: ABdhPJyaXB8AyrP/r8i55ExjjRdmeAd9G4Y9G2Cu8hHrxOKgTyf3tRAZ4Qd1pUWDrt9kNSOh62DXCA==
+X-Received: by 2002:a17:902:16a:: with SMTP id 97mr1516013plb.207.1598208665945;
+        Sun, 23 Aug 2020 11:51:05 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.217.77])
+        by smtp.gmail.com with ESMTPSA id s8sm861116pfm.180.2020.08.23.11.51.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Aug 2020 11:51:05 -0700 (PDT)
+From:   Sumera Priyadarsini <sylphrenadin@gmail.com>
+To:     davem@davemloft.net
+Cc:     Julia.Lawall@lip6.fr, andrew@lunn.ch, sean.wang@mediatek.com,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com, kuba@kernel.org,
+        matthias.bgg@gmail.com, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sumera Priyadarsini <sylphrenadin@gmail.com>
+Subject: [PATCH V2] net: dsa: Add of_node_put() before break statement
+Date:   Mon, 24 Aug 2020 00:20:56 +0530
+Message-Id: <20200823185056.16641-1-sylphrenadin@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 23 Aug 2020 08:25:36 -0000:
+Every iteration of for_each_child_of_node() decrements
+the reference count of the previous node, however when control
+is transferred from the middle of the loop, as in the case of
+a return or break or goto, there is no decrement thus ultimately
+resulting in a memory leak.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2020-08-23
+Fix a potential memory leak in mt7530.c by inserting of_node_put()
+before the break statement.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cea05c192b07b82a770816fc9d06031403cea164
+Issue found with Coccinelle.
 
-Thank you!
+---
+Changes in v2:
+	Add another of_node_put() in for_each_child_of_node() as pointed
+out by Andrew.
 
+---
+
+Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+---
+ drivers/net/dsa/mt7530.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 8dcb8a49ab67..e81198a65c26 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -1327,6 +1327,7 @@ mt7530_setup(struct dsa_switch *ds)
+ 			if (phy_node->parent == priv->dev->of_node->parent) {
+ 				ret = of_get_phy_mode(mac_np, &interface);
+ 				if (ret && ret != -ENODEV)
++					of_node_put(mac_np)
+ 					return ret;
+ 				id = of_mdio_parse_addr(ds->dev, phy_node);
+ 				if (id == 0)
+@@ -1334,6 +1335,7 @@ mt7530_setup(struct dsa_switch *ds)
+ 				if (id == 4)
+ 					priv->p5_intf_sel = P5_INTF_SEL_PHY_P4;
+ 			}
++			of_node_put(mac_np);
+ 			of_node_put(phy_node);
+ 			break;
+ 		}
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.17.1
+
