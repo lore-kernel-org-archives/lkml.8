@@ -2,156 +2,143 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3995C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 10:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E61C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 11:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5152072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 10:58:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598180334;
-	bh=b2rTg/fR21l4CoWP+SM3cdEWOBguA/lksw8HvdFpxCI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Px9SKzua2dS19x6Yob6eOCJ3LhZBWBxH89Bs4mC7aIb39C+A6kzosptBPBW7lNY49
-	 Kk3xZuXpSt4rENnMFOT5l4TiXcl/e2jcGFRwwR3n4QDwdaH6Tu8eVyKYvooNAEkEtG
-	 juJK6ineNOU8a7Q+jTkYLpPnAwZhkfdHZzO3N5e0=
+	by mail.kernel.org (Postfix) with ESMTP id D42292075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 11:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgHWK6Z (ORCPT
+        id S1726886AbgHWLAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 06:58:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbgHWK5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 06:57:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FDF92072D;
-        Sun, 23 Aug 2020 10:57:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598180269;
-        bh=b2rTg/fR21l4CoWP+SM3cdEWOBguA/lksw8HvdFpxCI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OSYTjTDZLBWGAqgsRCEdTcNPmjxDG9UvSP8PqMzE8uEWC9CuuTsDuEgNYVIjbwRJx
-         b1J0+KL+yPmuQJzpS+/lzMzv3fjHNlezGBrOe84wSPv92ks38mXpSffCLRXVtXe1aG
-         kADUaA2xl+nl4t41nlxVEwLTBNeqEInWzR8UqYAs=
-Date:   Sun, 23 Aug 2020 12:58:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Himadri Pandya <himadrispandya@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        USB list <linux-usb@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: [PATCH] net: usb: Fix uninit-was-stored issue in asix_read_cmd()
-Message-ID: <20200823105808.GB87391@kroah.com>
-References: <20200823082042.20816-1-himadrispandya@gmail.com>
- <CACT4Y+Y1TpqYowNXj+OTcQwH-7T4n6PtPPa4gDWkV-np5KhKAQ@mail.gmail.com>
- <20200823101924.GA3078429@kroah.com>
- <CACT4Y+YbDODLRFn8M5QcY4CazhpeCaunJnP_udXtAs0rYoASSg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+YbDODLRFn8M5QcY4CazhpeCaunJnP_udXtAs0rYoASSg@mail.gmail.com>
+        Sun, 23 Aug 2020 07:00:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55477 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgHWK72 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 06:59:28 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1k9niF-0003UF-C2; Sun, 23 Aug 2020 10:59:00 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     tiwai@suse.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Hector Martin <marcan@marcan.st>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        Hui Wang <hui.wang@canonical.com>,
+        Dmitry Panchenko <dmitry@d-systems.ee>,
+        =?UTF-8?q?Franti=C5=A1ek=20Ku=C4=8Dera?= <franta-linux@frantovo.cz>,
+        Gregor Pintar <grpintar@gmail.com>,
+        Jussi Laako <jussi@sonarnerd.net>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Chris Wulff <crwulff@gmail.com>,
+        Jesus Ramos <jesus-ramos@live.com>,
+        alsa-devel@alsa-project.org (moderated list:SOUND),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ALSA: usb-audio: Disable autosuspend for Lenovo ThinkStation P620
+Date:   Sun, 23 Aug 2020 18:58:50 +0800
+Message-Id: <20200823105854.26950-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 23, 2020 at 12:31:03PM +0200, Dmitry Vyukov wrote:
-> On Sun, Aug 23, 2020 at 12:19 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Sun, Aug 23, 2020 at 11:26:27AM +0200, Dmitry Vyukov wrote:
-> > > On Sun, Aug 23, 2020 at 10:21 AM Himadri Pandya
-> > > <himadrispandya@gmail.com> wrote:
-> > > >
-> > > > Initialize the buffer before passing it to usb_read_cmd() function(s) to
-> > > > fix the uninit-was-stored issue in asix_read_cmd().
-> > > >
-> > > > Fixes: KMSAN: kernel-infoleak in raw_ioctl
-> > > > Reported by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
-> > > >
-> > > > Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
-> > > > ---
-> > > >  drivers/net/usb/asix_common.c | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >
-> > > > diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
-> > > > index e39f41efda3e..a67ea1971b78 100644
-> > > > --- a/drivers/net/usb/asix_common.c
-> > > > +++ b/drivers/net/usb/asix_common.c
-> > > > @@ -17,6 +17,8 @@ int asix_read_cmd(struct usbnet *dev, u8 cmd, u16 value, u16 index,
-> > > >
-> > > >         BUG_ON(!dev);
-> > > >
-> > > > +       memset(data, 0, size);
-> > >
-> > > Hi Himadri,
-> > >
-> > > I think the proper fix is to check
-> > > usbnet_read_cmd/usbnet_read_cmd_nopm return value instead.
-> > > Memsetting data helps to fix the warning at hand, but the device did
-> > > not send these 0's and we use them as if the device did send them.
-> >
-> > But, for broken/abusive devices, that really is the safest thing to do
-> > here.  They are returning something that is obviously not correct, so
-> > either all callers need to check the size received really is the size
-> > they asked for, or we just plod onward with a 0 value like this.  Or we
-> > could pick some other value, but that could cause other problems if it
-> > is treated as an actual value.
-> 
-> Do we want callers to do at least some error check (e.g. device did
-> not return anything at all, broke, hang)?
-> If yes, then with a separate helper function that fails on short
-> reads, we can get both benefits at no additional cost. User code will
-> say "I want 4 bytes, anything that is not 4 bytes is an error" and
-> then 1 error check will do. In fact, it seems that that was the
-> intention of whoever wrote this code (they assumed no short reads),
-> it's just they did not actually implement that "anything that is not 4
-> bytes is an error" part.
-> 
-> 
-> > > Perhaps we need a separate helper function (of a bool flag) that will
-> > > fail on incomplete reads. Maybe even in the common USB layer because I
-> > > think we've seen this type of bug lots of times and I guess there are
-> > > dozens more.
-> >
-> > It's not always a failure, some devices have protocols that are "I could
-> > return up to a max X bytes but could be shorter" types of messages, so
-> > it's up to the caller to check that they got what they really asked for.
-> 
-> Yes, that's why I said _separate_ helper function. There seems to be
-> lots of callers that want exactly this -- "I want 4 bytes, anything
-> else is an error". With the current API it's harder to do - you need
-> additional checks, additional code, maybe even additional variables to
-> store the required size. APIs should make correct code easy to write.
+If USB autosuspend is enabled, both front and rear panel can no longer
+detect jack insertion.
 
-I guess I already answered both of these in my previous email...
+Enable USB remote wakeup, i.e. needs_remote_wakeup = 1, doesn't help
+either.
 
-> > Yes, it's more work to do this checking.  However converting the world
-> > over to a "give me an error value if you don't read X number of bytes"
-> > function would also be the same amount of work, right?
-> 
-> Should this go into the common USB layer then?
-> It's weird to have such a special convention on the level of a single
-> driver. Why are rules for this single driver so special?...
+So disable USB autosuspend to prevent missing jack detection event.
 
-They aren't special at all, so yes, we should be checking for a short
-read everywhere.  That would be the "correct" thing to do, I was just
-suggesting a "quick fix" here, sorry.
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ sound/usb/quirks-table.h | 18 ++++++++++++++----
+ sound/usb/quirks.c       | 10 ++++++++++
+ sound/usb/usbaudio.h     |  1 +
+ 3 files changed, 25 insertions(+), 4 deletions(-)
 
-Himadri, want to fix up all callers to properly check the size of the
-message recieved before they access it?  That will fix this issue
-properly.
+diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+index f4fb002e3ef4..416de71c6895 100644
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -2827,14 +2827,24 @@ YAMAHA_DEVICE(0x7010, "UB99"),
+ /* Lenovo ThinkStation P620 Rear Line-in, Line-out and Microphone */
+ {
+ 	USB_DEVICE(0x17aa, 0x1046),
+-	QUIRK_DEVICE_PROFILE("Lenovo", "ThinkStation P620 Rear",
+-			     "Lenovo-ThinkStation-P620-Rear"),
++	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) {
++		.vendor_name = "Lenovo",
++		.product_name = "ThinkStation P620 Rear",
++		.profile_name = "Lenovo-ThinkStation-P620-Rear",
++		.ifnum = QUIRK_ANY_INTERFACE,
++		.type = QUIRK_SETUP_DISABLE_AUTOSUSPEND
++	}
+ },
+ /* Lenovo ThinkStation P620 Internal Speaker + Front Headset */
+ {
+ 	USB_DEVICE(0x17aa, 0x104d),
+-	QUIRK_DEVICE_PROFILE("Lenovo", "ThinkStation P620 Main",
+-			     "Lenovo-ThinkStation-P620-Main"),
++	.driver_info = (unsigned long) & (const struct snd_usb_audio_quirk) {
++		.vendor_name = "Lenovo",
++		.product_name = "ThinkStation P620 Main",
++		.profile_name = "Lenovo-ThinkStation-P620-Main",
++		.ifnum = QUIRK_ANY_INTERFACE,
++		.type = QUIRK_SETUP_DISABLE_AUTOSUSPEND
++	}
+ },
+ 
+ /* Native Instruments MK2 series */
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index abf99b814a0f..b800fd92106c 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -518,6 +518,15 @@ static int setup_fmt_after_resume_quirk(struct snd_usb_audio *chip,
+ 	return 1;	/* Continue with creating streams and mixer */
+ }
+ 
++static int setup_disable_autosuspend(struct snd_usb_audio *chip,
++				       struct usb_interface *iface,
++				       struct usb_driver *driver,
++				       const struct snd_usb_audio_quirk *quirk)
++{
++	driver->supports_autosuspend = 0;
++	return 1;	/* Continue with creating streams and mixer */
++}
++
+ /*
+  * audio-interface quirks
+  *
+@@ -557,6 +566,7 @@ int snd_usb_create_quirk(struct snd_usb_audio *chip,
+ 		[QUIRK_AUDIO_ALIGN_TRANSFER] = create_align_transfer_quirk,
+ 		[QUIRK_AUDIO_STANDARD_MIXER] = create_standard_mixer_quirk,
+ 		[QUIRK_SETUP_FMT_AFTER_RESUME] = setup_fmt_after_resume_quirk,
++		[QUIRK_SETUP_DISABLE_AUTOSUSPEND] = setup_disable_autosuspend,
+ 	};
+ 
+ 	if (quirk->type < QUIRK_TYPE_COUNT) {
+diff --git a/sound/usb/usbaudio.h b/sound/usb/usbaudio.h
+index b91c4c0807ec..6839915a0128 100644
+--- a/sound/usb/usbaudio.h
++++ b/sound/usb/usbaudio.h
+@@ -102,6 +102,7 @@ enum quirk_type {
+ 	QUIRK_AUDIO_ALIGN_TRANSFER,
+ 	QUIRK_AUDIO_STANDARD_MIXER,
+ 	QUIRK_SETUP_FMT_AFTER_RESUME,
++	QUIRK_SETUP_DISABLE_AUTOSUSPEND,
+ 
+ 	QUIRK_TYPE_COUNT
+ };
+-- 
+2.17.1
 
-thanks,
-
-greg k-h
