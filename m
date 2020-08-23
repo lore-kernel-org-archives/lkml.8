@@ -2,104 +2,80 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE00C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38A7B206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A2720656
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:12:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598217177;
+	bh=nLgwnKShUqKPc0FGg/NC07wShXozDBhWeWygswaJ1Z8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uogV7mEmKwX/jIy/pCmT+4O/fu5EYoqaL8vfePoa4X9YlsnSX15nGO9LgeSgYkQ/O
+	 pOuUmaanVY+MgX//2tFj342U7yikd9N2ysmoqav+l8rcm4H7MqOgrbicU2vVdn+Se/
+	 /v0vChbEKZd/q9+kXutLmwHDrVg4/xMJTZtpjjq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgHWVMJ (ORCPT
+        id S1726624AbgHWVM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 17:12:09 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36420 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbgHWVMI (ORCPT
+        Sun, 23 Aug 2020 17:12:56 -0400
+Received: from mail.stusta.mhn.de ([141.84.69.5]:33766 "EHLO
+        mail.stusta.mhn.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbgHWVMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 17:12:08 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 416EF1C0BBF; Sun, 23 Aug 2020 23:12:05 +0200 (CEST)
-Date:   Sun, 23 Aug 2020 23:12:04 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH] thermal: ti-soc-thermal: Fix bogus thermal shutdowns for
- omap4430
-Message-ID: <20200823211204.zerldmljfd6rrk7g@duo.ucw.cz>
-References: <20200706183338.25622-1-tony@atomide.com>
+        Sun, 23 Aug 2020 17:12:55 -0400
+X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Aug 2020 17:12:54 EDT
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        by mail.stusta.mhn.de (Postfix) with ESMTPSA id 4BZSQ04x3mz3Q;
+        Sun, 23 Aug 2020 23:02:48 +0200 (CEST)
+Date:   Mon, 24 Aug 2020 00:02:46 +0300
+From:   Adrian Bunk <bunk@kernel.org>
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>, alex.gaynor@gmail.com,
+        geofft@ldpreload.com, jbaublitz@redhat.com,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: Linux kernel in-tree Rust support
+Message-ID: <20200823210246.GA1811@localhost>
+References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
+ <20200712123151.GB25970@localhost>
+ <20200712193944.GA81641@localhost>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="imrc7pfk7bghwsac"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200706183338.25622-1-tony@atomide.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200712193944.GA81641@localhost>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 12, 2020 at 12:39:44PM -0700, Josh Triplett wrote:
+>...
+> Rust has hard stability guarantees when upgrading from one stable
+> version to the next. If code compiles with a given stable version of
+> Rust, it'll compile with a newer stable version of Rust.
+>...
 
---imrc7pfk7bghwsac
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In librsvg, breakages with more recent Rust versions in the past year
+required updates of two vendored crates:
+https://gitlab.gnome.org/GNOME/librsvg/-/commit/de26c4d8b192ed0224e6d38f54e429838608b902
+https://gitlab.gnome.org/GNOME/librsvg/-/commit/696e4a6be2aeb00ea27945f94da066757431684d
 
-Hi!
+For updating Rust in Debian stable for the next Firefox ESR update it 
+would actually be useful if these violations of the "hard stability 
+guarantee" in Rust get fixed, so that the old librsvg 2.44.10 builds 
+again with the latest Rust.
 
-> We can sometimes get bogus thermal shutdowns on omap4430 at least with
-> droid4 running idle with a battery charger connected:
->=20
-> thermal thermal_zone0: critical temperature reached (143 C), shutting down
->=20
-> Dumping out the register values shows we can occasionally get a 0x7f value
-> that is outside the TRM listed values in the ADC conversion table. And th=
-en
-> we get a normal value when reading again after that. Reading the register
-> multiple times does not seem help avoiding the bogus values as they stay
-> until the next sample is ready.
->=20
-> Looking at the TRM chapter "18.4.10.2.3 ADC Codes Versus Temperature", we
-> should have values from 13 to 107 listed with a total of 95 values. But
-> looking at the omap4430_adc_to_temp array, the values are off, and the
-> end values are missing. And it seems that the 4430 ADC table is similar
-> to omap3630 rather than omap4460.
->=20
-> Let's fix the issue by using values based on the omap3630 table and just
-> ignoring invalid values. Compared to the 4430 TRM, the omap3630 table has
-> the missing values added while the TRM table only shows every second
-> value.
->=20
-> Note that sometimes the ADC register values within the valid table can
-> also be way off for about 1 out of 10 values. But it seems that those
-> just show about 25 C too low values rather than too high values. So those
-> do not cause a bogus thermal shutdown.
+It also makes me wonder how such regressions slip into Rust releases.
 
-This does not seem to be in recent -next. Ping?
-
-Best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---imrc7pfk7bghwsac
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX0LbpAAKCRAw5/Bqldv6
-8syxAJ9PBvNHtKpZctrdFyS/NBbDxA0ooACgvS260BY0E4CHRadpt6Gmyw8ayfw=
-=aSuf
------END PGP SIGNATURE-----
-
---imrc7pfk7bghwsac--
+cu
+Adrian
