@@ -2,138 +2,85 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1931BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3BD9206B5
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E229621741
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgHWSAy (ORCPT
+        id S1726215AbgHWSNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 14:00:54 -0400
-Received: from mail.v3.sk ([167.172.186.51]:42328 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727945AbgHWSAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 14:00:50 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 3E84CDF106;
-        Sun, 23 Aug 2020 17:59:46 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id uzF78zdjqwmD; Sun, 23 Aug 2020 17:59:45 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 759FDDFA6B;
-        Sun, 23 Aug 2020 17:59:44 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id uf-79zAqGnZt; Sun, 23 Aug 2020 17:59:44 +0000 (UTC)
-Received: from localhost (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id DC182DF106;
-        Sun, 23 Aug 2020 17:59:43 +0000 (UTC)
-Date:   Sun, 23 Aug 2020 20:00:41 +0200
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 5/6] dt-bindings: mfd: ene-kb3930: Document
- power-supplies and monitored-battery properties
-Message-ID: <20200823180041.GB209852@demiurge.local>
-References: <20200823140846.19299-1-digetx@gmail.com>
- <20200823140846.19299-6-digetx@gmail.com>
+        Sun, 23 Aug 2020 14:13:36 -0400
+Received: from smtprelay0245.hostedemail.com ([216.40.44.245]:37118 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725867AbgHWSNg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 14:13:36 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave01.hostedemail.com (Postfix) with ESMTP id 5721F18014950;
+        Sun, 23 Aug 2020 18:13:34 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 73430182CED2A;
+        Sun, 23 Aug 2020 18:13:33 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: idea45_11162582704c
+X-Filterd-Recvd-Size: 1957
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 23 Aug 2020 18:13:32 +0000 (UTC)
+Message-ID: <e6cd92faf09722fe729a7de03e7bde592f62499c.camel@perches.com>
+Subject: [likely PATCH] media: lmedm04: Fix misuse of comma
+From:   Joe Perches <joe@perches.com>
+To:     Malcolm Priestley <tvboxspy@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Julia Lawall <julia.lawall@lip6.fr>
+Date:   Sun, 23 Aug 2020 11:13:31 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200823140846.19299-6-digetx@gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+There's a comma used instead of a semicolon that causes multiple
+statements to be executed after an if instead of just the intended
+single statement.
 
-On Sun, Aug 23, 2020 at 05:08:45PM +0300, Dmitry Osipenko wrote:
-> Battery could be connected to the controller and in this case controller
-> will provide a battery-monitor function.
-> 
-> The power-supplies phandle property is needed in order to describe the
-> power supply which is used for charging of the battery, this allows to
-> determine whither battery is charging or discharging, depending on the
-> supply state.
-> 
-> The monitored-battery phandle provides information about the battery cell
-> characteristics.
+Replace the comma with a semicolon.
 
-I believe it would be better if you created a new binding document
-instead of reusing this one -- the hardware part iseems to be a
-different one and the firmware it runs seems to be behaving totally
-differently than the usual ENE firmware [1].
+Signed-off-by: Joe Perches <joe@perches.com>
+---
 
-[1] This eneec.c seems to be coming from ENE, so I'm assuming it's a
-    good enough description of how their firmware behaves:
-    https://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp3-dell-ariel.git/tree/drivers/input/serio/eneec.c
+Untested, but really likely to be a defect given the indentation.
 
-Cheers
-Lubo
+Found using Julia Lawall's (and my) coccinelle script.
 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  .../devicetree/bindings/mfd/ene-kb3930.yaml    | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-> index 5a1c4a959d9c..435728054f3a 100644
-> --- a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-> +++ b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-> @@ -29,6 +29,8 @@ properties:
->      description: GPIO used with the shutdown protocol on Ariel
->      maxItems: 2
->  
-> +  monitored-battery: true
-> +  power-supplies: true
->    system-power-controller: true
->  
->  required:
-> @@ -41,6 +43,19 @@ examples:
->    - |
->      #include <dt-bindings/gpio/gpio.h>
->  
-> +    battery: battery-cell {
-> +            compatible = "simple-battery";
-> +            charge-full-design-microamp-hours = <3260000>;
-> +            energy-full-design-microwatt-hours = <24000000>;
-> +            operating-range-celsius = <0 40>;
-> +    };
-> +
-> +    mains: ac-adapter {
-> +      compatible = "gpio-charger";
-> +      charger-type = "mains";
-> +      gpios = <&gpio 125 GPIO_ACTIVE_LOW>;
-> +    };
-> +
->      i2c {
->        #address-cells = <1>;
->        #size-cells = <0>;
-> @@ -52,6 +67,9 @@ examples:
->  
->          off-gpios = <&gpio 126 GPIO_ACTIVE_HIGH>,
->                      <&gpio 127 GPIO_ACTIVE_HIGH>;
-> +
-> +        monitored-battery = <&battery>;
-> +        power-supplies = <&mains>;
->        };
->      };
->  
-> -- 
-> 2.27.0
-> 
+https://lore.kernel.org/lkml/alpine.DEB.2.22.394.2008201856110.2524@hadrien/
+
+ drivers/media/usb/dvb-usb-v2/lmedm04.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/usb/dvb-usb-v2/lmedm04.c b/drivers/media/usb/dvb-usb-v2/lmedm04.c
+index 8a3c0eeed959..cce431f34f61 100644
+--- a/drivers/media/usb/dvb-usb-v2/lmedm04.c
++++ b/drivers/media/usb/dvb-usb-v2/lmedm04.c
+@@ -391,7 +391,7 @@ static int lme2510_int_read(struct dvb_usb_adapter *adap)
+ 	ep = usb_pipe_endpoint(d->udev, lme_int->lme_urb->pipe);
+ 
+ 	if (usb_endpoint_type(&ep->desc) == USB_ENDPOINT_XFER_BULK)
+-		lme_int->lme_urb->pipe = usb_rcvbulkpipe(d->udev, 0xa),
++		lme_int->lme_urb->pipe = usb_rcvbulkpipe(d->udev, 0xa);
+ 
+ 	usb_submit_urb(lme_int->lme_urb, GFP_ATOMIC);
+ 	info("INT Interrupt Service Started");
+
+
