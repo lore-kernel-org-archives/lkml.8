@@ -2,115 +2,86 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556B2C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D82C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 23:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB0D2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:59:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="xUqk7lJm"
+	by mail.kernel.org (Postfix) with ESMTP id CE11820724
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 23:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598223698;
+	bh=uIozQjH4sJMFEtlil87O9vMH7tgYAD4fbTQ4Y7hSR1A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DiJG/GlGbOVQcRdqcWBVlhm1amyeQRqDq/0rEy70J8w3z3AoSvCfAQQQZXcyXUm80
+	 Vwp5NObJxQZzJqz6bWgBRKZtjUPszYzk/8SMQBlq2iU1ZuUhu+zvntDEevIT5KCq70
+	 PDFClvQiCEA67e/xjcg/lfb/YgCOOMilAJ32SP2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgHWW7C (ORCPT
+        id S1726950AbgHWXBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 18:59:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgHWW7A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 18:59:00 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3CFC061574
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 15:59:00 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id s1so6825728iot.10
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 15:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yMBkmv0QmaZUXjMTcydv1MvAQ17m/air8AA2TKonhbk=;
-        b=xUqk7lJmfQL+W6Y/yVEN1nr4YOva5j95dPVccDsw4YrsizctfrTagnEDzeYuiv7CO3
-         bmCwF9r81iE+EN9gz1U8xyFIbgQHWFnENIurKB/4PvDuKkFuQbN6qlFwY0FpeGtvd+6V
-         35t8bELtqc+1fpUkc/KHGrMgMDpwSH7P5ef/0/YYFwvB5PTqfMkD/WqmxMebAvtWHbZf
-         yV2sbG0Y7qAN4o5NCfkcA84LhQC8M6TPsxoXuwHnSwm3OfV4mddWJVFX94bsxVG++Z/j
-         /hKt7w09ivoOfqHY7sQatOvc8ulYpCFsd2R15v5ZfqTflzSQjbTbLqdPwUg8nhsTNgIV
-         t0bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yMBkmv0QmaZUXjMTcydv1MvAQ17m/air8AA2TKonhbk=;
-        b=gxT4CmVLwnMi3XDcQyW3KTQEDMPRxEoymW6ojVpI0Q9SilALt7jvC+OBKEYz4Ub+kb
-         1TiOX+x4KxoG5yDMvo+lbgv1yH40475XDIjuKOgLQGbtp4gZIU4socbhByIKosAR5WX4
-         qxvhOJvLFbe76tamlJbQ9nHGVYr7ARwcrl4xW1T7Vmd1TV8d80pxmFA2DInXqn6w/LPM
-         cyv6GCsQjnL3AwK73k8zHIENErgcy3vz3tFv7oBUel2BpQ38T4JkqPMRIyXtq6s36XuG
-         X6xqWtAqlHKw1+ItoBpqBdwFSj/cB0TWerjgv/345NNzx4ZkbsmogxPi9z9odMryGXSr
-         lfnw==
-X-Gm-Message-State: AOAM532QCe3cIC7SHwhOim8aGyYLpwVEUiYzCY2YJuwYY7xBJnA7eXJi
-        kx/BBuS6BEfR1iSW8FRBEH+2RKToY8s28wp9Li7Xvg==
-X-Google-Smtp-Source: ABdhPJxZDAxn1LzOKezHkNZB1x2PKPPIIfZnkKnRgW8p3oI1Zv5UOzASaFY2I9OCzjHFeqCyhCTIWI/uqplIdTc/Qrk=
-X-Received: by 2002:a02:730b:: with SMTP id y11mr2987869jab.126.1598223539443;
- Sun, 23 Aug 2020 15:58:59 -0700 (PDT)
+        Sun, 23 Aug 2020 19:01:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726631AbgHWXBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 19:01:37 -0400
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 722F520768
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 23:01:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598223696;
+        bh=uIozQjH4sJMFEtlil87O9vMH7tgYAD4fbTQ4Y7hSR1A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=o3Hzhb0eZNmdy41TDKHPXtlCbqf/kILQve41+HJMAem+pUiHvLymALgk5OmZz32dR
+         guADt+SPC56+X+h0a55FIzgGGr0Jhj8XAJUaTJoI0cCtEodCjPliQJh5DrHWsNhf7m
+         Ma3ArnaLhJYC9FkAInmn7wj4yptPDQOmsZx4LOOw=
+Received: by mail-wr1-f47.google.com with SMTP id a15so6874834wrh.10
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 16:01:36 -0700 (PDT)
+X-Gm-Message-State: AOAM530ZeUyWOOjnm5jgVj+Z+g/E2MjgHBE/be77rts2W2nSamvCrg8B
+        PoR+J6paHeTKly5nELkVcxkYxMXMBhcJUhBXS7zFdA==
+X-Google-Smtp-Source: ABdhPJw/e7WuyQb73fVLpX70mVy6DyaoG51HgfKj0IODmT0P7DTkHaZhDk4x5BKmsFSIgvGRBwwluUXsMOqlaXdgAZQ=
+X-Received: by 2002:a5d:400e:: with SMTP id n14mr3077705wrp.75.1598223695033;
+ Sun, 23 Aug 2020 16:01:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200817065654.4419-1-krzk@kernel.org> <20200823014600.GH30094@dragon>
- <20200823084241.GA2886@kozik-lap>
-In-Reply-To: <20200823084241.GA2886@kozik-lap>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Sun, 23 Aug 2020 15:58:48 -0700
-Message-ID: <CAOesGMhL887y5WaW=yM8Bh9RZGsO6mZzC=Giv_Ai4=_Z=YZhAQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] arm64: defconfig: Enable USB gadget with configfs
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        ARM-SoC Maintainers <arm@kernel.org>,
-        SoC Team <soc@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
+References: <20200821093912.815135402@infradead.org> <20200821102052.910320981@infradead.org>
+In-Reply-To: <20200821102052.910320981@infradead.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 23 Aug 2020 16:01:23 -0700
+X-Gmail-Original-Message-ID: <CALCETrWLj=jAyDqOz4D5aXoa8b-qxSvZauHAbu56rOyXWyRNKw@mail.gmail.com>
+Message-ID: <CALCETrWLj=jAyDqOz4D5aXoa8b-qxSvZauHAbu56rOyXWyRNKw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/8] x86/debug: Move kprobe_debug_handler() into exc_debug_kernel()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Kyle Huey <me@kylehuey.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Robert O'Callahan" <rocallahan@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Sun, Aug 23, 2020 at 1:42 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Fri, Aug 21, 2020 at 3:21 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> On Sun, Aug 23, 2020 at 09:46:01AM +0800, Shawn Guo wrote:
-> > On Mon, Aug 17, 2020 at 08:56:53AM +0200, Krzysztof Kozlowski wrote:
-> > > USB OTG connections are pretty common for embedded and development
-> > > boards, for example to have networking or serial access to the device.
-> > > Build as a module the USB gadget configfs options so the defconfig can
-> > > be used in such development configurations.
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > Applied both, thanks.
+> Kprobes are on kernel text, and thus only matter for #DB-from-kernel.
+> Kprobes are ordered before the generic notifier, preserve that order.
 >
-> Thanks, although few days ago I got confirmation from patchwork that
-> Olof already applied them to arm-soc.  I cannot find them in arm-soc
-> or next trees, though.
->
-> Dear Olof,
-> Did you pick these up already?
 
-Yes, I applied them to the arm/fixes in the soc tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/log/?h=arm/fixes
-
-
--Olof
+Acked-by: Andy Lutomirski <luto@kernel.org>
