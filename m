@@ -6,90 +6,80 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 23:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D22C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 23:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 897F22072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 23:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C5D420724
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 23:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598224296;
-	bh=BCwIL8BZHn3eI2tqa/kgvc98qVPVBfUsxvsIzZrfJ3g=;
+	s=default; t=1598224352;
+	bh=ZpmvbCroy3pMVb4rJfiM8NWKqfQUkRdiaTTX3ZVVzAg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1AcebnnvfkvXZ2bFYlkrcCLcccVYR0WI/hw4BFVpo1vfs4mDoFrWaJIlYve3AkSI5
-	 PLjYfCZPjRASGWNJy1WHHjJISN7fG5zYYhqhMz8gqG+psMW3hBhq+0aiYyUPvglOEj
-	 Z7os1FmYlvwJErGzhvJRMtki3xd8nTwGGh6YvSqo=
+	b=sRfv9P+lei+5SYm93zUNmdsZmcAPx/Z78nh1BWRvqIsLhQQqRB4DJ+xXTts7RPvN1
+	 3U4Bntx5imiTcnpP6SN+7HRzTJVD6GbJBCI/wy40tVMHtPqEiY7bZKJGU5npgf4Aw2
+	 spdg1nsLylZWSyj80H+m4HBK0QWZSSEGFNJ/SVCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgHWXLf (ORCPT
+        id S1726998AbgHWXMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 19:11:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40160 "EHLO mail.kernel.org"
+        Sun, 23 Aug 2020 19:12:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbgHWXLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 19:11:32 -0400
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+        id S1726480AbgHWXMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 19:12:31 -0400
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35E45221E2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 23:11:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 776EB2075B
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 23:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598224291;
-        bh=BCwIL8BZHn3eI2tqa/kgvc98qVPVBfUsxvsIzZrfJ3g=;
+        s=default; t=1598224350;
+        bh=ZpmvbCroy3pMVb4rJfiM8NWKqfQUkRdiaTTX3ZVVzAg=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XHNpaLqfzGlDhobM8HCFCbVvtDNvg4cdhZ+xWNXKFGtC3KKyT3kLsK4adLu+O71qc
-         EnOxLyAI+xCEGVSSOEXMZ0jvdWcxgx/AUPen3MBDQjaIjs7yMpa86GtozO5sD7KI2Z
-         ifYhR1pD3eLt57bMZ/2UMjFqBgXmh4H61JJsf9Sw=
-Received: by mail-wm1-f45.google.com with SMTP id a65so3050045wme.5
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 16:11:31 -0700 (PDT)
-X-Gm-Message-State: AOAM533bXrsw8/xcDNVH/8hYbCmT3T4bzyDaMQRIvxrU9Pk5FbyKurlO
-        ZjPWSp6bysz7+ZNINs+26TNH+EKueVju6GsE7xdWaw==
-X-Google-Smtp-Source: ABdhPJz8B6sM7+LM2fthhpeY9wjeM67AlrTus0j2XWe7olFHIGn6T6qEvgzyAhqEGJia10bJyk48lWg8laNqXsQesoI=
-X-Received: by 2002:a7b:c76e:: with SMTP id x14mr2904019wmk.176.1598224289860;
- Sun, 23 Aug 2020 16:11:29 -0700 (PDT)
+        b=0CDe7+Bzr86jlTuYjVCOF4lX3mQs0gMVkW5f2y8OPRCyAwVhyaXG0JUOYSICP/cLa
+         vLZ4FTxirMsLe6OPkC1Ig6EszC5mMopR7pzXEgto5ojPm+RNNKn0tPL4oQW92zv49J
+         Z0J033Z9Oxzv+F7sIELWbAqbNfZMaLZ8DBiKR4fs=
+Received: by mail-wm1-f47.google.com with SMTP id s20so1614952wmj.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 16:12:30 -0700 (PDT)
+X-Gm-Message-State: AOAM532cmqeWuZq2IyXW8luqOr8nlUsLOeYkM+LNGI5vy+F1Q8Hg9hGO
+        q3PdRSmsM1K9kAJreRXitfeGRyehjHYUr0OWvr5AYA==
+X-Google-Smtp-Source: ABdhPJy35I/Gzkbp0WW1BdvJj2QIdO/WOhE+U51NFmdPuZTyXxMg4gQXZgvkGBrP54gm4r5C8kMZaeLo147x6/P8a9s=
+X-Received: by 2002:a1c:7e02:: with SMTP id z2mr2988577wmc.138.1598224349132;
+ Sun, 23 Aug 2020 16:12:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200821093912.815135402@infradead.org> <20200821102053.219655533@infradead.org>
-In-Reply-To: <20200821102053.219655533@infradead.org>
+References: <159817113401.5783.14776307451257171431.tglx@nanos>
+ <159817113762.5783.6214320432160748743.tglx@nanos> <CAHk-=wiQQRS1f0qMwVVWKd6YHJ9K3bUK4BR2zoeGeCWRpTM3aw@mail.gmail.com>
+ <CALCETrUSE6cTgaa9LWK=JgKhJt4vgGz42uPJEkk6XZWA9dOkvg@mail.gmail.com> <CAHk-=whjkMOgAP_fHL_+p5Gw6fwDm3tOa6_DTuVTJkaTJVTr+A@mail.gmail.com>
+In-Reply-To: <CAHk-=whjkMOgAP_fHL_+p5Gw6fwDm3tOa6_DTuVTJkaTJVTr+A@mail.gmail.com>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 23 Aug 2020 16:11:18 -0700
-X-Gmail-Original-Message-ID: <CALCETrWJhes7QVmqit1XU+ioq13Ly7A9QJ5s4grp3+Vq75vMxw@mail.gmail.com>
-Message-ID: <CALCETrWJhes7QVmqit1XU+ioq13Ly7A9QJ5s4grp3+Vq75vMxw@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] x86/debug: Remove the historical junk
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Kyle Huey <me@kylehuey.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        "Robert O'Callahan" <rocallahan@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
+Date:   Sun, 23 Aug 2020 16:12:17 -0700
+X-Gmail-Original-Message-ID: <CALCETrWZ9chgr68N7KSahJ9=vU4uqgqGZ1w_e2RH982XNEJv_Q@mail.gmail.com>
+Message-ID: <CALCETrWZ9chgr68N7KSahJ9=vU4uqgqGZ1w_e2RH982XNEJv_Q@mail.gmail.com>
+Subject: Re: [GIT pull] x86/urgent for v5.9-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 3:21 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Sun, Aug 23, 2020 at 3:35 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> Remove the historical junk and replace it with a WARN and a comment.
+> On Sun, Aug 23, 2020 at 3:27 PM Andy Lutomirski <luto@kernel.org> wrote:
+> >
+> > Every interrupt is going to load the CS and SS descriptor cache lines.
 >
-> The problem is that even though the kernel only uses TF single-step in
-> kprobes and KGDB, both of which consume the event before this,
-> QEMU/KVM has bugs in this area that can trigger this state so we have
-> to deal with it.
+> Yeah, but this isn't even sharing the same GDT cache line. Those two
+> are at least in the same cacheline, and hey, that is forced upon us by
+> the architecture, so we don't have any choice.
+>
+> But I guess this lsl thing only triggers on the paranoid entry, so
+> it's just NMI, DB and MCE.. Or?
 
-Almost acked by me.
-
-If you make the change I suggested earlier, then the ->debugreg6
-garbage can actually die.
+Indeed.  And also all the new virt garbage that keeps popping up.
 
 --Andy
