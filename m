@@ -2,107 +2,125 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6129BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 14:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 14:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE8A206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 14:01:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBm7IpmR"
+	by mail.kernel.org (Postfix) with ESMTP id BEA462078A
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 14:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598191436;
+	bh=EFE6jLBhE8IxwiWnVnZDQ7Ja0ooQMNmVgY6jo4NDWiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dgNavf81Bm19mmMbc7LbDqbcZDwRuwXBndcMJVDtheW0IrRMbV2Q+N6YHWKQWcj3K
+	 lYX94lJkcK3UbCI9YBoKBXVlXX8bHU98hxGzoAYB8GjRDFE4dTGolQTRjuTFQoeovp
+	 snUNwjUv4x5OA8Cs/xyWTbdtxLrp+jpJtsF/AO34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgHWOBo (ORCPT
+        id S1726556AbgHWODy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 10:01:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgHWOBo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 10:01:44 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D743BC061573;
-        Sun, 23 Aug 2020 07:01:43 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id s14so2962950plp.4;
-        Sun, 23 Aug 2020 07:01:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=TlsZGie0Pmq1ULANAaf92cPvcSYg7hONtV2IZVBlGx0=;
-        b=FBm7IpmR8lFsFOm/8ZYSpn4lHcHTTlLQtfZ7gnrV+9KiCN7Z+4XW9HBRFhYCAlcrFo
-         IegKHLWFZd1UkHFojFjnNltDYMlTWXU2lXJpBlQipRET6ZAxveZCthpajxQjss5Zf0Fd
-         ynmVJHpxWPvnLkNLJhz0gqlBBDG39Sl6OB2u5yQfDJ4e/OQ+XN24CklX+9L9hl6VHcmD
-         S4x8op5uNEZJd+mTCTWeZKCP9nr8b7ltoXA4wYNk2EgxM+kr1Ffa8mn7/rH1hcR+7rop
-         K8jAzyqiq/obyOFReOMaKDFMA650dGvGDq6ePyVaPgO3tVecb0DM94WUru27QsRozWQH
-         RJIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TlsZGie0Pmq1ULANAaf92cPvcSYg7hONtV2IZVBlGx0=;
-        b=Jzh/T2rARQD98IJ2JskBW0i0ODBFVoyUxHTQc9EelOCXFk8edcHGR13HspWaq89uXa
-         wAeI2ejq3jm4eE8WxXb5WcdCiIxxv1RjNX7tIUyyzrmnFfdbttPAH+UtTT2g8tiPGpCf
-         jdMninKWxpP5hgsS3AXsfvc8v7PjBwJBJ0kD/s9EJOlMltFHYRYjivwf+GqfIAYffl96
-         26X+0mOWzLBX53FvFF8YQuXJb441WW0CEkI2XcwB6tbcM89JtZzCRmX9TkR6wz6baVri
-         PrMWecp0vRg99phePKqzlKDBYqJehRUn7ZEmXv/Ug4lq3+kDj3gNYevdBuDHHsjUalr6
-         UooA==
-X-Gm-Message-State: AOAM532bdgdfdwLlXxBLPg7yV+n3NhnCJps5xvdcOHRLASJbYnauR2m2
-        JM7rXNsXtujbyZkHYHQ48Tc=
-X-Google-Smtp-Source: ABdhPJwB7I7XTQmD24PNJDgOa3uoUFrwQGJ2tGiqYQj1CtzJOReQaeyjNpN2XqZHLin2FmSnxHgu7A==
-X-Received: by 2002:a17:902:10f:: with SMTP id 15mr976200plb.121.1598191303470;
-        Sun, 23 Aug 2020 07:01:43 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.210.11])
-        by smtp.gmail.com with ESMTPSA id t19sm8291639pfc.5.2020.08.23.07.01.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2020 07:01:42 -0700 (PDT)
-From:   Sumera Priyadarsini <sylphrenadin@gmail.com>
-To:     davem@davemloft.net
-Cc:     Julia.Lawall@lip6.fr, andrew@lunn.ch, sean.wang@mediatek.com,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com, kuba@kernel.org,
-        matthias.bgg@gmail.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sumera Priyadarsini <sylphrenadin@gmail.com>
-Subject: [PATCH] net: dsa: Add of_node_put() before break statement
-Date:   Sun, 23 Aug 2020 19:31:16 +0530
-Message-Id: <20200823140116.6606-1-sylphrenadin@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 23 Aug 2020 10:03:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725887AbgHWODt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 10:03:49 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 312FB206C0;
+        Sun, 23 Aug 2020 14:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598191429;
+        bh=EFE6jLBhE8IxwiWnVnZDQ7Ja0ooQMNmVgY6jo4NDWiA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OsSeugnElqiXFjOtTQ748aijFNETUw3KGWbIcsy7UZo9pqxwCmpmffSAYma5R/lDi
+         BNw6CV+0c8GwnvLGLyEBw4SKlB9udN9H5NQj1nia8v75HIVQJGAm+tYz93n+rxVM5o
+         IDE4kRvhz3j5CFIGOvPsG2m2GKD6+545ZEnWcGXQ=
+Date:   Sun, 23 Aug 2020 19:33:45 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     kishon@ti.com, thierry.reding@gmail.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5 3/7] phy: tegra: xusb: Add USB2 pad power control
+ support for Tegra210
+Message-ID: <20200823140345.GP2639@vkoul-mobl>
+References: <1595238948-20531-1-git-send-email-nkristam@nvidia.com>
+ <1595238948-20531-4-git-send-email-nkristam@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595238948-20531-4-git-send-email-nkristam@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Every iteration of for_each_child_of_node() decrements
-the reference count of the previous node, however when control
-is transferred from the middle of the loop, as in the case of
-a return or break or goto, there is no decrement thus ultimately
-resulting in a memory leak.
+On 20-07-20, 15:25, Nagarjuna Kristam wrote:
+> Add USB2 pad power on and off API's for TEgra210 and provide its control
+> via soc ops. It can be used by operations like charger detect to power on
+> and off USB2 pad if needed.
+> 
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> ---
+> V5:
+>  - Made tegra210_usb2_pad_power_on() and tegra210_usb2_pad_power_down() static.
+> ---
+> V4:
+>  - No changes
+> ---
+> V3:
+>  - Added Acked-by updates to commit message.
+> ---
+> V2:
+>  - Patch re-based.
+> ---
+>  drivers/phy/tegra/xusb-tegra210.c | 190 ++++++++++++++++++++++++++------------
+>  1 file changed, 133 insertions(+), 57 deletions(-)
+> 
+> diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
+> index 66bd461..2e5f71c 100644
+> --- a/drivers/phy/tegra/xusb-tegra210.c
+> +++ b/drivers/phy/tegra/xusb-tegra210.c
+> @@ -994,6 +994,128 @@ static int tegra210_xusb_padctl_id_override(struct tegra_xusb_padctl *padctl,
+>  	return 0;
+>  }
+>  
+> +static void tegra210_usb2_bias_pad_power_on(struct tegra_xusb_usb2_pad *pad)
+> +{
+> +	struct tegra_xusb_padctl *padctl = pad->base.padctl;
+> +	u32 value;
+> +
+> +	if (pad->enable++ > 0)
+> +		return;
+> +
+> +	dev_dbg(padctl->dev, "power on BIAS PAD & USB2 tracking\n");
+> +
+> +	if (clk_prepare_enable(pad->clk))
+> +		dev_warn(padctl->dev, "failed to enable BIAS PAD & USB2 tracking\n");
 
-Fix a potential memory leak in mt7530.c by inserting of_node_put()
-before the break statement.
+do you want to proceed ahead even if clock is not enabled..?
 
-Issue found with Coccinelle.
+> +
+> +	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+> +	value &= ~((XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_MASK <<
+> +		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
+> +		   (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_MASK <<
+> +		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT));
+> +	value |= (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_VAL <<
+> +		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
+> +		 (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_VAL <<
+> +		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT);
 
-Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
----
- drivers/net/dsa/mt7530.c | 1 +
- 1 file changed, 1 insertion(+)
+I recently found <linux/bitfield.h> I think this would look lot neater
+if we use FIELD_PREP or u32_encode_bits() and you can drop shift defines
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 8dcb8a49ab67..af83e5034842 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -1334,6 +1334,7 @@ mt7530_setup(struct dsa_switch *ds)
- 				if (id == 4)
- 					priv->p5_intf_sel = P5_INTF_SEL_PHY_P4;
- 			}
-+			of_node_put(mac_np);
- 			of_node_put(phy_node);
- 			break;
- 		}
+Since this is not new code but moved here, I will leave it upto you to
+change this, either ways is fine by me.
+
 -- 
-2.17.1
-
+~Vinod
