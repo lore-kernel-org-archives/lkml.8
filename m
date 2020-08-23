@@ -2,80 +2,125 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49EFC433E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A2720656
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598217177;
-	bh=nLgwnKShUqKPc0FGg/NC07wShXozDBhWeWygswaJ1Z8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uogV7mEmKwX/jIy/pCmT+4O/fu5EYoqaL8vfePoa4X9YlsnSX15nGO9LgeSgYkQ/O
-	 pOuUmaanVY+MgX//2tFj342U7yikd9N2ysmoqav+l8rcm4H7MqOgrbicU2vVdn+Se/
-	 /v0vChbEKZd/q9+kXutLmwHDrVg4/xMJTZtpjjq0=
+	by mail.kernel.org (Postfix) with ESMTP id CB2C2206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgHWVM4 (ORCPT
+        id S1726647AbgHWVQj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 17:12:56 -0400
-Received: from mail.stusta.mhn.de ([141.84.69.5]:33766 "EHLO
-        mail.stusta.mhn.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbgHWVMz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 17:12:55 -0400
-X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Aug 2020 17:12:54 EDT
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by mail.stusta.mhn.de (Postfix) with ESMTPSA id 4BZSQ04x3mz3Q;
-        Sun, 23 Aug 2020 23:02:48 +0200 (CEST)
-Date:   Mon, 24 Aug 2020 00:02:46 +0300
-From:   Adrian Bunk <bunk@kernel.org>
-To:     Josh Triplett <josh@joshtriplett.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>, alex.gaynor@gmail.com,
-        geofft@ldpreload.com, jbaublitz@redhat.com,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: Linux kernel in-tree Rust support
-Message-ID: <20200823210246.GA1811@localhost>
-References: <CAKwvOdmuYc8rW_H4aQG4DsJzho=F+djd68fp7mzmBp3-wY--Uw@mail.gmail.com>
- <20200712123151.GB25970@localhost>
- <20200712193944.GA81641@localhost>
+        Sun, 23 Aug 2020 17:16:39 -0400
+Received: from mail.v3.sk ([167.172.186.51]:44612 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725992AbgHWVQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 17:16:38 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id D7991DFAA3;
+        Sun, 23 Aug 2020 21:15:34 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id n4yfbq_FXlnr; Sun, 23 Aug 2020 21:15:33 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 3A52FDFAA9;
+        Sun, 23 Aug 2020 21:15:33 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id z2QIb2K3RBg1; Sun, 23 Aug 2020 21:15:32 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 00970DFAA3;
+        Sun, 23 Aug 2020 21:15:31 +0000 (UTC)
+Date:   Sun, 23 Aug 2020 23:16:29 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 4/6] dt-bindings: mfd: ene-kb3930: Add compatibles for
+ KB930 and Acer A500
+Message-ID: <20200823211629.GA240555@demiurge.local>
+References: <20200823140846.19299-1-digetx@gmail.com>
+ <20200823140846.19299-5-digetx@gmail.com>
+ <20200823182050.GA210632@demiurge.local>
+ <b91b96d2-89e1-feb7-a4d0-6fd19a173ab4@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200712193944.GA81641@localhost>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b91b96d2-89e1-feb7-a4d0-6fd19a173ab4@gmail.com>
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 12:39:44PM -0700, Josh Triplett wrote:
->...
-> Rust has hard stability guarantees when upgrading from one stable
-> version to the next. If code compiles with a given stable version of
-> Rust, it'll compile with a newer stable version of Rust.
->...
+Hello,
 
-In librsvg, breakages with more recent Rust versions in the past year
-required updates of two vendored crates:
-https://gitlab.gnome.org/GNOME/librsvg/-/commit/de26c4d8b192ed0224e6d38f54e429838608b902
-https://gitlab.gnome.org/GNOME/librsvg/-/commit/696e4a6be2aeb00ea27945f94da066757431684d
+On Sun, Aug 23, 2020 at 10:31:36PM +0300, Dmitry Osipenko wrote:
+> 23.08.2020 21:20, Lubomir Rintel пишет:
+> > On Sun, Aug 23, 2020 at 05:08:44PM +0300, Dmitry Osipenko wrote:
+> >> The ENE KB930 hardware is compatible with KB3930.
+> >>
+> >> Acer A500 Iconia Tab is Android tablet device, it has KB930 controller
+> >> that is running firmware specifically customized for the needs of the
+> >> Acer A500 hardware. This means that firmware interface isn't re-usable
+> >> by other non-Acer devices. Some akin models of Acer tablets should be
+> >> able to re-use the FW interface of A500 model, like A200 for example.
+> >>
+> >> This patch adds the new compatibles to the binding.
+> > 
+> > I've responded to patch 5/6 with what should've been said here [1].
+> > Sorry for the confusion.
+> > 
+> > In any case please consider adding a new binding file instead of
+> > modifying the kb3930 binding doc. It would also remove a dependency on
+> > my patch set which should have slipped out of maintainers' radar.
+> > 
+> > [1] https://lore.kernel.org/lkml/20200823180041.GB209852@demiurge.local/
+> 
+> Hello, Lubomir! I was doing some research about the differences of
+> KB3930 and KB930 before created this patch and my understanding is that
+> the controllers are mostly identical. I've seen posts from people who
+> replaced KB3930 with KB930 (and vice versa) on various notebooks and it
+> worked, although not always.
+> 
+> It's a very common practice to re-use binding in a case of a sibling
+> hardware. Do you know what are the exact differences between KB3930 and
+> KB930 which could justify having separate bindings?
+> 
+> The firmware implementation varies a lot from device to device,
 
-For updating Rust in Debian stable for the next Firefox ESR update it 
-would actually be useful if these violations of the "hard stability 
-guarantee" in Rust get fixed, so that the old librsvg 2.44.10 builds 
-again with the latest Rust.
+It sometimes does. The ENE's downstream driver suggests there are parts
+that run more-or-less stock firmware that are comatible with each other.
+That is why I grabbed the generic kb3930 name.
 
-It also makes me wonder how such regressions slip into Rust releases.
+> and
+> thus, each device needs to have its own driver in order to talk to the
+> firmware, but hardware description (i.e. DT binding) should be common
+> for all devices.
 
-cu
-Adrian
+Note the DT is not the hardware description. It's the description of how
+the hardware presents itself, from the software's perspective. As far as
+that is concerned, the devices don't seem to have anything in common at
+all (other than the bus address). The fact that you need an entirely
+different driver implies this.
+
+This would be the case even if the A500 EC was based directly on a KB3930.
+
+A good reason to keep bindings for different yet somewhat similar devices in
+a single document is to avoid duplication. Yet here there's very little to
+share here. If you've done your bindings correctly, you'd need to
+conditionalize the monitored-battery and power-supplies properties for
+acer,a500-iconia-ec, complicating the binding too much. It makes more
+sense to just add a new document.
+
+Thanks,
+Lubo
