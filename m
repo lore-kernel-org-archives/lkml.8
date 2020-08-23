@@ -2,216 +2,81 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A04C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 09:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF29C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 09:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 949CA2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 09:11:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jd2+lONk"
+	by mail.kernel.org (Postfix) with ESMTP id E8B112072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 09:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgHWJLJ (ORCPT
+        id S1726475AbgHWJPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 05:11:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgHWJLA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 05:11:00 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 188D2C061755;
-        Sun, 23 Aug 2020 02:10:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=cLc8UFh8Zn6w+mLuoS0pkRz+kyaYfh0fJF4FT3u1x/M=; b=Jd2+lONkz5bk6PvfkHn1D/V7qV
-        Vlyk1nLSCtExUzPZkfp3rBQN8FGPdpX+Dc8Qh9vAHJn5B58Ga8x8AMMYpOa3TvzdEmVEKcpxoTHnu
-        MLLmvRK0jttZWXRBgkaA3irYPQfnRLZ6GcYL/CMHRdfkorYw/m1RKbBo5/+kTHdV59RaC8Pd8wTOi
-        jo7G3URqxr5MEa/A0sGGBefAFTMrljyB2t0TGRiRnHxFeLadzpsnYn1IXU+AOep6iankq8A3pFaMm
-        RP63WcgsCe3jtesgABCd8bNh/Yzk6NUjfZAB48atObBn68zJElrVuLfF5/tyY05ixQmv5umrKt3+i
-        5yixz6Aw==;
-Received: from 171.168.43.195.cust.ip.kpnqwest.it ([195.43.168.171] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k9m1V-0003Kk-Dx; Sun, 23 Aug 2020 09:10:47 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Justin Sanders <justin@coraid.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Xianting Tian <xianting_tian@126.com>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, nbd@other.debian.org,
-        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 1/3] block: replace bd_set_size with bd_set_nr_sectors
-Date:   Sun, 23 Aug 2020 11:10:41 +0200
-Message-Id: <20200823091043.2600261-2-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200823091043.2600261-1-hch@lst.de>
-References: <20200823091043.2600261-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        Sun, 23 Aug 2020 05:15:11 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:24886 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725913AbgHWJPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 05:15:10 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app4 (Coremail) with SMTP id cS_KCgBn3nmNM0JfBb47AQ--.54780S4;
+        Sun, 23 Aug 2020 17:14:56 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Jack Wang <jinpu.wang@cloud.ionos.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: pm8001: Fix memleak in pm8001_exec_internal_task_abort
+Date:   Sun, 23 Aug 2020 17:14:53 +0800
+Message-Id: <20200823091453.4782-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgBn3nmNM0JfBb47AQ--.54780S4
+X-Coremail-Antispam: 1UD129KBjvdXoWruFy5WF48tr1UXrWrZF1rCrg_yoW3ArX_Gr
+        4xJFn2gry8GrZ7Ga4UCrs0yr9F9FWrXF1xCF1Yvas3uayrur45WF45ZF45AF1UXw4xG3Wj
+        qw1kGa1fZr13tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_
+        Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+        9x0JUhNVgUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhABBse
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace bd_set_size with a version that takes the number of sectors
-instead, as that fits most of the current and future callers much better.
+When pm8001_tag_alloc() fails, task should be freed just
+like what we've done in the subsequent error paths.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
- drivers/block/loop.c     |  4 ++--
- drivers/block/nbd.c      |  7 ++++---
- drivers/block/pktcdvd.c  |  2 +-
- drivers/nvme/host/nvme.h |  2 +-
- fs/block_dev.c           | 10 +++++-----
- include/linux/genhd.h    |  2 +-
- 6 files changed, 14 insertions(+), 13 deletions(-)
+ drivers/scsi/pm8001/pm8001_sas.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 2f137d6ce169d5..7069899a94903e 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -253,7 +253,7 @@ static void loop_set_size(struct loop_device *lo, loff_t size)
- {
- 	struct block_device *bdev = lo->lo_device;
+diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
+index 337e79d6837f..9889bab7d31c 100644
+--- a/drivers/scsi/pm8001/pm8001_sas.c
++++ b/drivers/scsi/pm8001/pm8001_sas.c
+@@ -818,7 +818,7 @@ pm8001_exec_internal_task_abort(struct pm8001_hba_info *pm8001_ha,
  
--	bd_set_size(bdev, size << SECTOR_SHIFT);
-+	bd_set_nr_sectors(bdev, size);
- 
- 	set_capacity_revalidate_and_notify(lo->lo_disk, size, false);
- }
-@@ -1248,7 +1248,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 	set_capacity(lo->lo_disk, 0);
- 	loop_sysfs_exit(lo);
- 	if (bdev) {
--		bd_set_size(bdev, 0);
-+		bd_set_nr_sectors(bdev, 0);
- 		/* let user-space know about this change */
- 		kobject_uevent(&disk_to_dev(bdev->bd_disk)->kobj, KOBJ_CHANGE);
- 	}
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 3ff4054d6834d2..f07243335472a4 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -300,6 +300,7 @@ static void nbd_size_update(struct nbd_device *nbd)
- {
- 	struct nbd_config *config = nbd->config;
- 	struct block_device *bdev = bdget_disk(nbd->disk, 0);
-+	sector_t nr_sectors = config->bytesize >> 9;
- 
- 	if (config->flags & NBD_FLAG_SEND_TRIM) {
- 		nbd->disk->queue->limits.discard_granularity = config->blksize;
-@@ -308,10 +309,10 @@ static void nbd_size_update(struct nbd_device *nbd)
- 	}
- 	blk_queue_logical_block_size(nbd->disk->queue, config->blksize);
- 	blk_queue_physical_block_size(nbd->disk->queue, config->blksize);
--	set_capacity(nbd->disk, config->bytesize >> 9);
-+	set_capacity(nbd->disk, nr_sectors);
- 	if (bdev) {
- 		if (bdev->bd_disk) {
--			bd_set_size(bdev, config->bytesize);
-+			bd_set_nr_sectors(bdev, nr_sectors);
- 			set_blocksize(bdev, config->blksize);
- 		} else
- 			bdev->bd_invalidated = 1;
-@@ -1138,7 +1139,7 @@ static void nbd_bdev_reset(struct block_device *bdev)
- {
- 	if (bdev->bd_openers > 1)
- 		return;
--	bd_set_size(bdev, 0);
-+	bd_set_nr_sectors(bdev, 0);
- }
- 
- static void nbd_parse_flags(struct nbd_device *nbd)
-diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-index 4becc1efe775fc..015fe128fa8a35 100644
---- a/drivers/block/pktcdvd.c
-+++ b/drivers/block/pktcdvd.c
-@@ -2192,7 +2192,7 @@ static int pkt_open_dev(struct pktcdvd_device *pd, fmode_t write)
- 
- 	set_capacity(pd->disk, lba << 2);
- 	set_capacity(pd->bdev->bd_disk, lba << 2);
--	bd_set_size(pd->bdev, (loff_t)lba << 11);
-+	bd_set_nr_sectors(pd->bdev, lba << 2);
- 
- 	q = bdev_get_queue(pd->bdev);
- 	if (write) {
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index ebb8c3ed388554..ae5cad5a08f411 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -664,7 +664,7 @@ static inline void nvme_mpath_update_disk_size(struct gendisk *disk)
- 	struct block_device *bdev = bdget_disk(disk, 0);
- 
- 	if (bdev) {
--		bd_set_size(bdev, get_capacity(disk) << SECTOR_SHIFT);
-+		bd_set_nr_sectors(bdev, get_capacity(disk));
- 		bdput(bdev);
- 	}
- }
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 8ae833e004439b..f52597172c8b79 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1371,13 +1371,13 @@ int check_disk_change(struct block_device *bdev)
- 
- EXPORT_SYMBOL(check_disk_change);
- 
--void bd_set_size(struct block_device *bdev, loff_t size)
-+void bd_set_nr_sectors(struct block_device *bdev, sector_t sectors)
- {
- 	inode_lock(bdev->bd_inode);
--	i_size_write(bdev->bd_inode, size);
-+	i_size_write(bdev->bd_inode, (loff_t)sectors << SECTOR_SHIFT);
- 	inode_unlock(bdev->bd_inode);
- }
--EXPORT_SYMBOL(bd_set_size);
-+EXPORT_SYMBOL(bd_set_nr_sectors);
- 
- static void __blkdev_put(struct block_device *bdev, fmode_t mode, int for_part);
- 
-@@ -1514,7 +1514,7 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, void *holder,
- 			}
- 
- 			if (!ret) {
--				bd_set_size(bdev,(loff_t)get_capacity(disk)<<9);
-+				bd_set_nr_sectors(bdev, get_capacity(disk));
- 				set_init_blocksize(bdev);
- 			}
- 
-@@ -1542,7 +1542,7 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, void *holder,
- 				ret = -ENXIO;
- 				goto out_clear;
- 			}
--			bd_set_size(bdev, (loff_t)bdev->bd_part->nr_sects << 9);
-+			bd_set_nr_sectors(bdev, bdev->bd_part->nr_sects);
- 			set_init_blocksize(bdev);
- 		}
- 
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index 4ab853461dff25..39025dc0397c04 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -375,7 +375,7 @@ void unregister_blkdev(unsigned int major, const char *name);
- int revalidate_disk(struct gendisk *disk);
- int check_disk_change(struct block_device *bdev);
- int __invalidate_device(struct block_device *bdev, bool kill_dirty);
--void bd_set_size(struct block_device *bdev, loff_t size);
-+void bd_set_nr_sectors(struct block_device *bdev, sector_t sectors);
- 
- /* for drivers/char/raw.c: */
- int blkdev_ioctl(struct block_device *, fmode_t, unsigned, unsigned long);
+ 		res = pm8001_tag_alloc(pm8001_ha, &ccb_tag);
+ 		if (res)
+-			return res;
++			goto ex_err;
+ 		ccb = &pm8001_ha->ccb_info[ccb_tag];
+ 		ccb->device = pm8001_dev;
+ 		ccb->ccb_tag = ccb_tag;
 -- 
-2.28.0
+2.17.1
 
