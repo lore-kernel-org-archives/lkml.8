@@ -2,110 +2,193 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9148C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 17:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B35C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 17:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9527020838
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 17:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67BD206B5
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 17:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNL/hXG9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgHWRWC (ORCPT
+        id S1727931AbgHWR2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 13:22:02 -0400
-Received: from smtp.h3c.com ([60.191.123.50]:10248 "EHLO h3cspam02-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbgHWRWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 13:22:01 -0400
-Received: from h3cspam02-ex.h3c.com (localhost [127.0.0.2] (may be forged))
-        by h3cspam02-ex.h3c.com with ESMTP id 07NFqcem065411
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 23:52:38 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
-        by h3cspam02-ex.h3c.com with ESMTPS id 07NFphto065235
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 23 Aug 2020 23:51:43 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from localhost.localdomain (10.99.212.201) by
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 23 Aug 2020 23:51:47 +0800
-From:   Xianting Tian <tian.xianting@h3c.com>
-To:     <axboe@kernel.dk>, <ast@kernel.org>, <daniel@iogearbox.net>,
-        <kafai@fb.com>, <songliubraving@fb.com>, <yhs@fb.com>,
-        <andriin@fb.com>, <john.fastabend@gmail.com>,
-        <kpsingh@chromium.org>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Xianting Tian <tian.xianting@h3c.com>
-Subject: [PATCH] blk-mq: use BLK_MQ_NO_TAG for no tag
-Date:   Sun, 23 Aug 2020 23:44:59 +0800
-Message-ID: <20200823154459.40731-1-tian.xianting@h3c.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 23 Aug 2020 13:28:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbgHWR2g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 13:28:36 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F15FC061573;
+        Sun, 23 Aug 2020 10:28:36 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id s20so1208010wmj.1;
+        Sun, 23 Aug 2020 10:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HoFO/AgR8AufdMjyxtS63xYROlqubr/t8wlPbNK2VDI=;
+        b=LNL/hXG9CVk7XyZ7Pxt6xTDwW6kDXS39iwSjQjJZgBz38IbxBgygCt4bE4JNxAi2Ce
+         agbjzGqAkVwmJdUT+lvpZ8vkmYFCjNZZiWUkqmQ6itPWVvBiB8WiZrsbfdEmfCawwxEK
+         kC+Bt7Vi17W5jx0v6r8pA6kf/argMOp5AlPT2EgDw20bmAjMastqiJiCa9nTynbJaE5J
+         3aCQzG0lE/lmUrd0WxedItxJnIWWHuReXbTFHv1/F/MC74DAcLdbfSbCgQLjN4yv87Ej
+         CB7OTyzpfuaB3Sx1E2a0syXnZcPBZ6ofYiG/0iLn8Hq+x1OJ0yY7qzrKJ0od42cRMCm6
+         m0cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HoFO/AgR8AufdMjyxtS63xYROlqubr/t8wlPbNK2VDI=;
+        b=dxDTiBkLhSebg9KLAlY+HdBeR8BdXUc+kh0m0KL5sb/xHBrXMqUavNWgnjkb4k/cMM
+         wNtLBYSID420agIGKcF05Ssmij+Aa1pfeRRGLBw8lKdMVPA91eAiziwTb6hppQlTVHeD
+         rp1nzhoEzvp7GJ1XhNIzVhQ36l3mEDzlZS/xkKd9huqbtEeM6nYlTNDijJenubLAdHGp
+         HHHEtOXxKW7Wa3ArMGxS3oSBOP7gfzb6cM/0+7m51OitTTI9/IFOO48dJphROUic6CCr
+         x8sQVyojWdTVt6xp4rX+0oAxc0kT3t/gKFJCzbxCBtnWNbluLa9X19y2MYOl7PxMkGF2
+         BoqQ==
+X-Gm-Message-State: AOAM531/Q4e/ZaiCqyeQnpF49FoxGd6rRY0K46O56hTOd99vhlIRfUXR
+        ZyUtQews01Vh1zLg6PKBS8PvvSvnZ6OrgQ==
+X-Google-Smtp-Source: ABdhPJxWNmuIlQQFsKivnSNHJ4iwdG6k0g1uyr5YArFNHVjz+qsWhiE+yaPISSWYORbkao4s9b7lJg==
+X-Received: by 2002:a1c:dd07:: with SMTP id u7mr2149064wmg.172.1598203714469;
+        Sun, 23 Aug 2020 10:28:34 -0700 (PDT)
+Received: from localhost.localdomain ([194.230.147.231])
+        by smtp.gmail.com with ESMTPSA id j5sm23025209wma.45.2020.08.23.10.28.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Aug 2020 10:28:33 -0700 (PDT)
+Subject: Re: [PATCH v1] perf_event_open.2: update the man page with
+ CAP_PERFMON related information
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     linux-man@vger.kernel.org, James Morris <jmorris@namei.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <18d1083d-efe5-f5f8-c531-d142c0e5c1a8@linux.intel.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <ed6f63bd-5dcb-425d-60ee-311a68756bfe@gmail.com>
+Date:   Sun, 23 Aug 2020 19:28:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.99.212.201]
-X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
-X-DNSRBL: 
-X-MAIL: h3cspam02-ex.h3c.com 07NFphto065235
+In-Reply-To: <18d1083d-efe5-f5f8-c531-d142c0e5c1a8@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace various magic -1 constants for tags with BLK_MQ_NO_TAG.
+Hello Alexey,
 
-Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
----
- block/blk-core.c       | 4 ++--
- block/blk-mq-sched.c   | 2 +-
- include/linux/blk-mq.h | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+Could you look at the question below and update the patch.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index d9d632639..c7eaf7504 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -116,8 +116,8 @@ void blk_rq_init(struct request_queue *q, struct request *rq)
- 	rq->__sector = (sector_t) -1;
- 	INIT_HLIST_NODE(&rq->hash);
- 	RB_CLEAR_NODE(&rq->rb_node);
--	rq->tag = -1;
--	rq->internal_tag = -1;
-+	rq->tag = BLK_MQ_NO_TAG;
-+	rq->internal_tag = BLK_MQ_NO_TAG;
- 	rq->start_time_ns = ktime_get_ns();
- 	rq->part = NULL;
- 	refcount_set(&rq->ref, 1);
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index a19cdf159..439481f59 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -522,7 +522,7 @@ void blk_mq_sched_insert_request(struct request *rq, bool at_head,
- 		goto run;
- 	}
- 
--	WARN_ON(e && (rq->tag != -1));
-+	WARN_ON(e && (rq->tag != BLK_MQ_NO_TAG));
- 
- 	if (blk_mq_sched_bypass_insert(hctx, !!e, rq)) {
- 		/*
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 9d2d5ad36..161d8a0e6 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -569,7 +569,7 @@ static inline void *blk_mq_rq_to_pdu(struct request *rq)
- static inline blk_qc_t request_to_qc_t(struct blk_mq_hw_ctx *hctx,
- 		struct request *rq)
- {
--	if (rq->tag != -1)
-+	if (rq->tag != BLK_MQ_NO_TAG)
- 		return rq->tag | (hctx->queue_num << BLK_QC_T_SHIFT);
- 
- 	return rq->internal_tag | (hctx->queue_num << BLK_QC_T_SHIFT) |
--- 
-2.17.1
+On 2/17/20 9:18 AM, Alexey Budankov wrote:
+> 
+> Extend perf_event_open 2 man page with the information about
+> CAP_PERFMON capability designed to secure performance monitoring
+> and observability operation in a system according to the principle
+> of least privilege [1] (POSIX IEEE 1003.1e, 2.2.2.39).
+> 
+> [1] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.pdf
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+>   man2/perf_event_open.2 | 27 +++++++++++++++++++++++++++
+>   1 file changed, 27 insertions(+)
+> 
+> diff --git a/man2/perf_event_open.2 b/man2/perf_event_open.2
+> index 89d267c02..e9aab2ca1 100644
+> --- a/man2/perf_event_open.2
+> +++ b/man2/perf_event_open.2
+> @@ -98,6 +98,8 @@ when running on the specified CPU.
+>   .BR "pid == \-1" " and " "cpu >= 0"
+>   This measures all processes/threads on the specified CPU.
+>   This requires
+> +.B CAP_PERFMON
+> +or
+>   .B CAP_SYS_ADMIN
+>   capability or a
+>   .I /proc/sys/kernel/perf_event_paranoid
+> @@ -2920,6 +2922,8 @@ to hold the result.
+>   This allows attaching a Berkeley Packet Filter (BPF)
+>   program to an existing kprobe tracepoint event.
+>   You need
+> +.B CAP_PERFMON
+> +or
+>   .B CAP_SYS_ADMIN
+>   privileges to use this ioctl.
+>   .IP
+> @@ -2962,6 +2966,8 @@ have multiple events attached to a tracepoint.
+>   Querying this value on one tracepoint event returns the id
+>   of all BPF programs in all events attached to the tracepoint.
+>   You need
+> +.B CAP_PERFMON
+> +or
+>   .B CAP_SYS_ADMIN
+>   privileges to use this ioctl.
+>   .IP
+> @@ -3170,6 +3176,8 @@ it was expecting.
+>   .TP
+>   .B EACCES
+>   Returned when the requested event requires
+> +.B CAP_PERFMON
+> +or
+>   .B CAP_SYS_ADMIN
+>   permissions (or a more permissive perf_event paranoid setting).
+>   Some common cases where an unprivileged process
+> @@ -3291,6 +3299,8 @@ setting is specified.
+>   It can also happen, as with
+>   .BR EACCES ,
+>   when the requested event requires
+> +.B CAP_PERFMON
+> +or
+>   .B CAP_SYS_ADMIN
+>   permissions (or a more permissive perf_event paranoid setting).
+>   This includes setting a breakpoint on a kernel address,
+> @@ -3321,6 +3331,23 @@ The official way of knowing if
+>   support is enabled is checking
+>   for the existence of the file
+>   .IR /proc/sys/kernel/perf_event_paranoid .
+> +.PP
+> +.B CAP_PERFMON
+> +capability (since Linux X.Y) provides secure approach to
+
+What's the version?
+
+> +performance monitoring and observability operations in a system
+> +according to the principal of least privilege (POSIX IEEE 1003.1e).
+> +Accessing system performance monitoring and observability operations
+> +using
+> +.B CAP_PERFMON
+> +capability singly, without the rest of
+> +.B CAP_SYS_ADMIN
+> +credentials, excludes chances to misuse the credentials and makes
+
+I think that wording like "using CAP_PERFMON rather than the much
+more powerful CAP_SYS_ADMIN..."
+
+> +the operations more secure.
+> +.B CAP_SYS_ADMIN
+> +usage for secure system performance monitoring and observability
+> +is discouraged with respect to
+> +.B CAP_PERFMON
+> +capability.
+>   .SH BUGS
+>   The
+>   .B F_SETOWN_EX
+
+Thanks,
+
+Michael
 
