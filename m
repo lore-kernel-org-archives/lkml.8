@@ -2,70 +2,105 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB88C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 20:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B121C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 20:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D251B20774
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 20:40:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=thedillows.org header.i=@thedillows.org header.b="UGnj71wK"
+	by mail.kernel.org (Postfix) with ESMTP id 7F0FA20720
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 20:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHWUkM (ORCPT
+        id S1726808AbgHWUym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 16:40:12 -0400
-Received: from matrix.voodoobox.net ([172.105.149.185]:51106 "EHLO
-        voodoobox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbgHWUkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 16:40:11 -0400
-X-Greylist: delayed 542 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Aug 2020 16:40:10 EDT
-Received: from [192.168.0.125] (c-67-180-109-87.hsd1.ca.comcast.net [67.180.109.87])
-        (authenticated bits=0)
-        by voodoobox.net (8.14.4/8.14.4) with ESMTP id 07NKV1pd024784
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Sun, 23 Aug 2020 16:31:03 -0400
-DKIM-Filter: OpenDKIM Filter v2.11.0 voodoobox.net 07NKV1pd024784
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thedillows.org;
-        s=default; t=1598214664;
-        bh=wmUG6o89gBX1TLqYAralUXM07OLbYdPOGB6qiq1e56I=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=UGnj71wKv/4O9nTL74ZuOnrANwEOcPk5lYcY/GlQh/Jh/WlDN1vMV1bMpCh/bsVTF
-         JUnGhJWAAffgfC+MPk7oxpuDoYSlX2TbmayMqFVkrd0phHRaDZlUy7D2Q/FdaxT9KT
-         joq8gpOUqpOiDQCa38KuUry0FnE2Cy3fPLWsaLPzvJMvXI17VczjF8Osp/us6RjCFd
-         cpAN65ueBzNgFDkd7enVSkBxdM0dMVde3f9EhlijreEZYXDmrITMpaspUUyiDmL2wO
-         Babcq7GJkJ9aftL6pUCytvI3CBrtBc0KF1MkHp7tSm7W2UF2P/mnJZEZ1VgFSRxUVJ
-         LYLfWYm8XZD9Q==
-Message-ID: <5659ca27570189d51d99d69e4bb91b7b996a7084.camel@thedillows.org>
-Subject: Re: [PATCH] typhoon: switch from 'pci_' to 'dma_' API
-From:   David Dillow <dave@thedillows.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Date:   Sun, 23 Aug 2020 13:31:01 -0700
-In-Reply-To: <20200823061150.162135-1-christophe.jaillet@wanadoo.fr>
-References: <20200823061150.162135-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2-1 
+        Sun, 23 Aug 2020 16:54:42 -0400
+Received: from mail.ispras.ru ([83.149.199.84]:51698 "EHLO mail.ispras.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725995AbgHWUyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 16:54:41 -0400
+Received: from monopod.intra.ispras.ru (unknown [10.10.3.121])
+        by mail.ispras.ru (Postfix) with ESMTPS id 8315940A206F;
+        Sun, 23 Aug 2020 20:54:38 +0000 (UTC)
+Date:   Sun, 23 Aug 2020 23:54:38 +0300 (MSK)
+From:   Alexander Monakov <amonakov@ispras.ru>
+To:     Len Brown <lenb@kernel.org>
+cc:     Liwei Song <liwei.song@windriver.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tools/power turbostat: call pread64 in kernel directly
+In-Reply-To: <CAJvTdKms0Qj3d+g_tK8oboMXebYgnPm51EdSL_UvLdw3GV6A3A@mail.gmail.com>
+Message-ID: <alpine.LNX.2.20.13.2008232345570.12553@monopod.intra.ispras.ru>
+References: <20200717060849.12469-1-liwei.song@windriver.com> <CAJvTdKm9WHgQuP38Y2o1zQ-VgLKMMDup4crAPrW3pexoWft+6Q@mail.gmail.com> <52f16995-6d2d-fa7d-ed5e-682db3461d03@windriver.com> <CAJvTdKms0Qj3d+g_tK8oboMXebYgnPm51EdSL_UvLdw3GV6A3A@mail.gmail.com>
+User-Agent: Alpine 2.20.13 (LNX 116 2015-12-14)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-08-23 at 08:11 +0200, Christophe JAILLET wrote:
-> The wrappers in include/linux/pci-dma-compat.h should go away.
+Hi,
+
+I am not the original submitter, but I have answers and a proper patch :)
+
+On Fri, 21 Aug 2020, Len Brown wrote:
+
+> Re: offset size
 > 
-> The patch has been generated with the coccinelle script below and has
-> been
-> hand modified to replace GFP_ with a correct flag.
-> It has been compile tested.
+> The offsets on this file are the MSR offsets.
+> What MSR are you trying to access at offset 0xc0010299?
 
-Looks good, thanks!
+This MSR is particular is part of AMD RAPL (energy measurements) interface.
 
-Reviewed-by: David Dillow <dave@thedillows.org>
+> Re: pread vs pread64
+> 
+> If I take on faith that you have some kind of 32-bit execution
+> environment that makes pread into pread32 instead of pread64, and that
+> truncates an off_t to 32-bits from 64-bits, and it actually makes
+> sense to request a read at this large offset...
+
+The problem here stems from the backward compatibility in Glibc: off_t is
+32-bit on 32-bit x86, unless compiled with -D_FILE_OFFSET_BITS=64. This
+macro should be used for all new code. Distros should enable it for all
+builds, but when one builds turbostat 'by hand', they hit the issue.
+
+> would we really have to invoke syscall() directly -- couldn't we
+> invoke pread64() directly? (eg. below)
+
+No, the proper fix is to pass -D_FILE_OFFSET_BITS=64 to the compiler.
+
+Here's the patch:
+
+---8<---
+
+From: Alexander Monakov <amonakov@ispras.ru>
+Date: Sun, 23 Aug 2020 23:27:02 +0300
+Subject: [PATCH] turbostat: build with _FILE_OFFSET_BITS=64
+
+For compatibility reasons, Glibc off_t is a 32-bit type on 32-bit x86
+unless _FILE_OFFSET_BITS=64 is defined. Add this define, as otherwise
+reading MSRs with index 0x80000000 and above attempts a pread with a
+negative offset, which fails.
+
+Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+---
+ tools/power/x86/turbostat/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/power/x86/turbostat/Makefile b/tools/power/x86/turbostat/Makefile
+index 2b6551269e43..40ae44402eec 100644
+--- a/tools/power/x86/turbostat/Makefile
++++ b/tools/power/x86/turbostat/Makefile
+@@ -12,6 +12,7 @@ turbostat : turbostat.c
+ override CFLAGS +=	-O2 -Wall -I../../../include
+ override CFLAGS +=	-DMSRHEADER='"../../../../arch/x86/include/asm/msr-index.h"'
+ override CFLAGS +=	-DINTEL_FAMILY_HEADER='"../../../../arch/x86/include/asm/intel-family.h"'
++override CFLAGS +=	-D_FILE_OFFSET_BITS=64
+ override CFLAGS +=	-D_FORTIFY_SOURCE=2
+ 
+ %: %.c
+-- 
+2.26.2
 
