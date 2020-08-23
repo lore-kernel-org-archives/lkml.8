@@ -2,149 +2,138 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C952BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 01:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FCDC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 01:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5ED2078A
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 01:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57F62078A
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 01:21:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZsPMZ5su"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="sxVB+uXN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgHWBQ5 (ORCPT
+        id S1726664AbgHWBVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 21:16:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56270 "EHLO
+        Sat, 22 Aug 2020 21:21:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgHWBQ4 (ORCPT
+        with ESMTP id S1726079AbgHWBVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 21:16:56 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DDA8C061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 18:16:56 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id dd12so2315888qvb.0
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 18:16:56 -0700 (PDT)
+        Sat, 22 Aug 2020 21:21:49 -0400
+Received: from mail-vk1-xa4a.google.com (mail-vk1-xa4a.google.com [IPv6:2607:f8b0:4864:20::a4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C1A7C061574
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 18:21:48 -0700 (PDT)
+Received: by mail-vk1-xa4a.google.com with SMTP id k125so1657825vkh.16
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 18:21:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KMZwOnPr/kgr8gJIALudEGJEnhBEYV4zfZwOjTzah9Q=;
-        b=ZsPMZ5suHCRYgZmkwNSWpd6HJbQI/JDLVImdhWuxIDy7gGhqkYl4qUPihJfWztd2DA
-         bAB27cDYV5cOhUk+QtFLKeUZ9I+WOfaRfNSQIDB8mGshEDu6Wn66GnjEQmTqjmEc2Fhs
-         PpWL2xFVnCncpBRij3V9bx0WLWbih8cdF6zn2wxKKYobGJUIthDSvrM5nKU/wWMjri5D
-         dCgwbboFZE9kMTOEFPcM1s7bpt/s/71OADWz9EKwfI4toN3aD2OuHnozDiB4i12zk8i1
-         6nYsBW0Nv6ezuKmWybBgPqwWV7yclEGefai/x5qHTZUOOrwDivtkPNBB4HPuTrHXJQxm
-         M6mg==
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=n3DhyqY375Ipe7NVxdqGFwuYsUhvRETKMRg2jv8ryx8=;
+        b=sxVB+uXNSSKW133zTCYUoY8ofixIZc2YV8vYbEE/M/ki1BlQNYvhOXxetQBykPWRw+
+         nQVljL+tecLVrB8Nuz4ovUVHE8GmSABkI2N3i6nLEpKzkoXxoS0eRnT+zxnb1ccXI3GZ
+         3yRuz0mrGp4NxhPkTxb9rC04cskxn549KGT79VzhRM/K8T6Vt+rSrHi5JBywlONPiBGg
+         SmBO3pplsD+fpgOkKC3e1zpTI1DxHPHzdtDzqagr7NnoypAqyIzU5bJldQBAq0vQhGP1
+         x5RScDzwYfqG4laTRw2hUQb6k/U7GT9RgUxMuoTzYxW1AgK3ljRLMPC81vzlZsjoW5nz
+         YPPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=KMZwOnPr/kgr8gJIALudEGJEnhBEYV4zfZwOjTzah9Q=;
-        b=a5Xv1aITS78I23hpw9cwDME/ZpnlRw0qRvSmBuwrRgeigvwcqHAiStOjIzjFCASm0q
-         +RPSYQR64lNFfKSZUiyVt1v4my8zFX0xkQr1z9dhk4GPRZyJ/1nQcHKAW2d2uOcHeZBk
-         sYIbwhcA69QRsSOiLP6Zw8eWK+tBkPBomeZk2Bo+zfRZHhIs/eUxsUVkgjeAU6phN6jW
-         WVNLRevLNU5TZY0omSqvhO07kXrxukL/tYD5cYfQX/WnouVnXnYBKE+CZ5uyJ8G4n0jm
-         mQCKGvVGKjeqOPJiu5/LO7Be8FGgLYXqEsk4YDEQyNMDew6Uif48zS8vky+cFvfTn6ui
-         S8xg==
-X-Gm-Message-State: AOAM533MFsws2UBN67tJvMkDx53SS+LBvG2cAvJE4bxUROE1MdPU4hJt
-        Li+PAefKsa9hd+E0zI7xiHo=
-X-Google-Smtp-Source: ABdhPJwJvUeVm8LI15OBrwxqc0jjo+cnTlwf6RgptIHGYIaZz10KIRsVCt0Hrexej45uSbVmGU5eBA==
-X-Received: by 2002:a0c:f507:: with SMTP id j7mr8530731qvm.82.1598145415396;
-        Sat, 22 Aug 2020 18:16:55 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id z197sm5958411qkb.66.2020.08.22.18.16.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Aug 2020 18:16:54 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sat, 22 Aug 2020 21:16:52 -0400
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
-Message-ID: <20200823011652.GA1910689@rani.riverdale.lan>
-References: <CAKwvOdkoB+fT9tt7vgg1R6J-NEr77EWP5X8nFat_L-HvEzWGzA@mail.gmail.com>
- <87eenzqzmr.fsf@nanos.tec.linutronix.de>
- <20200822035552.GA104886@rani.riverdale.lan>
- <20200822084133.GL28786@gate.crashing.org>
- <CA+icZUVf9a8LC2Mf0cFymYQfALWs6bVfR1v1nRbxKaLAyU6NkQ@mail.gmail.com>
- <CA+icZUWGHo3mkN4=ZYeU37p8KJhxTXS5QKcAvq_HaqTHmFkw2g@mail.gmail.com>
- <CANiq72=3iOh5Z_rboZf-_GUpBE2LUUv3yPKOVNN_XmaNswdNSw@mail.gmail.com>
- <CAHk-=whaVW4FQjdwaicLFE4kiqr18rk6V50CuU-ziUPyRFjHrg@mail.gmail.com>
- <20200822231055.GA1871205@rani.riverdale.lan>
- <CAHk-=whEb2xVU7uGOFwLxPgX-U2asMu1bJQA8QUEZPrL7zWwQQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whEb2xVU7uGOFwLxPgX-U2asMu1bJQA8QUEZPrL7zWwQQ@mail.gmail.com>
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=n3DhyqY375Ipe7NVxdqGFwuYsUhvRETKMRg2jv8ryx8=;
+        b=JaYaCsIb37GCy6Ui4gyJJqrEMCcZxVet3WrR8cgBU+BSINA8MckjL/GnVaUPRFntVh
+         Ulp/4aIwQVBhPrQctfh3VRNTSJPZyu+hhtOhk0CHWC7jwoYROwWsonHU+Th64Y0rn7UJ
+         btw28/Cgy1e1zbuwcAxcmd3ZlrcTXTjcZFPGIS6Aq3blbWuPopYCPs45OPi2OsgSh9mL
+         QYSrL9LUuIWLjLVnkUy5poMiysK0i/Thl7DGWjjihpgy027ltMs5wfdbFY/wdBgHwM/m
+         i6VWFBWsxSr2gGfh/mDM20oQaYs2oxo34KNofTGn6s9JAFa8HvIn+PIbOPU7pz/8Aenw
+         CIjQ==
+X-Gm-Message-State: AOAM530AO3VmdpwAhMljDZMWYdDjIwWqWTAWcy9nVo/0pxD7LyGXXkPs
+        pInRbgzjy2kkh4bflzaI8zcPiTXkQVw=
+X-Google-Smtp-Source: ABdhPJwvffrWmmEbfSl5IOGr6w9hLslpHSpEtF2b1OFHLtPJifLXlCpJTd3IASAy5zlD6pnjClqOzoJEe7E=
+X-Received: from christoph.c.googlers.com ([fda3:e722:ac3:10:14:4d90:c0a8:1fe1])
+ (user=agoode job=sendgmr) by 2002:a67:eb91:: with SMTP id e17mr5274045vso.7.1598145705968;
+ Sat, 22 Aug 2020 18:21:45 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 21:21:33 -0400
+Message-Id: <20200823012134.3813457-1-agoode@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH 1/2] media: uvcvideo: Ensure all probed info is returned to v4l2
+From:   Adam Goode <agoode@google.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Adam Goode <agoode@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 05:10:21PM -0700, Linus Torvalds wrote:
-> On Sat, Aug 22, 2020 at 4:11 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > Actually, is a memory clobber required for correctness? Memory accesses
-> > probably shouldn't be reordered across a CRn write. Is asm volatile
-> > enough to stop that or do you need a memory clobber?
-> 
-> You do need a memory clobber if you really care about ordering wrt
-> normal memory references.
-> 
-> That said, I'm not convinced we do care here. Normal memory accesses
-> (as seen by the compiler) should be entirely immune to any changes we
-> do wrt CRx registers.
-> 
-> Because code that really fundamentally changes kernel mappings or
-> access rules is already written in low-level assembler (eg the entry
-> routines or bootup).
-> 
-> Anything that relies on the more subtle changes (ie user space
-> accesses etc) should already be ordered by other things - usually by
-> the fact that they are also "asm volatile".
-> 
-> But hey, maybe somebody can come up with an exception to that.
-> 
->                 Linus
+bFrameIndex and bFormatIndex can be negotiated by the camera during
+probing, resulting in the camera choosing a different format than
+expected. v4l2 can already accommodate such changes, but the code was
+not updating the proper fields.
 
-I'm sure in practice it can't happen, as any memory accesses happening
-immediately around write_cr3() are probably mapped the same in both
-pagetables anyway, but eg cleanup_trampoline() in
-arch/x86/boot/compressed/pgtable_64.c:
+Without such a change, v4l2 would potentially interpret the payload
+incorrectly, causing corrupted output. This was happening on the
+Elgato HD60 S+, which currently always renegotiates to format 1.
 
-	memcpy(pgtable, trampoline_pgtable, PAGE_SIZE);
-	native_write_cr3((unsigned long)pgtable);
+As an aside, the Elgato firmware is buggy and should not be renegotating,
+but it is still a valid thing for the camera to do. Both macOS and Windows
+will properly probe and read uncorrupted images from this camera.
 
-There'll probably be trouble if the compiler were to reverse the order
-here.
+With this change, both qv4l2 and chromium can now read uncorrupted video
+from the Elgato HD60 S+.
 
-We could actually make write_crn() use memory clobber, and read_crn()
-use "m"(*(int *)0x1000) as an input operand. A bit hacky, but no global
-variable needed. And maybe read_crn() doesn't even have to be volatile.
+Signed-off-by: Adam Goode <agoode@google.com>
+---
+ drivers/media/usb/uvc/uvc_v4l2.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-Also, if we look at the rdmsr/wrmsr pair, there's no force_order
-equivalent AFAICT. wrmsr has a memory clobber, but the asm volatile-ness
-is the only thing enforcing read/write ordering.
+diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+index 0335e69b70ab..7f14096cb44d 100644
+--- a/drivers/media/usb/uvc/uvc_v4l2.c
++++ b/drivers/media/usb/uvc/uvc_v4l2.c
+@@ -247,11 +247,37 @@ static int uvc_v4l2_try_format(struct uvc_streaming *stream,
+ 	if (ret < 0)
+ 		goto done;
+ 
++	/* After the probe, update fmt with the values returned from
++	 * negotiation with the device.
++	 */
++	for (i = 0; i < stream->nformats; ++i) {
++		if (probe->bFormatIndex == stream->format[i].index) {
++			format = &stream->format[i];
++			break;
++		}
++	}
++	if (i == stream->nformats) {
++		uvc_trace(UVC_TRACE_FORMAT, "Unknown bFormatIndex %u.\n",
++			  probe->bFormatIndex);
++		return -EINVAL;
++	}
++	for (i = 0; i < format->nframes; ++i) {
++		if (probe->bFrameIndex == format->frame[i].bFrameIndex) {
++			frame = &format->frame[i];
++			break;
++		}
++	}
++	if (i == format->nframes) {
++		uvc_trace(UVC_TRACE_FORMAT, "Unknown bFrameIndex %u.\n",
++			  probe->bFrameIndex);
++		return -EINVAL;
++	}
+ 	fmt->fmt.pix.width = frame->wWidth;
+ 	fmt->fmt.pix.height = frame->wHeight;
+ 	fmt->fmt.pix.field = V4L2_FIELD_NONE;
+ 	fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
+ 	fmt->fmt.pix.sizeimage = probe->dwMaxVideoFrameSize;
++	fmt->fmt.pix.pixelformat = format->fcc;
+ 	fmt->fmt.pix.colorspace = format->colorspace;
+ 
+ 	if (uvc_format != NULL)
+-- 
+2.28.0.297.g1956fa8f8d-goog
+
