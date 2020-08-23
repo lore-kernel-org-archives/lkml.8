@@ -2,60 +2,116 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2190C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 19:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17839C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 19:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87F3E206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 19:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E338F20768
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 19:20:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0TVRAPIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgHWTNX (ORCPT
+        id S1726759AbgHWTUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 15:13:23 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40712 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbgHWTNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 15:13:21 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1k9vQS-00BQBj-Id; Sun, 23 Aug 2020 21:13:08 +0200
-Date:   Sun, 23 Aug 2020 21:13:08 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Sumera Priyadarsini <sylphrenadin@gmail.com>
-Cc:     davem@davemloft.net, Julia.Lawall@lip6.fr, sean.wang@mediatek.com,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com, kuba@kernel.org,
-        matthias.bgg@gmail.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] net: dsa: Add of_node_put() before break statement
-Message-ID: <20200823191308.GG2588906@lunn.ch>
-References: <20200823185056.16641-1-sylphrenadin@gmail.com>
+        Sun, 23 Aug 2020 15:20:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgHWTUQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 15:20:16 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C0AC061573;
+        Sun, 23 Aug 2020 12:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3fF6Mlmm3gJtBShPFzFPOko81F6k4KIOq/kf7RgYAgk=; b=0TVRAPIR7uXCAc1Rvleb8CExp
+        6EOFYFzsKPefQYiWDW0gFT18KJKHzSEKuQtXsjgW2UKJA9Lrc4PVra81Trj3FeIW8KRGun/YPGJnu
+        0acBokLq142gUB6Enk9zCY+EAjmS1QxB+iwn+opfq417cuDm0jU0mmVx997mlGHuOtJmLjexgN37D
+        ib4ZTVIeunOKZxchqfEJ7vy8Y8ycxFQKE5HHou3sXvwTpl+7HsOf5dL98oOaC5eV8ruKeaMw54iaV
+        lNQbE8H3YZD2R2lavdrygu7NxgW/fMTb1r8nl63W34NIWsyNt44dVwazEWX3F6QU3hO3/LI9vS4W/
+        uQADyHsNA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56250)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k9vX6-0007Rq-2x; Sun, 23 Aug 2020 20:20:00 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k9vX2-0006eC-G2; Sun, 23 Aug 2020 20:19:56 +0100
+Date:   Sun, 23 Aug 2020 20:19:56 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Christian Gmeiner <christian.gmeiner@gmail.com>
+Cc:     "Ing. Josua Mayer" <josua.mayer@jm0.eu>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] drm/etnaviv: fix external abort seen on GC600 rev 0x19
+Message-ID: <20200823191956.GH1551@shell.armlinux.org.uk>
+References: <20200821181731.94852-1-christian.gmeiner@gmail.com>
+ <4dbee9c7-8a59-9250-ab13-394cbab689a8@jm0.eu>
+ <CAH9NwWdLnwb0BiR6qAHKFexFm2NJkpHv7Z7YAdQ7fJBVxjGH4w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200823185056.16641-1-sylphrenadin@gmail.com>
+In-Reply-To: <CAH9NwWdLnwb0BiR6qAHKFexFm2NJkpHv7Z7YAdQ7fJBVxjGH4w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-> index 8dcb8a49ab67..e81198a65c26 100644
-> --- a/drivers/net/dsa/mt7530.c
-> +++ b/drivers/net/dsa/mt7530.c
-> @@ -1327,6 +1327,7 @@ mt7530_setup(struct dsa_switch *ds)
->  			if (phy_node->parent == priv->dev->of_node->parent) {
->  				ret = of_get_phy_mode(mac_np, &interface);
->  				if (ret && ret != -ENODEV)
-> +					of_node_put(mac_np)
->  					return ret;
->  				id = of_mdio_parse_addr(ds->dev, phy_node);
->  				if (id == 0)
+On Sun, Aug 23, 2020 at 09:10:25PM +0200, Christian Gmeiner wrote:
+> Hi
+> 
+> > I have formally tested the patch with 5.7.10 - and it doesn't resolve
+> > the issue - sadly :(
+> >
+> > From my testing, the reads on
+> > VIVS_HI_CHIP_PRODUCT_ID
+> > VIVS_HI_CHIP_ECO_ID
+> > need to be conditional - while
+> > VIVS_HI_CHIP_CUSTOMER_ID
+> > seems to be okay.
+> >
+> 
+> Uhh.. okay.. just send a V2 - thanks for testing :)
 
-You are missing some { }. And a ; . I'm surprised gcc did not warn
-you!
+There is also something else going on with the GC600 - 5.4 worked fine,
+5.8 doesn't - my 2D Xorg driver gets stuck waiting on a BO after just
+a couple of minutes.  Looking in debugfs, there's a whole load of BOs
+that are listed as "active", yet the GPU is idle:
 
-    Andrew
+   00020000: A  0 ( 7) 00000000 00000000 8294400
+   00010000: I  0 ( 1) 00000000 00000000 4096
+   00010000: I  0 ( 1) 00000000 00000000 4096
+   00010000: I  0 ( 1) 00000000 00000000 327680
+   00010000: A  0 ( 7) 00000000 00000000 8388608
+   00010000: I  0 ( 1) 00000000 00000000 8388608
+   00010000: I  0 ( 1) 00000000 00000000 8388608
+   00010000: A  0 ( 7) 00000000 00000000 8388608
+   00010000: A  0 ( 3) 00000000 00000000 8388608
+   00010000: A  0 ( 4) 00000000 00000000 8388608
+   00010000: A  0 ( 3) 00000000 00000000 8388608
+   00010000: A  0 ( 3) 00000000 00000000 8388608
+   00010000: A  0 ( 3) 00000000 00000000 8388608
+....
+   00010000: A  0 ( 3) 00000000 00000000 8388608
+Total 38 objects, 293842944 bytes
+
+My guess is there's something up with the way a job completes that's
+causing the BOs not to be marked inactive.  I haven't yet been able
+to debug any further.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
