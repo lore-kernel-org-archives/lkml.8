@@ -2,105 +2,91 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B121C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 20:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAA9C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 20:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0FA20720
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 20:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0C1206BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 20:58:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="K3kr31LR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgHWUym (ORCPT
+        id S1726663AbgHWU6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 16:54:42 -0400
-Received: from mail.ispras.ru ([83.149.199.84]:51698 "EHLO mail.ispras.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbgHWUyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 16:54:41 -0400
-Received: from monopod.intra.ispras.ru (unknown [10.10.3.121])
-        by mail.ispras.ru (Postfix) with ESMTPS id 8315940A206F;
-        Sun, 23 Aug 2020 20:54:38 +0000 (UTC)
-Date:   Sun, 23 Aug 2020 23:54:38 +0300 (MSK)
-From:   Alexander Monakov <amonakov@ispras.ru>
-To:     Len Brown <lenb@kernel.org>
-cc:     Liwei Song <liwei.song@windriver.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tools/power turbostat: call pread64 in kernel directly
-In-Reply-To: <CAJvTdKms0Qj3d+g_tK8oboMXebYgnPm51EdSL_UvLdw3GV6A3A@mail.gmail.com>
-Message-ID: <alpine.LNX.2.20.13.2008232345570.12553@monopod.intra.ispras.ru>
-References: <20200717060849.12469-1-liwei.song@windriver.com> <CAJvTdKm9WHgQuP38Y2o1zQ-VgLKMMDup4crAPrW3pexoWft+6Q@mail.gmail.com> <52f16995-6d2d-fa7d-ed5e-682db3461d03@windriver.com> <CAJvTdKms0Qj3d+g_tK8oboMXebYgnPm51EdSL_UvLdw3GV6A3A@mail.gmail.com>
-User-Agent: Alpine 2.20.13 (LNX 116 2015-12-14)
+        Sun, 23 Aug 2020 16:58:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbgHWU6Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 16:58:24 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693D9C061573
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 13:58:24 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o13so3586279pgf.0
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 13:58:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zS0ecbpZZ+cVdlZa+aZAL5hWPlBuHCBFZniPWAzuhC8=;
+        b=K3kr31LRIux788x0rBtRMvzRJ+5++K+3UFf3uhX9RcvkrOioN6TY7wv71Wt8cLwLXv
+         YfIT7goRQUkp3f0koA0fOY8Ql1jBqviGoqKvo6w63ao3quEat9E2b0V/7CsbYMtUYhNW
+         0f92pTadFo0+RkPe14oNq5c8RtgPBaRSmXIvtMFBmthXM9gQUrAc9Oo2ThjhVSB9Hxu/
+         YmW1lv2QSo4fJA+eFn6LfSWmcimedezE09Ec+Z57OX4PqNEaK72yXLd4teDIp5YMnddV
+         KPumVHW4hJnkNcWX1ugwPOQPId60RQhySTQbndgfomxAgJL9607+e0TiSQP6Dmz8CdFP
+         DIBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zS0ecbpZZ+cVdlZa+aZAL5hWPlBuHCBFZniPWAzuhC8=;
+        b=Em1ojYxCFXjdCyDScyItwt7LBmqRSwHq1KSX78AHmAkCixXbaZpJITaqXHQAhi/f9G
+         +akw4euoJmodI8PZ+7+mslKm/qP9U/fDDoxEkQj2qt0IPZU3pUJOSRNvAnNCM2QlD6Z4
+         x9NGe4vure4OceTJuOWbYAeKeTJ4OQ2a5kRDvGVGSTP9b1l6Bhfz0/p+BQA2xxA55Y/p
+         k16Nhk7Z0bWS72iMJz6Td/imKLIhzE1b1sn9QmMufk4Mq/jJMZSw9AM+oAjwLpo/K9uZ
+         grB1xaU3lV4V1aqIEAuVL00+IJ4apQ+9WO7Aqea/fzNYGqieHPgpjCZG0d6EFNPnhJbl
+         830g==
+X-Gm-Message-State: AOAM5330gXkcdz5MxUC+L84y2Vd/wMjfPdD/9CuylpKZzkA77GGAPcr/
+        cvVRbFLMN9FcfKd7GJvM8yK+aLYGvmba38Ps
+X-Google-Smtp-Source: ABdhPJwlLmInfWDL6vJxQX8lHTn4RlsoAdp7APBoSmQoNVguKawr7GFn7LH5UYATXd4T5rVt0yaJdw==
+X-Received: by 2002:a63:cf03:: with SMTP id j3mr1593200pgg.14.1598216303091;
+        Sun, 23 Aug 2020 13:58:23 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id y72sm9192384pfg.58.2020.08.23.13.58.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Aug 2020 13:58:22 -0700 (PDT)
+Subject: Re: [PATCH] blk-mq: use BLK_MQ_NO_TAG for no tag
+To:     Xianting Tian <tian.xianting@h3c.com>, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200823154459.40731-1-tian.xianting@h3c.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <1b85d18e-b0ae-a925-bb84-0a1eb8942099@kernel.dk>
+Date:   Sun, 23 Aug 2020 14:58:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200823154459.40731-1-tian.xianting@h3c.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 8/23/20 9:44 AM, Xianting Tian wrote:
+> Replace various magic -1 constants for tags with BLK_MQ_NO_TAG.
 
-I am not the original submitter, but I have answers and a proper patch :)
+Doesn't look like this patch was even compiled...
 
-On Fri, 21 Aug 2020, Len Brown wrote:
-
-> Re: offset size
-> 
-> The offsets on this file are the MSR offsets.
-> What MSR are you trying to access at offset 0xc0010299?
-
-This MSR is particular is part of AMD RAPL (energy measurements) interface.
-
-> Re: pread vs pread64
-> 
-> If I take on faith that you have some kind of 32-bit execution
-> environment that makes pread into pread32 instead of pread64, and that
-> truncates an off_t to 32-bits from 64-bits, and it actually makes
-> sense to request a read at this large offset...
-
-The problem here stems from the backward compatibility in Glibc: off_t is
-32-bit on 32-bit x86, unless compiled with -D_FILE_OFFSET_BITS=64. This
-macro should be used for all new code. Distros should enable it for all
-builds, but when one builds turbostat 'by hand', they hit the issue.
-
-> would we really have to invoke syscall() directly -- couldn't we
-> invoke pread64() directly? (eg. below)
-
-No, the proper fix is to pass -D_FILE_OFFSET_BITS=64 to the compiler.
-
-Here's the patch:
-
----8<---
-
-From: Alexander Monakov <amonakov@ispras.ru>
-Date: Sun, 23 Aug 2020 23:27:02 +0300
-Subject: [PATCH] turbostat: build with _FILE_OFFSET_BITS=64
-
-For compatibility reasons, Glibc off_t is a 32-bit type on 32-bit x86
-unless _FILE_OFFSET_BITS=64 is defined. Add this define, as otherwise
-reading MSRs with index 0x80000000 and above attempts a pread with a
-negative offset, which fails.
-
-Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
----
- tools/power/x86/turbostat/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/power/x86/turbostat/Makefile b/tools/power/x86/turbostat/Makefile
-index 2b6551269e43..40ae44402eec 100644
---- a/tools/power/x86/turbostat/Makefile
-+++ b/tools/power/x86/turbostat/Makefile
-@@ -12,6 +12,7 @@ turbostat : turbostat.c
- override CFLAGS +=	-O2 -Wall -I../../../include
- override CFLAGS +=	-DMSRHEADER='"../../../../arch/x86/include/asm/msr-index.h"'
- override CFLAGS +=	-DINTEL_FAMILY_HEADER='"../../../../arch/x86/include/asm/intel-family.h"'
-+override CFLAGS +=	-D_FILE_OFFSET_BITS=64
- override CFLAGS +=	-D_FORTIFY_SOURCE=2
- 
- %: %.c
 -- 
-2.26.2
+Jens Axboe
 
