@@ -2,81 +2,125 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF29C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 09:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E81DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 09:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8B112072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 09:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51EDE2074D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 09:26:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ePgC16u/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgHWJPL (ORCPT
+        id S1726663AbgHWJ0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 05:15:11 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:24886 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725913AbgHWJPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 05:15:10 -0400
-Received: from localhost.localdomain (unknown [210.32.144.184])
-        by mail-app4 (Coremail) with SMTP id cS_KCgBn3nmNM0JfBb47AQ--.54780S4;
-        Sun, 23 Aug 2020 17:14:56 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Jack Wang <jinpu.wang@cloud.ionos.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: pm8001: Fix memleak in pm8001_exec_internal_task_abort
-Date:   Sun, 23 Aug 2020 17:14:53 +0800
-Message-Id: <20200823091453.4782-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgBn3nmNM0JfBb47AQ--.54780S4
-X-Coremail-Antispam: 1UD129KBjvdXoWruFy5WF48tr1UXrWrZF1rCrg_yoW3ArX_Gr
-        4xJFn2gry8GrZ7Ga4UCrs0yr9F9FWrXF1xCF1Yvas3uayrur45WF45ZF45AF1UXw4xG3Wj
-        qw1kGa1fZr13tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI48J
-        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_
-        Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
-        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-        9x0JUhNVgUUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhABBse
+        Sun, 23 Aug 2020 05:26:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbgHWJ0j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 05:26:39 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E4BC061573
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 02:26:39 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id x6so2518092qvr.8
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 02:26:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s1sYF8go7qkIJfXgsFM0jG5g2kLGG3UutjF1ASPDx3Y=;
+        b=ePgC16u/C5fV3JjKJ4mqDBjBKX7rE8F5HKEV6aigJmB/MT0dpC6RU3uQWbhAfk9tUp
+         RCR7HIz1aGfyaWYfV3GYIthDlOREgyLhCneg+gG//QsMKzs3fAzx+vysXc9j4vsXQOrt
+         AbkVzaoQHcRTZHsieukpuWTyIr5I+Xd15gqNmwG/AqciZW/DLPSxu8sSVPnLDWlGBHHD
+         VHAWW5VLQGH6HQ20FmLfJcODHQuHT1SSbllPBfD8cKutqH3Lki5oRx19oMGJpXVIH12A
+         xq/5H9ylhHxH+F5YsJtY5387XcOHxSohttYGk7ZRlN2dwZiilN/axFky6oj1IQUmV2VI
+         Nyxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s1sYF8go7qkIJfXgsFM0jG5g2kLGG3UutjF1ASPDx3Y=;
+        b=AUqRLOLAD8LbSi6L7laQl1dBMagnTCoakAp09lCXBvcuS3fKcJYANutxuIxbHllYjI
+         ktO4bNhRRpRYEjurQXC7CxyYjgw6zJxr98ZZ9WyibuuxGcBBEPzTT6jV5ltX6wGcvH/l
+         MivBgcIIX+vzdSl7D2BzV6W5sNmMQ7quCHQuLCKJmgxfETRqe3wrI6TeoDUnG6jxAVK5
+         cApM2ksnXcLQAGG89XkzeG8auV9snPN7sL+z3EdDKrG2AuJAhqP9FVeqbl1Y2lHw6NGd
+         vRw6TxPmKnc2tikGQ+NzzPmnZKBSzm7PRbT8+PvSRDdlNOxxikigBYZ1TqBNiOqfClyU
+         HZNA==
+X-Gm-Message-State: AOAM533TQxY+NN5/xeamy40kaz5AQFz1SbdrqZciYIMGeMJq4dzrsthH
+        n3iIQrOfRcOAWOUdNrpjHyfoLgL7KFrfYNzNOMmnlg==
+X-Google-Smtp-Source: ABdhPJyRzSGIRnG9KdFdUSjw7nF3cpcCtQH1Pk0Y2ZVnelPepWNaPSLGOZB1ugjQ9FrlSgcpZPWH4jpnNU6VoPO2oTw=
+X-Received: by 2002:a0c:cc94:: with SMTP id f20mr472014qvl.159.1598174798398;
+ Sun, 23 Aug 2020 02:26:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200823082042.20816-1-himadrispandya@gmail.com>
+In-Reply-To: <20200823082042.20816-1-himadrispandya@gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sun, 23 Aug 2020 11:26:27 +0200
+Message-ID: <CACT4Y+Y1TpqYowNXj+OTcQwH-7T4n6PtPPa4gDWkV-np5KhKAQ@mail.gmail.com>
+Subject: Re: [PATCH] net: usb: Fix uninit-was-stored issue in asix_read_cmd()
+To:     Himadri Pandya <himadrispandya@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When pm8001_tag_alloc() fails, task should be freed just
-like what we've done in the subsequent error paths.
+On Sun, Aug 23, 2020 at 10:21 AM Himadri Pandya
+<himadrispandya@gmail.com> wrote:
+>
+> Initialize the buffer before passing it to usb_read_cmd() function(s) to
+> fix the uninit-was-stored issue in asix_read_cmd().
+>
+> Fixes: KMSAN: kernel-infoleak in raw_ioctl
+> Reported by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
+>
+> Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
+> ---
+>  drivers/net/usb/asix_common.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
+> index e39f41efda3e..a67ea1971b78 100644
+> --- a/drivers/net/usb/asix_common.c
+> +++ b/drivers/net/usb/asix_common.c
+> @@ -17,6 +17,8 @@ int asix_read_cmd(struct usbnet *dev, u8 cmd, u16 value, u16 index,
+>
+>         BUG_ON(!dev);
+>
+> +       memset(data, 0, size);
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/scsi/pm8001/pm8001_sas.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Himadri,
 
-diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
-index 337e79d6837f..9889bab7d31c 100644
---- a/drivers/scsi/pm8001/pm8001_sas.c
-+++ b/drivers/scsi/pm8001/pm8001_sas.c
-@@ -818,7 +818,7 @@ pm8001_exec_internal_task_abort(struct pm8001_hba_info *pm8001_ha,
- 
- 		res = pm8001_tag_alloc(pm8001_ha, &ccb_tag);
- 		if (res)
--			return res;
-+			goto ex_err;
- 		ccb = &pm8001_ha->ccb_info[ccb_tag];
- 		ccb->device = pm8001_dev;
- 		ccb->ccb_tag = ccb_tag;
--- 
-2.17.1
+I think the proper fix is to check
+usbnet_read_cmd/usbnet_read_cmd_nopm return value instead.
+Memsetting data helps to fix the warning at hand, but the device did
+not send these 0's and we use them as if the device did send them.
 
+Perhaps we need a separate helper function (of a bool flag) that will
+fail on incomplete reads. Maybe even in the common USB layer because I
+think we've seen this type of bug lots of times and I guess there are
+dozens more.
+
+
+>         if (!in_pm)
+>                 fn = usbnet_read_cmd;
+>         else
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20200823082042.20816-1-himadrispandya%40gmail.com.
