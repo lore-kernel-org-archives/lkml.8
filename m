@@ -2,86 +2,60 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B35C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 17:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C98C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 17:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B67BD206B5
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 17:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D5FB20658
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 17:35:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNL/hXG9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LcrpUeiJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgHWR2j (ORCPT
+        id S1727956AbgHWRed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 13:28:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35922 "EHLO
+        Sun, 23 Aug 2020 13:34:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbgHWR2g (ORCPT
+        with ESMTP id S1726792AbgHWRec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 13:28:36 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F15FC061573;
-        Sun, 23 Aug 2020 10:28:36 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id s20so1208010wmj.1;
-        Sun, 23 Aug 2020 10:28:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HoFO/AgR8AufdMjyxtS63xYROlqubr/t8wlPbNK2VDI=;
-        b=LNL/hXG9CVk7XyZ7Pxt6xTDwW6kDXS39iwSjQjJZgBz38IbxBgygCt4bE4JNxAi2Ce
-         agbjzGqAkVwmJdUT+lvpZ8vkmYFCjNZZiWUkqmQ6itPWVvBiB8WiZrsbfdEmfCawwxEK
-         kC+Bt7Vi17W5jx0v6r8pA6kf/argMOp5AlPT2EgDw20bmAjMastqiJiCa9nTynbJaE5J
-         3aCQzG0lE/lmUrd0WxedItxJnIWWHuReXbTFHv1/F/MC74DAcLdbfSbCgQLjN4yv87Ej
-         CB7OTyzpfuaB3Sx1E2a0syXnZcPBZ6ofYiG/0iLn8Hq+x1OJ0yY7qzrKJ0od42cRMCm6
-         m0cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HoFO/AgR8AufdMjyxtS63xYROlqubr/t8wlPbNK2VDI=;
-        b=dxDTiBkLhSebg9KLAlY+HdBeR8BdXUc+kh0m0KL5sb/xHBrXMqUavNWgnjkb4k/cMM
-         wNtLBYSID420agIGKcF05Ssmij+Aa1pfeRRGLBw8lKdMVPA91eAiziwTb6hppQlTVHeD
-         rp1nzhoEzvp7GJ1XhNIzVhQ36l3mEDzlZS/xkKd9huqbtEeM6nYlTNDijJenubLAdHGp
-         HHHEtOXxKW7Wa3ArMGxS3oSBOP7gfzb6cM/0+7m51OitTTI9/IFOO48dJphROUic6CCr
-         x8sQVyojWdTVt6xp4rX+0oAxc0kT3t/gKFJCzbxCBtnWNbluLa9X19y2MYOl7PxMkGF2
-         BoqQ==
-X-Gm-Message-State: AOAM531/Q4e/ZaiCqyeQnpF49FoxGd6rRY0K46O56hTOd99vhlIRfUXR
-        ZyUtQews01Vh1zLg6PKBS8PvvSvnZ6OrgQ==
-X-Google-Smtp-Source: ABdhPJxWNmuIlQQFsKivnSNHJ4iwdG6k0g1uyr5YArFNHVjz+qsWhiE+yaPISSWYORbkao4s9b7lJg==
-X-Received: by 2002:a1c:dd07:: with SMTP id u7mr2149064wmg.172.1598203714469;
-        Sun, 23 Aug 2020 10:28:34 -0700 (PDT)
-Received: from localhost.localdomain ([194.230.147.231])
-        by smtp.gmail.com with ESMTPSA id j5sm23025209wma.45.2020.08.23.10.28.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Aug 2020 10:28:33 -0700 (PDT)
-Subject: Re: [PATCH v1] perf_event_open.2: update the man page with
- CAP_PERFMON related information
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     linux-man@vger.kernel.org, James Morris <jmorris@namei.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <18d1083d-efe5-f5f8-c531-d142c0e5c1a8@linux.intel.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <ed6f63bd-5dcb-425d-60ee-311a68756bfe@gmail.com>
-Date:   Sun, 23 Aug 2020 19:28:31 +0200
+        Sun, 23 Aug 2020 13:34:32 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5FA8C061573
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 10:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=m+GJGGDri22EBW21a3YLD95b7I/Yf63Z7NN5hOGpxGE=; b=LcrpUeiJp/VI+myyQ6BxbREVDC
+        lPdSq6ZNPl4tW/Gkw10QIu83So09gR5CySaXRxmKP9I46KKrWk96TKCQkrpt5iYdE1WXHg4ImtyIc
+        Dc2OFAil2PnJg50Qa61f4csNY5fmZhbujSL82i5eAatn5Tv0oee7XkJ5mrHXafQDsTIf5VK8zVaVD
+        ms0BPI5xOI8ZeXCoREsk9osD9WkdOJ3Al0sdr6A0Cwswe3vtI4A4vqvcz1yEmrycrop1+fFdLqhWn
+        5KwsfZ5Dxw7Yc+8JPRoF3ZAq4/XG4qTvuYqv5UvAQxFROag578kK2gQHMtzW5QmTowf3WMPqe3ZcC
+        MIWezY3A==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9tsp-0005rs-PT; Sun, 23 Aug 2020 17:34:20 +0000
+Subject: Re: kernel BUG at kernel/fork.c:LINE!
+To:     syzbot <syzbot+3776ecd80aac504e6085@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, christian@brauner.io,
+        christian@kellner.me, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, luto@amacapital.net,
+        mingo@kernel.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, wad@chromium.org,
+        Shakeel Butt <shakeelb@google.com>
+References: <000000000000067ab705ac501e5f@google.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <41cb418a-572e-80d7-214a-ad7131fdc0f2@infradead.org>
+Date:   Sun, 23 Aug 2020 10:34:14 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <18d1083d-efe5-f5f8-c531-d142c0e5c1a8@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <000000000000067ab705ac501e5f@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -89,106 +63,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Alexey,
+On 8/7/20 2:16 PM, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    fffe3ae0 Merge tag 'for-linus-hmm' of git://git.kernel.org..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1194d90a900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=18bb86f2e4ebfda2
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3776ecd80aac504e6085
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+3776ecd80aac504e6085@syzkaller.appspotmail.com
 
-Could you look at the question below and update the patch.
+Is this fixed by
 
-On 2/17/20 9:18 AM, Alexey Budankov wrote:
+commit 991e7673859ed41e7ba83c8c4e57afe8cfebe314
+Author: Shakeel Butt <shakeelb@google.com>
+Date:   Thu Aug 6 23:21:37 2020 -0700
+
+    mm: memcontrol: account kernel stack per node
+
+
+since the BUG_ON() at line 390 is removed by this patch.
+
+
+> ------------[ cut here ]------------
+> kernel BUG at kernel/fork.c:390!
+> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 0 PID: 5239 Comm: syz-executor.1 Not tainted 5.8.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:account_kernel_stack+0x297/0x320 kernel/fork.c:390
+> Code: 89 e2 be 23 00 00 00 48 89 ef c1 e2 05 e8 81 9e 75 00 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f e9 ae c9 2f 00 e8 a9 c9 2f 00 <0f> 0b e8 f2 50 6f 00 e9 d2 fd ff ff e8 98 c9 2f 00 48 c7 c6 20 24
+> RSP: 0018:ffffc90015e4f850 EFLAGS: 00010216
+> RAX: 00000000000001f4 RBX: 0000000000000000 RCX: ffffc90017983000
+> RDX: 0000000000040000 RSI: ffffffff81445327 RDI: 0000000000000005
+> RBP: 0000000000000000 R08: 0000000000000001 R09: ffff8880a2ef9663
+> R10: 0000000000000008 R11: 0000000000000000 R12: ffffffffffffffff
+> R13: ffff8880001b2280 R14: ffff88809e4fa840 R15: 0000000000000000
+> FS:  00007f7f035e5700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000001b2fd30000 CR3: 000000009b747000 CR4: 00000000001506f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  release_task_stack kernel/fork.c:447 [inline]
+>  put_task_stack+0xc4/0x230 kernel/fork.c:459
+>  finish_task_switch+0x52a/0x750 kernel/sched/core.c:3649
+>  context_switch kernel/sched/core.c:3781 [inline]
+>  __schedule+0x8ed/0x21e0 kernel/sched/core.c:4527
+>  schedule+0xd0/0x2a0 kernel/sched/core.c:4602
+>  freezable_schedule include/linux/freezer.h:172 [inline]
+>  futex_wait_queue_me+0x2a7/0x570 kernel/futex.c:2588
+>  futex_wait+0x1df/0x560 kernel/futex.c:2690
+>  do_futex+0x15b/0x1a60 kernel/futex.c:3749
+>  __do_sys_futex kernel/futex.c:3810 [inline]
+>  __se_sys_futex kernel/futex.c:3778 [inline]
+>  __x64_sys_futex+0x378/0x4e0 kernel/futex.c:3778
+>  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x45ccd9
+> Code: 2d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb b5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f7f035e4cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+> RAX: ffffffffffffffda RBX: 000000000078bfa8 RCX: 000000000045ccd9
+> RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000078bfa8
+> RBP: 000000000078bfa0 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bfac
+> R13: 00007fff896cb67f R14: 00007f7f035e59c0 R15: 000000000078bfac
+> Modules linked in:
+> ---[ end trace ff14b6c5822b8142 ]---
+> RIP: 0010:account_kernel_stack+0x297/0x320 kernel/fork.c:390
+> Code: 89 e2 be 23 00 00 00 48 89 ef c1 e2 05 e8 81 9e 75 00 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f e9 ae c9 2f 00 e8 a9 c9 2f 00 <0f> 0b e8 f2 50 6f 00 e9 d2 fd ff ff e8 98 c9 2f 00 48 c7 c6 20 24
+> RSP: 0018:ffffc90015e4f850 EFLAGS: 00010216
+> RAX: 00000000000001f4 RBX: 0000000000000000 RCX: ffffc90017983000
+> RDX: 0000000000040000 RSI: ffffffff81445327 RDI: 0000000000000005
+> RBP: 0000000000000000 R08: 0000000000000001 R09: ffff8880a2ef9663
+> R10: 0000000000000008 R11: 0000000000000000 R12: ffffffffffffffff
+> R13: ffff8880001b2280 R14: ffff88809e4fa840 R15: 0000000000000000
+> FS:  00007f7f035e5700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000001b2fd30000 CR3: 000000009b747000 CR4: 00000000001506f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 > 
-> Extend perf_event_open 2 man page with the information about
-> CAP_PERFMON capability designed to secure performance monitoring
-> and observability operation in a system according to the principle
-> of least privilege [1] (POSIX IEEE 1003.1e, 2.2.2.39).
 > 
-> [1] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.pdf
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 > ---
->   man2/perf_event_open.2 | 27 +++++++++++++++++++++++++++
->   1 file changed, 27 insertions(+)
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
 > 
-> diff --git a/man2/perf_event_open.2 b/man2/perf_event_open.2
-> index 89d267c02..e9aab2ca1 100644
-> --- a/man2/perf_event_open.2
-> +++ b/man2/perf_event_open.2
-> @@ -98,6 +98,8 @@ when running on the specified CPU.
->   .BR "pid == \-1" " and " "cpu >= 0"
->   This measures all processes/threads on the specified CPU.
->   This requires
-> +.B CAP_PERFMON
-> +or
->   .B CAP_SYS_ADMIN
->   capability or a
->   .I /proc/sys/kernel/perf_event_paranoid
-> @@ -2920,6 +2922,8 @@ to hold the result.
->   This allows attaching a Berkeley Packet Filter (BPF)
->   program to an existing kprobe tracepoint event.
->   You need
-> +.B CAP_PERFMON
-> +or
->   .B CAP_SYS_ADMIN
->   privileges to use this ioctl.
->   .IP
-> @@ -2962,6 +2966,8 @@ have multiple events attached to a tracepoint.
->   Querying this value on one tracepoint event returns the id
->   of all BPF programs in all events attached to the tracepoint.
->   You need
-> +.B CAP_PERFMON
-> +or
->   .B CAP_SYS_ADMIN
->   privileges to use this ioctl.
->   .IP
-> @@ -3170,6 +3176,8 @@ it was expecting.
->   .TP
->   .B EACCES
->   Returned when the requested event requires
-> +.B CAP_PERFMON
-> +or
->   .B CAP_SYS_ADMIN
->   permissions (or a more permissive perf_event paranoid setting).
->   Some common cases where an unprivileged process
-> @@ -3291,6 +3299,8 @@ setting is specified.
->   It can also happen, as with
->   .BR EACCES ,
->   when the requested event requires
-> +.B CAP_PERFMON
-> +or
->   .B CAP_SYS_ADMIN
->   permissions (or a more permissive perf_event paranoid setting).
->   This includes setting a breakpoint on a kernel address,
-> @@ -3321,6 +3331,23 @@ The official way of knowing if
->   support is enabled is checking
->   for the existence of the file
->   .IR /proc/sys/kernel/perf_event_paranoid .
-> +.PP
-> +.B CAP_PERFMON
-> +capability (since Linux X.Y) provides secure approach to
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
 
-What's the version?
 
-> +performance monitoring and observability operations in a system
-> +according to the principal of least privilege (POSIX IEEE 1003.1e).
-> +Accessing system performance monitoring and observability operations
-> +using
-> +.B CAP_PERFMON
-> +capability singly, without the rest of
-> +.B CAP_SYS_ADMIN
-> +credentials, excludes chances to misuse the credentials and makes
-
-I think that wording like "using CAP_PERFMON rather than the much
-more powerful CAP_SYS_ADMIN..."
-
-> +the operations more secure.
-> +.B CAP_SYS_ADMIN
-> +usage for secure system performance monitoring and observability
-> +is discouraged with respect to
-> +.B CAP_PERFMON
-> +capability.
->   .SH BUGS
->   The
->   .B F_SETOWN_EX
-
-Thanks,
-
-Michael
+-- 
+~Randy
 
