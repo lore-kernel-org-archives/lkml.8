@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A65C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93E2C433EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7682072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FDC02184D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598199492;
-	bh=sQld/rHqgvWMEGDYoBvDchJJetnYPftabvD886fB5Os=;
+	s=default; t=1598199495;
+	bh=896l3mHbTpz7Udoblv0WC50trxhLboDp1OOqzgKW9jM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ucNzDIycQ3R2zwIedaSU3RkiZ3MhDVINGphoJG5OifREUWulgR+dStKcaJP1N6S/f
-	 AYl2vn8KjqnF4d+BZZADbnbmtCozf3XcUIX7yW7kfcOY+NHTViVCNvq2bX7uh8veLl
-	 OUz6GTuL1hqUAo6bJ7WmmOSo5cMVloDnGYqPKOoc=
+	b=AcEVMMQIqElbvnQRmi8JKRaacQhcXja+ZCyYBt+30yKTxwstNlB2l857bZd4uWs+Q
+	 JM/wJMlvYZ6L14cUNbwXaBF9sNqXwW7M60oyoZw6qDCTuoGatzXqGThuwBZLoPts19
+	 Br/KBt/3RAldxlUxmuCZNpnqvsQ0crJr8+uNubWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgHWQSJ (ORCPT
+        id S1728204AbgHWQRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 12:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47222 "EHLO mail.kernel.org"
+        Sun, 23 Aug 2020 12:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728184AbgHWQR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 12:17:26 -0400
+        id S1728121AbgHWQRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 12:17:07 -0400
 Received: from kozik-lap.proceq-device.com (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 269932076D;
-        Sun, 23 Aug 2020 16:17:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43E132075B;
+        Sun, 23 Aug 2020 16:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598199446;
-        bh=sQld/rHqgvWMEGDYoBvDchJJetnYPftabvD886fB5Os=;
+        s=default; t=1598199426;
+        bh=896l3mHbTpz7Udoblv0WC50trxhLboDp1OOqzgKW9jM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wY4K7oe3cC/0huZbBIyhotqb9FgN9nL+Ghie/J1XqWk+hu2foVGRXX+rYUew4b1Yj
-         u/V+EQTvWwGmcTMA0z1atfQpJxu/IQnq4wjxMXJ8cvQEacwG1elHKuyhCsGXml9BTT
-         IccFjTRwut+1LETjAo0m2lfT0M7yQzZVpgEo+OOQ=
+        b=HuKsuY+eqO+A5PXgNMu8MX+x2WaM5UnMlzLnxerWZETbbSWDWVXnW1VhGg7pPK+xo
+         105L/fgGz6B9tFDyC3nwOyHLdpuuvHFDQsBhlEQJtIchsXgRZdzFUsCVLY+PJ2qu9v
+         tYHvP3WQX/qrZCrvvo0VDiyx89qasQwsBS/h9YZw=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -56,9 +56,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Anson Huang <Anson.Huang@nxp.com>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 19/22] arm64: dts: imx8mm: Remove i.MX7 compatible from USDHC
-Date:   Sun, 23 Aug 2020 18:15:47 +0200
-Message-Id: <20200823161550.3981-19-krzk@kernel.org>
+Subject: [PATCH 15/22] dt-bindings: arm: fsl: Add ZII Ultra boards binding
+Date:   Sun, 23 Aug 2020 18:15:43 +0200
+Message-Id: <20200823161550.3981-15-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200823161550.3981-1-krzk@kernel.org>
 References: <20200823161550.3981-1-krzk@kernel.org>
@@ -67,51 +67,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The USDHC on i.MX 8M Mini has its own compatible described in bindings
-and used in the driver (with its own quirks).  Remove additional
-fsl,imx7d-usdhc compatible to fix dtbs_check warnings like:
-
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: mmc@30b40000: compatible: ['fsl,imx8mm-usdhc', 'fsl,imx7d-usdhc'] is too long
-    From schema: Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: mmc@30b40000: compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
+Document the binding for Zodiac Inflight Innovations Ultra Boards.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 76f040e4be5e..38bf41184489 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -784,7 +784,7 @@
- 			};
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 93a21b10d115..f2e670e9ae54 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -379,6 +379,14 @@ properties:
+               - technexion,pico-pi-imx8m  # TechNexion PICO-PI-8M evk
+           - const: fsl,imx8mq
  
- 			usdhc1: mmc@30b40000 {
--				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
-+				compatible = "fsl,imx8mm-usdhc";
- 				reg = <0x30b40000 0x10000>;
- 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
-@@ -798,7 +798,7 @@
- 			};
- 
- 			usdhc2: mmc@30b50000 {
--				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
-+				compatible = "fsl,imx8mm-usdhc";
- 				reg = <0x30b50000 0x10000>;
- 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
-@@ -812,7 +812,7 @@
- 			};
- 
- 			usdhc3: mmc@30b60000 {
--				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
-+				compatible = "fsl,imx8mm-usdhc";
- 				reg = <0x30b60000 0x10000>;
- 				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
++      - description: Zodiac Inflight Innovations Ultra Boards
++        items:
++          - enum:
++              - zii,imx8mq-ultra-rmb3
++              - zii,imx8mq-ultra-zest
++          - const: zii,imx8mq-ultra
++          - const: fsl,imx8mq
++
+       - description: i.MX8QXP based Boards
+         items:
+           - enum:
 -- 
 2.17.1
 
