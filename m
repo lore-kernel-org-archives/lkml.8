@@ -8,69 +8,66 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E35620724
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC58620724
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:01:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTg+E2yd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V74dtCU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgHWWBO (ORCPT
+        id S1727050AbgHWWBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 18:01:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49454 "EHLO
+        Sun, 23 Aug 2020 18:01:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbgHWWAl (ORCPT
+        with ESMTP id S1726752AbgHWWAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 18:00:41 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 452DDC061573;
-        Sun, 23 Aug 2020 15:00:41 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v4so7491618ljd.0;
-        Sun, 23 Aug 2020 15:00:41 -0700 (PDT)
+        Sun, 23 Aug 2020 18:00:42 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4235BC061574
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 15:00:42 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id s9so3443831lfs.4
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 15:00:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JPZuS7I229v2rKOhfu7+ce1NyRVmKq/AHQWhLmKujP4=;
-        b=cTg+E2ydKwcInMKpR3G8waBqOeQXI6b1Yvvta+Aff/dHc+qAKsIsTPfqYLMlS+DLBg
-         GNdqdoI/vH4LiNMLjydYF7KzB/wXahqqqgvQEWf9JoKfak3xmNVrhw19wAc2Uuq3A+RX
-         aHpcavoIsaplGXjKD6f+V02r7I77Q7rE9o4XKPTFEPi8VTw8ONh3c6r+jJ5vC2YIM630
-         woojk/MX4HurR2SV3ob99fpskXGJ0s4Mdb6QJntTl71cvVc4VYjEJbfWFBvn100uGCJA
-         Sx+/822CRvMQQ+dHNC5fnc2BzzmnBTnPZIgrcNniiuvLtE1h9McsCzN6/+lpZD9sdTtr
-         U7Fw==
+        bh=PVkKQ+rBkOrviFA3gyJDGe3unI5VCeDUb05QjWVQmnI=;
+        b=V74dtCU0eEAN3ERAydHkgKWbp5GZGVVvfixyfJju2k5H8XyjMLhtzNlH5lMzSnpi33
+         gtRboKHsNW145qboKAoBOuSEpiIUlbx6r71mgXKyZPrCF/xcJqdJQvBes4FXmMxuEmjZ
+         kz9cSg9R9PfM1qrFNFg7PNcxb9ZnBrP1G5XX6umZh/35RTfFsYbULBzVVLGr29EUUKvC
+         sN3KjHVzfLlHRZyjmiVBo6kY3tFIwqmtGSg/PBtnsHp5ZF5tY5wxiBBfPuQs+WwPQDmi
+         C8LWzS9nXU68W5RfJMl7JMZejiVch1fNL9c+6NTmrpsIxwIMkEcQsOU2P+6RoavP6fyN
+         biEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JPZuS7I229v2rKOhfu7+ce1NyRVmKq/AHQWhLmKujP4=;
-        b=d0sjdbFHdQHwSbllG5gM406uByqoO4BF4Koez7tQRE3Zm0fQrSAeV2dyzoBfd9bpDV
-         JbXye5s6FJ7VnCoPV9W6qNFJeEn2b4UK+LITkw6TIT17P27wwpjsY3WI/5yj/lHorQrT
-         ZuuA/5N/0dYaEYpf18R6Wf8xd85psRTpSy8UHqPyhL1POEHvuZ/ZdPPJeqomG/jOSp9H
-         9LJRcdG/ikQO55iAcv+GgeVV4XONZ+KFyWFY0MBJU9lu/Lpw4h1pLyKnLZG+Cb7T8x8H
-         OQPTVaJIHwk04FInV6SBtAES4qzhUphSHejh/1dwScSk+8219qfvYEuTLvF6xEPO9UDW
-         RzOA==
-X-Gm-Message-State: AOAM532UoGotd+t7+JszYETT9U+qie9amQrWqUby6mhKrPK16yD9Skxh
-        DFQs7C7N1zTE+SJgQg/nZ10=
-X-Google-Smtp-Source: ABdhPJzW+lVIxAbZZMzVpx99MwYlCHKd16McQ4UG52nPDjpInTQMoO8aRibYEin4DYIWm20b6dWQFQ==
-X-Received: by 2002:a2e:87cd:: with SMTP id v13mr1406397ljj.180.1598220039776;
-        Sun, 23 Aug 2020 15:00:39 -0700 (PDT)
+        bh=PVkKQ+rBkOrviFA3gyJDGe3unI5VCeDUb05QjWVQmnI=;
+        b=WSUpCCGm9uK+SU7woLhMd4FOqEwNeZPwjtwF1Pntr9DEP2yoicDhTjqjaGHaAiQbDd
+         QYiCnOwRbJJ1WscALbLLVQQkBhK4PO6/m124P3OdHisQIQmntsXpXEbc7dGbXkRwRmlK
+         9XZiv1ZIMtKGkys8iZbqtd3S09oEwntT9vKKOoB8xa7kM2Hpz2Dg/gtl03ScjMKkqmgc
+         lV/DNr2Zz+1TsHEcOAIS45yX8Yr2HEamXPfSS/7nnRy8Zfjpl5gN+njWEheJUFXdvDbY
+         GAqxbyCzAzeZqpTUmqrEc6xtCTmbUC/N2niGHt2edYnlu72aXFX7yH69cJhcsohOlBmW
+         yYZw==
+X-Gm-Message-State: AOAM5339bkZqO6uIiH4zfeWXu2uiA9ifp2/XmkFS5yvZ1Z5fMzQvaWRd
+        3Jj3xZiznwFQF3Ppc0Wp2n0jjAEpxPcXsw==
+X-Google-Smtp-Source: ABdhPJzG/XAjhe2FmDDt3Xi+XmG4WtjYwzHMOd+o5TVEG9CgwbINbxgb2XPhr5aW0L7oRU4qUL2OGQ==
+X-Received: by 2002:a05:6512:3e8:: with SMTP id n8mr1209460lfq.210.1598220040768;
+        Sun, 23 Aug 2020 15:00:40 -0700 (PDT)
 Received: from localhost.localdomain (h-82-196-111-59.NA.cust.bahnhof.se. [82.196.111.59])
-        by smtp.gmail.com with ESMTPSA id g11sm1825097lfc.46.2020.08.23.15.00.38
+        by smtp.gmail.com with ESMTPSA id g11sm1825097lfc.46.2020.08.23.15.00.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2020 15:00:39 -0700 (PDT)
+        Sun, 23 Aug 2020 15:00:40 -0700 (PDT)
 From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Vinod Koul <vkoul@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        linux-usb@vger.kernel.org
-Subject: [PATCH 3/8] phy: hisilicon; Constify hi3660_phy_ops
-Date:   Mon, 24 Aug 2020 00:00:20 +0200
-Message-Id: <20200823220025.17588-4-rikard.falkeborn@gmail.com>
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH 4/8] phy: lantiq: rcu-usb2: Constify ltq_rcu_usb2_phy_ops
+Date:   Mon, 24 Aug 2020 00:00:21 +0200
+Message-Id: <20200823220025.17588-5-rikard.falkeborn@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200823220025.17588-1-rikard.falkeborn@gmail.com>
 References: <20200823220025.17588-1-rikard.falkeborn@gmail.com>
@@ -87,22 +84,22 @@ read-only memory.
 
 Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 ---
- drivers/phy/hisilicon/phy-hi3660-usb3.c | 2 +-
+ drivers/phy/lantiq/phy-lantiq-rcu-usb2.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/hisilicon/phy-hi3660-usb3.c b/drivers/phy/hisilicon/phy-hi3660-usb3.c
-index cc0af2c044d0..84adce9b4277 100644
---- a/drivers/phy/hisilicon/phy-hi3660-usb3.c
-+++ b/drivers/phy/hisilicon/phy-hi3660-usb3.c
-@@ -161,7 +161,7 @@ static int hi3660_phy_exit(struct phy *phy)
- 	return ret;
+diff --git a/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c b/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
+index be09b1530ae6..a7d126192cf1 100644
+--- a/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
++++ b/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
+@@ -141,7 +141,7 @@ static int ltq_rcu_usb2_phy_power_off(struct phy *phy)
+ 	return 0;
  }
  
--static struct phy_ops hi3660_phy_ops = {
-+static const struct phy_ops hi3660_phy_ops = {
- 	.init		= hi3660_phy_init,
- 	.exit		= hi3660_phy_exit,
- 	.owner		= THIS_MODULE,
+-static struct phy_ops ltq_rcu_usb2_phy_ops = {
++static const struct phy_ops ltq_rcu_usb2_phy_ops = {
+ 	.init		= ltq_rcu_usb2_phy_init,
+ 	.power_on	= ltq_rcu_usb2_phy_power_on,
+ 	.power_off	= ltq_rcu_usb2_phy_power_off,
 -- 
 2.28.0
 
