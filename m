@@ -2,129 +2,212 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FFCC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7A5C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE96D2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975152075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:38:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Va45Xos9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgHWQ0c (ORCPT
+        id S1726839AbgHWQi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 12:26:32 -0400
-Received: from fgw20-4.mail.saunalahti.fi ([62.142.5.107]:41343 "EHLO
-        fgw20-4.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725996AbgHWQ0a (ORCPT
+        Sun, 23 Aug 2020 12:38:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgHWQi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 12:26:30 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-0-157-nat.elisa-mobile.fi [85.76.0.157])
-        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-        id 63b7ac4d-e55d-11ea-ba22-005056bd6ce9;
-        Sun, 23 Aug 2020 19:26:26 +0300 (EEST)
-Date:   Sun, 23 Aug 2020 19:26:25 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] omapdrm/N900 display broken
-Message-ID: <20200823162625.GC4313@darkstar.musicnaut.iki.fi>
-References: <20200728181412.GA49617@darkstar.musicnaut.iki.fi>
- <660b2fe1-343d-b83e-11d2-5a5eb530b83f@ti.com>
- <448c1441-2cac-44ef-95ef-bb28b512297b@ti.com>
+        Sun, 23 Aug 2020 12:38:27 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92800C061573;
+        Sun, 23 Aug 2020 09:38:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=YGI9CUlHRdCGssJcQqqFI32/JdSs/OG4pNXNnIVDjlM=; b=Va45Xos9+GWduEXlVaM2nPXmrT
+        kNIIyeulu4SvMYVxkIDYzUGJYtXKC2XFEZzwYhiUjyxUTgBetHfBBOs1bNb1hQX1iMsY9508jeof3
+        uuvT50KEIZ5SnJ5kzshTU8mIljOvsZsa8+StULVXDSVkQ1DN23Chpw1WxkOZpjFah/vQ=;
+Received: from pd9e2f105.dip0.t-ipconnect.de ([217.226.241.5] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1k9t0R-0004GD-O8; Sun, 23 Aug 2020 18:38:07 +0200
+Date:   Sun, 23 Aug 2020 18:38:06 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, Anson.Huang@nxp.com,
+        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
+        michael@walle.cc, rjones@gateworks.com, leoyang.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH RFC 2/2] ARM: dts: imx: add devicetree for Tolino Shine
+ 2 HD
+Message-ID: <20200823183806.4a5c4134@aktux>
+In-Reply-To: <20200823014226.GG30094@dragon>
+References: <20200815193336.21598-1-andreas@kemnade.info>
+        <20200815193336.21598-3-andreas@kemnade.info>
+        <20200823014226.GG30094@dragon>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <448c1441-2cac-44ef-95ef-bb28b512297b@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, 23 Aug 2020 09:42:31 +0800
+Shawn Guo <shawnguo@kernel.org> wrote:
 
-On Tue, Aug 04, 2020 at 03:39:37PM +0300, Tomi Valkeinen wrote:
-> On 04/08/2020 15:13, Tomi Valkeinen wrote:
-
-> > Can you try to pinpoint a bit where the hang happens? Maybe add
-> > DRM/omapdrm debug prints, or perhaps sysrq works and it shows a lock
-> > that's in deadlock.
+> On Sat, Aug 15, 2020 at 09:33:36PM +0200, Andreas Kemnade wrote:
+> > This adds a devicetree for the Tolino Shine 2 HD Ebook reader. It is based
+> > on boards marked with "37NB-E60QF0+4A2". It is equipped with an i.MX6SL
+> > SoC.
+> > 
+> > Expected to work:
+> > - Buttons
+> > - Wifi
+> > - Touchscreen
+> > - LED
+> > - uSD
+> > - USB
+> > - RTC
+> > 
+> > Not working due to missing drivers:
+> > - Backlight (requires NTXEC driver)
+> > - EPD
+> > 
+> > Not working due to unknown reasons:
+> > - deep sleep (echo standby >/sys/power/state works),
+> >   wakeup fails when imx_gpc_pre_suspend(true) was called.
+> > 
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > ---
+> > Reason for RFC: The suspend trouble might be caused by bad devicetree.
+> > But as the devicetree is already useful I decided to submit it.
+> > 
+> >  arch/arm/boot/dts/Makefile                   |   1 +
+> >  arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts | 582 +++++++++++++++++++
+> >  2 files changed, 583 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index e6a1cac0bfc7..c65fa3852246 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -581,6 +581,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+> >  	imx6qp-zii-rdu2.dtb
+> >  dtb-$(CONFIG_SOC_IMX6SL) += \
+> >  	imx6sl-evk.dtb \
+> > +	imx6sl-tolino-shine2hd.dtb \
+> >  	imx6sl-tolino-shine3.dtb \
+> >  	imx6sl-warp.dtb
+> >  dtb-$(CONFIG_SOC_IMX6SLL) += \
+> > diff --git a/arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts b/arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts
+> > new file mode 100644
+> > index 000000000000..7b28e19a1d98
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts
+> > @@ -0,0 +1,582 @@
+> > +// SPDX-License-Identifier: (GPL-2.0)
+> > +/*
+> > + * Device tree for the Tolino Shine 2 HD ebook reader
+> > + *
+> > + * Name on mainboard is: 37NB-E60QF0+4A2
+> > + * Serials start with: E60QF2
+> > + *
+> > + * Copyright 2020 Andreas Kemnade
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include <dt-bindings/input/input.h>
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include "imx6sl.dtsi"
+> > +
+> > +/ {
+> > +	model = "Tolino Shine 2 HD";
+> > +	compatible = "kobo,tolino-shine2hd", "fsl,imx6sl";
+> > +
+> > +	chosen {
+> > +		stdout-path = &uart1;
+> > +	};
+> > +
+> > +	gpio_keys: gpio-keys {
+> > +		compatible = "gpio-keys";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_gpio_keys>;
+> > +
+> > +		cover {
+> > +			label = "Cover";
+> > +			gpios = <&gpio5 12 GPIO_ACTIVE_LOW>;
+> > +			linux,code = <SW_LID>;
+> > +			linux,input-type = <EV_SW>;
+> > +			wakeup-source;
+> > +		};
+> > +
+> > +		fl {
+> > +			label = "Frontlight";
+> > +			gpios = <&gpio3 26 GPIO_ACTIVE_LOW>;
+> > +			linux,code = <KEY_BRIGHTNESS_CYCLE>;
+> > +		};
+> > +
+> > +		home {
+> > +			label = "Home";
+> > +			gpios = <&gpio3 25 GPIO_ACTIVE_LOW>;
+> > +			linux,code = <KEY_HOME>;
+> > +		};
+> > +
+> > +		power {
+> > +			label = "Power";
+> > +			gpios = <&gpio5 8 GPIO_ACTIVE_LOW>;
+> > +			linux,code = <KEY_POWER>;
+> > +			wakeup-source;
+> > +		};
+> > +	};
+> > +
+> > +	leds: leds {
+> > +		compatible = "gpio-leds";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_led>;
+> > +
+> > +		on {
+> > +			label = "tolinoshine2hd:white:on";
+> > +			gpios = <&gpio5 13 GPIO_ACTIVE_LOW>;
+> > +			linux,default-trigger = "timer";
+> > +		};
+> > +	};
+> > +
+> > +	memory@80000000 {
+> > +		device_type = "memory";
+> > +		reg = <0x80000000 0x20000000>;
+> > +	};
+> > +
+> > +	reg_wifi: regulator-wifi {
+> > +		compatible = "regulator-fixed";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_wifi_power>;
+> > +		regulator-name = "SD3_SPWR";
+> > +		regulator-min-microvolt = <3000000>;
+> > +		regulator-max-microvolt = <3000000>;
+> > +		gpio = <&gpio4 29 GPIO_ACTIVE_HIGH>;  
 > 
-> Also, one data point would be to disable venc, e.g. set venc status to
-> "disabled" in dts.
+> Missing enable-active-high?
+> 
+no. I should rather use GPIO_ACTIVE_LOW to avoid that confusion.
+corresponding code in vendor kernel is the function
+_ntx_wifi_power_ctrl()
 
-Disabling venc makes no difference.
 
-The hang happens in drm_fb_helper_initial_config(). I followed the
-"HANG DEBUGGING" tips in the function comment text and enabled
-fb.lockless_register_fb=1 to get more (serial) console output.
-
-Now I get this:
-
-[    6.514739] omapdss_dss 48050000.dss: supply vdda_video not found, using dummy regulator
-[    6.566375] DSS: OMAP DSS rev 2.0
-[    6.571807] omapdss_dss 48050000.dss: bound 48050400.dispc (ops dispc_component_ops)
-[    6.580749] omapdrm omapdrm.0: DMM not available, disable DMM support
-[    6.587982] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[    6.626617] ------------[ cut here ]------------
-[    6.631774] WARNING: CPU: 0 PID: 18 at drivers/gpu/drm/drm_bridge.c:708 drm_atomic_helper_commit_modeset_enables+0x134/0x268
-[    6.643768] Modules linked in:
-[    6.647033] CPU: 0 PID: 18 Comm: kworker/0:1 Tainted: G     U            5.8.0-omap3-los_16068+-00004-g2e7d4a7efefd-dirty #2
-[    6.658966] Hardware name: Nokia RX-51 board
-[    6.663635] Workqueue: events deferred_probe_work_func
-[    6.669097] [<c010bf18>] (unwind_backtrace) from [<c010a0f4>] (show_stack+0x10/0x14)
-[    6.677429] [<c010a0f4>] (show_stack) from [<c0124f18>] (__warn+0xbc/0xd4)
-[    6.684844] [<c0124f18>] (__warn) from [<c0124f90>] (warn_slowpath_fmt+0x60/0xb8)
-[    6.692901] [<c0124f90>] (warn_slowpath_fmt) from [<c040c0e8>] (drm_atomic_helper_commit_modeset_enables+0x134/0x268)
-[    6.704254] [<c040c0e8>] (drm_atomic_helper_commit_modeset_enables) from [<c045442c>] (omap_atomic_commit_tail+0xb4/0xc0)
-[    6.715972] [<c045442c>] (omap_atomic_commit_tail) from [<c040d1b4>] (commit_tail+0x9c/0x1a8)
-[    6.725128] [<c040d1b4>] (commit_tail) from [<c040de70>] (drm_atomic_helper_commit+0x134/0x158)
-[    6.734466] [<c040de70>] (drm_atomic_helper_commit) from [<c043b204>] (drm_client_modeset_commit_atomic+0x16c/0x208)
-[    6.745727] [<c043b204>] (drm_client_modeset_commit_atomic) from [<c043b2f8>] (drm_client_modeset_commit_locked+0x58/0x184)
-[    6.757629] [<c043b2f8>] (drm_client_modeset_commit_locked) from [<c043b448>] (drm_client_modeset_commit+0x24/0x40)
-[    6.768798] [<c043b448>] (drm_client_modeset_commit) from [<c0412778>] (__drm_fb_helper_restore_fbdev_mode_unlocked+0xa0/0xc8)
-[    6.780975] [<c0412778>] (__drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0412808>] (drm_fb_helper_set_par+0x38/0x64)
-[    6.792785] [<c0412808>] (drm_fb_helper_set_par) from [<c03a9b24>] (fbcon_init+0x3d4/0x568)
-[    6.801757] [<c03a9b24>] (fbcon_init) from [<c03eaab0>] (visual_init+0xb8/0xfc)
-[    6.809631] [<c03eaab0>] (visual_init) from [<c03ec070>] (do_bind_con_driver+0x1e0/0x3bc)
-[    6.818267] [<c03ec070>] (do_bind_con_driver) from [<c03ec59c>] (do_take_over_console+0x138/0x1d8)
-[    6.827880] [<c03ec59c>] (do_take_over_console) from [<c03a856c>] (do_fbcon_takeover+0x74/0xd4)
-[    6.837219] [<c03a856c>] (do_fbcon_takeover) from [<c03a22e0>] (register_framebuffer+0x204/0x2d8)
-[    6.846740] [<c03a22e0>] (register_framebuffer) from [<c0412228>] (__drm_fb_helper_initial_config_and_unlock+0x3a4/0x554)
-[    6.858459] [<c0412228>] (__drm_fb_helper_initial_config_and_unlock) from [<c045c230>] (omap_fbdev_init+0x84/0xbc)
-[    6.869537] [<c045c230>] (omap_fbdev_init) from [<c04549b8>] (pdev_probe+0x580/0x7d8)
-[    6.877807] [<c04549b8>] (pdev_probe) from [<c04669b4>] (platform_drv_probe+0x48/0x98)
-[    6.886291] [<c04669b4>] (platform_drv_probe) from [<c0464b3c>] (really_probe+0x1e0/0x344)
-[    6.895172] [<c0464b3c>] (really_probe) from [<c0464dac>] (driver_probe_device+0x5c/0xb4)
-[    6.903961] [<c0464dac>] (driver_probe_device) from [<c0462fd8>] (bus_for_each_drv+0x80/0xc4)
-[    6.913085] [<c0462fd8>] (bus_for_each_drv) from [<c04648e8>] (__device_attach+0xd0/0x13c)
-[    6.921966] [<c04648e8>] (__device_attach) from [<c0463c84>] (bus_probe_device+0x84/0x8c)
-[    6.930725] [<c0463c84>] (bus_probe_device) from [<c04605e0>] (device_add+0x3f0/0x740)
-[    6.939086] [<c04605e0>] (device_add) from [<c0466794>] (platform_device_add+0x110/0x204)
-[    6.947845] [<c0466794>] (platform_device_add) from [<c04670b0>] (platform_device_register_full+0xcc/0x110)
-[    6.958282] [<c04670b0>] (platform_device_register_full) from [<c044276c>] (dss_bind+0x80/0xa8)
-[    6.967620] [<c044276c>] (dss_bind) from [<c045dfc8>] (try_to_bring_up_master+0x160/0x1a8)
-[    6.976501] [<c045dfc8>] (try_to_bring_up_master) from [<c045e408>] (component_master_add_with_match+0xc4/0xf8)
-[    6.987304] [<c045e408>] (component_master_add_with_match) from [<c0443524>] (dss_probe+0x494/0x55c)
-[    6.997100] [<c0443524>] (dss_probe) from [<c04669b4>] (platform_drv_probe+0x48/0x98)
-[    7.005523] [<c04669b4>] (platform_drv_probe) from [<c0464b3c>] (really_probe+0x1e0/0x344)
-[    7.014404] [<c0464b3c>] (really_probe) from [<c0464dac>] (driver_probe_device+0x5c/0xb4)
-[    7.023193] [<c0464dac>] (driver_probe_device) from [<c0462fd8>] (bus_for_each_drv+0x80/0xc4)
-[    7.032348] [<c0462fd8>] (bus_for_each_drv) from [<c04648e8>] (__device_attach+0xd0/0x13c)
-[    7.041198] [<c04648e8>] (__device_attach) from [<c0463c84>] (bus_probe_device+0x84/0x8c)
-[    7.049987] [<c0463c84>] (bus_probe_device) from [<c046410c>] (deferred_probe_work_func+0x64/0x90)
-[    7.059570] [<c046410c>] (deferred_probe_work_func) from [<c013b04c>] (process_one_work+0x1d4/0x440)
-[    7.069213] [<c013b04c>] (process_one_work) from [<c013b518>] (worker_thread+0x260/0x590)
-[    7.078002] [<c013b518>] (worker_thread) from [<c013f958>] (kthread+0x120/0x128)
-[    7.085968] [<c013f958>] (kthread) from [<c0100148>] (ret_from_fork+0x14/0x2c)
-[    7.093719] Exception stack(0xcfa05fb0 to 0xcfa05ff8)
-[    7.099060] 5fa0:                                     00000000 00000000 00000000 00000000
-[    7.107849] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    7.116607] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    7.123687] ---[ end trace 415544dc9303b330 ]---
-[    7.379821] omapdrm omapdrm.0: atomic complete timeout (pipe 0)!
-
-A.
+Regards,
+Andreas
