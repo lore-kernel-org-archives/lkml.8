@@ -2,33 +2,32 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF602C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 07:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17392C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 07:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9831320767
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 07:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF93E20767
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 07:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgHWHSR (ORCPT
+        id S1728067AbgHWHSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 03:18:17 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:50554 "EHLO honk.sigxcpu.org"
+        Sun, 23 Aug 2020 03:18:20 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:50526 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbgHWHSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 03:18:16 -0400
+        id S1726371AbgHWHSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 03:18:17 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id B53C1FB02;
-        Sun, 23 Aug 2020 09:18:14 +0200 (CEST)
+        by honk.sigxcpu.org (Postfix) with ESMTP id 2F7E5FB04;
+        Sun, 23 Aug 2020 09:18:13 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id S-2PK1a2eBTw; Sun, 23 Aug 2020 09:18:11 +0200 (CEST)
+        with ESMTP id 4D3AEECRzJdg; Sun, 23 Aug 2020 09:18:10 +0200 (CEST)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 096654586A; Sun, 23 Aug 2020 09:18:09 +0200 (CEST)
+        id EF71C45869; Sun, 23 Aug 2020 09:18:08 +0200 (CEST)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
@@ -53,12 +52,10 @@ To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Michael Walle <michael@walle.cc>,
         Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] arm64: defconfig: Enable imx8mq-librem5-devkit display stack
-Date:   Sun, 23 Aug 2020 09:18:08 +0200
-Message-Id: <075bae3facd8c3af9cd2ab376d361097cbf99631.1598166983.git.agx@sigxcpu.org>
+Subject: [PATCH v4 0/2] arm64: dts: imx8mq: Add NWL DSI host controller to Librem 5 Devkit
+Date:   Sun, 23 Aug 2020 09:18:06 +0200
+Message-Id: <cover.1598166983.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1598166983.git.agx@sigxcpu.org>
-References: <cover.1598166983.git.agx@sigxcpu.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -67,44 +64,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the panel, NWL DSI host controller and dphy. This
-also needs the reset controller.
+These patches add the NWL host controller to the imx8mq and make use of it on
+the Librem 5 Devkit enabling the built in MIPI DSI LCD panel.
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
----
- arch/arm64/configs/defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+I opted to add imx8mq internal ports and endpoints between nwl and lcdif to the
+generic dtsi since those are SOC rather than board specific properties.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 43200a86fe10..185904e0c5d5 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -640,8 +640,10 @@ CONFIG_DRM_MSM=m
- CONFIG_DRM_TEGRA=m
- CONFIG_DRM_PANEL_LVDS=m
- CONFIG_DRM_PANEL_SIMPLE=m
-+CONFIG_DRM_PANEL_SITRONIX_ST7703=m
- CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
- CONFIG_DRM_DISPLAY_CONNECTOR=m
-+CONFIG_DRM_NWL_MIPI_DSI=m
- CONFIG_DRM_SII902X=m
- CONFIG_DRM_SIMPLE_BRIDGE=m
- CONFIG_DRM_THINE_THC63LVD1024=m
-@@ -949,11 +951,13 @@ CONFIG_PWM_SAMSUNG=y
- CONFIG_PWM_SUN4I=m
- CONFIG_PWM_TEGRA=m
- CONFIG_QCOM_PDC=y
-+CONFIG_RESET_IMX7=y
- CONFIG_RESET_QCOM_AOSS=y
- CONFIG_RESET_QCOM_PDC=m
- CONFIG_RESET_TI_SCI=y
- CONFIG_PHY_XGENE=y
- CONFIG_PHY_SUN4I_USB=y
-+CONFIG_PHY_MIXEL_MIPI_DPHY=m
- CONFIG_PHY_HI6220_USB=y
- CONFIG_PHY_HISTB_COMBPHY=y
- CONFIG_PHY_HISI_INNO_USB2=y
+Changes from v3
+- Rebase patch 3 and 4 against Shawn's imx/defconfig
+  Patches 1 an 2 got already applies, thanks!
+
+Changes from v2
+- Add Tested-by from Martin Kepplinger, thanks!
+  https://lore.kernel.org/linux-arm-kernel/cover.1597913263.git.agx@sigxcpu.org/T/#m067f2d659fcd1c0cb7792b22d0c4db06ed235815
+  https://lore.kernel.org/linux-arm-kernel/cover.1597913263.git.agx@sigxcpu.org/T/#m9aff315ee38fd9bbcd3a896876726c14b2fb7048
+
+Changes from v1
+- Add Reviewed-by from Fabio Estevam, thanks!
+  https://lore.kernel.org/linux-arm-kernel/CAOMZO5DUA5eS8apZPbte0EcSQ4Vwpg6YLK7D0YdjSUy+kdBu8Q@mail.gmail.com/
+  https://lore.kernel.org/linux-arm-kernel/CAOMZO5ANrd2JCmHyxZ0Sv0WNcU9T-q3MbaeADxbOwf+31MQ4LQ@mail.gmail.com/#t
+  https://lore.kernel.org/linux-arm-kernel/CAOMZO5Dg5NGpJ0SQkYny04Kv3ky0619J7YwT-0eE1dsK19o1-w@mail.gmail.com/
+- As per review comment by Fabio Estevam
+  Re-sync DRM related defconfig bits. I didn't resyc the whole defconfig since
+  this is pretty much kernel version dependent.
+
+Guido Günther (2):
+  arm64: defconfig: re-sync DRM related defconfig bits
+  arm64: defconfig: Enable imx8mq-librem5-devkit display stack
+
+ arch/arm64/configs/defconfig | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
 -- 
 2.26.2
 
