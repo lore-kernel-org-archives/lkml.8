@@ -2,122 +2,100 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D35C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 01:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 01:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D311A204FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 01:00:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rx6aRGdc"
+	by mail.kernel.org (Postfix) with ESMTP id 4A86E206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 01:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbgHWBAi (ORCPT
+        id S1726556AbgHWBKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 21:00:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgHWBAi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 21:00:38 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04921C061573;
-        Sat, 22 Aug 2020 18:00:38 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id g33so2797171pgb.4;
-        Sat, 22 Aug 2020 18:00:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5+TanUjx4aTdxJYsMsMUFdiokbTUr43+JM8xsRSY+0I=;
-        b=rx6aRGdcfWR0o7pmQXw8pzwtdAHGaRLCgCMimwem4zB0IThITtZDpAl4mr7GQM5ABv
-         l1Xav6doj4OTLnwA4WdMcHEbD88JHGA94UnRMXKLOFYYtKEK9V+IYzcoAfzLlFLkkIZY
-         c+M50sOOGpNS3D89y06E83Ur0YIMmT1+h/ZfNYjOT8pBg/wWehqtd6D4jkUFAEmJZYKB
-         XbAqvmLPMWCwlgh0+4ZmlL2fdeGndIKC6Z3FxKiJGeU60XbTnI596i7sUNUHzyJMpqz1
-         E4oshkUJ9vHj2h+CgJqIGlXgpPaoG7gDkPCmf+Y4RJZ8CyPClaU/OCI306cSS4xNrpIK
-         1l7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5+TanUjx4aTdxJYsMsMUFdiokbTUr43+JM8xsRSY+0I=;
-        b=KpjA+l49Q3eKA/KS6wGZJW9MgonSDMkDMXUQkgZKQ0YvyoJQNnj56nsB+8eP3fbWFp
-         sr6QspQVcQKxv2M8TxUJZppyH7qjThA+/xbdfRUIA9USiy7+9dGXE8e30SS5UXXGVYE/
-         gxYYn4iRuplnZnmWQ84Rh640XpJMySTi6T7qbod7423j0Ow6kiBn3Jp6NpsvVoUXL0b8
-         w4umKO9w83DzosHLCjDh7PQxOsqNJZm3EiKqbO1a/hq4XYLjgz3HAGpzgBRFTIX4bh4+
-         D2TyB2rSR2Z+yd+phTrTZotbnVf5tklTcAo85Hf20/HWEozZrUwxTtcKkhudHZpzk1+0
-         KSHw==
-X-Gm-Message-State: AOAM530AelOY28gXqNfaCwiC51puINcyUJBplQa5fjAyHqFSZrDe674W
-        hJh3s3iJokAxDxwlsFJV9w9O10uTEj5d/hA4rMc=
-X-Google-Smtp-Source: ABdhPJz1cfAq4nmjDpSF4+magItyeRjS9uG2hW1AoMBR1/nYYEIytOx/aCMpULiCkbyufqWuEEBc5A==
-X-Received: by 2002:a65:60ce:: with SMTP id r14mr6742305pgv.85.1598144436460;
-        Sat, 22 Aug 2020 18:00:36 -0700 (PDT)
-Received: from localhost ([2001:e42:102:1532:160:16:113:140])
-        by smtp.gmail.com with ESMTPSA id x15sm6875701pfr.208.2020.08.22.18.00.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Aug 2020 18:00:35 -0700 (PDT)
-From:   Coiby Xu <coiby.xu@gmail.com>
-To:     linux-bluetooth@vger.kernel.org
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        gregkh@linuxfoundation.org, syzkaller-bugs@googlegroups.com,
-        syzbot+dd768a260f7358adbaf9@syzkaller.appspotmail.com,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] Bluetooth: fix "list_add double add" in hci_conn_complete_evt
-Date:   Sun, 23 Aug 2020 09:00:22 +0800
-Message-Id: <20200823010022.938532-1-coiby.xu@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <000000000000c57f2d05ac4c5b8e@google.com>
-References: <000000000000c57f2d05ac4c5b8e@google.com>
+        Sat, 22 Aug 2020 21:10:14 -0400
+Received: from mga05.intel.com ([192.55.52.43]:29326 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725767AbgHWBKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 21:10:13 -0400
+IronPort-SDR: Xpdc519I8YoXEKBI7adLVMeqASkqsCTMKgErRRewMP60XP2qt29KCKwJfms2h6AQiM9t+YEoCr
+ rZD/pbe6J7xA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9721"; a="240570446"
+X-IronPort-AV: E=Sophos;i="5.76,342,1592895600"; 
+   d="scan'208";a="240570446"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2020 18:10:13 -0700
+IronPort-SDR: SV4RKiZJw6LXxUkUB4xMIaziyOpvUhwFjKSI5AqvL0+NMdtmCjAwncpBZUv3W6yv30+LmxyFsB
+ 3vgjf6l3oMcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,342,1592895600"; 
+   d="scan'208";a="311792232"
+Received: from lkp-server01.sh.intel.com (HELO 91ed66e1ca04) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 22 Aug 2020 18:10:12 -0700
+Received: from kbuild by 91ed66e1ca04 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k9eWR-0001uA-Jr; Sun, 23 Aug 2020 01:10:11 +0000
+Date:   Sun, 23 Aug 2020 09:10:07 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/misc] BUILD SUCCESS
+ c31feed8461fb8648075ba9b53d9e527d530972f
+Message-ID: <5f41c1ef.h/9RT8WqlolTHKyH%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When two HCI_EV_CONN_COMPLETE event packets with status=0 of the same
-HCI connection are received, device_add would be called twice which
-leads to kobject_add being called twice. Thus duplicate
-(struct hci_conn *conn)->dev.kobj.entry would be inserted into
-(struct hci_conn *conn)->dev.kobj.kset->list.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/misc
+branch HEAD: c31feed8461fb8648075ba9b53d9e527d530972f  x86/msr: Make source of unrecognised MSR writes unambiguous
 
-This issue can be fixed by checking (struct hci_conn *conn)->debugfs.
-If it's not NULL, it means the HCI connection has been completed and we
-won't duplicate the work as for processing the first
-HCI_EV_CONN_COMPLETE event.
+elapsed time: 723m
 
-Reported-and-tested-by: syzbot+dd768a260f7358adbaf9@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=dd768a260f7358adbaf9
-Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+configs tested: 30
+configs skipped: 47
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+sh                 kfr2r09-romimage_defconfig
+sh                          urquell_defconfig
+parisc                           alldefconfig
+mips                       capcella_defconfig
+m68k                                defconfig
+arm                           stm32_defconfig
+arm                         mv78xx0_defconfig
+arm                         s3c2410_defconfig
+c6x                        evmc6474_defconfig
+powerpc                  mpc885_ads_defconfig
+mips                           jazz_defconfig
+sh                           se7712_defconfig
+arm                        mini2440_defconfig
+mips                          ath79_defconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                                  kexec
+
 ---
- net/bluetooth/hci_event.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 4b7fc430793c..1233739ce760 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -2605,6 +2605,11 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
- 	}
-
- 	if (!ev->status) {
-+		if (conn->debugfs) {
-+			bt_dev_err(hdev, "The connection has been completed");
-+			goto unlock;
-+		}
-+
- 		conn->handle = __le16_to_cpu(ev->handle);
-
- 		if (conn->type == ACL_LINK) {
---
-2.28.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
