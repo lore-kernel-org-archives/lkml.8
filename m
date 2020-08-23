@@ -4,63 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F216C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC248C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03CF120656
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACCDE20656
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598207984;
-	bh=09n9DPXyjeVOuJISvWRvida3UAVTg7gh8CDylNsGf4s=;
+	s=default; t=1598207988;
+	bh=nW31LJUiQBpYV32e+bvFLVnpTxFhXwgvwwryQS9MImw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=t5v8H2HY7/xM2I6qfR+IJB0IPhFtDQNTidO5Od9EBxiGKFEzcViQTU0Z6IyxtvlK7
-	 hiQufkBJbPKTIZSeGrXSSrd6PoaeH9Kp6sSNaf8wdz0gzLQEvGUC1TJ3+7RBTnbBPZ
-	 ccvDu2f93dA3g5vZiTHXZd3KKuFAdHZdtdINJQKQ=
+	b=eKyTLz2r3IcqlX5HktumvqTZCaUO+o2oMhBthPIzPgR58PWz/B79iEBVasxYmCNdQ
+	 NPMClmvZqiB1hTPbkD68rvkz2Sn8tNJNw4QwfjwIZ9YQwKz7eEyq/L0DrBNZXkdFL2
+	 xUQAG7GxMa7m3EV2gshy/36ylIh+hoSFG7/sqwIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgHWSjl (ORCPT
+        id S1726744AbgHWSjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 14:39:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48200 "EHLO mail.kernel.org"
+        Sun, 23 Aug 2020 14:39:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgHWSjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725992AbgHWSjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 23 Aug 2020 14:39:24 -0400
-Subject: Re: [GIT PULL] EDAC urgent for v5.9-rc2
+Subject: Re: [GIT pull] core/urgent for v5.9-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598207964;
-        bh=09n9DPXyjeVOuJISvWRvida3UAVTg7gh8CDylNsGf4s=;
+        s=default; t=1598207963;
+        bh=nW31LJUiQBpYV32e+bvFLVnpTxFhXwgvwwryQS9MImw=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=vNFDdXgN2fF64EuC7S/21i3CfTmwM8xM/5xDJXshWkpboxT23s0/ucjwJAWEmEdZB
-         ZrIt4rxgvPYWXAg4fDwk9JpSHkN/8gjm+aMiWaEnarpZrMF66xIJwpFCrJoPGQuIQI
-         8Tq7VHu1JUnGgw5f2QaJVsDlth02NqcqyhHB6Ils=
+        b=nb0ZuOSwfEbdC+p7H3WZpHxoCU5B7jMPbQD+wzWzwLJ6lHA3mjxEaEyh4yEHmt8+w
+         3crxzZaILHHfoD3laNNI/mzp4tNYpdQYo7/F5o7WZeTAOnZXJqHPgZ7xmuf4lEpKrp
+         HeEH6qmKoDMJXC96IGgQf84iNn3DP/tibsVoiBTY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200823101203.GA27452@zn.tnic>
-References: <20200823101203.GA27452@zn.tnic>
+In-Reply-To: <159817113401.5783.14776307451257171431.tglx@nanos>
+References: <159817113401.5783.14776307451257171431.tglx@nanos>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200823101203.GA27452@zn.tnic>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v5.9_rc2
-X-PR-Tracked-Commit-Id: 45bc6098a3e279d8e391d22428396687562797e2
+X-PR-Tracked-Message-Id: <159817113401.5783.14776307451257171431.tglx@nanos>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-2020-08-23
+X-PR-Tracked-Commit-Id: d88d59b64ca35abae208e2781fdb45e69cbed56c
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d9232cb79651c244f8679607b6e30c5230bcc967
-Message-Id: <159820796431.12134.18041504030184472094.pr-tracker-bot@kernel.org>
-Date:   Sun, 23 Aug 2020 18:39:24 +0000
-To:     Borislav Petkov <bp@suse.de>
+X-PR-Merge-Commit-Id: e99b2507baccca79394ec646e3d1a0884667ea98
+Message-Id: <159820796355.12134.4421321352772303.pr-tracker-bot@kernel.org>
+Date:   Sun, 23 Aug 2020 18:39:23 +0000
+To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+        linux-kernel@vger.kernel.org, x86@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 23 Aug 2020 12:12:03 +0200:
+The pull request you sent on Sun, 23 Aug 2020 08:25:34 -0000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v5.9_rc2
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-2020-08-23
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d9232cb79651c244f8679607b6e30c5230bcc967
+https://git.kernel.org/torvalds/c/e99b2507baccca79394ec646e3d1a0884667ea98
 
 Thank you!
 
