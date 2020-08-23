@@ -1,116 +1,133 @@
-Return-Path: <SRS0=ximN=CA=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 23:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E8EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 00:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A805B208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Aug 2020 23:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86AB20738
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 00:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598141515;
+	bh=N80vO2FqH66Lzj9ecVOxZaMGT3JFxaZossY4HFjJcWo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Fr12MlXGgbIQrvSDnJtSN++bcQDgfPmgnMD4Y/aDZWH4t1iA4TdE5CeIyyVyVk1sH
+	 JdnucN+OKtiZebV3bniHHfcWS9YcNuQjf3wmL9Fbe1tKyRnwtt7Hg3N2wqtbg2z170
+	 xvpkiFz3Cwp+HxL58/jRj+dEC0WjAxvl0e6lf+Yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbgHVXtc convert rfc822-to-8bit (ORCPT
+        id S1728690AbgHWAKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 19:49:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728453AbgHVXtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 19:49:31 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 714A1206B5;
-        Sat, 22 Aug 2020 23:49:30 +0000 (UTC)
-Date:   Sat, 22 Aug 2020 19:49:28 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     peterz@infradead.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Joerg Vehlow <lkml@jv-coder.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Huang Ying <ying.huang@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Joerg Vehlow <joerg.vehlow@aox-tech.de>, dave@stgolabs.net
-Subject: Re: [BUG RT] dump-capture kernel not executed for panic in
- interrupt context
-Message-ID: <20200822194928.54ee4cb5@oasis.local.home>
-In-Reply-To: <20200822123252.GQ1362448@hirez.programming.kicks-ass.net>
-References: <2c243f59-6d10-7abb-bab4-e7b1796cd54f@jv-coder.de>
-        <20200528084614.0c949e8d@gandalf.local.home>
-        <cbbf7926-148e-7acb-dc03-3f055d73364b@jv-coder.de>
-        <20200727163655.8c94c8e245637b62311f5053@linux-foundation.org>
-        <c6b095af-fc92-420f-303f-d2efd9f28873@jv-coder.de>
-        <20200821110848.6c3183d1@oasis.local.home>
-        <20200821134753.9547695c9b782275be3c95b5@linux-foundation.org>
-        <20200821170334.73b52fdd@oasis.local.home>
-        <20200822123252.GQ1362448@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 22 Aug 2020 20:10:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728434AbgHWAKn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 20:10:43 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79D48C061573
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 17:10:42 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id 185so5747784ljj.7
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 17:10:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YIkVDHiTfHwp9VvpwPx0pR6/gdoUoxP4akmJs/bN2QQ=;
+        b=dTw30b2JGhzNFtqWpFzHbpuHuQK0LUZLpQyOlsdW4z28uyV5F5wMPq7Hbs/Nd5GgTW
+         YG7B0STPDqSEY9nHy+oY8pAlsWAL6l6kpJPJrMqvCHOe7tgsnfSwMw4VE8LS+c1/9a+3
+         QhwTZl/ANBCM7KtvK0945P6zEu/p+m0DjZil0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YIkVDHiTfHwp9VvpwPx0pR6/gdoUoxP4akmJs/bN2QQ=;
+        b=nZH6OgNKbjStww90qldPHjlrPd/pV1To7MPDvu1TghiMRlv0WD5lzXHRM+Uv0HZabx
+         j3Tt7Qc/+I9Yl8slvB8NWtcm41ivmzjCzVgVOCGK/KzN2gjWPRYgnXuiKuWq2Y516Q3S
+         xjrwPSbSInZ+5o6K4ea9cucV6P7zUtfSTTSe0W4ulJDV2vSlkqHzmdvf4mUcCMBI+ggi
+         mUItaAI0WcNK+3q5aC2TsYF5ck6EJVayUFNXi6RUPsxiYvltm4Hgawo9gIzWIFa1IT9U
+         rR25SXb7qMghrDG0ODxnBQDF2ScRMlF4Cvc8a9Gsj/wl2qk9T1Iq0FhwQCg82B1Vlz8z
+         bA4w==
+X-Gm-Message-State: AOAM5329bf2sITZY+PoFc0ILdFlXp4AaLC5st7aL+yb43Z4xfedl6fPy
+        v3OOcHen1vIUyWipMbLFnZAjaU+8ozgyRA==
+X-Google-Smtp-Source: ABdhPJzB4zcQCVZFjc9fyBaKY5p6J26ezqxfXbTG6w/SKyFn6P6StNliMPRRxGHPW2gOG6ktAzlTuQ==
+X-Received: by 2002:a2e:808f:: with SMTP id i15mr4850048ljg.151.1598141440051;
+        Sat, 22 Aug 2020 17:10:40 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id s2sm1262623ljm.4.2020.08.22.17.10.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Aug 2020 17:10:38 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id t6so5733888ljk.9
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 17:10:37 -0700 (PDT)
+X-Received: by 2002:a2e:7615:: with SMTP id r21mr4215256ljc.371.1598141437262;
+ Sat, 22 Aug 2020 17:10:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+References: <87zh6ohm03.fsf@nanos.tec.linutronix.de> <20200821230435.GA56974@rani.riverdale.lan>
+ <CAKwvOdkoB+fT9tt7vgg1R6J-NEr77EWP5X8nFat_L-HvEzWGzA@mail.gmail.com>
+ <87eenzqzmr.fsf@nanos.tec.linutronix.de> <20200822035552.GA104886@rani.riverdale.lan>
+ <20200822084133.GL28786@gate.crashing.org> <CA+icZUVf9a8LC2Mf0cFymYQfALWs6bVfR1v1nRbxKaLAyU6NkQ@mail.gmail.com>
+ <CA+icZUWGHo3mkN4=ZYeU37p8KJhxTXS5QKcAvq_HaqTHmFkw2g@mail.gmail.com>
+ <CANiq72=3iOh5Z_rboZf-_GUpBE2LUUv3yPKOVNN_XmaNswdNSw@mail.gmail.com>
+ <CAHk-=whaVW4FQjdwaicLFE4kiqr18rk6V50CuU-ziUPyRFjHrg@mail.gmail.com> <20200822231055.GA1871205@rani.riverdale.lan>
+In-Reply-To: <20200822231055.GA1871205@rani.riverdale.lan>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 22 Aug 2020 17:10:21 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whEb2xVU7uGOFwLxPgX-U2asMu1bJQA8QUEZPrL7zWwQQ@mail.gmail.com>
+Message-ID: <CAHk-=whEb2xVU7uGOFwLxPgX-U2asMu1bJQA8QUEZPrL7zWwQQ@mail.gmail.com>
+Subject: Re: [PATCH] x86: work around clang IAS bug referencing __force_order
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 22 Aug 2020 14:32:52 +0200
-peterz@infradead.org wrote:
+On Sat, Aug 22, 2020 at 4:11 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> Actually, is a memory clobber required for correctness? Memory accesses
+> probably shouldn't be reordered across a CRn write. Is asm volatile
+> enough to stop that or do you need a memory clobber?
 
-> On Fri, Aug 21, 2020 at 05:03:34PM -0400, Steven Rostedt wrote:
-> 
-> > > Sigh.  Is it too hard to make mutex_trylock() usable from interrupt
-> > > context?  
-> > 
-> > 
-> > That's a question for Thomas and Peter Z.  
-> 
-> You should really know that too, the TL;DR answer is it's fundamentally
-> buggered, can't work.
+You do need a memory clobber if you really care about ordering wrt
+normal memory references.
 
-I knew there was an issue but I couldn't remember the reasoning, and
-figured you could easily answer it without having to look back at the
-code.
+That said, I'm not convinced we do care here. Normal memory accesses
+(as seen by the compiler) should be entirely immune to any changes we
+do wrt CRx registers.
 
-> 
-> The problem is that RT relies on being able to PI boost the mutex owner.
-> 
-> ISTR we had a thread about all this last year or so, let me see if I can
-> find that.
-> 
-> Here goes:
-> 
->   https://lkml.kernel.org/r/20191218135047.GS2844@hirez.programming.kicks-ass.net
+Because code that really fundamentally changes kernel mappings or
+access rules is already written in low-level assembler (eg the entry
+routines or bootup).
 
-From this email:
+Anything that relies on the more subtle changes (ie user space
+accesses etc) should already be ordered by other things - usually by
+the fact that they are also "asm volatile".
 
-> The problem happens when that owner is the idle task, this can happen
-> when the irq/softirq hits the idle task, in that case the contending
-> mutex_lock() will try and PI boost the idle task, and that is a big
-> no-no.
+But hey, maybe somebody can come up with an exception to that.
 
-What's wrong with priority boosting the idle task? It's not obvious,
-and I can't find comments in the code saying it would be bad.
-
-I looked around the code to see if I could find "why this is bad" but
-couldn't find it. There's lots of places that say "Do not use
-mutex_trylock in interrupt context, the implementation is not safe to
-do so" but I can't find where it says "why" it is not safe to do so.
-
-The idle task is not mentioned at all in rtmutex.c and not mentioned in
-kernel/locking except for some comments about RCU in lockdep.
-
-I see that in the idle code the prio_change method does a BUG(), but
-there's no comment to say why it does so.
-
-The commit that added that BUG, doesn't explain why it can't happen:
-
-a8941d7ec8167 ("sched: Simplify the idle scheduling class")
-
-I may have once known the rationale behind all this, but it's been a
-long time since I worked on the PI code, and it's out of my cache.
-
-
--- Steve
+                Linus
