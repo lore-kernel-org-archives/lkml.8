@@ -2,82 +2,122 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CF1C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 00:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D35C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 01:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9266A2078A
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 00:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598143935;
-	bh=fHKSK8wdF749P2iqH1it2zMw2LMD18Kh7O1CA/kPKLs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w8SKHr3TxxucX4AE2cKB831H7FXkcZctMXkBFgBSoAFKWzNDkP2zow2RBGnaMwTgj
-	 l74h50VvytEcjGbcW0NOTcpltVdrzj44IQ3l5DBqaeZK+XB/Us7iN/7LGA7ROzuVEr
-	 7IWEop3vFAPJb6aN5SiRtijNEgEkz6qvy5THLrx4=
+	by mail.kernel.org (Postfix) with ESMTP id D311A204FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 01:00:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rx6aRGdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbgHWAwO (ORCPT
+        id S1726257AbgHWBAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 20:52:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgHWAwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 20:52:14 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402412072D;
-        Sun, 23 Aug 2020 00:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598143933;
-        bh=fHKSK8wdF749P2iqH1it2zMw2LMD18Kh7O1CA/kPKLs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GX0WngMrj73Isxo8BzajuGY1NeGUDH9y8qqQwbwcTPgDOviruOgCM4LWLXCkdIwMz
-         ygUj0VsFy8mmtC07WgEXEMyXpETytdYKFwRKh/3t7Y+steYARJH2Lvnt16af9IA+ES
-         Z/IpqGR5TLfnpCiI3zzSZImi0PegfYLDSAIzF1mU=
-Date:   Sun, 23 Aug 2020 08:52:07 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh@kernel.org,
-        marek.behun@nic.cz, devicetree@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH v33 5/6] ARM: dts: imx6dl-yapp4: Add reg property to the
- lp5562 channel node
-Message-ID: <20200823005206.GD30094@dragon>
-References: <20200812195020.13568-1-dmurphy@ti.com>
- <20200812195020.13568-6-dmurphy@ti.com>
+        Sat, 22 Aug 2020 21:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgHWBAi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 21:00:38 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04921C061573;
+        Sat, 22 Aug 2020 18:00:38 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id g33so2797171pgb.4;
+        Sat, 22 Aug 2020 18:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5+TanUjx4aTdxJYsMsMUFdiokbTUr43+JM8xsRSY+0I=;
+        b=rx6aRGdcfWR0o7pmQXw8pzwtdAHGaRLCgCMimwem4zB0IThITtZDpAl4mr7GQM5ABv
+         l1Xav6doj4OTLnwA4WdMcHEbD88JHGA94UnRMXKLOFYYtKEK9V+IYzcoAfzLlFLkkIZY
+         c+M50sOOGpNS3D89y06E83Ur0YIMmT1+h/ZfNYjOT8pBg/wWehqtd6D4jkUFAEmJZYKB
+         XbAqvmLPMWCwlgh0+4ZmlL2fdeGndIKC6Z3FxKiJGeU60XbTnI596i7sUNUHzyJMpqz1
+         E4oshkUJ9vHj2h+CgJqIGlXgpPaoG7gDkPCmf+Y4RJZ8CyPClaU/OCI306cSS4xNrpIK
+         1l7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5+TanUjx4aTdxJYsMsMUFdiokbTUr43+JM8xsRSY+0I=;
+        b=KpjA+l49Q3eKA/KS6wGZJW9MgonSDMkDMXUQkgZKQ0YvyoJQNnj56nsB+8eP3fbWFp
+         sr6QspQVcQKxv2M8TxUJZppyH7qjThA+/xbdfRUIA9USiy7+9dGXE8e30SS5UXXGVYE/
+         gxYYn4iRuplnZnmWQ84Rh640XpJMySTi6T7qbod7423j0Ow6kiBn3Jp6NpsvVoUXL0b8
+         w4umKO9w83DzosHLCjDh7PQxOsqNJZm3EiKqbO1a/hq4XYLjgz3HAGpzgBRFTIX4bh4+
+         D2TyB2rSR2Z+yd+phTrTZotbnVf5tklTcAo85Hf20/HWEozZrUwxTtcKkhudHZpzk1+0
+         KSHw==
+X-Gm-Message-State: AOAM530AelOY28gXqNfaCwiC51puINcyUJBplQa5fjAyHqFSZrDe674W
+        hJh3s3iJokAxDxwlsFJV9w9O10uTEj5d/hA4rMc=
+X-Google-Smtp-Source: ABdhPJz1cfAq4nmjDpSF4+magItyeRjS9uG2hW1AoMBR1/nYYEIytOx/aCMpULiCkbyufqWuEEBc5A==
+X-Received: by 2002:a65:60ce:: with SMTP id r14mr6742305pgv.85.1598144436460;
+        Sat, 22 Aug 2020 18:00:36 -0700 (PDT)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id x15sm6875701pfr.208.2020.08.22.18.00.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Aug 2020 18:00:35 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+To:     linux-bluetooth@vger.kernel.org
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        gregkh@linuxfoundation.org, syzkaller-bugs@googlegroups.com,
+        syzbot+dd768a260f7358adbaf9@syzkaller.appspotmail.com,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] Bluetooth: fix "list_add double add" in hci_conn_complete_evt
+Date:   Sun, 23 Aug 2020 09:00:22 +0800
+Message-Id: <20200823010022.938532-1-coiby.xu@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <000000000000c57f2d05ac4c5b8e@google.com>
+References: <000000000000c57f2d05ac4c5b8e@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812195020.13568-6-dmurphy@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 02:50:19PM -0500, Dan Murphy wrote:
-> Add the reg property to each channel node.  This update is
-> to accommodate the multicolor framework.  In addition to the
-> accommodation this allows the LEDs to be placed on any channel
-> and allow designs to skip channels as opposed to requiring
-> sequential order.
-> 
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> CC: Shawn Guo <shawnguo@kernel.org>
-> CC: Sascha Hauer <s.hauer@pengutronix.de>
-> CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-> CC: Fabio Estevam <festevam@gmail.com>
-> CC: NXP Linux Team <linux-imx@nxp.com>
+When two HCI_EV_CONN_COMPLETE event packets with status=0 of the same
+HCI connection are received, device_add would be called twice which
+leads to kobject_add being called twice. Thus duplicate
+(struct hci_conn *conn)->dev.kobj.entry would be inserted into
+(struct hci_conn *conn)->dev.kobj.kset->list.
 
-Applied, thanks.
+This issue can be fixed by checking (struct hci_conn *conn)->debugfs.
+If it's not NULL, it means the HCI connection has been completed and we
+won't duplicate the work as for processing the first
+HCI_EV_CONN_COMPLETE event.
+
+Reported-and-tested-by: syzbot+dd768a260f7358adbaf9@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=dd768a260f7358adbaf9
+Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+---
+ net/bluetooth/hci_event.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 4b7fc430793c..1233739ce760 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -2605,6 +2605,11 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
+ 	}
+
+ 	if (!ev->status) {
++		if (conn->debugfs) {
++			bt_dev_err(hdev, "The connection has been completed");
++			goto unlock;
++		}
++
+ 		conn->handle = __le16_to_cpu(ev->handle);
+
+ 		if (conn->type == ACL_LINK) {
+--
+2.28.0
+
