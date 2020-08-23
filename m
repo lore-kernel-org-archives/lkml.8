@@ -2,80 +2,109 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7669C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 06:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F67C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 06:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE74D20656
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 06:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E07A20768
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 06:57:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BrUhEcP2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgHWGzk (ORCPT
+        id S1727835AbgHWG5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 02:55:40 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:19514 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725855AbgHWGzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 02:55:39 -0400
-Received: from localhost.localdomain (unknown [210.32.144.184])
-        by mail-app2 (Coremail) with SMTP id by_KCgB3H2DQEkJfpuAbAg--.29268S4;
-        Sun, 23 Aug 2020 14:55:16 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ntb: intel: Fix memleak in intel_ntb_pci_probe
-Date:   Sun, 23 Aug 2020 14:55:12 +0800
-Message-Id: <20200823065512.11626-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgB3H2DQEkJfpuAbAg--.29268S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7XFyDtF4kWrWDtryrGw1DAwb_yoWxKrc_WF
-        yku3sxGr40krySg3Wj9F4Svry2vwnYqwn3CF92qrZxCrZrZF45CrWkuF4rWFs8Gw47JrnF
-        kF15Wr17Z3s0vjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48J
-        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_
-        Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
-        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-        9x0JU-J5rUUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhAA1sq
+        Sun, 23 Aug 2020 02:57:30 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19974 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgHWG53 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 02:57:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f42134a0003>; Sat, 22 Aug 2020 23:57:15 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 22 Aug 2020 23:57:29 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 22 Aug 2020 23:57:29 -0700
+Received: from [10.2.94.162] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 23 Aug
+ 2020 06:57:28 +0000
+Subject: Re: [PATCH 4/5] bio: introduce BIO_FOLL_PIN flag
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Jeff Layton <jlayton@kernel.org>,
+        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <ceph-devel@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200822042059.1805541-1-jhubbard@nvidia.com>
+ <20200822042059.1805541-5-jhubbard@nvidia.com>
+ <20200823062559.GA32480@infradead.org>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <efa2519d-53b7-7b08-bf85-a5c2d725282c@nvidia.com>
+Date:   Sat, 22 Aug 2020 23:57:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200823062559.GA32480@infradead.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598165835; bh=kB8FzCW7DtQaUtPovVv0+HKVzVDdBHBMlKCnKbkxrMg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BrUhEcP2N++kRHfl+zn7vDD/FlQ/3V2H/XgPoyKwbIdXc2SCUUSumiENqN7cJHfVK
+         ZbkgfCj6OLx+CXHj8eM1/7+jc0ro3HzWRPLmxjKxc2RNOVXT5tORXdZinwrKaItaaq
+         uygoVGHfGf5kDiATAsmUPuPK5q+iTOViZNwt7J27vitQCIVd1+qybDu8jYLh7sQfed
+         X/Vpz7gURyRC6DpYj/2onKg32L5/uYmrGMAKvcltCs8K6bIwVtm+pGOn+qJmerTXrd
+         RZ7OESoORKJrVEhKFDF1rhSrGhurBpHh+2Onm9Rn1gHlesoEDzJfJtRu7bsOBF08Po
+         cACGMbyUwt2Ww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default error branch of a series of pdev_is_gen calls
-should free ndev just like what we've done in these calls.
+On 8/22/20 11:25 PM, Christoph Hellwig wrote:
+> On Fri, Aug 21, 2020 at 09:20:58PM -0700, John Hubbard wrote:
+>> Add a new BIO_FOLL_PIN flag to struct bio, whose "short int" flags field
+>> was full, thuse triggering an expansion of the field from 16, to 32
+>> bits. This allows for a nice assertion in bio_release_pages(), that the
+>> bio page release mechanism matches the page acquisition mechanism.
+>>
+>> Set BIO_FOLL_PIN whenever pin_user_pages_fast() is used, and check for
+>> BIO_FOLL_PIN before using unpin_user_page().
+> 
+> When would the flag not be set when BIO_NO_PAGE_REF is not set?
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/ntb/hw/intel/ntb_hw_gen1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Well, I don't *think* you can get there. However, I've only been studying
+bio/block for a fairly short time, and the scattering of get_page() and
+put_page() calls in some of the paths made me wonder if, for example,
+someone was using get_page() to acquire ITER_BVEC or ITER_KVEC via
+get_page(), and release them via bio_release_pages(). It's hard to tell.
 
-diff --git a/drivers/ntb/hw/intel/ntb_hw_gen1.c b/drivers/ntb/hw/intel/ntb_hw_gen1.c
-index 3185efeab487..093dd20057b9 100644
---- a/drivers/ntb/hw/intel/ntb_hw_gen1.c
-+++ b/drivers/ntb/hw/intel/ntb_hw_gen1.c
-@@ -1893,7 +1893,7 @@ static int intel_ntb_pci_probe(struct pci_dev *pdev,
- 			goto err_init_dev;
- 	} else {
- 		rc = -EINVAL;
--		goto err_ndev;
-+		goto err_init_pci;
- 	}
- 
- 	ndev_reset_unsafe_flags(ndev);
+It seems like that shouldn't be part of the design. I'm asserting that
+it isn't, with this new flag. But if you're sure that this assertion is
+unnecessary, then let's just drop this patch, of course.
+
+> 
+> Also I don't think we can't just expand the flags field, but I can send
+> a series to kill off two flags.
+> 
+
+Good to know, just in case we do want this flag. Great!
+
+thanks,
 -- 
-2.17.1
-
+John Hubbard
+NVIDIA
