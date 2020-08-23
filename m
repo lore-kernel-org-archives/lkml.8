@@ -2,143 +2,256 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267B1C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 10:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2847C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 10:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F00902072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 10:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B49A22072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 10:14:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgHWKMO (ORCPT
+        id S1726876AbgHWKOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 06:12:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59214 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbgHWKMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 06:12:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 85514AE92;
-        Sun, 23 Aug 2020 10:12:39 +0000 (UTC)
-Date:   Sun, 23 Aug 2020 12:12:03 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] EDAC urgent for v5.9-rc2
-Message-ID: <20200823101203.GA27452@zn.tnic>
+        Sun, 23 Aug 2020 06:14:35 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33570 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbgHWKOe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 06:14:34 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9D17429C09F;
+        Sun, 23 Aug 2020 11:14:32 +0100 (BST)
+Date:   Sun, 23 Aug 2020 12:14:30 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Parshuram Thombare <pthombar@cadence.com>, <bbrezillon@kernel.org>,
+        mparab@cadence.com, praneeth@ti.com, pgaj@cadence.com
+Cc:     <vitor.soares@synopsys.com>, linux-kernel@vger.kernel.org,
+        linux-i3c@lists.infradead.org
+Subject: Re: [PATCH v4] i3c: master: fix for SETDASA and DAA process
+Message-ID: <20200823121430.272d97f9@collabora.com>
+In-Reply-To: <20200823115918.7dd868e0@collabora.com>
+References: <1598001195-18511-1-git-send-email-pthombar@cadence.com>
+        <20200823115918.7dd868e0@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sun, 23 Aug 2020 11:59:18 +0200
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-please pull a single fix which corrects a wrong error severity
-determination which got copied to a bunch of drivers too.
 
-Thx.
+> > -static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
+> > +static int i3c_master_early_i3c_dev_add(struct i3c_master_controller *master,
+> > +					  struct i3c_dev_boardinfo *boardinfo)
+> >  {
+> > -	struct i3c_master_controller *master = i3c_dev_get_master(dev);
+> > +	struct i3c_device_info info = {
+> > +		.static_addr = boardinfo->static_addr,
+> > +	};
+> > +	struct i3c_dev_desc *i3cdev;
+> >  	int ret;
+> >  
+> > -	if (!dev->boardinfo || !dev->boardinfo->init_dyn_addr ||
+> > -	    !dev->boardinfo->static_addr)
+> > -		return;
+> > +	i3cdev = i3c_master_alloc_i3c_dev(master, &info);
+> > +	if (IS_ERR(i3cdev))
+> > +		return -ENOMEM;
+> >  
+> > -	ret = i3c_master_setdasa_locked(master, dev->info.static_addr,
+> > -					dev->boardinfo->init_dyn_addr);
+> > +	i3cdev->boardinfo = boardinfo;
+> > +
+> > +	ret = i3c_master_attach_i3c_dev(master, i3cdev);
+> >  	if (ret)
+> > -		return;
+> > +		goto err_attach;
+> > +
+> > +	ret = i3c_master_setdasa_locked(master, i3cdev->info.static_addr,
+> > +					i3cdev->boardinfo->init_dyn_addr);
+> > +	if (ret)
+> > +		goto err_setdasa;
+> >  
+> > -	dev->info.dyn_addr = dev->boardinfo->init_dyn_addr;
+> > -	ret = i3c_master_reattach_i3c_dev(dev, 0);
+> > +	i3cdev->info.dyn_addr = i3cdev->boardinfo->init_dyn_addr;
+> > +	ret = i3c_master_reattach_i3c_dev(i3cdev, 0);
+> >  	if (ret)
+> >  		goto err_rstdaa;
+> >  
+> > -	ret = i3c_master_retrieve_dev_info(dev);
+> > +	ret = i3c_master_retrieve_dev_info(i3cdev);
+> >  	if (ret)
+> >  		goto err_rstdaa;
+> >  
+> > -	return;
+> > +	return 0;
+> >  
+> >  err_rstdaa:
+> > -	i3c_master_rstdaa_locked(master, dev->boardinfo->init_dyn_addr);
+> > +	i3c_master_rstdaa_locked(master, i3cdev->boardinfo->init_dyn_addr);
+> > +err_setdasa:
 
----
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+Let's be consistent with the rest of the framework. Labels don't encode
+what the error is but what's expected to be undone. IOW, this one
+should be err_detach_dev
 
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+> > +	i3c_master_detach_i3c_dev(i3cdev);
+> > +err_attach:
 
-are available in the Git repository at:
+and this one err_free_dev.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v5.9_rc2
+> > +	i3c_master_free_i3c_dev(i3cdev);
+> > +
+> > +	return ret;
+> >  }
+> >  
+> >  static void
+> > @@ -1619,8 +1637,8 @@ static void i3c_master_detach_free_devs(struct i3c_master_controller *master)
+> >   * This function is following all initialisation steps described in the I3C
+> >   * specification:
+> >   *
+> > - * 1. Attach I2C and statically defined I3C devs to the master so that the
+> > - *    master can fill its internal device table appropriately
+> > + * 1. Attach I2C devs to the master so that the master can fill its internal
+> > + *    device table appropriately
+> >   *
+> >   * 2. Call &i3c_master_controller_ops->bus_init() method to initialize
+> >   *    the master controller. That's usually where the bus mode is selected
+> > @@ -1633,10 +1651,14 @@ static void i3c_master_detach_free_devs(struct i3c_master_controller *master)
+> >   * 4. Disable all slave events.
+> >   *
+> >   * 5. Pre-assign dynamic addresses requested by the FW with SETDASA for I3C
+> > - *    devices that have a static address
+> > + *    devices that have a static address and attach corresponding statically
+> > + *    defined I3C devices to the master. If only init_dyn_addr is available
+> > + *    or if SETDASA fails, reserve those init_dyn_addr to be used later to set
+> > + *    address using SETNEWDA after DAA.
 
-for you to fetch changes up to 45bc6098a3e279d8e391d22428396687562797e2:
+I'd re-order this to match what really happens: first reserve slots for
+devices that have an init_dyn_addr defined, then try to create+attach
+devices that also have a static address defined.
 
-  EDAC/{i7core,sb,pnd2,skx}: Fix error event severity (2020-08-18 15:40:30 +0200)
+> >   *
+> >   * 6. Do a DAA (Dynamic Address Assignment) to assign dynamic addresses to all
+> > - *    remaining I3C devices
+> > + *    remaining I3C devices and attach them to the master if the dynamic address
+> > + *    assignment succeeds
 
-----------------------------------------------------------------
-A single fix correcting a reversed error severity determination check
-which lead to a recoverable error getting marked as fatal, by Tony
-Luck.
+Can we move that change to a separate patch?
 
-----------------------------------------------------------------
-Tony Luck (1):
-      EDAC/{i7core,sb,pnd2,skx}: Fix error event severity
+> >   *
+> >   * Once this is done, all I3C and I2C devices should be usable.
+> >   *
+> > @@ -1647,7 +1669,6 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+> >  	enum i3c_addr_slot_status status;
+> >  	struct i2c_dev_boardinfo *i2cboardinfo;
+> >  	struct i3c_dev_boardinfo *i3cboardinfo;
+> > -	struct i3c_dev_desc *i3cdev;
+> >  	struct i2c_dev_desc *i2cdev;
+> >  	int ret;
+> >  
+> > @@ -1679,34 +1700,6 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+> >  			goto err_detach_devs;
+> >  		}
+> >  	}
+> > -	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
+> > -		struct i3c_device_info info = {
+> > -			.static_addr = i3cboardinfo->static_addr,
+> > -		};
+> > -
+> > -		if (i3cboardinfo->init_dyn_addr) {
+> > -			status = i3c_bus_get_addr_slot_status(&master->bus,
+> > -						i3cboardinfo->init_dyn_addr);
+> > -			if (status != I3C_ADDR_SLOT_FREE) {
+> > -				ret = -EBUSY;
+> > -				goto err_detach_devs;
+> > -			}
+> > -		}
+> > -
+> > -		i3cdev = i3c_master_alloc_i3c_dev(master, &info);
+> > -		if (IS_ERR(i3cdev)) {
+> > -			ret = PTR_ERR(i3cdev);
+> > -			goto err_detach_devs;
+> > -		}
+> > -
+> > -		i3cdev->boardinfo = i3cboardinfo;
+> > -
+> > -		ret = i3c_master_attach_i3c_dev(master, i3cdev);
+> > -		if (ret) {
+> > -			i3c_master_free_i3c_dev(i3cdev);
+> > -			goto err_detach_devs;
+> > -		}
+> > -	}
+> >  
+> >  	/*
+> >  	 * Now execute the controller specific ->bus_init() routine, which
+> > @@ -1744,10 +1737,33 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+> >  
+> >  	/*
+> >  	 * Pre-assign dynamic address and retrieve device information if
+> > -	 * needed.
+> > +	 * needed. And reserve the init_dyn_addr in case of failure, to retry
+> > +	 * setting the requested address after DAA is done in
+> > +	 * i3c_master_add_i3c_dev_locked().
 
- drivers/edac/i7core_edac.c | 4 ++--
- drivers/edac/pnd2_edac.c   | 2 +-
- drivers/edac/sb_edac.c     | 4 ++--
- drivers/edac/skx_common.c  | 4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+That's no longer accurate: init_dyn_addr are reserved up-front and
+device creation is only attempted if the device has a static address.
 
-diff --git a/drivers/edac/i7core_edac.c b/drivers/edac/i7core_edac.c
-index 5860ca41185c..2acd9f9284a2 100644
---- a/drivers/edac/i7core_edac.c
-+++ b/drivers/edac/i7core_edac.c
-@@ -1710,9 +1710,9 @@ static void i7core_mce_output_error(struct mem_ctl_info *mci,
- 	if (uncorrected_error) {
- 		core_err_cnt = 1;
- 		if (ripv)
--			tp_event = HW_EVENT_ERR_FATAL;
--		else
- 			tp_event = HW_EVENT_ERR_UNCORRECTED;
-+		else
-+			tp_event = HW_EVENT_ERR_FATAL;
- 	} else {
- 		tp_event = HW_EVENT_ERR_CORRECTED;
- 	}
-diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
-index fd363746f5b0..b8fc4b84fd86 100644
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -1155,7 +1155,7 @@ static void pnd2_mce_output_error(struct mem_ctl_info *mci, const struct mce *m,
- 	u32 optypenum = GET_BITFIELD(m->status, 4, 6);
- 	int rc;
- 
--	tp_event = uc_err ? (ripv ? HW_EVENT_ERR_FATAL : HW_EVENT_ERR_UNCORRECTED) :
-+	tp_event = uc_err ? (ripv ? HW_EVENT_ERR_UNCORRECTED : HW_EVENT_ERR_FATAL) :
- 						 HW_EVENT_ERR_CORRECTED;
- 
- 	/*
-diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
-index d414698ca324..c5ab634cb6a4 100644
---- a/drivers/edac/sb_edac.c
-+++ b/drivers/edac/sb_edac.c
-@@ -2982,9 +2982,9 @@ static void sbridge_mce_output_error(struct mem_ctl_info *mci,
- 	if (uncorrected_error) {
- 		core_err_cnt = 1;
- 		if (ripv) {
--			tp_event = HW_EVENT_ERR_FATAL;
--		} else {
- 			tp_event = HW_EVENT_ERR_UNCORRECTED;
-+		} else {
-+			tp_event = HW_EVENT_ERR_FATAL;
- 		}
- 	} else {
- 		tp_event = HW_EVENT_ERR_CORRECTED;
-diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
-index 6d8d6dc626bf..2b4ce8e5ac2f 100644
---- a/drivers/edac/skx_common.c
-+++ b/drivers/edac/skx_common.c
-@@ -493,9 +493,9 @@ static void skx_mce_output_error(struct mem_ctl_info *mci,
- 	if (uncorrected_error) {
- 		core_err_cnt = 1;
- 		if (ripv) {
--			tp_event = HW_EVENT_ERR_FATAL;
--		} else {
- 			tp_event = HW_EVENT_ERR_UNCORRECTED;
-+		} else {
-+			tp_event = HW_EVENT_ERR_FATAL;
- 		}
- 	} else {
- 		tp_event = HW_EVENT_ERR_CORRECTED;
+> >  	 */
+> > -	i3c_bus_for_each_i3cdev(&master->bus, i3cdev)
+> > -		i3c_master_pre_assign_dyn_addr(i3cdev);
+> > +	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
+> > +		/*
+> > +		 * We don't attach devices which are not addressable
+> > +		 * (no static_addr and dyn_addr) and devices with static_addr
+> > +		 * but no init_dyn_addr will participate in DAA.
+> > +		 */  
+> 
+> The above comment should be split:
+> 
+> 		/*
+> 		 * We don't reserve a dynamic address for devices that
+> 		 * don't explicitly request one.
+> 		 */
+> 
+> > +		if (!i3cboardinfo->init_dyn_addr)
+> > +			continue;
+> > +
+> > +		ret = i3c_bus_get_addr_slot_status(&master->bus,
+> > +						   i3cboardinfo->init_dyn_addr);
+> > +		if (ret != I3C_ADDR_SLOT_FREE) {
+> > +			ret = -EBUSY;
+> > +			goto err_rstdaa;
+> > +		}
+> > +
+> > +		i3c_bus_set_addr_slot_status(&master->bus,
+> > +					     i3cboardinfo->init_dyn_addr,
+> > +					     I3C_ADDR_SLOT_I3C_DEV);
+> > +  
+> 		/*
+> 		 * Only try to create/attach devices that have a static
+> 		 * address. Other devices will be created/attached when
+> 		 * DAA happens, and the requested dynamic address will
+> 		 * be set using SETNEWDA once those devices become
+> 		 * addressable.
+> 		 */
+> > +		if (i3cboardinfo->static_addr)
+> > +			i3c_master_early_i3c_dev_add(master, i3cboardinfo);
+> > +	}
+> >  
+> >  	ret = i3c_master_do_daa(master);
+> >  	if (ret)  
+> 
 
--- 
-Regards/Gruss,
-    Boris.
-
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
