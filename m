@@ -2,122 +2,159 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27164C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE70A206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:43:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tpiYIcuK"
+	by mail.kernel.org (Postfix) with ESMTP id E84362074D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgHWQna (ORCPT
+        id S1727095AbgHWQsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 12:43:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgHWQn1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 12:43:27 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6153C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 09:43:26 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id g14so6339854iom.0
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 09:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=72AGIyZ7/chrx66NON3xoDnq09zkWUqUGGzNHoZVAyo=;
-        b=tpiYIcuK5fYZPl3R0jfV567+ZZwhWr0FSMVdo1+AVUdoyUmir0NcpghkWjorKhX+JS
-         q1T/rA6tQd1gqvkjOoc4pZR9sCBkTCeYrfoxFjiRipYr3Gbdqj+MlL52PFaEqXGsACb8
-         nZiCVXUTy5Bc+y44qidgcV2gaer3fUL43d95Tv4a57nqaO/SoLPLvRpFoP+WeP0oTJnk
-         xDJn2ZwyVyPQ8HzphmX3PPntC1gzdvqkB9m2tgh6gF8s9Srh+Dfypa+183SYJF8rDvJa
-         SFfJpu6A7iyxlPJ0xOpXBFT9oYGm0GO81prDMw3YfOc82KoGtvrSxIRXR7lUeT6aFO3y
-         ulTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=72AGIyZ7/chrx66NON3xoDnq09zkWUqUGGzNHoZVAyo=;
-        b=EEKKEdW2XyZel0M0grsOfTNu7vfl2ZyEbxnKYVclV3evZeUgw8MuE7ysjcysG0LYL9
-         JcumYXb8ycD+LJwxKj5/pJxaXWaKiWWh1si+mzFkBeKRsaZCnohzB6bfbQwwXAjis0h0
-         v+NarKmzYUG349VuOCgCtgLBwRSpsDlvXYwDFgMhes9fMRaaLHmszi3fcf2Sz4xmvV14
-         tIuBGq6RkVbWg0kEvBCukdXZg08xvW/VpGx8o8H+jyykA3Jq6P7JIYNVbtSSZxNQ5sP0
-         4s6mkS4z0TV5bY3/9vnrhITz0Wsl55sjnhNTcNM5olrFqzAz1mmiIXLhNWjCjO3XWPJ9
-         Goqw==
-X-Gm-Message-State: AOAM531y8BX0KTPOJya43TMrP4b0Z6/w9r3XNGt5dcQj1XNPBfrehvra
-        2rksAfP1PXd1RQD851MtkHYYABWBdJX5Wdb3Wg0=
-X-Google-Smtp-Source: ABdhPJw9XW73Ks1Mk+SxJLl501UzmDyDGidOcFbVjWrKBsIzfALOsE7OQnp6iM6Z8bQvSq5pqlDi2W3eZtL4fNGsHtc=
-X-Received: by 2002:a5e:8e0c:: with SMTP id a12mr1583460ion.147.1598200999791;
- Sun, 23 Aug 2020 09:43:19 -0700 (PDT)
+        Sun, 23 Aug 2020 12:48:52 -0400
+Received: from mga06.intel.com ([134.134.136.31]:36920 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726569AbgHWQsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 12:48:51 -0400
+IronPort-SDR: gYaEtC4C09WN3eSdGPnej3YUbl2S2k6lhKdUifcVsspTIutIu5umFI9ee6LVQWuUaQGlSQ+Qln
+ 0SnPt++mG3xA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="217337468"
+X-IronPort-AV: E=Sophos;i="5.76,345,1592895600"; 
+   d="scan'208";a="217337468"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2020 09:48:50 -0700
+IronPort-SDR: 0ht87XvZ53q/3W2CoVydxUjAnlEpxuU+TAcCwqoqni40dcjfonSCDKdy7wWC+ddzFuUDbBTaL1
+ PIsc2/OfE0yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,345,1592895600"; 
+   d="scan'208";a="321858908"
+Received: from araj-mobl1.jf.intel.com ([10.254.85.84])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Aug 2020 09:48:49 -0700
+Date:   Sun, 23 Aug 2020 09:48:49 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
+        Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
+        x86@kernel.org, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v2] x86/hotplug: Silence APIC only after all irq's are
+ migrated
+Message-ID: <20200823164848.GA29858@araj-mobl1.jf.intel.com>
+References: <1597970523-24797-1-git-send-email-ashok.raj@intel.com>
 MIME-Version: 1.0
-References: <1597557042-5154-1-git-send-email-simhavcs@gmail.com> <20200823150522.GA1047718@ravnborg.org>
-In-Reply-To: <20200823150522.GA1047718@ravnborg.org>
-From:   Vinay Simha B N <simhavcs@gmail.com>
-Date:   Sun, 23 Aug 2020 22:13:07 +0530
-Message-ID: <CAGWqDJ4-iBRmdDAdHj+0dwpMiXdW=p_SDySjdeU6PR7VOuGs_g@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge/tc358775: Fix for PTR_ERR
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597970523-24797-1-git-send-email-ashok.raj@intel.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Sam.
+Hi Thomas,
 
-On Sun, Aug 23, 2020 at 8:35 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> On Sun, Aug 16, 2020 at 11:20:41AM +0530, Vinay Simha BN wrote:
-> > passing zero to 'PTR_ERR'
-> >
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
->
-> Applied to drm-misc-next - thanks.
->
->         Sam
->
-> > ---
-> >  drivers/gpu/drm/bridge/tc358775.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/tc358775.c b/drivers/gpu/drm/bridge/tc358775.c
-> > index 7da15cd..d951cdc 100644
-> > --- a/drivers/gpu/drm/bridge/tc358775.c
-> > +++ b/drivers/gpu/drm/bridge/tc358775.c
-> > @@ -684,7 +684,7 @@ static int tc_probe(struct i2c_client *client, const struct i2c_device_id *id)
-> >
-> >       tc->vdd = devm_regulator_get(dev, "vdd-supply");
-> >       if (IS_ERR(tc->vdd)) {
-> > -             ret = PTR_ERR(tc->vddio);
-> > +             ret = PTR_ERR(tc->vdd);
-> >               dev_err(dev, "vdd-supply not found\n");
-> >               return ret;
-> >       }
-> > --
-> > 2.7.4
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I was wondering if you got a chance to take a look at this fix?
+
+I had some mail issues recently and they showed up at lore after 2
+days. I wasn't sure if you got the original mail, or maybe it didn't
+make it. 
+
+If you had a different way to fix it, we can try those out. 
 
 
+On Thu, Aug 20, 2020 at 05:42:03PM -0700, Ashok Raj wrote:
+> When offlining CPUs, fixup_irqs() migrates all interrupts away from the
+> outgoing CPU to an online CPU. It's always possible the device sent an
+> interrupt to the previous CPU destination. Pending interrupt bit in IRR in
+> LAPIC identifies such interrupts. apic_soft_disable() will not capture any
+> new interrupts in IRR. This causes interrupts from device to be lost during
+> CPU offline. The issue was found when explicitly setting MSI affinity to a
+> CPU and immediately offlining it. It was simple to recreate with a USB
+> ethernet device and doing I/O to it while the CPU is offlined. Lost
+> interrupts happen even when Interrupt Remapping is enabled.
+> 
+> Current code does apic_soft_disable() before migrating interrupts.
+> 
+> native_cpu_disable()
+> {
+> 	...
+> 	apic_soft_disable();
+> 	cpu_disable_common();
+> 	  --> fixup_irqs(); // Too late to capture anything in IRR.
+> }
+> 
+> Just flipping the above call sequence seems to hit the IRR checks
+> and the lost interrupt is fixed for both legacy MSI and when
+> interrupt remapping is enabled.
 
--- 
-regards,
-vinaysimha
+On another note, we have tested both with and without the read
+after write when programming MSI addr/data on the device. It didn't
+seem to change the results. But I think its a useful one to add
+for correctness.
+
+https://lore.kernel.org/lkml/878si6rx7f.fsf@nanos.tec.linutronix.de/
+
+This bug been eluding for a while. Looking for your feedback.
+
+> 
+> Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
+> Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
+> Reported-by: Evan Green <evgreen@chromium.org>
+> Tested-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+> Tested-by: Evan Green <evgreen@chromium.org>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> ---
+> v2:
+> - Typos and fixes suggested by Randy Dunlap
+> 
+> To: linux-kernel@vger.kernel.org
+> To: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Sukumar Ghorai <sukumar.ghorai@intel.com>
+> Cc: Srikanth Nandamuri <srikanth.nandamuri@intel.com>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  arch/x86/kernel/smpboot.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+> index 27aa04a95702..3016c3b627ce 100644
+> --- a/arch/x86/kernel/smpboot.c
+> +++ b/arch/x86/kernel/smpboot.c
+> @@ -1594,13 +1594,20 @@ int native_cpu_disable(void)
+>  	if (ret)
+>  		return ret;
+>  
+> +	cpu_disable_common();
+>  	/*
+>  	 * Disable the local APIC. Otherwise IPI broadcasts will reach
+>  	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
+> -	 * messages.
+> +	 * messages. It's important to do apic_soft_disable() after
+> +	 * fixup_irqs(), because fixup_irqs() called from cpu_disable_common()
+> +	 * depends on IRR being set. After apic_soft_disable() CPU preserves
+> +	 * currently set IRR/ISR but new interrupts will not set IRR.
+> +	 * This causes interrupts sent to outgoing CPU before completion
+> +	 * of IRQ migration to be lost. Check SDM Vol 3 "10.4.7.2 Local
+> +	 * APIC State after It Has been Software Disabled" section for more
+> +	 * details.
+>  	 */
+>  	apic_soft_disable();
+> -	cpu_disable_common();
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.7.4
+> 
