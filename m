@@ -2,200 +2,357 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 06:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF35AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 06:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D957120720
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 06:10:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TZombwlk"
+	by mail.kernel.org (Postfix) with ESMTP id A61A1207CD
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 06:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgHWGKH (ORCPT
+        id S1726999AbgHWGMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 02:10:07 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10833 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgHWGKH (ORCPT
+        Sun, 23 Aug 2020 02:12:01 -0400
+Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:39200 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgHWGMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 02:10:07 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4207c90001>; Sat, 22 Aug 2020 23:08:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sat, 22 Aug 2020 23:10:06 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sat, 22 Aug 2020 23:10:06 -0700
-Received: from mtl-vdi-166.wap.labs.mlnx (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 23 Aug
- 2020 06:09:54 +0000
-Date:   Sun, 23 Aug 2020 09:09:51 +0300
-From:   Eli Cohen <elic@nvidia.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-CC:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Eli Cohen <eli@mellanox.com>,
-        <virtualization@lists.linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] vdpa/mlx5: Avoid warnings about shifts on 32-bit
- platforms
-Message-ID: <20200823060951.GA147797@mtl-vdi-166.wap.labs.mlnx>
-References: <20200821225018.940798-1-natechancellor@gmail.com>
+        Sun, 23 Aug 2020 02:12:00 -0400
+Received: from localhost.localdomain ([93.22.133.217])
+        by mwinf5d33 with ME
+        id JuBt230054hbG4l03uBtgt; Sun, 23 Aug 2020 08:11:57 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 23 Aug 2020 08:11:57 +0200
+X-ME-IP: 93.22.133.217
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     dave@thedillows.org, davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] typhoon: switch from 'pci_' to 'dma_' API
+Date:   Sun, 23 Aug 2020 08:11:50 +0200
+Message-Id: <20200823061150.162135-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200821225018.940798-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.9.5 (bf161cf53efb) (2018-04-13)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598162889; bh=UQi/THUnpkMQGa3pyAFcoK62NCnVMUs9jsVEsWrDdzM=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=TZombwlkRr8Q9ivC7JDBu8vXs/LCdWnKHt1nNPSTo/wFB+4PKyQ4PoeBSzU15MiSs
-         3u50P3rbMmbQHE6UqlXGfvIJGTHRQ1YDUr6WPZjlF9Tq/WVCBqJHNrP/4VFcMWhHCx
-         H32oq/oyuZuLFltIoCFLgT6nP1djs0GbrXs0+5dl52QtB+IK1lZYjRH3GaJ2l9NkgK
-         uE78k7PZD6Tb4eoXuW+WjBqoZZYS3yRixXHnND8jlHlEYt/583RHEqqWtdmbTc7jWy
-         BoQZv8STAeu3sc1c8j1lwwwO6lr/CDpm7QsB6CeSf4Z3x5RyIbGHS6Sv3jzTpUuXSD
-         bf/9Y91z8s2XA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 03:50:19PM -0700, Nathan Chancellor wrote:
-> Clang warns several times when building for 32-bit ARM along the lines
-> of:
-> 
-> drivers/vdpa/mlx5/net/mlx5_vnet.c:1462:31: warning: shift count >= width
-> of type [-Wshift-count-overflow]
->                 ndev->mvdev.mlx_features |= BIT(VIRTIO_F_VERSION_1);
->                                             ^~~~~~~~~~~~~~~~~~~~~~~
-> 
-> This is related to the BIT macro, which uses an unsigned long literal,
-> which is 32-bit on ARM so having a shift equal to or larger than 32 will
-> cause this warning, such as the above, where VIRTIO_F_VERSION_1 is 32.
-> To avoid this, use BIT_ULL, which will be an unsigned long long. This
-> matches the size of the features field throughout this driver, which is
-> u64 so there should be no functional change.
-> 
-> Fixes: 1a86b377aa21 ("vdpa/mlx5: Add VDPA driver for supported mlx5 devices")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1140
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
-Acked-by: Eli Cohen <elic@nvidia.com>
+The patch has been generated with the coccinelle script below and has been
+hand modified to replace GFP_ with a correct flag.
+It has been compile tested.
 
->  drivers/vdpa/mlx5/net/mlx5_vnet.c | 50 +++++++++++++++----------------
->  1 file changed, 25 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> index 9df69d5efe8c..70676a6d1691 100644
-> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
-> @@ -16,19 +16,19 @@
->  #define to_mvdev(__vdev) container_of((__vdev), struct mlx5_vdpa_dev, vdev)
->  
->  #define VALID_FEATURES_MASK                                                                        \
-> -	(BIT(VIRTIO_NET_F_CSUM) | BIT(VIRTIO_NET_F_GUEST_CSUM) |                                   \
-> -	 BIT(VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) | BIT(VIRTIO_NET_F_MTU) | BIT(VIRTIO_NET_F_MAC) |   \
-> -	 BIT(VIRTIO_NET_F_GUEST_TSO4) | BIT(VIRTIO_NET_F_GUEST_TSO6) |                             \
-> -	 BIT(VIRTIO_NET_F_GUEST_ECN) | BIT(VIRTIO_NET_F_GUEST_UFO) | BIT(VIRTIO_NET_F_HOST_TSO4) | \
-> -	 BIT(VIRTIO_NET_F_HOST_TSO6) | BIT(VIRTIO_NET_F_HOST_ECN) | BIT(VIRTIO_NET_F_HOST_UFO) |   \
-> -	 BIT(VIRTIO_NET_F_MRG_RXBUF) | BIT(VIRTIO_NET_F_STATUS) | BIT(VIRTIO_NET_F_CTRL_VQ) |      \
-> -	 BIT(VIRTIO_NET_F_CTRL_RX) | BIT(VIRTIO_NET_F_CTRL_VLAN) |                                 \
-> -	 BIT(VIRTIO_NET_F_CTRL_RX_EXTRA) | BIT(VIRTIO_NET_F_GUEST_ANNOUNCE) |                      \
-> -	 BIT(VIRTIO_NET_F_MQ) | BIT(VIRTIO_NET_F_CTRL_MAC_ADDR) | BIT(VIRTIO_NET_F_HASH_REPORT) |  \
-> -	 BIT(VIRTIO_NET_F_RSS) | BIT(VIRTIO_NET_F_RSC_EXT) | BIT(VIRTIO_NET_F_STANDBY) |           \
-> -	 BIT(VIRTIO_NET_F_SPEED_DUPLEX) | BIT(VIRTIO_F_NOTIFY_ON_EMPTY) |                          \
-> -	 BIT(VIRTIO_F_ANY_LAYOUT) | BIT(VIRTIO_F_VERSION_1) | BIT(VIRTIO_F_ACCESS_PLATFORM) |      \
-> -	 BIT(VIRTIO_F_RING_PACKED) | BIT(VIRTIO_F_ORDER_PLATFORM) | BIT(VIRTIO_F_SR_IOV))
-> +	(BIT_ULL(VIRTIO_NET_F_CSUM) | BIT_ULL(VIRTIO_NET_F_GUEST_CSUM) |                                   \
-> +	 BIT_ULL(VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) | BIT_ULL(VIRTIO_NET_F_MTU) | BIT_ULL(VIRTIO_NET_F_MAC) |   \
-> +	 BIT_ULL(VIRTIO_NET_F_GUEST_TSO4) | BIT_ULL(VIRTIO_NET_F_GUEST_TSO6) |                             \
-> +	 BIT_ULL(VIRTIO_NET_F_GUEST_ECN) | BIT_ULL(VIRTIO_NET_F_GUEST_UFO) | BIT_ULL(VIRTIO_NET_F_HOST_TSO4) | \
-> +	 BIT_ULL(VIRTIO_NET_F_HOST_TSO6) | BIT_ULL(VIRTIO_NET_F_HOST_ECN) | BIT_ULL(VIRTIO_NET_F_HOST_UFO) |   \
-> +	 BIT_ULL(VIRTIO_NET_F_MRG_RXBUF) | BIT_ULL(VIRTIO_NET_F_STATUS) | BIT_ULL(VIRTIO_NET_F_CTRL_VQ) |      \
-> +	 BIT_ULL(VIRTIO_NET_F_CTRL_RX) | BIT_ULL(VIRTIO_NET_F_CTRL_VLAN) |                                 \
-> +	 BIT_ULL(VIRTIO_NET_F_CTRL_RX_EXTRA) | BIT_ULL(VIRTIO_NET_F_GUEST_ANNOUNCE) |                      \
-> +	 BIT_ULL(VIRTIO_NET_F_MQ) | BIT_ULL(VIRTIO_NET_F_CTRL_MAC_ADDR) | BIT_ULL(VIRTIO_NET_F_HASH_REPORT) |  \
-> +	 BIT_ULL(VIRTIO_NET_F_RSS) | BIT_ULL(VIRTIO_NET_F_RSC_EXT) | BIT_ULL(VIRTIO_NET_F_STANDBY) |           \
-> +	 BIT_ULL(VIRTIO_NET_F_SPEED_DUPLEX) | BIT_ULL(VIRTIO_F_NOTIFY_ON_EMPTY) |                          \
-> +	 BIT_ULL(VIRTIO_F_ANY_LAYOUT) | BIT_ULL(VIRTIO_F_VERSION_1) | BIT_ULL(VIRTIO_F_ACCESS_PLATFORM) |      \
-> +	 BIT_ULL(VIRTIO_F_RING_PACKED) | BIT_ULL(VIRTIO_F_ORDER_PLATFORM) | BIT_ULL(VIRTIO_F_SR_IOV))
->  
->  #define VALID_STATUS_MASK                                                                          \
->  	(VIRTIO_CONFIG_S_ACKNOWLEDGE | VIRTIO_CONFIG_S_DRIVER | VIRTIO_CONFIG_S_DRIVER_OK |        \
-> @@ -149,7 +149,7 @@ static bool mlx5_vdpa_debug;
->  
->  #define MLX5_LOG_VIO_FLAG(_feature)                                                                \
->  	do {                                                                                       \
-> -		if (features & BIT(_feature))                                                      \
-> +		if (features & BIT_ULL(_feature))                                                  \
->  			mlx5_vdpa_info(mvdev, "%s\n", #_feature);                                  \
->  	} while (0)
->  
-> @@ -750,10 +750,10 @@ static bool vq_is_tx(u16 idx)
->  
->  static u16 get_features_12_3(u64 features)
->  {
-> -	return (!!(features & BIT(VIRTIO_NET_F_HOST_TSO4)) << 9) |
-> -	       (!!(features & BIT(VIRTIO_NET_F_HOST_TSO6)) << 8) |
-> -	       (!!(features & BIT(VIRTIO_NET_F_CSUM)) << 7) |
-> -	       (!!(features & BIT(VIRTIO_NET_F_GUEST_CSUM)) << 6);
-> +	return (!!(features & BIT_ULL(VIRTIO_NET_F_HOST_TSO4)) << 9) |
-> +	       (!!(features & BIT_ULL(VIRTIO_NET_F_HOST_TSO6)) << 8) |
-> +	       (!!(features & BIT_ULL(VIRTIO_NET_F_CSUM)) << 7) |
-> +	       (!!(features & BIT_ULL(VIRTIO_NET_F_GUEST_CSUM)) << 6);
->  }
->  
->  static int create_virtqueue(struct mlx5_vdpa_net *ndev, struct mlx5_vdpa_virtqueue *mvq)
-> @@ -1439,13 +1439,13 @@ static u64 mlx_to_vritio_features(u16 dev_features)
->  	u64 result = 0;
->  
->  	if (dev_features & MLX5_VIRTIO_NET_F_GUEST_CSUM)
-> -		result |= BIT(VIRTIO_NET_F_GUEST_CSUM);
-> +		result |= BIT_ULL(VIRTIO_NET_F_GUEST_CSUM);
->  	if (dev_features & MLX5_VIRTIO_NET_F_CSUM)
-> -		result |= BIT(VIRTIO_NET_F_CSUM);
-> +		result |= BIT_ULL(VIRTIO_NET_F_CSUM);
->  	if (dev_features & MLX5_VIRTIO_NET_F_HOST_TSO6)
-> -		result |= BIT(VIRTIO_NET_F_HOST_TSO6);
-> +		result |= BIT_ULL(VIRTIO_NET_F_HOST_TSO6);
->  	if (dev_features & MLX5_VIRTIO_NET_F_HOST_TSO4)
-> -		result |= BIT(VIRTIO_NET_F_HOST_TSO4);
-> +		result |= BIT_ULL(VIRTIO_NET_F_HOST_TSO4);
->  
->  	return result;
->  }
-> @@ -1459,15 +1459,15 @@ static u64 mlx5_vdpa_get_features(struct vdpa_device *vdev)
->  	dev_features = MLX5_CAP_DEV_VDPA_EMULATION(mvdev->mdev, device_features_bits_mask);
->  	ndev->mvdev.mlx_features = mlx_to_vritio_features(dev_features);
->  	if (MLX5_CAP_DEV_VDPA_EMULATION(mvdev->mdev, virtio_version_1_0))
-> -		ndev->mvdev.mlx_features |= BIT(VIRTIO_F_VERSION_1);
-> -	ndev->mvdev.mlx_features |= BIT(VIRTIO_F_ACCESS_PLATFORM);
-> +		ndev->mvdev.mlx_features |= BIT_ULL(VIRTIO_F_VERSION_1);
-> +	ndev->mvdev.mlx_features |= BIT_ULL(VIRTIO_F_ACCESS_PLATFORM);
->  	print_features(mvdev, ndev->mvdev.mlx_features, false);
->  	return ndev->mvdev.mlx_features;
->  }
->  
->  static int verify_min_features(struct mlx5_vdpa_dev *mvdev, u64 features)
->  {
-> -	if (!(features & BIT(VIRTIO_F_ACCESS_PLATFORM)))
-> +	if (!(features & BIT_ULL(VIRTIO_F_ACCESS_PLATFORM)))
->  		return -EOPNOTSUPP;
->  
->  	return 0;
-> 
-> base-commit: 8a7c3213db068135e816a6a517157de6443290d6
-> -- 
-> 2.28.0
-> 
+When memory is allocated in 'typhoon_init_one()' GFP_KERNEL can be used
+because it is a probe function and no lock is acquired.
+
+When memory is allocated in 'typhoon_download_firmware()', GFP_ATOMIC
+must be used because it can be called from a .ndo_tx_timeout function.
+So this function can be called with the 'netif_tx_lock' acquired.
+The call chain is:
+  --> typhoon_tx_timeout                 (.ndo_tx_timeout function)
+    --> typhoon_start_runtime
+      --> typhoon_download_firmware
+
+While at is, update some comments accordingly.
+
+
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
+
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
+
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
+
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ drivers/net/ethernet/3com/typhoon.c | 61 ++++++++++++++---------------
+ 1 file changed, 30 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/net/ethernet/3com/typhoon.c b/drivers/net/ethernet/3com/typhoon.c
+index d3b30bacc94e..f11474cac59f 100644
+--- a/drivers/net/ethernet/3com/typhoon.c
++++ b/drivers/net/ethernet/3com/typhoon.c
+@@ -789,8 +789,8 @@ typhoon_start_tx(struct sk_buff *skb, struct net_device *dev)
+ 	 * it with zeros to ETH_ZLEN for us.
+ 	 */
+ 	if (skb_shinfo(skb)->nr_frags == 0) {
+-		skb_dma = pci_map_single(tp->tx_pdev, skb->data, skb->len,
+-				       PCI_DMA_TODEVICE);
++		skb_dma = dma_map_single(&tp->tx_pdev->dev, skb->data,
++					 skb->len, DMA_TO_DEVICE);
+ 		txd->flags = TYPHOON_FRAG_DESC | TYPHOON_DESC_VALID;
+ 		txd->len = cpu_to_le16(skb->len);
+ 		txd->frag.addr = cpu_to_le32(skb_dma);
+@@ -800,8 +800,8 @@ typhoon_start_tx(struct sk_buff *skb, struct net_device *dev)
+ 		int i, len;
+ 
+ 		len = skb_headlen(skb);
+-		skb_dma = pci_map_single(tp->tx_pdev, skb->data, len,
+-				         PCI_DMA_TODEVICE);
++		skb_dma = dma_map_single(&tp->tx_pdev->dev, skb->data, len,
++					 DMA_TO_DEVICE);
+ 		txd->flags = TYPHOON_FRAG_DESC | TYPHOON_DESC_VALID;
+ 		txd->len = cpu_to_le16(len);
+ 		txd->frag.addr = cpu_to_le32(skb_dma);
+@@ -818,8 +818,8 @@ typhoon_start_tx(struct sk_buff *skb, struct net_device *dev)
+ 
+ 			len = skb_frag_size(frag);
+ 			frag_addr = skb_frag_address(frag);
+-			skb_dma = pci_map_single(tp->tx_pdev, frag_addr, len,
+-					 PCI_DMA_TODEVICE);
++			skb_dma = dma_map_single(&tp->tx_pdev->dev, frag_addr,
++						 len, DMA_TO_DEVICE);
+ 			txd->flags = TYPHOON_FRAG_DESC | TYPHOON_DESC_VALID;
+ 			txd->len = cpu_to_le16(len);
+ 			txd->frag.addr = cpu_to_le32(skb_dma);
+@@ -1349,12 +1349,12 @@ typhoon_download_firmware(struct typhoon *tp)
+ 	image_data = typhoon_fw->data;
+ 	fHdr = (struct typhoon_file_header *) image_data;
+ 
+-	/* Cannot just map the firmware image using pci_map_single() as
++	/* Cannot just map the firmware image using dma_map_single() as
+ 	 * the firmware is vmalloc()'d and may not be physically contiguous,
+-	 * so we allocate some consistent memory to copy the sections into.
++	 * so we allocate some coherent memory to copy the sections into.
+ 	 */
+ 	err = -ENOMEM;
+-	dpage = pci_alloc_consistent(pdev, PAGE_SIZE, &dpage_dma);
++	dpage = dma_alloc_coherent(&pdev->dev, PAGE_SIZE, &dpage_dma, GFP_ATOMIC);
+ 	if (!dpage) {
+ 		netdev_err(tp->dev, "no DMA mem for firmware\n");
+ 		goto err_out;
+@@ -1460,7 +1460,7 @@ typhoon_download_firmware(struct typhoon *tp)
+ 	iowrite32(irqMasked, ioaddr + TYPHOON_REG_INTR_MASK);
+ 	iowrite32(irqEnabled, ioaddr + TYPHOON_REG_INTR_ENABLE);
+ 
+-	pci_free_consistent(pdev, PAGE_SIZE, dpage, dpage_dma);
++	dma_free_coherent(&pdev->dev, PAGE_SIZE, dpage, dpage_dma);
+ 
+ err_out:
+ 	return err;
+@@ -1527,8 +1527,8 @@ typhoon_clean_tx(struct typhoon *tp, struct transmit_ring *txRing,
+ 			 */
+ 			skb_dma = (dma_addr_t) le32_to_cpu(tx->frag.addr);
+ 			dma_len = le16_to_cpu(tx->len);
+-			pci_unmap_single(tp->pdev, skb_dma, dma_len,
+-				       PCI_DMA_TODEVICE);
++			dma_unmap_single(&tp->pdev->dev, skb_dma, dma_len,
++					 DMA_TO_DEVICE);
+ 		}
+ 
+ 		tx->flags = 0;
+@@ -1609,8 +1609,8 @@ typhoon_alloc_rx_skb(struct typhoon *tp, u32 idx)
+ 	skb_reserve(skb, 2);
+ #endif
+ 
+-	dma_addr = pci_map_single(tp->pdev, skb->data,
+-				  PKT_BUF_SZ, PCI_DMA_FROMDEVICE);
++	dma_addr = dma_map_single(&tp->pdev->dev, skb->data, PKT_BUF_SZ,
++				  DMA_FROM_DEVICE);
+ 
+ 	/* Since no card does 64 bit DAC, the high bits will never
+ 	 * change from zero.
+@@ -1665,20 +1665,19 @@ typhoon_rx(struct typhoon *tp, struct basic_ring *rxRing, volatile __le32 * read
+ 		if (pkt_len < rx_copybreak &&
+ 		   (new_skb = netdev_alloc_skb(tp->dev, pkt_len + 2)) != NULL) {
+ 			skb_reserve(new_skb, 2);
+-			pci_dma_sync_single_for_cpu(tp->pdev, dma_addr,
+-						    PKT_BUF_SZ,
+-						    PCI_DMA_FROMDEVICE);
++			dma_sync_single_for_cpu(&tp->pdev->dev, dma_addr,
++						PKT_BUF_SZ, DMA_FROM_DEVICE);
+ 			skb_copy_to_linear_data(new_skb, skb->data, pkt_len);
+-			pci_dma_sync_single_for_device(tp->pdev, dma_addr,
+-						       PKT_BUF_SZ,
+-						       PCI_DMA_FROMDEVICE);
++			dma_sync_single_for_device(&tp->pdev->dev, dma_addr,
++						   PKT_BUF_SZ,
++						   DMA_FROM_DEVICE);
+ 			skb_put(new_skb, pkt_len);
+ 			typhoon_recycle_rx_skb(tp, idx);
+ 		} else {
+ 			new_skb = skb;
+ 			skb_put(new_skb, pkt_len);
+-			pci_unmap_single(tp->pdev, dma_addr, PKT_BUF_SZ,
+-				       PCI_DMA_FROMDEVICE);
++			dma_unmap_single(&tp->pdev->dev, dma_addr, PKT_BUF_SZ,
++					 DMA_FROM_DEVICE);
+ 			typhoon_alloc_rx_skb(tp, idx);
+ 		}
+ 		new_skb->protocol = eth_type_trans(new_skb, tp->dev);
+@@ -1792,8 +1791,8 @@ typhoon_free_rx_rings(struct typhoon *tp)
+ 	for (i = 0; i < RXENT_ENTRIES; i++) {
+ 		struct rxbuff_ent *rxb = &tp->rxbuffers[i];
+ 		if (rxb->skb) {
+-			pci_unmap_single(tp->pdev, rxb->dma_addr, PKT_BUF_SZ,
+-				       PCI_DMA_FROMDEVICE);
++			dma_unmap_single(&tp->pdev->dev, rxb->dma_addr,
++					 PKT_BUF_SZ, DMA_FROM_DEVICE);
+ 			dev_kfree_skb(rxb->skb);
+ 			rxb->skb = NULL;
+ 		}
+@@ -2306,7 +2305,7 @@ typhoon_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto error_out_disable;
+ 	}
+ 
+-	err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
++	err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
+ 	if (err < 0) {
+ 		err_msg = "No usable DMA configuration";
+ 		goto error_out_mwi;
+@@ -2355,8 +2354,8 @@ typhoon_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	/* allocate pci dma space for rx and tx descriptor rings
+ 	 */
+-	shared = pci_alloc_consistent(pdev, sizeof(struct typhoon_shared),
+-				      &shared_dma);
++	shared = dma_alloc_coherent(&pdev->dev, sizeof(struct typhoon_shared),
++				    &shared_dma, GFP_KERNEL);
+ 	if (!shared) {
+ 		err_msg = "could not allocate DMA memory";
+ 		err = -ENOMEM;
+@@ -2509,8 +2508,8 @@ typhoon_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	typhoon_reset(ioaddr, NoWait);
+ 
+ error_out_dma:
+-	pci_free_consistent(pdev, sizeof(struct typhoon_shared),
+-			    shared, shared_dma);
++	dma_free_coherent(&pdev->dev, sizeof(struct typhoon_shared), shared,
++			  shared_dma);
+ error_out_remap:
+ 	pci_iounmap(pdev, ioaddr);
+ error_out_regions:
+@@ -2537,8 +2536,8 @@ typhoon_remove_one(struct pci_dev *pdev)
+ 	pci_restore_state(pdev);
+ 	typhoon_reset(tp->ioaddr, NoWait);
+ 	pci_iounmap(pdev, tp->ioaddr);
+-	pci_free_consistent(pdev, sizeof(struct typhoon_shared),
+-			    tp->shared, tp->shared_dma);
++	dma_free_coherent(&pdev->dev, sizeof(struct typhoon_shared),
++			  tp->shared, tp->shared_dma);
+ 	pci_release_regions(pdev);
+ 	pci_clear_mwi(pdev);
+ 	pci_disable_device(pdev);
+-- 
+2.25.1
+
