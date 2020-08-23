@@ -2,239 +2,200 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29390C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A30BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F025D206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3304320724
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:34:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ov4rrPDx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBGUO2+C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgHWV1G (ORCPT
+        id S1726765AbgHWVeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 17:27:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44294 "EHLO
+        Sun, 23 Aug 2020 17:34:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgHWV1F (ORCPT
+        with ESMTP id S1726257AbgHWVeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 17:27:05 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F48C061573;
-        Sun, 23 Aug 2020 14:27:04 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id u21so8726814ejz.0;
-        Sun, 23 Aug 2020 14:27:04 -0700 (PDT)
+        Sun, 23 Aug 2020 17:34:16 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D740C061573;
+        Sun, 23 Aug 2020 14:34:16 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id i10so7441382ljn.2;
+        Sun, 23 Aug 2020 14:34:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EcCugnZtUf9EcdHZzAdpWyC7YtIPD+wlHx18QDFMkeA=;
-        b=Ov4rrPDx0whCuZe1U34iy0hzc2I7RNo7LBhJx3P4bLi4ieABp1HynodJ3pySbP3YPa
-         qRuG0vzWxMwehD9Z+QIlsv3ECfyzkd7t24rl9ZFUcUPzk8ZevcJWVE47t7n8Gz3DD+BK
-         km+VUQ+Pf7flm7ZQPXzfwCTKilbOMSZKm2mJ/55+KkhyDjejZAaTS50I4ROez4/RqMS0
-         Sfx4WUoEkrNRlQiMROM4wNqukl3H1sxww480rPkaTFauoCYnA+6UXCi7ZGTH3GPfV87Y
-         jgYp5RAAXK/NjaC72HNHB1Vsh9Xb5YUa9vT2KpHbepVusA0RXqUSctAuP3J7JWHlPAgZ
-         /ksQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n2F2FGRAOF++9VTPEPAqlvQHDhX4O80c4ILV6HoVEkg=;
+        b=nBGUO2+CzS+eIedJYh0adgzGTCDK+DiYn+T1RWXwfVtA2TPyYsqs5oPkwJ5G6odtcA
+         5+zRzZJcb6dh2zSNNYBhTZxQ2YWy8Qb/LmpKPWnd8BRTPrxglvI0lrfrLeUqAMQnF4Lv
+         jUc3pDjYPCyq6k5mHgnYpKhff2MyMHxmWsvf6cLws+OTw+1JIA2CMEHDk2b29JjHp8ek
+         dOriBvpV8Rr0Q71D4TeYyrYtbb0BGJKZ0rLDya+EH5FPsx6rOHVCB3m5SXVxFxIfqDoo
+         A+3QOEhgqi7Gox6wqxUqQ/PGrXaMSN82Z4X89LoCSBJNkOtDhqjPg95Csr2lyf66RTAC
+         xMqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=EcCugnZtUf9EcdHZzAdpWyC7YtIPD+wlHx18QDFMkeA=;
-        b=cvuTdqzZX3fHr0yfMBcbAidofZR2UyJZFsKwBY10lFOwhQozIofrQQtZErZ6Fa1fMC
-         z6vkpvK1gAMDZa+b8hopopJ0tSFMxWUuXdbnnH+26BhdGoUVOR8gGTsL0/48UUCHwONF
-         cicbZXLDPx+0+hUxTUXGQqHmt+aVxoZZeGzWXyEfpIY5j6UXxLyZJKrTRfT9/0EdOfEw
-         2GuiXIO7wrJ83SKhgnsrEvvdwyCMOKj+OVhbDTKFrQ3CcYZR6Gm/wiiG+hkkXNjlE+FM
-         wN0oTQUOjXeOwc6f7Mi9r7d69wagVvUG6WHexciurbA9/M/OT5H8Bq61Z2ZziZKlaxL9
-         8TEQ==
-X-Gm-Message-State: AOAM530vAnGj6PhY2/rNxyCQAoERXWHds/8BKK8qK6P9snsSWKMokHPE
-        4xy8rzGfQqxvuKSKvVHQwWE=
-X-Google-Smtp-Source: ABdhPJyt/4b6xfFADsr3nS/4mP8hBYXqkEGngXAANdtzAuyylwhhDwKenjVSiyKFH7lMXULbkOC/bA==
-X-Received: by 2002:a17:906:cb86:: with SMTP id mf6mr2932493ejb.415.1598218023225;
-        Sun, 23 Aug 2020 14:27:03 -0700 (PDT)
-Received: from localhost.localdomain ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id d17sm5233305edr.78.2020.08.23.14.27.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2020 14:27:02 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        angelo.dureghello@timesys.com
-Subject: [PATCH] spi: spi-fsl-dspi: delete EOQ transfer mode
-Date:   Mon, 24 Aug 2020 00:26:57 +0300
-Message-Id: <20200823212657.2400075-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        bh=n2F2FGRAOF++9VTPEPAqlvQHDhX4O80c4ILV6HoVEkg=;
+        b=b6x/YT7njZ9ruqmsIF19K4G5QPjXy0d+fTjt7e8phRp+dPm31by6KVusLQJeXwl8jW
+         vS0QpXjVz/EGqdkFKDHcxu1Exu3aZjrkcmimix62GRLHFf9HHqgTVSxCDbfTwQeElXNl
+         Iab9vO0IZPAGMosJakrim6BvkWra+OOjwa2C4lr4sru5XfkQUIitatgxXqc8hsTMKXkz
+         Deo8HhXWo63/p6LYftXEOqlVir/Z+qV9n1YhxhlRy7gjXmyAbFxM79laabtXy4KDQf7K
+         3AWlSvlyzG1Ddj42bvDCHdVsc5TZVqdUfXzQyA1KKlidS2+uZT8//ITTLM9Y3GM+O5+4
+         Ckhg==
+X-Gm-Message-State: AOAM5339A6LoeHpgPQpLH8w0S+3H4f8oMsDxomXbdLYIgBNz+kUirIAC
+        GmzvLLMsSM6ZoKPC91qbDkqgbmJLmGs=
+X-Google-Smtp-Source: ABdhPJyGaoIhdc9oGCyfDdmoZ4N9IK/jexb/zrdCS7oGtDaEk9ZhXkPkOIEioXN5U2D5nTEitFcv4A==
+X-Received: by 2002:a05:651c:8f:: with SMTP id 15mr1122855ljq.53.1598218454018;
+        Sun, 23 Aug 2020 14:34:14 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id f18sm395343lfa.54.2020.08.23.14.34.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Aug 2020 14:34:13 -0700 (PDT)
+Subject: Re: [PATCH 16/18] staging/media/tegra-vde: Clean up IOMMU workaround
+To:     Robin Murphy <robin.murphy@arm.com>, hch@lst.de, joro@8bytes.org,
+        linux@armlinux.org.uk
+Cc:     will@kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, vdumpa@nvidia.com,
+        matthias.bgg@gmail.com, yong.wu@mediatek.com,
+        geert+renesas@glider.be, magnus.damm@gmail.com, t-kristo@ti.com,
+        s-anna@ti.com, laurent.pinchart@ideasonboard.com,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1597931875.git.robin.murphy@arm.com>
+ <3535c205b9bce52556abbf2f63384fb38e009df9.1597931876.git.robin.murphy@arm.com>
+ <07135a55-cbc9-83e5-60dc-731282192554@gmail.com>
+ <cb12808b-7316-19db-7413-b7f852a6f8ae@arm.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <62a72187-442b-2103-46c3-39d3cd999f54@gmail.com>
+Date:   Mon, 24 Aug 2020 00:34:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <cb12808b-7316-19db-7413-b7f852a6f8ae@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After the only user of the limited EOQ mode has now been converted to
-DMA as of commit b09058bbf5f0 ("spi: spi-fsl-dspi: set ColdFire to DMA
-mode"), we can finally delete this code.
+21.08.2020 03:11, Robin Murphy пишет:
+...
+>> Hello, Robin! Thank you for yours work!
+>>
+>> Some drivers, like this Tegra VDE (Video Decoder Engine) driver for
+>> example, do not want to use implicit IOMMU domain.
+> 
+> That isn't (intentionally) changing here - the only difference should be
+> that instead of having the ARM-special implicit domain, which you have
+> to kick out of the way with the ARM-specific API before you're able to
+> attach your own domain, the implicit domain is now a proper IOMMU API
+> default domain, which automatically gets bumped by your attach. The
+> default domains should still only be created in the same cases that the
+> ARM dma_iommu_mappings were.
+> 
+>> Tegra VDE driver
+>> relies on explicit IOMMU domain in a case of Tegra SMMU because VDE
+>> hardware can't access last page of the AS and because driver wants to
+>> reserve some fixed addresses [1].
+>>
+>> [1]
+>> https://elixir.bootlin.com/linux/v5.9-rc1/source/drivers/staging/media/tegra-vde/iommu.c#L100
+>>
+>>
+>> Tegra30 SoC supports up to 4 domains, hence it's not possible to afford
+>> wasting unused implicit domains. I think this needs to be addressed
+>> before this patch could be applied.
+> 
+> Yeah, there is one subtle change in behaviour from removing the ARM
+> layer on top of the core API, in that the IOMMU driver will no longer
+> see an explicit detach call. Thus it does stand to benefit from being a
+> bit cleverer about noticing devices being moved from one domain to
+> another by an attach call, either by releasing the hardware context for
+> the inactive domain once the device(s) are moved across to the new one,
+> or by simply reprogramming the hardware context in-place for the new
+> domain's address space without allocating a new one at all (most of the
+> drivers that don't have multiple contexts already handle the latter
+> approach quite well).
+> 
+>> Would it be possible for IOMMU drivers to gain support for filtering out
+>> devices in iommu_domain_alloc(dev, type)? Then perhaps Tegra SMMU driver
+>> could simply return NULL in a case of type=IOMMU_DOMAIN_DMA and
+>> dev=tegra-vde.
+> 
+> If you can implement IOMMU_DOMAIN_IDENTITY by allowing the relevant
+> devices to bypass translation entirely without needing a hardware
+> context (or at worst, can spare one context which all identity-mapped
+> logical domains can share), then you could certainly do that kind of
+> filtering with the .def_domain_type callback if you really wanted to. As
+> above, the intent is that that shouldn't be necessary for this
+> particular case, since only one of a group's default domain and
+> explicitly attached domain can be live at any given time, so the driver
+> should be able to take advantage of that.
+> 
+> If you simply have more active devices (groups) than available contexts
+> then yes, you probably would want to do some filtering to decide who
+> deserves a translation domain and who doesn't, but in that case you
+> should already have had a long-standing problem with the ARM implicit
+> domains.
+> 
+>> Alternatively, the Tegra SMMU could be changed such that the devices
+>> will be attached to a domain at the time of a first IOMMU mapping
+>> invocation instead of attaching at the time of attach_dev() callback
+>> invocation.
+>>
+>> Or maybe even IOMMU core could be changed to attach devices at the time
+>> of the first IOMMU mapping invocation? This could be a universal
+>> solution for all drivers.
+> 
+> I suppose technically you could do that within an IOMMU driver already
+> (similar to how some defer most of setup that logically belongs to
+> ->domain_alloc until the first ->attach_dev). It's a bit grim from the
+> caller's PoV though, in terms of the failure mode being non-obvious and
+> having no real way to recover. Again, you'd be better off simply making
+> decisions up-front at domain_alloc or attach time based on the domain type.
 
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
- drivers/spi/spi-fsl-dspi.c | 56 ++++----------------------------------
- 1 file changed, 5 insertions(+), 51 deletions(-)
+Robin, thank you very much for the clarifications!
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 5b9a285d84a7..c739cc7e4561 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -53,7 +53,6 @@
- 
- #define SPI_SR				0x2c
- #define SPI_SR_TCFQF			BIT(31)
--#define SPI_SR_EOQF			BIT(28)
- #define SPI_SR_TFUF			BIT(27)
- #define SPI_SR_TFFF			BIT(25)
- #define SPI_SR_CMDTCF			BIT(23)
-@@ -62,7 +61,7 @@
- #define SPI_SR_TFIWF			BIT(18)
- #define SPI_SR_RFDF			BIT(17)
- #define SPI_SR_CMDFFF			BIT(16)
--#define SPI_SR_CLEAR			(SPI_SR_TCFQF | SPI_SR_EOQF | \
-+#define SPI_SR_CLEAR			(SPI_SR_TCFQF | \
- 					SPI_SR_TFUF | SPI_SR_TFFF | \
- 					SPI_SR_CMDTCF | SPI_SR_SPEF | \
- 					SPI_SR_RFOF | SPI_SR_TFIWF | \
-@@ -75,7 +74,6 @@
- 
- #define SPI_RSER			0x30
- #define SPI_RSER_TCFQE			BIT(31)
--#define SPI_RSER_EOQFE			BIT(28)
- #define SPI_RSER_CMDTCFE		BIT(23)
- 
- #define SPI_PUSHR			0x34
-@@ -114,7 +112,6 @@ struct chip_data {
- };
- 
- enum dspi_trans_mode {
--	DSPI_EOQ_MODE = 0,
- 	DSPI_XSPI_MODE,
- 	DSPI_DMA_MODE,
- };
-@@ -671,11 +668,6 @@ static void ns_delay_scale(char *psc, char *sc, int delay_ns,
- 	}
- }
- 
--static void dspi_pushr_write(struct fsl_dspi *dspi)
--{
--	regmap_write(dspi->regmap, SPI_PUSHR, dspi_pop_tx_pushr(dspi));
--}
--
- static void dspi_pushr_cmd_write(struct fsl_dspi *dspi, u16 cmd)
- {
- 	/*
-@@ -735,21 +727,6 @@ static void dspi_xspi_fifo_write(struct fsl_dspi *dspi, int num_words)
- 	}
- }
- 
--static void dspi_eoq_fifo_write(struct fsl_dspi *dspi, int num_words)
--{
--	u16 xfer_cmd = dspi->tx_cmd;
--
--	/* Fill TX FIFO with as many transfers as possible */
--	while (num_words--) {
--		dspi->tx_cmd = xfer_cmd;
--		/* Request EOQF for last transfer in FIFO */
--		if (num_words == 0)
--			dspi->tx_cmd |= SPI_PUSHR_CMD_EOQ;
--		/* Write combined TX FIFO and CMD FIFO entry */
--		dspi_pushr_write(dspi);
--	}
--}
--
- static u32 dspi_popr_read(struct fsl_dspi *dspi)
- {
- 	u32 rxdata = 0;
-@@ -818,7 +795,7 @@ static void dspi_setup_accel(struct fsl_dspi *dspi)
- 	dspi->oper_word_size = DIV_ROUND_UP(dspi->oper_bits_per_word, 8);
- 
- 	/*
--	 * Update CTAR here (code is common for EOQ, XSPI and DMA modes).
-+	 * Update CTAR here (code is common for XSPI and DMA modes).
- 	 * We will update CTARE in the portion specific to XSPI, when we
- 	 * also know the preload value (DTCP).
- 	 */
-@@ -862,10 +839,7 @@ static void dspi_fifo_write(struct fsl_dspi *dspi)
- 
- 	spi_take_timestamp_pre(dspi->ctlr, xfer, dspi->progress, !dspi->irq);
- 
--	if (dspi->devtype_data->trans_mode == DSPI_EOQ_MODE)
--		dspi_eoq_fifo_write(dspi, num_words);
--	else
--		dspi_xspi_fifo_write(dspi, num_words);
-+	dspi_xspi_fifo_write(dspi, num_words);
- 	/*
- 	 * Everything after this point is in a potential race with the next
- 	 * interrupt, so we must never use dspi->words_in_flight again since it
-@@ -898,7 +872,7 @@ static int dspi_poll(struct fsl_dspi *dspi)
- 		regmap_read(dspi->regmap, SPI_SR, &spi_sr);
- 		regmap_write(dspi->regmap, SPI_SR, spi_sr);
- 
--		if (spi_sr & (SPI_SR_EOQF | SPI_SR_CMDTCF))
-+		if (spi_sr & SPI_SR_CMDTCF)
- 			break;
- 	} while (--tries);
- 
-@@ -916,7 +890,7 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
- 	regmap_write(dspi->regmap, SPI_SR, spi_sr);
- 
--	if (!(spi_sr & (SPI_SR_EOQF | SPI_SR_CMDTCF)))
-+	if (!(spi_sr & SPI_SR_CMDTCF))
- 		return IRQ_NONE;
- 
- 	if (dspi_rxtx(dspi) == 0)
-@@ -1204,9 +1178,6 @@ static int dspi_init(struct fsl_dspi *dspi)
- 	regmap_write(dspi->regmap, SPI_SR, SPI_SR_CLEAR);
- 
- 	switch (dspi->devtype_data->trans_mode) {
--	case DSPI_EOQ_MODE:
--		regmap_write(dspi->regmap, SPI_RSER, SPI_RSER_EOQFE);
--		break;
- 	case DSPI_XSPI_MODE:
- 		regmap_write(dspi->regmap, SPI_RSER, SPI_RSER_CMDTCFE);
- 		break;
-@@ -1245,22 +1216,6 @@ static int dspi_slave_abort(struct spi_master *master)
- 	return 0;
- }
- 
--/*
-- * EOQ mode will inevitably deassert its PCS signal on last word in a queue
-- * (hardware limitation), so we need to inform the spi_device that larger
-- * buffers than the FIFO size are going to have the chip select randomly
-- * toggling, so it has a chance to adapt its message sizes.
-- */
--static size_t dspi_max_message_size(struct spi_device *spi)
--{
--	struct fsl_dspi *dspi = spi_controller_get_devdata(spi->controller);
--
--	if (dspi->devtype_data->trans_mode == DSPI_EOQ_MODE)
--		return dspi->devtype_data->fifo_size;
--
--	return SIZE_MAX;
--}
--
- static int dspi_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
-@@ -1283,7 +1238,6 @@ static int dspi_probe(struct platform_device *pdev)
- 
- 	ctlr->setup = dspi_setup;
- 	ctlr->transfer_one_message = dspi_transfer_one_message;
--	ctlr->max_message_size = dspi_max_message_size;
- 	ctlr->dev.of_node = pdev->dev.of_node;
- 
- 	ctlr->cleanup = dspi_cleanup;
--- 
-2.25.1
+In accordance to yours comments, this patch can't be applied until Tegra
+SMMU will support IOMMU_DOMAIN_IDENTITY and implement def_domain_type()
+callback that returns IOMMU_DOMAIN_IDENTITY for the VDE device.
 
+Otherwise you're breaking the VDE driver because
+dma_buf_map_attachment() [1] returns the IOMMU SGT of the implicit
+domain which is then mapped into the VDE's explicit domain [2], and this
+is a nonsense.
+
+[1]
+https://elixir.bootlin.com/linux/v5.9-rc1/source/drivers/staging/media/tegra-vde/dmabuf-cache.c#L102
+
+[2]
+https://elixir.bootlin.com/linux/v5.9-rc1/source/drivers/staging/media/tegra-vde/dmabuf-cache.c#L122
+
+Hence, either VDE driver should bypass iommu_dma_ops from the start or
+it needs a way to kick out the ops, like it does this using ARM's
+arm_iommu_detach_device().
+
+
+The same applies to the Tegra GPU devices, otherwise you're breaking
+them as well because Tegra DRM is sensible to implicit vs explicit domain.
+
+
+BTW, I tried to apply this series and T30 doesn't boot anymore. I don't
+have more info for now.
