@@ -2,256 +2,182 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2847C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 10:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E1FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 10:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B49A22072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 10:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7128207C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 10:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598177808;
+	bh=sNNU0HlYekzwB0yfQZcmKIYq2ZWNe4GIlaHSv3C2l9A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wj0clQctLkLN/QAHh5SAFmsncI4ehIxMxDSrLH1g7jMnlEG9zO6MuSFQ1uskyHSSx
+	 H7imZv63tpwyV7PG43kUvyIxuWM2kW48FXr9Hz2JvexbAWTuwAX2ar5rv1dSpQwKNb
+	 MH34kd02+SP6NhY52jnl/nkNBQfhSv666Z0YUJnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgHWKOf (ORCPT
+        id S1726910AbgHWKQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 06:14:35 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33570 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbgHWKOe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 06:14:34 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        Sun, 23 Aug 2020 06:16:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbgHWKQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 06:16:46 -0400
+Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9D17429C09F;
-        Sun, 23 Aug 2020 11:14:32 +0100 (BST)
-Date:   Sun, 23 Aug 2020 12:14:30 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Parshuram Thombare <pthombar@cadence.com>, <bbrezillon@kernel.org>,
-        mparab@cadence.com, praneeth@ti.com, pgaj@cadence.com
-Cc:     <vitor.soares@synopsys.com>, linux-kernel@vger.kernel.org,
-        linux-i3c@lists.infradead.org
-Subject: Re: [PATCH v4] i3c: master: fix for SETDASA and DAA process
-Message-ID: <20200823121430.272d97f9@collabora.com>
-In-Reply-To: <20200823115918.7dd868e0@collabora.com>
-References: <1598001195-18511-1-git-send-email-pthombar@cadence.com>
-        <20200823115918.7dd868e0@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id B41E32075B;
+        Sun, 23 Aug 2020 10:16:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598177805;
+        bh=sNNU0HlYekzwB0yfQZcmKIYq2ZWNe4GIlaHSv3C2l9A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LKxqZMhRzqVjwR2QmOX3sxlP6fn47/3fYdnBtc6mArmbJHLBzQCI1MWeCAOWblRmu
+         GscRa4oXOF85qjvNybdV+J5Y6goEuWhuu4irt4fcqe3URt/LFGfwQo6H6rgiqgB2h8
+         o/H/nv4cNEhWjZmZj+s6yqwhQMYn3EphvxKuQ4ss=
+Received: by pali.im (Postfix)
+        id E9490EA3; Sun, 23 Aug 2020 12:16:43 +0200 (CEST)
+Date:   Sun, 23 Aug 2020 12:16:43 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Cc:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v2 08/10] fs/ntfs3: Add Kconfig, Makefile and doc
+Message-ID: <20200823101643.2qljlqzxne4r32am@pali>
+References: <74de75d537ac486e9fcfe7931181a9b9@paragon-software.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <74de75d537ac486e9fcfe7931181a9b9@paragon-software.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 23 Aug 2020 11:59:18 +0200
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
+On Friday 21 August 2020 16:25:37 Konstantin Komarov wrote:
+> +Mount Options
+> +=============
+> +
+> +The list below describes mount options supported by NTFS3 driver in addtion to
+> +generic ones.
+> +
+> +===============================================================================
+> +
+> +nls=name		These options inform the driver how to interpret path
+> +			strings and translate them to Unicode and back. In case
+> +			none of these options are set, or if specified codepage
+> +			doesn't exist on the system, the default codepage will be
+> +			used (CONFIG_NLS_DEFAULT).
+> +			Examples:
+> +				'nls=utf8'
+> +
+> +uid=
+> +gid=
 
+IIRC ntfs filesystem had concept of storing unix owner/group. Was it
+dropped? Or it is incompatible with current Windows implementation? I'm
+just curious if we cannot use ntfs-native unix permissions instead of
+forcing them from mount options. Maybe as improvement for future.
 
-> > -static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
-> > +static int i3c_master_early_i3c_dev_add(struct i3c_master_controller *master,
-> > +					  struct i3c_dev_boardinfo *boardinfo)
-> >  {
-> > -	struct i3c_master_controller *master = i3c_dev_get_master(dev);
-> > +	struct i3c_device_info info = {
-> > +		.static_addr = boardinfo->static_addr,
-> > +	};
-> > +	struct i3c_dev_desc *i3cdev;
-> >  	int ret;
-> >  
-> > -	if (!dev->boardinfo || !dev->boardinfo->init_dyn_addr ||
-> > -	    !dev->boardinfo->static_addr)
-> > -		return;
-> > +	i3cdev = i3c_master_alloc_i3c_dev(master, &info);
-> > +	if (IS_ERR(i3cdev))
-> > +		return -ENOMEM;
-> >  
-> > -	ret = i3c_master_setdasa_locked(master, dev->info.static_addr,
-> > -					dev->boardinfo->init_dyn_addr);
-> > +	i3cdev->boardinfo = boardinfo;
-> > +
-> > +	ret = i3c_master_attach_i3c_dev(master, i3cdev);
-> >  	if (ret)
-> > -		return;
-> > +		goto err_attach;
-> > +
-> > +	ret = i3c_master_setdasa_locked(master, i3cdev->info.static_addr,
-> > +					i3cdev->boardinfo->init_dyn_addr);
-> > +	if (ret)
-> > +		goto err_setdasa;
-> >  
-> > -	dev->info.dyn_addr = dev->boardinfo->init_dyn_addr;
-> > -	ret = i3c_master_reattach_i3c_dev(dev, 0);
-> > +	i3cdev->info.dyn_addr = i3cdev->boardinfo->init_dyn_addr;
-> > +	ret = i3c_master_reattach_i3c_dev(i3cdev, 0);
-> >  	if (ret)
-> >  		goto err_rstdaa;
-> >  
-> > -	ret = i3c_master_retrieve_dev_info(dev);
-> > +	ret = i3c_master_retrieve_dev_info(i3cdev);
-> >  	if (ret)
-> >  		goto err_rstdaa;
-> >  
-> > -	return;
-> > +	return 0;
-> >  
-> >  err_rstdaa:
-> > -	i3c_master_rstdaa_locked(master, dev->boardinfo->init_dyn_addr);
-> > +	i3c_master_rstdaa_locked(master, i3cdev->boardinfo->init_dyn_addr);
-> > +err_setdasa:
+Normally owner/group on ntfs is stored in that windows SID format.
+ntfs-3g fuse driver has some mount option where you can specify mapping
+table between SID and unix to make permissions compatible with existing
+windows installations.
 
-Let's be consistent with the rest of the framework. Labels don't encode
-what the error is but what's expected to be undone. IOW, this one
-should be err_detach_dev
+Such functionality could be a nice feature once somebody would have time
+to implement it in future...
 
-> > +	i3c_master_detach_i3c_dev(i3cdev);
-> > +err_attach:
+> +umask=			Controls the default permissions for files/directories created
+> +			after the NTFS volume is mounted.
+> +
+> +fmask=
+> +dmask=			Instead of specifying umask which applies both to
+> +			files and directories, fmask applies only to files and
+> +			dmask only to directories.
+> +
+> +nohidden		Files with the Windows-specific HIDDEN (FILE_ATTRIBUTE_HIDDEN)
+> +			attribute will not be shown under Linux.
 
-and this one err_free_dev.
+What other people think? It is useful mount option which would disallow
+access to hidden files? Hidden attribute is normal attribute which even
+normal user without admin rights on Windows can set on its own files.
 
-> > +	i3c_master_free_i3c_dev(i3cdev);
-> > +
-> > +	return ret;
-> >  }
-> >  
-> >  static void
-> > @@ -1619,8 +1637,8 @@ static void i3c_master_detach_free_devs(struct i3c_master_controller *master)
-> >   * This function is following all initialisation steps described in the I3C
-> >   * specification:
-> >   *
-> > - * 1. Attach I2C and statically defined I3C devs to the master so that the
-> > - *    master can fill its internal device table appropriately
-> > + * 1. Attach I2C devs to the master so that the master can fill its internal
-> > + *    device table appropriately
-> >   *
-> >   * 2. Call &i3c_master_controller_ops->bus_init() method to initialize
-> >   *    the master controller. That's usually where the bus mode is selected
-> > @@ -1633,10 +1651,14 @@ static void i3c_master_detach_free_devs(struct i3c_master_controller *master)
-> >   * 4. Disable all slave events.
-> >   *
-> >   * 5. Pre-assign dynamic addresses requested by the FW with SETDASA for I3C
-> > - *    devices that have a static address
-> > + *    devices that have a static address and attach corresponding statically
-> > + *    defined I3C devices to the master. If only init_dyn_addr is available
-> > + *    or if SETDASA fails, reserve those init_dyn_addr to be used later to set
-> > + *    address using SETNEWDA after DAA.
+Also concept of hidden files is already present for fat filesystems and
+we do not have such mount option nor for msdosfs, vfat nor for exfat.
 
-I'd re-order this to match what really happens: first reserve slots for
-devices that have an init_dyn_addr defined, then try to create+attach
-devices that also have a static address defined.
+Konstantin, what is purpose of this mount option? I would like to know
+what usecases have this option.
 
-> >   *
-> >   * 6. Do a DAA (Dynamic Address Assignment) to assign dynamic addresses to all
-> > - *    remaining I3C devices
-> > + *    remaining I3C devices and attach them to the master if the dynamic address
-> > + *    assignment succeeds
+> +sys_immutable		Files with the Windows-specific SYSTEM
+> +			(FILE_ATTRIBUTE_SYSTEM) attribute will be marked as system
+> +			immutable files.
+> +
+> +discard			Enable support of the TRIM command for improved performance
+> +			on delete operations, which is recommended for use with the
+> +			solid-state drives (SSD).
+> +
+> +force			Forces the driver to mount partitions even if 'dirty' flag
+> +			(volume dirty) is set. Not recommended for use.
+> +
+> +sparse			Create new files as "sparse".
+> +
+> +showmeta		Use this parameter to show all meta-files (System Files) on
+> +			a mounted NTFS partition.
+> +			By default, all meta-files are hidden.
+> +
+> +no_acs_rules		"No access rules" mount option sets access rights for
+> +			files/folders to 777 and owner/group to root. This mount
+> +			option absorbs all other permissions:
+> +			- permissions change for files/folders will be reported
+> +				as successful, but they will remain 777;
+> +			- owner/group change will be reported as successful, but
+> +				they will stay as root
 
-Can we move that change to a separate patch?
+What about rather adding "mode=" and "dmode=" mount option which would
+specify permissions for all files and directories? Other filesystems
+have support for "mode=" mount option and I think it is better if
+filesystems have some "common" options and not each filesystem its own
+mount option for similar features.
 
-> >   *
-> >   * Once this is done, all I3C and I2C devices should be usable.
-> >   *
-> > @@ -1647,7 +1669,6 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
-> >  	enum i3c_addr_slot_status status;
-> >  	struct i2c_dev_boardinfo *i2cboardinfo;
-> >  	struct i3c_dev_boardinfo *i3cboardinfo;
-> > -	struct i3c_dev_desc *i3cdev;
-> >  	struct i2c_dev_desc *i2cdev;
-> >  	int ret;
-> >  
-> > @@ -1679,34 +1700,6 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
-> >  			goto err_detach_devs;
-> >  		}
-> >  	}
-> > -	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
-> > -		struct i3c_device_info info = {
-> > -			.static_addr = i3cboardinfo->static_addr,
-> > -		};
-> > -
-> > -		if (i3cboardinfo->init_dyn_addr) {
-> > -			status = i3c_bus_get_addr_slot_status(&master->bus,
-> > -						i3cboardinfo->init_dyn_addr);
-> > -			if (status != I3C_ADDR_SLOT_FREE) {
-> > -				ret = -EBUSY;
-> > -				goto err_detach_devs;
-> > -			}
-> > -		}
-> > -
-> > -		i3cdev = i3c_master_alloc_i3c_dev(master, &info);
-> > -		if (IS_ERR(i3cdev)) {
-> > -			ret = PTR_ERR(i3cdev);
-> > -			goto err_detach_devs;
-> > -		}
-> > -
-> > -		i3cdev->boardinfo = i3cboardinfo;
-> > -
-> > -		ret = i3c_master_attach_i3c_dev(master, i3cdev);
-> > -		if (ret) {
-> > -			i3c_master_free_i3c_dev(i3cdev);
-> > -			goto err_detach_devs;
-> > -		}
-> > -	}
-> >  
-> >  	/*
-> >  	 * Now execute the controller specific ->bus_init() routine, which
-> > @@ -1744,10 +1737,33 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
-> >  
-> >  	/*
-> >  	 * Pre-assign dynamic address and retrieve device information if
-> > -	 * needed.
-> > +	 * needed. And reserve the init_dyn_addr in case of failure, to retry
-> > +	 * setting the requested address after DAA is done in
-> > +	 * i3c_master_add_i3c_dev_locked().
+> diff --git a/fs/ntfs3/Kconfig b/fs/ntfs3/Kconfig
+> new file mode 100644
+> index 000000000000..92a9c68008c8
+> --- /dev/null
+> +++ b/fs/ntfs3/Kconfig
+> @@ -0,0 +1,23 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config NTFS3_FS
+> +	tristate "NTFS Read-Write file system support"
+> +	select NLS
+> +	help
+> +	  Windows OS native file system (NTFS) support up to NTFS version 3.1.
+> +
+> +	  Y or M enables the NTFS3 driver with full features enabled (read,
+> +	  write, journal replaying, sparse/compressed files support).
+> +	  File system type to use on mount is "ntfs3". Module name (M option)
+> +	  is also "ntfs3".
+> +
+> +	  Documentation: <file:Documentation/filesystems/ntfs3.rst>
+> +
+> +config NTFS3_64BIT_CLUSTER
+> +	bool "64 bits per NTFS clusters"
+> +	depends on NTFS3_FS && 64BIT
+> +	help
+> +	  Windows implementation of ntfs.sys uses 32 bits per clusters.
+> +	  If activated 64 bits per clusters you will be able to use 4k cluster
+> +	  for 16T+ volumes. Windows will not be able to mount such volumes.
 
-That's no longer accurate: init_dyn_addr are reserved up-front and
-device creation is only attempted if the device has a static address.
+Would it be possible to change this compile time option into mount
+option?
 
-> >  	 */
-> > -	i3c_bus_for_each_i3cdev(&master->bus, i3cdev)
-> > -		i3c_master_pre_assign_dyn_addr(i3cdev);
-> > +	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
-> > +		/*
-> > +		 * We don't attach devices which are not addressable
-> > +		 * (no static_addr and dyn_addr) and devices with static_addr
-> > +		 * but no init_dyn_addr will participate in DAA.
-> > +		 */  
-> 
-> The above comment should be split:
-> 
-> 		/*
-> 		 * We don't reserve a dynamic address for devices that
-> 		 * don't explicitly request one.
-> 		 */
-> 
-> > +		if (!i3cboardinfo->init_dyn_addr)
-> > +			continue;
-> > +
-> > +		ret = i3c_bus_get_addr_slot_status(&master->bus,
-> > +						   i3cboardinfo->init_dyn_addr);
-> > +		if (ret != I3C_ADDR_SLOT_FREE) {
-> > +			ret = -EBUSY;
-> > +			goto err_rstdaa;
-> > +		}
-> > +
-> > +		i3c_bus_set_addr_slot_status(&master->bus,
-> > +					     i3cboardinfo->init_dyn_addr,
-> > +					     I3C_ADDR_SLOT_I3C_DEV);
-> > +  
-> 		/*
-> 		 * Only try to create/attach devices that have a static
-> 		 * address. Other devices will be created/attached when
-> 		 * DAA happens, and the requested dynamic address will
-> 		 * be set using SETNEWDA once those devices become
-> 		 * addressable.
-> 		 */
-> > +		if (i3cboardinfo->static_addr)
-> > +			i3c_master_early_i3c_dev_add(master, i3cboardinfo);
-> > +	}
-> >  
-> >  	ret = i3c_master_do_daa(master);
-> >  	if (ret)  
-> 
+Because I do not see any benefit in compile time option which makes
+kernel's ntfs driver "fully" incompatible with Windows implementation.
 
+For me it looks like that mount option for such functionality is more
+suitable.
