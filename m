@@ -2,161 +2,131 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6268C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 19:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 19:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82CED207DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 19:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9F22075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 19:31:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sCt6RdWA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V77Ac81F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgHWT2M (ORCPT
+        id S1726784AbgHWTbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 15:28:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54330 "EHLO
+        Sun, 23 Aug 2020 15:31:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgHWT2L (ORCPT
+        with ESMTP id S1725885AbgHWTbE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 15:28:11 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BD2CC061573;
-        Sun, 23 Aug 2020 12:28:11 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id t6so7234774ljk.9;
-        Sun, 23 Aug 2020 12:28:11 -0700 (PDT)
+        Sun, 23 Aug 2020 15:31:04 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CBBC061573;
+        Sun, 23 Aug 2020 12:31:03 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bh1so3166524plb.12;
+        Sun, 23 Aug 2020 12:31:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=s13OsjDQPtL8KuQJ8dsi0mLtQkr0NRKTnj5zGuiKZ2E=;
-        b=sCt6RdWAVKRlkVqrE5hOoHlkuA4JCN3B2ZXzyWBY1O2D1PB+RqJqnIHGLoABvhIBOv
-         YCacflFemwc/hNH8GMI3OO9592O+kDPwMObrQSG0CoTvsm0paMihgj9KNVutz/dmo0SB
-         MpV/VOvF9iU+K8bK7HSWE+2jp/KRmrrxqDDyeYCJa2rXraQp4QVi7JQ+AYHjQ8El3Cdk
-         KLiDkDDtVzqKVHMGKCZTExJlNPhCGcuvRg7zyvsNqZb2MYcA86qnBFJWqzacoV0IOHbM
-         akVFH9RJ9dY9V1+atJOc3hhWYG1B0PLD+hRGjDXG579cb7/h4qTvu580RSmOMMUJkcaU
-         wysg==
+        h=from:to:cc:subject:date:message-id;
+        bh=weNWHTNBlFYVLfVtCUahgwUBiIrruSXZn6kHTI1JUaY=;
+        b=V77Ac81FIKwovH3RsFHYw6KqcGVROAhAK7uQOVOywTRUgnyCtheBeTYlD1U+XRbKHB
+         G/ioAl4eu40NyeaXo8Nl33FsxQSPIUvhrlHT2SLxOszsMe0ByUA9Szm5Jbg9ZuS4b0uy
+         ZHJCNEJV1fLvjRhxlxSMq89sQ7MHRGM6yCJDrAa3t8rrnoQ8QIg5eezpRxC/UgdtYppA
+         PoDfL/7KmBV3kKXseyYll1UVhOqEWjq8reufqJ6BX1Ou5u9bvkAQNSDgr0FJxnig6WZN
+         q3am9o04NOYfbyLNjZlXhDpjGRu+YHnYJCuR1Y2E3KPVC9A4WB3DGhfailImR7zwA9Bg
+         92Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s13OsjDQPtL8KuQJ8dsi0mLtQkr0NRKTnj5zGuiKZ2E=;
-        b=DauHkE0F4m8a2SH3vMbg+0xz+Iuig4vrsxqdxflIn9bDIt+1Qi9GfWJRTBOD2HFmKd
-         dQqUuv8cgMdG/m0YdQAJ9vgcbegZa9hsvfkcHFCbHqH781R9mbjdWQvKob1yZ8p7K00y
-         WWBuj5+vejNaBSx5IeKvV7wcC9j+/Sc2CTsfwPazX1FE3GK8Y0aJcUwurEUnrkbBeVtm
-         4bUBWI0NVi36FOfcsGRWScAg7hwqll1H2zgOf8fCd1NSCWFlTxL6tHrjEBguChylqCOY
-         jNcBkiokGlqDz6uPWEYKW9So/Zvqbi0XkZUl/I2+1/9qvuPcrnZv5sJ1SeEItFC3izGy
-         m3wA==
-X-Gm-Message-State: AOAM533smz7GaBmMqfuOx8Fx4qoB8DUcupyKYwZ8cPIMkU4rHIH6C28A
-        njZqhVULn25a66wPydv1DlsoAJczveA=
-X-Google-Smtp-Source: ABdhPJwDfjK/HE0tON7VnxYRNaHOg4uBo5YnQYPxLlscHgVNfikIIom+nVrHDtNT8aZCv4KBPiNAHQ==
-X-Received: by 2002:a05:651c:110d:: with SMTP id d13mr1057059ljo.206.1598210889300;
-        Sun, 23 Aug 2020 12:28:09 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id i24sm1765732lfo.16.2020.08.23.12.28.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Aug 2020 12:28:08 -0700 (PDT)
-Subject: Re: [PATCH v1 1/6] mfd: Add driver for Embedded Controller found on
- Acer Iconia Tab A500
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200823140846.19299-1-digetx@gmail.com>
- <20200823140846.19299-2-digetx@gmail.com>
- <20200823181653.GC209852@demiurge.local>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <82abab10-9af6-a9c4-b241-d5a3af5b588d@gmail.com>
-Date:   Sun, 23 Aug 2020 22:28:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200823181653.GC209852@demiurge.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=weNWHTNBlFYVLfVtCUahgwUBiIrruSXZn6kHTI1JUaY=;
+        b=dL7Y99KWwtreoa0EbxegI5lw84Tz9qq0mTBBL9qZzs7KN5fh4AFKlon3yb4cCPXIRR
+         qKwNs/skHySolqOICLvUpIe9ijEyLuRxKbSOgZOStwCV9E0Q3eArL2gx2J82ln00WuL7
+         ZapovAL8aMUIVY4S/SIf9GngKvi7m+Gz9//4MRurisWMyPIXnci7xsm+wIAludVRRbMl
+         Y/6W30N34hvKhtsaOIVJCcNUhy3Nb55GtLvaigZ1CyuDPJrWg381/IkTUq5KHE/FIV7F
+         HBSgYnKmTDEC7o+sOYrQBNYvFxcIeQdpsa+1nqfCQX2JRhGZY5Rh65eROF7DehXIJsmU
+         ZVpw==
+X-Gm-Message-State: AOAM53146SF6QFu8L4gDJqFx4SMoHMwsegcqRIC/LlXXby7nJaNNPeSY
+        zEJnATl+VI/WfxBf0J0KgxE=
+X-Google-Smtp-Source: ABdhPJwwq1r/SRRcR3NwII2uDcDioNwrJebgxM9d75uHBbsTp1sJOileU4MFGNBOgcn4iKBR6eyIzA==
+X-Received: by 2002:a17:902:8bcb:: with SMTP id r11mr1547106plo.65.1598211063471;
+        Sun, 23 Aug 2020 12:31:03 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.212.93])
+        by smtp.gmail.com with ESMTPSA id mp1sm7804624pjb.27.2020.08.23.12.30.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Aug 2020 12:31:02 -0700 (PDT)
+From:   Sumera Priyadarsini <sylphrenadin@gmail.com>
+To:     davem@davemloft.net
+Cc:     Julia.Lawall@lip6.fr, andrew@lunn.ch, sean.wang@mediatek.com,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com, kuba@kernel.org,
+        matthias.bgg@gmail.com, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sumera Priyadarsini <sylphrenadin@gmail.com>
+Subject: [PATCH V3] net: dsa: Add of_node_put() before break and return statements
+Date:   Mon, 24 Aug 2020 01:00:54 +0530
+Message-Id: <20200823193054.29336-1-sylphrenadin@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-23.08.2020 21:16, Lubomir Rintel пишет:
-> Hello,
-...
->> +config MFD_ACER_A500_EC
->> +	tristate "Embedded Controller driver for Acer Iconia Tab A500"
->> +	depends on (I2C_TEGRA && ARCH_TEGRA_2x_SOC) || COMPILE_TEST
-> 
-> This seems to also depend on I2C and OF. Perhaps I2C_TEGRA and
-> ARCH_TEGRA_2x_SOC imply that, but it could lead to build failures with
-> COMPILE_TEST=y. 
+Every iteration of for_each_child_of_node() decrements
+the reference count of the previous node, however when control
+is transferred from the middle of the loop, as in the case of
+a return or break or goto, there is no decrement thus ultimately
+resulting in a memory leak.
 
-Hello, Lubomir! You're right about the I2C because it could be compiled
-as a loadable module, good catch! The OF seems should fine as-is.
+Fix a potential memory leak in mt7530.c by inserting of_node_put()
+before the break and return statements.
 
-...
->> +static struct a500_ec *a500_ec_scratch;
-> 
-> If this is only used for power_off, please rename it. I've been told to
-> do so in my driver: https://lore.kernel.org/lkml/20200519104933.GX271301@dell/
+Issue found with Coccinelle.
 
-I don't mind to rename the variable, but not sure whether it will be a
-worthwhile change since _scratch is also a common naming scheme among
-MFD drivers. Please see max77620_scratch for example, which I added
-about a year ago.
+---
+Changes in v2:
+	Add another of_node_put() in for_each_child_of_node() as pointed
+out by Andrew.
 
-...
->> +int a500_ec_read_locked(struct a500_ec *ec_chip,
->> +			const struct a500_ec_cmd *cmd_desc)
-> 
-> Any reason you're exporting these to the cell drivers instead of using
-> regmap?
-> 
-> I think regmap would also help you with the locking if you set .lock() and
-> .unlock() callbacks in regmap_config.
+Changes in v3:
+	- Correct syntax errors
+	- Modify commit message
 
-Yes, perhaps you're right. Right now I can't recall what stopped me from
-using regmap. I'll give it a shot for v2, thank you for the suggestion!
+---
 
-...
->> +static struct notifier_block a500_ec_restart_handler = {
->> +	.notifier_call = a500_ec_restart_notify,
->> +	.priority = 200,
-> 
-> What would happend if you didn't set priority explicitly?
+Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
 
-Then the Tegra's default CPU soft-reset handler will be used for
-rebooting [1].
+Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+---
+ drivers/net/dsa/mt7530.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-[1]
-https://elixir.bootlin.com/linux/v5.9-rc1/source/drivers/soc/tegra/pmc.c#L977
-
-...
->> +MODULE_LICENSE("GPL v2");
-> 
-> MODULE_LICENSE("GPL");
-> 
-> Your SPDX tag suggests newer versions of GPL than v2 are okay.
-
-Okay! I'll change this in v2, thanks.
-
-...
->> +#define A500_EC_COMMAND(NAME, CMD, DELAY_MS)				\
->> +static const struct a500_ec_cmd A500_EC_##NAME = {			\
->> +	.cmd = CMD,							\
->> +	.post_delay = DELAY_MS,						\
->> +};									\
-> 
-> I think that the mfd driver should decide about the delay, not the cell
-> drivers.
-
-This should be a good idea, especially combined with the regmap, thanks!
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 8dcb8a49ab67..4b4701c69fe1 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -1326,14 +1326,17 @@ mt7530_setup(struct dsa_switch *ds)
+ 
+ 			if (phy_node->parent == priv->dev->of_node->parent) {
+ 				ret = of_get_phy_mode(mac_np, &interface);
+-				if (ret && ret != -ENODEV)
++				if (ret && ret != -ENODEV) {
++					of_node_put(mac_np);
+ 					return ret;
++				}
+ 				id = of_mdio_parse_addr(ds->dev, phy_node);
+ 				if (id == 0)
+ 					priv->p5_intf_sel = P5_INTF_SEL_PHY_P0;
+ 				if (id == 4)
+ 					priv->p5_intf_sel = P5_INTF_SEL_PHY_P4;
+ 			}
++			of_node_put(mac_np);
+ 			of_node_put(phy_node);
+ 			break;
+ 		}
+-- 
+2.17.1
 
