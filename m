@@ -2,242 +2,119 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80744C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 15:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB05AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 15:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5580C2067C
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 15:08:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="axBoqfcm"
+	by mail.kernel.org (Postfix) with ESMTP id 90F2D2067C
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 15:11:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgHWPIy (ORCPT
+        id S1727882AbgHWPLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 11:08:54 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:53756 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726433AbgHWPIr (ORCPT
+        Sun, 23 Aug 2020 11:11:08 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:37040 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbgHWPLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 11:08:47 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 02EB9279;
-        Sun, 23 Aug 2020 17:08:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598195321;
-        bh=aRHKKbIzuzcc1zB3SZSw6wCNsc8boanIYJtbzti4zBE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=axBoqfcmepkWKkVLe5pGATmqhgRBNucOb4IUgdEWmkPxONGIazO+qFAivbj7KVH5R
-         sAhMWvsImPGMIzSz+Xo4MoNNkOudO5fJcB2c4lrtyB4+MVxmj/eF9a48fe+wY8KGZe
-         q2asfzo0Jxl534PzmfcGvrqrG766wceWt8JjalOA=
-Date:   Sun, 23 Aug 2020 18:08:22 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Adam Goode <agoode@google.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: Re: [PATCH 2/2] media: uvcvideo: Convey full ycbcr colorspace
- information to v4l2
-Message-ID: <20200823150822.GD6002@pendragon.ideasonboard.com>
-References: <20200823012134.3813457-1-agoode@google.com>
- <20200823012134.3813457-2-agoode@google.com>
- <20200823145417.GC6002@pendragon.ideasonboard.com>
+        Sun, 23 Aug 2020 11:11:04 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id A05A880512;
+        Sun, 23 Aug 2020 17:10:59 +0200 (CEST)
+Date:   Sun, 23 Aug 2020 17:10:58 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Nadezda Lutovinova <lutovinova@ispras.ru>
+Cc:     Peter Senna Tschudin <peter.senna@gmail.com>,
+        ldv-project@linuxtesting.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Martyn Welch <martyn.welch@collabora.co.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Martin Donnelly <martin.donnelly@ge.com>
+Subject: Re: [PATCH] drm/brige/megachips: Add checking if
+ ge_b850v3_lvds_init() is working correctly
+Message-ID: <20200823151058.GB1047718@ravnborg.org>
+References: <20200819143756.30626-1-lutovinova@ispras.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200823145417.GC6002@pendragon.ideasonboard.com>
+In-Reply-To: <20200819143756.30626-1-lutovinova@ispras.ru>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=HH5vDtPzAAAA:8 a=xjQjg--fAAAA:8 a=e5mUnYsNAAAA:8
+        a=hQuFlIxVr7xEOWb3pwQA:9 a=CjuIK1q_8ugA:10 a=QM_-zKB-Ew0MsOlNKMB5:22
+        a=L4vkcYpMSA5nFlNZ2tk3:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+Hi Nadezda
 
-(CC'ing Hans Verkuil)
-
-On Sun, Aug 23, 2020 at 05:54:24PM +0300, Laurent Pinchart wrote:
-> Hi Adam,
+On Wed, Aug 19, 2020 at 05:37:56PM +0300, Nadezda Lutovinova wrote:
+> If ge_b850v3_lvds_init() does not allocate memory for ge_b850v3_lvds_ptr,
+> then a null pointer dereference is accessed.
 > 
-> Thank you for the patch.
+> The patch adds checking of the return value of ge_b850v3_lvds_init().
 > 
-> On Sat, Aug 22, 2020 at 09:21:34PM -0400, Adam Goode wrote:
-> > The Color Matching Descriptor has been present in USB cameras since
-> > the original version of UVC, but it has never been fully used
-> > in Linux.
-> > 
-> > This change informs V4L2 of all of the critical colorspace parameters:
-> > colorspace (called "color primaries" in UVC), transfer function
-> > (called "transfer characteristics" in UVC), ycbcr encoding (called
-> > "matrix coefficients" in UVC), and quantization, which is always
-> > LIMITED for UVC, see section 2.26 in USB_Video_FAQ_1.5.pdf.
+> Found by Linux Driver Verification project (linuxtesting.org).
 > 
-> Isn't this valid for MJPEG only though ? There's not much else we can do
-> though, as UVC cameras don't report quantization information. Shouldn't
-> we however reflect this in the commit message, and in the comment below,
-> to state that UVC requires limited quantization range for MJPEG, and
-> while it doesn't explicitly specify the quantization range for other
-> formats, we can only assume it should be limited as well ?
+> Signed-off-by: Nadezda Lutovinova <lutovinova@ispras.ru>
+
+Thanks, applied to drm-misc-next, so it will hit upstream during the
+next merge window.
+
+	Sam
+
+> ---
+>  drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
 > 
-> The code otherwise looks good to me.
+> diff --git a/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c b/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+> index 6200f12..ab81748 100644
+> --- a/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+> +++ b/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+> @@ -302,8 +302,12 @@ static int stdp4028_ge_b850v3_fw_probe(struct i2c_client *stdp4028_i2c,
+>  				       const struct i2c_device_id *id)
+>  {
+>  	struct device *dev = &stdp4028_i2c->dev;
+> +	int ret;
+> +
+> +	ret = ge_b850v3_lvds_init(dev);
+>  
+> -	ge_b850v3_lvds_init(dev);
+> +	if (ret)
+> +		return ret;
+>  
+>  	ge_b850v3_lvds_ptr->stdp4028_i2c = stdp4028_i2c;
+>  	i2c_set_clientdata(stdp4028_i2c, ge_b850v3_lvds_ptr);
+> @@ -361,8 +365,12 @@ static int stdp2690_ge_b850v3_fw_probe(struct i2c_client *stdp2690_i2c,
+>  				       const struct i2c_device_id *id)
+>  {
+>  	struct device *dev = &stdp2690_i2c->dev;
+> +	int ret;
+> +
+> +	ret = ge_b850v3_lvds_init(dev);
+>  
+> -	ge_b850v3_lvds_init(dev);
+> +	if (ret)
+> +		return ret;
+>  
+>  	ge_b850v3_lvds_ptr->stdp2690_i2c = stdp2690_i2c;
+>  	i2c_set_clientdata(stdp2690_i2c, ge_b850v3_lvds_ptr);
+> -- 
+> 1.9.1
 > 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> Please let me know if you'd like to address the above issue.
-> 
-> > The quantization is the most important improvement for this patch,
-> > because V4L2 will otherwise interpret MJPEG as FULL range. Web browsers
-> > such as Chrome and Firefox already ignore V4L2's quantization for USB
-> > devices and use the correct LIMITED value, but other programs such
-> > as qv4l2 will incorrectly interpret the output of MJPEG from USB
-> > cameras without this change.
-> > 
-> > Signed-off-by: Adam Goode <agoode@google.com>
-> > ---
-> >  drivers/media/usb/uvc/uvc_driver.c | 52 +++++++++++++++++++++++++++---
-> >  drivers/media/usb/uvc/uvc_v4l2.c   |  6 ++++
-> >  drivers/media/usb/uvc/uvcvideo.h   |  5 ++-
-> >  3 files changed, 58 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> > index 431d86e1c94b..c0c81b089b7d 100644
-> > --- a/drivers/media/usb/uvc/uvc_driver.c
-> > +++ b/drivers/media/usb/uvc/uvc_driver.c
-> > @@ -248,10 +248,10 @@ static struct uvc_format_desc *uvc_format_by_guid(const u8 guid[16])
-> >  	return NULL;
-> >  }
-> >  
-> > -static u32 uvc_colorspace(const u8 primaries)
-> > +static enum v4l2_colorspace uvc_colorspace(const u8 primaries)
-> >  {
-> > -	static const u8 colorprimaries[] = {
-> > -		0,
-> > +	static const enum v4l2_colorspace colorprimaries[] = {
-> > +		V4L2_COLORSPACE_DEFAULT,  /* Unspecified */
-> >  		V4L2_COLORSPACE_SRGB,
-> >  		V4L2_COLORSPACE_470_SYSTEM_M,
-> >  		V4L2_COLORSPACE_470_SYSTEM_BG,
-> > @@ -262,7 +262,43 @@ static u32 uvc_colorspace(const u8 primaries)
-> >  	if (primaries < ARRAY_SIZE(colorprimaries))
-> >  		return colorprimaries[primaries];
-> >  
-> > -	return 0;
-> > +	return V4L2_COLORSPACE_DEFAULT;  /* Reserved */
-> > +}
-> > +
-> > +static enum v4l2_xfer_func uvc_xfer_func(const u8 transfer_characteristics)
-> > +{
-> > +	static const enum v4l2_xfer_func xfer_funcs[] = {
-> > +		V4L2_XFER_FUNC_DEFAULT,  /* Unspecified */
-> > +		V4L2_XFER_FUNC_709,
-> > +		V4L2_XFER_FUNC_709,      /* BT.470-2 M */
-> > +		V4L2_XFER_FUNC_709,      /* BT.470-2 B, G */
-> > +		V4L2_XFER_FUNC_709,      /* SMPTE 170M */
-> > +		V4L2_XFER_FUNC_SMPTE240M,
-> > +		V4L2_XFER_FUNC_NONE,     /* Linear (V = Lc) */
-> > +		V4L2_XFER_FUNC_SRGB,
-> > +	};
-> > +
-> > +	if (transfer_characteristics < ARRAY_SIZE(xfer_funcs))
-> > +		return xfer_funcs[transfer_characteristics];
-> > +
-> > +	return V4L2_XFER_FUNC_DEFAULT;  /* Reserved */
-> > +}
-> > +
-> > +static enum v4l2_ycbcr_encoding uvc_ycbcr_enc(const u8 matrix_coefficients)
-> > +{
-> > +	static const enum v4l2_ycbcr_encoding ycbcr_encs[] = {
-> > +		V4L2_YCBCR_ENC_DEFAULT,  /* Unspecified */
-> > +		V4L2_YCBCR_ENC_709,
-> > +		V4L2_YCBCR_ENC_601,      /* FCC */
-
-I may have spoken a bit too fast. Doesn't FCC differ from BT.601 ?
-According to https://en.wikipedia.org/wiki/Talk%3AYCbCr, the former uses
-
- E'Y = 0.59 E'G + 0.11 E'B + 0.30 E'R
- E'PB = – 0.331 E'G + 0.500 E'B – 0.169 E'R
- E'PR = – 0.421 E'G – 0.079 E'B + 0.500 E'R
-
-while the latter uses
-
- E'Y = 0.587 E'G + 0.114 E'B + 0.299 E'R
- E'PB = – 0.331 E'G + 0.500 E'B – 0.169 E'R
- E'PR = – 0.419 E'G – 0.081 E'B + 0.500 E'R
-
-We seems to be missing FCC in the V4L2 color space definitions.
-
-> > +		V4L2_YCBCR_ENC_601,      /* BT.470-2 B, G */
-> > +		V4L2_YCBCR_ENC_601,      /* SMPTE 170M */
-> > +		V4L2_YCBCR_ENC_SMPTE240M,
-> > +	};
-> > +
-> > +	if (matrix_coefficients < ARRAY_SIZE(ycbcr_encs))
-> > +		return ycbcr_encs[matrix_coefficients];
-> > +
-> > +	return V4L2_YCBCR_ENC_DEFAULT;  /* Reserved */
-> >  }
-> >  
-> >  /* Simplify a fraction using a simple continued fraction decomposition. The
-> > @@ -704,6 +740,14 @@ static int uvc_parse_format(struct uvc_device *dev,
-> >  		}
-> >  
-> >  		format->colorspace = uvc_colorspace(buffer[3]);
-> > +		format->xfer_func = uvc_xfer_func(buffer[4]);
-> > +		format->ycbcr_enc = uvc_ycbcr_enc(buffer[5]);
-> > +		/* All USB YCbCr encodings use LIMITED range as of UVC 1.5.
-> > +		 * This is true even for MJPEG, which V4L2 otherwise assumes to
-> > +		 * be FULL.
-> > +		 * See section 2.26 in USB_Video_FAQ_1.5.pdf.
-> > +		 */
-> > +		format->quantization = V4L2_QUANTIZATION_LIM_RANGE;
-> >  
-> >  		buflen -= buffer[0];
-> >  		buffer += buffer[0];
-> > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> > index 7f14096cb44d..79daf46b3dcd 100644
-> > --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> > @@ -279,6 +279,9 @@ static int uvc_v4l2_try_format(struct uvc_streaming *stream,
-> >  	fmt->fmt.pix.sizeimage = probe->dwMaxVideoFrameSize;
-> >  	fmt->fmt.pix.pixelformat = format->fcc;
-> >  	fmt->fmt.pix.colorspace = format->colorspace;
-> > +	fmt->fmt.pix.xfer_func = format->xfer_func;
-> > +	fmt->fmt.pix.ycbcr_enc = format->ycbcr_enc;
-> > +	fmt->fmt.pix.quantization = format->quantization;
-> >  
-> >  	if (uvc_format != NULL)
-> >  		*uvc_format = format;
-> > @@ -315,6 +318,9 @@ static int uvc_v4l2_get_format(struct uvc_streaming *stream,
-> >  	fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
-> >  	fmt->fmt.pix.sizeimage = stream->ctrl.dwMaxVideoFrameSize;
-> >  	fmt->fmt.pix.colorspace = format->colorspace;
-> > +	fmt->fmt.pix.xfer_func = format->xfer_func;
-> > +	fmt->fmt.pix.ycbcr_enc = format->ycbcr_enc;
-> > +	fmt->fmt.pix.quantization = format->quantization;
-> >  
-> >  done:
-> >  	mutex_unlock(&stream->mutex);
-> > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> > index 6ab972c643e3..6508192173dd 100644
-> > --- a/drivers/media/usb/uvc/uvcvideo.h
-> > +++ b/drivers/media/usb/uvc/uvcvideo.h
-> > @@ -370,7 +370,10 @@ struct uvc_format {
-> >  	u8 type;
-> >  	u8 index;
-> >  	u8 bpp;
-> > -	u8 colorspace;
-> > +	enum v4l2_colorspace colorspace;
-> > +	enum v4l2_xfer_func xfer_func;
-> > +	enum v4l2_ycbcr_encoding ycbcr_enc;
-> > +	enum v4l2_quantization quantization;
-> >  	u32 fcc;
-> >  	u32 flags;
-> >  
-
--- 
-Regards,
-
-Laurent Pinchart
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
