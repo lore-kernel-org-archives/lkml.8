@@ -2,195 +2,248 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 06:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A794C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 07:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B2E20768
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 06:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB10C2074D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 07:02:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvACUgal"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgHWG6c (ORCPT
+        id S1726803AbgHWHCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 02:58:32 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:48712 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbgHWG62 (ORCPT
+        Sun, 23 Aug 2020 03:02:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725771AbgHWHC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 02:58:28 -0400
-Received: by mail-il1-f199.google.com with SMTP id w8so4367576ilg.15
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 23:58:27 -0700 (PDT)
+        Sun, 23 Aug 2020 03:02:29 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07850C061573
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 00:02:28 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id l84so5450189oig.10
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 00:02:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E25u1RZ35/8UovGtjIgDLnGJo1E95eU4X7jPGyQa9FU=;
+        b=lvACUgalycGxGivoroXz/mNrSv7Ofz0paPtCvb4RXndTDjIBy2bCyHU8FWIGQYzxOg
+         4tsps256SrnDHgLBm3YukAaiNFvH3UFL3pjxz7A+oJXV9JvnP8OdDWPsU8R5a5HweHyw
+         ag0Gshk3HHZBRW9V2K/8Gha34eW5E7Y4uUfB2MjJ4qNbCuM1Bx3OZDLSIhh2NiYI3QNs
+         djsU39FGAHxyoyLHzK2uQ00YJHLXmPsEHOE6NIQOOAjIamanfi7+eJedkpaAu9w0BhCR
+         tfm+oReMeD8Qb5jnaWj9Au8x1JVkC5aOc14HAb8oH13Q/WLzEpT3nDhI5IW+GmjKF+zX
+         fi7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=t29zJAKnfaYjJznkotvF0/mjvpUWVuo15SYvwaAFriA=;
-        b=hCMI32TXdEk/YdK+mNBMzEqe3WHf8WN9nNPh2EJj0ZBqFJbWpUw56knZgTcD8SewKp
-         JzL+gz4qy+VH9zB0ymanJcEd0MJT4eYWtZYM1xhVDzOXrcV2mr69ifhXCZ/fVmdt0NFC
-         gf1RQYwWfFmWT+Osq8M0ENMBSPtHlO10tW50ZumyG4pClIT41y73ygOikGwRxGsjhlkL
-         aDkvI2VmfIW6+IxJVUxOgs7oypSHxUXoJyRxK7zFLylNimH6WEqmzF4UFTKkL19Z27DZ
-         5NYUgbCAVM4MvRHbMQZady/1WPwdKpddHakDGMWJlY9zbEDqeaCV0W/DZzAe1qPMlUus
-         fILg==
-X-Gm-Message-State: AOAM533EqFcFeKmKxtzktv0nFeG8B7KO0jOd0cD37vuBsfgf8k1R37zE
-        zEaMGyy5ySsqOeyhja9PZFou9+kBHgVNoxMwcxHMt0Vdps4r
-X-Google-Smtp-Source: ABdhPJzM3XIWblKmjj6LEQdcEVKudVwYHB1PSiEz7rqBf7rm5ezLZplDxxwWa1TKyxOP6xRdqKmOk7yNkL+/+m/1m6zlgaNjS4rt
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E25u1RZ35/8UovGtjIgDLnGJo1E95eU4X7jPGyQa9FU=;
+        b=UpHIx/hue2JX2dcP0GKODlEjMtkT08OAG+AyqCT7pCEtJ6VaXD+uOpM6UOOfXcRE/k
+         IpPLl+aKEySxjrzBhJ4CvkD+b6PqIg37OilLvbHqqCKwU6l6ToJnqM7wAiCM5t1o37S1
+         ssSLaMKlPHgD9EsIUBcB3KejPMwLSGodSE0t+z1DLvE2tAEzB2i4WargK1Jev0MdqlZd
+         hZuxTRoJkNCYrmg4egjkDyyqfxRxVbSequyQZEkkyErAsEf340BAlXMnKnHGBPw2C2zi
+         Cl9h4Cmp55MK68TUija0XqNpUpWMFRJbf73KLg8gh7Cr02UfVFpxn4wmZTiUL/pBrcoa
+         iBZQ==
+X-Gm-Message-State: AOAM532HYVV8n75XZBuZZWeGIDQ79p58r0w8RzBw4Y4jsOuz1xgyH10C
+        oElXzzfcaqgGUaZ4Koeo1ISsXPAObqYMY6tQUBs=
+X-Google-Smtp-Source: ABdhPJxQ1E/uGTFYkWpstxd/q0CY+ZcJoo6ElilYCbrCUAwq903fZKQi58FLqpgPhGcR9vrC1y4lHplC1ouzvmD5/Ao=
+X-Received: by 2002:aca:5bc6:: with SMTP id p189mr155602oib.130.1598166147132;
+ Sun, 23 Aug 2020 00:02:27 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:1f4f:: with SMTP id i76mr289111ile.226.1598165907014;
- Sat, 22 Aug 2020 23:58:27 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 23:58:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002e0c2505ad85ffcd@google.com>
-Subject: KMSAN: uninit-value in vga16fb_imageblit
-From:   syzbot <syzbot+370e5ded96ace049ac26@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
-        dri-devel@lists.freedesktop.org, glider@google.com,
-        jani.nikula@intel.com, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20200817134752.11344-1-hdanton@sina.com> <CAFCwf13BGZC86iWdL4msO5=0TbUm=HVwgHsqfxCSJzVKr1FqpA@mail.gmail.com>
+ <20200822233242.7840-1-hdanton@sina.com>
+In-Reply-To: <20200822233242.7840-1-hdanton@sina.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Sun, 23 Aug 2020 10:01:59 +0300
+Message-ID: <CAFCwf12yz+6tiNWSUxs05dTL-XG+ukAg823uQAAOoA-6uQMXWQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] habanalabs: goya: make use of dma_mmap_coherent
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        SW_Drivers <SW_Drivers@habana.ai>,
+        Zhang Li <li.zhang@bitmain.com>,
+        Ding Z Nan <oshack@hotmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Aug 23, 2020 at 2:32 AM Hillf Danton <hdanton@sina.com> wrote:
+>
+>
+> On Sat, 22 Aug 2020 19:10:07 +0300 Oded Gabbay wrote:
+> > On Mon, Aug 17, 2020 at 4:48 PM Hillf Danton <hdanton@sina.com> wrote:
+> > >
+> > >
+> > > Add dma_mmap_coherent() to match dma_alloc_coherent(), see the Link tag
+> > > for why.
+> > >
+> > > Link: https://lore.kernel.org/lkml/20200609091727.GA23814@lst.de/
+> > > Signed-off-by: Hillf Danton <hdanton@sina.com>
+> > > ---
+> > >
+> > > --- a/drivers/misc/habanalabs/common/habanalabs.h
+> > > +++ b/drivers/misc/habanalabs/common/habanalabs.h
+> > > @@ -679,7 +679,7 @@ struct hl_asic_funcs {
+> > >         int (*suspend)(struct hl_device *hdev);
+> > >         int (*resume)(struct hl_device *hdev);
+> > >         int (*cb_mmap)(struct hl_device *hdev, struct vm_area_struct *vma,
+> > > -                       u64 kaddress, phys_addr_t paddress, u32 size);
+> > > +                       void *cpu_addr, dma_addr_t dma_addr, size_t size);
+> > >         void (*ring_doorbell)(struct hl_device *hdev, u32 hw_queue_id, u32 pi);
+> > >         void (*pqe_write)(struct hl_device *hdev, __le64 *pqe,
+> > >                         struct hl_bd *bd);
+> > > --- a/drivers/misc/habanalabs/goya/goya.c
+> > > +++ b/drivers/misc/habanalabs/goya/goya.c
+> > > @@ -2642,15 +2642,14 @@ int goya_resume(struct hl_device *hdev)
+> > >  }
+> > >
+> > >  static int goya_cb_mmap(struct hl_device *hdev, struct vm_area_struct *vma,
+> > > -               u64 kaddress, phys_addr_t paddress, u32 size)
+> > > +                       void *cpu_addr, dma_addr_t dma_addr, size_t size)
+> > >  {
+> > >         int rc;
+> > >
+> > >         vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP |
+> > >                         VM_DONTCOPY | VM_NORESERVE;
+> > >
+> > > -       rc = remap_pfn_range(vma, vma->vm_start, paddress >> PAGE_SHIFT,
+> > > -                               size, vma->vm_page_prot);
+> > > +       rc = dma_mmap_coherent(hdev->dev, vma, cpu_addr, dma_addr, size);
+> > >         if (rc)
+> > >                 dev_err(hdev->dev, "remap_pfn_range error %d", rc);
+> > >
+> > > --- a/drivers/misc/habanalabs/common/command_buffer.c
+> > > +++ b/drivers/misc/habanalabs/common/command_buffer.c
+> > > @@ -299,7 +299,6 @@ int hl_cb_mmap(struct hl_fpriv *hpriv, s
+> > >  {
+> > >         struct hl_device *hdev = hpriv->hdev;
+> > >         struct hl_cb *cb;
+> > > -       phys_addr_t address;
+> > >         u32 handle;
+> > >         int rc;
+> > >
+> > > @@ -344,12 +343,8 @@ int hl_cb_mmap(struct hl_fpriv *hpriv, s
+> > >
+> > >         vma->vm_private_data = cb;
+> > >
+> > > -       /* Calculate address for CB */
+> > > -       address = virt_to_phys((void *) (uintptr_t) cb->kernel_address);
+> > > -
+> > > -       rc = hdev->asic_funcs->cb_mmap(hdev, vma, cb->kernel_address,
+> > > -                                       address, cb->size);
+> > > -
+> > > +       rc = hdev->asic_funcs->cb_mmap(hdev, vma, (void *) cb->kernel_address,
+> > > +                                       cb->bus_address, cb->size);
+> > >         if (rc) {
+> > >                 spin_lock(&cb->lock);
+> > >                 cb->mmap = false;
+> > >
+> >
+> > Hi Hillf,
+> > Could you please also fix gaudi_cb_mmap() and resend this patch ?
+>
+> ---8<---
+> From: Hillf Danton <hdanton@sina.com>
+> Subject: [PATCH] habanalabs: make use of dma_mmap_coherent
+>
+> Add dma_mmap_coherent() for goya and gaudi to match their use of
+> dma_alloc_coherent(), see the Link tag for why.
+>
+> Link: https://lore.kernel.org/lkml/20200609091727.GA23814@lst.de/
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Zhang Li <li.zhang@bitmain.com>
+> Cc: Ding Z Nan <oshack@hotmail.com>
+> Signed-off-by: Hillf Danton <hdanton@sina.com>
+> ---
+>
+> --- a/drivers/misc/habanalabs/common/habanalabs.h
+> +++ b/drivers/misc/habanalabs/common/habanalabs.h
+> @@ -679,7 +679,7 @@ struct hl_asic_funcs {
+>         int (*suspend)(struct hl_device *hdev);
+>         int (*resume)(struct hl_device *hdev);
+>         int (*cb_mmap)(struct hl_device *hdev, struct vm_area_struct *vma,
+> -                       u64 kaddress, phys_addr_t paddress, u32 size);
+> +                       void *cpu_addr, dma_addr_t dma_addr, size_t size);
+>         void (*ring_doorbell)(struct hl_device *hdev, u32 hw_queue_id, u32 pi);
+>         void (*pqe_write)(struct hl_device *hdev, __le64 *pqe,
+>                         struct hl_bd *bd);
+> --- a/drivers/misc/habanalabs/goya/goya.c
+> +++ b/drivers/misc/habanalabs/goya/goya.c
+> @@ -2642,15 +2642,14 @@ int goya_resume(struct hl_device *hdev)
+>  }
+>
+>  static int goya_cb_mmap(struct hl_device *hdev, struct vm_area_struct *vma,
+> -               u64 kaddress, phys_addr_t paddress, u32 size)
+> +                       void *cpu_addr, dma_addr_t dma_addr, size_t size)
+>  {
+>         int rc;
+>
+>         vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP |
+>                         VM_DONTCOPY | VM_NORESERVE;
+>
+> -       rc = remap_pfn_range(vma, vma->vm_start, paddress >> PAGE_SHIFT,
+> -                               size, vma->vm_page_prot);
+> +       rc = dma_mmap_coherent(hdev->dev, vma, cpu_addr, dma_addr, size);
+>         if (rc)
+>                 dev_err(hdev->dev, "remap_pfn_range error %d", rc);
+>
+> --- a/drivers/misc/habanalabs/common/command_buffer.c
+> +++ b/drivers/misc/habanalabs/common/command_buffer.c
+> @@ -299,7 +299,6 @@ int hl_cb_mmap(struct hl_fpriv *hpriv, s
+>  {
+>         struct hl_device *hdev = hpriv->hdev;
+>         struct hl_cb *cb;
+> -       phys_addr_t address;
+>         u32 handle;
+>         int rc;
+>
+> @@ -344,12 +343,8 @@ int hl_cb_mmap(struct hl_fpriv *hpriv, s
+>
+>         vma->vm_private_data = cb;
+>
+> -       /* Calculate address for CB */
+> -       address = virt_to_phys((void *) (uintptr_t) cb->kernel_address);
+> -
+> -       rc = hdev->asic_funcs->cb_mmap(hdev, vma, cb->kernel_address,
+> -                                       address, cb->size);
+> -
+> +       rc = hdev->asic_funcs->cb_mmap(hdev, vma, (void *) cb->kernel_address,
+> +                                       cb->bus_address, cb->size);
+>         if (rc) {
+>                 spin_lock(&cb->lock);
+>                 cb->mmap = false;
+> --- a/drivers/misc/habanalabs/gaudi/gaudi.c
+> +++ b/drivers/misc/habanalabs/gaudi/gaudi.c
+> @@ -3063,15 +3063,14 @@ static int gaudi_resume(struct hl_device
+>  }
+>
+>  static int gaudi_cb_mmap(struct hl_device *hdev, struct vm_area_struct *vma,
+> -               u64 kaddress, phys_addr_t paddress, u32 size)
+> +                       void *cpu_addr, dma_addr_t dma_addr, size_t size)
+>  {
+>         int rc;
+>
+>         vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP |
+>                         VM_DONTCOPY | VM_NORESERVE;
+>
+> -       rc = remap_pfn_range(vma, vma->vm_start, paddress >> PAGE_SHIFT,
+> -                               size, vma->vm_page_prot);
+> +       rc = dma_mmap_coherent(hdev->dev, vma, cpu_addr, dma_addr, size);
+>         if (rc)
+>                 dev_err(hdev->dev, "remap_pfn_range error %d", rc);
+>
+> --
+>
 
-syzbot found the following issue on:
-
-HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=14fb4061900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
-dashboard link: https://syzkaller.appspot.com/bug?extid=370e5ded96ace049ac26
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+370e5ded96ace049ac26@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in writeb arch/x86/include/asm/io.h:65 [inline]
-BUG: KMSAN: uninit-value in vga_imageblit_expand drivers/video/fbdev/vga16fb.c:1176 [inline]
-BUG: KMSAN: uninit-value in vga16fb_imageblit+0x125e/0x20c0 drivers/video/fbdev/vga16fb.c:1260
-CPU: 0 PID: 20360 Comm: syz-executor.5 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x21c/0x280 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- writeb arch/x86/include/asm/io.h:65 [inline]
- vga_imageblit_expand drivers/video/fbdev/vga16fb.c:1176 [inline]
- vga16fb_imageblit+0x125e/0x20c0 drivers/video/fbdev/vga16fb.c:1260
- soft_cursor+0x12bc/0x13f0 drivers/video/fbdev/core/softcursor.c:74
- bit_cursor+0x38c6/0x3a40 drivers/video/fbdev/core/bitblit.c:386
- fbcon_cursor+0x195e/0x1a60 drivers/video/fbdev/core/fbcon.c:1411
- hide_cursor+0xdd/0x560 drivers/tty/vt/vt.c:902
- redraw_screen+0x2b1/0x2980 drivers/tty/vt/vt.c:1006
- vc_do_resize+0x36a8/0x38f0 drivers/tty/vt/vt.c:1314
- vc_resize+0xc3/0xe0 drivers/tty/vt/vt.c:1334
- vt_ioctl+0x6651/0x67c0 drivers/tty/vt/vt_ioctl.c:901
- vt_compat_ioctl+0x59b/0x1040 drivers/tty/vt/vt_ioctl.c:1242
- tty_compat_ioctl+0x74b/0x1660 drivers/tty/tty_io.c:2847
- __do_compat_sys_ioctl fs/ioctl.c:847 [inline]
- __se_compat_sys_ioctl+0x55f/0x1100 fs/ioctl.c:798
- __ia32_compat_sys_ioctl+0x4a/0x70 fs/ioctl.c:798
- do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
- __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
- do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
- do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-RIP: 0023:0xf7f70549
-Code: Bad RIP value.
-RSP: 002b:00000000f556a0cc EFLAGS: 00000296 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000000560a
-RDX: 0000000020000240 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
- __fb_pad_aligned_buffer include/linux/fb.h:655 [inline]
- fb_pad_aligned_buffer+0x7c4/0x8e0 drivers/video/fbdev/core/fbmem.c:116
- soft_cursor+0x1224/0x13f0 drivers/video/fbdev/core/softcursor.c:72
- bit_cursor+0x38c6/0x3a40 drivers/video/fbdev/core/bitblit.c:386
- fbcon_cursor+0x195e/0x1a60 drivers/video/fbdev/core/fbcon.c:1411
- hide_cursor+0xdd/0x560 drivers/tty/vt/vt.c:902
- redraw_screen+0x2b1/0x2980 drivers/tty/vt/vt.c:1006
- vc_do_resize+0x36a8/0x38f0 drivers/tty/vt/vt.c:1314
- vc_resize+0xc3/0xe0 drivers/tty/vt/vt.c:1334
- vt_ioctl+0x6651/0x67c0 drivers/tty/vt/vt_ioctl.c:901
- vt_compat_ioctl+0x59b/0x1040 drivers/tty/vt/vt_ioctl.c:1242
- tty_compat_ioctl+0x74b/0x1660 drivers/tty/tty_io.c:2847
- __do_compat_sys_ioctl fs/ioctl.c:847 [inline]
- __se_compat_sys_ioctl+0x55f/0x1100 fs/ioctl.c:798
- __ia32_compat_sys_ioctl+0x4a/0x70 fs/ioctl.c:798
- do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
- __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
- do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
- do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- soft_cursor+0x7d7/0x13f0 drivers/video/fbdev/core/softcursor.c:70
- bit_cursor+0x38c6/0x3a40 drivers/video/fbdev/core/bitblit.c:386
- fbcon_cursor+0x195e/0x1a60 drivers/video/fbdev/core/fbcon.c:1411
- hide_cursor+0xdd/0x560 drivers/tty/vt/vt.c:902
- redraw_screen+0x2b1/0x2980 drivers/tty/vt/vt.c:1006
- vc_do_resize+0x36a8/0x38f0 drivers/tty/vt/vt.c:1314
- vc_resize+0xc3/0xe0 drivers/tty/vt/vt.c:1334
- vt_ioctl+0x6651/0x67c0 drivers/tty/vt/vt_ioctl.c:901
- vt_compat_ioctl+0x59b/0x1040 drivers/tty/vt/vt_ioctl.c:1242
- tty_compat_ioctl+0x74b/0x1660 drivers/tty/tty_io.c:2847
- __do_compat_sys_ioctl fs/ioctl.c:847 [inline]
- __se_compat_sys_ioctl+0x55f/0x1100 fs/ioctl.c:798
- __ia32_compat_sys_ioctl+0x4a/0x70 fs/ioctl.c:798
- do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
- __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
- do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
- do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
- slab_alloc_node mm/slub.c:2839 [inline]
- slab_alloc mm/slub.c:2848 [inline]
- __kmalloc+0x312/0x410 mm/slub.c:3911
- kmalloc include/linux/slab.h:560 [inline]
- fbcon_set_font+0x5ad/0xfb0 drivers/video/fbdev/core/fbcon.c:2673
- con_font_set drivers/tty/vt/vt.c:4571 [inline]
- con_font_op+0x1e59/0x2290 drivers/tty/vt/vt.c:4636
- vt_ioctl+0x99e/0x67c0 drivers/tty/vt/vt_ioctl.c:917
- vt_compat_ioctl+0x59b/0x1040 drivers/tty/vt/vt_ioctl.c:1242
- tty_compat_ioctl+0x74b/0x1660 drivers/tty/tty_io.c:2847
- __do_compat_sys_ioctl fs/ioctl.c:847 [inline]
- __se_compat_sys_ioctl+0x55f/0x1100 fs/ioctl.c:798
- __ia32_compat_sys_ioctl+0x4a/0x70 fs/ioctl.c:798
- do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
- __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
- do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
- do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Thanks!
+One more small thing, can you please change the error message content
+from "remap_pfn_range error" to "dma_mmap_coherent error" ?
+Oded
