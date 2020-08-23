@@ -2,131 +2,124 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 19:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C976C433E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 19:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD9F22075E
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 19:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E0B2075E
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 19:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V77Ac81F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFwncRAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgHWTbF (ORCPT
+        id S1726834AbgHWTbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 15:31:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54776 "EHLO
+        Sun, 23 Aug 2020 15:31:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgHWTbE (ORCPT
+        with ESMTP id S1725885AbgHWTbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 15:31:04 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CBBC061573;
-        Sun, 23 Aug 2020 12:31:03 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id bh1so3166524plb.12;
-        Sun, 23 Aug 2020 12:31:03 -0700 (PDT)
+        Sun, 23 Aug 2020 15:31:40 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 403FFC061573;
+        Sun, 23 Aug 2020 12:31:40 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id g6so7233730ljn.11;
+        Sun, 23 Aug 2020 12:31:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=weNWHTNBlFYVLfVtCUahgwUBiIrruSXZn6kHTI1JUaY=;
-        b=V77Ac81FIKwovH3RsFHYw6KqcGVROAhAK7uQOVOywTRUgnyCtheBeTYlD1U+XRbKHB
-         G/ioAl4eu40NyeaXo8Nl33FsxQSPIUvhrlHT2SLxOszsMe0ByUA9Szm5Jbg9ZuS4b0uy
-         ZHJCNEJV1fLvjRhxlxSMq89sQ7MHRGM6yCJDrAa3t8rrnoQ8QIg5eezpRxC/UgdtYppA
-         PoDfL/7KmBV3kKXseyYll1UVhOqEWjq8reufqJ6BX1Ou5u9bvkAQNSDgr0FJxnig6WZN
-         q3am9o04NOYfbyLNjZlXhDpjGRu+YHnYJCuR1Y2E3KPVC9A4WB3DGhfailImR7zwA9Bg
-         92Bg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+n9yQYKjNKE6Ca5NdW7hAYXe/4MN1OyfmeKRWcj2nLQ=;
+        b=nFwncRAwcg7lEz1gqxGOT+hUpbJF33iNu7dBhVovyvQulCyOTWsdw3Hmu1sKJMdLFE
+         o9C83qJkT4lw6wfu8JtaIu4Aj+vLBiIQxYuThHq84gxfodfLXde/z/yCcs1GDCvdE7a0
+         lY56kOJjEeD2TkjY0QDuXr0DtHwoEe+1doYHYjvYqFGKNoBL8b4W6O01W6t7gHqTwnSS
+         lx0mkB8BfILuliwOlDh/VTeru9bjF47rViihzwPipXKUsvfeCIrE63x/Ci/atV8FRFhn
+         vlv1ik5WyQvLWsfL/ON/R/zoc1Tga63rHrPEZ6nqZABEE0jUTOJL1ftt/3pIkBapy9ar
+         lfvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=weNWHTNBlFYVLfVtCUahgwUBiIrruSXZn6kHTI1JUaY=;
-        b=dL7Y99KWwtreoa0EbxegI5lw84Tz9qq0mTBBL9qZzs7KN5fh4AFKlon3yb4cCPXIRR
-         qKwNs/skHySolqOICLvUpIe9ijEyLuRxKbSOgZOStwCV9E0Q3eArL2gx2J82ln00WuL7
-         ZapovAL8aMUIVY4S/SIf9GngKvi7m+Gz9//4MRurisWMyPIXnci7xsm+wIAludVRRbMl
-         Y/6W30N34hvKhtsaOIVJCcNUhy3Nb55GtLvaigZ1CyuDPJrWg381/IkTUq5KHE/FIV7F
-         HBSgYnKmTDEC7o+sOYrQBNYvFxcIeQdpsa+1nqfCQX2JRhGZY5Rh65eROF7DehXIJsmU
-         ZVpw==
-X-Gm-Message-State: AOAM53146SF6QFu8L4gDJqFx4SMoHMwsegcqRIC/LlXXby7nJaNNPeSY
-        zEJnATl+VI/WfxBf0J0KgxE=
-X-Google-Smtp-Source: ABdhPJwwq1r/SRRcR3NwII2uDcDioNwrJebgxM9d75uHBbsTp1sJOileU4MFGNBOgcn4iKBR6eyIzA==
-X-Received: by 2002:a17:902:8bcb:: with SMTP id r11mr1547106plo.65.1598211063471;
-        Sun, 23 Aug 2020 12:31:03 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.212.93])
-        by smtp.gmail.com with ESMTPSA id mp1sm7804624pjb.27.2020.08.23.12.30.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2020 12:31:02 -0700 (PDT)
-From:   Sumera Priyadarsini <sylphrenadin@gmail.com>
-To:     davem@davemloft.net
-Cc:     Julia.Lawall@lip6.fr, andrew@lunn.ch, sean.wang@mediatek.com,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com, kuba@kernel.org,
-        matthias.bgg@gmail.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sumera Priyadarsini <sylphrenadin@gmail.com>
-Subject: [PATCH V3] net: dsa: Add of_node_put() before break and return statements
-Date:   Mon, 24 Aug 2020 01:00:54 +0530
-Message-Id: <20200823193054.29336-1-sylphrenadin@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+n9yQYKjNKE6Ca5NdW7hAYXe/4MN1OyfmeKRWcj2nLQ=;
+        b=fqOi1NoHywgQ/rV6/wpi2aJDY+PM6hE93syMHsgc6dhPzG6zPQubt7+Of917HQk+SQ
+         qWccZbzXpZ4u5aTrj8PaTgbrIFVEHB4/I3L7HimwNO9epMJ1Nyz447IDeykTbNCwkFMm
+         8jOHCoYbmJxAAnHXLucnuyrvIzoiSPdB7mkggXTEek65Re9wRMwqAUPPvrZnKgHBQQd/
+         vPUqLMfkqgySlsfSvcatLcpxSWU9vbRzjPTnZwo88p7E8U0ZpXaajeKiHsxAd+PmIr8b
+         5q+CIHslNrze944QoI22YqqOm+8jKuwuj8m1gWKyA9hI57s6CEHZ13Gvl+8ueROja7nd
+         mtvg==
+X-Gm-Message-State: AOAM532nAXNtrZ94U0ejyNai7PU+WyKzqIvR1LY+pZUPtUiMYLUq/GFK
+        YuWHLDLaQ3G3SAQInxbaRPe3cqg5z4M=
+X-Google-Smtp-Source: ABdhPJwizHK3fmafWUkJXb8pYyXEcwK3lwpXVnJ1jVspMSTddzWJoCB2o2siEF8Vikk+5Yn0MZyYDQ==
+X-Received: by 2002:a2e:9843:: with SMTP id e3mr1160500ljj.57.1598211098526;
+        Sun, 23 Aug 2020 12:31:38 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id t16sm1790954ljo.27.2020.08.23.12.31.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Aug 2020 12:31:37 -0700 (PDT)
+Subject: Re: [PATCH v1 4/6] dt-bindings: mfd: ene-kb3930: Add compatibles for
+ KB930 and Acer A500
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200823140846.19299-1-digetx@gmail.com>
+ <20200823140846.19299-5-digetx@gmail.com>
+ <20200823182050.GA210632@demiurge.local>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b91b96d2-89e1-feb7-a4d0-6fd19a173ab4@gmail.com>
+Date:   Sun, 23 Aug 2020 22:31:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200823182050.GA210632@demiurge.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Every iteration of for_each_child_of_node() decrements
-the reference count of the previous node, however when control
-is transferred from the middle of the loop, as in the case of
-a return or break or goto, there is no decrement thus ultimately
-resulting in a memory leak.
+23.08.2020 21:20, Lubomir Rintel пишет:
+> On Sun, Aug 23, 2020 at 05:08:44PM +0300, Dmitry Osipenko wrote:
+>> The ENE KB930 hardware is compatible with KB3930.
+>>
+>> Acer A500 Iconia Tab is Android tablet device, it has KB930 controller
+>> that is running firmware specifically customized for the needs of the
+>> Acer A500 hardware. This means that firmware interface isn't re-usable
+>> by other non-Acer devices. Some akin models of Acer tablets should be
+>> able to re-use the FW interface of A500 model, like A200 for example.
+>>
+>> This patch adds the new compatibles to the binding.
+> 
+> I've responded to patch 5/6 with what should've been said here [1].
+> Sorry for the confusion.
+> 
+> In any case please consider adding a new binding file instead of
+> modifying the kb3930 binding doc. It would also remove a dependency on
+> my patch set which should have slipped out of maintainers' radar.
+> 
+> [1] https://lore.kernel.org/lkml/20200823180041.GB209852@demiurge.local/
 
-Fix a potential memory leak in mt7530.c by inserting of_node_put()
-before the break and return statements.
+Hello, Lubomir! I was doing some research about the differences of
+KB3930 and KB930 before created this patch and my understanding is that
+the controllers are mostly identical. I've seen posts from people who
+replaced KB3930 with KB930 (and vice versa) on various notebooks and it
+worked, although not always.
 
-Issue found with Coccinelle.
+It's a very common practice to re-use binding in a case of a sibling
+hardware. Do you know what are the exact differences between KB3930 and
+KB930 which could justify having separate bindings?
 
----
-Changes in v2:
-	Add another of_node_put() in for_each_child_of_node() as pointed
-out by Andrew.
-
-Changes in v3:
-	- Correct syntax errors
-	- Modify commit message
-
----
-
-Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
-
-Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
----
- drivers/net/dsa/mt7530.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 8dcb8a49ab67..4b4701c69fe1 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -1326,14 +1326,17 @@ mt7530_setup(struct dsa_switch *ds)
- 
- 			if (phy_node->parent == priv->dev->of_node->parent) {
- 				ret = of_get_phy_mode(mac_np, &interface);
--				if (ret && ret != -ENODEV)
-+				if (ret && ret != -ENODEV) {
-+					of_node_put(mac_np);
- 					return ret;
-+				}
- 				id = of_mdio_parse_addr(ds->dev, phy_node);
- 				if (id == 0)
- 					priv->p5_intf_sel = P5_INTF_SEL_PHY_P0;
- 				if (id == 4)
- 					priv->p5_intf_sel = P5_INTF_SEL_PHY_P4;
- 			}
-+			of_node_put(mac_np);
- 			of_node_put(phy_node);
- 			break;
- 		}
--- 
-2.17.1
-
+The firmware implementation varies a lot from device to device, and
+thus, each device needs to have its own driver in order to talk to the
+firmware, but hardware description (i.e. DT binding) should be common
+for all devices.
