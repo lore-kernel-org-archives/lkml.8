@@ -2,93 +2,109 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0472FC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 14:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 14:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCD57206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 14:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C4F2067C
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 14:22:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbSDWEMr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKOdxg9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgHWOMY (ORCPT
+        id S1727014AbgHWOWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 10:12:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
+        Sun, 23 Aug 2020 10:22:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgHWOMV (ORCPT
+        with ESMTP id S1725996AbgHWOWi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 10:12:21 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8856C061573;
-        Sun, 23 Aug 2020 07:12:20 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id j15so3102986lfg.7;
-        Sun, 23 Aug 2020 07:12:20 -0700 (PDT)
+        Sun, 23 Aug 2020 10:22:38 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC3BC061573;
+        Sun, 23 Aug 2020 07:22:37 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id 185so6756695ljj.7;
+        Sun, 23 Aug 2020 07:22:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TSlo4b8ovN8j9ufmCxToQYw7EM4pY/SThcXYNxp45Nw=;
-        b=bbSDWEMrNigm9slWkT5KqfUYK5OtYrdkHoE5553RGh0BehhoZj7vSGT0VzumMHfjYR
-         oj7zjyDghGHeRTNLY6AG9t0gWrN138M9PYNFyizwNOd2jWkqAvrE9rCUJcao4jMQHNE1
-         odfb9/FxVSr7DTzyvxnL5KJbfYnUiOJGm+oQBomMO7FPqimEX4JzcyQXtwGRgLT6ikoa
-         WsChrxXwbiBaoe6mpYJtWgTe7m30cHBn+PjfsivnArGWDsetq7gwDrib6tC2OTgSXFrx
-         hwvhMksq+RQM4nw3wDtV/uA3dQvmJ4PUQPvgEHc11l37d7yaCxM6FQI7CvOQLb2/C0E9
-         xRZw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cpCT819jIZRApX9D520kYS6bFmlnpJPpxZjN4lrXVfs=;
+        b=AKOdxg9x4WPMYdcVBFb6mbCTAht38QZGhsXUdTJkxxM1nl1W0PkY/anI72vrMwXbaI
+         ou7kHmCFWXkygBGapGdKCmTdbNTMEyiWMBtOxxsWbaKw2yACIoX1z17ez2bBC/HqQ2EG
+         5addTlyUg5G9vohHbfBMtLeJriLNqoMMlprdqUtXvZ0vEXMBqQq5FELMWGOYPn6KX487
+         R83z83bnvJGWte06RSYwY4vX5cFb6FCVYrlwjWKgCjzLlI6VzTDvFJjqZIdaUn9gJBEB
+         56t+5W7vJK6+ShRCQzNCQ2FN2j2qfcgKS9krwdX70YrDsIDbiHAC5gGmxhE/QgvzNzCo
+         eYzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TSlo4b8ovN8j9ufmCxToQYw7EM4pY/SThcXYNxp45Nw=;
-        b=rC3xDOsCyHxtOc7w4IwSlD8KjKKyMwKr0gll0Yf7Y93U+7Qh7HtKA96B4QlyYWJix+
-         7huw3K+9chQwVUSqMCVCgWs8/aSZTZYyUW1I1K5TLz/jvir2YG3o0X4snUItku0VdFYX
-         e6Y66tDjKPwCzvwBJdFYDnTZApL902Q+QULW2kee25LEKbCgKt7XBsK2HMQVYZkOd9Xo
-         26wzoJW/PSvwcxnuh/G7xShrwOwBBY3DwvJx2tWJ8UUdP5k89nOi9Gy03tJJ/Z5NxPGs
-         ojse/HAkjpoGhAcMD8jQ0/4YZWBWlGnOjokUCyxySDw5jIdW7+JJOk82C/HVn2Sx+Tg3
-         8fEg==
-X-Gm-Message-State: AOAM531qwFhShNdkskJsRsI15zbuk0Rz/v7Id5zBGjLJiWDbOxU+cx1y
-        6jFwjYN4MzSOAt0qqPmCoXaOVyGCoRv4ghA56M0=
-X-Google-Smtp-Source: ABdhPJzpc9xnXVWN7kBxunjdAXR4CZlJ5vyIKYmlyoGgNSI2LACUJ+7D5x14pIBIsL45fGZyV0/MJBlrDIz0SPaKO84=
-X-Received: by 2002:a19:4801:: with SMTP id v1mr370564lfa.56.1598191939039;
- Sun, 23 Aug 2020 07:12:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cpCT819jIZRApX9D520kYS6bFmlnpJPpxZjN4lrXVfs=;
+        b=ZoXJihx59V0HAFqtJEDimaNSwEoOrlCO6cn4TwLSYNZHD1NlXDrKvJYaBV/Ip1E74S
+         OVWn+eLYtL5PvVjtbfgVy+QzZwYEZZ931sfAjJ2kVZTFgWiKHWcrI5KdXZB9ywsDJk22
+         eZZ8JWw+1SNSnxD0LcxgvVhh43ZG1JKWKDA14/Vu50UAuOyjeFHNZshfCzotcf3k+wcc
+         WU31WfWq8P+7QRUfYMKBDo5ONamdaPpVWY/DXDwoEy4otBc6c1AVpoZ9t0I7XtF6qEYe
+         UDX8uMn+V8dvDtO8VJT82ydMjGxnLbsuQlR8TwQJh1hL3+aZodrCGSBARvt5i356RGIr
+         nJxQ==
+X-Gm-Message-State: AOAM5303QXBQxllRafkMrNJ+gXyMsiaLsiqbgvYJI52HeggorEIo2qKN
+        HJTBdMyLWuYeJOgFswhDNmIz7Dx+zxA=
+X-Google-Smtp-Source: ABdhPJxGj++OCovG9IFWIJGZ6F5MA3xQetTwTZaV29FbQT5OaF+P2/Fkq2Y8x3gtSk0LOz9fiFZHWw==
+X-Received: by 2002:a2e:8e94:: with SMTP id z20mr762846ljk.367.1598192556375;
+        Sun, 23 Aug 2020 07:22:36 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id 1sm1627876ljr.6.2020.08.23.07.22.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Aug 2020 07:22:35 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] brcmfmac: increase F2 watermark for BCM4329
+Date:   Sun, 23 Aug 2020 17:20:04 +0300
+Message-Id: <20200823142004.21990-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <VI1PR0402MB33427CE688DB9D28DDFC000EE3590@VI1PR0402MB3342.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB33427CE688DB9D28DDFC000EE3590@VI1PR0402MB3342.eurprd04.prod.outlook.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Sun, 23 Aug 2020 11:12:08 -0300
-Message-ID: <CAOMZO5AQdOONXgYFYGV+=0u8KqXUfJm-J53YoKdJDPXJmLtW0Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6sx-sdb: Add headphone detection for sound card
-To:     "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wang Shengjiu and Shawn,
+This patch fixes SDHCI CRC errors during of RX throughput testing on
+BCM4329 chip if SDIO BUS is clocked above 25MHz. In particular the
+checksum problem is observed on NVIDIA Tegra20 SoCs. The good watermark
+value is borrowed from downstream BCMDHD driver and it's the same as the
+value used for the BCM4339 chip, hence let's re-use it for BCM4329.
 
-On Sun, Aug 23, 2020 at 9:31 AM S.j. Wang <shengjiu.wang@nxp.com> wrote:
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> I would like to know your opinion, should I move headphone detect GPIO
-> To audmux group?
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index 3c07d1bbe1c6..ac3ee93a2378 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -4278,6 +4278,7 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
+ 			brcmf_sdiod_writeb(sdiod, SBSDIO_FUNC1_MESBUSYCTRL,
+ 					   CY_43012_MESBUSYCTRL, &err);
+ 			break;
++		case SDIO_DEVICE_ID_BROADCOM_4329:
+ 		case SDIO_DEVICE_ID_BROADCOM_4339:
+ 			brcmf_dbg(INFO, "set F2 watermark to 0x%x*4 bytes for 4339\n",
+ 				  CY_4339_F2_WATERMARK);
+-- 
+2.27.0
 
-What about adding a dedicated pinctrl_hp for the headphone detect pin
-like it is done at:
-https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/tree/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi?h=for-next&id=8f0216b006e5f553d28c4c1a991b5234693a49cb#n130
-
-My point is that we should avoid adding a hog group when possible.
-
-Thanks
