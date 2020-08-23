@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85864C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4B7C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 643C02072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1186D2072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598199526;
-	bh=FgDauWijE2v2zG1uUmpQp0k3ggKYFyDzL5p9qK38cTA=;
+	s=default; t=1598199548;
+	bh=VqDD3KFuiRD86Z7+w0i17rgKkKCPFxI1DEBp8fL8MEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZOiDRb3GZhTOUcfHZkSW3AGJTI/etyj2sn43lnSaXh3r0EpsRDmLBhjmJSjNMrm2o
-	 6mAtHDaeZSELHW/KFLI4sm8lVc150weJmM0i865cdCeGFVzGdvCg+GRmnikVeokG5L
-	 sf/zpxzSONzfW1igYruQvsH8ceAIdXv0gfpkt0jM=
+	b=MQCniTuSv/oWOl+EFi97R02h+uG6SrLEiArJGQ0w7iz5+XrC8CH/TiixhjzaJIx2g
+	 pjbV6BggIuSsDjCpqUoXenMl6av22yslm1stvzdFo2+atJ9bRWkvRx8j859lLROSiQ
+	 fc6BVu6VIiSRDeYPwclHKrvb9TV8Z1BVpd8A4irM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgHWQSo (ORCPT
+        id S1728131AbgHWQTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 12:18:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47380 "EHLO mail.kernel.org"
+        Sun, 23 Aug 2020 12:19:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbgHWQRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 12:17:32 -0400
+        id S1728105AbgHWQQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 12:16:57 -0400
 Received: from kozik-lap.proceq-device.com (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 723892075B;
-        Sun, 23 Aug 2020 16:17:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 193DD2078A;
+        Sun, 23 Aug 2020 16:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598199451;
-        bh=FgDauWijE2v2zG1uUmpQp0k3ggKYFyDzL5p9qK38cTA=;
+        s=default; t=1598199417;
+        bh=VqDD3KFuiRD86Z7+w0i17rgKkKCPFxI1DEBp8fL8MEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iQKrnvwOPFy36zo9ouWkzK/k66jZBtwE1DCl0+FuKAc2CgHeyOrQ5moiyAj1WqiAY
-         uF7zNC19Jf2QR/TpzqOO7bPHGqzuKaCiNASOMBvMr2UgOvStlsr8RD5J0BczCkYabW
-         byjfqz7daDcQ65RwP0IJAkDuLqXYySK83JNx8+8Y=
+        b=MCzDXQVgp12mbtB449hvqtg7DzFdqsO50NCG20CPk1CsZdLEJfHDaLpgv7hQiFozl
+         65k5IkpH4qZJ/JxrPVyr6VCgjsJNsUFOxZFdgzzJK9n3KQX0m6DpPrmDLR7D6+wrHK
+         Z0iUD8IrtKeucGsZayZVT8FCgSjVCTBh+IVhWc6o=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -56,9 +56,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Anson Huang <Anson.Huang@nxp.com>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 20/22] arm64: dts: imx8qxp: Remove i.MX7 compatible from UART
-Date:   Sun, 23 Aug 2020 18:15:48 +0200
-Message-Id: <20200823161550.3981-20-krzk@kernel.org>
+Subject: [PATCH 13/22] dt-bindings: nvmem: imx-ocotp: Update i.MX 8M compatibles
+Date:   Sun, 23 Aug 2020 18:15:41 +0200
+Message-Id: <20200823161550.3981-13-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200823161550.3981-1-krzk@kernel.org>
 References: <20200823161550.3981-1-krzk@kernel.org>
@@ -67,62 +67,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The UART on i.MX 8QXP has its own compatible described in bindings
-and used in the driver (with its own quirks).  Remove additional
-fsl,imx7ulp-lpuart compatible to fix dtbs_check warnings like:
+DTSes with new i.MX 8M SoCs use two compatibles so update the binding to
+fix dtbs_check warnings like:
 
-  arch/arm64/boot/dts/freescale/imx8qxp-mek.dt.yaml: serial@5a060000:
-    compatible: ['fsl,imx8qxp-lpuart', 'fsl,imx7ulp-lpuart'] is too long
-    From schema: Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000: compatible:1: 'syscon' was expected
+    From schema: Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
 
-  arch/arm64/boot/dts/freescale/imx8qxp-mek.dt.yaml: serial@5a060000:
-    compatible: Additional items are not allowed ('fsl,imx7ulp-lpuart' was unexpected)
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000:
+    compatible: ['fsl,imx8mn-ocotp', 'fsl,imx8mm-ocotp', 'syscon'] is too long
+
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000:
+    compatible: Additional items are not allowed ('syscon' was unexpected)
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/nvmem/imx-ocotp.yaml  | 39 ++++++++++++-------
+ 1 file changed, 24 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index e46faac1fe71..61bccb69f09e 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -257,7 +257,7 @@
- 		};
+diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml b/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
+index 1c9d7f05f173..b5b250185afd 100644
+--- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
++++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
+@@ -19,21 +19,30 @@ allOf:
  
- 		adma_lpuart0: serial@5a060000 {
--			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
-+			compatible = "fsl,imx8qxp-lpuart";
- 			reg = <0x5a060000 0x1000>;
- 			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART0_IPG_CLK>,
-@@ -268,7 +268,7 @@
- 		};
+ properties:
+   compatible:
+-    items:
+-      - enum:
+-          - fsl,imx6q-ocotp
+-          - fsl,imx6sl-ocotp
+-          - fsl,imx6sx-ocotp
+-          - fsl,imx6ul-ocotp
+-          - fsl,imx6ull-ocotp
+-          - fsl,imx7d-ocotp
+-          - fsl,imx6sll-ocotp
+-          - fsl,imx7ulp-ocotp
+-          - fsl,imx8mq-ocotp
+-          - fsl,imx8mm-ocotp
+-          - fsl,imx8mn-ocotp
+-          - fsl,imx8mp-ocotp
+-      - const: syscon
++    oneOf:
++      - items:
++          - enum:
++              - fsl,imx6q-ocotp
++              - fsl,imx6sl-ocotp
++              - fsl,imx6sx-ocotp
++              - fsl,imx6ul-ocotp
++              - fsl,imx6ull-ocotp
++              - fsl,imx7d-ocotp
++              - fsl,imx6sll-ocotp
++              - fsl,imx7ulp-ocotp
++              - fsl,imx8mq-ocotp
++              - fsl,imx8mm-ocotp
++              - fsl,imx8mn-ocotp
++              - fsl,imx8mp-ocotp
++          - const: syscon
++      - items:
++          # The devices are not really compatible with fsl,imx8mm-ocotp, however
++          # the code for getting SoC revision depends on fsl,imx8mm-ocotp compatible.
++          - enum:
++              - fsl,imx8mn-ocotp
++              - fsl,imx8mp-ocotp
++          - const: fsl,imx8mm-ocotp
++          - const: syscon
  
- 		adma_lpuart1: serial@5a070000 {
--			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
-+			compatible = "fsl,imx8qxp-lpuart";
- 			reg = <0x5a070000 0x1000>;
- 			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART1_IPG_CLK>,
-@@ -279,7 +279,7 @@
- 		};
- 
- 		adma_lpuart2: serial@5a080000 {
--			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
-+			compatible = "fsl,imx8qxp-lpuart";
- 			reg = <0x5a080000 0x1000>;
- 			interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART2_IPG_CLK>,
-@@ -290,7 +290,7 @@
- 		};
- 
- 		adma_lpuart3: serial@5a090000 {
--			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
-+			compatible = "fsl,imx8qxp-lpuart";
- 			reg = <0x5a090000 0x1000>;
- 			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART3_IPG_CLK>,
+   reg:
+     maxItems: 1
 -- 
 2.17.1
 
