@@ -2,122 +2,271 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80194C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 00:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236CEC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 00:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B10620738
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 00:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01362080D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 00:40:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="prB0m3ov"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KFCVvOGj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725968AbgHWAc5 (ORCPT
+        id S1726057AbgHWAkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 20:32:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49516 "EHLO
+        Sat, 22 Aug 2020 20:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgHWAcz (ORCPT
+        with ESMTP id S1725959AbgHWAkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 20:32:55 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C0DC061573;
-        Sat, 22 Aug 2020 17:32:55 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id s2so5268397ioo.2;
-        Sat, 22 Aug 2020 17:32:55 -0700 (PDT)
+        Sat, 22 Aug 2020 20:40:45 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B94C3C061574
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 17:40:44 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id m34so2772915pgl.11
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 17:40:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SsZoxPoLhqbUeZj/RqXQMzdgBATwQI9M/taaTrFxrcI=;
-        b=prB0m3ovlX+Tt7YUwdPANWpMeqw7MuVw7bYlxs+v5vW/Pqq3Y3oq/jsjGzDlefrxBd
-         /forhKz6f3SZcNq0UOnmXJIOA1chkAe+tRp5n+fxP8sG/qX8DYITd6APtOEQfz4mpvTg
-         hTXD8W6T3p3au+XfWxGcGs2/WEriqH+Bh6Drk/Tf3FecbPfXKcmC9HCfHK0NQW61KG+7
-         8yPonEh8UTLOvY3AuEW/VnYHMpyQ3uP/DLpifZ9BMhrB1fFD3TpkYIWeeubcPbLkCixG
-         DFAxS6S6fCBMWWgJaK+6UQjb/tBy/YcU0dkCAfu71XwRA7ptg+JO0ximpkpevMGF2ZDc
-         gUmA==
+        bh=Eh5sQVyCmH30XYzTZRKBdCm/XGoXbbsyIhSzkPDA3nY=;
+        b=KFCVvOGjy3AcOG2bBSkOE+3LCzwwPZotSad1PWFQ4uJDa+qiLx1O6isw2wwjGzte+5
+         CMnFYskCCwmtWO5Qt4aw1gHPOCl6EED6k9qUlfe9sQg3y4O7B0G07OU4SyalFCkYJBR9
+         sYaDBVnSOeYpbfw8CHJ+fGbd7+adurmOiXd72K4p8AkijCTdm6P9wOnShFY93jbHECFQ
+         29maW9D/0Gmk179UdXjnV//yhb0CBBxkjYT7Ag9wXNGziLL7xaJz8aD2vn4FCi2dynrZ
+         CQoSUM/sJzKUQk3Zuj3FHSCqPtR99snCR0Z+J2Yk0OB3VtpCjVYAe3kMyth2evKk5Fj9
+         cxvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SsZoxPoLhqbUeZj/RqXQMzdgBATwQI9M/taaTrFxrcI=;
-        b=i35wiam6VoOLfM4a+ooHZP9HbIGgASqLvxMKX5U4w725qawwOkXKbrIt6wZl9Ul90H
-         5tDDwFb1UXcFx+DvM0Itnx7Jdg5r/f5kVlmw6Z5YGdidSKXIiY/4PubqtyWWbJkVWJVb
-         EnSagwOUuxOSPVuPJ6f0cekseRRB+Z9wIMrYoQyiZCEihziroBakrYy/wOa5y5HjEB0D
-         CRXRMFS1CvRJDmSv3HSMvKcThO3oRUFDvoSebGYe9/DL02QJMROaonJVNvzabmp5aC5X
-         hKxJFDZ8SjF3XxJnI0nhn1P7scBR0CMOD0fPT/yVeYEZYod9C+gVZVYa2Dw2+pP68DH/
-         Pi8w==
-X-Gm-Message-State: AOAM530P0zhjFhHhRcM1q+B4HJSp/rNOlDkUJhAgL/hMFuNM429Pw4yq
-        0F/0pBJXWit0m1bY+Kpa7FpLZU8xaDFrdrskLnuvXKTtSWI=
-X-Google-Smtp-Source: ABdhPJzzwaYlNUJ0FlaOId7Z0x9I2Pa+zPa/qWXmbhq/hdzbTohApMlq8N0UjiDH/QXpAExGFsND/3crvlUdV6wZ9Cw=
-X-Received: by 2002:a6b:b292:: with SMTP id b140mr5342260iof.87.1598142773579;
- Sat, 22 Aug 2020 17:32:53 -0700 (PDT)
+        bh=Eh5sQVyCmH30XYzTZRKBdCm/XGoXbbsyIhSzkPDA3nY=;
+        b=cbCQYWcdksHi1voaZ/7E8YTkuBr9C45cI+MYB6VuolH+yIAnotyT0gqmpTiUaXLt8/
+         YfW+MueqrJgj5kWCsioMPFuJhhSvouMnVu6ZEFF+pmXiOUuLTGgC9nmIZ6/6li+LtqEG
+         JJna4a8MvzQ9wGrD12I1ZNUI8o8x7dAow6fntOXKQKw0G12ra4cG3owljsInk/kUEdY2
+         Hm1Wo2UMgbvdab8/ALtRofevW5RE2kKc3zI7N7Twy0GvI/+75TaeZh0lVInpRpgfGaqp
+         wD5ErlQEEgPbsJKyiImBorBoFEved32ygVPIpz9ZGJ6COY8JgKd8oNe0HkKj2PlFQTq1
+         qOqg==
+X-Gm-Message-State: AOAM531+hy0bw+QwPqDMCKSWoi/71XJ7o49K0J4QmpDZb0Kt5iyjt//Y
+        IpaRlqO8lUN8T3JEyxT5t5xdpvpKEdwxnSA1OWi/zQ==
+X-Google-Smtp-Source: ABdhPJxbF8iHnyeBqTxIEzJj/7CIIpAKX88fhSnZMq4wcG3PnYETUVS5bin64B/+NXyGy8iKsuroJnqqbRO/M7eNFyY=
+X-Received: by 2002:a63:a119:: with SMTP id b25mr6481177pgf.10.1598143242377;
+ Sat, 22 Aug 2020 17:40:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200821205115.50333-1-shawn@anastas.io>
-In-Reply-To: <20200821205115.50333-1-shawn@anastas.io>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Sun, 23 Aug 2020 10:32:42 +1000
-Message-ID: <CAOSf1CGjm576cj3mqAqhp0xGE4P5F0ULNBPWxN44kmBLgUh4_A@mail.gmail.com>
-Subject: Re: [PATCH] powerpc/pseries: Add pcibios_default_alignment implementation
-To:     Shawn Anastasio <shawn@anastas.io>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-pci <linux-pci@vger.kernel.org>
+References: <20200822145618.1222514-1-masahiroy@kernel.org> <20200822145618.1222514-8-masahiroy@kernel.org>
+In-Reply-To: <20200822145618.1222514-8-masahiroy@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Sat, 22 Aug 2020 17:40:31 -0700
+Message-ID: <CAKwvOdkbc-NH5-fx7DVOj8=fgo6AmM5ufOSvkVYp3XXVxVdoCQ@mail.gmail.com>
+Subject: Re: [PATCH v3 07/10] gen_compile_commands: support *.o, *.a,
+ modules.order in positional argument
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Tom Roeder <tmroeder@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 6:51 AM Shawn Anastasio <shawn@anastas.io> wrote:
+On Sat, Aug 22, 2020 at 7:56 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> Implement pcibios_default_alignment for pseries so that
-> resources are page-aligned. The main benefit of this is being
-> able to map any resource from userspace via mechanisms like VFIO.
-
-Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
-
-That said, there's nothing power specific about this so we should
-probably drop the pcibios hacks and fix the default alignment in the
-PCI core.
-
-> This is identical to powernv's implementation.
+> This script currently searches the specified directory for .cmd files.
+> One drawback is it may contain stale .cmd files after you rebuild the
+> kernel several times without 'make clean'.
 >
-> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
+> This commit supports *.o, *.a, and modules.order as positional
+> parameters. If such files are given, they are parsed to collect
+> associated .cmd files. I added a generator helper for each of them.
+>
+> This feature is useful to get the list of active .cmd files from the
+> last build, and will be used by the next commit to wire up the
+> compile_commands.json rule to the Makefile.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
 > ---
->  arch/powerpc/platforms/pseries/pci.c | 7 +++++++
->  1 file changed, 7 insertions(+)
 >
-> diff --git a/arch/powerpc/platforms/pseries/pci.c b/arch/powerpc/platforms/pseries/pci.c
-> index 911534b89c85..6d922c096354 100644
-> --- a/arch/powerpc/platforms/pseries/pci.c
-> +++ b/arch/powerpc/platforms/pseries/pci.c
-> @@ -210,6 +210,11 @@ int pseries_pcibios_sriov_disable(struct pci_dev *pdev)
->  }
->  #endif
+> Changes in v3:
+>   - Use 'llvm-ar' instead of 'ar' for the default of -a option
+>   - Fix the corrupted comment block
 >
-> +static resource_size_t pseries_pcibios_default_alignment(void)
-> +{
-> +       return PAGE_SIZE;
-> +}
+> Changes in v2:
+>   - Separate the file parser into generator functions
+>   - Use 'obj' instead of 'object' because 'object' is a built-in function
+>   - I think using 'file' is OK because it is not a built-in function in Python3
+>     (https://docs.python.org/3/library/functions.html)
+>     Anyway, the variable 'file' is no longer used in this version
+>   - Keep the previous work-flow to allow to search the given directory
+>
+>  scripts/gen_compile_commands.py | 100 ++++++++++++++++++++++++++++++--
+>  1 file changed, 96 insertions(+), 4 deletions(-)
+>
+> diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
+> index e45f17be8817..f370375b2f70 100755
+> --- a/scripts/gen_compile_commands.py
+> +++ b/scripts/gen_compile_commands.py
+> @@ -12,6 +12,7 @@ import json
+>  import logging
+>  import os
+>  import re
+> +import subprocess
+>
+>  _DEFAULT_OUTPUT = 'compile_commands.json'
+>  _DEFAULT_LOG_LEVEL = 'WARNING'
+> @@ -32,8 +33,9 @@ def parse_arguments():
+>      Returns:
+>          log_level: A logging level to filter log output.
+>          directory: The work directory where the objects were built.
+> +        ar: Command used for parsing .a archives.
+>          output: Where to write the compile-commands JSON file.
+> -        paths: The list of directories to handle to find .cmd files.
+> +        paths: The list of files/directories to handle to find .cmd files.
+>      """
+>      usage = 'Creates a compile_commands.json database from kernel .cmd files'
+>      parser = argparse.ArgumentParser(description=usage)
+> @@ -53,12 +55,21 @@ def parse_arguments():
+>      parser.add_argument('--log_level', choices=_VALID_LOG_LEVELS,
+>                          default=_DEFAULT_LOG_LEVEL, help=log_level_help)
+>
+> +    ar_help = 'command used for parsing .a archives'
+> +    parser.add_argument('-a', '--ar', type=str, default='llvm-ar', help=ar_help)
 > +
->  static void __init pSeries_request_regions(void)
->  {
->         if (!isa_io_base)
-> @@ -231,6 +236,8 @@ void __init pSeries_final_fixup(void)
->
->         eeh_show_enabled();
->
-> +       ppc_md.pcibios_default_alignment = pseries_pcibios_default_alignment;
+> +    paths_help = ('directories to search or files to parse '
+> +                  '(files should be *.o, *.a, or modules.order). '
+> +                  'If nothing is specified, the current directory is searched')
+> +    parser.add_argument('paths', type=str, nargs='*', help=paths_help)
 > +
->  #ifdef CONFIG_PCI_IOV
->         ppc_md.pcibios_sriov_enable = pseries_pcibios_sriov_enable;
->         ppc_md.pcibios_sriov_disable = pseries_pcibios_sriov_disable;
+>      args = parser.parse_args()
+>
+>      return (args.log_level,
+>              os.path.abspath(args.directory),
+>              args.output,
+> -            [args.directory])
+> +            args.ar,
+> +            args.paths if len(args.paths) > 0 else [args.directory])
+>
+>
+>  def cmdfiles_in_dir(directory):
+> @@ -81,6 +92,73 @@ def cmdfiles_in_dir(directory):
+>                  yield os.path.join(dirpath, filename)
+>
+>
+> +def to_cmdfile(path):
+> +    """Return the path of .cmd file used for the given build artifact
+> +
+> +    Args:
+> +        Path: file path
+> +
+> +    Returns:
+> +        The path to .cmd file
+> +    """
+> +    dir, base = os.path.split(path)
+> +    return os.path.join(dir, '.' + base + '.cmd')
+> +
+> +
+> +def cmdfiles_for_o(obj):
+> +    """Generate the iterator of .cmd files associated with the object
+> +
+> +    Yield the .cmd file used to build the given object
+> +
+> +    Args:
+> +        obj: The object path
+> +
+> +    Yields:
+> +        The path to .cmd file
+> +    """
+> +    yield to_cmdfile(obj)
+> +
+> +
+> +def cmdfiles_for_a(archive, ar):
+> +    """Generate the iterator of .cmd files associated with the archive.
+> +
+> +    Parse the given archive, and yield every .cmd file used to build it.
+> +
+> +    Args:
+> +        archive: The archive to parse
+> +
+> +    Yields:
+> +        The path to every .cmd file found
+> +    """
+> +    for obj in subprocess.check_output([ar, '-t', archive]).decode().split():
+> +        yield to_cmdfile(obj)
+> +
+> +
+> +def cmdfiles_for_modorder(modorder):
+> +    """Generate the iterator of .cmd files associated with the modules.order.
+> +
+> +    Parse the given modules.order, and yield every .cmd file used to build the
+> +    contained modules.
+> +
+> +    Args:
+> +        modorder: The modules.order file to parse
+> +
+> +    Yields:
+> +        The path to every .cmd file found
+> +    """
+> +    with open(modorder) as f:
+> +        for line in f:
+> +            ko = line.rstrip()
+> +            base, ext = os.path.splitext(ko)
+> +            if ext != '.ko':
+> +                sys.exit('{}: module path must end with .ko'.format(ko))
+> +            mod = base + '.mod'
+> +           # The first line of *.mod lists the objects that compose the module.
+> +            with open(mod) as m:
+> +                for obj in m.readline().split():
+> +                    yield to_cmdfile(obj)
+> +
+> +
+>  def process_line(root_directory, command_prefix, file_path):
+>      """Extracts information from a .cmd line and creates an entry from it.
+>
+> @@ -117,7 +195,7 @@ def process_line(root_directory, command_prefix, file_path):
+>
+>  def main():
+>      """Walks through the directory and finds and parses .cmd files."""
+> -    log_level, directory, output, paths = parse_arguments()
+> +    log_level, directory, output, ar, paths = parse_arguments()
+>
+>      level = getattr(logging, log_level)
+>      logging.basicConfig(format='%(levelname)s: %(message)s', level=level)
+> @@ -127,7 +205,21 @@ def main():
+>      compile_commands = []
+>
+>      for path in paths:
+> -        cmdfiles = cmdfiles_in_dir(path)
+> +        # If 'path' is a directory, handle all .cmd files under it.
+> +        # Otherwise, handle .cmd files associated with the file.
+> +        # Most of built-in objects are linked via archives (built-in.a or lib.a)
+> +        # but some objects are linked to vmlinux directly.
+> +        # Modules are listed in modules.order.
+> +        if os.path.isdir(path):
+> +            cmdfiles = cmdfiles_in_dir(path)
+> +        elif path.endswith('.o'):
+> +            cmdfiles = cmdfiles_for_o(path)
+> +        elif path.endswith('.a'):
+> +            cmdfiles = cmdfiles_for_a(path, ar)
+> +        elif path.endswith('modules.order'):
+> +            cmdfiles = cmdfiles_for_modorder(path)
+> +        else:
+> +            sys.exit('{}: unknown file type'.format(path))
+>
+>          for cmdfile in cmdfiles:
+>              with open(cmdfile, 'rt') as f:
 > --
-> 2.28.0
+> 2.25.1
 >
+
+
+-- 
+Thanks,
+~Nick Desaulniers
