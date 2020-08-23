@@ -2,89 +2,88 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB98C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 23:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 275B1C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 23:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBB6A2075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 23:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y4Vf/dNr"
+	by mail.kernel.org (Postfix) with ESMTP id F2E4820724
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 23:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598223928;
+	bh=MT4hXiSC7bB81yIZ9jkCCwMmUeVSdfkfkly0vsYtmPU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FfrIh1dqDF0zS5FNqhxMqcCL5RvkaChQgzk+E0arH1nmvy59uAOp/Juc6I9Kb9NKM
+	 wV+LN/itMICRHD5FwaNwml7a89UcxBc52GwULpdiTIZVKUFYC7nliHUdCGke+91KeR
+	 aywDuI+ahNhIkgsi45LniW5c29sB4bsvzrCWAwZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgHWXEb (ORCPT
+        id S1727040AbgHWXF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 19:04:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgHWXE2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 19:04:28 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C411AC061573;
-        Sun, 23 Aug 2020 16:04:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=v34t1N2mYe9Af+5RjwXf4HVMIq4eM3wL/1dL7e36QP8=; b=Y4Vf/dNrO+91A6H3uaWeUOMznt
-        K9I4ZjAH0eez3Z0SCVIXb9pgotmYapZEqXszgrIn9KHp6NCbA/QqCS4INvADBopC4qSFnF/ljYGBV
-        buIdZENVpvP+OMpXwRUUlMgnd0sVXVZ6GKSd+87vYRIEh7rbiD6nIJy/BZWoYLHaOMrHqpkausiEf
-        P8F/rWTGJ4bdH26rk2AzqnXpl635Wvp3oJU9ZWP7swzUSv2Bw9F2A4pMEkuL9+pbQLWfP/uvvEEp+
-        d5IvCk8JTqwle+pLkQxOAR5S3f4I4Juom8S39qZuol8+/1AEZAa+mqPCGX1lLrvISwj7aHivyhyng
-        8tN4effw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k9z25-00089U-O4; Sun, 23 Aug 2020 23:04:14 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] Documentation: fix pm/intel_pstate build warning and wording
-Message-ID: <884e2ee2-7426-cda1-aae2-676062c67f10@infradead.org>
-Date:   Sun, 23 Aug 2020 16:04:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Sun, 23 Aug 2020 19:05:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726631AbgHWXFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 19:05:25 -0400
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B320E22B3F
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 23:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598223925;
+        bh=MT4hXiSC7bB81yIZ9jkCCwMmUeVSdfkfkly0vsYtmPU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=P75IuQ5hAYqoH15pniwwGB2pjnMfpNvP1nCJt7rlXAz/5OT/5RntYPqnDpxQiFplp
+         ACocrfjHX0Y4olJJddRMi+P+Hvg3uq6RiUzENxgLMD7KQ9B8CeP/hW99QzUekIH7sp
+         mnFTvoYyQ6RwbuOw3+2uruE/NBmS6txw3lM7QN9A=
+Received: by mail-wr1-f51.google.com with SMTP id c15so6861196wrs.11
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 16:05:24 -0700 (PDT)
+X-Gm-Message-State: AOAM532q4bxUR0KkvIgzHKDA4ko5OJOVMqqMXtta5eFTaSwFoN6vXaB1
+        xbGTLW/iA0q94vb9C8fKNuYnbKH3o++fAia4JoaUUw==
+X-Google-Smtp-Source: ABdhPJw3YGuseiXCPiqboMP11UPr12JryRp1xwhFLf/rVOMZP43mBgZCkm3+cDcQJewT9khUZ1LhWQMbkvdU5g26J2Y=
+X-Received: by 2002:adf:9283:: with SMTP id 3mr3110796wrn.70.1598223923309;
+ Sun, 23 Aug 2020 16:05:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200821093912.815135402@infradead.org> <20200821102052.969925934@infradead.org>
+In-Reply-To: <20200821102052.969925934@infradead.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 23 Aug 2020 16:05:12 -0700
+X-Gmail-Original-Message-ID: <CALCETrVBfM0B8viVFZ5uPuLJnJWPmF8smciMmnf0n9nwegcNTQ@mail.gmail.com>
+Message-ID: <CALCETrVBfM0B8viVFZ5uPuLJnJWPmF8smciMmnf0n9nwegcNTQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] x86/debug: Remove handle_debug(.user) argument
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Kyle Huey <me@kylehuey.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Robert O'Callahan" <rocallahan@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Fri, Aug 21, 2020 at 3:21 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> The handle_debug(.user) argument is used to terminate the #DB handler
+> early for the INT1-from-kernel case, since the kernel doesn't use
+> INT1.
+>
+> Remove the argument and handle this explicitly in #DB-from-kernel.
 
-Fix documentation build warning and sentence wording:
-
-Documentation/admin-guide/pm/intel_pstate.rst:568: WARNING: Unexpected indentation.
-
-Fixes: f473bf398bf1 ("cpufreq: intel_pstate: Allow raw energy performance preference value")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- Documentation/admin-guide/pm/intel_pstate.rst |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- lnx-59-rc2.orig/Documentation/admin-guide/pm/intel_pstate.rst
-+++ lnx-59-rc2/Documentation/admin-guide/pm/intel_pstate.rst
-@@ -564,8 +564,8 @@ Energy-Performance Preference (EPP) knob
- Energy-Performance Bias (EPB) knob. It is also possible to write a positive
- integer value between 0 to 255, if the EPP feature is present. If the EPP
- feature is not present, writing integer value to this attribute is not
--supported. In this case, user can use
-- "/sys/devices/system/cpu/cpu*/power/energy_perf_bias" interface.
-+supported. In this case, user can use the
-+"/sys/devices/system/cpu/cpu*/power/energy_perf_bias" interface.
- 
- [Note that tasks may by migrated from one CPU to another by the scheduler's
- load-balancing algorithm and if different energy vs performance hints are
-
+Acked-by: Andy Lutomirski <luto@kernel.org>
