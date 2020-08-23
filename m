@@ -2,110 +2,109 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE8DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 04:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14174C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 05:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBFA20767
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 04:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E311F2078D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 05:49:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PFBK0c9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726056AbgHWE4I (ORCPT
+        id S1726337AbgHWFtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 00:56:08 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:40577 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbgHWE4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 00:56:07 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 07N4txw6025979;
-        Sun, 23 Aug 2020 06:55:59 +0200
-Date:   Sun, 23 Aug 2020 06:55:59 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     richard clark <richard.xnu.clark@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, andreyknvl@google.com
-Subject: Re: Why KASAN doesn't detect this stack oob fault?
-Message-ID: <20200823045559.GA25758@1wt.eu>
-References: <CAJNi4rPKTarta5rfhNWSsLqa+Z6qo=FGFygfmT7kuZi11sr3VQ@mail.gmail.com>
+        Sun, 23 Aug 2020 01:49:16 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:16177 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725908AbgHWFtN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 01:49:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598161753; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=VVsAV6RJurfzrc+Bc09hMPCBHRTFLKJUd/JUAnKTN6c=; b=PFBK0c9tfKgcxm/LqA4IRYwaiUWe3TKG/a3cxBeu2uZj058SDQDBVqHfw9zJS+oc7Cs/S5L1
+ ATxKgfZEnlupUdmslOQ1GPFPa8niwaWkICP+AbzBN7TKBk1F1+kgIrMH8wje43w71JSzP5zS
+ cZPtWzKTpAKtRbNwpQcz09w3nxU=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f42034d52709f5476d9e155 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 23 Aug 2020 05:49:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 86C34C4339C; Sun, 23 Aug 2020 05:49:01 +0000 (UTC)
+Received: from [192.168.1.16] (unknown [61.3.22.212])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3A823C433CA;
+        Sun, 23 Aug 2020 05:48:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3A823C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH V3 0/4] opp: general cleanups
+To:     Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>, sibis@codeaurora.org,
+        sbhanu@codeaurora.org, linux-kernel@vger.kernel.org
+References: <cover.1597909885.git.viresh.kumar@linaro.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <11c1cb5f-2ac3-3d30-f554-c782c1ab8a42@codeaurora.org>
+Date:   Sun, 23 Aug 2020 11:18:55 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJNi4rPKTarta5rfhNWSsLqa+Z6qo=FGFygfmT7kuZi11sr3VQ@mail.gmail.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <cover.1597909885.git.viresh.kumar@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 23, 2020 at 11:04:34AM +0800, richard clark wrote:
-> Hi guys,
-> 
-> I ins a kmod with below code in a KASAN enabled kernel (
-> 5.7.0,
-> CONFIG_KASAN=y
-> CONFIG_KASAN_GENERIC=y
-> CONFIG_KASAN_OUTLINE=y):
-> 
-> static int kmod_init(void)
-> {
->     int i;
->     int arr[4];
-> 
->     for (i = 0; i < 20; i++) {
->         arr[i] = i;
->         printk("arr[%d] = %d\n", i, arr[i]);
->     }
->     return 0;
-> }
-> 
-> The output is after insmod:
-> 
-> [ 1511.800683] arr[0] = 0
-> [ 1511.800685] arr[1] = 1
-> [ 1511.800686] arr[2] = 2
-> [ 1511.800687] arr[3] = 3
-> [ 1511.800688] arr[4] = 4
-> [ 1511.800690] arr[5] = 5
-> [ 1511.800691] arr[6] = 6
-> [ 1511.800692] arr[7] = 7
-> [ 1511.800693] arr[8] = 8
-> [ 1511.800694] arr[9] = 9
-> [ 1511.800695] arr[10] = 10
-> [ 1511.800696] arr[11] = 11
-> [ 1511.800697] arr[12] = 12
-> [ 1511.800699] arr[13] = 13
-> [ 1511.800700] arr[14] = 14
-> [ 1511.800701] arr[15] = 15
-> [ 1511.800702] arr[16] = 16
-> [ 1511.800704] arr[17] = 17
-> [ 1511.800705] arr[18] = 18
-> [ 1511.800706] arr[19] = 19
-> 
-> The kernel is not tainted and the gcc version is 7.5 used to build the kernel.
-> The question is:
-> 1. Why the stack out-of-bound can work?
-> 2. Why the KASAN doesn't detect this?
 
-Have you verified in the output code that the compiler didn't optimize
-the stack access away since it doesn't need it ?
+On 8/20/2020 1:26 PM, Viresh Kumar wrote:
+> Hi,
+> 
+> Here is another version of the cleanups I sent earlier.
+> 
+> Rajendra: Please see if these work fine now.
 
-Just to make sure, do it in two distinct loops so that there are more
-chances for the stack to be really used:
+I gave these a quick spin, and they don';t result in the crash I
+earlier observed
 
- static int kmod_init(void)
- {
-     int i;
-     int arr[4];
- 
-     for (i = 0; i < 20; i++)
-         arr[i] = i;
+Tested-by: Rajendra Nayak <rnayak@codeaurora.org>
 
-     for (i = 0; i < 20; i++)
-         printk("arr[%d] = %d\n", i, arr[i]);
+> 
+> V3:
+> - Dropped v2 1/4 as it is already merged.
+> - New patch 4/4 added.
+> - Reordered the first two patches here (Stephen)
+> - disable regulator only if present
+> 
+> Viresh Kumar (4):
+>    opp: Rename regulator_enabled and use it as status of all resources
+>    opp: Track device's resources configuration status
+>    opp: Split out _opp_set_rate_zero()
+>    opp: Remove _dev_pm_opp_find_and_remove_table() wrapper
+> 
+>   drivers/opp/core.c | 103 +++++++++++++++++++++------------------------
+>   drivers/opp/cpu.c  |   2 +-
+>   drivers/opp/of.c   |   2 +-
+>   drivers/opp/opp.h  |   5 +--
+>   4 files changed, 52 insertions(+), 60 deletions(-)
+> 
 
-     return 0;
- }
-
-Willy
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
