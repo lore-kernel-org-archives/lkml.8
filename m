@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 09:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE1EC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 09:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D499C2072D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 09:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2112072D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 09:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598173536;
-	bh=2uo/JEJs8YAZS6b2NkF8X/+7G50HlAMv/ZREDOinUng=;
+	s=default; t=1598173538;
+	bh=/hAdfkHYpIvG+bGuLetMOOvdC01F1x0vwIdd3TjtKP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H4MDglOA+/0ZEpRRv7tjBAmTDHIfTeKEJYPrgapLpQ4rJmOYXo3h0C0dj9NuGTc4O
-	 PSjkpDVU50jgci3lWG6vca+j+HTz+AZFiIQ3J8IDuiHdmRWTFORHL0fymlB7z/0+Na
-	 WkCGXqaGcJCb502zhpISMZf+gZAkn7LiOBPnlzFI=
+	b=AvvMNoJFncM7w7N556RBKWvKcJMpuzAEagcs8diJc/RytAtTw9wG442ts9dT/FOxY
+	 4kY5MsdqPgre9jlHgKq89ggcNWEmdPH0QVuEvzxhxZiWhZhYhQ0Ntvmy8GKzozSJry
+	 ViBMdmq2jB97d6pp4p+9iB81GMyISy0f4Oh5/1bI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgHWJFd (ORCPT
+        id S1728705AbgHWJF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 05:05:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40536 "EHLO mail.kernel.org"
+        Sun, 23 Aug 2020 05:05:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728691AbgHWJF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 05:05:27 -0400
+        id S1726964AbgHWJFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 05:05:24 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 762092072D;
-        Sun, 23 Aug 2020 09:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51F3F20FC3;
+        Sun, 23 Aug 2020 09:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598173527;
-        bh=2uo/JEJs8YAZS6b2NkF8X/+7G50HlAMv/ZREDOinUng=;
+        s=default; t=1598173523;
+        bh=/hAdfkHYpIvG+bGuLetMOOvdC01F1x0vwIdd3TjtKP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LVXV8H6/FWm1NY+h8uiBifu0RS9SHBzj+PgvpYZ7pWxbqJiR2wcdcE0+IOy7RFZvj
-         d772vafq9BwHsW0Z8LjlX2uc5g7ZShrEY7G5sXgxY+tSglY6/X/WXUEoZvE8L7binB
-         p1mTxNJ6XMQ3F+k3CYVjciDR2qb/Fo6lCaQeIW3s=
+        b=WGH5fPnbT6vyzzVlewpDAGMlR7cy/l54O9B/qRSgJG1lj/yU0DEsfYMJTr+5t0OgR
+         0Ch78pQSJkWRBVlyI3px31bTm3WX3jtczTRsrohb3NdbiDKMYnvaRXeSLmpVWOXTvx
+         aQrvQF23KGfv1g2woAwm1y8YZDegzTZiu9sMtA2E=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
@@ -50,9 +50,9 @@ To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 3/3] arm64: dts: imx8mp-evk: remove orphaned pinctrl-names property
-Date:   Sun, 23 Aug 2020 11:05:05 +0200
-Message-Id: <20200823090505.5579-3-krzk@kernel.org>
+Subject: [PATCH 2/3] arm64: dts: imx8mn-evk: remove orphaned pinctrl-names property
+Date:   Sun, 23 Aug 2020 11:05:04 +0200
+Message-Id: <20200823090505.5579-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200823090505.5579-1-krzk@kernel.org>
 References: <20200823090505.5579-1-krzk@kernel.org>
@@ -66,22 +66,22 @@ own (without "pinctrl-X").
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 2 --
+ arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-index 3da1fff3d6fd..3d535f1b3440 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-@@ -124,8 +124,6 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi b/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
+index 98f5324b1dbe..48892ed562b4 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
+@@ -174,8 +174,6 @@
  };
  
  &iomuxc {
 -	pinctrl-names = "default";
 -
- 	pinctrl_fec: fecgrp {
+ 	pinctrl_fec1: fec1grp {
  		fsl,pins = <
- 			MX8MP_IOMUXC_SAI1_RXD2__ENET1_MDC		0x3
+ 			MX8MN_IOMUXC_ENET_MDC_ENET1_MDC		0x3
 -- 
 2.17.1
 
