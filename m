@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF3BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 14:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B51DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 14:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2844F20825
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 14:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D24D12078D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 14:10:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gtRZ6LA/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViEZr59x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgHWOKV (ORCPT
+        id S1727835AbgHWOK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 10:10:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33552 "EHLO
+        Sun, 23 Aug 2020 10:10:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgHWOKG (ORCPT
+        with ESMTP id S1726912AbgHWOKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 10:10:06 -0400
+        Sun, 23 Aug 2020 10:10:08 -0400
 Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFCFAC061574;
-        Sun, 23 Aug 2020 07:10:05 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id i10so6748900ljn.2;
-        Sun, 23 Aug 2020 07:10:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B89BCC0613ED;
+        Sun, 23 Aug 2020 07:10:07 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id f26so6725602ljc.8;
+        Sun, 23 Aug 2020 07:10:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=d0/iqnz3eh4YT0SPBZ7HT6PtoyWEl2aG7pq1uIcFnsA=;
-        b=gtRZ6LA/hPM1PhW0zRukgaHDTK4C/dNipt79Xq3/ybtRrQLAdiLH0ue9FTX7h4RaBC
-         u4CsSXry1snsPO2+YhvGNS2grmCQwQdMfIcZu7A5anUZhMM9zWiy18WF8omjylEKyZU9
-         hie1oVH1Po6NsEnfnSpV6X9rNMYhRZ0Cb5NW7a99FKLJzpcSkCTjrPUVdxvVkM6kIqol
-         n/t10s5TSVcFblc0Z/R8ad+LTB8F+E4AZztV1m2QPyTBv8lACggowAWqFNGvP3zWBgm6
-         2eXaUP2dM+w5wnW7u/0zk73L4xQou730tzfxD/uE5oU+I7nCWeOeh+3JVnmzXsEInpq4
-         Y81g==
+        bh=35wLUHHiL0jcYl7dr+ydbL6W/M+IENF1DgF9AQYM8t8=;
+        b=ViEZr59xlFFxHAnvxlgRZc5ssiXQT0tzUGBTDv4KYhMnBX4cL3HYXEhKeV4X6q53mZ
+         Gsa/A5B34Coz+f9z5jB8hRMsbh4soP1UUqGjvUzx5WX4pYY38a2jEqINeekxEGxNq737
+         ssRpEZ+FRFKBIbZ+lG7mUfRcSB+fFprInOdoEa+iUzJC1+WxIrnKAYPYLi93IZM9Bgsa
+         n7TEZLWkHPo0eLDn4nv5HqsPKHh207111jOcsknhv2FJ/+MutqkNnR1I7GHpVXtTozHS
+         2k2u5b9QlNVmBvtMMVzbXmWDlpolC4Omgsu+gPNiv7uQ1CoK04RG7d1TMg/gOeQneZ7Y
+         kJqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=d0/iqnz3eh4YT0SPBZ7HT6PtoyWEl2aG7pq1uIcFnsA=;
-        b=mgALyyGQTXk+iE4D52/ivtCAeiXk3/1Lmr06qTb2BWBquZfG94a4qfcrEOlxaBXPRD
-         Ly6yVTFWc3hkZnmJMTP8MET0jQb8xxU1WKsSJvx1krgQZbdyDSFLtTZ9Q+OHHw2zm9QE
-         WXmWBkAvcrFBH0L6TX0HyqCAlyenr2JPeEwN2xmmM4Crawv5wQKvVnQNatjZmcKVUlqQ
-         kRB5nfHZHkmcNlONzkNX0jvsHO1h4M1v6FW4yJAVC50Iz6zYzelbVg8GzxKZEtoIok47
-         eB8noL7IchxAeJyZIHd+OFw+5JAyw7tCJY0eVDfzeTKwtOYxp7o1tBN1rO13YRCFCck8
-         8zng==
-X-Gm-Message-State: AOAM532/yDWEb/4N2yTIqNi1R9Q3C5JN7nZWsoPNikfVNJxXH9bOwzf4
-        LWVGqmLr7pmA+JVLfsSxerk=
-X-Google-Smtp-Source: ABdhPJxY3oK+0Juf0WVBhBw5hn+u7TUWOfMJRioQYQVCU6RkCxN1CzJAOvaCf1PWYVay117RKB/2SQ==
-X-Received: by 2002:a2e:9284:: with SMTP id d4mr673013ljh.64.1598191804186;
-        Sun, 23 Aug 2020 07:10:04 -0700 (PDT)
+        bh=35wLUHHiL0jcYl7dr+ydbL6W/M+IENF1DgF9AQYM8t8=;
+        b=TTxZehyuqs65e1M+axUL//z7yukLfnQkzsJ7DrQQrasBUC/fFCbbsu2NSrKsJ4b8nZ
+         2qmd1rkGpekQN/QYkgjMw3949T7VnbpMWznhBjCnVCLGHWtKUJ++HywlT4H2AZJnHOLa
+         vaJpNXKbWHqYPvFEUqAmJRCVGZ5tNhhBAUv3eQ7vja0Mw0Dl4vnTQcQejBkEw2OJv2cq
+         uNZ2UKS1pPE6f34xhXcmA46e1YsmABJjJXRFOTKIudwLsNp4ofLRL63WUvFXcX0mEMOT
+         QXxLscGder8cCHhTMKCvzusrAyvXFy0qHDhevo3jXMgbEFm4j7kwsyR87i22+PRmz3Rm
+         hn/A==
+X-Gm-Message-State: AOAM531BfQkNz1DfAiwfdamGYeM9+VwLVTLmLo86ik7hQUak+r09Lz6V
+        rkg3F8PCNttHq3oWq9eTYEQ=
+X-Google-Smtp-Source: ABdhPJzU2EqrkTFmH1289oQBf1AS7N5fRURLGWkSQCB7ihkYlFD87c3JcUWU8O9Fzhze9kCZLws/Lg==
+X-Received: by 2002:a2e:9557:: with SMTP id t23mr676484ljh.85.1598191806202;
+        Sun, 23 Aug 2020 07:10:06 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id b17sm1641342ljp.9.2020.08.23.07.10.03
+        by smtp.gmail.com with ESMTPSA id b17sm1641342ljp.9.2020.08.23.07.10.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2020 07:10:03 -0700 (PDT)
+        Sun, 23 Aug 2020 07:10:05 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -70,9 +70,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 4/6] dt-bindings: mfd: ene-kb3930: Add compatibles for KB930 and Acer A500
-Date:   Sun, 23 Aug 2020 17:08:44 +0300
-Message-Id: <20200823140846.19299-5-digetx@gmail.com>
+Subject: [PATCH v1 6/6] ARM: tegra: acer-a500: Add Embedded Controller
+Date:   Sun, 23 Aug 2020 17:08:46 +0300
+Message-Id: <20200823140846.19299-7-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200823140846.19299-1-digetx@gmail.com>
 References: <20200823140846.19299-1-digetx@gmail.com>
@@ -83,38 +83,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ENE KB930 hardware is compatible with KB3930.
-
-Acer A500 Iconia Tab is Android tablet device, it has KB930 controller
-that is running firmware specifically customized for the needs of the
-Acer A500 hardware. This means that firmware interface isn't re-usable
-by other non-Acer devices. Some akin models of Acer tablets should be
-able to re-use the FW interface of A500 model, like A200 for example.
-
-This patch adds the new compatibles to the binding.
+This patch adds device-tree node for the Embedded Controller which is
+found on the Picasso board. The Embedded Controller itself is ENE KB930,
+it provides functions like battery-gauge/LED/GPIO/etc and it uses firmware
+that is specifically customized for the Acer A500 device.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- Documentation/devicetree/bindings/mfd/ene-kb3930.yaml | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/tegra20-acer-a500-picasso.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-index 074243c40891..5a1c4a959d9c 100644
---- a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-+++ b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-@@ -17,8 +17,11 @@ properties:
-   compatible:
-     items:
-       - enum:
-+        - acer,a500-iconia-ec # Acer A500 Iconia tablet device
-         - dell,wyse-ariel-ec  # Dell Wyse Ariel board (3020)
--      - const: ene,kb3930
-+      - enum:
-+        - ene,kb3930
-+        - ene,kb930
-   reg:
-     maxItems: 1
+diff --git a/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts b/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
+index 2d683c9a1a5d..f92712e4bd34 100644
+--- a/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
++++ b/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
+@@ -502,6 +502,16 @@ panel_ddc: i2c@1 {
+ 			reg = <1>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++
++			embedded-controller@58 {
++				compatible = "acer,a500-iconia-ec", "ene,kb930";
++				reg = <0x58>;
++
++				system-power-controller;
++
++				monitored-battery = <&bat1010>;
++				power-supplies = <&mains>;
++			};
+ 		};
+ 	};
  
+@@ -780,6 +790,13 @@ backlight: backlight {
+ 		default-brightness-level = <20>;
+ 	};
+ 
++	bat1010: battery-2s1p {
++		compatible = "simple-battery";
++		charge-full-design-microamp-hours = <3260000>;
++		energy-full-design-microwatt-hours = <24000000>;
++		operating-range-celsius = <0 40>;
++	};
++
+ 	/* PMIC has a built-in 32KHz oscillator which is used by PMC */
+ 	clk32k_in: clock@0 {
+ 		compatible = "fixed-clock";
 -- 
 2.27.0
 
