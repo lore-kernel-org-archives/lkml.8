@@ -2,119 +2,85 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722E7C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF87C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB862067C
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:19:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gKBnNPjh"
+	by mail.kernel.org (Postfix) with ESMTP id 668C12067C
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598221627;
+	bh=ywQ7wbvfZOV7aZ30pD3zOxjP7J3ylb5kVjfEk/wwAcc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SmHuHTTmrVuhkcdrEqn864rr9u4T3km/yueoBfNytTGlqaRnGwI4vgr2tQPB9GkLO
+	 xVATijjGL5QNDWqg+AVcTjeOP6fTk1s3fhqUAdVvUfyS/8IWrPdVS+YDIphYFaqm3u
+	 YtZtBYx2vai5wg6RctvAMT8Am4UK/LTbuUdjfxBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgHWWT0 (ORCPT
+        id S1726758AbgHWW1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 18:19:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgHWWTZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 18:19:25 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35F36C061573;
-        Sun, 23 Aug 2020 15:19:25 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1B41A279;
-        Mon, 24 Aug 2020 00:19:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598221153;
-        bh=jR2719Bh8edQKpKcDCblp3fFLCmrLJ9k0mDA6xq9Vw8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gKBnNPjhYTM3EYnpFqaj4S7t7Iozy47maNCuMrXuefLLjxSVpvg+MK3FaBHwgg70z
-         xBfv2iysL/2WhIQMppAipazp6O1frreJAOh7eKWIeJvl/4MaxHnLps8WqmJMuye1UU
-         kOXvMQa/0uhJa6c9meNOFCite6cJOvlPCwkxRDUA=
-Date:   Mon, 24 Aug 2020 01:18:54 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drm/rcar-du: DRM_RCAR_WRITEBACK depends on DRM
-Message-ID: <20200823221854.GG6002@pendragon.ideasonboard.com>
-References: <20200608025340.3050-1-cai@lca.pw>
- <20200608031442.GP22208@pendragon.ideasonboard.com>
- <20200608031622.GQ22208@pendragon.ideasonboard.com>
- <20200822012036.GA26224@lca.pw>
+        Sun, 23 Aug 2020 18:27:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbgHWW1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 18:27:05 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8F192067C
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 22:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598221624;
+        bh=ywQ7wbvfZOV7aZ30pD3zOxjP7J3ylb5kVjfEk/wwAcc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Pu87/nn8tvRz5AvJUWVKOCjthZ/PL0hoWvqrq5a4BJwIMGy2mjCKWhQcOuVLD0oow
+         YwmRAf5c40XMM7RgYHDfD1InhU94OFxr2yUYDQzea88QoliWRsQehvvTKoItyOW7db
+         moLTOZTSVWj/lLhL7anmhruL74pHR76gc2XxyGII=
+Received: by mail-wr1-f41.google.com with SMTP id h15so105706wrt.12
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 15:27:04 -0700 (PDT)
+X-Gm-Message-State: AOAM531BhDqfJR+/uKUUIRNCjNW+lnracj00aMCYaigZ1z0tU4ZATwhF
+        8unm/jYMlkfrzwEAGbNwIvU+8kUobjxCQAr09AtnJA==
+X-Google-Smtp-Source: ABdhPJxxkTewnABDF1snMo38SAmkcDhAIMHKGfs0qEnsQORpj4dQEv0BGI67lZ5op1LN62U1zAx3RAQ+K6q3JsbdLYQ=
+X-Received: by 2002:adf:9283:: with SMTP id 3mr3022561wrn.70.1598221623317;
+ Sun, 23 Aug 2020 15:27:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200822012036.GA26224@lca.pw>
+References: <159817113401.5783.14776307451257171431.tglx@nanos>
+ <159817113762.5783.6214320432160748743.tglx@nanos> <CAHk-=wiQQRS1f0qMwVVWKd6YHJ9K3bUK4BR2zoeGeCWRpTM3aw@mail.gmail.com>
+In-Reply-To: <CAHk-=wiQQRS1f0qMwVVWKd6YHJ9K3bUK4BR2zoeGeCWRpTM3aw@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 23 Aug 2020 15:26:52 -0700
+X-Gmail-Original-Message-ID: <CALCETrUSE6cTgaa9LWK=JgKhJt4vgGz42uPJEkk6XZWA9dOkvg@mail.gmail.com>
+Message-ID: <CALCETrUSE6cTgaa9LWK=JgKhJt4vgGz42uPJEkk6XZWA9dOkvg@mail.gmail.com>
+Subject: Re: [GIT pull] x86/urgent for v5.9-rc2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qian,
+On Sun, Aug 23, 2020 at 11:29 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Sun, Aug 23, 2020 at 1:26 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > Remove the RDPID optimization, which is not even
+> > backed by numbers from the paranoid entry path instead.
+>
+> Ugh, that's sad. I'd expect the LSL to be quite a bit slower than the
+> RDPID on raw hardware, since LSL has to go out to the GDT.
+>
+> And I don't think we need the GDT for anything else normally, so it's
+> not even going to be cached.
 
-On Fri, Aug 21, 2020 at 09:20:37PM -0400, Qian Cai wrote:
-> On Mon, Jun 08, 2020 at 06:16:22AM +0300, Laurent Pinchart wrote:
-> > Hi Qian,
-> > 
-> > I forgot to mention, I think the subject line should be
-> > 
-> > drm/rcar-du: Make DRM_RCAR_WRITEBACK depend on DRM_RCAR_DU
-> > 
-> > Could you please let me know if you're OK with these two small changes ?
-> 
-> Laurent, this patch is still not in the latest linux-next. Can you take a look?
+Every interrupt is going to load the CS and SS descriptor cache lines.
+Every IRET to user mode will get the user CS cache line.  Because x86
+is optimized to be as convoluted as possible and to have as much
+garbage in microcode as possible!
 
-Sorry for the delay. It will be included in the pull request I send this
-week.
-
-> > On Mon, Jun 08, 2020 at 06:14:43AM +0300, Laurent Pinchart wrote:
-> > > On Sun, Jun 07, 2020 at 10:53:40PM -0400, Qian Cai wrote:
-> > > > There is no need to select DRM_RCAR_WRITEBACK if DRM=n which just make
-> > > 
-> > > s/DRM=n/DRM_RCAR_DU=n/ here.
-> > > 
-> > > > the generated .config a bit ugly.
-> > > > 
-> > > >  # ARM devices
-> > > >  #
-> > > >  # end of ARM devices
-> > > > 
-> > > >  CONFIG_DRM_RCAR_WRITEBACK=y
-> > > > 
-> > > >  #
-> > > >  # Frame buffer Devices
-> > > > 
-> > > > Let DRM_RCAR_WRITEBACK depend on DRM_RCAR_DU instead.
-> > > > 
-> > > > Signed-off-by: Qian Cai <cai@lca.pw>
-> > > 
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > 
-> > > No need to submit a v3 if you agree with the above change, I'll fix it
-> > > in my tree.
-> > > 
-> > > > ---
-> > > >  drivers/gpu/drm/rcar-du/Kconfig | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > > 
-> > > > diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-> > > > index 0919f1f159a4..3304b41f5611 100644
-> > > > --- a/drivers/gpu/drm/rcar-du/Kconfig
-> > > > +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> > > > @@ -48,3 +48,4 @@ config DRM_RCAR_VSP
-> > > >  config DRM_RCAR_WRITEBACK
-> > > >  	bool
-> > > >  	default y if ARM64
-> > > > +	depends on DRM_RCAR_DU
-
--- 
-Regards,
-
-Laurent Pinchart
+--Andy
