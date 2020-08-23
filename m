@@ -2,159 +2,210 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73878C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E84362074D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494E32074D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 16:56:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UMeUwR6e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgHWQsw (ORCPT
+        id S1727969AbgHWQ4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 12:48:52 -0400
-Received: from mga06.intel.com ([134.134.136.31]:36920 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgHWQsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 12:48:51 -0400
-IronPort-SDR: gYaEtC4C09WN3eSdGPnej3YUbl2S2k6lhKdUifcVsspTIutIu5umFI9ee6LVQWuUaQGlSQ+Qln
- 0SnPt++mG3xA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="217337468"
-X-IronPort-AV: E=Sophos;i="5.76,345,1592895600"; 
-   d="scan'208";a="217337468"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2020 09:48:50 -0700
-IronPort-SDR: 0ht87XvZ53q/3W2CoVydxUjAnlEpxuU+TAcCwqoqni40dcjfonSCDKdy7wWC+ddzFuUDbBTaL1
- PIsc2/OfE0yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,345,1592895600"; 
-   d="scan'208";a="321858908"
-Received: from araj-mobl1.jf.intel.com ([10.254.85.84])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Aug 2020 09:48:49 -0700
-Date:   Sun, 23 Aug 2020 09:48:49 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Cc:     Sukumar Ghorai <sukumar.ghorai@intel.com>,
-        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
-        Evan Green <evgreen@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-        x86@kernel.org, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v2] x86/hotplug: Silence APIC only after all irq's are
- migrated
-Message-ID: <20200823164848.GA29858@araj-mobl1.jf.intel.com>
-References: <1597970523-24797-1-git-send-email-ashok.raj@intel.com>
+        Sun, 23 Aug 2020 12:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727123AbgHWQ4T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 12:56:19 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15FB4C061574
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 09:56:18 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id a65so2600697wme.5
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 09:56:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N9VV0VUKWdKHrZoZz+bAO4AdD0M5HnXZsnWHlLxVB6M=;
+        b=UMeUwR6etEL/eS6zVJBLfsO6LqOADW8C+YVfMTVz2AwAGxY+gZLPgmt6ZjQsM2BPWX
+         4VnGZKCt5BXluaf623gXfO2dU+2GYpdeVMW+09hbYvsMHNrzMB7h4iMxkcXZhIQu2i5z
+         2O7XesC0dmfmALO5Envzj4vGDut6MX/CCdLVE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N9VV0VUKWdKHrZoZz+bAO4AdD0M5HnXZsnWHlLxVB6M=;
+        b=nfQf4MrD+NKHiwaqePLzSqGczva2PeKqc84UhgcI5AkAw7M0uLmyE4nwaLax6zURD6
+         ZWtqiCEg00YwoUoOWC1y3FPUlTgsqFx3GUkD4LqnE/COzifURF3FRqS57ojPA0sMQpJJ
+         gKkvagzRruRxYtQ9096gZq/jPIkMQ2GVoyMUq9xZdedLvWILkoXBU1zgxT0UBGYaNYhr
+         HiYro05+sOA7xrkOENFDmNcS+vy5meu6YLUO0hv7Emo1FbfI4sijlLnHdmQeLvaGMgAb
+         1wbF/fU1x4Hz40y3F/VErbtX46Uh+CUsVu8eyOSsVWo9+cVn8DmCmxIh4bb8lUzhHb6t
+         gVOQ==
+X-Gm-Message-State: AOAM53255+eKzwneywHt+6h4C3pkFRSKB7LXW9thuyuoieo4BBmycC5a
+        0sEiSTaK/kKuwssLOQeihCtl/w7l8uDdXA==
+X-Google-Smtp-Source: ABdhPJyK463/MZaqw9Mr5vZyyPpODXteH13nvjHT/Vt4TwEfctmO5SmOa65LMqohhCFoqcG1VTVbmA==
+X-Received: by 2002:a1c:a385:: with SMTP id m127mr2166694wme.189.1598201777210;
+        Sun, 23 Aug 2020 09:56:17 -0700 (PDT)
+Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
+        by smtp.gmail.com with ESMTPSA id d10sm5425974wrg.3.2020.08.23.09.56.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Aug 2020 09:56:16 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>
+Subject: [PATCH bpf-next v9 0/7] Generalizing bpf_local_storage
+Date:   Sun, 23 Aug 2020 18:56:05 +0200
+Message-Id: <20200823165612.404892-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597970523-24797-1-git-send-email-ashok.raj@intel.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+From: KP Singh <kpsingh@google.com>
 
-I was wondering if you got a chance to take a look at this fix?
+# v8 -> v9
 
-I had some mail issues recently and they showed up at lore after 2
-days. I wasn't sure if you got the original mail, or maybe it didn't
-make it. 
+- Fixed reference count logic for files for inode maps.
+- Other fixes suggested by Martin
+- Rebase
 
-If you had a different way to fix it, we can try those out. 
+# v7 -> v8
 
+- Fixed an issue with BTF IDs for helpers and added
+  bpf_<>_storage_delete to selftests to catch this issue.
+- Update comments about refcounts and grabbed a refcount to the open
+  file for userspace inode helpers.
+- Rebase.
 
-On Thu, Aug 20, 2020 at 05:42:03PM -0700, Ashok Raj wrote:
-> When offlining CPUs, fixup_irqs() migrates all interrupts away from the
-> outgoing CPU to an online CPU. It's always possible the device sent an
-> interrupt to the previous CPU destination. Pending interrupt bit in IRR in
-> LAPIC identifies such interrupts. apic_soft_disable() will not capture any
-> new interrupts in IRR. This causes interrupts from device to be lost during
-> CPU offline. The issue was found when explicitly setting MSI affinity to a
-> CPU and immediately offlining it. It was simple to recreate with a USB
-> ethernet device and doing I/O to it while the CPU is offlined. Lost
-> interrupts happen even when Interrupt Remapping is enabled.
-> 
-> Current code does apic_soft_disable() before migrating interrupts.
-> 
-> native_cpu_disable()
-> {
-> 	...
-> 	apic_soft_disable();
-> 	cpu_disable_common();
-> 	  --> fixup_irqs(); // Too late to capture anything in IRR.
-> }
-> 
-> Just flipping the above call sequence seems to hit the IRR checks
-> and the lost interrupt is fixed for both legacy MSI and when
-> interrupt remapping is enabled.
+# v6 -> v7
 
-On another note, we have tested both with and without the read
-after write when programming MSI addr/data on the device. It didn't
-seem to change the results. But I think its a useful one to add
-for correctness.
+- Updated the series to use Martin's POC patch:
 
-https://lore.kernel.org/lkml/878si6rx7f.fsf@nanos.tec.linutronix.de/
+  https://lore.kernel.org/bpf/20200725013047.4006241-1-kafai@fb.com/
 
-This bug been eluding for a while. Looking for your feedback.
+  I added a Co-developed-by: tag, but would need Martin's Signoff
+  (was not sure of the procedure here).
 
-> 
-> Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
-> Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
-> Reported-by: Evan Green <evgreen@chromium.org>
-> Tested-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-> Tested-by: Evan Green <evgreen@chromium.org>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> ---
-> v2:
-> - Typos and fixes suggested by Randy Dunlap
-> 
-> To: linux-kernel@vger.kernel.org
-> To: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Sukumar Ghorai <sukumar.ghorai@intel.com>
-> Cc: Srikanth Nandamuri <srikanth.nandamuri@intel.com>
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: stable@vger.kernel.org
-> ---
->  arch/x86/kernel/smpboot.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> index 27aa04a95702..3016c3b627ce 100644
-> --- a/arch/x86/kernel/smpboot.c
-> +++ b/arch/x86/kernel/smpboot.c
-> @@ -1594,13 +1594,20 @@ int native_cpu_disable(void)
->  	if (ret)
->  		return ret;
->  
-> +	cpu_disable_common();
->  	/*
->  	 * Disable the local APIC. Otherwise IPI broadcasts will reach
->  	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
-> -	 * messages.
-> +	 * messages. It's important to do apic_soft_disable() after
-> +	 * fixup_irqs(), because fixup_irqs() called from cpu_disable_common()
-> +	 * depends on IRR being set. After apic_soft_disable() CPU preserves
-> +	 * currently set IRR/ISR but new interrupts will not set IRR.
-> +	 * This causes interrupts sent to outgoing CPU before completion
-> +	 * of IRQ migration to be lost. Check SDM Vol 3 "10.4.7.2 Local
-> +	 * APIC State after It Has been Software Disabled" section for more
-> +	 * details.
->  	 */
->  	apic_soft_disable();
-> -	cpu_disable_common();
->  
->  	return 0;
->  }
-> -- 
-> 2.7.4
-> 
+- Rebase.
+
+# v5 -> v6
+
+- Fixed a build warning.
+- Rebase.
+
+# v4 -> v5
+
+- Split non-functional changes into separate commits.
+- Updated the cache macros to be simpler.
+- Fixed some bugs noticed by Martin.
+- Updated the userspace map functions to use an fd for lookups, updates
+  and deletes.
+- Rebase.
+
+# v3 -> v4
+
+- Fixed a missing include to bpf_sk_storage.h in bpf_sk_storage.c
+- Fixed some functions that were not marked as static which led to
+  W=1 compilation warnings.
+
+# v2 -> v3
+
+* Restructured the code as per Martin's suggestions:
+  - Common functionality in bpf_local_storage.c
+  - bpf_sk_storage functionality remains in net/bpf_sk_storage.
+  - bpf_inode_storage is kept separate as it is enabled only with
+    CONFIG_BPF_LSM.
+* A separate cache for inode and sk storage with macros to define it.
+* Use the ops style approach as suggested by Martin instead of the
+  enum + switch style.
+* Added the inode map to bpftool bash completion and docs.
+* Rebase and indentation fixes.
+
+# v1 -> v2
+
+* Use the security blob pointer instead of dedicated member in
+  struct inode.
+* Better code re-use as suggested by Alexei.
+* Dropped the inode count arithmetic as pointed out by Alexei.
+* Minor bug fixes and rebase.
+
+bpf_sk_storage can already be used by some BPF program types to annotate
+socket objects. These annotations are managed with the life-cycle of the
+object (i.e. freed when the object is freed) which makes BPF programs
+much simpler and less prone to errors and leaks.
+
+This patch series:
+
+* Generalizes the bpf_sk_storage infrastructure to allow easy
+  implementation of local storage for other objects
+* Implements local storage for inodes
+* Makes both bpf_{sk, inode}_storage available to LSM programs.
+
+Local storage is safe to use in LSM programs as the attachment sites are
+limited and the owning object won't be freed, however, this is not the
+case for tracing. Usage in tracing is expected to follow a white-list
+based approach similar to the d_path helper
+(https://lore.kernel.org/bpf/20200506132946.2164578-1-jolsa@kernel.org).
+
+Access to local storage would allow LSM programs to implement stateful
+detections like detecting the unlink of a running executable from the
+examples shared as a part of the KRSI series
+https://lore.kernel.org/bpf/20200329004356.27286-1-kpsingh@chromium.org/
+and
+https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_detect_exec_unlink.c
+
+KP Singh (7):
+  bpf: Renames in preparation for bpf_local_storage
+  bpf: Generalize caching for sk_storage.
+  bpf: Generalize bpf_sk_storage
+  bpf: Split bpf_local_storage to bpf_sk_storage
+  bpf: Implement bpf_local_storage for inodes
+  bpf: Allow local storage to be used from LSM programs
+  bpf: Add selftests for local_storage
+
+ include/linux/bpf.h                           |   8 +
+ include/linux/bpf_local_storage.h             | 163 ++++
+ include/linux/bpf_lsm.h                       |  29 +
+ include/linux/bpf_types.h                     |   3 +
+ include/net/bpf_sk_storage.h                  |  14 +
+ include/net/sock.h                            |   4 +-
+ include/uapi/linux/bpf.h                      |  53 +-
+ kernel/bpf/Makefile                           |   2 +
+ kernel/bpf/bpf_inode_storage.c                | 265 ++++++
+ kernel/bpf/bpf_local_storage.c                | 600 +++++++++++++
+ kernel/bpf/bpf_lsm.c                          |  21 +-
+ kernel/bpf/syscall.c                          |   3 +-
+ kernel/bpf/verifier.c                         |  10 +
+ net/core/bpf_sk_storage.c                     | 830 +++---------------
+ security/bpf/hooks.c                          |   7 +
+ .../bpf/bpftool/Documentation/bpftool-map.rst |   2 +-
+ tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
+ tools/bpf/bpftool/map.c                       |   3 +-
+ tools/include/uapi/linux/bpf.h                |  53 +-
+ tools/lib/bpf/libbpf_probes.c                 |   5 +-
+ .../bpf/prog_tests/test_local_storage.c       |  60 ++
+ .../selftests/bpf/progs/local_storage.c       | 140 +++
+ 22 files changed, 1566 insertions(+), 712 deletions(-)
+ create mode 100644 include/linux/bpf_local_storage.h
+ create mode 100644 kernel/bpf/bpf_inode_storage.c
+ create mode 100644 kernel/bpf/bpf_local_storage.c
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/test_local_storage.c
+ create mode 100644 tools/testing/selftests/bpf/progs/local_storage.c
+
+-- 
+2.28.0.297.g1956fa8f8d-goog
+
