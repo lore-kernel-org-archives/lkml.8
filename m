@@ -2,136 +2,88 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5E8C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 02:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88012C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 02:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD63E2080D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 02:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rb5WNI8n"
+	by mail.kernel.org (Postfix) with ESMTP id 661B72080D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 02:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598151269;
+	bh=5bkX5rAYUgmN73+UTffyQPARL0/RISQfwE7jsPG4vok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D28/qBMxcB23pqbVThWGKh3t+eyJvr00U7eB9oxsLG/VvsSAnS3FPLSp8vkhp2KvM
+	 TahF6ULCLrmJ1hve8GnU2R05aLKDKvymvnbgtAF8DS9TyNS7AaUZokEeN5os9FRfbc
+	 Fgx4jP9q+VhQKe1puVboU26mMyzrRhwMskwvHidc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgHWCyN (ORCPT
+        id S1727807AbgHWCy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Aug 2020 22:54:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbgHWCyM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Aug 2020 22:54:12 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E0E6C061573;
-        Sat, 22 Aug 2020 19:54:12 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id w13so5046539wrk.5;
-        Sat, 22 Aug 2020 19:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JO459KxhJEzf2IEvI+josGJJ60W1ooA97Y5knTsxYNo=;
-        b=Rb5WNI8n/gZRSeMt+vb40+nrepp/iM3BAw0azlstiR+TmHzSf13RqQXBLUE+Su0NLw
-         fce1d1ywY5xSM/jbls95zUoVSn7t/r1AYVRsIzSGU6NfVWMsbkep9Vhtxw36ZeWRU1NY
-         whI/eHHCx59CIvp2SlyiJwbmHXHvoCGowkEBZ8tMj7V0xT5q57zH8KAWqG7bkNvaSNKt
-         2IqCrm54R7PLM0/IFnA4bVXzuDOHfd+SGvSkzCjICGk7EKpjmWdKOj6esTyEQ3ahlI3Q
-         iwQh6GybEajGdzEhNyDFHdn4DND7Hm4lSxQeEjBeK8lKWeBqoAkBqc/TZWHOQAuBcTK6
-         dsJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JO459KxhJEzf2IEvI+josGJJ60W1ooA97Y5knTsxYNo=;
-        b=e1ySMhfz0/6pZui9/VnL6TEd1TKKhF4amloTsBz5u7Q592vEz8hY3YDRwz8IFA0UV0
-         fXnh54V2ayqbao8cvC+sG0FHnLUmA/qkR+oNIq5zl96QDw0OUo6WJAhk/wgMZjPrpJ+b
-         cawbAFbi7V8/qUP1dh5UOVC8DWNRgQxzcVlbwSDBotxzaii0mbLAuLKjPQPhX3K4kPow
-         7LRtRk5OJqYlgt6myWUO1WMmMgPdlIOz1GvuwD+DaTHScZgEUiztfiXIxpamf4doLwYJ
-         OWiglq1nLsJ4T7G6wdjvtJrJokGdIkw2vQw7nB99FuGZGVhvARtkvu2hD9PNkXzWy90r
-         T95g==
-X-Gm-Message-State: AOAM531VSIogmgMd0bv2kzbbuHUhaUPjWAxxYNq10n3AlqW/w0L28lC3
-        ht5jjI+U6SscoJhoXe5YH4J/nxGMbHhAzGbD6Yo=
-X-Google-Smtp-Source: ABdhPJxVBi+fxXUP+tAoUQKNyIfnLypZr9quB2wxZNg+UUdCRFGmKVwAS0GkY0xptxxCJF0laNsknAkD1vUkiXyqd8Q=
-X-Received: by 2002:a5d:4e8c:: with SMTP id e12mr147495wru.19.1598151250584;
- Sat, 22 Aug 2020 19:54:10 -0700 (PDT)
+        Sat, 22 Aug 2020 22:54:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726700AbgHWCy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Aug 2020 22:54:27 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C93E2072D;
+        Sun, 23 Aug 2020 02:54:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598151267;
+        bh=5bkX5rAYUgmN73+UTffyQPARL0/RISQfwE7jsPG4vok=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XH29qLnXy03kukeYdLC/I6/9NlsFy/QCT8wli+GMzODtnVtGThCs2+Ip1qpx9aiiL
+         xzKEuv6uwSBKyOIptvAXVpuW8+5lffO1KMfflX8sLIQCobGUCZrC++ujx/2hnUGJda
+         wHh5kuUFp7bLsV0gtLr/OMUUMuTrHgU2rSJVJaXw=
+Date:   Sun, 23 Aug 2020 10:54:18 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Martin Kepplinger <martink@posteo.de>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Li Jun <jun.li@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Walle <michael@walle.cc>,
+        Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] arm64: dts: imx8mq: Add NWL MIPI DSI controller
+Message-ID: <20200823025417.GP30094@dragon>
+References: <cover.1597913263.git.agx@sigxcpu.org>
+ <138346192af1adb1277269a3cbd542dff00ba4a3.1597913263.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-References: <cover.1597919647.git.viresh.kumar@linaro.org> <56f1c76a0061dc3ed2d6ea115a3ba8b2e2dee9fd.1597919647.git.viresh.kumar@linaro.org>
-In-Reply-To: <56f1c76a0061dc3ed2d6ea115a3ba8b2e2dee9fd.1597919647.git.viresh.kumar@linaro.org>
-From:   Qiang Yu <yuq825@gmail.com>
-Date:   Sun, 23 Aug 2020 10:53:59 +0800
-Message-ID: <CAKGbVbukA=M=a5uNwPJ3=tXYVT3QTVSJKb5VJFCq2JGwV0TSCw@mail.gmail.com>
-Subject: Re: [PATCH 2/8] drm/lima: Unconditionally call dev_pm_opp_of_remove_table()
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     rnayak@codeaurora.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        lima@lists.freedesktop.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <138346192af1adb1277269a3cbd542dff00ba4a3.1597913263.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good for me, patch is:
-Reviewed-by: Qiang Yu <yuq825@gmail.com>
+On Thu, Aug 20, 2020 at 10:50:56AM +0200, Guido Günther wrote:
+> Add a node for the Northwest Logic MIPI DSI IP core, "disabled" by
+> default. This also adds the necessary port to LCDIF.
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-Regards,
-Qiang
-
-On Thu, Aug 20, 2020 at 6:44 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> dev_pm_opp_of_remove_table() doesn't report any errors when it fails to
-> find the OPP table with error -ENODEV (i.e. OPP table not present for
-> the device). And we can call dev_pm_opp_of_remove_table()
-> unconditionally here.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/gpu/drm/lima/lima_devfreq.c | 6 +-----
->  drivers/gpu/drm/lima/lima_devfreq.h | 1 -
->  2 files changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/lima/lima_devfreq.c b/drivers/gpu/drm/lima/lima_devfreq.c
-> index bbe02817721b..cd290d866a04 100644
-> --- a/drivers/gpu/drm/lima/lima_devfreq.c
-> +++ b/drivers/gpu/drm/lima/lima_devfreq.c
-> @@ -105,10 +105,7 @@ void lima_devfreq_fini(struct lima_device *ldev)
->                 devfreq->devfreq = NULL;
->         }
->
-> -       if (devfreq->opp_of_table_added) {
-> -               dev_pm_opp_of_remove_table(ldev->dev);
-> -               devfreq->opp_of_table_added = false;
-> -       }
-> +       dev_pm_opp_of_remove_table(ldev->dev);
->
->         if (devfreq->regulators_opp_table) {
->                 dev_pm_opp_put_regulators(devfreq->regulators_opp_table);
-> @@ -162,7 +159,6 @@ int lima_devfreq_init(struct lima_device *ldev)
->         ret = dev_pm_opp_of_add_table(dev);
->         if (ret)
->                 goto err_fini;
-> -       ldevfreq->opp_of_table_added = true;
->
->         lima_devfreq_reset(ldevfreq);
->
-> diff --git a/drivers/gpu/drm/lima/lima_devfreq.h b/drivers/gpu/drm/lima/lima_devfreq.h
-> index 5eed2975a375..2d9b3008ce77 100644
-> --- a/drivers/gpu/drm/lima/lima_devfreq.h
-> +++ b/drivers/gpu/drm/lima/lima_devfreq.h
-> @@ -18,7 +18,6 @@ struct lima_devfreq {
->         struct opp_table *clkname_opp_table;
->         struct opp_table *regulators_opp_table;
->         struct thermal_cooling_device *cooling;
-> -       bool opp_of_table_added;
->
->         ktime_t busy_time;
->         ktime_t idle_time;
-> --
-> 2.25.0.rc1.19.g042ed3e048af
->
+Applied, thanks.
