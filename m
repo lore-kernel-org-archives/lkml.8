@@ -8,67 +8,69 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0679C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB4A7206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2C220724
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:00:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZSNgL22m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUoUs/YZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgHWWAs (ORCPT
+        id S1726932AbgHWWAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 18:00:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49446 "EHLO
+        Sun, 23 Aug 2020 18:00:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbgHWWAj (ORCPT
+        with ESMTP id S1726847AbgHWWAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 18:00:39 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C631EC061574
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 15:00:38 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id m22so7467672ljj.5
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 15:00:38 -0700 (PDT)
+        Sun, 23 Aug 2020 18:00:47 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4353C061574;
+        Sun, 23 Aug 2020 15:00:46 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w25so7433732ljo.12;
+        Sun, 23 Aug 2020 15:00:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=B7cJIHsSvb5hbXVJfJh4y83titz5j9Tbj6LXlECxklc=;
-        b=ZSNgL22mr5vmLGoMGbgOWCD6cZ3ZwXkpm/JkGbh1eWDXk0jYGEqeWeG9O0d/79WF3P
-         XrpjSqnEMxxDjQjA8/fmfEom8sghKgVTEs0QfJYyFDa9sOBeSDNFAQ9EVEtOwsiJLeBm
-         i2UOSvcOux5D9oVmHRmGsH2vrtE0qgUoxWygOelWljyCnyopGz5E3mOaCDcxNzSZpElg
-         h54Rj776ZdvjUjYGDktJb+oAyCVWHH/HnSE9sSd6QYYat/dJVQB7cRsUN/1XkweXATxg
-         3Fe4RpnW2bVPTc6Ui8zoz/gIYTr1ApjwXN24CVsrpZLPrwZQc3ZbuQJir3k75hHYHeJ4
-         JF7A==
+        bh=SBAESB7guiywS3iRmfY/38fD7WSfpRQpGnQZqXWbF/E=;
+        b=mUoUs/YZzrS+B8vzev3/EC0sCnui5HL7nn72tGunptCJAE6kS8AKnUdsnYknHG5JMp
+         8eku6cYBPhqcsOEB85RnLWHcpbv9o0uyUB5bcgr/E9i5ovPaZyXc+vXORprMKjj/j5cV
+         b8D+nCcjIQlrqB7OB8FiiEGCAliunJGv3TZx+5Du8o8PB2pOeJKSrNG53s5XMIGOTjWX
+         SP0czzpQ4OeWNzRL6308in8h6oQYb8KU0tPsdrL7snwWNsBnI89FZ/vvf/zS/wnSgqZt
+         YxP6vsJkAZHPqF34YW4Ro93q9k915IZU+LcRioiYoIEAPcKE8+t93dsvAOEmDOKP3Rnz
+         ivUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=B7cJIHsSvb5hbXVJfJh4y83titz5j9Tbj6LXlECxklc=;
-        b=OfgZgohiumCxVZRG5Zv17czxlP+KXP36lewZ0dFTin2/mdfovdDDiP2LjShPO/RnbN
-         Uz+ggl/Z3/ROcg2BXdjrUMzWmrF0p1zVBk/u1HYmPwIqVR83moTxj/3Xz9hDBSVer/zC
-         +ZniGer+eD7NuipTXxRGIJd8LjDpyWuNpv213aiQH1KvSBm/UkfRg6KctsBmeeAm8hw/
-         ZdMM57op3LS6LjjVHJolwXrV2vlK5/u/ctBnaN+mQC7Rr9D43oem0tsq5WMQnZBxdN2l
-         iXY/p4yzE9gEu/1n22+GUukE0/Ey6A4xDLOK/6hPObhn1+Xaex2aP3zTqz9FYe3vCkoE
-         gssA==
-X-Gm-Message-State: AOAM533fFLUkYQacv/98l2MnYLKnz1pHCygqh5e//B1SfoA6OWEjOfWm
-        jGnkiLhIBzPSlUM+/LFop+E=
-X-Google-Smtp-Source: ABdhPJzP9XMh13FRNLkRGG0952W4JFU6O7z0y3Icgo6PwjR29LlVstTtANJnkti6VkKa8nCilT5fnQ==
-X-Received: by 2002:a2e:b80b:: with SMTP id u11mr1366822ljo.286.1598220037261;
-        Sun, 23 Aug 2020 15:00:37 -0700 (PDT)
+        bh=SBAESB7guiywS3iRmfY/38fD7WSfpRQpGnQZqXWbF/E=;
+        b=q5TPJS232xqSC6HhLQpIROCwp+TmqB1CCOzYF6U9UFQ6I+dlx5xDG9WNma+jJ2BDlA
+         oxEjBlSw/iL+8CRnHUqho+/MeEXvIPBiSpXS2Aisr3kvq5IfY3Y5M4Ru9NsIAeF6MRHp
+         ryyme668VSPcsfVSpiUwfAqC/Zc1dHjwPt3Awtg243gAERrl9GB3lPbKQhdE1tYjx4ng
+         lQTEeHH3ZichRtu+YmZ87tE94H1GTAdrnwgXq4xyjpTT8bwobOYdUm9nJx2x520RuHB4
+         0qnTjn2lgAAGs5LaAfUVWn1YSSBw1PpmlMUtseL85c4FZixZTmNivxe7SNmpqUoF6q8r
+         sy2Q==
+X-Gm-Message-State: AOAM530pEyquMgCD/HIN0OBS4z0sVxdPy4Wrrp5Q4aUelqVuwwiJdEM0
+        f2hglXZEV3m62+oL6nNOJZE=
+X-Google-Smtp-Source: ABdhPJyAXmjDEQVqyO5wb+cn0sHUGPcE1n0OGb5nWyE3bXMb/rcnlEUeFwdTq4iEZcmsn893UxpR2w==
+X-Received: by 2002:a2e:9643:: with SMTP id z3mr1370413ljh.282.1598220045235;
+        Sun, 23 Aug 2020 15:00:45 -0700 (PDT)
 Received: from localhost.localdomain (h-82-196-111-59.NA.cust.bahnhof.se. [82.196.111.59])
-        by smtp.gmail.com with ESMTPSA id g11sm1825097lfc.46.2020.08.23.15.00.36
+        by smtp.gmail.com with ESMTPSA id g11sm1825097lfc.46.2020.08.23.15.00.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2020 15:00:36 -0700 (PDT)
+        Sun, 23 Aug 2020 15:00:44 -0700 (PDT)
 From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Vinod Koul <vkoul@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
         Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 1/8] phy: cadence: salvo: Constify cdns_salvo_phy_ops
-Date:   Mon, 24 Aug 2020 00:00:18 +0200
-Message-Id: <20200823220025.17588-2-rikard.falkeborn@gmail.com>
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH 8/8] phy: qcom-ipq4019-usb: Constify static phy_ops structs
+Date:   Mon, 24 Aug 2020 00:00:25 +0200
+Message-Id: <20200823220025.17588-9-rikard.falkeborn@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200823220025.17588-1-rikard.falkeborn@gmail.com>
 References: <20200823220025.17588-1-rikard.falkeborn@gmail.com>
@@ -79,28 +81,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only usage is to pass its address to devm_phy_create() which takes a
-const pointer. Make it const to allow the compiler to put it in
-read-only memory.
+Their only usages is to assign the address to the data field in the
+of_device_id struct, which is a const void pointer. Make them const to
+allow the compiler to put them in read-only memory.
 
 Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 ---
- drivers/phy/cadence/phy-cadence-salvo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/cadence/phy-cadence-salvo.c b/drivers/phy/cadence/phy-cadence-salvo.c
-index 016514e4aa54..8c33d3215f2d 100644
---- a/drivers/phy/cadence/phy-cadence-salvo.c
-+++ b/drivers/phy/cadence/phy-cadence-salvo.c
-@@ -251,7 +251,7 @@ static int cdns_salvo_phy_power_off(struct phy *phy)
+diff --git a/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c b/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c
+index b8ef331e1545..fc7f9df80a7b 100644
+--- a/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c
++++ b/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c
+@@ -48,7 +48,7 @@ static int ipq4019_ss_phy_power_on(struct phy *_phy)
  	return 0;
  }
  
--static struct phy_ops cdns_salvo_phy_ops = {
-+static const struct phy_ops cdns_salvo_phy_ops = {
- 	.init		= cdns_salvo_phy_init,
- 	.power_on	= cdns_salvo_phy_power_on,
- 	.power_off	= cdns_salvo_phy_power_off,
+-static struct phy_ops ipq4019_usb_ss_phy_ops = {
++static const struct phy_ops ipq4019_usb_ss_phy_ops = {
+ 	.power_on	= ipq4019_ss_phy_power_on,
+ 	.power_off	= ipq4019_ss_phy_power_off,
+ };
+@@ -80,7 +80,7 @@ static int ipq4019_hs_phy_power_on(struct phy *_phy)
+ 	return 0;
+ }
+ 
+-static struct phy_ops ipq4019_usb_hs_phy_ops = {
++static const struct phy_ops ipq4019_usb_hs_phy_ops = {
+ 	.power_on	= ipq4019_hs_phy_power_on,
+ 	.power_off	= ipq4019_hs_phy_power_off,
+ };
 -- 
 2.28.0
 
