@@ -2,402 +2,377 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 08:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 08:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86038207CD
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 08:27:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YdV7bvhm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fWws6EiZ"
+	by mail.kernel.org (Postfix) with ESMTP id B01AF2074D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 08:37:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgHWI1S (ORCPT
+        id S1727824AbgHWIg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 04:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbgHWI1B (ORCPT
+        Sun, 23 Aug 2020 04:36:57 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:51338 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgHWIg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 04:27:01 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86D90C061574
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 01:27:00 -0700 (PDT)
-Date:   Sun, 23 Aug 2020 08:25:35 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598171212;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=tR4jIfP7V7noDB3vp6DlJxvw+Mwn9fO0Kfls/0QfD3Q=;
-        b=YdV7bvhmTxFGDRHWsQhWE/BtDAeC+ai5y122c5Wg7YXj5uFgNjVpanQ4LqVD2ECmB205sM
-        cZV7115+wMeqjW82FZniAyqmdcrVtLcRrHWuAvf5JyxsPCzZhppJE08dLc6xsdJ+RMwpHu
-        UDtr2uASiEbwyIDasIy14iYXhgf4Xugg1wkn2xnY5ruZLXvKRTBgKitkMG1Z2boDsF4UFA
-        n5lyz5F0T2TGy5pPXgBIG0OTvMvmXSxBiir59EDeZtYPmI6FyCJTBpqulOnMdz8ELdmkgb
-        fOaTFZDcetVkN5d9Ey4hf5NNqZmTV6Xt9+f5EpZkBIH8y9qx7n0NC9jOGw/qUg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598171212;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=tR4jIfP7V7noDB3vp6DlJxvw+Mwn9fO0Kfls/0QfD3Q=;
-        b=fWws6EiZyR30spRfL7A8hftqpCwTqy7f7E+8vBcES2MAbZe3xG1WZZLOPi9oL/wndCHp8M
-        kPtYfiOznHICN+Ag==
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] efi/urgent for v5.9-rc2
-References: <159817113401.5783.14776307451257171431.tglx@nanos>
-Message-ID: <159817113521.5783.17455022106783691165.tglx@nanos>
-Content-Type: text/plain; charset="utf-8"
+        Sun, 23 Aug 2020 04:36:56 -0400
+Received: from localhost.localdomain ([93.22.133.217])
+        by mwinf5d55 with ME
+        id Jwcr2300H4hbG4l03wcsbl; Sun, 23 Aug 2020 10:36:53 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 23 Aug 2020 10:36:53 +0200
+X-ME-IP: 93.22.133.217
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     davem@davemloft.net, kuba@kernel.org, leon@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] chelsio: switch from 'pci_' to 'dma_' API
+Date:   Sun, 23 Aug 2020 10:36:48 +0200
+Message-Id: <20200823083648.171858-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
-please pull the latest efi/urgent branch from:
+The patch has been generated with the coccinelle script below and has been
+hand modified to replace GFP_ with a correct flag.
+It has been compile tested.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-urgent-2020-08-23
+When memory is allocated in 'free_rx_resources()' and
+'alloc_tx_resources()' (sge.c) GFP_KERNEL can be used because it is
+already used in these functions.
 
-up to:  fb1201aececc: Documentation: efi: remove description of efi=old_map
+Moreover, they can only be called from a .ndo_open	function. So it is
+guarded by the 'rtnl_lock()', which is a mutex.
 
+While at it, a pr_err message in 'init_one()' has been updated accordingly
+(s/consistent/coherent).
 
-A set of EFI fixes:
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
 
- - Enforce NX on RO data in mixed EFI mode
- - Destroy workqueue in an error handling path to prevent UAF
- - Stop argument parser at '--' which is the delimiter for init
- - Treat a NULL command line pointer as empty instead of dereferncing it
-   unconditionally.
- - Handle an unterminated command line correctly
- - Cleanup the 32bit code leftovers and remove obsolete documentation
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
 
-Thanks,
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
 
-	tglx
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
 
------------------->
-Ard Biesheuvel (2):
-      efi/x86: Move 32-bit code into efi_32.c
-      Documentation: efi: remove description of efi=old_map
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
 
-Arvind Sankar (4):
-      efi/x86: Mark kernel rodata non-executable for mixed mode
-      efi/libstub: Stop parsing arguments at "--"
-      efi/libstub: Handle NULL cmdline
-      efi/libstub: Handle unterminated cmdline
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
 
-Li Heng (1):
-      efi: add missed destroy_workqueue when efisubsys_init fails
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
 
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
 
- Documentation/admin-guide/kernel-parameters.txt |  5 +-
- arch/x86/include/asm/efi.h                      | 10 ----
- arch/x86/platform/efi/efi.c                     | 69 -------------------------
- arch/x86/platform/efi/efi_32.c                  | 44 +++++++++++++---
- arch/x86/platform/efi/efi_64.c                  |  2 +
- drivers/firmware/efi/efi.c                      |  2 +
- drivers/firmware/efi/libstub/efi-stub-helper.c  | 12 ++++-
- 7 files changed, 52 insertions(+), 92 deletions(-)
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index bdc1f33fd3d1..a1068742a6df 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1233,8 +1233,7 @@
- 	efi=		[EFI]
- 			Format: { "debug", "disable_early_pci_dma",
- 				  "nochunk", "noruntime", "nosoftreserve",
--				  "novamap", "no_disable_early_pci_dma",
--				  "old_map" }
-+				  "novamap", "no_disable_early_pci_dma" }
- 			debug: enable misc debug output.
- 			disable_early_pci_dma: disable the busmaster bit on all
- 			PCI bridges while in the EFI boot stub.
-@@ -1251,8 +1250,6 @@
- 			novamap: do not call SetVirtualAddressMap().
- 			no_disable_early_pci_dma: Leave the busmaster bit set
- 			on all PCI bridges while in the EFI boot stub
--			old_map [X86-64]: switch to the old ioremap-based EFI
--			runtime services mapping. [Needs CONFIG_X86_UV=y]
- 
- 	efi_no_storage_paranoia [EFI; X86]
- 			Using this parameter you can use more than 50% of
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index b9c2667ac46c..bc9758ef292e 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -81,11 +81,8 @@ extern unsigned long efi_fw_vendor, efi_config_table;
- 	kernel_fpu_end();						\
- })
- 
--
- #define arch_efi_call_virt(p, f, args...)	p->f(args)
- 
--#define efi_ioremap(addr, size, type, attr)	ioremap_cache(addr, size)
--
- #else /* !CONFIG_X86_32 */
- 
- #define EFI_LOADER_SIGNATURE	"EL64"
-@@ -125,9 +122,6 @@ struct efi_scratch {
- 	kernel_fpu_end();						\
- })
- 
--extern void __iomem *__init efi_ioremap(unsigned long addr, unsigned long size,
--					u32 type, u64 attribute);
--
- #ifdef CONFIG_KASAN
- /*
-  * CONFIG_KASAN may redefine memset to __memset.  __memset function is present
-@@ -143,17 +137,13 @@ extern void __iomem *__init efi_ioremap(unsigned long addr, unsigned long size,
- #endif /* CONFIG_X86_32 */
- 
- extern struct efi_scratch efi_scratch;
--extern void __init efi_set_executable(efi_memory_desc_t *md, bool executable);
- extern int __init efi_memblock_x86_reserve_range(void);
- extern void __init efi_print_memmap(void);
--extern void __init efi_memory_uc(u64 addr, unsigned long size);
- extern void __init efi_map_region(efi_memory_desc_t *md);
- extern void __init efi_map_region_fixed(efi_memory_desc_t *md);
- extern void efi_sync_low_kernel_mappings(void);
- extern int __init efi_alloc_page_tables(void);
- extern int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages);
--extern void __init old_map_region(efi_memory_desc_t *md);
--extern void __init runtime_code_page_mkexec(void);
- extern void __init efi_runtime_update_mappings(void);
- extern void __init efi_dump_pagetable(void);
- extern void __init efi_apply_memmap_quirks(void);
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index f6ea8f1a9d57..d37ebe6e70d7 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -49,7 +49,6 @@
- #include <asm/efi.h>
- #include <asm/e820/api.h>
- #include <asm/time.h>
--#include <asm/set_memory.h>
- #include <asm/tlbflush.h>
- #include <asm/x86_init.h>
- #include <asm/uv/uv.h>
-@@ -496,74 +495,6 @@ void __init efi_init(void)
- 		efi_print_memmap();
- }
- 
--#if defined(CONFIG_X86_32)
--
--void __init efi_set_executable(efi_memory_desc_t *md, bool executable)
--{
--	u64 addr, npages;
--
--	addr = md->virt_addr;
--	npages = md->num_pages;
--
--	memrange_efi_to_native(&addr, &npages);
--
--	if (executable)
--		set_memory_x(addr, npages);
--	else
--		set_memory_nx(addr, npages);
--}
--
--void __init runtime_code_page_mkexec(void)
--{
--	efi_memory_desc_t *md;
--
--	/* Make EFI runtime service code area executable */
--	for_each_efi_memory_desc(md) {
--		if (md->type != EFI_RUNTIME_SERVICES_CODE)
--			continue;
--
--		efi_set_executable(md, true);
--	}
--}
--
--void __init efi_memory_uc(u64 addr, unsigned long size)
--{
--	unsigned long page_shift = 1UL << EFI_PAGE_SHIFT;
--	u64 npages;
--
--	npages = round_up(size, page_shift) / page_shift;
--	memrange_efi_to_native(&addr, &npages);
--	set_memory_uc(addr, npages);
--}
--
--void __init old_map_region(efi_memory_desc_t *md)
--{
--	u64 start_pfn, end_pfn, end;
--	unsigned long size;
--	void *va;
--
--	start_pfn = PFN_DOWN(md->phys_addr);
--	size	  = md->num_pages << PAGE_SHIFT;
--	end	  = md->phys_addr + size;
--	end_pfn   = PFN_UP(end);
--
--	if (pfn_range_is_mapped(start_pfn, end_pfn)) {
--		va = __va(md->phys_addr);
--
--		if (!(md->attribute & EFI_MEMORY_WB))
--			efi_memory_uc((u64)(unsigned long)va, size);
--	} else
--		va = efi_ioremap(md->phys_addr, size,
--				 md->type, md->attribute);
--
--	md->virt_addr = (u64) (unsigned long) va;
--	if (!va)
--		pr_err("ioremap of 0x%llX failed!\n",
--		       (unsigned long long)md->phys_addr);
--}
--
--#endif
--
- /* Merge contiguous regions of the same type and attribute */
- static void __init efi_merge_regions(void)
- {
-diff --git a/arch/x86/platform/efi/efi_32.c b/arch/x86/platform/efi/efi_32.c
-index 826ead67753d..e06a199423c0 100644
---- a/arch/x86/platform/efi/efi_32.c
-+++ b/arch/x86/platform/efi/efi_32.c
-@@ -29,9 +29,35 @@
- #include <asm/io.h>
- #include <asm/desc.h>
- #include <asm/page.h>
-+#include <asm/set_memory.h>
- #include <asm/tlbflush.h>
- #include <asm/efi.h>
- 
-+void __init efi_map_region(efi_memory_desc_t *md)
-+{
-+	u64 start_pfn, end_pfn, end;
-+	unsigned long size;
-+	void *va;
-+
-+	start_pfn	= PFN_DOWN(md->phys_addr);
-+	size		= md->num_pages << PAGE_SHIFT;
-+	end		= md->phys_addr + size;
-+	end_pfn 	= PFN_UP(end);
-+
-+	if (pfn_range_is_mapped(start_pfn, end_pfn)) {
-+		va = __va(md->phys_addr);
-+
-+		if (!(md->attribute & EFI_MEMORY_WB))
-+			set_memory_uc((unsigned long)va, md->num_pages);
-+	} else {
-+		va = ioremap_cache(md->phys_addr, size);
-+	}
-+
-+	md->virt_addr = (unsigned long)va;
-+	if (!va)
-+		pr_err("ioremap of 0x%llX failed!\n", md->phys_addr);
-+}
-+
- /*
-  * To make EFI call EFI runtime service in physical addressing mode we need
-  * prolog/epilog before/after the invocation to claim the EFI runtime service
-@@ -58,11 +84,6 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
- 	return 0;
- }
- 
--void __init efi_map_region(efi_memory_desc_t *md)
--{
--	old_map_region(md);
--}
--
- void __init efi_map_region_fixed(efi_memory_desc_t *md) {}
- void __init parse_efi_setup(u64 phys_addr, u32 data_len) {}
- 
-@@ -107,6 +128,15 @@ efi_status_t __init efi_set_virtual_address_map(unsigned long memory_map_size,
- 
- void __init efi_runtime_update_mappings(void)
- {
--	if (__supported_pte_mask & _PAGE_NX)
--		runtime_code_page_mkexec();
-+	if (__supported_pte_mask & _PAGE_NX) {
-+		efi_memory_desc_t *md;
-+
-+		/* Make EFI runtime service code area executable */
-+		for_each_efi_memory_desc(md) {
-+			if (md->type != EFI_RUNTIME_SERVICES_CODE)
-+				continue;
-+
-+			set_memory_x(md->virt_addr, md->num_pages);
-+		}
-+	}
- }
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index 413583f904a6..6af4da1149ba 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -259,6 +259,8 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
- 	npages = (__end_rodata - __start_rodata) >> PAGE_SHIFT;
- 	rodata = __pa(__start_rodata);
- 	pfn = rodata >> PAGE_SHIFT;
-+
-+	pf = _PAGE_NX | _PAGE_ENC;
- 	if (kernel_map_pages_in_pgd(pgd, pfn, rodata, npages, pf)) {
- 		pr_err("Failed to map kernel rodata 1:1\n");
- 		return 1;
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index fdd1db025dbf..3aa07c3b5136 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -381,6 +381,7 @@ static int __init efisubsys_init(void)
- 	efi_kobj = kobject_create_and_add("efi", firmware_kobj);
- 	if (!efi_kobj) {
- 		pr_err("efi: Firmware registration failed.\n");
-+		destroy_workqueue(efi_rts_wq);
- 		return -ENOMEM;
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ drivers/net/ethernet/chelsio/cxgb/cxgb2.c | 10 ++--
+ drivers/net/ethernet/chelsio/cxgb/sge.c   | 64 ++++++++++++-----------
+ 2 files changed, 39 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/net/ethernet/chelsio/cxgb/cxgb2.c b/drivers/net/ethernet/chelsio/cxgb/cxgb2.c
+index 99736796e1a0..0e4a0f413960 100644
+--- a/drivers/net/ethernet/chelsio/cxgb/cxgb2.c
++++ b/drivers/net/ethernet/chelsio/cxgb/cxgb2.c
+@@ -997,17 +997,17 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto out_disable_pdev;
  	}
  
-@@ -424,6 +425,7 @@ static int __init efisubsys_init(void)
- 		generic_ops_unregister();
- err_put:
- 	kobject_put(efi_kobj);
-+	destroy_workqueue(efi_rts_wq);
- 	return error;
+-	if (!pci_set_dma_mask(pdev, DMA_BIT_MASK(64))) {
++	if (!dma_set_mask(&pdev->dev, DMA_BIT_MASK(64))) {
+ 		pci_using_dac = 1;
+ 
+-		if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64))) {
+-			pr_err("%s: unable to obtain 64-bit DMA for "
+-			       "consistent allocations\n", pci_name(pdev));
++		if (dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64))) {
++			pr_err("%s: unable to obtain 64-bit DMA for coherent allocations\n",
++			       pci_name(pdev));
+ 			err = -ENODEV;
+ 			goto out_disable_pdev;
+ 		}
+ 
+-	} else if ((err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32))) != 0) {
++	} else if ((err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32))) != 0) {
+ 		pr_err("%s: no usable DMA configuration\n", pci_name(pdev));
+ 		goto out_disable_pdev;
+ 	}
+diff --git a/drivers/net/ethernet/chelsio/cxgb/sge.c b/drivers/net/ethernet/chelsio/cxgb/sge.c
+index 47b5c8e2104b..21016de20b2d 100644
+--- a/drivers/net/ethernet/chelsio/cxgb/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb/sge.c
+@@ -509,9 +509,8 @@ static void free_freelQ_buffers(struct pci_dev *pdev, struct freelQ *q)
+ 	while (q->credits--) {
+ 		struct freelQ_ce *ce = &q->centries[cidx];
+ 
+-		pci_unmap_single(pdev, dma_unmap_addr(ce, dma_addr),
+-				 dma_unmap_len(ce, dma_len),
+-				 PCI_DMA_FROMDEVICE);
++		dma_unmap_single(&pdev->dev, dma_unmap_addr(ce, dma_addr),
++				 dma_unmap_len(ce, dma_len), DMA_FROM_DEVICE);
+ 		dev_kfree_skb(ce->skb);
+ 		ce->skb = NULL;
+ 		if (++cidx == q->size)
+@@ -529,8 +528,8 @@ static void free_rx_resources(struct sge *sge)
+ 
+ 	if (sge->respQ.entries) {
+ 		size = sizeof(struct respQ_e) * sge->respQ.size;
+-		pci_free_consistent(pdev, size, sge->respQ.entries,
+-				    sge->respQ.dma_addr);
++		dma_free_coherent(&pdev->dev, size, sge->respQ.entries,
++				  sge->respQ.dma_addr);
+ 	}
+ 
+ 	for (i = 0; i < SGE_FREELQ_N; i++) {
+@@ -542,8 +541,8 @@ static void free_rx_resources(struct sge *sge)
+ 		}
+ 		if (q->entries) {
+ 			size = sizeof(struct freelQ_e) * q->size;
+-			pci_free_consistent(pdev, size, q->entries,
+-					    q->dma_addr);
++			dma_free_coherent(&pdev->dev, size, q->entries,
++					  q->dma_addr);
+ 		}
+ 	}
  }
+@@ -564,7 +563,8 @@ static int alloc_rx_resources(struct sge *sge, struct sge_params *p)
+ 		q->size = p->freelQ_size[i];
+ 		q->dma_offset = sge->rx_pkt_pad ? 0 : NET_IP_ALIGN;
+ 		size = sizeof(struct freelQ_e) * q->size;
+-		q->entries = pci_alloc_consistent(pdev, size, &q->dma_addr);
++		q->entries = dma_alloc_coherent(&pdev->dev, size,
++						&q->dma_addr, GFP_KERNEL);
+ 		if (!q->entries)
+ 			goto err_no_mem;
  
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index 6bca70bbb43d..f735db55adc0 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -187,20 +187,28 @@ int efi_printk(const char *fmt, ...)
-  */
- efi_status_t efi_parse_options(char const *cmdline)
- {
--	size_t len = strlen(cmdline) + 1;
-+	size_t len;
- 	efi_status_t status;
- 	char *str, *buf;
+@@ -601,7 +601,8 @@ static int alloc_rx_resources(struct sge *sge, struct sge_params *p)
+ 	sge->respQ.credits = 0;
+ 	size = sizeof(struct respQ_e) * sge->respQ.size;
+ 	sge->respQ.entries =
+-		pci_alloc_consistent(pdev, size, &sge->respQ.dma_addr);
++		dma_alloc_coherent(&pdev->dev, size, &sge->respQ.dma_addr,
++				   GFP_KERNEL);
+ 	if (!sge->respQ.entries)
+ 		goto err_no_mem;
+ 	return 0;
+@@ -624,9 +625,10 @@ static void free_cmdQ_buffers(struct sge *sge, struct cmdQ *q, unsigned int n)
+ 	ce = &q->centries[cidx];
+ 	while (n--) {
+ 		if (likely(dma_unmap_len(ce, dma_len))) {
+-			pci_unmap_single(pdev, dma_unmap_addr(ce, dma_addr),
++			dma_unmap_single(&pdev->dev,
++					 dma_unmap_addr(ce, dma_addr),
+ 					 dma_unmap_len(ce, dma_len),
+-					 PCI_DMA_TODEVICE);
++					 DMA_TO_DEVICE);
+ 			if (q->sop)
+ 				q->sop = 0;
+ 		}
+@@ -663,8 +665,8 @@ static void free_tx_resources(struct sge *sge)
+ 		}
+ 		if (q->entries) {
+ 			size = sizeof(struct cmdQ_e) * q->size;
+-			pci_free_consistent(pdev, size, q->entries,
+-					    q->dma_addr);
++			dma_free_coherent(&pdev->dev, size, q->entries,
++					  q->dma_addr);
+ 		}
+ 	}
+ }
+@@ -689,7 +691,8 @@ static int alloc_tx_resources(struct sge *sge, struct sge_params *p)
+ 		q->stop_thres = 0;
+ 		spin_lock_init(&q->lock);
+ 		size = sizeof(struct cmdQ_e) * q->size;
+-		q->entries = pci_alloc_consistent(pdev, size, &q->dma_addr);
++		q->entries = dma_alloc_coherent(&pdev->dev, size,
++						&q->dma_addr, GFP_KERNEL);
+ 		if (!q->entries)
+ 			goto err_no_mem;
  
-+	if (!cmdline)
-+		return EFI_SUCCESS;
-+
-+	len = strnlen(cmdline, COMMAND_LINE_SIZE - 1) + 1;
- 	status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, len, (void **)&buf);
- 	if (status != EFI_SUCCESS)
- 		return status;
+@@ -837,8 +840,8 @@ static void refill_free_list(struct sge *sge, struct freelQ *q)
+ 			break;
  
--	str = skip_spaces(memcpy(buf, cmdline, len));
-+	memcpy(buf, cmdline, len - 1);
-+	buf[len - 1] = '\0';
-+	str = skip_spaces(buf);
+ 		skb_reserve(skb, q->dma_offset);
+-		mapping = pci_map_single(pdev, skb->data, dma_len,
+-					 PCI_DMA_FROMDEVICE);
++		mapping = dma_map_single(&pdev->dev, skb->data, dma_len,
++					 DMA_FROM_DEVICE);
+ 		skb_reserve(skb, sge->rx_pkt_pad);
  
- 	while (*str) {
- 		char *param, *val;
+ 		ce->skb = skb;
+@@ -1049,15 +1052,15 @@ static inline struct sk_buff *get_packet(struct adapter *adapter,
+ 			goto use_orig_buf;
  
- 		str = next_arg(str, &param, &val);
-+		if (!val && !strcmp(param, "--"))
-+			break;
+ 		skb_put(skb, len);
+-		pci_dma_sync_single_for_cpu(pdev,
+-					    dma_unmap_addr(ce, dma_addr),
+-					    dma_unmap_len(ce, dma_len),
+-					    PCI_DMA_FROMDEVICE);
++		dma_sync_single_for_cpu(&pdev->dev,
++					dma_unmap_addr(ce, dma_addr),
++					dma_unmap_len(ce, dma_len),
++					DMA_FROM_DEVICE);
+ 		skb_copy_from_linear_data(ce->skb, skb->data, len);
+-		pci_dma_sync_single_for_device(pdev,
+-					       dma_unmap_addr(ce, dma_addr),
+-					       dma_unmap_len(ce, dma_len),
+-					       PCI_DMA_FROMDEVICE);
++		dma_sync_single_for_device(&pdev->dev,
++					   dma_unmap_addr(ce, dma_addr),
++					   dma_unmap_len(ce, dma_len),
++					   DMA_FROM_DEVICE);
+ 		recycle_fl_buf(fl, fl->cidx);
+ 		return skb;
+ 	}
+@@ -1068,8 +1071,8 @@ static inline struct sk_buff *get_packet(struct adapter *adapter,
+ 		return NULL;
+ 	}
  
- 		if (!strcmp(param, "nokaslr")) {
- 			efi_nokaslr = true;
+-	pci_unmap_single(pdev, dma_unmap_addr(ce, dma_addr),
+-			 dma_unmap_len(ce, dma_len), PCI_DMA_FROMDEVICE);
++	dma_unmap_single(&pdev->dev, dma_unmap_addr(ce, dma_addr),
++			 dma_unmap_len(ce, dma_len), DMA_FROM_DEVICE);
+ 	skb = ce->skb;
+ 	prefetch(skb->data);
+ 
+@@ -1091,8 +1094,9 @@ static void unexpected_offload(struct adapter *adapter, struct freelQ *fl)
+ 	struct freelQ_ce *ce = &fl->centries[fl->cidx];
+ 	struct sk_buff *skb = ce->skb;
+ 
+-	pci_dma_sync_single_for_cpu(adapter->pdev, dma_unmap_addr(ce, dma_addr),
+-			    dma_unmap_len(ce, dma_len), PCI_DMA_FROMDEVICE);
++	dma_sync_single_for_cpu(&adapter->pdev->dev,
++				dma_unmap_addr(ce, dma_addr),
++				dma_unmap_len(ce, dma_len), DMA_FROM_DEVICE);
+ 	pr_err("%s: unexpected offload packet, cmd %u\n",
+ 	       adapter->name, *skb->data);
+ 	recycle_fl_buf(fl, fl->cidx);
+@@ -1209,8 +1213,8 @@ static inline void write_tx_descs(struct adapter *adapter, struct sk_buff *skb,
+ 	e = e1 = &q->entries[pidx];
+ 	ce = &q->centries[pidx];
+ 
+-	mapping = pci_map_single(adapter->pdev, skb->data,
+-				 skb_headlen(skb), PCI_DMA_TODEVICE);
++	mapping = dma_map_single(&adapter->pdev->dev, skb->data,
++				 skb_headlen(skb), DMA_TO_DEVICE);
+ 
+ 	desc_mapping = mapping;
+ 	desc_len = skb_headlen(skb);
+-- 
+2.25.1
 
