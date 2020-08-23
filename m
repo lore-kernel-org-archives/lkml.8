@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC55C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 04:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F89AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 04:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9E2520723
+	by mail.kernel.org (Postfix) with ESMTP id DA8BA20768
 	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 04:04:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="25wTBR+n"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ivpcJrv7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgHWEEq (ORCPT
+        id S1727020AbgHWEEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 00:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53644 "EHLO
+        Sun, 23 Aug 2020 00:04:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725139AbgHWEEo (ORCPT
+        with ESMTP id S1725139AbgHWEEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 00:04:44 -0400
+        Sun, 23 Aug 2020 00:04:50 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62DD3C061573
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 21:04:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E42AC061573
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Aug 2020 21:04:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
         Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
         Content-Description:In-Reply-To:References;
-        bh=23jrrPFyNJvlaPrF0eO0nEFnHnerjAyGE3H05xFP2tA=; b=25wTBR+nOz9OAL09z6MS0ZTsyV
-        us6O0G5EF8IrkLrPK59V5JJAXCTY4bDIspfNdmQGipnJJtvdgQ4SbZyuwVc9qmgUL4LPHuRASPNfq
-        NqRv+bvHCXgr6Rz3CY9alprRPGz0T8OGLfSgYskDVO3Gng+w/a+gtYR2pCNarYme/XDoJFslfnqNO
-        zE9M0lc6wEYoGpSLyvg5u9uDkNWOJADYukO+TzP+cZdHlLS38eK6ds/q5UaGDSoNFTXQ4PrVaHcMB
-        kTtlM2agY8rRYXDsxPppsf9iFablXAzIlMv4lWpep4iqgphjwl+heQUaDNzvsu5ocsMlj3X7QGv7Q
-        +5nZkx6Q==;
+        bh=OAYGpfvJpZGXlclvSv+CIEvZpDqOEEpRLEOMBFpgdq4=; b=ivpcJrv7qaSpTRn8A6SqmHQ7nS
+        X93GpCbsw+SaUqFnvq34KjjAGfnCRRTjS+SGseM1L4c+tgF2Ljg85PQuQjvf1YqKChBV7u0M8Q3C0
+        tnitBPNw3oGWgXlSwQdXuqTbsaahpM41wwbqFETi7GOwI1QyeJYGS71SIqYSWslJrXlDEdR5M2rRl
+        PZxBd9kGq1+gt6RZ7V85q4FwssKkKWWvt+iQ9mf5pud8IevWoGJJFwCW4bBwjGg9i5PoYhNZs0H+l
+        svs2NfRncTbkltW4E5K2jyHWTtt8ou+TFKHOr/Qo3y+h737JemAinOv+ZvpIx2N5mvy5BfZkeQHXK
+        3Sf8XISQ==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k9hFI-0004om-Vn; Sun, 23 Aug 2020 04:04:41 +0000
+        id 1k9hFP-0004pD-Cm; Sun, 23 Aug 2020 04:04:47 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Lasse Collin <lasse.collin@tukaani.org>
-Subject: [PATCH] lib: decompress_bunzip2: delete duplicated words
-Date:   Sat, 22 Aug 2020 21:04:36 -0700
-Message-Id: <20200823040436.25852-1-rdunlap@infradead.org>
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] lib: devres: delete duplicated words
+Date:   Sat, 22 Aug 2020 21:04:43 -0700
+Message-Id: <20200823040443.25900-1-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -56,24 +56,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the repeated word "how".
+Drop the repeated word "the".
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Lasse Collin <lasse.collin@tukaani.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- lib/decompress_bunzip2.c |    2 +-
+ lib/devres.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200730.orig/lib/decompress_bunzip2.c
-+++ linux-next-20200730/lib/decompress_bunzip2.c
-@@ -390,7 +390,7 @@ static int INIT get_next_block(struct bu
- 		j = (bd->inbufBits >> bd->inbufBitCount)&
- 			((1 << hufGroup->maxLen)-1);
- got_huff_bits:
--		/* Figure how how many bits are in next symbol and
-+		/* Figure how many bits are in next symbol and
- 		 * unget extras */
- 		i = hufGroup->minLen;
- 		while (j > limit[i])
+--- linux-next-20200730.orig/lib/devres.c
++++ linux-next-20200730/lib/devres.c
+@@ -217,7 +217,7 @@ void __iomem *devm_ioremap_resource_wc(s
+  * Please Note: This is not a one-to-one replacement for of_iomap() because the
+  * of_iomap() function does not track whether the region is already mapped.  If
+  * two drivers try to map the same memory, the of_iomap() function will succeed
+- * but the the devm_of_iomap() function will return -EBUSY.
++ * but the devm_of_iomap() function will return -EBUSY.
+  *
+  */
+ void __iomem *devm_of_iomap(struct device *dev, struct device_node *node, int index,
