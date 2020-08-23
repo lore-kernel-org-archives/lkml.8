@@ -2,99 +2,169 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F54C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02679C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6D320724
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598222124;
-	bh=6VQZdghfN6q6iI6P+KXsnoA2sExjXc9b4l8qA5bdqYg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Up/deEUMduJShBldMZm2yjxRW+HNuaaU3EQ/UVAyA8oq16YU9P+TgWk/iTwWuLSpc
-	 XFC5WVwbV8Zm620x7L2Pg3nAWOzPbOW7UXitB4bcnIjXW58sAm+ToIslSTAQDinfme
-	 LZQoJN33IA1xIemQ8izc61dMgwSoTRHH5qG8cT4Q=
+	by mail.kernel.org (Postfix) with ESMTP id D302120720
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 22:35:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rgps0+Rw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHWWfX (ORCPT
+        id S1726894AbgHWWfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 18:35:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54782 "EHLO
+        Sun, 23 Aug 2020 18:35:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbgHWWfW (ORCPT
+        with ESMTP id S1726631AbgHWWfv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 18:35:22 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE880C061574
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 15:35:21 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id u23so1063906lfl.10
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 15:35:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uzmjYlqLP9grVXNztevfVLPLQlQaBdUV4HiAd6F1C34=;
-        b=ECVBP6C/LjzqKwJkBSH/DooTnPJkl5JrIH+r6QornOMrWW5ij1JyOTe7pTgAbUfsRd
-         VhexgNDqmiy7yRJ/pbjbmgADVFq2zMCdfcNPRKIkb2eN82kz9RtdPWDp9X2UMHWz2gd+
-         EEiVciU3Eix467UOu8CfezJIXuykAnEMLHVlk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uzmjYlqLP9grVXNztevfVLPLQlQaBdUV4HiAd6F1C34=;
-        b=gU4PexNSYJxRgg7RSji8dQUgG/nyDex+UueDYRREb8sKVobz3y6mwXT37+jv33hlOD
-         hzahSDm80+ePB+i5E7pVKwlx0/9ltLmfItE7PsIipv72p5FD28B4lN6+adjX1IIXqhIX
-         iaXjRHCP64U0+fz4g9EGjy5gAt0pFjEblS5f2d6baCCCm0wHMRGV+l9a1zxwHcwCR41+
-         GU/nsGZH/MfDyjERZ3AWPSHFvw7CJWbTH7qGXJ1ctdP5oDfDVzvrztRbrGOCoC1Hthzn
-         wTyJSZAO9oHBLX2FM5wjem3PnlwAAL/2Mu46lFVmhJnrsjfoIWV3FsfNeV3/hxv+cy4+
-         nDVA==
-X-Gm-Message-State: AOAM532AqvhmyDC7zwaOtR2EWP6AmzTGrVLGJkXLr3R7KTZpweBmvCm+
-        UqyuzQBhV5PxWkdZAiJb0cFr76m6GAgwUA==
-X-Google-Smtp-Source: ABdhPJxrkcFREkKbWFoIvI1hsKVSo3bC3NHkxcg/GNE3e9LmHR+KyT13O2r213HIR1GSeKqtl2YB7A==
-X-Received: by 2002:a05:6512:482:: with SMTP id v2mr1260302lfq.182.1598222119856;
-        Sun, 23 Aug 2020 15:35:19 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id j66sm1841745lfd.74.2020.08.23.15.35.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Aug 2020 15:35:19 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id c8so3452607lfh.9
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 15:35:18 -0700 (PDT)
-X-Received: by 2002:a19:c206:: with SMTP id l6mr1240827lfc.152.1598222118541;
- Sun, 23 Aug 2020 15:35:18 -0700 (PDT)
+        Sun, 23 Aug 2020 18:35:51 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBC37C061573
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 15:35:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=xn4BC+pQmW9NzzzhMuyq2NbKnTZIdMXNDhTAAA/sNnc=; b=rgps0+RwIrR1qFQh33q+l1IacG
+        8saSJirXqMnVDOqRufaLA0mftIBXJpJd2Vh/SpbubUz6wUeiEUaazPRp0+z+jBTB7gewDoXa17mio
+        sYMPVgxWOgVG6DVogpKvk8Z+kMdqgya49ZWwXpSJdqjB31pCR7InrCe3raYd8oNyD+EIcUZpASIoZ
+        8rXwWrkgOMFuw+2tOmWzk4WGaPRSPlVjq+TlMWkLpOvPxg8AvS4EoX2iEDnfbTibzfNHFFuebAvev
+        iPhydiM3egRy8b6yuRi0OCHwmfoNJ7Ev1+Brlu6dBM+RJDKvVVAttqroCV73oys4ZgW/Kww0bYTyC
+        WVt/BO2A==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9yaS-0006kJ-0f; Sun, 23 Aug 2020 22:35:42 +0000
+To:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>
+Cc:     Evan Quan <evan.quan@amd.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] amdgpu: fix Documentation builds for pm/ file movement
+Message-ID: <88d43daf-f29b-0fbe-cf58-930e8caca0e7@infradead.org>
+Date:   Sun, 23 Aug 2020 15:35:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <159817113401.5783.14776307451257171431.tglx@nanos>
- <159817113762.5783.6214320432160748743.tglx@nanos> <CAHk-=wiQQRS1f0qMwVVWKd6YHJ9K3bUK4BR2zoeGeCWRpTM3aw@mail.gmail.com>
- <CALCETrUSE6cTgaa9LWK=JgKhJt4vgGz42uPJEkk6XZWA9dOkvg@mail.gmail.com>
-In-Reply-To: <CALCETrUSE6cTgaa9LWK=JgKhJt4vgGz42uPJEkk6XZWA9dOkvg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 23 Aug 2020 15:35:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whjkMOgAP_fHL_+p5Gw6fwDm3tOa6_DTuVTJkaTJVTr+A@mail.gmail.com>
-Message-ID: <CAHk-=whjkMOgAP_fHL_+p5Gw6fwDm3tOa6_DTuVTJkaTJVTr+A@mail.gmail.com>
-Subject: Re: [GIT pull] x86/urgent for v5.9-rc2
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 23, 2020 at 3:27 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> Every interrupt is going to load the CS and SS descriptor cache lines.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Yeah, but this isn't even sharing the same GDT cache line. Those two
-are at least in the same cacheline, and hey, that is forced upon us by
-the architecture, so we don't have any choice.
+Fix Documentation errors for amdgpu.rst due to file rename (moved
+to another subdirectory).
 
-But I guess this lsl thing only triggers on the paranoid entry, so
-it's just NMI, DB and MCE.. Or?
+Error: Cannot open file ../drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+WARNING: kernel-doc '../scripts/kernel-doc -rst -enable-lineno -function hwmon ../drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c' failed with return code 1
 
-             Linus
+Fixes: e098bc9612c2 ("drm/amd/pm: optimize the power related source code layout")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Evan Quan <evan.quan@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+---
+ Documentation/gpu/amdgpu.rst |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+--- linux-next-20200821.orig/Documentation/gpu/amdgpu.rst
++++ linux-next-20200821/Documentation/gpu/amdgpu.rst
+@@ -153,7 +153,7 @@ This section covers hwmon and power/ther
+ HWMON Interfaces
+ ----------------
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++.. kernel-doc:: drivers/gpu/drm/amd/pm/amdgpu_pm.c
+    :doc: hwmon
+ 
+ GPU sysfs Power State Interfaces
+@@ -164,52 +164,52 @@ GPU power controls are exposed via sysfs
+ power_dpm_state
+ ~~~~~~~~~~~~~~~
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++.. kernel-doc:: drivers/gpu/drm/amd/pm/amdgpu_pm.c
+    :doc: power_dpm_state
+ 
+ power_dpm_force_performance_level
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++.. kernel-doc:: drivers/gpu/drm/amd/pm/amdgpu_pm.c
+    :doc: power_dpm_force_performance_level
+ 
+ pp_table
+ ~~~~~~~~
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++.. kernel-doc:: drivers/gpu/drm/amd/pm/amdgpu_pm.c
+    :doc: pp_table
+ 
+ pp_od_clk_voltage
+ ~~~~~~~~~~~~~~~~~
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++.. kernel-doc:: drivers/gpu/drm/amd/pm/amdgpu_pm.c
+    :doc: pp_od_clk_voltage
+ 
+ pp_dpm_*
+ ~~~~~~~~
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++.. kernel-doc:: drivers/gpu/drm/amd/pm/amdgpu_pm.c
+    :doc: pp_dpm_sclk pp_dpm_mclk pp_dpm_socclk pp_dpm_fclk pp_dpm_dcefclk pp_dpm_pcie
+ 
+ pp_power_profile_mode
+ ~~~~~~~~~~~~~~~~~~~~~
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++.. kernel-doc:: drivers/gpu/drm/amd/pm/amdgpu_pm.c
+    :doc: pp_power_profile_mode
+ 
+ *_busy_percent
+ ~~~~~~~~~~~~~~
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++.. kernel-doc:: drivers/gpu/drm/amd/pm/amdgpu_pm.c
+    :doc: gpu_busy_percent
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++.. kernel-doc:: drivers/gpu/drm/amd/pm/amdgpu_pm.c
+    :doc: mem_busy_percent
+ 
+ gpu_metrics
+ ~~~~~~~~~~~~~~~~~~~~~
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++.. kernel-doc:: drivers/gpu/drm/amd/pm/amdgpu_pm.c
+    :doc: gpu_metrics
+ 
+ GPU Product Information
+@@ -239,7 +239,7 @@ serial_number
+ unique_id
+ ---------
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++.. kernel-doc:: drivers/gpu/drm/amd/pm/amdgpu_pm.c
+    :doc: unique_id
+ 
+ GPU Memory Usage Information
+@@ -289,7 +289,7 @@ PCIe Accounting Information
+ pcie_bw
+ -------
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++.. kernel-doc:: drivers/gpu/drm/amd/pm/amdgpu_pm.c
+    :doc: pcie_bw
+ 
+ pcie_replay_count
+
