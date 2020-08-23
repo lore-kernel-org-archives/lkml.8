@@ -2,92 +2,109 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD179C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5B6C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 943AD22C9F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598206626;
-	bh=3lul98rbUGtH34AYFa7Aqj5OcRlHkKocjnlMIpYR2yo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DyIKAf/p2OoO82CvnHeqPwr5lfKp/VeUE0Q5Fm5nGSoMzEFNHWCDzvZWEciuLfd+g
-	 tqq+IDBgfzy9vGGFHQDajgsHyq/K/2GSC1s9p/TAwHopsAA4mw7x30Q8pFcgGQersR
-	 o/5M6hkPASwFiv+Zs7I6frFafopXyAz41lqsFWiU=
+	by mail.kernel.org (Postfix) with ESMTP id 0E46C206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 18:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgHWSRE (ORCPT
+        id S1726730AbgHWSU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 14:17:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgHWSRA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 14:17:00 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F4AC061573
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 11:17:00 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id y26so3005167lfe.2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 11:16:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JnKpyRAWRyhJsnfjEuUO679mdOG8RFrNfw0DNC4pOc0=;
-        b=X1nycomtytoGAhD6s6RaibTAcGAxZPZRkVo3vot8/b9LYGnffAdF1OY82DnLGqqhEp
-         HOcbMRaSoHu2hQM8Lv9Y6GefQd6q42MhnMvkFCiA4HRF42frubpc7nNCHZNQ4R4agaza
-         FIxpxuqLvauWvIMVnuP6EFyh9PcojPTjAPi3U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JnKpyRAWRyhJsnfjEuUO679mdOG8RFrNfw0DNC4pOc0=;
-        b=R9FMW8sAX749aR1AABN21gVdft8FS340IruHh//fgEAAvtdXco2SrQEsDpmU2VMa+h
-         Vqr7LLM1sHzxqeBIbwDesJrNZMYutzvjNL76k7yfssQ7MPVIgduRdx3CZortXBnyxgwa
-         PzE9QI6a/QiyspBANZLkpm+3bgfQSOuxi2rJDTPL0EDHLC4ThTZVO3cWKiJPpKq6Bn8f
-         5hcp8xbM6YuuBL9P9+E0a5hhUUsvkcsO6vUN9hi8IEPNlJIWg54y1UcXBB02hVus7Skh
-         +cJPIW4hqV8+6EK9/ANWojiQf584aoMYz6tHZLdIgD62VKpte0YupgYFX4o/Ym8iw5+v
-         NCVg==
-X-Gm-Message-State: AOAM531tgAUxBytLx73kBlgMT4udfQ63nEtZdlJmUCl4JvEp3yxw8IqW
-        EDW2sRtVfB+FNwxa/xSODoEbJ9vcE/sEVQ==
-X-Google-Smtp-Source: ABdhPJxW2B1PMHtsQimpIjoXZkpEP5oMgnJUAOMYv4LynD17ca82Bs7Sv71wJp0Spgc3ArVDVYGTlQ==
-X-Received: by 2002:ac2:44d4:: with SMTP id d20mr928937lfm.137.1598206618071;
-        Sun, 23 Aug 2020 11:16:58 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id r11sm1723772ljk.46.2020.08.23.11.16.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Aug 2020 11:16:57 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id c8so3279054lfh.9
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 11:16:56 -0700 (PDT)
-X-Received: by 2002:ac2:5469:: with SMTP id e9mr954739lfn.125.1598206616565;
- Sun, 23 Aug 2020 11:16:56 -0700 (PDT)
+        Sun, 23 Aug 2020 14:20:56 -0400
+Received: from mail.v3.sk ([167.172.186.51]:42628 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725867AbgHWSUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 14:20:55 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 3E642DF106;
+        Sun, 23 Aug 2020 18:19:54 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id QOcGrmKfV6b9; Sun, 23 Aug 2020 18:19:53 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 954DCDFA6B;
+        Sun, 23 Aug 2020 18:19:53 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id ryvxz95CuVXD; Sun, 23 Aug 2020 18:19:53 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id ADC95DF106;
+        Sun, 23 Aug 2020 18:19:52 +0000 (UTC)
+Date:   Sun, 23 Aug 2020 20:20:50 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 4/6] dt-bindings: mfd: ene-kb3930: Add compatibles for
+ KB930 and Acer A500
+Message-ID: <20200823182050.GA210632@demiurge.local>
+References: <20200823140846.19299-1-digetx@gmail.com>
+ <20200823140846.19299-5-digetx@gmail.com>
 MIME-Version: 1.0
-References: <159817113401.5783.14776307451257171431.tglx@nanos> <159817113641.5783.13356693197176111647.tglx@nanos>
-In-Reply-To: <159817113641.5783.13356693197176111647.tglx@nanos>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 23 Aug 2020 11:16:40 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh1PRRxGgEaSf4TWcyja+_rbsmo6qy1d63vS4GfkV_tmA@mail.gmail.com>
-Message-ID: <CAHk-=wh1PRRxGgEaSf4TWcyja+_rbsmo6qy1d63vS4GfkV_tmA@mail.gmail.com>
-Subject: Re: [GIT pull] perf/urgent for v5.9-rc2
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200823140846.19299-5-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 23, 2020 at 1:26 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> A single update for perf on x86 which ass support for the
-> broken down bandwith counters.
+On Sun, Aug 23, 2020 at 05:08:44PM +0300, Dmitry Osipenko wrote:
+> The ENE KB930 hardware is compatible with KB3930.
+> 
+> Acer A500 Iconia Tab is Android tablet device, it has KB930 controller
+> that is running firmware specifically customized for the needs of the
+> Acer A500 hardware. This means that firmware interface isn't re-usable
+> by other non-Acer devices. Some akin models of Acer tablets should be
+> able to re-use the FW interface of A500 model, like A200 for example.
+> 
+> This patch adds the new compatibles to the binding.
 
-Spot the freudian slip..
+I've responded to patch 5/6 with what should've been said here [1].
+Sorry for the confusion.
 
-                   Linus
+In any case please consider adding a new binding file instead of
+modifying the kb3930 binding doc. It would also remove a dependency on
+my patch set which should have slipped out of maintainers' radar.
+
+[1] https://lore.kernel.org/lkml/20200823180041.GB209852@demiurge.local/
+
+Take care
+Lubo
+
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/ene-kb3930.yaml | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
+> index 074243c40891..5a1c4a959d9c 100644
+> --- a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
+> @@ -17,8 +17,11 @@ properties:
+>    compatible:
+>      items:
+>        - enum:
+> +        - acer,a500-iconia-ec # Acer A500 Iconia tablet device
+>          - dell,wyse-ariel-ec  # Dell Wyse Ariel board (3020)
+> -      - const: ene,kb3930
+> +      - enum:
+> +        - ene,kb3930
+> +        - ene,kb930
+>    reg:
+>      maxItems: 1
+>  
+> -- 
+> 2.27.0
+> 
