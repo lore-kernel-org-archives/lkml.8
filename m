@@ -2,91 +2,104 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAA9C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 20:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE00C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0C1206BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 20:58:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="K3kr31LR"
+	by mail.kernel.org (Postfix) with ESMTP id 38A7B206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 21:12:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgHWU6Z (ORCPT
+        id S1726475AbgHWVMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 16:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgHWU6Y (ORCPT
+        Sun, 23 Aug 2020 17:12:09 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:36420 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbgHWVMI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 16:58:24 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693D9C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 13:58:24 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id o13so3586279pgf.0
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 13:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zS0ecbpZZ+cVdlZa+aZAL5hWPlBuHCBFZniPWAzuhC8=;
-        b=K3kr31LRIux788x0rBtRMvzRJ+5++K+3UFf3uhX9RcvkrOioN6TY7wv71Wt8cLwLXv
-         YfIT7goRQUkp3f0koA0fOY8Ql1jBqviGoqKvo6w63ao3quEat9E2b0V/7CsbYMtUYhNW
-         0f92pTadFo0+RkPe14oNq5c8RtgPBaRSmXIvtMFBmthXM9gQUrAc9Oo2ThjhVSB9Hxu/
-         YmW1lv2QSo4fJA+eFn6LfSWmcimedezE09Ec+Z57OX4PqNEaK72yXLd4teDIp5YMnddV
-         KPumVHW4hJnkNcWX1ugwPOQPId60RQhySTQbndgfomxAgJL9607+e0TiSQP6Dmz8CdFP
-         DIBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zS0ecbpZZ+cVdlZa+aZAL5hWPlBuHCBFZniPWAzuhC8=;
-        b=Em1ojYxCFXjdCyDScyItwt7LBmqRSwHq1KSX78AHmAkCixXbaZpJITaqXHQAhi/f9G
-         +akw4euoJmodI8PZ+7+mslKm/qP9U/fDDoxEkQj2qt0IPZU3pUJOSRNvAnNCM2QlD6Z4
-         x9NGe4vure4OceTJuOWbYAeKeTJ4OQ2a5kRDvGVGSTP9b1l6Bhfz0/p+BQA2xxA55Y/p
-         k16Nhk7Z0bWS72iMJz6Td/imKLIhzE1b1sn9QmMufk4Mq/jJMZSw9AM+oAjwLpo/K9uZ
-         grB1xaU3lV4V1aqIEAuVL00+IJ4apQ+9WO7Aqea/fzNYGqieHPgpjCZG0d6EFNPnhJbl
-         830g==
-X-Gm-Message-State: AOAM5330gXkcdz5MxUC+L84y2Vd/wMjfPdD/9CuylpKZzkA77GGAPcr/
-        cvVRbFLMN9FcfKd7GJvM8yK+aLYGvmba38Ps
-X-Google-Smtp-Source: ABdhPJwlLmInfWDL6vJxQX8lHTn4RlsoAdp7APBoSmQoNVguKawr7GFn7LH5UYATXd4T5rVt0yaJdw==
-X-Received: by 2002:a63:cf03:: with SMTP id j3mr1593200pgg.14.1598216303091;
-        Sun, 23 Aug 2020 13:58:23 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id y72sm9192384pfg.58.2020.08.23.13.58.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Aug 2020 13:58:22 -0700 (PDT)
-Subject: Re: [PATCH] blk-mq: use BLK_MQ_NO_TAG for no tag
-To:     Xianting Tian <tian.xianting@h3c.com>, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200823154459.40731-1-tian.xianting@h3c.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <1b85d18e-b0ae-a925-bb84-0a1eb8942099@kernel.dk>
-Date:   Sun, 23 Aug 2020 14:58:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 23 Aug 2020 17:12:08 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 416EF1C0BBF; Sun, 23 Aug 2020 23:12:05 +0200 (CEST)
+Date:   Sun, 23 Aug 2020 23:12:04 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH] thermal: ti-soc-thermal: Fix bogus thermal shutdowns for
+ omap4430
+Message-ID: <20200823211204.zerldmljfd6rrk7g@duo.ucw.cz>
+References: <20200706183338.25622-1-tony@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <20200823154459.40731-1-tian.xianting@h3c.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="imrc7pfk7bghwsac"
+Content-Disposition: inline
+In-Reply-To: <20200706183338.25622-1-tony@atomide.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/23/20 9:44 AM, Xianting Tian wrote:
-> Replace various magic -1 constants for tags with BLK_MQ_NO_TAG.
 
-Doesn't look like this patch was even compiled...
+--imrc7pfk7bghwsac
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Jens Axboe
+Hi!
 
+> We can sometimes get bogus thermal shutdowns on omap4430 at least with
+> droid4 running idle with a battery charger connected:
+>=20
+> thermal thermal_zone0: critical temperature reached (143 C), shutting down
+>=20
+> Dumping out the register values shows we can occasionally get a 0x7f value
+> that is outside the TRM listed values in the ADC conversion table. And th=
+en
+> we get a normal value when reading again after that. Reading the register
+> multiple times does not seem help avoiding the bogus values as they stay
+> until the next sample is ready.
+>=20
+> Looking at the TRM chapter "18.4.10.2.3 ADC Codes Versus Temperature", we
+> should have values from 13 to 107 listed with a total of 95 values. But
+> looking at the omap4430_adc_to_temp array, the values are off, and the
+> end values are missing. And it seems that the 4430 ADC table is similar
+> to omap3630 rather than omap4460.
+>=20
+> Let's fix the issue by using values based on the omap3630 table and just
+> ignoring invalid values. Compared to the 4430 TRM, the omap3630 table has
+> the missing values added while the TRM table only shows every second
+> value.
+>=20
+> Note that sometimes the ADC register values within the valid table can
+> also be way off for about 1 out of 10 values. But it seems that those
+> just show about 25 C too low values rather than too high values. So those
+> do not cause a bogus thermal shutdown.
+
+This does not seem to be in recent -next. Ping?
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--imrc7pfk7bghwsac
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX0LbpAAKCRAw5/Bqldv6
+8syxAJ9PBvNHtKpZctrdFyS/NBbDxA0ooACgvS260BY0E4CHRadpt6Gmyw8ayfw=
+=aSuf
+-----END PGP SIGNATURE-----
+
+--imrc7pfk7bghwsac--
