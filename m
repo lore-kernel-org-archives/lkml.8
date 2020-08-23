@@ -2,104 +2,193 @@ Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEBFC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 13:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 13:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 836DC20724
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 13:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F07E20724
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 13:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHWNbK (ORCPT
+        id S1726768AbgHWNbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 09:31:10 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:39116 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725884AbgHWNbI (ORCPT
+        Sun, 23 Aug 2020 09:31:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgHWNbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 09:31:08 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-110-qqfqCzmdNDSN-PnAlo1h6w-1; Sun, 23 Aug 2020 14:31:04 +0100
-X-MC-Unique: qqfqCzmdNDSN-PnAlo1h6w-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sun, 23 Aug 2020 14:31:03 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sun, 23 Aug 2020 14:31:03 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Arvind Sankar' <nivedita@alum.mit.edu>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-CC:     Sedat Dilek <sedat.dilek@gmail.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Nick Desaulniers" <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Will Deacon <will@kernel.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>
-Subject: RE: [PATCH] x86: work around clang IAS bug referencing __force_order
-Thread-Topic: [PATCH] x86: work around clang IAS bug referencing __force_order
-Thread-Index: AQHWeMmchmXotIF5Tka9hwpvbqXx2alFrjuQ
-Date:   Sun, 23 Aug 2020 13:31:03 +0000
-Message-ID: <b87e210138ac48018613529db3b54462@AcuMS.aculab.com>
-References: <20200820130641.GA536306@rani.riverdale.lan>
- <87zh6ohm03.fsf@nanos.tec.linutronix.de>
- <20200821230435.GA56974@rani.riverdale.lan>
- <CAKwvOdkoB+fT9tt7vgg1R6J-NEr77EWP5X8nFat_L-HvEzWGzA@mail.gmail.com>
- <87eenzqzmr.fsf@nanos.tec.linutronix.de>
- <20200822035552.GA104886@rani.riverdale.lan>
- <20200822084133.GL28786@gate.crashing.org>
- <CA+icZUVf9a8LC2Mf0cFymYQfALWs6bVfR1v1nRbxKaLAyU6NkQ@mail.gmail.com>
- <CA+icZUWGHo3mkN4=ZYeU37p8KJhxTXS5QKcAvq_HaqTHmFkw2g@mail.gmail.com>
- <CANiq72=3iOh5Z_rboZf-_GUpBE2LUUv3yPKOVNN_XmaNswdNSw@mail.gmail.com>
- <20200822211705.GA1382515@rani.riverdale.lan>
-In-Reply-To: <20200822211705.GA1382515@rani.riverdale.lan>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sun, 23 Aug 2020 09:31:37 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91E8BC061573
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 06:31:37 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E3DAD298604;
+        Sun, 23 Aug 2020 14:31:30 +0100 (BST)
+Date:   Sun, 23 Aug 2020 15:31:27 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Thirumalesha Narasimhappa <nthirumalesha7@gmail.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Shivamurthy Shastri <sshivamurthy@micron.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mtd: spinand: micron: add support for MT29F2G01AAAED
+Message-ID: <20200823153127.7498f0c0@collabora.com>
+In-Reply-To: <20200823111410.13049-1-nthirumalesha7@gmail.com>
+References: <20200823111410.13049-1-nthirumalesha7@gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQXJ2aW5kIFNhbmthcg0KPiBTZW50OiAyMiBBdWd1c3QgMjAyMCAyMjoxNw0KLi4uDQo+
-IEFzc3VtaW5nIHdlIGRvbid0IHdhbnQgdG8gcmlzayByZW1vdmluZyBmb3JjZV9vcmRlciwgSSdk
-IHN1Z2dlc3QNCj4gLSBtYWtlIGl0IGFuIGlucHV0L291dHB1dCBvcGVyYW5kLCBzbyBpdCBlbmZv
-cmNlcyBvcmRlcmluZyBmdWxseS4NCj4gLSBlaXRoZXIgcmVzdHJpY3QgaXQgdG8gZ2NjIDwgOCwg
-b3IganVzdCBwcm92aWRlIGEgcHJvcGVyIGRlZmluaXRpb24gaW4NCj4gICBzb21lIGZpbGUgKG1h
-eWJlIGFyY2gveDg2L2tlcm5lbC9jcHUvY29tbW9uLmMpPw0KDQpJcyBpdCBwb3NzaWJsZSB0byBy
-ZXBsYWNlIF9fZm9yY2Vfb3JkZXIgd2l0aCBhIHN5bWJvbCB0aGF0IHRoZQ0KbGlua2VyIHNjcmlw
-dHMgZGVmaW5lcz8NCk9yIGp1c3QgZGVmaW5lIF9fZm9yY2Vfb3JkZXIgaW4gdGhlIGxpbmtlciBz
-Y3JpcHQgdG8gc29tZQ0KJ3JhbmRvbScgY29uc3RhbnQgKGVnIDApLg0KDQpJU1RNIHRoYXQgYWRk
-aW5nICJtIihfX2ZvcmNlX29yZGVyKSB0byBhc20gdm9sYXRpbGUgY2FuIGRvIG5vIGhhcm0uDQpF
-c3BlY2lhbGx5IGZvciBhY2Nlc3NlcyB0byBDUm4gYW5kIE1TUm4gKGV0Yykgd2hpY2ggbWlnaHQg
-aGF2ZSBvYnNjdXJlDQpzaWRlIGVmZmVjdHMuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFk
-ZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywg
-TUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Sun, 23 Aug 2020 19:14:10 +0800
+Thirumalesha Narasimhappa <nthirumalesha7@gmail.com> wrote:
 
+> The MT29F2G01AAAED is a single die, 2Gb Micron SPI NAND Flash with 4-bit
+> ECC
+> 
+> Signed-off-by: Thirumalesha Narasimhappa <nthirumalesha7@gmail.com>
+> ---
+>  v2: removed SPINAND_SELECT_TARGET as per the comments & fixed typo errors
+> 
+>  drivers/mtd/nand/spi/micron.c | 78 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
+> index 5d370cfcdaaa..c21ca395d657 100644
+> --- a/drivers/mtd/nand/spi/micron.c
+> +++ b/drivers/mtd/nand/spi/micron.c
+> @@ -18,6 +18,9 @@
+>  #define MICRON_STATUS_ECC_4TO6_BITFLIPS	(3 << 4)
+>  #define MICRON_STATUS_ECC_7TO8_BITFLIPS	(5 << 4)
+>  
+> +/* For Micron MT29F2G01AAAED Device */
+> +#define MICRON_STATUS_ECC_1TO4_BITFLIPS	(1 << 4)
+> +
+
+You shouldn't need that new definition (see below).
+
+>  #define MICRON_CFG_CR			BIT(0)
+>  
+>  /*
+> @@ -44,6 +47,19 @@ static SPINAND_OP_VARIANTS(update_cache_variants,
+>  		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
+>  		SPINAND_PROG_LOAD(false, 0, NULL, 0));
+>  
+> +/* Micron  MT29F2G01AAAED Device */
+> +static SPINAND_OP_VARIANTS(read_cache_variants_mt29f2g01aaaed,
+> +		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
+> +		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
+> +		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+> +		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
+> +
+> +static SPINAND_OP_VARIANTS(write_cache_variants_mt29f2g01aaaed,
+> +		SPINAND_PROG_LOAD(true, 0, NULL, 0));
+> +
+> +static SPINAND_OP_VARIANTS(update_cache_variants_mt29f2g01aaaed,
+> +		SPINAND_PROG_LOAD(false, 0, NULL, 0));
+> +
+
+Okay, I'd suggest picking more generic names. How about renaming the
+existing variants into quadio_read_cache_variants,
+x4_write_cache_variants and x4_update_cache_variants and naming the new
+ones x4_read_cache_variants, x1_write_cache_variants and
+x1_update_cache_variants.
+
+>  static int micron_8_ooblayout_ecc(struct mtd_info *mtd, int section,
+>  				  struct mtd_oob_region *region)
+>  {
+> @@ -69,11 +85,41 @@ static int micron_8_ooblayout_free(struct mtd_info *mtd, int section,
+>  	return 0;
+>  }
+>  
+> +static int mt29f2g01aaaed_ooblayout_ecc(struct mtd_info *mtd, int section,
+> +					struct mtd_oob_region *region)
+> +{
+> +	if (section >= 4)
+> +		return -ERANGE;
+
+Hm, I'd try to deduce the max section based on the
+pagesize/ecc-step-size so we can re-use the same ooblayout def for different
+pagesize/ecc-step-size combinations.
+
+> +
+> +	region->offset = (section * 16) + 8;
+> +	region->length = 8;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mt29f2g01aaaed_ooblayout_free(struct mtd_info *mtd, int section,
+> +					 struct mtd_oob_region *region)
+> +{
+> +	if (section >= 4)
+> +		return -ERANGE;
+> +
+> +	/* Reserve 2 bytes for the BBM. */
+> +	region->offset = (section * 16) + 2;
+
+You should probably only reserve those 2 bytes in section 0 (where the
+BBM is).
+
+> +	region->length = 6;
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct mtd_ooblayout_ops micron_8_ooblayout = {
+>  	.ecc = micron_8_ooblayout_ecc,
+>  	.free = micron_8_ooblayout_free,
+>  };
+>  
+> +static const struct mtd_ooblayout_ops mt29f2g01aaaed_ooblayout = {
+
+Maybe name that one micron_interleaved_ooblayout, and rename
+micron_8_ooblayout into micron_grouped_ooblayout.
+
+> +	.ecc = mt29f2g01aaaed_ooblayout_ecc,
+> +	.free = mt29f2g01aaaed_ooblayout_free,
+> +};
+> +
+>  static int micron_select_target(struct spinand_device *spinand,
+>  				unsigned int target)
+>  {
+> @@ -114,6 +160,27 @@ static int micron_8_ecc_get_status(struct spinand_device *spinand,
+>  	return -EINVAL;
+>  }
+>  
+> +static int mt29f2g01aaaed_ecc_get_status(struct spinand_device *spinand,
+> +					 u8 status)
+> +{
+> +	switch (status & MICRON_STATUS_ECC_MASK) {
+> +	case STATUS_ECC_NO_BITFLIPS:
+> +		return 0;
+> +
+> +	case STATUS_ECC_UNCOR_ERROR:
+> +		return -EBADMSG;
+> +
+> +	/* 1 to 4-bit error detected and corrected */
+> +	case MICRON_STATUS_ECC_1TO4_BITFLIPS:
+> +		return 4;
+> +
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+
+Looks like you're duplicating spinand_check_ecc_status(). Just leave the
+get_status hook to NULL, that should do trick.
