@@ -2,113 +2,163 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACBEC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E2CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 546332067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598290819;
-	bh=oXolKDkrqEteaOxR9Z85JmSKQysQ3vFhv+zsNP4FTXs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XkxZj9G68mzd56A1AaXzYw100AEKnX/S7A12SaYonxKF4Wypp1b3C/YgN4W7UB2/X
-	 9H37/FwRL1g+griTeuBhrFEMDfVX2FTD2UmZbCNDwiakqL+GKpLSYCkM9hpK1Q8OtH
-	 DvEc4/MdjYb1n/ep87MLlJk8qbJmjH0sNL1Dcc8M=
+	by mail.kernel.org (Postfix) with ESMTP id 3E5F02067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:40:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="OFk4R8Ns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgHXRkR (ORCPT
+        id S1727780AbgHXRkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:40:17 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42202 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgHXRkP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:40:15 -0400
-Received: by mail-io1-f66.google.com with SMTP id g13so9550772ioo.9;
-        Mon, 24 Aug 2020 10:40:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UVtrljt/EWWhhPr0mdtIWZRHw/y3jFOkqpDqOIKXMy8=;
-        b=rootcDx+L8DT1N+2GVRb6rnnhi4pdvbLDRDMPLE7b64UAMIljpre62+DMmnryf0nnc
-         JRiI4NBGH6KG6Sn9BBBL7ei2x6PyrTkcwL6e4k0EtSQvNWx0RzYFc1JBS3OoXS9Og0Wo
-         EjRGYZYg849Sli3qeGd+gqGnH7SalnemNVcVjqmLNYnYcs3XU7gEoL1QYdRHkjDoye7z
-         LPPEJjjVy8IrlralaUufDy+8VctXQDAOHo/WEaHqoT9u2uIOGSI5fJELjSyVc+CSNC7C
-         cQdi9K2ghD6gjGl6+puj3nZyvcDSFsiqWIdiRKKotA4zctQWpcvdEMZatOK83Y6dYn97
-         vGDA==
-X-Gm-Message-State: AOAM532Ql5EeQeEl2RK6ONQHey/u5QW6FoGAK6Xq9FXqG2Mc6lcpr4ji
-        7YwAd6ArXl8uglVWN7ARLQ==
-X-Google-Smtp-Source: ABdhPJyjYzUkBxJsb/wKRoH4c89oJ3tsNy0bXy++WXqLOyjfTb7kelHoON54dkX40b2Pf0HM6/psTg==
-X-Received: by 2002:a5d:995a:: with SMTP id v26mr5699626ios.176.1598290814026;
-        Mon, 24 Aug 2020 10:40:14 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id h13sm6714876iob.33.2020.08.24.10.40.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 10:40:13 -0700 (PDT)
-Received: (nullmailer pid 2950296 invoked by uid 1000);
-        Mon, 24 Aug 2020 17:40:09 -0000
-Date:   Mon, 24 Aug 2020 11:40:09 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
-Message-ID: <20200824174009.GA2948650@bogus>
-References: <20200824084712.2526079-1-vkoul@kernel.org>
- <20200824084712.2526079-2-vkoul@kernel.org>
+        Mon, 24 Aug 2020 13:40:42 -0400
+Received: from mail-bn8nam11on2124.outbound.protection.outlook.com ([40.107.236.124]:12493
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725601AbgHXRkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 13:40:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Mp7pxCyP6pfoiqW5X6jIXqxg1OFCVlfO69EkNfPlsBnO3wFDWkbtUwgT9IVqwdozouxXD53rP6BRwbrI50H1YPOmzNadw/u9N/cZQgyHBvAUc4M7SeFSFAD3aifKrFbJyM3l1XzFSfjxohS6n0WyDNtXUR0pll7+Z6sULC8CXCuPe5CBdmNEHpn3WcRRXImmZsdYNrFf6WRud2kD9kfzxXzkDWLp9fr37UKI5JSMDVDN85/P1x1k3L1WzZKNx3doMnb0l7ufSBVCpW5+CeRfMdaG44Aw7EUlmd4lozZiAjb/b0ARPdsOODvDl4eqNaYKB9drEgknydYnlnuLNL2q3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vC9VHzd4rybTXSvIEn6vKv3HUBaQNPjxIEBbkUiAqlE=;
+ b=Wj8j9k+aFPBzSFGXJQEDtCWFYoyUtpa+HeV/ogsNEJib3VYWu27aSqk0txXIbipzuRMQzfjXUCcPIcIO/sd2Y285OA0dsuWoTnfgwD7hGYYNvb2ZAHoZQ+km4QtqrYemI1/5f/28Z6PN0DDohsHR4zKzxkX1Men7sTfsRPjL21CIK4zcEXqOd9JUmwOX5Lrsd7Snndo1IsAUEnlqZ8AGfLPiCLjvBxPuQLVGtucUe+RmBG1ZJLAk/V1bMFrPvVvQTGY2M7kmZRuQG2OiBpA3UydtP1OgnnfvkyTRORvu/FQ3CSmdEFHY8CjcyGUHdUY0pyoNhCGRtCBMq51G7sL4+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vC9VHzd4rybTXSvIEn6vKv3HUBaQNPjxIEBbkUiAqlE=;
+ b=OFk4R8NsP1bo7nLn8ZqGkl6Jlsb4+m+H6RXvTfdlKrg0ZLPVNVYMdqCl5hNL18uW6ZUiYXjmuey7agxUjtt1NS3zp/iwZgNXI2Zi6iO2QlJeGasIF+b0Z/vlajMHWVJo86PAVMXBSWwGh5Z//YocDkqdgHvPSDK9HDN/iTvFRow=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1849.namprd21.prod.outlook.com (2603:10b6:302:7::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.4; Mon, 24 Aug
+ 2020 17:40:32 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407%9]) with mapi id 15.20.3305.021; Mon, 24 Aug 2020
+ 17:40:32 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "will@kernel.org" <will@kernel.org>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "Mark.Rutland@arm.com" <Mark.Rutland@arm.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>
+Subject: RE: [PATCH v7 09/10] arm64: efi: Export screen_info
+Thread-Topic: [PATCH v7 09/10] arm64: efi: Export screen_info
+Thread-Index: AQHWejZWC3GY08nqAkGtdhnMB8m42qlHhV4AgAAAZtA=
+Date:   Mon, 24 Aug 2020 17:40:32 +0000
+Message-ID: <MW2PR2101MB1052C68771718B3FB47BB58BD7560@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
+ <1598287583-71762-10-git-send-email-mikelley@microsoft.com>
+ <20200824173502.GA1161855@kroah.com>
+In-Reply-To: <20200824173502.GA1161855@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-08-24T17:40:30Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b1a6bad6-5462-4b54-aea9-d9458f32c526;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 827e11d4-b56b-4fdf-53a5-08d84854ccc4
+x-ms-traffictypediagnostic: MW2PR2101MB1849:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB18495662E4E1A77441C18005D7560@MW2PR2101MB1849.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oyii6JwTPczUyjKXdyEZ4qD5HWHGsMDnmAO9SokBIk2NXGCx7oEnQflj+cREhSfIb60gcstMa2WYyCadfnj2h0S3+hA5Jl9OGBbjD6NzBnILimjH0TX9QLGMSiXHiV74wgA+Mx3zc3oZ1Za6JA+wcPZMla2vbPNI1mdF7Mkh/FuoAxUgxQtE993fBNMLhrEL5nW0EdrvvdvSzeBhFQdMM2FsLFGhpEXcHmevPP3GnWFFs7qtRHuzynSCevN7/O0YWchoITgT1BVrcm5v++b5jpl6B5/qQN36RFVh+21uHW2dgmDQWtnAshwWsQ7BXH/SDovybD8L7e6INgCraLp+aw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(346002)(366004)(39860400002)(136003)(6916009)(26005)(55016002)(186003)(10290500003)(7416002)(4326008)(7696005)(9686003)(54906003)(316002)(71200400001)(2906002)(82960400001)(6506007)(5660300002)(8936002)(86362001)(66476007)(64756008)(66446008)(66556008)(83380400001)(82950400001)(66946007)(8676002)(8990500004)(76116006)(33656002)(52536014)(478600001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: mG19BDg/VXsLSDItTNaVvr1aMxZveZ3RkYow7pAGZrSL7krJoP5mHst0Z8IfpTaNUdpBCeP4aD1+JIuuOajCJgJDksCZHDRojQ9p53BZKd+E+Z8Zf2Y7l8GUeEuLjnpSelgqpxZwTtkeSn24GCfsFuSznKrP0OsmUJlyI9MFgsrJr9Gg8oHTTsF0vked7WQa8GIxl1j+OwFFYj/6KH6lOn7bDdoGK8QLGtu1/q3E56rsmeJevaZ2Go4YFUt/3OwkH2eZ1OYtGDziJ0kr8bI3NuR3ahVD63SlSbDF28kskJ/OQiZJ5XKz7+hmzoh5ExkNewBAjiSKU0Lw1K4LWILFU+LCC72kos/YnGceAf+/h/ukwaEhesKLnT70antid0u7v4c7Wh0yUhmgps5j9f05d4YeoikkNqOI1N3N/Ws3qSuV/uRxJ6AOXD+XvBoE6HQ64ChEczfqsGe6ATf0SoRG5bPQ8xWLbnvoW7nn1HHKGxzqdzrsDzCz6+noje5elUkpmPyvYS7pfxtqpa/FFlCekrqGD1Nrb8IflF4as7rmWHPr9wGDCDoK2LNYi2n7ZCNYrbCCb1DPemwVWrXz+rtrDHC5MomtCNcMI0sMWnaxhwbmGfIlBx7r9ZaHSgZtjhtn4N4WatEyFNqfLKFvmZcm/Q==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824084712.2526079-2-vkoul@kernel.org>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 827e11d4-b56b-4fdf-53a5-08d84854ccc4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2020 17:40:32.1597
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: j4VGhdjEe24ZrKlgAYmYbidXg+qWexJ6Rl5RTGg5jkhKUtkaEZABKtDIg03/TJ3IS0w0UMt/hPLY1gMnclniTRZWof/PCRLyCgYvlJhN5A4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1849
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
-> Add devicetree binding documentation for GPI DMA controller
-> implemented on Qualcomm SoCs
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.yaml
-> 
+From: Greg KH <gregkh@linuxfoundation.org> Sent: Monday, August 24, 2020 10=
+:35 AM
+>=20
+> On Mon, Aug 24, 2020 at 09:46:22AM -0700, Michael Kelley wrote:
+> > The Hyper-V frame buffer driver may be built as a module, and
+> > it needs access to screen_info. So export screen_info.
+> >
+> > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> > ---
+> >  arch/arm64/kernel/efi.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
+> > index d0cf596..8ff557a 100644
+> > --- a/arch/arm64/kernel/efi.c
+> > +++ b/arch/arm64/kernel/efi.c
+> > @@ -55,6 +55,7 @@ static __init pteval_t
+> create_mapping_protection(efi_memory_desc_t *md)
+> >
+> >  /* we will fill this structure from the stub, so don't put it in .bss =
+*/
+> >  struct screen_info screen_info __section(.data);
+> > +EXPORT_SYMBOL(screen_info);
+>=20
+> EXPORT_SYMBOL_GPL()?
+>=20
+> I have to ask :)
 
+It's also just EXPORT_SYMBOL(screen_info) in the x86, PowerPC, and Alpha
+architectures. I know that doesn't guarantee it's right, but I'll have to d=
+efer
+to the appropriate subsystem maintainers for whether it really should be
+EXPORT_SYMBOL_GPL.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Michael
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ring transfer size compare to channel transfer ring. Event ring length = ev-factor * transfer ring size', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required property
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,gpii-mask: {'description': 'Bitmap of supported GPII instances for OS', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,gpii-mask: 'not' is a required property
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,max-num-gpii: {'description': 'Maximum number of GPII instances available', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,max-num-gpii: 'not' is a required property
-
-./Documentation/devicetree/bindings/dma/qcom-gpi.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/dma/qcom-gpi.yaml#
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: ignoring, error in schema: properties: qcom,max-num-gpii
-warning: no schema found in file: ./Documentation/devicetree/bindings/dma/qcom-gpi.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.example.dt.yaml: example-0: dma@800000:reg:0: [0, 8388608, 0, 393216] is too long
-	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
-
-
-See https://patchwork.ozlabs.org/patch/1350170
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+>=20
+> thanks,
+>=20
+> greg k-h
