@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A488EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EB6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82469207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4181D206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262761;
-	bh=Uhj6dEJu6AGEjcDWmhyIdamP5e5R5Xf5Z/7H+u4JIm0=;
+	s=default; t=1598262765;
+	bh=Th2zgGwWzxKAiUqBsJBnqsq9toC4rscuuCvlMxfUxuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RZg0WVTPFWFplN139nC9zRWjNKmCWv/anjZGIgxnd3O3HHIH2DBz5cSrAuvSL2o3B
-	 wdb6TobSzQREaW0JL786FoJpSGCW8Eh9oD0Qaapp6fxgA0fnJtbUatablDheUZ7fOv
-	 Zz69KbSf/4LQpNq5cdR0CnWPtCHk0fazGMxYmJaY=
+	b=0e+c++HG4VU26aCvqH2rtHNzV2SfiFLc5gLvXjUwdpE0S2lDnp+lXFCE3SGdpKd2x
+	 gXWB6ARG+neR4eRRyMge2GKc4vd9/f9LsbpLvTREqPiQKCh+qDNcbAGFj1AQy/lVlJ
+	 K7SpIDPCqWvQBDrHnruJR5D4iwOtF+ZkwTQTAXe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbgHXJwj (ORCPT
+        id S1728582AbgHXJwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53422 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:52:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728535AbgHXIij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:38:39 -0400
+        id S1728548AbgHXIid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:38:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C19A2177B;
-        Mon, 24 Aug 2020 08:38:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E4D20FC3;
+        Mon, 24 Aug 2020 08:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258318;
-        bh=Uhj6dEJu6AGEjcDWmhyIdamP5e5R5Xf5Z/7H+u4JIm0=;
+        s=default; t=1598258312;
+        bh=Th2zgGwWzxKAiUqBsJBnqsq9toC4rscuuCvlMxfUxuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DIuWo2TRmW1cvdEXyHxiGYw3qOYCnOuMtveD4qIjVOfXfd/LzfJp31k3FcCPYlFdK
-         msJrbOBZ9orv7ETqGBZDj2t6tN21RZVRjdZJb8Rvw1jhg5NXIYv3xuEZS0HBZpJRdr
-         VCJfVAQSKkQc8GGSY9zl00CduSwi1nXnotAyO4wc=
+        b=gVLrYnNZ0WUkROvqR49bwvTUmwra/CdePyeU4621Ei7uJmpZPHsAmPORBmervZARD
+         AOMWV1etGyiPFOeSlURvfGwJJXajA3LbE0WxKu4pHTx99zfVjfTVRi4/ucPzQftM0t
+         yveCzXqiMtR2rrT65nsOz5dqu24TRHPC1XPRnZho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Weihang Li <liweihang@huawei.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 115/148] scsi: ufs-pci: Add quirk for broken auto-hibernate for Intel EHL
-Date:   Mon, 24 Aug 2020 10:30:13 +0200
-Message-Id: <20200824082419.519204503@linuxfoundation.org>
+Subject: [PATCH 5.8 123/148] Revert "RDMA/hns: Reserve one sge in order to avoid local length error"
+Date:   Mon, 24 Aug 2020 10:30:21 +0200
+Message-Id: <20200824082419.905659752@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -61,92 +60,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Weihang Li <liweihang@huawei.com>
 
-[ Upstream commit 8da76f71fef7d8a1a72af09d48899573feb60065 ]
+[ Upstream commit 6da06c6291f38be4df6df2efb76ba925096d2691 ]
 
-Intel EHL UFS host controller advertises auto-hibernate capability but it
-does not work correctly. Add a quirk for that.
+This patch caused some issues on SEND operation, and it should be reverted
+to make the drivers work correctly. There will be a better solution that
+has been tested carefully to solve the original problem.
 
-[mkp: checkpatch fix]
+This reverts commit 711195e57d341e58133d92cf8aaab1db24e4768d.
 
-Link: https://lore.kernel.org/r/20200810141024.28859-1-adrian.hunter@intel.com
-Fixes: 8c09d7527697 ("scsi: ufshdc-pci: Add Intel PCI IDs for EHL")
-Acked-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 711195e57d34 ("RDMA/hns: Reserve one sge in order to avoid local length error")
+Link: https://lore.kernel.org/r/1597829984-20223-1-git-send-email-liweihang@huawei.com
+Signed-off-by: Weihang Li <liweihang@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd-pci.c | 16 ++++++++++++++--
- drivers/scsi/ufs/ufshcd.h     |  9 ++++++++-
- 2 files changed, 22 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_device.h | 2 --
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 9 ++++-----
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.h  | 4 +---
+ drivers/infiniband/hw/hns/hns_roce_qp.c     | 5 ++---
+ drivers/infiniband/hw/hns/hns_roce_srq.c    | 2 +-
+ 5 files changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd-pci.c b/drivers/scsi/ufs/ufshcd-pci.c
-index 8f78a81514991..b220666774ce8 100644
---- a/drivers/scsi/ufs/ufshcd-pci.c
-+++ b/drivers/scsi/ufs/ufshcd-pci.c
-@@ -67,11 +67,23 @@ static int ufs_intel_link_startup_notify(struct ufs_hba *hba,
- 	return err;
+diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
+index 479fa557993e7..c69453a62767c 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_device.h
++++ b/drivers/infiniband/hw/hns/hns_roce_device.h
+@@ -66,8 +66,6 @@
+ #define HNS_ROCE_CQE_WCMD_EMPTY_BIT		0x2
+ #define HNS_ROCE_MIN_CQE_CNT			16
+ 
+-#define HNS_ROCE_RESERVED_SGE			1
+-
+ #define HNS_ROCE_MAX_IRQ_NUM			128
+ 
+ #define HNS_ROCE_SGE_IN_WQE			2
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index eb71b941d21b7..38a48ab3e1d02 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -629,7 +629,7 @@ static int hns_roce_v2_post_recv(struct ib_qp *ibqp,
+ 
+ 		wqe_idx = (hr_qp->rq.head + nreq) & (hr_qp->rq.wqe_cnt - 1);
+ 
+-		if (unlikely(wr->num_sge >= hr_qp->rq.max_gs)) {
++		if (unlikely(wr->num_sge > hr_qp->rq.max_gs)) {
+ 			ibdev_err(ibdev, "rq:num_sge=%d >= qp->sq.max_gs=%d\n",
+ 				  wr->num_sge, hr_qp->rq.max_gs);
+ 			ret = -EINVAL;
+@@ -649,7 +649,6 @@ static int hns_roce_v2_post_recv(struct ib_qp *ibqp,
+ 		if (wr->num_sge < hr_qp->rq.max_gs) {
+ 			dseg->lkey = cpu_to_le32(HNS_ROCE_INVALID_LKEY);
+ 			dseg->addr = 0;
+-			dseg->len = cpu_to_le32(HNS_ROCE_INVALID_SGE_LENGTH);
+ 		}
+ 
+ 		/* rq support inline data */
+@@ -783,8 +782,8 @@ static int hns_roce_v2_post_srq_recv(struct ib_srq *ibsrq,
+ 		}
+ 
+ 		if (wr->num_sge < srq->max_gs) {
+-			dseg[i].len = cpu_to_le32(HNS_ROCE_INVALID_SGE_LENGTH);
+-			dseg[i].lkey = cpu_to_le32(HNS_ROCE_INVALID_LKEY);
++			dseg[i].len = 0;
++			dseg[i].lkey = cpu_to_le32(0x100);
+ 			dseg[i].addr = 0;
+ 		}
+ 
+@@ -5098,7 +5097,7 @@ static int hns_roce_v2_query_srq(struct ib_srq *ibsrq, struct ib_srq_attr *attr)
+ 
+ 	attr->srq_limit = limit_wl;
+ 	attr->max_wr = srq->wqe_cnt - 1;
+-	attr->max_sge = srq->max_gs - HNS_ROCE_RESERVED_SGE;
++	attr->max_sge = srq->max_gs;
+ 
+ out:
+ 	hns_roce_free_cmd_mailbox(hr_dev, mailbox);
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
+index e6c385ced1872..4f840997c6c73 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
+@@ -92,9 +92,7 @@
+ #define HNS_ROCE_V2_CQC_TIMER_ENTRY_SZ		PAGE_SIZE
+ #define HNS_ROCE_V2_PAGE_SIZE_SUPPORTED		0xFFFFF000
+ #define HNS_ROCE_V2_MAX_INNER_MTPT_NUM		2
+-#define HNS_ROCE_INVALID_LKEY			0x0
+-#define HNS_ROCE_INVALID_SGE_LENGTH		0x80000000
+-
++#define HNS_ROCE_INVALID_LKEY			0x100
+ #define HNS_ROCE_CMQ_TX_TIMEOUT			30000
+ #define HNS_ROCE_V2_UC_RC_SGE_NUM_IN_WQE	2
+ #define HNS_ROCE_V2_RSV_QPS			8
+diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
+index a0a47bd669759..4edea397b6b80 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -386,8 +386,7 @@ static int set_rq_size(struct hns_roce_dev *hr_dev, struct ib_qp_cap *cap,
+ 		return -EINVAL;
+ 	}
+ 
+-	hr_qp->rq.max_gs = roundup_pow_of_two(max(1U, cap->max_recv_sge) +
+-					      HNS_ROCE_RESERVED_SGE);
++	hr_qp->rq.max_gs = roundup_pow_of_two(max(1U, cap->max_recv_sge));
+ 
+ 	if (hr_dev->caps.max_rq_sg <= HNS_ROCE_SGE_IN_WQE)
+ 		hr_qp->rq.wqe_shift = ilog2(hr_dev->caps.max_rq_desc_sz);
+@@ -402,7 +401,7 @@ static int set_rq_size(struct hns_roce_dev *hr_dev, struct ib_qp_cap *cap,
+ 		hr_qp->rq_inl_buf.wqe_cnt = 0;
+ 
+ 	cap->max_recv_wr = cnt;
+-	cap->max_recv_sge = hr_qp->rq.max_gs - HNS_ROCE_RESERVED_SGE;
++	cap->max_recv_sge = hr_qp->rq.max_gs;
+ 
+ 	return 0;
  }
+diff --git a/drivers/infiniband/hw/hns/hns_roce_srq.c b/drivers/infiniband/hw/hns/hns_roce_srq.c
+index f40a000e94ee7..b9e2dbd372b66 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_srq.c
++++ b/drivers/infiniband/hw/hns/hns_roce_srq.c
+@@ -297,7 +297,7 @@ int hns_roce_create_srq(struct ib_srq *ib_srq,
+ 	spin_lock_init(&srq->lock);
  
-+static int ufs_intel_ehl_init(struct ufs_hba *hba)
-+{
-+	hba->quirks |= UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8;
-+	return 0;
-+}
-+
- static struct ufs_hba_variant_ops ufs_intel_cnl_hba_vops = {
- 	.name                   = "intel-pci",
- 	.link_startup_notify	= ufs_intel_link_startup_notify,
- };
+ 	srq->wqe_cnt = roundup_pow_of_two(init_attr->attr.max_wr + 1);
+-	srq->max_gs = init_attr->attr.max_sge + HNS_ROCE_RESERVED_SGE;
++	srq->max_gs = init_attr->attr.max_sge;
  
-+static struct ufs_hba_variant_ops ufs_intel_ehl_hba_vops = {
-+	.name                   = "intel-pci",
-+	.init			= ufs_intel_ehl_init,
-+	.link_startup_notify	= ufs_intel_link_startup_notify,
-+};
-+
- #ifdef CONFIG_PM_SLEEP
- /**
-  * ufshcd_pci_suspend - suspend power management function
-@@ -200,8 +212,8 @@ static const struct dev_pm_ops ufshcd_pci_pm_ops = {
- static const struct pci_device_id ufshcd_pci_tbl[] = {
- 	{ PCI_VENDOR_ID_SAMSUNG, 0xC00C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0 },
- 	{ PCI_VDEVICE(INTEL, 0x9DFA), (kernel_ulong_t)&ufs_intel_cnl_hba_vops },
--	{ PCI_VDEVICE(INTEL, 0x4B41), (kernel_ulong_t)&ufs_intel_cnl_hba_vops },
--	{ PCI_VDEVICE(INTEL, 0x4B43), (kernel_ulong_t)&ufs_intel_cnl_hba_vops },
-+	{ PCI_VDEVICE(INTEL, 0x4B41), (kernel_ulong_t)&ufs_intel_ehl_hba_vops },
-+	{ PCI_VDEVICE(INTEL, 0x4B43), (kernel_ulong_t)&ufs_intel_ehl_hba_vops },
- 	{ }	/* terminate list */
- };
- 
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index e38e9e0af6b59..4bf98c2295372 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -549,6 +549,12 @@ enum ufshcd_quirks {
- 	 * OCS FATAL ERROR with device error through sense data
- 	 */
- 	UFSHCD_QUIRK_BROKEN_OCS_FATAL_ERROR		= 1 << 10,
-+
-+	/*
-+	 * This quirk needs to be enabled if the host controller has
-+	 * auto-hibernate capability but it doesn't work.
-+	 */
-+	UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8		= 1 << 11,
- };
- 
- enum ufshcd_caps {
-@@ -815,7 +821,8 @@ return true;
- 
- static inline bool ufshcd_is_auto_hibern8_supported(struct ufs_hba *hba)
- {
--	return (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT);
-+	return (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT) &&
-+		!(hba->quirks & UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8);
- }
- 
- static inline bool ufshcd_is_auto_hibern8_enabled(struct ufs_hba *hba)
+ 	if (udata) {
+ 		ret = ib_copy_from_udata(&ucmd, udata, sizeof(ucmd));
 -- 
 2.25.1
 
