@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 573F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D90CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2596E20866
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A8A2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598296108;
-	bh=vxbLV+STRC09+mFwG0u3yWhMHTkrX3R2cxAN/HKppaU=;
+	s=default; t=1598296112;
+	bh=1uXd9ISJsirAUfbmjnYLzUw+I40c4LhHjYZ4wB/ECos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f0sAhtFz4imE/5puLY8QtoAZYFJPCH6R3V9rtPz/CL0PT7peB2QsNNTzFmseBY+Dx
-	 ZKCfb9ZbhvnLBczimMSSkeBTzbVIL6H946mx2kYNNB+ifb6THnB2HjZB65knEE5ZJI
-	 0ishARSVufclTeuLBkIXr5pMyv3zDm9dnwKj4U9s=
+	b=Yv+Tr6LFZcYrrxzxWYRPtiIK+aSXcx53Cps4AKcxhNjmskP+C7zvc8jSRScrFtHwr
+	 bJYs8qtOGx8Qd9zIR2ZSuXdY6Hs57YykJLQ+r13sHfK9M3hDUTH3zNzLL8OKCaV0KG
+	 imQioQoN50PHJp8V+SUB0HqdtXCYj1BlMpl4jzNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgHXTI0 (ORCPT
+        id S1727942AbgHXTIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59086 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 15:08:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbgHXTIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:08:23 -0400
+        id S1725976AbgHXTI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 15:08:28 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3927820897;
-        Mon, 24 Aug 2020 19:08:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F0A2208E4;
+        Mon, 24 Aug 2020 19:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598296102;
-        bh=vxbLV+STRC09+mFwG0u3yWhMHTkrX3R2cxAN/HKppaU=;
+        s=default; t=1598296107;
+        bh=1uXd9ISJsirAUfbmjnYLzUw+I40c4LhHjYZ4wB/ECos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n1TaWayN4OpKj0jgL2lsvbH/7vGz+xg8siK7JsuKe98xCf8Qg4WmKiTxGaAPuu0Fv
-         o4+wSkDLsOAKu9dSdzWqliYN0CAKjdral3Gzm5tT0g657c7U/XtRvGjtvXR9TEsWPA
-         zar93ngbUYyLViyBWDD0u/7de8Y1EneHIw/7qeXM=
+        b=xcDERDPt1FIgjUD6tZIWlzM6gTt66qiu1HQI3LlnPV9Ju2nErpF9T1H6uQQby1Wqh
+         dXxr93RTOuKueVOY1NhkM8uNd0jAxHHGoBN1u40MYPwN3TOJbkDwZS88Qrrx7MPpoL
+         P6Gtd658QWknTg+2mr2+hQrQ0ucP9rFa9g6lrOgo=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -58,9 +58,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 14/16] arm64: dts: imx8mq-sr-som: Align pin configuration group names with schema
-Date:   Mon, 24 Aug 2020 21:06:59 +0200
-Message-Id: <20200824190701.8447-14-krzk@kernel.org>
+Subject: [PATCH 15/16] arm64: dts: imx8mq-hummingboard-pulse: Align pin configuration group names with schema
+Date:   Mon, 24 Aug 2020 21:07:00 +0200
+Message-Id: <20200824190701.8447-15-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200824190701.8447-1-krzk@kernel.org>
 References: <20200824190701.8447-1-krzk@kernel.org>
@@ -76,31 +76,47 @@ suffix, otherwise dtbs_check complain with a warning like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-sr-som.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../boot/dts/freescale/imx8mq-hummingboard-pulse.dts      | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-sr-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-sr-som.dtsi
-index 404c46671b96..0187890a90c5 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-sr-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-sr-som.dtsi
-@@ -275,7 +275,7 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-hummingboard-pulse.dts b/arch/arm64/boot/dts/freescale/imx8mq-hummingboard-pulse.dts
+index bfd91c1ed6a5..366693f31992 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-hummingboard-pulse.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-hummingboard-pulse.dts
+@@ -214,13 +214,13 @@
  		>;
  	};
  
--	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-+	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
+-	pinctrl_usdhc2_gpio: usdhc2grpgpio {
++	pinctrl_usdhc2_gpio: usdhc2gpiogrp {
  		fsl,pins = <
- 			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x8d
- 			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xcd
-@@ -292,7 +292,7 @@
+ 			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x41
  		>;
  	};
  
--	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-+	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
+-	pinctrl_usdhc2_vmmc: usdhc2vmmcgpio {
++	pinctrl_usdhc2_vmmc: usdhc2vmmcgpiogrp {
  		fsl,pins = <
- 			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x9f
- 			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xdf
+ 			MX8MQ_IOMUXC_GPIO1_IO13_GPIO1_IO13	0x41
+ 		>;
+@@ -238,7 +238,7 @@
+ 		>;
+ 	};
+ 
+-	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
++	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
+ 		fsl,pins = <
+ 			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x8d
+ 			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xcd
+@@ -250,7 +250,7 @@
+ 		>;
+ 	};
+ 
+-	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
++	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
+ 		fsl,pins = <
+ 			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x9f
+ 			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xdf
 -- 
 2.17.1
 
