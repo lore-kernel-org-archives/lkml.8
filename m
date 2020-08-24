@@ -2,165 +2,151 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320A8C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 05:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F74C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 05:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1282C20706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 05:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 435492071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 05:15:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cSomIGIf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgHXFJi (ORCPT
+        id S1727912AbgHXFPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 01:09:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44020 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbgHXFJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 01:09:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 36A65AD71;
-        Mon, 24 Aug 2020 05:10:06 +0000 (UTC)
-Subject: Re: [patch RFC 23/38] x86/xen: Rework MSI teardown
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200821002424.119492231@linutronix.de>
- <20200821002947.575838946@linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <c81c2536-2258-19b0-4d77-0de1d2fa88db@suse.com>
-Date:   Mon, 24 Aug 2020 07:09:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 24 Aug 2020 01:15:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgHXFPQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 01:15:16 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 413FBC061573;
+        Sun, 23 Aug 2020 22:15:16 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id h16so6318664oti.7;
+        Sun, 23 Aug 2020 22:15:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yx7Nja45rwc9KndWWKuV55iUZandynQREVAn0nYKVuk=;
+        b=cSomIGIf8KOoETBTP6JIIJa/eD+yEKn3iUZtr+LbI5lUEyxPqzTw4jF+RERLSwaKzW
+         OxRAsveJueQVlAqb8pHbOFEdGrpF4H87u1Grr/1ZLeq+A59/HX5JwfBe+TqMnd8WJjCh
+         5z6W6RvA2XGnPIItpcdANYRUZxKMBqnpzSZC4fZlPkvpsIIGf53P6Xt7xsZfjTeOb8TF
+         26iQQ/pCUdkau90cYFtlxBOxCYRT5dmiex/XPCdnpSZmz+XtfRGd22araX3zKVAmcPCQ
+         HduwMR7051yldSeel6EtqyuZU9f8OnvTXjDwzx3dS1ZKm2NV8zZXfDY1HYzJd3tM9QK5
+         1tdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yx7Nja45rwc9KndWWKuV55iUZandynQREVAn0nYKVuk=;
+        b=aihT5ivXnUmc7EMxmwv6BQKTVdtgcicK//le9wQnBTjvURzdgdqpMOCXpGILTdligY
+         x8ZYifYuEiLOUdNOwXbGlBKYFUxoQaSxFJFAqWi+14jiIufWJ6BicK9CMN3Z0L+n58zZ
+         EKyLgwq3aU5RvZCESJHdo1dGx8cLy5adT1tPIaSgjufCuamVdGXGQuZwf0gV8/w9tr/u
+         S5jlXgGdwYjzIpweOhsMNaGN4EBfa5Z/J93V7C7iKANOj+8oqEzk7e1n28S2fgPJE4vC
+         cIaDLfyW6viq6pdkSuvs7cxTJI266nwc02G3sYyzkMKMQJTH0PWQqpX4odmAdDhJWsN0
+         xGZA==
+X-Gm-Message-State: AOAM531Mx5liVgsA+O5klNjUkjoECp1/Jf46D3Q6ID20zV7aeISFrgBH
+        PYQjn1rzdhuGOJkfBE4wr93KRi6nqA+Bc3cVcpaAqU/QTEM=
+X-Google-Smtp-Source: ABdhPJxcqEeDQEdj+hF2nYVhxLQiUEoqEB5DeXrTNaZDVtGYohpjkaMJckJhFpK6zABo4imVtff0XKPQOAMKz19uMcE=
+X-Received: by 2002:a9d:51c7:: with SMTP id d7mr563835oth.56.1598246114010;
+ Sun, 23 Aug 2020 22:15:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200821002947.575838946@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1598230996-17097-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <1598230996-17097-1-git-send-email-wanpengli@tencent.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 24 Aug 2020 13:15:03 +0800
+Message-ID: <CANRm+CyhkOAFUczm4vr0J9KubKGSTz84rsWHOBFujZM05gQWVw@mail.gmail.com>
+Subject: Re: [PATCH v2] KVM: LAPIC: Narrow down the kick target vCPU
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.08.20 02:24, Thomas Gleixner wrote:
-> X86 cannot store the irq domain pointer in struct device without breaking
-> XEN because the irq domain pointer takes precedence over arch_*_msi_irqs()
-> fallbacks.
-> 
-> XENs MSI teardown relies on default_teardown_msi_irqs() which invokes
-> arch_teardown_msi_irq(). default_teardown_msi_irqs() is a trivial iterator
-> over the msi entries associated to a device.
-> 
-> Implement this loop in xen_teardown_msi_irqs() to prepare for removal of
-> the fallbacks for X86.
-> 
-> This is a preparatory step to wrap XEN MSI alloc/free into a irq domain
-> which in turn allows to store the irq domain pointer in struct device and
-> to use the irq domain functions directly.
-> 
-> Signed-off-by: Thomas Gleixner<tglx@linutronix.de>
+On Mon, 24 Aug 2020 at 09:03, Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> From: Wanpeng Li <wanpengli@tencent.com>
+>
+> The kick after setting KVM_REQ_PENDING_TIMER is used to handle the timer
+> fires on a different pCPU which vCPU is running on, this kick is expensive
+> since memory barrier, rcu, preemption disable/enable operations. We don't
+> need this kick when injecting already-expired timer, we also should call
+> out the VMX preemption timer case, which also passes from_timer_fn=false
+> but doesn't need a kick because kvm_lapic_expired_hv_timer() is called
+> from the target vCPU.
+>
+
+I miss Sean's reviewed-by tag.
+
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 > ---
->   arch/x86/pci/xen.c |   23 ++++++++++++++++++-----
->   1 file changed, 18 insertions(+), 5 deletions(-)
-> 
-> --- a/arch/x86/pci/xen.c
-> +++ b/arch/x86/pci/xen.c
-> @@ -376,20 +376,31 @@ static void xen_initdom_restore_msi_irqs
->   static void xen_teardown_msi_irqs(struct pci_dev *dev)
->   {
->   	struct msi_desc *msidesc;
-> +	int i;
-> +
-> +	for_each_pci_msi_entry(msidesc, dev) {
-> +		if (msidesc->irq) {
-> +			for (i = 0; i < msidesc->nvec_used; i++)
-> +				xen_destroy_irq(msidesc->irq + i);
-> +		}
-> +	}
-> +}
-> +
-> +static void xen_pv_teardown_msi_irqs(struct pci_dev *dev)
-> +{
-> +	struct msi_desc *msidesc = first_pci_msi_entry(dev);
->   
-> -	msidesc = first_pci_msi_entry(dev);
->   	if (msidesc->msi_attrib.is_msix)
->   		xen_pci_frontend_disable_msix(dev);
->   	else
->   		xen_pci_frontend_disable_msi(dev);
->   
-> -	/* Free the IRQ's and the msidesc using the generic code. */
-> -	default_teardown_msi_irqs(dev);
-> +	xen_teardown_msi_irqs(dev);
->   }
->   
->   static void xen_teardown_msi_irq(unsigned int irq)
->   {
-> -	xen_destroy_irq(irq);
-> +	WARN_ON_ONCE(1);
->   }
->   
->   #endif
-> @@ -412,7 +423,7 @@ int __init pci_xen_init(void)
->   #ifdef CONFIG_PCI_MSI
->   	x86_msi.setup_msi_irqs = xen_setup_msi_irqs;
->   	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
-> -	x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
-> +	x86_msi.teardown_msi_irqs = xen_pv_teardown_msi_irqs;
->   	pci_msi_ignore_mask = 1;
->   #endif
->   	return 0;
-> @@ -436,6 +447,7 @@ static void __init xen_hvm_msi_init(void
->   	}
->   
->   	x86_msi.setup_msi_irqs = xen_hvm_setup_msi_irqs;
-> +	x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
->   	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
->   }
->   #endif
-> @@ -472,6 +484,7 @@ int __init pci_xen_initial_domain(void)
->   #ifdef CONFIG_PCI_MSI
->   	x86_msi.setup_msi_irqs = xen_initdom_setup_msi_irqs;
->   	x86_msi.teardown_msi_irq = xen_teardown_msi_irq;
-> +	x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
-
-This should be xen_pv_teardown_msi_irqs, as pci_xen_initial_domain() is
-called only for the pv initial domain case today.
-
->   	x86_msi.restore_msi_irqs = xen_initdom_restore_msi_irqs;
->   	pci_msi_ignore_mask = 1;
->   #endif
-> 
-
-
-Juergen
+> v1 -> v2:
+>  * update patch subject and changelog
+>  * open code kvm_set_pending_timer()
+>
+>  arch/x86/kvm/lapic.c | 4 +++-
+>  arch/x86/kvm/x86.c   | 6 ------
+>  arch/x86/kvm/x86.h   | 1 -
+>  3 files changed, 3 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 248095a..97f1dbf 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -1642,7 +1642,9 @@ static void apic_timer_expired(struct kvm_lapic *apic, bool from_timer_fn)
+>         }
+>
+>         atomic_inc(&apic->lapic_timer.pending);
+> -       kvm_set_pending_timer(vcpu);
+> +       kvm_make_request(KVM_REQ_PENDING_TIMER, vcpu);
+> +       if (from_timer_fn)
+> +               kvm_vcpu_kick(vcpu);
+>  }
+>
+>  static void start_sw_tscdeadline(struct kvm_lapic *apic)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 599d732..51b74d0 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1778,12 +1778,6 @@ static s64 get_kvmclock_base_ns(void)
+>  }
+>  #endif
+>
+> -void kvm_set_pending_timer(struct kvm_vcpu *vcpu)
+> -{
+> -       kvm_make_request(KVM_REQ_PENDING_TIMER, vcpu);
+> -       kvm_vcpu_kick(vcpu);
+> -}
+> -
+>  static void kvm_write_wall_clock(struct kvm *kvm, gpa_t wall_clock)
+>  {
+>         int version;
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 995ab69..ea20b8b 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -246,7 +246,6 @@ static inline bool kvm_vcpu_latch_init(struct kvm_vcpu *vcpu)
+>         return is_smm(vcpu) || kvm_x86_ops.apic_init_signal_blocked(vcpu);
+>  }
+>
+> -void kvm_set_pending_timer(struct kvm_vcpu *vcpu);
+>  void kvm_inject_realmode_interrupt(struct kvm_vcpu *vcpu, int irq, int inc_eip);
+>
+>  void kvm_write_tsc(struct kvm_vcpu *vcpu, struct msr_data *msr);
+> --
+> 2.7.4
+>
