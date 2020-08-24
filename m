@@ -2,181 +2,122 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440BAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFB422072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:07:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7JfQloK"
+	by mail.kernel.org (Postfix) with ESMTP id 2E6CE206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbgHXJG5 (ORCPT
+        id S1727903AbgHXJGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:06:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728790AbgHXJGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:06:54 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F19CDC061573;
-        Mon, 24 Aug 2020 02:06:53 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id f193so4480120pfa.12;
-        Mon, 24 Aug 2020 02:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kUkHyWifMBTnLUKfuOlzPEWC4L6WTYZmfRcQtW7YpF0=;
-        b=Z7JfQloKaTjiT0H4ASAyjMkzOVg0yvKyOhrTwAaHBfJbVfCJcgfcC/td6BJwaNPz4C
-         ff9ViiFoPralIJ8iinxqg7EGJesq/N2dB6tFIsnDAyq1IwXuvT2ySJe6YoK0eLBEko46
-         0gfp6pg5DKGU5U+h2TigbaH1m/PVqGMqTfJSkcgUAduItvIzaIFLJ9uX00Yh2EHCHyBh
-         YcrWAACm2yCl8VSUoxJh+oo406KRROv9VENVUPjD/59wOX2eXxvtyBY80Y7yo6BqS4t1
-         fbMGY+0drYrqVOB04LqRnl/lgluQ/L7NZMK1/3dMZH0sBEJwYUeuJh0342DPyCrTr+I2
-         kjdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=kUkHyWifMBTnLUKfuOlzPEWC4L6WTYZmfRcQtW7YpF0=;
-        b=Z7BH/W7901IBeO8jFQIaCnkPYhpOXgrHkVlMOjOCGqoXdm65gdFUHgtHuXVjYvMGfd
-         g6trMIUw779RuyvScIJOWzjIHKsdwwo2W2GjmlaR5z63i7YhLu1mR6SswSOsYlsSG/ZJ
-         CMTRYlLQeGvT5/5feosdmPbJtLAOxcvW3xe9n626S+XCFJ+rkxLXYWvGbzma5apM9vkv
-         URhe8YeN/Fd73D7WGdyyyAGC93zuWvex/3W+4Ef/mKbWu4Dn8XmUO+oeToNg1pPnHZz/
-         gpuFv20XuJif6SNt0LoIYR7SGFy4lGSgI8oJhCuGXJ0XsVjAHBkrggZMp11R+3dTPoQt
-         Hbig==
-X-Gm-Message-State: AOAM5321WX/9h9g0JCHWwyQuAyHsJ7tM6WuMkONUol5UWXTuLznHff+2
-        DvLZ4IRexeiwpPBX8RwpQdw=
-X-Google-Smtp-Source: ABdhPJw14xcNmXa1rR9IVlAIv+z1Xu6egOA/ZqBXZ3+NIiQOsygfcNGkj27A9h4zWhIQbWn+tiZxpQ==
-X-Received: by 2002:a63:5c08:: with SMTP id q8mr2956738pgb.222.1598260013533;
-        Mon, 24 Aug 2020 02:06:53 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:484:931d:1b34:35e8:fe10:8c7a])
-        by smtp.gmail.com with ESMTPSA id c20sm9220988pjv.31.2020.08.24.02.06.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 02:06:53 -0700 (PDT)
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-To:     jic23@kernel.org, matthias.bgg@gmail.com
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com,
-        benjamin.chao@mediatek.com
-Subject: [PATCH v3 2/2] Documentation: ABI: testing: mt6360: Add ADC sysfs guideline
-Date:   Mon, 24 Aug 2020 17:06:25 +0800
-Message-Id: <1598259985-12517-3-git-send-email-gene.chen.richtek@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598259985-12517-1-git-send-email-gene.chen.richtek@gmail.com>
-References: <1598259985-12517-1-git-send-email-gene.chen.richtek@gmail.com>
+        Mon, 24 Aug 2020 05:06:53 -0400
+Received: from 8bytes.org ([81.169.241.247]:38436 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730541AbgHXI41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:27 -0400
+Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 2F6FEFFC;
+        Mon, 24 Aug 2020 10:56:20 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v6 54/76] x86/sev-es: Handle MSR events
+Date:   Mon, 24 Aug 2020 10:54:49 +0200
+Message-Id: <20200824085511.7553-55-joro@8bytes.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
+References: <20200824085511.7553-1-joro@8bytes.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gene Chen <gene_chen@richtek.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Add ABI documentation for mt6360 ADC sysfs interfaces.
+Implement a handler for #VC exceptions caused by RDMSR/WRMSR
+instructions.
 
-Signed-off-by: Gene Chen <gene_chen@richtek.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: Adapt to #VC handling infrastructure ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Link: https://lore.kernel.org/r/20200724160336.5435-54-joro@8bytes.org
 ---
- Documentation/ABI/testing/sysfs-bus-iio-adc-mt6360 | 83 ++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-mt6360
+ arch/x86/kernel/sev-es.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-mt6360 b/Documentation/ABI/testing/sysfs-bus-iio-adc-mt6360
-new file mode 100644
-index 0000000..9dab17e
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-mt6360
-@@ -0,0 +1,83 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/usbid_input
-+KernelVersion:	5.8.0
-+Contact:	gene_chen@richtek.com
-+Description:
-+		Indicated MT6360 USBID ADC
-+		Reading returns current voltage in uV
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index 7bfd402c74e3..379f9ad63ce8 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -398,6 +398,31 @@ static bool vc_slow_virt_to_phys(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+ /* Include code shared with pre-decompression boot stage */
+ #include "sev-es-shared.c"
+ 
++static enum es_result vc_handle_msr(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
++{
++	struct pt_regs *regs = ctxt->regs;
++	enum es_result ret;
++	u64 exit_info_1;
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/vbusdiv5_input
-+KernelVersion:	5.8.0
-+Contact:	gene_chen@richtek.com
-+Description:
-+		Indicated MT6360 VBUS ADC with high accuracy
-+		Reading returns current voltage in uV
++	/* Is it a WRMSR? */
++	exit_info_1 = (ctxt->insn.opcode.bytes[1] == 0x30) ? 1 : 0;
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/vbusdiv2_input
-+KernelVersion:	5.8.0
-+Contact:	gene_chen@richtek.com
-+Description:
-+		Indicated MT6360 VBUS ADC with low accuracy
-+		Reading returns current voltage in uV
++	ghcb_set_rcx(ghcb, regs->cx);
++	if (exit_info_1) {
++		ghcb_set_rax(ghcb, regs->ax);
++		ghcb_set_rdx(ghcb, regs->dx);
++	}
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/vsys_input
-+KernelVersion:	5.8.0
-+Contact:	gene_chen@richtek.com
-+Description:
-+		Indicated MT6360 VSYS ADC
-+		Reading returns current voltage in uV
++	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_MSR, exit_info_1, 0);
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/vbat_input
-+KernelVersion:	5.8.0
-+Contact:	gene_chen@richtek.com
-+Description:
-+		Indicated MT6360 VBAT ADC
-+		Reading returns current voltage in uV
++	if ((ret == ES_OK) && (!exit_info_1)) {
++		regs->ax = ghcb->save.rax;
++		regs->dx = ghcb->save.rdx;
++	}
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/ibus_input
-+KernelVersion:	5.8.0
-+Contact:	gene_chen@richtek.com
-+Description:
-+		Indicated MT6360 IBUS ADC
-+		Reading returns current in uA
++	return ret;
++}
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/ibat_input
-+KernelVersion:	5.8.0
-+Contact:	gene_chen@richtek.com
-+Description:
-+		Indicated MT6360 IBAT ADC
-+		Reading returns current in uA
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/chg_vddp_input
-+KernelVersion:	5.8.0
-+Contact:	gene_chen@richtek.com
-+Description:
-+		Indicated MT6360 CHG_VDDP ADC
-+		Reading returns current voltage in uV
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/temp_jc_input
-+KernelVersion:	5.8.0
-+Contact:	gene_chen@richtek.com
-+Description:
-+		Indicated MT6360 IC junction temperature
-+		Reading returns current temperature in degree
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/vref_ts_input
-+KernelVersion:	5.8.0
-+Contact:	gene_chen@richtek.com
-+Description:
-+		Indicated MT6360 VREF_TS ADC
-+		Reading returns current voltage in uV
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/ts_input
-+KernelVersion:	5.8.0
-+Contact:	gene_chen@richtek.com
-+Description:
-+		Indicated MT6360 TS ADC
-+		Reading returns current voltage in uV
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/timestamp
-+KernelVersion:	5.8.0
-+Contact:	gene_chen@richtek.com
-+Description:
-+		Indicated MT6360 timestamp
-+		Reading returns current timestamp in ms
+ /*
+  * This function runs on the first #VC exception after the kernel
+  * switched to virtual addresses.
+@@ -756,6 +781,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_IOIO:
+ 		result = vc_handle_ioio(ghcb, ctxt);
+ 		break;
++	case SVM_EXIT_MSR:
++		result = vc_handle_msr(ghcb, ctxt);
++		break;
+ 	case SVM_EXIT_NPF:
+ 		result = vc_handle_mmio(ghcb, ctxt);
+ 		break;
 -- 
-2.7.4
+2.28.0
 
