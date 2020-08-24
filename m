@@ -5,50 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E4DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA16CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16EB32072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB12207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259071;
-	bh=Bj3DVBVlYSQg01Azg3GPbjL/vH1bmbuoq0bMb+Oz7H4=;
+	s=default; t=1598259075;
+	bh=oO0dZwfGj4Y6n706qO+SnIlv1vaIK4Y+d8ortXkuYlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UJNWP8nGbuUjxMcIeRprbi2cfvDxiVfsfwnfzPKjgPSPMTbBAjHtRAsAA0I7TIlQk
-	 qupLNvBkIFVVJPa701F3DG8Z8gj/18UovSW3O6X8zgQnFJ5oslVFyJ7Du8O1IBIpjW
-	 pl7TcelGCGIkE6eL9syCa2ikPugg2C/Cbs8io22s=
+	b=TPlzTpmE56eZ2UuEbT8+pskt5TRZbDqzIQ8lhDFvu5TL0pMag7XtxBpBXyUbiSB4X
+	 zVJnTLM1L1NgmsoqMPaLsAdMA7w0zkhyflS5NTZZl15dDv9OnFVZGk53cXvbbQ9uTX
+	 aNvfNXkXLcC1yzsKP8r2J+YO9q1AmzQGZSxBa9Kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbgHXIvK (ORCPT
+        id S1729673AbgHXIvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:51:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55546 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:51:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729866AbgHXIvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:02 -0400
+        id S1729896AbgHXIvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 947BD2072D;
-        Mon, 24 Aug 2020 08:51:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19B182072D;
+        Mon, 24 Aug 2020 08:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259062;
-        bh=Bj3DVBVlYSQg01Azg3GPbjL/vH1bmbuoq0bMb+Oz7H4=;
+        s=default; t=1598259067;
+        bh=oO0dZwfGj4Y6n706qO+SnIlv1vaIK4Y+d8ortXkuYlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pH/ycSIswC2oGogRiw8yYoBzXoa9Av2unlo3tRjg2rUh6fvAen34l4j2YbkCSK+J0
-         DkfpAqIHNYRJrUVMDSDAt5m/0Muu9F3WTFlkEaTzNQwhHWdsUAFvA2ptPSiORJyaUW
-         4HFQ7iGjasmzVlEfjGqAMZu1TeU6u8yL2DEz6T9E=
+        b=IH20dnCfe7vbNzFvXFvwDCaULXBx6fXLQVyZvpT8gy/NXJE2gLiPO6Wi6DRvfDyk/
+         eCNJUSL3fZtD5dFfyaGczDMI1oAduYTkKc9J2q9EOPVjIWnX14Yp7vwIjlU2eBnSB6
+         zY0itd1LhUay03b9AeX/uEvwStuzqs4nJfpmUqig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <shy828301@gmail.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 16/33] media: budget-core: Improve exception handling in budget_register()
-Date:   Mon, 24 Aug 2020 10:31:12 +0200
-Message-Id: <20200824082347.347122924@linuxfoundation.org>
+Subject: [PATCH 4.4 08/33] khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
+Date:   Mon, 24 Aug 2020 10:31:04 +0200
+Message-Id: <20200824082346.936562325@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
 References: <20200824082346.498653578@linuxfoundation.org>
@@ -61,54 +68,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Hugh Dickins <hughd@google.com>
 
-[ Upstream commit fc0456458df8b3421dba2a5508cd817fbc20ea71 ]
+[ Upstream commit f3f99d63a8156c7a4a6b20aac22b53c5579c7dc1 ]
 
-budget_register() has no error handling after its failure.
-Add the missed undo functions for error handling to fix it.
+syzbot crashes on the VM_BUG_ON_MM(khugepaged_test_exit(mm), mm) in
+__khugepaged_enter(): yes, when one thread is about to dump core, has set
+core_state, and is waiting for others, another might do something calling
+__khugepaged_enter(), which now crashes because I lumped the core_state
+test (known as "mmget_still_valid") into khugepaged_test_exit().  I still
+think it's best to lump them together, so just in this exceptional case,
+check mm->mm_users directly instead of khugepaged_test_exit().
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: bbe98f9cadff ("khugepaged: khugepaged_test_exit() check mmget_still_valid()")
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Yang Shi <shy828301@gmail.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: <stable@vger.kernel.org>	[4.8+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008141503370.18085@eggly.anvils
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/ttpci/budget-core.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ mm/huge_memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/ttpci/budget-core.c b/drivers/media/pci/ttpci/budget-core.c
-index e9674b40007c1..6107c469efa07 100644
---- a/drivers/media/pci/ttpci/budget-core.c
-+++ b/drivers/media/pci/ttpci/budget-core.c
-@@ -386,20 +386,25 @@ static int budget_register(struct budget *budget)
- 	ret = dvbdemux->dmx.add_frontend(&dvbdemux->dmx, &budget->hw_frontend);
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 1c4d7d2f53d22..f38d24bb8a1bc 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2149,7 +2149,7 @@ int __khugepaged_enter(struct mm_struct *mm)
+ 		return -ENOMEM;
  
- 	if (ret < 0)
--		return ret;
-+		goto err_release_dmx;
- 
- 	budget->mem_frontend.source = DMX_MEMORY_FE;
- 	ret = dvbdemux->dmx.add_frontend(&dvbdemux->dmx, &budget->mem_frontend);
- 	if (ret < 0)
--		return ret;
-+		goto err_release_dmx;
- 
- 	ret = dvbdemux->dmx.connect_frontend(&dvbdemux->dmx, &budget->hw_frontend);
- 	if (ret < 0)
--		return ret;
-+		goto err_release_dmx;
- 
- 	dvb_net_init(&budget->dvb_adapter, &budget->dvb_net, &dvbdemux->dmx);
- 
- 	return 0;
-+
-+err_release_dmx:
-+	dvb_dmxdev_release(&budget->dmxdev);
-+	dvb_dmx_release(&budget->demux);
-+	return ret;
- }
- 
- static void budget_unregister(struct budget *budget)
+ 	/* __khugepaged_exit() must not run from under us */
+-	VM_BUG_ON_MM(khugepaged_test_exit(mm), mm);
++	VM_BUG_ON_MM(atomic_read(&mm->mm_users) == 0, mm);
+ 	if (unlikely(test_and_set_bit(MMF_VM_HUGEPAGE, &mm->flags))) {
+ 		free_mm_slot(mm_slot);
+ 		return 0;
 -- 
 2.25.1
 
