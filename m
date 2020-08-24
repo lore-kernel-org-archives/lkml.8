@@ -2,333 +2,137 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AC7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A6420838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF0B20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h+bSioct"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1fAtQ2n4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+rvejp7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgHXMYw (ORCPT
+        id S1726968AbgHXMZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:24:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50832 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726187AbgHXMYv (ORCPT
+        Mon, 24 Aug 2020 08:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726795AbgHXMYw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:24:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598271888;
+        Mon, 24 Aug 2020 08:24:52 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9C5C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:24:52 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598271889;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=0ezayPHJbCOH4Sek4r/KNUEKU/MLNOPoHBQLgHtZxKo=;
-        b=h+bSioctpiEDyr5XqVe2IdwHguIdUX6dviZzpKi9B8uPwvPo2lby18qBTAYFLzc2uMWivp
-        MwaOThwN3LCQYR5Qt43aCYWztXqpRtTSCTIjxeH7yxgmqqqMMn13BcxVPUse3YGzUUymWx
-        zfCfzk7Tn/0fLEzdvhekvsq1tVA5Qmo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-165-fiy4duNVMBGzw8eSnoevFA-1; Mon, 24 Aug 2020 08:24:46 -0400
-X-MC-Unique: fiy4duNVMBGzw8eSnoevFA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 034B680734E;
-        Mon, 24 Aug 2020 12:24:45 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 82957197E5;
-        Mon, 24 Aug 2020 12:24:43 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 1/5] Add manpage for open_tree(2)
-From:   David Howells <dhowells@redhat.com>
-To:     mtk.manpages@gmail.com, viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 24 Aug 2020 13:24:42 +0100
-Message-ID: <159827188271.306468.16962617119460123110.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=J3kOSuANczljR0oJzMVSEz4vNtkQBEm/4UZxW4w9Euw=;
+        b=1fAtQ2n4yDiLzitucu4ui1UzVtZ4vm815sBCxB4sZTUtT+szYObEPI1qtxX/gDTg6ot2aN
+        u5+nZ1FBV0VoNPUoQJqPuNHhpkl5gGKonx5ZS29SG1JB97c5c53165SUo6e1OGW4IupU9G
+        2xzOFMYu++TETiPirg+PFf4keMJMg1LAGwKUH2hpdooxkGnyKRisE3Ql7pdoeiouZFfu6s
+        +KuSUaspwcFAztI9CqW5a4HGt8nQcD1ZfqtxwwnMLn9nfq9DwIq44mg9rbd/gDpkhq9JWf
+        O2703fBS+An4p8U/MJr+WvPHY28HNPtFdeMdJAn7cKADBHrgadVsnT15PIvcxA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598271889;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=J3kOSuANczljR0oJzMVSEz4vNtkQBEm/4UZxW4w9Euw=;
+        b=+rvejp7S4z6QjE2z59+T2BBhaKwkna4Y2itxsd3pmlThQGXj6wfpx1dKZZ096ml2oshK5e
+        Jma4W26YCUJV4kAA==
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Pu Wen <puwen@hygon.cn>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Dirk Hohndel <dirkhh@vmware.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        "H. Peter Anvin" <hpa@linux.intel.com>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Gordon Tetlow <gordon@tetlows.org>,
+        David Kaplan <David.Kaplan@amd.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: [RFD] x86: Curing the exception and syscall trainwreck in hardware
+Date:   Mon, 24 Aug 2020 14:24:48 +0200
+Message-ID: <875z98jkof.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a manual page to document the open_tree() system call.
+It's a sad state of affairs that I have to write this mail at all and it's
+nothing else than an act of desperation.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+The x86 exception handling including the various ways of syscall entry/exit
+are a constant source of trouble. Aside of being a functional disaster
+quite some of these issues have severe security implications.
 
- man2/open_tree.2 |  249 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 249 insertions(+)
- create mode 100644 man2/open_tree.2
+There are similar issues on the virtualization side including the handling
+of essential MSRs which are required to run a guest OS and even more so
+with the upcoming virt specific exceptions of various vendors.
 
-diff --git a/man2/open_tree.2 b/man2/open_tree.2
-new file mode 100644
-index 000000000..d480bd82f
---- /dev/null
-+++ b/man2/open_tree.2
-@@ -0,0 +1,249 @@
-+'\" t
-+.\" Copyright (c) 2020 David Howells <dhowells@redhat.com>
-+.\"
-+.\" %%%LICENSE_START(VERBATIM)
-+.\" Permission is granted to make and distribute verbatim copies of this
-+.\" manual provided the copyright notice and this permission notice are
-+.\" preserved on all copies.
-+.\"
-+.\" Permission is granted to copy and distribute modified versions of this
-+.\" manual under the conditions for verbatim copying, provided that the
-+.\" entire resulting derived work is distributed under the terms of a
-+.\" permission notice identical to this one.
-+.\"
-+.\" Since the Linux kernel and libraries are constantly changing, this
-+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
-+.\" responsibility for errors or omissions, or for damages resulting from
-+.\" the use of the information contained herein.  The author(s) may not
-+.\" have taken the same level of care in the production of this manual,
-+.\" which is licensed free of charge, as they might when working
-+.\" professionally.
-+.\"
-+.\" Formatted or processed versions of this manual, if unaccompanied by
-+.\" the source, must acknowledge the copyright and authors of this work.
-+.\" %%%LICENSE_END
-+.\"
-+.TH OPEN_TREE 2 2020-08-24 "Linux" "Linux Programmer's Manual"
-+.SH NAME
-+open_tree \- Pick or clone mount object and attach to fd
-+.SH SYNOPSIS
-+.nf
-+.B #include <sys/types.h>
-+.B #include <sys/mount.h>
-+.B #include <unistd.h>
-+.BR "#include <fcntl.h>           " "/* Definition of AT_* constants */"
-+.PP
-+.BI "int open_tree(int " dirfd ", const char *" pathname ", unsigned int " flags );
-+.fi
-+.PP
-+.IR Note :
-+There are no glibc wrappers for these system calls.
-+.SH DESCRIPTION
-+.BR open_tree ()
-+picks the mount object specified by the pathname and attaches it to a new file
-+descriptor or clones it and attaches the clone to the file descriptor.  The
-+resultant file descriptor is indistinguishable from one produced by
-+.BR open "(2) with " O_PATH .
-+.PP
-+In the case that the mount object is cloned, the clone will be "unmounted" and
-+destroyed when the file descriptor is closed if it is not otherwise mounted
-+somewhere by calling
-+.BR move_mount (2).
-+.PP
-+To select a mount object, no permissions are required on the object referred
-+to by the path, but execute (search) permission is required on all of the
-+directories in
-+.I pathname
-+that lead to the object.
-+.PP
-+Appropriate privilege (Linux: the
-+.B CAP_SYS_ADMIN
-+capability) is required to clone mount objects.
-+.PP
-+.BR open_tree ()
-+uses
-+.IR pathname ", " dirfd " and " flags
-+to locate the target object in one of a variety of ways:
-+.TP
-+[*] By absolute path.
-+.I pathname
-+points to an absolute path and
-+.I dirfd
-+is ignored.  The object is looked up by name, starting from the root of the
-+filesystem as seen by the calling process.
-+.TP
-+[*] By cwd-relative path.
-+.I pathname
-+points to a relative path and
-+.IR dirfd " is " AT_FDCWD .
-+The object is looked up by name, starting from the current working directory.
-+.TP
-+[*] By dir-relative path.
-+.I pathname
-+points to relative path and
-+.I dirfd
-+indicates a file descriptor pointing to a directory.  The object is looked up
-+by name, starting from the directory specified by
-+.IR dirfd .
-+.TP
-+[*] By file descriptor.
-+.I pathname
-+is "",
-+.I dirfd
-+indicates a file descriptor and
-+.B AT_EMPTY_PATH
-+is set in
-+.IR flags .
-+The mount attached to the file descriptor is queried directly.  The file
-+descriptor may point to any type of file, not just a directory.
-+.PP
-+.I flags
-+can be used to control the operation of the function and to influence a
-+path-based lookup.  A value for
-+.I flags
-+is constructed by OR'ing together zero or more of the following constants:
-+.TP
-+.BR AT_EMPTY_PATH
-+.\" commit 65cfc6722361570bfe255698d9cd4dccaf47570d
-+If
-+.I pathname
-+is an empty string, operate on the file referred to by
-+.IR dirfd
-+(which may have been obtained from
-+.BR open "(2) with"
-+.BR O_PATH ", from " fsmount (2)
-+or from another
-+.BR open_tree ()).
-+If
-+.I dirfd
-+is
-+.BR AT_FDCWD ,
-+the call operates on the current working directory.
-+In this case,
-+.I dirfd
-+can refer to any type of file, not just a directory.
-+This flag is Linux-specific; define
-+.B _GNU_SOURCE
-+.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
-+to obtain its definition.
-+.TP
-+.BR AT_NO_AUTOMOUNT
-+Don't automount the final ("basename") component of
-+.I pathname
-+if it is a directory that is an automount point.  This flag allows the
-+automount point itself to be picked up or a mount cloned that is rooted on the
-+automount point.  The
-+.B AT_NO_AUTOMOUNT
-+flag has no effect if the mount point has already been mounted over.
-+This flag is Linux-specific; define
-+.B _GNU_SOURCE
-+.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
-+to obtain its definition.
-+.TP
-+.B AT_SYMLINK_NOFOLLOW
-+If
-+.I pathname
-+is a symbolic link, do not dereference it: instead pick up or clone a mount
-+rooted on the link itself.
-+.TP
-+.B OPEN_TREE_CLOEXEC
-+Set the close-on-exec flag for the new file descriptor.  This will cause the
-+file descriptor to be closed automatically when a process exec's.
-+.TP
-+.B OPEN_TREE_CLONE
-+Rather than directly attaching the selected object to the file descriptor,
-+clone the object, set the root of the new mount object to that point and
-+attach the clone to the file descriptor.
-+.TP
-+.B AT_RECURSIVE
-+This is only permitted in conjunction with OPEN_TREE_CLONE.  It causes the
-+entire mount subtree rooted at the selected spot to be cloned rather than just
-+that one mount object.
-+.SH RETURN VALUE
-+On success, the new file descriptor is returned.  On error, \-1 is returned,
-+and
-+.I errno
-+is set appropriately.
-+.SH ERRORS
-+.TP
-+.B EACCES
-+Search permission is denied for one of the directories
-+in the path prefix of
-+.IR pathname .
-+(See also
-+.BR path_resolution (7).)
-+.TP
-+.B EBADF
-+.I dirfd
-+is not a valid open file descriptor.
-+.TP
-+.B EFAULT
-+.I pathname
-+is NULL or
-+.IR pathname
-+point to a location outside the process's accessible address space.
-+.TP
-+.B EINVAL
-+Reserved flag specified in
-+.IR flags .
-+.TP
-+.B ELOOP
-+Too many symbolic links encountered while traversing the pathname.
-+.TP
-+.B ENAMETOOLONG
-+.I pathname
-+is too long.
-+.TP
-+.B ENOENT
-+A component of
-+.I pathname
-+does not exist, or
-+.I pathname
-+is an empty string and
-+.B AT_EMPTY_PATH
-+was not specified in
-+.IR flags .
-+.TP
-+.B ENOMEM
-+Out of memory (i.e., kernel memory).
-+.TP
-+.B ENOTDIR
-+A component of the path prefix of
-+.I pathname
-+is not a directory or
-+.I pathname
-+is relative and
-+.I dirfd
-+is a file descriptor referring to a file other than a directory.
-+.SH VERSIONS
-+.BR open_tree ()
-+was added to Linux in kernel 5.2.
-+.SH CONFORMING TO
-+.BR open_tree ()
-+is Linux-specific.
-+.SH NOTES
-+Glibc does not (yet) provide a wrapper for the
-+.BR open_tree ()
-+system call; call it using
-+.BR syscall (2).
-+.SH EXAMPLE
-+The
-+.BR open_tree ()
-+function can be used like the following:
-+.PP
-+.RS
-+.nf
-+fd1 = open_tree(AT_FDCWD, "/mnt", 0);
-+fd2 = open_tree(fd1, "",
-+                AT_EMPTY_PATH | OPEN_TREE_CLONE | AT_RECURSIVE);
-+move_mount(fd2, "", AT_FDCWD, "/mnt2", MOVE_MOUNT_F_EMPTY_PATH);
-+.fi
-+.RE
-+.PP
-+This would attach the path point for "/mnt" to fd1, then it would copy the
-+entire subtree at the point referred to by fd1 and attach that to fd2; lastly,
-+it would attach the clone to "/mnt2".
-+.SH SEE ALSO
-+.BR fsmount (2),
-+.BR move_mount (2),
-+.BR open (2)
+We are asking the vendors for more than a decade to fix this situation, but
+even the most trivial requests like an IRET variant which does not reenable
+NMIs unconditionally and other small things which would make our life less
+miserable aren't happening.
 
+Instead of fixing the underlying design fails first and creating a solid
+base the vendors add even more ill defined exception variants on top of
+the existing pile. Unsurprisingly these add-ons are creating more
+problems than they solve, but being based on the existing house of cards
+that's obviously expected.
 
+This really has to stop and the underlying issues have to be resolved
+before more problems are inflicted upon operating systems and hypervisors.
+The amount of code to workaround these issues is already by far larger than
+the actual functional code. Some of these workarounds are just bandaids
+which try to prevent the most obvious damage, but they are mostly based on
+the hope that the unfixable corner cases never happen.
+
+There is talk about solutions for years, but it's just talk and we have not
+yet seen a coordinated effort accross the x86 vendors to come up with a
+sane replacement for the x86 exception and syscall trainwreck.
+
+The important word here is 'coordinated'. We are not at all interested
+in different solutions from different vendors. It's going to be
+challenging enough to maintain ONE parallel exception/syscall handling
+implementation.  In other words, the kernel is going to support exactly
+ONE new exception/syscall handling mechanism and not going to accomodate
+every vendor.
+
+So I call on the x86 vendors to sit together and come up with a unified
+and consolidated base on which each of the vendors can build their
+differentiating features.
+
+Aside of coordination between the x86 vendors this also requires
+coordination with the people who finally have to deal with that on the
+software side. The prevailing hardware engineering principle "That can
+be fixed in software" does not work; it never worked - especially not in
+the area of x86 exception and syscall handling.
+
+This coordination must include all major operating systems and hypervisors
+whether open source or proprietary to ensure that the different
+requirements are met. This kind of coordination has happened in the context
+of the hardware vulnerability mitigations already in a fruitful way so
+this request is not asking for something impossible.
+
+If the x86 vendors are unable to talk to each other and coordinate on a
+solution, then the ultimate backstop might be to take the first reasonable
+design specification and the first reasonable silicon implementation of it
+as the ONE alternative solution to the existing trainwreck. How the other
+vendors are going to deal with that is none of our business. That's the
+least useful and least desired outcome and will only happen when the x86
+vendors are not able to get their act together and sort that out upfront.
+
+Thanks,
+
+	Thomas
