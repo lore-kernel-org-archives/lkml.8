@@ -2,187 +2,133 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-18.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D61C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2B7120720
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B91120720
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:18:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="icNFqnhW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jlJV57Dz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgHXHRv (ORCPT
+        id S1726529AbgHXHSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 03:17:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgHXHRt (ORCPT
+        Mon, 24 Aug 2020 03:18:03 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1341 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgHXHSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 03:17:49 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF457C061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 00:17:48 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id si26so10518676ejb.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 00:17:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cv0gBSyms31X3v+bjPdOSOUcfTikjpWu5wq03sJExYI=;
-        b=icNFqnhWBsWGPLfip7JfTbIQR2nv2ccuCFXyuBt2XGNAW3KN3qXJALxpXhHTcNZi0K
-         NQKfFa/P+16/EwNZACRzEThzhl2oZ6fO9QHLUSn9sajKLAD42zfW6LV8pVR/ysgVssBk
-         rlIdPGxvXIB1J8E72bJeafJS7B8CxXodWiCwnn7fsSlgCeAx10rx5P/vApmr6vpBlVqn
-         wvJM//5Xjj2JuuGo7Ue3GA2f8xjHdoqZh5h55JPGjmcK6h0dokRmpr9VZLd5gzNl1zeF
-         bONG5Anz389Eb7yyWeSkdWwxjS1ZDR8FInMHypyVEXRt4HTXG65MihnAykaCj8wJLRIC
-         UPIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=cv0gBSyms31X3v+bjPdOSOUcfTikjpWu5wq03sJExYI=;
-        b=bBcXziqrAhkq72vS7WJtinyBWn0D+jt+dXvBy0lLJNy+9X7XCMyYuGvEFAzpbovfQe
-         8Pgw1n/KG9TIphwhfpReX66ibHUOuRTm9/LSbaYV2TyzTbmmGTZNWdDkj+581pV4ZXwq
-         dBn8DDqEmf8gewBcE04AprY5+Z+QaUD2Mdnrtdh3B/mnnsVfSAjde9seDtrfT2o6dIzv
-         Cd0Njlp56q5tVvTQNp3Ttw2ZrqDEJYPB5nSs4yKAP1HtJrexJLcJqvhQM4fRPm9WvUat
-         KWnmje6OKMBpBsMyxFFUAxmUGVB/EeFyH4ghZaHWcxIQjaHiCx0U3A5W+urzBp+K/XVz
-         uvmg==
-X-Gm-Message-State: AOAM532Owzfk/ypOeMSbvK9AiatxDic8oSLQBk7LdPbVSaCDVBeeGWuG
-        tzjmevrJN+rpDcGOlNFxuTkxce+Pt/7GdA==
-X-Google-Smtp-Source: ABdhPJzxmT5nThaJSE79UQYoUDb+3mYAi302TJOj9NUZLu/JbSWvaTT8BRzykjFb9U89gqTs5pXtVg==
-X-Received: by 2002:a17:906:fcdc:: with SMTP id qx28mr614644ejb.289.1598253467063;
-        Mon, 24 Aug 2020 00:17:47 -0700 (PDT)
-Received: from [192.168.0.151] (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id r18sm3336241eju.25.2020.08.24.00.17.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 00:17:45 -0700 (PDT)
-Subject: Re: linux-next: Signed-off-by missing for commits in the
- arm-soc-fixes tree
-To:     Olof Johansson <olof@lixom.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200821151942.6b01dbd8@canb.auug.org.au>
- <CAOesGMhHhBBdXdEAM+P5orFz56bdQTk8MP20k4UZ2rh53Ge6XQ@mail.gmail.com>
-From:   Michal Simek <monstr@monstr.eu>
-Autocrypt: addr=monstr@monstr.eu; keydata=
- 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
- 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <77be1e4f-6734-8e9c-f539-26123e55f5dc@monstr.eu>
-Date:   Mon, 24 Aug 2020 09:17:44 +0200
+        Mon, 24 Aug 2020 03:18:01 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f43699b0000>; Mon, 24 Aug 2020 00:17:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 24 Aug 2020 00:18:01 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 24 Aug 2020 00:18:01 -0700
+Received: from [10.2.58.8] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Aug
+ 2020 07:18:00 +0000
+Subject: Re: [GIT PULL] tee subsystem pin_user_pages for v5.8
+To:     Jens Wiklander <jens.wiklander@linaro.org>,
+        Olof Johansson <olof@lixom.net>
+List-Id: <soc.lore.kernel.org>
+CC:     ARM-SoC Maintainers <arm@kernel.org>, SoC Team <soc@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+References: <20200526131259.GA97001@jade> <20200821184910.GB3407@lx2k>
+ <f7c8bb6e-e732-2565-8b50-20f5504701c9@nvidia.com>
+ <CAOesGMjKq3ECJuaMANq=AyDMLXYvorafMYS3LDr9YMH6M9VdYA@mail.gmail.com>
+ <CAHUa44EGf1yayXhHUJLUmbNpueKMZ9jArT4narJLzOVWujHR9A@mail.gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <d757854b-577c-b8f2-8b67-526385101d68@nvidia.com>
+Date:   Mon, 24 Aug 2020 00:18:00 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <CAOesGMhHhBBdXdEAM+P5orFz56bdQTk8MP20k4UZ2rh53Ge6XQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAHUa44EGf1yayXhHUJLUmbNpueKMZ9jArT4narJLzOVWujHR9A@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598253467; bh=4vttQ/KNTevcP8Lhc43eLbaEsbq1qATO1KNb7WQXbF8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jlJV57Dz0MWw2dXUqUVHlm93Zjog9Oy0yFVFI5J1AfXuALU7MrsWGfStY0/Vi1RsX
+         LEEbIVkLUr7YleA5UW5lfySMW1nssaRwpRhYWEyJaZxuymi4lgxf/7a8kqJKZ2Lu79
+         ulmZuZLRAegjuTAonz+y6zTQ3sG+lSUMwCwpMcp9VTcdiTv6C+JP7NER8JfPLakT1L
+         whXN8beQqjp+NVV+CPrwrxWLBSdlezp+2KQvhTfwxv5fqWCEKP5lDOz26GcAjLDlm4
+         GsqUw2pyKsHtkgHwNvGC0IUE79G4iFI5cKKUfENVsT+MgeQS9VceavPLT0cnG3eoRg
+         I891ULHWPk7Aw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 21. 08. 20 18:18, Olof Johansson wrote:
-> Hi,
+On 8/23/20 11:51 PM, Jens Wiklander wrote:
+> On Fri, Aug 21, 2020 at 11:19 PM Olof Johansson <olof@lixom.net> wrote:
+>>
+>> On Fri, Aug 21, 2020 at 12:58 PM John Hubbard <jhubbard@nvidia.com> wrote:
+>>>
+>>> On 8/21/20 11:49 AM, Olof Johansson wrote:
+>>>> On Tue, May 26, 2020 at 03:12:59PM +0200, Jens Wiklander wrote:
+>>>>> Hello arm-soc maintainers,
+>>>>>
+>>>>> Please pull this small patch converting the tee subsystem to use
+>>>>> pin_user_pages() instead of get_user_pages().
+>>>>>
+>>>>> Thanks,
+>>>>> Jens
+>>>>>
+>>>>> The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+>>>>>
+>>>>>     Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+>>>>>
+>>>>> are available in the Git repository at:
+>>>>>
+>>>>>     git://git.linaro.org:/people/jens.wiklander/linux-tee.git tags/tee-pin-user-pages-for-5.8
+>>>>>
+>>>>> for you to fetch changes up to 37f6b4d5f47b600ec4ab6682c005a44a1bfca530:
+>>>>>
+>>>>>     tee: convert get_user_pages() --> pin_user_pages() (2020-05-26 10:42:41 +0200)
+>>>>
+>>>> Hi, I noticed this never got merged, but I don't see any follow-up here that
+>>>> retracts it. Is it still pending merge such that I should queue it for v5.10?
+>>>>
+>>>
+>>> I think so. I had marked it in my notes as "accepted, and the maintainer will
+>>> eventually merge it", and I left it at that. It's still desirable.
+>>>
+>>
+>> Looks like it conflicts with some of the later work. Jens, given the
+>> timelines here it's probably easiest all around if you rebase/respin
+>> and send a fresh pull request. I could fix it up but you'd still need
+>> to review that so the amount of work is probably less if you do it
+>> directly.
 > 
-> On Thu, Aug 20, 2020 at 10:19 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>
->> Hi all,
->>
->> Commits
->>
->>   8d53ecfbf231 ("arm64: dts: xilinx: Align IOMMU nodename with dtschema")
->>   b4b6fb8de8dc ("arm64: dts: zynqmp: Add GTR transceivers")
->>
->> are missing a Signed-off-by from their committer.
+> Agree, I'll send a fresh pull request once we have this rebased.
+> The conflict is with the recently added call to get_kernel_pages()
+> when kernel memory is shared.
+> The conflict isn't trivial, I guess we need to handle the different
+> types of pages differently when releasing them.
+> John, would you mind rebasing and posting the patch again?
 > 
-> Ah, I see what happened here. I've been relying on some of my
-> semi-automation scripts for catching this, but I had to use regular
-> manual git merge for this branch due to GPG signatures not capturing
-> it in patchwork.
-> 
-> Since the committer was Michal, and the pull request came from him, we
-> still have the chain of contribution documented, but I'll keep this in
-> mind on future manual merges.
 
-Sorry about it. I expect I don't need to do anything but I have at least
-add checking to git hooks to make sure that this won't happen again.
+Sure. Should it be against 5.9-rc2, or something else? I can do this in the morning,
+about 10 hrs from now.
 
-Thanks,
-Michal
-
+thanks,
 -- 
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
-
+John Hubbard
+NVIDIA
