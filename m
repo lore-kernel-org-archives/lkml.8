@@ -2,162 +2,149 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA56C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E3EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F32C62078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE5F206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgHXNYC (ORCPT
+        id S1726578AbgHXNZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:24:02 -0400
-Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:14657 "EHLO
-        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726187AbgHXNX5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:23:57 -0400
-From:   Peter Enderborg <peter.enderborg@sony.com>
-To:     <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Paul Moore <paul@paul-moore.com>
-CC:     Peter Enderborg <peter.enderborg@sony.com>
-Subject: [RFC PATCH] selinux: Add denied trace with permssion filter
-Date:   Mon, 24 Aug 2020 15:22:52 +0200
-Message-ID: <20200824132252.31261-2-peter.enderborg@sony.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200824132252.31261-1-peter.enderborg@sony.com>
-References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
- <20200824132252.31261-1-peter.enderborg@sony.com>
+        Mon, 24 Aug 2020 09:25:55 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54436 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726187AbgHXNZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 09:25:53 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CFBB8E14E810167125F2;
+        Mon, 24 Aug 2020 21:25:46 +0800 (CST)
+Received: from DESKTOP-8N3QUD5.china.huawei.com (10.67.102.173) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 24 Aug 2020 21:25:40 +0800
+From:   Guohua Zhong <zhongguohua1@huawei.com>
+To:     <paubert@iram.es>
+CC:     <christophe.leroy@csgroup.eu>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <nixiaoming@huawei.com>, <paulus@samba.org>,
+        <stable@vger.kernel.org>, <wangle6@huawei.com>,
+        <zhongguohua1@huawei.com>
+Subject: =?UTF-8?q?Re=3A=20Re=EF=BC=9ARe=3A=20=5BPATCH=5D=20powerpc=3A=20Fix=20a=20bug=20in=20=5F=5Fdiv64=5F32=20if=20divisor=20is=20zero?=
+Date:   Mon, 24 Aug 2020 21:25:39 +0800
+Message-ID: <20200824132539.35972-1-zhongguohua1@huawei.com>
+X-Mailer: git-send-email 2.21.0.windows.1
+In-Reply-To: <20200822172524.GA5451@lt-gp.iram.es>
+References: <20200822172524.GA5451@lt-gp.iram.es>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=dtal9Go4 c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=y4yBn9ojGxQA:10 a=z6gsHLkEAAAA:8 a=9Lnft3qYOPM9H8Q3WhUA:9 a=d-OLMTCWyvARjPbQ-enb:22
-X-SEG-SpamProfiler-Score: 0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.102.173]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds tracing of all denies. They are grouped with trace_seq for
-each audit.
+>> >In generic version in lib/math/div64.c, there is no checking of 'base' 
+>> >either.
+>> >Do we really want to add this check in the powerpc version only ?
+>> 
+>> >The only user of __div64_32() is do_div() in 
+>> >include/asm-generic/div64.h. Wouldn't it be better to do the check there ?
+>> 
+>> >Christophe
+>> 
+>> Yet, I have noticed that there is no checking of 'base' in these functions.
+>> But I am not sure how to check is better.As we know that the result is 
+>> undefined when divisor is zero. It maybe good to print error and dump stack.
+>>  Let the process to know that the divisor is zero by sending SIGFPE. 
+>> 
+>> diff --git a/include/asm-generic/div64.h b/include/asm-generic/div64.h
+>> index a3b98c86f077..161c656ee3ee 100644
+>> --- a/include/asm-generic/div64.h
+>> +++ b/include/asm-generic/div64.h
+>> @@ -43,6 +43,11 @@
+>>  # define do_div(n,base) ({                                     \
+>>         uint32_t __base = (base);                               \
+>>         uint32_t __rem;                                         \
+>> + if (unlikely(base == 0)) {                          \
+>> +         pr_err("do_div base=%d\n",base);            \
+>> +         dump_stack();                               \
+>> +         force_sig(SIGFPE);                          \
+>> + }      
+>> 
 
-A filter can be inserted with a write to it's filter section.
+> I suspect this will generate a strong reaction. SIGFPE is for user space
+> instruction attempting a division by zero. A division by zero in the
+> kernel is a kernel bug, period, and you don't want to kill a user
+> process for this reason.
 
-echo "permission==\"entrypoint\"" > events/avc/selinux_denied/filter
+> If it happens in an interrupt, the context of the kernel may not even be
+> related to the current process.
 
-A output will be like:
-          runcon-1046  [002] .N..   156.351738: selinux_denied:
-	  trace_seq=2 result=-13
-	  scontext=system_u:system_r:cupsd_t:s0-s0:c0.
-	  c1023 tcontext=system_u:object_r:bin_t:s0
-	  tclass=file permission=entrypoint
+> Many other architectures (x86 for example) already trigger an exception
+> on a division by zero but the handler will find that the exception
+> happened in kernel context and generate an Oops, not raise a signal in a
+> (possibly innocent) userland process.
 
-Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
----
- include/trace/events/avc.h | 37 +++++++++++++++++++++++++++++++++++++
- security/selinux/avc.c     | 27 +++++++++++++++++++++++++--
- 2 files changed, 62 insertions(+), 2 deletions(-)
+OK. So just don't touch do_div functions in include/asm-generic/div64.h
+But for powerpc it can not trigger an exception when divisor is 0 in __div64_32.
 
-diff --git a/include/trace/events/avc.h b/include/trace/events/avc.h
-index 94bca8bef8d2..9a28559956de 100644
---- a/include/trace/events/avc.h
-+++ b/include/trace/events/avc.h
-@@ -54,6 +54,43 @@ TRACE_EVENT(selinux_audited,
- 	)
- );
- 
-+TRACE_EVENT(selinux_denied,
-+
-+	TP_PROTO(struct selinux_audit_data *sad,
-+		char *scontext,
-+		char *tcontext,
-+		const char *tclass,
-+		const char *permission,
-+		int64_t seq
-+	),
-+
-+	TP_ARGS(sad, scontext, tcontext, tclass, permission, seq),
-+
-+	TP_STRUCT__entry(
-+		__field(int, result)
-+		__string(scontext, scontext)
-+		__string(tcontext, tcontext)
-+		__string(permission, permission)
-+		__string(tclass, tclass)
-+		__field(u64, seq)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->result	= sad->result;
-+		__entry->seq	= seq;
-+		__assign_str(tcontext, tcontext);
-+		__assign_str(scontext, scontext);
-+		__assign_str(permission, permission);
-+		__assign_str(tclass, tclass);
-+	),
-+
-+	TP_printk("trace_seq=%lld result=%d scontext=%s tcontext=%s tclass=%s permission=%s",
-+		 __entry->seq, __entry->result, __get_str(scontext), __get_str(tcontext),
-+		 __get_str(tclass), __get_str(permission)
-+
-+	)
-+);
-+
- #endif
- 
- /* This part must be outside protection */
-diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-index 1debddfb5af9..ca53baca15e1 100644
---- a/security/selinux/avc.c
-+++ b/security/selinux/avc.c
-@@ -92,6 +92,7 @@ struct selinux_avc {
- };
- 
- static struct selinux_avc selinux_avc;
-+static atomic64_t trace_seqno;
- 
- void selinux_avc_init(struct selinux_avc **avc)
- {
-@@ -731,9 +732,31 @@ static void avc_audit_post_callback(struct audit_buffer *ab, void *a)
- 	tclass = secclass_map[sad->tclass-1].name;
- 	audit_log_format(ab, " tclass=%s", tclass);
- 
--	if (sad->denied)
-+	if (sad->denied) {
- 		audit_log_format(ab, " permissive=%u", sad->result ? 0 : 1);
--
-+		if (trace_selinux_denied_enabled()) {
-+			int i, perm;
-+			const char **perms;
-+			u32 denied = sad->denied;
-+			int64_t seq;
-+
-+			seq = atomic_long_inc_return(&trace_seqno);
-+			perms = secclass_map[sad->tclass-1].perms;
-+			i = 0;
-+			perm = 1;
-+			while (i < (sizeof(denied) * 8)) {
-+				if ((perm & denied & sad->requested) && perms[i]) {
-+					trace_selinux_denied(sad, scontext, tcontext,
-+							     tclass, perms[i], seq);
-+					denied &= ~perm;
-+					if (!denied)
-+						break;
-+				}
-+				i++;
-+				perm <<= 1;
-+			}
-+		}
-+	}
- 	trace_selinux_audited(sad, scontext, tcontext, tclass);
- 	kfree(tcontext);
- 	kfree(scontext);
--- 
-2.17.1
+
+So the patch as below is still useful for powerpc. If this patch looks good for 
+you, please help to review. I will send the new patch later.
+
+Thanks for your reply.
+
+diff --git a/arch/powerpc/boot/div64.S b/arch/powerpc/boot/div64.S
+index 4354928ed62e..1d3561cf16fa 100644
+--- a/arch/powerpc/boot/div64.S
++++ b/arch/powerpc/boot/div64.S
+@@ -13,8 +13,10 @@
+
+        .globl __div64_32
+        .globl __div64_32
+ __div64_32:
++ cmplwi      r4,0    # check if divisor r4 is zero
+        lwz     r5,0(r3)        # get the dividend into r5/r6
+        lwz     r6,4(r3)
++ beq 5f                      # jump to label 5 if r4(divisor) is zero
+        cmplw   r5,r4
+        li      r7,0
+        li      r8,0
+@@ -52,7 +54,7 @@ __div64_32:
+ 4:     stw     r7,0(r3)        # return the quotient in *r3
+        stw     r8,4(r3)
+        mr      r3,r6           # return the remainder in r3
+-   blr
++5:   blr                             # return if divisor r4 is zero
+
+ /*
+  * Extended precision shifts.
+diff --git a/arch/powerpc/lib/div64.S b/arch/powerpc/lib/div64.S
+index 3d5426e7dcc4..570774d9782d 100644
+--- a/arch/powerpc/lib/div64.S
++++ b/arch/powerpc/lib/div64.S
+@@ -13,8 +13,10 @@
+ #include <asm/processor.h>
+
+ _GLOBAL(__div64_32)
++ cmplwi      r4,0    # check if divisor r4 is zero
+        lwz     r5,0(r3)        # get the dividend into r5/r6
+        lwz     r6,4(r3)
++ beq 5f                      # jump to label 5 if r4(divisor) is zero
+        cmplw   r5,r4
+        li      r7,0
+        li      r8,0
+@@ -52,4 +54,4 @@ _GLOBAL(__div64_32)
+ 4:     stw     r7,0(r3)        # return the quotient in *r3
+        stw     r8,4(r3)
+        mr      r3,r6           # return the remainder in r3
+-   blr
++5:   blr                             # return if divisor r4 is zero
+
+Guohua
 
