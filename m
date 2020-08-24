@@ -2,54 +2,53 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53444C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41C7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2849520639
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2B620639
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263154;
-	bh=SIeG7Z+CBSxKzYXm+uvI3AM47ortAoyt9kWNz2qiNnY=;
+	s=default; t=1598263158;
+	bh=4CNSfVrCBAZQkhDGS1J1IlqaAAqRPrPo8zCzlL0vzx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KXuqKcbIkNOc68Fd+XUBSagRA3qQGVX8zV/fnaJeYPTbPVyuyT8i1/w8q7O1JWlkT
-	 PdSxm5zi7sKpHvaa8C9CbXM0Taf/NjA+oQjFhVyXqUtT27eVfW6Qp9wChCMd3PldCW
-	 WCqy/JbDyRZPz6LX5w27RRxYemRx7FeKC7ZYauWc=
+	b=T+slWZ43+NCStLeavRitkxS5cv7wQPCnliH9wWautEX03pe10jXUxLkHX51g3XIyF
+	 mazz0Lp9Hliumu9wNw10OQl4aC+qRAdYX8PQRd7iBd7ys8nOtt/27fsvOK5xvOaqPZ
+	 4kEOvhKWHOsceuG6hjEiOzcsikKbE5mM0FQKexG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbgHXJ7M (ORCPT
+        id S1727077AbgHXIdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:59:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41490 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:33:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727086AbgHXIdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:33:43 -0400
+        id S1727040AbgHXId0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:33:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB0A52074D;
-        Mon, 24 Aug 2020 08:33:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06913206F0;
+        Mon, 24 Aug 2020 08:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258023;
-        bh=SIeG7Z+CBSxKzYXm+uvI3AM47ortAoyt9kWNz2qiNnY=;
+        s=default; t=1598258006;
+        bh=4CNSfVrCBAZQkhDGS1J1IlqaAAqRPrPo8zCzlL0vzx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eaYCPMuOXiuVt9yxbMeEjZPaSCoubgT/b+86Y8OA4R0duuUU/1bBevaj9OVk1QvJ5
-         CUMHswBq9elH9VXse4Zuy0rOLiwy0PWgl3meWvu3B8qQ2U8sGxD3lT8rm9wIktn+JT
-         EDAQ7OCYNmxglKxKPjpMk1nrGWw1xH/ISDqeb8gk=
+        b=btzR8/g2fMZy85OD4fnQAjSGjwrZoSWKFtQA/0c4yffhLXIs8NjcCW6iVlyY9HWvq
+         1cih+fWF1Uxj/Msixn8TMBgFdACXmCmn82TYh0X1WW1ekig1ye8uhCQHsvlzVqhw85
+         QE00NMODi8Ub81yr8YC1CWdaUmYA7ANLzC5uk5kk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 045/148] scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
-Date:   Mon, 24 Aug 2020 10:29:03 +0200
-Message-Id: <20200824082416.226555071@linuxfoundation.org>
+        stable@vger.kernel.org, Stylon Wang <stylon.wang@amd.com>,
+        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
+        Qingqing Zhuo <qingqing.zhuo@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.8 039/148] drm/amd/display: Fix EDID parsing after resume from suspend
+Date:   Mon, 24 Aug 2020 10:28:57 +0200
+Message-Id: <20200824082415.919874230@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -62,52 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Stylon Wang <stylon.wang@amd.com>
 
-[ Upstream commit c0a18ee0ce78d7957ec1a53be35b1b3beba80668 ]
+commit b24bdc37d03a0478189e20a50286092840f414fa upstream.
 
-It is confirmed that Micron device needs DELAY_BEFORE_LPM quirk to have a
-delay before VCC is powered off. Sdd Micron vendor ID and this quirk for
-Micron devices.
+[Why]
+Resuming from suspend, CEA blocks from EDID are not parsed and no video
+modes can support YUV420. When this happens, output bpc cannot go over
+8-bit with 4K modes on HDMI.
 
-Link: https://lore.kernel.org/r/20200612012625.6615-2-stanley.chu@mediatek.com
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[How]
+In amdgpu_dm_update_connector_after_detect(), drm_add_edid_modes() is
+called after drm_connector_update_edid_property() to fully parse EDID
+and update display info.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Stylon Wang <stylon.wang@amd.com>
+Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
+Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/ufs/ufs_quirks.h | 1 +
- drivers/scsi/ufs/ufshcd.c     | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/ufs/ufs_quirks.h b/drivers/scsi/ufs/ufs_quirks.h
-index e3175a63c676b..e80d5f26a4424 100644
---- a/drivers/scsi/ufs/ufs_quirks.h
-+++ b/drivers/scsi/ufs/ufs_quirks.h
-@@ -12,6 +12,7 @@
- #define UFS_ANY_VENDOR 0xFFFF
- #define UFS_ANY_MODEL  "ANY_MODEL"
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -2184,6 +2184,7 @@ void amdgpu_dm_update_connector_after_de
  
-+#define UFS_VENDOR_MICRON      0x12C
- #define UFS_VENDOR_TOSHIBA     0x198
- #define UFS_VENDOR_SAMSUNG     0x1CE
- #define UFS_VENDOR_SKHYNIX     0x1AD
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index e412e43d23821..dec56e99335f0 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -216,6 +216,8 @@ ufs_get_desired_pm_lvl_for_dev_link_state(enum ufs_dev_pwr_mode dev_state,
+ 			drm_connector_update_edid_property(connector,
+ 							   aconnector->edid);
++			drm_add_edid_modes(connector, aconnector->edid);
  
- static struct ufs_dev_fix ufs_fixups[] = {
- 	/* UFS cards deviations table */
-+	UFS_FIX(UFS_VENDOR_MICRON, UFS_ANY_MODEL,
-+		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
- 		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
--- 
-2.25.1
-
+ 			if (aconnector->dc_link->aux_mode)
+ 				drm_dp_cec_set_edid(&aconnector->dm_dp_aux.aux,
 
 
