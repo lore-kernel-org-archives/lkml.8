@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F332CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE46CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2BA122B4E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4062177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258240;
-	bh=Szw6jA3d8Pxqmf1JA6WaAVW8AEfSzqqzAAso5Yu42xk=;
+	s=default; t=1598258245;
+	bh=Ri/RBWj/xKdkdllwX2uawEFqyQBCuL7mbEJLEbn/lvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rqpXqaSE9E6+XLtI2j59DoESZWGJB8YdBnhfWdt0M2nhIcd7nq90M9Bw/P6WvYzzC
-	 vdcNltI9OrydpXjpMIdKxUviiZl9Rs/M8YraNfXn5rfvSzqV6WwWj44tYM5Sd7itpv
-	 vE9f1wqaLfiadJw9P+C/sXFzgwKP7TIIkABEtXas=
+	b=2EIKXiuHwmeXrykopIRBLzsPf5YKt/eDAwL7ypg/C9/b0xmPBtqyTKtLh4PKBgZpO
+	 9O2o4fxxHVqQFdH3EOT2fLqoeXH/drlNNFYZbBvWFdNAQagAot4qRpUCNUXKrQBXxM
+	 r1a8pObA50Et14WimCsBviPTzbTPHEd/qF2me+jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbgHXIhS (ORCPT
+        id S1728394AbgHXIhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:37:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50312 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:37:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727917AbgHXIhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:37:09 -0400
+        id S1728044AbgHXIhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:37:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9014A207DF;
-        Mon, 24 Aug 2020 08:37:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E091F221E2;
+        Mon, 24 Aug 2020 08:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258228;
-        bh=Szw6jA3d8Pxqmf1JA6WaAVW8AEfSzqqzAAso5Yu42xk=;
+        s=default; t=1598258230;
+        bh=Ri/RBWj/xKdkdllwX2uawEFqyQBCuL7mbEJLEbn/lvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lNXWp9MmqoCFO4+S0pJqmyayntlFVIjNPVYLMPM3eakXEY62iMh2DRQeYm3SsOJiG
-         9gNvox+UKBduvYZW4/0EAU0/v8FJr+5LcYy3f2xuLH7Y3pzlXW2U13QlHX7BbBF1NA
-         h6sBVQU8q6V9Tu7xeMnd0bVBxhU1AHw0kcAuXOpg=
+        b=Po93oY2s8DBD5u9sTkr8O4T76p70lU4qAstX+vuQKCh/+u4XTaGf2htQIb2bO6gu6
+         p/yWj1NP8FFmcak6z1rJV20Wv6ziyWX+r5D3fboz1OmkaVg2CzHyX6e0L7KrKFjiyb
+         wNZio1fr9dQowuYaAlqjoUDK406JWMiRQ4OFul2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Zhang Changzhong <zhangchangzhong@huawei.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 092/148] can: j1939: fix support for multipacket broadcast message
-Date:   Mon, 24 Aug 2020 10:29:50 +0200
-Message-Id: <20200824082418.452898742@linuxfoundation.org>
+Subject: [PATCH 5.8 083/148] libbpf: Fix BTF-defined map-in-map initialization on 32-bit host arches
+Date:   Mon, 24 Aug 2020 10:29:41 +0200
+Message-Id: <20200824082418.030867573@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -62,79 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Changzhong <zhangchangzhong@huawei.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit f4fd77fd87e9b214c26bb2ebd4f90055eaea5ade ]
+[ Upstream commit 15728ad3e71c120278105f20fa65b3735e715e0f ]
 
-Currently j1939_tp_im_involved_anydir() in j1939_tp_recv() check the previously
-set flags J1939_ECU_LOCAL_DST and J1939_ECU_LOCAL_SRC of incoming skb, thus
-multipacket broadcast message was aborted by receive side because it may come
-from remote ECUs and have no exact dst address. Similarly, j1939_tp_cmd_recv()
-and j1939_xtp_rx_dat() didn't process broadcast message.
+Libbpf built in 32-bit mode should be careful about not conflating 64-bit BPF
+pointers in BPF ELF file and host architecture pointers. This patch fixes
+issue of incorrect initializating of map-in-map inner map slots due to such
+difference.
 
-So fix it by checking and process broadcast message in j1939_tp_recv(),
-j1939_tp_cmd_recv() and j1939_xtp_rx_dat().
-
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
-Link: https://lore.kernel.org/r/1596599425-5534-2-git-send-email-zhangchangzhong@huawei.com
-Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fixes: 646f02ffdd49 ("libbpf: Add BTF-defined map-in-map support")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200813204945.1020225-4-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/j1939/transport.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ tools/lib/bpf/libbpf.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index 90a2baac8a4aa..67189b4c482c5 100644
---- a/net/can/j1939/transport.c
-+++ b/net/can/j1939/transport.c
-@@ -1673,8 +1673,12 @@ static void j1939_xtp_rx_rts(struct j1939_priv *priv, struct sk_buff *skb,
- 			return;
- 		}
- 		session = j1939_xtp_rx_rts_session_new(priv, skb);
--		if (!session)
-+		if (!session) {
-+			if (cmd == J1939_TP_CMD_BAM && j1939_sk_recv_match(priv, skcb))
-+				netdev_info(priv->ndev, "%s: failed to create TP BAM session\n",
-+					    __func__);
- 			return;
-+		}
- 	} else {
- 		if (j1939_xtp_rx_rts_session_active(session, skb)) {
- 			j1939_session_put(session);
-@@ -1852,6 +1856,13 @@ static void j1939_xtp_rx_dat(struct j1939_priv *priv, struct sk_buff *skb)
- 		else
- 			j1939_xtp_rx_dat_one(session, skb);
- 	}
-+
-+	if (j1939_cb_is_broadcast(skcb)) {
-+		session = j1939_session_get_by_addr(priv, &skcb->addr, false,
-+						    false);
-+		if (session)
-+			j1939_xtp_rx_dat_one(session, skb);
-+	}
- }
- 
- /* j1939 main intf */
-@@ -1943,7 +1954,7 @@ static void j1939_tp_cmd_recv(struct j1939_priv *priv, struct sk_buff *skb)
- 		if (j1939_tp_im_transmitter(skcb))
- 			j1939_xtp_rx_rts(priv, skb, true);
- 
--		if (j1939_tp_im_receiver(skcb))
-+		if (j1939_tp_im_receiver(skcb) || j1939_cb_is_broadcast(skcb))
- 			j1939_xtp_rx_rts(priv, skb, false);
- 
- 		break;
-@@ -2007,7 +2018,7 @@ int j1939_tp_recv(struct j1939_priv *priv, struct sk_buff *skb)
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 11e4725b8b1c0..e7642a6e39f9e 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -5025,7 +5025,8 @@ static int bpf_object__collect_st_ops_relos(struct bpf_object *obj,
+ static int bpf_object__collect_map_relos(struct bpf_object *obj,
+ 					 GElf_Shdr *shdr, Elf_Data *data)
  {
- 	struct j1939_sk_buff_cb *skcb = j1939_skb_to_cb(skb);
+-	int i, j, nrels, new_sz, ptr_sz = sizeof(void *);
++	const int bpf_ptr_sz = 8, host_ptr_sz = sizeof(void *);
++	int i, j, nrels, new_sz;
+ 	const struct btf_var_secinfo *vi = NULL;
+ 	const struct btf_type *sec, *var, *def;
+ 	const struct btf_member *member;
+@@ -5074,7 +5075,7 @@ static int bpf_object__collect_map_relos(struct bpf_object *obj,
  
--	if (!j1939_tp_im_involved_anydir(skcb))
-+	if (!j1939_tp_im_involved_anydir(skcb) && !j1939_cb_is_broadcast(skcb))
- 		return 0;
+ 			vi = btf_var_secinfos(sec) + map->btf_var_idx;
+ 			if (vi->offset <= rel.r_offset &&
+-			    rel.r_offset + sizeof(void *) <= vi->offset + vi->size)
++			    rel.r_offset + bpf_ptr_sz <= vi->offset + vi->size)
+ 				break;
+ 		}
+ 		if (j == obj->nr_maps) {
+@@ -5110,17 +5111,20 @@ static int bpf_object__collect_map_relos(struct bpf_object *obj,
+ 			return -EINVAL;
  
- 	switch (skcb->addr.pgn) {
+ 		moff = rel.r_offset - vi->offset - moff;
+-		if (moff % ptr_sz)
++		/* here we use BPF pointer size, which is always 64 bit, as we
++		 * are parsing ELF that was built for BPF target
++		 */
++		if (moff % bpf_ptr_sz)
+ 			return -EINVAL;
+-		moff /= ptr_sz;
++		moff /= bpf_ptr_sz;
+ 		if (moff >= map->init_slots_sz) {
+ 			new_sz = moff + 1;
+-			tmp = realloc(map->init_slots, new_sz * ptr_sz);
++			tmp = realloc(map->init_slots, new_sz * host_ptr_sz);
+ 			if (!tmp)
+ 				return -ENOMEM;
+ 			map->init_slots = tmp;
+ 			memset(map->init_slots + map->init_slots_sz, 0,
+-			       (new_sz - map->init_slots_sz) * ptr_sz);
++			       (new_sz - map->init_slots_sz) * host_ptr_sz);
+ 			map->init_slots_sz = new_sz;
+ 		}
+ 		map->init_slots[moff] = targ_map;
 -- 
 2.25.1
 
