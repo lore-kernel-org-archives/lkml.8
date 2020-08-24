@@ -2,140 +2,194 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8FFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7355C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBC020702
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48A520702
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:07:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgHXSDn (ORCPT
+        id S1726444AbgHXSHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:03:43 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43136 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgHXSDl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:03:41 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v12so10708731ljc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:03:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=3GJCfwC6SVPAdYsbdjOag7ygfBjGZBd/v2hPsIjMnwk=;
-        b=UFsh+1ZKEyZtu4GIlycvX7FhAvkEa5LJILXfunlaTw/fZrYMgglazvkJCPZeZmROa9
-         7D/f0qTO7lGd4Utt7Oi6LmeocidjFRguRlASXNvTyFVgoY1tPbviOOT9pty71+F1BVCg
-         yTfY0Z+eygiPStUdn5btkNl67iSdiLu//RkVYYpEPQ5LHxzwIXeMH+a55XS8Z6v3G5e2
-         Hm/u2m83Uxa8VMHNL6glFm7qaRrbi2mTvpWcoHz8rtdgCdMlCHoNX/x8O2RcIBhI4pj5
-         hMKVYa6avUDRfdPkvexdQm5z1JXDtdeUcNBOiu0KpjJZaMZO1KxdcVMV33lFtBsZGeC/
-         eT9w==
-X-Gm-Message-State: AOAM532LrZl4vF4YNdTeCX0nd0OT8u4g/CjTdzf0DOy/dYbSNPBCaCNo
-        0zHvl4qIcSuD8pEFdB7Jv4G/N4qashs=
-X-Google-Smtp-Source: ABdhPJxzkSLDl1407LxpD1rsrVhL8uClxQeJAVmNcMolUL6yTf5EhUl5/1j2xWZMibkF6jRvVZ5zEA==
-X-Received: by 2002:a2e:7c18:: with SMTP id x24mr2989083ljc.402.1598292214900;
-        Mon, 24 Aug 2020 11:03:34 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id e21sm452427lfc.97.2020.08.24.11.03.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 11:03:34 -0700 (PDT)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org
-References: <20200824125921.488311-1-efremov@linux.com>
- <202008240929.8DDED2B90@keescook>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Subject: Re: [PATCH] seccomp: Use current_pt_regs()
-Message-ID: <fbf5bceb-c2fe-300f-fad9-7bcf9abd96d2@linux.com>
-Date:   Mon, 24 Aug 2020 21:03:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 24 Aug 2020 14:07:31 -0400
+Received: from mga01.intel.com ([192.55.52.88]:2300 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725962AbgHXSHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 14:07:30 -0400
+IronPort-SDR: 6qJRLuPHEX/CrQA8D/HwI/xiFU3lt+Uz81gM4nWg5HMuRErDwMFqNdToJ0e/mRW8obH2nkIicE
+ nfaE0utWvn7w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="174004217"
+X-IronPort-AV: E=Sophos;i="5.76,349,1592895600"; 
+   d="scan'208";a="174004217"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 11:07:28 -0700
+IronPort-SDR: VV8A1511vCngjUeNQoS1pNZEaXHC9S7d/52jf69/7B4je4sPfMoGBr6opv9Ki7AT4kFCMmtjQ8
+ bUIWO2/SP9vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,349,1592895600"; 
+   d="scan'208";a="328585726"
+Received: from lkp-server01.sh.intel.com (HELO c420d4f0765f) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 24 Aug 2020 11:07:26 -0700
+Received: from kbuild by c420d4f0765f with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kAGsQ-0000JK-59; Mon, 24 Aug 2020 18:07:26 +0000
+Date:   Tue, 25 Aug 2020 02:07:20 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 21f294e9c2da915d0cebb747f64e2c08b24fbd93
+Message-ID: <5f4401d8.GLmbsIHHix1JT5lb%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <202008240929.8DDED2B90@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: 21f294e9c2da915d0cebb747f64e2c08b24fbd93  Merge branch 'perf/core'
 
+elapsed time: 721m
 
-On 8/24/20 7:34 PM, Kees Cook wrote:
-> On Mon, Aug 24, 2020 at 03:59:21PM +0300, Denis Efremov wrote:
->> Modify seccomp_do_user_notification(), __seccomp_filter(),
->> __secure_computing() to use current_pt_regs().
-> 
-> This looks okay. It seems some architectures have a separate
-> define for current_pt_regs(), though it's overlapped directly with
-> task_pt_regs(). I'm curious what the benefit of the change is?
-> 
+configs tested: 124
+configs skipped: 7
 
-Generally, it's just a shorthand.
-From: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a3460a59747cfddfa7be4758e5ef08bf5d751d59
-- arch versions are "optimized versions"
-- some architectures have task_pt_regs() working only
-  for traced tasks blocked on signal delivery. current_pt_regs()
-  needs to work for *all* processes
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-My motivation:
-I'm going to add cocci rule for using current_uid(), current_xxx(), ...
-instead of raw accesses to current->cred, current->cred->uid
-https://elixir.bootlin.com/linux/latest/source/include/linux/cred.h#L379
-These interfaces use rcu_dereference_protected() internally for access
-check.
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+powerpc                      tqm8xx_defconfig
+nios2                         10m50_defconfig
+m68k                        m5407c3_defconfig
+powerpc                          g5_defconfig
+arm                    vt8500_v6_v7_defconfig
+sh                           se7206_defconfig
+arm                       imx_v6_v7_defconfig
+ia64                            zx1_defconfig
+m68k                                defconfig
+sh                     magicpanelr2_defconfig
+mips                           jazz_defconfig
+c6x                         dsk6455_defconfig
+arm                         lpc32xx_defconfig
+arm                      integrator_defconfig
+arm                           sunxi_defconfig
+xtensa                         virt_defconfig
+powerpc                      mgcoge_defconfig
+ia64                          tiger_defconfig
+sh                        dreamcast_defconfig
+xtensa                           alldefconfig
+mips                     loongson1b_defconfig
+m68k                             allmodconfig
+arm                         mv78xx0_defconfig
+sh                          landisk_defconfig
+powerpc                     ep8248e_defconfig
+mips                       rbtx49xx_defconfig
+m68k                           sun3_defconfig
+sh                   rts7751r2dplus_defconfig
+powerpc                     mpc5200_defconfig
+mips                     cu1830-neo_defconfig
+sh                 kfr2r09-romimage_defconfig
+c6x                        evmc6678_defconfig
+arm                        mvebu_v7_defconfig
+h8300                            alldefconfig
+sh                          polaris_defconfig
+powerpc                 mpc8272_ads_defconfig
+powerpc                     mpc83xx_defconfig
+mips                      loongson3_defconfig
+arm                            zeus_defconfig
+arm                              zx_defconfig
+arc                              alldefconfig
+arm                          badge4_defconfig
+sh                          sdk7780_defconfig
+sh                          r7785rp_defconfig
+arm                             rpc_defconfig
+h8300                    h8300h-sim_defconfig
+powerpc                         ps3_defconfig
+riscv                    nommu_k210_defconfig
+arc                        nsimosci_defconfig
+sh                           se7721_defconfig
+sparc                               defconfig
+m68k                            q40_defconfig
+arm                           stm32_defconfig
+x86_64                           alldefconfig
+sparc                       sparc64_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+i386                 randconfig-a002-20200823
+i386                 randconfig-a004-20200823
+i386                 randconfig-a003-20200823
+i386                 randconfig-a005-20200823
+i386                 randconfig-a006-20200823
+i386                 randconfig-a001-20200823
+i386                 randconfig-a002-20200824
+i386                 randconfig-a004-20200824
+i386                 randconfig-a005-20200824
+i386                 randconfig-a003-20200824
+i386                 randconfig-a006-20200824
+i386                 randconfig-a001-20200824
+x86_64               randconfig-a015-20200824
+x86_64               randconfig-a016-20200824
+x86_64               randconfig-a012-20200824
+x86_64               randconfig-a014-20200824
+x86_64               randconfig-a011-20200824
+x86_64               randconfig-a013-20200824
+i386                 randconfig-a013-20200824
+i386                 randconfig-a012-20200824
+i386                 randconfig-a011-20200824
+i386                 randconfig-a016-20200824
+i386                 randconfig-a015-20200824
+i386                 randconfig-a014-20200824
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-I though that adding current_pt_regs(), current_user_stack_pointer() to
-this cocci rule will be a good idea.
-
-Thanks,
-Denis
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
