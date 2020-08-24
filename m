@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ADBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D386C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3BC8208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5201F2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263160;
-	bh=BUqh9hxrrhfBSUuYGJs7qbkTVzJ4kaDSPrSOfKiy10g=;
+	s=default; t=1598263165;
+	bh=axrNnX8tt3YCR1/f6ugFOlCWrbE2ylmJgM32F8pJ0so=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tjeA7RWMVg5jODjorl6ATvZCrUG81NLEo9XEALuZfgE0hf0GzxOf6xV9yd7XgvtJz
-	 rDLu2UZYxxdS89ngTSP0pBY02wrzo8uQA/e6qQgIOJUCAX9DYzfr0bpLguuQsUPfuV
-	 fSSj5DCYph8w3qs00eNHmbEC3gaY8Gh1TC1r7B7Y=
+	b=KZ1rCgBXlXuCPrtmzzaeKRJpvcZgTA/xTDoG2EAkp95cMNI6uNfTTe+R4TRbQ5G+w
+	 oRHcAkQj9TQFU2vXkpr6ShYeu7r3piSbCNtO0mnplqugy4CbXnzqQtI0gkCYnOhahJ
+	 zjrp0vSeGWW9QxwnrLzxL0MVpzL/tYKgMsGd6oQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgHXIde (ORCPT
+        id S1728256AbgHXJ7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:33:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40976 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:59:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727019AbgHXIdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:33:24 -0400
+        id S1727050AbgHXIdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:33:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5E87206F0;
-        Mon, 24 Aug 2020 08:33:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EEEE2074D;
+        Mon, 24 Aug 2020 08:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258004;
-        bh=BUqh9hxrrhfBSUuYGJs7qbkTVzJ4kaDSPrSOfKiy10g=;
+        s=default; t=1598258012;
+        bh=axrNnX8tt3YCR1/f6ugFOlCWrbE2ylmJgM32F8pJ0so=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GS/6haiS2H/L3k9Y/KakDt+UJ8fTI/qdHJ592r8Q3sM48GSUcVK4jYRAzkTuvYIuo
-         EtLaD4OyXm4OPHgk2nMs8QopWVEGsnTMb0vHkUyJCh/aEWrrSp4uDy5oPgiXE0ExlJ
-         /wulgpafAMjwqpSlev98xNdI+vHzxylHQNMxGrC4=
+        b=wznB91/4kFrpN6fpXiVaz3yS7JQdReTEahRaLGQdV6MuguFtOY6XPpbup9ghuD3BW
+         9ZaPJ/4tdzcMvP6MsQhrLkWLofnykqipWaPr79Wv3ywU4QCdcQTwR5BvTH6wnpi7nF
+         S6dstRQq0pjHtzoAe6/bhY7DIi6Gbnm3qoXMjZBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH 5.8 021/148] RDMA/hfi1: Correct an interlock issue for TID RDMA WRITE request
-Date:   Mon, 24 Aug 2020 10:28:39 +0200
-Message-Id: <20200824082414.985790869@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Hsieh <paul.hsieh@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.8 041/148] drm/amd/display: Fix DFPstate hang due to view port changed
+Date:   Mon, 24 Aug 2020 10:28:59 +0200
+Message-Id: <20200824082416.020090440@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -62,63 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Paul Hsieh <paul.hsieh@amd.com>
 
-commit b25e8e85e75a61af1ddc88c4798387dd3132dd43 upstream.
+commit 8e80d482608a4e6a97c75272ef8b4bcfc5d0c490 upstream.
 
-The following message occurs when running an AI application with TID RDMA
-enabled:
+[Why]
+Place the cursor in the center of screen between two pipes then
+adjusting the viewport but cursour doesn't update cause DFPstate hang.
 
-hfi1 0000:7f:00.0: hfi1_0: [QP74] hfi1_tid_timeout 4084
-hfi1 0000:7f:00.0: hfi1_0: [QP70] hfi1_tid_timeout 4084
+[How]
+If viewport changed, update cursor as well.
 
-The issue happens when TID RDMA WRITE request is followed by an
-IB_WR_RDMA_WRITE_WITH_IMM request, the latter could be completed first on
-the responder side. As a result, no ACK packet for the latter could be
-sent because the TID RDMA WRITE request is still being processed on the
-responder side.
-
-When the TID RDMA WRITE request is eventually completed, the requester
-will wait for the IB_WR_RDMA_WRITE_WITH_IMM request to be acknowledged.
-
-If the next request is another TID RDMA WRITE request, no TID RDMA WRITE
-DATA packet could be sent because the preceding IB_WR_RDMA_WRITE_WITH_IMM
-request is not completed yet.
-
-Consequently the IB_WR_RDMA_WRITE_WITH_IMM will be retried but it will be
-ignored on the responder side because the responder thinks it has already
-been completed. Eventually the retry will be exhausted and the qp will be
-put into error state on the requester side. On the responder side, the TID
-resource timer will eventually expire because no TID RDMA WRITE DATA
-packets will be received for the second TID RDMA WRITE request.  There is
-also risk of a write-after-write memory corruption due to the issue.
-
-Fix by adding a requester side interlock to prevent any potential data
-corruption and TID RDMA protocol error.
-
-Fixes: a0b34f75ec20 ("IB/hfi1: Add interlock between a TID RDMA request and other requests")
-Link: https://lore.kernel.org/r/20200811174931.191210.84093.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org> # 5.4.x+
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paul Hsieh <paul.hsieh@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/tid_rdma.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/tid_rdma.c
-+++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
-@@ -3215,6 +3215,7 @@ bool hfi1_tid_rdma_wqe_interlock(struct
- 	case IB_WR_ATOMIC_CMP_AND_SWP:
- 	case IB_WR_ATOMIC_FETCH_AND_ADD:
- 	case IB_WR_RDMA_WRITE:
-+	case IB_WR_RDMA_WRITE_WITH_IMM:
- 		switch (prev->wr.opcode) {
- 		case IB_WR_TID_RDMA_WRITE:
- 			req = wqe_to_tid_req(prev);
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
+@@ -1386,8 +1386,8 @@ static void dcn20_update_dchubp_dpp(
+ 
+ 	/* Any updates are handled in dc interface, just need to apply existing for plane enable */
+ 	if ((pipe_ctx->update_flags.bits.enable || pipe_ctx->update_flags.bits.opp_changed ||
+-			pipe_ctx->update_flags.bits.scaler || pipe_ctx->update_flags.bits.viewport)
+-			&& pipe_ctx->stream->cursor_attributes.address.quad_part != 0) {
++			pipe_ctx->update_flags.bits.scaler || viewport_changed == true) &&
++			pipe_ctx->stream->cursor_attributes.address.quad_part != 0) {
+ 		dc->hwss.set_cursor_position(pipe_ctx);
+ 		dc->hwss.set_cursor_attribute(pipe_ctx);
+ 
 
 
