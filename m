@@ -2,98 +2,127 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D570CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19919C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B278B2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E92572074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:18:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="q8aqKNgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgHXWPB (ORCPT
+        id S1727981AbgHXWSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:15:01 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:28880 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726519AbgHXWPA (ORCPT
+        Mon, 24 Aug 2020 18:18:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726519AbgHXWST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 18:15:00 -0400
-Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OMBwlX003004;
-        Mon, 24 Aug 2020 22:14:43 GMT
-Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
-        by mx0b-002e3701.pphosted.com with ESMTP id 333d3543rs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 22:14:43 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3426.houston.hpe.com (Postfix) with ESMTP id DEFA04F;
-        Mon, 24 Aug 2020 22:14:41 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.214.32.129])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 7823A46;
-        Mon, 24 Aug 2020 22:14:40 +0000 (UTC)
-Date:   Mon, 24 Aug 2020 17:14:39 -0500
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2] MAINTAINERS: Add entry for HPE Superdome Flex (UV)
- maintainers
-Message-ID: <20200824221439.GA52810@swahl-home.5wahls.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Mon, 24 Aug 2020 18:18:19 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CD4BC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 15:18:19 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id m22so13879029eje.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 15:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zbf1ipuYiVgdUWQ8HAa35vLjx5URShNXD1uA8qol15c=;
+        b=q8aqKNgAlrJcW1DfAsWkK0x70/h9sqAj6sG9yqn4l/81Q41m4/G0P59I57LZClkaXi
+         CPRLqLU/FdeEg+A0IImj5/xmgMzpxLzV0U9aJUwFuwU3geGJYK3FSk86WpPspnvnCuHc
+         lw2P/Pm6qanEAdo3l1ruLGUEqfthWuBXvPR7BlqcKs2ZOdJXVKdhy5zbtJGbRokQ+hlf
+         Rc/Zp2cKm0uj5jtbaIIJ7vTYZl3New8ZpWpAvBSNXx6c6BJLfSJczOJCxTqywbT6jrff
+         qDtfZZQwwLNKFMrIDwZ5J/yokHCrMA2+vPPJ17xngNIpCph3FoV8syaw2e0zK33I2uSz
+         IaJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zbf1ipuYiVgdUWQ8HAa35vLjx5URShNXD1uA8qol15c=;
+        b=BvJXyckQzMtwqkpNACwt/STQXtqznQGZsN/WH5JJ0Fdwes7tjelWg4GgeL8SHljk7D
+         0ewCXgVVjQENMpV72HH/0HatmXPAhJIbYudU6KQ3moBp5b0P8dZBEWdab48tnxcw2JjP
+         AapafI9zs40TdM7VaMzSJuJzUOimCVJw9GpPglulMncXCZe4tdGIL6SOf/sOppXRx8Av
+         Yz8UptnIrn2K8VV1gJygcStLQZORjSPdo0TmutiC6xeQKNb+a/qRiCZefg2h616r9pTI
+         JC9kDYHDiogL0yxsH2dri0f2bVa/f89uvbmdPNKw5yvHdHceFbDn3XC9HmK7QOQ30H2u
+         BDww==
+X-Gm-Message-State: AOAM531R1+l87ddD3sNdMnoSaCw22HV90nTWrhHfIegXZJxmtYfgNNCG
+        PVNQHZS/O7orF/5+uK0OrXthLhoNo/taNo5chuBV
+X-Google-Smtp-Source: ABdhPJyWFqwCWCfOf3aV/DF5A9ybjw9coxTPI7UoJ5H9ThnSSr/T7I4PmxsgQ0RTLjLnYwrNv3pGmxT7ITZ5GTP/Ijs=
+X-Received: by 2002:a17:906:e0e:: with SMTP id l14mr7179237eji.398.1598307497548;
+ Mon, 24 Aug 2020 15:18:17 -0700 (PDT)
 MIME-Version: 1.0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- clxscore=1015 priorityscore=1501 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 mlxlogscore=999 spamscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240175
+References: <20200822010018.19453-1-nramas@linux.microsoft.com>
+ <CAEjxPJ5Kok-TBfS=XQ+NUC5tuaZRkyLBOawG4UDky51_bsMnGw@mail.gmail.com>
+ <418618c4-a0c6-6b28-6718-2726a29b83c5@linux.microsoft.com>
+ <CAEjxPJ6-8WnZRJnADsn=RVakzJiESjEjK-f8nSkscpT7dnricQ@mail.gmail.com>
+ <CAFqZXNvVQ5U6Ea3gT32Z0hfWbu7GPR-mTF2z6-JZZJT57Heuuw@mail.gmail.com> <f041e8ee-3955-9551-b72d-d4d7fa6e636d@linux.microsoft.com>
+In-Reply-To: <f041e8ee-3955-9551-b72d-d4d7fa6e636d@linux.microsoft.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 24 Aug 2020 18:18:05 -0400
+Message-ID: <CAHC9VhQP7_rV+Oi6weLjVhrx2d8iu9UJ8zeE=ZcqnBMqngrJ4Q@mail.gmail.com>
+Subject: Re: [PATCH] SELinux: Measure state and hash of policy using IMA
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>,
+        tusharsu@linux.microsoft.com, Sasha Levin <sashal@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an entry and email addresses for people at HPE who are supporting
-linux on the Superdome Flex (a.k.a) UV platform.
+On Mon, Aug 24, 2020 at 5:29 PM Lakshmi Ramasubramanian
+<nramas@linux.microsoft.com> wrote:
+> On 8/24/20 1:01 PM, Ondrej Mosnacek wrote:
+> > On Mon, Aug 24, 2020 at 9:30 PM Stephen Smalley
+> > <stephen.smalley.work@gmail.com> wrote:
+> >> On Mon, Aug 24, 2020 at 2:13 PM Lakshmi Ramasubramanian
+> >> <nramas@linux.microsoft.com> wrote:
+> >>> On 8/24/20 7:00 AM, Stephen Smalley wrote:
 
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+...
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index deaafb617361..4c2143d8ae45 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18874,6 +18874,15 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
- F:	arch/x86/platform
- 
-+X86 PLATFORM UV HPE SUPERDOME FLEX
-+M:	Steve Wahl <steve.wahl@hpe.com>
-+R:	Dimitri Sivanich <dimitri.sivanich@hpe.com>
-+R:	Russ Anderson <russ.anderson@hpe.com>
-+S:	Supported
-+F:	arch/x86/include/asm/uv/
-+F:	arch/x86/kernel/apic/x2apic_uv_x.c
-+F:	arch/x86/platform/uv/
-+
- X86 VDSO
- M:	Andy Lutomirski <luto@kernel.org>
- L:	linux-kernel@vger.kernel.org
+> >>> Is Ondrej's re-try approach I need to use to workaround policy reload issue?
+> >>
+> >> No, I think perhaps we should move the mutex to selinux_state instead
+> >> of selinux_fs_info.  selinux_fs_info has a pointer to selinux_state so
+> >> it can then use it indirectly.  Note that your patches are going to
+> >> conflict with other ongoing work in the selinux next branch that is
+> >> refactoring policy load and converting the policy rwlock to RCU.
+> >
+> > Yeah, and I'm experimenting with a patch on top of Stephen's RCU work
+> > that would allow you to do this in a straightforward way without even
+> > messing with the fsi->mutex. My patch may or may not be eventually
+> > committed, but either way I'd recommend holding off on this for a
+> > while until the dust settles around the RCU conversion.
+>
+> I can make the SELinux\IMA changes in "selinux next branch" taking
+> dependencies on Stephen's patches + relevant IMA patches.
+
+I know it can be frustrating to hear what I'm about to say, but the
+best option is probably just to wait a little to let things settle in
+the SELinux -next branch.  There is a lot of stuff going on right now
+with patches flooding in (at least "flooding" from a SELinux kernel
+development perspective) and we/I've haven't gotten through all of
+them yet.
+
+> Could you please let me know the URL to the "selinux next branch"?
+
+git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git next
+
 -- 
-2.12.3
-
+paul moore
+www.paul-moore.com
