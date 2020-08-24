@@ -5,55 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDB0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FCBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4BC206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FAD7207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258094;
-	bh=9Qb0N9+6E/GV3ZEmAcr2/EdtRX3yuWtlrYKP2CZhivA=;
+	s=default; t=1598258098;
+	bh=O7cbD4PDnM0EpN7J17/wF5KKMXAJKy5EqjAcay2JH+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gUfqfIrhFqxeRYn73x5wkrQkppOua+4RxfYlVvYoetY1jNqj2cFRSOPuMFuLQIJSF
-	 7tTNxwCYIESJRo9X7UpsunYW0kbMfFEHgMQJgCpliVzHCqbtrfrW6YBN10ExXGLvQn
-	 USl+CYwQi9UnAxTjLKZefOMhL9SALV+7DHZG/bGE=
+	b=Q9UlbEAbd8x1zhQUP7I4SAg9RsrbRgxVezAAsinXB7fqEWYvflmXBxmkjWKwd9V2M
+	 Dy6cpaFWotCWLuEvX69ai2FlsdbLms9JngtD9GxOEDpP5Gc49fjE8AK+/YlElBnu5u
+	 6zN/8JtPMnDnj8gPbPvQ8mPRmRUfM5EvjkMLQTUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgHXIex (ORCPT
+        id S1728036AbgHXIe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:34:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43754 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727990AbgHXIem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:34:42 -0400
+        id S1728006AbgHXIep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:34:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5552207D3;
-        Mon, 24 Aug 2020 08:34:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EA23207DF;
+        Mon, 24 Aug 2020 08:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258082;
-        bh=9Qb0N9+6E/GV3ZEmAcr2/EdtRX3yuWtlrYKP2CZhivA=;
+        s=default; t=1598258085;
+        bh=O7cbD4PDnM0EpN7J17/wF5KKMXAJKy5EqjAcay2JH+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n7tgNKK0Wd74p1evXcZ1HDzPvQOdCVgCH2FA1S1z+wmrtberJ2g+jtCO25mix50VH
-         hlIVarjhrU3Z/3qelZx7H4aq7kBgLfO6vYo3CvaH63YS+lQUZ1dMNHTBAKzMGU8npX
-         vw7fs3EL6sZiHdw/pL7FVu7PdCH8OXDx1xmKcH2o=
+        b=vkDtlR2+iBO4rZG/WI/5q8meN2FFmY4nTVKB84RaaNzuku/0CMcaeOx4IYLKRFV9u
+         YbodYaPqmVYlaEUMvwhHlbXuMM/tjURThgK2ftcqVjmNXdQQ5xU9aA+FMjassysLul
+         L6b6CaDZ9NQsr7E+6NAH0LrFL9hJueokl4OGa+Zw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        stable@vger.kernel.org,
+        syzbot+756199124937b31a9b7e@syzkaller.appspotmail.com,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 069/148] alpha: fix annotation of io{read,write}{16,32}be()
-Date:   Mon, 24 Aug 2020 10:29:27 +0200
-Message-Id: <20200824082417.383396991@linuxfoundation.org>
+Subject: [PATCH 5.8 070/148] fat: fix fat_ra_init() for data clusters == 0
+Date:   Mon, 24 Aug 2020 10:29:28 +0200
+Message-Id: <20200824082417.430597987@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -66,55 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 
-[ Upstream commit bd72866b8da499e60633ff28f8a4f6e09ca78efe ]
+[ Upstream commit a090a5a7d73f79a9ae2dcc6e60d89bfc6864a65a ]
 
-These accessors must be used to read/write a big-endian bus.  The value
-returned or written is native-endian.
+If data clusters == 0, fat_ra_init() calls the ->ent_blocknr() for the
+cluster beyond ->max_clusters.
 
-However, these accessors are defined using be{16,32}_to_cpu() or
-cpu_to_be{16,32}() to make the endian conversion but these expect a
-__be{16,32} when none is present.  Keeping them would need a force cast
-that would solve nothing at all.
+This checks the limit before initialization to suppress the warning.
 
-So, do the conversion using swab{16,32}, like done in asm-generic for
-similar situations.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Reported-by: syzbot+756199124937b31a9b7e@syzkaller.appspotmail.com
+Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Richard Henderson <rth@twiddle.net>
-Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Cc: Matt Turner <mattst88@gmail.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Link: http://lkml.kernel.org/r/20200622114232.80039-1-luc.vanoostenryck@gmail.com
+Link: http://lkml.kernel.org/r/87mu462sv4.fsf@mail.parknet.co.jp
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/alpha/include/asm/io.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/fat/fatent.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
-index a4d0c19f1e796..640e1a2f57b42 100644
---- a/arch/alpha/include/asm/io.h
-+++ b/arch/alpha/include/asm/io.h
-@@ -489,10 +489,10 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
- }
- #endif
+diff --git a/fs/fat/fatent.c b/fs/fat/fatent.c
+index bbfe18c074179..f7e3304b78029 100644
+--- a/fs/fat/fatent.c
++++ b/fs/fat/fatent.c
+@@ -657,6 +657,9 @@ static void fat_ra_init(struct super_block *sb, struct fatent_ra *ra,
+ 	unsigned long ra_pages = sb->s_bdi->ra_pages;
+ 	unsigned int reada_blocks;
  
--#define ioread16be(p) be16_to_cpu(ioread16(p))
--#define ioread32be(p) be32_to_cpu(ioread32(p))
--#define iowrite16be(v,p) iowrite16(cpu_to_be16(v), (p))
--#define iowrite32be(v,p) iowrite32(cpu_to_be32(v), (p))
-+#define ioread16be(p) swab16(ioread16(p))
-+#define ioread32be(p) swab32(ioread32(p))
-+#define iowrite16be(v,p) iowrite16(swab16(v), (p))
-+#define iowrite32be(v,p) iowrite32(swab32(v), (p))
- 
- #define inb_p		inb
- #define inw_p		inw
++	if (fatent->entry >= ent_limit)
++		return;
++
+ 	if (ra_pages > sb->s_bdi->io_pages)
+ 		ra_pages = rounddown(ra_pages, sb->s_bdi->io_pages);
+ 	reada_blocks = ra_pages << (PAGE_SHIFT - sb->s_blocksize_bits + 1);
 -- 
 2.25.1
 
