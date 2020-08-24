@@ -2,110 +2,155 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E5DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15202C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2267204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYCwq2y5"
+	by mail.kernel.org (Postfix) with ESMTP id EF228204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:41:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgHXNlA (ORCPT
+        id S1727980AbgHXNlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbgHXNhI (ORCPT
+        Mon, 24 Aug 2020 09:41:08 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:64224 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbgHXNk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:37:08 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B952AC061573;
-        Mon, 24 Aug 2020 06:37:07 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q1so4243212pjd.1;
-        Mon, 24 Aug 2020 06:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HA+IoySHM18+Ji1+GkkEUhRTYU4tOUsxV8f7iuUjK5g=;
-        b=NYCwq2y5k6ImOIJqiNBLvPWNsOxzxMwTRw8nkWW+nitE6MBbqYGs8qNux0UrH8DtVH
-         Oj1LcSHB8tVC3aHAEYXu4uSRwT9BhTDF3bCsEA1jDRzjf1Mgyp8jWJ62LBAS8Xm56GIo
-         QrWV8P59A0oH/6rl08S5VoZPUL4ZgpFUlmM4khwVbz2EnHZ+r5UUHmA6mN8Lin9JNJGJ
-         mGesnMeXjMpXwBXXYvdxK6rUGKrbIdGZo/vmKDVVNbWo4oEhbE71VJGBipHldOjDP5bi
-         u3EUj8MPrfMSJ7rwXQQdYjVPtSR5uCAyhhYigbh5qCRdaylkTtpMjRgLRrG0KsMdmNTj
-         fvkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HA+IoySHM18+Ji1+GkkEUhRTYU4tOUsxV8f7iuUjK5g=;
-        b=W2xLy5uwX8O+ntbCjV7TdZb5fzQ8y3pph3R7MKVFsdVNzZ4++FK91eOC2wxsPkzT+V
-         lcDW69tw9j9W+16zzhRGyze2sly0CCpekO9eW02oYGh57tN4XrZRe31qdmyTVZROvBHQ
-         Qgt2020iS3YdhF86xUnExEtCdbXctHoACGVWzLItAwysonWzFAzTFgNjkk3ZrGnjE7Ow
-         Gmmr+9h/ZBWGrPQNZZicEEiTopOAt5AP0vHv1yG89ACrKQkNa27P6axqtekUmS1zc7qO
-         pi1EVnJYGnPFkOdsxKTYSH8Ua6P1yeGAqb/pezgnx4WxftDuFbLq259R+tzdLKdo4rA3
-         pmSQ==
-X-Gm-Message-State: AOAM5328RNGEnv8UCtekGcWVEsOfvtzzAgZvrSIu9RxzaKmOUeb5fUYa
-        FYA6TZNjVOHrztui8aBu1fE=
-X-Google-Smtp-Source: ABdhPJxwjGu4tstbhUR2JUxmbqXCQFVMmCX8uCMbium/N3v5e/W/rOAne2C5/v8JsN9ExfIPSaB71A==
-X-Received: by 2002:a17:902:e906:: with SMTP id k6mr3929841pld.41.1598276227353;
-        Mon, 24 Aug 2020 06:37:07 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e9sm12029721pfh.151.2020.08.24.06.37.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 06:37:06 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 06:37:05 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] watchdog: Fix memleak in watchdog_cdev_register
-Message-ID: <20200824133705.GB192024@roeck-us.net>
-References: <20200824024001.25474-1-dinghao.liu@zju.edu.cn>
+        Mon, 24 Aug 2020 09:40:57 -0400
+Received: from 89-64-88-199.dynamic.chello.pl (89.64.88.199) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.459)
+ id 8cbe13510595119e; Mon, 24 Aug 2020 15:40:54 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     'Srinivas Pandruvada' <srinivas.pandruvada@linux.intel.com>,
+        'LKML' <linux-kernel@vger.kernel.org>,
+        'Linux PM' <linux-pm@vger.kernel.org>
+Subject: [PATCH v2 3/4] cpufreq: intel_pstate: Add ->offline and ->online callbacks
+Date:   Mon, 24 Aug 2020 15:40:54 +0200
+Message-ID: <1620790.MIbp4yWDbA@kreacher>
+In-Reply-To: <000501d6781d$c953def0$5bfb9cd0$@net>
+References: <2283366.Lr8yYYnyev@kreacher> <1879185.C8Vd3vmt8n@kreacher> <000501d6781d$c953def0$5bfb9cd0$@net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824024001.25474-1-dinghao.liu@zju.edu.cn>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:40:01AM +0800, Dinghao Liu wrote:
-> When watchdog_kworker is NULL, we should free wd_data
-> before the function returns to prevent memleak.
+On Saturday, August 22, 2020 2:47:16 AM CEST Doug Smythies wrote:
+> Hi Rafael,
 > 
-> Fixes: 664a39236e718 ("watchdog: Introduce hardware maximum heartbeat in watchdog core")
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> Just annoying typo type feedback.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Thanks!
 
-> ---
->  drivers/watchdog/watchdog_dev.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-> index 6798addabd5a..785270ee337c 100644
-> --- a/drivers/watchdog/watchdog_dev.c
-> +++ b/drivers/watchdog/watchdog_dev.c
-> @@ -994,8 +994,10 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
->  	wd_data->wdd = wdd;
->  	wdd->wd_data = wd_data;
->  
-> -	if (IS_ERR_OR_NULL(watchdog_kworker))
-> +	if (IS_ERR_OR_NULL(watchdog_kworker)) {
-> +		kfree(wd_data);
->  		return -ENODEV;
-> +	}
->  
->  	device_initialize(&wd_data->dev);
->  	wd_data->dev.devt = MKDEV(MAJOR(watchdog_devt), wdd->id);
-> -- 
-> 2.17.1
-> 
+Please find a corrected patch below.
+
+Cheers!
+
+---
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Subject: [PATCH] cpufreq: intel_pstate: Add ->offline and ->online callbacks
+
+Add ->offline and ->online driver callbacks to prepare for taking a
+CPU offline and to restore its working configuration when it goes
+back online, respectively, to avoid invoking the ->init callback on
+every CPU online which is quite a bit of unnecessary overhead.
+
+Define ->offline and ->online so that they can be used in the
+passive mode as well as in the active mode and because ->offline
+will do the majority of ->stop_cpu work, the passive mode does
+not need that callback any more, so drop it.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/cpufreq/intel_pstate.c |   38 ++++++++++++++++++++++++++++++++------
+ 1 file changed, 32 insertions(+), 6 deletions(-)
+
+Index: linux-pm/drivers/cpufreq/intel_pstate.c
+===================================================================
+--- linux-pm.orig/drivers/cpufreq/intel_pstate.c
++++ linux-pm/drivers/cpufreq/intel_pstate.c
+@@ -2297,28 +2297,51 @@ static int intel_pstate_verify_policy(st
+ 	return 0;
+ }
+ 
+-static void intel_cpufreq_stop_cpu(struct cpufreq_policy *policy)
++static int intel_pstate_cpu_offline(struct cpufreq_policy *policy)
+ {
++	pr_debug("CPU %d going offline\n", policy->cpu);
++
++	intel_pstate_exit_perf_limits(policy);
++
++	/*
++	 * If the CPU is an SMT thread and it goes offline with the performance
++	 * settings different from the minimum, it will prevent its sibling
++	 * from getting to lower performance levels, so force the minimum
++	 * performance on CPU offline to prevent that from happening.
++	 */
+ 	if (hwp_active)
+ 		intel_pstate_hwp_force_min_perf(policy->cpu);
+ 	else
+ 		intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
++
++	return 0;
++}
++
++static int intel_pstate_cpu_online(struct cpufreq_policy *policy)
++{
++	pr_debug("CPU %d going online\n", policy->cpu);
++
++	intel_pstate_init_acpi_perf_limits(policy);
++
++	if (hwp_active)
++		wrmsrl_on_cpu(policy->cpu, MSR_HWP_REQUEST,
++			      all_cpu_data[policy->cpu]->hwp_req_cached);
++
++	return 0;
+ }
+ 
+ static void intel_pstate_stop_cpu(struct cpufreq_policy *policy)
+ {
+-	pr_debug("CPU %d exiting\n", policy->cpu);
++	pr_debug("CPU %d stopping\n", policy->cpu);
+ 
+ 	intel_pstate_clear_update_util_hook(policy->cpu);
+ 	if (hwp_active)
+ 		intel_pstate_hwp_save_state(policy);
+-
+-	intel_cpufreq_stop_cpu(policy);
+ }
+ 
+ static int intel_pstate_cpu_exit(struct cpufreq_policy *policy)
+ {
+-	intel_pstate_exit_perf_limits(policy);
++	pr_debug("CPU %d exiting\n", policy->cpu);
+ 
+ 	policy->fast_switch_possible = false;
+ 
+@@ -2398,6 +2421,8 @@ static struct cpufreq_driver intel_pstat
+ 	.init		= intel_pstate_cpu_init,
+ 	.exit		= intel_pstate_cpu_exit,
+ 	.stop_cpu	= intel_pstate_stop_cpu,
++	.offline	= intel_pstate_cpu_offline,
++	.online		= intel_pstate_cpu_online,
+ 	.update_limits	= intel_pstate_update_limits,
+ 	.name		= "intel_pstate",
+ };
+@@ -2652,7 +2677,8 @@ static struct cpufreq_driver intel_cpufr
+ 	.fast_switch	= intel_cpufreq_fast_switch,
+ 	.init		= intel_cpufreq_cpu_init,
+ 	.exit		= intel_cpufreq_cpu_exit,
+-	.stop_cpu	= intel_cpufreq_stop_cpu,
++	.offline	= intel_pstate_cpu_offline,
++	.online		= intel_pstate_cpu_online,
+ 	.update_limits	= intel_pstate_update_limits,
+ 	.name		= "intel_cpufreq",
+ };
+
+
+
