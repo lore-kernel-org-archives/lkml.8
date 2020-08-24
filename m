@@ -2,149 +2,93 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43E25206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1C22067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:37:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8erb2eT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EflxfCon"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgHXRgo (ORCPT
+        id S1726818AbgHXRhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:36:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34600 "EHLO
+        Mon, 24 Aug 2020 13:37:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbgHXRez (ORCPT
+        with ESMTP id S1725601AbgHXRgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:34:55 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAA50C061573;
-        Mon, 24 Aug 2020 10:34:54 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id r19so4098751qvw.11;
-        Mon, 24 Aug 2020 10:34:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=R/gjJ6j/FhaneyBpj6umF/HqEi7YvQW6Fq+8r2981jM=;
-        b=d8erb2eTlwZ4WAHJZlxNDI0FqxDuU1CBLpFiKi/vhcy2efTmjgZOPAvl0ShimQe6Nr
-         hS1JmW55UDx0ClxiyolNWUCthFTJg5VZW4q6hag+yBmcM07jq0+IPO6ZWBIxOMQ1K1L+
-         irMnwBPwVdbXoKhNT6VKo9E/iSGUhQL4Fu2uYM6Aj+Cw37uPrXTRye9DC7rXKWxvCeQk
-         XeUgGfkEtMqJZt4vcp99utQH7hDdRX1MHJxkBXbWIqdjUmymdKtuNI9sUmBnUd4ZnW4K
-         UkZ76NfS2AlW/XXvy8VJQtQdrky3zBcoyoLmPDTZGZLjjHWGotKMUQpq0XLKjKrDiuRh
-         U1Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=R/gjJ6j/FhaneyBpj6umF/HqEi7YvQW6Fq+8r2981jM=;
-        b=mMxzlLnlWYSxsA3aYzIAkXlQleb7W6d9fOOZ2Ad5nykSKROXbiUf2fd+UVZrE9XiEk
-         troc9kvtbcbWd/wnm7mUTYU2HwnNv0I0Xrpja4Z/L/qYOd6fYsau9AENF/YRJU3JbFXK
-         IzNlr9C8zfOIYcSPmmMzouTFb2umHi2mLgQ3A0LLWYshAsUxL+5xtRrPF+aJc95Vz7tH
-         zm54sIpMAVLfxgtK1sFh/1FEwSA1I0wHWUex3mA0GlvR5KVLtcZ0TY+t6chhfssghe4l
-         kXQ7RBv5F/hnlim5p1xrRXTGpdr4vzggBVtWGGGYX+7uCU1zgWw8i9YjM3tqx0ezIF+4
-         KrLQ==
-X-Gm-Message-State: AOAM5329f1YHYdL2lM0BfoqSo7CZuAAbjTRxHnz2G6HUp7EuZIlg2w0a
-        2yU4sdGJFeEblMjIZ9sdqzE=
-X-Google-Smtp-Source: ABdhPJzMpu2lu0shOslZt9c27kd6KgRSA79fzx/p2mRpGxB9rGahuMot4Eed2b46wQK147HqDIaprg==
-X-Received: by 2002:a0c:d98d:: with SMTP id y13mr5968347qvj.203.1598290493720;
-        Mon, 24 Aug 2020 10:34:53 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id d202sm249016qke.38.2020.08.24.10.34.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 10:34:52 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 24 Aug 2020 13:34:50 -0400
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-Message-ID: <20200824173450.GA4157679@rani.riverdale.lan>
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com>
- <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
- <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com>
- <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
- <20200818202407.GA3143683@rani.riverdale.lan>
- <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
- <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
- <20200818214146.GA3196105@rani.riverdale.lan>
- <CAK7LNAQmWBPV4nZ0xPdSHEt=DipHmR40co827voGOFN=2j47BQ@mail.gmail.com>
+        Mon, 24 Aug 2020 13:36:46 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03114C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:36:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PDGpX/gLn6F/h8sTkr6/xtJftCfZUJ0TMwjy5eqECbw=; b=EflxfCon92BXdyEpHqw0j6BRKB
+        kHi1RfocRHJrsGcFweJYVWk1o8lsW3K+xRkyZRTDbZ4K1RcSRWQElpDgwAJsJndV0PRfjhdTnT5e1
+        Z2R2bc9dUvv5a+bBZmqdI1FBJsLI36RsUiBo2mEWrU4jJwrl7I5jgj12xCCa42ItzmkhozXwebjRi
+        5Ymj7UAF354UfSMh2mUB4v1cVVXDlM8U5BwnffhxApZ76471ZKtO3M1I0Z0OiS+L42gP4hHGVwYLz
+        4MXysnyDzjjdB4x+71CKqGrCC/s+x8vVIEmtS/lMJPz/VDfFsxw1UVWFTJKz0m4OqFMTnWXCe5Hum
+        SOLhP7JQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAGOe-0006CA-2D; Mon, 24 Aug 2020 17:36:40 +0000
+Date:   Mon, 24 Aug 2020 18:36:39 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] mm: Pass pvec directly to find_get_entries
+Message-ID: <20200824173639.GD17456@casper.infradead.org>
+References: <20200819150555.31669-1-willy@infradead.org>
+ <20200819150555.31669-7-willy@infradead.org>
+ <20200824161620.GK24877@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK7LNAQmWBPV4nZ0xPdSHEt=DipHmR40co827voGOFN=2j47BQ@mail.gmail.com>
+In-Reply-To: <20200824161620.GK24877@quack2.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 12:57:22AM +0900, Masahiro Yamada wrote:
+On Mon, Aug 24, 2020 at 06:16:20PM +0200, Jan Kara wrote:
+> On Wed 19-08-20 16:05:54, Matthew Wilcox (Oracle) wrote:
+> > All callers of find_get_entries() use a pvec, so pass it directly
+> > instead of manipulating it in the caller.
+> > 
+> > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > 
-> 
-> To prevent transformation from foo() into bar(),
-> there are two ways in Clang to do that;
-> -fno-builtin-foo, and -fno-builtin-bar.
-> There is only one in GCC; -fno-buitin-foo.
-> 
-> Is this correct?
-> 
+> Rather than passing pvec to find_get_entries() and then making everybody
+> use it, won't it more consistent WRT the naming to make everybody use
+> pagevec_lookup_entries() (which is trivial at this point in the series) and
+> then rename find_get_entries() to pagevec_lookup_entries()? I.e., I'd prefer
+> if the final function was called pagevec_lookup_entries() because that is
+> IMO more consistent with how other functions are named in this area...
 
-It looked that way from previous experimentation, but...
+It seemed more consistent to me to have everybody using
+find_get_entries().  To me the pagevec functions:
 
-> 
-> 
-> I just played the optimization
-> from printf("helloworld\n") to puts("helloworld").
-> 
-> https://godbolt.org/z/5s4ded
-> 
-> 
-> -fno-builtin-puts cannot prevent clang
-> from emitting puts.
-> Is it because clang does not support
-> -fno-builtin-puts?
+1. Are in mm/swap.c (not really sure why)
+2. Take pvec as the first argument, not the last
+3. Wrap a find_* function
 
-Ugh. clang doesn't have __builtin_puts() but it optimizes printf() into
-puts(). It doesn't have __builtin_putchar() but will optimize
-printf("c") into putchar('c').
+Whereas the find_* functions:
 
-And it has .. half of __builtin_fwrite()? fwrite() of a single byte gets
-optimized into fputc(), fprintf() of a string literal gets optimized
-into fwrite(), -fno-builtin-fwrite prevents both optimizations, but
-__builtin_fwrite() gives a compile error.
+1. Are in mm/filemap.c
+2. Take mapping as the first argument
+3. Manipulate the XArray directly
 
-I give up.
+We already have functions in filemap which take a pagevec, eg
+page_cache_delete_batch() and delete_from_page_cache_batch().
+
+So if we're going to merge the two functions, it seems more natural to
+have it in filemap.c and called find_get_entries(), but I'm definitely
+open to persuasion on this!
