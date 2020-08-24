@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B567C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82271C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE8F9208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 545092072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259477;
-	bh=ImpPFBJmwyJzt8S4M4/A8Dv82hlFhhtkULjLLR2O+Yw=;
+	s=default; t=1598259483;
+	bh=QL/HMz2JrmL91ABJ+lMXetS+5ctxDTE9SiP398KMi1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KJAB1WEPXxxaS458LViLNnIxOVQS0q4IbfUyaNYyhShNwX7/cjlSXsH7SXevGu9Qy
-	 TSJbTfAAk/XXh7KwJ3el0U3HvAQ+DHke64hYhqyk6k9eSZjCZWZuvsNmPSHfUmsCwZ
-	 MSvta5dzTO/JjxtMzai+/qoC0iEIALm4gOHHVPek=
+	b=JaO9UUz3I9kFU3pdcVvR23PPYX4g54+s5wtZU7rqUtC7Dr+QHpSWn/vGjBgJiDMuB
+	 O807raMstCv8r1qnMMEYwNnahZrK+kyo3doD5JHnk3CgexBH9A/eV5d3XlEqGTFh/l
+	 7mCnO2IwH9v63WElAzp//7ThrEugc+/zW4NvhJR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730629AbgHXI5z (ORCPT
+        id S1730732AbgHXI57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:57:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44810 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:57:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730691AbgHXI5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:57:36 -0400
+        id S1730696AbgHXI5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE81E207D3;
-        Mon, 24 Aug 2020 08:57:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 041332072D;
+        Mon, 24 Aug 2020 08:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259456;
-        bh=ImpPFBJmwyJzt8S4M4/A8Dv82hlFhhtkULjLLR2O+Yw=;
+        s=default; t=1598259461;
+        bh=QL/HMz2JrmL91ABJ+lMXetS+5ctxDTE9SiP398KMi1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1gkpNZSLa9hzjiHEoPh+z5PZyGc0kUdNwn9R/tJx8UXlklP8QP/Msr03HeD2lN5po
-         SgiXP7ReIMjMhm8gpK43O8uVID67dzOhCOWmcb2sl2RyTekw7EHz86Cj7/BGRNEAao
-         4/jkW9j4IHMfQhXRSvyTV9nYMblJdauMhQUofEGs=
+        b=V7F9m1v0EtiPh56klTG5PbClhyGRcRsg0bcvpVIUEwZmN6AdIGPY+nzoQkw4lSg3x
+         DXfjhB1tYw0cIMOjbAwUu1cDfS9QPiVQLDS2tbEJRdYTJ5gG3bJWujA2Ime+jvw06n
+         yXu0HpMhnrsqpIsz2z3UEpWkh8GcJT9pQsw32oho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Li Heng <liheng40@huawei.com>, Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 4.19 66/71] efi: add missed destroy_workqueue when efisubsys_init fails
-Date:   Mon, 24 Aug 2020 10:31:57 +0200
-Message-Id: <20200824082359.257365792@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.19 68/71] do_epoll_ctl(): clean the failure exits up a bit
+Date:   Mon, 24 Aug 2020 10:31:59 +0200
+Message-Id: <20200824082359.365252698@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -59,41 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Heng <liheng40@huawei.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 98086df8b70c06234a8f4290c46064e44dafa0ed upstream.
+commit 52c479697c9b73f628140dcdfcd39ea302d05482 upstream.
 
-destroy_workqueue() should be called to destroy efi_rts_wq
-when efisubsys_init() init resources fails.
-
-Cc: <stable@vger.kernel.org>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Li Heng <liheng40@huawei.com>
-Link: https://lore.kernel.org/r/1595229738-10087-1-git-send-email-liheng40@huawei.com
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/firmware/efi/efi.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/eventpoll.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -359,6 +359,7 @@ static int __init efisubsys_init(void)
- 	efi_kobj = kobject_create_and_add("efi", firmware_kobj);
- 	if (!efi_kobj) {
- 		pr_err("efi: Firmware registration failed.\n");
-+		destroy_workqueue(efi_rts_wq);
- 		return -ENOMEM;
- 	}
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -2094,10 +2094,8 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, in
+ 			mutex_lock(&epmutex);
+ 			if (is_file_epoll(tf.file)) {
+ 				error = -ELOOP;
+-				if (ep_loop_check(ep, tf.file) != 0) {
+-					clear_tfile_check_list();
++				if (ep_loop_check(ep, tf.file) != 0)
+ 					goto error_tgt_fput;
+-				}
+ 			} else {
+ 				get_file(tf.file);
+ 				list_add(&tf.file->f_tfile_llink,
+@@ -2126,8 +2124,6 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, in
+ 			error = ep_insert(ep, &epds, tf.file, fd, full_check);
+ 		} else
+ 			error = -EEXIST;
+-		if (full_check)
+-			clear_tfile_check_list();
+ 		break;
+ 	case EPOLL_CTL_DEL:
+ 		if (epi)
+@@ -2150,8 +2146,10 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, in
+ 	mutex_unlock(&ep->mtx);
  
-@@ -395,6 +396,7 @@ err_unregister:
- 	generic_ops_unregister();
- err_put:
- 	kobject_put(efi_kobj);
-+	destroy_workqueue(efi_rts_wq);
- 	return error;
- }
+ error_tgt_fput:
+-	if (full_check)
++	if (full_check) {
++		clear_tfile_check_list();
+ 		mutex_unlock(&epmutex);
++	}
  
+ 	fdput(tf);
+ error_fput:
 
 
