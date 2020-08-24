@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4A0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF90C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9235B22B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E08EC22B49
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258421;
-	bh=gIazi6x58FX9+J9bAlcFwxT9oi5406XSbZ8njmSAYsg=;
+	s=default; t=1598258425;
+	bh=1I0FJfJlkGo4/bQRz+yIbSTD2q6adynUdm/vCXmFolc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EkbKF5D98NzH3wy9Z/X4BuSVQdW0sXSbEoLAz7UEbp34rO/noAHJ9Jt/YKZEEt7BQ
-	 6Hwuoif3YDg88QGK73i3PZw1gVMtVTjacNwJMoZeuv3UeOTqzKtI1PswoF8hrJn+Bk
-	 awoPYqSZEaGXgqaoeN/qsL9TLkL5z82wIJ/HN/AY=
+	b=Uku20CHImugSFxpslp0Ruqlhgwf3XXjHyk+wdvMocRO6DMEouPopCkiqGXkag+Ew3
+	 E/CDiEZkd/tMOVEPVdHmTmwc9qCd0L7r2QBI3jdQ/OwRxchCId1UHRnBqN2Na2HJl3
+	 GdfTFI4IohYW4S4r5THLdCLuzBC2vP7RL2YnIYuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgHXIkU (ORCPT
+        id S1728716AbgHXIkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:40:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56716 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:40:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728718AbgHXIkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:40:08 -0400
+        id S1728732AbgHXIkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:40:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B97222B43;
-        Mon, 24 Aug 2020 08:40:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D269122B43;
+        Mon, 24 Aug 2020 08:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258408;
-        bh=gIazi6x58FX9+J9bAlcFwxT9oi5406XSbZ8njmSAYsg=;
+        s=default; t=1598258411;
+        bh=1I0FJfJlkGo4/bQRz+yIbSTD2q6adynUdm/vCXmFolc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jOZ6ZG61xaITdCP9yYl3b/uq0ZHBdTS+Dd8MtaNhlIC/aArytbZpwJy6f0JnyWf4P
-         A90ztFkE7nACQxG7hvesTQ6IfaD+9qhAkZQLuP0dp2bWJZTeqPfTJvAu//SPuiarwj
-         JN0UVBh54wEz0kP+kgF+TmRz9pRJRTBL5qs+t7fk=
+        b=hoH03DqVcfRJv6ujcnJnl9MpJOc3elR+y+dI/72TtSYpoEGnB4FL3VQE613ea/H5k
+         OyCq/FCrfascTwOUeSgMIguyaYS9xxfI6HwLfO1cUMluypFVpuaJYqLpukuWxkpbO/
+         ++yFRfhgVMLMvRHYbcowsFS6iVEk95UqRGVODVTs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Pozulp <pozulp.kernel@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 007/124] ALSA: hda/realtek: Add quirk for Samsung Galaxy Book Ion
-Date:   Mon, 24 Aug 2020 10:29:01 +0200
-Message-Id: <20200824082409.758572842@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+5322482fe520b02aea30@syzkaller.appspotmail.com,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 5.7 008/124] can: j1939: transport: j1939_session_tx_dat(): fix use-after-free read in j1939_tp_txtimer()
+Date:   Mon, 24 Aug 2020 10:29:02 +0200
+Message-Id: <20200824082409.815361151@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -59,34 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Pozulp <pozulp.kernel@gmail.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-commit e17f02d0559c174cf1f6435e45134490111eaa37 upstream.
+commit cd3b3636c99fcac52c598b64061f3fe4413c6a12 upstream.
 
-The Galaxy Book Ion uses the same ALC298 codec as other Samsung laptops
-which have the no headphone sound bug, like my Samsung Notebook. The
-Galaxy Book owner confirmed that this patch fixes the bug.
+The current stack implementation do not support ECTS requests of not
+aligned TP sized blocks.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207423
-Signed-off-by: Mike Pozulp <pozulp.kernel@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200818165446.499821-1-pozulp.kernel@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+If ECTS will request a block with size and offset spanning two TP
+blocks, this will cause memcpy() to read beyond the queued skb (which
+does only contain one TP sized block).
+
+Sometimes KASAN will detect this read if the memory region beyond the
+skb was previously allocated and freed. In other situations it will stay
+undetected. The ETP transfer in any case will be corrupted.
+
+This patch adds a sanity check to avoid this kind of read and abort the
+session with error J1939_XTP_ABORT_ECTS_TOO_BIG.
+
+Reported-by: syzbot+5322482fe520b02aea30@syzkaller.appspotmail.com
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Cc: linux-stable <stable@vger.kernel.org> # >= v5.4
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Link: https://lore.kernel.org/r/20200807105200.26441-3-o.rempel@pengutronix.de
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/can/j1939/transport.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7667,6 +7667,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x144d, 0xc176, "Samsung Notebook 9 Pro (NP930MBE-K04US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x144d, 0xc189, "Samsung Galaxy Flex Book (NT950QCG-X716)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
-+	SND_PCI_QUIRK(0x144d, 0xc18a, "Samsung Galaxy Book Ion (NT950XCJ-X716A)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x144d, 0xc740, "Samsung Ativ book 8 (NP870Z5G)", ALC269_FIXUP_ATIV_BOOK_8),
- 	SND_PCI_QUIRK(0x144d, 0xc812, "Samsung Notebook Pen S (NT950SBE-X58)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x1458, 0xfa53, "Gigabyte BXBT-2807", ALC283_FIXUP_HEADSET_MIC),
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -787,6 +787,18 @@ static int j1939_session_tx_dat(struct j
+ 		if (len > 7)
+ 			len = 7;
+ 
++		if (offset + len > se_skb->len) {
++			netdev_err_once(priv->ndev,
++					"%s: 0x%p: requested data outside of queued buffer: offset %i, len %i, pkt.tx: %i\n",
++					__func__, session, skcb->offset, se_skb->len , session->pkt.tx);
++			return -EOVERFLOW;
++		}
++
++		if (!len) {
++			ret = -ENOBUFS;
++			break;
++		}
++
+ 		memcpy(&dat[1], &tpdat[offset], len);
+ 		ret = j1939_tp_tx_dat(session, dat, len + 1);
+ 		if (ret < 0) {
+@@ -1120,6 +1132,9 @@ static enum hrtimer_restart j1939_tp_txt
+ 		 * cleanup including propagation of the error to user space.
+ 		 */
+ 		break;
++	case -EOVERFLOW:
++		j1939_session_cancel(session, J1939_XTP_ABORT_ECTS_TOO_BIG);
++		break;
+ 	case 0:
+ 		session->tx_retry = 0;
+ 		break;
 
 
