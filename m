@@ -2,109 +2,114 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27199C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66C5520706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598273217;
-	bh=a+1o0PTMneX8uphjhwaL9LZrDMgRjnzdhnnVEaiH5/c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P7JhOakj1IeMJCmb6XQzntk5CjaTF4rJGyqia9NXwMC0YcCE0bBKy9h8VIEr2U1uI
-	 3M5q2mx6wG/27mKgBHfC/PkL1q5j0Wy07H//ONa39zhdyWTFQqg+nns8rcwZ6kpUA4
-	 vZR8S+AlaDsx60V6oiP/3YlY93qrBVo/qdPjUTC0=
+	by mail.kernel.org (Postfix) with ESMTP id CD9EB2078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:48:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="BfRVfTBX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHXMqz (ORCPT
+        id S1726875AbgHXMsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:46:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgHXMqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:46:50 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 575FB20706;
-        Mon, 24 Aug 2020 12:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598273210;
-        bh=a+1o0PTMneX8uphjhwaL9LZrDMgRjnzdhnnVEaiH5/c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PYSR3P8WkqrqAyGOI6FNDvoDQmJ0PwtaDkr2sm5i9XWeN39lU1FsccYwrjaALiB//
-         ijhLsFTHnbp2QlvcZI2VgUwr2k/SXPnTHWEwZ2HycV+wBWkP4ERIlnEEkeyKGOzwlA
-         TXXieX61hkQ6siuGc6uMvtGAjTpE/ByuvfKKeDHo=
-Date:   Mon, 24 Aug 2020 20:46:36 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Martin Kepplinger <martink@posteo.de>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Li Jun <jun.li@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Walle <michael@walle.cc>,
-        Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] arm64: dts: imx8mq: Add NWL DSI host controller
- to Librem 5 Devkit
-Message-ID: <20200824124635.GE12776@dragon>
-References: <cover.1598166983.git.agx@sigxcpu.org>
+        Mon, 24 Aug 2020 08:48:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgHXMsO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 08:48:14 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97BB7C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:48:13 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id d11so11518486ejt.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:48:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S2IPXzmn+OKMcrQgf/hKHvn8I9Z5eUqBH1sKWLhEHkw=;
+        b=BfRVfTBXcVbti1Hpi5XfJ9bPtCpd/H+Yoa8sWOaAvxUonJ76O0Lea7kGjVAGJmOCJ5
+         Jtzcdpw5goa/kbBky0td2syRYGONm0uqruHTKboQap+xTpY+GFD2x+Dni+qkmvc+Wwsm
+         4pkeX4wFxnnIeItQwxZPhFji88v7JFVl0CoGU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S2IPXzmn+OKMcrQgf/hKHvn8I9Z5eUqBH1sKWLhEHkw=;
+        b=nYRBON3Kdkw7GSASHGXiGZMGH0DD1ffcaY5TYZqSwqOYhnOEGb8JGZ9vjvLm2sneRr
+         IZeYWVMqoEFXzy+zh80naeoM7Wt4QGBX5BKDsgYQwpQzJo91YBNOEtVAlkjezM7ZLvfr
+         x8h2TIaIM9cphlKfQxSUDQpkrQvHqymnkC6wozzZB0XKrF+sDEZt7IEnNFwHPLlohYH5
+         NHsXxS+DYHP+8e5z4/5INPdgwq4V4+Z2eP0O7B0Zv38RVnrg26I3Q+YA5EcntWv6SQUH
+         evxL8l94Q6oGTyvR4sj2g6VTufOeUQHhqvp9QnYmT/wEbU2YhH91NVmM17/tL/g/IazN
+         GXeg==
+X-Gm-Message-State: AOAM532ZnbP6t2nnNTun4B4bv/x/+/Re6xuMZ8aM7QU9rtkr6V7xRh6/
+        Yvb2efKGvwMHXlJCp4LK609j23Ffs5ZUI+9hEfccaA==
+X-Google-Smtp-Source: ABdhPJyFg7kN9mhul11wEbcYUGJAB7HYhA8U9EnjCXIxa2cNqHKznAI3idzFu6PpASOAq35nSzcCZMhWbHxQmvz1enI=
+X-Received: by 2002:a17:907:94ca:: with SMTP id dn10mr5328702ejc.110.1598273292348;
+ Mon, 24 Aug 2020 05:48:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1598166983.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200812161452.3086303-1-balsini@android.com> <CAG48ez17uXtjCTa7xpa=JWz3iBbNDQTKO2hvn6PAZtfW3kXgcA@mail.gmail.com>
+ <20200813132809.GA3414542@google.com> <CAG48ez0jkU7iwdLYPA0=4PdH0SL8wpEPrYvpSztKG3JEhkeHag@mail.gmail.com>
+ <20200818135313.GA3074431@google.com> <877dtvb2db.fsf@vostro.rath.org> <CAOQ4uxhRzkpg2_JA2MCXe6Hjc1XaA=s3L_4Q298dW3OxxE2nFg@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhRzkpg2_JA2MCXe6Hjc1XaA=s3L_4Q298dW3OxxE2nFg@mail.gmail.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Mon, 24 Aug 2020 14:48:01 +0200
+Message-ID: <CAJfpegs2LHv4xfb5KPzSRPSAVg3eZEvZKk46SjgwGcgq==qNzw@mail.gmail.com>
+Subject: Re: [PATCH v6] fuse: Add support for passthrough read/write
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Alessio Balsini <balsini@android.com>,
+        Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>,
+        Nikhilesh Reddy <reddyn@codeaurora.org>,
+        Akilesh Kailash <akailash@google.com>,
+        David Anderson <dvander@google.com>,
+        Eric Yan <eric.yan@oneplus.com>,
+        Martijn Coenen <maco@android.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Lawrence <paullawrence@google.com>,
+        Stefano Duo <stefanoduo@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>,
+        kernel-team <kernel-team@android.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 23, 2020 at 09:18:06AM +0200, Guido Günther wrote:
-> These patches add the NWL host controller to the imx8mq and make use of it on
-> the Librem 5 Devkit enabling the built in MIPI DSI LCD panel.
-> 
-> I opted to add imx8mq internal ports and endpoints between nwl and lcdif to the
-> generic dtsi since those are SOC rather than board specific properties.
-> 
-> Changes from v3
-> - Rebase patch 3 and 4 against Shawn's imx/defconfig
->   Patches 1 an 2 got already applies, thanks!
-> 
-> Changes from v2
-> - Add Tested-by from Martin Kepplinger, thanks!
->   https://lore.kernel.org/linux-arm-kernel/cover.1597913263.git.agx@sigxcpu.org/T/#m067f2d659fcd1c0cb7792b22d0c4db06ed235815
->   https://lore.kernel.org/linux-arm-kernel/cover.1597913263.git.agx@sigxcpu.org/T/#m9aff315ee38fd9bbcd3a896876726c14b2fb7048
-> 
-> Changes from v1
-> - Add Reviewed-by from Fabio Estevam, thanks!
->   https://lore.kernel.org/linux-arm-kernel/CAOMZO5DUA5eS8apZPbte0EcSQ4Vwpg6YLK7D0YdjSUy+kdBu8Q@mail.gmail.com/
->   https://lore.kernel.org/linux-arm-kernel/CAOMZO5ANrd2JCmHyxZ0Sv0WNcU9T-q3MbaeADxbOwf+31MQ4LQ@mail.gmail.com/#t
->   https://lore.kernel.org/linux-arm-kernel/CAOMZO5Dg5NGpJ0SQkYny04Kv3ky0619J7YwT-0eE1dsK19o1-w@mail.gmail.com/
-> - As per review comment by Fabio Estevam
->   Re-sync DRM related defconfig bits. I didn't resyc the whole defconfig since
->   this is pretty much kernel version dependent.
-> 
-> Guido Günther (2):
->   arm64: defconfig: re-sync DRM related defconfig bits
->   arm64: defconfig: Enable imx8mq-librem5-devkit display stack
+On Wed, Aug 19, 2020 at 11:25 AM Amir Goldstein <amir73il@gmail.com> wrote:
 
-Applied both, thanks.
+> > What I have in mind is things like not coupling the setup of the
+> > passthrough fds to open(), but having a separate notification message for
+> > this (like what we use for invalidation of cache), and adding not just
+> > an "fd" field but also "offset" and "length" fields (which would
+> > currently be required to be both zero to get the "full file" semantics).
+> >
+>
+> You mean like this?
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git/commit/?h=fuse2
+
+Look specifically at fuse_file_map_iter():
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git/tree/fs/fuse2/file.c?h=fuse2#n582
+
+and fudev_map_ioctl():
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git/tree/fs/fuse2/fudev.c?h=fuse2#n601
+
+This avoids the security issue Jann mentioned as well as allowing
+arbitrary mapping of file ranges.  E.g. it could also  be used by a
+block based filesystem to map I/O directly into the block device.
+
+What the implementation lacks is any kind of caching.  Since your
+usecase involves just one map extent per file, special casing that
+would be trivial.  We can revisit general caching later.
+
+Thanks,
+Miklos
