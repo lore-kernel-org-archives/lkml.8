@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74066C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D44C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D57F206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E222A2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598288774;
-	bh=K3yWvFf9iGlYV6TEXI/TRyddrzkpJ+p9pjKQXDWZ5CM=;
+	s=default; t=1598288780;
+	bh=yPaioRTnmqK2dwTb0FtvPCcfUxc6Z2ND0GZZr19QrpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PN4oNfJNGe0z8hYyZSZLsNMtDNTDYwgw7afFwl3EHeXgBrFwGPF7u9WyzXHbkN1vz
-	 DqNaKnQBGcledbPpOIqZl1vq0uByRM+4VxnvYperf5E9BBtdMIgFdp0IhDcA7KSRPf
-	 Gn7YT2DQEjOk1yTcWxEkuEj6gKcWMhcwizq6Db1s=
+	b=QB4iOnhtBMv4UIcn1IuPu9TmVPTIWBNa1tXBMp4M/YKEFyJiqa3U3E6LoqymGhQ8+
+	 5qXM3Sk28rxltL9oAG/SMQHoDt3o3YCtINDoRX3SboYIa5WQplzT0bsCcvi8ayFT2b
+	 1jKP/2r+4DL0fsN6S4A4rj+SOewjNCIsULz5nnFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgHXRGL (ORCPT
+        id S1727877AbgHXRGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:06:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:06:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbgHXQia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728428AbgHXQia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:38:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED1C022DFB;
-        Mon, 24 Aug 2020 16:38:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21CEA22DCC;
+        Mon, 24 Aug 2020 16:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287084;
-        bh=K3yWvFf9iGlYV6TEXI/TRyddrzkpJ+p9pjKQXDWZ5CM=;
+        s=default; t=1598287081;
+        bh=yPaioRTnmqK2dwTb0FtvPCcfUxc6Z2ND0GZZr19QrpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V5LyVqdYuf2p73Xle5JkwH4FB5kbYnyNEb6vx2hTMHkECmW+rw23M9L/HNqjAhGg3
-         OQ81XnU78N1pxPnJjI8o4AstRMTrrKbIRQLBEyh3gpw4MzS1bB2qDl8ApjoIG+F7JZ
-         uhTuiSZMJ4qE5RG8hX+r6HHHoBH0DHib9wZi921c=
+        b=Ki/S+Ra/RFIu2klP5VM4joWLlO+W6G1pltBgbmV4Y/RQj/R0DTlQFDK1Zx01SM1U5
+         5rN0+jWiV3ot46RqiuFbJ3y52G69WaJPZplB3i8Z/+il8OMu90PkJFASe8LRXOQocj
+         45U5v0KwjvTBUpjKC+J/P4+qdTzEqgNixY8895Wk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Antonio Borneo <antonio.borneo@st.com>,
-        Alain Volmat <alain.volmat@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 10/38] spi: stm32h7: fix race condition at end of transfer
-Date:   Mon, 24 Aug 2020 12:37:22 -0400
-Message-Id: <20200824163751.606577-10-sashal@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>, Lukas Czerner <lczerner@redhat.com>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 08/38] ext4: correctly restore system zone info when remount fails
+Date:   Mon, 24 Aug 2020 12:37:20 -0400
+Message-Id: <20200824163751.606577-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163751.606577-1-sashal@kernel.org>
 References: <20200824163751.606577-1-sashal@kernel.org>
@@ -62,42 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antonio Borneo <antonio.borneo@st.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 135dd873d3c76d812ae64c668adef3f2c59ed27f ]
+[ Upstream commit 0f5bde1db174f6c471f0bd27198575719dabe3e5 ]
 
-The caller of stm32_spi_transfer_one(), spi_transfer_one_message(),
-is waiting for us to call spi_finalize_current_transfer() and will
-eventually schedule a new transfer, if available.
-We should guarantee that the spi controller is really available
-before calling spi_finalize_current_transfer().
+When remounting filesystem fails late during remount handling and
+block_validity mount option is also changed during the remount, we fail
+to restore system zone information to a state matching the mount option.
+This is mostly harmless, just the block validity checking will not match
+the situation described by the mount option. Make sure these two are always
+consistent.
 
-Move the call to spi_finalize_current_transfer() _after_ the call
-to stm32_spi_disable().
-
-Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
-Link: https://lore.kernel.org/r/1597043558-29668-2-git-send-email-alain.volmat@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Lukas Czerner <lczerner@redhat.com>
+Reviewed-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200728130437.7804-7-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-stm32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/block_validity.c |  8 --------
+ fs/ext4/super.c          | 29 +++++++++++++++++++++--------
+ 2 files changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index db4c1584327c1..cb54471456145 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -966,8 +966,8 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- 	spin_unlock_irqrestore(&spi->lock, flags);
+diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
+index ff8e1205127ee..bbe7773394c4e 100644
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -260,14 +260,6 @@ int ext4_setup_system_zone(struct super_block *sb)
+ 	int flex_size = ext4_flex_bg_size(sbi);
+ 	int ret;
  
- 	if (end) {
--		spi_finalize_current_transfer(master);
- 		stm32h7_spi_disable(spi);
-+		spi_finalize_current_transfer(master);
+-	if (!test_opt(sb, BLOCK_VALIDITY)) {
+-		if (sbi->system_blks)
+-			ext4_release_system_zone(sb);
+-		return 0;
+-	}
+-	if (sbi->system_blks)
+-		return 0;
+-
+ 	system_blks = kzalloc(sizeof(*system_blks), GFP_KERNEL);
+ 	if (!system_blks)
+ 		return -ENOMEM;
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index e8923013accc0..184f2d737efc9 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4563,11 +4563,13 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 
+ 	ext4_set_resv_clusters(sb);
+ 
+-	err = ext4_setup_system_zone(sb);
+-	if (err) {
+-		ext4_msg(sb, KERN_ERR, "failed to initialize system "
+-			 "zone (%d)", err);
+-		goto failed_mount4a;
++	if (test_opt(sb, BLOCK_VALIDITY)) {
++		err = ext4_setup_system_zone(sb);
++		if (err) {
++			ext4_msg(sb, KERN_ERR, "failed to initialize system "
++				 "zone (%d)", err);
++			goto failed_mount4a;
++		}
  	}
  
- 	return IRQ_HANDLED;
+ 	ext4_ext_init(sb);
+@@ -5563,9 +5565,16 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+ 		ext4_register_li_request(sb, first_not_zeroed);
+ 	}
+ 
+-	err = ext4_setup_system_zone(sb);
+-	if (err)
+-		goto restore_opts;
++	/*
++	 * Handle creation of system zone data early because it can fail.
++	 * Releasing of existing data is done when we are sure remount will
++	 * succeed.
++	 */
++	if (test_opt(sb, BLOCK_VALIDITY) && !sbi->system_blks) {
++		err = ext4_setup_system_zone(sb);
++		if (err)
++			goto restore_opts;
++	}
+ 
+ 	if (sbi->s_journal == NULL && !(old_sb_flags & SB_RDONLY)) {
+ 		err = ext4_commit_super(sb, 1);
+@@ -5587,6 +5596,8 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+ 		}
+ 	}
+ #endif
++	if (!test_opt(sb, BLOCK_VALIDITY) && sbi->system_blks)
++		ext4_release_system_zone(sb);
+ 
+ 	/*
+ 	 * Some options can be enabled by ext4 and/or by VFS mount flag
+@@ -5608,6 +5619,8 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+ 	sbi->s_commit_interval = old_opts.s_commit_interval;
+ 	sbi->s_min_batch_time = old_opts.s_min_batch_time;
+ 	sbi->s_max_batch_time = old_opts.s_max_batch_time;
++	if (!test_opt(sb, BLOCK_VALIDITY) && sbi->system_blks)
++		ext4_release_system_zone(sb);
+ #ifdef CONFIG_QUOTA
+ 	sbi->s_jquota_fmt = old_opts.s_jquota_fmt;
+ 	for (i = 0; i < EXT4_MAXQUOTAS; i++) {
 -- 
 2.25.1
 
