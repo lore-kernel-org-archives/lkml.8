@@ -1,100 +1,89 @@
-Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8009DC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF587C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0012063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A86E6207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgHXX7W (ORCPT
+        id S1726912AbgHYABx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:59:22 -0400
-Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:58744 "EHLO
-        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726090AbgHXX7W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 19:59:22 -0400
-Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
-        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id B8F73D5C62F;
-        Tue, 25 Aug 2020 09:59:18 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kAMMw-0005iZ-3C; Tue, 25 Aug 2020 09:59:18 +1000
-Date:   Tue, 25 Aug 2020 09:59:18 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] iomap: Support arbitrarily many blocks per page
-Message-ID: <20200824235918.GF12131@dread.disaster.area>
-References: <20200824145511.10500-1-willy@infradead.org>
- <20200824145511.10500-6-willy@infradead.org>
+        Mon, 24 Aug 2020 20:01:53 -0400
+Received: from mail.hallyn.com ([178.63.66.53]:48840 "EHLO mail.hallyn.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgHYABw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 20:01:52 -0400
+X-Greylist: delayed 597 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Aug 2020 20:01:51 EDT
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+        id ABFEF11ED; Mon, 24 Aug 2020 18:51:53 -0500 (CDT)
+Date:   Mon, 24 Aug 2020 18:51:53 -0500
+From:   "Serge E. Hallyn" <serge@hallyn.com>
+To:     Khazhismel Kumykov <khazhy@google.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Serge Hallyn <serge@hallyn.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2] block: grant IOPRIO_CLASS_RT to CAP_SYS_NICE
+Message-ID: <20200824235153.GA12526@mail.hallyn.com>
+References: <20200824221034.2170308-1-khazhy@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824145511.10500-6-willy@infradead.org>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0 cx=a_idp_d
-        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=JfrnYn6hAAAA:8 a=20KFwNOVAAAA:8
-        a=7-415B0cAAAA:8 a=anYf10tJ47q-4tFj-8MA:9 a=CjuIK1q_8ugA:10
-        a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20200824221034.2170308-1-khazhy@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:55:06PM +0100, Matthew Wilcox (Oracle) wrote:
-> Size the uptodate array dynamically to support larger pages in the
-> page cache.  With a 64kB page, we're only saving 8 bytes per page today,
-> but with a 2MB maximum page size, we'd have to allocate more than 4kB
-> per page.  Add a few debugging assertions.
+On Mon, Aug 24, 2020 at 03:10:34PM -0700, Khazhismel Kumykov wrote:
+> CAP_SYS_ADMIN is too broad, and ionice fits into CAP_SYS_NICE's grouping.
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Retain CAP_SYS_ADMIN permission for backwards compatibility.
+> 
+> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+
+Acked-by: Serge Hallyn <serge@hallyn.com>
+
 > ---
->  fs/iomap/buffered-io.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
+>  block/ioprio.c                  | 2 +-
+>  include/uapi/linux/capability.h | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index dbf9572dabe9..844e95cacea8 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -22,18 +22,19 @@
->  #include "../internal.h"
+> v2: fix embarrassing logic mistake
+> diff --git a/block/ioprio.c b/block/ioprio.c
+> index 77bcab11dce5..276496246fe9 100644
+> --- a/block/ioprio.c
+> +++ b/block/ioprio.c
+> @@ -69,7 +69,7 @@ int ioprio_check_cap(int ioprio)
 >  
->  /*
-> - * Structure allocated for each page when block size < PAGE_SIZE to track
-> + * Structure allocated for each page when block size < page size to track
->   * sub-page uptodate status and I/O completions.
->   */
->  struct iomap_page {
->  	atomic_t		read_count;
->  	atomic_t		write_count;
->  	spinlock_t		uptodate_lock;
-> -	DECLARE_BITMAP(uptodate, PAGE_SIZE / 512);
-> +	unsigned long		uptodate[];
->  };
+>  	switch (class) {
+>  		case IOPRIO_CLASS_RT:
+> -			if (!capable(CAP_SYS_ADMIN))
+> +			if (!capable(CAP_SYS_NICE) && !capable(CAP_SYS_ADMIN))
+>  				return -EPERM;
+>  			/* fall through */
+>  			/* rt has prio field too */
+> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+> index 395dd0df8d08..c6ca33034147 100644
+> --- a/include/uapi/linux/capability.h
+> +++ b/include/uapi/linux/capability.h
+> @@ -288,6 +288,8 @@ struct vfs_ns_cap_data {
+>     processes and setting the scheduling algorithm used by another
+>     process. */
+>  /* Allow setting cpu affinity on other processes */
+> +/* Allow setting realtime ioprio class */
+> +/* Allow setting ioprio class on other processes */
 >  
->  static inline struct iomap_page *to_iomap_page(struct page *page)
->  {
-> +	VM_BUG_ON_PGFLAGS(PageTail(page), page);
->  	if (page_has_private(page))
->  		return (struct iomap_page *)page_private(page);
->  	return NULL;
-
-Just to confirm: this vm bug check is to needed becuse we only
-attach the iomap_page to the head page of a compound page?
-
-Assuming that I've understood the above correctly:
-
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
--- 
-Dave Chinner
-david@fromorbit.com
+>  #define CAP_SYS_NICE         23
+>  
+> -- 
+> 2.28.0.297.g1956fa8f8d-goog
