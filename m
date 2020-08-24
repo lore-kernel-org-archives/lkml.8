@@ -2,105 +2,244 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D44C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC968C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F116020774
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:31:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iqLr05L9"
+	by mail.kernel.org (Postfix) with ESMTP id B37FF20774
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:32:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598268756;
+	bh=oKOxl1juUSHIm3m5pKwM6Ovyw4EWT4u0XHnop+u4aQw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AbQW6MwzpEcHjOPGZnSpXd+AXJpXbaArtvX5uWyn1UJbseubof7bOEcwQTmLj6in7
+	 L6qBiVciMw6O0xq92mNvr9soEZL0wlg2Z6bzbeDGDTat8cD1+z/9Y871ttU6BHVuQD
+	 0F2P5y4WkZ1dkJ4mB3AdcqEEyKBHJuIHdkOuqdk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgHXLbz (ORCPT
+        id S1726804AbgHXLcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:31:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgHXLaj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:30:39 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2282C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:30:30 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 17so4650665pfw.9
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:30:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KFVBStf/gf1dn9u4zO2x0xipCrd73hHfqj8Q+elUA6k=;
-        b=iqLr05L9bMYf1Q1YOzzoOeQuCLaPr/lR39Wr1rxWF64ZbU0xLpZBF8iUwYh/a3/5VC
-         K1lL5Il0RvcoFxohuj31lGwRHYwD+h7NMKfo2lmfMQ1iLqLvNDujhvNcQEhp0Ae0kDH9
-         IR4OiPOcd9b1WB97D4SkdRLgWaPsEdhOG05MRr1Ov/lXXoEn0zTsTaIYgARNOdtLJDiw
-         xgIJKzGjmeXNxaLu0Olnx2evewVxzXldixTPJlzoU/ScmAPXIIk/P9rYR+qWb8HQ7hC7
-         XT2eIHtIgOR/PXaEs3pQAZzZ3qsR0AnInnRzshA7AaWSOuXTmeava6a40ndJRxvH4jUV
-         adLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KFVBStf/gf1dn9u4zO2x0xipCrd73hHfqj8Q+elUA6k=;
-        b=Bg8L4dveYWfxlByxSar/ODgnrCbh3boe5LpbZBW3W0Qva9TtbCmrk6d5W6vxDcfE+g
-         ISD20OrxBHhJAphH69FGxQwck4wDIBUVj85eBMzpSRLhcdYLgHEzFt4EQh1FSrzlAcHy
-         TfEKnRmuoTjTF38TQdgO4YWdQ4I1LNZEgFb6tQ2ITghtGVbhU3tBq0oDx51+4gQxM7W2
-         qfVQq2JITzzP3oe/nrauSpYCAeBnRf4Z1IOvEXtJLJ59STtVpbBeSHfJHOgA30YRrIFy
-         KdcHIc73EJkBfLTut/sJId2kHoHR3On/ae2Sznr3kAZBSdzy0gfzwpD+DvQtIzJZd3QD
-         qS9g==
-X-Gm-Message-State: AOAM531KT5gn4OT3wGOGZwl1d4UdI+vv+m5bpWuMn1+EY+3Zt4i3UB4P
-        1OToTcBxAVLIcfJEPA4GkQjcWQ==
-X-Google-Smtp-Source: ABdhPJwof+0lVQnVChbft2uU8gERi7rnvy18l1DB/HKP5XCCoWFy6zzd0qvuoXraHA02UUv2w1CLsw==
-X-Received: by 2002:a05:6a00:851:: with SMTP id q17mr3790700pfk.214.1598268630288;
-        Mon, 24 Aug 2020 04:30:30 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id x13sm2714433pfr.69.2020.08.24.04.30.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 04:30:29 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 17:00:27 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Niklas Cassel <nks@flawful.org>
-Subject: Re: [RFC PATCH 2/3] opp: Set required OPPs in reverse order when
- scaling down
-Message-ID: <20200824113027.lzh6fp4bottjl6cc@vireshk-i7>
-References: <20200730080146.25185-1-stephan@gerhold.net>
- <20200730080146.25185-3-stephan@gerhold.net>
- <20200821163152.GA3422@gerhold.net>
+        Mon, 24 Aug 2020 07:32:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726854AbgHXLak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 07:30:40 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 131EE20738;
+        Mon, 24 Aug 2020 11:30:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598268627;
+        bh=oKOxl1juUSHIm3m5pKwM6Ovyw4EWT4u0XHnop+u4aQw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tRk6drzmFNZOmjSLL/WfhRAql5B9dHuoOTp4MDSIFDHUKsth0mUikPRFG8arO0oxH
+         XjNvDJHhnZirHAEzYzugYXlQrM6zMC2PHoClfiIGTCK3R1Bycz3dCL1nloyFvZIS2g
+         TfSAsjzQK+A9Vv2IQHFcfj/UmpPQSZ+927xvfPtw=
+From:   Will Deacon <will@kernel.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, maz@kernel.org,
+        suzuki.poulose@arm.com, james.morse@arm.com, pbonzini@redhat.com,
+        kernel-team@android.com, Will Deacon <will@kernel.org>,
+        stable@vger.kernel.org
+Subject: [PATCH stable-5.4.y backport 1/2] KVM: Pass MMU notifier range flags to kvm_unmap_hva_range()
+Date:   Mon, 24 Aug 2020 12:30:21 +0100
+Message-Id: <20200824113022.24860-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821163152.GA3422@gerhold.net>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-08-20, 18:31, Stephan Gerhold wrote:
-> This patch does not apply anymore after the cleanup you pushed to
-> opp/linux-next. I would be happy to send a v2 with that fixed.
-> 
-> On my other OPP patch set you mentioned that you might apply these
-> directly with some of your own changes - would you also prefer to do it
-> yourself in this case or should I send a v2?
+commit fdfe7cbd58806522e799e2a50a15aee7f2cbb7b6 upstream.
 
-I will pick the first 2 myself, that's fine. Lets see where we go with
-the third one :)
+The 'flags' field of 'struct mmu_notifier_range' is used to indicate
+whether invalidate_range_{start,end}() are permitted to block. In the
+case of kvm_mmu_notifier_invalidate_range_start(), this field is not
+forwarded on to the architecture-specific implementation of
+kvm_unmap_hva_range() and therefore the backend cannot sensibly decide
+whether or not to block.
 
-> Still looking for your feedback on both patch sets by the way! :)
+Add an extra 'flags' parameter to kvm_unmap_hva_range() so that
+architectures are aware as to whether or not they are permitted to block.
 
-Sorry about the delay, I was on vacation for over a week in between and
-this and the other patchset was a bit tricky (which you may have not
-realized, not sure, as I wondered if something will not work within
-the OPP core for v1 binding, but it did finally I believe) :)
+Cc: <stable@vger.kernel.org> # v5.4 only
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Message-Id: <20200811102725.7121-2-will@kernel.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+---
+ arch/arm/include/asm/kvm_host.h     | 2 +-
+ arch/arm64/include/asm/kvm_host.h   | 2 +-
+ arch/mips/include/asm/kvm_host.h    | 2 +-
+ arch/mips/kvm/mmu.c                 | 3 ++-
+ arch/powerpc/include/asm/kvm_host.h | 3 ++-
+ arch/powerpc/kvm/book3s.c           | 3 ++-
+ arch/powerpc/kvm/e500_mmu_host.c    | 3 ++-
+ arch/x86/include/asm/kvm_host.h     | 3 ++-
+ arch/x86/kvm/mmu.c                  | 3 ++-
+ virt/kvm/arm/mmu.c                  | 2 +-
+ virt/kvm/kvm_main.c                 | 3 ++-
+ 11 files changed, 18 insertions(+), 11 deletions(-)
 
+diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
+index 1b179b1f46bc..dd03d5e01a94 100644
+--- a/arch/arm/include/asm/kvm_host.h
++++ b/arch/arm/include/asm/kvm_host.h
+@@ -266,7 +266,7 @@ int __kvm_arm_vcpu_set_events(struct kvm_vcpu *vcpu,
+ 
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+ int kvm_unmap_hva_range(struct kvm *kvm,
+-			unsigned long start, unsigned long end);
++			unsigned long start, unsigned long end, unsigned flags);
+ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+ 
+ unsigned long kvm_arm_num_regs(struct kvm_vcpu *vcpu);
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index 0c3bd6aff6e9..d719c6b4dd81 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -427,7 +427,7 @@ int __kvm_arm_vcpu_set_events(struct kvm_vcpu *vcpu,
+ 
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+ int kvm_unmap_hva_range(struct kvm *kvm,
+-			unsigned long start, unsigned long end);
++			unsigned long start, unsigned long end, unsigned flags);
+ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+ int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
+index 7b47a323dc23..356c61074d13 100644
+--- a/arch/mips/include/asm/kvm_host.h
++++ b/arch/mips/include/asm/kvm_host.h
+@@ -939,7 +939,7 @@ enum kvm_mips_fault_result kvm_trap_emul_gva_fault(struct kvm_vcpu *vcpu,
+ 
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+ int kvm_unmap_hva_range(struct kvm *kvm,
+-			unsigned long start, unsigned long end);
++			unsigned long start, unsigned long end, unsigned flags);
+ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+ int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
+index 97e538a8c1be..97f63a84aa51 100644
+--- a/arch/mips/kvm/mmu.c
++++ b/arch/mips/kvm/mmu.c
+@@ -512,7 +512,8 @@ static int kvm_unmap_hva_handler(struct kvm *kvm, gfn_t gfn, gfn_t gfn_end,
+ 	return 1;
+ }
+ 
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags)
+ {
+ 	handle_hva_to_gpa(kvm, start, end, &kvm_unmap_hva_handler, NULL);
+ 
+diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
+index 6fe6ad64cba5..740b52ec3509 100644
+--- a/arch/powerpc/include/asm/kvm_host.h
++++ b/arch/powerpc/include/asm/kvm_host.h
+@@ -58,7 +58,8 @@
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+ 
+ extern int kvm_unmap_hva_range(struct kvm *kvm,
+-			       unsigned long start, unsigned long end);
++			       unsigned long start, unsigned long end,
++			       unsigned flags);
+ extern int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ extern int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+ extern int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+index ec2547cc5ecb..1ff971f3b06f 100644
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -867,7 +867,8 @@ void kvmppc_core_commit_memory_region(struct kvm *kvm,
+ 	kvm->arch.kvm_ops->commit_memory_region(kvm, mem, old, new, change);
+ }
+ 
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags)
+ {
+ 	return kvm->arch.kvm_ops->unmap_hva_range(kvm, start, end);
+ }
+diff --git a/arch/powerpc/kvm/e500_mmu_host.c b/arch/powerpc/kvm/e500_mmu_host.c
+index 321db0fdb9db..7154bd424d24 100644
+--- a/arch/powerpc/kvm/e500_mmu_host.c
++++ b/arch/powerpc/kvm/e500_mmu_host.c
+@@ -734,7 +734,8 @@ static int kvm_unmap_hva(struct kvm *kvm, unsigned long hva)
+ 	return 0;
+ }
+ 
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags)
+ {
+ 	/* kvm_unmap_hva flushes everything anyways */
+ 	kvm_unmap_hva(kvm, start);
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 742de9d97ba1..c41686641c3f 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1553,7 +1553,8 @@ asmlinkage void kvm_spurious_fault(void);
+ 	_ASM_EXTABLE(666b, 667b)
+ 
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end);
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags);
+ int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index 342d9ddf35c3..bb743f956c23 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -2045,7 +2045,8 @@ static int kvm_handle_hva(struct kvm *kvm, unsigned long hva,
+ 	return kvm_handle_hva_range(kvm, hva, hva + 1, data, handler);
+ }
+ 
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags)
+ {
+ 	return kvm_handle_hva_range(kvm, start, end, 0, kvm_unmap_rmapp);
+ }
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index 767ac4eab4fe..b4a6bbadd144 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -2050,7 +2050,7 @@ static int kvm_unmap_hva_handler(struct kvm *kvm, gpa_t gpa, u64 size, void *dat
+ }
+ 
+ int kvm_unmap_hva_range(struct kvm *kvm,
+-			unsigned long start, unsigned long end)
++			unsigned long start, unsigned long end, unsigned flags)
+ {
+ 	if (!kvm->arch.pgd)
+ 		return 0;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index d5d4cd581af3..278bdc53047e 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -425,7 +425,8 @@ static int kvm_mmu_notifier_invalidate_range_start(struct mmu_notifier *mn,
+ 	 * count is also read inside the mmu_lock critical section.
+ 	 */
+ 	kvm->mmu_notifier_count++;
+-	need_tlb_flush = kvm_unmap_hva_range(kvm, range->start, range->end);
++	need_tlb_flush = kvm_unmap_hva_range(kvm, range->start, range->end,
++					     range->flags);
+ 	need_tlb_flush |= kvm->tlbs_dirty;
+ 	/* we've to flush the tlb before the pages can be freed */
+ 	if (need_tlb_flush)
 -- 
-viresh
+2.28.0.297.g1956fa8f8d-goog
+
