@@ -2,56 +2,56 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE12DC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 874FF20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C837207CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287659;
-	bh=oSERYQXpQfBuJnrHVHRieZoE8sDcxceBGWQ9X7mqF34=;
+	s=default; t=1598287707;
+	bh=kjggIwyu8tGGql/uP4yWKtPejoz6uZLhw5z0iPKYxWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q3cLzgSNe150IJ4e0+nt02un3aYyBnIYIGYB7uMYcIGDmS1UoQaMVG4DWYWtXQO5k
-	 OBxo/4n8fPZoUkInmmmFM4IgCSeo05scCALTc/TY6U6xtwQvirYcbk1Cr4PSp818vf
-	 IdDp8NKv6QBc/0hc4J3aNQNeoiVnsNm8wEThoKi8=
+	b=yg+zKH+G2pWQGUOZYVq+tGoyRGaxyaJz3U85ZrYDWfpGLZh7uIDgeguPzeMgrAhr2
+	 Nxj4+n1fcBcZgx/43EZsDA0MSZryBxturp8PUPYYavGkdf9EcuKV9C9HTAk4ho4tDN
+	 mDUnnf9HvMIxJslBvCMycf4XbUiOVtVhJsD4NJwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgHXQri (ORCPT
+        id S1728575AbgHXQsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46868 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:48:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728559AbgHXQjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:39:14 -0400
+        id S1728555AbgHXQjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:39:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E5A122BED;
-        Mon, 24 Aug 2020 16:39:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D752022D2A;
+        Mon, 24 Aug 2020 16:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287154;
-        bh=oSERYQXpQfBuJnrHVHRieZoE8sDcxceBGWQ9X7mqF34=;
+        s=default; t=1598287151;
+        bh=kjggIwyu8tGGql/uP4yWKtPejoz6uZLhw5z0iPKYxWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HOBMQcUZHL6iv62S1D/bJ5J98vRMTJr5rg5Oq0NXn2c/vzCWuW49AMrVDaq8TXwPp
-         TEtRzxjpPOksQSdT0EfE30/SPrFXW2RYm4MA95TIQr23iZ3D2La9hykjVjBfmNA7wB
-         TnRlkyCy8ya68yarkUgvfUC+FcfJ/qY0+4QjGqHo=
+        b=nvZrWObsmoghNZZREZZlhZYSVKkWTyAQO25kQtZtK9Zn3DHiUC0Vr2cZxLBxGoiOv
+         etzSNkSLX9EueyMEgKJEnsSUlNyvMST4eXAbHevuGctBeDXPtBKHPx4b8YJz3F9gWK
+         /nCmo9VuC4OzwE+svCMJfZDdxwzmspopW+OD6cng=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 21/21] powerpc/perf: Fix soft lockups due to missed interrupt accounting
-Date:   Mon, 24 Aug 2020 12:38:45 -0400
-Message-Id: <20200824163845.606933-21-sashal@kernel.org>
+Cc:     =?UTF-8?q?Alvin=20=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/21] macvlan: validate setting of multiple remote source MAC addresses
+Date:   Mon, 24 Aug 2020 12:38:43 -0400
+Message-Id: <20200824163845.606933-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163845.606933-1-sashal@kernel.org>
 References: <20200824163845.606933-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,54 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+From: Alvin Šipraga <alsi@bang-olufsen.dk>
 
-[ Upstream commit 17899eaf88d689529b866371344c8f269ba79b5f ]
+[ Upstream commit 8b61fba503904acae24aeb2bd5569b4d6544d48f ]
 
-Performance monitor interrupt handler checks if any counter has
-overflown and calls record_and_restart() in core-book3s which invokes
-perf_event_overflow() to record the sample information. Apart from
-creating sample, perf_event_overflow() also does the interrupt and
-period checks via perf_event_account_interrupt().
+Remote source MAC addresses can be set on a 'source mode' macvlan
+interface via the IFLA_MACVLAN_MACADDR_DATA attribute. This commit
+tightens the validation of these MAC addresses to match the validation
+already performed when setting or adding a single MAC address via the
+IFLA_MACVLAN_MACADDR attribute.
 
-Currently we record information only if the SIAR (Sampled Instruction
-Address Register) valid bit is set (using siar_valid() check) and
-hence the interrupt check.
+iproute2 uses IFLA_MACVLAN_MACADDR_DATA for its 'macvlan macaddr set'
+command, and IFLA_MACVLAN_MACADDR for its 'macvlan macaddr add' command,
+which demonstrates the inconsistent behaviour that this commit
+addresses:
 
-But it is possible that we do sampling for some events that are not
-generating valid SIAR, and hence there is no chance to disable the
-event if interrupts are more than max_samples_per_tick. This leads to
-soft lockup.
+ # ip link add link eth0 name macvlan0 type macvlan mode source
+ # ip link set link dev macvlan0 type macvlan macaddr add 01:00:00:00:00:00
+ RTNETLINK answers: Cannot assign requested address
+ # ip link set link dev macvlan0 type macvlan macaddr set 01:00:00:00:00:00
+ # ip -d link show macvlan0
+ 5: macvlan0@eth0: <BROADCAST,MULTICAST,DYNAMIC,UP,LOWER_UP> mtu 1500 ...
+     link/ether 2e:ac:fd:2d:69:f8 brd ff:ff:ff:ff:ff:ff promiscuity 0
+     macvlan mode source remotes (1) 01:00:00:00:00:00 numtxqueues 1 ...
 
-Fix this by adding perf_event_account_interrupt() in the invalid SIAR
-code path for a sampling event. ie if SIAR is invalid, just do
-interrupt check and don't record the sample information.
+With this change, the 'set' command will (rightly) fail in the same way
+as the 'add' command.
 
-Reported-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1596717992-7321-1-git-send-email-atrajeev@linux.vnet.ibm.com
+Signed-off-by: Alvin Šipraga <alsi@bang-olufsen.dk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/core-book3s.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/macvlan.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index 4004dbdab9c7b..d407b73298171 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -2087,6 +2087,10 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
- 
- 		if (perf_event_overflow(event, &data, regs))
- 			power_pmu_stop(event, 0);
-+	} else if (period) {
-+		/* Account for interrupt in case of invalid SIAR */
-+		if (perf_event_account_interrupt(event))
-+			power_pmu_stop(event, 0);
+diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
+index 349123592af0f..e226a96da3a39 100644
+--- a/drivers/net/macvlan.c
++++ b/drivers/net/macvlan.c
+@@ -1230,6 +1230,9 @@ static void macvlan_port_destroy(struct net_device *dev)
+ static int macvlan_validate(struct nlattr *tb[], struct nlattr *data[],
+ 			    struct netlink_ext_ack *extack)
+ {
++	struct nlattr *nla, *head;
++	int rem, len;
++
+ 	if (tb[IFLA_ADDRESS]) {
+ 		if (nla_len(tb[IFLA_ADDRESS]) != ETH_ALEN)
+ 			return -EINVAL;
+@@ -1277,6 +1280,20 @@ static int macvlan_validate(struct nlattr *tb[], struct nlattr *data[],
+ 			return -EADDRNOTAVAIL;
  	}
- }
  
++	if (data[IFLA_MACVLAN_MACADDR_DATA]) {
++		head = nla_data(data[IFLA_MACVLAN_MACADDR_DATA]);
++		len = nla_len(data[IFLA_MACVLAN_MACADDR_DATA]);
++
++		nla_for_each_attr(nla, head, len, rem) {
++			if (nla_type(nla) != IFLA_MACVLAN_MACADDR ||
++			    nla_len(nla) != ETH_ALEN)
++				return -EINVAL;
++
++			if (!is_valid_ether_addr(nla_data(nla)))
++				return -EADDRNOTAVAIL;
++		}
++	}
++
+ 	if (data[IFLA_MACVLAN_MACADDR_COUNT])
+ 		return -EINVAL;
+ 
+@@ -1333,10 +1350,6 @@ static int macvlan_changelink_sources(struct macvlan_dev *vlan, u32 mode,
+ 		len = nla_len(data[IFLA_MACVLAN_MACADDR_DATA]);
+ 
+ 		nla_for_each_attr(nla, head, len, rem) {
+-			if (nla_type(nla) != IFLA_MACVLAN_MACADDR ||
+-			    nla_len(nla) != ETH_ALEN)
+-				continue;
+-
+ 			addr = nla_data(nla);
+ 			ret = macvlan_hash_add_source(vlan, addr);
+ 			if (ret)
 -- 
 2.25.1
 
