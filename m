@@ -2,143 +2,134 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BD5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A382074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:22:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598260957;
-	bh=3OTZlymDPzV28010Bf0ZDLIKHdyjPso850u1d4l7nig=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZnoxNNjWoPqqgggCPnJjTTHPdj+Fb6vjpIdNTMe1OhObcgAa8extemQb7bK7hCK3J
-	 WT7iAcC2RlDk4uJuXZNqQCMgp83JXeZk+BvpMGcJead3xveUAeTM/NhvNKu2YWpCfc
-	 AC4wwdv685JjsLPWKLw8LyoC1EsfS1533gpwU7iI=
+	by mail.kernel.org (Postfix) with ESMTP id 340CA2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:22:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gc08fz17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbgHXJWf (ORCPT
+        id S1729667AbgHXJWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:22:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730369AbgHXIzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 881D22072D;
-        Mon, 24 Aug 2020 08:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259307;
-        bh=3OTZlymDPzV28010Bf0ZDLIKHdyjPso850u1d4l7nig=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AjzUtu+7uLOSVeQTG97DUL/ErClYESYDhOtym/Kl7eYypZ1g9i7gA3vJ2UemPmcvF
-         yUFZ6IEGgvvH+rp0b9c1ev79Jn0sVnwn/24tUhUpfucmLNMRQ1CrvfhKhOvvV/gguk
-         CEWeeuzognAe7hsQwFwfPE8xDmQXVmSuyElWqfa0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 01/71] drm/vgem: Replace opencoded version of drm_gem_dumb_map_offset()
-Date:   Mon, 24 Aug 2020 10:30:52 +0200
-Message-Id: <20200824082355.941463987@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
-References: <20200824082355.848475917@linuxfoundation.org>
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
+        Mon, 24 Aug 2020 05:22:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729747AbgHXJWc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:22:32 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E71B9C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 02:22:31 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y6so3925833plk.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 02:22:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G4UM9mPQ/Wl0010YGua3xqk8lRiomnoA+4Ucmsd+rGg=;
+        b=Gc08fz17RCgg9vthCMAjs4eBGBC6yt0YsaI2PhMPrOxts9oM0gRBNRn2RMlw2xVToq
+         Za9M5hDNMxv9nR2/JIGOV2VXJfAcE0XqMxnNBEjrd+FWxJoKnrcBAgL5oPIV3/ZlzYSk
+         d6K1V7hpnhCYXtAy15L0w7s3lOvU7R4OyDGUYSa3tm6Tn8Wb5Fi4p9BNe5hrCQjGsln/
+         v6J24L8ogceKQ94aboLJR6bR64R3IP7MfdMzOCkO3NEOzCYp9IYBJ6ZLuiWoJv/TJ7B5
+         IrrO9fpNkCp6BjadZd+oSMwNofjhEd/QF++8XKSd/uoCRjPUdQ6JuLtkxZpPcK4whAkk
+         qctQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G4UM9mPQ/Wl0010YGua3xqk8lRiomnoA+4Ucmsd+rGg=;
+        b=X3tTDLZQK74tlaCh6s70PXDFGE4u7EkRgkyLiLv5vyB8P7geKgSV+Ay9DR4thPwhrl
+         dB1rNhYDP5awu0nwB6E49bgGDL4OPXX8b+aFyb5XKSREB1oq0/DgeCUHpq4rA8Pzdhu4
+         7TZWijvypHrbnD+OIhJliid/HqYbSk+MaQumOseS9APMfOxsve1hLTyMtRrvIuTYrXQL
+         YmaGWnsl7VvEQ6pka8I7l4UnFeFHFWSP+rw+LdwmsbHqtj7mDzp54W/riwc38S7gAZUC
+         UvM50++3kCyOISjWBuCwlc4aaG4iJn5IXQP5OsihD0OMfN0kpg8taRq6qFqteWtuzKMu
+         9DJw==
+X-Gm-Message-State: AOAM5317TUnkWui2sutIPpoZzKF1UPWYXKsKI1tYeb5jNKtSjGgHz1M0
+        A7D8h9zZcP5PmVDDbpxPDIO8uA==
+X-Google-Smtp-Source: ABdhPJzr/+V5/Xvr7hHGMeg9kPul3msU5ZfPAjcPIANC22Uv5q3G4hAz2I/TVnaLNhp/C7LmbkSUcA==
+X-Received: by 2002:a17:90a:ead1:: with SMTP id ev17mr3973550pjb.147.1598260951510;
+        Mon, 24 Aug 2020 02:22:31 -0700 (PDT)
+Received: from localhost ([122.172.43.13])
+        by smtp.gmail.com with ESMTPSA id w23sm9021621pgj.5.2020.08.24.02.22.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Aug 2020 02:22:30 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     stable@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sajida Bhanu <sbhanu@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH - stable v5.4 and v5.7] opp: Enable resources again if they were disabled earlier
+Date:   Mon, 24 Aug 2020 14:52:23 +0530
+Message-Id: <31f315cf2b0c4afd60b07b7121058dcaa6e4afa1.1598260882.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Rajendra Nayak <rnayak@codeaurora.org>
 
-[ Upstream commit 119c53d2d4044c59c450c4f5a568d80b9d861856 ]
+commit a4501bac0e553bed117b7e1b166d49731caf7260 upstream.
 
-drm_gem_dumb_map_offset() now exists and does everything
-vgem_gem_dump_map does and *ought* to do.
+dev_pm_opp_set_rate() can now be called with freq = 0 in order
+to either drop performance or bandwidth votes or to disable
+regulators on platforms which support them.
 
-In particular, vgem_gem_dumb_map() was trying to reject mmapping an
-imported dmabuf by checking the existence of obj->filp. Unfortunately,
-we always allocated an obj->filp, even if unused for an imported dmabuf.
-Instead, the drm_gem_dumb_map_offset(), since commit 90378e589192
-("drm/gem: drm_gem_dumb_map_offset(): reject dma-buf"), uses the
-obj->import_attach to reject such invalid mmaps.
+In such cases, a subsequent call to dev_pm_opp_set_rate() with
+the same frequency ends up returning early because 'old_freq == freq'
 
-This prevents vgem from allowing userspace mmapping the dumb handle and
-attempting to incorrectly fault in remote pages belonging to another
-device, where there may not even be a struct page.
+Instead make it fall through and put back the dropped performance
+and bandwidth votes and/or enable back the regulators.
 
-v2: Use the default drm_gem_dumb_map_offset() callback
-
-Fixes: af33a9190d02 ("drm/vgem: Enable dmabuf import interfaces")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: <stable@vger.kernel.org> # v4.13+
-Link: https://patchwork.freedesktop.org/patch/msgid/20200708154911.21236-1-chris@chris-wilson.co.uk
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: v5.3+ <stable@vger.kernel.org> # v5.3+
+Fixes: cd7ea582866f ("opp: Make dev_pm_opp_set_rate() handle freq = 0 to drop performance votes")
+Reported-by: Sajida Bhanu <sbhanu@codeaurora.org>
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Reported-by: Matthias Kaehlcke <mka@chromium.org>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+[ Viresh: Don't skip clk_set_rate() and massaged changelog ]
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+[ Viresh: Updated the patch to apply to v5.4 ]
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/gpu/drm/vgem/vgem_drv.c | 27 ---------------------------
- 1 file changed, 27 deletions(-)
+ drivers/opp/core.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
-index 4709f08f39e49..1c1a435d354bc 100644
---- a/drivers/gpu/drm/vgem/vgem_drv.c
-+++ b/drivers/gpu/drm/vgem/vgem_drv.c
-@@ -219,32 +219,6 @@ static int vgem_gem_dumb_create(struct drm_file *file, struct drm_device *dev,
- 	return 0;
- }
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 9ff0538ee83a..518442be638d 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -843,10 +843,12 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
  
--static int vgem_gem_dumb_map(struct drm_file *file, struct drm_device *dev,
--			     uint32_t handle, uint64_t *offset)
--{
--	struct drm_gem_object *obj;
--	int ret;
--
--	obj = drm_gem_object_lookup(file, handle);
--	if (!obj)
--		return -ENOENT;
--
--	if (!obj->filp) {
--		ret = -EINVAL;
--		goto unref;
--	}
--
--	ret = drm_gem_create_mmap_offset(obj);
--	if (ret)
--		goto unref;
--
--	*offset = drm_vma_node_offset_addr(&obj->vma_node);
--unref:
--	drm_gem_object_put_unlocked(obj);
--
--	return ret;
--}
--
- static struct drm_ioctl_desc vgem_ioctls[] = {
- 	DRM_IOCTL_DEF_DRV(VGEM_FENCE_ATTACH, vgem_fence_attach_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
- 	DRM_IOCTL_DEF_DRV(VGEM_FENCE_SIGNAL, vgem_fence_signal_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-@@ -438,7 +412,6 @@ static struct drm_driver vgem_driver = {
- 	.fops				= &vgem_driver_fops,
+ 	/* Return early if nothing to do */
+ 	if (old_freq == freq) {
+-		dev_dbg(dev, "%s: old/new frequencies (%lu Hz) are same, nothing to do\n",
+-			__func__, freq);
+-		ret = 0;
+-		goto put_opp_table;
++		if (!opp_table->required_opp_tables) {
++			dev_dbg(dev, "%s: old/new frequencies (%lu Hz) are same, nothing to do\n",
++				__func__, freq);
++			ret = 0;
++			goto put_opp_table;
++		}
+ 	}
  
- 	.dumb_create			= vgem_gem_dumb_create,
--	.dumb_map_offset		= vgem_gem_dumb_map,
- 
- 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
- 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+ 	temp_freq = old_freq;
 -- 
-2.25.1
-
-
+2.25.0.rc1.19.g042ed3e048af
 
