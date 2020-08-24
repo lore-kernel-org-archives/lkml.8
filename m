@@ -2,105 +2,178 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5368C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55489C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 908B02071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261827;
-	bh=wZ6Ga9/LK8jl4Ht/RtyD0Avy0rx8x0tBexNUgy5gQrg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BBZ79/30amL9Kw129Z4aUV27NfhK6wh+AksY+O29V2U+xSrpgOmfVcfCR1nX8G6yd
-	 NcZEx0IENwrTK651JD0xCfPQ9lD/xKJU3/MibnrXwKC5E7Gcd7GhF9t9++IUBlDOkh
-	 zPbtaXoyE4mi9l80zd8HXokXBYkZ0mGgYkFuh+Yg=
+	by mail.kernel.org (Postfix) with ESMTP id 38E7E2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgHXJhB (ORCPT
+        id S1729827AbgHXJhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49590 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:37:12 -0400
+Received: from mga12.intel.com ([192.55.52.136]:16464 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729551AbgHXIs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:48:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA0A3204FD;
-        Mon, 24 Aug 2020 08:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258907;
-        bh=wZ6Ga9/LK8jl4Ht/RtyD0Avy0rx8x0tBexNUgy5gQrg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GcjwL5B9OoErqj160p6MdYJ1jyOaPvB2awIwzTfhs+c5xlKVjLf5vrqVOSxzbkOL3
-         zESRI4oNeLG46AMhL9BRBuHRmqG+ugmJKkOTnhG49GkJsiHrT0MAq02FVaBZKd5feb
-         3n+aeujjP/otQ4EwtvCMisEjLGHJ686xUrVDvpBk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huaitong Han <huaitong.han@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 088/107] kvm: x86: Toggling CR4.PKE does not load PDPTEs in PAE mode
-Date:   Mon, 24 Aug 2020 10:30:54 +0200
-Message-Id: <20200824082409.468704123@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
-References: <20200824082405.020301642@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1726825AbgHXJgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:36:54 -0400
+IronPort-SDR: rFHxpNYUpeyJ5Q+HoqLM0A6ZwifP0W4U+6P8oOML0fvpp1qJG5rT0sDYylIS/Uezs40dBoaEEf
+ rrAeUHiWIyTg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="135412726"
+X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
+   d="scan'208";a="135412726"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 02:36:52 -0700
+IronPort-SDR: 67MvChZQtMHeJGcLdFvFwsT6bbMTvuekf5QhyOcXeEmCSDtpZWY29mFmWCA+/rewHoWu7cSXQ4
+ 2loCMKTHXHMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
+   d="scan'208";a="279608953"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 24 Aug 2020 02:36:52 -0700
+Received: from [10.249.74.159] (rtanwar-MOBL.gar.corp.intel.com [10.249.74.159])
+        by linux.intel.com (Postfix) with ESMTP id 403425805B5;
+        Mon, 24 Aug 2020 02:36:48 -0700 (PDT)
+Subject: Re: [PATCH v10 2/2] Add PWM fan controller driver for LGM SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com
+References: <cover.1598240097.git.rahul.tanwar@linux.intel.com>
+ <05b664b961e37c1c35fa7d5d1cfc9ae244bc86bc.1598240097.git.rahul.tanwar@linux.intel.com>
+ <20200824081715.GA1891694@smile.fi.intel.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <ed7affbb-b95d-cf42-b9bc-71addf908ffc@linux.intel.com>
+Date:   Mon, 24 Aug 2020 17:36:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200824081715.GA1891694@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
 
-[ Upstream commit cb957adb4ea422bd758568df5b2478ea3bb34f35 ]
+Hi Andy,
 
-See the SDM, volume 3, section 4.4.1:
+On 24/8/2020 4:17 pm, Andy Shevchenko wrote:
+> On Mon, Aug 24, 2020 at 11:36:37AM +0800, Rahul Tanwar wrote:
+>> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+>> This PWM controller does not have any other consumer, it is a
+>> dedicated PWM controller for fan attached to the system. Add
+>> driver for this PWM fan controller.
+> ...
+>
+>> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
+>> +	if (IS_ERR(pc->regmap)) {
+>> +		ret = PTR_ERR(pc->regmap);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err_probe(dev, ret, "failed to init register map\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	pc->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(pc->clk)) {
+>> +		ret = PTR_ERR(pc->clk);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err_probe(dev, ret, "failed to get clock\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
+>> +	if (IS_ERR(pc->rst)) {
+>> +		ret = PTR_ERR(pc->rst);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err_probe(dev, ret, "failed to get reset control\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = reset_control_deassert(pc->rst);
+>> +	if (ret) {
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err_probe(dev, ret, "cannot deassert reset control\n");
+>> +		return ret;
+>> +	}
+> Please, spend a bit of time to understand the changes you are doing. There are
+> already few examples how to use dev_err_probe() properly.
 
-If PAE paging would be in use following an execution of MOV to CR0 or
-MOV to CR4 (see Section 4.1.1) and the instruction is modifying any of
-CR0.CD, CR0.NW, CR0.PG, CR4.PAE, CR4.PGE, CR4.PSE, or CR4.SMEP; then
-the PDPTEs are loaded from the address in CR3.
+I guess your point is that the check of (ret !- -EPROBE_DEFER) is not needed
+when using dev_err_probe() as it encapsulates it. Sorry, i missed it. Will
+fix it. I am not able to find any other missing point after referring to
+two driver examples which uses dev_err_probe() ?
 
-Fixes: b9baba8614890 ("KVM, pkeys: expose CPUID/CR4 to guest")
-Cc: Huaitong Han <huaitong.han@intel.com>
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Reviewed-by: Oliver Upton <oupton@google.com>
-Message-Id: <20200817181655.3716509-1-jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kvm/x86.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>> +	ret = clk_prepare_enable(pc->clk);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to enable clock\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = devm_add_action_or_reset(dev, lgm_pwm_action, pc);
+>> +	if (ret)
+>> +		return ret;
+> You have also ordering issues here.
+>
+> So, what I can see about implementation is that
+>
+>
+> 	static void ..._clk_disable(void *data)
+> 	{
+> 		clk_disable_unprepare(data);
+> 	}
+>
+> 	static int ..._clk_enable(...)
+> 	{
+> 		int ret;
+>
+> 		ret = clk_preare_enable(...);
+> 		if (ret)
+> 			return ret;
+> 		return devm_add_action_or_reset(..., ..._clk_disable);
+> 	}
+>
+>
+> Similar for reset control.
+>
+> Then in the ->probe() something like this:
+>
+> 	ret = devm_reset_control_get...;
+> 	if (ret)
+> 		return ret;
+>
+> 	ret = ..._reset_deassert(...);
+> 	if (ret)
+> 		return ret;
+>
+> followed by similar section for the clock.
+>
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 1721a8c8eb26c..8920ee7b28811 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -972,7 +972,7 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- {
- 	unsigned long old_cr4 = kvm_read_cr4(vcpu);
- 	unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
--				   X86_CR4_SMEP | X86_CR4_PKE;
-+				   X86_CR4_SMEP;
- 
- 	if (kvm_valid_cr4(vcpu, cr4))
- 		return 1;
--- 
-2.25.1
+Regarding ordering: In early rounds of review, feedback about ordering was that
+it is recommended to be reverse of the sequence in probe i.e.
+if in probe:
+1. reset_control_deassert()
+2. clk_prepare_enable()
+then in remove:
+1. clk_disable_uprepare()
+2. reset_control_assert()
 
+That's the reason i added a generic action() which reverses order.
 
+I understand your suggested way as explained above but not sure if that would
+ensure reverse ordering during unwind.
 
+Thanks.
+
+Regards,
+Rahul
