@@ -2,107 +2,167 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51436C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD95DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E09D207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3732177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:02:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="h2bkzp4r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgHXVBW (ORCPT
+        id S1727872AbgHXVCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:01:22 -0400
-Received: from mail2.sp2max.com.br ([138.185.4.9]:51508 "EHLO
-        mail2.sp2max.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgHXVBV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 17:01:21 -0400
-X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Aug 2020 17:01:19 EDT
-Received: from [172.17.0.6] (37-247-245-190.fibertel.com.ar [190.245.247.37])
-        (Authenticated sender: pablo@fliagreco.com.ar)
-        by mail2.sp2max.com.br (Postfix) with ESMTPSA id B81627B3207;
-        Mon, 24 Aug 2020 17:54:03 -0300 (-03)
-Subject: Re: [linux-sunxi] [PATCH] ARM: dts: sun8i: r40: bananapi-m2-ultra:
- Fix dcdc1 regulator
-To:     jernej.skrabec@siol.net, mripard@kernel.org, wens@csie.org
-Cc:     robh+dt@kernel.org, icenowy@aosc.io, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20200824193649.978197-1-jernej.skrabec@siol.net>
-From:   =?UTF-8?Q?Pablo_Sebasti=c3=a1n_Greco?= <pgreco@centosproject.org>
-Message-ID: <a25ee214-5316-f6c8-53ce-676aa3c8a8ca@centosproject.org>
-Date:   Mon, 24 Aug 2020 17:54:01 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 24 Aug 2020 17:02:17 -0400
+Received: from crapouillou.net ([89.234.176.41]:35916 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbgHXVCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 17:02:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1598302930; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z3eh6MgJfv5Trn56d6MpAcV8dA3a4THzYLpI6NyJBOo=;
+        b=h2bkzp4reLWbww/5KQ5D67CKbDQAe7+UofDsDZHh80sqleK2rWxRuD5qD0fqcsEF2P31V2
+        Mq9lYdH3goJ8rF02OOYUyT2/0bsoHAFjqKIF1PHQ7evv9ztpaj/0xv94rhSVFfXzRGjF/U
+        zeWzd/xLj5TdZs1O32y9LtquX3HUlrI=
+Date:   Mon, 24 Aug 2020 23:02:00 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/2] MIPS: Add support for ZSTD-compressed kernels
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        od@zcrc.me
+Message-Id: <CF6LFQ.EXKNOXDIOE502@crapouillou.net>
+In-Reply-To: <41742AA6-8BC0-46E5-8735-9B3D6E83FA2D@fb.com>
+References: <20200821162948.146947-1-paul@crapouillou.net>
+        <20200821162948.146947-2-paul@crapouillou.net>
+        <41742AA6-8BC0-46E5-8735-9B3D6E83FA2D@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20200824193649.978197-1-jernej.skrabec@siol.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-SP2Max-MailScanner-Information: Please contact the ISP for more information
-X-SP2Max-MailScanner-ID: B81627B3207.A21CE
-X-SP2Max-MailScanner: Sem Virus encontrado
-X-SP2Max-MailScanner-SpamCheck: nao spam, SpamAssassin (not cached,
-        escore=-5.15, requerido 6, autolearn=not spam, ALL_TRUSTED -1.00,
-        BAYES_00 -1.90, NICE_REPLY_A -2.25)
-X-SP2Max-MailScanner-From: pgreco@centosproject.org
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Nick,
 
-On 24/8/20 16:36, Jernej Skrabec wrote:
-> DCDC1 regulator powers many different subsystems. While some of them can
-> work at 3.0 V, some of them can not. For example, VCC-HDMI can only work
-> between 3.24 V and 3.36 V. According to OS images provided by the board
-> manufacturer this regulator should be set to 3.3 V.
->
-> Set DCDC1 and DCDC1SW to 3.3 V in order to fix this.
->
-> Fixes: da7ac948fa93 ("ARM: dts: sun8i: Add board dts file for Banana Pi M2
-> 		      Ultra")
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->   arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> index 42d62d1ba1dc..ea15073f0c79 100644
-> --- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> +++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> @@ -223,16 +223,16 @@ &reg_aldo3 {
->   };
->   
->   &reg_dc1sw {
-> -	regulator-min-microvolt = <3000000>;
-> -	regulator-max-microvolt = <3000000>;
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
->   	regulator-name = "vcc-gmac-phy";
->   };
->   
->   &reg_dcdc1 {
->   	regulator-always-on;
-> -	regulator-min-microvolt = <3000000>;
-> -	regulator-max-microvolt = <3000000>;
-> -	regulator-name = "vcc-3v0";
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "vcc-3v3";
->   };
->   
->   &reg_dcdc2 {
+Le lun. 24 ao=FBt 2020 =E0 19:51, Nick Terrell <terrelln@fb.com> a =E9crit=20
+:
+>=20
+>=20
+>>  On Aug 21, 2020, at 9:29 AM, Paul Cercueil <paul@crapouillou.net>=20
+>> wrote:
+>>=20
+>>  Add support for self-extracting kernels with a ZSTD compression.
+>>=20
+>>  Tested on a kernel for the GCW-Zero, it allows to reduce the size=20
+>> of the
+>>  kernel file from 4.1 MiB with gzip to 3.5 MiB with ZSTD, and boots=20
+>> just
+>>  as fast.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>  arch/mips/Kconfig                      |  1 +
+>>  arch/mips/boot/compressed/Makefile     |  1 +
+>>  arch/mips/boot/compressed/decompress.c |  4 ++++
+>>  arch/mips/boot/compressed/string.c     | 16 ++++++++++++++++
+>>  4 files changed, 22 insertions(+)
+>>=20
+>>  diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+>>  index c95fa3a2484c..b9d7c4249dc9 100644
+>>  --- a/arch/mips/Kconfig
+>>  +++ b/arch/mips/Kconfig
+>>  @@ -1890,6 +1890,7 @@ config SYS_SUPPORTS_ZBOOT
+>>  	select HAVE_KERNEL_LZMA
+>>  	select HAVE_KERNEL_LZO
+>>  	select HAVE_KERNEL_XZ
+>>  +	select HAVE_KERNEL_ZSTD
+>>=20
+>>  config SYS_SUPPORTS_ZBOOT_UART16550
+>>  	bool
+>>  diff --git a/arch/mips/boot/compressed/Makefile=20
+>> b/arch/mips/boot/compressed/Makefile
+>>  index 6e56caef69f0..86ddc6fc16f4 100644
+>>  --- a/arch/mips/boot/compressed/Makefile
+>>  +++ b/arch/mips/boot/compressed/Makefile
+>>  @@ -70,6 +70,7 @@ tool_$(CONFIG_KERNEL_LZ4)     =3D lz4
+>>  tool_$(CONFIG_KERNEL_LZMA)    =3D lzma
+>>  tool_$(CONFIG_KERNEL_LZO)     =3D lzo
+>>  tool_$(CONFIG_KERNEL_XZ)      =3D xzkern
+>>  +tool_$(CONFIG_KERNEL_ZSTD)    =3D zstd
+>=20
+> You can use zstd22 here. It will give you slightly better compression
+> without any additional memory usage. Also, you should add
+> -D__DISABLE_EXPORTS to the KBUILD_CFLAGS like x86 does [1].
 
+Indeed, it's 0.01% smaller :)
 
-Should this be done also for the bananapi-m2-berry?, it is basically the 
-same device
-sun8i-v40-bananapi-m2-berry.dts
+What is __DISABLE_EXPORTS for?
 
+-Paul
 
-Pablo
+>=20
+> [1]=20
+> https://github.com/torvalds/linux/blob/master/arch/x86/boot/compressed/Ma=
+kefile
+>=20
+> -Nick
+>=20
+>>  targets +=3D vmlinux.bin.z
+>>  $(obj)/vmlinux.bin.z: $(obj)/vmlinux.bin FORCE
+>>  diff --git a/arch/mips/boot/compressed/decompress.c=20
+>> b/arch/mips/boot/compressed/decompress.c
+>>  index 88f5d637b1c4..c61c641674e6 100644
+>>  --- a/arch/mips/boot/compressed/decompress.c
+>>  +++ b/arch/mips/boot/compressed/decompress.c
+>>  @@ -72,6 +72,10 @@ void error(char *x)
+>>  #include "../../../../lib/decompress_unxz.c"
+>>  #endif
+>>=20
+>>  +#ifdef CONFIG_KERNEL_ZSTD
+>>  +#include "../../../../lib/decompress_unzstd.c"
+>>  +#endif
+>>  +
+>>  const unsigned long __stack_chk_guard =3D 0x000a0dff;
+>>=20
+>>  void __stack_chk_fail(void)
+>>  diff --git a/arch/mips/boot/compressed/string.c=20
+>> b/arch/mips/boot/compressed/string.c
+>>  index 43beecc3587c..ab95722ec0c9 100644
+>>  --- a/arch/mips/boot/compressed/string.c
+>>  +++ b/arch/mips/boot/compressed/string.c
+>>  @@ -27,3 +27,19 @@ void *memset(void *s, int c, size_t n)
+>>  		ss[i] =3D c;
+>>  	return s;
+>>  }
+>>  +
+>>  +void *memmove(void *dest, const void *src, size_t n)
+>>  +{
+>>  +	unsigned int i;
+>>  +	const char *s =3D src;
+>>  +	char *d =3D dest;
+>>  +
+>>  +	if ((uintptr_t)dest < (uintptr_t)src) {
+>>  +		for (i =3D 0; i < n; i++)
+>>  +			d[i] =3D s[i];
+>>  +	} else {
+>>  +		for (i =3D n; i > 0; i--)
+>>  +			d[i - 1] =3D s[i - 1];
+>>  +	}
+>>  +	return dest;
+>>  +}
+>>  --
+>>  2.28.0
+>>=20
+
 
