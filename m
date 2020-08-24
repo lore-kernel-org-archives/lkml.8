@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02605C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7FA120639
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E730720639
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263186;
-	bh=kCkV9GnogaTy4jEU/uZ8pRQps80RvBYxzFXGpYVLYd4=;
+	s=default; t=1598263190;
+	bh=1wL/Z6LurwxbTSysMOzB72LpziDJn+ht/d2FVBvJ8u8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uibGJ3VxdSJ2oli90uODTOoJNh6111jy5zNMwC4kq7iykcJV47a8y3FXFg0GfwlCm
-	 E6E2lRqbe1CW70VnUFk0584f/MsBAx/0Qg2b6qiFXWjk5+gIb+U95QYSn4lhHpd6cx
-	 5fNszVJWYBCM8amXyUUcu7S0tRufwkyIixS8Hz5I=
+	b=wz5Piy8su3agxeAkGNske4qJowKg/iV7a4u8EJ8moulMbRuRZ83k58mI71nPX8E6+
+	 bBMjvh2UsaZdYNmsNMLumd9NFtl54Xmdyz0rwGT+seRKlMIJ3NqYUcGMQMzkT2ASJq
+	 o5KuNTVjf48TxUWPYgiL8RUL8y6YaRErw9TG+ZXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbgHXJ7p (ORCPT
+        id S1726943AbgHXIdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:59:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40756 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:33:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbgHXIdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:33:17 -0400
+        id S1726875AbgHXIdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:33:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BE70207D3;
-        Mon, 24 Aug 2020 08:33:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B7DE2075B;
+        Mon, 24 Aug 2020 08:33:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257996;
-        bh=kCkV9GnogaTy4jEU/uZ8pRQps80RvBYxzFXGpYVLYd4=;
+        s=default; t=1598257982;
+        bh=1wL/Z6LurwxbTSysMOzB72LpziDJn+ht/d2FVBvJ8u8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LCd+UiMDo5qgyrjOv0Nps/+Zd8u/Y6fPM73ddyUIy3KGzQkNEDaLGOy8aKcIvama8
-         31Pe/ISi+bffjUx9zRg7wXX1QyDqEYEahMMZEAXTy5aEx2JDKDjK0J6BJz+F72gyuB
-         7TjVutS9SWPFNqiZdeoag33GucjzLMhP/RwIaDXA=
+        b=eYLVJ30aRY0cuPVQ8fxhkNpUcCkQnmL++ZdwEZVrVUo8kiZDNefUZM8bcWXX+mjqw
+         SYzo7lQxrA+XXGF+wpcNmyPvJW9w4SbT2LU2/1m1TKoSGLzq/BMUuIUfPoAnNnIF6c
+         yHMVFq2dSD0blBOftH3gXhqkTTfhkC6S5ZQPUeM8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.8 036/148] drm: amdgpu: Use the correct size when allocating memory
-Date:   Mon, 24 Aug 2020 10:28:54 +0200
-Message-Id: <20200824082415.777369848@linuxfoundation.org>
+        stable@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: [PATCH 5.8 031/148] s390/pci: fix zpci_bus_link_virtfn()
+Date:   Mon, 24 Aug 2020 10:28:49 +0200
+Message-Id: <20200824082415.448863145@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -61,37 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Niklas Schnelle <schnelle@linux.ibm.com>
 
-commit 78484d7c747e30468b35bd5f19edf602f50162a7 upstream.
+commit 3cddb79afc60bcdb5fd9dd7a1c64a8d03bdd460f upstream.
 
-When '*sgt' is allocated, we must allocated 'sizeof(**sgt)' bytes instead
-of 'sizeof(*sg)'.
+We were missing the pci_dev_put() for candidate PFs.  Furhtermore in
+discussion with upstream it turns out that somewhat counterintuitively
+some common code, in particular the vfio-pci driver, assumes that
+pdev->is_virtfn always implies that pdev->physfn is set, i.e. that VFs
+are always linked.
+While POWER does seem to set pdev->is_virtfn even for unlinked functions
+(see comments in arch/powerpc/kernel/eeh.c:eeh_debugfs_break_device())
+for now just be safe and only set pdev->is_virtfn on linking.
+Also make sure that we only search for parent PFs if the zbus is
+multifunction and we thus know the devfn values supplied by firmware
+come from the RID.
 
-The sizeof(*sg) is bigger than sizeof(**sgt) so this wastes memory but
-it won't lead to corruption.
-
-Fixes: f44ffd677fb3 ("drm/amdgpu: add support for exporting VRAM using DMA-buf v3")
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fixes: e5794cf1a270 ("s390/pci: create links between PFs and VFs")
+Cc: <stable@vger.kernel.org> # 5.8
+Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/pci/pci_bus.c |   25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
-@@ -465,7 +465,7 @@ int amdgpu_vram_mgr_alloc_sgt(struct amd
- 	unsigned int pages;
- 	int i, r;
+--- a/arch/s390/pci/pci_bus.c
++++ b/arch/s390/pci/pci_bus.c
+@@ -132,13 +132,14 @@ static int zpci_bus_link_virtfn(struct p
+ {
+ 	int rc;
  
--	*sgt = kmalloc(sizeof(*sg), GFP_KERNEL);
-+	*sgt = kmalloc(sizeof(**sgt), GFP_KERNEL);
- 	if (!*sgt)
- 		return -ENOMEM;
+-	virtfn->physfn = pci_dev_get(pdev);
+ 	rc = pci_iov_sysfs_link(pdev, virtfn, vfid);
+-	if (rc) {
+-		pci_dev_put(pdev);
+-		virtfn->physfn = NULL;
++	if (rc)
+ 		return rc;
+-	}
++
++	virtfn->is_virtfn = 1;
++	virtfn->multifunction = 0;
++	virtfn->physfn = pci_dev_get(pdev);
++
+ 	return 0;
+ }
  
+@@ -151,9 +152,9 @@ static int zpci_bus_setup_virtfn(struct
+ 	int vfid = vfn - 1; /* Linux' vfid's start at 0 vfn at 1*/
+ 	int rc = 0;
+ 
+-	virtfn->is_virtfn = 1;
+-	virtfn->multifunction = 0;
+-	WARN_ON(vfid < 0);
++	if (!zbus->multifunction)
++		return 0;
++
+ 	/* If the parent PF for the given VF is also configured in the
+ 	 * instance, it must be on the same zbus.
+ 	 * We can then identify the parent PF by checking what
+@@ -165,11 +166,17 @@ static int zpci_bus_setup_virtfn(struct
+ 		zdev = zbus->function[i];
+ 		if (zdev && zdev->is_physfn) {
+ 			pdev = pci_get_slot(zbus->bus, zdev->devfn);
++			if (!pdev)
++				continue;
+ 			cand_devfn = pci_iov_virtfn_devfn(pdev, vfid);
+ 			if (cand_devfn == virtfn->devfn) {
+ 				rc = zpci_bus_link_virtfn(pdev, virtfn, vfid);
++				/* balance pci_get_slot() */
++				pci_dev_put(pdev);
+ 				break;
+ 			}
++			/* balance pci_get_slot() */
++			pci_dev_put(pdev);
+ 		}
+ 	}
+ 	return rc;
+@@ -178,8 +185,6 @@ static int zpci_bus_setup_virtfn(struct
+ static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
+ 		struct pci_dev *virtfn, int vfn)
+ {
+-	virtfn->is_virtfn = 1;
+-	virtfn->multifunction = 0;
+ 	return 0;
+ }
+ #endif
 
 
