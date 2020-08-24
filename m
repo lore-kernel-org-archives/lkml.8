@@ -2,90 +2,94 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7466BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 352EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D258206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10468206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:05:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="abBFOKCu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgHXPEm (ORCPT
+        id S1726730AbgHXPEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:04:42 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:40933 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1725946AbgHXPEW (ORCPT
+        Mon, 24 Aug 2020 11:04:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgHXPE0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:04:22 -0400
-Received: (qmail 332615 invoked by uid 1000); 24 Aug 2020 11:04:21 -0400
-Date:   Mon, 24 Aug 2020 11:04:21 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] PM: sleep: core: Fix the handling of pending runtime
- resume requests
-Message-ID: <20200824150421.GD329866@rowland.harvard.edu>
-References: <7969920.MVx1BpXlEM@kreacher>
- <20200821193442.GA264863@rowland.harvard.edu>
- <4922509.6NPD9QEisq@kreacher>
+        Mon, 24 Aug 2020 11:04:26 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C3D0C0617A9;
+        Mon, 24 Aug 2020 08:04:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=8CP6fVQFmATmTA1mY6X4BjyYws+1260yHBdv8vP3vaA=; b=abBFOKCuZv5f3di1oL2KpM+NYX
+        3jL/ZHpavzavy6HHSEvGScySN4B2OLgWxbltw14zWrUpj7tQFvq2IlvmFiLgtzkhTcycrFXioZVCj
+        jVUGq4nLATCW0S1bNtYkidrzspSdwR8K60jIsr0RPBF2cxijXTBLeOJ1WeOMZSp/vBHi+UpQV85/0
+        5fSNqFHc+ZTkoHT8XmdxHNDlmHH8fdzjWJF/uE49Z8OYVBbH348GA0dQ8c7yT06WZcSIL7cdyySc8
+        SAu7lKtuxV8m9AJo5nGSa8Hw5lYXnAqpy8p0CTJuO4czS5S6jQgEEHkR8bD5CEjMjb9QrJeMOK2Wd
+        iZalW7Yg==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAE1B-0003Nv-An; Mon, 24 Aug 2020 15:04:17 +0000
+Date:   Mon, 24 Aug 2020 16:04:17 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        willy@infradead.org
+Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
+Message-ID: <20200824150417.GA12258@infradead.org>
+References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
+ <20200820231140.GE7941@dread.disaster.area>
+ <20200821044533.BBFD1A405F@d06av23.portsmouth.uk.ibm.com>
+ <20200821215358.GG7941@dread.disaster.area>
+ <20200822131312.GA17997@infradead.org>
+ <20200824142823.GA295033@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4922509.6NPD9QEisq@kreacher>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200824142823.GA295033@bfoster>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:36:36PM +0200, Rafael J. Wysocki wrote:
-> > Furthermore, by the logic used in this patch, the call to 
-> > pm_wakeup_event() in the original code is also redundant: Any required 
-> > wakeup event should have been generated when the runtime resume inside 
-> > pm_runtime_barrer() was carried out.
-> 
-> It should be redundant in the real wakeup event cases, but it may cause
-> spurious suspend aborts to occur when there are no real system wakeup
-> events.
-> 
-> Actually, the original code is racy with respect to system wakeup events,
-> because it depends on the exact time when the runtime-resume starts.  Namely,
-> if it manages to start before the freezing of pm_wq, the wakeup will be lost
-> unless the driver takes care of reporting it, which means that drivers really
-> need to do that anyway.  And if they do that (which hopefully is the case), the
-> pm_wakeup_event() call in the core may be dropped.
+On Mon, Aug 24, 2020 at 10:28:23AM -0400, Brian Foster wrote:
+> Do I understand the current code (__bio_try_merge_page() ->
+> page_is_mergeable()) correctly in that we're checking for physical page
+> contiguity and not necessarily requiring a new bio_vec per physical
+> page?
 
-In other words, wakeup events are supposed to be reported at the time 
-the wakeup request is first noticed, right?  We don't want to wait until 
-a resume or runtime_resume callback runs; thanks to this race the 
-callback might not run at all if the event isn't reported first.
 
-Therefore the reasoning behind the original code appears to have been 
-highly suspect.  If there already was a queued runtime-resume request 
-for the device and the device was wakeup-enabled, the wakeup event 
-should _already_ have been reported at the time the request was queued.  
-And we shouldn't rely on it being reported by the runtime-resume 
-callback routine.
+Yes.
 
-> > This means that the code could be simplified to just:
-> > 
-> > 	pm_runtime_barrier(dev);
+> With regard to Dave's earlier point around seeing excessively sized bio
+> chains.. If I set up a large memory box with high dirty mem ratios and
+> do contiguous buffered overwrites over a 32GB range followed by fsync, I
+> can see upwards of 1GB per bio and thus chains on the order of 32+ bios
+> for the entire write. If I play games with how the buffered overwrite is
+> submitted (i.e., in reverse) however, then I can occasionally reproduce
+> a ~32GB chain of ~32k bios, which I think is what leads to problems in
+> I/O completion on some systems. Granted, I don't reproduce soft lockup
+> issues on my system with that behavior, so perhaps there's more to that
+> particular issue.
 > 
-> Yes, it could, so I'm going to re-spin the patch with this code simplification
-> and updated changelog.
-> 
-> > Will this fix the reported bug?
-> 
-> I think so.
+> Regardless, it seems reasonable to me to at least have a conservative
+> limit on the length of an ioend bio chain. Would anybody object to
+> iomap_ioend growing a chain counter and perhaps forcing into a new ioend
+> if we chain something like more than 1k bios at once?
 
-Okay, we'll see!
-
-Alan Stern
+So what exactly is the problem of processing a long chain in the
+workqueue vs multiple small chains?  Maybe we need a cond_resched()
+here and there, but I don't see how we'd substantially change behavior.
