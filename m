@@ -2,184 +2,96 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC0DC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4752E20639
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E70120639
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:54:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="jv9ij9F1"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZFQsTjXM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgHXRye (ORCPT
+        id S1726903AbgHXRyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:54:34 -0400
-Received: from sonic312-30.consmr.mail.ne1.yahoo.com ([66.163.191.211]:36222
-        "EHLO sonic312-30.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726630AbgHXRyb (ORCPT
+        Mon, 24 Aug 2020 13:54:52 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3976 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgHXRyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:54:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1598291670; bh=wZWdeV82grk1vCCG3xyxethbZMe/msX85Us+HfU7CEg=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=jv9ij9F16qa1xzyTPbSC3hnDR9x22zIAPzidexwZ8V1iieDz9qQ/QN8c/5W2Jbv/RvY9OghklFdK6UC6ACXnwnKkaK3gEPYF8slGbb77OJvt89udcJQ8lt2o4FGalovEt69dZXhzGFXVWNdmXn1gITh97KNgA+x/yghb5m+RtTs8K2DGYGRBZ1LxhgNYCQ3SfIPqnvfxfAr2gm3uL7bMB3nXUNFDDCIWXqu5LNhtLYa25Yd3J0/PWMsQuNwPbggpYy5BOzmhLnBlo+rTYbN6ON3DNDscx4cBjle9Lt+xCYKgqNTsGFJXQcVRYZI+dI+jl8UzPaoiJqqp1OZjhWTVhQ==
-X-YMail-OSG: Ws92fo4VM1mkc77h2D.KIK2Of1VKQjfcG5Xhd0ffvRyyGPxmw9R4IkYrt3w_B4b
- uRu0TI7SB834dyQBAW16L3WTq8guJKN9SnGrQI682oRyq8S0HBrrClnY0tm608wSl6e3kY7Mt1aO
- _TwTmWs8c9b7CReMmupYS_BFSTdILsnwtqeVd4ASRxDgYVrePEB48z4xAIbuk9Wt0eY1ntsCuV0N
- ndQVjlcXGGF1NcPAwXX3R7Awt2x_J_2_EMq3GkSJSfHkzKUSXzkWm6te2_2R0uOQfmPb6I9sqmCf
- DhCvnkDN6PgwBLxxC9nJk5zT13M05d4EHWhzDIeNEpdq6pzj9so6aOfOmHpLFU4gIBGMERjL21WM
- lLx3pmo38q5YF6e4rPEefVJwOhHFzQvzbT7kGM2gLh6M67pPYu9rcsll2EaXzshDj2UE4bgk4h0z
- EJD9MzIm2kS5dMGquCPX_kiRTlgFfI8WBufDu4YehRbblA7tbIA8glPx5jecV.DPDLSW19ACBDIV
- BkUpCHmGP7Iu_8ANK0LDOBjhnE9QzbLVz1.fz_fe20UroPQRTqOPL2oAEtlu2NeLk2NZcgO5mOpR
- SInSnlqLSrrKn8O1SQJOHDmwDYx5mV1vYVytf0tDe4cGcDx47goIaEHpbAWg3avgrUIdVDwngvtJ
- xdUEUeQIYM5Xx7u14JXVpK5Ib06jDfAv_YeHma3cvtO1DlAs6FP9AH2TxRGQDwIKf7NTf0qhlv.x
- bK48ym9Bw_PvQnrqHgVJIXEoHM0mX_dH_udz50xk4J7BYNesuvKx9JT3Q6p7oRYNnWQRMWd0VOyE
- 7rIuNK4.k4LytuDmTc_TSJl_UUvGCh9BsyZSOxSBJTufmGspWuIN4ksYXsOGG3aw0slVVo2L44iO
- fEQmBsFjAVslIG9ZeCHgoJvo9aYQuI81W_uC0n7gn8G6NS0ulF7vJoop4D5PYyylIt8N4u9VStW1
- agihrNPCnfxLp3_oR.gEOemkPgt_iJcdk614qyiGNKHia_fQAr4iHPcR2SlXyhhZ1c85xjf4yTjE
- B3Fxup53R1f1YHFJp5qUk7BdTYVgaQu3Wmi3h9jYyFe_xdXLG0xFQpd0a._wNrLqoFBmgC9RJiF8
- _D3CQmdMGmxndAzeE5XwNIyw1tFUVo7urFX_A5p42ad71YG.1U4xQ6iTjdQzif4a.YHw2q58F9ds
- Uy39Nr4CvGo_zhZT6Dk1W4wg9FVEtW5aUxbTZVFJgSs583KudHfuUTIZGXJ_i7liInk3QGuI2tRd
- zpH.1lsfZjpRTMzJQu4fGAWP.PLbs1p0PO6LNj_4e777B2DC2tRgahap0rzyqkXoIgstGQuhHXGs
- 0KxDgruSu3k9EPUQhyv0oXDER8iiKPHQs_FwCze07PxxvntxkXcRSuLlHALZduypZH0CBJuYizUK
- A0mBeQoFFQ35XUBUU1y_6oCoWRIznzI577W5FeDQXKuEOPZb..FtUGTHdoikcFPLt4YO31C2t.bQ
- ScOGwV2hCGpehlb0oPMb1k1Y2FMeodRGu.jaGcMb4oGVhHiM_aimKPooogDH9S6OzZRgFLSbBY6X
- 5G0lBS86LqJKcNwVHcvZzWz0tcrwnweTi6vQMuLUDQyK1pB9NMDaBEonHoI8IXLH5tVZCjewdCMH
- PZqw_tM36DJszZMAbNQAtJ5mH
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.ne1.yahoo.com with HTTP; Mon, 24 Aug 2020 17:54:30 +0000
-Received: by smtp424.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 56d747b8779068a3f044ba03cad1d4c1;
-          Mon, 24 Aug 2020 17:54:29 +0000 (UTC)
-Subject: Re: [RFC] security: replace indirect calls with static calls
-To:     Brendan Jackman <jackmanb@google.com>
-Cc:     Brendan Jackman <jackmanb@chromium.org>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Paul Renauld <renauld@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rafael.j.wysocki@intel.com, Kees Cook <keescook@chromium.org>,
-        thgarnie@chromium.org, KP Singh <kpsingh@google.com>,
-        paul.renauld.epfl@gmail.com,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <20200820164753.3256899-1-jackmanb@chromium.org>
- <42fb4180-772c-5579-ef3e-b4003e2b784b@schaufler-ca.com>
- <CA+i-1C09YZ8aCr6p5NOA2e3Ji5TKwdET=qAy=M328NK--L=0RA@mail.gmail.com>
- <66a35f25-53be-17c3-8ab3-7cb32b0bc77a@schaufler-ca.com>
- <CA+i-1C1GwgYJAfaUofzv47nyryQ15znE6OLWhAN-gsscm6mMoA@mail.gmail.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Message-ID: <04b2d1ca-1524-d503-084c-4b27d55f862c@schaufler-ca.com>
-Date:   Mon, 24 Aug 2020 10:54:26 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Mon, 24 Aug 2020 13:54:49 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f43fe720000>; Mon, 24 Aug 2020 10:52:50 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 24 Aug 2020 10:54:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 24 Aug 2020 10:54:49 -0700
+Received: from [10.2.58.8] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Aug
+ 2020 17:54:48 +0000
+Subject: Re: [PATCH 5/5] fs/ceph: use pipe_get_pages_alloc() for pipe
+To:     Jeff Layton <jlayton@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, <linux-xfs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <ceph-devel@vger.kernel.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200822042059.1805541-1-jhubbard@nvidia.com>
+ <20200822042059.1805541-6-jhubbard@nvidia.com>
+ <048e78f2b440820d936eb67358495cc45ba579c3.camel@kernel.org>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <c943337b-1c1e-9c85-4ded-39931986c6a3@nvidia.com>
+Date:   Mon, 24 Aug 2020 10:54:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <CA+i-1C1GwgYJAfaUofzv47nyryQ15znE6OLWhAN-gsscm6mMoA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <048e78f2b440820d936eb67358495cc45ba579c3.camel@kernel.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-Mailer: WebService/1.1.16455 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598291570; bh=CWuYw5dH/VtBpvI19yHqq86doR7B2zJKPzasfKT65u4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ZFQsTjXMbeI3odHvWyyv+avDBH8AbQfdk/U759B5HohE1mwGHvlrewSpb+kAzQUcn
+         qpiBh79ZgoT3BgBaR/4K0luta3Fhw12TGTDKBytzb3xqjfW20BFGBgoOHfJpD6V6pl
+         RQQdVWIB+0HeeHIGKU1yGgj3CT15cw/Oy4hmHeaC4JeB57jy8gOWrl5eFh0BGw2J1N
+         /hHEDha+UU+2OIE8uS2UiYiUVAvev6rDInJrCQUDmMu07atPRtlsbaFICCCuiZUrJc
+         nlCtkrPZVDxFy+ch0xB2yJGUibXU4EjwgOxn1J1wNNPSFwA4NNat5nH5siKxTScwDt
+         BZdUfY32nEviA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/24/2020 10:04 AM, Brendan Jackman wrote:
-> On Mon, 24 Aug 2020 at 18:43, Casey Schaufler <casey@schaufler-ca.com> wrote:
->> On 8/24/2020 8:20 AM, Brendan Jackman wrote:
->>> On Fri, 21 Aug 2020 at 00:46, Casey Schaufler <casey@schaufler-ca.com> wrote:
->>>> On 8/20/2020 9:47 AM, Brendan Jackman wrote:
->>> [...]
->>>> What does NOP really look like?
->>> The NOP is the same as a regular function call but the CALL
->>> instruction is replaced with a NOP instruction. The code that sets up
->>> the call parameters is unchanged, and so is the code that expects to
->>> get the return value in eax or whatever.
->> Right. Are you saying that NOP is in-line assembler in your switch?
-> That's right - although it's behind the static_call API that the patch
-> depends on ([5] in the original mail).
->
->>> That means we cannot actually
->>> call the static_calls for NULL slots, we'd get undefined behaviour
->>> (except for void hooks) - this is what Peter is talking about in the
->>> sibling thread.
->> Referring to the "sibling thread" is kinda confusing, and
->> assumes everyone is one all the right mailing lists, and knows
->> which other thread you're talking about.
-> Sure, sorry - here's the Lore link for future reference:
->
-> https://lore.kernel.org/lkml/20200820164753.3256899-1-jackmanb@chromium.org/T/#m5a6fb3f10141049ce43e18a41f154796090ae1d5
->
->>> For this reason, there are _no gaps_ in the callback table. For a
->>> given LSM hook, all the slots after base_slot_idx are filled,
->> Why go to all the trouble of maintaining the base_slot_idx
->> if NOP is so cheap? Why not fill all unused slots with NOP?
->> Worst case would be a hook with no users, in which case you
->> have 11 NOPS in the void hook case and 11 "if (ret != DEFAULT_RET)"
->> and 11 NOPS in the int case. No switch magic required. Even
->> better, in the int case you have two calls/slot, the first is the
->> module supplied function (or NOP) and the second is
->>         int isit(int ret) { return (ret != DEFAULT_RET) ? ret : 0; }
->> (or NOP).
->>
->> The no security module case degenerates to 22 NOP instructions
->> and no if checks of any sort. I'm not the performance guy, but
->> that seems better than maintaining and checking base_slot_idx
->> to me.
-> The switch trick is not really motivated by performance.
+On 8/24/20 3:53 AM, Jeff Layton wrote:
+> 
+> This looks fine to me. Let me know if you need this merged via the ceph
+> tree. Thanks!
+> 
+> Acked-by: Jeff Layton <jlayton@kernel.org>
+> 
 
-Then what is its motivation? It makes the code more complicated,
-and is unnecessary.
+Yes, please! It will get proper testing that way, and it doesn't have
+any prerequisites, despite being part of this series. So it would be
+great to go in via the ceph tree.
 
-> I think all the focus on the NOPs themselves is a bit misleading here
-> - we _can't_ execute the NOPs for the int hooks, because there are
-> instructions after them that expect a function to have just returned a
-> value, which NOP doesn't do.
+For the main series here, I'll send a v2 with only patches 1-3, once
+enough feedback has happened.
 
-That's what I was hoping to address with the second call in the slot.
-The first call in the slot would be either the module supplied code
-or a NOP if the module isn't using the hook. The second would be
-supplied by the LSM infrastructure and would be NOP if the module
-didn't use the hook. The LSM supplied function would do the necessary
-checking. Its more complicated than the void case, but not that much
-more complicated than the existing list based scheme.
-
-The concern about the non-existent return on a NOP can be dealt with
-by setting up initial conditions correctly in most cases. Dealing with
-multiple security modules providing information (e.g. secid_to_secctx)
-is where it gets tricky.
-
->  When there is a NOP in the slot instead
-> of a CALL, it would appear to "return" whatever value is leftover in
-> the return register. At the C level, this is why the static_call API
-> doesn't allow static_call_cond to return a value (which is what PeterZ
-> is referring to in the thread I linked above).
->
-> So, we could drop the switch trick for void hooks and just use
-> static_call_cond, but this doesn't work for int hooks. IMO that
-> variation between the two hook types would just add confusion.
-
-With the number of cases where the switch trick isn't going to
-work in the long term I'm disinclined to think it makes things
-less confusing.
-
-
->>>>> +#define __UNROLL_MACRO_LOOP_20(MACRO, ...) \
->>>>> + __UNROLL_MACRO_LOOP_19(MACRO, __VA_ARGS__) \
->>>>> + MACRO(19, __VA_ARGS__)
->>>>> +
->>>> Where does "20" come from? Why are you unrolling beyond 11?
->>> It's just an arbitrary limit on the unrolling macro implementation, we
->>> aren't actually unrolling beyond 11 where the macro is used (N is set
->>> to 11).
->> I'm not a fan of including macros you can't use, especially
->> when they're just obvious variants of other macros.
-> Not sure what you mean here - is there already a macro that does what
-> UNROLL_MACRO_LOOP does?
-
-No, I'm saying that __UNROLL_MACRO_LOOP_20() will never be used on
-a system that has at most 11 security modules. You've added a bunch of
-text that serves no purpose. "Future expansion" is pretty silly here.
-
+thanks,
+-- 
+John Hubbard
+NVIDIA
