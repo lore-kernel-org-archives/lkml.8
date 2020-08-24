@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC05C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E89C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F217206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727B2207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258165;
-	bh=Jneed6ie/AYBGZ4JnR/nz3pF9fM3dYNvhGU5zeQzGlY=;
+	s=default; t=1598258169;
+	bh=vFo0tFMRonMA5xJot5VRchBFMbiRh0keaJPlkskQS/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LCdeTx46W59uXjVsdI30jJS5gELT+Wzl8DAhJL0g+LcyPo2dLFvU0HmfVbHiDGztE
-	 JeFGJH1CzztmJvZjV8s/SYrApmjzdhjrvccS2aA0K2gMzMji3j0Uz202/nZkL14ZzT
-	 tRYhX/66xU8oD3g+XJadiDrg1JX450hvCslRyvjQ=
+	b=1R8o0/pqQvGzCI048RkBYBSCz/q0Y3i2gFacVRcV1g/0utYaAt4JXAExdFssK8E7I
+	 atloi8MNL4cByIqaU+autmWJUypr+lUDsXS1Enp+BjeyhZiQG2fyTw8VNBWseTok/B
+	 iEZ4F37VTjcjg3JCM/3w9iy62+1sXYAVEIpvPfME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgHXIgC (ORCPT
+        id S1728223AbgHXIgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:36:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47364 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbgHXIfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:35:51 -0400
+        id S1728198AbgHXIgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:36:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB2DF204FD;
-        Mon, 24 Aug 2020 08:35:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8F89206F0;
+        Mon, 24 Aug 2020 08:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258151;
-        bh=Jneed6ie/AYBGZ4JnR/nz3pF9fM3dYNvhGU5zeQzGlY=;
+        s=default; t=1598258160;
+        bh=vFo0tFMRonMA5xJot5VRchBFMbiRh0keaJPlkskQS/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LfTJTfJLrHy594CF3QJaD4IjyqDrZ0BvTzBn8YO97KLkVaReeTaOwslNl+fRW6AgH
-         1EVnCyQy37NK+D1/C5SOoCQBx2hsG3FpoTybdUdv7u+Hf2pfFt/Av1PL3bbsdBiE7v
-         utVsX+V6Y1CAPsxTTCfEcjwFIJrQmqdQiuuzBeLk=
+        b=qmViKZy/zWHd6b3xkva19FN/frQ8NJ9IqMmeO86FQnPLlbzTovOIS8aMUdbgk+j8P
+         vmwN+C5jlp633OYcEQew8oeRsDVGwTSSRvqsz/dMrqiqA13mIyJiIFUskShI1XJmJX
+         g880vt0pHA0d8yPTqM8Ff9mD1elE3bipesFGcK74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Zhang Changzhong <zhangchangzhong@huawei.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, Mahesh Bandewar <maheshb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 094/148] can: j1939: abort multipacket broadcast session when timeout occurs
-Date:   Mon, 24 Aug 2020 10:29:52 +0200
-Message-Id: <20200824082418.549189841@linuxfoundation.org>
+Subject: [PATCH 5.8 097/148] ipvlan: fix device features
+Date:   Mon, 24 Aug 2020 10:29:55 +0200
+Message-Id: <20200824082418.684820974@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -62,49 +61,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Changzhong <zhangchangzhong@huawei.com>
+From: Mahesh Bandewar <maheshb@google.com>
 
-[ Upstream commit 2b8b2e31555cf55ba3680fb28e2b382e168d7ea1 ]
+[ Upstream commit d0f5c7076e01fef6fcb86988d9508bf3ce258bd4 ]
 
-If timeout occurs, j1939_tp_rxtimer() first calls hrtimer_start() to restart
-rxtimer, and then calls __j1939_session_cancel() to set session->state =
-J1939_SESSION_WAITING_ABORT. At next timeout expiration, because of the
-J1939_SESSION_WAITING_ABORT session state j1939_tp_rxtimer() will call
-j1939_session_deactivate_activate_next() to deactivate current session, and
-rxtimer won't be set.
+Processing NETDEV_FEAT_CHANGE causes IPvlan links to lose
+NETIF_F_LLTX feature because of the incorrect handling of
+features in ipvlan_fix_features().
 
-But for multipacket broadcast session, __j1939_session_cancel() don't set
-session->state = J1939_SESSION_WAITING_ABORT, thus current session won't be
-deactivate and hrtimer_start() is called to start new rxtimer again and again.
+--before--
+lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
+tx-lockless: on [fixed]
+lpaa10:~# ethtool -K ipvl0 tso off
+Cannot change tcp-segmentation-offload
+Actual changes:
+vlan-challenged: off [fixed]
+tx-lockless: off [fixed]
+lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
+tx-lockless: off [fixed]
+lpaa10:~#
 
-So fix it by moving session->state = J1939_SESSION_WAITING_ABORT out of if
-(!j1939_cb_is_broadcast(&session->skcb)) statement.
+--after--
+lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
+tx-lockless: on [fixed]
+lpaa10:~# ethtool -K ipvl0 tso off
+Cannot change tcp-segmentation-offload
+Could not change any device features
+lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
+tx-lockless: on [fixed]
+lpaa10:~#
 
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
-Link: https://lore.kernel.org/r/1596599425-5534-4-git-send-email-zhangchangzhong@huawei.com
-Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fixes: 2ad7bf363841 ("ipvlan: Initial check-in of the IPVLAN driver.")
+Signed-off-by: Mahesh Bandewar <maheshb@google.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/j1939/transport.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ipvlan/ipvlan_main.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index d1a9adde677b0..e3167619b196f 100644
---- a/net/can/j1939/transport.c
-+++ b/net/can/j1939/transport.c
-@@ -1074,9 +1074,9 @@ static void __j1939_session_cancel(struct j1939_session *session,
- 	lockdep_assert_held(&session->priv->active_session_list_lock);
+diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
+index 15e87c097b0b3..5bca94c990061 100644
+--- a/drivers/net/ipvlan/ipvlan_main.c
++++ b/drivers/net/ipvlan/ipvlan_main.c
+@@ -106,12 +106,21 @@ static void ipvlan_port_destroy(struct net_device *dev)
+ 	kfree(port);
+ }
  
- 	session->err = j1939_xtp_abort_to_errno(priv, err);
-+	session->state = J1939_SESSION_WAITING_ABORT;
- 	/* do not send aborts on incoming broadcasts */
- 	if (!j1939_cb_is_broadcast(&session->skcb)) {
--		session->state = J1939_SESSION_WAITING_ABORT;
- 		j1939_xtp_tx_abort(priv, &session->skcb,
- 				   !session->transmission,
- 				   err, session->skcb.addr.pgn);
++#define IPVLAN_ALWAYS_ON_OFLOADS \
++	(NETIF_F_SG | NETIF_F_HW_CSUM | \
++	 NETIF_F_GSO_ROBUST | NETIF_F_GSO_SOFTWARE | NETIF_F_GSO_ENCAP_ALL)
++
++#define IPVLAN_ALWAYS_ON \
++	(IPVLAN_ALWAYS_ON_OFLOADS | NETIF_F_LLTX | NETIF_F_VLAN_CHALLENGED)
++
+ #define IPVLAN_FEATURES \
+-	(NETIF_F_SG | NETIF_F_CSUM_MASK | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
++	(NETIF_F_SG | NETIF_F_HW_CSUM | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
+ 	 NETIF_F_GSO | NETIF_F_ALL_TSO | NETIF_F_GSO_ROBUST | \
+ 	 NETIF_F_GRO | NETIF_F_RXCSUM | \
+ 	 NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_HW_VLAN_STAG_FILTER)
+ 
++	/* NETIF_F_GSO_ENCAP_ALL NETIF_F_GSO_SOFTWARE Newly added */
++
+ #define IPVLAN_STATE_MASK \
+ 	((1<<__LINK_STATE_NOCARRIER) | (1<<__LINK_STATE_DORMANT))
+ 
+@@ -125,7 +134,9 @@ static int ipvlan_init(struct net_device *dev)
+ 	dev->state = (dev->state & ~IPVLAN_STATE_MASK) |
+ 		     (phy_dev->state & IPVLAN_STATE_MASK);
+ 	dev->features = phy_dev->features & IPVLAN_FEATURES;
+-	dev->features |= NETIF_F_LLTX | NETIF_F_VLAN_CHALLENGED;
++	dev->features |= IPVLAN_ALWAYS_ON;
++	dev->vlan_features = phy_dev->vlan_features & IPVLAN_FEATURES;
++	dev->vlan_features |= IPVLAN_ALWAYS_ON_OFLOADS;
+ 	dev->hw_enc_features |= dev->features;
+ 	dev->gso_max_size = phy_dev->gso_max_size;
+ 	dev->gso_max_segs = phy_dev->gso_max_segs;
+@@ -227,7 +238,14 @@ static netdev_features_t ipvlan_fix_features(struct net_device *dev,
+ {
+ 	struct ipvl_dev *ipvlan = netdev_priv(dev);
+ 
+-	return features & (ipvlan->sfeatures | ~IPVLAN_FEATURES);
++	features |= NETIF_F_ALL_FOR_ALL;
++	features &= (ipvlan->sfeatures | ~IPVLAN_FEATURES);
++	features = netdev_increment_features(ipvlan->phy_dev->features,
++					     features, features);
++	features |= IPVLAN_ALWAYS_ON;
++	features &= (IPVLAN_FEATURES | IPVLAN_ALWAYS_ON);
++
++	return features;
+ }
+ 
+ static void ipvlan_change_rx_flags(struct net_device *dev, int change)
+@@ -734,10 +752,9 @@ static int ipvlan_device_event(struct notifier_block *unused,
+ 
+ 	case NETDEV_FEAT_CHANGE:
+ 		list_for_each_entry(ipvlan, &port->ipvlans, pnode) {
+-			ipvlan->dev->features = dev->features & IPVLAN_FEATURES;
+ 			ipvlan->dev->gso_max_size = dev->gso_max_size;
+ 			ipvlan->dev->gso_max_segs = dev->gso_max_segs;
+-			netdev_features_change(ipvlan->dev);
++			netdev_update_features(ipvlan->dev);
+ 		}
+ 		break;
+ 
 -- 
 2.25.1
 
