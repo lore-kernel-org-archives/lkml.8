@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE39C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B841EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0E0B204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9019A204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259345;
-	bh=YmMkGDCzuMOp8TtDnyNzcwbeuxefZcMKSq0PW3kxMDY=;
+	s=default; t=1598259356;
+	bh=ss/+lyIIJVPE1pC7wdBMHiVipnG8obl6FjO1g5MfdVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gXxB9uPb26XPEdCerbc7g3DoC373rrklR9HW4HVWck3Fnf3m7n9kG9+oQGqpRRtYG
-	 Thbjg1gYyIE2fJpNh2IOtEgn49wp2zOZAvTGWbN3mrZModHNs6AFkSiu/eo6C/hI4P
-	 j/cR/+GOiECZQH5XCFPTY8fZB7yJtcqFqSF3pKQo=
+	b=keeVmI7dr7ESztRx2Hg3fZUgtMuvZanbuy+ato3rIrfsH8ZgNUOM+aGEHWAp50Op4
+	 HRgCCr9I+ZCamN14LUOlanP49lS0jMH9liT1UV17vhGNSGWJQqsBkE3kHD6tXEWWzw
+	 D4+5/Kzv3ubcNGDiCq9uHNMoSJxQRrLg7FbuCyEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbgHXIzp (ORCPT
+        id S1730111AbgHXIzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37182 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:55:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730408AbgHXIzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:19 -0400
+        id S1730406AbgHXIzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:55:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CACA82072D;
-        Mon, 24 Aug 2020 08:55:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB5B82087D;
+        Mon, 24 Aug 2020 08:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259319;
-        bh=YmMkGDCzuMOp8TtDnyNzcwbeuxefZcMKSq0PW3kxMDY=;
+        s=default; t=1598259324;
+        bh=ss/+lyIIJVPE1pC7wdBMHiVipnG8obl6FjO1g5MfdVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S+rYZVewReyMWJXXAnMGgAOoUnOHXxCaROG2kSvCvEWULsgOFNSWrS+tDkk8egU37
-         unEA+1+DDwTa+lPODl5YdRfkw9MZyqqF9I77RUvCedDwKrQDa9tc+Eb1Sqcr9uUFon
-         jiihtRw6XVlpjPktPxowfdZhCNznhmzQ4FRQo2D4=
+        b=UupuI5LIJiuSAYZHVZXQklRdH/Qle/3H0thyu3qw67qQHFGkDyteMh6h/zt1AY2vx
+         jlvxlSnYQqQ+kaK+SJHhIDR8g8hm8j4SvGaklIr9pURUKJdI1+r6cm9JLEUqFkB3zT
+         3xIY05QottNWBuqosydWOlVpaYX9LIlrySAHUtqY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.19 14/71] ext4: fix checking of directory entry validity for inline directories
-Date:   Mon, 24 Aug 2020 10:31:05 +0200
-Message-Id: <20200824082356.611465553@linuxfoundation.org>
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 16/71] scsi: zfcp: Fix use-after-free in request timeout handlers
+Date:   Mon, 24 Aug 2020 10:31:07 +0200
+Message-Id: <20200824082356.708885351@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -59,56 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit 7303cb5bfe845f7d43cd9b2dbd37dbb266efda9b upstream.
+commit 2d9a2c5f581be3991ba67fa9e7497c711220ea8e upstream.
 
-ext4_search_dir() and ext4_generic_delete_entry() can be called both for
-standard director blocks and for inline directories stored inside inode
-or inline xattr space. For the second case we didn't call
-ext4_check_dir_entry() with proper constraints that could result in
-accepting corrupted directory entry as well as false positive filesystem
-errors like:
+Before v4.15 commit 75492a51568b ("s390/scsi: Convert timers to use
+timer_setup()"), we intentionally only passed zfcp_adapter as context
+argument to zfcp_fsf_request_timeout_handler(). Since we only trigger
+adapter recovery, it was unnecessary to sync against races between timeout
+and (late) completion.  Likewise, we only passed zfcp_erp_action as context
+argument to zfcp_erp_timeout_handler(). Since we only wakeup an ERP action,
+it was unnecessary to sync against races between timeout and (late)
+completion.
 
-EXT4-fs error (device dm-0): ext4_search_dir:1395: inode #28320400:
-block 113246792: comm dockerd: bad entry in directory: directory entry too
-close to block end - offset=0, inode=28320403, rec_len=32, name_len=8,
-size=4096
+Meanwhile the timeout handlers get timer_list as context argument and do a
+timer-specific container-of to zfcp_fsf_req which can have been freed.
 
-Fix the arguments passed to ext4_check_dir_entry().
+Fix it by making sure that any request timeout handlers, that might just
+have started before del_timer(), are completed by using del_timer_sync()
+instead. This ensures the request free happens afterwards.
 
-Fixes: 109ba779d6cc ("ext4: check for directory entries too close to block end")
-CC: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200731162135.8080-1-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Space time diagram of potential use-after-free:
+
+Basic idea is to have 2 or more pending requests whose timeouts run out at
+almost the same time.
+
+req 1 timeout     ERP thread        req 2 timeout
+----------------  ----------------  ---------------------------------------
+zfcp_fsf_request_timeout_handler
+fsf_req = from_timer(fsf_req, t, timer)
+adapter = fsf_req->adapter
+zfcp_qdio_siosl(adapter)
+zfcp_erp_adapter_reopen(adapter,...)
+                  zfcp_erp_strategy
+                  ...
+                  zfcp_fsf_req_dismiss_all
+                  list_for_each_entry_safe
+                    zfcp_fsf_req_complete 1
+                    del_timer 1
+                    zfcp_fsf_req_free 1
+                    zfcp_fsf_req_complete 2
+                                    zfcp_fsf_request_timeout_handler
+                    del_timer 2
+                                    fsf_req = from_timer(fsf_req, t, timer)
+                    zfcp_fsf_req_free 2
+                                    adapter = fsf_req->adapter
+                                              ^^^^^^^ already freed
+
+Link: https://lore.kernel.org/r/20200813152856.50088-1-maier@linux.ibm.com
+Fixes: 75492a51568b ("s390/scsi: Convert timers to use timer_setup()")
+Cc: <stable@vger.kernel.org> #4.15+
+Suggested-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/namei.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/s390/scsi/zfcp_fsf.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -1309,8 +1309,8 @@ int ext4_search_dir(struct buffer_head *
- 		    ext4_match(fname, de)) {
- 			/* found a match - just to be sure, do
- 			 * a full check */
--			if (ext4_check_dir_entry(dir, NULL, de, bh, bh->b_data,
--						 bh->b_size, offset))
-+			if (ext4_check_dir_entry(dir, NULL, de, bh, search_buf,
-+						 buf_size, offset))
- 				return -1;
- 			*res_dir = de;
- 			return 1;
-@@ -2344,7 +2344,7 @@ int ext4_generic_delete_entry(handle_t *
- 	de = (struct ext4_dir_entry_2 *)entry_buf;
- 	while (i < buf_size - csum_size) {
- 		if (ext4_check_dir_entry(dir, NULL, de, bh,
--					 bh->b_data, bh->b_size, i))
-+					 entry_buf, buf_size, i))
- 			return -EFSCORRUPTED;
- 		if (de == de_del)  {
- 			if (pde)
+--- a/drivers/s390/scsi/zfcp_fsf.c
++++ b/drivers/s390/scsi/zfcp_fsf.c
+@@ -403,7 +403,7 @@ static void zfcp_fsf_req_complete(struct
+ 		return;
+ 	}
+ 
+-	del_timer(&req->timer);
++	del_timer_sync(&req->timer);
+ 	zfcp_fsf_protstatus_eval(req);
+ 	zfcp_fsf_fsfstatus_eval(req);
+ 	req->handler(req);
+@@ -758,7 +758,7 @@ static int zfcp_fsf_req_send(struct zfcp
+ 	req->qdio_req.qdio_outb_usage = atomic_read(&qdio->req_q_free);
+ 	req->issued = get_tod_clock();
+ 	if (zfcp_qdio_send(qdio, &req->qdio_req)) {
+-		del_timer(&req->timer);
++		del_timer_sync(&req->timer);
+ 		/* lookup request again, list might have changed */
+ 		zfcp_reqlist_find_rm(adapter->req_list, req_id);
+ 		zfcp_erp_adapter_reopen(adapter, 0, "fsrs__1");
 
 
