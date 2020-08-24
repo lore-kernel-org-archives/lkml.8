@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A71C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD55C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB38206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63EBE206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289128;
-	bh=MCxPakGL9ABd29OvlEbGaratiOtRqPYeKeb2GiLmDas=;
+	s=default; t=1598289149;
+	bh=3wKM+eofZ9MBJ6+Q56FyXiwsjGuqFNmK8dy1L010v3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2hm2VBOZ0403wTy6TqV19G3YEh+SeuuZ5wZN1TyM8OTzyPWyl+yShoOPmUcPqpuyd
-	 15kp1XG5akmO/xjRRsYcoBUPKYJrZN6iWNB+Z07qganJgJpbcXb97oaMGI2uKHeDb4
-	 88FWa7Wvj11m3Gxq9oHcirCFwHitjAs5clplpaOQ=
+	b=i0lOfvRO05+RoKz1OrQMnDCDFnaKAaVOzzi1PaWRyL1LAXO5F288ixLGdbY13Js6B
+	 6AQSwmj73y5jI24bI1AbXXJ3h7fRRcUU3SUz72M1Mn94cREubWtvopeR3mssAxXYLs
+	 tSzgbw+O9+xRNYDOsNDs5aaRRodxk94euJ4RCqJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbgHXRLs (ORCPT
+        id S1728150AbgHXRMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:11:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:12:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728393AbgHXQhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:37:55 -0400
+        id S1728022AbgHXQhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:37:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B600D22D74;
-        Mon, 24 Aug 2020 16:37:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66EE522CB1;
+        Mon, 24 Aug 2020 16:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287031;
-        bh=MCxPakGL9ABd29OvlEbGaratiOtRqPYeKeb2GiLmDas=;
+        s=default; t=1598287026;
+        bh=3wKM+eofZ9MBJ6+Q56FyXiwsjGuqFNmK8dy1L010v3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q/+m0HhQ8GJQHjAc0anjx/ZlQuZVapRNL68QpPbiBL4dD6ubQpNgpzsysePOfzbKA
-         +GhFhfnz8TrIo3MkKhZVdbxZFAFoSd1RhFml4qlhKzYBCHeORbxyQJOFYGYs4gkavc
-         MS+Q3SpMBIVA5M7Jsp8H9cMCndhUzw0cgCw3+Egk=
+        b=xSFHHUwcaaYww2gTxGdok27s6qgj43vY5bCN3eY8e9mNljCJqef3g9OeOAv2t1dhM
+         u+5zTyk326tT0nMhXYUYq1KIeN4EaoE5U8nJUtRuC7Y1JVQaIQfccrWHd5x45uhNgS
+         hhfWV2D1KPBqx66wbgUpWR3htbIr7eorYkeJyoos=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Martin Schiller <ms@dev.tdt.de>,
-        Andrew Hendry <andrew.hendry@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 27/54] drivers/net/wan/hdlc_x25: Added needed_headroom and a skb->len check
-Date:   Mon, 24 Aug 2020 12:36:06 -0400
-Message-Id: <20200824163634.606093-27-sashal@kernel.org>
+Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 23/54] libbpf: Prevent overriding errno when logging errors
+Date:   Mon, 24 Aug 2020 12:36:02 -0400
+Message-Id: <20200824163634.606093-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,106 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 77b981c82c1df7c7ad32a046f17f007450b46954 ]
+[ Upstream commit 23ab656be263813acc3c20623757d3cd1496d9e1 ]
 
-1. Added a skb->len check
+Turns out there were a few more instances where libbpf didn't save the
+errno before writing an error message, causing errno to be overridden by
+the printf() return and the error disappearing if logging is enabled.
 
-This driver expects upper layers to include a pseudo header of 1 byte
-when passing down a skb for transmission. This driver will read this
-1-byte header. This patch added a skb->len check before reading the
-header to make sure the header exists.
-
-2. Added needed_headroom and set hard_header_len to 0
-
-When this driver transmits data,
-  first this driver will remove a pseudo header of 1 byte,
-  then the lapb module will prepend the LAPB header of 2 or 3 bytes.
-So the value of needed_headroom in this driver should be 3 - 1.
-
-Because this driver has no header_ops, according to the logic of
-af_packet.c, the value of hard_header_len should be 0.
-
-Reason of setting needed_headroom and hard_header_len at this place:
-
-This driver is written using the API of the hdlc module, the hdlc
-module enables this driver (the protocol driver) to run on any hardware
-that has a driver (the hardware driver) written using the API of the
-hdlc module.
-
-Two other hdlc protocol drivers - hdlc_ppp and hdlc_raw_eth, also set
-things like hard_header_len at this place. In hdlc_ppp, it sets
-hard_header_len after attach_hdlc_protocol and before setting dev->type.
-In hdlc_raw_eth, it sets hard_header_len by calling ether_setup after
-attach_hdlc_protocol and after memcpy the settings.
-
-3. Reset needed_headroom when detaching protocols (in hdlc.c)
-
-When detaching a protocol from a hardware device, the hdlc module will
-reset various parameters of the device (including hard_header_len) to
-the default values. We add needed_headroom here so that needed_headroom
-will also be reset.
-
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Cc: Andrew Hendry <andrew.hendry@gmail.com>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200813142905.160381-1-toke@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/hdlc.c     |  1 +
- drivers/net/wan/hdlc_x25.c | 17 ++++++++++++++++-
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ tools/lib/bpf/libbpf.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wan/hdlc.c b/drivers/net/wan/hdlc.c
-index dfc16770458d8..386ed2aa31fd9 100644
---- a/drivers/net/wan/hdlc.c
-+++ b/drivers/net/wan/hdlc.c
-@@ -230,6 +230,7 @@ static void hdlc_setup_dev(struct net_device *dev)
- 	dev->max_mtu		 = HDLC_MAX_MTU;
- 	dev->type		 = ARPHRD_RAWHDLC;
- 	dev->hard_header_len	 = 16;
-+	dev->needed_headroom	 = 0;
- 	dev->addr_len		 = 0;
- 	dev->header_ops		 = &hdlc_null_ops;
- }
-diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
-index f70336bb6f524..f52b9fed05931 100644
---- a/drivers/net/wan/hdlc_x25.c
-+++ b/drivers/net/wan/hdlc_x25.c
-@@ -107,8 +107,14 @@ static netdev_tx_t x25_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	int result;
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index c417cff2cdaf4..3e53bfcba2b1a 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -3210,10 +3210,11 @@ bpf_object__probe_global_data(struct bpf_object *obj)
  
-+	/* There should be a pseudo header of 1 byte added by upper layers.
-+	 * Check to make sure it is there before reading it.
-+	 */
-+	if (skb->len < 1) {
-+		kfree_skb(skb);
-+		return NETDEV_TX_OK;
-+	}
+ 	map = bpf_create_map_xattr(&map_attr);
+ 	if (map < 0) {
+-		cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
++		ret = -errno;
++		cp = libbpf_strerror_r(ret, errmsg, sizeof(errmsg));
+ 		pr_warn("Error in %s():%s(%d). Couldn't create simple array map.\n",
+-			__func__, cp, errno);
+-		return -errno;
++			__func__, cp, -ret);
++		return ret;
+ 	}
  
--	/* X.25 to LAPB */
- 	switch (skb->data[0]) {
- 	case X25_IFACE_DATA:	/* Data to be transmitted */
- 		skb_pull(skb, 1);
-@@ -294,6 +300,15 @@ static int x25_ioctl(struct net_device *dev, struct ifreq *ifr)
- 			return result;
+ 	insns[0].imm = map;
+@@ -5508,9 +5509,10 @@ int bpf_program__pin_instance(struct bpf_program *prog, const char *path,
+ 	}
  
- 		memcpy(&state(hdlc)->settings, &new_settings, size);
-+
-+		/* There's no header_ops so hard_header_len should be 0. */
-+		dev->hard_header_len = 0;
-+		/* When transmitting data:
-+		 * first we'll remove a pseudo header of 1 byte,
-+		 * then we'll prepend an LAPB header of at most 3 bytes.
-+		 */
-+		dev->needed_headroom = 3 - 1;
-+
- 		dev->type = ARPHRD_X25;
- 		call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE, dev);
- 		netif_dormant_off(dev);
+ 	if (bpf_obj_pin(prog->instances.fds[instance], path)) {
+-		cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
++		err = -errno;
++		cp = libbpf_strerror_r(err, errmsg, sizeof(errmsg));
+ 		pr_warn("failed to pin program: %s\n", cp);
+-		return -errno;
++		return err;
+ 	}
+ 	pr_debug("pinned program '%s'\n", path);
+ 
 -- 
 2.25.1
 
