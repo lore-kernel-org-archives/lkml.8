@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84321C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FADC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF38204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9CEB207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259138;
-	bh=0B0DRFdWdWQdHL0+g7iBEWqDYDKRRqAchK9/0m+Xyfo=;
+	s=default; t=1598259142;
+	bh=Tt0oAXWRf5+Ttfk1X82OJ9XAYKwy9lkTMfu3XrypqKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X2NeQhxzQ+HVnNRrDHzzJCCLufe94JVVVCV1YoOHnfMkxDW1W0ebRjPq+CrZGe+kA
-	 UQrsnkch6IyAvn9UNsDLe+cpGRoqMKpMxY3xnFyUdRHHdEr41AcKIIDsISlQtGGP3o
-	 nwrSHsxiHv4Vr5vusNK4CLmQWWaBVzdqg5vZktJs=
+	b=yVxwRG3ZAitotnx3BlHILuCX4p+fd+0iE53GKbo3DQpX4w+bP0u5oggzhFzJPP3eq
+	 zSTf5jNFpSC+LaH5/jhEBdrIhXYMz6iczcazCzbI5qN23stEHR4dr5iMnFc7cekE/G
+	 Zvimm963vLPk4bB4XaiplGqMjkdwRIz/1198K/as=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbgHXIwR (ORCPT
+        id S1730084AbgHXIwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:52:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58044 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:52:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729494AbgHXIwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:52:12 -0400
+        id S1728832AbgHXIwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:52:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23A5C204FD;
-        Mon, 24 Aug 2020 08:52:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C57D1207D3;
+        Mon, 24 Aug 2020 08:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259131;
-        bh=0B0DRFdWdWQdHL0+g7iBEWqDYDKRRqAchK9/0m+Xyfo=;
+        s=default; t=1598259134;
+        bh=Tt0oAXWRf5+Ttfk1X82OJ9XAYKwy9lkTMfu3XrypqKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bUM9PzMqm2n1R9bcwUPT+BURm02o0TFAneooc8nBvwyJbLzfiOb5opr5/x/LP7HUC
-         ibwNZJRCW/4IGXR6uvf2WMjKopfiyI11jnQN2m/qtBT5Vm6c3D9lycJDvh6m43KmDV
-         Hr5NvISEkUs9yo+y/zns+4q4f0NEIRGShR+fpNCA=
+        b=Jb+UC9k7PC5l0XLk9e5yU68qhvS+xRuUOOEeT2HSyNylQ31JE26X/hlor3y12JHIA
+         4TMPm+X7Iea1ltjCjgi5s2QQ8CPAmMG0sJ41ycBKBRs/vQ3ukspqaIE3C12R+zlnUS
+         CBZLJ5cWBUCvjzABnQufQvqUOc6XDWScUpyZ95g4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        stable@vger.kernel.org,
+        Charan Teja Reddy <charante@codeaurora.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Jason Baron <jbaron@akamai.com>,
+        David Hildenbrand <david@redhat.com>,
         David Rientjes <rientjes@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Vinayak Menon <vinmenon@codeaurora.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 13/39] mm: include CMA pages in lowmem_reserve at boot
-Date:   Mon, 24 Aug 2020 10:31:12 +0200
-Message-Id: <20200824082349.153225426@linuxfoundation.org>
+Subject: [PATCH 4.9 14/39] mm, page_alloc: fix core hung in free_pcppages_bulk()
+Date:   Mon, 24 Aug 2020 10:31:13 +0200
+Message-Id: <20200824082349.214880399@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
@@ -64,85 +66,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Charan Teja Reddy <charante@codeaurora.org>
 
-commit e08d3fdfe2dafa0331843f70ce1ff6c1c4900bf4 upstream.
+commit 88e8ac11d2ea3acc003cf01bb5a38c8aa76c3cfd upstream.
 
-The lowmem_reserve arrays provide a means of applying pressure against
-allocations from lower zones that were targeted at higher zones.  Its
-values are a function of the number of pages managed by higher zones and
-are assigned by a call to the setup_per_zone_lowmem_reserve() function.
+The following race is observed with the repeated online, offline and a
+delay between two successive online of memory blocks of movable zone.
 
-The function is initially called at boot time by the function
-init_per_zone_wmark_min() and may be called later by accesses of the
-/proc/sys/vm/lowmem_reserve_ratio sysctl file.
+P1						P2
 
-The function init_per_zone_wmark_min() was moved up from a module_init to
-a core_initcall to resolve a sequencing issue with khugepaged.
-Unfortunately this created a sequencing issue with CMA page accounting.
+Online the first memory block in
+the movable zone. The pcp struct
+values are initialized to default
+values,i.e., pcp->high = 0 &
+pcp->batch = 1.
 
-The CMA pages are added to the managed page count of a zone when
-cma_init_reserved_areas() is called at boot also as a core_initcall.  This
-makes it uncertain whether the CMA pages will be added to the managed page
-counts of their zones before or after the call to
-init_per_zone_wmark_min() as it becomes dependent on link order.  With the
-current link order the pages are added to the managed count after the
-lowmem_reserve arrays are initialized at boot.
+					Allocate the pages from the
+					movable zone.
 
-This means the lowmem_reserve values at boot may be lower than the values
-used later if /proc/sys/vm/lowmem_reserve_ratio is accessed even if the
-ratio values are unchanged.
+Try to Online the second memory
+block in the movable zone thus it
+entered the online_pages() but yet
+to call zone_pcp_update().
+					This process is entered into
+					the exit path thus it tries
+					to release the order-0 pages
+					to pcp lists through
+					free_unref_page_commit().
+					As pcp->high = 0, pcp->count = 1
+					proceed to call the function
+					free_pcppages_bulk().
+Update the pcp values thus the
+new pcp values are like, say,
+pcp->high = 378, pcp->batch = 63.
+					Read the pcp's batch value using
+					READ_ONCE() and pass the same to
+					free_pcppages_bulk(), pcp values
+					passed here are, batch = 63,
+					count = 1.
 
-In many cases the difference is not significant, but for example
-an ARM platform with 1GB of memory and the following memory layout
+					Since num of pages in the pcp
+					lists are less than ->batch,
+					then it will stuck in
+					while(list_empty(list)) loop
+					with interrupts disabled thus
+					a core hung.
 
-  cma: Reserved 256 MiB at 0x0000000030000000
-  Zone ranges:
-    DMA      [mem 0x0000000000000000-0x000000002fffffff]
-    Normal   empty
-    HighMem  [mem 0x0000000030000000-0x000000003fffffff]
+Avoid this by ensuring free_pcppages_bulk() is called with proper count of
+pcp list pages.
 
-would result in 0 lowmem_reserve for the DMA zone.  This would allow
-userspace to deplete the DMA zone easily.
+The mentioned race is some what easily reproducible without [1] because
+pcp's are not updated for the first memory block online and thus there is
+a enough race window for P2 between alloc+free and pcp struct values
+update through onlining of second memory block.
 
-Funnily enough
+With [1], the race still exists but it is very narrow as we update the pcp
+struct values for the first memory block online itself.
 
-  $ cat /proc/sys/vm/lowmem_reserve_ratio
+This is not limited to the movable zone, it could also happen in cases
+with the normal zone (e.g., hotplug to a node that only has DMA memory, or
+no other memory yet).
 
-would fix up the situation because as a side effect it forces
-setup_per_zone_lowmem_reserve.
+[1]: https://patchwork.kernel.org/patch/11696389/
 
-This commit breaks the link order dependency by invoking
-init_per_zone_wmark_min() as a postcore_initcall so that the CMA pages
-have the chance to be properly accounted in their zone(s) and allowing
-the lowmem_reserve arrays to receive consistent values.
-
-Fixes: bc22af74f271 ("mm: update min_free_kbytes from khugepaged after core initialization")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
+Fixes: 5f8dcc21211a ("page-allocator: split per-cpu list into one-list-per-migrate-type")
+Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: David Rientjes <rientjes@google.com>
 Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Jason Baron <jbaron@akamai.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/1597423766-27849-1-git-send-email-opendmb@gmail.com
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Vinayak Menon <vinmenon@codeaurora.org>
+Cc: <stable@vger.kernel.org> [2.6+]
+Link: http://lkml.kernel.org/r/1597150703-19003-1-git-send-email-charante@codeaurora.org
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_alloc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/page_alloc.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -6782,7 +6782,7 @@ int __meminit init_per_zone_wmark_min(vo
+@@ -1116,6 +1116,11 @@ static void free_pcppages_bulk(struct zo
+ 	if (nr_scanned)
+ 		__mod_node_page_state(zone->zone_pgdat, NR_PAGES_SCANNED, -nr_scanned);
  
- 	return 0;
- }
--core_initcall(init_per_zone_wmark_min)
-+postcore_initcall(init_per_zone_wmark_min)
- 
- /*
-  * min_free_kbytes_sysctl_handler - just a wrapper around proc_dointvec() so
++	/*
++	 * Ensure proper count is passed which otherwise would stuck in the
++	 * below while (list_empty(list)) loop.
++	 */
++	count = min(pcp->count, count);
+ 	while (count) {
+ 		struct page *page;
+ 		struct list_head *list;
 
 
