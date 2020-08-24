@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB3BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B2AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60BB8206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 106A4206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:49:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262588;
-	bh=qTRimv2Y4WfSI/kauU+bdYkYWFNVaPoXDZxXzewNdR4=;
+	s=default; t=1598262595;
+	bh=83LRrZrC4LInnS5Myvxnbeok5E3I28f+ZTEuGCIFQTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XBHOrPNopbZd2Hjq8v5ncBoz0bs/UNHnZ19svYISa7M23B3wh6iCdxXNbuv0oJ3Wh
-	 SDf8ZbqsROKkm2JBV6aojhtJFZ5WJgd7rMhum3yyi5avVbEKKUN1YRgeYmUfUf5n0y
-	 5hULkQ1SLUBe+wTblGZAMHO9UcEwwfF+rZsNzwnI=
+	b=ee+haR3KaoXfsCtw82aoH2ELPQen/OR17XRrR9mDMETpuzMTEA5i+FZF1ADkHg27m
+	 D9ShlecMI0mdRNcoCJ7vgnsOz7RmeKlgkE8P/FgnK8mRI2xYxwzJoA7sXSfEujBpbr
+	 bXGRdtwhY9WyHJw5OVT5CNHF61Ba8ggLvF/IMGPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgHXJtq (ORCPT
+        id S1729308AbgHXJtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:49:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55346 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:49:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728640AbgHXIja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:39:30 -0400
+        id S1727889AbgHXIj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:39:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7865F2177B;
-        Mon, 24 Aug 2020 08:39:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CB6920FC3;
+        Mon, 24 Aug 2020 08:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258369;
-        bh=qTRimv2Y4WfSI/kauU+bdYkYWFNVaPoXDZxXzewNdR4=;
+        s=default; t=1598258366;
+        bh=83LRrZrC4LInnS5Myvxnbeok5E3I28f+ZTEuGCIFQTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nylIPnjOCRcisy97pZIGumMKTLENcVlYQlNwE50kOApvXh2ozo5n1Vui7UvqX6R03
-         QKaiZp34pHMlK2CKZcZeT+4D6n4ZyN4EjHJ0Gx0wyVJsMimFm19etlH3JZQvxjnpuN
-         8Q9wroKcU3Ct90aGvvmRmb9KYyyE8PmEUOC5VTHU=
+        b=twt840eeclLi3CT4e3t7W8smeH46sQoGacvHuxTLeOt4ztENfboPxBYNC0F806CW4
+         kg1GMmmGUY+nJ8B04a0bvEOvP/l3mc74mEF4b5rAV6WX+aA7V6tVbVs1fzlyyBqS3S
+         JGBkmtVM+ZJblVri7zfndMPh7o0cWNqYU00rS/0c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Kolesa <daniel@octaforge.org>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.7 023/124] drm/amdgpu/display: use GFP_ATOMIC in dcn20_validate_bandwidth_internal
-Date:   Mon, 24 Aug 2020 10:29:17 +0200
-Message-Id: <20200824082410.560827925@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Xu Yu <xuyu@linux.alibaba.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Yang Shi <shy828301@gmail.com>
+Subject: [PATCH 5.7 022/124] mm/memory.c: skip spurious TLB flush for retried page fault
+Date:   Mon, 24 Aug 2020 10:29:16 +0200
+Message-Id: <20200824082410.510847956@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -59,36 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Kolesa <daniel@octaforge.org>
+From: Yang Shi <shy828301@gmail.com>
 
-commit f41ed88cbd6f025f7a683a11a74f901555fba11c upstream.
+commit b7333b58f358f38d90d78e00c1ee5dec82df10ad upstream.
 
-GFP_KERNEL may and will sleep, and this is being executed in
-a non-preemptible context; this will mess things up since it's
-called inbetween DC_FP_START/END, and rescheduling will result
-in the DC_FP_END later being called in a different context (or
-just crashing if any floating point/vector registers/instructions
-are used after the call is resumed in a different context).
+Recently we found regression when running will_it_scale/page_fault3 test
+on ARM64.  Over 70% down for the multi processes cases and over 20% down
+for the multi threads cases.  It turns out the regression is caused by
+commit 89b15332af7c ("mm: drop mmap_sem before calling
+balance_dirty_pages() in write fault").
 
-Signed-off-by: Daniel Kolesa <daniel@octaforge.org>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+The test mmaps a memory size file then write to the mapping, this would
+make all memory dirty and trigger dirty pages throttle, that upstream
+commit would release mmap_sem then retry the page fault.  The retried
+page fault would see correct PTEs installed then just fall through to
+spurious TLB flush.  The regression is caused by the excessive spurious
+TLB flush.  It is fine on x86 since x86's spurious TLB flush is no-op.
+
+We could just skip the spurious TLB flush to mitigate the regression.
+
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Xu Yu <xuyu@linux.alibaba.com>
+Debugged-by: Xu Yu <xuyu@linux.alibaba.com>
+Tested-by: Xu Yu <xuyu@linux.alibaba.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Yang Shi <shy828301@gmail.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memory.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -3031,7 +3031,7 @@ static bool dcn20_validate_bandwidth_int
- 	int vlevel = 0;
- 	int pipe_split_from[MAX_PIPES];
- 	int pipe_cnt = 0;
--	display_e2e_pipe_params_st *pipes = kzalloc(dc->res_pool->pipe_count * sizeof(display_e2e_pipe_params_st), GFP_KERNEL);
-+	display_e2e_pipe_params_st *pipes = kzalloc(dc->res_pool->pipe_count * sizeof(display_e2e_pipe_params_st), GFP_ATOMIC);
- 	DC_LOGGER_INIT(dc->ctx->logger);
- 
- 	BW_VAL_TRACE_COUNT();
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4237,6 +4237,9 @@ static vm_fault_t handle_pte_fault(struc
+ 				vmf->flags & FAULT_FLAG_WRITE)) {
+ 		update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
+ 	} else {
++		/* Skip spurious TLB flush for retried page fault */
++		if (vmf->flags & FAULT_FLAG_TRIED)
++			goto unlock;
+ 		/*
+ 		 * This is needed only for protection faults but the arch code
+ 		 * is not yet telling us if this is a protection fault or not.
 
 
