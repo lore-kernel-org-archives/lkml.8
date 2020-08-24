@@ -4,52 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06ECAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7D912067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D9C2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289384;
-	bh=BgjkH+en7+kW2CLN1WT3ryTGuJJpA+Dy/5tLtJauIiM=;
+	s=default; t=1598289389;
+	bh=nN2X4oEKGVhTNSkEAU4v2/jWqY5AJGIkryR8OT7ctnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RSI5L3KMInBqFdNrC62T2Baa1336hNyZ5gXgGziN4R1ObUtwdkF3WtChIBPCQcIP3
-	 4WAWG4H11fXXKftkrHjtbywHR3y6P7uqnhiTLDvLFmNitIbOJ/xUA1fguM2ldM5Aaw
-	 Rua4Tz9eg13Kc2idkQv6zh9b3dr9j7YAr5reNQMw=
+	b=MMa/BvFd+a+LHSjZztvwbLQZd62K1Ozd6FNqft5avPqd7zs6wm7grnZ1zOOLMCi2o
+	 5EARY1m2JVyG4n1nshapZhsmKH+LFfEmA5OKsM77iKVXRSz8fwuaOWoTyPIC/PITXc
+	 pIP2YKbfJaGo3hgh4DvZ9IVN1Ycd3Q0jRKBAkmyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgHXRQU (ORCPT
+        id S1727925AbgHXRQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:16:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41064 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:16:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728357AbgHXQg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728290AbgHXQg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:36:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CF9622D0B;
-        Mon, 24 Aug 2020 16:36:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAB1D22D07;
+        Mon, 24 Aug 2020 16:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286997;
-        bh=BgjkH+en7+kW2CLN1WT3ryTGuJJpA+Dy/5tLtJauIiM=;
+        s=default; t=1598286991;
+        bh=nN2X4oEKGVhTNSkEAU4v2/jWqY5AJGIkryR8OT7ctnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FCu1RRR549NJ5q189ILAhsySsABktzOI/lQstzQ5dPELRSRvPg+nSg03g4en0Rnt/
-         Ra7QFel5+v3XHl7lEZNB1jhcQcKzq36DbdpMphSEEITNwsXMvz9CKhrDADt1bV0qGj
-         i9VX44IidvxeUqPtVWProw7PVvL2TrgNwjjUetYA=
+        b=UJvAFp/PLv0xT/tLMbqqMS1LMoHnj6aTRnm/LuJhW4K00li2xvafqxWDVcrW4kWQI
+         5x2vH0JB57KCeYn4oTI73x3c3HwIKo9n9C6znArhDBYXuzsibg4NRlQ1aOkMpfL8HH
+         IO+RaRfiPwSyXFplMePoiVbmn13fLbPiwDByQzUY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukas Czerner <lczerner@redhat.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 02/54] jbd2: make sure jh have b_transaction set in refile/unfile_buffer
-Date:   Mon, 24 Aug 2020 12:35:41 -0400
-Message-Id: <20200824163634.606093-2-sashal@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 63/63] arm64: Allow booting of late CPUs affected by erratum 1418040
+Date:   Mon, 24 Aug 2020 12:35:03 -0400
+Message-Id: <20200824163504.605538-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
-References: <20200824163634.606093-1-sashal@kernel.org>
+In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
+References: <20200824163504.605538-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,60 +64,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 24dc9864914eb5813173cfa53313fcd02e4aea7d ]
+[ Upstream commit bf87bb0881d0f59181fe3bbcf29c609f36483ff8 ]
 
-Callers of __jbd2_journal_unfile_buffer() and
-__jbd2_journal_refile_buffer() assume that the b_transaction is set. In
-fact if it's not, we can end up with journal_head refcounting errors
-leading to crash much later that might be very hard to track down. Add
-asserts to make sure that is the case.
+As we can now switch from a system that isn't affected by 1418040
+to a system that globally is affected, let's allow affected CPUs
+to come in at a later time.
 
-We also make sure that b_next_transaction is NULL in
-__jbd2_journal_unfile_buffer() since the callers expect that as well and
-we should not get into that stage in this state anyway, leading to
-problems later on if we do.
-
-Tested with fstests.
-
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200617092549.6712-1-lczerner@redhat.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Acked-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20200731173824.107480-3-maz@kernel.org
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/transaction.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/kernel/cpu_errata.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index e91aad3637a23..e65e0aca28261 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -2026,6 +2026,9 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
-  */
- static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
- {
-+	J_ASSERT_JH(jh, jh->b_transaction != NULL);
-+	J_ASSERT_JH(jh, jh->b_next_transaction == NULL);
-+
- 	__jbd2_journal_temp_unlink_buffer(jh);
- 	jh->b_transaction = NULL;
- }
-@@ -2572,6 +2575,13 @@ bool __jbd2_journal_refile_buffer(struct journal_head *jh)
- 
- 	was_dirty = test_clear_buffer_jbddirty(bh);
- 	__jbd2_journal_temp_unlink_buffer(jh);
-+
-+	/*
-+	 * b_transaction must be set, otherwise the new b_transaction won't
-+	 * be holding jh reference
-+	 */
-+	J_ASSERT_JH(jh, jh->b_transaction != NULL);
-+
- 	/*
- 	 * We set b_transaction here because b_next_transaction will inherit
- 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index 79728bfb5351f..2c0b82db825ba 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -910,6 +910,8 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+ 		.desc = "ARM erratum 1418040",
+ 		.capability = ARM64_WORKAROUND_1418040,
+ 		ERRATA_MIDR_RANGE_LIST(erratum_1418040_list),
++		.type = (ARM64_CPUCAP_SCOPE_LOCAL_CPU |
++			 ARM64_CPUCAP_PERMITTED_FOR_LATE_CPU),
+ 	},
+ #endif
+ #ifdef CONFIG_ARM64_WORKAROUND_SPECULATIVE_AT
 -- 
 2.25.1
 
