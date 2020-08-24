@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 654DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69606C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 395072072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4640E2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259118;
-	bh=gz1Ql6wLuLKli3sxEIWh60v0JCTWQm0FhUAHNyRqBJY=;
+	s=default; t=1598259121;
+	bh=mHmuW0qSq3QNXYvoj8xDvzfdQv6OG64aQ1Yffv75DPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1LB303ONesgR5Bem5EibgzL2CTS/v6kNucWfUmV9s7KquY434a4DqyvizEFRlrEi6
-	 BIQMMd4PfiSowQ3yKyvC9T7mP7l6Dct+B8R8TWU69wvS4pqOqEjWie6EQxxp7Te1IJ
-	 jbBdLqGtU0OjHElUTKNpeBZbVRlosvUtEM5bpRY0=
+	b=Upi9/kIqQmD8gB5lVAYI3cN1iyGqesMRgjmN4qkSd8izwR/iFX85wLbsNworqT34e
+	 SiZN/hi+hCbHCzAfCeyWjJi/+8IjHxftp7AYX/G9Xh0y3z2wurEz5Gz2coCq5fBuYP
+	 o8G7XwKpAFWhW6JjPm79o+NIm7sD2tlw+pICZPtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbgHXIv5 (ORCPT
+        id S1730030AbgHXIv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:51:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57256 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:51:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730004AbgHXIvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:51 -0400
+        id S1729755AbgHXIvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 580212072D;
-        Mon, 24 Aug 2020 08:51:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D00FE2075B;
+        Mon, 24 Aug 2020 08:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259110;
-        bh=gz1Ql6wLuLKli3sxEIWh60v0JCTWQm0FhUAHNyRqBJY=;
+        s=default; t=1598259113;
+        bh=mHmuW0qSq3QNXYvoj8xDvzfdQv6OG64aQ1Yffv75DPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b5Blo2f5PpFMtGh6p8YYXMhzsMJLE1cWPZrDUBfsr4KAZjuitSXn4OhkTgLG21Dv4
-         agRCSAQxAHgccZT2U0/6INFMeg93+61PDNWE4Rl1a0yMD46ix5oVsNyObdCFOIClCL
-         4Pb6BElEcOWLZDlMlMc+cfKM8vLagYv9YuFkuCDI=
+        b=WeCFN8S8P6VmMgnIpr2Yb8OEzgSPU0cpiLHwyy4fPglMdTYNSDHJtzCIZpEFKqM4y
+         lZI5YgT9UR2SJ1I9PESDqEJDmNnGL6yBh7Adi4xIdS86LGpKOIxstElq5+s7BXd4v3
+         SeyaqYvtdgRaJg2chU1ybgx9dVegHNFfZFFJzrC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhe Li <lizhe67@huawei.com>,
-        Hou Tao <houtao1@huawei.com>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 24/39] jffs2: fix UAF problem
-Date:   Mon, 24 Aug 2020 10:31:23 +0200
-Message-Id: <20200824082349.783160086@linuxfoundation.org>
+Subject: [PATCH 4.9 07/39] khugepaged: khugepaged_test_exit() check mmget_still_valid()
+Date:   Mon, 24 Aug 2020 10:31:06 +0200
+Message-Id: <20200824082348.845274231@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
@@ -61,78 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhe Li <lizhe67@huawei.com>
+From: Hugh Dickins <hughd@google.com>
 
-[ Upstream commit 798b7347e4f29553db4b996393caf12f5b233daf ]
+[ Upstream commit bbe98f9cadff58cdd6a4acaeba0efa8565dabe65 ]
 
-The log of UAF problem is listed below.
-BUG: KASAN: use-after-free in jffs2_rmdir+0xa4/0x1cc [jffs2] at addr c1f165fc
-Read of size 4 by task rm/8283
-=============================================================================
-BUG kmalloc-32 (Tainted: P    B      O   ): kasan: bad access detected
------------------------------------------------------------------------------
+Move collapse_huge_page()'s mmget_still_valid() check into
+khugepaged_test_exit() itself.  collapse_huge_page() is used for anon THP
+only, and earned its mmget_still_valid() check because it inserts a huge
+pmd entry in place of the page table's pmd entry; whereas
+collapse_file()'s retract_page_tables() or collapse_pte_mapped_thp()
+merely clears the page table's pmd entry.  But core dumping without mmap
+lock must have been as open to mistaking a racily cleared pmd entry for a
+page table at physical page 0, as exit_mmap() was.  And we certainly have
+no interest in mapping as a THP once dumping core.
 
-INFO: Allocated in 0xbbbbbbbb age=3054364 cpu=0 pid=0
-        0xb0bba6ef
-        jffs2_write_dirent+0x11c/0x9c8 [jffs2]
-        __slab_alloc.isra.21.constprop.25+0x2c/0x44
-        __kmalloc+0x1dc/0x370
-        jffs2_write_dirent+0x11c/0x9c8 [jffs2]
-        jffs2_do_unlink+0x328/0x5fc [jffs2]
-        jffs2_rmdir+0x110/0x1cc [jffs2]
-        vfs_rmdir+0x180/0x268
-        do_rmdir+0x2cc/0x300
-        ret_from_syscall+0x0/0x3c
-INFO: Freed in 0x205b age=3054364 cpu=0 pid=0
-        0x2e9173
-        jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
-        jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
-        jffs2_garbage_collect_dirent.isra.3+0x21c/0x288 [jffs2]
-        jffs2_garbage_collect_live+0x16bc/0x1800 [jffs2]
-        jffs2_garbage_collect_pass+0x678/0x11d4 [jffs2]
-        jffs2_garbage_collect_thread+0x1e8/0x3b0 [jffs2]
-        kthread+0x1a8/0x1b0
-        ret_from_kernel_thread+0x5c/0x64
-Call Trace:
-[c17ddd20] [c02452d4] kasan_report.part.0+0x298/0x72c (unreliable)
-[c17ddda0] [d2509680] jffs2_rmdir+0xa4/0x1cc [jffs2]
-[c17dddd0] [c026da04] vfs_rmdir+0x180/0x268
-[c17dde00] [c026f4e4] do_rmdir+0x2cc/0x300
-[c17ddf40] [c001a658] ret_from_syscall+0x0/0x3c
-
-The root cause is that we don't get "jffs2_inode_info.sem" before
-we scan list "jffs2_inode_info.dents" in function jffs2_rmdir.
-This patch add codes to get "jffs2_inode_info.sem" before we scan
-"jffs2_inode_info.dents" to slove the UAF problem.
-
-Signed-off-by: Zhe Li <lizhe67@huawei.com>
-Reviewed-by: Hou Tao <houtao1@huawei.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: 59ea6d06cfa9 ("coredump: fix race condition between collapse_huge_page() and core dumping")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: <stable@vger.kernel.org>	[4.8+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021217020.27773@eggly.anvils
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jffs2/dir.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ mm/khugepaged.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/fs/jffs2/dir.c b/fs/jffs2/dir.c
-index e5a6deb38e1e1..f4a5ec92f5dc7 100644
---- a/fs/jffs2/dir.c
-+++ b/fs/jffs2/dir.c
-@@ -590,10 +590,14 @@ static int jffs2_rmdir (struct inode *dir_i, struct dentry *dentry)
- 	int ret;
- 	uint32_t now = get_seconds();
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 3080c6415493c..f4ed056d9f863 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -391,7 +391,7 @@ static void insert_to_mm_slots_hash(struct mm_struct *mm,
  
-+	mutex_lock(&f->sem);
- 	for (fd = f->dents ; fd; fd = fd->next) {
--		if (fd->ino)
-+		if (fd->ino) {
-+			mutex_unlock(&f->sem);
- 			return -ENOTEMPTY;
-+		}
- 	}
-+	mutex_unlock(&f->sem);
+ static inline int khugepaged_test_exit(struct mm_struct *mm)
+ {
+-	return atomic_read(&mm->mm_users) == 0;
++	return atomic_read(&mm->mm_users) == 0 || !mmget_still_valid(mm);
+ }
  
- 	ret = jffs2_do_unlink(c, dir_f, dentry->d_name.name,
- 			      dentry->d_name.len, f, now);
+ int __khugepaged_enter(struct mm_struct *mm)
+@@ -1004,9 +1004,6 @@ static void collapse_huge_page(struct mm_struct *mm,
+ 	 * handled by the anon_vma lock + PG_lock.
+ 	 */
+ 	down_write(&mm->mmap_sem);
+-	result = SCAN_ANY_PROCESS;
+-	if (!mmget_still_valid(mm))
+-		goto out;
+ 	result = hugepage_vma_revalidate(mm, address, &vma);
+ 	if (result)
+ 		goto out;
 -- 
 2.25.1
 
