@@ -2,124 +2,106 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBF6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C7EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64E632087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C8B20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:24:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cuzflAC3"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="DsE8cuz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgHXSYQ (ORCPT
+        id S1727049AbgHXSYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:24:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42266 "EHLO
+        Mon, 24 Aug 2020 14:24:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbgHXSYP (ORCPT
+        with ESMTP id S1726719AbgHXSYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:24:15 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D016C061573;
-        Mon, 24 Aug 2020 11:24:15 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id z9so370585wmk.1;
-        Mon, 24 Aug 2020 11:24:15 -0700 (PDT)
+        Mon, 24 Aug 2020 14:24:18 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AF50C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:24:18 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id s9so5020701lfs.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:24:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=android.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6IMhsacwEGlvqh63CK0QsU6TXKj2+AaqerE7CsDvPC4=;
-        b=cuzflAC3uciy+SFo7niw4FCDuAb3fCMO86nc63jHSysfsEyKhWd27QFpqF3n6w/xWC
-         1obfY0eXN+qO+RLagG+MeQ4XvM0NUv+JIgPW4xc1THskPm97mmyvg5JVnf3kzU3FdnXu
-         3h1lMyO0QB608NMom1x7NB0/tDOiorIbSDvrSm2jkcjMYdaM8feWuZPFXXiqU0q5Q5W3
-         CJKsyzaiWPieLyXFvRh0832RE97WLGEe6B/Iqb1j690i5oH9R4IdOAGRpb9ag2czWN7a
-         e+SdM2jyKEtg8NmTygqUmA7yaZ9Heq2GjDfWJBfZh5JvQPnEJjyKfgQ/km678L3PLXBK
-         GtqQ==
+        bh=OSM5pA9SWQyrteWcj7xcQCSKujeMY9ejX45tVYAfBoI=;
+        b=DsE8cuz6Tnb5qD5lXMhQmBfbgz5KUNwN0GWr49phT2y0EJ71c1bWgsTkGaVRCjpxIW
+         AvS1KhiLVpCAFVRHdd1pAmoDKAXHCDfPejKkBi4JI/+dRPzO6pkAHDqE6cSTnkxclpvF
+         K+uzniqAUGswWvoSqfDBtFmOkpHh/P+SLTjyCk2x3l+qnSR99gEbLRKP+j9QrWvUeaEW
+         bN2w2UdkHtDj75EjjFmTdkxBbd3QUZ7NmHYippV6atbmwdi45FV++tMsfKUeNSkxWNOQ
+         qvQy1zR9GfxQUF5EMEGeV4/GnLExryISck/GJewEe+2aovUcpl2qJmeyM+3wKgViWH5b
+         CUbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6IMhsacwEGlvqh63CK0QsU6TXKj2+AaqerE7CsDvPC4=;
-        b=S4QVYrafYIxjCTc6E0cjyJV341rsNTQjH1k57kWI85R93t2gt2Aw5HtX0nm9Xm2RmC
-         LbHY6fYQBt/XskrAdpmgm46hRNxr1RXMQCqp/j/XsYxHOaocrTtxCo1ewErcQqm/8BVy
-         YpaLGCK9OB3NZuBbAf4+wXvb0WFkqtozU+9AuVChnzYhw3oCWOeS2lkbpqXS/Rt5P/ef
-         H8RvpTYLfN9+Eg2INtzcbD7Mcksm777mMUhCAR/rBS4cchiLiEeR8eu8jCLPfnfBe3Cv
-         Z/uGgRBHmokHieC0yzTXE2aWoVdLu7qElhUaJNessq9SyQLAZ/QzH/+GuD6BiOV2bgtm
-         xIMQ==
-X-Gm-Message-State: AOAM532/Z/cq0mdueVNne05rvw7yfLdf5IdrzGmbj3npPIFgVP8uM7Sp
-        LsXZe8/Pe0WkMhTeM4EFd6i1t3ufhepzUP9frYQ=
-X-Google-Smtp-Source: ABdhPJz0DDJ2oIV/MrKaC4i0wH55w26Pka4uWviJmB8OafYTOputc9WZ6fiTJY/yEvVjFSK0bLyEE/F5rQPjGysMQBE=
-X-Received: by 2002:a1c:f70a:: with SMTP id v10mr495773wmh.39.1598293453989;
- Mon, 24 Aug 2020 11:24:13 -0700 (PDT)
+        bh=OSM5pA9SWQyrteWcj7xcQCSKujeMY9ejX45tVYAfBoI=;
+        b=mvp77LPRYazIwzgAJ+kydQA6jMUCIyamRQ+tiEXMriXc5+jeXvAppJkpuuBN1mdLFT
+         xZLRasSZUAZPhlD+alRhNOHJAuiiT/CKaJNjKMl1wLMFZK08tjtT/pVYLuOimUqF/6BX
+         0yziZo8u77/3rSCibFsZcHSm6CNUnlVN/sgV60gOWKOlmsx+Z2a/0gEMmE4s99F5fby6
+         jZ04HKnAOpBLVbl6Z5lEmegioS5ZG3ztyBkI8ZNh16ZfKvyfFQXd4MQijnnUIg/KJ9/V
+         x3MowjXL1jvMAOrI+uLf+JVcrVNX5+G4UOIya8hC7y6PxQmkz6n1y1Uwp39AntHb/As2
+         uwxA==
+X-Gm-Message-State: AOAM530AMn+hqmry+xgLvdVpjFe37wmpeiERoOpTjTHr1yWawNVjxX3/
+        ZvMkWehr3r568tN/Cwv8i6GM41y65rOZ3qhk+8B7kA==
+X-Google-Smtp-Source: ABdhPJzh5kWNVpQmnUSWC2YPJatgcz6LX0E1Dzl49n/9qZdHiyEj+CE+CSzqUU+5wr/EC05GLEVG/YmrVDpX38FHVak=
+X-Received: by 2002:a19:8c3:: with SMTP id 186mr3225689lfi.61.1598293456483;
+ Mon, 24 Aug 2020 11:24:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200824163504.605538-1-sashal@kernel.org> <20200824163504.605538-58-sashal@kernel.org>
-In-Reply-To: <20200824163504.605538-58-sashal@kernel.org>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 24 Aug 2020 14:24:02 -0400
-Message-ID: <CADnq5_P7CMeUof2G99jMFCq95VsSCb8CAWMOFL=PujmZs=0QcQ@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.8 58/63] Revert "drm/amdgpu: disable gfxoff for navy_flounder"
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "for 3.8" <stable@vger.kernel.org>, Tao Zhou <tao.zhou1@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Jiansong Chen <Jiansong.Chen@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Kenneth Feng <kenneth.feng@amd.com>
+References: <20200824154436.GA255257@gardel-login>
+In-Reply-To: <20200824154436.GA255257@gardel-login>
+From:   Martijn Coenen <maco@android.com>
+Date:   Mon, 24 Aug 2020 20:24:05 +0200
+Message-ID: <CAB0TPYEPWALD1iOP_5Rq0NKusJEvc_eOVVkoXRxjPtPTZU2GgA@mail.gmail.com>
+Subject: Re: LOOP_CONFIGURE ioctl doesn't work if lo_offset/lo_sizelimit are set
+To:     Lennart Poettering <mzxreary@0pointer.de>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Yang Xu <xuyang2018.jy@cn.fujitsu.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 12:36 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Jiansong Chen <Jiansong.Chen@amd.com>
->
-> [ Upstream commit da2446b66b5e2c7f3ab63912c8d999810e35e8b3 ]
->
-> This reverts commit 9c9b17a7d19a8e21db2e378784fff1128b46c9d3.
-> Newly released sdma fw (51.52) provides a fix for the issue.
->
-> Signed-off-by: Jiansong Chen <Jiansong.Chen@amd.com>
-> Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
-> Reviewed-by: Tao Zhou <tao.zhou1@amd.com>
-> Acked-by: Alex Deucher <alexander.deucher@amd.com>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Hi Lennart,
 
-Support for this chip does not exist in 5.8 or any other older trees.
-Please drop this.
+Thanks for the report, I'll look into it. FWIW, we've been using
+LOOP_CONFIGURE on Android with lo_offset/lo_sizelimit without issues,
+but it may be a particular configuration that's causing issues.
 
-Alex
+Thanks,
+Martijn
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 3 ---
->  1 file changed, 3 deletions(-)
+On Mon, Aug 24, 2020 at 5:44 PM Lennart Poettering <mzxreary@0pointer.de> wrote:
 >
-> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-> index 2c870ff7f8a45..fac77a86c04b2 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-> @@ -3427,9 +3427,6 @@ static void gfx_v10_0_check_gfxoff_flag(struct amdgpu_device *adev)
->                 if (!gfx_v10_0_navi10_gfxoff_should_enable(adev))
->                         adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
->                 break;
-> -       case CHIP_NAVY_FLOUNDER:
-> -               adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
-> -               break;
->         default:
->                 break;
->         }
-> --
-> 2.25.1
+> Hi!
 >
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> Even with fe6a8fc5ed2f0081f17375ae2005718522c392c6 the LOOP_CONFIGURE
+> ioctl doesn't work correctly. It gets confused if the
+> lo_offset/lo_sizelimit fields are set to non-zero.
+>
+> In a quick test I ran (on Linux 5.8.3) I call LOOP_CONFIGURE with
+> .lo_offset=3221204992 and .lo_sizelimit=50331648 and immediately
+> verify the size of the block device with BLKGETSIZE64. It should of
+> course return 50331648, but actually returns 3271557120. (the precise
+> values have no particular relevance, it's just what I happened to use
+> in my test.) If I instead use LOOP_SET_STATUS64 with the exact same
+> parameters, everything works correctly. In either case, if I use
+> LOOP_GET_STATUS64 insted of BLKGETSIZE64 to verify things, everything
+> looks great.
+>
+> My guess is that the new ioctl simply doesn't properly propagate the
+> size limit into the underlying block device like it should. I didn't
+> have the time to investigate further though.
+>
+> Lennart
