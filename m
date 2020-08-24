@@ -2,82 +2,215 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C718CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D380FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC7C2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0552075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598261346;
+	bh=xFp7gwbTyvsc4dzlDY9Vyfn/LmD4ZGwMaD/AQ8FfRu4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BMUdLGx4IXAgDQiA+2Ankl5g2X9Xxqiv+ZVzbZ1u8PCjvTt/6GIk1nyLMwH103lnU
+	 XKfNodBwiGESjjgvZ2G5h9oZybmaY4lnkTtGX+4zAaw1Wg0Y3+zyObRSEaDzkWmSVL
+	 iEhPSB66va+8hix9M2HkKt2t1wTMl/2yCtD6hr3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbgHXJ2t (ORCPT
+        id S1729111AbgHXJ3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:28:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:57364 "EHLO foss.arm.com"
+        Mon, 24 Aug 2020 05:29:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729716AbgHXJ2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:28:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CADD1063;
-        Mon, 24 Aug 2020 02:28:36 -0700 (PDT)
-Received: from [10.57.5.66] (unknown [10.57.5.66])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C34483F71F;
-        Mon, 24 Aug 2020 02:28:35 -0700 (PDT)
-To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, acme@redhat.com
-From:   Al Grant <al.grant@foss.arm.com>
-Subject: [PATCH] perf: correct SNOOPX field offset
-Message-ID: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
-Date:   Mon, 24 Aug 2020 10:28:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.0.1
+        id S1729910AbgHXIvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66851204FD;
+        Mon, 24 Aug 2020 08:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259072;
+        bh=xFp7gwbTyvsc4dzlDY9Vyfn/LmD4ZGwMaD/AQ8FfRu4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vYqVQmkdfI4zYp9oCkNH6h7bm4oTqG4xIEEuyNl5arUQQICUS3Z7QYOFTzI6SyD3A
+         opRy4/e+ZTWxcbQhbc23BeV25BxGlf6Y2ZcmBKkTQcfqix6TNlkNoThzfIWTiuxPkT
+         EbdfqtcYBbRzeU2DvJ6cJnhE/sPJ6Z2uBv5vYRa0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.9 02/39] x86/asm: Add instruction suffixes to bitops
+Date:   Mon, 24 Aug 2020 10:31:01 +0200
+Message-Id: <20200824082348.596398460@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
+References: <20200824082348.445866152@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-perf_event.h has macros that define the field offsets in the
-data_src bitmask in perf records. The SNOOPX and REMOTE offsets
-were both 37. These are distinct fields, and the bitfield layout
-in perf_mem_data_src confirms that SNOOPX should be at offset 38.
+From: Jan Beulich <JBeulich@suse.com>
 
-From: Al Grant <al.grant@arm.com>
+commit 22636f8c9511245cb3c8412039f1dd95afb3aa59 upstream.
 
-  include/uapi/linux/perf_event.h       | 2 +-
-  tools/include/uapi/linux/perf_event.h | 2 +-
-  2 files changed, 2 insertions(+), 2 deletions(-)
+Omitting suffixes from instructions in AT&T mode is bad practice when
+operand size cannot be determined by the assembler from register
+operands, and is likely going to be warned about by upstream gas in the
+future (mine does already). Add the missing suffixes here. Note that for
+64-bit this means some operations change from being 32-bit to 64-bit.
 
-diff --git a/include/uapi/linux/perf_event.h 
-b/include/uapi/linux/perf_event.h
-index 077e7ee69e3d..3e5dcdd48a49 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -1196,7 +1196,7 @@ union perf_mem_data_src {
+Signed-off-by: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/5A93F98702000078001ABACC@prv-mh.provo.novell.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
-  /* 1 free */
--#define PERF_MEM_SNOOPX_SHIFT  37
-+#define PERF_MEM_SNOOPX_SHIFT  38
+---
+ arch/x86/include/asm/bitops.h |   29 ++++++++++++++++-------------
+ arch/x86/include/asm/percpu.h |    2 +-
+ 2 files changed, 17 insertions(+), 14 deletions(-)
 
-  /* locked instruction */
-  #define PERF_MEM_LOCK_NA       0x01 /* not available */
-diff --git a/tools/include/uapi/linux/perf_event.h 
-b/tools/include/uapi/linux/perf_event.h
-index 077e7ee69e3d..3e5dcdd48a49 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -1196,7 +1196,7 @@ union perf_mem_data_src {
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -77,7 +77,7 @@ set_bit(long nr, volatile unsigned long
+ 			: "iq" ((u8)CONST_MASK(nr))
+ 			: "memory");
+ 	} else {
+-		asm volatile(LOCK_PREFIX "bts %1,%0"
++		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+ 			: BITOP_ADDR(addr) : "Ir" (nr) : "memory");
+ 	}
+ }
+@@ -93,7 +93,7 @@ set_bit(long nr, volatile unsigned long
+  */
+ static __always_inline void __set_bit(long nr, volatile unsigned long *addr)
+ {
+-	asm volatile("bts %1,%0" : ADDR : "Ir" (nr) : "memory");
++	asm volatile(__ASM_SIZE(bts) " %1,%0" : ADDR : "Ir" (nr) : "memory");
+ }
+ 
+ /**
+@@ -114,7 +114,7 @@ clear_bit(long nr, volatile unsigned lon
+ 			: CONST_MASK_ADDR(nr, addr)
+ 			: "iq" ((u8)~CONST_MASK(nr)));
+ 	} else {
+-		asm volatile(LOCK_PREFIX "btr %1,%0"
++		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+ 			: BITOP_ADDR(addr)
+ 			: "Ir" (nr));
+ 	}
+@@ -136,7 +136,7 @@ static __always_inline void clear_bit_un
+ 
+ static __always_inline void __clear_bit(long nr, volatile unsigned long *addr)
+ {
+-	asm volatile("btr %1,%0" : ADDR : "Ir" (nr));
++	asm volatile(__ASM_SIZE(btr) " %1,%0" : ADDR : "Ir" (nr));
+ }
+ 
+ /*
+@@ -168,7 +168,7 @@ static __always_inline void __clear_bit_
+  */
+ static __always_inline void __change_bit(long nr, volatile unsigned long *addr)
+ {
+-	asm volatile("btc %1,%0" : ADDR : "Ir" (nr));
++	asm volatile(__ASM_SIZE(btc) " %1,%0" : ADDR : "Ir" (nr));
+ }
+ 
+ /**
+@@ -187,7 +187,7 @@ static __always_inline void change_bit(l
+ 			: CONST_MASK_ADDR(nr, addr)
+ 			: "iq" ((u8)CONST_MASK(nr)));
+ 	} else {
+-		asm volatile(LOCK_PREFIX "btc %1,%0"
++		asm volatile(LOCK_PREFIX __ASM_SIZE(btc) " %1,%0"
+ 			: BITOP_ADDR(addr)
+ 			: "Ir" (nr));
+ 	}
+@@ -203,7 +203,8 @@ static __always_inline void change_bit(l
+  */
+ static __always_inline bool test_and_set_bit(long nr, volatile unsigned long *addr)
+ {
+-	GEN_BINARY_RMWcc(LOCK_PREFIX "bts", *addr, "Ir", nr, "%0", c);
++	GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(bts),
++	                 *addr, "Ir", nr, "%0", c);
+ }
+ 
+ /**
+@@ -232,7 +233,7 @@ static __always_inline bool __test_and_s
+ {
+ 	bool oldbit;
+ 
+-	asm("bts %2,%1"
++	asm(__ASM_SIZE(bts) " %2,%1"
+ 	    CC_SET(c)
+ 	    : CC_OUT(c) (oldbit), ADDR
+ 	    : "Ir" (nr));
+@@ -249,7 +250,8 @@ static __always_inline bool __test_and_s
+  */
+ static __always_inline bool test_and_clear_bit(long nr, volatile unsigned long *addr)
+ {
+-	GEN_BINARY_RMWcc(LOCK_PREFIX "btr", *addr, "Ir", nr, "%0", c);
++	GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btr),
++	                 *addr, "Ir", nr, "%0", c);
+ }
+ 
+ /**
+@@ -272,7 +274,7 @@ static __always_inline bool __test_and_c
+ {
+ 	bool oldbit;
+ 
+-	asm volatile("btr %2,%1"
++	asm volatile(__ASM_SIZE(btr) " %2,%1"
+ 		     CC_SET(c)
+ 		     : CC_OUT(c) (oldbit), ADDR
+ 		     : "Ir" (nr));
+@@ -284,7 +286,7 @@ static __always_inline bool __test_and_c
+ {
+ 	bool oldbit;
+ 
+-	asm volatile("btc %2,%1"
++	asm volatile(__ASM_SIZE(btc) " %2,%1"
+ 		     CC_SET(c)
+ 		     : CC_OUT(c) (oldbit), ADDR
+ 		     : "Ir" (nr) : "memory");
+@@ -302,7 +304,8 @@ static __always_inline bool __test_and_c
+  */
+ static __always_inline bool test_and_change_bit(long nr, volatile unsigned long *addr)
+ {
+-	GEN_BINARY_RMWcc(LOCK_PREFIX "btc", *addr, "Ir", nr, "%0", c);
++	GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc),
++	                 *addr, "Ir", nr, "%0", c);
+ }
+ 
+ static __always_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
+@@ -315,7 +318,7 @@ static __always_inline bool variable_tes
+ {
+ 	bool oldbit;
+ 
+-	asm volatile("bt %2,%1"
++	asm volatile(__ASM_SIZE(bt) " %2,%1"
+ 		     CC_SET(c)
+ 		     : CC_OUT(c) (oldbit)
+ 		     : "m" (*(unsigned long *)addr), "Ir" (nr));
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -536,7 +536,7 @@ static inline bool x86_this_cpu_variable
+ {
+ 	bool oldbit;
+ 
+-	asm volatile("bt "__percpu_arg(2)",%1"
++	asm volatile("btl "__percpu_arg(2)",%1"
+ 			CC_SET(c)
+ 			: CC_OUT(c) (oldbit)
+ 			: "m" (*(unsigned long __percpu *)addr), "Ir" (nr));
 
-  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
-  /* 1 free */
--#define PERF_MEM_SNOOPX_SHIFT  37
-+#define PERF_MEM_SNOOPX_SHIFT  38
 
-  /* locked instruction */
-  #define PERF_MEM_LOCK_NA       0x01 /* not available */
