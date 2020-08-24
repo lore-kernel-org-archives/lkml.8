@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E788CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9869EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C871021775
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 665AE20FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258650;
-	bh=58Z6IeNs6Hg/9kOGBErvEFQIfNcXC8BC2NCSVEBxqas=;
+	s=default; t=1598258654;
+	bh=5cbQV9c2lHZGlqdrGa8MUGaqrhRQfarfY4yneXqdzGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgpaDZOshyFTYJ4lLWSeEANj4Q8c1ON2WButCiH/IZW67GeRYEYmz4/WSbh5xvYyJ
-	 6YuUTFnrZnaz9gq5hu/jzto0MLJ2Wu0UFa5FOPKojzvLamCnw0nGDydKQy0JudPq4p
-	 nYP90eqfqbnDRZdERmlmeMoSI7kjbQBcHsBZ8u/o=
+	b=aviK+oblmL7MWK3qDS0qwp1ONidZ0OJ7kHVvkmFNWKBWf0OJm+pa4Lupg4KNUc00s
+	 21XrhzqRpB9LiHMh1Aj8cuIAytnaj8OzxmnKFZ6kqchNu6f1AVPu8hEDRDzsKpczSU
+	 36rOMlTa3K5VKK2fVaeQ0Tjdeur59dNEK8fzdg+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgHXIoI (ORCPT
+        id S1729115AbgHXIoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:44:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39310 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:44:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728690AbgHXIoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:44:04 -0400
+        id S1729105AbgHXIoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:44:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 775562075B;
-        Mon, 24 Aug 2020 08:44:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 374792074D;
+        Mon, 24 Aug 2020 08:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258644;
-        bh=58Z6IeNs6Hg/9kOGBErvEFQIfNcXC8BC2NCSVEBxqas=;
+        s=default; t=1598258646;
+        bh=5cbQV9c2lHZGlqdrGa8MUGaqrhRQfarfY4yneXqdzGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=byletigB+KuAu6PyEK3tg5F5ye/QkIofNBIrQIUblz+7tFkrA3KEE23Oy85g8ppzN
-         /zXgCZ77W3vpqsTmZFmgrCMPt6bCQbI67e+zwnDJfDbMKkerXj9fzzR4eP2nZzTruO
-         2MfkJkgZUkIZXxl+y94JGj5VY5B0/D0rf3984KqE=
+        b=RD2GxNlpdDycszUpVpYH4zMq7NWCt/O8LkhOv0KWveIo9iINf5Lkr/cUdvOWUBE8j
+         4B2OfKDRG6UFcuQgtyFY9hAby3e3mToi0g+qz7NTSq0FQ1GlqdboFyC7ocpue4yHQX
+         JiJHgohbRC3JeDUFj4h3PG37r975MWAoCTkUhlBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 5.7 119/124] efi/x86: Mark kernel rodata non-executable for mixed mode
-Date:   Mon, 24 Aug 2020 10:30:53 +0200
-Message-Id: <20200824082415.261235479@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Li Heng <liheng40@huawei.com>, Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 5.7 120/124] efi: add missed destroy_workqueue when efisubsys_init fails
+Date:   Mon, 24 Aug 2020 10:30:54 +0200
+Message-Id: <20200824082415.311207518@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -59,34 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Li Heng <liheng40@huawei.com>
 
-commit c8502eb2d43b6b9b1dc382299a4d37031be63876 upstream.
+commit 98086df8b70c06234a8f4290c46064e44dafa0ed upstream.
 
-When remapping the kernel rodata section RO in the EFI pagetables, the
-protection flags that were used for the text section are being reused,
-but the rodata section should not be marked executable.
+destroy_workqueue() should be called to destroy efi_rts_wq
+when efisubsys_init() init resources fails.
 
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Link: https://lore.kernel.org/r/20200717194526.3452089-1-nivedita@alum.mit.edu
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Li Heng <liheng40@huawei.com>
+Link: https://lore.kernel.org/r/1595229738-10087-1-git-send-email-liheng40@huawei.com
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/platform/efi/efi_64.c |    2 ++
+ drivers/firmware/efi/efi.c |    2 ++
  1 file changed, 2 insertions(+)
 
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -269,6 +269,8 @@ int __init efi_setup_page_tables(unsigne
- 	npages = (__end_rodata - __start_rodata) >> PAGE_SHIFT;
- 	rodata = __pa(__start_rodata);
- 	pfn = rodata >> PAGE_SHIFT;
-+
-+	pf = _PAGE_NX | _PAGE_ENC;
- 	if (kernel_map_pages_in_pgd(pgd, pfn, rodata, npages, pf)) {
- 		pr_err("Failed to map kernel rodata 1:1\n");
- 		return 1;
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -381,6 +381,7 @@ static int __init efisubsys_init(void)
+ 	efi_kobj = kobject_create_and_add("efi", firmware_kobj);
+ 	if (!efi_kobj) {
+ 		pr_err("efi: Firmware registration failed.\n");
++		destroy_workqueue(efi_rts_wq);
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -424,6 +425,7 @@ err_unregister:
+ 		generic_ops_unregister();
+ err_put:
+ 	kobject_put(efi_kobj);
++	destroy_workqueue(efi_rts_wq);
+ 	return error;
+ }
+ 
 
 
