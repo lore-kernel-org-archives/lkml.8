@@ -2,333 +2,106 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A445BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88904206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A76206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:12:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598260321;
+	bh=APaZWR8dp4pm9OJV+km8jzu4nmbPaHhaC0PDHDJ+Elc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=f5Y3cdzNThIk+uHcLIjkORJM7SDcInV3xvbY4xopyHwWWkXTXekhlwOaqUH+FFlYc
+	 UosJ2q8BnJUFy5QzSmXd9NO+//Fv0xakFMOwV9gPnWbJTm7NLTx/Ro4J5ExjBT0o8N
+	 BZUi1es8gzWslabxslaN/KiiecuUGyzxs6ToeDKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbgHXJLx (ORCPT
+        id S1729703AbgHXJL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:11:53 -0400
-Received: from 8bytes.org ([81.169.241.247]:37890 "EHLO theia.8bytes.org"
+        Mon, 24 Aug 2020 05:11:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730505AbgHXI4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:16 -0400
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1730504AbgHXI4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 77E0A48C;
-        Mon, 24 Aug 2020 10:56:11 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 41/76] x86/sev-es: Compile early handler code into kernel image
-Date:   Mon, 24 Aug 2020 10:54:36 +0200
-Message-Id: <20200824085511.7553-42-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id B1095206F0;
+        Mon, 24 Aug 2020 08:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259374;
+        bh=APaZWR8dp4pm9OJV+km8jzu4nmbPaHhaC0PDHDJ+Elc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=B3AX2tXWWV6VPRyukm6xUQ/PVawqGUtVbyl9+nguDNAV6zSRiKOFk/iWwScMmy5bi
+         Y3VMgAmN6GNkQBfted0hhbYCG2TgbfcBGRKIfp7TdtnYWNEmRpDyGp7buuUVY3oFiY
+         SomswgOuF32CswJQYzrf71JmsmXqO+GMlfA757WM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Gaurav Singh <gaurav1086@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Michal Koutn <mkoutny@suse.com>, Roman Gushchin <guro@fb.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Chris Down <chris@chrisdown.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 35/71] tools/testing/selftests/cgroup/cgroup_util.c: cg_read_strcmp: fix null pointer dereference
+Date:   Mon, 24 Aug 2020 10:31:26 +0200
+Message-Id: <20200824082357.640632967@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Gaurav Singh <gaurav1086@gmail.com>
 
-Setup sev-es.c and include the code from the
-pre-decompression stage to also build it into the image of the running
-kernel. Temporarily add __maybe_unused annotations to avoid build
-warnings until the functions get used.
+[ Upstream commit d830020656c5b68ced962ed3cb51a90e0a89d4c4 ]
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-41-joro@8bytes.org
+Haven't reproduced this issue. This PR is does a minor code cleanup.
+
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Michal Koutn <mkoutny@suse.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Chris Down <chris@chrisdown.name>
+Link: http://lkml.kernel.org/r/20200726013808.22242-1-gaurav1086@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/Makefile        |   1 +
- arch/x86/kernel/sev-es-shared.c |  21 ++--
- arch/x86/kernel/sev-es.c        | 163 ++++++++++++++++++++++++++++++++
- 3 files changed, 175 insertions(+), 10 deletions(-)
- create mode 100644 arch/x86/kernel/sev-es.c
+ tools/testing/selftests/cgroup/cgroup_util.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index e77261db2391..23bc0f830f18 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -145,6 +145,7 @@ obj-$(CONFIG_UNWINDER_ORC)		+= unwind_orc.o
- obj-$(CONFIG_UNWINDER_FRAME_POINTER)	+= unwind_frame.o
- obj-$(CONFIG_UNWINDER_GUESS)		+= unwind_guess.o
+diff --git a/tools/testing/selftests/cgroup/cgroup_util.c b/tools/testing/selftests/cgroup/cgroup_util.c
+index 075cb0c730149..90418d79ef676 100644
+--- a/tools/testing/selftests/cgroup/cgroup_util.c
++++ b/tools/testing/selftests/cgroup/cgroup_util.c
+@@ -95,7 +95,7 @@ int cg_read_strcmp(const char *cgroup, const char *control,
  
-+obj-$(CONFIG_AMD_MEM_ENCRYPT)		+= sev-es.o
- ###
- # 64 bit specific files
- ifeq ($(CONFIG_X86_64),y)
-diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-index a6b41910b8ab..18619279a46f 100644
---- a/arch/x86/kernel/sev-es-shared.c
-+++ b/arch/x86/kernel/sev-es-shared.c
-@@ -9,7 +9,7 @@
-  * and is included directly into both code-bases.
-  */
+ 	/* Handle the case of comparing against empty string */
+ 	if (!expected)
+-		size = 32;
++		return -1;
+ 	else
+ 		size = strlen(expected) + 1;
  
--static void sev_es_terminate(unsigned int reason)
-+static void __maybe_unused sev_es_terminate(unsigned int reason)
- {
- 	u64 val = GHCB_SEV_TERMINATE;
- 
-@@ -27,7 +27,7 @@ static void sev_es_terminate(unsigned int reason)
- 		asm volatile("hlt\n" : : : "memory");
- }
- 
--static bool sev_es_negotiate_protocol(void)
-+static bool __maybe_unused sev_es_negotiate_protocol(void)
- {
- 	u64 val;
- 
-@@ -46,7 +46,7 @@ static bool sev_es_negotiate_protocol(void)
- 	return true;
- }
- 
--static void vc_ghcb_invalidate(struct ghcb *ghcb)
-+static void __maybe_unused vc_ghcb_invalidate(struct ghcb *ghcb)
- {
- 	memset(ghcb->save.valid_bitmap, 0, sizeof(ghcb->save.valid_bitmap));
- }
-@@ -58,9 +58,9 @@ static bool vc_decoding_needed(unsigned long exit_code)
- 		 exit_code <= SVM_EXIT_LAST_EXCP);
- }
- 
--static enum es_result vc_init_em_ctxt(struct es_em_ctxt *ctxt,
--				      struct pt_regs *regs,
--				      unsigned long exit_code)
-+static enum es_result __maybe_unused vc_init_em_ctxt(struct es_em_ctxt *ctxt,
-+						     struct pt_regs *regs,
-+						     unsigned long exit_code)
- {
- 	enum es_result ret = ES_OK;
- 
-@@ -73,7 +73,7 @@ static enum es_result vc_init_em_ctxt(struct es_em_ctxt *ctxt,
- 	return ret;
- }
- 
--static void vc_finish_insn(struct es_em_ctxt *ctxt)
-+static void __maybe_unused vc_finish_insn(struct es_em_ctxt *ctxt)
- {
- 	ctxt->regs->ip += ctxt->insn.length;
- }
-@@ -325,7 +325,8 @@ static enum es_result vc_ioio_exitinfo(struct es_em_ctxt *ctxt, u64 *exitinfo)
- 	return ES_OK;
- }
- 
--static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
-+static enum es_result __maybe_unused
-+vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- {
- 	struct pt_regs *regs = ctxt->regs;
- 	u64 exit_info_1, exit_info_2;
-@@ -433,8 +434,8 @@ static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- 	return ret;
- }
- 
--static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
--				      struct es_em_ctxt *ctxt)
-+static enum es_result __maybe_unused vc_handle_cpuid(struct ghcb *ghcb,
-+						     struct es_em_ctxt *ctxt)
- {
- 	struct pt_regs *regs = ctxt->regs;
- 	u32 cr4 = native_read_cr4();
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-new file mode 100644
-index 000000000000..0b698b653c0b
---- /dev/null
-+++ b/arch/x86/kernel/sev-es.c
-@@ -0,0 +1,163 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * AMD Memory Encryption Support
-+ *
-+ * Copyright (C) 2019 SUSE
-+ *
-+ * Author: Joerg Roedel <jroedel@suse.de>
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/mm.h>
-+
-+#include <asm/sev-es.h>
-+#include <asm/insn-eval.h>
-+#include <asm/fpu/internal.h>
-+#include <asm/processor.h>
-+#include <asm/trap_pf.h>
-+#include <asm/trapnr.h>
-+#include <asm/svm.h>
-+
-+static inline u64 sev_es_rd_ghcb_msr(void)
-+{
-+	return native_read_msr(MSR_AMD64_SEV_ES_GHCB);
-+}
-+
-+static inline void sev_es_wr_ghcb_msr(u64 val)
-+{
-+	u32 low, high;
-+
-+	low  = (u32)(val);
-+	high = (u32)(val >> 32);
-+
-+	native_write_msr(MSR_AMD64_SEV_ES_GHCB, low, high);
-+}
-+
-+static int vc_fetch_insn_kernel(struct es_em_ctxt *ctxt,
-+				unsigned char *buffer)
-+{
-+	return copy_from_kernel_nofault(buffer, (unsigned char *)ctxt->regs->ip, MAX_INSN_SIZE);
-+}
-+
-+static enum es_result vc_decode_insn(struct es_em_ctxt *ctxt)
-+{
-+	char buffer[MAX_INSN_SIZE];
-+	enum es_result ret;
-+	int res;
-+
-+	res = vc_fetch_insn_kernel(ctxt, buffer);
-+	if (unlikely(res == -EFAULT)) {
-+		ctxt->fi.vector     = X86_TRAP_PF;
-+		ctxt->fi.error_code = 0;
-+		ctxt->fi.cr2        = ctxt->regs->ip;
-+		return ES_EXCEPTION;
-+	}
-+
-+	insn_init(&ctxt->insn, buffer, MAX_INSN_SIZE - res, 1);
-+	insn_get_length(&ctxt->insn);
-+
-+	ret = ctxt->insn.immediate.got ? ES_OK : ES_DECODE_FAILED;
-+
-+	return ret;
-+}
-+
-+static enum es_result vc_write_mem(struct es_em_ctxt *ctxt,
-+				   char *dst, char *buf, size_t size)
-+{
-+	unsigned long error_code = X86_PF_PROT | X86_PF_WRITE;
-+	char __user *target = (char __user *)dst;
-+	u64 d8;
-+	u32 d4;
-+	u16 d2;
-+	u8  d1;
-+
-+	switch (size) {
-+	case 1:
-+		memcpy(&d1, buf, 1);
-+		if (put_user(d1, target))
-+			goto fault;
-+		break;
-+	case 2:
-+		memcpy(&d2, buf, 2);
-+		if (put_user(d2, target))
-+			goto fault;
-+		break;
-+	case 4:
-+		memcpy(&d4, buf, 4);
-+		if (put_user(d4, target))
-+			goto fault;
-+		break;
-+	case 8:
-+		memcpy(&d8, buf, 8);
-+		if (put_user(d8, target))
-+			goto fault;
-+		break;
-+	default:
-+		WARN_ONCE(1, "%s: Invalid size: %zu\n", __func__, size);
-+		return ES_UNSUPPORTED;
-+	}
-+
-+	return ES_OK;
-+
-+fault:
-+	if (user_mode(ctxt->regs))
-+		error_code |= X86_PF_USER;
-+
-+	ctxt->fi.vector = X86_TRAP_PF;
-+	ctxt->fi.error_code = error_code;
-+	ctxt->fi.cr2 = (unsigned long)dst;
-+
-+	return ES_EXCEPTION;
-+}
-+
-+static enum es_result vc_read_mem(struct es_em_ctxt *ctxt,
-+				  char *src, char *buf, size_t size)
-+{
-+	unsigned long error_code = X86_PF_PROT;
-+	char __user *s = (char __user *)src;
-+	u64 d8;
-+	u32 d4;
-+	u16 d2;
-+	u8  d1;
-+
-+	switch (size) {
-+	case 1:
-+		if (get_user(d1, s))
-+			goto fault;
-+		memcpy(buf, &d1, 1);
-+		break;
-+	case 2:
-+		if (get_user(d2, s))
-+			goto fault;
-+		memcpy(buf, &d2, 2);
-+		break;
-+	case 4:
-+		if (get_user(d4, s))
-+			goto fault;
-+		memcpy(buf, &d4, 4);
-+		break;
-+	case 8:
-+		if (get_user(d8, s))
-+			goto fault;
-+		memcpy(buf, &d8, 8);
-+		break;
-+	default:
-+		WARN_ONCE(1, "%s: Invalid size: %zu\n", __func__, size);
-+		return ES_UNSUPPORTED;
-+	}
-+
-+	return ES_OK;
-+
-+fault:
-+	if (user_mode(ctxt->regs))
-+		error_code |= X86_PF_USER;
-+
-+	ctxt->fi.vector = X86_TRAP_PF;
-+	ctxt->fi.error_code = error_code;
-+	ctxt->fi.cr2 = (unsigned long)src;
-+
-+	return ES_EXCEPTION;
-+}
-+
-+/* Include code shared with pre-decompression boot stage */
-+#include "sev-es-shared.c"
 -- 
-2.28.0
+2.25.1
+
+
 
