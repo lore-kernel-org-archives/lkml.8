@@ -2,126 +2,222 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8560C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC59FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 863AB2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfwdl791"
+	by mail.kernel.org (Postfix) with ESMTP id B60BE2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598261417;
+	bh=JybTueb32MztoA3mhfLUfMFI647wfKdR59gapxgWM/E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2lsKB38dBLUu5F2yFg11ZLoRTjnAjRx0wJuLlpPM6eJxidTol9cJNcF/SwXLaXBMp
+	 0xAA/tPYxJpUvsV5O550sKRLbaJ0LkBxCIgzY7MuXYdtWmVW4HTBxremIXtdNHbmWb
+	 96PO3N0LZkENbwzZv4dFyN246M8m5veIZDf6fmEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgHXJ3b (ORCPT
+        id S1726181AbgHXJaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:29:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729716AbgHXJ3M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:29:12 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E36CC061573;
-        Mon, 24 Aug 2020 02:29:12 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id m71so4526653pfd.1;
-        Mon, 24 Aug 2020 02:29:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=M+CBKNTiwAynTWcjwTpo/w0QwP0i2sY5ZYNiviotLzQ=;
-        b=lfwdl791pl6Rg3w7CCBD0U3WMVfwrvu6r0fM1NUT9BSmRAF83AXPqnMx8nGgLEeSm1
-         B4KRNgwRVbajM54XQquuBtk0DR5JiJjSwr6RmH2lOJm/0SpJmLM8OKTeM5NjiQYaPk66
-         HYVBod+Q4QFQ8vYYy7b9d9h5v9C9/ymT0gT08lS1m5sl8dUN+LgEvOeE1Hm4ImWpbWr5
-         BiD3HQHd6dn2WFsaXPnalUNKXVh6SwfHz5f5jpL1Eyse1f9p4yMWcpDsjwhrF7JCOyVF
-         flPIO8SrL+3iJ1LqbJJJODF2w24zXqJJzD54cx41rNQhwBMqwR0Gx5mYKh1BLNe7Mvds
-         Wmrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=M+CBKNTiwAynTWcjwTpo/w0QwP0i2sY5ZYNiviotLzQ=;
-        b=T1E0/nGGXT0AJfYuLipOEZp/WxnRm7KD5Fkgrf3HOt4wrYIVwrsR8dhIc0q3YkN75w
-         uSScRMN+VB/k4EaEC7qtqnEG+BaHomLYzLmNzS/fPH68pTQe+Vqlj//uggmWUOiGcsvy
-         nxGAqc5OK/j1YYOUfR9R2Sd9LvNSh4ruhp/RGz9raWZSNip4634sLdhNlB5YKHPeETas
-         e6Zbdf2X1ZPOXGx4iMipo9IsC0lInYgrvKJJH2RhReP26I/Q3S6NydYnxyRF3seq8HOh
-         4AG640WQeCijQK8BNPuZUiKqVwsohNUH0vnZ+t1PS5QLwO3hqFtxpi741j7w+k5dxJwa
-         YCBw==
-X-Gm-Message-State: AOAM530QtUoVJSx5TSWaA4K9yQvTu5DvR7xC4DYTVM+fgajYkx60JWHU
-        HJ1CoYvzK24WB6xIYSlI2t8wQkMLTUs=
-X-Google-Smtp-Source: ABdhPJyc/CdqWYl6Q/XYn70yHRjoNGyndjmiKPxrI/Fyj2xyhj0Zh1FqxNiNv5r1bUM5eBRoFKKdRQ==
-X-Received: by 2002:a63:4e58:: with SMTP id o24mr2987994pgl.208.1598261352105;
-        Mon, 24 Aug 2020 02:29:12 -0700 (PDT)
-Received: from localhost.localdomain ([2401:e180:8881:a353:4578:9e9b:6ebc:aff1])
-        by smtp.gmail.com with ESMTPSA id y65sm10644627pfb.155.2020.08.24.02.29.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 02:29:11 -0700 (PDT)
-From:   Johnny Chuang <johnny.chuang.emc@gmail.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        Harry Cutts <hcutts@chromium.org>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>
-Cc:     James Chen <james.chen@emc.com.tw>,
-        Jennifer Tsai <jennifer.tsai@emc.com.tw>,
-        Paul Liang <paul.liang@emc.com.tw>,
-        Jeff Chuang <jeff.chuang@emc.com.tw>
-Subject: [PATCH] Input: elants_i2c - Report resolution of ABS_MT_TOUCH_MAJOR by FW information.
-Date:   Mon, 24 Aug 2020 17:29:03 +0800
-Message-Id: <1598261343-23946-1-git-send-email-johnny.chuang.emc@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 24 Aug 2020 05:30:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729878AbgHXIu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:50:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C64DE2075B;
+        Mon, 24 Aug 2020 08:50:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259056;
+        bh=JybTueb32MztoA3mhfLUfMFI647wfKdR59gapxgWM/E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=D0J/3/WbhaEPhM2S0Ho1kSdERuQOvILdtSo/FWxa7r9fkCLpnrPIv+ymxhZGmglZe
+         7rr1Y9e6re0b1Amk+QilgrI6VBAevBMV/26d5uR3gdQjwXtkTqLX9RHfAt0JPpERtm
+         8jUiKLzIk6HiIANM2AhCC/cebWLn/4aNF9IhRVfM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 14/33] ext4: clean up ext4_match() and callers
+Date:   Mon, 24 Aug 2020 10:31:10 +0200
+Message-Id: <20200824082347.245673019@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
+References: <20200824082346.498653578@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new behavior to report touch major resolution
-based on information provided by firmware.
+From: Eric Biggers <ebiggers@google.com>
 
-In initial process, driver acquires touch information from touch ic.
-This information contains of one flag about reporting resolution of
-ABS_MT_TOUCH_MAJOR is needed, or not.
-Touch driver will report touch major resolution after geting this flag.
+[ Upstream commit d9b9f8d5a88cb7881d9f1c2b7e9de9a3fe1dc9e2 ]
 
-Signed-off-by: Johnny Chuang <johnny.chuang.emc@gmail.com>
+When ext4 encryption was originally merged, we were encrypting the
+user-specified filename in ext4_match(), introducing a lot of additional
+complexity into ext4_match() and its callers.  This has since been
+changed to encrypt the filename earlier, so we can remove the gunk
+that's no longer needed.  This more or less reverts ext4_search_dir()
+and ext4_find_dest_de() to the way they were in the v4.0 kernel.
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/elants_i2c.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/ext4/namei.c | 81 +++++++++++++++----------------------------------
+ 1 file changed, 25 insertions(+), 56 deletions(-)
 
-diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-index b0bd5bb..513f2fd 100644
---- a/drivers/input/touchscreen/elants_i2c.c
-+++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -151,6 +151,7 @@ struct elants_data {
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index 566a8b08ccdd6..eb41fb189d4b3 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1226,19 +1226,18 @@ static void dx_insert_block(struct dx_frame *frame, u32 hash, ext4_lblk_t block)
+ }
  
- 	bool wake_irq_enabled;
- 	bool keep_power_in_suspend;
-+	bool report_major_resolution;
+ /*
+- * NOTE! unlike strncmp, ext4_match returns 1 for success, 0 for failure.
++ * Test whether a directory entry matches the filename being searched for.
+  *
+- * `len <= EXT4_NAME_LEN' is guaranteed by caller.
+- * `de != NULL' is guaranteed by caller.
++ * Return: %true if the directory entry matches, otherwise %false.
+  */
+-static inline int ext4_match(struct ext4_filename *fname,
+-			     struct ext4_dir_entry_2 *de)
++static inline bool ext4_match(const struct ext4_filename *fname,
++			      const struct ext4_dir_entry_2 *de)
+ {
+ 	const void *name = fname_name(fname);
+ 	u32 len = fname_len(fname);
  
- 	/* Must be last to be used for DMA operations */
- 	u8 buf[MAX_PACKET_SIZE] ____cacheline_aligned;
-@@ -459,6 +460,9 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
- 	rows = resp[2] + resp[6] + resp[10];
- 	cols = resp[3] + resp[7] + resp[11];
+ 	if (!de->inode)
+-		return 0;
++		return false;
  
-+	/* Decide if report resolution of ABS_MT_TOUCH_MAJOR */
-+	ts->report_major_resolution = (resp[16] != 0) ? true : false;
+ #ifdef CONFIG_EXT4_FS_ENCRYPTION
+ 	if (unlikely(!name)) {
+@@ -1270,48 +1269,31 @@ int ext4_search_dir(struct buffer_head *bh, char *search_buf, int buf_size,
+ 	struct ext4_dir_entry_2 * de;
+ 	char * dlimit;
+ 	int de_len;
+-	int res;
+ 
+ 	de = (struct ext4_dir_entry_2 *)search_buf;
+ 	dlimit = search_buf + buf_size;
+ 	while ((char *) de < dlimit) {
+ 		/* this code is executed quadratically often */
+ 		/* do minimal checking `by hand' */
+-		if ((char *) de + de->name_len <= dlimit) {
+-			res = ext4_match(fname, de);
+-			if (res < 0) {
+-				res = -1;
+-				goto return_result;
+-			}
+-			if (res > 0) {
+-				/* found a match - just to be sure, do
+-				 * a full check */
+-				if (ext4_check_dir_entry(dir, NULL, de, bh,
+-						bh->b_data,
+-						 bh->b_size, offset)) {
+-					res = -1;
+-					goto return_result;
+-				}
+-				*res_dir = de;
+-				res = 1;
+-				goto return_result;
+-			}
+-
++		if ((char *) de + de->name_len <= dlimit &&
++		    ext4_match(fname, de)) {
++			/* found a match - just to be sure, do
++			 * a full check */
++			if (ext4_check_dir_entry(dir, NULL, de, bh, bh->b_data,
++						 bh->b_size, offset))
++				return -1;
++			*res_dir = de;
++			return 1;
+ 		}
+ 		/* prevent looping on a bad block */
+ 		de_len = ext4_rec_len_from_disk(de->rec_len,
+ 						dir->i_sb->s_blocksize);
+-		if (de_len <= 0) {
+-			res = -1;
+-			goto return_result;
+-		}
++		if (de_len <= 0)
++			return -1;
+ 		offset += de_len;
+ 		de = (struct ext4_dir_entry_2 *) ((char *) de + de_len);
+ 	}
+-
+-	res = 0;
+-return_result:
+-	return res;
++	return 0;
+ }
+ 
+ static int is_dx_internal_node(struct inode *dir, ext4_lblk_t block,
+@@ -1824,24 +1806,15 @@ int ext4_find_dest_de(struct inode *dir, struct inode *inode,
+ 	int nlen, rlen;
+ 	unsigned int offset = 0;
+ 	char *top;
+-	int res;
+ 
+ 	de = (struct ext4_dir_entry_2 *)buf;
+ 	top = buf + buf_size - reclen;
+ 	while ((char *) de <= top) {
+ 		if (ext4_check_dir_entry(dir, NULL, de, bh,
+-					 buf, buf_size, offset)) {
+-			res = -EFSCORRUPTED;
+-			goto return_result;
+-		}
+-		/* Provide crypto context and crypto buffer to ext4 match */
+-		res = ext4_match(fname, de);
+-		if (res < 0)
+-			goto return_result;
+-		if (res > 0) {
+-			res = -EEXIST;
+-			goto return_result;
+-		}
++					 buf, buf_size, offset))
++			return -EFSCORRUPTED;
++		if (ext4_match(fname, de))
++			return -EEXIST;
+ 		nlen = EXT4_DIR_REC_LEN(de->name_len);
+ 		rlen = ext4_rec_len_from_disk(de->rec_len, buf_size);
+ 		if ((de->inode ? rlen - nlen : rlen) >= reclen)
+@@ -1849,15 +1822,11 @@ int ext4_find_dest_de(struct inode *dir, struct inode *inode,
+ 		de = (struct ext4_dir_entry_2 *)((char *)de + rlen);
+ 		offset += rlen;
+ 	}
+-
+ 	if ((char *) de > top)
+-		res = -ENOSPC;
+-	else {
+-		*dest_de = de;
+-		res = 0;
+-	}
+-return_result:
+-	return res;
++		return -ENOSPC;
 +
- 	/* Process mm_to_pixel information */
- 	error = elants_i2c_execute_command(client,
- 					   get_osr_cmd, sizeof(get_osr_cmd),
-@@ -1325,6 +1329,8 @@ static int elants_i2c_probe(struct i2c_client *client,
- 			     0, MT_TOOL_PALM, 0, 0);
- 	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
- 	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
-+	if (ts->report_major_resolution == true)
-+		input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
++	*dest_de = de;
++	return 0;
+ }
  
- 	touchscreen_parse_properties(ts->input, true, &ts->prop);
- 
+ int ext4_insert_dentry(struct inode *dir,
 -- 
-2.7.4
+2.25.1
+
+
 
