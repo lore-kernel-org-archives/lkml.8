@@ -2,140 +2,111 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D810C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF50C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B757205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:01:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C4u2oJBk"
+	by mail.kernel.org (Postfix) with ESMTP id 411E2205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598288527;
+	bh=/cmKDYK2LnwTDI3PyjSrAp/bL60zoRXUZl6xO+YnnQg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zOj+8c8Z1B9ERiI30kNPfx/TAv716zXV3weWLVMksEPAAEVswd8HfhRsmmc5UU/Sf
+	 S/LQy6gYTJMhBg7knOeCrjRcBDsSaqLmIBN416jajBwx6Y2xpqc+EKYpviuNd2NqKq
+	 f5eTQkliOTvA0YY7BC3gIvWx+DauZcBPJGIRCYLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgHXRBk (ORCPT
+        id S1726851AbgHXRCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:01:40 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42544 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgHXRBI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:01:08 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07OH12k0100866;
-        Mon, 24 Aug 2020 12:01:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598288462;
-        bh=DT3PA1/IKDqSXW15ng6SPivLr45yGQeLTmDSIfcQkho=;
-        h=From:To:Subject:Date;
-        b=C4u2oJBkCwWBuWEgNB3FaDbjnXaCPiJOt9a+jPpmMl1A0oItgXWtmfYVzCxheiqDc
-         5MtGCZgGsfEwbRTcd58tnyMvg+2v8GyIYb7VjOvELRFX9dSsHrrFYpYW6mW+N+QH8H
-         tYTp6bTr+FK9zkDwuNEPWIFkVPT7t8XKWjHcjteU=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07OH1297035999
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Aug 2020 12:01:02 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 24
- Aug 2020 12:01:01 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 24 Aug 2020 12:01:01 -0500
-Received: from uda0868495.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07OH103g005955;
-        Mon, 24 Aug 2020 12:01:00 -0500
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>,
-        <grygorii.strashko@ti.com>, <nsekhar@ti.com>,
-        <linux-omap@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [net v3 PATCH] net: ethernet: ti: cpsw_new: fix error handling in cpsw_ndo_vlan_rx_kill_vid()
-Date:   Mon, 24 Aug 2020 13:01:00 -0400
-Message-ID: <20200824170100.21319-1-m-karicheri2@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 24 Aug 2020 13:02:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728488AbgHXQik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:38:40 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A35B22D08;
+        Mon, 24 Aug 2020 16:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598287106;
+        bh=/cmKDYK2LnwTDI3PyjSrAp/bL60zoRXUZl6xO+YnnQg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bQYXKFrIG/ktDclNvpD53u3MpYcLq7fRjkXu9ybMEBfCkZ2SkpZ9YQ6xw2hmA0xHu
+         XSqyrd7GeoClbV6u12Odh1v7UDE2HaufCCqexpQ60eQB9136pFthYjGzN3qG8crdEB
+         sRnINTBFon6fcAGDJXuy4uB3VYOv2lsW+57KQP+M=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 26/38] scsi: ufs: Improve interrupt handling for shared interrupts
+Date:   Mon, 24 Aug 2020 12:37:38 -0400
+Message-Id: <20200824163751.606577-26-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200824163751.606577-1-sashal@kernel.org>
+References: <20200824163751.606577-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes a bunch of issues in cpsw_ndo_vlan_rx_kill_vid()
+From: Adrian Hunter <adrian.hunter@intel.com>
 
- - pm_runtime_get_sync() returns non zero value. This results in
-   non zero value return to caller which will be interpreted as error.
-   So overwrite ret with zero.
- - If VID matches with port VLAN VID, then set error code.
- - Currently when VLAN interface is deleted, all of the VLAN mc addresses
-   are removed from ALE table, however the return values from ale function
-   calls are not checked. These functions can return error code -ENOENT.
-   But that shouldn't happen in a normal case. So add error print to
-   catch the situations so that these can be investigated and addressed.
-   return zero in these cases as these are not real error case, but only
-   serve to catch ALE table update related issues and help address the
-   same in the driver.
+[ Upstream commit 127d5f7c4b653b8be5eb3b2c7bbe13728f9003ff ]
 
-Fixes: ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+For shared interrupts, the interrupt status might be zero, so check that
+first.
+
+Link: https://lore.kernel.org/r/20200811133936.19171-2-adrian.hunter@intel.com
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- v3 - updated commit description to describe error check related to
-      port vlan VID
- v2 - updated comments from Grygorii, also return error code if VID
- match with port_vlan vid.
- drivers/net/ethernet/ti/cpsw_new.c | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
-index 8d0a2bc7128d..61fa5063d751 100644
---- a/drivers/net/ethernet/ti/cpsw_new.c
-+++ b/drivers/net/ethernet/ti/cpsw_new.c
-@@ -1032,19 +1032,35 @@ static int cpsw_ndo_vlan_rx_kill_vid(struct net_device *ndev,
- 		return ret;
- 	}
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 9642e3ab840fa..99c1b0138c573 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5610,7 +5610,7 @@ static void ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
+  */
+ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ {
+-	u32 intr_status, enabled_intr_status;
++	u32 intr_status, enabled_intr_status = 0;
+ 	irqreturn_t retval = IRQ_NONE;
+ 	struct ufs_hba *hba = __hba;
+ 	int retries = hba->nutrs;
+@@ -5624,7 +5624,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 	 * read, make sure we handle them by checking the interrupt status
+ 	 * again in a loop until we process all of the reqs before returning.
+ 	 */
+-	do {
++	while (intr_status && retries--) {
+ 		enabled_intr_status =
+ 			intr_status & ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
+ 		if (intr_status)
+@@ -5635,7 +5635,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 		}
  
-+	/* reset the return code as pm_runtime_get_sync() can return
-+	 * non zero values as well.
-+	 */
-+	ret = 0;
- 	for (i = 0; i < cpsw->data.slaves; i++) {
- 		if (cpsw->slaves[i].ndev &&
--		    vid == cpsw->slaves[i].port_vlan)
-+		    vid == cpsw->slaves[i].port_vlan) {
-+			ret = -EINVAL;
- 			goto err;
-+		}
- 	}
+ 		intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+-	} while (intr_status && --retries);
++	}
  
- 	dev_dbg(priv->dev, "removing vlanid %d from vlan filter\n", vid);
--	cpsw_ale_del_vlan(cpsw->ale, vid, 0);
--	cpsw_ale_del_ucast(cpsw->ale, priv->mac_addr,
--			   HOST_PORT_NUM, ALE_VLAN, vid);
--	cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
--			   0, ALE_VLAN, vid);
-+	ret = cpsw_ale_del_vlan(cpsw->ale, vid, 0);
-+	if (ret)
-+		dev_err(priv->dev, "%s: failed %d: ret %d\n",
-+			__func__, __LINE__, ret);
-+	ret = cpsw_ale_del_ucast(cpsw->ale, priv->mac_addr,
-+				 HOST_PORT_NUM, ALE_VLAN, vid);
-+	if (ret)
-+		dev_err(priv->dev, "%s: failed %d: ret %d\n",
-+			__func__, __LINE__, ret);
-+	ret = cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
-+				 0, ALE_VLAN, vid);
-+	if (ret)
-+		dev_err(priv->dev, "%s: failed %d: ret %d\n",
-+			__func__, __LINE__, ret);
- 	cpsw_ale_flush_multicast(cpsw->ale, ALE_PORT_HOST, vid);
-+	ret = 0;
- err:
- 	pm_runtime_put(cpsw->dev);
- 	return ret;
+ 	spin_unlock(hba->host->host_lock);
+ 	return retval;
 -- 
-2.17.1
+2.25.1
 
