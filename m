@@ -5,54 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A74C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F633C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5FC620738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB78120738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261539;
-	bh=A57CuqgnKgu/vD9IuTu09MWYcdZZSsFtJI1yNs7c7Yw=;
+	s=default; t=1598261541;
+	bh=6aHggL1RkTAzBEHv4FvfQ9+Mk3/6PJyf2EJjPbmIUQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1kvVafdkUk7g/4WeNpdHvXZpX4PQE9k9xYSfdFwDAfcdzKNEn+EVPZp/DCf0t4NJX
-	 NBZ5dwi7jIq7kDpBYbHB9I/QngLe0rs2jekmi1dpKrC+HMEpawLw1FrKKU6dsWYx3z
-	 hObF1WL9C4UTRaLYqhq+4jZgS2NcF6oX7p3yXL+U=
+	b=SSOSSuGo/mZ463lvC9+xI3OgOj6aG0+k+1bGogHf0e9xig5IG2AlATL96dhsvIAhr
+	 cAD0GKE4UMJyY8fvcVpDJdJ7/SHO7iIUl6gQg/ozagCdnL/vrKLwnzQjBqlKz7J5Gm
+	 iQSKrTD5lM6/lqD0c4sztPRS/44QqQMsqD4iz5Ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbgHXIuF (ORCPT
+        id S1729901AbgHXJcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52898 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:32:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729802AbgHXIt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:49:57 -0400
+        id S1726909AbgHXIuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:50:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D400207D3;
-        Mon, 24 Aug 2020 08:49:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8003C20FC3;
+        Mon, 24 Aug 2020 08:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258996;
-        bh=A57CuqgnKgu/vD9IuTu09MWYcdZZSsFtJI1yNs7c7Yw=;
+        s=default; t=1598259007;
+        bh=6aHggL1RkTAzBEHv4FvfQ9+Mk3/6PJyf2EJjPbmIUQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YpwfCtfNbRtNSphixWA4Q69hDI8+IVugvFKv+hk9ywg3DMr8lYIEwhE/kcjFZ3Dm8
-         Doem8EJsp3hZQDN+ajUo4vIP506BvX/5dy2Crt2sAdAWDPvycNvjk6sngTR5XZdf6z
-         dzO7nKZDZh52xYLuesAZyuB9xjkFT5FUFmt/PALo=
+        b=VlcgrOErM9arNdK+6Jc5sA32GoW11tFsdAcCK933m4fMNWhGjcTMEBspzLCeOh370
+         gLb6J/dAaXugjyGxW2K5bdk+ONNOFQl0qnDtYkkR97b7APo4BBQvWobq0Nz+jlAj3W
+         xKPr27/eWFk2Iyj8BQgzZOoyW52HaNhSyVjlwI+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 07/33] khugepaged: khugepaged_test_exit() check mmget_still_valid()
-Date:   Mon, 24 Aug 2020 10:31:03 +0200
-Message-Id: <20200824082346.885173926@linuxfoundation.org>
+Subject: [PATCH 4.4 19/33] m68knommu: fix overwriting of bits in ColdFire V3 cache control
+Date:   Mon, 24 Aug 2020 10:31:15 +0200
+Message-Id: <20200824082347.504318577@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
 References: <20200824082346.498653578@linuxfoundation.org>
@@ -65,58 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Greg Ungerer <gerg@linux-m68k.org>
 
-[ Upstream commit bbe98f9cadff58cdd6a4acaeba0efa8565dabe65 ]
+[ Upstream commit bdee0e793cea10c516ff48bf3ebb4ef1820a116b ]
 
-Move collapse_huge_page()'s mmget_still_valid() check into
-khugepaged_test_exit() itself.  collapse_huge_page() is used for anon THP
-only, and earned its mmget_still_valid() check because it inserts a huge
-pmd entry in place of the page table's pmd entry; whereas
-collapse_file()'s retract_page_tables() or collapse_pte_mapped_thp()
-merely clears the page table's pmd entry.  But core dumping without mmap
-lock must have been as open to mistaking a racily cleared pmd entry for a
-page table at physical page 0, as exit_mmap() was.  And we certainly have
-no interest in mapping as a THP once dumping core.
+The Cache Control Register (CACR) of the ColdFire V3 has bits that
+control high level caching functions, and also enable/disable the use
+of the alternate stack pointer register (the EUSP bit) to provide
+separate supervisor and user stack pointer registers. The code as
+it is today will blindly clear the EUSP bit on cache actions like
+invalidation. So it is broken for this case - and that will result
+in failed booting (interrupt entry and exit processing will be
+completely hosed).
 
-Fixes: 59ea6d06cfa9 ("coredump: fix race condition between collapse_huge_page() and core dumping")
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: <stable@vger.kernel.org>	[4.8+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021217020.27773@eggly.anvils
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This only affects ColdFire V3 parts that support the alternate stack
+register (like the 5329 for example) - generally speaking new parts do,
+older parts don't. It has no impact on ColdFire V3 parts with the single
+stack pointer, like the 5307 for example.
+
+Fix the cache bit defines used, so they maintain the EUSP bit when
+carrying out cache actions through the CACR register.
+
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/huge_memory.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/m68k/include/asm/m53xxacr.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index c5628ebc0fc29..1c4d7d2f53d22 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2136,7 +2136,7 @@ static void insert_to_mm_slots_hash(struct mm_struct *mm,
+diff --git a/arch/m68k/include/asm/m53xxacr.h b/arch/m68k/include/asm/m53xxacr.h
+index 3177ce8331d69..baee0c77b9818 100644
+--- a/arch/m68k/include/asm/m53xxacr.h
++++ b/arch/m68k/include/asm/m53xxacr.h
+@@ -88,9 +88,9 @@
+  * coherency though in all cases. And for copyback caches we will need
+  * to push cached data as well.
+  */
+-#define CACHE_INIT	  CACR_CINVA
+-#define CACHE_INVALIDATE  CACR_CINVA
+-#define CACHE_INVALIDATED CACR_CINVA
++#define CACHE_INIT        (CACHE_MODE + CACR_CINVA - CACR_EC)
++#define CACHE_INVALIDATE  (CACHE_MODE + CACR_CINVA)
++#define CACHE_INVALIDATED (CACHE_MODE + CACR_CINVA)
  
- static inline int khugepaged_test_exit(struct mm_struct *mm)
- {
--	return atomic_read(&mm->mm_users) == 0;
-+	return atomic_read(&mm->mm_users) == 0 || !mmget_still_valid(mm);
- }
- 
- int __khugepaged_enter(struct mm_struct *mm)
-@@ -2587,9 +2587,6 @@ static void collapse_huge_page(struct mm_struct *mm,
- 	 * handled by the anon_vma lock + PG_lock.
- 	 */
- 	down_write(&mm->mmap_sem);
--	result = SCAN_ANY_PROCESS;
--	if (!mmget_still_valid(mm))
--		goto out;
- 	if (unlikely(khugepaged_test_exit(mm)))
- 		goto out;
- 
+ #define ACR0_MODE	((CONFIG_RAMBASE & 0xff000000) + \
+ 			 (0x000f0000) + \
 -- 
 2.25.1
 
