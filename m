@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6518DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A208DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45FAD20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CC32067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289316;
-	bh=kcZohN4nvpOETCp1JV6JHC3z9PMZTGOOhCfWIUYUEVY=;
+	s=default; t=1598289342;
+	bh=yM0adv38uo+NQx7so3B98b2SMvGI1C8RiqcPnmX6+rI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ecuzfRLpuLanThv8VC8PYKgNbKF1luRc1o8g9X9X860Sbe0W2oSwyhtAxcr4q7dQk
-	 CVyFDqTvbtqtSG9fdyRPybD4Ih8ltcywTLexH7Zj3S6F4fTiy54o39vlQwhKvIc1Gc
-	 IMxG4Eh8HiDcB+RDu2MIlvuH0qEhhuIUNJf+woXQ=
+	b=SqST7l/8YsPRXxYCuYI3S9kA4f72BgV06YCzSZn2Q9H5VZzPxpk7xsg8uo5T8hiQ1
+	 8Y+cIjJ5Je69rWEZXBuevHKIuY15VDjrNncpKpLilH1SMuWkHoCfx/kbcdtrcjne11
+	 /keMy6zEhjPAHqZ+zV0v4nsBqXKGakCiaHbktCR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgHXRPB (ORCPT
+        id S1727881AbgHXRPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:15:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728366AbgHXQhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:37:05 -0400
+        id S1728365AbgHXQhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:37:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E96E22DD3;
-        Mon, 24 Aug 2020 16:36:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DBC522DA9;
+        Mon, 24 Aug 2020 16:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287002;
-        bh=kcZohN4nvpOETCp1JV6JHC3z9PMZTGOOhCfWIUYUEVY=;
+        s=default; t=1598287001;
+        bh=yM0adv38uo+NQx7so3B98b2SMvGI1C8RiqcPnmX6+rI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M0uJh5FxzAhFyqZHvb2XNPprXmz64jr1Vh+YPczpqUs1bBNYXiKc4qTSB/Sav1Qqn
-         7YG7gdyCk+2+GDrgdRYfwIpAUf7U7QmR2TMbjOxoHBidOcz/pV6PrD/Vf1BN+P45V5
-         7nh6eLUp4CdHqTFB+BM3VvVf9SKjpMV4p9nSkYqM=
+        b=EXUzDAG5QriYH/XVwMMT+nWzkvQnbQPyYVFFJ/KDRNYvpHF22vlxWkj+SCtRmNIva
+         KT8DFW33xKGI8b5cGM0JUr1CSXnN504MNXB0Y0II82gBAnzoOYqB6zVtj93GJvvHOz
+         zwxdoJ/yhBckxozHJy7lMMvxu0E4JbguPI3uw6R0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 06/54] ext4: abort the filesystem if failed to async write metadata buffer
-Date:   Mon, 24 Aug 2020 12:35:45 -0400
-Message-Id: <20200824163634.606093-6-sashal@kernel.org>
+Cc:     Xin He <hexin.op@bytedance.com>, Qi Liu <liuqi.16@bytedance.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.7 05/54] drm/virtio: fix memory leak in virtio_gpu_cleanup_object()
+Date:   Mon, 24 Aug 2020 12:35:44 -0400
+Message-Id: <20200824163634.606093-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
@@ -59,129 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: Xin He <hexin.op@bytedance.com>
 
-[ Upstream commit bc71726c725767205757821df364acff87f92ac5 ]
+[ Upstream commit 836b194d65782aaec4485a07d2aab52d3f698505 ]
 
-There is a risk of filesystem inconsistency if we failed to async write
-back metadata buffer in the background. Because of current buffer's end
-io procedure is handled by end_buffer_async_write() in the block layer,
-and it only clear the buffer's uptodate flag and mark the write_io_error
-flag, so ext4 cannot detect such failure immediately. In most cases of
-getting metadata buffer (e.g. ext4_read_inode_bitmap()), although the
-buffer's data is actually uptodate, it may still read data from disk
-because the buffer's uptodate flag has been cleared. Finally, it may
-lead to on-disk filesystem inconsistency if reading old data from the
-disk successfully and write them out again.
+Before setting shmem->pages to NULL, kfree() should
+be called.
 
-This patch detect bdev mapping->wb_err when getting journal's write
-access and mark the filesystem error if bdev's mapping->wb_err was
-increased, this could prevent further writing and potential
-inconsistency.
-
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Suggested-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200620025427.1756360-2-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Xin He <hexin.op@bytedance.com>
+Reviewed-by: Qi Liu <liuqi.16@bytedance.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200722051851.72662-1-hexin.op@bytedance.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/ext4.h      |  3 +++
- fs/ext4/ext4_jbd2.c | 25 +++++++++++++++++++++++++
- fs/ext4/super.c     | 17 +++++++++++++++++
- 3 files changed, 45 insertions(+)
+ drivers/gpu/drm/virtio/virtgpu_object.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 51a85b50033a7..ba9971b446b51 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1560,6 +1560,9 @@ struct ext4_sb_info {
- #ifdef CONFIG_EXT4_DEBUG
- 	unsigned long s_simulate_fail;
- #endif
-+	/* Record the errseq of the backing block device */
-+	errseq_t s_bdev_wb_err;
-+	spinlock_t s_bdev_wb_lock;
- };
- 
- static inline struct ext4_sb_info *EXT4_SB(struct super_block *sb)
-diff --git a/fs/ext4/ext4_jbd2.c b/fs/ext4/ext4_jbd2.c
-index 0c76cdd44d90d..760b9ee49dc00 100644
---- a/fs/ext4/ext4_jbd2.c
-+++ b/fs/ext4/ext4_jbd2.c
-@@ -195,6 +195,28 @@ static void ext4_journal_abort_handle(const char *caller, unsigned int line,
- 	jbd2_journal_abort_handle(handle);
- }
- 
-+static void ext4_check_bdev_write_error(struct super_block *sb)
-+{
-+	struct address_space *mapping = sb->s_bdev->bd_inode->i_mapping;
-+	struct ext4_sb_info *sbi = EXT4_SB(sb);
-+	int err;
-+
-+	/*
-+	 * If the block device has write error flag, it may have failed to
-+	 * async write out metadata buffers in the background. In this case,
-+	 * we could read old data from disk and write it out again, which
-+	 * may lead to on-disk filesystem inconsistency.
-+	 */
-+	if (errseq_check(&mapping->wb_err, READ_ONCE(sbi->s_bdev_wb_err))) {
-+		spin_lock(&sbi->s_bdev_wb_lock);
-+		err = errseq_check_and_advance(&mapping->wb_err, &sbi->s_bdev_wb_err);
-+		spin_unlock(&sbi->s_bdev_wb_lock);
-+		if (err)
-+			ext4_error_err(sb, -err,
-+				       "Error while async write back metadata");
-+	}
-+}
-+
- int __ext4_journal_get_write_access(const char *where, unsigned int line,
- 				    handle_t *handle, struct buffer_head *bh)
- {
-@@ -202,6 +224,9 @@ int __ext4_journal_get_write_access(const char *where, unsigned int line,
- 
- 	might_sleep();
- 
-+	if (bh->b_bdev->bd_super)
-+		ext4_check_bdev_write_error(bh->b_bdev->bd_super);
-+
- 	if (ext4_handle_valid(handle)) {
- 		err = jbd2_journal_get_write_access(handle, bh);
- 		if (err)
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 017aecc1393a8..f4d7289462d9b 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4670,6 +4670,15 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 	}
- #endif  /* CONFIG_QUOTA */
- 
-+	/*
-+	 * Save the original bdev mapping's wb_err value which could be
-+	 * used to detect the metadata async write error.
-+	 */
-+	spin_lock_init(&sbi->s_bdev_wb_lock);
-+	if (!sb_rdonly(sb))
-+		errseq_check_and_advance(&sb->s_bdev->bd_inode->i_mapping->wb_err,
-+					 &sbi->s_bdev_wb_err);
-+	sb->s_bdev->bd_super = sb;
- 	EXT4_SB(sb)->s_mount_state |= EXT4_ORPHAN_FS;
- 	ext4_orphan_cleanup(sb, es);
- 	EXT4_SB(sb)->s_mount_state &= ~EXT4_ORPHAN_FS;
-@@ -5558,6 +5567,14 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 				goto restore_opts;
+diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+index d9039bb7c5e37..1e65c5ac573b1 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_object.c
++++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+@@ -79,6 +79,7 @@ void virtio_gpu_cleanup_object(struct virtio_gpu_object *bo)
  			}
  
-+			/*
-+			 * Update the original bdev mapping's wb_err value
-+			 * which could be used to detect the metadata async
-+			 * write error.
-+			 */
-+			errseq_check_and_advance(&sb->s_bdev->bd_inode->i_mapping->wb_err,
-+						 &sbi->s_bdev_wb_err);
-+
- 			/*
- 			 * Mounting a RDONLY partition read-write, so reread
- 			 * and store the current valid flag.  (It may have
+ 			sg_free_table(shmem->pages);
++			kfree(shmem->pages);
+ 			shmem->pages = NULL;
+ 			drm_gem_shmem_unpin(&bo->base.base);
+ 		}
 -- 
 2.25.1
 
