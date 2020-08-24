@@ -2,147 +2,115 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EB3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20A78204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB966204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:40:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jC40hn4m"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NMmyyMPg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgHXNkc (ORCPT
+        id S1727954AbgHXNky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:40:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13596 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727859AbgHXNik (ORCPT
+        Mon, 24 Aug 2020 09:40:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbgHXNhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:38:40 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07ODWAun037927;
-        Mon, 24 Aug 2020 09:38:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : reply-to : references : mime-version : content-type
- : in-reply-to; s=pp1; bh=J6snxcYbQgYaI1dLzLSaJ+5USc2AXUnB6IShN2cfXmU=;
- b=jC40hn4mTYC5ra28Pn3LuGL/MNVFMZ3H3vO9T+UpSly+BYV7i/QrGwihLczp09CkrloW
- 84DbDqNjdPUBHKoo666FdNfe4TdZu/AxXBbSsxNlPIrURWlFeOVMThj7jH1P7LMCDPZT
- il6Bpep98ZARYgKOHj/4cZqUtw3DVNjhaD/SEirzd5FUIud6QGA3t7+nXm+yCyWa2uj1
- E1KTnE767U9PkUz+16bQouc0lARrQLAebfJz2ghhGQ00Rw1CU8VwvnxHNbS9nXo3Hbfb
- /N5QSPff02znXT7wsGGpIoeG0uTISjyLnaT5OJhgv12x/42Km00ahtmS+6pLYooWfqdc tw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 334eamgmcw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 09:38:27 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07ODWGbi038571;
-        Mon, 24 Aug 2020 09:38:27 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 334eamgmbt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 09:38:27 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07ODbKH6008980;
-        Mon, 24 Aug 2020 13:38:25 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04fra.de.ibm.com with ESMTP id 332ujjsfj9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 13:38:25 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07ODcMhu25756104
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Aug 2020 13:38:22 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B46194C04A;
-        Mon, 24 Aug 2020 13:38:22 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4376A4C040;
-        Mon, 24 Aug 2020 13:38:21 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Mon, 24 Aug 2020 13:38:21 +0000 (GMT)
-Date:   Mon, 24 Aug 2020 19:08:20 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Xunlei Pang <xlpang@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Wetp Zhang <wetp.zy@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: Fix wrong cpu selecting from isolated domain
-Message-ID: <20200824133820.GA31355@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <1598272219-43040-1-git-send-email-xlpang@linux.alibaba.com>
+        Mon, 24 Aug 2020 09:37:31 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F429C061575;
+        Mon, 24 Aug 2020 06:37:30 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id v16so4250442plo.1;
+        Mon, 24 Aug 2020 06:37:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KxnJ226rDEIRCYSAfgyQD9VSISjkVVFiQbho/xUa2SA=;
+        b=NMmyyMPgB/lrfnnRRTyR4UPqUE/BEx0i2SqGdFdnIR5BqKp+uXn58ArQ9p+GBWGXBG
+         ga3kv+F6nJNaZ4aa1iIfYJvoXVylqsq6BXkOflL5RHQpXN8oetMgfb9Pag33aZoZ4Ufc
+         bs5aluqrYiYOOA6008C7gl4/JZvEf6w6EMbtQ25UvXVSLL6Q1Fo67IUW00eLkPlf20ca
+         Hm9fXSpvbYkqzxnZjw8MeRBSxxAZEI/+V7vp+uGooTrn4JiQpnn0bKGBrAUY0Cy7+iTB
+         fz5LxtHabotoJNfBiZukJbuJiKmqfyBrv2j1wToMfeYUBXoJsJFpvHFNn+zoUNmssTEL
+         1/kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KxnJ226rDEIRCYSAfgyQD9VSISjkVVFiQbho/xUa2SA=;
+        b=dNa7c1R1Kz1L6Ganppk9Ty/OutlzWAPmiZoaZpFkMZJsyfQJGQ4LV71L1B7KjIRPRN
+         ucmEBkpfd+vHIWaYKDVZ99Z2Dd7Pi2YZ8KID+cOtH2ypWdF5ljKrj0CR/GjpFcKwdYNY
+         nZ/mrGS0DIJBlSuKUy4lOSeY+0eVxaov95cj5v731DaewylM0bwBYxwEgv89BORehP1V
+         7NHpRM1HBuQSF1D+T2E4TdfAEz1JZfIXfuKHWUmyJG1PDcM3bKt3AlVnzTQzWstFWzxs
+         6sNvnYdnhRJx3iRBWpJRYsC5XoUlLQvY7/n66LLfiQgED3TcHnK+sEzfyAqDAPd/5NL5
+         2aPg==
+X-Gm-Message-State: AOAM530vsJRENw6oTx6WTFGbolltOp9tT0oP2lTDTF4IbOq49D+WRYCi
+        BiaO9KdMDf5qU1+woraK/xs=
+X-Google-Smtp-Source: ABdhPJyblR17voN8n55AJBmzyqzj7oJ0VpoOBnxQZXjNDrfhr/CoulNXRFksFXDdkDw5JzvcD3o1rg==
+X-Received: by 2002:a17:902:d90e:: with SMTP id c14mr3804333plz.76.1598276250112;
+        Mon, 24 Aug 2020 06:37:30 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y7sm10518969pjm.3.2020.08.24.06.37.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 06:37:29 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 06:37:28 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu, Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Krzysztof Sobota <krzysztof.sobota@nokia.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] watchdog: Use put_device on error
+Message-ID: <20200824133728.GC192024@roeck-us.net>
+References: <20200824031230.31050-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1598272219-43040-1-git-send-email-xlpang@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- mlxlogscore=999 clxscore=1015 mlxscore=0 phishscore=0 spamscore=0
- suspectscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240104
+In-Reply-To: <20200824031230.31050-1-dinghao.liu@zju.edu.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Xunlei Pang <xlpang@linux.alibaba.com> [2020-08-24 20:30:19]:
+On Mon, Aug 24, 2020 at 11:12:30AM +0800, Dinghao Liu wrote:
+> We should use put_device() instead of freeing device
+> directly after device_initialize().
+> 
+> Fixes: cb36e29bb0e4b ("watchdog: initialize device before misc_register")
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-> We've met problems that occasionally tasks with full cpumask
-> (e.g. by putting it into a cpuset or setting to full affinity)
-> were migrated to our isolated cpus in production environment.
-> 
-> After some analysis, we found that it is due to the current
-> select_idle_smt() not considering the sched_domain mask.
-> 
-> Fix it by checking the valid domain mask in select_idle_smt().
-> 
-> Fixes: 10e2f1acd010 ("sched/core: Rewrite and improve select_idle_siblings())
-> Reported-by: Wetp Zhang <wetp.zy@linux.alibaba.com>
-> Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
 > ---
->  kernel/sched/fair.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 1a68a05..fa942c4 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6075,7 +6075,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
->  /*
->   * Scan the local SMT mask for idle CPUs.
->   */
-> -static int select_idle_smt(struct task_struct *p, int target)
-> +static int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
->  {
->  	int cpu;
->  
-> @@ -6083,7 +6083,8 @@ static int select_idle_smt(struct task_struct *p, int target)
->  		return -1;
->  
->  	for_each_cpu(cpu, cpu_smt_mask(target)) {
-> -		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
-> +		if (!cpumask_test_cpu(cpu, p->cpus_ptr) ||
-> +		    !cpumask_test_cpu(cpu, sched_domain_span(sd)))
->  			continue;
-
-Don't think this is right thing to do.  What if this task had set a cpumask
-that doesn't cover all the cpus in this sched_domain_span(sd)
-
-cpu_smt_mask(target) would already limit to the sched_domain_span(sd) so I
-am not sure how this can help?
-
-
--- 
-Thanks and Regards
-Srikar Dronamraju
+> Changelog:
+> 
+> v2: - Use put_device() instead of just removing kfree.
+>       Move the memleak part to a separate patch.
+> ---
+>  drivers/watchdog/watchdog_dev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+> index 6798addabd5a..b0fa7f31b1b6 100644
+> --- a/drivers/watchdog/watchdog_dev.c
+> +++ b/drivers/watchdog/watchdog_dev.c
+> @@ -1021,7 +1021,7 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
+>  				pr_err("%s: a legacy watchdog module is probably present.\n",
+>  					wdd->info->identity);
+>  			old_wd_data = NULL;
+> -			kfree(wd_data);
+> +			put_device(&wd_data->dev);
+>  			return err;
+>  		}
+>  	}
+> -- 
+> 2.17.1
+> 
