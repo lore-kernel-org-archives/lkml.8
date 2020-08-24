@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A77CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26844207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29E7207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259296;
-	bh=eJmoOkOwIKJr1fsns/ZDCxgBG69hF1jWCUYyZljgpgE=;
+	s=default; t=1598259303;
+	bh=nDjY3y7ErgtlHV9zuxLaLxvjiiP3J7I04nb1tlS5++0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aJFi+XoN75S7bHIXbCaPOGFvOcTha1GatbaB/cqOWtSXX0eElH4ukGimKsQlfGv/E
-	 GV7pbnLOQEhbnyxk5fqaFZ7SHgRSEWFyKArnUQYNfh1lo57l0WCri665ZS6/CZ1PF1
-	 iNpgI7ssVANGp6zuG3mNFOmuoZLphZ8vtmOPNNPc=
+	b=HDAL74+MSQAc/Fks3PFgNuRLNOHMimktfzXMgLQhyiSeeAyBh1Lye3m58HMAk8VhC
+	 oTkXcKIgg8ekSrZ7t3StbbDpbCmJacl5ZYYkXVZmU9e0f7RKeuTvvP8ZIId1bC1o8A
+	 M66+iHwThk4AZTNkFLaWQdr/eTw/ETx7ZHC8C+j8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730376AbgHXIyz (ORCPT
+        id S1730383AbgHXIy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:54:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35698 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:54:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730355AbgHXIyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:54:45 -0400
+        id S1730369AbgHXIyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:54:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 962052072D;
-        Mon, 24 Aug 2020 08:54:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E960204FD;
+        Mon, 24 Aug 2020 08:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259284;
-        bh=eJmoOkOwIKJr1fsns/ZDCxgBG69hF1jWCUYyZljgpgE=;
+        s=default; t=1598259288;
+        bh=nDjY3y7ErgtlHV9zuxLaLxvjiiP3J7I04nb1tlS5++0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zPDCZu7VDlipoLV7dZdsWLQ3jJAqvhvS+SGishZW1qw06yIvnwRvlRHPjQlQr2HMQ
-         mb19aUqrROHWFIv1EsYYMx4psXxhEhzR9Nhy9rd6sxe+tW46BIbf/v4TF/qF9HLGwb
-         PgEMyd732m3ctHEE38mEatTiKHNqrKKe8KpYezfQ=
+        b=jZUX1wG+cl5Bv1aAiETZdrjjkanQqHME69at+u6E05ILm8Tew+9EuwpBb54UIkb0O
+         +CxNiu6KkgnhXhFbjiCM/peas6m4FxO0qZoQ5nRXpkZQl5qTSuGtk3zo/QUpZ5lqLa
+         AHetzuqGTfAn7Cd5azZkMUBjys4d0A8QlVzsRtmc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Wiesner <jwiesner@suse.com>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 42/50] bonding: fix active-backup failover for current ARP slave
-Date:   Mon, 24 Aug 2020 10:31:43 +0200
-Message-Id: <20200824082354.176090532@linuxfoundation.org>
+Subject: [PATCH 4.14 44/50] net: dsa: b53: check for timeout
+Date:   Mon, 24 Aug 2020 10:31:45 +0200
+Message-Id: <20200824082354.271719950@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -60,88 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Wiesner <jwiesner@suse.com>
+From: Tom Rix <trix@redhat.com>
 
-[ Upstream commit 0410d07190961ac526f05085765a8d04d926545b ]
+[ Upstream commit 774d977abfd024e6f73484544b9abe5a5cd62de7 ]
 
-When the ARP monitor is used for link detection, ARP replies are
-validated for all slaves (arp_validate=3) and fail_over_mac is set to
-active, two slaves of an active-backup bond may get stuck in a state
-where both of them are active and pass packets that they receive to
-the bond. This state makes IPv6 duplicate address detection fail. The
-state is reached thus:
-1. The current active slave goes down because the ARP target
-   is not reachable.
-2. The current ARP slave is chosen and made active.
-3. A new slave is enslaved. This new slave becomes the current active
-   slave and can reach the ARP target.
-As a result, the current ARP slave stays active after the enslave
-action has finished and the log is littered with "PROBE BAD" messages:
-> bond0: PROBE: c_arp ens10 && cas ens11 BAD
-The workaround is to remove the slave with "going back" status from
-the bond and re-enslave it. This issue was encountered when DPDK PMD
-interfaces were being enslaved to an active-backup bond.
+clang static analysis reports this problem
 
-I would be possible to fix the issue in bond_enslave() or
-bond_change_active_slave() but the ARP monitor was fixed instead to
-keep most of the actions changing the current ARP slave in the ARP
-monitor code. The current ARP slave is set as inactive and backup
-during the commit phase. A new state, BOND_LINK_FAIL, has been
-introduced for slaves in the context of the ARP monitor. This allows
-administrators to see how slaves are rotated for sending ARP requests
-and attempts are made to find a new active slave.
+b53_common.c:1583:13: warning: The left expression of the compound
+  assignment is an uninitialized value. The computed value will
+  also be garbage
+        ent.port &= ~BIT(port);
+        ~~~~~~~~ ^
 
-Fixes: b2220cad583c9 ("bonding: refactor ARP active-backup monitor")
-Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
+ent is set by a successful call to b53_arl_read().  Unsuccessful
+calls are caught by an switch statement handling specific returns.
+b32_arl_read() calls b53_arl_op_wait() which fails with the
+unhandled -ETIMEDOUT.
+
+So add -ETIMEDOUT to the switch statement.  Because
+b53_arl_op_wait() already prints out a message, do not add another
+one.
+
+Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Signed-off-by: Tom Rix <trix@redhat.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ drivers/net/dsa/b53/b53_common.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index a6d8d3b3c903d..861d2c0a521a4 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2753,6 +2753,9 @@ static int bond_ab_arp_inspect(struct bonding *bond)
- 			if (bond_time_in_interval(bond, last_rx, 1)) {
- 				bond_propose_link_state(slave, BOND_LINK_UP);
- 				commit++;
-+			} else if (slave->link == BOND_LINK_BACK) {
-+				bond_propose_link_state(slave, BOND_LINK_FAIL);
-+				commit++;
- 			}
- 			continue;
- 		}
-@@ -2863,6 +2866,19 @@ static void bond_ab_arp_commit(struct bonding *bond)
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index 274d369151107..5c3fa0be8844e 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1160,6 +1160,8 @@ static int b53_arl_op(struct b53_device *dev, int op, int port,
+ 		return ret;
  
- 			continue;
- 
-+		case BOND_LINK_FAIL:
-+			bond_set_slave_link_state(slave, BOND_LINK_FAIL,
-+						  BOND_SLAVE_NOTIFY_NOW);
-+			bond_set_slave_inactive_flags(slave,
-+						      BOND_SLAVE_NOTIFY_NOW);
-+
-+			/* A slave has just been enslaved and has become
-+			 * the current active slave.
-+			 */
-+			if (rtnl_dereference(bond->curr_active_slave))
-+				RCU_INIT_POINTER(bond->current_arp_slave, NULL);
-+			continue;
-+
- 		default:
- 			netdev_err(bond->dev, "impossible: new_link %d on slave %s\n",
- 				   slave->link_new_state, slave->dev->name);
-@@ -2912,8 +2928,6 @@ static bool bond_ab_arp_probe(struct bonding *bond)
- 			return should_notify_rtnl;
- 	}
- 
--	bond_set_slave_inactive_flags(curr_arp_slave, BOND_SLAVE_NOTIFY_LATER);
--
- 	bond_for_each_slave_rcu(bond, slave, iter) {
- 		if (!found && !before && bond_slave_is_up(slave))
- 			before = slave;
+ 	switch (ret) {
++	case -ETIMEDOUT:
++		return ret;
+ 	case -ENOSPC:
+ 		dev_dbg(dev->dev, "{%pM,%.4d} no space left in ARL\n",
+ 			addr, vid);
 -- 
 2.25.1
 
