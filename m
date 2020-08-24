@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C77132072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB4C2087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259530;
-	bh=39BZSNOZ3YCtH8xHE/nc+9Glh3GPa0Ojog1NJQhchpA=;
+	s=default; t=1598259534;
+	bh=yDI7kyIrfEtwCe9LMag+1+fPE95GOwlxTupO1hn7NEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lbj+bFNHo2BFtg1RLpvWKujy/Z4dnRLXRor5LNWE7GYAhatu60wQwlbMR0nbqKU1Y
-	 cx6k9UwP/QlDxoPnwFxo6l2t8LL/2bHuBPMq+RS1mMRmRhNzI+Ox10kFnMr9gtkf32
-	 lvbhUOC933P1JGlt0ft8DH4pcgHc8ljGPzrD8XW8=
+	b=juuToNrjnYUAnpWf7trH0Cw3m1B//lKtDp4zsWEJavlVWEVy6lGYcNi0Wq9QZTjf7
+	 d5krfcfsRbOtUXbClMcUzNmna7yuHqYj2MlWt3Pihr8wqnIk/xEyyvfxEYnnThYQgW
+	 9IYe9UWuQ6/xHY4XDDn9TDoRPEwMJihYpnA8Qdf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbgHXI6s (ORCPT
+        id S1730793AbgHXI6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:58:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46092 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:58:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730462AbgHXI6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:58:09 -0400
+        id S1730451AbgHXI6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:58:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D74C42074D;
-        Mon, 24 Aug 2020 08:58:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD9132072D;
+        Mon, 24 Aug 2020 08:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259488;
-        bh=39BZSNOZ3YCtH8xHE/nc+9Glh3GPa0Ojog1NJQhchpA=;
+        s=default; t=1598259485;
+        bh=yDI7kyIrfEtwCe9LMag+1+fPE95GOwlxTupO1hn7NEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2bJvJLnkU+RhmReazxHF08V6S1+y9xIIhBv9RUzIxhG8bEPmOg3gQlIdEOBHZ+quR
-         RvxLaVluwPso0FYAZo16kLRHt5zIyfhzmXQkwuJscO0+NUBIeaLZSTzHhdI6vKP8Io
-         2lqy0KGvw62Cz5zdG440pHvyFmX5ub0UM+1BPRig=
+        b=KUmloRlOxDpuaHkxTmbmbiBWd6cuMC0CZc+OwRHP4rjcD8E8NYg3RFBaFrDhHmEGR
+         DZlGMZNSsXEG3qmplhEa2/cPTY2jGTigtD8WgNhSkV36+zyZ+jlxbkdRJh4g6Sm3Ma
+         lQDc1L6AJGW+w1ZeyH4xHaSCgfVwPQceuL6+pTgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 57/71] Fix build error when CONFIG_ACPI is not set/enabled:
-Date:   Mon, 24 Aug 2020 10:31:48 +0200
-Message-Id: <20200824082358.762937348@linuxfoundation.org>
+Subject: [PATCH 4.19 56/71] efi: avoid error message when booting under Xen
+Date:   Mon, 24 Aug 2020 10:31:47 +0200
+Message-Id: <20200824082358.698146893@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -64,40 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit ee87e1557c42dc9c2da11c38e11b87c311569853 ]
+[ Upstream commit 6163a985e50cb19d5bdf73f98e45b8af91a77658 ]
 
-../arch/x86/pci/xen.c: In function ‘pci_xen_init’:
-../arch/x86/pci/xen.c:410:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
-  acpi_noirq_set();
+efifb_probe() will issue an error message in case the kernel is booted
+as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoid
+that message by calling efi_mem_desc_lookup() only if EFI_MEMMAP is set.
 
-Fixes: 88e9ca161c13 ("xen/pci: Use acpi_noirq_set() helper to avoid #ifdef")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: xen-devel@lists.xenproject.org
-Cc: linux-pci@vger.kernel.org
+Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/pci/xen.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/video/fbdev/efifb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
-index 9112d1cb397bb..22da9bfd8a458 100644
---- a/arch/x86/pci/xen.c
-+++ b/arch/x86/pci/xen.c
-@@ -25,6 +25,7 @@
- #include <asm/xen/pci.h>
- #include <asm/xen/cpuid.h>
- #include <asm/apic.h>
-+#include <asm/acpi.h>
- #include <asm/i8259.h>
+diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+index cc1006375cacb..f50cc1a7c31a9 100644
+--- a/drivers/video/fbdev/efifb.c
++++ b/drivers/video/fbdev/efifb.c
+@@ -449,7 +449,7 @@ static int efifb_probe(struct platform_device *dev)
+ 	info->apertures->ranges[0].base = efifb_fix.smem_start;
+ 	info->apertures->ranges[0].size = size_remap;
  
- static int xen_pcifront_enable_irq(struct pci_dev *dev)
+-	if (efi_enabled(EFI_BOOT) &&
++	if (efi_enabled(EFI_MEMMAP) &&
+ 	    !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+ 		if ((efifb_fix.smem_start + efifb_fix.smem_len) >
+ 		    (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
 -- 
 2.25.1
 
