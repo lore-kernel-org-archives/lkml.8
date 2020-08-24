@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D83C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA26C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8221A204EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561582067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598288311;
-	bh=bquUQtYQR6tiaYYUv+R3KHF3KhNMeapv/X03Nd/5SQs=;
+	s=default; t=1598288318;
+	bh=0sF2i8X150aJR9s1ThR83KFzBqql1OUgtwul40T7+EY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GcfvhvCQ9ot8oCdsRHPjoPHTNT7NXjf8j1EcSkjWxmK/tQ/QN3hPKnUvO0By/y1VJ
-	 H5/sJDnG2j6wvFCeXomwZOhg/Ya2idKuNDQSEB2ooolU2zRZAquxMlp4387KLGCw+J
-	 bnvfX6VBqEIsBvYojaZyyfDG46Ip9aqs8QS/dfT8=
+	b=atImaKn1OcLlU/AwN/b8BfyzkrJtsyJKHIjNwwTactEJCMHGAjN0ZwlEyacq71wGV
+	 XWV2a4gtePcKGaYwpspAR8LdhVaWcWHdZl7i4yrzfpYfPZ0vLJvnPZzmzzSOgMRh/g
+	 IDByub9hEBm/p/H4gnLGjGtqtf0GAve+ON3NYqDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHXQ60 (ORCPT
+        id S1726809AbgHXQ6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:58:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:58:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728525AbgHXQiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:38:55 -0400
+        id S1728512AbgHXQiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:38:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 741F422D3E;
-        Mon, 24 Aug 2020 16:38:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26C3F22D37;
+        Mon, 24 Aug 2020 16:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287135;
-        bh=bquUQtYQR6tiaYYUv+R3KHF3KhNMeapv/X03Nd/5SQs=;
+        s=default; t=1598287133;
+        bh=0sF2i8X150aJR9s1ThR83KFzBqql1OUgtwul40T7+EY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iFyMm4+eYKTkMGPQIp8jW6IyeLW0WxMhKtyyraJZ/t6QfFFImy/bvJNsa2cePXd5H
-         kP6zogLbXtJSUq4obyEFduqf+n04VCAxrAaPtu2sMtM/8x0nb+Pj1hE5/5n/OjiqpJ
-         JcU4FsDu4ijbpCiCIVwnIF7kemFhTmPfUEQ54lXA=
+        b=qmd9YCgjoc//q8m+3J1UZAZDyeQjhxboFUcc8V8f85vxl2DPY8eFVYXbNJEpWeR+J
+         rki/78v6SU3SfRx+lYpEaBU3zTAPfk5T8QvY33IHiXjGfeRCcD84A9oreYFUy0BANz
+         ZyLkTMQrhUHnK70L9ddITZL+2zV1zTdSMSQLgYSw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jan Kara <jack@suse.cz>, Lukas Czerner <lczerner@redhat.com>,
         Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
         linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/21] ext4: correctly restore system zone info when remount fails
-Date:   Mon, 24 Aug 2020 12:38:31 -0400
-Message-Id: <20200824163845.606933-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 06/21] ext4: handle error of ext4_setup_system_zone() on remount
+Date:   Mon, 24 Aug 2020 12:38:30 -0400
+Message-Id: <20200824163845.606933-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163845.606933-1-sashal@kernel.org>
 References: <20200824163845.606933-1-sashal@kernel.org>
@@ -61,106 +61,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 0f5bde1db174f6c471f0bd27198575719dabe3e5 ]
+[ Upstream commit d176b1f62f242ab259ff665a26fbac69db1aecba ]
 
-When remounting filesystem fails late during remount handling and
-block_validity mount option is also changed during the remount, we fail
-to restore system zone information to a state matching the mount option.
-This is mostly harmless, just the block validity checking will not match
-the situation described by the mount option. Make sure these two are always
-consistent.
+ext4_setup_system_zone() can fail. Handle the failure in ext4_remount().
 
-Reported-by: Lukas Czerner <lczerner@redhat.com>
 Reviewed-by: Lukas Czerner <lczerner@redhat.com>
 Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200728130437.7804-7-jack@suse.cz
+Link: https://lore.kernel.org/r/20200728130437.7804-2-jack@suse.cz
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/block_validity.c |  8 --------
- fs/ext4/super.c          | 29 +++++++++++++++++++++--------
- 2 files changed, 21 insertions(+), 16 deletions(-)
+ fs/ext4/super.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-index d203cc935ff83..9d5a6bc98a71a 100644
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -260,14 +260,6 @@ int ext4_setup_system_zone(struct super_block *sb)
- 	int flex_size = ext4_flex_bg_size(sbi);
- 	int ret;
- 
--	if (!test_opt(sb, BLOCK_VALIDITY)) {
--		if (sbi->system_blks)
--			ext4_release_system_zone(sb);
--		return 0;
--	}
--	if (sbi->system_blks)
--		return 0;
--
- 	system_blks = kzalloc(sizeof(*system_blks), GFP_KERNEL);
- 	if (!system_blks)
- 		return -ENOMEM;
 diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index daabd7a2cee81..9ac34b6ae0731 100644
+index 03ebb0b385467..daabd7a2cee81 100644
 --- a/fs/ext4/super.c
 +++ b/fs/ext4/super.c
-@@ -4473,11 +4473,13 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 
- 	ext4_set_resv_clusters(sb);
- 
--	err = ext4_setup_system_zone(sb);
--	if (err) {
--		ext4_msg(sb, KERN_ERR, "failed to initialize system "
--			 "zone (%d)", err);
--		goto failed_mount4a;
-+	if (test_opt(sb, BLOCK_VALIDITY)) {
-+		err = ext4_setup_system_zone(sb);
-+		if (err) {
-+			ext4_msg(sb, KERN_ERR, "failed to initialize system "
-+				 "zone (%d)", err);
-+			goto failed_mount4a;
-+		}
- 	}
- 
- 	ext4_ext_init(sb);
-@@ -5470,9 +5472,16 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+@@ -5470,7 +5470,10 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
  		ext4_register_li_request(sb, first_not_zeroed);
  	}
  
--	err = ext4_setup_system_zone(sb);
--	if (err)
--		goto restore_opts;
-+	/*
-+	 * Handle creation of system zone data early because it can fail.
-+	 * Releasing of existing data is done when we are sure remount will
-+	 * succeed.
-+	 */
-+	if (test_opt(sb, BLOCK_VALIDITY) && !sbi->system_blks) {
-+		err = ext4_setup_system_zone(sb);
-+		if (err)
-+			goto restore_opts;
-+	}
- 
+-	ext4_setup_system_zone(sb);
++	err = ext4_setup_system_zone(sb);
++	if (err)
++		goto restore_opts;
++
  	if (sbi->s_journal == NULL && !(old_sb_flags & SB_RDONLY)) {
  		err = ext4_commit_super(sb, 1);
-@@ -5494,6 +5503,8 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 		}
- 	}
- #endif
-+	if (!test_opt(sb, BLOCK_VALIDITY) && sbi->system_blks)
-+		ext4_release_system_zone(sb);
- 
- 	/*
- 	 * Some options can be enabled by ext4 and/or by VFS mount flag
-@@ -5515,6 +5526,8 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 	sbi->s_commit_interval = old_opts.s_commit_interval;
- 	sbi->s_min_batch_time = old_opts.s_min_batch_time;
- 	sbi->s_max_batch_time = old_opts.s_max_batch_time;
-+	if (!test_opt(sb, BLOCK_VALIDITY) && sbi->system_blks)
-+		ext4_release_system_zone(sb);
- #ifdef CONFIG_QUOTA
- 	sbi->s_jquota_fmt = old_opts.s_jquota_fmt;
- 	for (i = 0; i < EXT4_MAXQUOTAS; i++) {
+ 		if (err)
 -- 
 2.25.1
 
