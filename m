@@ -5,53 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC505C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95D3C206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB2A206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261499;
-	bh=5nk3NJXNopBSzjnj7Lpg8MhVeJiX9H+Pd26H61xczsw=;
+	s=default; t=1598261504;
+	bh=4hK1erPQRlP1+oL9gdRiB7F0rzjISyPy6USi40HgIjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGwAnBwL4cle/m1F+1yImM/cZj0yLo/vGBmVbgBx0IQq0MEjJ1FPUe3kkLLhOtcTv
-	 IAdw+e+qQryZMeK14Rd/jupNFgqWo/cbht9k/U9DbD4ll///G20gKb+35fM1raUf7Z
-	 rYShyVmCgIhb6m9KTGQujSHXCcIjZ+Tk0nNIOgBc=
+	b=odZQ+A9jH3hBcUg85Qni+ZE8PrBLXM1M7gNW2YR8EJuLlhkh+ECP9N2QoW3zNei7J
+	 VGUJORQ/ChUmT2cpDDqJFNZeyrL6HT5BahkNvYrougRTJKO4F7qdxo1XlB11dPCAuB
+	 vQUmR0HTxEbUGw8UrdEwV8rWAnMGNM9NZ5Ltla/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbgHXIuX (ORCPT
+        id S1729780AbgHXJbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:50:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53610 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:31:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729828AbgHXIuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:50:15 -0400
+        id S1728122AbgHXIuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:50:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6DEB207D3;
-        Mon, 24 Aug 2020 08:50:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A32F2075B;
+        Mon, 24 Aug 2020 08:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259014;
-        bh=5nk3NJXNopBSzjnj7Lpg8MhVeJiX9H+Pd26H61xczsw=;
+        s=default; t=1598259022;
+        bh=4hK1erPQRlP1+oL9gdRiB7F0rzjISyPy6USi40HgIjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rpQaNR9EYKGpA3BlD36YhvG2Ke1i0LY3Ix1XJv+GTfFRuuualSlGlWvJ8c8LYBtok
-         nGBeHbfI43a2aDsBtcPgJe6MILJzNCGy2QX4I/OybNuMR5AnhfbNz7+93xlgZb8py7
-         0ucWUchuoFXIrPfGBZuisY6Jy0vAfyspujBTuPFo=
+        b=RFmJNeUDPBU9SLiymkPnyVof47ZXY6ec1o6WJYpYPSwd8wTKVyJ4jQux4tLn5ZJ+A
+         +jzfSgoPcQ8uVZDbLZIOgGFyHlNkBVRlGcLCb/ZSNogLf0I0qNpIx87mfJ0lhDGvG6
+         l+grVYbvps/ihXbKTSpdWIYieX1VXOBB00benkSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Girish Basrur <gbasrur@marvell.com>,
-        Santosh Vernekar <svernekar@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        Shyam Sundar <ssundar@marvell.com>,
-        Javed Hasan <jhasan@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 22/33] scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
-Date:   Mon, 24 Aug 2020 10:31:18 +0200
-Message-Id: <20200824082347.642172839@linuxfoundation.org>
+Subject: [PATCH 4.4 25/33] alpha: fix annotation of io{read,write}{16,32}be()
+Date:   Mon, 24 Aug 2020 10:31:21 +0200
+Message-Id: <20200824082347.799118539@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
 References: <20200824082346.498653578@linuxfoundation.org>
@@ -64,64 +66,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Javed Hasan <jhasan@marvell.com>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit ec007ef40abb6a164d148b0dc19789a7a2de2cc8 ]
+[ Upstream commit bd72866b8da499e60633ff28f8a4f6e09ca78efe ]
 
-In fc_disc_gpn_id_resp(), skb is supposed to get freed in all cases except
-for PTR_ERR. However, in some cases it didn't.
+These accessors must be used to read/write a big-endian bus.  The value
+returned or written is native-endian.
 
-This fix is to call fc_frame_free(fp) before function returns.
+However, these accessors are defined using be{16,32}_to_cpu() or
+cpu_to_be{16,32}() to make the endian conversion but these expect a
+__be{16,32} when none is present.  Keeping them would need a force cast
+that would solve nothing at all.
 
-Link: https://lore.kernel.org/r/20200729081824.30996-2-jhasan@marvell.com
-Reviewed-by: Girish Basrur <gbasrur@marvell.com>
-Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
-Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
-Reviewed-by: Shyam Sundar <ssundar@marvell.com>
-Signed-off-by: Javed Hasan <jhasan@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+So, do the conversion using swab{16,32}, like done in asm-generic for
+similar situations.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Richard Henderson <rth@twiddle.net>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Link: http://lkml.kernel.org/r/20200622114232.80039-1-luc.vanoostenryck@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_disc.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/alpha/include/asm/io.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
-index 880a9068ca126..ef06af4e3611d 100644
---- a/drivers/scsi/libfc/fc_disc.c
-+++ b/drivers/scsi/libfc/fc_disc.c
-@@ -595,8 +595,12 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- 	mutex_lock(&disc->disc_mutex);
- 	if (PTR_ERR(fp) == -FC_EX_CLOSED)
- 		goto out;
--	if (IS_ERR(fp))
--		goto redisc;
-+	if (IS_ERR(fp)) {
-+		mutex_lock(&disc->disc_mutex);
-+		fc_disc_restart(disc);
-+		mutex_unlock(&disc->disc_mutex);
-+		goto out;
-+	}
+diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
+index ff4049155c840..355aec0867f4d 100644
+--- a/arch/alpha/include/asm/io.h
++++ b/arch/alpha/include/asm/io.h
+@@ -491,10 +491,10 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
+ }
+ #endif
  
- 	cp = fc_frame_payload_get(fp, sizeof(*cp));
- 	if (!cp)
-@@ -621,7 +625,7 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- 				new_rdata->disc_id = disc->disc_id;
- 				lport->tt.rport_login(new_rdata);
- 			}
--			goto out;
-+			goto free_fp;
- 		}
- 		rdata->disc_id = disc->disc_id;
- 		lport->tt.rport_login(rdata);
-@@ -635,6 +639,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- redisc:
- 		fc_disc_restart(disc);
- 	}
-+free_fp:
-+	fc_frame_free(fp);
- out:
- 	mutex_unlock(&disc->disc_mutex);
- 	kref_put(&rdata->kref, lport->tt.rport_destroy);
+-#define ioread16be(p) be16_to_cpu(ioread16(p))
+-#define ioread32be(p) be32_to_cpu(ioread32(p))
+-#define iowrite16be(v,p) iowrite16(cpu_to_be16(v), (p))
+-#define iowrite32be(v,p) iowrite32(cpu_to_be32(v), (p))
++#define ioread16be(p) swab16(ioread16(p))
++#define ioread32be(p) swab32(ioread32(p))
++#define iowrite16be(v,p) iowrite16(swab16(v), (p))
++#define iowrite32be(v,p) iowrite32(swab32(v), (p))
+ 
+ #define inb_p		inb
+ #define inw_p		inw
 -- 
 2.25.1
 
