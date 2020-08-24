@@ -2,122 +2,95 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF8EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE7FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC59420706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:21:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Pv4WTzw8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cN6eYBny"
+	by mail.kernel.org (Postfix) with ESMTP id C4D8620706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598304228;
+	bh=LO1EEB144C2vD5cYYmOu1dLJPWOThQQ/laiuqMTmvWE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S2uUO/XnLv6JGkEVCD84YwLbecMutaBmgeyto+edwxBfARxon7d2gRTYnCzWRxLG8
+	 fRV/wY2D2dkZf+Uvo+Dhqr/gboPgERKQ6a/iOkLUGINchrD/+iB+TTt9m9dDm2M1+W
+	 pIQ7QnI9nyUNF6o3rz6DFHhqFdxdsxzzuyM4C57o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgHXVVa (ORCPT
+        id S1726863AbgHXVXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:21:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgHXVVX (ORCPT
+        Mon, 24 Aug 2020 17:23:48 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42414 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgHXVXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 17:21:23 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3AEFC061574;
-        Mon, 24 Aug 2020 14:21:22 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598304080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X6NJ+kPKGl5Nf3jE9xklx6hH03TKpnofr8g96HAw8Ck=;
-        b=Pv4WTzw87H6NCx71gJqPiRampyZmRAAfWJrVk0KJysnfqzFan/ccSk8LSOb7qVVuPkbB8z
-        tGoDrp+2ju8a/cTr5MMPgifcmaB8n9M75wctO+lZ606ZWdfd053SzbNlGzcK9jw30ur2mH
-        TDbLQHXk1Dh9ueKmK3Go6nRfjv8zoHatFiZuH0z15JhWa7zd1dbxSJs0yBdpWRdSBTq9V2
-        X9XEPWc+RvXUBns4bi7L9OdG3sThW5qDimMJb9E+VvYLGZjxixChT1oUzdf/dlLTqSoUaU
-        EspLZ6f4CF2x6Rx5EjvdF4GfJ2iyzgouZQbm5KkIt6/C6cpdCkAuu4GovEYy3Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598304080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X6NJ+kPKGl5Nf3jE9xklx6hH03TKpnofr8g96HAw8Ck=;
-        b=cN6eYBnyeUaRAodJ5n9Kq1Of1A3DDOOMFul6xvKSp6P4/ZL9J+JfpPUvxxWGcEA5BgckeU
-        I2Edk8IuxDhtxSCg==
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 24/38] x86/xen: Consolidate XEN-MSI init
-In-Reply-To: <5caec213-8f56-9f12-34db-a29de8326f95@suse.com>
-References: <20200821002424.119492231@linutronix.de> <20200821002947.667887608@linutronix.de> <5caec213-8f56-9f12-34db-a29de8326f95@suse.com>
-Date:   Mon, 24 Aug 2020 23:21:19 +0200
-Message-ID: <87tuwr68q8.fsf@nanos.tec.linutronix.de>
+        Mon, 24 Aug 2020 17:23:45 -0400
+Received: by mail-io1-f66.google.com with SMTP id g13so10281083ioo.9;
+        Mon, 24 Aug 2020 14:23:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DYG0ILvFxNKM05Xe+HSbAjxQcLfwP0Jr68vg3DfN5q8=;
+        b=A/6tmk+7J4pMP145E6+LNdmxl476Jen+t8gxykBYqYuiS9CzSya4jBdcW+rEfQfZq6
+         Xdan25fPSQ26bW1GKuM/xPhg4ObzgOWta/w4MLgT+mB2FQyScYccGWKj3L6/i1Pf30ca
+         pdogkMfC6Dcj4JREvNpmN0gF6tJnJjRup0rlFQCmyVMZJwKgYY8aU8sEPOg71bRcBPZI
+         nuCibXGcdWN11tiUC1ne1z3+Dw6oWQCQojcj5xyvV0wgebP5LdjIZbffbIzyBwFtXfJt
+         11w26IiBgpPOJMCR2SIig5L0LKKyQIgxjJrKiJUvpi++PwmC2B4Bp1E6R+Bd5FCUOKEz
+         fUYw==
+X-Gm-Message-State: AOAM533JixQrYCUQ0HJM9Xa+czNogFbT/1vx5hiHfR3wH2Y8P9N8snHY
+        HMIaIK+jPTDifIOFvYkeew==
+X-Google-Smtp-Source: ABdhPJzXtING/zXpOypB5KNMcRp+7WblWNsKV+7ju4aN3WqY6cvZhBEIox0+vNTYZRCJOwij5qml4A==
+X-Received: by 2002:a5d:9344:: with SMTP id i4mr6449153ioo.106.1598304224852;
+        Mon, 24 Aug 2020 14:23:44 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id f186sm3347485ioa.42.2020.08.24.14.23.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 14:23:44 -0700 (PDT)
+Received: (nullmailer pid 3323541 invoked by uid 1000);
+        Mon, 24 Aug 2020 21:23:41 -0000
+Date:   Mon, 24 Aug 2020 15:23:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lgirdwood@gmail.com, cy_huang <u0084500@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        cy_huang@richtek.com, gene_chen@richtek.com
+Subject: Re: [PATCH 1/3] regulator: rt4801: Add support for RT4801 Display
+ Bias regulator driver
+Message-ID: <20200824212341.GA3321545@bogus>
+References: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
+ <159776976828.56451.5593321071237177212.b4-ty@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159776976828.56451.5593321071237177212.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24 2020 at 06:59, J=C3=BCrgen Gro=C3=9F wrote:
-> On 21.08.20 02:24, Thomas Gleixner wrote:
->> +static __init void xen_setup_pci_msi(void)
->> +{
->> +	if (xen_initial_domain()) {
->> +		x86_msi.setup_msi_irqs =3D xen_initdom_setup_msi_irqs;
->> +		x86_msi.teardown_msi_irqs =3D xen_teardown_msi_irqs;
->> +		x86_msi.restore_msi_irqs =3D xen_initdom_restore_msi_irqs;
->> +		pci_msi_ignore_mask =3D 1;
->
-> This is wrong, as a PVH initial domain shouldn't do the pv settings.
->
-> The "if (xen_initial_domain())" should be inside the pv case, like:
->
-> if (xen_pv_domain()) {
-> 	if (xen_initial_domain()) {
-> 		...
-> 	} else {
-> 		...
-> 	}
-> } else if (xen_hvm_domain()) {
-> 	...
+On Tue, Aug 18, 2020 at 05:56:08PM +0100, Mark Brown wrote:
+> On Sat, 15 Aug 2020 11:14:20 +0800, cy_huang wrote:
+> > Adds support for the RT4801 DSV. It has two regulators (DSVP/DSVN) with
+> > an I2C interface. DSVP/DSVN can provide the display panel module for the
+> > positive/negative voltage range from (+/-)4V to (+/-)6V.
+> 
+> Applied to
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+> 
+> Thanks!
+> 
+> [1/3] regulator: rt4801: Add support for RT4801 Display Bias regulator driver
+>       commit: 5bbbfc7f7f0a44b7a85ab3872dd2ccce7019f7b1
+> [2/3] regulator: rt4801: Add DT binding documentation
+>       commit: fd6b928db8a05fcd8629320c52eae214a8615aae
+> [3/3] regulator: rt4801: Fix the dt-binding document for dtc check.
+>       commit: 6f4ac2844b61d43c0c48b7c67a974d9f6e4ddd9c
 
-I still think it does the right thing depending on the place it is
-called from, but even if so, it's completely unreadable gunk. I'll fix
-that proper.
+Really? Despite my comments patch 3 should both be squashed and is still 
+just wrong.
 
-Thanks,
-
-        tglx
+Rob
