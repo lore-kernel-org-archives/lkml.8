@@ -2,77 +2,76 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0930C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CB1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84BC22071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E949E20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:56:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgHXKze (ORCPT
+        id S1727768AbgHXK4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:55:34 -0400
-Received: from 8bytes.org ([81.169.241.247]:39232 "EHLO theia.8bytes.org"
+        Mon, 24 Aug 2020 06:56:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42172 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726532AbgHXKyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:54:19 -0400
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 77D9E35A;
-        Mon, 24 Aug 2020 12:54:17 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     iommu@lists.linux-foundation.org
-Cc:     Joerg Roedel <joro@8bytes.org>, jroedel@suse.de,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Alexander.Deucher@amd.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] iommu/amd: Do not force direct mapping when SME is active
-Date:   Mon, 24 Aug 2020 12:54:14 +0200
-Message-Id: <20200824105415.21000-2-joro@8bytes.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824105415.21000-1-joro@8bytes.org>
-References: <20200824105415.21000-1-joro@8bytes.org>
+        id S1726772AbgHXK4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:56:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 13496AC1D;
+        Mon, 24 Aug 2020 10:56:32 +0000 (UTC)
+Date:   Mon, 24 Aug 2020 12:55:59 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Subject: Re: [PATCH v2 07/10] mm/memory_hotplug: simplify page onlining
+Message-ID: <20200824105559.GG6315@linux>
+References: <20200819175957.28465-1-david@redhat.com>
+ <20200819175957.28465-8-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819175957.28465-8-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Wed, Aug 19, 2020 at 07:59:54PM +0200, David Hildenbrand wrote:
+> We don't allow to offline memory with holes, all boot memory is online,
+> and all hotplugged memory cannot have holes.
+> 
+> We can now simplify onlining of pages. As we only allow to online/offline
+> full sections and sections always span full MAX_ORDER_NR_PAGES, we can just
+> process MAX_ORDER - 1 pages without further special handling.
+> 
+> The number of onlined pages simply corresponds to the number of pages we
+> were requested to online.
+> 
+> While at it, refine the comment regarding the callback not exposing all
+> pages to the buddy.
+> 
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Do not force devices supporting IOMMUv2 to be direct mapped when memory
-encryption is active. This might cause them to be unusable because their
-DMA mask does not include the encryption bit.
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/amd/iommu.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-index ba9f3dbc5b94..77e4268e41cf 100644
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -2659,7 +2659,12 @@ static int amd_iommu_def_domain_type(struct device *dev)
- 	if (!dev_data)
- 		return 0;
- 
--	if (dev_data->iommu_v2)
-+	/*
-+	 * Do not identity map IOMMUv2 capable devices when memory encryption is
-+	 * active, because some of those devices (AMD GPUs) don't have the
-+	 * encryption bit in their DMA-mask and require remapping.
-+	 */
-+	if (!mem_encrypt_active() && dev_data->iommu_v2)
- 		return IOMMU_DOMAIN_IDENTITY;
- 
- 	return 0;
 -- 
-2.28.0
-
+Oscar Salvador
+SUSE L3
