@@ -2,146 +2,105 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC99C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89FB62063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKXT5UYx"
+	by mail.kernel.org (Postfix) with ESMTP id 3C80A2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598289082;
+	bh=1N7E8jTdaJiP5AS0s7ssZc9dpyomkdQrUUBLpq3o5w0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Dx7zsqBjJBP81xhS0zcZ3kNZDWnc1zIiw8uMSjiGoj+zXZ9VXMOoQtNF80H1lAPsN
+	 WIM7fCOFPTUK3beaT91kieNMhmusyaQ0tqptVdIhB2H5IisU+Ovd+UipVRbnW0oZeu
+	 ajKyGIWGEz3ipV0+1T0JacPA2a4+UImVqA0swWBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgHXRK4 (ORCPT
+        id S1726656AbgHXRLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:10:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728094AbgHXRKV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:10:21 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B62C061573;
-        Mon, 24 Aug 2020 10:10:20 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id b16so9470080ioj.4;
-        Mon, 24 Aug 2020 10:10:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IMPieJ6G/FjISqeIaeyMBO8mjHCzr6gbFdzDsbc9RjU=;
-        b=mKXT5UYxS5oCUEqFkSp6EnQe1A8HIM5kdPJpSYXFRQFw4WQkEBNLmTwb7JMoZRmZLW
-         Mya22X3jCngtDbO65fbmL532dvtLsoQwFKTb6Ki9/ZUBfzrlCR0AmHxK7IMsE1m9U7lU
-         t0McOpd//phZkJUXj28SB7BJ8sRXxyEKL2OAdnOWpQtHtoxTuaUBUBSfpnJ9YKP4n5GS
-         OSEtYFRxR3/WnXpseiGYj5+eaVb9JuwsAQosg3ezjmZysbOeLFlm5En4asBAzehlM3b/
-         n6JWxIam76vJ4IJ2iFTRGPKCjfMJlFiAEmU0ZM4bVUpMk5qWRgL0M/WDLoyLpBqN4mRQ
-         2YYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IMPieJ6G/FjISqeIaeyMBO8mjHCzr6gbFdzDsbc9RjU=;
-        b=XgVCv45o6CbNOgX1ou1pbvDxFK8rTRmCehbogVwLwzXcDzeIzDsNCRazb/EUG1URtp
-         U42AaGn7DUSEE0ytYh37Q3FHIfcdc5ffBqnZ7PDPsvMWrxlMsUn+TE5YNyHfbQD9uvh+
-         EPFIhPKBdeCo6xW8PFQ6kDBC4GXd2nc/NXV4x7lLru4iKw5CUydvQFjjX+qbPUKaWcH1
-         ntY4CLDTdyuwrt5Z6kBT4hlQsOuSJyEqr0TzJzoYFUnEgfjgnmFMn0Ld0i5qs53okg7J
-         7B4TH7f2RuyhN9oEKTnPsZF1upXxGTJHHTNEXut3d27PJYp1UcUJUB+zPR4D7HuFN2mH
-         dzVQ==
-X-Gm-Message-State: AOAM530OFKLfD9mnjDCWQKI1nwjfwkdpclWDYGrZQBgtBAoUt3JTa2Cq
-        6lG0vTYpFwb+M/kWzuH/26ASf61kKkk=
-X-Google-Smtp-Source: ABdhPJzPD0GqZZcrOIp+/3GUKKV/wDisq+HkkvnR/EzkahjQjOsvqCIkJlui1S+vEVoOMGuM4r6p7Q==
-X-Received: by 2002:a6b:7d42:: with SMTP id d2mr5632006ioq.17.1598289015607;
-        Mon, 24 Aug 2020 10:10:15 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id z11sm1386609iop.37.2020.08.24.10.10.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 10:10:14 -0700 (PDT)
-Subject: Re: [PATCH 00/12] Convert WAR defines to config options
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20200824163257.44533-1-tsbogend@alpha.franken.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <430f374e-d87e-0302-5b83-70670125f873@gmail.com>
-Date:   Mon, 24 Aug 2020 10:10:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 24 Aug 2020 13:11:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728402AbgHXQh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:37:56 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1084222D6E;
+        Mon, 24 Aug 2020 16:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598287036;
+        bh=1N7E8jTdaJiP5AS0s7ssZc9dpyomkdQrUUBLpq3o5w0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eOwiE1a6iYHna+N+/ANNhe313c54QN2GMwz0onYnPOOP5ZRZfV81mndKl73FayoMU
+         /Y5ZR68SrHKz+gZGRFTHRBnB0J0Cr6Gvi5j7gM0/YZC4O4dnDAahnElUF8x/CAbXde
+         o9zvT3e2k2nvhC0otf0GfID3ZyzQMYX+URErxJ8Q=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tom Yan <tom.ty89@gmail.com>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.7 31/54] ALSA: usb-audio: ignore broken processing/extension unit
+Date:   Mon, 24 Aug 2020 12:36:10 -0400
+Message-Id: <20200824163634.606093-31-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
+References: <20200824163634.606093-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200824163257.44533-1-tsbogend@alpha.franken.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/24/20 9:32 AM, Thomas Bogendoerfer wrote:
-> This patches convert workaround (WAR) defines into config options and
-> gets rid of mach-*/war.h files.
+From: Tom Yan <tom.ty89@gmail.com>
 
-Most (all but octeon?) of those platforms are not particularly popular
-or widespread, but is not this going to make it harder for distributions
-and people doing CI by having an explosion in the number of
-configurations to test?
+[ Upstream commit d8d0db7bb358ef65d60726a61bfcd08eccff0bc0 ]
+
+Some devices have broken extension unit where getting current value
+doesn't work. Attempt that once when creating mixer control for it. If
+it fails, just ignore it, so that it won't cripple the device entirely
+(and/or make the error floods).
+
+Signed-off-by: Tom Yan <tom.ty89@gmail.com>
+Link: https://lore.kernel.org/r/5f3abc52.1c69fb81.9cf2.fe91@mx.google.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/usb/mixer.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index eab0fd4fd7c33..e0b7174c10430 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2367,7 +2367,7 @@ static int build_audio_procunit(struct mixer_build *state, int unitid,
+ 	int num_ins;
+ 	struct usb_mixer_elem_info *cval;
+ 	struct snd_kcontrol *kctl;
+-	int i, err, nameid, type, len;
++	int i, err, nameid, type, len, val;
+ 	const struct procunit_info *info;
+ 	const struct procunit_value_info *valinfo;
+ 	const struct usbmix_name_map *map;
+@@ -2470,6 +2470,12 @@ static int build_audio_procunit(struct mixer_build *state, int unitid,
+ 			break;
+ 		}
+ 
++		err = get_cur_ctl_value(cval, cval->control << 8, &val);
++		if (err < 0) {
++			usb_mixer_elem_info_free(cval);
++			return -EINVAL;
++		}
++
+ 		kctl = snd_ctl_new1(&mixer_procunit_ctl, cval);
+ 		if (!kctl) {
+ 			usb_mixer_elem_info_free(cval);
 -- 
-Florian
+2.25.1
+
