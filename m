@@ -5,51 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02889C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF38E207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD44207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261369;
-	bh=aGLp3zmK/pZ7U2zYcovkf1Te9IJe7NFiu1HuOT6reYU=;
+	s=default; t=1598261374;
+	bh=ib3ov4ByJ2KzNtKTgGjw5zSsvyIJbB/3U+DgfprOU6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oItMRQkV1HXQushH0SCOSvsbw3oBmBir9TXmmXx6GfSMtVh6aQ5ffdZwKEsXQURym
-	 Uin2uTK6OQWOxQ3F77Ku1+S5+cMQf0Ydlte0plyIdplNvRt1cbRqImBtZhlH9onuVf
-	 GM4PkiaOcfR1/VIZUZQMthCAESrycOc2eiQ3nhJA=
+	b=SkWpF0m+fFm5o6h+B/hM97MD3JPFgbnPX0bf82Z8vVKm89zxck4JEHMo/VNraJ/0p
+	 8f7a9hWHUwvqkBfRgAbDHgP4GmtDzZc55T3fEOKpoYTMBz2tm0eXanyf0pgf8wntD6
+	 yvlKfx9xNELog9kma0UeKsXSqiGiru6STE0+4E4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgHXJ31 (ORCPT
+        id S1730129AbgHXJ3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:29:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55446 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:29:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729886AbgHXIvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:00 -0400
+        id S1729947AbgHXIvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26AF2204FD;
-        Mon, 24 Aug 2020 08:50:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C332D207D3;
+        Mon, 24 Aug 2020 08:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259059;
-        bh=aGLp3zmK/pZ7U2zYcovkf1Te9IJe7NFiu1HuOT6reYU=;
+        s=default; t=1598259095;
+        bh=ib3ov4ByJ2KzNtKTgGjw5zSsvyIJbB/3U+DgfprOU6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZOtTzZ/Dl7RPP4/wCDr34WSALD7GWuGEWsCVXPOvNG6ghEdMq64Bz7D4mWyixijlH
-         fQoYyVlRpr4diUOSViV91JK6LpGbJc8MOlglY2j+fHG/S91O/13ilUXBDyIe58e/lZ
-         uMe9fsneLDK9jnfCDifPUecAaCzTBUgI4qhgJsgA=
+        b=QP2WetXphjtEAWvebVDTBZAl2LTXHaVRoEKc6phxuhRVKtgEOFn65PiHCGXNTfCJE
+         mLpQ3mJhMhySRsDE7nMLpegocwrKqduqUCznTS+gg5Mq9xkC2xzOfDr2OZQ/LjRSj1
+         RICFVj8U18Efn/pWkpnx9OQP0MYxEFrU6zboAGno=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 15/33] ext4: fix checking of directory entry validity for inline directories
-Date:   Mon, 24 Aug 2020 10:31:11 +0200
-Message-Id: <20200824082347.295184080@linuxfoundation.org>
+        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 18/39] scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
+Date:   Mon, 24 Aug 2020 10:31:17 +0200
+Message-Id: <20200824082349.435003610@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
-References: <20200824082346.498653578@linuxfoundation.org>
+In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
+References: <20200824082348.445866152@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,58 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit 7303cb5bfe845f7d43cd9b2dbd37dbb266efda9b ]
+[ Upstream commit c0a18ee0ce78d7957ec1a53be35b1b3beba80668 ]
 
-ext4_search_dir() and ext4_generic_delete_entry() can be called both for
-standard director blocks and for inline directories stored inside inode
-or inline xattr space. For the second case we didn't call
-ext4_check_dir_entry() with proper constraints that could result in
-accepting corrupted directory entry as well as false positive filesystem
-errors like:
+It is confirmed that Micron device needs DELAY_BEFORE_LPM quirk to have a
+delay before VCC is powered off. Sdd Micron vendor ID and this quirk for
+Micron devices.
 
-EXT4-fs error (device dm-0): ext4_search_dir:1395: inode #28320400:
-block 113246792: comm dockerd: bad entry in directory: directory entry too
-close to block end - offset=0, inode=28320403, rec_len=32, name_len=8,
-size=4096
-
-Fix the arguments passed to ext4_check_dir_entry().
-
-Fixes: 109ba779d6cc ("ext4: check for directory entries too close to block end")
-CC: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200731162135.8080-1-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: https://lore.kernel.org/r/20200612012625.6615-2-stanley.chu@mediatek.com
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/namei.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/ufs/ufs_quirks.h | 1 +
+ drivers/scsi/ufs/ufshcd.c     | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index eb41fb189d4b3..faf142a6fa8bb 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -1279,8 +1279,8 @@ int ext4_search_dir(struct buffer_head *bh, char *search_buf, int buf_size,
- 		    ext4_match(fname, de)) {
- 			/* found a match - just to be sure, do
- 			 * a full check */
--			if (ext4_check_dir_entry(dir, NULL, de, bh, bh->b_data,
--						 bh->b_size, offset))
-+			if (ext4_check_dir_entry(dir, NULL, de, bh, search_buf,
-+						 buf_size, offset))
- 				return -1;
- 			*res_dir = de;
- 			return 1;
-@@ -2312,7 +2312,7 @@ int ext4_generic_delete_entry(handle_t *handle,
- 	de = (struct ext4_dir_entry_2 *)entry_buf;
- 	while (i < buf_size - csum_size) {
- 		if (ext4_check_dir_entry(dir, NULL, de, bh,
--					 bh->b_data, bh->b_size, i))
-+					 entry_buf, buf_size, i))
- 			return -EFSCORRUPTED;
- 		if (de == de_del)  {
- 			if (pde)
+diff --git a/drivers/scsi/ufs/ufs_quirks.h b/drivers/scsi/ufs/ufs_quirks.h
+index 71f73d1d1ad1f..6c944fbefd40a 100644
+--- a/drivers/scsi/ufs/ufs_quirks.h
++++ b/drivers/scsi/ufs/ufs_quirks.h
+@@ -21,6 +21,7 @@
+ #define UFS_ANY_VENDOR 0xFFFF
+ #define UFS_ANY_MODEL  "ANY_MODEL"
+ 
++#define UFS_VENDOR_MICRON      0x12C
+ #define UFS_VENDOR_TOSHIBA     0x198
+ #define UFS_VENDOR_SAMSUNG     0x1CE
+ #define UFS_VENDOR_SKHYNIX     0x1AD
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index af4b0a2021d6c..a7f520581cb0f 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -178,6 +178,8 @@ ufs_get_pm_lvl_to_link_pwr_state(enum ufs_pm_level lvl)
+ 
+ static struct ufs_dev_fix ufs_fixups[] = {
+ 	/* UFS cards deviations table */
++	UFS_FIX(UFS_VENDOR_MICRON, UFS_ANY_MODEL,
++		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
+ 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
+ 		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
+ 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL, UFS_DEVICE_NO_VCCQ),
 -- 
 2.25.1
 
