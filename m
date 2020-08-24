@@ -2,154 +2,397 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECBFE2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:50:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="KxgBBWRB"
+	by mail.kernel.org (Postfix) with ESMTP id B4BE32067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:51:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598287863;
+	bh=tPY5slmVT4CLtGjJ/wKMH1xlI3Y0Q2ALMul3irCTGHg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QBwK714vKJBvRPZOq2ziMFaU3UynaU44Brb43uX09mv0oV4o9oPyoPKfA5JF1adHG
+	 jRhP7joJFJteoGW4yjJxdxfctKpy1JMSqcqRtrbkFn1vbsLT81JqlursEjqzUzYbRn
+	 OoqRVq8byyDI7Gic18VwDYPVF29et0GheG0HIO1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgHXQuu (ORCPT
+        id S1728832AbgHXQu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:50:50 -0400
-Received: from mail-dm6nam12on2118.outbound.protection.outlook.com ([40.107.243.118]:61408
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728630AbgHXQtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:49:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kCxo/bzpKT91/2jx3+/kQkOPSWfMyWtJaV+/ZapYJ3pp4Hdlr/k1HyVe78j3O0szABfyb4Wrz+lFZlhO/OIcbgUCw5FYNIJLpJw6oqyyuxW8M/mm2jsCRoQi5X3Fie5wo+W8Hy74jZUJ8invYYhzX2XA0lGF2y+20kNpYv/ZEPCFlHB1ja9nJgSNDQqZH2/TyF+5QFsZLWwVtA/3Lrw/jh54x6hvbRnd4VgORMd/zKsXu+86NDRa+bWZyWqIAHrmJNzTJFT3Jr/bnObxeDvGjSseFM+qKb22MRiD8jIlcBAu0JspTPKaQUJUcEI4slBd5VlTBkv+ZwrRcYXlfUGv5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4tbvHCr+PAkwKsxjK8X5LwxiM17npNhS/8Ql+bo2GO4=;
- b=OMnulliczjm7xTWzVOnSz5MvvTgwJK8HEtYuHLAZvSsHC0Q7tgy1fbnSyZeudbLMkqrX7v+MCk9+hq6NpAbsh7edmPV2zAPT6RpolZYrong+IHVppoa0i4AxQF/yVHHicj/YE8DncNgZeHnN53+XGLFhHaYS6xmMpw8cPezagsQwIxYOZEvX5Qw5yGufcX1FaQbQu41GuvdzuqzVLUFRL4v9wxUVJ4u3aotKe6sQ+kr2GEnnGcjVMTP1W31lLnm1AeaMcbH7xtULVLI0FTrfzJvAvdSgacnxYL5ShMw7H4cZxr80em2VekjVhP6bN2K7WsLDfNNGYgMdD2x28MQrdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4tbvHCr+PAkwKsxjK8X5LwxiM17npNhS/8Ql+bo2GO4=;
- b=KxgBBWRBFAebvyidGNz7DUXoGHByx7PXRiM2slgp/anB9ojMW4bMIYT1PIvdlIOO3DeYsggaTxWH8c7KR0ISmQOu9r483StcUieYpAfK2vXOKkQyNfZV0yO0MN1rxy6PK4J+gVHBbcALZky7rkNsYCbElGSSh2ei/gggm1ssmVQ=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
-Received: from BN8PR21MB1281.namprd21.prod.outlook.com (2603:10b6:408:a2::19)
- by BN6PR21MB0753.namprd21.prod.outlook.com (2603:10b6:404:9c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.4; Mon, 24 Aug
- 2020 16:48:03 +0000
-Received: from BN8PR21MB1281.namprd21.prod.outlook.com
- ([fe80::e0c9:2634:6fb1:5615]) by BN8PR21MB1281.namprd21.prod.outlook.com
- ([fe80::e0c9:2634:6fb1:5615%3]) with mapi id 15.20.3326.012; Mon, 24 Aug 2020
- 16:48:03 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     will@kernel.org, ardb@kernel.org, arnd@arndb.de,
-        catalin.marinas@arm.com, mark.rutland@arm.com, maz@kernel.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arch@vger.kernel.org,
-        wei.liu@kernel.org, vkuznets@redhat.com, kys@microsoft.com
-Cc:     mikelley@microsoft.com, sunilmut@microsoft.com,
-        boqun.feng@gmail.com
-Subject: [PATCH v7 08/10] Drivers: hv: vmbus: Add hooks for per-CPU IRQ
-Date:   Mon, 24 Aug 2020 09:46:21 -0700
-Message-Id: <1598287583-71762-9-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
-References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: CO2PR04CA0145.namprd04.prod.outlook.com (2603:10b6:104::23)
- To BN8PR21MB1281.namprd21.prod.outlook.com (2603:10b6:408:a2::19)
+        Mon, 24 Aug 2020 12:50:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728570AbgHXQtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:49:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D2122067C;
+        Mon, 24 Aug 2020 16:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598287758;
+        bh=tPY5slmVT4CLtGjJ/wKMH1xlI3Y0Q2ALMul3irCTGHg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KIJ6cJ0A2JZ0rQaRR95Z51YUuYlVjZLPtdpkVjkarCAufoo7kIV9ex0DGg91BXYGQ
+         hLsnkc6rRYM8xOI6Ak/0mF6/SxBRP/cHA+VeQPKzgNUI8N3aiVSqvScs+n5p2p0eEq
+         F8DYnB7nccg//gi0Wifipp0HHnnOK0nJ0wAVlUEc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.19 00/73] 4.19.142-rc2 review
+Date:   Mon, 24 Aug 2020 18:49:36 +0200
+Message-Id: <20200824164729.443078729@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by CO2PR04CA0145.namprd04.prod.outlook.com (2603:10b6:104::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Mon, 24 Aug 2020 16:47:55 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [131.107.159.16]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e14e6266-aa11-41b3-ec99-08d8484d73e2
-X-MS-TrafficTypeDiagnostic: BN6PR21MB0753:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN6PR21MB07533BDAAD9AB848FED8D705D7560@BN6PR21MB0753.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hOjspxDxFRdsXNAyPUaaVwIdLAEE/ETylCxtVn/iK8JfijR8B5u4O2cNMuzGoOTt8r469W3FtUMJ+elgM5+/PnccG2wQhNISmDKWqc/YebbKrMIRKd8yFo7/j5TFAQ/YPQjE22kCljOtHWznO32tBRUtScEohoc2q3bBqMj7TgxUVO4W7iU/h9Pr1wt1Xvsef6WOpNancEQGZVeXSgW8fSGDPNsVsARPZTJF63+42WD44EVlNPncFRZBSQhmIbsQqxO5RlMz8n+OPMVYQcCmUTRgy/9XZvN9InsCo+hcWUyfhiUtjyEzMViNPYqfTWurPqoLzBbve6D26bnNaDDtJBZt888PLHsDWXAmHINBSnazhM80GOH9qO/7jZ7TgJQq
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1281.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39860400002)(366004)(376002)(396003)(346002)(8676002)(86362001)(2616005)(956004)(2906002)(6486002)(8936002)(52116002)(10290500003)(5660300002)(66946007)(16576012)(66556008)(4326008)(6636002)(316002)(36756003)(186003)(82950400001)(478600001)(26005)(6666004)(66476007)(82960400001)(83380400001)(7416002)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 6cgaDNz1sdQaU+LQYgB6hSBciD/nXCPQIUHlV7RIMsi75+/wvTsCC2QAJTPOVWkfs4i8aM9Ad09cgJ+supsDkR6PR9rFiVjUDDlPU+TqVdeoQVmTCqCk/NSiOkkZa21IRs6hrq7njrQ82g/tKO0+AvAWatnp0+Ebiti78w8kxFc+dvuWRMFp4QL32O+PpD7YI0olDmkjsS1IDCN0BFIjVdjJ1zXD5R+RRyPNzaNIFtk39fj6P1RBgQNGoJgyHtmxnVnr+oE1ithzhZ5yx2c7r+uXUxlBAdGpHXzfchk/mo/re2scgo+AbeLiQqzNd9hpc1egfE9jJo6RbMxqM1diEVhgDb93BY4pqu7CjmTsc6ceE5Sl4FGa7wlwWANvguvkHpREJIUNYz85GZzS/q+o5H5diM4ft+f1FBbnE4kGS0eM/JZutIb9VAVfB6P6d4JxHyTh31bT2CSjDOEfH0tNwhxE2e/iLKOML01bw+N9No01jEEpGOaSN/45IuOy2WEXOyAPGoWG7NuqJtxqreoF9rc9oMxjxv7Sc81MmckobtOdXxhl230dABqFEDJTu/gwaPAqs1oCB9l2gsVD5c/9XZnn9HhWygO+0hy+jbK8L3gQCqq0HYLGrC4o3HURG3KwHD3z2OOvCGMzlqAB0CgfYw==
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e14e6266-aa11-41b3-ec99-08d8484d73e2
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR21MB1281.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2020 16:47:57.0956
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: T7eQKxiWmlDdNZ348lZpCFOXXLma/0PIvjEa0yMqskPwf5Ew6lCb+FhNGEcW5rdIblB5ZvZsgzBnh0a2qXb7rA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0753
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.142-rc2.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.142-rc2
+X-KernelTest-Deadline: 2020-08-26T16:47+00:00
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add hooks to enable/disable a per-CPU IRQ for VMbus. These hooks
-are in the architecture independent setup and shutdown paths for
-Hyper-V, and are needed by Linux guests on Hyper-V on ARM64.  The
-x86/x64 implementation is null because VMbus interrupts on x86/x64
-don't use an IRQ.
+This is the start of the stable review cycle for the 4.19.142 release.
+There are 73 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- arch/x86/include/asm/mshyperv.h | 4 ++++
- drivers/hv/hv.c                 | 3 +++
- 2 files changed, 7 insertions(+)
+Responses should be made by Wed, 26 Aug 2020 16:47:07 +0000.
+Anything received after that time might be too late.
 
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index ffc2899..dd1365c 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -56,6 +56,10 @@ typedef int (*hyperv_fill_flush_list_func)(
- #define hv_get_raw_timer() rdtsc_ordered()
- #define hv_get_vector() HYPERVISOR_CALLBACK_VECTOR
- 
-+/* On x86/x64, there isn't a real IRQ to be enabled/disable */
-+static inline void hv_enable_vmbus_irq(void) {}
-+static inline void hv_disable_vmbus_irq(void) {}
-+
- /*
-  * Reference to pv_ops must be inline so objtool
-  * detection of noinstr violations can work correctly.
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 2bd44fd..7499079 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -178,6 +178,7 @@ void hv_synic_enable_regs(unsigned int cpu)
- 	hv_set_siefp(siefp.as_uint64);
- 
- 	/* Setup the shared SINT. */
-+	hv_enable_vmbus_irq();
- 	hv_get_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
- 
- 	shared_sint.vector = hv_get_vector();
-@@ -235,6 +236,8 @@ void hv_synic_disable_regs(unsigned int cpu)
- 	hv_get_synic_state(sctrl.as_uint64);
- 	sctrl.enable = 0;
- 	hv_set_synic_state(sctrl.as_uint64);
-+
-+	hv_disable_vmbus_irq();
- }
- 
- int hv_synic_cleanup(unsigned int cpu)
--- 
-1.8.3.1
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.142-rc2.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.19.142-rc2
+
+Will Deacon <will@kernel.org>
+    KVM: arm64: Only reschedule if MMU_NOTIFIER_RANGE_BLOCKABLE is not set
+
+Will Deacon <will@kernel.org>
+    KVM: Pass MMU notifier range flags to kvm_unmap_hva_range()
+
+Stephen Boyd <sboyd@kernel.org>
+    clk: Evict unregistered clks from parent caches
+
+Juergen Gross <jgross@suse.com>
+    xen: don't reschedule in preemption off sections
+
+Peter Xu <peterx@redhat.com>
+    mm/hugetlb: fix calculation of adjust_range_if_pmd_sharing_possible
+
+Al Viro <viro@zeniv.linux.org.uk>
+    do_epoll_ctl(): clean the failure exits up a bit
+
+Marc Zyngier <maz@kernel.org>
+    epoll: Keep a reference on files added to the check list
+
+Li Heng <liheng40@huawei.com>
+    efi: add missed destroy_workqueue when efisubsys_init fails
+
+Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
+    powerpc/pseries: Do not initiate shutdown when system is running on UPS
+
+Tom Rix <trix@redhat.com>
+    net: dsa: b53: check for timeout
+
+Haiyang Zhang <haiyangz@microsoft.com>
+    hv_netvsc: Fix the queue_mapping in netvsc_vf_xmit()
+
+Wang Hai <wanghai38@huawei.com>
+    net: gemini: Fix missing free_netdev() in error path of gemini_ethernet_port_probe()
+
+Shay Agroskin <shayagr@amazon.com>
+    net: ena: Prevent reset after device destruction
+
+Jiri Wiesner <jwiesner@suse.com>
+    bonding: fix active-backup failover for current ARP slave
+
+David Howells <dhowells@redhat.com>
+    afs: Fix NULL deref in afs_dynroot_depopulate()
+
+Selvin Xavier <selvin.xavier@broadcom.com>
+    RDMA/bnxt_re: Do not add user qps to flushlist
+
+Randy Dunlap <rdunlap@infradead.org>
+    Fix build error when CONFIG_ACPI is not set/enabled:
+
+Juergen Gross <jgross@suse.com>
+    efi: avoid error message when booting under Xen
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kconfig: qconf: fix signal connection to invalid slots
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kconfig: qconf: do not limit the pop-up menu to the first row
+
+Jim Mattson <jmattson@google.com>
+    kvm: x86: Toggling CR4.PKE does not load PDPTEs in PAE mode
+
+Jim Mattson <jmattson@google.com>
+    kvm: x86: Toggling CR4.SMAP does not load PDPTEs in PAE mode
+
+Alex Williamson <alex.williamson@redhat.com>
+    vfio/type1: Add proper error unwind for vfio_iommu_replay()
+
+Dinghao Liu <dinghao.liu@zju.edu.cn>
+    ASoC: intel: Fix memleak in sst_media_open
+
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+    ASoC: msm8916-wcd-analog: fix register Interrupt offset
+
+Heiko Carstens <hca@linux.ibm.com>
+    s390/ptrace: fix storage key handling
+
+Heiko Carstens <hca@linux.ibm.com>
+    s390/runtime_instrumentation: fix storage key handling
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    bonding: fix a potential double-unregister
+
+Jarod Wilson <jarod@redhat.com>
+    bonding: show saner speed for broadcast mode
+
+Fugang Duan <fugang.duan@nxp.com>
+    net: fec: correct the error path for regulator disable in probe
+
+Grzegorz Szczurek <grzegorzx.szczurek@intel.com>
+    i40e: Fix crash during removing i40e driver
+
+Przemyslaw Patynowski <przemyslawx.patynowski@intel.com>
+    i40e: Set RX_ONLY mode for unicast promiscuous on VLAN
+
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+    ASoC: q6routing: add dummy register read/write function
+
+Jan Kara <jack@suse.cz>
+    ext4: don't allow overlapping system zones
+
+Eric Sandeen <sandeen@redhat.com>
+    ext4: fix potential negative array index in do_split()
+
+Helge Deller <deller@gmx.de>
+    fs/signalfd.c: fix inconsistent return codes for signalfd4
+
+Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+    alpha: fix annotation of io{read,write}{16,32}be()
+
+Eiichi Tsukata <devel@etsukata.com>
+    xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
+
+Gaurav Singh <gaurav1086@gmail.com>
+    tools/testing/selftests/cgroup/cgroup_util.c: cg_read_strcmp: fix null pointer dereference
+
+Mao Wenan <wenan.mao@linux.alibaba.com>
+    virtio_ring: Avoid loop when vq is broken in virtqueue_poll
+
+Javed Hasan <jhasan@marvell.com>
+    scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
+
+Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+    cpufreq: intel_pstate: Fix cpuinfo_max_freq when MSR_TURBO_RATIO_LIMIT is 0
+
+Xiubo Li <xiubli@redhat.com>
+    ceph: fix use-after-free for fsc->mdsc
+
+Zhe Li <lizhe67@huawei.com>
+    jffs2: fix UAF problem
+
+Darrick J. Wong <darrick.wong@oracle.com>
+    xfs: fix inode quota reservation checks
+
+Chuck Lever <chuck.lever@oracle.com>
+    svcrdma: Fix another Receive buffer leak
+
+Greg Ungerer <gerg@linux-m68k.org>
+    m68knommu: fix overwriting of bits in ColdFire V3 cache control
+
+Xiongfeng Wang <wangxiongfeng2@huawei.com>
+    Input: psmouse - add a newline when printing 'proto' by sysfs
+
+Evgeny Novikov <novikov@ispras.ru>
+    media: vpss: clean up resources in init
+
+Huacai Chen <chenhc@lemote.com>
+    rtc: goldfish: Enable interrupt in set_alarm() when necessary
+
+Chuhong Yuan <hslester96@gmail.com>
+    media: budget-core: Improve exception handling in budget_register()
+
+Bodo Stroesser <bstroesser@ts.fujitsu.com>
+    scsi: target: tcmu: Fix crash in tcmu_flush_dcache_range on ARM
+
+Stanley Chu <stanley.chu@mediatek.com>
+    scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
+
+Lukas Wunner <lukas@wunner.de>
+    spi: Prevent adding devices below an unregistering controller
+
+Liang Chen <cl@rock-chips.com>
+    kthread: Do not preempt current task if it is going to call schedule()
+
+Krunoslav Kovac <Krunoslav.Kovac@amd.com>
+    drm/amd/display: fix pow() crashing when given base 0
+
+Yang Shi <shy828301@gmail.com>
+    mm/memory.c: skip spurious TLB flush for retried page fault
+
+Steffen Maier <maier@linux.ibm.com>
+    scsi: zfcp: Fix use-after-free in request timeout handlers
+
+zhangyi (F) <yi.zhang@huawei.com>
+    jbd2: add the missing unlock_buffer() in the error path of jbd2_write_superblock()
+
+Jan Kara <jack@suse.cz>
+    ext4: fix checking of directory entry validity for inline directories
+
+Charan Teja Reddy <charante@codeaurora.org>
+    mm, page_alloc: fix core hung in free_pcppages_bulk()
+
+Doug Berger <opendmb@gmail.com>
+    mm: include CMA pages in lowmem_reserve at boot
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    kernel/relay.c: fix memleak on destroy relay channel
+
+Jann Horn <jannh@google.com>
+    romfs: fix uninitialized memory leak in romfs_dev_read()
+
+Josef Bacik <josef@toxicpanda.com>
+    btrfs: sysfs: use NOFS for device creation
+
+Qu Wenruo <wqu@suse.com>
+    btrfs: inode: fix NULL pointer dereference if inode doesn't need compression
+
+Nikolay Borisov <nborisov@suse.com>
+    btrfs: Move free_pages_out label in inline extent handling branch in compress_file_range
+
+Josef Bacik <josef@toxicpanda.com>
+    btrfs: don't show full path of bind mounts in subvol=
+
+Marcos Paulo de Souza <mpdesouza@suse.com>
+    btrfs: export helpers for subvolume name/id resolution
+
+Hugh Dickins <hughd@google.com>
+    khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
+
+Hugh Dickins <hughd@google.com>
+    khugepaged: khugepaged_test_exit() check mmget_still_valid()
+
+Masami Hiramatsu <mhiramat@kernel.org>
+    perf probe: Fix memory leakage when the probe point is not found
+
+Chris Wilson <chris@chris-wilson.co.uk>
+    drm/vgem: Replace opencoded version of drm_gem_dumb_map_offset()
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                          |  4 +-
+ arch/alpha/include/asm/io.h                       |  8 +--
+ arch/arm/include/asm/kvm_host.h                   |  2 +-
+ arch/arm64/include/asm/kvm_host.h                 |  2 +-
+ arch/m68k/include/asm/m53xxacr.h                  |  6 +-
+ arch/mips/include/asm/kvm_host.h                  |  2 +-
+ arch/mips/kvm/mmu.c                               |  3 +-
+ arch/powerpc/include/asm/kvm_host.h               |  3 +-
+ arch/powerpc/kvm/book3s.c                         |  3 +-
+ arch/powerpc/kvm/e500_mmu_host.c                  |  3 +-
+ arch/powerpc/platforms/pseries/ras.c              |  1 -
+ arch/s390/kernel/ptrace.c                         |  7 ++-
+ arch/s390/kernel/runtime_instr.c                  |  2 +-
+ arch/x86/include/asm/kvm_host.h                   |  3 +-
+ arch/x86/kvm/mmu.c                                |  3 +-
+ arch/x86/kvm/x86.c                                |  2 +-
+ arch/x86/pci/xen.c                                |  1 +
+ drivers/clk/clk.c                                 | 52 +++++++++++++----
+ drivers/cpufreq/intel_pstate.c                    |  1 +
+ drivers/firmware/efi/efi.c                        |  2 +
+ drivers/gpu/drm/amd/display/include/fixed31_32.h  |  3 +
+ drivers/gpu/drm/vgem/vgem_drv.c                   | 27 ---------
+ drivers/infiniband/hw/bnxt_re/main.c              |  3 +-
+ drivers/input/mouse/psmouse-base.c                |  2 +-
+ drivers/media/pci/ttpci/budget-core.c             | 11 +++-
+ drivers/media/platform/davinci/vpss.c             | 20 +++++--
+ drivers/net/bonding/bond_main.c                   | 42 ++++++++++++--
+ drivers/net/dsa/b53/b53_common.c                  |  2 +
+ drivers/net/ethernet/amazon/ena/ena_netdev.c      | 19 +++---
+ drivers/net/ethernet/cortina/gemini.c             |  4 +-
+ drivers/net/ethernet/freescale/fec_main.c         |  4 +-
+ drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h |  2 +-
+ drivers/net/ethernet/intel/i40e/i40e_common.c     | 35 ++++++++---
+ drivers/net/ethernet/intel/i40e/i40e_main.c       |  3 +
+ drivers/net/hyperv/netvsc_drv.c                   |  2 +-
+ drivers/rtc/rtc-goldfish.c                        |  1 +
+ drivers/s390/scsi/zfcp_fsf.c                      |  4 +-
+ drivers/scsi/libfc/fc_disc.c                      | 12 +++-
+ drivers/scsi/ufs/ufs_quirks.h                     |  1 +
+ drivers/scsi/ufs/ufshcd.c                         |  2 +
+ drivers/spi/Kconfig                               |  3 +
+ drivers/spi/spi.c                                 | 21 ++++++-
+ drivers/target/target_core_user.c                 |  2 +-
+ drivers/vfio/vfio_iommu_type1.c                   | 71 +++++++++++++++++++++--
+ drivers/video/fbdev/efifb.c                       |  2 +-
+ drivers/virtio/virtio_ring.c                      |  3 +
+ drivers/xen/preempt.c                             |  2 +-
+ fs/afs/dynroot.c                                  | 20 ++++---
+ fs/btrfs/ctree.h                                  |  2 +
+ fs/btrfs/export.c                                 |  8 +--
+ fs/btrfs/export.h                                 |  5 ++
+ fs/btrfs/inode.c                                  | 23 +++++---
+ fs/btrfs/super.c                                  | 18 ++++--
+ fs/btrfs/sysfs.c                                  |  4 ++
+ fs/ceph/mds_client.c                              |  3 +-
+ fs/eventpoll.c                                    | 19 +++---
+ fs/ext4/block_validity.c                          | 36 +++++-------
+ fs/ext4/namei.c                                   | 22 +++++--
+ fs/jbd2/journal.c                                 |  4 +-
+ fs/jffs2/dir.c                                    |  6 +-
+ fs/romfs/storage.c                                |  4 +-
+ fs/signalfd.c                                     | 10 ++--
+ fs/xfs/xfs_sysfs.h                                |  6 +-
+ fs/xfs/xfs_trans_dquot.c                          |  2 +-
+ kernel/kthread.c                                  | 17 +++++-
+ kernel/relay.c                                    |  1 +
+ mm/hugetlb.c                                      | 24 ++++----
+ mm/khugepaged.c                                   |  7 +--
+ mm/memory.c                                       |  3 +
+ mm/page_alloc.c                                   |  7 ++-
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c           |  2 +
+ scripts/kconfig/qconf.cc                          | 70 +++++++++++-----------
+ sound/soc/codecs/msm8916-wcd-analog.c             |  4 +-
+ sound/soc/intel/atom/sst-mfld-platform-pcm.c      |  5 +-
+ sound/soc/qcom/qdsp6/q6routing.c                  | 16 +++++
+ tools/perf/util/probe-finder.c                    |  2 +-
+ tools/testing/selftests/cgroup/cgroup_util.c      |  2 +-
+ virt/kvm/arm/mmu.c                                | 18 ++++--
+ virt/kvm/kvm_main.c                               |  2 +-
+ 79 files changed, 525 insertions(+), 260 deletions(-)
+
 
