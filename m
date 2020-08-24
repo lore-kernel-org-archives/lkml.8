@@ -2,107 +2,82 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A22FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 015F320706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:08:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/2Bfrf1"
+	by mail.kernel.org (Postfix) with ESMTP id 0046020706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:10:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgHXWIU (ORCPT
+        id S1727961AbgHXWKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:08:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXWIU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 18:08:20 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A7DC061574;
-        Mon, 24 Aug 2020 15:08:19 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id o22so7534451qtt.13;
-        Mon, 24 Aug 2020 15:08:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lBxRutKoRvBsYMY7DjEDLutlgfOhzLlM9Y1VeLJ+A7s=;
-        b=T/2Bfrf1wY8nhFiNcBiCCQhHmW5zBx7JXmfuWVBbQB+x1k7mRvciNL7nUBN7oFE8LJ
-         oEzm5C8MEsIWBoZob/1OcU3xpIar/nzvkhjBV76G4FfLUyxyDx5aOfuWsfhLlXyOjTFy
-         cwdHFDxZsPGRF2um51QavWrE9tpB9dd6qMZs72+xi0KEHHLe0ivLOQ4bCM55rreYFIMX
-         2+/cfSxNhUmdZfAprWggg8dBWbwQyy6fdmbmcbVcVrVF4hP6G7MgYOIxVP85hQc3PJxD
-         Or465Fn93dC8QrfshSd0ivrVPnxMiiEMS1dH/fWwqMUFBXGx8bA1rBTX+HPAFuQfc4xT
-         iONA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lBxRutKoRvBsYMY7DjEDLutlgfOhzLlM9Y1VeLJ+A7s=;
-        b=TO2OivIUQrVMdakkgtZrKlJbhGfex1+O9ReyvKfeRTRztZVqGI0l5oO7W7yQrcxU6f
-         QDn0/hIpnYecbSzhho4YWV+eT5mt6NEGJb6VCkg4X3c5DpsI40UkkCc8l/O/nGieDp/g
-         WyMRRfpr/rHyvRQ7l7GDkmuqNIJYDNEBTpBTsgCv9gMu2L9Jw2CRDUP6EgBO0AY6zbor
-         9WYjyKTXMFNy2S19ReQHcJVIM61PKNQ8AmkRQQJUtbo/gjBZXMTPh7BeS/e1d3cMXESJ
-         8nphqGCRcaWv05oQ9S2sxK43Tmwbi1tvuLyFZlzN3ELXs4HCjyzOqC+EjkTCDeFdx5+V
-         k4Bw==
-X-Gm-Message-State: AOAM532QvmuIyCgawdkI/N/1N1uYj8czK5WZETBQpV40ZoK3vkQBNbSM
-        cHxReIUmsTrkGq/GkQ9kDng=
-X-Google-Smtp-Source: ABdhPJzKshlK6jcVf/9HMVRKL2q2AuOpfROK7MkWUZaFhH9sfkW0M9H1pE69KAD4NDzRvQPAc/a1Rw==
-X-Received: by 2002:aed:364a:: with SMTP id e68mr6690391qtb.260.1598306898013;
-        Mon, 24 Aug 2020 15:08:18 -0700 (PDT)
-Received: from tong-desktop.local ([2601:5c0:c100:b9d:e9aa:e42d:21e4:5150])
-        by smtp.googlemail.com with ESMTPSA id x31sm8241177qtx.97.2020.08.24.15.08.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 15:08:17 -0700 (PDT)
-From:   Tong Zhang <ztong0001@gmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, ztong0001@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: caif: fix error code handling
-Date:   Mon, 24 Aug 2020 18:08:06 -0400
-Message-Id: <20200824220806.1257123-1-ztong0001@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 24 Aug 2020 18:10:35 -0400
+Received: from ms.lwn.net ([45.79.88.28]:56776 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgHXWKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 18:10:35 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id AE9A460C;
+        Mon, 24 Aug 2020 22:10:34 +0000 (UTC)
+Date:   Mon, 24 Aug 2020 16:10:33 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Nitin Joshi <njoshi1@lenovo.com>,
+        Sugumaran <slacshiminar@lenovo.com>,
+        Bastien Nocera <bnocera@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH] Documentation: laptops: thinkpad-acpi: fix underline
+ length build warning
+Message-ID: <20200824161033.0448f327@lwn.net>
+In-Reply-To: <7b2ecef9-dfb7-808a-7c05-4e4f44b363c4@infradead.org>
+References: <7b2ecef9-dfb7-808a-7c05-4e4f44b363c4@infradead.org>
+Organization: LWN.net
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cfpkt_peek_head return 0 and 1, caller is checking error using <0
+On Sun, 23 Aug 2020 15:55:16 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-Signed-off-by: Tong Zhang <ztong0001@gmail.com>
----
- net/caif/cfrfml.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix underline length build warning in thinkpad-acpi.rst documentation:
+> 
+> Documentation/admin-guide/laptops/thinkpad-acpi.rst:1437: WARNING: Title underline too short.
+> DYTC Lapmode sensor
+> ------------------
+> 
+> Fixes: acf7f4a59114 ("platform/x86: thinkpad_acpi: lap or desk mode interface")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Nitin Joshi <njoshi1@lenovo.com>
+> Cc: Sugumaran <slacshiminar@lenovo.com>
+> Cc: Bastien Nocera <bnocera@redhat.com>
+> Cc: Mark Pearson <markpearson@lenovo.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+> Cc: ibm-acpi-devel@lists.sourceforge.net
+> Cc: platform-driver-x86@vger.kernel.org
+> ---
+>  Documentation/admin-guide/laptops/thinkpad-acpi.rst |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/caif/cfrfml.c b/net/caif/cfrfml.c
-index ce2767e9cec6..7b0af33bdb97 100644
---- a/net/caif/cfrfml.c
-+++ b/net/caif/cfrfml.c
-@@ -116,7 +116,7 @@ static int cfrfml_receive(struct cflayer *layr, struct cfpkt *pkt)
- 	if (segmented) {
- 		if (rfml->incomplete_frm == NULL) {
- 			/* Initial Segment */
--			if (cfpkt_peek_head(pkt, rfml->seghead, 6) < 0)
-+			if (cfpkt_peek_head(pkt, rfml->seghead, 6) != 0)
- 				goto out;
- 
- 			rfml->pdu_size = get_unaligned_le16(rfml->seghead+4);
-@@ -233,7 +233,7 @@ static int cfrfml_transmit(struct cflayer *layr, struct cfpkt *pkt)
- 	if (cfpkt_getlen(pkt) > rfml->fragment_size + RFM_HEAD_SIZE)
- 		err = cfpkt_peek_head(pkt, head, 6);
- 
--	if (err < 0)
-+	if (err != 0)
- 		goto out;
- 
- 	while (cfpkt_getlen(frontpkt) > rfml->fragment_size + RFM_HEAD_SIZE) {
--- 
-2.25.1
+Applied, thanks.
 
+jon
