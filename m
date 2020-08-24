@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D901C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE0CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77055206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55261206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:20:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pmIh7Ufd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZGQSHZbY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgHXPTu (ORCPT
+        id S1727924AbgHXPUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39720 "EHLO
+        Mon, 24 Aug 2020 11:20:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgHXPG5 (ORCPT
+        with ESMTP id S1726999AbgHXPRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:06:57 -0400
+        Mon, 24 Aug 2020 11:17:13 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA472C06179B;
-        Mon, 24 Aug 2020 07:55:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC85FC061573;
+        Mon, 24 Aug 2020 08:17:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=pESaBZIQUbmTuqEp0QvjJ/1J69UiEMBwpDyvyHVUJqY=; b=pmIh7UfdQ7/LQD7SvCjLKXe2jy
-        0wpFTf2dGM/ZnEtdSJ6epnFIKDfGNnUmnku83ljK6wvI7+Ma5sKSCeqldh0oMYxGDqhJ0VVWgJnAr
-        YyJzxIouvgs33CASyOTuDV1IE5IsaqfkXgAMt8zOMVnRq1GwpJJAtVyGRlN7LHscQu423L4+u7ngi
-        MA6urfnXaOMrQazL/Dmzgda2GTnaRR8SXJps6PnsT9FvflPmKRR2F38sm8X58SfTK0U8yVcJLfH3s
-        hWnpZYdxqcumvCJs15ueYg11+t2L6Uq8w4XegKtsGHsJjONe3hX8+cDbjotp3oYfinH4VlGveQ0t7
-        JqWe1kyQ==;
+        bh=GPFgCYmxv4H+cWd8xnvyf0L9mCYFI6Udvua5Tow80pE=; b=ZGQSHZbYFffQRLYPHl3+9lLOEn
+        ro8mxCPTSctq7sAjopAJF3cl7hz3/7B5iPaXBF5RrxLqMc3DCDTUljy8j6vPTOXrVftxqvAy1mFlx
+        nng+/8uH9xWqZWIU5bZpmF5JPW9UdI4rizhs7YeTdL0xuEsXAB/Y7EeUnyJ932yBalU/UIPRgKE2S
+        Jx22Ac6Ep2KtmGawfYtHtk3j4WYZ724agSeNWgh0RzA1ZQUyEsAEXvdjehlVCLftHrD/n4+03mP8y
+        ifIj5+ILXK8MrOeMm5Z+vtvKMdq5jShLv+o/22evclmJsSZPoavZEJM0snV8VlXhLJ9wogSzyvytm
+        9IlleK4w==;
 Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kADsO-0002lv-VY; Mon, 24 Aug 2020 14:55:13 +0000
+        id 1kAEDW-0004CQ-Cn; Mon, 24 Aug 2020 15:17:02 +0000
 From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
 To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/9] iomap: Fix misplaced page flushing
-Date:   Mon, 24 Aug 2020 15:55:02 +0100
-Message-Id: <20200824145511.10500-2-willy@infradead.org>
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 01/11] fs: Make page_mkwrite_check_truncate thp-aware
+Date:   Mon, 24 Aug 2020 16:16:50 +0100
+Message-Id: <20200824151700.16097-2-willy@infradead.org>
 X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20200824145511.10500-1-willy@infradead.org>
-References: <20200824145511.10500-1-willy@infradead.org>
+In-Reply-To: <20200824151700.16097-1-willy@infradead.org>
+References: <20200824151700.16097-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,37 +57,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If iomap_unshare_actor() unshares to an inline iomap, the page was
-not being flushed.  block_write_end() and __iomap_write_end() already
-contain flushes, so adding it to iomap_write_end_inline() seems like
-the best place.  That means we can remove it from iomap_write_actor().
+If the page is compound, check the last index in the page and return
+the appropriate size.  Change the return type to ssize_t in case we ever
+support pages larger than 2GB.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/iomap/buffered-io.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ include/linux/pagemap.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index bcfc288dba3f..cffd575e57b6 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -715,6 +715,7 @@ iomap_write_end_inline(struct inode *inode, struct page *page,
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 853733286138..50b176b65911 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -876,22 +876,22 @@ static inline unsigned long dir_pages(struct inode *inode)
+  * @page: the page to check
+  * @inode: the inode to check the page against
+  *
+- * Returns the number of bytes in the page up to EOF,
++ * Return: The number of bytes in the page up to EOF,
+  * or -EFAULT if the page was truncated.
+  */
+-static inline int page_mkwrite_check_truncate(struct page *page,
++static inline ssize_t page_mkwrite_check_truncate(struct page *page,
+ 					      struct inode *inode)
  {
- 	void *addr;
+ 	loff_t size = i_size_read(inode);
+ 	pgoff_t index = size >> PAGE_SHIFT;
+-	int offset = offset_in_page(size);
++	unsigned long offset = offset_in_thp(page, size);
  
-+	flush_dcache_page(page);
- 	WARN_ON_ONCE(!PageUptodate(page));
- 	BUG_ON(pos + copied > PAGE_SIZE - offset_in_page(iomap->inline_data));
+ 	if (page->mapping != inode->i_mapping)
+ 		return -EFAULT;
  
-@@ -811,8 +812,6 @@ iomap_write_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 
- 		copied = iov_iter_copy_from_user_atomic(page, i, offset, bytes);
- 
--		flush_dcache_page(page);
--
- 		status = iomap_write_end(inode, pos, bytes, copied, page, iomap,
- 				srcmap);
- 		if (unlikely(status < 0))
+ 	/* page is wholly inside EOF */
+-	if (page->index < index)
+-		return PAGE_SIZE;
++	if (page->index + thp_nr_pages(page) - 1 < index)
++		return thp_size(page);
+ 	/* page is wholly past EOF */
+ 	if (page->index > index || !offset)
+ 		return -EFAULT;
 -- 
 2.28.0
 
