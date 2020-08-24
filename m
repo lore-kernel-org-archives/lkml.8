@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0064BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6902C206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66B0206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261557;
-	bh=RPfWYGi+QKddpDu5XlK35oVwvWksJylz921MQD9a08I=;
+	s=default; t=1598261560;
+	bh=rsO0Mge3Fyu9w0ytzbKM5dzgdzpTXz3fx22bKZ4jLjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tH5+WWaTZH+vstEk3JSYlciWTrM2Fhaw9TbZiul/jXEZ0cd4nOpTKa40lX0XDgvpn
-	 zUe2NaRu8F1TF0OsuRPBDmVidS2Qige1RDB/hMnlxR/Alo68Rs6cAse1P41goCgsU6
-	 e1bGmkVtG5MEm7I54Evap7VsFedPyRu3M4U/CQLs=
+	b=O9k2WbeU8e/hCdBlxFNehPZpDAhgFJFi75ntGGgjPoRMoDpeCLUpgSUYE8+HGlNYQ
+	 d21VcA9d8brprak8gTVK951Ptqxb039aZ52FEqYzXe2mpCfQgnVBmJScSFVfhgmwWE
+	 a3vg4q9aDHj0y5pnCPcjeOEwo24ct0ygEDwpfGS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbgHXIt4 (ORCPT
+        id S1729787AbgHXItz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:49:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52750 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:49:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729756AbgHXItw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:49:52 -0400
+        id S1729763AbgHXItp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:49:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A6032075B;
-        Mon, 24 Aug 2020 08:49:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F37B32072D;
+        Mon, 24 Aug 2020 08:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258991;
-        bh=RPfWYGi+QKddpDu5XlK35oVwvWksJylz921MQD9a08I=;
+        s=default; t=1598258984;
+        bh=rsO0Mge3Fyu9w0ytzbKM5dzgdzpTXz3fx22bKZ4jLjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3CQpOi7qTZOVfICZJY0mytBs/QmcdoW/8GAEpz7v8K4I+HE1G1cutvAX1Vtal1By
-         n6XgdRmc6i3hFIulr9Sz32tTlnraLidSlTyuF34vb2Yz74X7i+EwEYGMNptRKE+boS
-         avnK8IsJG9D8FluDCJQBGJX0BaUKSwg4E8p8Aqss=
+        b=j93gyRi9SqPjM5o2zg4ynZIplKnI9b2vqW6kqmkSBOHC6liE2Uv6tTJIIxCg10HtO
+         qQm0uBY5ZDx1+8nOwu+g+Xhglkz/06N7znEsfS3FmGoqDXFmkYLB9bzmkeZXQ0ZgWs
+         C7yoWXguFlNuwTaJcAJ3a/Q53h8GBjAvdhJ0buoQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 05/33] watchdog: f71808e_wdt: remove use of wrong watchdog_info option
-Date:   Mon, 24 Aug 2020 10:31:01 +0200
-Message-Id: <20200824082346.791664700@linuxfoundation.org>
+Subject: [PATCH 4.4 02/33] perf probe: Fix memory leakage when the probe point is not found
+Date:   Mon, 24 Aug 2020 10:30:58 +0200
+Message-Id: <20200824082346.622728804@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
 References: <20200824082346.498653578@linuxfoundation.org>
@@ -61,50 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 802141462d844f2e6a4d63a12260d79b7afc4c34 ]
+[ Upstream commit 12d572e785b15bc764e956caaa8a4c846fd15694 ]
 
-The flags that should be or-ed into the watchdog_info.options by drivers
-all start with WDIOF_, e.g. WDIOF_SETTIMEOUT, which indicates that the
-driver's watchdog_ops has a usable set_timeout.
+Fix the memory leakage in debuginfo__find_trace_events() when the probe
+point is not found in the debuginfo. If there is no probe point found in
+the debuginfo, debuginfo__find_probes() will NOT return -ENOENT, but 0.
 
-WDIOC_SETTIMEOUT was used instead, which expands to 0xc0045706, which
-equals:
+Thus the caller of debuginfo__find_probes() must check the tf.ntevs and
+release the allocated memory for the array of struct probe_trace_event.
 
-   WDIOF_FANFAULT | WDIOF_EXTERN1 | WDIOF_PRETIMEOUT | WDIOF_ALARMONLY |
-   WDIOF_MAGICCLOSE | 0xc0045000
+The current code releases the memory only if the debuginfo__find_probes()
+hits an error but not checks tf.ntevs. In the result, the memory allocated
+on *tevs are not released if tf.ntevs == 0.
 
-These were so far indicated to userspace on WDIOC_GETSUPPORT.
-As the driver has not yet been migrated to the new watchdog kernel API,
-the constant can just be dropped without substitute.
+This fixes the memory leakage by checking tf.ntevs == 0 in addition to
+ret < 0.
 
-Fixes: 96cb4eb019ce ("watchdog: f71808e_wdt: new watchdog driver for Fintek F71808E and F71882FG")
+Fixes: ff741783506c ("perf probe: Introduce debuginfo to encapsulate dwarf information")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200611191750.28096-4-a.fatoum@pengutronix.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Link: http://lore.kernel.org/lkml/159438668346.62703.10887420400718492503.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/f71808e_wdt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/perf/util/probe-finder.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
-index 3577e356e08cc..2b12ef019ae02 100644
---- a/drivers/watchdog/f71808e_wdt.c
-+++ b/drivers/watchdog/f71808e_wdt.c
-@@ -642,8 +642,7 @@ static int __init watchdog_init(int sioaddr)
- 	 * into the module have been registered yet.
- 	 */
- 	watchdog.sioaddr = sioaddr;
--	watchdog.ident.options = WDIOC_SETTIMEOUT
--				| WDIOF_MAGICCLOSE
-+	watchdog.ident.options = WDIOF_MAGICCLOSE
- 				| WDIOF_KEEPALIVEPING
- 				| WDIOF_CARDRESET;
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index c694f10d004cc..1b73537af91db 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1274,7 +1274,7 @@ int debuginfo__find_trace_events(struct debuginfo *dbg,
+ 	tf.ntevs = 0;
  
+ 	ret = debuginfo__find_probes(dbg, &tf.pf);
+-	if (ret < 0) {
++	if (ret < 0 || tf.ntevs == 0) {
+ 		for (i = 0; i < tf.ntevs; i++)
+ 			clear_probe_trace_event(&tf.tevs[i]);
+ 		zfree(tevs);
 -- 
 2.25.1
 
