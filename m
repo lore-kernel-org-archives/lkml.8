@@ -2,51 +2,51 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC9B020738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF79D20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261989;
-	bh=DDo9rlJ1vGfTkw3ErVmo14AXqfaIcHBATRLU97RdBrc=;
+	s=default; t=1598262004;
+	bh=DpOnkbPZw4SB30cqBU97Llu/uZnXc+6xv7pwrG8oUQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h/iPYM08+EoBhcymVNPz+r3YHtjnUQN76bgUr0J9QOK048p80ROzjjRuuOeZxZz9z
-	 +DQ2gENTcZI5qLaUgfNHDuHLmSEwL5j9/Jg0+7aaFTPmUq26JFsgPOWb5KilReuxbV
-	 +AT2bcPl771IMRkOwrtqhk3IXt7YBS23z9RUIfJo=
+	b=sMbqO1p56VbMCJX5a5dTekRtBbCos70+PejtCKBbKdzdptQPjATBx0Oa3wwT0UgoU
+	 GpxXDN5/ktpgSJLhoIQ0IvanvVyOxLZTf0/cCty5waDSS2o1vqu8FjoR3JFqcn/K2e
+	 v67aIzlwwptFnfFTzwQGiPr/U4plkvIvxKyKzvc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgHXJjs (ORCPT
+        id S1729653AbgHXJkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:39:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45290 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:40:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728629AbgHXIqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:46:39 -0400
+        id S1729140AbgHXIq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:46:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1EEC206F0;
-        Mon, 24 Aug 2020 08:46:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FBA1204FD;
+        Mon, 24 Aug 2020 08:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258798;
-        bh=DDo9rlJ1vGfTkw3ErVmo14AXqfaIcHBATRLU97RdBrc=;
+        s=default; t=1598258789;
+        bh=DpOnkbPZw4SB30cqBU97Llu/uZnXc+6xv7pwrG8oUQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rLiTzXKm0byPvH8aGkhVE75AiSgcDOkymwGCcq7eAcEdNd+U+AwYl68e+Do7xJOkY
-         66Ed9CghMg3+n4ssqk49Ex3YJk1SqoiC0mnzqYF6gNkSHlkGGn/KzxLQVj+i5Td9VF
-         y5BVzk4Za1T+lfMF6HYmByQTsK6iODdxKkOBWEOg=
+        b=bkzqsBRImjYCLCGPQidjbw1K8ehitnWDJ+OjJLo1fmiJT1quaHTBCxoalTCyXgv3C
+         Ozpam0ExPdvgITQGfiZUcI9Ej/DN+J4JhUvH8IHdnMeUBxC6vPPzOImkPU0plgWN0Q
+         enDjzRfSi+tigdlDpOO9Duy0G53hzwSYcJYc50Wk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 049/107] svcrdma: Fix another Receive buffer leak
-Date:   Mon, 24 Aug 2020 10:30:15 +0200
-Message-Id: <20200824082407.562717573@linuxfoundation.org>
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH 5.4 006/107] kbuild: remove PYTHON2 variable
+Date:   Mon, 24 Aug 2020 10:29:32 +0200
+Message-Id: <20200824082405.351431962@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -59,45 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 64d26422516b2e347b32e6d9b1d40b3c19a62aae ]
+commit 94f7345b712405b79647a6a4bf8ccbd0d78fa69d upstream.
 
-During a connection tear down, the Receive queue is flushed before
-the device resources are freed. Typically, all the Receives flush
-with IB_WR_FLUSH_ERR.
+Python 2 has retired. There is no user of this variable.
 
-However, any pending successful Receives flush with IB_WR_SUCCESS,
-and the server automatically posts a fresh Receive to replace the
-completing one. This happens even after the connection has closed
-and the RQ is drained. Receives that are posted after the RQ is
-drained appear never to complete, causing a Receive resource leak.
-The leaked Receive buffer is left DMA-mapped.
-
-To prevent these late-posted recv_ctxt's from leaking, block new
-Receive posting after XPT_CLOSE is set.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Makefile |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index 0ce4e75b29812..d803d814a03ad 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -265,6 +265,8 @@ static int svc_rdma_post_recv(struct svcxprt_rdma *rdma)
- {
- 	struct svc_rdma_recv_ctxt *ctxt;
+--- a/Makefile
++++ b/Makefile
+@@ -423,7 +423,6 @@ INSTALLKERNEL  := installkernel
+ DEPMOD		= /sbin/depmod
+ PERL		= perl
+ PYTHON		= python
+-PYTHON2		= python2
+ PYTHON3		= python3
+ CHECK		= sparse
+ BASH		= bash
+@@ -474,7 +473,7 @@ CLANG_FLAGS :=
  
-+	if (test_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags))
-+		return 0;
- 	ctxt = svc_rdma_recv_ctxt_get(rdma);
- 	if (!ctxt)
- 		return -ENOMEM;
--- 
-2.25.1
-
+ export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
+ export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
+-export PERL PYTHON PYTHON2 PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
++export PERL PYTHON PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
+ export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
+ 
+ export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS KBUILD_LDFLAGS
 
 
