@@ -2,132 +2,112 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B580C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95719206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:50:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oLyJ6GRK"
+	by mail.kernel.org (Postfix) with ESMTP id EF7D6207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgHXLuZ (ORCPT
+        id S1726716AbgHXLyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:50:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbgHXLuU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:50:20 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F4D0C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:50:20 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id o8so4277496otp.9
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:50:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yJXg3YmJV9VmBBuMxTtghIxF3sII7GvdsrK6BwX4Nus=;
-        b=oLyJ6GRKHTm1t7mgGpDwN4erpee2C2K8InRMviIFM7ItOZjfGHwrLx5AqYVOyiaj2H
-         Sut0+dlkdVXZjAi7t6gZDvKzPxSlKEVjXEXukWfDse9h4cuaBBoHnh8nLCJnowemg/gp
-         OBPAHWMwTO2x0X0nGFhP1VkCLuv2QlfwmAOgXeKwSFhOB1mhlIHVv9tX3val2OmziOqL
-         KPTYLiXiQBhJxzN5Qip06U+Xx/adZQ8VHy13CgZ7WTjW3CJfkqFD3cc/vMOMqxFDP2d/
-         ci8FSMbFgXLLI+sGzo1XDEnZB+xvTYLArHLLB9OJ+Ku8Yj8EkrGjlqkkGP0s7pdstJok
-         DJQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yJXg3YmJV9VmBBuMxTtghIxF3sII7GvdsrK6BwX4Nus=;
-        b=UzvvEYhUU7k6Zk98ezHVRKaUZ+GQnr8ag1K6eMhTHbJntoXWOVPwth4sHxaXCYtkG6
-         WBA9O3VZVDMC5N/JUJO/XB9//GCp6dl8o/51x86/Dr+IUbnAX8tmwA71/rrsBjCqnv6b
-         j4DDFvril9+uPfUpRU2PeWcFJy3+nSW1QFNHKCmU7g94nDnvFK/RapmrpZV6WVd7QQWf
-         5fbcO8DshFas/g8ti3S9rn9uVYuXXTi92EDO5SJOPlcS1vvQhoTS/xngkwa1RbWPqfUC
-         MVQ65r+APCzllUDaM1BJESFlZLfyCrxony9KnMMjwyBH6eBaAFYkFm0NKrq/w5z9wjp4
-         foIA==
-X-Gm-Message-State: AOAM531ObG0CYYcBSQDu2Gg030DXva7PfW1L4W9QwJcsSGeIQTcoR0+e
-        aDyZD42vN6lwpfMQC7FX9ZR94oU/GgMzOhYZ8NwoXQ==
-X-Google-Smtp-Source: ABdhPJxY6ICnrMzo1mNkyVVmig6kmZLJrD1Ga0fs2iobFX/jQG+jCprR22w/YZrmq6KdxX46yuF7HEXTXgAX+iTF6Ik=
-X-Received: by 2002:a9d:739a:: with SMTP id j26mr3480830otk.17.1598269819856;
- Mon, 24 Aug 2020 04:50:19 -0700 (PDT)
+        Mon, 24 Aug 2020 07:54:24 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55548 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726075AbgHXLyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 07:54:21 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6905211FDBEEEEE5F66E;
+        Mon, 24 Aug 2020 19:54:16 +0800 (CST)
+Received: from DESKTOP-8N3QUD5.china.huawei.com (10.67.102.173) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 24 Aug 2020 19:54:09 +0800
+From:   Guohua Zhong <zhongguohua1@huawei.com>
+To:     <segher@kernel.crashing.org>
+CC:     <christophe.leroy@csgroup.eu>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <nixiaoming@huawei.com>, <paulus@samba.org>,
+        <stable@vger.kernel.org>, <wangle6@huawei.com>,
+        <zhongguohua1@huawei.com>
+Subject: =?UTF-8?q?Re=3A=20Re=EF=BC=9ARe=3A=20=5BPATCH=5D=20powerpc=3A=20Fix=20a=20bug=20in=20=5F=5Fdiv64=5F32=20if=20divisor=20is=20zero?=
+Date:   Mon, 24 Aug 2020 19:54:07 +0800
+Message-ID: <20200824115407.55896-1-zhongguohua1@huawei.com>
+X-Mailer: git-send-email 2.21.0.windows.1
+In-Reply-To: <20200823001101.GO28786@gate.crashing.org>
+References: <20200823001101.GO28786@gate.crashing.org>
 MIME-Version: 1.0
-References: <20200824080706.24704-1-walter-zh.wu@mediatek.com>
-In-Reply-To: <20200824080706.24704-1-walter-zh.wu@mediatek.com>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 24 Aug 2020 13:50:08 +0200
-Message-ID: <CANpmjNNYhYwyzT3pBzJdb=XCGyLj7X+Fhqui-6JAZJWGys25Rg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] kasan: add workqueue and timer stack for generic KASAN
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-mediatek@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.102.173]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020 at 10:07, Walter Wu <walter-zh.wu@mediatek.com> wrote:
->
-> Syzbot reports many UAF issues for workqueue or timer, see [1] and [2].
-> In some of these access/allocation happened in process_one_work(),
-> we see the free stack is useless in KASAN report, it doesn't help
-> programmers to solve UAF on workqueue. The same may stand for times.
->
-> This patchset improves KASAN reports by making them to have workqueue
-> queueing stack and timer queueing stack information. It is useful for
-> programmers to solve use-after-free or double-free memory issue.
->
-> Generic KASAN will record the last two workqueue and timer stacks,
-> print them in KASAN report. It is only suitable for generic KASAN.
->
-> [1]https://groups.google.com/g/syzkaller-bugs/search?q=%22use-after-free%22+process_one_work
-> [2]https://groups.google.com/g/syzkaller-bugs/search?q=%22use-after-free%22%20expire_timers
-> [3]https://bugzilla.kernel.org/show_bug.cgi?id=198437
->
-> Walter Wu (6):
-> timer: kasan: record timer stack
-> workqueue: kasan: record workqueue stack
-> kasan: print timer and workqueue stack
-> lib/test_kasan.c: add timer test case
-> lib/test_kasan.c: add workqueue test case
-> kasan: update documentation for generic kasan
->
-> ---
->
-> Changes since v1:
-> - Thanks for Marco and Thomas suggestion.
-> - Remove unnecessary code and fix commit log
-> - reuse kasan_record_aux_stack() and aux_stack
->   to record timer and workqueue stack.
-> - change the aux stack title for common name.
+>> Yet, I have noticed that there is no checking of 'base' in these functions.
+>> But I am not sure how to check is better.As we know that the result is 
+>> undefined when divisor is zero. It maybe good to print error and dump stack.
+>>  Let the process to know that the divisor is zero by sending SIGFPE. 
 
-Much cleaner.
+> That is now what the PowerPC integer divide insns do: they just leave
+> the result undefined (and they can set the overflow flag then, but no
+> one uses that).
 
-In general,
+OK ,So just keep the patch as below. If this patch looks good for you, please
+help to review. I will send the new patch later.
 
-Acked-by: Marco Elver <elver@google.com>
+Thanks for your reply.
 
-but I left some more comments. I'm a bit worried about the tests,
-because of KASAN-test KUnit rework, but probably not much we can do
-until these are added to -mm tree.
+diff --git a/arch/powerpc/boot/div64.S b/arch/powerpc/boot/div64.S
+index 4354928ed62e..1d3561cf16fa 100644
+--- a/arch/powerpc/boot/div64.S
++++ b/arch/powerpc/boot/div64.S
+@@ -13,8 +13,10 @@
 
-Thanks,
--- Marco
+        .globl __div64_32
+        .globl __div64_32
+ __div64_32:
++ cmplwi      r4,0    # check if divisor r4 is zero
+        lwz     r5,0(r3)        # get the dividend into r5/r6
+        lwz     r6,4(r3)
++ beq 5f                      # jump to label 5 if r4(divisor) is zero
+        cmplw   r5,r4
+        li      r7,0
+        li      r8,0
+@@ -52,7 +54,7 @@ __div64_32:
+ 4:     stw     r7,0(r3)        # return the quotient in *r3
+        stw     r8,4(r3)
+        mr      r3,r6           # return the remainder in r3
+-   blr
++5:   blr                             # return if divisor r4 is zero
+
+ /*
+  * Extended precision shifts.
+diff --git a/arch/powerpc/lib/div64.S b/arch/powerpc/lib/div64.S
+index 3d5426e7dcc4..570774d9782d 100644
+--- a/arch/powerpc/lib/div64.S
++++ b/arch/powerpc/lib/div64.S
+@@ -13,8 +13,10 @@
+ #include <asm/processor.h>
+
+ _GLOBAL(__div64_32)
++ cmplwi      r4,0    # check if divisor r4 is zero
+        lwz     r5,0(r3)        # get the dividend into r5/r6
+        lwz     r6,4(r3)
++ beq 5f                      # jump to label 5 if r4(divisor) is zero
+        cmplw   r5,r4
+        li      r7,0
+        li      r8,0
+@@ -52,4 +54,4 @@ _GLOBAL(__div64_32)
+ 4:     stw     r7,0(r3)        # return the quotient in *r3
+        stw     r8,4(r3)
+        mr      r3,r6           # return the remainder in r3
+-   blr
++5:   blr                             # return if divisor r4 is zero
+
+Guohua
+
