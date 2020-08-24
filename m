@@ -2,55 +2,56 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D4CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603A2C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 132052087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3218B2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259486;
-	bh=0vyft/VSgrnMagMT2usHlPRU18zZUjsnEaD7djZEAtk=;
+	s=default; t=1598259492;
+	bh=eHzawvg6Qqnr+ywSc/BhwWvuuYh7k/ZcjcKLX3gMZtI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RVKt8/MbhbMIiqf/eD/48sfB0TkgncTRLXh6N5Ja2bYB+kIRnTiyfZeElLwKCJeZ8
-	 qKYeASjp6acLop/Foe353Qlb7MsObPZZkVy7j0W4kYcPSZr8vwD1r3YvMTnV98jkCz
-	 CZ6mliyKqwNWo4Adhgp0Plw01/n5aWjC24kWWvL4=
+	b=yC6DK0CetjwsExtr148sTT1yGnOzSIxz/Tevp0Uzvx+h2sPu3Uvf4aEguEI0bLSzt
+	 lJY+il2IMZmduTUy1UPBrYEFeaUCTTnMBt3vnBFhEJ1eq5ylV3smWirfNBDTSHgdc+
+	 PcY9gZ72W3m8frqICfxdPL/JDpyoNbKcYY8HKFGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730742AbgHXI6E (ORCPT
+        id S1730749AbgHXI6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:58:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45210 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:58:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729951AbgHXI5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:57:46 -0400
+        id S1730208AbgHXI5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A38872074D;
-        Mon, 24 Aug 2020 08:57:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81EBD20FC3;
+        Mon, 24 Aug 2020 08:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259465;
-        bh=0vyft/VSgrnMagMT2usHlPRU18zZUjsnEaD7djZEAtk=;
+        s=default; t=1598259468;
+        bh=eHzawvg6Qqnr+ywSc/BhwWvuuYh7k/ZcjcKLX3gMZtI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cMCamHSJweqJpUNPgq7ouceWPE/udYgYCPk2uN+1LMKSpLpFKW4AcTc3wzjQsGRtx
-         OLNUkFT5Qlz2Tat/5Adv7AdwW2V70ZLGyGVg16VCyWHhRXGqWpwcefdcwHwGrPuhau
-         bHrBprB3cZnF5jx9pyOWYyzeurgwHTpukFvrZHmw=
+        b=tTrXLUsU8RUq5kReYrLVhGqsb3OCkQ1WE0P3j6S4JwSeeeUsuAgUS/USptrIOhN31
+         ORsGeIrmETuQHaU1/dT20j97EcYYuWErSGwK1/JbkH7nXTyRosGd87rV9ZA9CfGZ4S
+         GebQLx+ZOL0EjOJQeaH+Oa9/Hk6RTI8/4lvy1Cbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 69/71] mm/hugetlb: fix calculation of adjust_range_if_pmd_sharing_possible
-Date:   Mon, 24 Aug 2020 10:32:00 +0200
-Message-Id: <20200824082359.416421024@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Xiao Guangrong <guangrong.xiao@linux.intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 52/71] kvm: x86: Toggling CR4.SMAP does not load PDPTEs in PAE mode
+Date:   Mon, 24 Aug 2020 10:31:43 +0200
+Message-Id: <20200824082358.503737106@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -63,91 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Xu <peterx@redhat.com>
+From: Jim Mattson <jmattson@google.com>
 
-commit 75802ca66354a39ab8e35822747cd08b3384a99a upstream.
+[ Upstream commit 427890aff8558eb4326e723835e0eae0e6fe3102 ]
 
-This is found by code observation only.
+See the SDM, volume 3, section 4.4.1:
 
-Firstly, the worst case scenario should assume the whole range was covered
-by pmd sharing.  The old algorithm might not work as expected for ranges
-like (1g-2m, 1g+2m), where the adjusted range should be (0, 1g+2m) but the
-expected range should be (0, 2g).
+If PAE paging would be in use following an execution of MOV to CR0 or
+MOV to CR4 (see Section 4.1.1) and the instruction is modifying any of
+CR0.CD, CR0.NW, CR0.PG, CR4.PAE, CR4.PGE, CR4.PSE, or CR4.SMEP; then
+the PDPTEs are loaded from the address in CR3.
 
-Since at it, remove the loop since it should not be required.  With that,
-the new code should be faster too when the invalidating range is huge.
-
-Mike said:
-
-: With range (1g-2m, 1g+2m) within a vma (0, 2g) the existing code will only
-: adjust to (0, 1g+2m) which is incorrect.
-:
-: We should cc stable.  The original reason for adjusting the range was to
-: prevent data corruption (getting wrong page).  Since the range is not
-: always adjusted correctly, the potential for corruption still exists.
-:
-: However, I am fairly confident that adjust_range_if_pmd_sharing_possible
-: is only gong to be called in two cases:
-:
-: 1) for a single page
-: 2) for range == entire vma
-:
-: In those cases, the current code should produce the correct results.
-:
-: To be safe, let's just cc stable.
-
-Fixes: 017b1660df89 ("mm: migration: fix migration of huge PMD shared pages")
-Signed-off-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200730201636.74778-1-peterx@redhat.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 0be0226f07d14 ("KVM: MMU: fix SMAP virtualization")
+Cc: Xiao Guangrong <guangrong.xiao@linux.intel.com>
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Reviewed-by: Oliver Upton <oupton@google.com>
+Message-Id: <20200817181655.3716509-2-jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/hugetlb.c |   24 ++++++++++--------------
- 1 file changed, 10 insertions(+), 14 deletions(-)
+ arch/x86/kvm/x86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4650,25 +4650,21 @@ static bool vma_shareable(struct vm_area
- void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
- 				unsigned long *start, unsigned long *end)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5b2440e591fc1..ff1f764c4709a 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -857,7 +857,7 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
  {
--	unsigned long check_addr = *start;
-+	unsigned long a_start, a_end;
+ 	unsigned long old_cr4 = kvm_read_cr4(vcpu);
+ 	unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
+-				   X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_PKE;
++				   X86_CR4_SMEP | X86_CR4_PKE;
  
- 	if (!(vma->vm_flags & VM_MAYSHARE))
- 		return;
- 
--	for (check_addr = *start; check_addr < *end; check_addr += PUD_SIZE) {
--		unsigned long a_start = check_addr & PUD_MASK;
--		unsigned long a_end = a_start + PUD_SIZE;
-+	/* Extend the range to be PUD aligned for a worst case scenario */
-+	a_start = ALIGN_DOWN(*start, PUD_SIZE);
-+	a_end = ALIGN(*end, PUD_SIZE);
- 
--		/*
--		 * If sharing is possible, adjust start/end if necessary.
--		 */
--		if (range_in_vma(vma, a_start, a_end)) {
--			if (a_start < *start)
--				*start = a_start;
--			if (a_end > *end)
--				*end = a_end;
--		}
--	}
-+	/*
-+	 * Intersect the range with the vma range, since pmd sharing won't be
-+	 * across vma after all
-+	 */
-+	*start = max(vma->vm_start, a_start);
-+	*end = min(vma->vm_end, a_end);
- }
- 
- /*
+ 	if (kvm_valid_cr4(vcpu, cr4))
+ 		return 1;
+-- 
+2.25.1
+
 
 
