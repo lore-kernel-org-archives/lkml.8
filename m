@@ -5,48 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE798C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86D5720FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2941A2087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259262;
-	bh=V8IP8EA9VpB2T1l2jYQmpbW7svvqjAwsboHqoVjbVN8=;
+	s=default; t=1598259266;
+	bh=O/Nhrn08tkjaaarUDJU/ZrxBjQpZs+AwE15ZpuJ6Ak0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fxg+ZXQjWmRGNeUWg5gJ0+ADBz4gWQQym3mHR9+46wq6RjoqTxYBeeXD73jXN9YEQ
-	 MStoyTdTvjluUbdUXS0tl/0FZ0PlD4UqSVcm7J81bgyF82cT09mR50JGGL2MS58T2e
-	 5QmejXoNt5iQgtxAO21VB82bvX0uk4Wo5cD6nKvg=
+	b=khMJkW3I8RuJUqmf9/xAtD+o9uLEwjEgebEIm30M7sCHbCIaGxe0wMrk2BdzVPVCB
+	 fIJ3nusZ/+bFFOhA5CP2o9o5rvoGevvSDHU6aRfoZhYXrFCB7zAUE1V1RgmJrCZX1/
+	 Z61egH3OaqWBF+hacV3732BMgH0KN5EBppFq5gfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbgHXIyV (ORCPT
+        id S1729907AbgHXIyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:54:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34314 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:54:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730036AbgHXIyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:54:13 -0400
+        id S1730291AbgHXIyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:54:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E55A204FD;
-        Mon, 24 Aug 2020 08:54:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E765F207D3;
+        Mon, 24 Aug 2020 08:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259252;
-        bh=V8IP8EA9VpB2T1l2jYQmpbW7svvqjAwsboHqoVjbVN8=;
+        s=default; t=1598259255;
+        bh=O/Nhrn08tkjaaarUDJU/ZrxBjQpZs+AwE15ZpuJ6Ak0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wGolTF5lRjcNAmEin3jzLuAxvkP7d/VhEFhedsOGQFDf+bsdXStmoFMEkbjuYt2QZ
-         zCpQjUaVeVdxbfOqoPbbmjj0NsC5PIDJdqr2ys4MgTU/uvniRB0khcqlZkVhd1GaAL
-         0RCVJhNpclnxbk6llGLGEZsbv3UmXuEJpcjN3vGA=
+        b=JJ3PVHxC50CFR3pJsileGCCn4r4py4pfEzuc/dbefF9vcvau6a5q4j3uN+9ujKORL
+         fhjejGzY9FotAKi4IoMTteH6ISii/FXMuODE4jazYmiq9xTA9ssNg7PeSCSOZ5+Oqh
+         MX63gYEBHUGalyluLknVBIzLv9k5sCzhAq+BXZ8k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Sterba <dsterba@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH 4.14 11/50] btrfs: sysfs: use NOFS for device creation
-Date:   Mon, 24 Aug 2020 10:31:12 +0200
-Message-Id: <20200824082352.476380248@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 38/50] bonding: fix a potential double-unregister
+Date:   Mon, 24 Aug 2020 10:31:39 +0200
+Message-Id: <20200824082353.981385413@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -59,188 +65,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-Dave hit this splat during testing btrfs/078:
+[ Upstream commit 832707021666411d04795c564a4adea5d6b94f17 ]
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.8.0-rc6-default+ #1191 Not tainted
-  ------------------------------------------------------
-  kswapd0/75 is trying to acquire lock:
-  ffffa040e9d04ff8 (&delayed_node->mutex){+.+.}-{3:3}, at: __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
+When we tear down a network namespace, we unregister all
+the netdevices within it. So we may queue a slave device
+and a bonding device together in the same unregister queue.
 
-  but task is already holding lock:
-  ffffffff8b0c8040 (fs_reclaim){+.+.}-{0:0}, at: __fs_reclaim_acquire+0x5/0x30
+If the only slave device is non-ethernet, it would
+automatically unregister the bonding device as well. Thus,
+we may end up unregistering the bonding device twice.
 
-  which lock already depends on the new lock.
+Workaround this special case by checking reg_state.
 
-  the existing dependency chain (in reverse order) is:
-
-  -> #2 (fs_reclaim){+.+.}-{0:0}:
-	 __lock_acquire+0x56f/0xaa0
-	 lock_acquire+0xa3/0x440
-	 fs_reclaim_acquire.part.0+0x25/0x30
-	 __kmalloc_track_caller+0x49/0x330
-	 kstrdup+0x2e/0x60
-	 __kernfs_new_node.constprop.0+0x44/0x250
-	 kernfs_new_node+0x25/0x50
-	 kernfs_create_link+0x34/0xa0
-	 sysfs_do_create_link_sd+0x5e/0xd0
-	 btrfs_sysfs_add_devices_dir+0x65/0x100 [btrfs]
-	 btrfs_init_new_device+0x44c/0x12b0 [btrfs]
-	 btrfs_ioctl+0xc3c/0x25c0 [btrfs]
-	 ksys_ioctl+0x68/0xa0
-	 __x64_sys_ioctl+0x16/0x20
-	 do_syscall_64+0x50/0xe0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  -> #1 (&fs_info->chunk_mutex){+.+.}-{3:3}:
-	 __lock_acquire+0x56f/0xaa0
-	 lock_acquire+0xa3/0x440
-	 __mutex_lock+0xa0/0xaf0
-	 btrfs_chunk_alloc+0x137/0x3e0 [btrfs]
-	 find_free_extent+0xb44/0xfb0 [btrfs]
-	 btrfs_reserve_extent+0x9b/0x180 [btrfs]
-	 btrfs_alloc_tree_block+0xc1/0x350 [btrfs]
-	 alloc_tree_block_no_bg_flush+0x4a/0x60 [btrfs]
-	 __btrfs_cow_block+0x143/0x7a0 [btrfs]
-	 btrfs_cow_block+0x15f/0x310 [btrfs]
-	 push_leaf_right+0x150/0x240 [btrfs]
-	 split_leaf+0x3cd/0x6d0 [btrfs]
-	 btrfs_search_slot+0xd14/0xf70 [btrfs]
-	 btrfs_insert_empty_items+0x64/0xc0 [btrfs]
-	 __btrfs_commit_inode_delayed_items+0xb2/0x840 [btrfs]
-	 btrfs_async_run_delayed_root+0x10e/0x1d0 [btrfs]
-	 btrfs_work_helper+0x2f9/0x650 [btrfs]
-	 process_one_work+0x22c/0x600
-	 worker_thread+0x50/0x3b0
-	 kthread+0x137/0x150
-	 ret_from_fork+0x1f/0x30
-
-  -> #0 (&delayed_node->mutex){+.+.}-{3:3}:
-	 check_prev_add+0x98/0xa20
-	 validate_chain+0xa8c/0x2a00
-	 __lock_acquire+0x56f/0xaa0
-	 lock_acquire+0xa3/0x440
-	 __mutex_lock+0xa0/0xaf0
-	 __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
-	 btrfs_evict_inode+0x3bf/0x560 [btrfs]
-	 evict+0xd6/0x1c0
-	 dispose_list+0x48/0x70
-	 prune_icache_sb+0x54/0x80
-	 super_cache_scan+0x121/0x1a0
-	 do_shrink_slab+0x175/0x420
-	 shrink_slab+0xb1/0x2e0
-	 shrink_node+0x192/0x600
-	 balance_pgdat+0x31f/0x750
-	 kswapd+0x206/0x510
-	 kthread+0x137/0x150
-	 ret_from_fork+0x1f/0x30
-
-  other info that might help us debug this:
-
-  Chain exists of:
-    &delayed_node->mutex --> &fs_info->chunk_mutex --> fs_reclaim
-
-   Possible unsafe locking scenario:
-
-	 CPU0                    CPU1
-	 ----                    ----
-    lock(fs_reclaim);
-				 lock(&fs_info->chunk_mutex);
-				 lock(fs_reclaim);
-    lock(&delayed_node->mutex);
-
-   *** DEADLOCK ***
-
-  3 locks held by kswapd0/75:
-   #0: ffffffff8b0c8040 (fs_reclaim){+.+.}-{0:0}, at: __fs_reclaim_acquire+0x5/0x30
-   #1: ffffffff8b0b50b8 (shrinker_rwsem){++++}-{3:3}, at: shrink_slab+0x54/0x2e0
-   #2: ffffa040e057c0e8 (&type->s_umount_key#26){++++}-{3:3}, at: trylock_super+0x16/0x50
-
-  stack backtrace:
-  CPU: 2 PID: 75 Comm: kswapd0 Not tainted 5.8.0-rc6-default+ #1191
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
-  Call Trace:
-   dump_stack+0x78/0xa0
-   check_noncircular+0x16f/0x190
-   check_prev_add+0x98/0xa20
-   validate_chain+0xa8c/0x2a00
-   __lock_acquire+0x56f/0xaa0
-   lock_acquire+0xa3/0x440
-   ? __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
-   __mutex_lock+0xa0/0xaf0
-   ? __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
-   ? __lock_acquire+0x56f/0xaa0
-   ? __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
-   ? lock_acquire+0xa3/0x440
-   ? btrfs_evict_inode+0x138/0x560 [btrfs]
-   ? btrfs_evict_inode+0x2fe/0x560 [btrfs]
-   ? __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
-   __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
-   btrfs_evict_inode+0x3bf/0x560 [btrfs]
-   evict+0xd6/0x1c0
-   dispose_list+0x48/0x70
-   prune_icache_sb+0x54/0x80
-   super_cache_scan+0x121/0x1a0
-   do_shrink_slab+0x175/0x420
-   shrink_slab+0xb1/0x2e0
-   shrink_node+0x192/0x600
-   balance_pgdat+0x31f/0x750
-   kswapd+0x206/0x510
-   ? _raw_spin_unlock_irqrestore+0x3e/0x50
-   ? finish_wait+0x90/0x90
-   ? balance_pgdat+0x750/0x750
-   kthread+0x137/0x150
-   ? kthread_stop+0x2a0/0x2a0
-   ret_from_fork+0x1f/0x30
-
-This is because we're holding the chunk_mutex while adding this device
-and adding its sysfs entries.  We actually hold different locks in
-different places when calling this function, the dev_replace semaphore
-for instance in dev replace, so instead of moving this call around
-simply wrap it's operations in NOFS.
-
-CC: stable@vger.kernel.org # 4.14+
-Reported-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 9b5e383c11b0 ("net: Introduce unregister_netdevice_many()")
+Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Cc: Andy Gospodarek <andy@greyhouse.net>
+Cc: Jay Vosburgh <j.vosburgh@gmail.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/sysfs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/bonding/bond_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/sysfs.c b/fs/btrfs/sysfs.c
-index f05341bda1d14..383546ff62f04 100644
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -25,6 +25,7 @@
- #include <linux/bug.h>
- #include <linux/genhd.h>
- #include <linux/debugfs.h>
-+#include <linux/sched/mm.h>
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 9ddbafdca3b05..a6d8d3b3c903d 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2010,7 +2010,8 @@ static int  bond_release_and_destroy(struct net_device *bond_dev,
+ 	int ret;
  
- #include "ctree.h"
- #include "disk-io.h"
-@@ -749,7 +750,9 @@ int btrfs_sysfs_add_device_link(struct btrfs_fs_devices *fs_devices,
- {
- 	int error = 0;
- 	struct btrfs_device *dev;
-+	unsigned int nofs_flag;
- 
-+	nofs_flag = memalloc_nofs_save();
- 	list_for_each_entry(dev, &fs_devices->devices, dev_list) {
- 		struct hd_struct *disk;
- 		struct kobject *disk_kobj;
-@@ -768,6 +771,7 @@ int btrfs_sysfs_add_device_link(struct btrfs_fs_devices *fs_devices,
- 		if (error)
- 			break;
- 	}
-+	memalloc_nofs_restore(nofs_flag);
- 
- 	return error;
- }
+ 	ret = __bond_release_one(bond_dev, slave_dev, false, true);
+-	if (ret == 0 && !bond_has_slaves(bond)) {
++	if (ret == 0 && !bond_has_slaves(bond) &&
++	    bond_dev->reg_state != NETREG_UNREGISTERING) {
+ 		bond_dev->priv_flags |= IFF_DISABLE_NETPOLL;
+ 		netdev_info(bond_dev, "Destroying bond %s\n",
+ 			    bond_dev->name);
 -- 
 2.25.1
 
