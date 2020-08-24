@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E41AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EA1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D865C2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15062207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262354;
-	bh=8F8FTkw1me5mQVKEojIkOg3nYF6zXiP47ek1mH2mp4s=;
+	s=default; t=1598262361;
+	bh=R1B5YlnuzoIxPenPcQddKaeKp1L2RjlrEpwuGhilwK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vUr7I4NQey3BCQ2UJB5MZpwsIPPSWS2OZx++5Rjdb91qEtGgjUUAYiBmbJELJqgdV
-	 W+LqBV92vGCvX91EhRkFTdoL8IkosBrrxNm5YtR0rCj2Mo8dNRUJ+X4+Cu7BZu/BxR
-	 XgI0s5dJgGb3Zzis7Ly+Ku5sTUyJj83+BZ0sEltU=
+	b=Ew06BAerTCP1JtJVeAr5FRCQTIY4zLK78Vx+lnK0EqNhI1J2IkQR6clmjBsb5SuSz
+	 HgOjfGiZlz7t3iUoKz+1TnuLNmepdC4LP9kOAhlR7U/0gWEf30MqTZjLrCws2eyw8n
+	 n9mcndd6t1uE0QenGbSC8aNnnvi6PhLvaEnXRUXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgHXJpx (ORCPT
+        id S1729423AbgHXJqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:45:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35128 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:46:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbgHXImj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:42:39 -0400
+        id S1728623AbgHXImb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:42:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27D262074D;
-        Mon, 24 Aug 2020 08:42:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42BBD2074D;
+        Mon, 24 Aug 2020 08:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258558;
-        bh=8F8FTkw1me5mQVKEojIkOg3nYF6zXiP47ek1mH2mp4s=;
+        s=default; t=1598258550;
+        bh=R1B5YlnuzoIxPenPcQddKaeKp1L2RjlrEpwuGhilwK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D1Q4AMz/J+t+HXR7rASFne3M+xJoxHnEuZ5xBxsDJfFmKIJO0nJawHoVzRngHqHU/
-         aPltXRsvAgXaKw0kzThvdmrXIf5Sm3wUT+A1pmQ/j8UrzedD96HxPqeA08QBD+PHoF
-         xMXVgPXXG0cF8weliylL2QK7cgeXAMPWr7uNfFbA=
+        b=UmT3e0Y4sfSINf3H6JMwQShFutIPScSqLTDvVMmog8TmsJyrrHQUhRsS0t1Rl4noO
+         1OCFDO+I3uL6qNpiRVLZJPdFdkgS49m6jIJSFy9gSeVmjOa8waEHNH6JtnevhU00LD
+         5HZ/WL5590qw1c36tWpwUEwl6TS4a2vwpNEM01CA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhiyi Guo <zhguo@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 088/124] vfio/type1: Add proper error unwind for vfio_iommu_replay()
-Date:   Mon, 24 Aug 2020 10:30:22 +0200
-Message-Id: <20200824082413.745072744@linuxfoundation.org>
+Subject: [PATCH 5.7 085/124] s390/ptrace: fix storage key handling
+Date:   Mon, 24 Aug 2020 10:30:19 +0200
+Message-Id: <20200824082413.594160646@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -61,162 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Heiko Carstens <hca@linux.ibm.com>
 
-[ Upstream commit aae7a75a821a793ed6b8ad502a5890fb8e8f172d ]
+[ Upstream commit fd78c59446b8d050ecf3e0897c5a486c7de7c595 ]
 
-The vfio_iommu_replay() function does not currently unwind on error,
-yet it does pin pages, perform IOMMU mapping, and modify the vfio_dma
-structure to indicate IOMMU mapping.  The IOMMU mappings are torn down
-when the domain is destroyed, but the other actions go on to cause
-trouble later.  For example, the iommu->domain_list can be empty if we
-only have a non-IOMMU backed mdev attached.  We don't currently check
-if the list is empty before getting the first entry in the list, which
-leads to a bogus domain pointer.  If a vfio_dma entry is erroneously
-marked as iommu_mapped, we'll attempt to use that bogus pointer to
-retrieve the existing physical page addresses.
+The key member of the runtime instrumentation control block contains
+only the access key, not the complete storage key. Therefore the value
+must be shifted by four bits. Since existing user space does not
+necessarily query and set the access key correctly, just ignore the
+user space provided key and use the correct one.
+Note: this is only relevant for debugging purposes in case somebody
+compiles a kernel with a default storage access key set to a value not
+equal to zero.
 
-This is the scenario that uncovered this issue, attempting to hot-add
-a vfio-pci device to a container with an existing mdev device and DMA
-mappings, one of which could not be pinned, causing a failure adding
-the new group to the existing container and setting the conditions
-for a subsequent attempt to explode.
-
-To resolve this, we can first check if the domain_list is empty so
-that we can reject replay of a bogus domain, should we ever encounter
-this inconsistent state again in the future.  The real fix though is
-to add the necessary unwind support, which means cleaning up the
-current pinning if an IOMMU mapping fails, then walking back through
-the r-b tree of DMA entries, reading from the IOMMU which ranges are
-mapped, and unmapping and unpinning those ranges.  To be able to do
-this, we also defer marking the DMA entry as IOMMU mapped until all
-entries are processed, in order to allow the unwind to know the
-disposition of each entry.
-
-Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
-Reported-by: Zhiyi Guo <zhguo@redhat.com>
-Tested-by: Zhiyi Guo <zhguo@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Fixes: 262832bc5acd ("s390/ptrace: add runtime instrumention register get/set")
+Reported-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/vfio_iommu_type1.c | 71 ++++++++++++++++++++++++++++++---
- 1 file changed, 66 insertions(+), 5 deletions(-)
+ arch/s390/kernel/ptrace.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index cc1d64765ce79..c244e0ecf9f42 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -1149,13 +1149,16 @@ static int vfio_bus_type(struct device *dev, void *data)
- static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 			     struct vfio_domain *domain)
- {
--	struct vfio_domain *d;
-+	struct vfio_domain *d = NULL;
- 	struct rb_node *n;
- 	unsigned long limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
- 	int ret;
- 
- 	/* Arbitrarily pick the first domain in the list for lookups */
--	d = list_first_entry(&iommu->domain_list, struct vfio_domain, next);
-+	if (!list_empty(&iommu->domain_list))
-+		d = list_first_entry(&iommu->domain_list,
-+				     struct vfio_domain, next);
-+
- 	n = rb_first(&iommu->dma_list);
- 
- 	for (; n; n = rb_next(n)) {
-@@ -1173,6 +1176,11 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 				phys_addr_t p;
- 				dma_addr_t i;
- 
-+				if (WARN_ON(!d)) { /* mapped w/o a domain?! */
-+					ret = -EINVAL;
-+					goto unwind;
-+				}
-+
- 				phys = iommu_iova_to_phys(d->domain, iova);
- 
- 				if (WARN_ON(!phys)) {
-@@ -1202,7 +1210,7 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 				if (npage <= 0) {
- 					WARN_ON(!npage);
- 					ret = (int)npage;
--					return ret;
-+					goto unwind;
- 				}
- 
- 				phys = pfn << PAGE_SHIFT;
-@@ -1211,14 +1219,67 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 
- 			ret = iommu_map(domain->domain, iova, phys,
- 					size, dma->prot | domain->prot);
--			if (ret)
--				return ret;
-+			if (ret) {
-+				if (!dma->iommu_mapped)
-+					vfio_unpin_pages_remote(dma, iova,
-+							phys >> PAGE_SHIFT,
-+							size >> PAGE_SHIFT,
-+							true);
-+				goto unwind;
-+			}
- 
- 			iova += size;
- 		}
-+	}
-+
-+	/* All dmas are now mapped, defer to second tree walk for unwind */
-+	for (n = rb_first(&iommu->dma_list); n; n = rb_next(n)) {
-+		struct vfio_dma *dma = rb_entry(n, struct vfio_dma, node);
-+
- 		dma->iommu_mapped = true;
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index e007224b65bb2..a266ffed04df5 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -1311,7 +1311,6 @@ static bool is_ri_cb_valid(struct runtime_instr_cb *cb)
+ 		cb->pc == 1 &&
+ 		cb->qc == 0 &&
+ 		cb->reserved2 == 0 &&
+-		cb->key == PAGE_DEFAULT_KEY &&
+ 		cb->reserved3 == 0 &&
+ 		cb->reserved4 == 0 &&
+ 		cb->reserved5 == 0 &&
+@@ -1375,7 +1374,11 @@ static int s390_runtime_instr_set(struct task_struct *target,
+ 		kfree(data);
+ 		return -EINVAL;
  	}
-+
- 	return 0;
-+
-+unwind:
-+	for (; n; n = rb_prev(n)) {
-+		struct vfio_dma *dma = rb_entry(n, struct vfio_dma, node);
-+		dma_addr_t iova;
-+
-+		if (dma->iommu_mapped) {
-+			iommu_unmap(domain->domain, dma->iova, dma->size);
-+			continue;
-+		}
-+
-+		iova = dma->iova;
-+		while (iova < dma->iova + dma->size) {
-+			phys_addr_t phys, p;
-+			size_t size;
-+			dma_addr_t i;
-+
-+			phys = iommu_iova_to_phys(domain->domain, iova);
-+			if (!phys) {
-+				iova += PAGE_SIZE;
-+				continue;
-+			}
-+
-+			size = PAGE_SIZE;
-+			p = phys + size;
-+			i = iova + size;
-+			while (i < dma->iova + dma->size &&
-+			       p == iommu_iova_to_phys(domain->domain, i)) {
-+				size += PAGE_SIZE;
-+				p += PAGE_SIZE;
-+				i += PAGE_SIZE;
-+			}
-+
-+			iommu_unmap(domain->domain, iova, size);
-+			vfio_unpin_pages_remote(dma, iova, phys >> PAGE_SHIFT,
-+						size >> PAGE_SHIFT, true);
-+		}
-+	}
-+
-+	return ret;
- }
- 
- /*
+-
++	/*
++	 * Override access key in any case, since user space should
++	 * not be able to set it, nor should it care about it.
++	 */
++	ri_cb.key = PAGE_DEFAULT_KEY >> 4;
+ 	preempt_disable();
+ 	if (!target->thread.ri_cb)
+ 		target->thread.ri_cb = data;
 -- 
 2.25.1
 
