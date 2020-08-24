@@ -2,100 +2,99 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B17D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF28C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 917F12067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108502067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:46:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598287564;
+	bh=4TG4KMIY0v5Q13GLnA/64q9bgsmokJekESKQfdHsjfM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zgMdwcNS6HxEmtPBJDXwU4mU4CEotxPFlqDjlcoog6EYbmgfVyVedEAkqKxpEGGV6
+	 nM3HmG1QgvdiEmnw27p8DLuhc1qMS1WPi4WX4bTHvqJoqT10QpfqGYzue9aYfBJgLQ
+	 OD9dMp++NGFpYHv51zvuzb02PbfLal6Uhwjo3JZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgHXQpg (ORCPT
+        id S1728836AbgHXQqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:45:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58018 "EHLO mx2.suse.de"
+        Mon, 24 Aug 2020 12:46:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728803AbgHXQox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:44:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3C9E7AC46;
-        Mon, 24 Aug 2020 16:45:22 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 52A8BDA730; Mon, 24 Aug 2020 18:43:44 +0200 (CEST)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 5.9-rc3
-Date:   Mon, 24 Aug 2020 18:43:43 +0200
-Message-Id: <cover.1598283719.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.25.0
+        id S1728586AbgHXQjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:39:23 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A33D22CB1;
+        Mon, 24 Aug 2020 16:39:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598287163;
+        bh=4TG4KMIY0v5Q13GLnA/64q9bgsmokJekESKQfdHsjfM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ooHO/LAYaVVxBXlO4WkbAZ74n6SUBGoWdlBb8lf624HN3fx1zge4ugzww+plaDIht
+         iAqK7JP55N6XGT1OvzPjr2VATvfvf42qYBfOc6EAIVujCw474LFsOkdKJp2YsqbULN
+         7979X0Satwtymic4d19z63+YvOvnbHqsxHdpdV6E=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/11] s390/cio: add cond_resched() in the slow_eval_known_fn() loop
+Date:   Mon, 24 Aug 2020 12:39:09 -0400
+Message-Id: <20200824163914.607152-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200824163914.607152-1-sashal@kernel.org>
+References: <20200824163914.607152-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Vineeth Vijayan <vneethv@linux.ibm.com>
 
-a few more fixes. Please pull, Thanks.
+[ Upstream commit 0b8eb2ee9da1e8c9b8082f404f3948aa82a057b2 ]
 
-- fix swapfile activation on subvolumes with deleted snapshots
+The scanning through subchannels during the time of an event could
+take significant amount of time in case of platforms with lots of
+known subchannels. This might result in higher scheduling latencies
+for other tasks especially on systems with a single CPU. Add
+cond_resched() call, as the loop in slow_eval_known_fn() can be
+executed for a longer duration.
 
-- error value mixup when removing directory entries from tree log
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/cio/css.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-- fix lzo compression level reset after previous level setting
+diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
+index dadff1838fec1..e2026d54dd375 100644
+--- a/drivers/s390/cio/css.c
++++ b/drivers/s390/cio/css.c
+@@ -581,6 +581,11 @@ static int slow_eval_known_fn(struct subchannel *sch, void *data)
+ 		rc = css_evaluate_known_subchannel(sch, 1);
+ 		if (rc == -EAGAIN)
+ 			css_schedule_eval(sch->schid);
++		/*
++		 * The loop might take long time for platforms with lots of
++		 * known devices. Allow scheduling here.
++		 */
++		cond_resched();
+ 	}
+ 	return 0;
+ }
+-- 
+2.25.1
 
-- fix space cache memory leak after transaction abort
-
-- fix const function attribute
-
-- more error handling improvements
-
-----------------------------------------------------------------
-The following changes since commit c57dd1f2f6a7cd1bb61802344f59ccdc5278c983:
-
-  btrfs: trim: fix underflow in trim length to prevent access beyond device boundary (2020-08-12 10:15:58 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.9-rc2-tag
-
-for you to fetch changes up to a84d5d429f9eb56f81b388609841ed993f0ddfca:
-
-  btrfs: detect nocow for swap after snapshot delete (2020-08-21 12:21:23 +0200)
-
-----------------------------------------------------------------
-Boris Burkov (1):
-      btrfs: detect nocow for swap after snapshot delete
-
-David Sterba (1):
-      btrfs: use the correct const function attribute for btrfs_get_num_csums
-
-Filipe Manana (1):
-      btrfs: fix space cache memory leak after transaction abort
-
-Johannes Thumshirn (1):
-      btrfs: handle errors from async submission
-
-Josef Bacik (1):
-      btrfs: check the right error variable in btrfs_del_dir_entries_in_log
-
-Marcos Paulo de Souza (1):
-      btrfs: reset compression level for lzo on remount
-
- fs/btrfs/ctree.c            |  2 +-
- fs/btrfs/ctree.h            |  6 +++---
- fs/btrfs/disk-io.c          |  1 +
- fs/btrfs/extent-tree.c      | 17 +++++++++++------
- fs/btrfs/file.c             |  2 +-
- fs/btrfs/free-space-cache.c |  2 +-
- fs/btrfs/inode.c            | 29 ++++++++++++++---------------
- fs/btrfs/super.c            |  1 +
- fs/btrfs/tree-log.c         | 10 ++++++----
- 9 files changed, 39 insertions(+), 31 deletions(-)
