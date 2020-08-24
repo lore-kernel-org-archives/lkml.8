@@ -2,146 +2,234 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD11CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E949CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD6892074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCCE02074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:44:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QhwJdMUF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RG0osOb6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgHXLn7 (ORCPT
+        id S1726964AbgHXLoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:43:59 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55916 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgHXLn6 (ORCPT
+        Mon, 24 Aug 2020 07:44:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:44642 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726862AbgHXLoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:43:58 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07OBhj8d022877;
-        Mon, 24 Aug 2020 11:43:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=ENhKfqoc7RZ3alnPL8Dsu7Y/MFA2nBwzyI61xAxBZi4=;
- b=QhwJdMUF6JyInRnY45/J0LoShMw9LuxGql3s61iV0Ny1+ktHzIfRIuwcIDjOFyiTxHc9
- w+/0MV0Y/Kpu9TCQ0YVlWYEeI0l8HdljfRxJJUpqI8cCGaesLFrhySiXA2feHc1Sc4tp
- hv2eOoF5x6KzAWhjATXYJF9igy7SAD+XCJgLdmqCF2oFtr0zfuKnj84XKbMcFWldxvG/
- fgV7yldus/Hv247dY7pKTOPmkLjB3lhsPYydNhQwNZ4hPQTVCUt3Ldng6rkgFsJl4/xM
- Vy9v14cZx36ClscwKgVZmd1i43uucWAwgUtTq5//XOMLGSV8pIjMwLjFEVc9xULz/hTO Kw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 333dbrm1sq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Aug 2020 11:43:45 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07OBfE5Q152972;
-        Mon, 24 Aug 2020 11:43:44 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 333r9h3a14-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Aug 2020 11:43:44 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07OBhgEU009699;
-        Mon, 24 Aug 2020 11:43:42 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Aug 2020 04:43:41 -0700
-Date:   Mon, 24 Aug 2020 14:43:32 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Tomer Samara <tomersamara98@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Todd Kjos <tkjos@android.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Riley Andrews <riandrews@android.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Hridya Valsaraju <hridya@google.com>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Martijn Coenen <maco@android.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [PATCH v4 2/2] staging: android: Remove BUG from
- ion_system_heap.c
-Message-ID: <20200824114332.GN5493@kadam>
-References: <cover.1598023523.git.tomersamara98@gmail.com>
- <a39407f84031eaeed5e65a7aab515a079edf5fcc.1598023524.git.tomersamara98@gmail.com>
- <3eba90dc-128f-49da-41a6-81494653d535@infradead.org>
- <20200824112457.GI1793@kadam>
- <20200824112708.GM5493@kadam>
+        Mon, 24 Aug 2020 07:44:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598269457;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MfpV3F203s4Q5WIfbp3LWTnnzoF+cnouMwo8pG1/1kU=;
+        b=RG0osOb6C7KFTNUFoNb3QMxxPSqJWMtOIRDNENX8i888eLz/4mPwtD7Kg3fzJpQsHVUprZ
+        wtz7C67ESUGN/sFIQdY9Mk63jFfKYEF6nAXYbjWsU1CZ0czZO2KTHHJg2gOBM2jdX4Stsj
+        ZO4Frg7TyC/fKtyDh/CYgOhaU4KgmUc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-514-8vo1trLeOMSDM4ElnaAnTA-1; Mon, 24 Aug 2020 07:44:15 -0400
+X-MC-Unique: 8vo1trLeOMSDM4ElnaAnTA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35CCD807331;
+        Mon, 24 Aug 2020 11:44:14 +0000 (UTC)
+Received: from starship (unknown [10.35.206.221])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D53E42BFBF;
+        Mon, 24 Aug 2020 11:43:31 +0000 (UTC)
+Message-ID: <4858fb924edbda58b6c46bdd4ed803bda0ceebbb.camel@redhat.com>
+Subject: Re: [PATCH v2 3/7] KVM: SVM: refactor msr permission bitmap
+ allocation
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Date:   Mon, 24 Aug 2020 14:43:22 +0300
+In-Reply-To: <CALMp9eRoYLqFEGqcVf2tExGvG4bJwy6CURrHiAnYqQ9TrS4eDg@mail.gmail.com>
+References: <20200820133339.372823-1-mlevitsk@redhat.com>
+         <20200820133339.372823-4-mlevitsk@redhat.com>
+         <CALMp9eRoYLqFEGqcVf2tExGvG4bJwy6CURrHiAnYqQ9TrS4eDg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824112708.GM5493@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240093
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240093
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 02:27:08PM +0300, Dan Carpenter wrote:
-> On Mon, Aug 24, 2020 at 02:24:57PM +0300, Dan Carpenter wrote:
-> > On Fri, Aug 21, 2020 at 09:25:26AM -0700, Randy Dunlap wrote:
-> > > On 8/21/20 8:28 AM, Tomer Samara wrote:
-> > > > Remove BUG() from ion_sytem_heap.c
-> > > > 
-> > > > this fix the following checkpatch issue:
-> > > > Avoid crashing the kernel - try using WARN_ON &
-> > > > recovery code ratherthan BUG() or BUG_ON().
-> > > > 
-> > > > Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
-> > > > ---
-> > > >  drivers/staging/android/ion/ion_system_heap.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
-> > > > index eac0632ab4e8..00d6154aec34 100644
-> > > > --- a/drivers/staging/android/ion/ion_system_heap.c
-> > > > +++ b/drivers/staging/android/ion/ion_system_heap.c
-> > > > @@ -30,7 +30,7 @@ static int order_to_index(unsigned int order)
-> > > >  	for (i = 0; i < NUM_ORDERS; i++)
-> > > >  		if (order == orders[i])
-> > > >  			return i;
-> > > > -	BUG();
-> > > > +	/* This is impossible. */
-> > > >  	return -1;
-> > > >  }
-> > > 
-> > > Hi,
-> > > Please explain why this is impossible.
-> > > 
-> > > If some caller calls order_to_index(5), it will return -1, yes?
-> > > 
+On Thu, 2020-08-20 at 14:26 -0700, Jim Mattson wrote:
+> On Thu, Aug 20, 2020 at 6:34 AM Maxim Levitsky <mlevitsk@redhat.com> wrote:
+> > Replace svm_vcpu_init_msrpm with svm_vcpu_alloc_msrpm, that also allocates
+> > the msr bitmap and add svm_vcpu_free_msrpm to free it.
 > > 
-> > I was happy enough with the comment as-is given that I suggested it.
-> > But an alternative comment could be "/* This is impossible.
-> > We always pass valid values to this function. */
+> > This will be used later to move the nested msr permission bitmap allocation
+> > to nested.c
+> > 
+> > No functional change intended.
+> > 
+> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > ---
+> >  arch/x86/kvm/svm/svm.c | 45 +++++++++++++++++++++---------------------
+> >  1 file changed, 23 insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> > index d33013b9b4d7..7bb094bf6494 100644
+> > --- a/arch/x86/kvm/svm/svm.c
+> > +++ b/arch/x86/kvm/svm/svm.c
+> > @@ -609,18 +609,29 @@ static void set_msr_interception(u32 *msrpm, unsigned msr,
+> >         msrpm[offset] = tmp;
+> >  }
+> > 
+> > -static void svm_vcpu_init_msrpm(u32 *msrpm)
+> > +static u32 *svm_vcpu_alloc_msrpm(void)
 > 
-> Another option is to just change the BUG_ON() to a WARN_ON().  I feel
-> like that communicates the same thing but makes checkpatch happy.
+> I prefer the original name, since this function does more than allocation.
+But it also allocates it. I don't mind using the old name though.
+> 
+> >  {
+> >         int i;
+> > +       u32 *msrpm;
+> > +       struct page *pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
+> > +
+> > +       if (!pages)
+> > +               return NULL;
+> > 
+> > +       msrpm = page_address(pages);
+> >         memset(msrpm, 0xff, PAGE_SIZE * (1 << MSRPM_ALLOC_ORDER));
+> > 
+> >         for (i = 0; direct_access_msrs[i].index != MSR_INVALID; i++) {
+> >                 if (!direct_access_msrs[i].always)
+> >                         continue;
+> > -
+> >                 set_msr_interception(msrpm, direct_access_msrs[i].index, 1, 1);
+> >         }
+> > +       return msrpm;
+> > +}
+> > +
+> > +static void svm_vcpu_free_msrpm(u32 *msrpm)
+> > +{
+> > +       __free_pages(virt_to_page(msrpm), MSRPM_ALLOC_ORDER);
+> >  }
+> > 
+> >  static void add_msr_offset(u32 offset)
+> > @@ -1172,9 +1183,7 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+> >  {
+> >         struct vcpu_svm *svm;
+> >         struct page *vmcb_page;
+> > -       struct page *msrpm_pages;
+> >         struct page *hsave_page;
+> > -       struct page *nested_msrpm_pages;
+> >         int err;
+> > 
+> >         BUILD_BUG_ON(offsetof(struct vcpu_svm, vcpu) != 0);
+> > @@ -1185,21 +1194,13 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+> >         if (!vmcb_page)
+> >                 goto out;
+> > 
+> > -       msrpm_pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
+> > -       if (!msrpm_pages)
+> > -               goto free_page1;
+> > -
+> > -       nested_msrpm_pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
+> > -       if (!nested_msrpm_pages)
+> > -               goto free_page2;
+> > -
+> 
+> Reordering the allocations does seem like a functional change to me,
+> albeit one that should (hopefully) be benign. For example, if the
+> MSRPM_ALLOC_ORDER allocations fail, in the new version of the code,
+> the hsave_page will be cleared, but in the old version of the code, no
+> page would be cleared.
+Noted.
+> 
+> >         hsave_page = alloc_page(GFP_KERNEL_ACCOUNT);
+> 
+> Speaking of clearing pages, why not add __GFP_ZERO to the flags above
+> and skip the clear_page() call below?
+I haven't thought about it, I don't see a reason to not use __GFP_ZERO,
+but this is how the old code was.
 
-Actually earlier Greg pointed out that some systems have panic on warn
-so WARN_ON() doesn't work.  Just add the comment.
+> 
+> >         if (!hsave_page)
+> > -               goto free_page3;
+> > +               goto free_page1;
+> > 
+> >         err = avic_init_vcpu(svm);
+> >         if (err)
+> > -               goto free_page4;
+> > +               goto free_page2;
+> > 
+> >         /* We initialize this flag to true to make sure that the is_running
+> >          * bit would be set the first time the vcpu is loaded.
+> > @@ -1210,11 +1211,13 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+> >         svm->nested.hsave = page_address(hsave_page);
+> >         clear_page(svm->nested.hsave);
+> > 
+> > -       svm->msrpm = page_address(msrpm_pages);
+> > -       svm_vcpu_init_msrpm(svm->msrpm);
+> > +       svm->msrpm = svm_vcpu_alloc_msrpm();
+> > +       if (!svm->msrpm)
+> > +               goto free_page2;
+> > 
+> > -       svm->nested.msrpm = page_address(nested_msrpm_pages);
+> > -       svm_vcpu_init_msrpm(svm->nested.msrpm);
+> > +       svm->nested.msrpm = svm_vcpu_alloc_msrpm();
+> > +       if (!svm->nested.msrpm)
+> > +               goto free_page3;
+> > 
+> >         svm->vmcb = page_address(vmcb_page);
+> >         clear_page(svm->vmcb);
+> > @@ -1227,12 +1230,10 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+> > 
+> >         return 0;
+> > 
+> > -free_page4:
+> > -       __free_page(hsave_page);
+> >  free_page3:
+> > -       __free_pages(nested_msrpm_pages, MSRPM_ALLOC_ORDER);
+> > +       svm_vcpu_free_msrpm(svm->msrpm);
+> >  free_page2:
+> > -       __free_pages(msrpm_pages, MSRPM_ALLOC_ORDER);
+> > +       __free_page(hsave_page);
+> >  free_page1:
+> >         __free_page(vmcb_page);
+> >  out:
+> 
+> While you're here, could you improve these labels? Coding-style.rst says:
+> 
+> Choose label names which say what the goto does or why the goto exists.  An
+> example of a good name could be ``out_free_buffer:`` if the goto frees
+> ``buffer``.
+> Avoid using GW-BASIC names like ``err1:`` and ``err2:``, as you would have to
+> renumber them if you ever add or remove exit paths, and they make correctness
+> difficult to verify anyway.
+I noticed that and I agree. I'll do this in follow up patch.
 
-regards,
-dan carpenter
+Thanks for review,
+	Best regards,
+		Maxim Levitsky
+
+
+> 
+
 
