@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29347C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28721206F0
+	by mail.kernel.org (Postfix) with ESMTP id EF6E2206F0
 	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258916;
-	bh=wp8LIuscKuYSAmiPVftb+5sKuyKhkbhHTw8iaVTj5i4=;
+	s=default; t=1598258917;
+	bh=riN4z/mrdo2qC42KeSPF/qU3Hm3H0TkNahjQu/VUgaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vmbcSJqFwjbCovzc7ldHxr/v+ynyDuXG4ItGFNoh3ifV+cGR9BBWF6dOvNDI7MMpp
-	 8gYDuy2yB5AUt+1MOVpwM/q52aUQ0j+BVmdTs0e3WlOCcIUQvg0sm/LKbjahTJOlBl
-	 ETdOW5PCZpSjU0+JnERvNDvnBaTstludTtot6y4Q=
+	b=JHXL4PTCcjdejTWpzT5AlF0YNEoJcJgk6PjI3j+aSzNyn2YsR6TjzDIkASlyqW2xt
+	 N1a+J3B0nXTxgEMgWKK89lOo/omKpVAPO87LWhRhK2ce96ajeTqZqJPGW4FPz86/B7
+	 9sfe3d3sme5xX1MeK3uZEjHKSVRatlYWwMh+7jKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729561AbgHXIsc (ORCPT
+        id S1729571AbgHXIsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:48:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48924 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:48:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729528AbgHXIsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:48:09 -0400
+        id S1729103AbgHXIsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:48:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9951204FD;
-        Mon, 24 Aug 2020 08:48:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6382A206F0;
+        Mon, 24 Aug 2020 08:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258889;
-        bh=wp8LIuscKuYSAmiPVftb+5sKuyKhkbhHTw8iaVTj5i4=;
+        s=default; t=1598258891;
+        bh=riN4z/mrdo2qC42KeSPF/qU3Hm3H0TkNahjQu/VUgaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LLQDwEo2lO5wp3bHnA68BsccGixdvqLIrmJSCA5iU8wdWZmofIfw0WEuAflIiWauv
-         dAZL5kA76H+OePV7CR1t2G/3+KSvsiRbtqotvpAzMqG7ySPJ79G6o2cXpeLgRazC9c
-         fHcyHoYM8DNsV2SlUaLcrWe96Dhvwy1NBPBOt8K4=
+        b=YYIOwxs7+suwmTbpilYtysyiGgE9R+qipgiW1p0tdoET8OdiAdGzzZI7M6eja692M
+         N62T9a/WI7Fk1k9SsRB/DZNgw8sLJvW0+SQAGJJcX6yRzYTP4YCNpAaM+VTaSph8Us
+         YpFV0ZEaOvqwl/t2xL0sa9pUamFdmKBb+YjZJqJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 081/107] bonding: fix a potential double-unregister
-Date:   Mon, 24 Aug 2020 10:30:47 +0200
-Message-Id: <20200824082409.130142710@linuxfoundation.org>
+Subject: [PATCH 5.4 082/107] s390/runtime_instrumentation: fix storage key handling
+Date:   Mon, 24 Aug 2020 10:30:48 +0200
+Message-Id: <20200824082409.180331733@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -65,46 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Heiko Carstens <hca@linux.ibm.com>
 
-[ Upstream commit 832707021666411d04795c564a4adea5d6b94f17 ]
+[ Upstream commit 9eaba29c7985236e16468f4e6a49cc18cf01443e ]
 
-When we tear down a network namespace, we unregister all
-the netdevices within it. So we may queue a slave device
-and a bonding device together in the same unregister queue.
+The key member of the runtime instrumentation control block contains
+only the access key, not the complete storage key. Therefore the value
+must be shifted by four bits.
+Note: this is only relevant for debugging purposes in case somebody
+compiles a kernel with a default storage access key set to a value not
+equal to zero.
 
-If the only slave device is non-ethernet, it would
-automatically unregister the bonding device as well. Thus,
-we may end up unregistering the bonding device twice.
-
-Workaround this special case by checking reg_state.
-
-Fixes: 9b5e383c11b0 ("net: Introduce unregister_netdevice_many()")
-Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e4b8b3f33fca ("s390: add support for runtime instrumentation")
+Reported-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/s390/kernel/runtime_instr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 11c014586d466..ce829a7a92101 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2037,7 +2037,8 @@ static int bond_release_and_destroy(struct net_device *bond_dev,
- 	int ret;
+diff --git a/arch/s390/kernel/runtime_instr.c b/arch/s390/kernel/runtime_instr.c
+index 125c7f6e87150..1788a5454b6fc 100644
+--- a/arch/s390/kernel/runtime_instr.c
++++ b/arch/s390/kernel/runtime_instr.c
+@@ -57,7 +57,7 @@ static void init_runtime_instr_cb(struct runtime_instr_cb *cb)
+ 	cb->k = 1;
+ 	cb->ps = 1;
+ 	cb->pc = 1;
+-	cb->key = PAGE_DEFAULT_KEY;
++	cb->key = PAGE_DEFAULT_KEY >> 4;
+ 	cb->v = 1;
+ }
  
- 	ret = __bond_release_one(bond_dev, slave_dev, false, true);
--	if (ret == 0 && !bond_has_slaves(bond)) {
-+	if (ret == 0 && !bond_has_slaves(bond) &&
-+	    bond_dev->reg_state != NETREG_UNREGISTERING) {
- 		bond_dev->priv_flags |= IFF_DISABLE_NETPOLL;
- 		netdev_info(bond_dev, "Destroying bond\n");
- 		bond_remove_proc_entry(bond);
 -- 
 2.25.1
 
