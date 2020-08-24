@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CF8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A88402177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF68221E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258300;
-	bh=f3fVCrnyd6RLjHqgwPzYJEygHegsH91uj0rO+tkdHCo=;
+	s=default; t=1598258306;
+	bh=68+uDGRHiR1o4sreSUC+OlMMQwX6A8IQY+k1l9Klt4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M67OGC9K7Y/KmOB+VlVo5n6WjWHah9qGHaa8ok4VLUdeuKeWGv2dg7skAf3T/D9wH
-	 P595CrqY1jtdLvtDiZXX2JkxLh95ILtE+Ccsgbjq81mhOpTyE6DuEhD1b+P1/Ss8Pm
-	 THckdfvfaM8XwtdtvAwK4b2RQXVFP4l4A6B58zKQ=
+	b=1Dbe1Cau/tI/+j+OUbjunaSuQSD66lDH7mJyzEoZhcxUKxkXZPGBFZOpC7I4/oyjN
+	 Hx5Jnqx9ZOtNQe33ei+HmajFCdvBrzlp9qkQpxxUcX6hEF4FtTuJwrZLE4LOwgYKOo
+	 vtpsXlEqh+GFLBbUDRA/6mbOJiCZzJVX0KTGzkbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgHXIiT (ORCPT
+        id S1728521AbgHXIiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:38:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52224 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:38:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbgHXIiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:38:06 -0400
+        id S1727029AbgHXIiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:38:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF8D82177B;
-        Mon, 24 Aug 2020 08:38:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E01B722B47;
+        Mon, 24 Aug 2020 08:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258285;
-        bh=f3fVCrnyd6RLjHqgwPzYJEygHegsH91uj0rO+tkdHCo=;
+        s=default; t=1598258298;
+        bh=68+uDGRHiR1o4sreSUC+OlMMQwX6A8IQY+k1l9Klt4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q9EFd6OXbTCstxHn2QifuczQRELL9YNBwBlW78gQGEWb0rigfWBn+e6A/LgSkK6Dp
-         Km9RUVxujhXLirK2dJSrP5IT+nY+gmqXoJQMuEvs9Bwj+E26TiZ97wr1X22lZyQJyh
-         W/BeN2IX78wrM+pR/YWKXZYUKr65gJCmyYwCON8M=
+        b=Gf6CI+qWcRocvSmHUqeKc4dmLq7Jg1whnZYG98+eB9wpcs32YrH0sjkudByeVk3q1
+         ZYhAwXNMIQbH08gV1FEwx+Xw05+7yLOB918bvbzUynVZLPBNeiwQkBTIu3PYSX5VpL
+         WjKyL0wv7kPvWtKe/Zfj2JUA489HNio3gzVcI8w0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gabriele Paoloni <gabriele.paoloni@intel.com>,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.8 142/148] EDAC/{i7core,sb,pnd2,skx}: Fix error event severity
-Date:   Mon, 24 Aug 2020 10:30:40 +0200
-Message-Id: <20200824082420.823306113@linuxfoundation.org>
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 5.8 146/148] efi/libstub: Handle NULL cmdline
+Date:   Mon, 24 Aug 2020 10:30:44 +0200
+Message-Id: <20200824082421.017949583@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -60,86 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Luck <tony.luck@intel.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-commit 45bc6098a3e279d8e391d22428396687562797e2 upstream.
+commit a37ca6a2af9df2972372b918f09390c9303acfbd upstream.
 
-IA32_MCG_STATUS.RIPV indicates whether the return RIP value pushed onto
-the stack as part of machine check delivery is valid or not.
+Treat a NULL cmdline the same as empty. Although this is unlikely to
+happen in practice, the x86 kernel entry does check for NULL cmdline and
+handles it, so do it here as well.
 
-Various drivers copied a code fragment that uses the RIPV bit to
-determine the severity of the error as either HW_EVENT_ERR_UNCORRECTED
-or HW_EVENT_ERR_FATAL, but this check is reversed (marking errors where
-RIPV is set as "FATAL").
-
-Reverse the tests so that the error is marked fatal when RIPV is not set.
-
-Reported-by: Gabriele Paoloni <gabriele.paoloni@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
 Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200707194324.14884-1-tony.luck@intel.com
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Link: https://lore.kernel.org/r/20200729193300.598448-1-nivedita@alum.mit.edu
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/edac/i7core_edac.c |    4 ++--
- drivers/edac/pnd2_edac.c   |    2 +-
- drivers/edac/sb_edac.c     |    4 ++--
- drivers/edac/skx_common.c  |    4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/firmware/efi/libstub/efi-stub-helper.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/edac/i7core_edac.c
-+++ b/drivers/edac/i7core_edac.c
-@@ -1710,9 +1710,9 @@ static void i7core_mce_output_error(stru
- 	if (uncorrected_error) {
- 		core_err_cnt = 1;
- 		if (ripv)
--			tp_event = HW_EVENT_ERR_FATAL;
--		else
- 			tp_event = HW_EVENT_ERR_UNCORRECTED;
-+		else
-+			tp_event = HW_EVENT_ERR_FATAL;
- 	} else {
- 		tp_event = HW_EVENT_ERR_CORRECTED;
- 	}
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -1155,7 +1155,7 @@ static void pnd2_mce_output_error(struct
- 	u32 optypenum = GET_BITFIELD(m->status, 4, 6);
- 	int rc;
+--- a/drivers/firmware/efi/libstub/efi-stub-helper.c
++++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+@@ -187,10 +187,14 @@ int efi_printk(const char *fmt, ...)
+  */
+ efi_status_t efi_parse_options(char const *cmdline)
+ {
+-	size_t len = strlen(cmdline) + 1;
++	size_t len;
+ 	efi_status_t status;
+ 	char *str, *buf;
  
--	tp_event = uc_err ? (ripv ? HW_EVENT_ERR_FATAL : HW_EVENT_ERR_UNCORRECTED) :
-+	tp_event = uc_err ? (ripv ? HW_EVENT_ERR_UNCORRECTED : HW_EVENT_ERR_FATAL) :
- 						 HW_EVENT_ERR_CORRECTED;
- 
- 	/*
---- a/drivers/edac/sb_edac.c
-+++ b/drivers/edac/sb_edac.c
-@@ -2982,9 +2982,9 @@ static void sbridge_mce_output_error(str
- 	if (uncorrected_error) {
- 		core_err_cnt = 1;
- 		if (ripv) {
--			tp_event = HW_EVENT_ERR_FATAL;
--		} else {
- 			tp_event = HW_EVENT_ERR_UNCORRECTED;
-+		} else {
-+			tp_event = HW_EVENT_ERR_FATAL;
- 		}
- 	} else {
- 		tp_event = HW_EVENT_ERR_CORRECTED;
---- a/drivers/edac/skx_common.c
-+++ b/drivers/edac/skx_common.c
-@@ -493,9 +493,9 @@ static void skx_mce_output_error(struct
- 	if (uncorrected_error) {
- 		core_err_cnt = 1;
- 		if (ripv) {
--			tp_event = HW_EVENT_ERR_FATAL;
--		} else {
- 			tp_event = HW_EVENT_ERR_UNCORRECTED;
-+		} else {
-+			tp_event = HW_EVENT_ERR_FATAL;
- 		}
- 	} else {
- 		tp_event = HW_EVENT_ERR_CORRECTED;
++	if (!cmdline)
++		return EFI_SUCCESS;
++
++	len = strlen(cmdline) + 1;
+ 	status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, len, (void **)&buf);
+ 	if (status != EFI_SUCCESS)
+ 		return status;
 
 
