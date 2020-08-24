@@ -2,100 +2,168 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC8CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C44C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F74C206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:07:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzrIr48F"
+	by mail.kernel.org (Postfix) with ESMTP id 11310207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729515AbgHXJHR (ORCPT
+        id S1729360AbgHXJHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:07:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgHXJGr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:06:47 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB5D1C061575;
-        Mon, 24 Aug 2020 02:06:46 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id i13so3344351pjv.0;
-        Mon, 24 Aug 2020 02:06:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kp++64cFXoszqvdcGzZqbmMOiF0qCRzrPOcwqiRIH6Y=;
-        b=TzrIr48FY0zex/ejY2gCW04OU2O1usoehaBy5gcEmmrUyUYbvqvI+3oKvhhZQp4kyQ
-         mFTrCkSopwsB8H6TmtQZZFOpZmn282T/LKYkvzIZVfw3qherpuAR4bBMongjVlmYG+FK
-         cXP4C3lgSid/wpWk8JJnip1Rh0EXubRSbPzTETF0EjBeJAq/SrwPiKzQ7pBBdf6Qm3Mm
-         RHR+/V+FtgiCdlXbrFskyFGbtmiaJgZq3VAUvXokr3qrlYD2J9o/Tnpi5U/1GXTf6IG0
-         zoKDxyPlRjXLC9/zrfeIMABcsYZ8a2d829BOikzJpw0MzVUBnyLgBxpd0FW9y7s7uF5s
-         CDDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kp++64cFXoszqvdcGzZqbmMOiF0qCRzrPOcwqiRIH6Y=;
-        b=QGwzCqge6nL1cIDaUMMGkQnkp0mKYRjZXKLug7kelJaykUAJDqBbwFW9kFzZv3xdyy
-         dIoo6PHE69H/rQgTF5PxaYnC0lhnKnUU7HdGFfdHZvUcseCjB0FHKseWZhG4Wq8CA+fC
-         EaZHaA0TmuH8ztuRs6p/BDYHUv1dv2pYOawhQJQQyXiJzRiA/e6/Qw2t6AMHgfboUg4Y
-         3hv3Uh5zOWAS1Xpy2T8EwCYBmlmV4ZT2K1Dj8tmVnUhTuOuHPjLOgp84/14hjLXa4Ezr
-         g1Ur56OI0HVIGjXZvTEFztUiLrMFEgR8q38wNGmAZ6XeCLOjlbA+xkQUSex97QWXiRP7
-         ZMsA==
-X-Gm-Message-State: AOAM530UnBhblQIO60BGVtcO+0CRI6JLFbEMGvaq0KCBGCSkK+Hi8XoO
-        7NQSTP1jjQgFlAWhRxDKYkCJrx1qagM=
-X-Google-Smtp-Source: ABdhPJxc8UQkEFUD/7cHQQdo6BbNeb0PLjrl+ad28GepWqs3Ps+4ZyL+XjvIJB27Fk9NwthuMX9GJw==
-X-Received: by 2002:a17:902:7790:: with SMTP id o16mr2939439pll.299.1598260003543;
-        Mon, 24 Aug 2020 02:06:43 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:484:931d:1b34:35e8:fe10:8c7a])
-        by smtp.gmail.com with ESMTPSA id c20sm9220988pjv.31.2020.08.24.02.06.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 02:06:43 -0700 (PDT)
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-To:     jic23@kernel.org, matthias.bgg@gmail.com
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com,
-        benjamin.chao@mediatek.com
-Subject: [PATCH v3 0/2] iio: adc: mt6360: Add ADC driver for MT6360
-Date:   Mon, 24 Aug 2020 17:06:23 +0800
-Message-Id: <1598259985-12517-1-git-send-email-gene.chen.richtek@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 24 Aug 2020 05:07:24 -0400
+Received: from 8bytes.org ([81.169.241.247]:38408 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730530AbgHXI41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:27 -0400
+Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id A4EEAFF7;
+        Mon, 24 Aug 2020 10:56:19 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v6 53/76] x86/sev-es: Handle MMIO String Instructions
+Date:   Mon, 24 Aug 2020 10:54:48 +0200
+Message-Id: <20200824085511.7553-54-joro@8bytes.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
+References: <20200824085511.7553-1-joro@8bytes.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In-Reply-To: 
+From: Joerg Roedel <jroedel@suse.de>
 
-This patch series add MT6360 ADC support contains driver and testing document
+Add handling for emulation the MOVS instruction on MMIO regions, as done
+by the memcpy_toio() and memcpy_fromio() functions.
 
-Gene Chen (2)
-  iio: adc: mt6360: Add ADC driver for MT6360
-  Documentation: ABI: testing: mt6360: Add ADC sysfs guideline
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Link: https://lore.kernel.org/r/20200724160336.5435-53-joro@8bytes.org
+---
+ arch/x86/kernel/sev-es.c | 77 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
- Documentation/ABI/testing/sysfs-bus-iio-adc-mt6360 |   83 ++++
- drivers/iio/adc/Kconfig                            |   11 
- drivers/iio/adc/Makefile                           |    1 
- drivers/iio/adc/mt6360-adc.c                       |  359 +++++++++++++++++++++
- 4 files changed, 454 insertions(+)
-
-changelogs between v1 & v2
- - adc: use IIO_CHAN_INFO_PROCESSED only
- - adc: use devm_iio_triggered_buffer_setup
- - adc: use use s64 to record timestamp
-
-changelogs between v2 & v3
- - Rearrange include file order by alphabet
- - Set line length constraint below 100
- - Add Document for testing adc sysfs node guideline
- - Set compiler 64 bit aligned when handle iio timestamp
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index fa1fa55fd8e3..7bfd402c74e3 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -595,6 +595,73 @@ static enum es_result vc_handle_mmio_twobyte_ops(struct ghcb *ghcb,
+ 	return ret;
+ }
+ 
++/*
++ * The MOVS instruction has two memory operands, which raises the
++ * problem that it is not known whether the access to the source or the
++ * destination caused the #VC exception (and hence whether an MMIO read
++ * or write operation needs to be emulated).
++ *
++ * Instead of playing games with walking page-tables and trying to guess
++ * whether the source or destination is an MMIO range, split the move
++ * into two operations, a read and a write with only one memory operand.
++ * This will cause a nested #VC exception on the MMIO address which can
++ * then be handled.
++ *
++ * This implementation has the benefit that it also supports MOVS where
++ * source _and_ destination are MMIO regions.
++ *
++ * It will slow MOVS on MMIO down a lot, but in SEV-ES guests it is a
++ * rare operation. If it turns out to be a performance problem the split
++ * operations can be moved to memcpy_fromio() and memcpy_toio().
++ */
++static enum es_result vc_handle_mmio_movs(struct es_em_ctxt *ctxt,
++					  unsigned int bytes)
++{
++	unsigned long ds_base, es_base;
++	unsigned char *src, *dst;
++	unsigned char buffer[8];
++	enum es_result ret;
++	bool rep;
++	int off;
++
++	ds_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_DS);
++	es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
++
++	if (ds_base == -1L || es_base == -1L) {
++		ctxt->fi.vector = X86_TRAP_GP;
++		ctxt->fi.error_code = 0;
++		return ES_EXCEPTION;
++	}
++
++	src = ds_base + (unsigned char *)ctxt->regs->si;
++	dst = es_base + (unsigned char *)ctxt->regs->di;
++
++	ret = vc_read_mem(ctxt, src, buffer, bytes);
++	if (ret != ES_OK)
++		return ret;
++
++	ret = vc_write_mem(ctxt, dst, buffer, bytes);
++	if (ret != ES_OK)
++		return ret;
++
++	if (ctxt->regs->flags & X86_EFLAGS_DF)
++		off = -bytes;
++	else
++		off =  bytes;
++
++	ctxt->regs->si += off;
++	ctxt->regs->di += off;
++
++	rep = insn_has_rep_prefix(&ctxt->insn);
++	if (rep)
++		ctxt->regs->cx -= 1;
++
++	if (!rep || ctxt->regs->cx == 0)
++		return ES_OK;
++	else
++		return ES_RETRY;
++}
++
+ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
+ 				     struct es_em_ctxt *ctxt)
+ {
+@@ -655,6 +722,16 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
+ 		memcpy(reg_data, ghcb->shared_buffer, bytes);
+ 		break;
+ 
++		/* MOVS instruction */
++	case 0xa4:
++		bytes = 1;
++		fallthrough;
++	case 0xa5:
++		if (!bytes)
++			bytes = insn->opnd_bytes;
++
++		ret = vc_handle_mmio_movs(ctxt, bytes);
++		break;
+ 		/* Two-Byte Opcodes */
+ 	case 0x0f:
+ 		ret = vc_handle_mmio_twobyte_ops(ghcb, ctxt);
+-- 
+2.28.0
 
