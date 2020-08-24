@@ -2,55 +2,54 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 230C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECE022074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0A12087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258619;
-	bh=7BFDBi+tE/J6jvf0vG+BkFKA2VNwU/Y+dCrjgyHahTE=;
+	s=default; t=1598258622;
+	bh=kgwlQy3ZHZ1Z+O+p7uALrxALjfUCmg0CVvzjrzAfY5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dTLnguFWqlzvky49o1swBwXjdyKsXYrLUD9p0sclJh3xCT2Ziq6+gV3BgaB3j5DKA
-	 zw0Agb2xB3vHvJifQMoFqb7Q5JIBE4l7IFwhG4v2jyBD9315yohCWmyxa31aXuLkoZ
-	 r30lJFwcXi6aiyTQ7WsbOac40f4+q1qXjBcsKvBA=
+	b=V69TuPqWMzCfXe3cvTwEyGl+dVh4gMX3g5OXnt6pbuEn/TzipaUvRBbLtbtlfUkyd
+	 wnxzLyAheGay+hca0cT6wlWlRQX4MfWJ0U/qPgE9mEDILPlQLR4MwtoEzdFHhRslL8
+	 nISriRO+SaWd7c7ACTQXniXpIiPbX8xvUrjGD4GU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgHXIn3 (ORCPT
+        id S1728378AbgHXInk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:43:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37406 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:43:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729035AbgHXInR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:43:17 -0400
+        id S1728335AbgHXInU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:43:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D7272074D;
-        Mon, 24 Aug 2020 08:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03F7921741;
+        Mon, 24 Aug 2020 08:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258596;
-        bh=7BFDBi+tE/J6jvf0vG+BkFKA2VNwU/Y+dCrjgyHahTE=;
+        s=default; t=1598258599;
+        bh=kgwlQy3ZHZ1Z+O+p7uALrxALjfUCmg0CVvzjrzAfY5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0rwqP0AAzhBqWJ+k9K/rlPOy5C8w24QwXzslnmZspmlBZc9lSJWWXO67QMvoe7vc6
-         nhKWfE9slUQdoADoKeYkTVcnln2WqxGdZEREi6h1oKp5pbxqDyV9bYnbfobctwQW0n
-         zqJ/dY76XkFw7eCJqlFRCkKJa64dngI8L5x9HjBQ=
+        b=F7k8jXObAt4hL8VVgOOrXzvSbkmc0DK8oXUd8csAekB7F4lw8bw0TxPfD/50z5r88
+         R2id3G7UK0slxGUgmTaLAf6bTBaQ4IsIF0fbgKbM7+YKxJmu0CbYlW/qMe2rcUEhPw
+         h8WMF2YaT8aAWP1G3R/5oMoE+lETV3CSKpLAoO90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Andre Guedes <andre.guedes@intel.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
+        Alain Volmat <alain.volmat@st.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 073/124] igc: Fix PTP initialization
-Date:   Mon, 24 Aug 2020 10:30:07 +0200
-Message-Id: <20200824082412.999421167@linuxfoundation.org>
+Subject: [PATCH 5.7 064/124] spi: stm32: fixes suspend/resume management
+Date:   Mon, 24 Aug 2020 10:29:58 +0200
+Message-Id: <20200824082412.568310629@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -63,115 +62,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+From: Amelie Delaunay <amelie.delaunay@st.com>
 
-[ Upstream commit 3cda505a679ced78d69c889cfb418d1728bb2707 ]
+[ Upstream commit db96bf976a4fc65439be0b4524c0d41427d98814 ]
 
-Right now, igc_ptp_reset() is called from igc_reset(), which is called
-from igc_probe() before igc_ptp_init() has a chance to run. It is
-detected as an attempt to use an spinlock without registering its key
-first. See log below.
+This patch adds pinctrl power management, and reconfigure spi controller
+in case of resume.
 
-To avoid this problem, simplify the initialization: igc_ptp_init() is
-only called from igc_probe(), and igc_ptp_reset() is only called from
-igc_reset().
+Fixes: 038ac869c9d2 ("spi: stm32: add runtime PM support")
 
-[    2.736332] INFO: trying to register non-static key.
-[    2.736902] input: HDA Intel PCH Front Headphone as /devices/pci0000:00/0000:00:1f.3/sound/card0/input10
-[    2.737513] the code is fine but needs lockdep annotation.
-[    2.737513] turning off the locking correctness validator.
-[    2.737515] CPU: 8 PID: 239 Comm: systemd-udevd Tainted: G            E     5.8.0-rc7+ #13
-[    2.737515] Hardware name: Gigabyte Technology Co., Ltd. Z390 AORUS ULTRA/Z390 AORUS ULTRA-CF, BIOS F7 03/14/2019
-[    2.737516] Call Trace:
-[    2.737521]  dump_stack+0x78/0xa0
-[    2.737524]  register_lock_class+0x6b1/0x6f0
-[    2.737526]  ? lockdep_hardirqs_on_prepare+0xca/0x160
-[    2.739177]  ? _raw_spin_unlock_irq+0x24/0x50
-[    2.739179]  ? trace_hardirqs_on+0x1c/0xf0
-[    2.740820]  __lock_acquire+0x56/0x1ff0
-[    2.740823]  ? __schedule+0x30c/0x970
-[    2.740825]  lock_acquire+0x97/0x3e0
-[    2.740830]  ? igc_ptp_reset+0x35/0xf0 [igc]
-[    2.740833]  ? schedule_hrtimeout_range_clock+0xb7/0x120
-[    2.742507]  _raw_spin_lock_irqsave+0x3a/0x50
-[    2.742512]  ? igc_ptp_reset+0x35/0xf0 [igc]
-[    2.742515]  igc_ptp_reset+0x35/0xf0 [igc]
-[    2.742519]  igc_reset+0x96/0xd0 [igc]
-[    2.744148]  igc_probe+0x68f/0x7d0 [igc]
-[    2.745796]  local_pci_probe+0x3d/0x70
-[    2.745799]  pci_device_probe+0xd1/0x190
-[    2.745802]  really_probe+0x15a/0x3f0
-[    2.759936]  driver_probe_device+0xe1/0x150
-[    2.759937]  device_driver_attach+0xa8/0xb0
-[    2.761786]  __driver_attach+0x89/0x150
-[    2.761786]  ? device_driver_attach+0xb0/0xb0
-[    2.761787]  ? device_driver_attach+0xb0/0xb0
-[    2.761788]  bus_for_each_dev+0x66/0x90
-[    2.765012]  bus_add_driver+0x12e/0x1f0
-[    2.765716]  driver_register+0x8b/0xe0
-[    2.766418]  ? 0xffffffffc0230000
-[    2.767119]  do_one_initcall+0x5a/0x310
-[    2.767826]  ? kmem_cache_alloc_trace+0xe9/0x200
-[    2.768528]  do_init_module+0x5c/0x260
-[    2.769206]  __do_sys_finit_module+0x93/0xe0
-[    2.770048]  do_syscall_64+0x46/0xa0
-[    2.770716]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[    2.771396] RIP: 0033:0x7f83534589e0
-[    2.772073] Code: 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 2e 2e 2e 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 80 24 0d 00 f7 d8 64 89 01 48
-[    2.772074] RSP: 002b:00007ffd31d0ed18 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-[    2.774854] RAX: ffffffffffffffda RBX: 000055d52816aba0 RCX: 00007f83534589e0
-[    2.774855] RDX: 0000000000000000 RSI: 00007f83535b982f RDI: 0000000000000006
-[    2.774855] RBP: 00007ffd31d0ed60 R08: 0000000000000000 R09: 00007ffd31d0ed30
-[    2.774856] R10: 0000000000000006 R11: 0000000000000246 R12: 0000000000000000
-[    2.774856] R13: 0000000000020000 R14: 00007f83535b982f R15: 000055d527f5e120
-
-Fixes: 5f2958052c58 ("igc: Add basic skeleton for PTP")
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Reviewed-by: Andre Guedes <andre.guedes@intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Link: https://lore.kernel.org/r/1597043558-29668-5-git-send-email-alain.volmat@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igc/igc_main.c | 5 ++---
- drivers/net/ethernet/intel/igc/igc_ptp.c  | 2 --
- 2 files changed, 2 insertions(+), 5 deletions(-)
+ drivers/spi/spi-stm32.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index c7020ff2f490d..2ec89c99b6444 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -4801,6 +4801,8 @@ static int igc_probe(struct pci_dev *pdev,
- 	device_set_wakeup_enable(&adapter->pdev->dev,
- 				 adapter->flags & IGC_FLAG_WOL_SUPPORTED);
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index 44ac6eb3298d4..e29818abbeaf4 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -13,6 +13,7 @@
+ #include <linux/iopoll.h>
+ #include <linux/module.h>
+ #include <linux/of_platform.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/reset.h>
+ #include <linux/spi/spi.h>
+@@ -1985,6 +1986,8 @@ static int stm32_spi_remove(struct platform_device *pdev)
  
-+	igc_ptp_init(adapter);
+ 	pm_runtime_disable(&pdev->dev);
+ 
++	pinctrl_pm_select_sleep_state(&pdev->dev);
 +
- 	/* reset the hardware with the new settings */
- 	igc_reset(adapter);
+ 	return 0;
+ }
  
-@@ -4817,9 +4819,6 @@ static int igc_probe(struct pci_dev *pdev,
- 	 /* carrier off reporting is important to ethtool even BEFORE open */
- 	netif_carrier_off(netdev);
+@@ -1996,13 +1999,18 @@ static int stm32_spi_runtime_suspend(struct device *dev)
  
--	/* do hw tstamp init after resetting */
--	igc_ptp_init(adapter);
--
- 	/* Check if Media Autosense is enabled */
- 	adapter->ei = *ei;
+ 	clk_disable_unprepare(spi->clk);
  
-diff --git a/drivers/net/ethernet/intel/igc/igc_ptp.c b/drivers/net/ethernet/intel/igc/igc_ptp.c
-index f99c514ad0f47..4f67bdd1948b5 100644
---- a/drivers/net/ethernet/intel/igc/igc_ptp.c
-+++ b/drivers/net/ethernet/intel/igc/igc_ptp.c
-@@ -620,8 +620,6 @@ void igc_ptp_init(struct igc_adapter *adapter)
- 	adapter->tstamp_config.rx_filter = HWTSTAMP_FILTER_NONE;
- 	adapter->tstamp_config.tx_type = HWTSTAMP_TX_OFF;
+-	return 0;
++	return pinctrl_pm_select_sleep_state(dev);
+ }
  
--	igc_ptp_reset(adapter);
--
- 	adapter->ptp_clock = ptp_clock_register(&adapter->ptp_caps,
- 						&adapter->pdev->dev);
- 	if (IS_ERR(adapter->ptp_clock)) {
+ static int stm32_spi_runtime_resume(struct device *dev)
+ {
+ 	struct spi_master *master = dev_get_drvdata(dev);
+ 	struct stm32_spi *spi = spi_master_get_devdata(master);
++	int ret;
++
++	ret = pinctrl_pm_select_default_state(dev);
++	if (ret)
++		return ret;
+ 
+ 	return clk_prepare_enable(spi->clk);
+ }
+@@ -2032,10 +2040,23 @@ static int stm32_spi_resume(struct device *dev)
+ 		return ret;
+ 
+ 	ret = spi_master_resume(master);
+-	if (ret)
++	if (ret) {
+ 		clk_disable_unprepare(spi->clk);
++		return ret;
++	}
+ 
+-	return ret;
++	ret = pm_runtime_get_sync(dev);
++	if (ret) {
++		dev_err(dev, "Unable to power device:%d\n", ret);
++		return ret;
++	}
++
++	spi->cfg->config(spi);
++
++	pm_runtime_mark_last_busy(dev);
++	pm_runtime_put_autosuspend(dev);
++
++	return 0;
+ }
+ #endif
+ 
 -- 
 2.25.1
 
