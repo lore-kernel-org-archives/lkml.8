@@ -2,94 +2,126 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC91C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3613420738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289395;
-	bh=WhrAFwOzk/Rx5uChKtXnYnxfBGZcnnRc64UJOZ28RDM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1g8nAtVdBvVb9I+G1lnmLUC1g9KqzlQCbo+TpiATKM4VxxzeKU3ghS8VFimdf9h/p
-	 sGdq4K2CXa/d8dQJWQO/B+mv2GC7urn6f1n6cQYLMg5/7rUTIk8nZGJz1I4cf00Nw2
-	 wMSN38rs5zm3jLW+idXNnpjKaLaM32laQVuNh7KM=
+	by mail.kernel.org (Postfix) with ESMTP id A7B3720738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CVkUGe4w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgHXRQd (ORCPT
+        id S1728169AbgHXRQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:16:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbgHXQg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:36:58 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25AC922CF7;
-        Mon, 24 Aug 2020 16:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286996;
-        bh=WhrAFwOzk/Rx5uChKtXnYnxfBGZcnnRc64UJOZ28RDM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ZfZUntRf4rOkJ1EKFCGx4fq/Fo8+CaQ9UdZZbjkrACyjWCEBNv36S8FRD0tV1twOV
-         cpEs2Uvz5+9jaCVnBzsOhfXcizJh1lc21KF3+7n1z+o90poSNW/xEi5Zk2TWZG8z0T
-         B7niwUTNESJeZMEb3rgCkAywE3usPTRNHs2pcd1k=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tobias Schramm <t.schramm@manjaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 01/54] spi: stm32: clear only asserted irq flags on interrupt
-Date:   Mon, 24 Aug 2020 12:35:40 -0400
-Message-Id: <20200824163634.606093-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Mon, 24 Aug 2020 13:16:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728431AbgHXRQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 13:16:22 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AA6AC061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:16:11 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id s1so9470575iot.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:16:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wl71a8cghqkJSR267P9P0mVn6KDAwl29z7WcXnWApbw=;
+        b=CVkUGe4wi7xJpIXZZjM4CDM2kUZqeM9SAA3oVUlDitCdrBc2e7Xoif2L0s0narbqp6
+         rT8cIz+pJWuOfi+8YRApNDUn7x4k5tU3f50o8jSGlSLwRUADB/KEbZhXucNgiTaVkO9e
+         9yoqk+xs2Jhp969r7l0mrYSWSgcOu7ANi7gbs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wl71a8cghqkJSR267P9P0mVn6KDAwl29z7WcXnWApbw=;
+        b=O+Q2t9JtNMOHEqdhc24riLzLfLX8mHWfZi+ge81qiXdF1BoeM2iGPnV1cE/hvEBo4i
+         oLtQku8EKW0StIjJnGYlx0amZc7U5n9jwpAMvKi4HUdIloDktORC/Rym9q/sGjVARnAC
+         dUEwM8f47Qoo/TSa2dNtGeZtvpCtqpgm0KCjEUNmnglZ+rzQo1RPczIDAefN03LPQNhH
+         WeSIUntury99od740xUenjyD3avc4ElBoAEn1RXBslEpd87BETxY0WMwEgsWIZx2kkxH
+         Hd/0DzPimqXp/RSUTqcLfUYQfqXBC/ZhuLQZY/6uBzucD5YSDBhxtv8bw+FJXo43kJxk
+         gQ9A==
+X-Gm-Message-State: AOAM532YE7Vb+HxuqytdzFTjbNL/EEhUKb8tJEMWvJpiEe55XE3jN7yW
+        FVxMGfcMhrzJ8gG44fbPKxeCyA==
+X-Google-Smtp-Source: ABdhPJzJpVpTBCn9w1SRoKPNDmqmftKz/0Hk0SqBHm4+qva5yK1qN6pusdN1tE19FBtGZFn2rMK8zQ==
+X-Received: by 2002:a6b:5c03:: with SMTP id z3mr5669907ioh.16.1598289371025;
+        Mon, 24 Aug 2020 10:16:11 -0700 (PDT)
+Received: from rrangel920.bld.corp.google.com (h184-60-195-141.arvdco.broadband.dynamic.tds.net. [184.60.195.141])
+        by smtp.gmail.com with ESMTPSA id p77sm7618499ill.39.2020.08.24.10.16.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 10:16:10 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     adrian.hunter@intel.com
+Cc:     chris.wang@amd.com, Akshu.Agrawal@amd.com,
+        Nehal-bakulchandra.Shah@amd.com,
+        Raul E Rangel <rrangel@chromium.org>,
+        Jisheng Zhang <jszhang@marvell.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: [PATCH] mmc: sdhci: Don't enable presets while tuning
+Date:   Mon, 24 Aug 2020 11:16:07 -0600
+Message-Id: <20200824111427.1.Id6f3c92fecf4acc60c3b7f57d5f4e4c854ace765@changeid>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tobias Schramm <t.schramm@manjaro.org>
+SDHCI presets are not currently used for eMMC HS/HS200/HS400, but are
+used for DDR52. The HS400 retuning sequence is:
 
-[ Upstream commit ae1ba50f1e706dfd7ce402ac52c1f1f10becad68 ]
+    HS400->DDR52->HS->HS200->Perform Tuning->HS->HS400
 
-Previously the stm32h7 interrupt thread cleared all non-masked interrupts.
-If an interrupt was to occur during the handling of another interrupt its
-flag would be unset, resulting in a lost interrupt.
-This patches fixes the issue by clearing only the currently set interrupt
-flags.
+This means that when HS400 tuning happens, we transition through DDR52
+for a very brief period. This causes presets to be enabled
+unintentionally and stay enabled when transitioning back to HS200 or
+HS400.
 
-Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
-Link: https://lore.kernel.org/r/20200804195136.1485392-1-t.schramm@manjaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch prevents enabling presets while tuning is in progress.
+
+     change and that presets were still disabled.
+
+Fixes: 0dafa60eb2506 ("mmc: sdhci: also get preset value and driver type for MMC_DDR52")
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 ---
- drivers/spi/spi-stm32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The indentation changed because I ran clang-format
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 44ac6eb3298d4..ef3be03574e80 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -964,7 +964,7 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
- 			stm32h7_spi_read_rxfifo(spi, false);
+ drivers/mmc/host/sdhci.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 37b1158c1c0c9..fd702c436c165 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2360,12 +2360,13 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+ 		host->timing = ios->timing;
  
--	writel_relaxed(mask, spi->base + STM32H7_SPI_IFCR);
-+	writel_relaxed(sr & mask, spi->base + STM32H7_SPI_IFCR);
+ 		if (!(host->quirks2 & SDHCI_QUIRK2_PRESET_VALUE_BROKEN) &&
+-				((ios->timing == MMC_TIMING_UHS_SDR12) ||
+-				 (ios->timing == MMC_TIMING_UHS_SDR25) ||
+-				 (ios->timing == MMC_TIMING_UHS_SDR50) ||
+-				 (ios->timing == MMC_TIMING_UHS_SDR104) ||
+-				 (ios->timing == MMC_TIMING_UHS_DDR50) ||
+-				 (ios->timing == MMC_TIMING_MMC_DDR52))) {
++		    !mmc_doing_retune(mmc) &&
++		    ((ios->timing == MMC_TIMING_UHS_SDR12) ||
++		     (ios->timing == MMC_TIMING_UHS_SDR25) ||
++		     (ios->timing == MMC_TIMING_UHS_SDR50) ||
++		     (ios->timing == MMC_TIMING_UHS_SDR104) ||
++		     (ios->timing == MMC_TIMING_UHS_DDR50) ||
++		     (ios->timing == MMC_TIMING_MMC_DDR52))) {
+ 			u16 preset;
  
- 	spin_unlock_irqrestore(&spi->lock, flags);
- 
+ 			sdhci_enable_preset_value(host, true);
 -- 
-2.25.1
+2.28.0.297.g1956fa8f8d-goog
 
