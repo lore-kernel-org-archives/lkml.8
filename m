@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C00C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33BFF2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139822074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261061;
-	bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
+	s=default; t=1598261067;
+	bh=s6qr3pBHDicYElbR0M0Yvr0h47oarzRdFZZA1GnplWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oiB2yaHbTN/dWrsP20fA6K/xjxcLvgD3EcClol6YJLmWySG9ioqoc8ZW9N23yOrX5
-	 EGVNO0DwRHBkrXVl7VVusjkZmoqLFgWU1sVTS6ldqk7okN5cuXXoceNDNTBrHCW/xI
-	 DU+sd8YK2crmP7MZwfn4jaT4JFLzWuiuM7S2dlXA=
+	b=UzRVXzxMbib/79tmYFQSo9WU3VNQBDdd7+nLCWvB3NSyYZZ0a5FWJmLUv+bG/8KQ/
+	 uEZnCKOUcCGw0kTXDMa9Q3+jSLQway3d1tRJS4BWIytbs4wpr7s4cC+nfQbqTUQGG+
+	 K41esz8MQ7IiidSMCZXqmbj1JyJ0qzYptgIQY7+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbgHXIxv (ORCPT
+        id S1725973AbgHXJYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:53:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33012 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730202AbgHXIxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:53:37 -0400
+        id S1730244AbgHXIxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:53:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2609207D3;
-        Mon, 24 Aug 2020 08:53:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68030204FD;
+        Mon, 24 Aug 2020 08:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259216;
-        bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
+        s=default; t=1598259229;
+        bh=s6qr3pBHDicYElbR0M0Yvr0h47oarzRdFZZA1GnplWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sZdK6fcF9cFzkwWrLZJkAMZ0tHMCqx7w1Ixp9LuemxieGxkLLtjvJ2qAP1gV5DEXN
-         IyRXIGoFrD9i9RfSJUNcytb7Hx8LzaueDM3pd8vRgpzbZCgjcIe7AUuFq4GS5t1nJ4
-         GhmqA18y1YOdVEOlwTSdreTgdMv08fbkTWkJBZLc=
+        b=OaKG13vPDKnwxPe5lNK+mT91I0RU7OHioE5Urys4KjeXc4HQggpZf7ilnz1Dw12Xw
+         LmdoI+y/fzmjNQCiu6EqD/Qsy/2z058WlfLmjkXQXyAY3MrGQzwgItkYsBOGiwKOAw
+         PuqJXXWfGh7Z3AI9TGhr93S9VGtSJ4nzs5PDndoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>,
+        stable@vger.kernel.org, Girish Basrur <gbasrur@marvell.com>,
+        Santosh Vernekar <svernekar@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        Shyam Sundar <ssundar@marvell.com>,
+        Javed Hasan <jhasan@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 25/50] m68knommu: fix overwriting of bits in ColdFire V3 cache control
-Date:   Mon, 24 Aug 2020 10:31:26 +0200
-Message-Id: <20200824082353.314436934@linuxfoundation.org>
+Subject: [PATCH 4.14 29/50] scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
+Date:   Mon, 24 Aug 2020 10:31:30 +0200
+Message-Id: <20200824082353.513985817@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -59,50 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Ungerer <gerg@linux-m68k.org>
+From: Javed Hasan <jhasan@marvell.com>
 
-[ Upstream commit bdee0e793cea10c516ff48bf3ebb4ef1820a116b ]
+[ Upstream commit ec007ef40abb6a164d148b0dc19789a7a2de2cc8 ]
 
-The Cache Control Register (CACR) of the ColdFire V3 has bits that
-control high level caching functions, and also enable/disable the use
-of the alternate stack pointer register (the EUSP bit) to provide
-separate supervisor and user stack pointer registers. The code as
-it is today will blindly clear the EUSP bit on cache actions like
-invalidation. So it is broken for this case - and that will result
-in failed booting (interrupt entry and exit processing will be
-completely hosed).
+In fc_disc_gpn_id_resp(), skb is supposed to get freed in all cases except
+for PTR_ERR. However, in some cases it didn't.
 
-This only affects ColdFire V3 parts that support the alternate stack
-register (like the 5329 for example) - generally speaking new parts do,
-older parts don't. It has no impact on ColdFire V3 parts with the single
-stack pointer, like the 5307 for example.
+This fix is to call fc_frame_free(fp) before function returns.
 
-Fix the cache bit defines used, so they maintain the EUSP bit when
-carrying out cache actions through the CACR register.
-
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Link: https://lore.kernel.org/r/20200729081824.30996-2-jhasan@marvell.com
+Reviewed-by: Girish Basrur <gbasrur@marvell.com>
+Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
+Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
+Reviewed-by: Shyam Sundar <ssundar@marvell.com>
+Signed-off-by: Javed Hasan <jhasan@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/include/asm/m53xxacr.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/libfc/fc_disc.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/m68k/include/asm/m53xxacr.h b/arch/m68k/include/asm/m53xxacr.h
-index 9138a624c5c81..692f90e7fecc1 100644
---- a/arch/m68k/include/asm/m53xxacr.h
-+++ b/arch/m68k/include/asm/m53xxacr.h
-@@ -89,9 +89,9 @@
-  * coherency though in all cases. And for copyback caches we will need
-  * to push cached data as well.
-  */
--#define CACHE_INIT	  CACR_CINVA
--#define CACHE_INVALIDATE  CACR_CINVA
--#define CACHE_INVALIDATED CACR_CINVA
-+#define CACHE_INIT        (CACHE_MODE + CACR_CINVA - CACR_EC)
-+#define CACHE_INVALIDATE  (CACHE_MODE + CACR_CINVA)
-+#define CACHE_INVALIDATED (CACHE_MODE + CACR_CINVA)
+diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
+index 28b50ab2fbb01..62f83cc151b22 100644
+--- a/drivers/scsi/libfc/fc_disc.c
++++ b/drivers/scsi/libfc/fc_disc.c
+@@ -605,8 +605,12 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
  
- #define ACR0_MODE	((CONFIG_RAMBASE & 0xff000000) + \
- 			 (0x000f0000) + \
+ 	if (PTR_ERR(fp) == -FC_EX_CLOSED)
+ 		goto out;
+-	if (IS_ERR(fp))
+-		goto redisc;
++	if (IS_ERR(fp)) {
++		mutex_lock(&disc->disc_mutex);
++		fc_disc_restart(disc);
++		mutex_unlock(&disc->disc_mutex);
++		goto out;
++	}
+ 
+ 	cp = fc_frame_payload_get(fp, sizeof(*cp));
+ 	if (!cp)
+@@ -633,7 +637,7 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 				new_rdata->disc_id = disc->disc_id;
+ 				fc_rport_login(new_rdata);
+ 			}
+-			goto out;
++			goto free_fp;
+ 		}
+ 		rdata->disc_id = disc->disc_id;
+ 		mutex_unlock(&rdata->rp_mutex);
+@@ -650,6 +654,8 @@ redisc:
+ 		fc_disc_restart(disc);
+ 		mutex_unlock(&disc->disc_mutex);
+ 	}
++free_fp:
++	fc_frame_free(fp);
+ out:
+ 	kref_put(&rdata->kref, fc_rport_destroy);
+ 	if (!IS_ERR(fp))
 -- 
 2.25.1
 
