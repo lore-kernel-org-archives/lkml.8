@@ -2,57 +2,53 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BF4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2941A2087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10FF5204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259266;
-	bh=O/Nhrn08tkjaaarUDJU/ZrxBjQpZs+AwE15ZpuJ6Ak0=;
+	s=default; t=1598259275;
+	bh=nstCH6mn71s6+t+b0/T4hwQQsqc+bqiv7+SPeqwEVLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=khMJkW3I8RuJUqmf9/xAtD+o9uLEwjEgebEIm30M7sCHbCIaGxe0wMrk2BdzVPVCB
-	 fIJ3nusZ/+bFFOhA5CP2o9o5rvoGevvSDHU6aRfoZhYXrFCB7zAUE1V1RgmJrCZX1/
-	 Z61egH3OaqWBF+hacV3732BMgH0KN5EBppFq5gfM=
+	b=1I9HmEiBqEYGwe4mtk4wvUlXl28+4vxkuWOfWQmZFOgeC7HJgVZlooClIaR9vb2d9
+	 SQRRchZf84IHpghQkMZxxPim1CdnL4dP21AVQ1L9hcAmS6wJt3Xu76+gg49UgZ7hHg
+	 n+CcFga2Y6iIGiYORoAXoXXsK59iCkjL6z5Wb6UM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbgHXIyY (ORCPT
+        id S1730339AbgHXIyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:54:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34422 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:54:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730291AbgHXIyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:54:15 -0400
+        id S1729980AbgHXIyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:54:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E765F207D3;
-        Mon, 24 Aug 2020 08:54:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A669204FD;
+        Mon, 24 Aug 2020 08:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259255;
-        bh=O/Nhrn08tkjaaarUDJU/ZrxBjQpZs+AwE15ZpuJ6Ak0=;
+        s=default; t=1598259260;
+        bh=nstCH6mn71s6+t+b0/T4hwQQsqc+bqiv7+SPeqwEVLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JJ3PVHxC50CFR3pJsileGCCn4r4py4pfEzuc/dbefF9vcvau6a5q4j3uN+9ujKORL
-         fhjejGzY9FotAKi4IoMTteH6ISii/FXMuODE4jazYmiq9xTA9ssNg7PeSCSOZ5+Oqh
-         MX63gYEBHUGalyluLknVBIzLv9k5sCzhAq+BXZ8k=
+        b=UI4CRGP0dnGdyHjmQMMgiJzRpN5jMtMKOEI6oME4wSn5uRZ0ZYpBYgtX7nXmwIPMN
+         3M4Wo/JdP4vrbj5leG3fBca7qYQP8HFUYQaBXRGQYPdrsJYvmBU54Q/xzQMq/wfY/b
+         RTqxf5avb5rRS8FD6FjTKRr/UtlIR8OBlu7LlMGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 38/50] bonding: fix a potential double-unregister
-Date:   Mon, 24 Aug 2020 10:31:39 +0200
-Message-Id: <20200824082353.981385413@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 12/50] romfs: fix uninitialized memory leak in romfs_dev_read()
+Date:   Mon, 24 Aug 2020 10:31:13 +0200
+Message-Id: <20200824082352.591103294@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -65,48 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit 832707021666411d04795c564a4adea5d6b94f17 ]
+commit bcf85fcedfdd17911982a3e3564fcfec7b01eebd upstream.
 
-When we tear down a network namespace, we unregister all
-the netdevices within it. So we may queue a slave device
-and a bonding device together in the same unregister queue.
+romfs has a superblock field that limits the size of the filesystem; data
+beyond that limit is never accessed.
 
-If the only slave device is non-ethernet, it would
-automatically unregister the bonding device as well. Thus,
-we may end up unregistering the bonding device twice.
+romfs_dev_read() fetches a caller-supplied number of bytes from the
+backing device.  It returns 0 on success or an error code on failure;
+therefore, its API can't represent short reads, it's all-or-nothing.
 
-Workaround this special case by checking reg_state.
+However, when romfs_dev_read() detects that the requested operation would
+cross the filesystem size limit, it currently silently truncates the
+requested number of bytes.  This e.g.  means that when the content of a
+file with size 0x1000 starts one byte before the filesystem size limit,
+->readpage() will only fill a single byte of the supplied page while
+leaving the rest uninitialized, leaking that uninitialized memory to
+userspace.
 
-Fixes: 9b5e383c11b0 ("net: Introduce unregister_netdevice_many()")
-Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix it by returning an error code instead of truncating the read when the
+requested read operation would go beyond the end of the filesystem.
+
+Fixes: da4458bda237 ("NOMMU: Make it possible for RomFS to use MTD devices directly")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200818013202.2246365-1-jannh@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/bonding/bond_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/romfs/storage.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 9ddbafdca3b05..a6d8d3b3c903d 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2010,7 +2010,8 @@ static int  bond_release_and_destroy(struct net_device *bond_dev,
- 	int ret;
+--- a/fs/romfs/storage.c
++++ b/fs/romfs/storage.c
+@@ -221,10 +221,8 @@ int romfs_dev_read(struct super_block *s
+ 	size_t limit;
  
- 	ret = __bond_release_one(bond_dev, slave_dev, false, true);
--	if (ret == 0 && !bond_has_slaves(bond)) {
-+	if (ret == 0 && !bond_has_slaves(bond) &&
-+	    bond_dev->reg_state != NETREG_UNREGISTERING) {
- 		bond_dev->priv_flags |= IFF_DISABLE_NETPOLL;
- 		netdev_info(bond_dev, "Destroying bond %s\n",
- 			    bond_dev->name);
--- 
-2.25.1
-
+ 	limit = romfs_maxsize(sb);
+-	if (pos >= limit)
++	if (pos >= limit || buflen > limit - pos)
+ 		return -EIO;
+-	if (buflen > limit - pos)
+-		buflen = limit - pos;
+ 
+ #ifdef CONFIG_ROMFS_ON_MTD
+ 	if (sb->s_mtd)
 
 
