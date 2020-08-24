@@ -2,72 +2,68 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC12C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2892CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55F3E2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9EA220738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgHXK6m (ORCPT
+        id S1726897AbgHXK7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:58:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43168 "EHLO mx2.suse.de"
+        Mon, 24 Aug 2020 06:59:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:59556 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgHXK6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:58:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1AC73AE17;
-        Mon, 24 Aug 2020 10:58:48 +0000 (UTC)
-Date:   Mon, 24 Aug 2020 12:58:16 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Baoquan He <bhe@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH v2 08/10] mm/page_alloc: drop stale pageblock comment in
- memmap_init_zone*()
-Message-ID: <20200824105815.GH6315@linux>
-References: <20200819175957.28465-1-david@redhat.com>
- <20200819175957.28465-9-david@redhat.com>
+        id S1725998AbgHXK7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:59:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88A551063;
+        Mon, 24 Aug 2020 03:59:13 -0700 (PDT)
+Received: from [10.37.12.65] (unknown [10.37.12.65])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D7F03F66B;
+        Mon, 24 Aug 2020 03:59:11 -0700 (PDT)
+Subject: Re: [PATCH 1/3] memory: samsung: exynos5422-dmc: rename timing
+ register fields variables
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200822163218.21857-1-krzk@kernel.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <d8d7b2bb-d277-4e48-889c-16110f4d594d@arm.com>
+Date:   Mon, 24 Aug 2020 11:59:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819175957.28465-9-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200822163218.21857-1-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 07:59:55PM +0200, David Hildenbrand wrote:
-> Commit ac5d2539b238 ("mm: meminit: reduce number of times pageblocks are
-> set during struct page init") moved the actual zone range check, leaving
-> only the alignment check for pageblocks.
-> 
-> Let's drop the stale comment and make the pageblock check easier to read.
-> 
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
--- 
-Oscar Salvador
-SUSE L3
+On 8/22/20 5:32 PM, Krzysztof Kozlowski wrote:
+> The driver has file-scope arrays defining fields of timing registers
+> (e.g. struct timing_reg timing_row) and actual values for these
+> registers per each OPP in state container (struct
+> exynos5_dmc.timing_row).  The meanings of these are different so use
+> different names to avoid confusion.
+
+Good point
+
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+
+Acked-by: Lukasz Luba <lukasz.luba@arm.com>
+
+Regards,
+Lukasz
