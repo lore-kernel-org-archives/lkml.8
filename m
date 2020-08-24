@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1923C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3CD206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D852063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289041;
-	bh=suhF0qwwSU0yECNHcaKgTLO11nlKyMh0NmEMGkWs6+U=;
+	s=default; t=1598289046;
+	bh=i00RryqNd79GBkkS/0eKB14jaLHW8lpO6MOMluTgeKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B5nNKuMBI/2pG05mqIKDBm0pf7eyM1ZQegJPzYt3Aa+mhTdTtSkYdpZNjeoFoIvcm
-	 CJBixCs3NJAPgLfkfX3BULDxMhZAtT8ENUuStWhLwk3+fgaDOxRY/uJZ8YncfiUvAQ
-	 oQN8TRhOCm2osp18+9tsQEUevl25GNbAz58tkqos=
+	b=1yuzgvEmYm4hLVzBgb9FQviZA5ogmKNScCNzB8tW98TyXEytACdx+7CKxD+oanyu0
+	 L4HxQvtXihiJpuHtHxtmMsM1yEO2+tRYTofJLXXV17rF36mqtglZJz7D0vKiyRhbb3
+	 uD/u9I4+roQx0eXCrDnA/UJ/zasWDu66llOt/EvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgHXRKj (ORCPT
+        id S1726964AbgHXRKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:10:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40112 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbgHXQh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728397AbgHXQh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:37:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D7C923105;
-        Mon, 24 Aug 2020 16:37:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E85A23102;
+        Mon, 24 Aug 2020 16:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287038;
-        bh=suhF0qwwSU0yECNHcaKgTLO11nlKyMh0NmEMGkWs6+U=;
+        s=default; t=1598287034;
+        bh=i00RryqNd79GBkkS/0eKB14jaLHW8lpO6MOMluTgeKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M+xCNdvG20GxjI+BUUm/EbNsraOiCvWiyS/3RMheKyCTbL5wexWH52Ur+PJeBRuii
-         ZBFCAofJioEEuXd8bJcQtRVbVhRsPW46a3MwTUQ02lfLbdylax4E+M3lxmzzuyxGS4
-         WvGjaHowze2OH9aUvnPqre8mQXubGNBSTGJB+Koo=
+        b=qWrSY544OrEd3QbTFTLOh9eziibJk3+vWj0A+Ni0jOUIfvEHvBmZ8UkF2MAcln8ag
+         QIMT+7yuMUSSviFZM576uc6LZfVTd0ltuOMdjzQ8zKDhip7pwntmfYQFL+wjgp4U1V
+         tfGytR9GK1HQNQybsADiAYjD5tjtw6VFYm2hT+z4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Ahern <dsahern@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 32/54] selftests: disable rp_filter for icmp_redirect.sh
-Date:   Mon, 24 Aug 2020 12:36:11 -0400
-Message-Id: <20200824163634.606093-32-sashal@kernel.org>
+Cc:     Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 29/54] s390/cio: add cond_resched() in the slow_eval_known_fn() loop
+Date:   Mon, 24 Aug 2020 12:36:08 -0400
+Message-Id: <20200824163634.606093-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
@@ -60,36 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@kernel.org>
+From: Vineeth Vijayan <vneethv@linux.ibm.com>
 
-[ Upstream commit bcf7ddb0186d366f761f86196b480ea6dd2dc18c ]
+[ Upstream commit 0b8eb2ee9da1e8c9b8082f404f3948aa82a057b2 ]
 
-h1 is initially configured to reach h2 via r1 rather than the
-more direct path through r2. If rp_filter is set and inherited
-for r2, forwarding fails since the source address of h1 is
-reachable from eth0 vs the packet coming to it via r1 and eth1.
-Since rp_filter setting affects the test, explicitly reset it.
+The scanning through subchannels during the time of an event could
+take significant amount of time in case of platforms with lots of
+known subchannels. This might result in higher scheduling latencies
+for other tasks especially on systems with a single CPU. Add
+cond_resched() call, as the loop in slow_eval_known_fn() can be
+executed for a longer duration.
 
-Signed-off-by: David Ahern <dsahern@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/icmp_redirect.sh | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/s390/cio/css.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/testing/selftests/net/icmp_redirect.sh b/tools/testing/selftests/net/icmp_redirect.sh
-index 18c5de53558af..bf361f30d6ef9 100755
---- a/tools/testing/selftests/net/icmp_redirect.sh
-+++ b/tools/testing/selftests/net/icmp_redirect.sh
-@@ -180,6 +180,8 @@ setup()
- 			;;
- 		r[12]) ip netns exec $ns sysctl -q -w net.ipv4.ip_forward=1
- 		       ip netns exec $ns sysctl -q -w net.ipv4.conf.all.send_redirects=1
-+		       ip netns exec $ns sysctl -q -w net.ipv4.conf.default.rp_filter=0
-+		       ip netns exec $ns sysctl -q -w net.ipv4.conf.all.rp_filter=0
- 
- 		       ip netns exec $ns sysctl -q -w net.ipv6.conf.all.forwarding=1
- 		       ip netns exec $ns sysctl -q -w net.ipv6.route.mtu_expires=10
+diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
+index 94edbb33d0d1f..aca022239b333 100644
+--- a/drivers/s390/cio/css.c
++++ b/drivers/s390/cio/css.c
+@@ -677,6 +677,11 @@ static int slow_eval_known_fn(struct subchannel *sch, void *data)
+ 		rc = css_evaluate_known_subchannel(sch, 1);
+ 		if (rc == -EAGAIN)
+ 			css_schedule_eval(sch->schid);
++		/*
++		 * The loop might take long time for platforms with lots of
++		 * known devices. Allow scheduling here.
++		 */
++		cond_resched();
+ 	}
+ 	return 0;
+ }
 -- 
 2.25.1
 
