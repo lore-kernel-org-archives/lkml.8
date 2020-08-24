@@ -5,48 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550B4C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BC8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2883F206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F1E2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262336;
-	bh=Tj68wpcq8gwgRKTspOtj86cQXqXyuM2JjWCZZk96Frc=;
+	s=default; t=1598262339;
+	bh=G5AW/HK0V4Pk5DhnnnjMIePtey/qJT9sOfoHo3ZRB3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yqy0mR5NIlk4JcPaz62GNn5LhVfrdOR+/ikuetO6qAPvdiyiu5mVKzoz+xXLXpKu6
-	 od5XbJQ3GK+TS8eQuGRGXFKF3pnL73fwAWImymgfxCdJPTQDQ7YCLqfZLaYuuh+pOQ
-	 WeUTjzoyTgxTA4NgddITDRuXR4npmULb7NstYWD0=
+	b=LpF3WnwIkr0miWvIAGT95aTAs4gpuZ8kTJscvFiUYnjj2MfkkZNGCuBaJHT3jgrYo
+	 DrJEvFZAwIeck45t+n/U7ntIcrBLxLHVgwtTWbEKiOcwIfRcEQyH7ewMPPoz/Vjl8n
+	 3LYjlaizwbmwopXjkU+h8EBk38NtHAv19pWGCBGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgHXJpf (ORCPT
+        id S1729304AbgHXJpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:45:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35518 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:45:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728975AbgHXImq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:42:46 -0400
+        id S1728980AbgHXImo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:42:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B55CA2087D;
-        Mon, 24 Aug 2020 08:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44B8B2074D;
+        Mon, 24 Aug 2020 08:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258566;
-        bh=Tj68wpcq8gwgRKTspOtj86cQXqXyuM2JjWCZZk96Frc=;
+        s=default; t=1598258563;
+        bh=G5AW/HK0V4Pk5DhnnnjMIePtey/qJT9sOfoHo3ZRB3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pG9LwFEEqblJfZroqk3XC8EUg8rH4MDuPaxB3oVBbZXywu3rYtFRiMzLAT4FUDLXL
-         P+DHgIkAP3sfHbIkK2kjEvWYc1VX/5wsvDHeLkNXTnw8IwkQXrA9aQ1HaVvxoWYBKo
-         /s96MVUQbDBc/lt/UzPWbis79ptD+AOD6zJZdiCQ=
+        b=tkKrtlIa5wD8Bw2jdIWtD/JLQCJ6pAPgJJA97dHEY+BJidfWrLVUs9Z69cwHFgLpl
+         yFCcPZVGwSLB94giGRulZhyZhnU1LjJRk5Dludt4sAQE/0VHOWUWe7TuOrNB5z5JWQ
+         ODkuU81iiVTo2m0Xv8fz0woQMspt3r5T2LMvlE2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 091/124] of/address: check for invalid range.cpu_addr
-Date:   Mon, 24 Aug 2020 10:30:25 +0200
-Message-Id: <20200824082413.897972598@linuxfoundation.org>
+        stable@vger.kernel.org, Huaitong Han <huaitong.han@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 090/124] kvm: x86: Toggling CR4.PKE does not load PDPTEs in PAE mode
+Date:   Mon, 24 Aug 2020 10:30:24 +0200
+Message-Id: <20200824082413.845352982@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -59,40 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Jim Mattson <jmattson@google.com>
 
-[ Upstream commit f49c7faf776f16607c948d852a03b04a88c3b583 ]
+[ Upstream commit cb957adb4ea422bd758568df5b2478ea3bb34f35 ]
 
-Currently invalid CPU addresses are not being sanity checked resulting in
-SATA setup failure on a SynQuacer SC2A11 development machine. The original
-check was removed by and earlier commit, so add a sanity check back in
-to avoid this regression.
+See the SDM, volume 3, section 4.4.1:
 
-Fixes: 7a8b64d17e35 ("of/address: use range parser for of_dma_get_range")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20200817113208.523805-1-colin.king@canonical.com
-Signed-off-by: Rob Herring <robh@kernel.org>
+If PAE paging would be in use following an execution of MOV to CR0 or
+MOV to CR4 (see Section 4.1.1) and the instruction is modifying any of
+CR0.CD, CR0.NW, CR0.PG, CR4.PAE, CR4.PGE, CR4.PSE, or CR4.SMEP; then
+the PDPTEs are loaded from the address in CR3.
+
+Fixes: b9baba8614890 ("KVM, pkeys: expose CPUID/CR4 to guest")
+Cc: Huaitong Han <huaitong.han@intel.com>
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Reviewed-by: Oliver Upton <oupton@google.com>
+Message-Id: <20200817181655.3716509-1-jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/address.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/kvm/x86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 8eea3f6e29a44..340d3051b1ce2 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -980,6 +980,11 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
- 			/* Don't error out as we'd break some existing DTs */
- 			continue;
- 		}
-+		if (range.cpu_addr == OF_BAD_ADDR) {
-+			pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
-+			       range.bus_addr, node);
-+			continue;
-+		}
- 		dma_offset = range.cpu_addr - range.bus_addr;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 781b5d41663c5..be195e63f1e69 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -956,7 +956,7 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+ {
+ 	unsigned long old_cr4 = kvm_read_cr4(vcpu);
+ 	unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
+-				   X86_CR4_SMEP | X86_CR4_PKE;
++				   X86_CR4_SMEP;
  
- 		/* Take lower and upper limits */
+ 	if (kvm_valid_cr4(vcpu, cr4))
+ 		return 1;
 -- 
 2.25.1
 
