@@ -2,81 +2,147 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C80C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44967C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A276207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23403204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598258155;
+	bh=H4PJW85OSbOIF1DQ4hnrfqyHQL20ozcmuZlOID6RNzg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bEzNs1LchN0Ut+9EmqC2CRf9odJKDpGjhrHtvccg2/ZJMAppPuFftj+stTtntz6dh
+	 3jmXw4lIq3WSayDOpj81ILoQnXNeFBgChb7C1PrAuCUSiyUm6O3Rr1TP+V1ncg2/IT
+	 eOzbRaHM7nB0QYfq1SDgyzuJfTjbJhq0UxveyNDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgHXIfu convert rfc822-to-8bit (ORCPT
+        id S1726909AbgHXIfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:35:50 -0400
-Received: from mail.fireflyinternet.com ([77.68.26.236]:59229 "EHLO
-        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728138AbgHXIfl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:35:41 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 22218848-1500050 
-        for multiple; Mon, 24 Aug 2020 09:35:11 +0100
-Content-Type: text/plain; charset="utf-8"
+        Mon, 24 Aug 2020 04:35:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728129AbgHXIfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:35:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 677A8206F0;
+        Mon, 24 Aug 2020 08:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598258145;
+        bh=H4PJW85OSbOIF1DQ4hnrfqyHQL20ozcmuZlOID6RNzg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FpuQrlMTk43qtgwAWeRKtEXYVv+189LwW771Xe31sCVnq1wmAA//iF7bSQ2lkp5jD
+         wEv6+vLZ+bDPU58CWu3Bw6OPsVTUVOiKcFdWA0I+MHT4c9+Wht0oHsL8oegc+jN4OA
+         BV/Ko8VWOcPIc0bHYT7ZBmsvctQNPUitu32SUalE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Robin van der Gracht <robin@protonic.nl>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-can@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 084/148] can: j1939: fix kernel-infoleak in j1939_sk_sock2sockaddr_can()
+Date:   Mon, 24 Aug 2020 10:29:42 +0200
+Message-Id: <20200824082418.078240784@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
+References: <20200824082413.900489417@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <65125687-14ae-182f-da07-7d29b4910364@linux.intel.com>
-References: <20190525054136.27810-1-baolu.lu@linux.intel.com> <20190525054136.27810-8-baolu.lu@linux.intel.com> <159803479017.29194.1359332295829225843@build.alporthouse.com> <65125687-14ae-182f-da07-7d29b4910364@linux.intel.com>
-Subject: Re: [PATCH v4 07/15] iommu/vt-d: Delegate the dma domain to upper layer
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     baolu.lu@linux.intel.com, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        jamessewart@arista.com, tmurphy@arista.com, dima@arista.com,
-        sai.praneeth.prakhya@intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Date:   Mon, 24 Aug 2020 09:35:11 +0100
-Message-ID: <159825811140.30134.5347490249201789397@build.alporthouse.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lu Baolu (2020-08-24 07:31:23)
-> Hi Chris,
-> 
-> On 2020/8/22 2:33, Chris Wilson wrote:
-> > Quoting Lu Baolu (2019-05-25 06:41:28)
-> >> This allows the iommu generic layer to allocate a dma domain and
-> >> attach it to a device through the iommu api's. With all types of
-> >> domains being delegated to upper layer, we can remove an internal
-> >> flag which was used to distinguish domains mananged internally or
-> >> externally.
-> > 
-> > I'm seeing some really strange behaviour with this patch on a 32b
-> > Skylake system (and still present on mainline). Before this patch
-> > everything is peaceful and appears to work correctly. Applying this patch,
-> > and we fail to initialise the GPU with a few DMAR errors reported, e.g.
-> > 
-> > [   20.279445] DMAR: DRHD: handling fault status reg 3
-> > [   20.279508] DMAR: [DMA Read] Request device [00:02.0] fault addr 8900a000 [fault reason 05] PTE Write access is not set
-> > 
-> > Setting an identity map for the igfx made the DMAR errors disappear, but
-> > the GPU still failed to initialise.
-> > 
-> > There's no difference in the DMAR configuration dmesg between working and
-> > the upset patch. And the really strange part is that switching to a 64b
-> > kernel with this patch, it's working.
-> > 
-> > Any suggestions on what I should look for?
-> 
-> Can the patch titled "[PATCH] iommu/intel: Handle 36b addressing for
-> x86-32" solve this problem?
+From: Eric Dumazet <edumazet@google.com>
 
-It does. Not sure why, but that mystery I can leave for others.
--Chris
+[ Upstream commit 38ba8b9241f5848a49b80fddac9ab5f4692e434e ]
+
+syzbot found that at least 2 bytes of kernel information
+were leaked during getsockname() on AF_CAN CAN_J1939 socket.
+
+Since struct sockaddr_can has in fact two holes, simply
+clear the whole area before filling it with useful data.
+
+BUG: KMSAN: kernel-infoleak in kmsan_copy_to_user+0x81/0x90 mm/kmsan/kmsan_hooks.c:253
+CPU: 0 PID: 8466 Comm: syz-executor511 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x21c/0x280 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ kmsan_internal_check_memory+0x238/0x3d0 mm/kmsan/kmsan.c:423
+ kmsan_copy_to_user+0x81/0x90 mm/kmsan/kmsan_hooks.c:253
+ instrument_copy_to_user include/linux/instrumented.h:91 [inline]
+ _copy_to_user+0x18e/0x260 lib/usercopy.c:39
+ copy_to_user include/linux/uaccess.h:186 [inline]
+ move_addr_to_user+0x3de/0x670 net/socket.c:237
+ __sys_getsockname+0x407/0x5e0 net/socket.c:1909
+ __do_sys_getsockname net/socket.c:1920 [inline]
+ __se_sys_getsockname+0x91/0xb0 net/socket.c:1917
+ __x64_sys_getsockname+0x4a/0x70 net/socket.c:1917
+ do_syscall_64+0xad/0x160 arch/x86/entry/common.c:386
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x440219
+Code: Bad RIP value.
+RSP: 002b:00007ffe5ee150c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000033
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440219
+RDX: 0000000020000240 RSI: 0000000020000100 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a20
+R13: 0000000000401ab0 R14: 0000000000000000 R15: 0000000000000000
+
+Local variable ----address@__sys_getsockname created at:
+ __sys_getsockname+0x91/0x5e0 net/socket.c:1894
+ __sys_getsockname+0x91/0x5e0 net/socket.c:1894
+
+Bytes 2-3 of 24 are uninitialized
+Memory access of size 24 starts at ffff8880ba2c7de8
+Data copied to user address 0000000020000100
+
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Robin van der Gracht <robin@protonic.nl>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: linux-can@vger.kernel.org
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Link: https://lore.kernel.org/r/20200813161834.4021638-1-edumazet@google.com
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/can/j1939/socket.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
+index 11d566c70a944..1b7dc1a8547f3 100644
+--- a/net/can/j1939/socket.c
++++ b/net/can/j1939/socket.c
+@@ -561,6 +561,11 @@ static int j1939_sk_connect(struct socket *sock, struct sockaddr *uaddr,
+ static void j1939_sk_sock2sockaddr_can(struct sockaddr_can *addr,
+ 				       const struct j1939_sock *jsk, int peer)
+ {
++	/* There are two holes (2 bytes and 3 bytes) to clear to avoid
++	 * leaking kernel information to user space.
++	 */
++	memset(addr, 0, J1939_MIN_NAMELEN);
++
+ 	addr->can_family = AF_CAN;
+ 	addr->can_ifindex = jsk->ifindex;
+ 	addr->can_addr.j1939.pgn = jsk->addr.pgn;
+-- 
+2.25.1
+
+
+
