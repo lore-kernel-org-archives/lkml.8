@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEADC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE3382071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBA22071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261813;
-	bh=dXM8ebUwK/gOG6BlRks6/cnXzv5LRwXZ/MAjWYPQJ0Q=;
+	s=default; t=1598261820;
+	bh=5NLj5sKI134qWWyTgQ08KsIfccN+WZfBmPvo8KiYckE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=avcP9Qa41doeG4gJBgkw1UI1JP2bM16wToYHIkImjoqZzXIWrKtA448yvWi9wQcWY
-	 O7KhfQALQZ+xVdio/phE+yqBtlXYJaUjx1whnobXMKE7stno5iM9BpS8AHY1fMeSzw
-	 eArxXbTicmhxI6kpFVZaphcOhie4MTH9E8vKDlho=
+	b=azAeDXJ0655iuqYYELdPttaMyAco2qlcIvNwmXpSB+tS0QxarErvEdQk3DXSAtB/e
+	 SNOAt3j+vwl+nOUuRm86vYJnM2CH5gIHMi4V/U74jZWIbFNI+wIVZCyBjSjp0pCur6
+	 lDs3Ke1VBqRd54M+U3+/BkPJrSzK2rqdmnhwqPmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbgHXIsa (ORCPT
+        id S1729743AbgHXJg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:48:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48798 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:36:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728113AbgHXIsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:48:07 -0400
+        id S1729344AbgHXIsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:48:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30FBA2072D;
-        Mon, 24 Aug 2020 08:48:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 493A2206F0;
+        Mon, 24 Aug 2020 08:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258886;
-        bh=dXM8ebUwK/gOG6BlRks6/cnXzv5LRwXZ/MAjWYPQJ0Q=;
+        s=default; t=1598258909;
+        bh=5NLj5sKI134qWWyTgQ08KsIfccN+WZfBmPvo8KiYckE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZxkMu3T/lgnqfmNTedsQZoTqOoP4y0T5SULUBazxZRrLk0bJUaGrBUJMWEKhUJ/eu
-         Yy1VWXBhF5cfHkVrtSEoY52mE2jsEF7pY0X9nNFmO144amT2HlzrP0N0iWv4UsvZgj
-         mycXnEDL6LMRG9YeQ4OCx8Bhwuxk81VTrxrXLK0I=
+        b=oXf23BGsSzEmUbj6mQ/I2zSAmtaai1q33VCHgeedPhylHMimf1drzdgF8M8Sh7naS
+         QDMzslA34pZNsMjtP8Lk8w7MRK2b6MfdkYnKVJxdL8vOWoCtG/BfjZqQFpB/bX8ir7
+         jdjKOAFcu5b8+bGADf9KY4mIYAZMr/Dnb+SdZidk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Zhang Changzhong <zhangchangzhong@huawei.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 080/107] can: j1939: add rxtimer for multipacket broadcast session
-Date:   Mon, 24 Aug 2020 10:30:46 +0200
-Message-Id: <20200824082409.079524169@linuxfoundation.org>
+Subject: [PATCH 5.4 089/107] Revert "scsi: qla2xxx: Disable T10-DIF feature with FC-NVMe during probe"
+Date:   Mon, 24 Aug 2020 10:30:55 +0200
+Message-Id: <20200824082409.516205901@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -62,97 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Changzhong <zhangchangzhong@huawei.com>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 0ae18a82686f9b9965a8ce0dd81371871b306ffe ]
+[ Upstream commit dca93232b361d260413933903cd4bdbd92ebcc7f ]
 
-According to SAE J1939/21 (Chapter 5.12.3 and APPENDIX C), for transmit side
-the required time interval between packets of a multipacket broadcast message
-is 50 to 200 ms, the responder shall use a timeout of 250ms (provides margin
-allowing for the maximumm spacing of 200ms). For receive side a timeout will
-occur when a time of greater than 750 ms elapsed between two message packets
-when more packets were expected.
+FCP T10-PI and NVMe features are independent of each other. This patch
+allows both features to co-exist.
 
-So this patch fix and add rxtimer for multipacket broadcast session.
+This reverts commit 5da05a26b8305a625bc9d537671b981795b46dab.
 
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
-Link: https://lore.kernel.org/r/1596599425-5534-5-git-send-email-zhangchangzhong@huawei.com
-Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Link: https://lore.kernel.org/r/20200806111014.28434-12-njavali@marvell.com
+Fixes: 5da05a26b830 ("scsi: qla2xxx: Disable T10-DIF feature with FC-NVMe during probe")
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/j1939/transport.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index e3167619b196f..dbd215cbc53d8 100644
---- a/net/can/j1939/transport.c
-+++ b/net/can/j1939/transport.c
-@@ -723,10 +723,12 @@ static int j1939_session_tx_rts(struct j1939_session *session)
- 		return ret;
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index d7ec4083a0911..d91c95d9981ac 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -2804,10 +2804,6 @@ qla2x00_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	/* This may fail but that's ok */
+ 	pci_enable_pcie_error_reporting(pdev);
  
- 	session->last_txcmd = dat[0];
--	if (dat[0] == J1939_TP_CMD_BAM)
-+	if (dat[0] == J1939_TP_CMD_BAM) {
- 		j1939_tp_schedule_txtimer(session, 50);
+-	/* Turn off T10-DIF when FC-NVMe is enabled */
+-	if (ql2xnvmeenable)
+-		ql2xenabledif = 0;
 -
--	j1939_tp_set_rxtimeout(session, 1250);
-+		j1939_tp_set_rxtimeout(session, 250);
-+	} else {
-+		j1939_tp_set_rxtimeout(session, 1250);
-+	}
- 
- 	netdev_dbg(session->priv->ndev, "%s: 0x%p\n", __func__, session);
- 
-@@ -1687,11 +1689,15 @@ static void j1939_xtp_rx_rts(struct j1939_priv *priv, struct sk_buff *skb,
- 	}
- 	session->last_cmd = cmd;
- 
--	j1939_tp_set_rxtimeout(session, 1250);
--
--	if (cmd != J1939_TP_CMD_BAM && !session->transmission) {
--		j1939_session_txtimer_cancel(session);
--		j1939_tp_schedule_txtimer(session, 0);
-+	if (cmd == J1939_TP_CMD_BAM) {
-+		if (!session->transmission)
-+			j1939_tp_set_rxtimeout(session, 750);
-+	} else {
-+		if (!session->transmission) {
-+			j1939_session_txtimer_cancel(session);
-+			j1939_tp_schedule_txtimer(session, 0);
-+		}
-+		j1939_tp_set_rxtimeout(session, 1250);
- 	}
- 
- 	j1939_session_put(session);
-@@ -1742,6 +1748,7 @@ static void j1939_xtp_rx_dat_one(struct j1939_session *session,
- 	int offset;
- 	int nbytes;
- 	bool final = false;
-+	bool remain = false;
- 	bool do_cts_eoma = false;
- 	int packet;
- 
-@@ -1804,6 +1811,8 @@ static void j1939_xtp_rx_dat_one(struct j1939_session *session,
- 	    j1939_cb_is_broadcast(&session->skcb)) {
- 		if (session->pkt.rx >= session->pkt.total)
- 			final = true;
-+		else
-+			remain = true;
- 	} else {
- 		/* never final, an EOMA must follow */
- 		if (session->pkt.rx >= session->pkt.last)
-@@ -1813,6 +1822,9 @@ static void j1939_xtp_rx_dat_one(struct j1939_session *session,
- 	if (final) {
- 		j1939_session_timers_cancel(session);
- 		j1939_session_completed(session);
-+	} else if (remain) {
-+		if (!session->transmission)
-+			j1939_tp_set_rxtimeout(session, 750);
- 	} else if (do_cts_eoma) {
- 		j1939_tp_set_rxtimeout(session, 1250);
- 		if (!session->transmission)
+ 	ha = kzalloc(sizeof(struct qla_hw_data), GFP_KERNEL);
+ 	if (!ha) {
+ 		ql_log_pci(ql_log_fatal, pdev, 0x0009,
 -- 
 2.25.1
 
