@@ -2,161 +2,288 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4A622BED
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:36:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WHXuMrr+"
+	by mail.kernel.org (Postfix) with ESMTP id B683622D2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgHXQgu (ORCPT
+        id S1726770AbgHXQhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728044AbgHXQe3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:34:29 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4669C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 09:34:29 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id v16so4494872plo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 09:34:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sJRzEKxQslNUvlgLwatGfusZhkWsuQ/eLz0nCOLU88U=;
-        b=WHXuMrr+DrJsG5ydYqMywzOTNF0xboE3NYuEaGBrglNd4z3mFnPcURJW1XjqONdE02
-         jEd3johpV7asGvtVa+ez8MfBRQ87rUHVp7CmI3ahiaW8mamMuaI8qLNBlRmHIN8qIRqs
-         TFjcjDUxevJ7NY3H2b9PAQBUOWcIP8vFY1z/g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sJRzEKxQslNUvlgLwatGfusZhkWsuQ/eLz0nCOLU88U=;
-        b=F4XGw/wvFcNJhEyvv1BQ6HMYKe+VwjfEqvfVk6QskcE/29QbR5uHDKUeUcR/4da7Zz
-         UTLaLHeEQ7AYuL92LdrPrky9Zma8JqzNEd+7RQwZ8A2YybNI94G9CEz56VJ0E+ctXL9O
-         GANNsNCQOCfQe62sj97X7XXkp/sXuTFe+xh+IfYjO1F/Kdl09+rGfhj6rgXpYHkZ3t0g
-         8e5P+Ao9KyAnmSH/FQJJVZsy9PI2p2AVq0k1eSZ10K0kz59SLAggSnAPNPH/KdkweRUe
-         r0njrFvfb1FhP14fkF6toJ/MHf8vLhmVyCLwToDrbc/7/wAWO+nRLNZ2G3/TvJv7qF8i
-         0zhg==
-X-Gm-Message-State: AOAM533xTfXr0A1BC6Z9idTNBmggO/AzJXtGEhq2JIYVVpoMi5zRpG9Q
-        mtq115Y3IAoct6hpWVP1vuZ2Avf5cpTpbg==
-X-Google-Smtp-Source: ABdhPJyworV0/Dr0sI3KHDP2uuvn/VCt9Dk9wQf/9i50LZ8rfttmW34/1Rr/04C4VJQlwHUH/o6Tlg==
-X-Received: by 2002:a17:902:9a93:: with SMTP id w19mr4173622plp.297.1598286869071;
-        Mon, 24 Aug 2020 09:34:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q16sm12747047pfg.153.2020.08.24.09.34.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 09:34:28 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 09:34:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] seccomp: Use current_pt_regs()
-Message-ID: <202008240929.8DDED2B90@keescook>
-References: <20200824125921.488311-1-efremov@linux.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824125921.488311-1-efremov@linux.com>
+        Mon, 24 Aug 2020 12:37:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50666 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728078AbgHXQd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:33:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 3508CAF85;
+        Mon, 24 Aug 2020 16:33:53 +0000 (UTC)
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 06/12] MIPS: Convert ICACHE_REFILLS_WORKAROUND_WAR into a config option
+Date:   Mon, 24 Aug 2020 18:32:48 +0200
+Message-Id: <20200824163257.44533-7-tsbogend@alpha.franken.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20200824163257.44533-1-tsbogend@alpha.franken.de>
+References: <20200824163257.44533-1-tsbogend@alpha.franken.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:59:21PM +0300, Denis Efremov wrote:
-> Modify seccomp_do_user_notification(), __seccomp_filter(),
-> __secure_computing() to use current_pt_regs().
+Use a new config option to enable I-cache refill workaround and remove
+define from different war.h files.
 
-This looks okay. It seems some architectures have a separate
-define for current_pt_regs(), though it's overlapped directly with
-task_pt_regs(). I'm curious what the benefit of the change is?
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+---
+ arch/mips/Kconfig                              |  9 +++++++++
+ arch/mips/include/asm/mach-cavium-octeon/war.h |  1 -
+ arch/mips/include/asm/mach-generic/war.h       |  1 -
+ arch/mips/include/asm/mach-ip22/war.h          |  1 -
+ arch/mips/include/asm/mach-ip27/war.h          |  1 -
+ arch/mips/include/asm/mach-ip28/war.h          |  1 -
+ arch/mips/include/asm/mach-ip30/war.h          |  1 -
+ arch/mips/include/asm/mach-ip32/war.h          |  1 -
+ arch/mips/include/asm/mach-malta/war.h         |  1 -
+ arch/mips/include/asm/mach-rc32434/war.h       |  1 -
+ arch/mips/include/asm/mach-rm/war.h            |  1 -
+ arch/mips/include/asm/mach-sibyte/war.h        |  1 -
+ arch/mips/include/asm/mach-tx49xx/war.h        |  1 -
+ arch/mips/include/asm/war.h                    | 10 ----------
+ arch/mips/kernel/signal.c                      |  8 +++++++-
+ 15 files changed, 16 insertions(+), 23 deletions(-)
 
--Kees
-
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  kernel/seccomp.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> index 3ee59ce0a323..dc4eaa1d6002 100644
-> --- a/kernel/seccomp.c
-> +++ b/kernel/seccomp.c
-> @@ -910,7 +910,7 @@ static int seccomp_do_user_notification(int this_syscall,
->  	if (flags & SECCOMP_USER_NOTIF_FLAG_CONTINUE)
->  		return 0;
->  
-> -	syscall_set_return_value(current, task_pt_regs(current),
-> +	syscall_set_return_value(current, current_pt_regs(),
->  				 err, ret);
->  	return -1;
->  }
-> @@ -943,13 +943,13 @@ static int __seccomp_filter(int this_syscall, const struct seccomp_data *sd,
->  		/* Set low-order bits as an errno, capped at MAX_ERRNO. */
->  		if (data > MAX_ERRNO)
->  			data = MAX_ERRNO;
-> -		syscall_set_return_value(current, task_pt_regs(current),
-> +		syscall_set_return_value(current, current_pt_regs(),
->  					 -data, 0);
->  		goto skip;
->  
->  	case SECCOMP_RET_TRAP:
->  		/* Show the handler the original registers. */
-> -		syscall_rollback(current, task_pt_regs(current));
-> +		syscall_rollback(current, current_pt_regs());
->  		/* Let the filter pass back 16 bits of data. */
->  		seccomp_send_sigsys(this_syscall, data);
->  		goto skip;
-> @@ -962,7 +962,7 @@ static int __seccomp_filter(int this_syscall, const struct seccomp_data *sd,
->  		/* ENOSYS these calls if there is no tracer attached. */
->  		if (!ptrace_event_enabled(current, PTRACE_EVENT_SECCOMP)) {
->  			syscall_set_return_value(current,
-> -						 task_pt_regs(current),
-> +						 current_pt_regs(),
->  						 -ENOSYS, 0);
->  			goto skip;
->  		}
-> @@ -982,7 +982,7 @@ static int __seccomp_filter(int this_syscall, const struct seccomp_data *sd,
->  		if (fatal_signal_pending(current))
->  			goto skip;
->  		/* Check if the tracer forced the syscall to be skipped. */
-> -		this_syscall = syscall_get_nr(current, task_pt_regs(current));
-> +		this_syscall = syscall_get_nr(current, current_pt_regs());
->  		if (this_syscall < 0)
->  			goto skip;
->  
-> @@ -1025,7 +1025,7 @@ static int __seccomp_filter(int this_syscall, const struct seccomp_data *sd,
->  			kernel_siginfo_t info;
->  
->  			/* Show the original registers in the dump. */
-> -			syscall_rollback(current, task_pt_regs(current));
-> +			syscall_rollback(current, current_pt_regs());
->  			/* Trigger a manual coredump since do_exit skips it. */
->  			seccomp_init_siginfo(&info, this_syscall, data);
->  			do_coredump(&info);
-> @@ -1060,7 +1060,7 @@ int __secure_computing(const struct seccomp_data *sd)
->  		return 0;
->  
->  	this_syscall = sd ? sd->nr :
-> -		syscall_get_nr(current, task_pt_regs(current));
-> +		syscall_get_nr(current, current_pt_regs());
->  
->  	switch (mode) {
->  	case SECCOMP_MODE_STRICT:
-> -- 
-> 2.26.2
-> 
-
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 7db9611d7800..c32f6160f854 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -568,6 +568,7 @@ config MIPS_MALTA
+ 	select SYS_SUPPORTS_VPE_LOADER
+ 	select SYS_SUPPORTS_ZBOOT
+ 	select USE_OF
++	select WAR_ICACHE_REFILLS
+ 	select ZONE_DMA32 if 64BIT
+ 	help
+ 	  This enables support for the MIPS Technologies Malta evaluation
+@@ -756,6 +757,7 @@ config SGI_IP32
+ 	select SYS_HAS_CPU_NEVADA
+ 	select SYS_SUPPORTS_64BIT_KERNEL
+ 	select SYS_SUPPORTS_BIG_ENDIAN
++	select WAR_ICACHE_REFILLS
+ 	help
+ 	  If you want this kernel to run on SGI O2 workstation, say Y here.
+ 
+@@ -2666,6 +2668,13 @@ config WAR_R4600_V2_HIT_CACHEOP
+ config WAR_TX49XX_ICACHE_INDEX_INV
+ 	bool
+ 
++# The RM7000 processors and the E9000 cores have a bug (though PMC-Sierra
++# opposes it being called that) where invalid instructions in the same
++# I-cache line worth of instructions being fetched may case spurious
++# exceptions.
++config WAR_ICACHE_REFILLS
++	bool
++
+ #
+ # - Highmem only makes sense for the 32-bit kernel.
+ # - The current highmem code will only work properly on physically indexed
+diff --git a/arch/mips/include/asm/mach-cavium-octeon/war.h b/arch/mips/include/asm/mach-cavium-octeon/war.h
+index 1cb30485dc94..1061917152c6 100644
+--- a/arch/mips/include/asm/mach-cavium-octeon/war.h
++++ b/arch/mips/include/asm/mach-cavium-octeon/war.h
+@@ -11,7 +11,6 @@
+ 
+ #define BCM1250_M3_WAR			0
+ #define SIBYTE_1956_WAR			0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+ #define R10000_LLSC_WAR			0
+ #define MIPS34K_MISSED_ITLB_WAR		0
+ 
+diff --git a/arch/mips/include/asm/mach-generic/war.h b/arch/mips/include/asm/mach-generic/war.h
+index 79530836cc79..966f40aedf16 100644
+--- a/arch/mips/include/asm/mach-generic/war.h
++++ b/arch/mips/include/asm/mach-generic/war.h
+@@ -10,7 +10,6 @@
+ 
+ #define BCM1250_M3_WAR			0
+ #define SIBYTE_1956_WAR			0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+ #define R10000_LLSC_WAR			0
+ #define MIPS34K_MISSED_ITLB_WAR		0
+ 
+diff --git a/arch/mips/include/asm/mach-ip22/war.h b/arch/mips/include/asm/mach-ip22/war.h
+index 35286ba3ec57..99f6531e5b9b 100644
+--- a/arch/mips/include/asm/mach-ip22/war.h
++++ b/arch/mips/include/asm/mach-ip22/war.h
+@@ -10,7 +10,6 @@
+ 
+ #define BCM1250_M3_WAR			0
+ #define SIBYTE_1956_WAR			0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+ #define R10000_LLSC_WAR			0
+ #define MIPS34K_MISSED_ITLB_WAR		0
+ 
+diff --git a/arch/mips/include/asm/mach-ip27/war.h b/arch/mips/include/asm/mach-ip27/war.h
+index a18293c16ade..d8dfa7258bea 100644
+--- a/arch/mips/include/asm/mach-ip27/war.h
++++ b/arch/mips/include/asm/mach-ip27/war.h
+@@ -10,7 +10,6 @@
+ 
+ #define BCM1250_M3_WAR			0
+ #define SIBYTE_1956_WAR			0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+ #define R10000_LLSC_WAR			1
+ #define MIPS34K_MISSED_ITLB_WAR		0
+ 
+diff --git a/arch/mips/include/asm/mach-ip28/war.h b/arch/mips/include/asm/mach-ip28/war.h
+index 1a6092e5c7b3..f252df761ec8 100644
+--- a/arch/mips/include/asm/mach-ip28/war.h
++++ b/arch/mips/include/asm/mach-ip28/war.h
+@@ -10,7 +10,6 @@
+ 
+ #define BCM1250_M3_WAR			0
+ #define SIBYTE_1956_WAR			0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+ #define R10000_LLSC_WAR			1
+ #define MIPS34K_MISSED_ITLB_WAR		0
+ 
+diff --git a/arch/mips/include/asm/mach-ip30/war.h b/arch/mips/include/asm/mach-ip30/war.h
+index 031c7b9c5236..58ff9ca345b7 100644
+--- a/arch/mips/include/asm/mach-ip30/war.h
++++ b/arch/mips/include/asm/mach-ip30/war.h
+@@ -7,7 +7,6 @@
+ 
+ #define BCM1250_M3_WAR			0
+ #define SIBYTE_1956_WAR			0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+ #ifdef CONFIG_CPU_R10000
+ #define R10000_LLSC_WAR			1
+ #else
+diff --git a/arch/mips/include/asm/mach-ip32/war.h b/arch/mips/include/asm/mach-ip32/war.h
+index 25552158fa3a..ca3efe457ae0 100644
+--- a/arch/mips/include/asm/mach-ip32/war.h
++++ b/arch/mips/include/asm/mach-ip32/war.h
+@@ -10,7 +10,6 @@
+ 
+ #define BCM1250_M3_WAR			0
+ #define SIBYTE_1956_WAR			0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	1
+ #define R10000_LLSC_WAR			0
+ #define MIPS34K_MISSED_ITLB_WAR		0
+ 
+diff --git a/arch/mips/include/asm/mach-malta/war.h b/arch/mips/include/asm/mach-malta/war.h
+index 9b0803537bce..b7827eb09375 100644
+--- a/arch/mips/include/asm/mach-malta/war.h
++++ b/arch/mips/include/asm/mach-malta/war.h
+@@ -10,7 +10,6 @@
+ 
+ #define BCM1250_M3_WAR			0
+ #define SIBYTE_1956_WAR			0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	1
+ #define R10000_LLSC_WAR			0
+ #define MIPS34K_MISSED_ITLB_WAR		0
+ 
+diff --git a/arch/mips/include/asm/mach-rc32434/war.h b/arch/mips/include/asm/mach-rc32434/war.h
+index 924b51b9a340..b7827eb09375 100644
+--- a/arch/mips/include/asm/mach-rc32434/war.h
++++ b/arch/mips/include/asm/mach-rc32434/war.h
+@@ -10,7 +10,6 @@
+ 
+ #define BCM1250_M3_WAR			0
+ #define SIBYTE_1956_WAR			0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+ #define R10000_LLSC_WAR			0
+ #define MIPS34K_MISSED_ITLB_WAR		0
+ 
+diff --git a/arch/mips/include/asm/mach-rm/war.h b/arch/mips/include/asm/mach-rm/war.h
+index 0536972b24c8..fe04d059dd0c 100644
+--- a/arch/mips/include/asm/mach-rm/war.h
++++ b/arch/mips/include/asm/mach-rm/war.h
+@@ -10,7 +10,6 @@
+ 
+ #define BCM1250_M3_WAR			0
+ #define SIBYTE_1956_WAR			0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+ #define R10000_LLSC_WAR			0
+ #define MIPS34K_MISSED_ITLB_WAR		0
+ 
+diff --git a/arch/mips/include/asm/mach-sibyte/war.h b/arch/mips/include/asm/mach-sibyte/war.h
+index 9e006fdcf38a..7c376f6eee9b 100644
+--- a/arch/mips/include/asm/mach-sibyte/war.h
++++ b/arch/mips/include/asm/mach-sibyte/war.h
+@@ -24,7 +24,6 @@ extern int sb1250_m3_workaround_needed(void);
+ 
+ #endif
+ 
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+ #define R10000_LLSC_WAR			0
+ #define MIPS34K_MISSED_ITLB_WAR		0
+ 
+diff --git a/arch/mips/include/asm/mach-tx49xx/war.h b/arch/mips/include/asm/mach-tx49xx/war.h
+index 9293c5f9ffb2..5768889c20a7 100644
+--- a/arch/mips/include/asm/mach-tx49xx/war.h
++++ b/arch/mips/include/asm/mach-tx49xx/war.h
+@@ -10,7 +10,6 @@
+ 
+ #define BCM1250_M3_WAR			0
+ #define SIBYTE_1956_WAR			0
+-#define ICACHE_REFILLS_WORKAROUND_WAR	0
+ #define R10000_LLSC_WAR			0
+ #define MIPS34K_MISSED_ITLB_WAR		0
+ 
+diff --git a/arch/mips/include/asm/war.h b/arch/mips/include/asm/war.h
+index 7a69641de57b..a0942821d67d 100644
+--- a/arch/mips/include/asm/war.h
++++ b/arch/mips/include/asm/war.h
+@@ -93,16 +93,6 @@
+ #error Check setting of SIBYTE_1956_WAR for your platform
+ #endif
+ 
+-/*
+- * The RM7000 processors and the E9000 cores have a bug (though PMC-Sierra
+- * opposes it being called that) where invalid instructions in the same
+- * I-cache line worth of instructions being fetched may case spurious
+- * exceptions.
+- */
+-#ifndef ICACHE_REFILLS_WORKAROUND_WAR
+-#error Check setting of ICACHE_REFILLS_WORKAROUND_WAR for your platform
+-#endif
+-
+ /*
+  * On the R10000 up to version 2.6 (not sure about 2.7) there is a bug that
+  * may cause ll / sc and lld / scd sequences to execute non-atomically.
+diff --git a/arch/mips/kernel/signal.c b/arch/mips/kernel/signal.c
+index a0262729cd4c..f44265025281 100644
+--- a/arch/mips/kernel/signal.c
++++ b/arch/mips/kernel/signal.c
+@@ -545,6 +545,12 @@ int restore_sigcontext(struct pt_regs *regs, struct sigcontext __user *sc)
+ 	return err ?: protected_restore_fp_context(sc);
+ }
+ 
++#ifdef CONFIG_WAR_ICACHE_REFILLS
++#define SIGMASK		~(cpu_icache_line_size()-1)
++#else
++#define SIGMASK		ALMASK
++#endif
++
+ void __user *get_sigframe(struct ksignal *ksig, struct pt_regs *regs,
+ 			  size_t frame_size)
+ {
+@@ -565,7 +571,7 @@ void __user *get_sigframe(struct ksignal *ksig, struct pt_regs *regs,
+ 
+ 	sp = sigsp(sp, ksig);
+ 
+-	return (void __user *)((sp - frame_size) & (ICACHE_REFILLS_WORKAROUND_WAR ? ~(cpu_icache_line_size()-1) : ALMASK));
++	return (void __user *)((sp - frame_size) & SIGMASK);
+ }
+ 
+ /*
 -- 
-Kees Cook
+2.16.4
+
