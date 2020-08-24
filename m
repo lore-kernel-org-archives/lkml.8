@@ -2,116 +2,68 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F67C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6854D206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289003;
-	bh=4liA3bSXuXAyOirdTzhgqvbhRg6gkDsgcplNT6Y7sEs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zO9Z3yZqALdhfPrUZkdro3WrKiQ4yU77eP7+GTwoYkmEp8TUQ/XGqbwayAhqoNe09
-	 GRDLBOdI9o5j4QjcMrPTe/aZ8lFfnmOebRdaZ6/A1es+/i0t74gNPATxXSGYW2DGRk
-	 2lhiNG1HuW8IhtF/tpWCzFRJORRatztFvfoLQjQM=
+	by mail.kernel.org (Postfix) with ESMTP id 96F14206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbgHXRKC (ORCPT
+        id S1727959AbgHXRKH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:10:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40658 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:10:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:38342 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727998AbgHXQiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:38:08 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A54023104;
-        Mon, 24 Aug 2020 16:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287044;
-        bh=4liA3bSXuXAyOirdTzhgqvbhRg6gkDsgcplNT6Y7sEs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TNz6lxIzh9R3qmYm0CtHeNMFHWtSIJcm4OJ1+gVr3Qc+gmKFeehgRxR46hpQYgSdd
-         qUo5WWdp3CLBIgeCStGQqfumtcVkFzR3gqsO8+Mke8/TCP6/S43vCVPBCNvRoESpxn
-         1nbxgIdDRmvjwjWvZ0YtsyoCoLRHED/ea27qoC4s=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanley Chu <stanley.chu@mediatek.com>,
-        Can Guo <cang@codeaurora.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 36/54] scsi: ufs: Clean up completed request without interrupt notification
-Date:   Mon, 24 Aug 2020 12:36:15 -0400
-Message-Id: <20200824163634.606093-36-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
-References: <20200824163634.606093-1-sashal@kernel.org>
+        id S1728082AbgHXRJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 13:09:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 940281FB;
+        Mon, 24 Aug 2020 10:09:57 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AADB13F71F;
+        Mon, 24 Aug 2020 10:09:46 -0700 (PDT)
+References: <20200824153902.57875-1-andriy.shevchenko@linux.intel.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH v1] sched/topology: Make compiler happy about unused constant definitions
+In-reply-to: <20200824153902.57875-1-andriy.shevchenko@linux.intel.com>
+Date:   Mon, 24 Aug 2020 18:09:41 +0100
+Message-ID: <jhjeenwdl7u.mognet@arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit b10178ee7fa88b68a9e8adc06534d2605cb0ec23 ]
+Hi,
 
-If somehow no interrupt notification is raised for a completed request and
-its doorbell bit is cleared by host, UFS driver needs to cleanup its
-outstanding bit in ufshcd_abort(). Otherwise, system may behave abnormally
-in the following scenario:
+On 24/08/20 16:39, Andy Shevchenko wrote:
+> Compilation of almost each file ends up with
+>
+>  In file included from .../include/linux/energy_model.h:10,
+>                 from .../include/linux/device.h:16,
+>                 from .../drivers/spi/spi.c:8:
+>  .../include/linux/sched/topology.h:30:27: warning: ‘SD_DEGENERATE_GROUPS_MASK’ defined but not used [-Wunused-const-variable=]
+>     30 | static const unsigned int SD_DEGENERATE_GROUPS_MASK =
+>        |                           ^~~~~~~~~~~~~~~~~~~~~~~~~
+>  ...
+>
+> Make compiler happy by annotating the static constants with __maybwe_unused.
+>
 
-After ufshcd_abort() returns, this request will be requeued by SCSI layer
-with its outstanding bit set. Any future completed request will trigger
-ufshcd_transfer_req_compl() to handle all "completed outstanding bits". At
-this time the "abnormal outstanding bit" will be detected and the "requeued
-request" will be chosen to execute request post-processing flow. This is
-wrong because this request is still "alive".
+That should see some use as long as the build is for SMP. This whole region
+is guarded by #ifdef CONFIG_SMP, so an !SMP build shouldn't trigger this.
 
-Link: https://lore.kernel.org/r/20200811141859.27399-2-huobean@gmail.com
-Reviewed-by: Can Guo <cang@codeaurora.org>
-Acked-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/ufs/ufshcd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 93c8d1caeba2b..a36f003d00af1 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6227,7 +6227,7 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
- 			/* command completed already */
- 			dev_err(hba->dev, "%s: cmd at tag %d successfully cleared from DB.\n",
- 				__func__, tag);
--			goto out;
-+			goto cleanup;
- 		} else {
- 			dev_err(hba->dev,
- 				"%s: no response from device. tag = %d, err %d\n",
-@@ -6261,6 +6261,7 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
- 		goto out;
- 	}
- 
-+cleanup:
- 	scsi_dma_unmap(cmd);
- 
- 	spin_lock_irqsave(host->host_lock, flags);
--- 
-2.25.1
-
+With what config/kernel are you getting this?
