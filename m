@@ -2,108 +2,125 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E43C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F134AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 388AB2078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598311938;
-	bh=MHWFxrSNWgUFbkwhstp/6s6DxFuZbPykagmrmfORDj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H+luWWnchKomenvjAVBRxmtdIoGGU6dUz3tO7v1T+kJ1cZrzfvmvfL07j/ulkodpM
-	 geEGV8Zt5J6SIQzdrO+dgAR8bzpsLxo86TN3r7N+/eKe4PnsKi5HJYUKqFX1SnaM7T
-	 ycVgEaz4JR3CCNlS73X09UzvdR82tLGfLjjRyaxY=
+	by mail.kernel.org (Postfix) with ESMTP id C4CBB2078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:32:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YhvPHezV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgHXXcO (ORCPT
+        id S1728190AbgHXXcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:32:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38984 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 19:32:20 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37751 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725968AbgHXXcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 19:32:11 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726610AbgHXXcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 19:32:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1090C2074D;
-        Mon, 24 Aug 2020 23:32:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598311931;
-        bh=MHWFxrSNWgUFbkwhstp/6s6DxFuZbPykagmrmfORDj0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IsooUHbL1hbNjt/UxArRuXQ4gDx5qqLpZrSaveZCC0UMlS1Ca4PHW8BaGvurwQ/PM
-         0aFlZxQiWzqU2b6+2MLc9JWtCT2OCvP4nSwiSvkH8QOgdW7lsTBnv+LTZoxH5Ucz5x
-         sabwm2+ayVwUI+Ntm4IX2sz/ljDaix2w++h75wVY=
-Date:   Mon, 24 Aug 2020 16:32:10 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        Daniel Rosenberg <drosen@google.com>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [PATCH v12 0/4] Prepare for upcoming Casefolding/Encryption
- patches
-Message-ID: <20200824233210.GA122905@google.com>
-References: <20200708091237.3922153-1-drosen@google.com>
- <20200720170951.GE1292162@gmail.com>
- <20200727164508.GE1138@sol.localdomain>
- <20200824230015.GA810@sol.localdomain>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bb7gs0HBHz9sTX;
+        Tue, 25 Aug 2020 09:32:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1598311931;
+        bh=SwkRNpaLSIIubkfSUG1oYIMG1JGbIM6aYFzSpUYzBwE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YhvPHezVr3k1yKYSWhr0lMdJg3qM1mhgZb/5xhyRUpRMCmx/jxfmcgPMQ27A3U2X0
+         y3SEZIWdBQuAX0FOLnfAa8Fgb/MOjQUU1JGq4DRxdjOxnMJ8pNUnxADjRqagvjNp5W
+         vpL5uQPic/MnHJjQaAIKGAOqdEMC7+eOhGqRdTYbhOlQCbUcC4VQ2SLPuo7oYZyms7
+         gI6ilqh8EowiQCZrym8Ag0NGmcsj0rSPx60hQM0pKWYijTgYvoNvOCtaTwvRp0dh+G
+         XsIrUg7CdlSjOyDlGMlQrMYZyux+MtSRC5258byidN3Ik9qlYEj57FruWg/gZ9nSRr
+         8a9waDK/ji2Cg==
+Date:   Tue, 25 Aug 2020 09:32:08 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andy Gross <agross@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: linux-next: manual merge of the qcom tree with the imx-mxs tree
+Message-ID: <20200825093208.0b14ab2c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824230015.GA810@sol.localdomain>
+Content-Type: multipart/signed; boundary="Sig_/hB9Wh69cPQebzrYhyiHxju5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/24, Eric Biggers wrote:
-> On Mon, Jul 27, 2020 at 09:45:08AM -0700, Eric Biggers wrote:
-> > On Mon, Jul 20, 2020 at 10:09:51AM -0700, Eric Biggers wrote:
-> > > On Wed, Jul 08, 2020 at 02:12:33AM -0700, Daniel Rosenberg wrote:
-> > > > This lays the ground work for enabling casefolding and encryption at the
-> > > > same time for ext4 and f2fs. A future set of patches will enable that
-> > > > functionality.
-> > > > 
-> > > > These unify the highly similar dentry_operations that ext4 and f2fs both
-> > > > use for casefolding. In addition, they improve d_hash by not requiring a
-> > > > new string allocation.
-> > > > 
-> > > > Daniel Rosenberg (4):
-> > > >   unicode: Add utf8_casefold_hash
-> > > >   fs: Add standard casefolding support
-> > > >   f2fs: Use generic casefolding support
-> > > >   ext4: Use generic casefolding support
-> > > > 
-> > > 
-> > > Ted, are you interested in taking this through the ext4 tree for 5.9?
-> > > 
-> > > - Eric
-> > 
-> > Ping?
-> > 
-> 
-> Unfortunately this patchset got ignored for 5.9.
-> 
-> Ted, will you have any interest in taking this patchset for 5.10?  Or should
-> Jaegeuk just take patches 1-3 via the f2fs tree?
+--Sig_/hB9Wh69cPQebzrYhyiHxju5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-fyi; I think I can merge 1-3, if Al has no concern on 1 & 2. 
+Hi all,
 
-> 
-> The fscrypt tree is also an option, but I feel it's not really appropriate since
-> this patchset is just a refactoring of the existing casefolding support.
-> 
-> More reviews on patches 1-2 would be appreciated too.  So far just Gabriel and I
-> have reviewed them.  I was hoping that other people would review them too.
-> 
-> - Eric
+Today's linux-next merge of the qcom tree got a conflict in:
+
+  arch/arm64/configs/defconfig
+
+between commit:
+
+  0c08ed48c956 ("arm64: defconfig: Enable imx8mq-librem5-devkit display sta=
+ck")
+
+from the imx-mxs tree and commit:
+
+  8a3b3373891c ("arm64: defconfig: Enable Lontium LT9611 driver")
+
+from the qcom tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/arm64/configs/defconfig
+index 185904e0c5d5,947d8e0f50b3..000000000000
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@@ -640,12 -622,11 +640,13 @@@ CONFIG_DRM_MSM=3D
+  CONFIG_DRM_TEGRA=3Dm
+  CONFIG_DRM_PANEL_LVDS=3Dm
+  CONFIG_DRM_PANEL_SIMPLE=3Dm
+ -CONFIG_DRM_SIMPLE_BRIDGE=3Dm
+ +CONFIG_DRM_PANEL_SITRONIX_ST7703=3Dm
+  CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=3Dm
+  CONFIG_DRM_DISPLAY_CONNECTOR=3Dm
++ CONFIG_DRM_LONTIUM_LT9611=3Dm
+ +CONFIG_DRM_NWL_MIPI_DSI=3Dm
+  CONFIG_DRM_SII902X=3Dm
+ +CONFIG_DRM_SIMPLE_BRIDGE=3Dm
+  CONFIG_DRM_THINE_THC63LVD1024=3Dm
+  CONFIG_DRM_TI_SN65DSI86=3Dm
+  CONFIG_DRM_I2C_ADV7511=3Dm
+
+--Sig_/hB9Wh69cPQebzrYhyiHxju5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9ETfgACgkQAVBC80lX
+0Gxozgf/SgmI+LnsjwpnoNZ2I56nI7vbIteDq6oN2cmrZm6wNfFxgQFb/1hzPErp
+lVz2rUSrq2+eQpiHDNVmjhpjw0uSugp/bNvkvqGxPx9TPwqWInP4Wog3Pnlq/aFz
+Pi4uWXKKfvUSpjxZcb+GyZpGhYvaT1/nmjrU5sZtRHeUFyDH+XNATSnrNNsetw7Y
+Hz5DJi6lg7xM1wVYy0YSt2HhjrDHWSwqx8G05ej66Eu5ppKb3DrvrDm5/2ixQ5AA
+AQUvh/OPR212wrNWy945L3QwUkaXTHTSYUAXV2VjiY/cVRFXgLaoeRC8rpCoCoqx
+/bq5SpfQKhPvJpSaD8N0JXQ2arWq7A==
+=7L0y
+-----END PGP SIGNATURE-----
+
+--Sig_/hB9Wh69cPQebzrYhyiHxju5--
