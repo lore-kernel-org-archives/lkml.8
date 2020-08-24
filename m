@@ -5,52 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F633C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE005C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB78120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F6920738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261541;
-	bh=6aHggL1RkTAzBEHv4FvfQ9+Mk3/6PJyf2EJjPbmIUQE=;
+	s=default; t=1598261555;
+	bh=TYRNxJgDF1sQxxuNs8NuMg2bvxa6NkRqH6CyUWD6aeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SSOSSuGo/mZ463lvC9+xI3OgOj6aG0+k+1bGogHf0e9xig5IG2AlATL96dhsvIAhr
-	 cAD0GKE4UMJyY8fvcVpDJdJ7/SHO7iIUl6gQg/ozagCdnL/vrKLwnzQjBqlKz7J5Gm
-	 iQSKrTD5lM6/lqD0c4sztPRS/44QqQMsqD4iz5Ks=
+	b=V+QViX8Ejk8AAHsujBplssZjWq5nW25S6BDJhBSagyeeV/LK7wO+HClCgM06XYqsa
+	 VegpYqdcCQaA8RPcaCsEQHQAPezrUeHGxc6/ymtV+K64L7O4ua1NO93amKTmdNGFV9
+	 lJ8Bc1RV0RfMV3ytKuVBWiZqWPugHd5RHaKp+zac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbgHXJcU (ORCPT
+        id S1729906AbgHXJcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:32:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53322 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:32:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbgHXIuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:50:07 -0400
+        id S1729809AbgHXIuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:50:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8003C20FC3;
-        Mon, 24 Aug 2020 08:50:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 343EC20FC3;
+        Mon, 24 Aug 2020 08:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259007;
-        bh=6aHggL1RkTAzBEHv4FvfQ9+Mk3/6PJyf2EJjPbmIUQE=;
+        s=default; t=1598258999;
+        bh=TYRNxJgDF1sQxxuNs8NuMg2bvxa6NkRqH6CyUWD6aeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VlcgrOErM9arNdK+6Jc5sA32GoW11tFsdAcCK933m4fMNWhGjcTMEBspzLCeOh370
-         gLb6J/dAaXugjyGxW2K5bdk+ONNOFQl0qnDtYkkR97b7APo4BBQvWobq0Nz+jlAj3W
-         xKPr27/eWFk2Iyj8BQgzZOoyW52HaNhSyVjlwI+k=
+        b=z+l717PU5uUgOsd6ux1GA43CjKXQIoqDK2Fmn7F5cxMlrvuBJnctXivjFkb+e2zIi
+         rqliD5v5yiWAz2WZS08oi8P4u5hW/8kw6Zr++OR2b7xNfubFrj1UfXJ+F0uky3r+If
+         Nty8WbDx5MBzgS/R0jnd2L1E4MjkQsfpeTDBSP9M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 19/33] m68knommu: fix overwriting of bits in ColdFire V3 cache control
-Date:   Mon, 24 Aug 2020 10:31:15 +0200
-Message-Id: <20200824082347.504318577@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Liu Ying <victor.liu@nxp.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 01/33] drm/imx: imx-ldb: Disable both channels for split mode in enc->disable()
+Date:   Mon, 24 Aug 2020 10:30:57 +0200
+Message-Id: <20200824082346.580405012@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
 References: <20200824082346.498653578@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,50 +64,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Ungerer <gerg@linux-m68k.org>
+From: Liu Ying <victor.liu@nxp.com>
 
-[ Upstream commit bdee0e793cea10c516ff48bf3ebb4ef1820a116b ]
+[ Upstream commit 3b2a999582c467d1883716b37ffcc00178a13713 ]
 
-The Cache Control Register (CACR) of the ColdFire V3 has bits that
-control high level caching functions, and also enable/disable the use
-of the alternate stack pointer register (the EUSP bit) to provide
-separate supervisor and user stack pointer registers. The code as
-it is today will blindly clear the EUSP bit on cache actions like
-invalidation. So it is broken for this case - and that will result
-in failed booting (interrupt entry and exit processing will be
-completely hosed).
+Both of the two LVDS channels should be disabled for split mode
+in the encoder's ->disable() callback, because they are enabled
+in the encoder's ->enable() callback.
 
-This only affects ColdFire V3 parts that support the alternate stack
-register (like the 5329 for example) - generally speaking new parts do,
-older parts don't. It has no impact on ColdFire V3 parts with the single
-stack pointer, like the 5307 for example.
-
-Fix the cache bit defines used, so they maintain the EUSP bit when
-carrying out cache actions through the CACR register.
-
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Fixes: 6556f7f82b9c ("drm: imx: Move imx-drm driver out of staging")
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Liu Ying <victor.liu@nxp.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/include/asm/m53xxacr.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/imx/imx-ldb.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/m68k/include/asm/m53xxacr.h b/arch/m68k/include/asm/m53xxacr.h
-index 3177ce8331d69..baee0c77b9818 100644
---- a/arch/m68k/include/asm/m53xxacr.h
-+++ b/arch/m68k/include/asm/m53xxacr.h
-@@ -88,9 +88,9 @@
-  * coherency though in all cases. And for copyback caches we will need
-  * to push cached data as well.
-  */
--#define CACHE_INIT	  CACR_CINVA
--#define CACHE_INVALIDATE  CACR_CINVA
--#define CACHE_INVALIDATED CACR_CINVA
-+#define CACHE_INIT        (CACHE_MODE + CACR_CINVA - CACR_EC)
-+#define CACHE_INVALIDATE  (CACHE_MODE + CACR_CINVA)
-+#define CACHE_INVALIDATED (CACHE_MODE + CACR_CINVA)
+diff --git a/drivers/gpu/drm/imx/imx-ldb.c b/drivers/gpu/drm/imx/imx-ldb.c
+index 31ca56e593f58..b9dc2ef64ed88 100644
+--- a/drivers/gpu/drm/imx/imx-ldb.c
++++ b/drivers/gpu/drm/imx/imx-ldb.c
+@@ -305,6 +305,7 @@ static void imx_ldb_encoder_disable(struct drm_encoder *encoder)
+ {
+ 	struct imx_ldb_channel *imx_ldb_ch = enc_to_imx_ldb_ch(encoder);
+ 	struct imx_ldb *ldb = imx_ldb_ch->ldb;
++	int dual = ldb->ldb_ctrl & LDB_SPLIT_MODE_EN;
+ 	int mux, ret;
  
- #define ACR0_MODE	((CONFIG_RAMBASE & 0xff000000) + \
- 			 (0x000f0000) + \
+ 	/*
+@@ -321,14 +322,14 @@ static void imx_ldb_encoder_disable(struct drm_encoder *encoder)
+ 
+ 	drm_panel_disable(imx_ldb_ch->panel);
+ 
+-	if (imx_ldb_ch == &ldb->channel[0])
++	if (imx_ldb_ch == &ldb->channel[0] || dual)
+ 		ldb->ldb_ctrl &= ~LDB_CH0_MODE_EN_MASK;
+-	else if (imx_ldb_ch == &ldb->channel[1])
++	if (imx_ldb_ch == &ldb->channel[1] || dual)
+ 		ldb->ldb_ctrl &= ~LDB_CH1_MODE_EN_MASK;
+ 
+ 	regmap_write(ldb->regmap, IOMUXC_GPR2, ldb->ldb_ctrl);
+ 
+-	if (ldb->ldb_ctrl & LDB_SPLIT_MODE_EN) {
++	if (dual) {
+ 		clk_disable_unprepare(ldb->clk[0]);
+ 		clk_disable_unprepare(ldb->clk[1]);
+ 	}
 -- 
 2.25.1
 
