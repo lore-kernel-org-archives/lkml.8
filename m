@@ -2,148 +2,123 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E2DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F74C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3C12063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289223;
-	bh=iW5TFqh9aHKAWPpFm5d7hKY+aJrXMq3MTvrhKwmjeqQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NDiAwgR20m+4nWAQDyJATRXtLsNEwtYxNnGM8Bxel2nMrNlU5l7Rz8MuwfoNeWlw0
-	 hYqa0UgSSVVwmK8bQHJaLSh9UlmY9PNbsvQkgNXY7i2NSJzPoaMz75tkxAHbTlXuxB
-	 fUF4gBup6Sd4o+SCAsMpoE6+b43E4X39VK0zEaBo=
+	by mail.kernel.org (Postfix) with ESMTP id 331F72063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:13:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sACWAqxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgHXRNh (ORCPT
+        id S1728449AbgHXRNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:13:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbgHXQhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:37:25 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CB0E22E00;
-        Mon, 24 Aug 2020 16:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287016;
-        bh=iW5TFqh9aHKAWPpFm5d7hKY+aJrXMq3MTvrhKwmjeqQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vo9TpUMMMGXWtqj2Y8zaY+GD9P+GzltzFBTeDOYVgz3Mx3XCSM9dMBO8S0lPPPSna
-         lJGmIV3SNF7IfWEhI2cE2EOENOvSo7jHPXSskTVaHjpQlQFT0TFNxP41s4UqrQKBDy
-         7RwKz2WgsQuGTQjQ1/3poH3JDACCR0UDk/s2iNuI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 16/54] drm/amd/powerplay: correct Vega20 cached smu feature state
-Date:   Mon, 24 Aug 2020 12:35:55 -0400
-Message-Id: <20200824163634.606093-16-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
-References: <20200824163634.606093-1-sashal@kernel.org>
+        Mon, 24 Aug 2020 13:13:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbgHXRNT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 13:13:19 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A77C061573;
+        Mon, 24 Aug 2020 10:13:18 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id o12so3433971qki.13;
+        Mon, 24 Aug 2020 10:13:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GaHc2bZckrs8e79oDtFVB7aLWMuGUzPJWwj4xMv5ZQ0=;
+        b=sACWAqxr/VwqSbPYqQIyY1frS1wWBS77a9KLyRsBUtLvjhHrsnouo257CI/pZAU3NE
+         HUToM7TEMwjOrJ5fQ8PE7xoK3iL68yjtoax+Fn1Bz/MIMoK1Pmdg1aWH2M5Zx5gbc5Nj
+         vHMMGR6V44/vv023nXAYwemwySEZ1tzxw8Iu9QY/xZQ03pWZPdrL1LZGRv6aMAHv8dY8
+         cWv9WjHc10HWc9Rjgfnt8zBZcMgIUFhQRNTFt/LqcqxFq3Anq8QSqkS+FSrTGsYc6/1J
+         n438QmKE/gclk0V8c6ow5eP7xWRsU4Ldw1v/6UpgJvn//xaVZG2cTGULug7GOI42Ee+l
+         bBTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GaHc2bZckrs8e79oDtFVB7aLWMuGUzPJWwj4xMv5ZQ0=;
+        b=nssSjNSsugSR5DIcYKKGA49UO2GzPm8rqFM7qjPdz090Zc3qry6CvZkj0IONAZ3PHn
+         YLpDZEuQeQK2Ri1BfyaceDcTghTlah6Cg0waxJ5S6V+d/d8GUBMZjLl3zMrVIlFeulij
+         IBqC34ow7ck+FheEqdhvWuT4P90Ch241JIwf3/qM7cVFQFHidTZtzy1jg8TPZDbQeoyO
+         pvKsu2CPg+kOoyiCxT3kuyOtYqGdReyn4S3Mm1JsTRr9ccQcK1kArRXEgKs0psByEB/3
+         GOTcFArpsl9Q/h8i5LO4j44ad3qMu5sSCW8WvSyjHPYIqH34ithfQz56LEbyUqaFvhs9
+         0IFg==
+X-Gm-Message-State: AOAM532FReTpB97lsv2LWi9wVhIK+eOt4YvPfeow/gMvX7vHv0vbb12g
+        4XA3lxcoyPVUiMbHPQxLE5M=
+X-Google-Smtp-Source: ABdhPJxc+U0rwjsBE0g1+LJf3/921SQAlSClVRIUiNYJqVYKUNV6pzhfvMBdGRGx2YYHZo6QUvCcrQ==
+X-Received: by 2002:a37:8301:: with SMTP id f1mr5473168qkd.86.1598289197871;
+        Mon, 24 Aug 2020 10:13:17 -0700 (PDT)
+Received: from dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com ([2620:10d:c091:480::1:dd21])
+        by smtp.gmail.com with ESMTPSA id f189sm9839624qke.15.2020.08.24.10.13.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 10:13:17 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 13:13:14 -0400
+From:   Dan Schatzberg <schatzberg.dan@gmail.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Michel Lespinasse <walken@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH 2/4] mm: support nesting memalloc_use_memcg()
+Message-ID: <20200824171314.GA17113@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com>
+References: <20200824153607.6595-1-schatzberg.dan@gmail.com>
+ <20200824153607.6595-3-schatzberg.dan@gmail.com>
+ <20200824161901.GA2401952@carbon.lan>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824161901.GA2401952@carbon.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+On Mon, Aug 24, 2020 at 09:19:01AM -0700, Roman Gushchin wrote:
+> Hi Dan,
+> 
+> JFYI: I need a similar patch for the bpf memory accounting rework,
+> so I ended up sending it separately (with some modifications including
+> different naming): https://lkml.org/lkml/2020/8/21/1464 .
+> 
+> Can you please, rebase your patchset using this patch?
+> 
+> I hope Andrew can pull this standalone patch into 5.9-rc*,
+> as Shakeel suggested. It will help us to avoid merge conflicts
+> during the 5.10 merge window.
+> 
+> Thanks!
 
-[ Upstream commit 266d81d9eed30f4994d76a2b237c63ece062eefe ]
-
-Correct the cached smu feature state on pp_features sysfs
-setting.
-
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../drm/amd/powerplay/hwmgr/vega20_hwmgr.c    | 38 +++++++++----------
- 1 file changed, 19 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
-index 08b6ba39a6d7c..f714d65de07e1 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
-@@ -985,27 +985,15 @@ static int vega20_disable_all_smu_features(struct pp_hwmgr *hwmgr)
- {
- 	struct vega20_hwmgr *data =
- 			(struct vega20_hwmgr *)(hwmgr->backend);
--	uint64_t features_enabled;
--	int i;
--	bool enabled;
--	int ret = 0;
-+	int i, ret = 0;
- 
- 	PP_ASSERT_WITH_CODE((ret = smum_send_msg_to_smc(hwmgr,
- 			PPSMC_MSG_DisableAllSmuFeatures)) == 0,
- 			"[DisableAllSMUFeatures] Failed to disable all smu features!",
- 			return ret);
- 
--	ret = vega20_get_enabled_smc_features(hwmgr, &features_enabled);
--	PP_ASSERT_WITH_CODE(!ret,
--			"[DisableAllSMUFeatures] Failed to get enabled smc features!",
--			return ret);
--
--	for (i = 0; i < GNLD_FEATURES_MAX; i++) {
--		enabled = (features_enabled & data->smu_features[i].smu_feature_bitmap) ?
--			true : false;
--		data->smu_features[i].enabled = enabled;
--		data->smu_features[i].supported = enabled;
--	}
-+	for (i = 0; i < GNLD_FEATURES_MAX; i++)
-+		data->smu_features[i].enabled = 0;
- 
- 	return 0;
- }
-@@ -3215,10 +3203,11 @@ static int vega20_get_ppfeature_status(struct pp_hwmgr *hwmgr, char *buf)
- 
- static int vega20_set_ppfeature_status(struct pp_hwmgr *hwmgr, uint64_t new_ppfeature_masks)
- {
--	uint64_t features_enabled;
--	uint64_t features_to_enable;
--	uint64_t features_to_disable;
--	int ret = 0;
-+	struct vega20_hwmgr *data =
-+			(struct vega20_hwmgr *)(hwmgr->backend);
-+	uint64_t features_enabled, features_to_enable, features_to_disable;
-+	int i, ret = 0;
-+	bool enabled;
- 
- 	if (new_ppfeature_masks >= (1ULL << GNLD_FEATURES_MAX))
- 		return -EINVAL;
-@@ -3247,6 +3236,17 @@ static int vega20_set_ppfeature_status(struct pp_hwmgr *hwmgr, uint64_t new_ppfe
- 			return ret;
- 	}
- 
-+	/* Update the cached feature enablement state */
-+	ret = vega20_get_enabled_smc_features(hwmgr, &features_enabled);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < GNLD_FEATURES_MAX; i++) {
-+		enabled = (features_enabled & data->smu_features[i].smu_feature_bitmap) ?
-+			true : false;
-+		data->smu_features[i].enabled = enabled;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.25.1
-
+Yeah I mentioned it in the cover letter and linked to your patch. I
+had not realized the naming change, so I can rebase on top of that -
+I'll wait to see if there's other feedback first.
