@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FEFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DCBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B15207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51AD0208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262377;
-	bh=9HAS2loCHxQ24PIAcghVs2Z0hXa2Wx19xvuumM0vtFI=;
+	s=default; t=1598262383;
+	bh=rcxkiAp2mUiWSLyuix0BybFPmDsEZCspJKmcKwP9mks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TF7fbsDjpkVbM4guFY0hfpYqIM2iLNHlNsMqbg9Cr33X8nyhIvBQynUm0gjHVAiCq
-	 cmdvyjl7y9ui8DUoLKbSB7zBCe+KxXjl7shVtye49SMCx6/ckhqE0Qi1I2Bg34HYQ/
-	 txhZvPCZGLf7VI1H/t35jgiiw4evyRI03IndW0Zs=
+	b=p2TMMGcHeqc2h0JVUk9UPvxxk/kDT5Ljn7yd5Bv3341m/A4dy2wmmpdKWHZn+A5i2
+	 J3APvvoMpgodjmYp63nveOzDMv/nOJIjNpDakl1pMlDxPsKRhkEIK4NIAYn+EebOLU
+	 rgWXLxiYDUTI9JAiXDe+ke1IrBgqmX+8SywjFxG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbgHXJqQ (ORCPT
+        id S1728944AbgHXJqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:46:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34564 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:46:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbgHXImZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:42:25 -0400
+        id S1726809AbgHXImX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:42:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 784BF2075B;
-        Mon, 24 Aug 2020 08:42:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E639B2074D;
+        Mon, 24 Aug 2020 08:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258545;
-        bh=9HAS2loCHxQ24PIAcghVs2Z0hXa2Wx19xvuumM0vtFI=;
+        s=default; t=1598258542;
+        bh=rcxkiAp2mUiWSLyuix0BybFPmDsEZCspJKmcKwP9mks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gTWTq7V9SlXGmnoi1/4GDGzxvNIFACaEWJbyJtIRVv8W5l/6xy3QqdpAui8HAhb9V
-         LEZG5kCuNorXazsa2FVx/H7opZQRUJyb8ZSwqHpcwJNvAmNfO5HgKBq3sV6JECleCY
-         v39Q7SSCj9+lZUovxYblJ4qUbfWu3D4XncbcYHtU=
+        b=DYIDcDy6kZFT3C5Udq6uEyRB2iI2RuH3747OuHu4txKId54DcBCI0rT/3zSLxwy4I
+         i93BbMtB2EP7im/4mPG5r1q5+1k3hL6yrKJJbOmLS0vRQTnjzm8HxbhhMqHo6i7hlT
+         RlovI+/CjRvxQ60Lc6VB+eJbiGtmsVpX/LUlJVYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Mahesh Bandewar <maheshb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 066/124] ASoC: q6routing: add dummy register read/write function
-Date:   Mon, 24 Aug 2020 10:30:00 +0200
-Message-Id: <20200824082412.663970116@linuxfoundation.org>
+Subject: [PATCH 5.7 083/124] ipvlan: fix device features
+Date:   Mon, 24 Aug 2020 10:30:17 +0200
+Message-Id: <20200824082413.494136151@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -61,66 +61,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Mahesh Bandewar <maheshb@google.com>
 
-[ Upstream commit 796a58fe2b8c9b6668db00d92512ec84be663027 ]
+[ Upstream commit d0f5c7076e01fef6fcb86988d9508bf3ce258bd4 ]
 
-Most of the DAPM widgets for DSP ASoC components reuse reg field
-of the widgets for its internal calculations, however these are not
-real registers. So read/writes to these numbers are not really
-valid. However ASoC core will read these registers to get default
-state during startup.
+Processing NETDEV_FEAT_CHANGE causes IPvlan links to lose
+NETIF_F_LLTX feature because of the incorrect handling of
+features in ipvlan_fix_features().
 
-With recent changes to ASoC core, every register read/write
-failures are reported very verbosely. Prior to this fails to reads
-are totally ignored, so we never saw any error messages.
+--before--
+lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
+tx-lockless: on [fixed]
+lpaa10:~# ethtool -K ipvl0 tso off
+Cannot change tcp-segmentation-offload
+Actual changes:
+vlan-challenged: off [fixed]
+tx-lockless: off [fixed]
+lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
+tx-lockless: off [fixed]
+lpaa10:~#
 
-To fix this add dummy read/write function to return default value.
+--after--
+lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
+tx-lockless: on [fixed]
+lpaa10:~# ethtool -K ipvl0 tso off
+Cannot change tcp-segmentation-offload
+Could not change any device features
+lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
+tx-lockless: on [fixed]
+lpaa10:~#
 
-Fixes: e3a33673e845 ("ASoC: qdsp6: q6routing: Add q6routing driver")
-Reported-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200811120205.21805-2-srinivas.kandagatla@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 2ad7bf363841 ("ipvlan: Initial check-in of the IPVLAN driver.")
+Signed-off-by: Mahesh Bandewar <maheshb@google.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/qdsp6/q6routing.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/net/ipvlan/ipvlan_main.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
-index 46e50612b92c1..750e6a30444eb 100644
---- a/sound/soc/qcom/qdsp6/q6routing.c
-+++ b/sound/soc/qcom/qdsp6/q6routing.c
-@@ -973,6 +973,20 @@ static int msm_routing_probe(struct snd_soc_component *c)
- 	return 0;
+diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
+index f195f278a83aa..7768f1120c1f6 100644
+--- a/drivers/net/ipvlan/ipvlan_main.c
++++ b/drivers/net/ipvlan/ipvlan_main.c
+@@ -106,12 +106,21 @@ static void ipvlan_port_destroy(struct net_device *dev)
+ 	kfree(port);
  }
  
-+static unsigned int q6routing_reg_read(struct snd_soc_component *component,
-+				       unsigned int reg)
-+{
-+	/* default value */
-+	return 0;
-+}
++#define IPVLAN_ALWAYS_ON_OFLOADS \
++	(NETIF_F_SG | NETIF_F_HW_CSUM | \
++	 NETIF_F_GSO_ROBUST | NETIF_F_GSO_SOFTWARE | NETIF_F_GSO_ENCAP_ALL)
 +
-+static int q6routing_reg_write(struct snd_soc_component *component,
-+			       unsigned int reg, unsigned int val)
-+{
-+	/* dummy */
-+	return 0;
-+}
++#define IPVLAN_ALWAYS_ON \
++	(IPVLAN_ALWAYS_ON_OFLOADS | NETIF_F_LLTX | NETIF_F_VLAN_CHALLENGED)
 +
- static const struct snd_soc_component_driver msm_soc_routing_component = {
- 	.probe = msm_routing_probe,
- 	.name = DRV_NAME,
-@@ -981,6 +995,8 @@ static const struct snd_soc_component_driver msm_soc_routing_component = {
- 	.num_dapm_widgets = ARRAY_SIZE(msm_qdsp6_widgets),
- 	.dapm_routes = intercon,
- 	.num_dapm_routes = ARRAY_SIZE(intercon),
-+	.read = q6routing_reg_read,
-+	.write = q6routing_reg_write,
- };
+ #define IPVLAN_FEATURES \
+-	(NETIF_F_SG | NETIF_F_CSUM_MASK | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
++	(NETIF_F_SG | NETIF_F_HW_CSUM | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
+ 	 NETIF_F_GSO | NETIF_F_ALL_TSO | NETIF_F_GSO_ROBUST | \
+ 	 NETIF_F_GRO | NETIF_F_RXCSUM | \
+ 	 NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_HW_VLAN_STAG_FILTER)
  
- static int q6pcm_routing_probe(struct platform_device *pdev)
++	/* NETIF_F_GSO_ENCAP_ALL NETIF_F_GSO_SOFTWARE Newly added */
++
+ #define IPVLAN_STATE_MASK \
+ 	((1<<__LINK_STATE_NOCARRIER) | (1<<__LINK_STATE_DORMANT))
+ 
+@@ -125,7 +134,9 @@ static int ipvlan_init(struct net_device *dev)
+ 	dev->state = (dev->state & ~IPVLAN_STATE_MASK) |
+ 		     (phy_dev->state & IPVLAN_STATE_MASK);
+ 	dev->features = phy_dev->features & IPVLAN_FEATURES;
+-	dev->features |= NETIF_F_LLTX | NETIF_F_VLAN_CHALLENGED;
++	dev->features |= IPVLAN_ALWAYS_ON;
++	dev->vlan_features = phy_dev->vlan_features & IPVLAN_FEATURES;
++	dev->vlan_features |= IPVLAN_ALWAYS_ON_OFLOADS;
+ 	dev->hw_enc_features |= dev->features;
+ 	dev->gso_max_size = phy_dev->gso_max_size;
+ 	dev->gso_max_segs = phy_dev->gso_max_segs;
+@@ -225,7 +236,14 @@ static netdev_features_t ipvlan_fix_features(struct net_device *dev,
+ {
+ 	struct ipvl_dev *ipvlan = netdev_priv(dev);
+ 
+-	return features & (ipvlan->sfeatures | ~IPVLAN_FEATURES);
++	features |= NETIF_F_ALL_FOR_ALL;
++	features &= (ipvlan->sfeatures | ~IPVLAN_FEATURES);
++	features = netdev_increment_features(ipvlan->phy_dev->features,
++					     features, features);
++	features |= IPVLAN_ALWAYS_ON;
++	features &= (IPVLAN_FEATURES | IPVLAN_ALWAYS_ON);
++
++	return features;
+ }
+ 
+ static void ipvlan_change_rx_flags(struct net_device *dev, int change)
+@@ -732,10 +750,9 @@ static int ipvlan_device_event(struct notifier_block *unused,
+ 
+ 	case NETDEV_FEAT_CHANGE:
+ 		list_for_each_entry(ipvlan, &port->ipvlans, pnode) {
+-			ipvlan->dev->features = dev->features & IPVLAN_FEATURES;
+ 			ipvlan->dev->gso_max_size = dev->gso_max_size;
+ 			ipvlan->dev->gso_max_segs = dev->gso_max_segs;
+-			netdev_features_change(ipvlan->dev);
++			netdev_update_features(ipvlan->dev);
+ 		}
+ 		break;
+ 
 -- 
 2.25.1
 
