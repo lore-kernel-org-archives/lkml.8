@@ -2,191 +2,195 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC287C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF49AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72B3320702
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7096A20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:45:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="x1F19B8D"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="HfuhhlNF";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="BHtEUfkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgHXVpL (ORCPT
+        id S1727940AbgHXVpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:45:11 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51012 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXVpL (ORCPT
+        Mon, 24 Aug 2020 17:45:24 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:51108 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727913AbgHXVpS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 17:45:11 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07OLiZwJ109477;
-        Mon, 24 Aug 2020 21:44:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- references : message-id : date : mime-version : in-reply-to : content-type
- : content-transfer-encoding; s=corp-2020-01-29;
- bh=5ftygo4Ee5xu8FJ3Seecngj6CY7Jpdmg1p+RhDMqHss=;
- b=x1F19B8DJ72ef3WNDvH0pxbvintrtRug+OTw7RiM3R6MiaSCUTv3siJijWFfgEhLBOrb
- h1T0O1EltwbAAmKkR4NNMWVXnqllbIcn1288Q4lL0bTCLWulUIJQG7u4hga+9KqeoXX7
- BEoBPhkBzmUcythJHL92iiAsUSngwfBQuPMk0mxPHO4g4LNaHAQjzqPx2AkDAOzytj4L
- YTwfgSIbYlHeY+EZ1mUQXOCLZolS8VojBShviuSSYmYsSM9RZCpNZZcCkdlp92mVxIrR
- fZCJuNOQ7YA7x4Qvs//HC51Rbef5Hhny7FbNIXKOrEJWYD4Pgive0wM6y3k9NlhMrfHk gA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 333cshy559-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Aug 2020 21:44:35 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07OLZG7w117747;
-        Mon, 24 Aug 2020 21:42:34 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 333r9hst68-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Aug 2020 21:42:34 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07OLgV7l003277;
-        Mon, 24 Aug 2020 21:42:31 GMT
-Received: from [192.168.0.193] (/69.207.174.138)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Aug 2020 14:42:31 -0700
-Subject: Re: [RFC] Design proposal for upstream core-scheduling interface
-From:   chris hyser <chris.hyser@oracle.com>
-To:     Joel Fernandes <joel@joelfernandes.org>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        JulienDesfossez@google.com, jdesfossez@digitalocean.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>, vineethrp@gmail.com,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        dhaval.giani@gmail.com, paulmck@kernel.org, joshdon@google.com,
-        xii@google.com, haoluo@google.com, bsegall@google.com
-References: <20200822030155.GA414063@google.com>
- <6d25f0e8-9894-386e-7669-9ecbc176bd5b@oracle.com>
-Message-ID: <cb5432d1-9909-1f16-5e26-ea77efbee713@oracle.com>
-Date:   Mon, 24 Aug 2020 17:42:28 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <6d25f0e8-9894-386e-7669-9ecbc176bd5b@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 24 Aug 2020 17:45:18 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OLenmg017518;
+        Mon, 24 Aug 2020 14:45:10 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=YuFuzOO91iSg5oyy//8ib/18Qk/pOyk1qzUnyumRwTw=;
+ b=HfuhhlNFPLONZYWqKCPllX2LQXr5OvZr4GC98tS7wcb4Q0zSZAZ388JOWfTFKwamq4tH
+ fOduLISnSapqZFiCchgVVoW4t+33ATKmijgKCoxWBkbNQFuPK9RJzXXkTS33AwAObGXV
+ C3QDXtxOFaeQy7pDbm7bg8nvJ/Zl90jk8bg= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 33313tj53h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 24 Aug 2020 14:45:10 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.230) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 24 Aug 2020 14:45:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TMD+RIxU8jtDmn0oegQnI9Y1wxoyUyRsWMOyJQG2AYJSXQoiCYV4qBt06wK+WohsBNRTP9QEx7BMIfAkgdmbHjjvrQpLXlRNTF+cEGgMP0h7lauFJQQ6WW86PFtMMvgMNyNUuTGwNfdIjdz0lpT52ITUbvX8+/0mmoT7gA+Is2ufbjgEGEYbEOhQZxXvKkANM2U9eKUSDzzKrcsE3EoyIT3vnxVqf3c6DC1s7zPh3mo85l/rF+HT19phC5PNtVBo3bA8DMh2n6cIq2TKk/RW9tktR/Qedu88KwuuwE1muDJpyqvdTINXi10pmt5eQEEWl6ZYCk8KWXAzMo20oM6hIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YuFuzOO91iSg5oyy//8ib/18Qk/pOyk1qzUnyumRwTw=;
+ b=DsJtIeybPxHuiIN3UCu7SnwCYccaPEyt/KTCH0uFQkrrg3suTKe3nW8syiZ0Hmvp0Jba1tBfoxhzHR0wz6MxbXaCg3W02vg4TJs9zDJtH41v1LFtXK1hjmlQ3EJN+rHAOmc/Rp0nTLjDybFtzmGwZvZGOUNrWNYuTAa34M/6il7fsbZ3tQGEnksxsXURbKWJ4lR9QCeOp+1Dq9+ZZ3FY77i3emmNTZ9CBGQoh+h5XnDZ5kDQT8zWRCfzrnXAvKplDPAg/tBKHfnDGLtIvRXgQogixcubIvvfXQUMyqEhXRUbjmNeOKCjgVUdReEZYyXWKax+23S3GgOGvBQBunpnUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YuFuzOO91iSg5oyy//8ib/18Qk/pOyk1qzUnyumRwTw=;
+ b=BHtEUfkwOrGatWE5yO88KY6WTfDh4EHk/Sc3+dG9JShfMu2wAOFF+E8ZeiOlXVTeueVj0wagL+290JGMaK04nnzSNfmhlnIddT+62eJELKct6DIu0B0OjJewKT/qtJwFFCGuFHCJxP5ZSIMftsu6FK90aqFni1tLkk9LcDPouIw=
+Received: from BY5PR15MB3667.namprd15.prod.outlook.com (2603:10b6:a03:1f9::18)
+ by BYAPR15MB2408.namprd15.prod.outlook.com (2603:10b6:a02:85::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Mon, 24 Aug
+ 2020 21:45:08 +0000
+Received: from BY5PR15MB3667.namprd15.prod.outlook.com
+ ([fe80::f4b9:8011:9aaa:e4ea]) by BY5PR15MB3667.namprd15.prod.outlook.com
+ ([fe80::f4b9:8011:9aaa:e4ea%3]) with mapi id 15.20.3305.026; Mon, 24 Aug 2020
+ 21:45:08 +0000
+From:   Nick Terrell <terrelln@fb.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "od@zcrc.me" <od@zcrc.me>
+Subject: Re: [PATCH 2/2] MIPS: Add support for ZSTD-compressed kernels
+Thread-Topic: [PATCH 2/2] MIPS: Add support for ZSTD-compressed kernels
+Thread-Index: AQHWd9hubhseyyY4wEOiGjoaqbo/sqlHsDKAgAATuwCAAAwMgA==
+Date:   Mon, 24 Aug 2020 21:45:08 +0000
+Message-ID: <96AE5D79-D0DC-4E43-B7F1-41C373BDD1BF@fb.com>
+References: <20200821162948.146947-1-paul@crapouillou.net>
+ <20200821162948.146947-2-paul@crapouillou.net>
+ <41742AA6-8BC0-46E5-8735-9B3D6E83FA2D@fb.com>
+ <CF6LFQ.EXKNOXDIOE502@crapouillou.net>
+In-Reply-To: <CF6LFQ.EXKNOXDIOE502@crapouillou.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240170
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 clxscore=1015
- spamscore=0 priorityscore=1501 impostorscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: crapouillou.net; dkim=none (message not signed)
+ header.d=none;crapouillou.net; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c090:400::5:d050]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7e9c9890-a4ef-4879-c77d-08d84876f858
+x-ms-traffictypediagnostic: BYAPR15MB2408:
+x-microsoft-antispam-prvs: <BYAPR15MB24080D0E0AD33EB14C5E36DDAB560@BYAPR15MB2408.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:1227;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5hdYUADXiVITPkmpsOeYr65pdrVkTD42+a/7y8wyLfJzent07W5BfMimbTsNlCw1Iudv3epyIYXij5ouY1hIbh4YGpL/5stuuf2nG67rIdKdOXMYwusykz4NgwVFbEnb7pjkJ46+EY4flT2kOqDor6gN1720e9Gzd7oe8dl5cbAQjN94dG/yCXARwWh5LmlV6pWMCv5OLOlB9qJBEijgQLCBUc1MY9bcZeYy6NUbx5QzvrPO5r+5DcAHFbtKe6x8vVPv7cDlSbgITQe+Yqwz1AHkasEDuBDrGXPQBTXghEjelNvre0bLagI8uEFBnOrJG1WFVcFg/gnsCN5YFU9NDNsQnCJ1aMRUnWo9pmLUOt+sejOvGHD7ui3Za+D7fRjRz8f1uCwHAhbzT3EAkfbNlw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3667.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(366004)(39860400002)(346002)(396003)(136003)(83380400001)(5660300002)(2616005)(4326008)(6486002)(478600001)(54906003)(53546011)(8676002)(186003)(6506007)(86362001)(33656002)(76116006)(6512007)(36756003)(66446008)(2906002)(71200400001)(8936002)(316002)(64756008)(66476007)(66946007)(6916009)(966005)(66556008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: MMfzVwCDhGxZP5tIO1Sq6TxEaYZkiOnEVNnIxExBylGID8exScRhCSfkeZmD/fsqdoeAcykP6gUspHfKSBefIt8ZSkqIrZB7ICNhOiXOlEVNilWOGljpiKMIEWF41nsIkgwJeS4/clD2Atfi5uAwKcbMRZcGjkpSN03mUglvpV8GP0VXD4ICgcdXJylSMxfhZTAN5SnWR8dQlw0lkGXZp23R0kE0frC1RnYeD+W5gk8JujXI1IAH46bpbV09lR4JepmHdyuasWxw/PD/8W0lqf7Ryx5qgY1+oTjuwM9uOqGS9UJp6wD/BlgN+7qhJ3LWOU1GIs+jvDV2NcJof/E3sajBBNigxbAGazLBOlgHXs59+9xxlJJTvTsbgpUl5t/lxTrXSv64VKnmmaI/+FoD3Qa1VSgRDqPMPFKGgHgLrThdAitJrBpQVPTv48sxEoK8GkmwHzuLDuqgH6G66s0KC8UYbfg0LfSjG6jl9Y7fAxzyn/lMv2pBXeM1HhJ5wTzr+DAUQjPTZ7xe3NZ343ypg5ogxEmdYykZ3hI1T1mkg6II0GtAr2wwJb9B6umsl2kB+bvTD7OuHEkJLdn3IO7EPmeLQQ5LtyuGAUoCLG2QiXyu6l/uGvvL65njNSjATk0l3l2T5q/cJ1t/90CzzHAErsrZJ1YmXDONDWmInRV9RacgbH64H35MU2sw4BST6PpT
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2763A5DBB1884C4A9397A025309F1B97@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3667.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e9c9890-a4ef-4879-c77d-08d84876f858
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2020 21:45:08.1494
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ms0oTxgFS8/RhZjnV/fOuRuh8zO+4SSf8d1Q4k0MZAagzbvyLfGtGRxpatB1gsMY
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2408
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ clxscore=1015 lowpriorityscore=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 mlxlogscore=999 impostorscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2008240171
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/24/20 4:53 PM, chris hyser wrote:
-> On 8/21/20 11:01 PM, Joel Fernandes wrote:
->> Hello!
->> Core-scheduling aims to allow making it safe for more than 1 task that trust
->> each other to safely share hyperthreads within a CPU core [1]. This results
->> in a performance improvement for workloads that can benefit from using
->> hyperthreading safely while limiting core-sharing when it is not safe.
->>
->> Currently no universally agreed set of interface exists and companies have
->> been hacking up their own interface to make use of the patches. This post
->> aims to list usecases which I got after talking to various people at Google
->> and Oracle. After which actual development of code to add interfaces can follow.
->>
->> The below text uses the terms cookie and tag interchangeably. Further, cookie
->> of 0 is assumed to indicate a trusted process - such as kernel threads or
->> system daemons. By default, if nothing is tagged then everything is
->> considered trusted since the scheduler assumes all tasks are a match for each
->> other.
->>
->> Usecase 1: Google's cloud group tags CGroups with a 32-bit integer. This
->> int32 is split into 2 parts, the color and the id. The color can only be set
->> by privileged processes and the id can be set by anyone. The CGroup structure
->> looks like:
->>
->>     A         B
->>    / \      / \ \
->>   C   D    E  F  G
->>
->> Here A and B are container CGroups for 2 jobs are assigned a color by a
->> privileged daemon. The job itself has more sub-CGroups within (for ex, B has
->> E, F and G). When these sub-CGroups are spawned, they inherit the color from
->> the parent. An unprivileged user can then set an id for the sub-CGroup
->> without the knowledge of the privileged daemon if it desires to add further
->> isolation. This setting of id can be an unprivileged operation because the
->> root daemon has already isolated A and B.
->>
->> Usecase 2: Chrome browser - tagging renderers. In Chrome, each tab opened
->> spawns a renderer. A renderer is a sandboxed process and it is assumed it
->> could run arbitrary code (Javascript etc). When a renderer is created, a
->> prctl call is made to tag the renderer. Every thread that is spawned by the
->> renderer is also tagged. Essentially this turns SMT off for the renderer, but
->> still gives a performance boost due to privileged system threads being able
->> to share a core. The tagging also forbids the renderer from sharing a core
->> with privileged system processes. In the future, we plan to allow threads to
->> share a core as well (especially once we get syscall-isolation upstreamed.
->> Patches were posted recently for the same [2]).
->>
->> Usecase 3: ChromeOS VMs - each vCPU thread that is created by the VMM is
->> tagged thus disallowing core sharing between the vCPU thread and any other
->> thread on the system. This is because such VMs may run arbitrary user code
->> and attack both the guest and the host systems sharing the core.
->>
->> Usecase 4: Oracle - Setting a sub-CGroup as trusted (cookie 0). Chris Hyser
->> talked to me on IRC that in a CGroup hierarcy, some CGroups should be allowed
->> to not have to share its parent's CGroup tag. In fact, it should be allowed to
->> untag the child CGroup if needed thus allowing them to share a core with
->> trusted tasks. Others have had similar requirements.
->>
->> Proposal for tagging
->> --------------------
->> We have to support both CGroup and non-CGroup users. CGroup may be overkill
->> for some and the CGroup v2 unified hierarchy may be too inflexible.
->> Regardless, we must support CGroup due its easy of use and existing users.
->>
->> For Usecase #1
->> ----------
->> Usecase #1 requires a 2-level tagging mechanism. I propose 2 new files
->> to the CPU controller:
->> - tag : a boolean (0/1). If set, this CGroup and all sub-CGroups will be
->>    tagged.  (In the kernel, the cookie will be derived from the pointer value
->>    of a ref-counted cookie object.). If reset, then the CGroup will inherit
->>    the parent CGroup's cookie if there is one.
->>
->> - color : The ref-counted object will be aligned say to a 256-byte boundary
->>    (for example), then the lower 8 bits of the pointer can be used to specify
->>    color. Together, the pointer with the color will form a cookie used by the
->>    scheduler.
->>
->> Note that if 2 CGroups belong to 2 different tagged hierarchies, then setting
->> their color to be the same does not imply that the 2 groups will share a
->> core. This is key.  Also, to support usecase #4, we could add a third tag
->> value -- 2, along with the usual 0 and 1 to suggest that the CGroup can share
->> a core with cookie-0 tasks (Chris Hyser feel free to add any more comments
->> here).
-> 
-> Let em think about this. This looks like it would support delegation of a cgroup subtree, which I suppose containers are 
-
-s/em/me/
-
+DQoNCj4gT24gQXVnIDI0LCAyMDIwLCBhdCAyOjAyIFBNLCBQYXVsIENlcmN1ZWlsIDxwYXVsQGNy
+YXBvdWlsbG91Lm5ldD4gd3JvdGU6DQo+IA0KPiBIaSBOaWNrLA0KPiANCj4gTGUgbHVuLiAyNCBh
+b8O7dCAyMDIwIMOgIDE5OjUxLCBOaWNrIFRlcnJlbGwgPHRlcnJlbGxuQGZiLmNvbT4gYSDDqWNy
+aXQgOg0KPj4+IE9uIEF1ZyAyMSwgMjAyMCwgYXQgOToyOSBBTSwgUGF1bCBDZXJjdWVpbCA8cGF1
+bEBjcmFwb3VpbGxvdS5uZXQ+IHdyb3RlOg0KPj4+IEFkZCBzdXBwb3J0IGZvciBzZWxmLWV4dHJh
+Y3Rpbmcga2VybmVscyB3aXRoIGEgWlNURCBjb21wcmVzc2lvbi4NCj4+PiBUZXN0ZWQgb24gYSBr
+ZXJuZWwgZm9yIHRoZSBHQ1ctWmVybywgaXQgYWxsb3dzIHRvIHJlZHVjZSB0aGUgc2l6ZSBvZiB0
+aGUNCj4+PiBrZXJuZWwgZmlsZSBmcm9tIDQuMSBNaUIgd2l0aCBnemlwIHRvIDMuNSBNaUIgd2l0
+aCBaU1RELCBhbmQgYm9vdHMganVzdA0KPj4+IGFzIGZhc3QuDQo+Pj4gU2lnbmVkLW9mZi1ieTog
+UGF1bCBDZXJjdWVpbCA8cGF1bEBjcmFwb3VpbGxvdS5uZXQ+DQo+Pj4gLS0tDQo+Pj4gYXJjaC9t
+aXBzL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgfCAgMSArDQo+Pj4gYXJjaC9taXBzL2Jv
+b3QvY29tcHJlc3NlZC9NYWtlZmlsZSAgICAgfCAgMSArDQo+Pj4gYXJjaC9taXBzL2Jvb3QvY29t
+cHJlc3NlZC9kZWNvbXByZXNzLmMgfCAgNCArKysrDQo+Pj4gYXJjaC9taXBzL2Jvb3QvY29tcHJl
+c3NlZC9zdHJpbmcuYyAgICAgfCAxNiArKysrKysrKysrKysrKysrDQo+Pj4gNCBmaWxlcyBjaGFu
+Z2VkLCAyMiBpbnNlcnRpb25zKCspDQo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvbWlwcy9LY29uZmln
+IGIvYXJjaC9taXBzL0tjb25maWcNCj4+PiBpbmRleCBjOTVmYTNhMjQ4NGMuLmI5ZDdjNDI0OWRj
+OSAxMDA2NDQNCj4+PiAtLS0gYS9hcmNoL21pcHMvS2NvbmZpZw0KPj4+ICsrKyBiL2FyY2gvbWlw
+cy9LY29uZmlnDQo+Pj4gQEAgLTE4OTAsNiArMTg5MCw3IEBAIGNvbmZpZyBTWVNfU1VQUE9SVFNf
+WkJPT1QNCj4+PiAJc2VsZWN0IEhBVkVfS0VSTkVMX0xaTUENCj4+PiAJc2VsZWN0IEhBVkVfS0VS
+TkVMX0xaTw0KPj4+IAlzZWxlY3QgSEFWRV9LRVJORUxfWFoNCj4+PiArCXNlbGVjdCBIQVZFX0tF
+Uk5FTF9aU1REDQo+Pj4gY29uZmlnIFNZU19TVVBQT1JUU19aQk9PVF9VQVJUMTY1NTANCj4+PiAJ
+Ym9vbA0KPj4+IGRpZmYgLS1naXQgYS9hcmNoL21pcHMvYm9vdC9jb21wcmVzc2VkL01ha2VmaWxl
+IGIvYXJjaC9taXBzL2Jvb3QvY29tcHJlc3NlZC9NYWtlZmlsZQ0KPj4+IGluZGV4IDZlNTZjYWVm
+NjlmMC4uODZkZGM2ZmMxNmY0IDEwMDY0NA0KPj4+IC0tLSBhL2FyY2gvbWlwcy9ib290L2NvbXBy
+ZXNzZWQvTWFrZWZpbGUNCj4+PiArKysgYi9hcmNoL21pcHMvYm9vdC9jb21wcmVzc2VkL01ha2Vm
+aWxlDQo+Pj4gQEAgLTcwLDYgKzcwLDcgQEAgdG9vbF8kKENPTkZJR19LRVJORUxfTFo0KSAgICAg
+PSBsejQNCj4+PiB0b29sXyQoQ09ORklHX0tFUk5FTF9MWk1BKSAgICA9IGx6bWENCj4+PiB0b29s
+XyQoQ09ORklHX0tFUk5FTF9MWk8pICAgICA9IGx6bw0KPj4+IHRvb2xfJChDT05GSUdfS0VSTkVM
+X1haKSAgICAgID0geHprZXJuDQo+Pj4gK3Rvb2xfJChDT05GSUdfS0VSTkVMX1pTVEQpICAgID0g
+enN0ZA0KPj4gWW91IGNhbiB1c2UgenN0ZDIyIGhlcmUuIEl0IHdpbGwgZ2l2ZSB5b3Ugc2xpZ2h0
+bHkgYmV0dGVyIGNvbXByZXNzaW9uDQo+PiB3aXRob3V0IGFueSBhZGRpdGlvbmFsIG1lbW9yeSB1
+c2FnZS4gQWxzbywgeW91IHNob3VsZCBhZGQNCj4+IC1EX19ESVNBQkxFX0VYUE9SVFMgdG8gdGhl
+IEtCVUlMRF9DRkxBR1MgbGlrZSB4ODYgZG9lcyBbMV0uDQo+IA0KPiBJbmRlZWQsIGl0J3MgMC4w
+MSUgc21hbGxlciA6KQ0KPiANCj4gV2hhdCBpcyBfX0RJU0FCTEVfRVhQT1JUUyBmb3I/DQoNCkl0
+IGRpc2FibGVzIHRoZSBFWFBPUlRfU1lNQk9MKCkgbWFjcm9zIGluc2lkZSBvZiBsaWIvenN0ZC9k
+ZWNvbXByZXNzLmMuDQpPbiB4ODYgdGhlIGtlcm5lbCB3b27igJl0IGJvb3Qgd2l0aCB0aGVzZSBk
+ZWZpbmVkLiBPdGhlciBkZWNvbXByZXNzb3JzIGhpZGUNCnRoZW0gaWYgdGhlIFNUQVRJQyBtYWNy
+byBpcyBkZWZpbmVkLCBidXQgenN0ZCB1c2VzIHRoaXMgbWV0aG9kLCB3aGljaCB3YXMNCmFkZGVk
+IHNvbWV3aGF0IHJlY2VudGx5Lg0KDQotTmljaw0KDQo+IC1QYXVsDQo+IA0KPj4gWzFdIGh0dHBz
+Oi8vZ2l0aHViLmNvbS90b3J2YWxkcy9saW51eC9ibG9iL21hc3Rlci9hcmNoL3g4Ni9ib290L2Nv
+bXByZXNzZWQvTWFrZWZpbGUNCj4+IC1OaWNrDQo+Pj4gdGFyZ2V0cyArPSB2bWxpbnV4LmJpbi56
+DQo+Pj4gJChvYmopL3ZtbGludXguYmluLno6ICQob2JqKS92bWxpbnV4LmJpbiBGT1JDRQ0KPj4+
+IGRpZmYgLS1naXQgYS9hcmNoL21pcHMvYm9vdC9jb21wcmVzc2VkL2RlY29tcHJlc3MuYyBiL2Fy
+Y2gvbWlwcy9ib290L2NvbXByZXNzZWQvZGVjb21wcmVzcy5jDQo+Pj4gaW5kZXggODhmNWQ2Mzdi
+MWM0Li5jNjFjNjQxNjc0ZTYgMTAwNjQ0DQo+Pj4gLS0tIGEvYXJjaC9taXBzL2Jvb3QvY29tcHJl
+c3NlZC9kZWNvbXByZXNzLmMNCj4+PiArKysgYi9hcmNoL21pcHMvYm9vdC9jb21wcmVzc2VkL2Rl
+Y29tcHJlc3MuYw0KPj4+IEBAIC03Miw2ICs3MiwxMCBAQCB2b2lkIGVycm9yKGNoYXIgKngpDQo+
+Pj4gI2luY2x1ZGUgIi4uLy4uLy4uLy4uL2xpYi9kZWNvbXByZXNzX3VueHouYyINCj4+PiAjZW5k
+aWYNCj4+PiArI2lmZGVmIENPTkZJR19LRVJORUxfWlNURA0KPj4+ICsjaW5jbHVkZSAiLi4vLi4v
+Li4vLi4vbGliL2RlY29tcHJlc3NfdW56c3RkLmMiDQo+Pj4gKyNlbmRpZg0KPj4+ICsNCj4+PiBj
+b25zdCB1bnNpZ25lZCBsb25nIF9fc3RhY2tfY2hrX2d1YXJkID0gMHgwMDBhMGRmZjsNCj4+PiB2
+b2lkIF9fc3RhY2tfY2hrX2ZhaWwodm9pZCkNCj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9taXBzL2Jv
+b3QvY29tcHJlc3NlZC9zdHJpbmcuYyBiL2FyY2gvbWlwcy9ib290L2NvbXByZXNzZWQvc3RyaW5n
+LmMNCj4+PiBpbmRleCA0M2JlZWNjMzU4N2MuLmFiOTU3MjJlYzBjOSAxMDA2NDQNCj4+PiAtLS0g
+YS9hcmNoL21pcHMvYm9vdC9jb21wcmVzc2VkL3N0cmluZy5jDQo+Pj4gKysrIGIvYXJjaC9taXBz
+L2Jvb3QvY29tcHJlc3NlZC9zdHJpbmcuYw0KPj4+IEBAIC0yNywzICsyNywxOSBAQCB2b2lkICpt
+ZW1zZXQodm9pZCAqcywgaW50IGMsIHNpemVfdCBuKQ0KPj4+IAkJc3NbaV0gPSBjOw0KPj4+IAly
+ZXR1cm4gczsNCj4+PiB9DQo+Pj4gKw0KPj4+ICt2b2lkICptZW1tb3ZlKHZvaWQgKmRlc3QsIGNv
+bnN0IHZvaWQgKnNyYywgc2l6ZV90IG4pDQo+Pj4gK3sNCj4+PiArCXVuc2lnbmVkIGludCBpOw0K
+Pj4+ICsJY29uc3QgY2hhciAqcyA9IHNyYzsNCj4+PiArCWNoYXIgKmQgPSBkZXN0Ow0KPj4+ICsN
+Cj4+PiArCWlmICgodWludHB0cl90KWRlc3QgPCAodWludHB0cl90KXNyYykgew0KPj4+ICsJCWZv
+ciAoaSA9IDA7IGkgPCBuOyBpKyspDQo+Pj4gKwkJCWRbaV0gPSBzW2ldOw0KPj4+ICsJfSBlbHNl
+IHsNCj4+PiArCQlmb3IgKGkgPSBuOyBpID4gMDsgaS0tKQ0KPj4+ICsJCQlkW2kgLSAxXSA9IHNb
+aSAtIDFdOw0KPj4+ICsJfQ0KPj4+ICsJcmV0dXJuIGRlc3Q7DQo+Pj4gK30NCj4+PiAtLQ0KPj4+
+IDIuMjguMA0KDQo=
