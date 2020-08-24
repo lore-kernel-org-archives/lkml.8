@@ -2,76 +2,101 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55BAF206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24607206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598261583;
+	bh=7lsbmAPE+osnBo1JtRXsGT97WYY4/pQeVP4SvQXn9B0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QqGuU9A+tK4LTakkWap6jxHYn5gQU8ax1kDZvftQ4kNxl7b695BB6oNwvBCWibh6n
+	 X2Mr+ERITKHxHab1vU+rF9BzKQiBHZF/A48FtTSdC8EhvzSgtIe40xFm3Q9hi1agS2
+	 gaubdlhf2pJs2R4OfKaZsS5fRfTkB2o6wGPgJCq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbgHXJcs (ORCPT
+        id S1729816AbgHXJdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:32:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53113 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728544AbgHXJcl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:32:41 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1kA8q5-0007of-NZ; Mon, 24 Aug 2020 09:32:30 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     yhchuang@realtek.com, kvalo@codeaurora.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org (open list:REALTEK WIRELESS DRIVER
-        (rtw88)), netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] rtw88: pci: Power cycle device during shutdown
-Date:   Mon, 24 Aug 2020 17:32:25 +0800
-Message-Id: <20200824093225.13689-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 24 Aug 2020 05:33:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729779AbgHXItt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:49:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B50D42087D;
+        Mon, 24 Aug 2020 08:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598258989;
+        bh=7lsbmAPE+osnBo1JtRXsGT97WYY4/pQeVP4SvQXn9B0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TWBfd3rkOwNsfW7QtEIkrCwek6LbHRXXDobnEDzQeP8y7PVbISRBK83rubH2Gkmbo
+         h6UGH6VfA1347aNyR6dHGiP316f3tH2YLofRGeH3oy7C35F0SOeXS3rk+H34Gly82K
+         nXWO//rVPZQX7PtfnpAzZn2u8vwOM+5z2ODsI9vs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 04/33] watchdog: f71808e_wdt: indicate WDIOF_CARDRESET support in watchdog_info.options
+Date:   Mon, 24 Aug 2020 10:31:00 +0200
+Message-Id: <20200824082346.743864011@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
+References: <20200824082346.498653578@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes system freeze on cold/warm boot when rtw88 is probing.
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-According to [1], platform firmware may not properly power manage the
-device during shutdown. I did some expirements and putting the device to
-D3 can workaround the issue.
+[ Upstream commit e871e93fb08a619dfc015974a05768ed6880fd82 ]
 
-So let's power cycle the device by putting the device to D3 at shutdown
-to prevent the issue from happening.
+The driver supports populating bootstatus with WDIOF_CARDRESET, but so
+far userspace couldn't portably determine whether absence of this flag
+meant no watchdog reset or no driver support. Or-in the bit to fix this.
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=206411#c9
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Fixes: b97cb21a4634 ("watchdog: f71808e_wdt: Fix WDTMOUT_STS register read")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20200611191750.28096-3-a.fatoum@pengutronix.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/watchdog/f71808e_wdt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index 3413973bc475..7f1f5073b9f4 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -1599,6 +1599,8 @@ void rtw_pci_shutdown(struct pci_dev *pdev)
+diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
+index 2048aad91add8..3577e356e08cc 100644
+--- a/drivers/watchdog/f71808e_wdt.c
++++ b/drivers/watchdog/f71808e_wdt.c
+@@ -644,7 +644,8 @@ static int __init watchdog_init(int sioaddr)
+ 	watchdog.sioaddr = sioaddr;
+ 	watchdog.ident.options = WDIOC_SETTIMEOUT
+ 				| WDIOF_MAGICCLOSE
+-				| WDIOF_KEEPALIVEPING;
++				| WDIOF_KEEPALIVEPING
++				| WDIOF_CARDRESET;
  
- 	if (chip->ops->shutdown)
- 		chip->ops->shutdown(rtwdev);
-+
-+	pci_set_power_state(pdev, PCI_D3hot);
- }
- EXPORT_SYMBOL(rtw_pci_shutdown);
- 
+ 	snprintf(watchdog.ident.identity,
+ 		sizeof(watchdog.ident.identity), "%s watchdog",
 -- 
-2.17.1
+2.25.1
+
+
 
