@@ -2,107 +2,101 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A179AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D3EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A340206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A3F206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:48:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aixah.de header.i=@aixah.de header.b="CDlOMZpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHXOqB (ORCPT
+        id S1726691AbgHXOsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 10:46:01 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:22226 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725780AbgHXOqA (ORCPT
+        Mon, 24 Aug 2020 10:48:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgHXOsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 10:46:00 -0400
-Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OEhSMi026501;
-        Mon, 24 Aug 2020 14:45:28 GMT
-Received: from g9t5009.houston.hpe.com (g9t5009.houston.hpe.com [15.241.48.73])
-        by mx0b-002e3701.pphosted.com with ESMTP id 332um956t5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 14:45:28 +0000
-Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
-        by g9t5009.houston.hpe.com (Postfix) with ESMTP id 0CC0755;
-        Mon, 24 Aug 2020 14:45:25 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.214.226.216])
-        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id EEF854B;
-        Mon, 24 Aug 2020 14:45:23 +0000 (UTC)
-Date:   Mon, 24 Aug 2020 09:45:23 -0500
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>
-Subject: Re: [PATCH] MAINTAINERS: Add entry for HPE Superdome Flex (UV)
- maintainers
-Message-ID: <20200824144523.GB60946@swahl-home.5wahls.com>
-References: <20200821154848.GI7871@localhost.localdomain>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821154848.GI7871@localhost.localdomain>
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Mon, 24 Aug 2020 10:48:17 -0400
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D09C061573;
+        Mon, 24 Aug 2020 07:48:16 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4BZw3J3FGBzQlFd;
+        Mon, 24 Aug 2020 16:48:12 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aixah.de; s=MBO0001;
+        t=1598280490;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fkhd792qXanXZZ0T3bLwPCM0WFIBZuaDtJyXb3YHYPU=;
+        b=CDlOMZpFWNq2ShPX4xQLmG8Y3xNdoG+ioOp9PxMqiXV3o88OidTyi+f/BTUc4/ksx798/x
+        PNgUhNiii//SENwwnEfrb2IOhsU3AS/mFeIKdzIuBu7bwDVWj7+Q3/Y332cylmGZwRcTcc
+        gX8NS1l/SmttZc/aXun3rl4gxc9pcFjcNZPlQb8n56b6/MNc3pKnfQwhuobU/6IV04LiJi
+        KgQWFRAG0rplRzhckUu/ir0BGW8es3c+j2dR+0nfs174fxMknAegnpZDBAzklLNZM65dfF
+        LLVleFl/QoaGsNdRVo4VeErnMh+OTI8Osw+0Ox/ATKBPlwOcOzLgEMjRL3uTyA==
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id CGbXwHlVLfDj; Mon, 24 Aug 2020 16:48:09 +0200 (CEST)
+From:   Mira Ressel <aranea@aixah.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Mira Ressel <aranea@aixah.de>
+Subject: [PATCH 2/2] vlan: Initialize dev->perm_addr
+Date:   Mon, 24 Aug 2020 14:47:47 +0000
+Message-Id: <20200824144747.7037-1-aranea@aixah.de>
+In-Reply-To: <20200824143828.5964-1-aranea@aixah.de>
+References: <20200824143828.5964-1-aranea@aixah.de>
 MIME-Version: 1.0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
- mlxlogscore=999 mlxscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 phishscore=0 suspectscore=2 bulkscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240118
+Content-Transfer-Encoding: 8bit
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -4.43 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 4016A1796
+X-Rspamd-UID: ae5221
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added Darren Hart, Andy Shevchenko, Thomas Gleixner, Ingo Molnar,
-Borislav Petkov, and x86.kernel.org, after being told that
-get_maintainers.pl doesn't work on MAINTAINERS.
+Set the perm_addr of vlan devices to that of their parent device.
+Otherwise, it remains all zero, with the consequence that
+ipv6_generate_stable_address() (which is used if the sysctl
+net.ipv6.conf.DEV.addr_gen_mode is set to 2 or 3) assigns every vlan
+interface on a host the same link-local address.
 
-Thanks,
+This has the added benefit of giving vlan devices the same link-local
+address as their parent device, which is common practice, and indeed
+precisely what happens automatically if the default eui64-based address
+generation is used.
 
-Steve Wahl, HPE
+Signed-off-by: Mira Ressel <aranea@aixah.de>
+---
+ net/8021q/vlan_netlink.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On Fri, Aug 21, 2020 at 10:48:49AM -0500, Steve Wahl wrote:
-> 
-> Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-> ---
->  MAINTAINERS | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index deaafb617361..4c2143d8ae45 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -18874,6 +18874,15 @@ S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
->  F:	arch/x86/platform
->  
-> +X86 PLATFORM UV HPE SUPERDOME FLEX
-> +M:	Steve Wahl <steve.wahl@hpe.com>
-> +R:	Dimitri Sivanich <dimitri.sivanich@hpe.com>
-> +R:	Russ Anderson <russ.anderson@hpe.com>
-> +S:	Supported
-> +F:	arch/x86/include/asm/uv/
-> +F:	arch/x86/kernel/apic/x2apic_uv_x.c
-> +F:	arch/x86/platform/uv/
-> +
->  X86 VDSO
->  M:	Andy Lutomirski <luto@kernel.org>
->  L:	linux-kernel@vger.kernel.org
-> -- 
-> 2.12.3
-> 
+diff --git a/net/8021q/vlan_netlink.c b/net/8021q/vlan_netlink.c
+index 0db85aeb119b..8c60d92b7717 100644
+--- a/net/8021q/vlan_netlink.c
++++ b/net/8021q/vlan_netlink.c
+@@ -182,6 +182,8 @@ static int vlan_newlink(struct net *src_net, struct net_device *dev,
+ 	else if (dev->mtu > max_mtu)
+ 		return -EINVAL;
+ 
++	memcpy(dev->perm_addr, real_dev->perm_addr, real_dev->addr_len);
++
+ 	err = vlan_changelink(dev, tb, data, extack);
+ 	if (!err)
+ 		err = register_vlan_dev(dev, extack);
+-- 
+2.25.4
+
