@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1E3C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACE5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2E82072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 333B82072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730719AbgHXJC0 (ORCPT
+        id S1730794AbgHXJEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37602 "EHLO
+        Mon, 24 Aug 2020 05:04:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730136AbgHXI4j (ORCPT
+        with ESMTP id S1730562AbgHXI4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:39 -0400
+        Mon, 24 Aug 2020 04:56:35 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01383C061574;
-        Mon, 24 Aug 2020 01:56:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F76FC061755;
+        Mon, 24 Aug 2020 01:56:33 -0700 (PDT)
 Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id B8674168A;
-        Mon, 24 Aug 2020 10:56:30 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 205F212BA;
+        Mon, 24 Aug 2020 10:56:25 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -49,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 73/76] x86/sev-es: Support CPU offline/online
-Date:   Mon, 24 Aug 2020 10:55:08 +0200
-Message-Id: <20200824085511.7553-74-joro@8bytes.org>
+Subject: [PATCH v6 63/76] x86/sev-es: Handle #AC Events
+Date:   Mon, 24 Aug 2020 10:54:58 +0200
+Message-Id: <20200824085511.7553-64-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
 References: <20200824085511.7553-1-joro@8bytes.org>
@@ -64,119 +64,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add a play_dead handler when running under SEV-ES. This is needed
-because the hypervisor can't deliver an SIPI request to restart the AP.
-Instead the kernel has to issue a VMGEXIT to halt the VCPU until the
-hypervisor wakes it up again.
+Implement a handler for #VC exceptions caused by #AC exceptions. The #AC
+exception is just forwarded to do_alignment_check() and not pushed down
+to the hypervisor, as requested by the SEV-ES GHCB Standardization
+Specification.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-73-joro@8bytes.org
+Link: https://lore.kernel.org/r/20200724160336.5435-63-joro@8bytes.org
 ---
- arch/x86/include/uapi/asm/svm.h |  1 +
- arch/x86/kernel/sev-es.c        | 64 +++++++++++++++++++++++++++++++++
- 2 files changed, 65 insertions(+)
+ arch/x86/kernel/sev-es.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
-index a19ce9681ec2..20a05839dd9a 100644
---- a/arch/x86/include/uapi/asm/svm.h
-+++ b/arch/x86/include/uapi/asm/svm.h
-@@ -84,6 +84,7 @@
- /* SEV-ES software-defined VMGEXIT events */
- #define SVM_VMGEXIT_MMIO_READ			0x80000001
- #define SVM_VMGEXIT_MMIO_WRITE			0x80000002
-+#define SVM_VMGEXIT_AP_HLT_LOOP			0x80000004
- #define SVM_VMGEXIT_AP_JUMP_TABLE		0x80000005
- #define		SVM_VMGEXIT_SET_AP_JUMP_TABLE			0
- #define		SVM_VMGEXIT_GET_AP_JUMP_TABLE			1
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 09a45ccd6c1d..597ebb73411f 100644
+index 8dd8385efa6a..ee0950f01590 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -29,6 +29,8 @@
- #include <asm/processor.h>
- #include <asm/traps.h>
- #include <asm/svm.h>
-+#include <asm/smp.h>
-+#include <asm/cpu.h>
- 
- #define DR7_RESET_VALUE        0x400
- 
-@@ -522,6 +524,66 @@ static bool __init sev_es_setup_ghcb(void)
- 	return true;
+@@ -909,6 +909,19 @@ static enum es_result vc_handle_vmmcall(struct ghcb *ghcb,
+ 	return ES_OK;
  }
  
-+#ifdef CONFIG_HOTPLUG_CPU
-+static void sev_es_ap_hlt_loop(void)
++static enum es_result vc_handle_trap_ac(struct ghcb *ghcb,
++					struct es_em_ctxt *ctxt)
 +{
-+	struct ghcb_state state;
-+	struct ghcb *ghcb;
-+
-+	ghcb = sev_es_get_ghcb(&state);
-+
-+	while (true) {
-+		vc_ghcb_invalidate(ghcb);
-+		ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_HLT_LOOP);
-+		ghcb_set_sw_exit_info_1(ghcb, 0);
-+		ghcb_set_sw_exit_info_2(ghcb, 0);
-+
-+		sev_es_wr_ghcb_msr(__pa(ghcb));
-+		VMGEXIT();
-+
-+		/* Wakeup signal? */
-+		if (ghcb_sw_exit_info_2_is_valid(ghcb) &&
-+		    ghcb->save.sw_exit_info_2)
-+			break;
-+	}
-+
-+	sev_es_put_ghcb(&state);
-+}
-+
-+/*
-+ * Play_dead handler when running under SEV-ES. This is needed because
-+ * the hypervisor can't deliver an SIPI request to restart the AP.
-+ * Instead the kernel has to issue a VMGEXIT to halt the VCPU until the
-+ * hypervisor wakes it up again.
-+ */
-+static void sev_es_play_dead(void)
-+{
-+	play_dead_common();
-+
-+	/* IRQs now disabled */
-+
-+	sev_es_ap_hlt_loop();
-+
 +	/*
-+	 * If we get here, the VCPU was woken up again. Jump to CPU
-+	 * startup code to get it back online.
++	 * Calling ecx_alignment_check() directly does not work, because it
++	 * enables IRQs and the GHCB is active. Forward the exception and call
++	 * it later from vc_forward_exception().
 +	 */
-+
-+	start_cpu();
++	ctxt->fi.vector = X86_TRAP_AC;
++	ctxt->fi.error_code = 0;
++	return ES_EXCEPTION;
 +}
-+#else  /* CONFIG_HOTPLUG_CPU */
-+#define sev_es_play_dead	native_play_dead
-+#endif /* CONFIG_HOTPLUG_CPU */
 +
-+#ifdef CONFIG_SMP
-+static void __init sev_es_setup_play_dead(void)
-+{
-+	smp_ops.play_dead = sev_es_play_dead;
-+}
-+#else
-+static inline void sev_es_setup_play_dead(void) { }
-+#endif
-+
- static void __init sev_es_alloc_runtime_data(int cpu)
- {
- 	struct sev_es_runtime_data *data;
-@@ -569,6 +631,8 @@ void __init sev_es_init_vc_handling(void)
- 		sev_es_init_ghcb(cpu);
- 		sev_es_setup_vc_stacks(cpu);
- 	}
-+
-+	sev_es_setup_play_dead();
- }
- 
- static void __init vc_early_forward_exception(struct es_em_ctxt *ctxt)
+ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 					 struct ghcb *ghcb,
+ 					 unsigned long exit_code)
+@@ -922,6 +935,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_WRITE_DR7:
+ 		result = vc_handle_dr7_write(ghcb, ctxt);
+ 		break;
++	case SVM_EXIT_EXCP_BASE + X86_TRAP_AC:
++		result = vc_handle_trap_ac(ghcb, ctxt);
++		break;
+ 	case SVM_EXIT_RDTSC:
+ 	case SVM_EXIT_RDTSCP:
+ 		result = vc_handle_rdtsc(ghcb, ctxt, exit_code);
+@@ -981,6 +997,9 @@ static __always_inline void vc_forward_exception(struct es_em_ctxt *ctxt)
+ 	case X86_TRAP_UD:
+ 		exc_invalid_op(ctxt->regs);
+ 		break;
++	case X86_TRAP_AC:
++		exc_alignment_check(ctxt->regs, error_code);
++		break;
+ 	default:
+ 		pr_emerg("Unsupported exception in #VC instruction emulation - can't continue\n");
+ 		BUG();
 -- 
 2.28.0
 
