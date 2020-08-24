@@ -2,182 +2,118 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92634C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF550C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 799C621775
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94EEF2078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598273771;
+	bh=uaIpIkYXWrHltizAIIf9mWbKoMDFCmIolkVH3w/Ohp4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=plpVII6MaH2P0Q3J68vkE0p/rSZBTxzpH/Y5aeIkyhUxy8l8E1Hbj1Vdz/GgiS63I
+	 +cpPjuM9hdRJKRj2kIc08niukZrdndE5GOoin4jtAfkI1Ir5PQ04vqYK13AANGhRNR
+	 CvsADtiR4APuPH/ZzZzcAXWGZBGWpDQVYoVmQGMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgHXMz7 (ORCPT
+        id S1727959AbgHXM4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:55:59 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:11582 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726968AbgHXMzg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:55:36 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U6k9-bl_1598273712;
-Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6k9-bl_1598273712)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 24 Aug 2020 20:55:20 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, willy@infradead.org,
-        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        shakeelb@google.com, iamjoonsoo.kim@lge.com,
-        richard.weiyang@gmail.com, kirill@shutemov.name,
-        alexander.duyck@gmail.com, rong.a.chen@intel.com, mhocko@suse.com,
-        vdavydov.dev@gmail.com, shy828301@gmail.com
-Subject: [PATCH v18 19/32] mm/swap.c: serialize memcg changes in pagevec_lru_move_fn
-Date:   Mon, 24 Aug 2020 20:54:52 +0800
-Message-Id: <1598273705-69124-20-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+        Mon, 24 Aug 2020 08:56:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727903AbgHXMzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 08:55:55 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10AD020838;
+        Mon, 24 Aug 2020 12:55:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598273755;
+        bh=uaIpIkYXWrHltizAIIf9mWbKoMDFCmIolkVH3w/Ohp4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=azHT/aIvCD/fhdYwv6V4TMwMl5hcMboYO4ABWj7syBpuZ8Ej+ZOh8eTIXP8WG2WjC
+         Plq3dzr5Mq1PdfanNBX1TSOW9B2DGO48MgzNHoc+h4kPKQZm1mdrdM5pLijRL1dQx8
+         gYGFSnysboVazxCkToYQDi260ScgK/i45RtvhNF8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kAC0v-006DfH-HL; Mon, 24 Aug 2020 13:55:53 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 24 Aug 2020 13:55:53 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        suzuki.poulose@arm.com, james.morse@arm.com, pbonzini@redhat.com,
+        kernel-team@android.com, stable@vger.kernel.org
+Subject: Re: [PATCH stable-4.9.y backport] KVM: arm/arm64: Don't reschedule in
+ unmap_stage2_range()
+In-Reply-To: <20200824112940.24706-1-will@kernel.org>
+References: <20200824112940.24706-1-will@kernel.org>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <d59a7d7de22b1a83ff2ca4bf5204c551@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: will@kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, suzuki.poulose@arm.com, james.morse@arm.com, pbonzini@redhat.com, kernel-team@android.com, stable@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hugh Dickins' found a memcg change bug on original version:
-If we want to change the pgdat->lru_lock to memcg's lruvec lock, we have
-to serialize mem_cgroup_move_account during pagevec_lru_move_fn. The
-possible bad scenario would like:
+On 2020-08-24 12:29, Will Deacon wrote:
+> Upstream commits fdfe7cbd5880 ("KVM: Pass MMU notifier range flags to
+> kvm_unmap_hva_range()") and b5331379bc62 ("KVM: arm64: Only reschedule
+> if MMU_NOTIFIER_RANGE_BLOCKABLE is not set") fix a "sleeping from 
+> invalid
+> context" BUG caused by unmap_stage2_range() attempting to reschedule 
+> when
+> called on the OOM path.
+> 
+> Unfortunately, these patches rely on the MMU notifier callback being
+> passed knowledge about whether or not blocking is permitted, which was
+> introduced in 4.19. Rather than backport this considerable amount of
+> infrastructure just for KVM on arm, instead just remove the conditional
+> reschedule.
+> 
+> Cc: <stable@vger.kernel.org> # v4.9 only
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: James Morse <james.morse@arm.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>  arch/arm/kvm/mmu.c | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/arch/arm/kvm/mmu.c b/arch/arm/kvm/mmu.c
+> index bb0d5e21d60b..b5ce1e81f945 100644
+> --- a/arch/arm/kvm/mmu.c
+> +++ b/arch/arm/kvm/mmu.c
+> @@ -298,12 +298,6 @@ static void unmap_stage2_range(struct kvm *kvm,
+> phys_addr_t start, u64 size)
+>  		next = stage2_pgd_addr_end(addr, end);
+>  		if (!stage2_pgd_none(*pgd))
+>  			unmap_stage2_puds(kvm, pgd, addr, next);
+> -		/*
+> -		 * If the range is too large, release the kvm->mmu_lock
+> -		 * to prevent starvation and lockup detector warnings.
+> -		 */
+> -		if (next != end)
+> -			cond_resched_lock(&kvm->mmu_lock);
+>  	} while (pgd++, addr = next, addr != end);
+>  }
 
-	cpu 0					cpu 1
-lruvec = mem_cgroup_page_lruvec()
-					if (!isolate_lru_page())
-						mem_cgroup_move_account
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-spin_lock_irqsave(&lruvec->lru_lock <== wrong lock.
-
-So we need the ClearPageLRU to block isolate_lru_page(), that serializes
-the memcg change. and then removing the PageLRU check in move_fn callee
-as the consequence.
-
-Reported-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/swap.c | 44 +++++++++++++++++++++++++++++++++++---------
- 1 file changed, 35 insertions(+), 9 deletions(-)
-
-diff --git a/mm/swap.c b/mm/swap.c
-index 446ffe280809..2d9a86bf93a4 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -221,8 +221,14 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
- 			spin_lock_irqsave(&pgdat->lru_lock, flags);
- 		}
- 
-+		/* block memcg migration during page moving between lru */
-+		if (!TestClearPageLRU(page))
-+			continue;
-+
- 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
- 		(*move_fn)(page, lruvec);
-+
-+		SetPageLRU(page);
- 	}
- 	if (pgdat)
- 		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-@@ -232,7 +238,7 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
- 
- static void pagevec_move_tail_fn(struct page *page, struct lruvec *lruvec)
- {
--	if (PageLRU(page) && !PageUnevictable(page)) {
-+	if (!PageUnevictable(page)) {
- 		del_page_from_lru_list(page, lruvec, page_lru(page));
- 		ClearPageActive(page);
- 		add_page_to_lru_list_tail(page, lruvec, page_lru(page));
-@@ -306,7 +312,7 @@ void lru_note_cost_page(struct page *page)
- 
- static void __activate_page(struct page *page, struct lruvec *lruvec)
- {
--	if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
-+	if (!PageActive(page) && !PageUnevictable(page)) {
- 		int lru = page_lru_base_type(page);
- 		int nr_pages = thp_nr_pages(page);
- 
-@@ -362,7 +368,8 @@ void activate_page(struct page *page)
- 
- 	page = compound_head(page);
- 	spin_lock_irq(&pgdat->lru_lock);
--	__activate_page(page, mem_cgroup_page_lruvec(page, pgdat));
-+	if (PageLRU(page))
-+		__activate_page(page, mem_cgroup_page_lruvec(page, pgdat));
- 	spin_unlock_irq(&pgdat->lru_lock);
- }
- #endif
-@@ -521,9 +528,6 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec)
- 	bool active;
- 	int nr_pages = thp_nr_pages(page);
- 
--	if (!PageLRU(page))
--		return;
--
- 	if (PageUnevictable(page))
- 		return;
- 
-@@ -564,7 +568,7 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec)
- 
- static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec)
- {
--	if (PageLRU(page) && PageActive(page) && !PageUnevictable(page)) {
-+	if (PageActive(page) && !PageUnevictable(page)) {
- 		int lru = page_lru_base_type(page);
- 		int nr_pages = thp_nr_pages(page);
- 
-@@ -581,7 +585,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec)
- 
- static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec)
- {
--	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
-+	if (PageAnon(page) && PageSwapBacked(page) &&
- 	    !PageSwapCache(page) && !PageUnevictable(page)) {
- 		bool active = PageActive(page);
- 		int nr_pages = thp_nr_pages(page);
-@@ -979,7 +983,29 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec)
-  */
- void __pagevec_lru_add(struct pagevec *pvec)
- {
--	pagevec_lru_move_fn(pvec, __pagevec_lru_add_fn);
-+	int i;
-+	struct pglist_data *pgdat = NULL;
-+	struct lruvec *lruvec;
-+	unsigned long flags = 0;
-+
-+	for (i = 0; i < pagevec_count(pvec); i++) {
-+		struct page *page = pvec->pages[i];
-+		struct pglist_data *pagepgdat = page_pgdat(page);
-+
-+		if (pagepgdat != pgdat) {
-+			if (pgdat)
-+				spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-+			pgdat = pagepgdat;
-+			spin_lock_irqsave(&pgdat->lru_lock, flags);
-+		}
-+
-+		lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+		__pagevec_lru_add_fn(page, lruvec);
-+	}
-+	if (pgdat)
-+		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-+	release_pages(pvec->pages, pvec->nr);
-+	pagevec_reinit(pvec);
- }
- 
- /**
+         M.
 -- 
-1.8.3.1
-
+Jazz is not dead. It just smells funny...
