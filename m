@@ -2,199 +2,118 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A7CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3BF62087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A395B2087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598266894;
+	bh=6SZzRMN5GGlyh79co29gSLTZO76H+8JYL5VE28sGF20=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=neqBGEcJQJtE4VFcHGQHKo4ji1PSTS9t3E+Dq+HiYWQwxBYcockNNTKP1GoQkeRQ4
+	 smXAeyYzmo6398o9cx21YC1YroR/vOLzRwMzE/NyADQZsXuJt8wuAi5xyY85HpY9uT
+	 2x4XspcmcASPvkSTIoIMadwiLnmqmcYoDl91huxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgHXLBL (ORCPT
+        id S1727122AbgHXLBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:01:11 -0400
-Received: from mga14.intel.com ([192.55.52.115]:6052 "EHLO mga14.intel.com"
+        Mon, 24 Aug 2020 07:01:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgHXLBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:01:10 -0400
-IronPort-SDR: GuGpA6V+mkAFiDz3D306ChD1Ge/A55Hfupkwr5MFwNSko677nxu2b9dl4ocpZxlgrBbueYDGAz
- RJP/SBomZq+Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="155133956"
-X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
-   d="scan'208";a="155133956"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 04:01:09 -0700
-IronPort-SDR: oMsjOCIEV053hHPecxYkjTxeHLvzzfYB0Tz7AdejFDNPSnsjdmNWjQ2Xs8pDrbkyEyd3nX5URY
- Vz/svkvX+Pgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
-   d="scan'208";a="294558350"
-Received: from lkp-server01.sh.intel.com (HELO c420d4f0765f) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 24 Aug 2020 04:01:07 -0700
-Received: from kbuild by c420d4f0765f with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kAADr-00005l-2U; Mon, 24 Aug 2020 11:01:07 +0000
-Date:   Mon, 24 Aug 2020 19:00:16 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars-linux:testing/fallthrough] BUILD SUCCESS
- df561f6688fef775baa341a0f5d960becd248b11
-Message-ID: <5f439dc0.UziH39z9YtuR8FCr%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726483AbgHXLBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 07:01:20 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 560C2206B5;
+        Mon, 24 Aug 2020 11:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598266879;
+        bh=6SZzRMN5GGlyh79co29gSLTZO76H+8JYL5VE28sGF20=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e23Bob6o6Xo0hBCl442jnXgXQlakT98GnZpvR/3dAMkOWhgYz0m51RsIAvILsTzlg
+         1qScDMQv4rSd6Go0kH9xUQkOIomoMoFi6WN0w2dPPPhCgmOPc0yvIWeU2vNQ8w2qfJ
+         vRNQJmC6J0WQWl1hlDoM4WBydqnrrehLjrrRhP2Y=
+Date:   Mon, 24 Aug 2020 12:00:45 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 3/6] regulator: Add regulator driver for ATC260x PMICs
+Message-ID: <20200824110045.GA4676@sirena.org.uk>
+References: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
+ <8da70f0b19de17fb8edead7ff06461ae2451b0e9.1598043782.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+Content-Disposition: inline
+In-Reply-To: <8da70f0b19de17fb8edead7ff06461ae2451b0e9.1598043782.git.cristian.ciocaltea@gmail.com>
+X-Cookie: Weekend, where are you?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git  testing/fallthrough
-branch HEAD: df561f6688fef775baa341a0f5d960becd248b11  treewide: Use fallthrough pseudo-keyword
 
-elapsed time: 722m
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-configs tested: 129
-configs skipped: 7
+On Sat, Aug 22, 2020 at 01:19:49AM +0300, Cristian Ciocaltea wrote:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +static int atc260x_set_voltage_time_sel(struct regulator_dev *rdev,
+> +					unsigned int old_selector,
+> +					unsigned int new_selector)
+> +{
+> +	struct atc260x_regulator_data *data = rdev_get_drvdata(rdev);
+> +	int id = rdev_get_id(rdev);
+> +
+> +	if (new_selector > old_selector)
+> +		return id > data->last_dcdc_reg_id ? data->voltage_time_ldo
+> +						   : data->voltage_time_dcdc;
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-m68k                             alldefconfig
-arc                        vdk_hs38_defconfig
-arm                           u8500_defconfig
-sh                     sh7710voipgw_defconfig
-mips                      maltasmvp_defconfig
-mips                           jazz_defconfig
-c6x                         dsk6455_defconfig
-arm                         lpc32xx_defconfig
-arm                      integrator_defconfig
-arm                           sunxi_defconfig
-xtensa                         virt_defconfig
-powerpc                      mgcoge_defconfig
-ia64                          tiger_defconfig
-sh                        dreamcast_defconfig
-xtensa                           alldefconfig
-mips                     loongson1b_defconfig
-m68k                             allmodconfig
-arm                         mv78xx0_defconfig
-sh                          landisk_defconfig
-powerpc                     ep8248e_defconfig
-mips                       rbtx49xx_defconfig
-m68k                           sun3_defconfig
-sh                   rts7751r2dplus_defconfig
-powerpc                          alldefconfig
-m68k                         amcore_defconfig
-mips                        vocore2_defconfig
-powerpc                     mpc5200_defconfig
-mips                     cu1830-neo_defconfig
-sh                 kfr2r09-romimage_defconfig
-c6x                        evmc6678_defconfig
-arm                        mvebu_v7_defconfig
-h8300                            alldefconfig
-sh                          polaris_defconfig
-powerpc                 mpc8272_ads_defconfig
-powerpc                     mpc83xx_defconfig
-mips                      loongson3_defconfig
-arm                            zeus_defconfig
-arm                              zx_defconfig
-arc                              alldefconfig
-arm                          badge4_defconfig
-sh                          sdk7780_defconfig
-sh                          r7785rp_defconfig
-arm                             rpc_defconfig
-h8300                    h8300h-sim_defconfig
-sh                           se7724_defconfig
-mips                         db1xxx_defconfig
-arm                           spitz_defconfig
-arm                       multi_v4t_defconfig
-powerpc                         ps3_defconfig
-riscv                    nommu_k210_defconfig
-arc                        nsimosci_defconfig
-sh                           se7721_defconfig
-sparc                               defconfig
-m68k                            q40_defconfig
-arm                           stm32_defconfig
-x86_64                           alldefconfig
-sparc                       sparc64_defconfig
-mips                           gcw0_defconfig
-mips                 pnx8335_stb225_defconfig
-sh                         apsh4a3a_defconfig
-arm                       versatile_defconfig
-arm                             ezx_defconfig
-arm                           efm32_defconfig
-arm                            pleb_defconfig
-c6x                        evmc6474_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a002-20200824
-i386                 randconfig-a004-20200824
-i386                 randconfig-a005-20200824
-i386                 randconfig-a003-20200824
-i386                 randconfig-a006-20200824
-i386                 randconfig-a001-20200824
-x86_64               randconfig-a015-20200824
-x86_64               randconfig-a016-20200824
-x86_64               randconfig-a012-20200824
-x86_64               randconfig-a014-20200824
-x86_64               randconfig-a011-20200824
-x86_64               randconfig-a013-20200824
-i386                 randconfig-a013-20200824
-i386                 randconfig-a012-20200824
-i386                 randconfig-a011-20200824
-i386                 randconfig-a016-20200824
-i386                 randconfig-a015-20200824
-i386                 randconfig-a014-20200824
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+Please write normal conditional statements to make things easier to
+read.  It also looks like this would be more robustly written by just
+having separate ops for DCDCs and LDOs, this could easily break if
+another device is supported in the driver.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +static const struct of_device_id atc260x_regulator_of_match[] = {
+> +	{ .compatible = "actions,atc2603c-regulator" },
+> +	{ .compatible = "actions,atc2609a-regulator" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, atc260x_regulator_of_match);
+
+We don't need compatibles here, this is just reflecting the current
+Linux device model into the OS neutral DT bindings.  Another OS may
+choose to split regulators up differently.  We should just instantiate
+the regulator device from the MFD based on identifying the chip overall.
+
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9DndwACgkQJNaLcl1U
+h9CXoAf6AzUFwxgd0S5ClrLwTuv/z8XNl93mNAnQI+Lgte0VWytWqrO+qCtOPcAq
+sQgGC4jUOMfZR2vcx+UGMuCCoYjDO75ApLLyN4Z79wUeNApY/VVVoSpMCy1/yvtf
+wneUL9d6TNL0S/Po6/RBm0kII2vbhPcRXdJxGo1JAefjao0cc6OC7ep6OtxsnQF9
+sr9aCXfvloI95sl6bc/QVaWqd5/dP7WuPINxzY6Xd20TJ4bL9gVmwv87uBdZXLZZ
+8jjoAg+/7ma13fxdt7CuaGJLuXZNW+WusMKy/Bx5CqFwqpDkEPuRpA5zXXPI8/5c
+axFmXEOlJ7MAB8WZg4fNbeBHCsbekg==
+=H2HJ
+-----END PGP SIGNATURE-----
+
+--2fHTh5uZTiUOsy+g--
