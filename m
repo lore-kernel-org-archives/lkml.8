@@ -2,123 +2,102 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C24C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F58C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2583F2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261684;
-	bh=kH1Gs07rL+ujP0i+NK1hCa/O4lysoLbawWx5IuwWIp4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AGltFIqRdJCZqlERd/gkqhG44/iH9RLoZAEyNIrxOL4tvtZqwQY6VX+nCcK9I79BY
-	 rsoU8DstzS7iKgF2e5t83wVt96G2DRfxEvX/z0VrtA2IEozX6sTaYkcVGKiOTW+YM9
-	 Ii3JmDBH++P1EPX/FxDn5WILGBzoI2p9hmJcdQB0=
+	by mail.kernel.org (Postfix) with ESMTP id EDE31206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:34:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iI4wNU1g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbgHXJem (ORCPT
+        id S1729713AbgHXJev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:34:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729713AbgHXIt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:49:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 653D22072D;
-        Mon, 24 Aug 2020 08:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258968;
-        bh=kH1Gs07rL+ujP0i+NK1hCa/O4lysoLbawWx5IuwWIp4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yfzEAme6G7dbISxQGZdxSlHv7rDZGfxlYqN30H2FiMy6P3ZhXIuwlsrORMaFCmnMY
-         GoZ7B+6XDM1KCvJ7OQa9nGdKq+0kNurqPhCP8xm6CKwUw9xwFwVON/qjdtaHbbONIT
-         nC+5DBJPJOSMc7hBwRmiDe3S3IbYe8SH2zJ6Bc84=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5.4 104/107] epoll: Keep a reference on files added to the check list
-Date:   Mon, 24 Aug 2020 10:31:10 +0200
-Message-Id: <20200824082410.243017384@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
-References: <20200824082405.020301642@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Aug 2020 05:34:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728196AbgHXJeZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:34:25 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32519C061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 02:34:25 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id p17so2283716wrj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 02:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oQFrC1o3Nda9YLxSbgopWEOdNnQxrkWudyF2nTbVXVU=;
+        b=iI4wNU1gyMDP3WOfbrMsV5PNzotxiKE+bg3HG4dL4ZNpFQ5QXR1VjF7EaZVhqM5pbR
+         /apqB/5NXnbQO/3QcPmJa2ymAJrRdh3q+VNx0a0WUjVrqorgAvwGbIygf/nWdu0FJnlR
+         2VF43WNvEHWPrUMPWGcStgXCXrQu0Wt4FMh6t/B7KsM4x98lcwZjW40VVfETqRVT7u+B
+         YNLoQECf0W2p2wXdHaMUWqr7ZK7KKqGr2dI98GzCd0Gk03gAkK+va2bB9KNnzETyhrA4
+         SKMppU9b3ulLFxpyUTLBv1CO7H+HQ/8rLi1gdJkfeb+dDWshGrYd+KTB+cB2lMYgNSoL
+         4qeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oQFrC1o3Nda9YLxSbgopWEOdNnQxrkWudyF2nTbVXVU=;
+        b=eZavSEE9WycvU4wP5q63FQiUJJQlCk+erFXy9xpMCPr/TECFLrJGnjoioDo0pSrBNw
+         5dJ84x+8nCuEOlGJ+8i3qQJ+H261UsY9x8WWvpxqiE+bOA9BTZ7LCjbR6Tybr8D6CvdT
+         9/nK3JjF+u3oRDn0NYXtpXDR3IDqUjR4mDpynZ1dOZKOlDlUtr99jQQDARdE/+udA0iT
+         uEPlYImhCk0AXFBTU3NnCD82qF39zvoxKVyZ3KuaXJkey2ZNHjdys8vpjaIEPDzPIxba
+         O7X/7+OB6n8ujR3CmvA3KnWXpp6stcM7I8fSIkAA26rNh0zhDPuUevBP9t/0OjZqqwkH
+         sc/A==
+X-Gm-Message-State: AOAM532CyjUrsLGIkHIFSVHk1Y2wlUOJ/tDQvxA58C4j2FT+Cg6kKtcn
+        RZ+85qRMRwDhV+ICYoR/YYwNfnQf06adUw==
+X-Google-Smtp-Source: ABdhPJzfp+hZthOM0E1QMoXJyd50y7e6J2eC0nSOR2g0GL2084Jm9DgaEpMukZ1glzmBjUeTo56zoQ==
+X-Received: by 2002:a5d:630b:: with SMTP id i11mr5231552wru.95.1598261663543;
+        Mon, 24 Aug 2020 02:34:23 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:cd42:2fa4:120f:76b0? ([2a01:e34:ed2f:f020:cd42:2fa4:120f:76b0])
+        by smtp.googlemail.com with ESMTPSA id y17sm5682961wma.17.2020.08.24.02.34.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 02:34:23 -0700 (PDT)
+Subject: Re: [PATCH v2] thermal: core: Fix use-after-free in
+ thermal_zone_device_unregister()
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amitk@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200817235854.26816-1-digetx@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <84ecfc78-bbe7-b4e0-a815-46b6225eca09@linaro.org>
+Date:   Mon, 24 Aug 2020 11:34:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200817235854.26816-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+On 18/08/2020 01:58, Dmitry Osipenko wrote:
+> The user-after-free bug in thermal_zone_device_unregister() is reported by
+> KASAN. It happens because struct thermal_zone_device is released during of
+> device_unregister() invocation, and hence the "tz" variable shouldn't be
+> touched by thermal_notify_tz_delete(tz->id).
+> 
+> Fixes: 55cdf0a283b8 ("thermal: core: Add notifications call in the framework")
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
 
-commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682 upstream.
-
-When adding a new fd to an epoll, and that this new fd is an
-epoll fd itself, we recursively scan the fds attached to it
-to detect cycles, and add non-epool files to a "check list"
-that gets subsequently parsed.
-
-However, this check list isn't completely safe when deletions
-can happen concurrently. To sidestep the issue, make sure that
-a struct file placed on the check list sees its f_count increased,
-ensuring that a concurrent deletion won't result in the file
-disapearing from under our feet.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/eventpoll.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1991,9 +1991,11 @@ static int ep_loop_check_proc(void *priv
- 			 * not already there, and calling reverse_path_check()
- 			 * during ep_insert().
- 			 */
--			if (list_empty(&epi->ffd.file->f_tfile_llink))
-+			if (list_empty(&epi->ffd.file->f_tfile_llink)) {
-+				get_file(epi->ffd.file);
- 				list_add(&epi->ffd.file->f_tfile_llink,
- 					 &tfile_check_list);
-+			}
- 		}
- 	}
- 	mutex_unlock(&ep->mtx);
-@@ -2037,6 +2039,7 @@ static void clear_tfile_check_list(void)
- 		file = list_first_entry(&tfile_check_list, struct file,
- 					f_tfile_llink);
- 		list_del_init(&file->f_tfile_llink);
-+		fput(file);
- 	}
- 	INIT_LIST_HEAD(&tfile_check_list);
- }
-@@ -2196,9 +2199,11 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, in
- 					clear_tfile_check_list();
- 					goto error_tgt_fput;
- 				}
--			} else
-+			} else {
-+				get_file(tf.file);
- 				list_add(&tf.file->f_tfile_llink,
- 							&tfile_check_list);
-+			}
- 			mutex_lock_nested(&ep->mtx, 0);
- 			if (is_file_epoll(tf.file)) {
- 				tep = tf.file->private_data;
+Applied, thanks !
 
 
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
