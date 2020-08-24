@@ -2,132 +2,148 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EACC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41909C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7A7D206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A0F2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598262877;
+	bh=x369bIKVLiGCDxbll4WzEJyb58NWRRKtTnoVx+10Nk4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qNEVp/AiYWUMOSZ5bK7MldQpv+F2YfDFGvs69folWxi3CFXKE1Qy9FfDepOUlFcEa
+	 jcUKUcowvUwspSibl8v0CSdbozLSDT0j+Ix7CiLk+cBCBOCPFkJM+t+Zo9yfAKk/ex
+	 klJSVI8BES9uwbe42ja/iJNmJpvS5n4VnY6CenDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbgHXJya (ORCPT
+        id S1728405AbgHXIh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:54:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49518 "EHLO mx2.suse.de"
+        Mon, 24 Aug 2020 04:37:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726332AbgHXJy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:54:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 30C0FACAF;
-        Mon, 24 Aug 2020 09:54:56 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        syzbot+ad1f53726c3bd11180cb@syzkaller.appspotmail.com,
-        akpm@linux-foundation.org, nico@fluxnic.net
-Subject: [PATCH] Revert "vc_screen: extract vcs_read_buf_header"
-Date:   Mon, 24 Aug 2020 11:54:25 +0200
-Message-Id: <20200824095425.4376-1-jslaby@suse.cz>
+        id S1728387AbgHXIhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:37:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E8332177B;
+        Mon, 24 Aug 2020 08:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598258238;
+        bh=x369bIKVLiGCDxbll4WzEJyb58NWRRKtTnoVx+10Nk4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RR3mTgN1y4lILeGn83o/aRpa+Nf3p0Q71k8gb/SnDPOxhoIGTy4hLgKbvcTKyKC10
+         Q/OMWvv1P10inWzFpJiTMKhF2ggqEf/fhcQcctIBe7zDG/GIQHjb1bbecKw1GypYwp
+         dN9Xa87h/Mxw+AozN4z8bD+XYJeW9fv3LT0kannM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+c1eff8205244ae7e11a6@syzkaller.appspotmail.com,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 126/148] afs: Fix NULL deref in afs_dynroot_depopulate()
+Date:   Mon, 24 Aug 2020 10:30:24 +0200
+Message-Id: <20200824082420.050003623@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
+References: <20200824082413.900489417@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit b1c32fcfadf5593ab7a63261cc8a5747c36e627e, because
-Syzkaller reports a use-after-free, a write in vcs_read:
+From: David Howells <dhowells@redhat.com>
 
-BUG: KASAN: use-after-free in vcs_read_buf drivers/tty/vt/vc_screen.c:357 [inline]
-BUG: KASAN: use-after-free in vcs_read+0xaa7/0xb40 drivers/tty/vt/vc_screen.c:449
-Write of size 2 at addr ffff8880a8014000 by task syz-executor.5/16936
-CPU: 1 PID: 16936 Comm: syz-executor.5 Not tainted 5.9.0-rc1-next-20200820-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
-...
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- vcs_read_buf drivers/tty/vt/vc_screen.c:357 [inline]
- vcs_read+0xaa7/0xb40 drivers/tty/vt/vc_screen.c:449
+[ Upstream commit 5e0b17b026eb7c6de9baa9b0d45a51b05f05abe1 ]
 
-There are two issues with the patch:
-1) vcs_read rounds the 'count' *up* to an even number. So if we read odd
-   bytes from the header (3 bytes in the reproducer), the second byte of
-   a (2-byte/ushort) write to temporary con_buf won't fit. It is because
-   with the patch applied, we only subtract the real number read (3 bytes)
-   and not the whole header (4 bytes).
+If an error occurs during the construction of an afs superblock, it's
+possible that an error occurs after a superblock is created, but before
+we've created the root dentry.  If the superblock has a dynamic root
+(ie.  what's normally mounted on /afs), the afs_kill_super() will call
+afs_dynroot_depopulate() to unpin any created dentries - but this will
+oops if the root hasn't been created yet.
 
-2) in this scenario, we perform unaligned accesses now: there are
-   2-byte/ushort writes to odd addresses. Due to the same reason as
-   above.
+Fix this by skipping that bit of code if there is no root dentry.
 
-Revert this for now, re-think and retry later.
+This leads to an oops looking like:
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Reported-by: syzbot+ad1f53726c3bd11180cb@syzkaller.appspotmail.com
-Fixes: b1c32fcfadf5 ("vc_screen: extract vcs_read_buf_header")
-Cc: akpm@linux-foundation.org
-Cc: nico@fluxnic.net
+	general protection fault, ...
+	KASAN: null-ptr-deref in range [0x0000000000000068-0x000000000000006f]
+	...
+	RIP: 0010:afs_dynroot_depopulate+0x25f/0x529 fs/afs/dynroot.c:385
+	...
+	Call Trace:
+	 afs_kill_super+0x13b/0x180 fs/afs/super.c:535
+	 deactivate_locked_super+0x94/0x160 fs/super.c:335
+	 afs_get_tree+0x1124/0x1460 fs/afs/super.c:598
+	 vfs_get_tree+0x89/0x2f0 fs/super.c:1547
+	 do_new_mount fs/namespace.c:2875 [inline]
+	 path_mount+0x1387/0x2070 fs/namespace.c:3192
+	 do_mount fs/namespace.c:3205 [inline]
+	 __do_sys_mount fs/namespace.c:3413 [inline]
+	 __se_sys_mount fs/namespace.c:3390 [inline]
+	 __x64_sys_mount+0x27f/0x300 fs/namespace.c:3390
+	 do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+which is oopsing on this line:
+
+	inode_lock(root->d_inode);
+
+presumably because sb->s_root was NULL.
+
+Fixes: 0da0b7fd73e4 ("afs: Display manually added cells in dynamic root mount")
+Reported-by: syzbot+c1eff8205244ae7e11a6@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/vt/vc_screen.c | 31 +++++++++++++------------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
+ fs/afs/dynroot.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
-index 3e3a6a9a7f44..1850bacdb5b0 100644
---- a/drivers/tty/vt/vc_screen.c
-+++ b/drivers/tty/vt/vc_screen.c
-@@ -293,22 +293,6 @@ static void vcs_read_buf_noattr(const struct vc_data *vc, char *con_buf,
- 	}
- }
+diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
+index b79879aacc02e..7b784af604fd9 100644
+--- a/fs/afs/dynroot.c
++++ b/fs/afs/dynroot.c
+@@ -382,15 +382,17 @@ void afs_dynroot_depopulate(struct super_block *sb)
+ 		net->dynroot_sb = NULL;
+ 	mutex_unlock(&net->proc_cells_lock);
  
--static unsigned int vcs_read_buf_header(const struct vc_data *vc, char *con_buf,
--		unsigned int pos, unsigned int count)
--{
--	count = min(HEADER_SIZE - pos, count);
+-	inode_lock(root->d_inode);
 -
--	/* clamp header values if they don't fit */
--	con_buf[0] = min(vc->vc_rows, 0xFFu);
--	con_buf[1] = min(vc->vc_cols, 0xFFu);
--	getconsxy(vc, con_buf + 2);
--
--	if (pos)
--		memmove(con_buf, con_buf + pos, count);
--
--	return count;
--}
--
- static unsigned int vcs_read_buf(const struct vc_data *vc, char *con_buf,
- 		unsigned int pos, unsigned int count, bool viewed,
- 		unsigned int *skip)
-@@ -318,11 +302,22 @@ static unsigned int vcs_read_buf(const struct vc_data *vc, char *con_buf,
- 	unsigned int filled = count;
- 
- 	if (pos < HEADER_SIZE) {
--		count -= vcs_read_buf_header(vc, con_buf, pos, count);
-+		/* clamp header values if they don't fit */
-+		con_buf[0] = min(vc->vc_rows, 0xFFu);
-+		con_buf[1] = min(vc->vc_cols, 0xFFu);
-+		getconsxy(vc, con_buf + 2);
+-	/* Remove all the pins for dirs created for manually added cells */
+-	list_for_each_entry_safe(subdir, tmp, &root->d_subdirs, d_child) {
+-		if (subdir->d_fsdata) {
+-			subdir->d_fsdata = NULL;
+-			dput(subdir);
++	if (root) {
++		inode_lock(root->d_inode);
 +
-+		*skip += pos;
-+		count += pos;
-+		if (count > CON_BUF_SIZE) {
-+			count = CON_BUF_SIZE;
-+			filled = count - pos;
-+		}
++		/* Remove all the pins for dirs created for manually added cells */
++		list_for_each_entry_safe(subdir, tmp, &root->d_subdirs, d_child) {
++			if (subdir->d_fsdata) {
++				subdir->d_fsdata = NULL;
++				dput(subdir);
++			}
+ 		}
+-	}
  
-+		/* Advance state pointers and move on. */
-+		count -= min(HEADER_SIZE, count);
- 		pos = HEADER_SIZE;
- 		con_buf += HEADER_SIZE;
--
- 		/* If count >= 0, then pos is even... */
- 	} else if (pos & 1) {
- 		/*
+-	inode_unlock(root->d_inode);
++		inode_unlock(root->d_inode);
++	}
+ }
 -- 
-2.28.0
+2.25.1
+
+
 
