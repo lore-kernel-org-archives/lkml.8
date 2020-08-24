@@ -2,126 +2,154 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDAAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79CD6207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:47:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262468;
-	bh=+wO7/hn/KPi4LzV/su4H+IQbuELUFq9lcgIlERekZRU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NJ1Rb0ceeF7GMSH5qwUDHsBKgbdz9+0NUDnA2171dO7WBI7UKRk4dpsmyDUp4dRmA
-	 WeprjsEnsKWNLeOhS6YgLR6DNGduEMclCDRnV+1DLhRQZqtN4QWb55Vav6VZtb65PP
-	 YzEmDmLRZq/4o0fev56FkWxAsOZo8BeeavPb92wI=
+	by mail.kernel.org (Postfix) with ESMTP id 0B053206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbgHXJro (ORCPT
+        id S1729096AbgHXJrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:47:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbgHXIlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:41:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 747A62087D;
-        Mon, 24 Aug 2020 08:41:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258474;
-        bh=+wO7/hn/KPi4LzV/su4H+IQbuELUFq9lcgIlERekZRU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JxisfguBE1bb7p3N5ISxUw+P+EO11uxirPjF6uMeudCFxGr841KMAD+a02x+mOKFa
-         sZgfzhC9OStXPHPQZ8EZu7aF8sg2ZfvtSnff0qefQPCvZHIWd6rzOu0/BOxsC84yhc
-         DI9WZdptw51BzWdjGslZRJet0JmSQjlzDeJ1S/iU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 059/124] ext4: fix potential negative array index in do_split()
-Date:   Mon, 24 Aug 2020 10:29:53 +0200
-Message-Id: <20200824082412.327109156@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
-References: <20200824082409.368269240@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Aug 2020 05:47:52 -0400
+Received: from relay.sw.ru ([185.231.240.75]:58626 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728409AbgHXIlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:41:10 -0400
+Received: from [192.168.15.190]
+        by relay3.sw.ru with esmtp (Exim 4.94)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1kA7xd-000xLn-NE; Mon, 24 Aug 2020 11:36:13 +0300
+Subject: Re: [PATCH 1/4] mm: Trial do_wp_page() simplification
+To:     Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Maya B . Gokhale" <gokhale2@llnl.gov>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        Kirill Shutemov <kirill@shutemov.name>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Jan Kara <jack@suse.cz>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200821234958.7896-1-peterx@redhat.com>
+ <20200821234958.7896-2-peterx@redhat.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <42bc9a68-ef9e-2542-0b21-392a7f47bd74@virtuozzo.com>
+Date:   Mon, 24 Aug 2020 11:36:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200821234958.7896-2-peterx@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Sandeen <sandeen@redhat.com>
+On 22.08.2020 02:49, Peter Xu wrote:
+> From: Linus Torvalds <torvalds@linux-foundation.org>
+> 
+> How about we just make sure we're the only possible valid user fo the
+> page before we bother to reuse it?
+> 
+> Simplify, simplify, simplify.
+> 
+> And get rid of the nasty serialization on the page lock at the same time.
+> 
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> [peterx: add subject prefix]
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  mm/memory.c | 59 +++++++++++++++--------------------------------------
+>  1 file changed, 17 insertions(+), 42 deletions(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 602f4283122f..cb9006189d22 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2927,50 +2927,25 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
+>  	 * not dirty accountable.
+>  	 */
+>  	if (PageAnon(vmf->page)) {
+> -		int total_map_swapcount;
+> -		if (PageKsm(vmf->page) && (PageSwapCache(vmf->page) ||
+> -					   page_count(vmf->page) != 1))
+> +		struct page *page = vmf->page;
+> +
+> +		/* PageKsm() doesn't necessarily raise the page refcount */
 
-[ Upstream commit 5872331b3d91820e14716632ebb56b1399b34fe1 ]
+No, this is wrong. PageKSM() always raises refcount. There was another problem:
+KSM may raise refcount without lock_page(), and only then it takes the lock.
+See get_ksm_page(GET_KSM_PAGE_NOLOCK) for the details.
 
-If for any reason a directory passed to do_split() does not have enough
-active entries to exceed half the size of the block, we can end up
-iterating over all "count" entries without finding a split point.
+So, reliable protection against parallel access requires to freeze page counter,
+which is made in reuse_ksm_page().
 
-In this case, count == move, and split will be zero, and we will
-attempt a negative index into map[].
-
-Guard against this by detecting this case, and falling back to
-split-to-half-of-count instead; in this case we will still have
-plenty of space (> half blocksize) in each split block.
-
-Fixes: ef2b02d3e617 ("ext34: ensure do_split leaves enough free space in both blocks")
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/f53e246b-647c-64bb-16ec-135383c70ad7@redhat.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/ext4/namei.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index 98b91f2314eba..a91a5bb8c3a2b 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -1858,7 +1858,7 @@ static struct ext4_dir_entry_2 *do_split(handle_t *handle, struct inode *dir,
- 			     blocksize, hinfo, map);
- 	map -= count;
- 	dx_sort_map(map, count);
--	/* Split the existing block in the middle, size-wise */
-+	/* Ensure that neither split block is over half full */
- 	size = 0;
- 	move = 0;
- 	for (i = count-1; i >= 0; i--) {
-@@ -1868,8 +1868,18 @@ static struct ext4_dir_entry_2 *do_split(handle_t *handle, struct inode *dir,
- 		size += map[i].size;
- 		move++;
- 	}
--	/* map index at which we will split */
--	split = count - move;
-+	/*
-+	 * map index at which we will split
-+	 *
-+	 * If the sum of active entries didn't exceed half the block size, just
-+	 * split it in half by count; each resulting block will have at least
-+	 * half the space free.
-+	 */
-+	if (i > 0)
-+		split = count - move;
-+	else
-+		split = count/2;
-+
- 	hash2 = map[split].hash;
- 	continued = hash2 == map[split - 1].hash;
- 	dxtrace(printk(KERN_INFO "Split block %lu at %x, %i/%i\n",
--- 
-2.25.1
-
-
+> +		if (PageKsm(page) || page_count(page) != 1)
+> +			goto copy;
+> +		if (!trylock_page(page))
+> +			goto copy;
+> +		if (PageKsm(page) || page_mapcount(page) != 1 || page_count(page) != 1) {
+> +			unlock_page(page);
+>  			goto copy;
+> -		if (!trylock_page(vmf->page)) {
+> -			get_page(vmf->page);
+> -			pte_unmap_unlock(vmf->pte, vmf->ptl);
+> -			lock_page(vmf->page);
+> -			vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+> -					vmf->address, &vmf->ptl);
+> -			if (!pte_same(*vmf->pte, vmf->orig_pte)) {
+> -				update_mmu_tlb(vma, vmf->address, vmf->pte);
+> -				unlock_page(vmf->page);
+> -				pte_unmap_unlock(vmf->pte, vmf->ptl);
+> -				put_page(vmf->page);
+> -				return 0;
+> -			}
+> -			put_page(vmf->page);
+> -		}
+> -		if (PageKsm(vmf->page)) {
+> -			bool reused = reuse_ksm_page(vmf->page, vmf->vma,
+> -						     vmf->address);
+> -			unlock_page(vmf->page);
+> -			if (!reused)
+> -				goto copy;
+> -			wp_page_reuse(vmf);
+> -			return VM_FAULT_WRITE;
+> -		}
+> -		if (reuse_swap_page(vmf->page, &total_map_swapcount)) {
+> -			if (total_map_swapcount == 1) {
+> -				/*
+> -				 * The page is all ours. Move it to
+> -				 * our anon_vma so the rmap code will
+> -				 * not search our parent or siblings.
+> -				 * Protected against the rmap code by
+> -				 * the page lock.
+> -				 */
+> -				page_move_anon_rmap(vmf->page, vma);
+> -			}
+> -			unlock_page(vmf->page);
+> -			wp_page_reuse(vmf);
+> -			return VM_FAULT_WRITE;
+>  		}
+> -		unlock_page(vmf->page);
+> +		/*
+> +		 * Ok, we've got the only map reference, and the only
+> +		 * page count reference, and the page is locked,
+> +		 * it's dark out, and we're wearing sunglasses. Hit it.
+> +		 */
+> +		wp_page_reuse(vmf);
+> +		unlock_page(page);
+> +		return VM_FAULT_WRITE;
+>  	} else if (unlikely((vma->vm_flags & (VM_WRITE|VM_SHARED)) ==
+>  					(VM_WRITE|VM_SHARED))) {
+>  		return wp_page_shared(vmf);
+> 
 
