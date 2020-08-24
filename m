@@ -2,53 +2,54 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9659AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CC5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F45C20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D390720738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261845;
-	bh=X1Jc6HRrlX3sT+03uEUsKl4ouu4xw5betJQxvtle9D8=;
+	s=default; t=1598261862;
+	bh=d7IbofLkFJ0M00OwoHaWe5uXwyBPGMJBoTGBm7SmEMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LFmEKGeLTps/a8nibkLvqNqDR+6mCZomO6blCHe1ShXcAJj8ZUmB56tW+cV/jTaXF
-	 UrtF0IdVo8zkgtd0WmhhxUSo3ef/VUWw5H3/Drj9wOAi6KF4hlIU21E1uT8Lxs0tJH
-	 R2/jGV9W8/hj157BVskYWJtEvzLjvhDm950smslk=
+	b=f9ypMr39LPWdcGx4LO3uUaHzeECQzYR3aBUrP42DFlgrmca2xp5lcfMN9zs2q0OBt
+	 r/GikTPjDNltqz1kwJWRTWxdXwkRTHpsWGpUqq9mPK/wy01e+Y24LG7BOTHjZAkLys
+	 2K3irnQmeV+3i4fLmChz7WE7bPo4M4GQATTCEmUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgHXIs0 (ORCPT
+        id S1729447AbgHXIrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:48:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48608 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:47:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729519AbgHXIsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:48:01 -0400
+        id S1729480AbgHXIrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:47:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBFDC204FD;
-        Mon, 24 Aug 2020 08:48:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9131204FD;
+        Mon, 24 Aug 2020 08:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258881;
-        bh=X1Jc6HRrlX3sT+03uEUsKl4ouu4xw5betJQxvtle9D8=;
+        s=default; t=1598258854;
+        bh=d7IbofLkFJ0M00OwoHaWe5uXwyBPGMJBoTGBm7SmEMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zag+ylPmsSNEizhhsHOtT1lnkWBlhWd/C2hTYxlg8aSE1MEjwj90wRgW/XeT8sK2i
-         6JSzd1rhhYdSr+zQcJ7iBPuwl7yEn0kYy42tDLmWtKewStnM7YmMzSFiyaAlxb4MU3
-         q8m/YnXRbhW0fpyohQcIlE7GdBq+NMQF3fk11NrE=
+        b=cTayScb0KM4atCqLNusxAJ3Umm3pD5X0OXOEqSDsmTaPlr3ajw4dLfcWldOAwIoNq
+         uD37uRpXRoMoPm2JnHJlCPSsdp4gmu9TqvpM3vA/MYXgjqhGK5vBdzbaTGNxdHfnFl
+         m/W3qt5v+EhSJRs+8uxBvjyryY6T/bcm+NmZ5ehE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krunoslav Kovac <Krunoslav.Kovac@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 038/107] drm/amd/display: fix pow() crashing when given base 0
-Date:   Mon, 24 Aug 2020 10:30:04 +0200
-Message-Id: <20200824082407.009645502@linuxfoundation.org>
+        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 041/107] scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
+Date:   Mon, 24 Aug 2020 10:30:07 +0200
+Message-Id: <20200824082407.174877391@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -61,36 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-commit d2e59d0ff4c44d1f6f8ed884a5bea7d1bb7fd98c upstream.
+[ Upstream commit c0a18ee0ce78d7957ec1a53be35b1b3beba80668 ]
 
-[Why&How]
-pow(a,x) is implemented as exp(x*log(a)). log(0) will crash.
-So return 0^x = 0, unless x=0, convention seems to be 0^0 = 1.
+It is confirmed that Micron device needs DELAY_BEFORE_LPM quirk to have a
+delay before VCC is powered off. Sdd Micron vendor ID and this quirk for
+Micron devices.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20200612012625.6615-2-stanley.chu@mediatek.com
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/include/fixed31_32.h |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/ufs/ufs_quirks.h | 1 +
+ drivers/scsi/ufs/ufshcd.c     | 2 ++
+ 2 files changed, 3 insertions(+)
 
---- a/drivers/gpu/drm/amd/display/include/fixed31_32.h
-+++ b/drivers/gpu/drm/amd/display/include/fixed31_32.h
-@@ -431,6 +431,9 @@ struct fixed31_32 dc_fixpt_log(struct fi
-  */
- static inline struct fixed31_32 dc_fixpt_pow(struct fixed31_32 arg1, struct fixed31_32 arg2)
- {
-+	if (arg1.value == 0)
-+		return arg2.value == 0 ? dc_fixpt_one : dc_fixpt_zero;
-+
- 	return dc_fixpt_exp(
- 		dc_fixpt_mul(
- 			dc_fixpt_log(arg1),
+diff --git a/drivers/scsi/ufs/ufs_quirks.h b/drivers/scsi/ufs/ufs_quirks.h
+index fe6cad9b2a0d2..03985919150b9 100644
+--- a/drivers/scsi/ufs/ufs_quirks.h
++++ b/drivers/scsi/ufs/ufs_quirks.h
+@@ -12,6 +12,7 @@
+ #define UFS_ANY_VENDOR 0xFFFF
+ #define UFS_ANY_MODEL  "ANY_MODEL"
+ 
++#define UFS_VENDOR_MICRON      0x12C
+ #define UFS_VENDOR_TOSHIBA     0x198
+ #define UFS_VENDOR_SAMSUNG     0x1CE
+ #define UFS_VENDOR_SKHYNIX     0x1AD
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 2b6853c7375c9..b41b88bcab3d9 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -217,6 +217,8 @@ ufs_get_desired_pm_lvl_for_dev_link_state(enum ufs_dev_pwr_mode dev_state,
+ 
+ static struct ufs_dev_fix ufs_fixups[] = {
+ 	/* UFS cards deviations table */
++	UFS_FIX(UFS_VENDOR_MICRON, UFS_ANY_MODEL,
++		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
+ 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
+ 		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
+ 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
+-- 
+2.25.1
+
 
 
