@@ -2,300 +2,85 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68900C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF71C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC5F2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:44:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="FbTa55HQ"
+	by mail.kernel.org (Postfix) with ESMTP id A6FB7206F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgHXDoS (ORCPT
+        id S1728088AbgHXDqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 23:44:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbgHXDoR (ORCPT
+        Sun, 23 Aug 2020 23:46:08 -0400
+Received: from mail02.asahi-net.or.jp ([202.224.55.14]:35483 "EHLO
+        mail02.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbgHXDqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 23:44:17 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63001C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 20:44:17 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id 2so3531149pjx.5
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 20:44:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AuHZGEcvwVA/J+YrgA+hg2nQVVrGNVuVUgnExt2Jtzs=;
-        b=FbTa55HQlLRnIga2TQgifBGQe9++agGnPnTpjb+2yHM2QR28qogtQ9iZPSLUDZ6GQD
-         eGnkaA9vsHIloncO6bcYgh0zmJSLvKaHZtrGYhgegoI3CaBgYPDizT43E9wngvnijgbd
-         1jRNfuez8FVwvR7P7xnTBBdBIPS847aeYLVtmQzlltnAV3+laHIGWAPTHFG9pX8NKlUr
-         nQNspjkryB6fgz9PZjY5E4QRutYnV4FARx7opkwTySxMOdGF3b/nzpxAUHsHpjJzD2Rm
-         xcewMA1w2D4Gki7iomgxpvnzRtTCEoXisTiSr4QcP66nmMV8KAeSloeR3UijguWIUwTc
-         GFvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=AuHZGEcvwVA/J+YrgA+hg2nQVVrGNVuVUgnExt2Jtzs=;
-        b=PjmziRBSU1N2LRbjKKp4LsSO8jdq/UFx1VM+5zD/ytNlVLaIe0Haob6SajzTiAaWVC
-         XFAmBnLRBfDxqDdkU6SPWpo0qvbkzytHFLwYUqYYr+CunncFWMWnLWscJGGAxv9OL8hh
-         2RNzQh8OD99o3ZyG8WNeXZX4VkdkELOqcOS3YPDohY0mE8cKvMcormp/AkbBE61t/qaM
-         ARnsRNULTT3+ybn5OajI+e/aagxkwt+z/zogpZ7oFsN8PduUj1GKPhiLml32U3LdTI4y
-         yiw9mXKr1d61WZaN1raKzCY5lqCaFbhUdeGrIBQitQSoPlae/6dftkMML1ss13C4mBJa
-         3PNA==
-X-Gm-Message-State: AOAM532A/E8Yi5DnHDe5cFxl3kaUU4hsGhce86M1mHG5y2WxZvWqvIyZ
-        Hl47gbP7krWluZxxIRmYg9OUg6bbzo08hA==
-X-Google-Smtp-Source: ABdhPJzJj5lg6FcffqLNoOdi7oOjxu+WgJ3EjHm+5RToxfmFkShIifL864lXVryemiRTbnQumInuug==
-X-Received: by 2002:a17:90a:4a97:: with SMTP id f23mr3038211pjh.138.1598240656014;
-        Sun, 23 Aug 2020 20:44:16 -0700 (PDT)
-Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
-        by smtp.gmail.com with ESMTPSA id gm8sm7934162pjb.13.2020.08.23.20.44.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Aug 2020 20:44:15 -0700 (PDT)
-Subject: Re: [PATCH v1 07/10] powerpc/pseries/iommu: Allow DDW windows
- starting at 0x00
-To:     Leonardo Bras <leobras.c@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Joel Stanley <joel@jms.id.au>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
-        David Dai <zdai@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20200817234033.442511-1-leobras.c@gmail.com>
- <20200817234033.442511-8-leobras.c@gmail.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <3fda1c2d-20f2-7789-e072-47fe966f0265@ozlabs.ru>
-Date:   Mon, 24 Aug 2020 13:44:08 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200817234033.442511-8-leobras.c@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 23 Aug 2020 23:46:08 -0400
+Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
+        (Authenticated sender: PQ4Y-STU)
+        by mail02.asahi-net.or.jp (Postfix) with ESMTPA id E316226B8A;
+        Mon, 24 Aug 2020 12:36:15 +0900 (JST)
+Received: from yo-satoh-debian.ysato.ml (ZM005235.ppp.dion.ne.jp [222.8.5.235])
+        by sakura.ysato.name (Postfix) with ESMTPSA id 7B49D1C07B2;
+        Mon, 24 Aug 2020 12:36:15 +0900 (JST)
+Date:   Mon, 24 Aug 2020 12:36:14 +0900
+Message-ID: <87mu2kemvl.wl-ysato@users.sourceforge.jp>
+From:   Yoshinori Sato <ysato@users.sourceforge.jp>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] h8300: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+In-Reply-To: <20200819122925.18557-1-geert+renesas@glider.be>
+References: <20200819122925.18557-1-geert+renesas@glider.be>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 18/08/2020 09:40, Leonardo Bras wrote:
-> enable_ddw() currently returns the address of the DMA window, which is
-> considered invalid if has the value 0x00.
+On Wed, 19 Aug 2020 21:29:25 +0900,
+Geert Uytterhoeven wrote:
 > 
-> Also, it only considers valid an address returned from find_existing_ddw
-> if it's not 0x00.
+> The H8/300 platform code is not a clock provider, and just needs to call
+> of_clk_init().
 > 
-> Changing this behavior makes sense, given the users of enable_ddw() only
-> need to know if direct mapping is possible. It can also allow a DMA window
-> starting at 0x00 to be used.
+> Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
 > 
-> This will be helpful for using a DDW with indirect mapping, as the window
-> address will be different than 0x00, but it will not map the whole
-> partition.
-> 
-> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 > ---
->  arch/powerpc/platforms/pseries/iommu.c | 30 ++++++++++++--------------
->  1 file changed, 14 insertions(+), 16 deletions(-)
+> v2:
+>   - Add Reviewed-by.
+> ---
+>  arch/h8300/kernel/setup.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> index fcdefcc0f365..4031127c9537 100644
-> --- a/arch/powerpc/platforms/pseries/iommu.c
-> +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -852,24 +852,25 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
->  			np, ret);
->  }
->  
-> -static u64 find_existing_ddw(struct device_node *pdn)
-> +static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr)
->  {
->  	struct direct_window *window;
->  	const struct dynamic_dma_window_prop *direct64;
-> -	u64 dma_addr = 0;
-> +	bool found = false;
->  
->  	spin_lock(&direct_window_list_lock);
->  	/* check if we already created a window and dupe that config if so */
->  	list_for_each_entry(window, &direct_window_list, list) {
->  		if (window->device == pdn) {
->  			direct64 = window->prop;
-> -			dma_addr = be64_to_cpu(direct64->dma_base);
-> +			*dma_addr = be64_to_cpu(direct64->dma_base);
-> +			found = true;
->  			break;
->  		}
->  	}
->  	spin_unlock(&direct_window_list_lock);
->  
-> -	return dma_addr;
-> +	return found;
->  }
->  
->  static struct direct_window *ddw_list_add(struct device_node *pdn,
-> @@ -1131,15 +1132,15 @@ static void reset_dma_window(struct pci_dev *dev, struct device_node *par_dn)
->   * pdn: the parent pe node with the ibm,dma_window property
->   * Future: also check if we can remap the base window for our base page size
->   *
-> - * returns the dma offset for use by the direct mapped DMA code.
-> + * returns true if can map all pages (direct mapping), false otherwise..
->   */
-> -static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
-> +static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->  {
->  	int len, ret;
->  	struct ddw_query_response query;
->  	struct ddw_create_response create;
->  	int page_shift;
-> -	u64 dma_addr, max_addr;
-> +	u64 max_addr;
->  	struct device_node *dn;
->  	u32 ddw_avail[DDW_APPLICABLE_SIZE];
->  	struct direct_window *window;
-> @@ -1150,8 +1151,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->  
->  	mutex_lock(&direct_window_init_mutex);
->  
-> -	dma_addr = find_existing_ddw(pdn);
-> -	if (dma_addr != 0)
-> +	if (find_existing_ddw(pdn, &dev->dev.archdata.dma_offset))
->  		goto out_unlock;
->  
->  	/*
-> @@ -1292,7 +1292,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->  		goto out_free_window;
->  	}
->  
-> -	dma_addr = be64_to_cpu(ddwprop->dma_base);
-> +	dev->dev.archdata.dma_offset = be64_to_cpu(ddwprop->dma_base);
-
-
-Do not you need the same chunk in the find_existing_ddw() case above as
-well? Thanks,
-
-
->  	goto out_unlock;
->  
->  out_free_window:
-> @@ -1309,6 +1309,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->  	kfree(win64->name);
->  	kfree(win64->value);
->  	kfree(win64);
-> +	win64 = NULL;
->  
->  out_failed:
->  	if (default_win_removed)
-> @@ -1322,7 +1323,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->  
->  out_unlock:
->  	mutex_unlock(&direct_window_init_mutex);
-> -	return dma_addr;
-> +	return win64;
->  }
->  
->  static void pci_dma_dev_setup_pSeriesLP(struct pci_dev *dev)
-> @@ -1401,11 +1402,8 @@ static bool iommu_bypass_supported_pSeriesLP(struct pci_dev *pdev, u64 dma_mask)
->  			break;
->  	}
->  
-> -	if (pdn && PCI_DN(pdn)) {
-> -		pdev->dev.archdata.dma_offset = enable_ddw(pdev, pdn);
-> -		if (pdev->dev.archdata.dma_offset)
-> -			return true;
-> -	}
-> +	if (pdn && PCI_DN(pdn))
-> +		return enable_ddw(pdev, pdn);
->  
->  	return false;
->  }
+> diff --git a/arch/h8300/kernel/setup.c b/arch/h8300/kernel/setup.c
+> index 28ac88358a89a4f9..0ecaac7dd7e93d9f 100644
+> --- a/arch/h8300/kernel/setup.c
+> +++ b/arch/h8300/kernel/setup.c
+> @@ -24,7 +24,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_fdt.h>
+>  #include <linux/of_address.h>
+> -#include <linux/clk-provider.h>
+> +#include <linux/of_clk.h>
+>  #include <linux/memblock.h>
+>  #include <linux/screen_info.h>
+>  #include <linux/clocksource.h>
+> -- 
+> 2.17.1
 > 
+
+Applied h8300-next.
+Thanks.
 
 -- 
-Alexey
+Yosinori Sato
