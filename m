@@ -2,228 +2,135 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45723C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28690206F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7909A206F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:32:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="UkN0oSOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbgHXCcZ (ORCPT
+        id S1728094AbgHXCct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 22:32:25 -0400
-Received: from mga17.intel.com ([192.55.52.151]:18536 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbgHXCcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 22:32:25 -0400
-IronPort-SDR: x/9t3r3A/qcJE/MOhpNwI0naORS+vPBWHWKWPQGmFCPOF1S628gDFPNPRkqXDG/5JDSDzklZXN
- sP4kKUG6U8yw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="135894700"
-X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
-   d="scan'208";a="135894700"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2020 19:32:24 -0700
-IronPort-SDR: f8BfuEqWTP5sF+vKPqyqpugwW/EVHkAZhhuLHBcpA3DRmizcxLRTSVlya3D5U3ZfZjHj3ZMp/x
- CN0wybww5fwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
-   d="scan'208";a="402122343"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Aug 2020 19:32:21 -0700
-Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>, Wu Hao <hao.wu@intel.com>
-Subject: Re: [PATCH v2 4/9] iommu/ioasid: Add reference couting functions
-To:     Jacob Pan <jacob.pan.linux@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1598070918-21321-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1598070918-21321-5-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <31af38ba-5cda-5d60-237e-f98cfc87da1b@linux.intel.com>
-Date:   Mon, 24 Aug 2020 10:26:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <1598070918-21321-5-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Sun, 23 Aug 2020 22:32:49 -0400
+Received: from mail-eopbgr760059.outbound.protection.outlook.com ([40.107.76.59]:4287
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727021AbgHXCcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 22:32:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jWpOnndSW2GA32nw3pzi9kCf402jPUlKhUzXc8K1eMuUemi3i8Ck0ObMrHt1qaDRtQ1FZUEwnBLEZpmvo9HlAJdAJJ3YHUhUjIXKbPlOZVPVGCHjD0N8p5+7vF7UStPc261MMc1odyqQ/HuVEnsUWYJnf6CvlXo0JJ1o0082wMoKXrwJfUpMt2zSiOvf62QWFXnYoWtN/hta+eCWBSjzodixxcafcIGOhYOtzRy9Q1Xj4H+40iDsXY0WVtjgdSRXBpULOUyrNIhhkRvcl7gP8hpwzu/0p9a4GFk4jzpg5okYGYvUrL/ncJvq8FoVjv5+ZP8HyibEbZaU6rLAFs6z3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HLqXLmepUxH8lJ/T1aYWR5QEo481OuYSaLRGxZY5cQw=;
+ b=GAwgsTWMvkfDb42nJWbO1yvY/kJkrPZeeZU7T+50ei1/87Rb0M3d/MgTz6lBUCaqxJ/3dHvVDeuKvrlRTtYA192nEKWSNYpH0+g+XRHl4QeXASzueAj3mx6XxBxlHntMEwBGgo8xPT9qefkZYuWcAOhWX0a1Fej2KRXbxt1tGtUgv2l+OQkIlNtIcactqBh2o574sCoZSUcI9u6eoow1GOuZ455nSW8ID0LkyE7yhUP26VIrBR4RsJNv3byMcS2hsC7UAMq2HjIG6ZWmzoG0xSrH15NI4253O9t2Bm13WXNmUZXrc5sLca+Yphnp0FnojG5OigpeJOJNdTy/Fv9Nzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HLqXLmepUxH8lJ/T1aYWR5QEo481OuYSaLRGxZY5cQw=;
+ b=UkN0oSOSTJ9V9VLZPWrPno3nRkgEjxw2aCEYrS1ZLUhzhsBhSVNWi5OGxwnxRWOFvYsxPSGqzxa9OqBY70bu08UPrtxq37jbEvKaLHBf2LafSfX5lO5IfHRC9Fh2UR8pwwjrF5+EG8YUj0mAOp46QegvVOK/3Uh4sRwTQlHxM8w=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=synaptics.com;
+Received: from DM6PR03MB4555.namprd03.prod.outlook.com (20.178.24.145) by
+ DS7PR03MB5544.namprd03.prod.outlook.com (10.141.123.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3305.26; Mon, 24 Aug 2020 02:32:46 +0000
+Received: from DM6PR03MB4555.namprd03.prod.outlook.com
+ ([fe80::e494:740f:155:4a38]) by DM6PR03MB4555.namprd03.prod.outlook.com
+ ([fe80::e494:740f:155:4a38%7]) with mapi id 15.20.3305.026; Mon, 24 Aug 2020
+ 02:32:46 +0000
+Date:   Mon, 24 Aug 2020 10:32:14 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH] regulator: mp886x: use "mps,switch-frequency-hz"
+Message-ID: <20200824102402.4047fa5f@xhacker.debian>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYXPR01CA0047.jpnprd01.prod.outlook.com
+ (2603:1096:403:a::17) To DM6PR03MB4555.namprd03.prod.outlook.com
+ (2603:10b6:5:102::17)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by TYXPR01CA0047.jpnprd01.prod.outlook.com (2603:1096:403:a::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Mon, 24 Aug 2020 02:32:43 +0000
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 20622826-c3c7-43aa-5b35-08d847d5fc08
+X-MS-TrafficTypeDiagnostic: DS7PR03MB5544:
+X-Microsoft-Antispam-PRVS: <DS7PR03MB55443502AD77EE443645D24BED560@DS7PR03MB5544.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zykgtRs2pRlJYMqIGu0bXwQ8ci1C5pssyIe9wR4o5i11LHKtbjPWPXbLV3LetAv01jmEA2iKeGU/zFseZx2BIZbarTlvCSTCV9+0CQiwVhbW9N3svDQXJ/YkVUm/aPeiy0nVD3BvHefdSxSu9xsKIJc9AaJTkzDu1RPP2IQmwuW7q4oUFdU+hLpRZoliB7WJRL4qYNweFXmSaqOliHDg6EaGzy0gYfphZ0X3mh6XavPXFFOQXQRO/OZI0ntT0ovb3NPxRw+7fXBj7SvTsK40em0X13kLhFNUY0EilAsXyzVD/aQKO0lglmgUeu5ftw6ERH0wiJ9vG+ycrtoMOseH+RaDxv7j2AVaCPvSnTjvK1+ZvdqQjMfv4330c2vHHkze
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(136003)(396003)(376002)(39850400004)(366004)(956004)(6666004)(16576012)(478600001)(316002)(186003)(83380400001)(6486002)(26005)(9686003)(86362001)(1076003)(66946007)(4326008)(5660300002)(8936002)(2906002)(8676002)(52116002)(66556008)(110136005)(66476007)(142933001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: hHkcponacak1XrPbEK6meIkIH5v2bV8zNaGlRrcBvJQ5YRFB10DGqzImcXbCVaTYnk6RI10KnGnoZELkMM8z69hjV20VwQJGRMOvGhv0AGrdkQSnQMfYE7KMkVqI14POCo157nCc9gf6XFs/ds5UjJXJFhziUOZexgcR0DzwJ7Z+N3DrznbwvNulcVTO12NMiJX4lnDmJ8rX2FH87CyyIbwEW5eeFKFpChrb/g1HGtAUuE+Ud8tH9wKHpHXk4iJsh8ZvKgm9XNAZdIyRo9dZi2Uy5QIveTX8Aek1etF+XD2Uh5RlzKYn49Zer6Ev9CXlEUzwiAAQdGMAuek1e6mSumYBxXXBfRyObjQOKHbQdMeKFIUiaeUzya8BiOp8R7Yi7rI3OeBvLI3ljQWdQEU2TF3Sl0frPLDwPGk21LtwzgOEoWJ0qNb+jpxDd3N95DUtuMTvjtwSu526QbIdguckMRxZX3LJgwGKDqpYzdmF3KfF2OvOc1gR6SX2e5DKQhoUiENMtJQTSWODrni6atw9xgt54IxAsOAwYhXnG5N8ssEptqR8pFqfmaEC8LvDnFUEFI5Fu6aEQ56H3LJsAGlnZVeVXyVDHxtUYWD5dPDEcvM5sSxOuaX8FBflQ5YTVKZ5E4PMKHqHkZvrTQe9bHnblw==
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20622826-c3c7-43aa-5b35-08d847d5fc08
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2020 02:32:45.8585
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4LIYrKQoKAQP5IEB0J3PnXZ1r72KH2MXcUGTs6yR2h8bTSXs+Bl4cBPLUTkWVx2PKsKea7mfyec8Kfnp/wvjeA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR03MB5544
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+As Rob suggested, use the "mps,switch-frequency-hz" instead of the
+"mps,switch-frequency" for switch frequency. Fortunately, the switch
+frequency support isn't released, so we can modify it now without
+any concern.
 
-On 8/22/20 12:35 PM, Jacob Pan wrote:
-> There can be multiple users of an IOASID, each user could have hardware
-> contexts associated with the IOASID. In order to align lifecycles,
-> reference counting is introduced in this patch. It is expected that when
-> an IOASID is being freed, each user will drop a reference only after its
-> context is cleared.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->   drivers/iommu/ioasid.c | 113 +++++++++++++++++++++++++++++++++++++++++++++++++
->   include/linux/ioasid.h |   4 ++
->   2 files changed, 117 insertions(+)
-> 
-> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> index f73b3dbfc37a..5f31d63c75b1 100644
-> --- a/drivers/iommu/ioasid.c
-> +++ b/drivers/iommu/ioasid.c
-> @@ -717,6 +717,119 @@ int ioasid_set_for_each_ioasid(struct ioasid_set *set,
->   EXPORT_SYMBOL_GPL(ioasid_set_for_each_ioasid);
->   
->   /**
-> + * IOASID refcounting rules
-> + * - ioasid_alloc() set initial refcount to 1
-> + *
-> + * - ioasid_free() decrement and test refcount.
-> + *     If refcount is 0, ioasid will be freed. Deleted from the system-wide
-> + *     xarray as well as per set xarray. The IOASID will be returned to the
-> + *     pool and available for new allocations.
-> + *
-> + *     If recount is non-zero, mark IOASID as IOASID_STATE_FREE_PENDING.
-> + *     No new reference can be added. The IOASID is not returned to the pool
-> + *     for reuse.
-> + *     After free, ioasid_get() will return error but ioasid_find() and other
-> + *     non refcount adding APIs will continue to work until the last reference
-> + *     is dropped
-> + *
-> + * - ioasid_get() get a reference on an active IOASID
-> + *
-> + * - ioasid_put() decrement and test refcount of the IOASID.
-> + *     If refcount is 0, ioasid will be freed. Deleted from the system-wide
-> + *     xarray as well as per set xarray. The IOASID will be returned to the
-> + *     pool and available for new allocations.
-> + *     Do nothing if refcount is non-zero.
-> + *
-> + * - ioasid_find() does not take reference, caller must hold reference
-> + *
-> + * ioasid_free() can be called multiple times without error until all refs are
-> + * dropped.
-> + */
-> +
-> +int ioasid_get_locked(struct ioasid_set *set, ioasid_t ioasid)
-> +{
-> +	struct ioasid_data *data;
-> +
-> +	data = xa_load(&active_allocator->xa, ioasid);
-> +	if (!data) {
-> +		pr_err("Trying to get unknown IOASID %u\n", ioasid);
-> +		return -EINVAL;
-> +	}
-> +	if (data->state == IOASID_STATE_FREE_PENDING) {
-> +		pr_err("Trying to get IOASID being freed%u\n", ioasid);
-> +		return -EBUSY;
-> +	}
-> +
-> +	if (set && data->set != set) {
-> +		pr_err("Trying to get IOASID not in set%u\n", ioasid);
-> +		/* data found but does not belong to the set */
-> +		return -EACCES;
-> +	}
-> +	refcount_inc(&data->users);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_get_locked);
-> +
-> +/**
-> + * ioasid_get - Obtain a reference of an ioasid
-> + * @set
-> + * @ioasid
-> + *
-> + * Check set ownership if @set is non-null.
-> + */
-> +int ioasid_get(struct ioasid_set *set, ioasid_t ioasid)
-> +{
-> +	int ret = 0;
-> +
-> +	spin_lock(&ioasid_allocator_lock);
-> +	ret = ioasid_get_locked(set, ioasid);
-> +	spin_unlock(&ioasid_allocator_lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_get);
-> +
-> +void ioasid_put_locked(struct ioasid_set *set, ioasid_t ioasid)
-> +{
-> +	struct ioasid_data *data;
-> +
-> +	data = xa_load(&active_allocator->xa, ioasid);
-> +	if (!data) {
-> +		pr_err("Trying to put unknown IOASID %u\n", ioasid);
-> +		return;
-> +	}
-> +
-> +	if (set && data->set != set) {
-> +		pr_err("Trying to drop IOASID not in the set %u\n", ioasid);
-> +		return;
-> +	}
-> +
-> +	if (!refcount_dec_and_test(&data->users)) {
-> +		pr_debug("%s: IOASID %d has %d remainning users\n",
-> +			__func__, ioasid, refcount_read(&data->users));
-> +		return;
-> +	}
-> +	ioasid_do_free(data);
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_put_locked);
-> +
-> +/**
-> + * ioasid_put - Drop a reference of an ioasid
-> + * @set
-> + * @ioasid
-> + *
-> + * Check set ownership if @set is non-null.
-> + */
-> +void ioasid_put(struct ioasid_set *set, ioasid_t ioasid)
-> +{
-> +	spin_lock(&ioasid_allocator_lock);
-> +	ioasid_put_locked(set, ioasid);
-> +	spin_unlock(&ioasid_allocator_lock);
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_put);
-> +
-> +/**
->    * ioasid_find - Find IOASID data
->    * @set: the IOASID set
->    * @ioasid: the IOASID to find
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ Documentation/devicetree/bindings/regulator/mp886x.txt | 2 +-
+ drivers/regulator/mp886x.c                             | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Do you need to increase the refcount of the found ioasid and ask the
-caller to drop it after use? Otherwise, the ioasid might be freed
-elsewhere.
+diff --git a/Documentation/devicetree/bindings/regulator/mp886x.txt b/Documentation/devicetree/bindings/regulator/mp886x.txt
+index e747000cebba..b05307bbb0d9 100644
+--- a/Documentation/devicetree/bindings/regulator/mp886x.txt
++++ b/Documentation/devicetree/bindings/regulator/mp886x.txt
+@@ -10,7 +10,7 @@ Required properties:
+   values R1 and R2 of the feedback voltage divider in kilo ohms.
+ 
+ Optional properties:
+-- mps,switch-frequency: The valid switch frequency in Hertz. Available values
++- mps,switch-frequency-hz: The valid switch frequency in Hertz. Available values
+   are: 500000, 750000, 1000000, 1250000, 1500000
+ 
+ Any property defined as part of the core regulator binding, defined in
+diff --git a/drivers/regulator/mp886x.c b/drivers/regulator/mp886x.c
+index 97dc44c0d663..a84fd74081de 100644
+--- a/drivers/regulator/mp886x.c
++++ b/drivers/regulator/mp886x.c
+@@ -349,7 +349,7 @@ static int mp886x_i2c_probe(struct i2c_client *client)
+ 	config.driver_data = di;
+ 	config.of_node = np;
+ 
+-	if (!of_property_read_u32(np, "mps,switch-frequency", &freq))
++	if (!of_property_read_u32(np, "mps,switch-frequency-hz", &freq))
+ 		mp886x_set_switch_freq(di, regmap, freq);
+ 
+ 	ret = mp886x_regulator_register(di, &config);
+-- 
+2.28.0
 
-Best regards,
-baolu
-
-> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> index 412d025d440e..310abe4187a3 100644
-> --- a/include/linux/ioasid.h
-> +++ b/include/linux/ioasid.h
-> @@ -76,6 +76,10 @@ int ioasid_attach_data(ioasid_t ioasid, void *data);
->   int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
->   void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
->   void ioasid_is_in_set(struct ioasid_set *set, ioasid_t ioasid);
-> +int ioasid_get(struct ioasid_set *set, ioasid_t ioasid);
-> +int ioasid_get_locked(struct ioasid_set *set, ioasid_t ioasid);
-> +void ioasid_put(struct ioasid_set *set, ioasid_t ioasid);
-> +void ioasid_put_locked(struct ioasid_set *set, ioasid_t ioasid);
->   int ioasid_set_for_each_ioasid(struct ioasid_set *sdata,
->   			       void (*fn)(ioasid_t id, void *data),
->   			       void *data);
-> 
