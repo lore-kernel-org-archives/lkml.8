@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78755C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E99C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4157E2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CC82074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258778;
-	bh=EPajKXHFjc0YAhYJMrssrhINBvBrhqjSvgk0uwagryY=;
+	s=default; t=1598258786;
+	bh=G/McZE4QBg9BkUHnwrJRZBU4YvBJ3uxeKAUg6szMSYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vDgS2Ngw0UfY2rYKl2nClclTYOMiR10QxZJugvWIIjsWxlABW5I4lTmsLEFTQvz5P
-	 eCJ1zGzGL6FqSgLGjq0dWuOdXLsbnGPjRhN7/BmaC45qUr06stVamfw2nutM3vUKgj
-	 BNFFPeT19cTzlXcPGMJJSY1T3+CY5s1dMTBAh8Sc=
+	b=PTnbDZI67V4nI8tIDFET1Vd+wciLzBXxaPm7IfR+1A1l0Q7tk8q3jvgUrlZL0wvwt
+	 cOhb51Gkd1yhmfbh4dRSeJQZRsXmCnh09j+QSYuFfu/SYdoFDhLpV7jaYV91LTUdiQ
+	 sKvDQ/+RDrRFArlILthHR7mtFwDv5Lc5RPLo2OeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgHXIqR (ORCPT
+        id S1728926AbgHXIqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:46:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44238 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:46:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729291AbgHXIqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:46:14 -0400
+        id S1729330AbgHXIqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:46:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87D7C2075B;
-        Mon, 24 Aug 2020 08:46:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31CE1204FD;
+        Mon, 24 Aug 2020 08:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258773;
-        bh=EPajKXHFjc0YAhYJMrssrhINBvBrhqjSvgk0uwagryY=;
+        s=default; t=1598258775;
+        bh=G/McZE4QBg9BkUHnwrJRZBU4YvBJ3uxeKAUg6szMSYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UzoAU6G7IULXgo+nkkgW1GfV1IoLSW4+WmBcNEQYatFcAfJW/SDm3MZb3afyhn6Yj
-         +Pa76/ABJQUSh3XfiViM72HwaP9rE7v/1/Zsvu3FOfu2WDXbdAlqdHaNUMfiOBe9LH
-         pToxbUdUKkIvBrjZs2WrYGh67SP3IvsSgoE2UiUg=
+        b=arobwEZkndPlKFrIDOpzVwXxoJS8vaXrM6Of53oyw3TEJAONFAzeC1VCxAYyxI56+
+         h1/0BDro+ImiVakm8oHtrMbP3WN29WQIVN9dX9aAu6FcVpPbvmtDfDeImf6YtPq6jh
+         nr5+EemXoraoaULJOw7kQr7KW2FRAIq8NUvZlAM0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 010/107] drm/vgem: Replace opencoded version of drm_gem_dumb_map_offset()
-Date:   Mon, 24 Aug 2020 10:29:36 +0200
-Message-Id: <20200824082405.565795154@linuxfoundation.org>
+Subject: [PATCH 5.4 011/107] gfs2: Improve mmap write vs. punch_hole consistency
+Date:   Mon, 24 Aug 2020 10:29:37 +0200
+Message-Id: <20200824082405.621982099@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -60,81 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit 119c53d2d4044c59c450c4f5a568d80b9d861856 ]
+[ Upstream commit 39c3a948ecf6e7b8f55f0e91a5febc924fede4d7 ]
 
-drm_gem_dumb_map_offset() now exists and does everything
-vgem_gem_dump_map does and *ought* to do.
+When punching a hole in a file, use filemap_write_and_wait_range to
+write back any dirty pages in the range of the hole.  As a side effect,
+if the hole isn't page aligned, this marks unaligned pages at the
+beginning and the end of the hole read-only.  This is required when the
+block size is smaller than the page size: when those pages are written
+to again after the hole punching, we must make sure that page_mkwrite is
+called for those pages so that the page will be fully allocated and any
+blocks turned into holes from the hole punching will be reallocated.
+(If a page is writably mapped, page_mkwrite won't be called.)
 
-In particular, vgem_gem_dumb_map() was trying to reject mmapping an
-imported dmabuf by checking the existence of obj->filp. Unfortunately,
-we always allocated an obj->filp, even if unused for an imported dmabuf.
-Instead, the drm_gem_dumb_map_offset(), since commit 90378e589192
-("drm/gem: drm_gem_dumb_map_offset(): reject dma-buf"), uses the
-obj->import_attach to reject such invalid mmaps.
+Fixes xfstest generic/567.
 
-This prevents vgem from allowing userspace mmapping the dumb handle and
-attempting to incorrectly fault in remote pages belonging to another
-device, where there may not even be a struct page.
-
-v2: Use the default drm_gem_dumb_map_offset() callback
-
-Fixes: af33a9190d02 ("drm/vgem: Enable dmabuf import interfaces")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: <stable@vger.kernel.org> # v4.13+
-Link: https://patchwork.freedesktop.org/patch/msgid/20200708154911.21236-1-chris@chris-wilson.co.uk
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vgem/vgem_drv.c | 27 ---------------------------
- 1 file changed, 27 deletions(-)
+ fs/gfs2/bmap.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
-index 909eba43664a2..204d1df5a21d1 100644
---- a/drivers/gpu/drm/vgem/vgem_drv.c
-+++ b/drivers/gpu/drm/vgem/vgem_drv.c
-@@ -229,32 +229,6 @@ static int vgem_gem_dumb_create(struct drm_file *file, struct drm_device *dev,
- 	return 0;
- }
+diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
+index adbb8fef22162..4846e0c47e6af 100644
+--- a/fs/gfs2/bmap.c
++++ b/fs/gfs2/bmap.c
+@@ -2442,8 +2442,16 @@ int __gfs2_punch_hole(struct file *file, loff_t offset, loff_t length)
+ 	struct inode *inode = file_inode(file);
+ 	struct gfs2_inode *ip = GFS2_I(inode);
+ 	struct gfs2_sbd *sdp = GFS2_SB(inode);
++	unsigned int blocksize = i_blocksize(inode);
++	loff_t start, end;
+ 	int error;
  
--static int vgem_gem_dumb_map(struct drm_file *file, struct drm_device *dev,
--			     uint32_t handle, uint64_t *offset)
--{
--	struct drm_gem_object *obj;
--	int ret;
--
--	obj = drm_gem_object_lookup(file, handle);
--	if (!obj)
--		return -ENOENT;
--
--	if (!obj->filp) {
--		ret = -EINVAL;
--		goto unref;
--	}
--
--	ret = drm_gem_create_mmap_offset(obj);
--	if (ret)
--		goto unref;
--
--	*offset = drm_vma_node_offset_addr(&obj->vma_node);
--unref:
--	drm_gem_object_put_unlocked(obj);
--
--	return ret;
--}
--
- static struct drm_ioctl_desc vgem_ioctls[] = {
- 	DRM_IOCTL_DEF_DRV(VGEM_FENCE_ATTACH, vgem_fence_attach_ioctl, DRM_RENDER_ALLOW),
- 	DRM_IOCTL_DEF_DRV(VGEM_FENCE_SIGNAL, vgem_fence_signal_ioctl, DRM_RENDER_ALLOW),
-@@ -448,7 +422,6 @@ static struct drm_driver vgem_driver = {
- 	.fops				= &vgem_driver_fops,
++	start = round_down(offset, blocksize);
++	end = round_up(offset + length, blocksize) - 1;
++	error = filemap_write_and_wait_range(inode->i_mapping, start, end);
++	if (error)
++		return error;
++
+ 	if (gfs2_is_jdata(ip))
+ 		error = gfs2_trans_begin(sdp, RES_DINODE + 2 * RES_JDATA,
+ 					 GFS2_JTRUNC_REVOKES);
+@@ -2457,9 +2465,8 @@ int __gfs2_punch_hole(struct file *file, loff_t offset, loff_t length)
+ 		if (error)
+ 			goto out;
+ 	} else {
+-		unsigned int start_off, end_len, blocksize;
++		unsigned int start_off, end_len;
  
- 	.dumb_create			= vgem_gem_dumb_create,
--	.dumb_map_offset		= vgem_gem_dumb_map,
- 
- 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
- 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+-		blocksize = i_blocksize(inode);
+ 		start_off = offset & (blocksize - 1);
+ 		end_len = (offset + length) & (blocksize - 1);
+ 		if (start_off) {
 -- 
 2.25.1
 
