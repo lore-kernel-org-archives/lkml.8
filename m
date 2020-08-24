@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FB2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B251C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9216C2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D317B2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258448;
-	bh=OoNOYyVcBqHtuU3jcJNjtmLrgGP7luC9MQmdDUnLJTI=;
+	s=default; t=1598258451;
+	bh=/S/5fcNXp1qF0dj5Sh7EBvrVNQQbog7E1B1vZS/c6vk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jR2YCz7vKgB6yc8l0fIgKkN5New1nbTWvjuzPL1LAKdQm9JbtzI+6Jif7JeM2pQQd
-	 6NtQGJDipdraNPrabVJxVcRUOYuU4Y1kJoXnPJq9zfpKr6cwSj2a6eDSP0BNYt0bxm
-	 0z8AdaxNf+eG6OUynmzfEmQx61S4TZvL1zjnLzoA=
+	b=iWKv9qWpjLDLPSk5Xv3ZmvvCIGOM3GwgHemBwB5c7xPS9C6AoJPjO5Mdq6d5Smwkb
+	 qKwH52jwu2Fek2dK9o62XTiWG8jMkKOsuAJKpTflhHZzkWzdcoA9EicqBWeGQ8m/tU
+	 nIIl0WBpEfHpN2H3mbpvSzQSzlKfFAJWFl1cjbX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgHXIkq (ORCPT
+        id S1728735AbgHXIkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:40:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57428 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:40:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728747AbgHXIk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:40:28 -0400
+        id S1728775AbgHXIko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:40:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4912E2074D;
-        Mon, 24 Aug 2020 08:40:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99C1D2075B;
+        Mon, 24 Aug 2020 08:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258427;
-        bh=OoNOYyVcBqHtuU3jcJNjtmLrgGP7luC9MQmdDUnLJTI=;
+        s=default; t=1598258444;
+        bh=/S/5fcNXp1qF0dj5Sh7EBvrVNQQbog7E1B1vZS/c6vk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LcklCeW+N045uuqYQR9GKrjpCzyuFVqIiq9AtKbVIXs5tk33Yfiv2Nua1y9/hdcyF
-         QM+R3uG0ucjPzZIFwkhkLSt0x//rPZOqY7PAmqHdgnQB3uquZPIi+dP3pgAOrlNPlT
-         F03BxYteqZcbo9Vril/9blbjqyJvCQKeQFXOhbdU=
+        b=vE9HDkEzhbQHrWq2zTEXrcSZLZIoUSDtowyAyy997HUnsH305p50bzboYWQLsjJvL
+         N4SUsJwtwyf8HsomWMBlYWlo+2oZACjqY5rVVZjeWLZ94nS4xxQwzlHwGCsdw6oQzH
+         8L8yd7zuAkBmPXHHLjtEwQo6QFjdMa7Z2ogs7yuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        stable@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>,
+        Corey Minyard <cminyard@mvista.com>,
+        Roman Shaposhnik <roman@zededa.com>,
+        Juergen Gross <jgross@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 044/124] svcrdma: Fix another Receive buffer leak
-Date:   Mon, 24 Aug 2020 10:29:38 +0200
-Message-Id: <20200824082411.593157141@linuxfoundation.org>
+Subject: [PATCH 5.7 050/124] swiotlb-xen: use vmalloc_to_page on vmalloc virt addresses
+Date:   Mon, 24 Aug 2020 10:29:44 +0200
+Message-Id: <20200824082411.881127143@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -59,43 +64,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-[ Upstream commit 64d26422516b2e347b32e6d9b1d40b3c19a62aae ]
+[ Upstream commit 8b1e868f66076490189a36d984fcce286cdd6295 ]
 
-During a connection tear down, the Receive queue is flushed before
-the device resources are freed. Typically, all the Receives flush
-with IB_WR_FLUSH_ERR.
+xen_alloc_coherent_pages might return pages for which virt_to_phys and
+virt_to_page don't work, e.g. ioremap'ed pages.
 
-However, any pending successful Receives flush with IB_WR_SUCCESS,
-and the server automatically posts a fresh Receive to replace the
-completing one. This happens even after the connection has closed
-and the RQ is drained. Receives that are posted after the RQ is
-drained appear never to complete, causing a Receive resource leak.
-The leaked Receive buffer is left DMA-mapped.
+So in xen_swiotlb_free_coherent we can't assume that virt_to_page works.
+Instead add a is_vmalloc_addr check and use vmalloc_to_page on vmalloc
+virt addresses.
 
-To prevent these late-posted recv_ctxt's from leaking, block new
-Receive posting after XPT_CLOSE is set.
+This patch fixes the following crash at boot on RPi4 (the underlying
+issue is not RPi4 specific):
+https://marc.info/?l=xen-devel&m=158862573216800
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Tested-by: Corey Minyard <cminyard@mvista.com>
+Tested-by: Roman Shaposhnik <roman@zededa.com>
+Link: https://lore.kernel.org/r/20200710223427.6897-1-sstabellini@kernel.org
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/xen/swiotlb-xen.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index efa5fcb5793f7..952b8f1908500 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -265,6 +265,8 @@ static int svc_rdma_post_recv(struct svcxprt_rdma *rdma)
- {
- 	struct svc_rdma_recv_ctxt *ctxt;
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index b6d27762c6f8c..5fbadd07819bd 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -335,6 +335,7 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
+ 	int order = get_order(size);
+ 	phys_addr_t phys;
+ 	u64 dma_mask = DMA_BIT_MASK(32);
++	struct page *page;
  
-+	if (test_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags))
-+		return 0;
- 	ctxt = svc_rdma_recv_ctxt_get(rdma);
- 	if (!ctxt)
- 		return -ENOMEM;
+ 	if (hwdev && hwdev->coherent_dma_mask)
+ 		dma_mask = hwdev->coherent_dma_mask;
+@@ -346,9 +347,14 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
+ 	/* Convert the size to actually allocated. */
+ 	size = 1UL << (order + XEN_PAGE_SHIFT);
+ 
++	if (is_vmalloc_addr(vaddr))
++		page = vmalloc_to_page(vaddr);
++	else
++		page = virt_to_page(vaddr);
++
+ 	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
+ 		     range_straddles_page_boundary(phys, size)) &&
+-	    TestClearPageXenRemapped(virt_to_page(vaddr)))
++	    TestClearPageXenRemapped(page))
+ 		xen_destroy_contiguous_region(phys, order);
+ 
+ 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
 -- 
 2.25.1
 
