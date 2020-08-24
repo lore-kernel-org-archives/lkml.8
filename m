@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F097AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43AA521775
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B95972075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258594;
-	bh=NcCJpwC/mok/7nMe5D6wgpi8QMHvHt3QH/ZjaUgc8iU=;
+	s=default; t=1598258596;
+	bh=5oWJBfWM2iBMhFUPG9LnkQ2JFREBLz/tZMYL8MrWnG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EHOI2oSeBd2LWgmrVtB0Xd1Wik/SifWGi3N5xfFUjqgcdCOd+BT9ediuIlgkTKZr9
-	 XkAl1mu8pKULTMs/IGyL9MSHZCIkTjWtA1DTnrVtU4gxjEBiYDExwR6ORX3Rld6dYH
-	 2TrBwP/7LGQr+TR3jYWblTlGPvp9iiTLk9qdlWmM=
+	b=B+5B8n1Gs1w9FUV6lnmV15sJDcoUj0Ug1H0wJ/SYylwbj3t1f8RGwtg3tkTqAa84R
+	 MmUgPNGVdHtxKHqrJ23SWrph9YrsN+n1mAB3XawtEU2UoDTmkHLZAUfuSmNnj9QpVv
+	 6fnqQY+t+jAVMlEU9C2hJ9fI2e39mdfje0Xl7n+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgHXInL (ORCPT
+        id S1729023AbgHXInP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:43:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36612 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:43:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729009AbgHXInF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:43:05 -0400
+        id S1728667AbgHXInB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:43:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A4872074D;
-        Mon, 24 Aug 2020 08:43:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A4BD2075B;
+        Mon, 24 Aug 2020 08:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258584;
-        bh=NcCJpwC/mok/7nMe5D6wgpi8QMHvHt3QH/ZjaUgc8iU=;
+        s=default; t=1598258580;
+        bh=5oWJBfWM2iBMhFUPG9LnkQ2JFREBLz/tZMYL8MrWnG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nmlCPg4OR+SoSQsFxcFVGKr9LsHNcm7bsfCd/99WCCL3SYWA0LGpv9Kn3yAsywX6v
-         6aqmSTQK4iqy5agiIpGBE3UXjU3zIpO/ZiHnZyUXF6/Am2O9dCz/HlQFl0EY/wbNyx
-         Z1rC84APo0rXU359HVEoUu45x6JSoYZFJ3RX8NM4=
+        b=FyLubT2Xi6n2PYJYaqQFn/9VYTdClC673QgSepVjlnR7KUM3LWF7jFmEmK7K7oF0t
+         nkJ6wW0xmZ+4Q2NfcHZYiloq64EFcpuHlHUw7i+SuogMb001eu87yrk44rX/NU1wmI
+         U6yV4cgVJwPY4Tv9PbL1cOGQfEZF33dMq66r4bJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Martin KaFai Lau <kafai@fb.com>,
+        stable@vger.kernel.org, Can Guo <cang@codeaurora.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Seungwon Jeon <essuuj@gmail.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 068/124] bpf: sock_ops ctx access may stomp registers in corner case
-Date:   Mon, 24 Aug 2020 10:30:02 +0200
-Message-Id: <20200824082412.755960625@linuxfoundation.org>
+Subject: [PATCH 5.7 095/124] scsi: ufs: Add quirk to enable host controller without hce
+Date:   Mon, 24 Aug 2020 10:30:29 +0200
+Message-Id: <20200824082414.085007809@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -62,225 +63,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
 
-[ Upstream commit fd09af010788a884de1c39537c288830c3d305db ]
+[ Upstream commit 39bf2d83b54e900675cd7b52737ded695bb60bf1 ]
 
-I had a sockmap program that after doing some refactoring started spewing
-this splat at me:
+Some host controllers don't support host controller enable via HCE.
 
-[18610.807284] BUG: unable to handle kernel NULL pointer dereference at 0000000000000001
-[...]
-[18610.807359] Call Trace:
-[18610.807370]  ? 0xffffffffc114d0d5
-[18610.807382]  __cgroup_bpf_run_filter_sock_ops+0x7d/0xb0
-[18610.807391]  tcp_connect+0x895/0xd50
-[18610.807400]  tcp_v4_connect+0x465/0x4e0
-[18610.807407]  __inet_stream_connect+0xd6/0x3a0
-[18610.807412]  ? __inet_stream_connect+0x5/0x3a0
-[18610.807417]  inet_stream_connect+0x3b/0x60
-[18610.807425]  __sys_connect+0xed/0x120
-
-After some debugging I was able to build this simple reproducer,
-
- __section("sockops/reproducer_bad")
- int bpf_reproducer_bad(struct bpf_sock_ops *skops)
- {
-        volatile __maybe_unused __u32 i = skops->snd_ssthresh;
-        return 0;
- }
-
-And along the way noticed that below program ran without splat,
-
-__section("sockops/reproducer_good")
-int bpf_reproducer_good(struct bpf_sock_ops *skops)
-{
-        volatile __maybe_unused __u32 i = skops->snd_ssthresh;
-        volatile __maybe_unused __u32 family;
-
-        compiler_barrier();
-
-        family = skops->family;
-        return 0;
-}
-
-So I decided to check out the code we generate for the above two
-programs and noticed each generates the BPF code you would expect,
-
-0000000000000000 <bpf_reproducer_bad>:
-;       volatile __maybe_unused __u32 i = skops->snd_ssthresh;
-       0:       r1 = *(u32 *)(r1 + 96)
-       1:       *(u32 *)(r10 - 4) = r1
-;       return 0;
-       2:       r0 = 0
-       3:       exit
-
-0000000000000000 <bpf_reproducer_good>:
-;       volatile __maybe_unused __u32 i = skops->snd_ssthresh;
-       0:       r2 = *(u32 *)(r1 + 96)
-       1:       *(u32 *)(r10 - 4) = r2
-;       family = skops->family;
-       2:       r1 = *(u32 *)(r1 + 20)
-       3:       *(u32 *)(r10 - 8) = r1
-;       return 0;
-       4:       r0 = 0
-       5:       exit
-
-So we get reasonable assembly, but still something was causing the null
-pointer dereference. So, we load the programs and dump the xlated version
-observing that line 0 above 'r* = *(u32 *)(r1 +96)' is going to be
-translated by the skops access helpers.
-
-int bpf_reproducer_bad(struct bpf_sock_ops * skops):
-; volatile __maybe_unused __u32 i = skops->snd_ssthresh;
-   0: (61) r1 = *(u32 *)(r1 +28)
-   1: (15) if r1 == 0x0 goto pc+2
-   2: (79) r1 = *(u64 *)(r1 +0)
-   3: (61) r1 = *(u32 *)(r1 +2340)
-; volatile __maybe_unused __u32 i = skops->snd_ssthresh;
-   4: (63) *(u32 *)(r10 -4) = r1
-; return 0;
-   5: (b7) r0 = 0
-   6: (95) exit
-
-int bpf_reproducer_good(struct bpf_sock_ops * skops):
-; volatile __maybe_unused __u32 i = skops->snd_ssthresh;
-   0: (61) r2 = *(u32 *)(r1 +28)
-   1: (15) if r2 == 0x0 goto pc+2
-   2: (79) r2 = *(u64 *)(r1 +0)
-   3: (61) r2 = *(u32 *)(r2 +2340)
-; volatile __maybe_unused __u32 i = skops->snd_ssthresh;
-   4: (63) *(u32 *)(r10 -4) = r2
-; family = skops->family;
-   5: (79) r1 = *(u64 *)(r1 +0)
-   6: (69) r1 = *(u16 *)(r1 +16)
-; family = skops->family;
-   7: (63) *(u32 *)(r10 -8) = r1
-; return 0;
-   8: (b7) r0 = 0
-   9: (95) exit
-
-Then we look at lines 0 and 2 above. In the good case we do the zero
-check in r2 and then load 'r1 + 0' at line 2. Do a quick cross-check
-into the bpf_sock_ops check and we can confirm that is the 'struct
-sock *sk' pointer field. But, in the bad case,
-
-   0: (61) r1 = *(u32 *)(r1 +28)
-   1: (15) if r1 == 0x0 goto pc+2
-   2: (79) r1 = *(u64 *)(r1 +0)
-
-Oh no, we read 'r1 +28' into r1, this is skops->fullsock and then in
-line 2 we read the 'r1 +0' as a pointer. Now jumping back to our spat,
-
-[18610.807284] BUG: unable to handle kernel NULL pointer dereference at 0000000000000001
-
-The 0x01 makes sense because that is exactly the fullsock value. And
-its not a valid dereference so we splat.
-
-To fix we need to guard the case when a program is doing a sock_ops field
-access with src_reg == dst_reg. This is already handled in the load case
-where the ctx_access handler uses a tmp register being careful to
-store the old value and restore it. To fix the get case test if
-src_reg == dst_reg and in this case do the is_fullsock test in the
-temporary register. Remembering to restore the temporary register before
-writing to either dst_reg or src_reg to avoid smashing the pointer into
-the struct holding the tmp variable.
-
-Adding this inline code to test_tcpbpf_kern will now be generated
-correctly from,
-
-  9: r2 = *(u32 *)(r2 + 96)
-
-to xlated code,
-
-  12: (7b) *(u64 *)(r2 +32) = r9
-  13: (61) r9 = *(u32 *)(r2 +28)
-  14: (15) if r9 == 0x0 goto pc+4
-  15: (79) r9 = *(u64 *)(r2 +32)
-  16: (79) r2 = *(u64 *)(r2 +0)
-  17: (61) r2 = *(u32 *)(r2 +2348)
-  18: (05) goto pc+1
-  19: (79) r9 = *(u64 *)(r2 +32)
-
-And in the normal case we keep the original code, because really this
-is an edge case. From this,
-
-  9: r2 = *(u32 *)(r6 + 96)
-
-to xlated code,
-
-  22: (61) r2 = *(u32 *)(r6 +28)
-  23: (15) if r2 == 0x0 goto pc+2
-  24: (79) r2 = *(u64 *)(r6 +0)
-  25: (61) r2 = *(u32 *)(r2 +2348)
-
-So three additional instructions if dst == src register, but I scanned
-my current code base and did not see this pattern anywhere so should
-not be a big deal. Further, it seems no one else has hit this or at
-least reported it so it must a fairly rare pattern.
-
-Fixes: 9b1f3d6e5af29 ("bpf: Refactor sock_ops_convert_ctx_access")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Song Liu <songliubraving@fb.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Link: https://lore.kernel.org/bpf/159718347772.4728.2781381670567919577.stgit@john-Precision-5820-Tower
+Link: https://lore.kernel.org/r/20200528011658.71590-4-alim.akhtar@samsung.com
+Reviewed-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/filter.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 76 +++++++++++++++++++++++++++++++++++++--
+ drivers/scsi/ufs/ufshcd.h |  6 ++++
+ 2 files changed, 80 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index cebbb6ba9ed92..dcc06e510ec5d 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -8066,15 +8066,31 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
- /* Helper macro for adding read access to tcp_sock or sock fields. */
- #define SOCK_OPS_GET_FIELD(BPF_FIELD, OBJ_FIELD, OBJ)			      \
- 	do {								      \
-+		int fullsock_reg = si->dst_reg, reg = BPF_REG_9, jmp = 2;     \
- 		BUILD_BUG_ON(sizeof_field(OBJ, OBJ_FIELD) >		      \
- 			     sizeof_field(struct bpf_sock_ops, BPF_FIELD));   \
-+		if (si->dst_reg == reg || si->src_reg == reg)		      \
-+			reg--;						      \
-+		if (si->dst_reg == reg || si->src_reg == reg)		      \
-+			reg--;						      \
-+		if (si->dst_reg == si->src_reg) {			      \
-+			*insn++ = BPF_STX_MEM(BPF_DW, si->src_reg, reg,	      \
-+					  offsetof(struct bpf_sock_ops_kern,  \
-+					  temp));			      \
-+			fullsock_reg = reg;				      \
-+			jmp += 2;					      \
-+		}							      \
- 		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(			      \
- 						struct bpf_sock_ops_kern,     \
- 						is_fullsock),		      \
--				      si->dst_reg, si->src_reg,		      \
-+				      fullsock_reg, si->src_reg,	      \
- 				      offsetof(struct bpf_sock_ops_kern,      \
- 					       is_fullsock));		      \
--		*insn++ = BPF_JMP_IMM(BPF_JEQ, si->dst_reg, 0, 2);	      \
-+		*insn++ = BPF_JMP_IMM(BPF_JEQ, fullsock_reg, 0, jmp);	      \
-+		if (si->dst_reg == si->src_reg)				      \
-+			*insn++ = BPF_LDX_MEM(BPF_DW, reg, si->src_reg,	      \
-+				      offsetof(struct bpf_sock_ops_kern,      \
-+				      temp));				      \
- 		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(			      \
- 						struct bpf_sock_ops_kern, sk),\
- 				      si->dst_reg, si->src_reg,		      \
-@@ -8083,6 +8099,12 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
- 						       OBJ_FIELD),	      \
- 				      si->dst_reg, si->dst_reg,		      \
- 				      offsetof(OBJ, OBJ_FIELD));	      \
-+		if (si->dst_reg == si->src_reg)	{			      \
-+			*insn++ = BPF_JMP_A(1);				      \
-+			*insn++ = BPF_LDX_MEM(BPF_DW, reg, si->src_reg,	      \
-+				      offsetof(struct bpf_sock_ops_kern,      \
-+				      temp));				      \
-+		}							      \
- 	} while (0)
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index acd8fb4981142..3820117795327 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -3539,6 +3539,52 @@ static int ufshcd_dme_link_startup(struct ufs_hba *hba)
+ 			"dme-link-startup: error code %d\n", ret);
+ 	return ret;
+ }
++/**
++ * ufshcd_dme_reset - UIC command for DME_RESET
++ * @hba: per adapter instance
++ *
++ * DME_RESET command is issued in order to reset UniPro stack.
++ * This function now deals with cold reset.
++ *
++ * Returns 0 on success, non-zero value on failure
++ */
++static int ufshcd_dme_reset(struct ufs_hba *hba)
++{
++	struct uic_command uic_cmd = {0};
++	int ret;
++
++	uic_cmd.command = UIC_CMD_DME_RESET;
++
++	ret = ufshcd_send_uic_cmd(hba, &uic_cmd);
++	if (ret)
++		dev_err(hba->dev,
++			"dme-reset: error code %d\n", ret);
++
++	return ret;
++}
++
++/**
++ * ufshcd_dme_enable - UIC command for DME_ENABLE
++ * @hba: per adapter instance
++ *
++ * DME_ENABLE command is issued in order to enable UniPro stack.
++ *
++ * Returns 0 on success, non-zero value on failure
++ */
++static int ufshcd_dme_enable(struct ufs_hba *hba)
++{
++	struct uic_command uic_cmd = {0};
++	int ret;
++
++	uic_cmd.command = UIC_CMD_DME_ENABLE;
++
++	ret = ufshcd_send_uic_cmd(hba, &uic_cmd);
++	if (ret)
++		dev_err(hba->dev,
++			"dme-reset: error code %d\n", ret);
++
++	return ret;
++}
  
- #define SOCK_OPS_GET_TCP_SOCK_FIELD(FIELD) \
+ static inline void ufshcd_add_delay_before_dme_cmd(struct ufs_hba *hba)
+ {
+@@ -4256,7 +4302,7 @@ static inline void ufshcd_hba_stop(struct ufs_hba *hba, bool can_sleep)
+ }
+ 
+ /**
+- * ufshcd_hba_enable - initialize the controller
++ * ufshcd_hba_execute_hce - initialize the controller
+  * @hba: per adapter instance
+  *
+  * The controller resets itself and controller firmware initialization
+@@ -4265,7 +4311,7 @@ static inline void ufshcd_hba_stop(struct ufs_hba *hba, bool can_sleep)
+  *
+  * Returns 0 on success, non-zero value on failure
+  */
+-int ufshcd_hba_enable(struct ufs_hba *hba)
++static int ufshcd_hba_execute_hce(struct ufs_hba *hba)
+ {
+ 	int retry;
+ 
+@@ -4313,6 +4359,32 @@ int ufshcd_hba_enable(struct ufs_hba *hba)
+ 
+ 	return 0;
+ }
++
++int ufshcd_hba_enable(struct ufs_hba *hba)
++{
++	int ret;
++
++	if (hba->quirks & UFSHCI_QUIRK_BROKEN_HCE) {
++		ufshcd_set_link_off(hba);
++		ufshcd_vops_hce_enable_notify(hba, PRE_CHANGE);
++
++		/* enable UIC related interrupts */
++		ufshcd_enable_intr(hba, UFSHCD_UIC_MASK);
++		ret = ufshcd_dme_reset(hba);
++		if (!ret) {
++			ret = ufshcd_dme_enable(hba);
++			if (!ret)
++				ufshcd_vops_hce_enable_notify(hba, POST_CHANGE);
++			if (ret)
++				dev_err(hba->dev,
++					"Host controller enable failed with non-hce\n");
++		}
++	} else {
++		ret = ufshcd_hba_execute_hce(hba);
++	}
++
++	return ret;
++}
+ EXPORT_SYMBOL_GPL(ufshcd_hba_enable);
+ 
+ static int ufshcd_disable_tx_lcc(struct ufs_hba *hba, bool peer)
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 5b1acdd83d5c1..99dc0ca311899 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -529,6 +529,12 @@ enum ufshcd_quirks {
+ 	 * that the interrupt aggregation timer and counter are reset by s/w.
+ 	 */
+ 	UFSHCI_QUIRK_SKIP_RESET_INTR_AGGR		= 1 << 7,
++
++	/*
++	 * This quirks needs to be enabled if host controller cannot be
++	 * enabled via HCE register.
++	 */
++	UFSHCI_QUIRK_BROKEN_HCE				= 1 << 8,
+ };
+ 
+ enum ufshcd_caps {
 -- 
 2.25.1
 
