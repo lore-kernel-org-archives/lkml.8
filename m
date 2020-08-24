@@ -2,121 +2,103 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A26C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 019DEC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81A6B204EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF61220706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:01:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BSXZNxJr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjgmO0cG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgHXV5X (ORCPT
+        id S1727797AbgHXWBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:57:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50992 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXV5W (ORCPT
+        Mon, 24 Aug 2020 18:01:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHXWBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 17:57:22 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07OLnHBA073517;
-        Mon, 24 Aug 2020 21:57:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=A/PnfWbsJd7N4fG0fbCbbTnDOO65Xs5d+iKgr3JCUgQ=;
- b=BSXZNxJr0wXqAwuFszBTcYEBKJ7Ej103vFkbbEgePFPFHuPfJTmzSIRf28DXKPFyUxqh
- 6W4gQcYos0VZiE8+/cA0QeNSnzb8GHTuUQ+C0eAZD6eT8Izc1Xlfdjrx3nHqa9D97SxK
- oYwLXgOBks5k5UhR9xOXzrpS1sYrIuPARzOIg8kVb2EPsiAU8MzKAHpMPw1LUQwngWRl
- EgHfnTMiY9IbiA7r5Y/oUKpPwgWiAvfkcLd0AvceWPsQbM9nTJRXONRCCepFV1QiWfzr
- LCvK1G/7UD9UWinkUegV3CbOQu6k/OptRt79F12BhwVI64OkXf4BGn+48p9Me0KjaUlZ dg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 333w6tnnvd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Aug 2020 21:57:16 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07OLu8BK032110;
-        Mon, 24 Aug 2020 21:57:15 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 333ru5v8bj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Aug 2020 21:57:15 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07OLvDQu010932;
-        Mon, 24 Aug 2020 21:57:14 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Aug 2020 14:57:12 -0700
-Subject: Re: [PATCH v2 0/4] mm/hugetlb: Small cleanup and improvement
-To:     akpm@linux-foundation.org
-Cc:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, david@redhat.com
-References: <20200723032248.24772-1-bhe@redhat.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <9cdac49f-bec3-2230-2432-5ea2d83608b5@oracle.com>
-Date:   Mon, 24 Aug 2020 14:57:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 24 Aug 2020 18:01:05 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED8A8C061574;
+        Mon, 24 Aug 2020 15:01:04 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id j13so138975pjd.4;
+        Mon, 24 Aug 2020 15:01:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5dceEFJHLBFtiegpHMWaZEo6cCMQxCzvJQmC92aQl7Y=;
+        b=FjgmO0cG/xEzNMicn5lO4NbPeC/wxTC7SKhADUH71xUk9naSqj0UjMlaZDyNKhnEdO
+         m2dS3SBTQ0S16fkT0eqgRT9eYCGz9Jc43cndaMDHeneLXcZ7ULrthGI3GfGxfe38QxUb
+         kcSETNNDV8n7c8fVIlzc7VQcaA2WT1LsFLuHF6kmRkqSOsBrYz3UdNsN4GqxBBYeOiSF
+         g3+Q10hFaZ0Zn2bZ5sBT3no06gMK8he6byi79oYOCwRXZlzjuBWAqEGBA+UIRSjzYR1o
+         Jn3s8FblzqLzRRPTUFJ7N3ORV+2qpUnFLHiBpuY4plNVY9a6Wkg0XIcFmWl2OQS14ZOC
+         pduA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5dceEFJHLBFtiegpHMWaZEo6cCMQxCzvJQmC92aQl7Y=;
+        b=ZuPfAEP51l+GnEa1+NXqGg2j77im4arffz0f/mkzbuJ/oeqKH/5lZE69VAXat6raIv
+         yeOrAxMXafd+eQHbG6e6IOSI92Di+6T9wMM6r/WD/JgIF3qCf/oWlx62/Mh0naxQp6iZ
+         q9dcN0M5g3wB+/w6klkVHVCsFx1ZBkaKZp3cDknoCNHZNRCi9w6cCe+gEZ3lZWTR1AQM
+         ZsvdoGojnRA2uenV1GI/no9zM48LklysvMzt1J4a8CiUMaz8eA4BBnLt7u4r9csSF8zs
+         ZM9pDQ8UOFY2773zOAyYQD6I0EbaNRWpjBCKtI6uCI60aKm2EK+nkOAtb+d5kLcWNCez
+         N1wg==
+X-Gm-Message-State: AOAM532Mc2LezCEGWwnViL+1/EoC0Z0YJfWheH2D3fRnexxxWcRduP2V
+        fU4OlUr0IqCGjJ/Mu/71878=
+X-Google-Smtp-Source: ABdhPJzB2tD0ttx4dRe0UkSq6u48Qm7pCxLOmniH2qFkAsBtY2ARzs04nub2o5ANmEVeP/vS2qzrIw==
+X-Received: by 2002:a17:90a:ac11:: with SMTP id o17mr1044382pjq.145.1598306464525;
+        Mon, 24 Aug 2020 15:01:04 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:9d35])
+        by smtp.gmail.com with ESMTPSA id c143sm13050218pfb.84.2020.08.24.15.01.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 15:01:03 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 15:01:00 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Nicolas Rybowski <nicolas.rybowski@tessares.net>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mptcp@lists.01.org, netdev@vger.kernel.org
+Subject: Re: [PATCH bpf-next 0/3] bpf: add MPTCP subflow support
+Message-ID: <20200824220100.y33yza2sbd7sgemh@ast-mbp.dhcp.thefacebook.com>
+References: <20200821151544.1211989-1-nicolas.rybowski@tessares.net>
 MIME-Version: 1.0
-In-Reply-To: <20200723032248.24772-1-bhe@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240173
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008240172
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821151544.1211989-1-nicolas.rybowski@tessares.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Andrew,
+On Fri, Aug 21, 2020 at 05:15:38PM +0200, Nicolas Rybowski wrote:
+> Previously it was not possible to make a distinction between plain TCP
+> sockets and MPTCP subflow sockets on the BPF_PROG_TYPE_SOCK_OPS hook.
+> 
+> This patch series now enables a fine control of subflow sockets. In its
+> current state, it allows to put different sockopt on each subflow from a
+> same MPTCP connection (socket mark, TCP congestion algorithm, ...) using
+> BPF programs.
+> 
+> It should also be the basis of exposing MPTCP-specific fields through BPF.
 
-Unless someone objects, can you add patches 1-3 of this series to your tree.
-They have been reviewed and are fairly simple cleanups.
--- 
-Mike Kravetz
-
-On 7/22/20 8:22 PM, Baoquan He wrote:
-> v1 is here:
-> https://lore.kernel.org/linux-mm/20200720062623.13135-1-bhe@redhat.com/
-> 
-> Patch 1~3 are small clean up.
-> 
-> Patch 4 is adding warning message when the number of persistent huge
-> pages is not changed to the exact value written to the sysfs or proc
-> nr_hugepages file.
-> 
-> v1->v2:
->   Drop the old patch 1/5 in v1 post, which was thought as typo, while
->   actually another kind of abbreviation.
-> 
->   Updated patch log of patch 4 which is rephrased by Mike. And move the
->   added message logging code after the hugetlb_lock dropping, this is
->   suggested by Mike.
-> 
-> 
-> Baoquan He (4):
->   mm/hugetlb.c: make is_hugetlb_entry_hwpoisoned return bool
->   mm/hugetlb.c: Remove the unnecessary non_swap_entry()
->   doc/vm: fix typo in the hugetlb admin documentation
->   mm/hugetl.c: warn out if expected count of huge pages adjustment is
->     not achieved
-> 
->  Documentation/admin-guide/mm/hugetlbpage.rst |  2 +-
->  mm/hugetlb.c                                 | 27 +++++++++++++++-----
->  2 files changed, 21 insertions(+), 8 deletions(-)
-> 
+Looks fine, but I'd like to see the full picture a bit better.
+What's the point of just 'token' ? What can be done with it?
+What are you thinking to add later?
+Also selftest for new feature is mandatory.
