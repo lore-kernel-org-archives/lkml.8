@@ -2,287 +2,276 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA55C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57347C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE4C206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="DhdBf9Cb"
+	by mail.kernel.org (Postfix) with ESMTP id 2E99F206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbgHXJLB (ORCPT
+        id S1729393AbgHXJLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:11:01 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:14016 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbgHXJK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:10:28 -0400
-IronPort-SDR: EqjF/eidRffWCvHac/+1OtwSEJlCnJcPRhBhdR8mjUwcGJOuUE1FICmspMP2lZBqepYg3V0nnw
- a/f+B3vR1Rr4YmBhl/GJzOBrHXMdlPOl99rSBT0+GuVqc1ZE3mkj+fbWsx3YahAp7NeBBp3l3m
- PtFzK0/EPwt2B5bLx8SGsEH5hhXA+mfDhjQTqoE2slgqWrzjGiGjvRdRfYSGsp1bB12SblM7R5
- gfisxdc0ysG6d4LOGaxtffxU1Acb+0Qo9s+cTpMGqZ/aWpwPk/ZBzKqpz/dCRrJr2eZ4Sfb1fI
- 0Qg=
-X-IronPort-AV: E=Sophos;i="5.76,347,1592863200"; 
-   d="scan'208";a="13569866"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 24 Aug 2020 11:10:24 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 24 Aug 2020 11:10:24 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 24 Aug 2020 11:10:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1598260224; x=1629796224;
-  h=from:to:cc:subject:date:message-id;
-  bh=nfOCIFLlOQkJaDE/m/b6SwvoVyjRwfWEaCXvz/c4Hes=;
-  b=DhdBf9Cbw0ONRznEnlurm7Gudyhw3daniztvWj5E/bcYmo4LwJnS2nd2
-   VIf0Haq4VaYWQZbnbqQ0GUVDcwhkUPzwzbm2FUdL3WpoxPk5ntXeV4tX6
-   stI8j/8qnjh4gclsMYYrK4ocMnWQFqD5aO7otpxBWaFBNieqimgMtnNPv
-   2S3aLR0CulmDXb+ZHcZA4nw6MD8Jo2MG9ayO7edNT+LyiWtd4aVxIjkno
-   5MHgG+elKk7lmFH+x79DKXOfeBiuUe71Jdbmcor7taEyfCINhZPeA6jQa
-   UeDnhPIdwTGdPnl9vffN/8ekysTRJDa20Rxk813A/wrhthoV2aiqH7gjv
-   g==;
-IronPort-SDR: 3N6bGqvUdVNAMnwo+vYAJTkpRB3vVWzb0Xm2Zl0B9WA+7EYD36shGePzTj8P2ONIMXA6yUC8MQ
- UUpZfJdl0CjDoI9wllVv5io2RDoqRQUdNVniTO+3GxqsZ/bc6vX8iofK6mmGeRzRd8+TYTaReR
- 7onsXWTZDWU3MnOCQtcTWyoV3TkwuDDUdeHPx8AC6dK/8uV3NSWoZA1pExxj1963WxeZ17QPg5
- 1S8vVqSh7sn5l8Cwow8Z0PE/B6w3X/P4oUuNr//XtjfYlscESUpfo2EcRVVyTU+4ZT2lCx5pqo
- JNI=
-X-IronPort-AV: E=Sophos;i="5.76,347,1592863200"; 
-   d="scan'208";a="13569864"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 24 Aug 2020 11:10:24 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 34D99280065;
-        Mon, 24 Aug 2020 11:10:24 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH 1/2] ARM: dts: imx6qdl: tqma6: fix indentation
-Date:   Mon, 24 Aug 2020 11:10:12 +0200
-Message-Id: <20200824091013.20640-1-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 24 Aug 2020 05:11:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730519AbgHXI4W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:22 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 607EEC0613ED;
+        Mon, 24 Aug 2020 01:56:21 -0700 (PDT)
+Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 53DCCF8E;
+        Mon, 24 Aug 2020 10:56:14 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v6 45/76] x86/sev-es: Allocate and Map IST stack for #VC handler
+Date:   Mon, 24 Aug 2020 10:54:40 +0200
+Message-Id: <20200824085511.7553-46-joro@8bytes.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
+References: <20200824085511.7553-1-joro@8bytes.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes: cac849e9bbc8 ("ARM: dts: imx6qdl: add TQMa6{S,Q,QP} SoM")
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
- arch/arm/boot/dts/imx6qdl-tqma6.dtsi | 188 +++++++++++++--------------
- 1 file changed, 94 insertions(+), 94 deletions(-)
+From: Joerg Roedel <jroedel@suse.de>
 
-diff --git a/arch/arm/boot/dts/imx6qdl-tqma6.dtsi b/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-index 29bcce20f5f3..9513020ddd1a 100644
---- a/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-@@ -83,101 +83,101 @@
+Allocate and map an IST stack and an additional fall-back stack for
+the #VC handler.  The memory for the stacks is allocated only when
+SEV-ES is active.
+
+The #VC handler needs to use an IST stack because it could be raised
+from kernel space with unsafe stack, e.g. in the SYSCALL entry path.
+
+Since the #VC exception can be nested, the #VC handler switches back to
+the interrupted stack when entered from kernel space. If switching back
+is not possible the fall-back stack is used.
+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Link: https://lore.kernel.org/r/20200724160336.5435-45-joro@8bytes.org
+---
+ arch/x86/include/asm/cpu_entry_area.h | 33 +++++++++++++++++----------
+ arch/x86/include/asm/page_64_types.h  |  1 +
+ arch/x86/kernel/cpu/common.c          |  2 ++
+ arch/x86/kernel/dumpstack_64.c        |  8 +++++--
+ arch/x86/kernel/sev-es.c              | 33 +++++++++++++++++++++++++++
+ 5 files changed, 63 insertions(+), 14 deletions(-)
+
+diff --git a/arch/x86/include/asm/cpu_entry_area.h b/arch/x86/include/asm/cpu_entry_area.h
+index 8902fdb7de13..f87e4c0c16f4 100644
+--- a/arch/x86/include/asm/cpu_entry_area.h
++++ b/arch/x86/include/asm/cpu_entry_area.h
+@@ -11,25 +11,29 @@
+ #ifdef CONFIG_X86_64
+ 
+ /* Macro to enforce the same ordering and stack sizes */
+-#define ESTACKS_MEMBERS(guardsize)		\
+-	char	DF_stack_guard[guardsize];	\
+-	char	DF_stack[EXCEPTION_STKSZ];	\
+-	char	NMI_stack_guard[guardsize];	\
+-	char	NMI_stack[EXCEPTION_STKSZ];	\
+-	char	DB_stack_guard[guardsize];	\
+-	char	DB_stack[EXCEPTION_STKSZ];	\
+-	char	MCE_stack_guard[guardsize];	\
+-	char	MCE_stack[EXCEPTION_STKSZ];	\
+-	char	IST_top_guard[guardsize];	\
++#define ESTACKS_MEMBERS(guardsize, optional_stack_size)		\
++	char	DF_stack_guard[guardsize];			\
++	char	DF_stack[EXCEPTION_STKSZ];			\
++	char	NMI_stack_guard[guardsize];			\
++	char	NMI_stack[EXCEPTION_STKSZ];			\
++	char	DB_stack_guard[guardsize];			\
++	char	DB_stack[EXCEPTION_STKSZ];			\
++	char	MCE_stack_guard[guardsize];			\
++	char	MCE_stack[EXCEPTION_STKSZ];			\
++	char	VC_stack_guard[guardsize];			\
++	char	VC_stack[optional_stack_size];			\
++	char	VC2_stack_guard[guardsize];			\
++	char	VC2_stack[optional_stack_size];			\
++	char	IST_top_guard[guardsize];			\
+ 
+ /* The exception stacks' physical storage. No guard pages required */
+ struct exception_stacks {
+-	ESTACKS_MEMBERS(0)
++	ESTACKS_MEMBERS(0, 0)
  };
  
- &pmic {
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_pmic>;
--		interrupt-parent = <&gpio6>;
--		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
--
--		regulators {
--			reg_vddcore: sw1ab {
--				regulator-min-microvolt = <300000>;
--				regulator-max-microvolt = <1875000>;
--				regulator-always-on;
--			};
--
--			reg_vddsoc: sw1c {
--				regulator-min-microvolt = <300000>;
--				regulator-max-microvolt = <1875000>;
--				regulator-always-on;
--			};
--
--			reg_gen_3v3: sw2 {
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			reg_ddr_1v5a: sw3a {
--				regulator-min-microvolt = <400000>;
--				regulator-max-microvolt = <1975000>;
--				regulator-always-on;
--			};
--
--			reg_ddr_1v5b: sw3b {
--				regulator-min-microvolt = <400000>;
--				regulator-max-microvolt = <1975000>;
--				regulator-always-on;
--			};
--
--			sw4_reg: sw4 {
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			reg_5v_600mA: swbst {
--				regulator-min-microvolt = <5000000>;
--				regulator-max-microvolt = <5150000>;
--				regulator-always-on;
--			};
--
--			reg_snvs_3v: vsnvs {
--				regulator-min-microvolt = <1500000>;
--				regulator-max-microvolt = <3000000>;
--				regulator-always-on;
--			};
--
--			reg_vrefddr: vrefddr {
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			reg_vgen1_1v5: vgen1 {
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1550000>;
--				/* not used */
--			};
--
--			reg_vgen2_1v2_eth: vgen2 {
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1550000>;
--				regulator-always-on;
--			};
--
--			reg_vgen3_2v8: vgen3 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			reg_vgen4_1v8: vgen4 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			reg_vgen5_1v8_eth: vgen5 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			reg_vgen6_3v3: vgen6 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pmic>;
-+	interrupt-parent = <&gpio6>;
-+	interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
-+
-+	regulators {
-+		reg_vddcore: sw1ab {
-+			regulator-min-microvolt = <300000>;
-+			regulator-max-microvolt = <1875000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_vddsoc: sw1c {
-+			regulator-min-microvolt = <300000>;
-+			regulator-max-microvolt = <1875000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_gen_3v3: sw2 {
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_ddr_1v5a: sw3a {
-+			regulator-min-microvolt = <400000>;
-+			regulator-max-microvolt = <1975000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_ddr_1v5b: sw3b {
-+			regulator-min-microvolt = <400000>;
-+			regulator-max-microvolt = <1975000>;
-+			regulator-always-on;
-+		};
-+
-+		sw4_reg: sw4 {
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_5v_600mA: swbst {
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5150000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_snvs_3v: vsnvs {
-+			regulator-min-microvolt = <1500000>;
-+			regulator-max-microvolt = <3000000>;
-+			regulator-always-on;
- 		};
-+
-+		reg_vrefddr: vrefddr {
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		reg_vgen1_1v5: vgen1 {
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <1550000>;
-+			/* not used */
-+		};
-+
-+		reg_vgen2_1v2_eth: vgen2 {
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <1550000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_vgen3_2v8: vgen3 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_vgen4_1v8: vgen4 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_vgen5_1v8_eth: vgen5 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_vgen6_3v3: vgen6 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+	};
+ /* The effective cpu entry area mapping with guard pages. */
+ struct cea_exception_stacks {
+-	ESTACKS_MEMBERS(PAGE_SIZE)
++	ESTACKS_MEMBERS(PAGE_SIZE, EXCEPTION_STKSZ)
  };
  
- /* eMMC */
+ /*
+@@ -40,6 +44,8 @@ enum exception_stack_ordering {
+ 	ESTACK_NMI,
+ 	ESTACK_DB,
+ 	ESTACK_MCE,
++	ESTACK_VC,
++	ESTACK_VC2,
+ 	N_EXCEPTION_STACKS
+ };
+ 
+@@ -139,4 +145,7 @@ static inline struct entry_stack *cpu_entry_stack(int cpu)
+ #define __this_cpu_ist_top_va(name)					\
+ 	CEA_ESTACK_TOP(__this_cpu_read(cea_exception_stacks), name)
+ 
++#define __this_cpu_ist_bot_va(name)					\
++	CEA_ESTACK_BOT(__this_cpu_read(cea_exception_stacks), name)
++
+ #endif
+diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
+index 288b065955b7..d0c6c10c18a0 100644
+--- a/arch/x86/include/asm/page_64_types.h
++++ b/arch/x86/include/asm/page_64_types.h
+@@ -28,6 +28,7 @@
+ #define	IST_INDEX_NMI		1
+ #define	IST_INDEX_DB		2
+ #define	IST_INDEX_MCE		3
++#define	IST_INDEX_VC		4
+ 
+ /*
+  * Set __PAGE_OFFSET to the most negative possible address +
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 8aa20bc2f1ca..1d65365363a1 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1821,6 +1821,8 @@ static inline void tss_setup_ist(struct tss_struct *tss)
+ 	tss->x86_tss.ist[IST_INDEX_NMI] = __this_cpu_ist_top_va(NMI);
+ 	tss->x86_tss.ist[IST_INDEX_DB] = __this_cpu_ist_top_va(DB);
+ 	tss->x86_tss.ist[IST_INDEX_MCE] = __this_cpu_ist_top_va(MCE);
++	/* Only mapped when SEV-ES is active */
++	tss->x86_tss.ist[IST_INDEX_VC] = __this_cpu_ist_top_va(VC);
+ }
+ 
+ #else /* CONFIG_X86_64 */
+diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
+index 4a94d38cd141..c49cf594714b 100644
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -24,11 +24,13 @@ static const char * const exception_stack_names[] = {
+ 		[ ESTACK_NMI	]	= "NMI",
+ 		[ ESTACK_DB	]	= "#DB",
+ 		[ ESTACK_MCE	]	= "#MC",
++		[ ESTACK_VC	]	= "#VC",
++		[ ESTACK_VC2	]	= "#VC2",
+ };
+ 
+ const char *stack_type_name(enum stack_type type)
+ {
+-	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
++	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
+ 
+ 	if (type == STACK_TYPE_IRQ)
+ 		return "IRQ";
+@@ -79,6 +81,8 @@ struct estack_pages estack_pages[CEA_ESTACK_PAGES] ____cacheline_aligned = {
+ 	EPAGERANGE(NMI),
+ 	EPAGERANGE(DB),
+ 	EPAGERANGE(MCE),
++	EPAGERANGE(VC),
++	EPAGERANGE(VC2),
+ };
+ 
+ static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
+@@ -88,7 +92,7 @@ static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
+ 	struct pt_regs *regs;
+ 	unsigned int k;
+ 
+-	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
++	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
+ 
+ 	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
+ 	/*
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index 734afaee378d..64002d86a237 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -17,6 +17,7 @@
+ #include <linux/kernel.h>
+ #include <linux/mm.h>
+ 
++#include <asm/cpu_entry_area.h>
+ #include <asm/sev-es.h>
+ #include <asm/insn-eval.h>
+ #include <asm/fpu/internal.h>
+@@ -37,10 +38,41 @@ static struct ghcb __initdata *boot_ghcb;
+ /* #VC handler runtime per-cpu data */
+ struct sev_es_runtime_data {
+ 	struct ghcb ghcb_page;
++
++	/* Physical storage for the per-cpu IST stack of the #VC handler */
++	char ist_stack[EXCEPTION_STKSZ] __aligned(PAGE_SIZE);
++
++	/*
++	 * Physical storage for the per-cpu fall-back stack of the #VC handler.
++	 * The fall-back stack is used when it is not safe to switch back to the
++	 * interrupted stack in the #VC entry code.
++	 */
++	char fallback_stack[EXCEPTION_STKSZ] __aligned(PAGE_SIZE);
+ };
+ 
+ static DEFINE_PER_CPU(struct sev_es_runtime_data*, runtime_data);
+ 
++static void __init sev_es_setup_vc_stacks(int cpu)
++{
++	struct sev_es_runtime_data *data;
++	struct cpu_entry_area *cea;
++	unsigned long vaddr;
++	phys_addr_t pa;
++
++	data = per_cpu(runtime_data, cpu);
++	cea  = get_cpu_entry_area(cpu);
++
++	/* Map #VC IST stack */
++	vaddr = CEA_ESTACK_BOT(&cea->estacks, VC);
++	pa    = __pa(data->ist_stack);
++	cea_set_pte((void *)vaddr, pa, PAGE_KERNEL);
++
++	/* Map VC fall-back stack */
++	vaddr = CEA_ESTACK_BOT(&cea->estacks, VC2);
++	pa    = __pa(data->fallback_stack);
++	cea_set_pte((void *)vaddr, pa, PAGE_KERNEL);
++}
++
+ /* Needed in vc_early_forward_exception */
+ void do_early_exception(struct pt_regs *regs, int trapnr);
+ 
+@@ -249,6 +281,7 @@ void __init sev_es_init_vc_handling(void)
+ 	for_each_possible_cpu(cpu) {
+ 		sev_es_alloc_runtime_data(cpu);
+ 		sev_es_init_ghcb(cpu);
++		sev_es_setup_vc_stacks(cpu);
+ 	}
+ }
+ 
 -- 
-2.17.1
+2.28.0
 
