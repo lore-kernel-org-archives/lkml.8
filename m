@@ -2,103 +2,121 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60897C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65A2C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8832067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAAFD2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:45:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iTQCp4W4"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sOX5dqt/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgHXRoS (ORCPT
+        id S1727073AbgHXRpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:44:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgHXRoP (ORCPT
+        Mon, 24 Aug 2020 13:45:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31306 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725601AbgHXRpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:44:15 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76798C061573;
-        Mon, 24 Aug 2020 10:44:15 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a5so9683451wrm.6;
-        Mon, 24 Aug 2020 10:44:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TXooCNGdhbuCs38z5vOfPrPzquVwWGwJseeAUQIr3dI=;
-        b=iTQCp4W4bnKDurMqnF9xz+FFQWCsZ7QeRAPt3KjIVEHR2InNqejYz6MyUzv93PW4aS
-         WyZwtA/F3UKwIaVU/KvdA3Nv9lp5LXXtirqDZpOniKaWsLeVW77XiGZEoE5d/0bYZkRC
-         FOyQX6o8HfXmo5r3GRobQe/q8ZGeNfZh6/gRc9gpX7z3daiXERyOK8VQm1Rz7csQFtpB
-         zZcUQK+RQI/FNAq+EELAMH9/0FmdCQpckS1vilSX1afoClvoQj7SFBCGvhJ/YykaKG/0
-         COheMc2pNwqdgg95ISwKlP8oF6sZLtIavbPS1iWIOlTS1Yqr3zijv+Cl1Tfv1BIRbm4n
-         r/9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TXooCNGdhbuCs38z5vOfPrPzquVwWGwJseeAUQIr3dI=;
-        b=pudCV+Lu7ngveoaLfSHBjWYKJfq+a4oEXyRWdX7Wx5iCL6ZcO7XIsM9ADYp/xCL781
-         VzorB/UEds2JfCy1mqN9mwT0JAUGJWIvMRDEhDqlv88VvRlDmj9x2E0nLJdAr48Ysq4o
-         eRAW1syu/8nLN8lOtGw6Pd/iCTDTVUvj60Bc2XWJaduZDeKzFqlVbg37m0vcSVC/y48v
-         7De6Ljvjc5cbgE3q5LlxRBcDP3lQM/He9MJflMaXwQM2AoFgTsPKGVE+DCR0VHA9dypj
-         0DIyFi1VDxlZE8f4WaJih1wmklyltg0yOMsuzMmcOotsy0RsMUENlBwtbm9vNj7enV0y
-         Lvlw==
-X-Gm-Message-State: AOAM532/l+eb+l0Vbrm180ByNqxIq2LuXSjWWAcPAzEmA3cZpXNBYe6m
-        NXbWA/Zs1no7Pf6UN0mCFQMtJLS6kflKTCJC
-X-Google-Smtp-Source: ABdhPJw7TMgowMg/jub8r23jyDF6m4NIDyBitGVovsMaVGfdJyBBpTjsvU/TA22pDCl+TmPubgjUgQ==
-X-Received: by 2002:adf:f086:: with SMTP id n6mr3470862wro.208.1598291054224;
-        Mon, 24 Aug 2020 10:44:14 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id a7sm446977wmj.24.2020.08.24.10.44.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 10:44:13 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Alex Dewar <alex.dewar90@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] video: fbdev: replace spurious snprintf() with sprintf()
-Date:   Mon, 24 Aug 2020 18:44:03 +0100
-Message-Id: <20200824174407.429817-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 24 Aug 2020 13:45:12 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OHVwsT169379;
+        Mon, 24 Aug 2020 13:45:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=LLSRJbnN1rzlyk5a9nLMVRUtWdyFeR8aOd9giiaAzjg=;
+ b=sOX5dqt/fm60iVUH5jNLH6ljv0F/G3N41XlagB2QNV8IYDVPUq4yHHP+Ls+Iq93Ukmsk
+ 8GEnX+oSAkGhiTe4hgEhll4a2qMlEK6gMQu7GWSPcIERC5chPuRkc4P0V3O8k9B+xF9D
+ nvfV34tXGLOtj3txCcecfrutXTQJO7K9qyF9PG6UIDAQhF9CimrzIcV1/i8AEyVOkazu
+ 1cNRnP+eoyQOok68F+phTeDBOjqJTYNsIsraVLoGOCCqX3FjpImS0B3BJ4i8oQGa6zSC
+ /UARsq9dzsz7A3HZRiuVxoRMaHlDmaSMOy2TAniP9+vdu0Erj0HXBh/ivNNjpP47SL8+ gw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 334gxn2h6c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 13:45:07 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07OHWoCN174371;
+        Mon, 24 Aug 2020 13:45:07 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 334gxn2h54-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 13:45:06 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07OHh2B6017626;
+        Mon, 24 Aug 2020 17:45:04 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 332uk6akxg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 17:45:04 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07OHj2JA60817720
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Aug 2020 17:45:02 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5D93E4C04A;
+        Mon, 24 Aug 2020 17:45:02 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 520F94C046;
+        Mon, 24 Aug 2020 17:45:01 +0000 (GMT)
+Received: from sig-9-65-254-31.ibm.com (unknown [9.65.254.31])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Aug 2020 17:45:01 +0000 (GMT)
+Message-ID: <d4c9d5333256b17acdbe41729dd680f534266130.camel@linux.ibm.com>
+Subject: Re: [PATCH 01/11] evm: Execute evm_inode_init_security() only when
+ the HMAC key is loaded
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date:   Mon, 24 Aug 2020 13:45:00 -0400
+In-Reply-To: <2b204e31d21e93c0167d154c2397cd5d11be6e7f.camel@linux.ibm.com>
+References: <20200618160133.937-1-roberto.sassu@huawei.com>
+         <2b204e31d21e93c0167d154c2397cd5d11be6e7f.camel@linux.ibm.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
+ bulkscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 spamscore=0
+ lowpriorityscore=0 adultscore=0 phishscore=0 mlxscore=0 suspectscore=3
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008240138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-par->vgapass is a u8, so if we are assuming that buf is at least
-PAGE_SIZE then the extra checking is pointless.
+Hi Roberto,
 
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- drivers/video/fbdev/sstfb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, 2020-08-21 at 14:30 -0400, Mimi Zohar wrote:
+> Sorry for the delay in reviewing these patches.   Missing from this
+> patch set is a cover letter with an explanation for grouping these
+> patches into a patch set, other than for convenience.  In this case, it
+> would be along the lines that the original use case for EVM portable
+> and immutable keys support was for a few critical files, not combined
+> with an EVM encrypted key type.   This patch set more fully integrates
+> the initial EVM portable and immutable signature support.
 
-diff --git a/drivers/video/fbdev/sstfb.c b/drivers/video/fbdev/sstfb.c
-index afe6d1b7c3a0..c05cdabeb11c 100644
---- a/drivers/video/fbdev/sstfb.c
-+++ b/drivers/video/fbdev/sstfb.c
-@@ -733,7 +733,7 @@ static ssize_t show_vgapass(struct device *device, struct device_attribute *attr
- {
- 	struct fb_info *info = dev_get_drvdata(device);
- 	struct sstfb_par *par = info->par;
--	return snprintf(buf, PAGE_SIZE, "%d\n", par->vgapass);
-+	return sprintf(buf, "%d\n", par->vgapass);
- }
- 
- static struct device_attribute device_attrs[] = {
--- 
-2.28.0
+Thank you for more fully integrating the EVM portable signatures into
+IMA.
+
+" [PATCH 08/11] ima: Allow imasig requirement to be satisfied by EVM
+portable signatures" equates an IMA signature to having a portable and
+immutable EVM signature.  That is true in terms of signature
+verification, but from an attestation perspective the "ima-sig"
+template will not contain a signature.  If not the EVM signature, then
+at least some other indication should be included in the measurement
+list.
+
+Are you planning on posting the associated IMA/EVM regression tests?
+
+Mimi
 
