@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3983BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59250C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19C9C2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E44820FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259459;
-	bh=vPy/tWkM4rUBuv1/k3puIQlGWExl/XrbhuXOHiQLWEI=;
+	s=default; t=1598259465;
+	bh=0dDGJ3iihkhD2/qvQHopEqUmcVkqHXOCP7ICu1lLMRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=svGl0nCiGX96CeRaLRx9KYx/L7RY5jWKeT+kaClyK2W7o9YhqTDzwrinq9p31+G4U
-	 GCac6NkMPlq19iKfwyOa1m0ygaJ7k1c2rAG3v6+Nh/gtsJz6YqFGpyhz6tIgwu80jU
-	 z84eDZjQA6sIlzuB3vwnrXRlu3LglLvBB7ZSemb4=
+	b=T1QdsObTqQ1fk4k5BaIYU6B/ia6ekKceuE18N69APwtzxlerRl8d3iUlATsY1QvYw
+	 cglpwDINZusFGX/Eid8sYffDWW5/tmN8xi1giNa2MSMX17+1PLAztyJNom9PH8iDa5
+	 lykZ4LkcPWdSa2iFcmf+yqhbGCOmvJxdYCipSD/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730692AbgHXI5g (ORCPT
+        id S1730709AbgHXI5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:57:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43688 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:57:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730636AbgHXI5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:57:07 -0400
+        id S1730313AbgHXI52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9DD6207D3;
-        Mon, 24 Aug 2020 08:57:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDC312087D;
+        Mon, 24 Aug 2020 08:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259426;
-        bh=vPy/tWkM4rUBuv1/k3puIQlGWExl/XrbhuXOHiQLWEI=;
+        s=default; t=1598259448;
+        bh=0dDGJ3iihkhD2/qvQHopEqUmcVkqHXOCP7ICu1lLMRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nz+9O1d6PyQ+Rl+n/glPBkLVcseabxQtTBTyPR/B3FK0pZZUNmU0p5O0Gx+EMttar
-         DabJfo5ZZj5KEl+W5qkupPdsPFbkoA9bQp/s/+jqdztlnMNR3lj+fYLK+vqdMZQMtX
-         UhG1JOT2lGyffyL9Q+fc67f8GFyi08q8mJmxeTF8=
+        b=s36RP4S0C2ZA+2oiQBki9nwzCckGFisQ2Hcepf9ssPnU8YbboT9/Dg1CeohHlo0qt
+         fR3hGaAk2C6wt8iTL9H14o+DEq4aYxhVgTEnrtgW0CWO+ZUIxXcG9WOd06GBjP5xfs
+         l190C9de6GPTL9OpDNj5N207Hcq1rkthobq1IfB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 25/71] media: vpss: clean up resources in init
-Date:   Mon, 24 Aug 2020 10:31:16 +0200
-Message-Id: <20200824082357.145787325@linuxfoundation.org>
+Subject: [PATCH 4.19 63/71] hv_netvsc: Fix the queue_mapping in netvsc_vf_xmit()
+Date:   Mon, 24 Aug 2020 10:31:54 +0200
+Message-Id: <20200824082359.101341416@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -61,64 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-[ Upstream commit 9c487b0b0ea7ff22127fe99a7f67657d8730ff94 ]
+[ Upstream commit c3d897e01aef8ddc43149e4d661b86f823e3aae7 ]
 
-If platform_driver_register() fails within vpss_init() resources are not
-cleaned up. The patch fixes this issue by introducing the corresponding
-error handling.
+netvsc_vf_xmit() / dev_queue_xmit() will call VF NIC’s ndo_select_queue
+or netdev_pick_tx() again. They will use skb_get_rx_queue() to get the
+queue number, so the “skb->queue_mapping - 1” will be used. This may
+cause the last queue of VF not been used.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+Use skb_record_rx_queue() here, so that the skb_get_rx_queue() called
+later will get the correct queue number, and VF will be able to use
+all queues.
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: b3bf5666a510 ("hv_netvsc: defer queue selection to VF")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/vpss.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ drivers/net/hyperv/netvsc_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
-index 89a86c19579b8..50fc71d0cb9f3 100644
---- a/drivers/media/platform/davinci/vpss.c
-+++ b/drivers/media/platform/davinci/vpss.c
-@@ -514,19 +514,31 @@ static void vpss_exit(void)
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index e33cbb793b638..4a5d99ecb89d3 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -513,7 +513,7 @@ static int netvsc_vf_xmit(struct net_device *net, struct net_device *vf_netdev,
+ 	int rc;
  
- static int __init vpss_init(void)
- {
-+	int ret;
-+
- 	if (!request_mem_region(VPSS_CLK_CTRL, 4, "vpss_clock_control"))
- 		return -EBUSY;
+ 	skb->dev = vf_netdev;
+-	skb->queue_mapping = qdisc_skb_cb(skb)->slave_dev_queue_mapping;
++	skb_record_rx_queue(skb, qdisc_skb_cb(skb)->slave_dev_queue_mapping);
  
- 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
- 	if (unlikely(!oper_cfg.vpss_regs_base2)) {
--		release_mem_region(VPSS_CLK_CTRL, 4);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto err_ioremap;
- 	}
- 
- 	writel(VPSS_CLK_CTRL_VENCCLKEN |
--		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
-+	       VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
-+
-+	ret = platform_driver_register(&vpss_driver);
-+	if (ret)
-+		goto err_pd_register;
-+
-+	return 0;
- 
--	return platform_driver_register(&vpss_driver);
-+err_pd_register:
-+	iounmap(oper_cfg.vpss_regs_base2);
-+err_ioremap:
-+	release_mem_region(VPSS_CLK_CTRL, 4);
-+	return ret;
- }
- subsys_initcall(vpss_init);
- module_exit(vpss_exit);
+ 	rc = dev_queue_xmit(skb);
+ 	if (likely(rc == NET_XMIT_SUCCESS || rc == NET_XMIT_CN)) {
 -- 
 2.25.1
 
