@@ -2,57 +2,53 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592E0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DEFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E100206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D228206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262569;
-	bh=7Han2QVLXqkr8AIZdVre5zlABPQKzjDVkujBfvHzmeM=;
+	s=default; t=1598262574;
+	bh=LFHq/V0kwdQnyausUxrseybVT4S6OIu4rLLTcxXVCb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cCFOclS92qU6FJb9HY+6PWntQhQetIyj5kedQNj3f1TDSo8J5XzLJabN9SG6rgxDu
-	 NhUYFBd30gUvS1fxMzxA2rMltVO8vV+LtTtQmE4P1S1Eqtzz61NZY/b9xIF2vSJxoR
-	 i12mrhIvIFbj0ex+jl1LIj7gPpH+ue80MeFkCBUk=
+	b=LfCXthInpnRvkB6HIxlR3iEufqiGQ5LfjpfX5/Mc51z/iwpt08pfy7LlpSyGvy6j/
+	 aUgOhteBhAH/76QGBy/hk/SePYJ9/co8ENbVvyj/NKNo2oMjQCcvsVeriJTd+EKHRg
+	 uuIs9RrK41DDAt38K9bbJxCHvKiJv5IrRkjsR1JU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgHXJt0 (ORCPT
+        id S1729138AbgHXJtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:49:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56106 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:49:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728260AbgHXIju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:39:50 -0400
+        id S1728651AbgHXIjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:39:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2D50221E2;
-        Mon, 24 Aug 2020 08:39:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CA23221E2;
+        Mon, 24 Aug 2020 08:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258390;
-        bh=7Han2QVLXqkr8AIZdVre5zlABPQKzjDVkujBfvHzmeM=;
+        s=default; t=1598258372;
+        bh=LFHq/V0kwdQnyausUxrseybVT4S6OIu4rLLTcxXVCb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aNuXtx77OdMHBDnIjujkNya9mfb4iYBTNcVi9AG2iAOudqH45InFJ5TE7CU5unYYn
-         aPC2w12YpihQwGMX9r6J7YEcCf0fSMsJItZ0FcaZwu5dfKw30th7nEaBx7lhON4ydC
-         0ZZuBS30kkOtbQMslFTtDOMaiyTd+WgzbxzVo3+E=
+        b=O0OxBNO4QyhwI84wObANRqtMqRk8XvvVBeRocrVIInIxRc3lGGprnuK+AMb0Kf68V
+         z22tF7Df8mG/LHkYEBJ/goDh9kJZdvNx/wKQiWOSOyLCuadAlg9xe1L1GL69f1x8Oy
+         /5AfZnb229swwXTqWfnZqSZtO/Y0+SDRG45cJV9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 003/124] khugepaged: khugepaged_test_exit() check mmget_still_valid()
-Date:   Mon, 24 Aug 2020 10:28:57 +0200
-Message-Id: <20200824082409.555582174@linuxfoundation.org>
+        stable@vger.kernel.org, Stylon Wang <stylon.wang@amd.com>,
+        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
+        Qingqing Zhuo <qingqing.zhuo@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.7 024/124] drm/amd/display: Fix EDID parsing after resume from suspend
+Date:   Mon, 24 Aug 2020 10:29:18 +0200
+Message-Id: <20200824082410.609793701@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -65,60 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Stylon Wang <stylon.wang@amd.com>
 
-[ Upstream commit bbe98f9cadff58cdd6a4acaeba0efa8565dabe65 ]
+commit b24bdc37d03a0478189e20a50286092840f414fa upstream.
 
-Move collapse_huge_page()'s mmget_still_valid() check into
-khugepaged_test_exit() itself.  collapse_huge_page() is used for anon THP
-only, and earned its mmget_still_valid() check because it inserts a huge
-pmd entry in place of the page table's pmd entry; whereas
-collapse_file()'s retract_page_tables() or collapse_pte_mapped_thp()
-merely clears the page table's pmd entry.  But core dumping without mmap
-lock must have been as open to mistaking a racily cleared pmd entry for a
-page table at physical page 0, as exit_mmap() was.  And we certainly have
-no interest in mapping as a THP once dumping core.
+[Why]
+Resuming from suspend, CEA blocks from EDID are not parsed and no video
+modes can support YUV420. When this happens, output bpc cannot go over
+8-bit with 4K modes on HDMI.
 
-Fixes: 59ea6d06cfa9 ("coredump: fix race condition between collapse_huge_page() and core dumping")
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: <stable@vger.kernel.org>	[4.8+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021217020.27773@eggly.anvils
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[How]
+In amdgpu_dm_update_connector_after_detect(), drm_add_edid_modes() is
+called after drm_connector_update_edid_property() to fully parse EDID
+and update display info.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Stylon Wang <stylon.wang@amd.com>
+Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
+Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- mm/khugepaged.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 38874fe112d58..9e7cec2840927 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -400,7 +400,7 @@ static void insert_to_mm_slots_hash(struct mm_struct *mm,
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -1983,6 +1983,7 @@ void amdgpu_dm_update_connector_after_de
  
- static inline int khugepaged_test_exit(struct mm_struct *mm)
- {
--	return atomic_read(&mm->mm_users) == 0;
-+	return atomic_read(&mm->mm_users) == 0 || !mmget_still_valid(mm);
- }
+ 			drm_connector_update_edid_property(connector,
+ 							   aconnector->edid);
++			drm_add_edid_modes(connector, aconnector->edid);
  
- static bool hugepage_vma_check(struct vm_area_struct *vma,
-@@ -1016,9 +1016,6 @@ static void collapse_huge_page(struct mm_struct *mm,
- 	 * handled by the anon_vma lock + PG_lock.
- 	 */
- 	down_write(&mm->mmap_sem);
--	result = SCAN_ANY_PROCESS;
--	if (!mmget_still_valid(mm))
--		goto out;
- 	result = hugepage_vma_revalidate(mm, address, &vma);
- 	if (result)
- 		goto out;
--- 
-2.25.1
-
+ 			if (aconnector->dc_link->aux_mode)
+ 				drm_dp_cec_set_edid(&aconnector->dm_dp_aux.aux,
 
 
