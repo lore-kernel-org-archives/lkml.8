@@ -2,144 +2,111 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C086C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A67C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0E02072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F152D2078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgHXQLD (ORCPT
+        id S1726912AbgHXQMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:11:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59102 "EHLO mx2.suse.de"
+        Mon, 24 Aug 2020 12:12:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60568 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbgHXQK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:10:57 -0400
+        id S1725962AbgHXQMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:12:38 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 867BCAC79;
-        Mon, 24 Aug 2020 16:11:24 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 46C201E1316; Mon, 24 Aug 2020 18:10:54 +0200 (CEST)
-Date:   Mon, 24 Aug 2020 18:10:54 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, Jan Kara <jack@suse.cz>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/7] mm: Remove nr_entries parameter from
- pagevec_lookup_entries
-Message-ID: <20200824161054.GJ24877@quack2.suse.cz>
-References: <20200819150555.31669-1-willy@infradead.org>
- <20200819150555.31669-6-willy@infradead.org>
+        by mx2.suse.de (Postfix) with ESMTP id 6CE6EAC79;
+        Mon, 24 Aug 2020 16:13:06 +0000 (UTC)
+Date:   Mon, 24 Aug 2020 18:12:38 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Mel Gorman <mgorman@suse.com>
+Subject: Re: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
+ -14.1% regression
+Message-ID: <20200824161238.GI4794@zn.tnic>
+References: <20200425114414.GU26573@shao2-debian>
+ <20200425130136.GA28245@zn.tnic>
+ <20200818082943.GA65567@shbuild999.sh.intel.com>
+ <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
+ <20200819020437.GA2605@shbuild999.sh.intel.com>
+ <20200821020259.GA90000@shbuild999.sh.intel.com>
+ <20200824151425.GF4794@zn.tnic>
+ <20200824153300.GA56944@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200819150555.31669-6-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200824153300.GA56944@shbuild999.sh.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-08-20 16:05:53, Matthew Wilcox (Oracle) wrote:
-> All callers want to fetch the full size of the pvec.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-Looks good to me. You can add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  include/linux/pagevec.h |  2 +-
->  mm/swap.c               |  4 ++--
->  mm/truncate.c           | 10 ++++------
->  3 files changed, 7 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/pagevec.h b/include/linux/pagevec.h
-> index 4b245592262c..ce77724a2ab7 100644
-> --- a/include/linux/pagevec.h
-> +++ b/include/linux/pagevec.h
-> @@ -27,7 +27,7 @@ void __pagevec_release(struct pagevec *pvec);
->  void __pagevec_lru_add(struct pagevec *pvec);
->  unsigned pagevec_lookup_entries(struct pagevec *pvec,
->  		struct address_space *mapping, pgoff_t start, pgoff_t end,
-> -		unsigned nr_entries, pgoff_t *indices);
-> +		pgoff_t *indices);
->  void pagevec_remove_exceptionals(struct pagevec *pvec);
->  unsigned pagevec_lookup_range(struct pagevec *pvec,
->  			      struct address_space *mapping,
-> diff --git a/mm/swap.c b/mm/swap.c
-> index b6e56a84b466..d4e3ba4c967c 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -1058,9 +1058,9 @@ void __pagevec_lru_add(struct pagevec *pvec)
->   */
->  unsigned pagevec_lookup_entries(struct pagevec *pvec,
->  		struct address_space *mapping, pgoff_t start, pgoff_t end,
-> -		unsigned nr_entries, pgoff_t *indices)
-> +		pgoff_t *indices)
->  {
-> -	pvec->nr = find_get_entries(mapping, start, end, nr_entries,
-> +	pvec->nr = find_get_entries(mapping, start, end, PAGEVEC_SIZE,
->  				    pvec->pages, indices);
->  	return pagevec_count(pvec);
+On Mon, Aug 24, 2020 at 11:33:00PM +0800, Feng Tang wrote:
+> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+> index 43b1519..2c020ef 100644
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -95,7 +95,7 @@ struct mca_config mca_cfg __read_mostly = {
+>  	.monarch_timeout = -1
+>  };
+>  
+> -static DEFINE_PER_CPU(struct mce, mces_seen);
+> +static DEFINE_PER_CPU_ALIGNED(struct mce, mces_seen);
+>  static unsigned long mce_need_notify;
+>  static int cpu_missing;
+>  
+> @@ -148,7 +148,7 @@ void mce_setup(struct mce *m)
+>  	m->microcode = boot_cpu_data.microcode;
 >  }
-> diff --git a/mm/truncate.c b/mm/truncate.c
-> index 9c617291fb1e..96a45ba28042 100644
-> --- a/mm/truncate.c
-> +++ b/mm/truncate.c
-> @@ -327,7 +327,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
->  	pagevec_init(&pvec);
->  	index = start;
->  	while (pagevec_lookup_entries(&pvec, mapping, index, end - 1,
-> -			PAGEVEC_SIZE, indices)) {
-> +			indices)) {
->  		/*
->  		 * Pagevec array has exceptional entries and we may also fail
->  		 * to lock some pages. So we store pages that can be deleted
-> @@ -411,7 +411,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
->  	for ( ; ; ) {
->  		cond_resched();
->  		if (!pagevec_lookup_entries(&pvec, mapping, index, end - 1,
-> -				PAGEVEC_SIZE, indices)) {
-> +				indices)) {
->  			/* If all gone from start onwards, we're done */
->  			if (index == start)
->  				break;
-> @@ -540,8 +540,7 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
->  	int i;
 >  
->  	pagevec_init(&pvec);
-> -	while (pagevec_lookup_entries(&pvec, mapping, index, end,
-> -			PAGEVEC_SIZE, indices)) {
-> +	while (pagevec_lookup_entries(&pvec, mapping, index, end, indices)) {
->  		for (i = 0; i < pagevec_count(&pvec); i++) {
->  			struct page *page = pvec.pages[i];
->  
-> @@ -680,8 +679,7 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
->  
->  	pagevec_init(&pvec);
->  	index = start;
-> -	while (pagevec_lookup_entries(&pvec, mapping, index, end,
-> -			PAGEVEC_SIZE, indices)) {
-> +	while (pagevec_lookup_entries(&pvec, mapping, index, end, indices)) {
->  		for (i = 0; i < pagevec_count(&pvec); i++) {
->  			struct page *page = pvec.pages[i];
->  
-> -- 
-> 2.28.0
-> 
+> -DEFINE_PER_CPU(struct mce, injectm);
+> +DEFINE_PER_CPU_ALIGNED(struct mce, injectm);
+>  EXPORT_PER_CPU_SYMBOL_GPL(injectm);
+
+I don't think this is the right fix. Lemme quote Tony from a previous
+email:
+
+"The answer isn't to tinker with "struct mce". Other changes could
+trigger this same change in alignment. Anything that is this perfomance
+sensitive needs to have some "__attribute__((aligned(64)))" (or
+whatever) to make sure arbitrary changes elsewhere don't do this."
+
+And yes, your diff is not tinkering with struct mce but it is tinkering
+with percpu vars which are of type struct mce.
+
+However, the proper fix is...
+
+> :)  Right, this is what I'm doing right now. Some test job is queued on
+> the test box, and it may needs some iterations of new patch. Hopefully we
+> can isolate some specific variable given some luck.
+
+... yes, exactly, you need to identify the contention where this
+happens, causing a cacheline to bounce or a variable straddles across a
+cacheline boundary, causing the read to fetch two cachelines and thus
+causes that slowdown. And then align that var to the beginning of a
+cacheline.
+
+Also, maybe I missed this but, do you trigger this only on Xeon Phi or
+on "normal" x86 too?
+
+Because if it is Xeon Phi only, then that might explain the size of the
+slowdown and that it happens only there because it is a, well, "strange"
+machine. :-)
+
+Thx.
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
