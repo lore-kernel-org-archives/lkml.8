@@ -2,183 +2,199 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37C5320838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:18:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="S6YvTQRC"
+	by mail.kernel.org (Postfix) with ESMTP id 6827420838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:21:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598271676;
+	bh=4/WcGaaY8Ux1J2J6KoV9qunR0ZDORxC37whtgThOILg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CA64mOY8qG58X/QoNdSW6aFgaQ4+QpdUAYqDVBew3CQezwkkWirn5WDLIft3FT95f
+	 gMgA1paV84FX2zAX3XxHlKl8Tg4iLIXOAF5Qk7zvquDH7GczQfEPEyPjkTsLchRnHL
+	 Nou5ecFUUSbp4ZlZRv/GsKqjGN0V+Ddezs5Uq0+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgHXMSP (ORCPT
+        id S1726551AbgHXMVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:18:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10926 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725963AbgHXMSL (ORCPT
+        Mon, 24 Aug 2020 08:21:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgHXMVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:18:11 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OC28RL026224;
-        Mon, 24 Aug 2020 08:18:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=YVSlf2AzXg5AoaIwusruiLv/LC+K0rAL6DWLqYRzu1s=;
- b=S6YvTQRCPNeVhcrfUiCw5kqNqRGF/USGHCkQEFqnxjmdiIh43eXQJglqZWRVAD9/eU24
- VRDM8m9NBo5CSL64kLs8VhfdfgPc5TKAGrL698OeV8q0s6a9u2AXQVFKfMytoZipkJDE
- lO/e1DtCGZ/NvkcPpE8KHvNflFP3NA2hc9B8pST7vcV224p8PmJNjPF18dr2rB1t51kY
- vReiTYBn6gQ6bNd83JvIvVTKB/DbbPGdTMdD5EIWbd/Iv/XHou1XXXyCr4QmPduPbrON
- 8exR71HgEl3HNxisTYYOUAepjCvGeaddzS4W7IOXeoBci9hHYYBmHi+Ng+5bvV+nhjxW XA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 334d6ygfq2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 08:18:03 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07OCAhWu058306;
-        Mon, 24 Aug 2020 08:18:02 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 334d6ygfp8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 08:18:02 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07OCDupV015779;
-        Mon, 24 Aug 2020 12:18:01 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 332ujktb50-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 12:18:00 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07OCHwse28311886
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Aug 2020 12:17:58 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 97162AE045;
-        Mon, 24 Aug 2020 12:17:58 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B9BAAE051;
-        Mon, 24 Aug 2020 12:17:57 +0000 (GMT)
-Received: from sig-9-65-254-31.ibm.com (unknown [9.65.254.31])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Aug 2020 12:17:57 +0000 (GMT)
-Message-ID: <67cafcf63daf8e418871eb5302e7327ba851e253.camel@linux.ibm.com>
-Subject: Re: [PATCH 07/11] evm: Set IMA_CHANGE_XATTR/ATTR bit if
- EVM_ALLOW_METADATA_WRITES is set
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
-        stable@vger.kernel.org
-Date:   Mon, 24 Aug 2020 08:17:56 -0400
-In-Reply-To: <20200618160458.1579-7-roberto.sassu@huawei.com>
-References: <20200618160329.1263-2-roberto.sassu@huawei.com>
-         <20200618160458.1579-7-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-24_08:2020-08-24,2020-08-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- mlxscore=0 lowpriorityscore=0 suspectscore=3 priorityscore=1501
- phishscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0 malwarescore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240092
+        Mon, 24 Aug 2020 08:21:14 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB7CC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:21:12 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id 185so9370315ljj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:21:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5NwPvBBQUkH0mEClmzN5wdwQ2Z/fFI9qemgqXbwrLl8=;
+        b=d6wAodeTYaNed4PeOl2rgtKgK8h1wmOFU1kmRK0nl8aApodcaM7kwHfh28k2Vok5eR
+         xFk1XIdMNyiGqpzTUHoVFnIpB9Ts9V230wOil+Ug5XcFpwLdDcIo/QpwikFoHAeAn0Ne
+         vpnsk9AkvooIQgCkzjaQdFOkHcwian0N/FNKTDjR2ZuztLVokETzZbC9YAczCf5J1Pjr
+         KZinZVrdW29zNW4IYfPoKWp8Cxm/6o9Bae3+J794+mvUZflXmYHquK713lVgKgmehdXu
+         cYUMd4gsEaIwnGJ07kXiCPFBiILz7glEvHYjPYrZ2Mnxhz5nAQBl+9ramu8Mde0kGIvD
+         QwnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=5NwPvBBQUkH0mEClmzN5wdwQ2Z/fFI9qemgqXbwrLl8=;
+        b=qatjRHp0Uv9X55xnFlLQc+GddroCEX442rcLNZGp5QHe10TL0pdFv/sQBziYRw4d41
+         z0okb4kFEuNqx2zHpFBqEqmHuy68RwHDcwjLAy9ABIiMByaKjwfpvU3ChTzJHwx3HeJs
+         s3CxM0KCGYGUPpJgi/SqSesICYXAC8sqVGjSPaeTgXgKPxb8cFnvrTvU0+vGeOVvBG9n
+         6i2bgdLri3v5AFaE/nTOkHEMw7Z0Xp43bPQ/5vEC3UMncMj8hbir29exToLpBw0vQ0uX
+         ydgnHF8laVDqq4cCB11579WV8ACXGGL8a/bI57rGYrzxVX04Drn21Mg/PeD1QFFd5jeU
+         5adw==
+X-Gm-Message-State: AOAM532RwodkohwHnT39wxjfN3Ht6AOfHT3HCQYTMf2iFBws+E73TVnJ
+        +UYmwr1fO74NEGLsxA2PUvrV2XI5+Qs=
+X-Google-Smtp-Source: ABdhPJwjl8fSehkexpYd0Udf9DopmXcA8ll9d71tpxWiJ8kitq3gx+pBLkA9XqrmPqTJ5i7kCSQktg==
+X-Received: by 2002:a2e:a0cd:: with SMTP id f13mr2315197ljm.393.1598271671209;
+        Mon, 24 Aug 2020 05:21:11 -0700 (PDT)
+Received: from rric.localhost (31-208-27-44.cust.bredband2.com. [31.208.27.44])
+        by smtp.gmail.com with ESMTPSA id t22sm2255390lfr.12.2020.08.24.05.21.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Aug 2020 05:21:10 -0700 (PDT)
+From:   Robert Richter <rric@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Ganapatrao Kulkarni <gkulkarni@marvell.com>,
+        Sunil Goutham <sgoutham@marvell.com>,
+        Borislav Petkov <bp@alien8.de>, Marc Zyngier <maz@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Wolfram Sang <wsa@kernel.org>,
+        linux-kernel@vger.kernel.org, Robert Richter <rric@kernel.org>
+Subject: [PATCH] MAINTAINERS: Update Cavium/Marvell entries
+Date:   Mon, 24 Aug 2020 14:20:49 +0200
+Message-Id: <20200824122050.31164-1-rric@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-18 at 18:04 +0200, Roberto Sassu wrote:
-> When EVM_ALLOW_METADATA_WRITES is set, EVM allows any operation on
-> metadata. Its main purpose is to allow users to freely set metadata when
-> they are protected by a portable signature, until the HMAC key is loaded.
-> 
-> However, IMA is not notified about metadata changes and, after the first
-> appraisal, always allows access to the files without checking metadata
-> again.
+I am leaving Marvell and already do not have access to my @marvell.com
+email address. So switching over to my korg mail address or removing
+my address there another maintainer is already listed. For the entries
+there no other maintainer is listed I will keep looking into patches
+for Cavium systems for a while until someone from Marvell takes it
+over. Since I might have limited access to hardware and also limited
+time I changed state to 'Odd Fixes' for those entries.
 
-^after the first successful appraisal
-> 
-> This patch checks in evm_reset_status() if EVM_ALLOW_METADATA WRITES is
-> enabled and if it is, sets the IMA_CHANGE_XATTR/ATTR bits depending on the
-> operation performed. At the next appraisal, metadata are revalidated.
+Cc: Ganapatrao Kulkarni <gkulkarni@marvell.com>
+Cc: Sunil Goutham <sgoutham@marvell.com>
+Signed-off-by: Robert Richter <rric@kernel.org>
+---
+ MAINTAINERS | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
-EVM modifying IMA bits crosses the boundary between EVM and IMA.  There
-is already an IMA post_setattr hook.  IMA could reset its own bit
-there.  If necessary EVM could export as a function it's status info.
-
-Mimi
-
-> 
-> This patch also adds a call to evm_reset_status() in
-> evm_inode_post_setattr() so that EVM won't return the cached status the
-> next time appraisal is performed.
-> 
-> Cc: stable@vger.kernel.org # 4.16.x
-> Fixes: ae1ba1676b88e ("EVM: Allow userland to permit modification of EVM-protected metadata")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> ---
->  security/integrity/evm/evm_main.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
-> index 41cc6a4aaaab..d4d918183094 100644
-> --- a/security/integrity/evm/evm_main.c
-> +++ b/security/integrity/evm/evm_main.c
-> @@ -478,13 +478,17 @@ int evm_inode_removexattr(struct dentry *dentry, const char *xattr_name)
->  	return evm_protect_xattr(dentry, xattr_name, NULL, 0);
->  }
->  
-> -static void evm_reset_status(struct inode *inode)
-> +static void evm_reset_status(struct inode *inode, int bit)
->  {
->  	struct integrity_iint_cache *iint;
->  
->  	iint = integrity_iint_find(inode);
-> -	if (iint)
-> +	if (iint) {
-> +		if (evm_initialized & EVM_ALLOW_METADATA_WRITES)
-> +			set_bit(bit, &iint->atomic_flags);
-> +
->  		iint->evm_status = INTEGRITY_UNKNOWN;
-> +	}
->  }
->  
->  /**:q
-> @@ -507,7 +511,7 @@ void evm_inode_post_setxattr(struct dentry *dentry, const char *xattr_name,
->  				  && !posix_xattr_acl(xattr_name)))
->  		return;
->  
-> -	evm_reset_status(dentry->d_inode);
-> +	evm_reset_status(dentry->d_inode, IMA_CHANGE_XATTR);
->  
->  	evm_update_evmxattr(dentry, xattr_name, xattr_value, xattr_value_len);
->  }
-> @@ -527,7 +531,7 @@ void evm_inode_post_removexattr(struct dentry *dentry, const char *xattr_name)
->  	if (!evm_key_loaded() || !evm_protected_xattr(xattr_name))
->  		return;
->  
-> -	evm_reset_status(dentry->d_inode);
-> +	evm_reset_status(dentry->d_inode, IMA_CHANGE_XATTR);
->  
->  	evm_update_evmxattr(dentry, xattr_name, NULL, 0);
->  }
-> @@ -600,6 +604,8 @@ void evm_inode_post_setattr(struct dentry *dentry, int ia_valid)
->  	if (!evm_key_loaded())
->  		return;
->  
-> +	evm_reset_status(dentry->d_inode, IMA_CHANGE_ATTR);
-> +
->  	if (ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID))
->  		evm_update_evmxattr(dentry, NULL, NULL, 0);
->  }
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a45fe1a6251e..1b7b0c1a24c8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1693,7 +1693,6 @@ F:	arch/arm/mach-cns3xxx/
+ 
+ ARM/CAVIUM THUNDER NETWORK DRIVER
+ M:	Sunil Goutham <sgoutham@marvell.com>
+-M:	Robert Richter <rrichter@marvell.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Supported
+ F:	drivers/net/ethernet/cavium/thunder/
+@@ -3930,8 +3929,8 @@ W:	https://wireless.wiki.kernel.org/en/users/Drivers/carl9170
+ F:	drivers/net/wireless/ath/carl9170/
+ 
+ CAVIUM I2C DRIVER
+-M:	Robert Richter <rrichter@marvell.com>
+-S:	Supported
++M:	Robert Richter <rric@kernel.org>
++S:	Odd Fixes
+ W:	http://www.marvell.com
+ F:	drivers/i2c/busses/i2c-octeon*
+ F:	drivers/i2c/busses/i2c-thunderx*
+@@ -3946,8 +3945,8 @@ W:	http://www.marvell.com
+ F:	drivers/net/ethernet/cavium/liquidio/
+ 
+ CAVIUM MMC DRIVER
+-M:	Robert Richter <rrichter@marvell.com>
+-S:	Supported
++M:	Robert Richter <rric@kernel.org>
++S:	Odd Fixes
+ W:	http://www.marvell.com
+ F:	drivers/mmc/host/cavium*
+ 
+@@ -3959,9 +3958,9 @@ W:	http://www.marvell.com
+ F:	drivers/crypto/cavium/cpt/
+ 
+ CAVIUM THUNDERX2 ARM64 SOC
+-M:	Robert Richter <rrichter@marvell.com>
++M:	Robert Richter <rric@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+-S:	Maintained
++S:	Odd Fixes
+ F:	Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+ F:	arch/arm64/boot/dts/cavium/thunder2-99xx*
+ 
+@@ -6156,16 +6155,15 @@ F:	drivers/edac/highbank*
+ 
+ EDAC-CAVIUM OCTEON
+ M:	Ralf Baechle <ralf@linux-mips.org>
+-M:	Robert Richter <rrichter@marvell.com>
+ L:	linux-edac@vger.kernel.org
+ L:	linux-mips@vger.kernel.org
+ S:	Supported
+ F:	drivers/edac/octeon_edac*
+ 
+ EDAC-CAVIUM THUNDERX
+-M:	Robert Richter <rrichter@marvell.com>
++M:	Robert Richter <rric@kernel.org>
+ L:	linux-edac@vger.kernel.org
+-S:	Supported
++S:	Odd Fixes
+ F:	drivers/edac/thunderx_edac*
+ 
+ EDAC-CORE
+@@ -6173,7 +6171,7 @@ M:	Borislav Petkov <bp@alien8.de>
+ M:	Mauro Carvalho Chehab <mchehab@kernel.org>
+ M:	Tony Luck <tony.luck@intel.com>
+ R:	James Morse <james.morse@arm.com>
+-R:	Robert Richter <rrichter@marvell.com>
++R:	Robert Richter <rric@kernel.org>
+ L:	linux-edac@vger.kernel.org
+ S:	Supported
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac-for-next
+@@ -13394,10 +13392,10 @@ F:	Documentation/devicetree/bindings/pci/axis,artpec*
+ F:	drivers/pci/controller/dwc/*artpec*
+ 
+ PCIE DRIVER FOR CAVIUM THUNDERX
+-M:	Robert Richter <rrichter@marvell.com>
++M:	Robert Richter <rric@kernel.org>
+ L:	linux-pci@vger.kernel.org
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+-S:	Supported
++S:	Odd Fixes
+ F:	drivers/pci/controller/pci-thunder-*
+ 
+ PCIE DRIVER FOR HISILICON
+@@ -17125,8 +17123,8 @@ S:	Maintained
+ F:	drivers/net/thunderbolt.c
+ 
+ THUNDERX GPIO DRIVER
+-M:	Robert Richter <rrichter@marvell.com>
+-S:	Maintained
++M:	Robert Richter <rric@kernel.org>
++S:	Odd Fixes
+ F:	drivers/gpio/gpio-thunderx.c
+ 
+ TI AM437X VPFE DRIVER
+-- 
+2.20.1
 
