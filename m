@@ -2,135 +2,99 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D94C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 01:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 437CDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF0BD206F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 01:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151FA20768
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:01:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwRUo99o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4fLhJpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgHXBZR (ORCPT
+        id S1727913AbgHXCBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 21:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52460 "EHLO
+        Sun, 23 Aug 2020 22:01:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbgHXBZO (ORCPT
+        with ESMTP id S1727882AbgHXCBL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 21:25:14 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9E0CC061573;
-        Sun, 23 Aug 2020 18:25:12 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id v13so6853792oiv.13;
-        Sun, 23 Aug 2020 18:25:12 -0700 (PDT)
+        Sun, 23 Aug 2020 22:01:11 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5BAC061573
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 19:01:10 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id d22so4019363pfn.5
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 19:01:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=788AuSD6gYxgp3PSjUlFHERXLi4yTjFMzx3S3/9M/l0=;
-        b=LwRUo99ox3g3Ff3QgMVOlvu6yrh6AzLggfLo0C1JLdq2C9EHuCtJILQy/VW0CQ4yiA
-         Psyz97BcHz1teFxt8KiNrm699yYgDtajl2cNiFDtbZuzRQ6JCwLaOELGrjQH9EQW6r26
-         JI8/EMVXn9tfs6wp6hPxq4jwmkyFog+lfzaV00RcOQPuZzCwKyfuTTT9L1e67RMr93YI
-         c8u+1zPmhLyZSpxa/vJSae4ZEaUNpwcf4u9ItFNTKUl/tkyt3NRuNvCpxksIl2hwUZ22
-         XCRaIBpP4NK0/sQGdZYhNVuDkl1p9SFmhjUR+44tNfk3nTmI7vPmCgCG9Ro6NGZvFzru
-         eNjg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/EPwsOjNAOJnCAlukSWZN+FIBKRBbYip6lL2WUYmrb4=;
+        b=X4fLhJpuYLT9HBTn0MCHAO23k+DOxUoepGCYCLJcNCdkw+2uo7fXEY2BA340MEwfCB
+         d7ehL2aAhL9p7UzcVSCa/KI+OtxPiIGcHErN1yKPlmoLaZ6JHwHpQv2vcsZ+PkhRQTpI
+         QAvDmyLsOe56m9Oi9rNodzo3h6xmKIWMx76q4O7F47NpfdMRMvgxZqwTlgWceDZALmEq
+         Pwk9ImMaYtalMkB9TCaYwDXh947gnkugHtsHtH5OFaiXi/nqm7TvgzBU9OEhbldHvpoG
+         ABJ70gaXptcBtQYXwkH4Cc8dj8kSy0DBXjfEp/4dNUcGYanJ/nqJeUBNCxyrJgCG8Nxj
+         Ma/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=788AuSD6gYxgp3PSjUlFHERXLi4yTjFMzx3S3/9M/l0=;
-        b=gJKT7/F+n481op0baSoqEi1MjAPZ8VLrDhREaa6or7hEyDErPgBouMppStTw7gF7fV
-         HrhH0HvcPOKCOlhQT/SeBqMD1L2GZ2tslGrwMaTk8KDLhXWzKxPnXE/ojfS9dSs2Ckq8
-         mKNmr6rN1KZpNBgJ3nqsT+2yaqg88Pe4o8QSQX4/bgEnpNPukFeZX8LH+luC8eRaDw5F
-         CAiAzQ+i5KkwGBFtm9NMFCpfXvOZUqUhPnslx1l/UljHr1RlyseSNE6Tml74lu/OmHFa
-         sKZsLv/zWO/7zEK2jWCYXQGiW5MCkscJwqYA8gK3gqxkSR+Ip6A9juvI9Ram/KlvCJt+
-         2lyg==
-X-Gm-Message-State: AOAM533JK0RItI6TqSm07gZuIQ7PrxoY4K39XsSPD9BBQ+5wWXwEk+ZD
-        EbbVM+EUEbuT2zXe40yFhHpJG8cEHLSieFw3BhUIT9Ft
-X-Google-Smtp-Source: ABdhPJwGBPIXDyuyd4al8V7bERkQ5b+wxBcV6xY5xzTRvxpSNN6ouePY4tpAxjPAGdsbbnElclpUx9oCO91ClwZRyn0=
-X-Received: by 2002:a05:6808:b:: with SMTP id u11mr1900633oic.33.1598232311974;
- Sun, 23 Aug 2020 18:25:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/EPwsOjNAOJnCAlukSWZN+FIBKRBbYip6lL2WUYmrb4=;
+        b=OBW1Ph4lSn7c9xXe+jiUMxKZNfF+jcCWPYdsw+ES0XAo2N/intqEfODpVDc7ClLZmo
+         /QzY8rlNtd54iZe0pWaGOPrjHZMlG5ERyNHz1il/TklIcsn7x6zyC1I1uYfFYCH9ARot
+         zHnmStZ4k4zzbJMsUDWpSYtiWtMvgJmBJb7f4ALuKTtWCxOlPK4bvYdcXZk9ZASL3NpO
+         ORi0F2rqr0wN1+vnscWBAJt2poVtZzrZKk0O2Oz3s0JyT50SQVUP8awjtG4LmdRFjsN4
+         cWZ9eZ72TvrQibSgT8nQOs7mokM/7RAFhs0bVCD7w1kf5F7ecprD6jEVPrEV7Diypogy
+         NSlQ==
+X-Gm-Message-State: AOAM530INAupJjg8vSOEzMRXoh6/oV5+oLz0hpD4PmZqNavB6ZUtewyC
+        0CEnJrOgWSBW5xnvrMXC8lA=
+X-Google-Smtp-Source: ABdhPJxFfBdTcZQPgJcrxm+oQh/zQtDnzfKaFDqAVIatruFMa4d8yl7DsgEe6TtRST/nV59dfqRmlg==
+X-Received: by 2002:a63:6a47:: with SMTP id f68mr2052164pgc.170.1598234469821;
+        Sun, 23 Aug 2020 19:01:09 -0700 (PDT)
+Received: from thinkpad (104.36.148.139.aurocloud.com. [104.36.148.139])
+        by smtp.gmail.com with ESMTPSA id y72sm9584176pfg.58.2020.08.23.19.01.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Aug 2020 19:01:09 -0700 (PDT)
+Date:   Sun, 23 Aug 2020 19:01:46 -0700
+From:   Rustam Kovhaev <rkovhaev@gmail.com>
+To:     Anton Altaparmakov <anton@tuxera.com>
+Cc:     "linux-ntfs-dev@lists.sourceforge.net" 
+        <linux-ntfs-dev@lists.sourceforge.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] ntfs: add check for mft record size in superblock
+Message-ID: <20200824020146.GA209078@thinkpad>
+References: <20200823152147.55766-1-rkovhaev@gmail.com>
+ <F206DE99-102C-475D-9129-5B9ACBAED8E6@tuxera.com>
 MIME-Version: 1.0
-References: <1597827327-25055-1-git-send-email-wanpengli@tencent.com>
-In-Reply-To: <1597827327-25055-1-git-send-email-wanpengli@tencent.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 24 Aug 2020 09:25:01 +0800
-Message-ID: <CANRm+Cx57G2mRLQ4=Kt+0f0K9Ls+vbfHdMb1No8hfyAb9xEpZQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] KVM: LAPIC: Fix updating DFR missing apic map recalculation
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <F206DE99-102C-475D-9129-5B9ACBAED8E6@tuxera.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping, :)
-On Wed, 19 Aug 2020 at 16:55, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> There is missing apic map recalculation after updating DFR, if it is
-> INIT RESET, in x2apic mode, local apic is software enabled before.
-> This patch fix it by introducing the function kvm_apic_set_dfr() to
-> be called in INIT RESET handling path.
->
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/lapic.c | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 5ccbee7..248095a 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -310,6 +310,12 @@ static inline void kvm_apic_set_ldr(struct kvm_lapic *apic, u32 id)
->         atomic_set_release(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
->  }
->
-> +static inline void kvm_apic_set_dfr(struct kvm_lapic *apic, u32 val)
-> +{
-> +       kvm_lapic_set_reg(apic, APIC_DFR, val);
-> +       atomic_set_release(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
-> +}
-> +
->  static inline u32 kvm_apic_calc_x2apic_ldr(u32 id)
->  {
->         return ((id >> 4) << 16) | (1 << (id & 0xf));
-> @@ -1984,10 +1990,9 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
->                 break;
->
->         case APIC_DFR:
-> -               if (!apic_x2apic_mode(apic)) {
-> -                       kvm_lapic_set_reg(apic, APIC_DFR, val | 0x0FFFFFFF);
-> -                       atomic_set_release(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
-> -               } else
-> +               if (!apic_x2apic_mode(apic))
-> +                       kvm_apic_set_dfr(apic, val | 0x0FFFFFFF);
-> +               else
->                         ret = 1;
->                 break;
->
-> @@ -2303,7 +2308,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
->                              SET_APIC_DELIVERY_MODE(0, APIC_MODE_EXTINT));
->         apic_manage_nmi_watchdog(apic, kvm_lapic_get_reg(apic, APIC_LVT0));
->
-> -       kvm_lapic_set_reg(apic, APIC_DFR, 0xffffffffU);
-> +       kvm_apic_set_dfr(apic, 0xffffffffU);
->         apic_set_spiv(apic, 0xff);
->         kvm_lapic_set_reg(apic, APIC_TASKPRI, 0);
->         if (!apic_x2apic_mode(apic))
-> --
-> 2.7.4
->
+On Mon, Aug 24, 2020 at 01:44:06AM +0000, Anton Altaparmakov wrote:
+> Hi Rustam,
+> 
+> Thank you for the patch but it introduces an endianness bug - you have to us le32_to_cpu(m->bytes_allocated) both when doing the comparison and then printing the message.
+> 
+> Also, please drop the square brackets.  Wherever the driver prints such things it never uses brackets around the numbers and it would be better to have this consistent throughout.
+> 
+> Can you please resend with the above issues addressed?  You can then also add to the commit message:
+> 
+> 	Acked-by: Anton Altaparmakov <anton@tuxera.com>
+> 
+> Thanks!
+> 
+> Best regards,
+> 
+> 	Anton
+> 
+hi Anton,
+thank you for the review, my bad, i'll get it fixed and i'll resend the patch
