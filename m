@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EBFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A1FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC062067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127F82067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgHXQeF (ORCPT
+        id S1728130AbgHXQeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:34:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50612 "EHLO mx2.suse.de"
+        Mon, 24 Aug 2020 12:34:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50580 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbgHXQdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:33:24 -0400
+        id S1727921AbgHXQdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:33:19 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E64E0AF7A;
-        Mon, 24 Aug 2020 16:33:48 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id C7EA0AF76;
+        Mon, 24 Aug 2020 16:33:45 +0000 (UTC)
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/12] MIPS: Convert R4600_V2_HIT_CACHEOP into a config option
-Date:   Mon, 24 Aug 2020 18:32:45 +0200
-Message-Id: <20200824163257.44533-4-tsbogend@alpha.franken.de>
+Subject: [PATCH 01/12] MIPS: Convert R4600_V1_INDEX_ICACHEOP into a config option
+Date:   Mon, 24 Aug 2020 18:32:43 +0200
+Message-Id: <20200824163257.44533-2-tsbogend@alpha.franken.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200824163257.44533-1-tsbogend@alpha.franken.de>
 References: <20200824163257.44533-1-tsbogend@alpha.franken.de>
@@ -37,303 +37,243 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a new config option to enable R4600 V2 cacheop hit workaround
+Use a new config option to enable R4600 V1 index I-cacheop workaround
 and remove define from different war.h files.
 
 Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 ---
- arch/mips/Kconfig                              | 14 ++++++++++++++
+ arch/mips/Kconfig                              |  8 ++++++++
  arch/mips/include/asm/mach-cavium-octeon/war.h |  1 -
  arch/mips/include/asm/mach-generic/war.h       |  1 -
- arch/mips/include/asm/mach-ip22/war.h          |  5 -----
+ arch/mips/include/asm/mach-ip22/war.h          |  1 -
  arch/mips/include/asm/mach-ip27/war.h          |  1 -
  arch/mips/include/asm/mach-ip28/war.h          |  1 -
  arch/mips/include/asm/mach-ip30/war.h          |  1 -
  arch/mips/include/asm/mach-ip32/war.h          |  1 -
  arch/mips/include/asm/mach-malta/war.h         |  1 -
  arch/mips/include/asm/mach-rc32434/war.h       |  1 -
- arch/mips/include/asm/mach-rm/war.h            |  5 -----
- arch/mips/include/asm/mach-sibyte/war.h        |  2 --
+ arch/mips/include/asm/mach-rm/war.h            |  1 -
+ arch/mips/include/asm/mach-sibyte/war.h        |  1 -
  arch/mips/include/asm/mach-tx49xx/war.h        |  1 -
- arch/mips/include/asm/war.h                    | 15 ---------------
- arch/mips/mm/c-r4k.c                           |  3 ++-
- arch/mips/mm/page.c                            | 10 ++++++----
- 16 files changed, 22 insertions(+), 41 deletions(-)
+ arch/mips/include/asm/war.h                    | 10 ----------
+ arch/mips/mm/c-r4k.c                           |  6 ++++--
+ 15 files changed, 12 insertions(+), 24 deletions(-)
 
 diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 4d3179b66456..3cbeca6da823 100644
+index 99220e7e465e..90f8aa04e2ec 100644
 --- a/arch/mips/Kconfig
 +++ b/arch/mips/Kconfig
-@@ -640,6 +640,7 @@ config SGI_IP22
+@@ -638,6 +638,7 @@ config SGI_IP22
+ 	select SYS_SUPPORTS_32BIT_KERNEL
+ 	select SYS_SUPPORTS_64BIT_KERNEL
  	select SYS_SUPPORTS_BIG_ENDIAN
- 	select WAR_R4600_V1_INDEX_ICACHEOP
- 	select WAR_R4600_V1_HIT_CACHEOP
-+	select WAR_R4600_V2_HIT_CACHEOP
++	select WAR_R4600_V1_INDEX_ICACHEOP
  	select MIPS_L1_CACHE_SHIFT_7
  	help
  	  This are the SGI Indy, Challenge S and Indigo2, as well as certain
-@@ -877,6 +878,7 @@ config SNI_RM
- 	select SYS_SUPPORTS_BIG_ENDIAN
- 	select SYS_SUPPORTS_HIGHMEM
- 	select SYS_SUPPORTS_LITTLE_ENDIAN
-+	select WAR_R4600_V2_HIT_CACHEOP
- 	help
- 	  The SNI RM200/300/400 are MIPS-based machines manufactured by
- 	  Siemens Nixdorf Informationssysteme (SNI), parent company of Pyramid
-@@ -2643,6 +2645,18 @@ config WAR_R4600_V1_INDEX_ICACHEOP
- config WAR_R4600_V1_HIT_CACHEOP
+@@ -2607,6 +2608,13 @@ config MIPS_ASID_BITS_VARIABLE
+ config MIPS_CRC_SUPPORT
  	bool
  
-+# Writeback and invalidate the primary cache dcache before DMA.
-+#
-+# R4600 v2.0 bug: "The CACHE instructions Hit_Writeback_Inv_D,
-+# Hit_Writeback_D, Hit_Invalidate_D and Create_Dirty_Exclusive_D will only
-+# operate correctly if the internal data cache refill buffer is empty.  These
-+# CACHE instructions should be separated from any potential data cache miss
-+# by a load instruction to an uncached address to empty the response buffer."
-+# (Revision 2.0 device errata from IDT available on https://www.idt.com/
-+# in .pdf format.)
-+config WAR_R4600_V2_HIT_CACHEOP
++# R4600 erratum.  Due to the lack of errata information the exact
++# technical details aren't known.  I've experimentally found that disabling
++# interrupts during indexed I-cache flushes seems to be sufficient to deal
++# with the issue.
++config WAR_R4600_V1_INDEX_ICACHEOP
 +	bool
 +
  #
  # - Highmem only makes sense for the 32-bit kernel.
  # - The current highmem code will only work properly on physically indexed
 diff --git a/arch/mips/include/asm/mach-cavium-octeon/war.h b/arch/mips/include/asm/mach-cavium-octeon/war.h
-index 915ce0352c20..4bc396d0fdd9 100644
+index 2421411b7636..1e01e2f20086 100644
 --- a/arch/mips/include/asm/mach-cavium-octeon/war.h
 +++ b/arch/mips/include/asm/mach-cavium-octeon/war.h
 @@ -9,7 +9,6 @@
  #ifndef __ASM_MIPS_MACH_CAVIUM_OCTEON_WAR_H
  #define __ASM_MIPS_MACH_CAVIUM_OCTEON_WAR_H
  
--#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+ #define R4600_V1_HIT_CACHEOP_WAR	0
+ #define R4600_V2_HIT_CACHEOP_WAR	0
  #define BCM1250_M3_WAR			0
- #define SIBYTE_1956_WAR			0
- #define MIPS4K_ICACHE_REFILL_WAR	0
 diff --git a/arch/mips/include/asm/mach-generic/war.h b/arch/mips/include/asm/mach-generic/war.h
-index 44d14be2e1e5..4d46a880b832 100644
+index f0f4a35d0870..7614a1545d1c 100644
 --- a/arch/mips/include/asm/mach-generic/war.h
 +++ b/arch/mips/include/asm/mach-generic/war.h
 @@ -8,7 +8,6 @@
  #ifndef __ASM_MACH_GENERIC_WAR_H
  #define __ASM_MACH_GENERIC_WAR_H
  
--#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+ #define R4600_V1_HIT_CACHEOP_WAR	0
+ #define R4600_V2_HIT_CACHEOP_WAR	0
  #define BCM1250_M3_WAR			0
- #define SIBYTE_1956_WAR			0
- #define MIPS4K_ICACHE_REFILL_WAR	0
 diff --git a/arch/mips/include/asm/mach-ip22/war.h b/arch/mips/include/asm/mach-ip22/war.h
-index 9154c54d428a..a5a1c41df74e 100644
+index b48eb4ac362d..3424c1e8a24f 100644
 --- a/arch/mips/include/asm/mach-ip22/war.h
 +++ b/arch/mips/include/asm/mach-ip22/war.h
-@@ -8,11 +8,6 @@
- #ifndef __ASM_MIPS_MACH_IP22_WAR_H
- #define __ASM_MIPS_MACH_IP22_WAR_H
+@@ -12,7 +12,6 @@
+  * R4600 CPU modules for the Indy come with both V1.7 and V2.0 processors.
+  */
  
--/*
-- * R4600 CPU modules for the Indy come with both V1.7 and V2.0 processors.
-- */
--
--#define R4600_V2_HIT_CACHEOP_WAR	1
+-#define R4600_V1_INDEX_ICACHEOP_WAR	1
+ #define R4600_V1_HIT_CACHEOP_WAR	1
+ #define R4600_V2_HIT_CACHEOP_WAR	1
  #define BCM1250_M3_WAR			0
- #define SIBYTE_1956_WAR			0
- #define MIPS4K_ICACHE_REFILL_WAR	0
 diff --git a/arch/mips/include/asm/mach-ip27/war.h b/arch/mips/include/asm/mach-ip27/war.h
-index e7c070c85b7c..5891d506cffd 100644
+index ef3efce0094a..5a91a7564fb9 100644
 --- a/arch/mips/include/asm/mach-ip27/war.h
 +++ b/arch/mips/include/asm/mach-ip27/war.h
 @@ -8,7 +8,6 @@
  #ifndef __ASM_MIPS_MACH_IP27_WAR_H
  #define __ASM_MIPS_MACH_IP27_WAR_H
  
--#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+ #define R4600_V1_HIT_CACHEOP_WAR	0
+ #define R4600_V2_HIT_CACHEOP_WAR	0
  #define BCM1250_M3_WAR			0
- #define SIBYTE_1956_WAR			0
- #define MIPS4K_ICACHE_REFILL_WAR	0
 diff --git a/arch/mips/include/asm/mach-ip28/war.h b/arch/mips/include/asm/mach-ip28/war.h
-index 22d9f78bf552..346fc567ebb3 100644
+index 61cd67354829..0dc70d59909e 100644
 --- a/arch/mips/include/asm/mach-ip28/war.h
 +++ b/arch/mips/include/asm/mach-ip28/war.h
 @@ -8,7 +8,6 @@
  #ifndef __ASM_MIPS_MACH_IP28_WAR_H
  #define __ASM_MIPS_MACH_IP28_WAR_H
  
--#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+ #define R4600_V1_HIT_CACHEOP_WAR	0
+ #define R4600_V2_HIT_CACHEOP_WAR	0
  #define BCM1250_M3_WAR			0
- #define SIBYTE_1956_WAR			0
- #define MIPS4K_ICACHE_REFILL_WAR	0
 diff --git a/arch/mips/include/asm/mach-ip30/war.h b/arch/mips/include/asm/mach-ip30/war.h
-index 1400b030982e..f887a0a53e18 100644
+index a1fa0c1f5300..9f5c3305674c 100644
 --- a/arch/mips/include/asm/mach-ip30/war.h
 +++ b/arch/mips/include/asm/mach-ip30/war.h
 @@ -5,7 +5,6 @@
  #ifndef __ASM_MIPS_MACH_IP30_WAR_H
  #define __ASM_MIPS_MACH_IP30_WAR_H
  
--#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+ #define R4600_V1_HIT_CACHEOP_WAR	0
+ #define R4600_V2_HIT_CACHEOP_WAR	0
  #define BCM1250_M3_WAR			0
- #define SIBYTE_1956_WAR			0
- #define MIPS4K_ICACHE_REFILL_WAR	0
 diff --git a/arch/mips/include/asm/mach-ip32/war.h b/arch/mips/include/asm/mach-ip32/war.h
-index f91f4eddce8f..980dbd34355c 100644
+index e77b9d1b6c96..ac933b9119bb 100644
 --- a/arch/mips/include/asm/mach-ip32/war.h
 +++ b/arch/mips/include/asm/mach-ip32/war.h
 @@ -8,7 +8,6 @@
  #ifndef __ASM_MIPS_MACH_IP32_WAR_H
  #define __ASM_MIPS_MACH_IP32_WAR_H
  
--#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+ #define R4600_V1_HIT_CACHEOP_WAR	0
+ #define R4600_V2_HIT_CACHEOP_WAR	0
  #define BCM1250_M3_WAR			0
- #define SIBYTE_1956_WAR			0
- #define MIPS4K_ICACHE_REFILL_WAR	0
 diff --git a/arch/mips/include/asm/mach-malta/war.h b/arch/mips/include/asm/mach-malta/war.h
-index a4d5d0926e81..29f56803e3e5 100644
+index d62d2ffe515e..12c6393b6f31 100644
 --- a/arch/mips/include/asm/mach-malta/war.h
 +++ b/arch/mips/include/asm/mach-malta/war.h
 @@ -8,7 +8,6 @@
  #ifndef __ASM_MIPS_MACH_MIPS_WAR_H
  #define __ASM_MIPS_MACH_MIPS_WAR_H
  
--#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+ #define R4600_V1_HIT_CACHEOP_WAR	0
+ #define R4600_V2_HIT_CACHEOP_WAR	0
  #define BCM1250_M3_WAR			0
- #define SIBYTE_1956_WAR			0
- #define MIPS4K_ICACHE_REFILL_WAR	1
 diff --git a/arch/mips/include/asm/mach-rc32434/war.h b/arch/mips/include/asm/mach-rc32434/war.h
-index 82ce2d313eed..749787bb6c8e 100644
+index af430d26f713..62e04bea61b3 100644
 --- a/arch/mips/include/asm/mach-rc32434/war.h
 +++ b/arch/mips/include/asm/mach-rc32434/war.h
 @@ -8,7 +8,6 @@
  #ifndef __ASM_MIPS_MACH_MIPS_WAR_H
  #define __ASM_MIPS_MACH_MIPS_WAR_H
  
--#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+ #define R4600_V1_HIT_CACHEOP_WAR	0
+ #define R4600_V2_HIT_CACHEOP_WAR	0
  #define BCM1250_M3_WAR			0
- #define SIBYTE_1956_WAR			0
- #define MIPS4K_ICACHE_REFILL_WAR	1
 diff --git a/arch/mips/include/asm/mach-rm/war.h b/arch/mips/include/asm/mach-rm/war.h
-index 192ec3358ad0..aded634ccb01 100644
+index eca16d167c2f..fe3c17f38650 100644
 --- a/arch/mips/include/asm/mach-rm/war.h
 +++ b/arch/mips/include/asm/mach-rm/war.h
-@@ -8,11 +8,6 @@
- #ifndef __ASM_MIPS_MACH_RM_WAR_H
- #define __ASM_MIPS_MACH_RM_WAR_H
+@@ -12,7 +12,6 @@
+  * The RM200C seems to have been shipped only with V2.0 R4600s
+  */
  
--/*
-- * The RM200C seems to have been shipped only with V2.0 R4600s
-- */
--
--#define R4600_V2_HIT_CACHEOP_WAR	1
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+ #define R4600_V1_HIT_CACHEOP_WAR	0
+ #define R4600_V2_HIT_CACHEOP_WAR	1
  #define BCM1250_M3_WAR			0
- #define SIBYTE_1956_WAR			0
- #define MIPS4K_ICACHE_REFILL_WAR	0
 diff --git a/arch/mips/include/asm/mach-sibyte/war.h b/arch/mips/include/asm/mach-sibyte/war.h
-index bf793d36c890..78fd2ad4930b 100644
+index 4755b6116807..d34f3c1d6741 100644
 --- a/arch/mips/include/asm/mach-sibyte/war.h
 +++ b/arch/mips/include/asm/mach-sibyte/war.h
-@@ -8,8 +8,6 @@
+@@ -8,7 +8,6 @@
  #ifndef __ASM_MIPS_MACH_SIBYTE_WAR_H
  #define __ASM_MIPS_MACH_SIBYTE_WAR_H
  
--#define R4600_V2_HIT_CACHEOP_WAR	0
--
- #if defined(CONFIG_SB1_PASS_2_WORKAROUNDS)
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+ #define R4600_V1_HIT_CACHEOP_WAR	0
+ #define R4600_V2_HIT_CACHEOP_WAR	0
  
- #ifndef __ASSEMBLY__
 diff --git a/arch/mips/include/asm/mach-tx49xx/war.h b/arch/mips/include/asm/mach-tx49xx/war.h
-index 7da1a3ea54c7..0b1666e0391a 100644
+index 445abb4eb769..eb0375da266a 100644
 --- a/arch/mips/include/asm/mach-tx49xx/war.h
 +++ b/arch/mips/include/asm/mach-tx49xx/war.h
 @@ -8,7 +8,6 @@
  #ifndef __ASM_MIPS_MACH_TX49XX_WAR_H
  #define __ASM_MIPS_MACH_TX49XX_WAR_H
  
--#define R4600_V2_HIT_CACHEOP_WAR	0
+-#define R4600_V1_INDEX_ICACHEOP_WAR	0
+ #define R4600_V1_HIT_CACHEOP_WAR	0
+ #define R4600_V2_HIT_CACHEOP_WAR	0
  #define BCM1250_M3_WAR			0
- #define SIBYTE_1956_WAR			0
- #define MIPS4K_ICACHE_REFILL_WAR	0
 diff --git a/arch/mips/include/asm/war.h b/arch/mips/include/asm/war.h
-index d336a0e57093..37092c2c68e1 100644
+index e43f800e662d..3c8923692fca 100644
 --- a/arch/mips/include/asm/war.h
 +++ b/arch/mips/include/asm/war.h
-@@ -72,21 +72,6 @@
+@@ -72,16 +72,6 @@
  #define DADDI_WAR 0
  #endif
  
 -/*
-- * Writeback and invalidate the primary cache dcache before DMA.
-- *
-- * R4600 v2.0 bug: "The CACHE instructions Hit_Writeback_Inv_D,
-- * Hit_Writeback_D, Hit_Invalidate_D and Create_Dirty_Exclusive_D will only
-- * operate correctly if the internal data cache refill buffer is empty.	 These
-- * CACHE instructions should be separated from any potential data cache miss
-- * by a load instruction to an uncached address to empty the response buffer."
-- * (Revision 2.0 device errata from IDT available on https://www.idt.com/
-- * in .pdf format.)
+- * Another R4600 erratum.  Due to the lack of errata information the exact
+- * technical details aren't known.  I've experimentally found that disabling
+- * interrupts during indexed I-cache flushes seems to be sufficient to deal
+- * with the issue.
 - */
--#ifndef R4600_V2_HIT_CACHEOP_WAR
--#error Check setting of R4600_V2_HIT_CACHEOP_WAR for your platform
+-#ifndef R4600_V1_INDEX_ICACHEOP_WAR
+-#error Check setting of R4600_V1_INDEX_ICACHEOP_WAR for your platform
 -#endif
 -
  /*
-  * Workaround for the Sibyte M3 errata the text of which can be found at
+  * Pleasures of the R4600 V1.x.	 Cite from the IDT R4600 V1.7 errata:
   *
 diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c
-index 814a295a2df2..df09a3653c4f 100644
+index fc5a6d25f74f..bf454da84a9b 100644
 --- a/arch/mips/mm/c-r4k.c
 +++ b/arch/mips/mm/c-r4k.c
-@@ -130,7 +130,8 @@ struct bcache_ops *bcops = &no_sc_ops;
- 
- #define R4600_HIT_CACHEOP_WAR_IMPL					\
- do {									\
--	if (R4600_V2_HIT_CACHEOP_WAR && cpu_is_r4600_v2_x())		\
-+	if (IS_ENABLED(CONFIG_WAR_R4600_V2_HIT_CACHEOP) &&		\
-+	    cpu_is_r4600_v2_x())					\
- 		*(volatile unsigned long *)CKSEG1;			\
- 	if (IS_ENABLED(CONFIG_WAR_R4600_V1_HIT_CACHEOP))					\
- 		__asm__ __volatile__("nop;nop;nop;nop");		\
-diff --git a/arch/mips/mm/page.c b/arch/mips/mm/page.c
-index ecad11f5c67c..504bc4047c4c 100644
---- a/arch/mips/mm/page.c
-+++ b/arch/mips/mm/page.c
-@@ -258,7 +258,8 @@ static inline void build_clear_pref(u32 **buf, int off)
- 				uasm_i_nop(buf);
- 			}
- 
--			if (R4600_V2_HIT_CACHEOP_WAR && cpu_is_r4600_v2_x())
-+			if (IS_ENABLED(CONFIG_WAR_R4600_V2_HIT_CACHEOP) &&
-+			    cpu_is_r4600_v2_x())
- 				uasm_i_lw(buf, ZERO, ZERO, AT);
- 
- 			uasm_i_cache(buf, Create_Dirty_Excl_D, off, A0);
-@@ -303,7 +304,7 @@ void build_clear_page(void)
- 	else
- 		uasm_i_ori(&buf, A2, A0, off);
- 
--	if (R4600_V2_HIT_CACHEOP_WAR && cpu_is_r4600_v2_x())
-+	if (IS_ENABLED(CONFIG_WAR_R4600_V2_HIT_CACHEOP) && cpu_is_r4600_v2_x())
- 		uasm_i_lui(&buf, AT, uasm_rel_hi(0xa0000000));
- 
- 	off = cache_line_size ? min(8, pref_bias_clear_store / cache_line_size)
-@@ -411,7 +412,8 @@ static inline void build_copy_store_pref(u32 **buf, int off)
- 				uasm_i_nop(buf);
- 			}
- 
--			if (R4600_V2_HIT_CACHEOP_WAR && cpu_is_r4600_v2_x())
-+			if (IS_ENABLED(CONFIG_WAR_R4600_V2_HIT_CACHEOP) &&
-+			    cpu_is_r4600_v2_x())
- 				uasm_i_lw(buf, ZERO, ZERO, AT);
- 
- 			uasm_i_cache(buf, Create_Dirty_Excl_D, off, A0);
-@@ -455,7 +457,7 @@ void build_copy_page(void)
- 	else
- 		uasm_i_ori(&buf, A2, A0, off);
- 
--	if (R4600_V2_HIT_CACHEOP_WAR && cpu_is_r4600_v2_x())
-+	if (IS_ENABLED(CONFIG_WAR_R4600_V2_HIT_CACHEOP) && cpu_is_r4600_v2_x())
- 		uasm_i_lui(&buf, AT, uasm_rel_hi(0xa0000000));
- 
- 	off = cache_line_size ? min(8, pref_bias_copy_load / cache_line_size) *
+@@ -366,7 +366,8 @@ static void r4k_blast_icache_page_indexed_setup(void)
+ 	else if (ic_lsize == 16)
+ 		r4k_blast_icache_page_indexed = blast_icache16_page_indexed;
+ 	else if (ic_lsize == 32) {
+-		if (R4600_V1_INDEX_ICACHEOP_WAR && cpu_is_r4600_v1_x())
++		if (IS_ENABLED(CONFIG_WAR_R4600_V1_INDEX_ICACHEOP) &&
++		    cpu_is_r4600_v1_x())
+ 			r4k_blast_icache_page_indexed =
+ 				blast_icache32_r4600_v1_page_indexed;
+ 		else if (TX49XX_ICACHE_INDEX_INV_WAR)
+@@ -394,7 +395,8 @@ static void r4k_blast_icache_setup(void)
+ 	else if (ic_lsize == 16)
+ 		r4k_blast_icache = blast_icache16;
+ 	else if (ic_lsize == 32) {
+-		if (R4600_V1_INDEX_ICACHEOP_WAR && cpu_is_r4600_v1_x())
++		if (IS_ENABLED(CONFIG_WAR_R4600_V1_INDEX_ICACHEOP) &&
++		    cpu_is_r4600_v1_x())
+ 			r4k_blast_icache = blast_r4600_v1_icache32;
+ 		else if (TX49XX_ICACHE_INDEX_INV_WAR)
+ 			r4k_blast_icache = tx49_blast_icache32;
 -- 
 2.16.4
 
