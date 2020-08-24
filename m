@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8E7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88F7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 084D22075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92FC62087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258676;
-	bh=tQlFm5xToFGY2NUN7rgjiGp/qwq9MrJn5wWFr1gWNu0=;
+	s=default; t=1598258680;
+	bh=fIHeNq+fwaVaSWsFR5chX7jTNDuNYdyTKVPJb18KZRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yz0Po6PCuvon9YGm6Rx8WWtS/+XVI2EXMP0TuuuX4RPOIQrVee+Bfl5TSSQameZQt
-	 mAcVztJMOMD0FAdDwWHGvyXYW8Vh+R21DDRfMxK5Ox748dNfhHyNdJgEVTnzO8ZYT6
-	 w69rBtSZ2ix1C6/YCVPZ6VsmhvpuCSSBYocs7WeI=
+	b=vusYdl5NdY8zYZuyyuGJ9B9KbChjHKmim8E/XoCsMcr7CHH6x3FfSNK4fC7AQlzEK
+	 0BpACItGVYj8NbZSJCwhALg9wbbsJJDR2Bfkg4lMPMQ02j0t+Jk0CsM/GcKV+HDSCe
+	 bSt4pwKoukFDTBYITmBH56vqlUQqNVo+6Cn/Zkmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgHXIoe (ORCPT
+        id S1729159AbgHXIoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:44:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:44:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729145AbgHXIo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:44:28 -0400
+        id S1728427AbgHXIod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:44:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED11B2075B;
-        Mon, 24 Aug 2020 08:44:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AADA72075B;
+        Mon, 24 Aug 2020 08:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258667;
-        bh=tQlFm5xToFGY2NUN7rgjiGp/qwq9MrJn5wWFr1gWNu0=;
+        s=default; t=1598258673;
+        bh=fIHeNq+fwaVaSWsFR5chX7jTNDuNYdyTKVPJb18KZRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C3bQc86KUr7oSGW8StjBdxAGtYK2E22QmtVQFPTNrO5i32dOut50FfS8TPC/v89Kg
-         6TdqTk0gPAsyjnlLju2bgY3ny1pwIX/u1DOB6Yg1LvEJjYz8we/ZRzP6CQZFYFJo5Q
-         +hcH9VXSWKtbK7yuiw9BtIpH4Fy1i4pmPP6u6jBY=
+        b=qyHvJ9eRuyGxrOiG5xsrXgCrGrWyZ+r4t9cVqluFBLEkuQsqmZjNlWr8bvoYaX6aG
+         9Ce/fsulH4gvmf5jKUTt1u/AWGykouhgHdaOFqirqsmJX9G3yLUdAGjAbP88aX30tC
+         +I9qwYVptpBFgQuQePAKJBvLsK7Mr+NtZI+OsPwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 101/124] kconfig: qconf: do not limit the pop-up menu to the first row
-Date:   Mon, 24 Aug 2020 10:30:35 +0200
-Message-Id: <20200824082414.387622814@linuxfoundation.org>
+Subject: [PATCH 5.7 103/124] efi: avoid error message when booting under Xen
+Date:   Mon, 24 Aug 2020 10:30:37 +0200
+Message-Id: <20200824082414.485788191@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -59,110 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit fa8de0a3bf3c02e6f00b7746e7e934db522cdda9 ]
+[ Upstream commit 6163a985e50cb19d5bdf73f98e45b8af91a77658 ]
 
-If you right-click the first row in the option tree, the pop-up menu
-shows up, but if you right-click the second row or below, the event
-is ignored due to the following check:
+efifb_probe() will issue an error message in case the kernel is booted
+as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoid
+that message by calling efi_mem_desc_lookup() only if EFI_MEMMAP is set.
 
-  if (e->y() <= header()->geometry().bottom()) {
-
-Perhaps, the intention was to show the pop-menu only when the tree
-header was right-clicked, but this handler is not called in that case.
-
-Since the origin of e->y() starts from the bottom of the header,
-this check is odd.
-
-Going forward, you can right-click anywhere in the tree to get the
-pop-up menu.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/qconf.cc | 68 ++++++++++++++++++++--------------------
- 1 file changed, 34 insertions(+), 34 deletions(-)
+ drivers/video/fbdev/efifb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index c0ac8f7b5f1ab..e7e201d261f78 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -881,40 +881,40 @@ void ConfigList::focusInEvent(QFocusEvent *e)
+diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+index 65491ae74808d..e57c00824965c 100644
+--- a/drivers/video/fbdev/efifb.c
++++ b/drivers/video/fbdev/efifb.c
+@@ -453,7 +453,7 @@ static int efifb_probe(struct platform_device *dev)
+ 	info->apertures->ranges[0].base = efifb_fix.smem_start;
+ 	info->apertures->ranges[0].size = size_remap;
  
- void ConfigList::contextMenuEvent(QContextMenuEvent *e)
- {
--	if (e->y() <= header()->geometry().bottom()) {
--		if (!headerPopup) {
--			QAction *action;
--
--			headerPopup = new QMenu(this);
--			action = new QAction("Show Name", this);
--			  action->setCheckable(true);
--			  connect(action, SIGNAL(toggled(bool)),
--				  parent(), SLOT(setShowName(bool)));
--			  connect(parent(), SIGNAL(showNameChanged(bool)),
--				  action, SLOT(setOn(bool)));
--			  action->setChecked(showName);
--			  headerPopup->addAction(action);
--			action = new QAction("Show Range", this);
--			  action->setCheckable(true);
--			  connect(action, SIGNAL(toggled(bool)),
--				  parent(), SLOT(setShowRange(bool)));
--			  connect(parent(), SIGNAL(showRangeChanged(bool)),
--				  action, SLOT(setOn(bool)));
--			  action->setChecked(showRange);
--			  headerPopup->addAction(action);
--			action = new QAction("Show Data", this);
--			  action->setCheckable(true);
--			  connect(action, SIGNAL(toggled(bool)),
--				  parent(), SLOT(setShowData(bool)));
--			  connect(parent(), SIGNAL(showDataChanged(bool)),
--				  action, SLOT(setOn(bool)));
--			  action->setChecked(showData);
--			  headerPopup->addAction(action);
--		}
--		headerPopup->exec(e->globalPos());
--		e->accept();
--	} else
--		e->ignore();
-+	if (!headerPopup) {
-+		QAction *action;
-+
-+		headerPopup = new QMenu(this);
-+		action = new QAction("Show Name", this);
-+		action->setCheckable(true);
-+		connect(action, SIGNAL(toggled(bool)),
-+			parent(), SLOT(setShowName(bool)));
-+		connect(parent(), SIGNAL(showNameChanged(bool)),
-+			action, SLOT(setOn(bool)));
-+		action->setChecked(showName);
-+		headerPopup->addAction(action);
-+
-+		action = new QAction("Show Range", this);
-+		action->setCheckable(true);
-+		connect(action, SIGNAL(toggled(bool)),
-+			parent(), SLOT(setShowRange(bool)));
-+		connect(parent(), SIGNAL(showRangeChanged(bool)),
-+			action, SLOT(setOn(bool)));
-+		action->setChecked(showRange);
-+		headerPopup->addAction(action);
-+
-+		action = new QAction("Show Data", this);
-+		action->setCheckable(true);
-+		connect(action, SIGNAL(toggled(bool)),
-+			parent(), SLOT(setShowData(bool)));
-+		connect(parent(), SIGNAL(showDataChanged(bool)),
-+			action, SLOT(setOn(bool)));
-+		action->setChecked(showData);
-+		headerPopup->addAction(action);
-+	}
-+
-+	headerPopup->exec(e->globalPos());
-+	e->accept();
- }
- 
- ConfigView*ConfigView::viewList;
+-	if (efi_enabled(EFI_BOOT) &&
++	if (efi_enabled(EFI_MEMMAP) &&
+ 	    !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+ 		if ((efifb_fix.smem_start + efifb_fix.smem_len) >
+ 		    (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
 -- 
 2.25.1
 
