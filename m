@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5289AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6320FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA9B2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BCE22067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287517;
-	bh=I5sszpnEsWLW9bceSHEeRvrJ/DB70tDxtWUEm34wodg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=obwOzMAgV0FP+TR28PVhW/GtFs4iA32tAoQu7YfXHkZIB7PUt5WVQB3/MW8h/jm/T
-	 z+omLwkjFWvSMTiKNX3Z9iKzBOafw6s4QkVFsW/ZNCbTWekSHKiex7DMAh8rfzFLej
-	 TKg8pwFpauFStVNauOoe70joSmxy3LRk3HGD24IE=
+	s=default; t=1598287532;
+	bh=RacWlbSMKAJd0bJ0QP8Nbv2sinIB1vEMPGx2J0kjzqs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pJcqJvk5PmbeRIrO66ZNvQJpCdXvzaij2xyEWZVYB3qEKbMXH7iTWjTCQkYJI/3uE
+	 FC5eWCb8IdzXx3lP+cZe3jDGMqBtvUHSDdLNeEmBb1WSPShWnNc+jLPDqhSORHGe0a
+	 yR9u4RKRFMJrjzA5U0Sh6y+FPM2D5KnI0AYKHDn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgHXQpK (ORCPT
+        id S1728511AbgHXQp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:45:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47586 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:45:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728598AbgHXQjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:39:37 -0400
+        id S1728589AbgHXQj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:39:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65DEB22D0B;
-        Mon, 24 Aug 2020 16:39:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6214120838;
+        Mon, 24 Aug 2020 16:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287173;
-        bh=I5sszpnEsWLW9bceSHEeRvrJ/DB70tDxtWUEm34wodg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Nlm2sMBw37V5t1Sw2QmSN5DXZOQ5t/1ENEcNi9tmOqxV9xN6Eo+urX0QrWWdnjcC/
-         KqeTG03OoARXnObDYwOOxLj2jEKMaYw+OapqzOWE7EzgSEHb4AbinHfimnc0RfP2VI
-         e6MAGBlNqOyF9/nam3O5hpbydVhMNhgC6hFUDF5g=
+        s=default; t=1598287166;
+        bh=RacWlbSMKAJd0bJ0QP8Nbv2sinIB1vEMPGx2J0kjzqs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zF5eGdzfoo6QwNVkZk5+2PiK8eeXY9pNEOMIQ5z2xK6DBX87KrgEZOloqY1JJAKm/
+         uCx9Je0v/ugS1aM9IzqUaM0CS/K4O4rtStMpLxJW/AaL9DfylGbLaAGtKuh2tl+ikj
+         6NvY5a7NNnv1ylvjhWSZOsIcFeQ1UPLb6D/tadgk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukas Czerner <lczerner@redhat.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 1/8] jbd2: make sure jh have b_transaction set in refile/unfile_buffer
-Date:   Mon, 24 Aug 2020 12:39:24 -0400
-Message-Id: <20200824163931.607291-1-sashal@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 08/11] scsi: ufs: Improve interrupt handling for shared interrupts
+Date:   Mon, 24 Aug 2020 12:39:11 -0400
+Message-Id: <20200824163914.607152-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200824163914.607152-1-sashal@kernel.org>
+References: <20200824163914.607152-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,60 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-[ Upstream commit 24dc9864914eb5813173cfa53313fcd02e4aea7d ]
+[ Upstream commit 127d5f7c4b653b8be5eb3b2c7bbe13728f9003ff ]
 
-Callers of __jbd2_journal_unfile_buffer() and
-__jbd2_journal_refile_buffer() assume that the b_transaction is set. In
-fact if it's not, we can end up with journal_head refcounting errors
-leading to crash much later that might be very hard to track down. Add
-asserts to make sure that is the case.
+For shared interrupts, the interrupt status might be zero, so check that
+first.
 
-We also make sure that b_next_transaction is NULL in
-__jbd2_journal_unfile_buffer() since the callers expect that as well and
-we should not get into that stage in this state anyway, leading to
-problems later on if we do.
-
-Tested with fstests.
-
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200617092549.6712-1-lczerner@redhat.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: https://lore.kernel.org/r/20200811133936.19171-2-adrian.hunter@intel.com
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/transaction.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/scsi/ufs/ufshcd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index 8de458d64134a..1478512ecab3e 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1896,6 +1896,9 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 8144a54371c35..4eaecc3cdebc8 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5371,7 +5371,7 @@ static void ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
   */
- static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
+ static irqreturn_t ufshcd_intr(int irq, void *__hba)
  {
-+	J_ASSERT_JH(jh, jh->b_transaction != NULL);
-+	J_ASSERT_JH(jh, jh->b_next_transaction == NULL);
-+
- 	__jbd2_journal_temp_unlink_buffer(jh);
- 	jh->b_transaction = NULL;
- 	jbd2_journal_put_journal_head(jh);
-@@ -2443,6 +2446,13 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
+-	u32 intr_status, enabled_intr_status;
++	u32 intr_status, enabled_intr_status = 0;
+ 	irqreturn_t retval = IRQ_NONE;
+ 	struct ufs_hba *hba = __hba;
+ 	int retries = hba->nutrs;
+@@ -5385,7 +5385,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 	 * read, make sure we handle them by checking the interrupt status
+ 	 * again in a loop until we process all of the reqs before returning.
+ 	 */
+-	do {
++	while (intr_status && retries--) {
+ 		enabled_intr_status =
+ 			intr_status & ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
+ 		if (intr_status)
+@@ -5396,7 +5396,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 		}
  
- 	was_dirty = test_clear_buffer_jbddirty(bh);
- 	__jbd2_journal_temp_unlink_buffer(jh);
-+
-+	/*
-+	 * b_transaction must be set, otherwise the new b_transaction won't
-+	 * be holding jh reference
-+	 */
-+	J_ASSERT_JH(jh, jh->b_transaction != NULL);
-+
- 	/*
- 	 * We set b_transaction here because b_next_transaction will inherit
- 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
+ 		intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+-	} while (intr_status && --retries);
++	}
+ 
+ 	spin_unlock(hba->host->host_lock);
+ 	return retval;
 -- 
 2.25.1
 
