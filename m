@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A50DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E63C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6897F214F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF22A206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262494;
-	bh=8wABEDlREpvzT6ukPbd1Mmmvfg+2A2EvnE7zEw6dBsw=;
+	s=default; t=1598262496;
+	bh=DaLrVr7gb8fmO/aKLBWZESC8SZ7KeLFUyl9HyttA2JA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FJMQoQcNQ0R32Fup430+PqY4XXqv54ncBu7siaUUjLwiBSRj/RT4xbzI23vUgahqP
-	 AAtqTTYIXfOCP616kZ1ONRQxl7oF+p9Onv0qL94AvmIMT4zu8pZqJNbhVxw7yv19GA
-	 kQnr0BdZf1v2JV0ROG1R08Wn1es1OfKKgun84NXQ=
+	b=YAMmXyZuauuChSppptsGx1h9UxXUiQBZjMQNVA6yEzYJXU9ANAPHstp+diiw9XfvZ
+	 lDxKlZhrx47bUI9rXFxIjyLX+MW1TFa8L5eRaclL3DYYpU7FPQaiWqJHX63SK50wIU
+	 tqnAJqPnFW2uv16hLhjv+uXxnAh8mOC5dbviD7Xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbgHXJsN (ORCPT
+        id S1728145AbgHXJsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:48:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58858 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728806AbgHXIlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:41:08 -0400
+        id S1728804AbgHXIlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:41:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5409C2074D;
-        Mon, 24 Aug 2020 08:41:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BA6A2074D;
+        Mon, 24 Aug 2020 08:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258467;
-        bh=8wABEDlREpvzT6ukPbd1Mmmvfg+2A2EvnE7zEw6dBsw=;
+        s=default; t=1598258461;
+        bh=DaLrVr7gb8fmO/aKLBWZESC8SZ7KeLFUyl9HyttA2JA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XqFdAidqHLwDSzL6p1f6+7PujIdSgitlIxJQgtiWyUALP40iwlvLBgiRHSdT0WQzz
-         n+CgtPSMqUI48TI9q4SUEl+wR8CRqSH4y5fh334+3ObDfunnWpU4sPBLZtZ6JA9wg9
-         vlQcm+o1IDiL+UtBC1j33sW2C03O/hvv7pbYSzZs=
+        b=SSPx597SMSxItswlCreYAYkJUsEtL/cL2mavykUeb1pvcuzkf0Viv8R3TazLnHWUp
+         6o4GfNeU0OPLPW801PBnx3zQEIZgqyVprLmT4mu8d7yXkm+k+m15+W4kORcgZVH8qL
+         K2yoEveYse+Dxlwwb9otxx0rG+djhU8QU3879mDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        stable@vger.kernel.org, Gaurav Singh <gaurav1086@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Shuah Khan <shuah@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Michal Koutn <mkoutny@suse.com>, Roman Gushchin <guro@fb.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Chris Down <chris@chrisdown.name>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 057/124] alpha: fix annotation of io{read,write}{16,32}be()
-Date:   Mon, 24 Aug 2020 10:29:51 +0200
-Message-Id: <20200824082412.228000895@linuxfoundation.org>
+Subject: [PATCH 5.7 055/124] tools/testing/selftests/cgroup/cgroup_util.c: cg_read_strcmp: fix null pointer dereference
+Date:   Mon, 24 Aug 2020 10:29:49 +0200
+Message-Id: <20200824082412.128308690@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -66,55 +65,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+From: Gaurav Singh <gaurav1086@gmail.com>
 
-[ Upstream commit bd72866b8da499e60633ff28f8a4f6e09ca78efe ]
+[ Upstream commit d830020656c5b68ced962ed3cb51a90e0a89d4c4 ]
 
-These accessors must be used to read/write a big-endian bus.  The value
-returned or written is native-endian.
+Haven't reproduced this issue. This PR is does a minor code cleanup.
 
-However, these accessors are defined using be{16,32}_to_cpu() or
-cpu_to_be{16,32}() to make the endian conversion but these expect a
-__be{16,32} when none is present.  Keeping them would need a force cast
-that would solve nothing at all.
-
-So, do the conversion using swab{16,32}, like done in asm-generic for
-similar situations.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Richard Henderson <rth@twiddle.net>
-Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Cc: Matt Turner <mattst88@gmail.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Link: http://lkml.kernel.org/r/20200622114232.80039-1-luc.vanoostenryck@gmail.com
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Michal Koutn <mkoutny@suse.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Chris Down <chris@chrisdown.name>
+Link: http://lkml.kernel.org/r/20200726013808.22242-1-gaurav1086@gmail.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/alpha/include/asm/io.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/testing/selftests/cgroup/cgroup_util.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
-index e6225cf40de57..b09dd6bc98a12 100644
---- a/arch/alpha/include/asm/io.h
-+++ b/arch/alpha/include/asm/io.h
-@@ -490,10 +490,10 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
- }
- #endif
+diff --git a/tools/testing/selftests/cgroup/cgroup_util.c b/tools/testing/selftests/cgroup/cgroup_util.c
+index 8a637ca7d73a4..05853b0b88318 100644
+--- a/tools/testing/selftests/cgroup/cgroup_util.c
++++ b/tools/testing/selftests/cgroup/cgroup_util.c
+@@ -106,7 +106,7 @@ int cg_read_strcmp(const char *cgroup, const char *control,
  
--#define ioread16be(p) be16_to_cpu(ioread16(p))
--#define ioread32be(p) be32_to_cpu(ioread32(p))
--#define iowrite16be(v,p) iowrite16(cpu_to_be16(v), (p))
--#define iowrite32be(v,p) iowrite32(cpu_to_be32(v), (p))
-+#define ioread16be(p) swab16(ioread16(p))
-+#define ioread32be(p) swab32(ioread32(p))
-+#define iowrite16be(v,p) iowrite16(swab16(v), (p))
-+#define iowrite32be(v,p) iowrite32(swab32(v), (p))
+ 	/* Handle the case of comparing against empty string */
+ 	if (!expected)
+-		size = 32;
++		return -1;
+ 	else
+ 		size = strlen(expected) + 1;
  
- #define inb_p		inb
- #define inw_p		inw
 -- 
 2.25.1
 
