@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF37C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61943C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5A4208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A12C2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598296098;
-	bh=Cgxn33agiAyp87HeECnZVMhxGfb2+DrRvu3F+O4k4xU=;
+	s=default; t=1598296104;
+	bh=AgWkGLVNMdD2DNKd/wZ2SbCNZ2uFLt8zFJn6wF1Cl4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yJZCXO+2FoJQpyYYrvyAC0OQy1FOntdmT0OT8o/BPzTOJ3GGNdaEjcUuUeQeZe7IU
-	 oK04mw9+W1OodhO5LA7CA4N7JfW4UgZc5a1sLwJkf6qFCbg8p5vXaXm/3vLFd/lNyR
-	 g/OpknPMa9W7foOA4EzKvb7v1s0zjeKBSguRVxjw=
+	b=1jODBvz30ovIZtQcD3foR1Goeojyfe/FBU+sJAJ6ij4pAdr5de3ImoSHhOsEJLSQd
+	 6dMDL5MI1M/+FdemgiXGsQuly/jPxufeu6gFxJjk21wIMGLTmDyBC9NYUsIR71R7Mx
+	 Hc8iFvDXqTh8We169tVPS8nUieQYEeF7/XZa0rNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgHXTIQ (ORCPT
+        id S1727917AbgHXTIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:08:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58744 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 15:08:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgHXTIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:08:13 -0400
+        id S1725976AbgHXTIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 15:08:18 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E84A2074D;
-        Mon, 24 Aug 2020 19:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47E6E20866;
+        Mon, 24 Aug 2020 19:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598296092;
-        bh=Cgxn33agiAyp87HeECnZVMhxGfb2+DrRvu3F+O4k4xU=;
+        s=default; t=1598296097;
+        bh=AgWkGLVNMdD2DNKd/wZ2SbCNZ2uFLt8zFJn6wF1Cl4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xEELp6bEmiUWuGyLsLq1MK/NI+k27tG3Jmcj3wSPXd1kmGgntkdSA1YwP0mF0oDr6
-         MK3VR+XH0HNrxKAVkJpyLQhYQDL+/KAXpKgQDjnN8PnU4IIk1NV1/elaB0Ykd0fAsD
-         5yiTZU+kFiNRPg7RLyiw0zkOUx1USrifZCAcEqcc=
+        b=kbX7pFKdM1J7IiNFrdx/+DoYw1uK+WxRMew/kLsrqMMEiyUhH8rJ27ynDGz5JKsk8
+         rEKuAeTRektrsoa9aNDBqZneGy19fjPWZFjdz1EHH/L/qMdtxXUGrGM+qvQJ/kSU+j
+         0peIzmIJRrEaX17Ti37z51AkUuC74q8qeaWhkzB0=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -58,9 +58,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 12/16] arm64: dts: imx8mq-phanbell: Align pin configuration group names with schema
-Date:   Mon, 24 Aug 2020 21:06:57 +0200
-Message-Id: <20200824190701.8447-12-krzk@kernel.org>
+Subject: [PATCH 13/16] arm64: dts: imx8mq-pico-pi: Align pin configuration group names with schema
+Date:   Mon, 24 Aug 2020 21:06:58 +0200
+Message-Id: <20200824190701.8447-13-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200824190701.8447-1-krzk@kernel.org>
 References: <20200824190701.8447-1-krzk@kernel.org>
@@ -76,14 +76,14 @@ suffix, otherwise dtbs_check complain with a warning like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts | 12 ++++++------
+ arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-index 3f541ddf0768..d6d3a3d5abc3 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-@@ -365,7 +365,7 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts b/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
+index 59da96b7143f..f4d5748a7bd6 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
+@@ -297,7 +297,7 @@
  		>;
  	};
  
@@ -92,7 +92,7 @@ index 3f541ddf0768..d6d3a3d5abc3 100644
  		fsl,pins = <
  			MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
  		>;
-@@ -395,7 +395,7 @@
+@@ -335,7 +335,7 @@
  		>;
  	};
  
@@ -101,7 +101,7 @@ index 3f541ddf0768..d6d3a3d5abc3 100644
  		fsl,pins = <
  			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x85
  			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc5
-@@ -412,7 +412,7 @@
+@@ -351,7 +351,7 @@
  		>;
  	};
  
@@ -110,7 +110,7 @@ index 3f541ddf0768..d6d3a3d5abc3 100644
  		fsl,pins = <
  			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x87
  			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc7
-@@ -429,7 +429,7 @@
+@@ -367,7 +367,7 @@
  		>;
  	};
  
@@ -118,8 +118,8 @@ index 3f541ddf0768..d6d3a3d5abc3 100644
 +	pinctrl_usdhc2_gpio: usdhc2gpiogrp {
  		fsl,pins = <
  			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x41
- 			MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
-@@ -448,7 +448,7 @@
+ 		>;
+@@ -385,7 +385,7 @@
  		>;
  	};
  
@@ -128,7 +128,7 @@ index 3f541ddf0768..d6d3a3d5abc3 100644
  		fsl,pins = <
  			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
  			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
-@@ -460,7 +460,7 @@
+@@ -397,7 +397,7 @@
  		>;
  	};
  
