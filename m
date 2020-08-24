@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954D4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E0CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B442075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F042078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261777;
-	bh=CaqBnvXKciEygDccte2c3Ajvyb/vr18fd5B7HT20fE0=;
+	s=default; t=1598261780;
+	bh=iMzsFT6t7SGlhIOUqQv2/+hi3POeH7jRh46e6QHr64I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1MdNpWmw6tV0Ct6NpG4x4XC3yVNKaamj3QXTiGAMQxmBjvyrD2ICTfojYYBaH3CLz
-	 dxsoG7AXxdD4Uw0rYAsMtqEmHHuSVaDs0YN9AS7TvBeTZbtho1Bl8OkV0E1CKALQPL
-	 ahxbemOhfU+TCSE6htyegZ/xKdYM3tyeF0zfk1nU=
+	b=JTOzia4wsshOJcis1DNPzHL93fsVEljo9793Pfhe3kKsVy54ff8vF7CGWZPP1BS7i
+	 Qps6S4jwNpgXHbFgxHffFVqLeDkScx/AOIlUp6mMn1QPCC7mk39kLR7WevOiiZVNsJ
+	 e+K929J2y95b19Q/QgeDFQJbULbllsMbdAN8C61A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbgHXIss (ORCPT
+        id S1729740AbgHXJgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:48:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49406 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:36:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729333AbgHXIsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:48:22 -0400
+        id S1729606AbgHXIst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:48:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BEF6204FD;
-        Mon, 24 Aug 2020 08:48:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30576204FD;
+        Mon, 24 Aug 2020 08:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258901;
-        bh=CaqBnvXKciEygDccte2c3Ajvyb/vr18fd5B7HT20fE0=;
+        s=default; t=1598258928;
+        bh=iMzsFT6t7SGlhIOUqQv2/+hi3POeH7jRh46e6QHr64I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aOOtQcJkzR6cr/cxvUAWaQRZiDiLRm9XH0jIIzU7mMtCv00EV09Dgn961r8Y2RyMi
-         8UUFXDBIdlzgIXrcdTtlGBn3UgTD0FmkBJjBa31HR8YAlBkJa3vxqwvKieRsFZyh/s
-         YkEiHIRn7gmq1RL5bWDgMUuyxTrIrGW/Bh1OIMIw=
+        b=WdyH+ePRPAaf1MMr7QyxFpY4tJ2sGppk4XH+/jCFiM/W79oLPLcNLo5ulfqKfCXgP
+         gF9G0cDLrnzg7iQA8mmI5V0Kq2qiUwm0flxzwrKluBjkoWuV25AWkVyxkiS79c/CqG
+         z1t0OdWvigTzUjMcHPh3zj2MNS7vlJmNBD3jrsbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhiyi Guo <zhguo@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org,
+        syzbot+c1eff8205244ae7e11a6@syzkaller.appspotmail.com,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 086/107] vfio/type1: Add proper error unwind for vfio_iommu_replay()
-Date:   Mon, 24 Aug 2020 10:30:52 +0200
-Message-Id: <20200824082409.377647118@linuxfoundation.org>
+Subject: [PATCH 5.4 095/107] afs: Fix NULL deref in afs_dynroot_depopulate()
+Date:   Mon, 24 Aug 2020 10:31:01 +0200
+Message-Id: <20200824082409.801233634@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -61,162 +62,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit aae7a75a821a793ed6b8ad502a5890fb8e8f172d ]
+[ Upstream commit 5e0b17b026eb7c6de9baa9b0d45a51b05f05abe1 ]
 
-The vfio_iommu_replay() function does not currently unwind on error,
-yet it does pin pages, perform IOMMU mapping, and modify the vfio_dma
-structure to indicate IOMMU mapping.  The IOMMU mappings are torn down
-when the domain is destroyed, but the other actions go on to cause
-trouble later.  For example, the iommu->domain_list can be empty if we
-only have a non-IOMMU backed mdev attached.  We don't currently check
-if the list is empty before getting the first entry in the list, which
-leads to a bogus domain pointer.  If a vfio_dma entry is erroneously
-marked as iommu_mapped, we'll attempt to use that bogus pointer to
-retrieve the existing physical page addresses.
+If an error occurs during the construction of an afs superblock, it's
+possible that an error occurs after a superblock is created, but before
+we've created the root dentry.  If the superblock has a dynamic root
+(ie.  what's normally mounted on /afs), the afs_kill_super() will call
+afs_dynroot_depopulate() to unpin any created dentries - but this will
+oops if the root hasn't been created yet.
 
-This is the scenario that uncovered this issue, attempting to hot-add
-a vfio-pci device to a container with an existing mdev device and DMA
-mappings, one of which could not be pinned, causing a failure adding
-the new group to the existing container and setting the conditions
-for a subsequent attempt to explode.
+Fix this by skipping that bit of code if there is no root dentry.
 
-To resolve this, we can first check if the domain_list is empty so
-that we can reject replay of a bogus domain, should we ever encounter
-this inconsistent state again in the future.  The real fix though is
-to add the necessary unwind support, which means cleaning up the
-current pinning if an IOMMU mapping fails, then walking back through
-the r-b tree of DMA entries, reading from the IOMMU which ranges are
-mapped, and unmapping and unpinning those ranges.  To be able to do
-this, we also defer marking the DMA entry as IOMMU mapped until all
-entries are processed, in order to allow the unwind to know the
-disposition of each entry.
+This leads to an oops looking like:
 
-Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
-Reported-by: Zhiyi Guo <zhguo@redhat.com>
-Tested-by: Zhiyi Guo <zhguo@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+	general protection fault, ...
+	KASAN: null-ptr-deref in range [0x0000000000000068-0x000000000000006f]
+	...
+	RIP: 0010:afs_dynroot_depopulate+0x25f/0x529 fs/afs/dynroot.c:385
+	...
+	Call Trace:
+	 afs_kill_super+0x13b/0x180 fs/afs/super.c:535
+	 deactivate_locked_super+0x94/0x160 fs/super.c:335
+	 afs_get_tree+0x1124/0x1460 fs/afs/super.c:598
+	 vfs_get_tree+0x89/0x2f0 fs/super.c:1547
+	 do_new_mount fs/namespace.c:2875 [inline]
+	 path_mount+0x1387/0x2070 fs/namespace.c:3192
+	 do_mount fs/namespace.c:3205 [inline]
+	 __do_sys_mount fs/namespace.c:3413 [inline]
+	 __se_sys_mount fs/namespace.c:3390 [inline]
+	 __x64_sys_mount+0x27f/0x300 fs/namespace.c:3390
+	 do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+which is oopsing on this line:
+
+	inode_lock(root->d_inode);
+
+presumably because sb->s_root was NULL.
+
+Fixes: 0da0b7fd73e4 ("afs: Display manually added cells in dynamic root mount")
+Reported-by: syzbot+c1eff8205244ae7e11a6@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/vfio_iommu_type1.c | 71 ++++++++++++++++++++++++++++++---
- 1 file changed, 66 insertions(+), 5 deletions(-)
+ fs/afs/dynroot.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 6cc47af1f06d3..ca8c10aa4a4bc 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -1187,13 +1187,16 @@ static int vfio_bus_type(struct device *dev, void *data)
- static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 			     struct vfio_domain *domain)
- {
--	struct vfio_domain *d;
-+	struct vfio_domain *d = NULL;
- 	struct rb_node *n;
- 	unsigned long limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
- 	int ret;
+diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
+index 7503899c0a1b5..f07e53ab808e3 100644
+--- a/fs/afs/dynroot.c
++++ b/fs/afs/dynroot.c
+@@ -289,15 +289,17 @@ void afs_dynroot_depopulate(struct super_block *sb)
+ 		net->dynroot_sb = NULL;
+ 	mutex_unlock(&net->proc_cells_lock);
  
- 	/* Arbitrarily pick the first domain in the list for lookups */
--	d = list_first_entry(&iommu->domain_list, struct vfio_domain, next);
-+	if (!list_empty(&iommu->domain_list))
-+		d = list_first_entry(&iommu->domain_list,
-+				     struct vfio_domain, next);
+-	inode_lock(root->d_inode);
+-
+-	/* Remove all the pins for dirs created for manually added cells */
+-	list_for_each_entry_safe(subdir, tmp, &root->d_subdirs, d_child) {
+-		if (subdir->d_fsdata) {
+-			subdir->d_fsdata = NULL;
+-			dput(subdir);
++	if (root) {
++		inode_lock(root->d_inode);
 +
- 	n = rb_first(&iommu->dma_list);
- 
- 	for (; n; n = rb_next(n)) {
-@@ -1211,6 +1214,11 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 				phys_addr_t p;
- 				dma_addr_t i;
- 
-+				if (WARN_ON(!d)) { /* mapped w/o a domain?! */
-+					ret = -EINVAL;
-+					goto unwind;
-+				}
-+
- 				phys = iommu_iova_to_phys(d->domain, iova);
- 
- 				if (WARN_ON(!phys)) {
-@@ -1240,7 +1248,7 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 				if (npage <= 0) {
- 					WARN_ON(!npage);
- 					ret = (int)npage;
--					return ret;
-+					goto unwind;
- 				}
- 
- 				phys = pfn << PAGE_SHIFT;
-@@ -1249,14 +1257,67 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 
- 			ret = iommu_map(domain->domain, iova, phys,
- 					size, dma->prot | domain->prot);
--			if (ret)
--				return ret;
-+			if (ret) {
-+				if (!dma->iommu_mapped)
-+					vfio_unpin_pages_remote(dma, iova,
-+							phys >> PAGE_SHIFT,
-+							size >> PAGE_SHIFT,
-+							true);
-+				goto unwind;
++		/* Remove all the pins for dirs created for manually added cells */
++		list_for_each_entry_safe(subdir, tmp, &root->d_subdirs, d_child) {
++			if (subdir->d_fsdata) {
++				subdir->d_fsdata = NULL;
++				dput(subdir);
 +			}
- 
- 			iova += size;
  		}
-+	}
-+
-+	/* All dmas are now mapped, defer to second tree walk for unwind */
-+	for (n = rb_first(&iommu->dma_list); n; n = rb_next(n)) {
-+		struct vfio_dma *dma = rb_entry(n, struct vfio_dma, node);
-+
- 		dma->iommu_mapped = true;
- 	}
-+
- 	return 0;
-+
-+unwind:
-+	for (; n; n = rb_prev(n)) {
-+		struct vfio_dma *dma = rb_entry(n, struct vfio_dma, node);
-+		dma_addr_t iova;
-+
-+		if (dma->iommu_mapped) {
-+			iommu_unmap(domain->domain, dma->iova, dma->size);
-+			continue;
-+		}
-+
-+		iova = dma->iova;
-+		while (iova < dma->iova + dma->size) {
-+			phys_addr_t phys, p;
-+			size_t size;
-+			dma_addr_t i;
-+
-+			phys = iommu_iova_to_phys(domain->domain, iova);
-+			if (!phys) {
-+				iova += PAGE_SIZE;
-+				continue;
-+			}
-+
-+			size = PAGE_SIZE;
-+			p = phys + size;
-+			i = iova + size;
-+			while (i < dma->iova + dma->size &&
-+			       p == iommu_iova_to_phys(domain->domain, i)) {
-+				size += PAGE_SIZE;
-+				p += PAGE_SIZE;
-+				i += PAGE_SIZE;
-+			}
-+
-+			iommu_unmap(domain->domain, iova, size);
-+			vfio_unpin_pages_remote(dma, iova, phys >> PAGE_SHIFT,
-+						size >> PAGE_SHIFT, true);
-+		}
-+	}
-+
-+	return ret;
- }
+-	}
  
- /*
+-	inode_unlock(root->d_inode);
++		inode_unlock(root->d_inode);
++	}
+ }
 -- 
 2.25.1
 
