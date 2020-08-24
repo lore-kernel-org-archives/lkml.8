@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1651C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1ABC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6CA12072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A295F2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259600;
-	bh=757PNobQ795Eu1IGN8HnNy53RSgjwC9oKfln1dCIZto=;
+	s=default; t=1598259608;
+	bh=WfX1ZpfuBB1z/1oguVOc0b1pU/hcebrcKkCsfIvWMVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MboFxqJekHL36OheX5Ro2N86G1xLxRhs3zzCTdJq3dlxh0d3yHZ3SScFD3/LMsC36
-	 5DOWEV5757baeqVO6MavoqVtp7aAug4QmoyKsPeuCW+YTHBOW0r+jh6C67Qyot7w6h
-	 DAuWyyIWQ7CXB5dEUYah4bmzyxZ80ysmyh3oDrYU=
+	b=q3zEPJdNrrc+ag7f76ndlY58+EmWULnFCLmMIrHWY97Zj7umdO3dqjTpt5lvkDbwo
+	 S4ovKeDwERSt3k57MxDRjRHTs7qDtnqLIQsLBHV0Uiz38iCymKdNV2oGmo/a8fkYCM
+	 sdU0M29Nt6LCUq45l2937rnNx7kFm2A0au/C22IE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbgHXI77 (ORCPT
+        id S1729999AbgHXJAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:59:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44596 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:00:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730380AbgHXI5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:57:31 -0400
+        id S1730668AbgHXI5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D6D821775;
-        Mon, 24 Aug 2020 08:57:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D264C2072D;
+        Mon, 24 Aug 2020 08:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259451;
-        bh=757PNobQ795Eu1IGN8HnNy53RSgjwC9oKfln1dCIZto=;
+        s=default; t=1598259443;
+        bh=WfX1ZpfuBB1z/1oguVOc0b1pU/hcebrcKkCsfIvWMVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O7MSn1qh6qL7Jf45n9ZOFKtacX6GWRBKxZzK8PWXsI2dTQlM4gSzufV05migXeu12
-         g1BW1Fz4MGvJF+CgDu+Bza7moabCtK/0ywoneSs3aj3hjgGGtuE8n5p0AgNZQsZz/e
-         VDDGMRNnx+t+XF2Y5O0i/3L3HPMIAWxSGJ6HJWeY=
+        b=uGzQfLRvb5J/16gBhT17CMVmt8sIZRnGM48M9MnWPMNJ4CxiQ9AvNh8Dn+n3lmImj
+         SXYJ7zjGEw1zlPhj5dKPihnUocN8VGx/xfPJIRrzZ4qHW+BgpKZshndPgYpT5EC5Gu
+         eRG9DJPZk32jKzchw18MmmkB8IbWDkcU4fkhaFSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Shay Agroskin <shayagr@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 64/71] net: dsa: b53: check for timeout
-Date:   Mon, 24 Aug 2020 10:31:55 +0200
-Message-Id: <20200824082359.149158595@linuxfoundation.org>
+Subject: [PATCH 4.19 61/71] net: ena: Prevent reset after device destruction
+Date:   Mon, 24 Aug 2020 10:31:52 +0200
+Message-Id: <20200824082358.984584976@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -61,49 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Shay Agroskin <shayagr@amazon.com>
 
-[ Upstream commit 774d977abfd024e6f73484544b9abe5a5cd62de7 ]
+[ Upstream commit 63d4a4c145cca2e84dc6e62d2ef5cb990c9723c2 ]
 
-clang static analysis reports this problem
+The reset work is scheduled by the timer routine whenever it
+detects that a device reset is required (e.g. when a keep_alive signal
+is missing).
+When releasing device resources in ena_destroy_device() the driver
+cancels the scheduling of the timer routine without destroying the reset
+work explicitly.
 
-b53_common.c:1583:13: warning: The left expression of the compound
-  assignment is an uninitialized value. The computed value will
-  also be garbage
-        ent.port &= ~BIT(port);
-        ~~~~~~~~ ^
+This creates the following bug:
+    The driver is suspended and the ena_suspend() function is called
+	-> This function calls ena_destroy_device() to free the net device
+	   resources
+	    -> The driver waits for the timer routine to finish
+	    its execution and then cancels it, thus preventing from it
+	    to be called again.
 
-ent is set by a successful call to b53_arl_read().  Unsuccessful
-calls are caught by an switch statement handling specific returns.
-b32_arl_read() calls b53_arl_op_wait() which fails with the
-unhandled -ETIMEDOUT.
+    If, in its final execution, the timer routine schedules a reset,
+    the reset routine might be called afterwards,and a redundant call to
+    ena_restore_device() would be made.
 
-So add -ETIMEDOUT to the switch statement.  Because
-b53_arl_op_wait() already prints out a message, do not add another
-one.
+By changing the reset routine we allow it to read the device's state
+accurately.
+This is achieved by checking whether ENA_FLAG_TRIGGER_RESET flag is set
+before resetting the device and making both the destruction function and
+the flag check are under rtnl lock.
+The ENA_FLAG_TRIGGER_RESET is cleared at the end of the destruction
+routine. Also surround the flag check with 'likely' because
+we expect that the reset routine would be called only when
+ENA_FLAG_TRIGGER_RESET flag is set.
 
-Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
-Signed-off-by: Tom Rix <trix@redhat.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+The destruction of the timer and reset services in __ena_shutoff() have to
+stay, even though the timer routine is destroyed in ena_destroy_device().
+This is to avoid a case in which the reset routine is scheduled after
+free_netdev() in __ena_shutoff(), which would create an access to freed
+memory in adapter->flags.
+
+Fixes: 8c5c7abdeb2d ("net: ena: add power management ops to the ENA driver")
+Signed-off-by: Shay Agroskin <shayagr@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/b53/b53_common.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 11f3993ab7f30..294be86420b6d 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1335,6 +1335,8 @@ static int b53_arl_op(struct b53_device *dev, int op, int port,
- 		return ret;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 8736718b17359..55cc70ba5b093 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -2647,16 +2647,14 @@ static void ena_fw_reset_device(struct work_struct *work)
+ {
+ 	struct ena_adapter *adapter =
+ 		container_of(work, struct ena_adapter, reset_task);
+-	struct pci_dev *pdev = adapter->pdev;
  
- 	switch (ret) {
-+	case -ETIMEDOUT:
-+		return ret;
- 	case -ENOSPC:
- 		dev_dbg(dev->dev, "{%pM,%.4d} no space left in ARL\n",
- 			addr, vid);
+-	if (unlikely(!test_bit(ENA_FLAG_TRIGGER_RESET, &adapter->flags))) {
+-		dev_err(&pdev->dev,
+-			"device reset schedule while reset bit is off\n");
+-		return;
+-	}
+ 	rtnl_lock();
+-	ena_destroy_device(adapter, false);
+-	ena_restore_device(adapter);
++
++	if (likely(test_bit(ENA_FLAG_TRIGGER_RESET, &adapter->flags))) {
++		ena_destroy_device(adapter, false);
++		ena_restore_device(adapter);
++	}
++
+ 	rtnl_unlock();
+ }
+ 
+@@ -3392,8 +3390,11 @@ static void ena_remove(struct pci_dev *pdev)
+ 		netdev->rx_cpu_rmap = NULL;
+ 	}
+ #endif /* CONFIG_RFS_ACCEL */
+-	del_timer_sync(&adapter->timer_service);
+ 
++	/* Make sure timer and reset routine won't be called after
++	 * freeing device resources.
++	 */
++	del_timer_sync(&adapter->timer_service);
+ 	cancel_work_sync(&adapter->reset_task);
+ 
+ 	unregister_netdev(netdev);
 -- 
 2.25.1
 
