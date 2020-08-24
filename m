@@ -2,81 +2,143 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1997C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B79D207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A64422B43
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598258111;
+	bh=eA4vERAy34S0VeWfur/IzoADNGAc7BgNJIWlo12kVsM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=F4qyLSy+OgLZAAjNBRma8lT81v0A02YXoJUooxQdWrYX4f0vB0UVgj4OqvhJRyXgS
+	 /DbHqSHw25aT3eYO2ZCe4baZGova8CbXDibqAUwwONXC05VLcA2pz/MPvf6KcA0dQO
+	 EItAEZKnlrn467iffw09VV2dZBo3x3DCwfO3PS2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgHXIfI (ORCPT
+        id S1728079AbgHXIfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:35:08 -0400
-Received: from mga01.intel.com ([192.55.52.88]:23150 "EHLO mga01.intel.com"
+        Mon, 24 Aug 2020 04:35:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbgHXIe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:34:57 -0400
-IronPort-SDR: Fi8/nuCJfTynplYK4d+NpXldSoLCN/8BHO1oLEsVv+8457aWDXzQavuKZbYw3NZ6ruNuDbbw76
- e5kCeSsclEFQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="173902240"
-X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
-   d="scan'208";a="173902240"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 01:34:56 -0700
-IronPort-SDR: i4VuZti8JNghZZaHsaTSIbsR6me8+5YPBVVnqF/G99dTyy2pCzsPuWAfrFUEFWAAFtEGoG+f6b
- 4+jynUUE52Eg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
-   d="scan'208";a="402248684"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 24 Aug 2020 01:34:53 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 24 Aug 2020 11:34:52 +0300
-Date:   Mon, 24 Aug 2020 11:34:52 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] PM: sleep: core: Fix the handling of pending runtime
- resume requests
-Message-ID: <20200824083452.GX1375436@lahna.fi.intel.com>
-References: <7969920.MVx1BpXlEM@kreacher>
- <20200821193442.GA264863@rowland.harvard.edu>
+        id S1728048AbgHXIfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:35:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C2602087D;
+        Mon, 24 Aug 2020 08:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598258100;
+        bh=eA4vERAy34S0VeWfur/IzoADNGAc7BgNJIWlo12kVsM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Gk74LnMBfj8ShWKT9vd8kjl9EzPp4zRzM2NT3J0D/OWkMLQIswqqmxbp8AlDsUCfp
+         10J9AQzVXuzBug5kSaKcrsjXaZ7RQhsaKrWhYh0JONogrHs8/AwtWGFHwpm08ENXL7
+         Hxzs5xkdeBJk+G/zEYOREo4sRIH0r7rCmgEnHgyA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 074/148] ext4: dont allow overlapping system zones
+Date:   Mon, 24 Aug 2020 10:29:32 +0200
+Message-Id: <20200824082417.616819822@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
+References: <20200824082413.900489417@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821193442.GA264863@rowland.harvard.edu>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Jan Kara <jack@suse.cz>
 
-On Fri, Aug 21, 2020 at 03:34:42PM -0400, Alan Stern wrote:
-> This means that the code could be simplified to just:
-> 
-> 	pm_runtime_barrier(dev);
-> 
-> Will this fix the reported bug?  It seems likely to me that the actual 
-> problem with the failure scenario in the patch description was that 
-> turning on an ACPI power resource causes runtime-resume requests to be 
-> queued for all devices sharing that resource.  Wouldn't it make more 
-> sense to resume only the device that requested it and leave the others 
-> in runtime suspend?
+[ Upstream commit bf9a379d0980e7413d94cb18dac73db2bfc5f470 ]
 
-The problem with at least PCIe devices that share ACPI power resources
-is that once you turn on the power resource all the devices that shared
-it will go into D0uninitialized power state and that means they lose all
-wake configuration etc. so they need to be re-initialized by their
-driver before they can go back to D3(cold) in order for their wakes to
-still work.
+Currently, add_system_zone() just silently merges two added system zones
+that overlap. However the overlap should not happen and it generally
+suggests that some unrelated metadata overlap which indicates the fs is
+corrupted. We should have caught such problems earlier (e.g. in
+ext4_check_descriptors()) but add this check as another line of defense.
+In later patch we also use this for stricter checking of journal inode
+extent tree.
+
+Reviewed-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200728130437.7804-3-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ext4/block_validity.c | 36 +++++++++++++-----------------------
+ 1 file changed, 13 insertions(+), 23 deletions(-)
+
+diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
+index 16e9b2fda03ae..b394a50ebbe30 100644
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -68,7 +68,7 @@ static int add_system_zone(struct ext4_system_blocks *system_blks,
+ 			   ext4_fsblk_t start_blk,
+ 			   unsigned int count)
+ {
+-	struct ext4_system_zone *new_entry = NULL, *entry;
++	struct ext4_system_zone *new_entry, *entry;
+ 	struct rb_node **n = &system_blks->root.rb_node, *node;
+ 	struct rb_node *parent = NULL, *new_node = NULL;
+ 
+@@ -79,30 +79,20 @@ static int add_system_zone(struct ext4_system_blocks *system_blks,
+ 			n = &(*n)->rb_left;
+ 		else if (start_blk >= (entry->start_blk + entry->count))
+ 			n = &(*n)->rb_right;
+-		else {
+-			if (start_blk + count > (entry->start_blk +
+-						 entry->count))
+-				entry->count = (start_blk + count -
+-						entry->start_blk);
+-			new_node = *n;
+-			new_entry = rb_entry(new_node, struct ext4_system_zone,
+-					     node);
+-			break;
+-		}
++		else	/* Unexpected overlap of system zones. */
++			return -EFSCORRUPTED;
+ 	}
+ 
+-	if (!new_entry) {
+-		new_entry = kmem_cache_alloc(ext4_system_zone_cachep,
+-					     GFP_KERNEL);
+-		if (!new_entry)
+-			return -ENOMEM;
+-		new_entry->start_blk = start_blk;
+-		new_entry->count = count;
+-		new_node = &new_entry->node;
+-
+-		rb_link_node(new_node, parent, n);
+-		rb_insert_color(new_node, &system_blks->root);
+-	}
++	new_entry = kmem_cache_alloc(ext4_system_zone_cachep,
++				     GFP_KERNEL);
++	if (!new_entry)
++		return -ENOMEM;
++	new_entry->start_blk = start_blk;
++	new_entry->count = count;
++	new_node = &new_entry->node;
++
++	rb_link_node(new_node, parent, n);
++	rb_insert_color(new_node, &system_blks->root);
+ 
+ 	/* Can we merge to the left? */
+ 	node = rb_prev(new_node);
+-- 
+2.25.1
+
+
+
