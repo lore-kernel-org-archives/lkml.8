@@ -2,91 +2,92 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B51C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F08C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB522067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598303428;
-	bh=b+iTlV4khAeSnNkrYWDltD8Uy3YAJwyRMXjJv/hiPYg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wDW9HWMjF0pm6gsTAUXoFuYUJWssqg+P0T0YR6cyXRndx2j8lRBWSNXt3Gb8BJeXJ
-	 njlXAq3y7LRMBBnIwAt+Tpr+Q6sBatSPHFpU7X6mFADT+SwjGnqNdmvxYQhL+Ds6q/
-	 xFoYCwQw8aiHvYhzJqv0PSf7xDmNdArMFJB7UWOk=
+	by mail.kernel.org (Postfix) with ESMTP id E77C820702
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgHXVK1 (ORCPT
+        id S1727892AbgHXVKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:10:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbgHXVK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 17:10:26 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 24 Aug 2020 17:10:31 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:54670 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbgHXVK3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 17:10:29 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE4B42067C
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598303426;
-        bh=b+iTlV4khAeSnNkrYWDltD8Uy3YAJwyRMXjJv/hiPYg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yhEtqZ2KhMRVW0ugCZ7+yBbW7Rru6i8YBIawZxecusPj3pn8Z/cSpLq9hkV5Lr6SF
-         ksTcfY4lsUKzlLGjwO82EWogdV0xfR/xwpOGxQljOuFFDbK8z8iukLiw6nP2D/fs/I
-         reOY7S8NxKdqKAlIbHX9oN1s1fIY7cOHBWYmJA1Q=
-Received: by mail-wr1-f46.google.com with SMTP id l2so10534157wrc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 14:10:25 -0700 (PDT)
-X-Gm-Message-State: AOAM5323gX8yfZhqmQwZHGt20UvaExLRwN5uQTAlkCLxGyvEOoIQBjjf
-        9Bd7iPwSNa6UVl+Jgax1CgLOa8on5l/04HWIRIPW7Q==
-X-Google-Smtp-Source: ABdhPJyUkd1o3GT1Xad0KTVsiy6YUHXaldUk6yXHUKz5yS4PycBxxsVaNUIYEAOkQzrdJZlCIFg6oFgKse2fzJ0lRiE=
-X-Received: by 2002:a05:6000:10c6:: with SMTP id b6mr7336388wrx.257.1598303424431;
- Mon, 24 Aug 2020 14:10:24 -0700 (PDT)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 74F5C2004C;
+        Mon, 24 Aug 2020 23:10:22 +0200 (CEST)
+Date:   Mon, 24 Aug 2020 23:10:21 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
+        Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
+        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+Message-ID: <20200824211021.GA106986@ravnborg.org>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+ <20200819152120.GA106437@ravnborg.org>
+ <20200819174027.70b39ee9@coco.lan>
+ <20200819173558.GA3733@ravnborg.org>
+ <20200821155801.0b820fc6@coco.lan>
+ <20200821155505.GA300361@ravnborg.org>
+ <20200824180225.1a515b6a@coco.lan>
 MIME-Version: 1.0
-References: <CAOp6jLYrwMqV=7hmxgdZUdDZ2aeUB27TTHm=j6cQT7C10Muhww@mail.gmail.com>
- <7DF88F22-0310-40C9-9DA6-5EBCB4877933@amacapital.net>
-In-Reply-To: <7DF88F22-0310-40C9-9DA6-5EBCB4877933@amacapital.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 24 Aug 2020 14:10:12 -0700
-X-Gmail-Original-Message-ID: <CALCETrUrvrQNw6dPau_rtHjA_YuCVdCTWYd4dsdcvcGsOaspmg@mail.gmail.com>
-Message-ID: <CALCETrUrvrQNw6dPau_rtHjA_YuCVdCTWYd4dsdcvcGsOaspmg@mail.gmail.com>
-Subject: Re: [REGRESSION] x86/cpu fsgsbase breaks TLS in 32 bit rr tracees on
- a 64 bit system
-To:     "Robert O'Callahan" <robert@ocallahan.org>
-Cc:     "Bae, Chang Seok" <chang.seok.bae@intel.com>,
-        Kyle Huey <me@kylehuey.com>, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824180225.1a515b6a@coco.lan>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=lX9GyBD3xfA9ErMBXk8A:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 6:19 AM Andy Lutomirski <luto@amacapital.net> wrote:
->
-> We can give you a new ptrace operation to load the selector and deduce the base from the descriptor table if it would help.
+Hi Mauro
 
-Concretely, we could add one of these:
 
-PTRACE_READ_SEGMENT_DESCRIPTOR to read a segment descriptor.
 
-PTRACE_SET_FS / PTRACE_SET_GS: Sets FS or GS and updates the base accordingly.
+> kirin9xx_fb_panel.h b/drivers/staging/hikey9xx/gpu/kirin9xx_fb_panel.h
+> new file mode 100644
+> index 000000000000..a69c20470f1d
+> --- /dev/null
+> +++ b/drivers/staging/hikey9xx/gpu/kirin9xx_fb_panel.h
 
-PTRACE_READ_SEGMENT_BASE: pass in a segment selector, get a base out.
-You would use this to populate the base fields.
+This file is not referenced and should be deleted.
 
-or perhaps a ptrace SETREGS variant that tries to preserve the old
-base semantics and magically sets the bases to match the selectors if
-the selectors are nonzero.
-
-Do any of these choices sound preferable to any of you?
-
---Andhy
+	Sam
