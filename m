@@ -2,52 +2,52 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D37CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2570AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBA2A2087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 026E6207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258068;
-	bh=egZLI8/fjbloY10GvOwkNn+G+wjq30tevwSRbwaKQQ8=;
+	s=default; t=1598258074;
+	bh=U3/ZBaHYO/v3cl833Rr/LLMeh0E43V8IkoRMGx8wbCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rWhnBslN8SoJ6OzAtAkTOUdNUxYqVdgtwnVDErw5ZiECL3w/NYmDm1c2nyRhn+M9G
-	 jElmjYWWWEGEmvuLZzxoYHkP/55Y+AVI/zNcJwX+JdXYVHRzGI9pJotmADwR2TX9BC
-	 ZoTtPJ1L9H1bADw9WGLidJ00pxl3QLIY6AyMDTSc=
+	b=A4UOir0FwngXiZ8+ODeV2jaFS47Y6qg6011cBTdHQrOM+QY91xr3GifF/gB+dZdGX
+	 ADHiDGVFAVNmp+3LcEK2VxUXNJMY7JDM+30PxgYVylLopRFpSPa8sKT9YmEkRR3d2U
+	 ZNPFWrwp5TFDUDO02Gj3Q6ro3f8eCJ/UYNkU8RQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgHXIeZ (ORCPT
+        id S1727926AbgHXIec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:34:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42378 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:34:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727869AbgHXIeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:34:12 -0400
+        id S1727897AbgHXIeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:34:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70BE52074D;
-        Mon, 24 Aug 2020 08:34:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC66421741;
+        Mon, 24 Aug 2020 08:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258051;
-        bh=egZLI8/fjbloY10GvOwkNn+G+wjq30tevwSRbwaKQQ8=;
+        s=default; t=1598258059;
+        bh=U3/ZBaHYO/v3cl833Rr/LLMeh0E43V8IkoRMGx8wbCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2fzAvcSOQNYY5+kEvIl4h0tjn6oxc7YV15MOiQ7UNHpJmgMgL3U80DdzJ9U2umdge
-         YtMKViSLCwHZd5J0h0j8JuJKB0WvIvN4kzHvHhwTahcuCtbwPkQ52bPhzwSn40/QoI
-         uEr4D2mTpe2Y4ddWg4C8ADTV2hQvAATMAHkkV0cQ=
+        b=n1zD32rzXI1ML+NHhydhLJddoiocXJEgbzNmfalDkRL0u8uPMAGZWe4DgigsZBeaX
+         Zt4jTmXxlQXIKGD57uK9c2SzB3VbFbiYm4vu1CFSejevnS8XPzzuERcI6W+rTR0mpd
+         pUg+OxJXcGd9k2ZqBWKAfGWOj69nM3+wJmCLDQow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>, stable@kernel.org,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.8 027/148] jbd2: add the missing unlock_buffer() in the error path of jbd2_write_superblock()
-Date:   Mon, 24 Aug 2020 10:28:45 +0200
-Message-Id: <20200824082415.262889102@linuxfoundation.org>
+        stable@vger.kernel.org, Zhiguo Niu <Zhiguo.Niu@unisoc.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 052/148] f2fs: should avoid inode eviction in synchronous path
+Date:   Mon, 24 Aug 2020 10:29:10 +0200
+Message-Id: <20200824082416.560602391@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -60,39 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-commit ef3f5830b859604eda8723c26d90ab23edc027a4 upstream.
+[ Upstream commit b0f3b87fb3abc42c81d76c6c5795f26dbdb2f04b ]
 
-jbd2_write_superblock() is under the buffer lock of journal superblock
-before ending that superblock write, so add a missing unlock_buffer() in
-in the error path before submitting buffer.
+https://bugzilla.kernel.org/show_bug.cgi?id=208565
 
-Fixes: 742b06b5628f ("jbd2: check superblock mapped prior to committing")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Cc: stable@kernel.org
-Link: https://lore.kernel.org/r/20200620061948.2049579-1-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+PID: 257    TASK: ecdd0000  CPU: 0   COMMAND: "init"
+  #0 [<c0b420ec>] (__schedule) from [<c0b423c8>]
+  #1 [<c0b423c8>] (schedule) from [<c0b459d4>]
+  #2 [<c0b459d4>] (rwsem_down_read_failed) from [<c0b44fa0>]
+  #3 [<c0b44fa0>] (down_read) from [<c044233c>]
+  #4 [<c044233c>] (f2fs_truncate_blocks) from [<c0442890>]
+  #5 [<c0442890>] (f2fs_truncate) from [<c044d408>]
+  #6 [<c044d408>] (f2fs_evict_inode) from [<c030be18>]
+  #7 [<c030be18>] (evict) from [<c030a558>]
+  #8 [<c030a558>] (iput) from [<c047c600>]
+  #9 [<c047c600>] (f2fs_sync_node_pages) from [<c0465414>]
+ #10 [<c0465414>] (f2fs_write_checkpoint) from [<c04575f4>]
+ #11 [<c04575f4>] (f2fs_sync_fs) from [<c0441918>]
+ #12 [<c0441918>] (f2fs_do_sync_file) from [<c0441098>]
+ #13 [<c0441098>] (f2fs_sync_file) from [<c0323fa0>]
+ #14 [<c0323fa0>] (vfs_fsync_range) from [<c0324294>]
+ #15 [<c0324294>] (do_fsync) from [<c0324014>]
+ #16 [<c0324014>] (sys_fsync) from [<c0108bc0>]
 
+This can be caused by flush_dirty_inode() in f2fs_sync_node_pages() where
+iput() requires f2fs_lock_op() again resulting in livelock.
+
+Reported-by: Zhiguo Niu <Zhiguo.Niu@unisoc.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/journal.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/f2fs/node.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1367,8 +1367,10 @@ static int jbd2_write_superblock(journal
- 	int ret;
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 03e24df1c84f5..e61ce7fb0958b 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1924,8 +1924,12 @@ continue_unlock:
+ 				goto continue_unlock;
+ 			}
  
- 	/* Buffer got discarded which means block device got invalidated */
--	if (!buffer_mapped(bh))
-+	if (!buffer_mapped(bh)) {
-+		unlock_buffer(bh);
- 		return -EIO;
-+	}
+-			/* flush inline_data, if it's async context. */
+-			if (do_balance && is_inline_node(page)) {
++			/* flush inline_data/inode, if it's async context. */
++			if (!do_balance)
++				goto write_node;
++
++			/* flush inline_data */
++			if (is_inline_node(page)) {
+ 				clear_inline_node(page);
+ 				unlock_page(page);
+ 				flush_inline_data(sbi, ino_of_node(page));
+@@ -1938,7 +1942,7 @@ continue_unlock:
+ 				if (flush_dirty_inode(page))
+ 					goto lock_node;
+ 			}
+-
++write_node:
+ 			f2fs_wait_on_page_writeback(page, NODE, true, true);
  
- 	trace_jbd2_write_superblock(journal, write_flags);
- 	if (!(journal->j_flags & JBD2_BARRIER))
+ 			if (!clear_page_dirty_for_io(page))
+-- 
+2.25.1
+
 
 
