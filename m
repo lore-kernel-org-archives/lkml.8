@@ -2,185 +2,150 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B094C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA07C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2B7320656
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADEF72063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:45:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c8qrRiGC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RzJVZWj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgHXWov (ORCPT
+        id S1728067AbgHXWpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:44:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54742 "EHLO
+        Mon, 24 Aug 2020 18:45:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgHXWou (ORCPT
+        with ESMTP id S1726531AbgHXWpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 18:44:50 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8B1CC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 15:44:49 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id n3so320584pjq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 15:44:49 -0700 (PDT)
+        Mon, 24 Aug 2020 18:45:38 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8252C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 15:45:38 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id j19so2291536oor.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 15:45:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lvqRTw0O3/yHbkOlErkH4DxLVlE/caoRK9250pDnuAc=;
-        b=c8qrRiGCb73Dq+2Ss/c+oYm87rB3yS5b69CdPfgdJvR9OkGboB8mQDsBffKqrmPV2Z
-         7SP58uLu7Lq+cK09GbokMmYO0eyKBYizG1AIGGzXf04vQDwoutHJJ1HXHZWsJ4buBoP0
-         okNbb5Fpk7pIHc7D1NOIZqHCo8v5CYKdgSFbptNMDwwMVfhYplZ8ejyXpJPchXscoxHo
-         fYT3hC/28GRCdl2Icy8sMsKJ1zmV0EThW8EXjLTjgzTcI7vNntWlrsv2uk7iKvNVKUCa
-         /jYaKVeGMK3eypuuDuPr8+YmzRtExnXVaZsGq6FI2sdF4cDeI93utfdqtXmWkuuNIcTl
-         guiA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kz/k9wb2FtFBpuN0H9LrQExFH8jcMXPO4pczO7F26a8=;
+        b=RzJVZWj2odYP6gj+fnANkDRiVVO5QhynntjYJvZQrziuYBLmg36YoSiEn+/tuSF6+l
+         jSWpep4dxnzhgbca667Rpo5Mxk50/9gFQ6tQQBsZdz9Im5PIRnsfTdqdFJtoDKSu3KmC
+         GABfjj4dKx0Ga2DUHZLRTUfZ/IE9hSQCBP0tLGFRDLgfEh2eV4Ge8e79ZidlpZso4sq1
+         TJeK+3yi4N9NYShqELK6tdREyDCjIj52z0iXQRbLKKyy9oY74rVPBsXko1Y+Xueqw5ao
+         0b5zrHgEFx/lPxfBW0oU3vY/nREloWj4xuxW7R/pQZIZY+GrfTpqK+z1MZAkAcyVWd3c
+         Zg/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lvqRTw0O3/yHbkOlErkH4DxLVlE/caoRK9250pDnuAc=;
-        b=OMtaY9Pdf6CQIO5bEFy6ZSM8gtenrX5hoyTUUayPWLirzT+npDcm6Cnl2pKkt/vkVK
-         Ly+mbfrKO3FXbkJNBlIECZbjHLyqQn1HbLO1ioEPcH/iie7vBqTewS1E2UzRM5h8SJmS
-         geICsVXW3AqeUrz0lnDEsRs7hKANMH8wNeJuAoJAxXIugYpTRvUof8pPS3xnSn1VshDK
-         IGKgPE8/bMqQPjo/ynAiYsVCAkgAgdaWD5XNfQBgji5I18Wy1PPBXRbDzX+cCfsd0TIK
-         r91jNAiEsKvhK4UYywL8/6pwhBWntET7azsPA6QOeVmf0S5nkOy4Z9nwxVlUIKZx46Cj
-         1LQg==
-X-Gm-Message-State: AOAM531CBoMcOsZJXJ85sefQwHffPI+ZMLDTgXCTVe4vjFOnhtO/5VQN
-        PdVcf6s8dVPMgHQeIf6kcWnEFQ==
-X-Google-Smtp-Source: ABdhPJziXw/OMxO7aabSOn/p/vOo1+0RBR9sraOf+s0c/lIGdujYnIuv4mKjS3v5VqZkJ6K6Gni+WA==
-X-Received: by 2002:a17:90a:d24c:: with SMTP id o12mr1200035pjw.60.1598309089056;
-        Mon, 24 Aug 2020 15:44:49 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id 144sm12465625pfu.114.2020.08.24.15.44.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 15:44:48 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 16:44:46 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 2/9] rpmsg: core: add channel creation internal API
-Message-ID: <20200824224446.GC3938186@xps15>
-References: <20200731114732.12815-1-arnaud.pouliquen@st.com>
- <20200731114732.12815-3-arnaud.pouliquen@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kz/k9wb2FtFBpuN0H9LrQExFH8jcMXPO4pczO7F26a8=;
+        b=nQC7WinXoOhn39nUZg+OnohzwQrecknZPkn3xPzJcHTw2OrJ9LSK5jqrltcmztCmDX
+         VuPIp/jW3Pqw06UvvkQimoqlmVfOKfVvx603l4yFf8sFRchZg+GJZq/GvQrGX1OaeTQh
+         Tdeueb3NPtxUXEoTXqH4RtsFpOdAg6Wyiz5aGLP7UrD6hUgQajqD+Qw33llzT+3hESIU
+         ucwL3koRaxg+BzttBGEYf1jG6felCZvChNZoc5CqwgXI3zR++h8ZTDlPDkWCMutbiEAn
+         Jr5SYJoTXJCId/upnNtEWMYV3py3Zhz52TVK7q1WHJyVASbtXHPtPRGqogrAn/+9MZ+W
+         sE9Q==
+X-Gm-Message-State: AOAM533KCXw9+03i/WR+THB59wfmzlz7S/e+Hb2HeH82j8WgzH8EoKbh
+        UCOcQ6nYJm8Xq6qPYKp9y/Ny9XG13sxwOmUiL2TECA==
+X-Google-Smtp-Source: ABdhPJxoitD/PnUJXpPvhw1LOyg4DhZctOdJ0E9ohQPLLvAmBu1DMELY+FzMW8VJkgep9J7crO1jfWH/4BKHIxWQXxw=
+X-Received: by 2002:a4a:87c8:: with SMTP id c8mr5196624ooi.81.1598309137774;
+ Mon, 24 Aug 2020 15:45:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731114732.12815-3-arnaud.pouliquen@st.com>
+References: <20200401081348.1345307-1-vkuznets@redhat.com> <CALMp9eROXAOg_g=R8JRVfywY7uQXzBtVxKJYXq0dUcob-BfR-g@mail.gmail.com>
+ <20200822034046.GE4769@sjchrist-ice> <CALMp9eRHh9KXO12k4GaoenSJazFnSaN68FTVxOGhE9Mxw-hf2A@mail.gmail.com>
+In-Reply-To: <CALMp9eRHh9KXO12k4GaoenSJazFnSaN68FTVxOGhE9Mxw-hf2A@mail.gmail.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Mon, 24 Aug 2020 15:45:26 -0700
+Message-ID: <CALMp9eS1HusEZvzLShuuuxQnReKgTtunsKLoy+2GMVJAaTrZ7A@mail.gmail.com>
+Subject: Re: [PATCH] KVM: VMX: fix crash cleanup when KVM wasn't used
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaud,
+On Mon, Aug 24, 2020 at 11:57 AM Jim Mattson <jmattson@google.com> wrote:
+>
+> On Fri, Aug 21, 2020 at 8:40 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Thu, Aug 20, 2020 at 01:08:22PM -0700, Jim Mattson wrote:
+> > > On Wed, Apr 1, 2020 at 1:13 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+> > > > ---
+> > > >  arch/x86/kvm/vmx/vmx.c | 12 +++++++-----
+> > > >  1 file changed, 7 insertions(+), 5 deletions(-)
+> > > >
+> > > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > > > index 3aba51d782e2..39a5dde12b79 100644
+> > > > --- a/arch/x86/kvm/vmx/vmx.c
+> > > > +++ b/arch/x86/kvm/vmx/vmx.c
+> > > > @@ -2257,10 +2257,6 @@ static int hardware_enable(void)
+> > > >             !hv_get_vp_assist_page(cpu))
+> > > >                 return -EFAULT;
+> > > >
+> > > > -       INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
+> > > > -       INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
+> > > > -       spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
+> > > > -
+> > > >         r = kvm_cpu_vmxon(phys_addr);
+> > > >         if (r)
+> > > >                 return r;
+> > > > @@ -8006,7 +8002,7 @@ module_exit(vmx_exit);
+> > > >
+> > > >  static int __init vmx_init(void)
+> > > >  {
+> > > > -       int r;
+> > > > +       int r, cpu;
+> > > >
+> > > >  #if IS_ENABLED(CONFIG_HYPERV)
+> > > >         /*
+> > > > @@ -8060,6 +8056,12 @@ static int __init vmx_init(void)
+> > > >                 return r;
+> > > >         }
+> > > >
+> > > > +       for_each_possible_cpu(cpu) {
+> > > > +               INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
+> > > > +               INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
+> > > > +               spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
+> > > > +       }
+> > >
+> > > Just above this chunk, we have:
+> > >
+> > > r = vmx_setup_l1d_flush(vmentry_l1d_flush_param);
+> > > if (r) {
+> > >         vmx_exit();
+> > > ...
+> > >
+> > > If we take that early exit, because vmx_setup_l1d_flush() fails, we
+> > > won't initialize loaded_vmcss_on_cpu. However, vmx_exit() calls
+> > > kvm_exit(), which calls on_each_cpu(hardware_disable_nolock, NULL, 1).
+> > > Hardware_disable_nolock() then calls kvm_arch_hardware_disable(),
+> > > which calls kvm_x86_ops.hardware_disable() [the vmx.c
+> > > hardware_disable()], which calls vmclear_local_loaded_vmcss().
+> > >
+> > > I believe that vmclear_local_loaded_vmcss() will then try to
+> > > dereference a NULL pointer, since per_cpu(loaded_vmcss_on_cpu, cpu) is
+> > > uninitialzed.
+> >
+> > I agree the code is a mess (kvm_init() and kvm_exit() included), but I'm
+> > pretty sure hardware_disable_nolock() is guaranteed to be a nop as it's
+> > impossible for kvm_usage_count to be non-zero if vmx_init() hasn't
+> > finished.
+>
+> Unless I'm missing something, there's no check for a non-zero
+> kvm_usage_count on this path. There is such a check in
+> hardware_disable_all_nolock(), but not in hardware_disable_nolock().
 
-On Fri, Jul 31, 2020 at 01:47:25PM +0200, Arnaud Pouliquen wrote:
-> Add the channel creation API as a first step to be able to define the
-> name service announcement as a rpmsg driver independent from the RPMsg
-> virtio bus.
-> 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> ---
->  drivers/rpmsg/rpmsg_core.c     | 37 ++++++++++++++++++++++++++++++++++
->  drivers/rpmsg/rpmsg_internal.h | 12 +++++++++++
->  2 files changed, 49 insertions(+)
-> 
-> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-> index a6361cad608b..ae7da4a2e528 100644
-> --- a/drivers/rpmsg/rpmsg_core.c
-> +++ b/drivers/rpmsg/rpmsg_core.c
-> @@ -20,6 +20,43 @@
->  
->  #include "rpmsg_internal.h"
->  
-> +/**
-> + * rpmsg_create_channel() - create a new rpmsg channel
-> + * using its name and address info.
-> + * @rpdev: rpmsg driver
-> + * @chinfo: channel_info to bind
-> + *
-> + * Returns a pointer to the new rpmsg device on success, or NULL on error.
-> + */
-> +struct rpmsg_device *
-> +	rpmsg_create_channel(struct rpmsg_device *rpdev,
-> +			     struct rpmsg_channel_info *chinfo)
-> +{
-> +	if (WARN_ON(!rpdev) || !rpdev->ops->create_channel)
-> +		return NULL;
-
-Ok for the WARN_ON().  In another if(), I would check for ops and
-ops->create_channel().  Same for the release() operation.
-
-> +
-> +	return rpdev->ops->create_channel(rpdev, chinfo);
-> +}
-> +EXPORT_SYMBOL(rpmsg_create_channel);
-> +
-> +/**
-> + * rpmsg_release_channel() - release a rpmsg channel
-> + * using its name and address info.
-> + * @rpdev: rpmsg driver
-> + * @chinfo: channel_info to bind
-> + *
-> + * Returns a pointer to the new rpmsg device on success, or NULL on error.
-> + */
-> +int rpmsg_release_channel(struct rpmsg_device *rpdev,
-> +			  struct rpmsg_channel_info *chinfo)
-> +{
-> +	if (WARN_ON(!rpdev) || !rpdev->ops->release_channel)
-> +		return 0;
-> +
-> +	return rpdev->ops->release_channel(rpdev, chinfo);
-> +}
-> +EXPORT_SYMBOL(rpmsg_release_channel);
-> +
->  /**
->   * rpmsg_create_ept() - create a new rpmsg_endpoint
->   * @rpdev: rpmsg channel device
-> diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
-> index 3fc83cd50e98..d5ab286d0e5e 100644
-> --- a/drivers/rpmsg/rpmsg_internal.h
-> +++ b/drivers/rpmsg/rpmsg_internal.h
-> @@ -20,6 +20,8 @@
->  
->  /**
->   * struct rpmsg_device_ops - indirection table for the rpmsg_device operations
-> + * @create_channel:	create backend-specific channel, optional
-> + * @release_channel:	release backend-specific channel, optional
->   * @create_ept:		create backend-specific endpoint, required
->   * @announce_create:	announce presence of new channel, optional
->   * @announce_destroy:	announce destruction of channel, optional
-> @@ -29,6 +31,11 @@
->   * advertise new channels implicitly by creating the endpoints.
->   */
->  struct rpmsg_device_ops {
-> +	struct rpmsg_device *(*create_channel)(struct rpmsg_device *rpdev,
-> +					     struct rpmsg_channel_info *chinfo);
-> +	int (*release_channel)(struct rpmsg_device *rpdev,
-> +			       struct rpmsg_channel_info *chinfo);
-> +
->  	struct rpmsg_endpoint *(*create_ept)(struct rpmsg_device *rpdev,
->  					    rpmsg_rx_cb_t cb, void *priv,
->  					    struct rpmsg_channel_info chinfo);
-> @@ -75,6 +82,11 @@ int rpmsg_unregister_device(struct device *parent,
->  struct device *rpmsg_find_device(struct device *parent,
->  				 struct rpmsg_channel_info *chinfo);
->  
-> +struct rpmsg_device *
-> +	rpmsg_create_channel(struct rpmsg_device *rpdev,
-> +			     struct rpmsg_channel_info *chinfo);
-> +int rpmsg_release_channel(struct rpmsg_device *rpdev,
-> +			  struct rpmsg_channel_info *chinfo);
->  /**
->   * rpmsg_chrdev_register_device() - register chrdev device based on rpdev
->   * @rpdev:	prepared rpdev to be used for creating endpoints
-> -- 
-> 2.17.1
-> 
+However, cpus_hardware_enabled shouldn't have any bits set, so
+everything's fine. Nothing to see here, after all.
