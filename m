@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07A5C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4181D206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF03206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262765;
-	bh=Th2zgGwWzxKAiUqBsJBnqsq9toC4rscuuCvlMxfUxuk=;
+	s=default; t=1598262771;
+	bh=9W0Ya6Gt65VYCcjU3mitmvFQa1ldn5Bt82bw6ASrcjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0e+c++HG4VU26aCvqH2rtHNzV2SfiFLc5gLvXjUwdpE0S2lDnp+lXFCE3SGdpKd2x
-	 gXWB6ARG+neR4eRRyMge2GKc4vd9/f9LsbpLvTREqPiQKCh+qDNcbAGFj1AQy/lVlJ
-	 K7SpIDPCqWvQBDrHnruJR5D4iwOtF+ZkwTQTAXe4=
+	b=NU7wnu610XxMWwS+ZgX6fjZRqLoOx/kx+fbG1F8rvSe/hW/ZL2mlCW9a8wcIKvaaO
+	 aQ4aP1OHc/hnh6tUAhPcxC9yvzIrsl3seHZkv06vheu+//5oY4rqYhLtLMj0MUWbhx
+	 /4qEn/AgT/L2BEZfPmllNb3eVwSK8pLgjuKplemM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbgHXJwn (ORCPT
+        id S1727115AbgHXIid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:52:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728548AbgHXIid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 04:38:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728059AbgHXIiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:38:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5E4D20FC3;
-        Mon, 24 Aug 2020 08:38:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBE992177B;
+        Mon, 24 Aug 2020 08:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258312;
-        bh=Th2zgGwWzxKAiUqBsJBnqsq9toC4rscuuCvlMxfUxuk=;
+        s=default; t=1598258293;
+        bh=9W0Ya6Gt65VYCcjU3mitmvFQa1ldn5Bt82bw6ASrcjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gVLrYnNZ0WUkROvqR49bwvTUmwra/CdePyeU4621Ei7uJmpZPHsAmPORBmervZARD
-         AOMWV1etGyiPFOeSlURvfGwJJXajA3LbE0WxKu4pHTx99zfVjfTVRi4/ucPzQftM0t
-         yveCzXqiMtR2rrT65nsOz5dqu24TRHPC1XPRnZho=
+        b=yscEc30mbCA4jLtRWDdoYM9k+lQHnNP57VnrCVi0LYc9nQUKDl2aXJspzBBhhQGXV
+         zpJ4H9eEWoZQeNFDLVZiunnqBsmzfbhI8cd4zqhmb95tF7v0JVN4Btf3DH05J3FlS6
+         J45z5Z9uyhqv+aHIpatHkWqX8nQGsaV6ZI0aUoEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Weihang Li <liweihang@huawei.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 123/148] Revert "RDMA/hns: Reserve one sge in order to avoid local length error"
-Date:   Mon, 24 Aug 2020 10:30:21 +0200
-Message-Id: <20200824082419.905659752@linuxfoundation.org>
+Subject: [PATCH 5.8 118/148] kconfig: qconf: do not limit the pop-up menu to the first row
+Date:   Mon, 24 Aug 2020 10:30:16 +0200
+Message-Id: <20200824082419.664536136@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -60,134 +59,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weihang Li <liweihang@huawei.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 6da06c6291f38be4df6df2efb76ba925096d2691 ]
+[ Upstream commit fa8de0a3bf3c02e6f00b7746e7e934db522cdda9 ]
 
-This patch caused some issues on SEND operation, and it should be reverted
-to make the drivers work correctly. There will be a better solution that
-has been tested carefully to solve the original problem.
+If you right-click the first row in the option tree, the pop-up menu
+shows up, but if you right-click the second row or below, the event
+is ignored due to the following check:
 
-This reverts commit 711195e57d341e58133d92cf8aaab1db24e4768d.
+  if (e->y() <= header()->geometry().bottom()) {
 
-Fixes: 711195e57d34 ("RDMA/hns: Reserve one sge in order to avoid local length error")
-Link: https://lore.kernel.org/r/1597829984-20223-1-git-send-email-liweihang@huawei.com
-Signed-off-by: Weihang Li <liweihang@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Perhaps, the intention was to show the pop-menu only when the tree
+header was right-clicked, but this handler is not called in that case.
+
+Since the origin of e->y() starts from the bottom of the header,
+this check is odd.
+
+Going forward, you can right-click anywhere in the tree to get the
+pop-up menu.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_device.h | 2 --
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 9 ++++-----
- drivers/infiniband/hw/hns/hns_roce_hw_v2.h  | 4 +---
- drivers/infiniband/hw/hns/hns_roce_qp.c     | 5 ++---
- drivers/infiniband/hw/hns/hns_roce_srq.c    | 2 +-
- 5 files changed, 8 insertions(+), 14 deletions(-)
+ scripts/kconfig/qconf.cc | 68 ++++++++++++++++++++--------------------
+ 1 file changed, 34 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_device.h b/drivers/infiniband/hw/hns/hns_roce_device.h
-index 479fa557993e7..c69453a62767c 100644
---- a/drivers/infiniband/hw/hns/hns_roce_device.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_device.h
-@@ -66,8 +66,6 @@
- #define HNS_ROCE_CQE_WCMD_EMPTY_BIT		0x2
- #define HNS_ROCE_MIN_CQE_CNT			16
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index 23d1cb01a41ae..be67e74237d22 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -864,40 +864,40 @@ void ConfigList::focusInEvent(QFocusEvent *e)
  
--#define HNS_ROCE_RESERVED_SGE			1
+ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
+ {
+-	if (e->y() <= header()->geometry().bottom()) {
+-		if (!headerPopup) {
+-			QAction *action;
 -
- #define HNS_ROCE_MAX_IRQ_NUM			128
- 
- #define HNS_ROCE_SGE_IN_WQE			2
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index eb71b941d21b7..38a48ab3e1d02 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -629,7 +629,7 @@ static int hns_roce_v2_post_recv(struct ib_qp *ibqp,
- 
- 		wqe_idx = (hr_qp->rq.head + nreq) & (hr_qp->rq.wqe_cnt - 1);
- 
--		if (unlikely(wr->num_sge >= hr_qp->rq.max_gs)) {
-+		if (unlikely(wr->num_sge > hr_qp->rq.max_gs)) {
- 			ibdev_err(ibdev, "rq:num_sge=%d >= qp->sq.max_gs=%d\n",
- 				  wr->num_sge, hr_qp->rq.max_gs);
- 			ret = -EINVAL;
-@@ -649,7 +649,6 @@ static int hns_roce_v2_post_recv(struct ib_qp *ibqp,
- 		if (wr->num_sge < hr_qp->rq.max_gs) {
- 			dseg->lkey = cpu_to_le32(HNS_ROCE_INVALID_LKEY);
- 			dseg->addr = 0;
--			dseg->len = cpu_to_le32(HNS_ROCE_INVALID_SGE_LENGTH);
- 		}
- 
- 		/* rq support inline data */
-@@ -783,8 +782,8 @@ static int hns_roce_v2_post_srq_recv(struct ib_srq *ibsrq,
- 		}
- 
- 		if (wr->num_sge < srq->max_gs) {
--			dseg[i].len = cpu_to_le32(HNS_ROCE_INVALID_SGE_LENGTH);
--			dseg[i].lkey = cpu_to_le32(HNS_ROCE_INVALID_LKEY);
-+			dseg[i].len = 0;
-+			dseg[i].lkey = cpu_to_le32(0x100);
- 			dseg[i].addr = 0;
- 		}
- 
-@@ -5098,7 +5097,7 @@ static int hns_roce_v2_query_srq(struct ib_srq *ibsrq, struct ib_srq_attr *attr)
- 
- 	attr->srq_limit = limit_wl;
- 	attr->max_wr = srq->wqe_cnt - 1;
--	attr->max_sge = srq->max_gs - HNS_ROCE_RESERVED_SGE;
-+	attr->max_sge = srq->max_gs;
- 
- out:
- 	hns_roce_free_cmd_mailbox(hr_dev, mailbox);
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-index e6c385ced1872..4f840997c6c73 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
-@@ -92,9 +92,7 @@
- #define HNS_ROCE_V2_CQC_TIMER_ENTRY_SZ		PAGE_SIZE
- #define HNS_ROCE_V2_PAGE_SIZE_SUPPORTED		0xFFFFF000
- #define HNS_ROCE_V2_MAX_INNER_MTPT_NUM		2
--#define HNS_ROCE_INVALID_LKEY			0x0
--#define HNS_ROCE_INVALID_SGE_LENGTH		0x80000000
--
-+#define HNS_ROCE_INVALID_LKEY			0x100
- #define HNS_ROCE_CMQ_TX_TIMEOUT			30000
- #define HNS_ROCE_V2_UC_RC_SGE_NUM_IN_WQE	2
- #define HNS_ROCE_V2_RSV_QPS			8
-diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
-index a0a47bd669759..4edea397b6b80 100644
---- a/drivers/infiniband/hw/hns/hns_roce_qp.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
-@@ -386,8 +386,7 @@ static int set_rq_size(struct hns_roce_dev *hr_dev, struct ib_qp_cap *cap,
- 		return -EINVAL;
- 	}
- 
--	hr_qp->rq.max_gs = roundup_pow_of_two(max(1U, cap->max_recv_sge) +
--					      HNS_ROCE_RESERVED_SGE);
-+	hr_qp->rq.max_gs = roundup_pow_of_two(max(1U, cap->max_recv_sge));
- 
- 	if (hr_dev->caps.max_rq_sg <= HNS_ROCE_SGE_IN_WQE)
- 		hr_qp->rq.wqe_shift = ilog2(hr_dev->caps.max_rq_desc_sz);
-@@ -402,7 +401,7 @@ static int set_rq_size(struct hns_roce_dev *hr_dev, struct ib_qp_cap *cap,
- 		hr_qp->rq_inl_buf.wqe_cnt = 0;
- 
- 	cap->max_recv_wr = cnt;
--	cap->max_recv_sge = hr_qp->rq.max_gs - HNS_ROCE_RESERVED_SGE;
-+	cap->max_recv_sge = hr_qp->rq.max_gs;
- 
- 	return 0;
+-			headerPopup = new QMenu(this);
+-			action = new QAction("Show Name", this);
+-			  action->setCheckable(true);
+-			  connect(action, SIGNAL(toggled(bool)),
+-				  parent(), SLOT(setShowName(bool)));
+-			  connect(parent(), SIGNAL(showNameChanged(bool)),
+-				  action, SLOT(setOn(bool)));
+-			  action->setChecked(showName);
+-			  headerPopup->addAction(action);
+-			action = new QAction("Show Range", this);
+-			  action->setCheckable(true);
+-			  connect(action, SIGNAL(toggled(bool)),
+-				  parent(), SLOT(setShowRange(bool)));
+-			  connect(parent(), SIGNAL(showRangeChanged(bool)),
+-				  action, SLOT(setOn(bool)));
+-			  action->setChecked(showRange);
+-			  headerPopup->addAction(action);
+-			action = new QAction("Show Data", this);
+-			  action->setCheckable(true);
+-			  connect(action, SIGNAL(toggled(bool)),
+-				  parent(), SLOT(setShowData(bool)));
+-			  connect(parent(), SIGNAL(showDataChanged(bool)),
+-				  action, SLOT(setOn(bool)));
+-			  action->setChecked(showData);
+-			  headerPopup->addAction(action);
+-		}
+-		headerPopup->exec(e->globalPos());
+-		e->accept();
+-	} else
+-		e->ignore();
++	if (!headerPopup) {
++		QAction *action;
++
++		headerPopup = new QMenu(this);
++		action = new QAction("Show Name", this);
++		action->setCheckable(true);
++		connect(action, SIGNAL(toggled(bool)),
++			parent(), SLOT(setShowName(bool)));
++		connect(parent(), SIGNAL(showNameChanged(bool)),
++			action, SLOT(setOn(bool)));
++		action->setChecked(showName);
++		headerPopup->addAction(action);
++
++		action = new QAction("Show Range", this);
++		action->setCheckable(true);
++		connect(action, SIGNAL(toggled(bool)),
++			parent(), SLOT(setShowRange(bool)));
++		connect(parent(), SIGNAL(showRangeChanged(bool)),
++			action, SLOT(setOn(bool)));
++		action->setChecked(showRange);
++		headerPopup->addAction(action);
++
++		action = new QAction("Show Data", this);
++		action->setCheckable(true);
++		connect(action, SIGNAL(toggled(bool)),
++			parent(), SLOT(setShowData(bool)));
++		connect(parent(), SIGNAL(showDataChanged(bool)),
++			action, SLOT(setOn(bool)));
++		action->setChecked(showData);
++		headerPopup->addAction(action);
++	}
++
++	headerPopup->exec(e->globalPos());
++	e->accept();
  }
-diff --git a/drivers/infiniband/hw/hns/hns_roce_srq.c b/drivers/infiniband/hw/hns/hns_roce_srq.c
-index f40a000e94ee7..b9e2dbd372b66 100644
---- a/drivers/infiniband/hw/hns/hns_roce_srq.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_srq.c
-@@ -297,7 +297,7 @@ int hns_roce_create_srq(struct ib_srq *ib_srq,
- 	spin_lock_init(&srq->lock);
  
- 	srq->wqe_cnt = roundup_pow_of_two(init_attr->attr.max_wr + 1);
--	srq->max_gs = init_attr->attr.max_sge + HNS_ROCE_RESERVED_SGE;
-+	srq->max_gs = init_attr->attr.max_sge;
- 
- 	if (udata) {
- 		ret = ib_copy_from_udata(&ucmd, udata, sizeof(ucmd));
+ ConfigView*ConfigView::viewList;
 -- 
 2.25.1
 
