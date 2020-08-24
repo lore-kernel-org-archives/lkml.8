@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D94C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70118C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C1472074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502D22075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261042;
-	bh=sKzyCTVQt3yNjcURrQLuKLdMEI//B2JxQ9HvMAck5Os=;
+	s=default; t=1598261043;
+	bh=YpO6n/hx+XryrWAOxjzu0xvCNugcUj0aDwhi0NSNc6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u0Rs/spdxkMGFCU+19IvGexD3mF3zkRejXODEg6U87ba+fkntkchc4KbTxYAEQhTt
-	 XEWgnjYkCYGIF93VafeINHEZ0vW8voPSTr56Dob9VdCbOv7AYD9tLpVu7QBinjJaIn
-	 tHXW4n+ZfU+Hi1QyDlQOlyWYXlFhySFiY2GEnZG4=
+	b=wryNOoy//eEHQzB2rqbfoGZfPYl5CCTXL/+pKyXT5/P0rFaqAxGdbUiGCutThIFt6
+	 1xpqigvkRm59nGaRJlggsFJJZ5ruP/TjWjk/NmlteWyZXPW4S7b5ww778imn7lpfzq
+	 Kd5MtQqETJGzGGpNPCt070O/9LobVApV1b5m33F8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbgHXJX6 (ORCPT
+        id S1730326AbgHXJYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:23:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33746 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:24:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730261AbgHXIx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:53:58 -0400
+        id S1730255AbgHXIxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:53:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEA8A207D3;
-        Mon, 24 Aug 2020 08:53:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 415C1204FD;
+        Mon, 24 Aug 2020 08:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259237;
-        bh=sKzyCTVQt3yNjcURrQLuKLdMEI//B2JxQ9HvMAck5Os=;
+        s=default; t=1598259234;
+        bh=YpO6n/hx+XryrWAOxjzu0xvCNugcUj0aDwhi0NSNc6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DvRR03Okbq8ILESWgoP1fmQjBMvI5K4qFhHR+z/GovmP0CbX5W9Dlhpc0FJXXEjD4
-         dasnD0vPsivwOMkEZsdPx/aCMdQ2wpyjCTQ88B1dr/0M957mOndeCFSeBx21RIm5OV
-         uTwyBohwV5v0+EIM3ZW7KZ1/hs69sSj5l6xo1KPk=
+        b=QoO6TeUWdRjOkjPczkfNfrTEnh6hFd343xrw/NbGjue9496PF+lFOBBcyu6EmBC1G
+         vBv3l2N3v21Vw8Fu+YYjrx0bZ8zuQqlCEbRuW0NN3GwqSHVHDet6HGS07f4XKVzT2H
+         qCyK8KyQBTaAtxfDHegfso1/QaINF2jlqXZYX1bk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Eiichi Tsukata <devel@etsukata.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 32/50] alpha: fix annotation of io{read,write}{16,32}be()
-Date:   Mon, 24 Aug 2020 10:31:33 +0200
-Message-Id: <20200824082353.666647767@linuxfoundation.org>
+Subject: [PATCH 4.14 31/50] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
+Date:   Mon, 24 Aug 2020 10:31:32 +0200
+Message-Id: <20200824082353.619704553@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -66,55 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+From: Eiichi Tsukata <devel@etsukata.com>
 
-[ Upstream commit bd72866b8da499e60633ff28f8a4f6e09ca78efe ]
+[ Upstream commit 96cf2a2c75567ff56195fe3126d497a2e7e4379f ]
 
-These accessors must be used to read/write a big-endian bus.  The value
-returned or written is native-endian.
+If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
+shows the following warning:
 
-However, these accessors are defined using be{16,32}_to_cpu() or
-cpu_to_be{16,32}() to make the endian conversion but these expect a
-__be{16,32} when none is present.  Keeping them would need a force cast
-that would solve nothing at all.
+  UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
+  member access within null pointer of type 'struct xfs_kobj'
+  Call Trace:
+   dump_stack+0x10e/0x195
+   ubsan_type_mismatch_common+0x241/0x280
+   __ubsan_handle_type_mismatch_v1+0x32/0x40
+   init_xfs_fs+0x12b/0x28f
+   do_one_initcall+0xdd/0x1d0
+   do_initcall_level+0x151/0x1b6
+   do_initcalls+0x50/0x8f
+   do_basic_setup+0x29/0x2b
+   kernel_init_freeable+0x19f/0x20b
+   kernel_init+0x11/0x1e0
+   ret_from_fork+0x22/0x30
 
-So, do the conversion using swab{16,32}, like done in asm-generic for
-similar situations.
+Fix it by checking parent_kobj before the code accesses its member.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Richard Henderson <rth@twiddle.net>
-Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Cc: Matt Turner <mattst88@gmail.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Link: http://lkml.kernel.org/r/20200622114232.80039-1-luc.vanoostenryck@gmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+[darrick: minor whitespace edits]
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/alpha/include/asm/io.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/xfs/xfs_sysfs.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
-index d123ff90f7a83..9995bed6e92e2 100644
---- a/arch/alpha/include/asm/io.h
-+++ b/arch/alpha/include/asm/io.h
-@@ -493,10 +493,10 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
+diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
+index d04637181ef21..980c9429abec5 100644
+--- a/fs/xfs/xfs_sysfs.h
++++ b/fs/xfs/xfs_sysfs.h
+@@ -44,9 +44,11 @@ xfs_sysfs_init(
+ 	struct xfs_kobj		*parent_kobj,
+ 	const char		*name)
+ {
++	struct kobject		*parent;
++
++	parent = parent_kobj ? &parent_kobj->kobject : NULL;
+ 	init_completion(&kobj->complete);
+-	return kobject_init_and_add(&kobj->kobject, ktype,
+-				    &parent_kobj->kobject, "%s", name);
++	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
  }
- #endif
  
--#define ioread16be(p) be16_to_cpu(ioread16(p))
--#define ioread32be(p) be32_to_cpu(ioread32(p))
--#define iowrite16be(v,p) iowrite16(cpu_to_be16(v), (p))
--#define iowrite32be(v,p) iowrite32(cpu_to_be32(v), (p))
-+#define ioread16be(p) swab16(ioread16(p))
-+#define ioread32be(p) swab32(ioread32(p))
-+#define iowrite16be(v,p) iowrite16(swab16(v), (p))
-+#define iowrite32be(v,p) iowrite32(swab32(v), (p))
- 
- #define inb_p		inb
- #define inw_p		inw
+ static inline void
 -- 
 2.25.1
 
