@@ -2,173 +2,144 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5387C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7697F204EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC010204EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:56:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0ldp5eh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ejZiB6ta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgHXVw4 (ORCPT
+        id S1727774AbgHXV4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:52:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXVw4 (ORCPT
+        Mon, 24 Aug 2020 17:56:37 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38154 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHXV4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 17:52:56 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE07AC061574;
-        Mon, 24 Aug 2020 14:52:55 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id z9so306113wmk.1;
-        Mon, 24 Aug 2020 14:52:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:cc:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=fvCy+pd4+670VEadUx/STXeESbdU05FA+XcBzh8qwhM=;
-        b=g0ldp5ehGRJv6TOD7Dgo5dZrK1aZ9VzHX7DEHSwb/osmS5DKVm8URMmEvAqtzClwPh
-         bbEPR+jsFS6oX3cucJgdAYTLqvvI+AguH3GEBHRjjEy6oz1EscPbBeb558408DHTqys7
-         HKlVT8o+fglHtwGV94F1V2GNWLj+hEPwT3VZdL1Vb1vQ6egs8MNYz7IrxWh0qt+60BeB
-         AOJ4/YWtX5EXVZi74cpx9DGiV81y9jLH0nsJMCZnR8oAsrYOrMpOGoGt7breTnN66pqU
-         wlss69U3QSi7Z/VJMnAFfmokP6Zh1JxPFVR8vIJPEYQpFoaMVwoEP7rEE0xPFur7x6+O
-         TMXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=fvCy+pd4+670VEadUx/STXeESbdU05FA+XcBzh8qwhM=;
-        b=EzEeAEi3KpH+9QSupUrDk6TQPSNi9xObb5du0IJ4ejWw8LtQUP4Ohl2tL/lTbYpIM2
-         pGdP/i8Rh7uTewDIyLEKJiU0w9E8luR49AVtyJUESHMMShc2hJtlTwmB3+QvpFv1rSqh
-         QBFS+Not/Y55koMpFR9c7MrHID59EzSY6sUNJhu1ScjLWbFfC7dHuI7kDGvd/GeR6HfZ
-         J+Jv8t9Ac1yRuk1uF6HOo0Ykw7N+XPeBaX/xa2vg+Wm/Fv5DjHdpJ2pmUU2fvL3ogBIs
-         Hz91zzJNtEyfJyRWAkRFjxZ2ukKyLIC1lsv455DlH7Qt5CCumNGSlbPEQr8JhwfJFIv4
-         LdXQ==
-X-Gm-Message-State: AOAM531NoW9BHzNQM1HbIlIVzDL8ygDwGUADX7JlKq3TQuzfMDAHyHhQ
-        riFqaqr42K6J+d4nDf46eRU=
-X-Google-Smtp-Source: ABdhPJy2rKadPI2zBNw4ktmc+uBMPzsdcjYrNMDw9BWJupDR16/7H7KQ8nJSvv2V5QRkFlIGlSSUQA==
-X-Received: by 2002:a1c:a54e:: with SMTP id o75mr1176138wme.181.1598305974420;
-        Mon, 24 Aug 2020 14:52:54 -0700 (PDT)
-Received: from [192.168.0.18] (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id s8sm1571334wmc.1.2020.08.24.14.52.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 14:52:53 -0700 (PDT)
-Subject: Re: [PATCH v2] scsi: Don't call memset after dma_alloc_coherent()
-Cc:     GR-QLogic-Storage-Upstream@marvell.com, jejb@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, njavali@marvell.com
-References: <20200820185149.932178-1-alex.dewar90@gmail.com>
- <20200820234952.317313-1-alex.dewar90@gmail.com>
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Message-ID: <8f829bd7-fb2b-44af-44ea-130b08c1fd70@gmail.com>
-Date:   Mon, 24 Aug 2020 22:52:52 +0100
+        Mon, 24 Aug 2020 17:56:36 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07OLtjYQ054833;
+        Mon, 24 Aug 2020 16:55:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598306145;
+        bh=ToO+3NPhNZ4b2VimF7JI2m/Y+G+uDEUZKNJic2RPL6o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ejZiB6taEENr+Hn0hc5bAxqg24U0O44RwRV6vWtKHX8yF2fcogQtJomSomBv68bsw
+         PLYH2FmE7jGwhcY7LIUnfJ+iODjLSNf3FaJ0nJiaJysxQlv4DWvzMPBjl/LP0PdV54
+         oEReJqNmiKlUmO1gpvLUOBekMLgyCfT8DdSLNWaM=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07OLtiU8069939
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Aug 2020 16:55:44 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 24
+ Aug 2020 16:55:43 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 24 Aug 2020 16:55:43 -0500
+Received: from [10.250.32.171] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07OLtgT3075587;
+        Mon, 24 Aug 2020 16:55:43 -0500
+Subject: Re: [PATCH 17/18] media/omap3isp: Clean up IOMMU workaround
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>
+CC:     <hch@lst.de>, <joro@8bytes.org>, <linux@armlinux.org.uk>,
+        <will@kernel.org>, <inki.dae@samsung.com>,
+        <sw0312.kim@samsung.com>, <kyungmin.park@samsung.com>,
+        <m.szyprowski@samsung.com>, <agross@kernel.org>,
+        <bjorn.andersson@linaro.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <vdumpa@nvidia.com>, <digetx@gmail.com>,
+        <matthias.bgg@gmail.com>, <yong.wu@mediatek.com>,
+        <geert+renesas@glider.be>, <magnus.damm@gmail.com>,
+        <t-kristo@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <cover.1597931875.git.robin.murphy@arm.com>
+ <11d8419744e4e744a9448180801b0c4683328afd.1597931876.git.robin.murphy@arm.com>
+ <20200820165339.GK7145@valkosipuli.retiisi.org.uk>
+ <be010209-4abc-ba48-4e31-185427776a13@arm.com>
+ <20200820195536.GL7145@valkosipuli.retiisi.org.uk>
+ <5190a40e-ad24-d98e-3588-b95592ea2db3@arm.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <86d2fb37-33b8-68f1-fe0c-dad496869b29@ti.com>
+Date:   Mon, 24 Aug 2020 16:55:42 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200820234952.317313-1-alex.dewar90@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <5190a40e-ad24-d98e-3588-b95592ea2db3@arm.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-21 00:49, Alex Dewar wrote:
-> dma_alloc_coherent() already zeroes memory, so the extra call to
-> memset() is unnecessary.
->
-> Issue identified with Coccinelle.
->
-> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-Gentle ping? I've just realised that this is the one we want, not the v1 
-I just replied to.
-> ---
-> v2: I've noticed a few other places in the scsi subsystem with this
-> pattern, so lets fix them all with one patch.
-> ---
->   drivers/scsi/mpt3sas/mpt3sas_base.c | 1 -
->   drivers/scsi/mvsas/mv_init.c        | 4 ----
->   drivers/scsi/pmcraid.c              | 1 -
->   drivers/scsi/qla2xxx/qla_mbx.c      | 2 --
->   4 files changed, 8 deletions(-)
->
-> diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
-> index b66d3f9b717f..36b6c0d67353 100644
-> --- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-> +++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-> @@ -5259,7 +5259,6 @@ _base_allocate_memory_pools(struct MPT3SAS_ADAPTER *ioc)
->   		_base_release_memory_pools(ioc);
->   		goto retry_allocation;
->   	}
-> -	memset(ioc->request, 0, sz);
->   
->   	if (retry_sz)
->   		ioc_err(ioc, "request pool: dma_alloc_coherent succeed: hba_depth(%d), chains_per_io(%d), frame_sz(%d), total(%d kb)\n",
-> diff --git a/drivers/scsi/mvsas/mv_init.c b/drivers/scsi/mvsas/mv_init.c
-> index 978f5283c883..6aa2697c4a15 100644
-> --- a/drivers/scsi/mvsas/mv_init.c
-> +++ b/drivers/scsi/mvsas/mv_init.c
-> @@ -246,19 +246,16 @@ static int mvs_alloc(struct mvs_info *mvi, struct Scsi_Host *shost)
->   				     &mvi->tx_dma, GFP_KERNEL);
->   	if (!mvi->tx)
->   		goto err_out;
-> -	memset(mvi->tx, 0, sizeof(*mvi->tx) * MVS_CHIP_SLOT_SZ);
->   	mvi->rx_fis = dma_alloc_coherent(mvi->dev, MVS_RX_FISL_SZ,
->   					 &mvi->rx_fis_dma, GFP_KERNEL);
->   	if (!mvi->rx_fis)
->   		goto err_out;
-> -	memset(mvi->rx_fis, 0, MVS_RX_FISL_SZ);
->   
->   	mvi->rx = dma_alloc_coherent(mvi->dev,
->   				     sizeof(*mvi->rx) * (MVS_RX_RING_SZ + 1),
->   				     &mvi->rx_dma, GFP_KERNEL);
->   	if (!mvi->rx)
->   		goto err_out;
-> -	memset(mvi->rx, 0, sizeof(*mvi->rx) * (MVS_RX_RING_SZ + 1));
->   	mvi->rx[0] = cpu_to_le32(0xfff);
->   	mvi->rx_cons = 0xfff;
->   
-> @@ -267,7 +264,6 @@ static int mvs_alloc(struct mvs_info *mvi, struct Scsi_Host *shost)
->   				       &mvi->slot_dma, GFP_KERNEL);
->   	if (!mvi->slot)
->   		goto err_out;
-> -	memset(mvi->slot, 0, sizeof(*mvi->slot) * slot_nr);
->   
->   	mvi->bulk_buffer = dma_alloc_coherent(mvi->dev,
->   				       TRASH_BUCKET_SIZE,
-> diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
-> index aa9ae2ae8579..d99568fdf4af 100644
-> --- a/drivers/scsi/pmcraid.c
-> +++ b/drivers/scsi/pmcraid.c
-> @@ -4716,7 +4716,6 @@ static int pmcraid_allocate_host_rrqs(struct pmcraid_instance *pinstance)
->   			return -ENOMEM;
->   		}
->   
-> -		memset(pinstance->hrrq_start[i], 0, buffer_size);
->   		pinstance->hrrq_curr[i] = pinstance->hrrq_start[i];
->   		pinstance->hrrq_end[i] =
->   			pinstance->hrrq_start[i] + PMCRAID_MAX_CMD - 1;
-> diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-> index 226f1428d3e5..e00f604bbf7a 100644
-> --- a/drivers/scsi/qla2xxx/qla_mbx.c
-> +++ b/drivers/scsi/qla2xxx/qla_mbx.c
-> @@ -4925,8 +4925,6 @@ qla25xx_set_els_cmds_supported(scsi_qla_host_t *vha)
->   		return QLA_MEMORY_ALLOC_FAILED;
->   	}
->   
-> -	memset(els_cmd_map, 0, ELS_CMD_MAP_SIZE);
-> -
->   	/* List of Purex ELS */
->   	cmd_opcode[0] = ELS_FPIN;
->   	cmd_opcode[1] = ELS_RDP;
+On 8/20/20 6:01 PM, Robin Murphy wrote:
+> On 2020-08-20 20:55, Sakari Ailus wrote:
+>> On Thu, Aug 20, 2020 at 06:25:19PM +0100, Robin Murphy wrote:
+>>> On 2020-08-20 17:53, Sakari Ailus wrote:
+>>>> Hi Robin,
+>>>>
+>>>> On Thu, Aug 20, 2020 at 04:08:36PM +0100, Robin Murphy wrote:
+>>>>> Now that arch/arm is wired up for default domains and iommu-dma, devices
+>>>>> behind IOMMUs will get mappings set up automatically as appropriate, so
+>>>>> there is no need for drivers to do so manually.
+>>>>>
+>>>>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>>>>
+>>>> Thanks for the patch.
+>>>
+>>> Many thanks for testing so quickly!
+>>>
+>>>> I haven't looked at the details but it seems that this causes the buffer
+>>>> memory allocation to be physically contiguous, which causes a failure to
+>>>> allocate video buffers of entirely normal size. I guess that was not
+>>>> intentional?
+>>>
+>>> Hmm, it looks like the device ends up with the wrong DMA ops, which implies
+>>> something didn't go as expected with the earlier IOMMU setup and default
+>>> domain creation. Chances are that either I missed some subtlety in the
+>>> omap_iommu change, or I've fundamentally misjudged how the ISP probing works
+>>> and it never actually goes down the of_iommu_configure() path in the first
+>>> place. Do you get any messages from the IOMMU layer earlier on during boot?
+
+Yeah, I don't think we go through the of_iommu_configure() path, the setup is
+mostly done using .probe_device() and .attach_dev() ops. Since the MMUs are
+present directly in the respective sub-systems and relies on the sub-system
+clocking and power, the MMU itself is turned ON and enabled during .attach_dev().
+
+regards
+Suman
+
+>>
+>> I do get these:
+>>
+>> [    2.934936] iommu: Default domain type: Translated
+>> [    2.940917] omap-iommu 480bd400.mmu: 480bd400.mmu registered
+>> [    2.946899] platform 480bc000.isp: Adding to iommu group 0
+>>
+> 
+> So that much looks OK, if there are no obvious errors. Unfortunately there's no
+> easy way to tell exactly what of_iommu_configure() is doing (beyond enabling a
+> couple of vague debug messages). The first thing I'll do tomorrow is
+> double-check whether it's really working on my boards here, or whether I was
+> just getting lucky with CMA... (I assume you don't have CMA enabled if you're
+> ending up in remap_allocator_alloc())
+> 
+> Robin.
 
