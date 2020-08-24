@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E476C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 414CFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0799320738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A172071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262165;
-	bh=M46liTB7rLaDrsNa7jv2Os7kH0zrBiZPPkk6TpwqqpU=;
+	s=default; t=1598262170;
+	bh=leVTurjUD+8+YlGK6i8qakCakA8BGvB6rJ0efjYly1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X/LyGxVQCU0Ko8qukFQFZMbi4kE2eluOEfBq6A6G2C1mBEz3+LTWCb91yRyiHrRKR
-	 l9S9YSiTAuccbFf4rlmsDku50itEcnt5J4Ro1sa5X3xW9r3Aqxw0wiyHdJBBR+c6E4
-	 j0R+l9q7YF1rbaOKPnCQBWwexEwAAoobJZ6/mj3E=
+	b=IsdeLGpb6N27DsiY+qaoPcbSetIzHsomZi6MNABvMcHuwwKmF5uT4/qYBN1l/GtKG
+	 qPJIDIMaAwHBfloLn9G3d4FacxZ4Pg2W7CXuUuYhxm7pdVAUIwYX8BzlnPlIarvB5F
+	 etH6iVbto+blnjIbRWkABtpLAnDEX/6dG8GnTp1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbgHXIor (ORCPT
+        id S1729175AbgHXIoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40816 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:44:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729163AbgHXIol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:44:41 -0400
+        id S1728923AbgHXIoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:44:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80E142075B;
-        Mon, 24 Aug 2020 08:44:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 129B222BEA;
+        Mon, 24 Aug 2020 08:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258681;
-        bh=M46liTB7rLaDrsNa7jv2Os7kH0zrBiZPPkk6TpwqqpU=;
+        s=default; t=1598258678;
+        bh=leVTurjUD+8+YlGK6i8qakCakA8BGvB6rJ0efjYly1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sMzmG7lTgnAl7ey0lPkQkbs+by1mgDPxg0N807nEAeNbiSCBy9Z1Vl1/j49vOCjBN
-         A9jeYJByYhteGLYWZ9OeLx93Bld+EFaIEib6kvk1sapFCoZCRrkovDpr7RSTyftMmI
-         TW5sgvFC8leioZog24orVmfhUFX4U0fUF5G95AyA=
+        b=h/jw55ELGsEnuuK/kVItbUaMTE4BWPCRqPVCG1qHVJc/y26qp3NycTHd6QyA5Jg4b
+         thx0ng0llowlaeU8YHQenDzcMynOEGYbQf1jXnY5zDyZoFgY302SgFALIWRPG1eLrq
+         Bs9nm3yc+WSqMg5dLZRmBVWosfwHeYj65uHixcbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        Kiwoong Kim <kwmad.kim@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Selvin Xavier <selvin.xavier@broadcom.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 096/124] scsi: ufs: Introduce UFSHCD_QUIRK_PRDT_BYTE_GRAN quirk
-Date:   Mon, 24 Aug 2020 10:30:30 +0200
-Message-Id: <20200824082414.145645112@linuxfoundation.org>
+Subject: [PATCH 5.7 105/124] RDMA/bnxt_re: Do not add user qps to flushlist
+Date:   Mon, 24 Aug 2020 10:30:39 +0200
+Message-Id: <20200824082414.574698115@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -62,89 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alim Akhtar <alim.akhtar@samsung.com>
+From: Selvin Xavier <selvin.xavier@broadcom.com>
 
-[ Upstream commit 26f968d7de823ba4974a8f25c8bd8ee2df6ab74b ]
+[ Upstream commit a812f2d60a9fb7818f9c81f967180317b52545c0 ]
 
-Some UFS host controllers like Exynos uses granularities of PRDT length and
-offset as bytes, whereas others use actual segment count.
+Driver shall add only the kernel qps to the flush list for clean up.
+During async error events from the HW, driver is adding qps to this list
+without checking if the qp is kernel qp or not.
 
-Link: https://lore.kernel.org/r/20200528011658.71590-5-alim.akhtar@samsung.com
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Kiwoong Kim <kwmad.kim@samsung.com>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Add a check to avoid user qp addition to the flush list.
+
+Fixes: 942c9b6ca8de ("RDMA/bnxt_re: Avoid Hard lockup during error CQE processing")
+Fixes: c50866e2853a ("bnxt_re: fix the regression due to changes in alloc_pbl")
+Link: https://lore.kernel.org/r/1596689148-4023-1-git-send-email-selvin.xavier@broadcom.com
+Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 30 +++++++++++++++++++++++-------
- drivers/scsi/ufs/ufshcd.h |  6 ++++++
- 2 files changed, 29 insertions(+), 7 deletions(-)
+ drivers/infiniband/hw/bnxt_re/main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 3820117795327..4d5e8f6a31438 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -2158,8 +2158,14 @@ static int ufshcd_map_sg(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
- 		return sg_segments;
+diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
+index b12fbc857f942..5c41e13496a02 100644
+--- a/drivers/infiniband/hw/bnxt_re/main.c
++++ b/drivers/infiniband/hw/bnxt_re/main.c
+@@ -811,7 +811,8 @@ static int bnxt_re_handle_qp_async_event(struct creq_qp_event *qp_event,
+ 	struct ib_event event;
+ 	unsigned int flags;
  
- 	if (sg_segments) {
--		lrbp->utr_descriptor_ptr->prd_table_length =
--			cpu_to_le16((u16)sg_segments);
-+
-+		if (hba->quirks & UFSHCD_QUIRK_PRDT_BYTE_GRAN)
-+			lrbp->utr_descriptor_ptr->prd_table_length =
-+				cpu_to_le16((sg_segments *
-+					sizeof(struct ufshcd_sg_entry)));
-+		else
-+			lrbp->utr_descriptor_ptr->prd_table_length =
-+				cpu_to_le16((u16) (sg_segments));
- 
- 		prd_table = (struct ufshcd_sg_entry *)lrbp->ucd_prdt_ptr;
- 
-@@ -3505,11 +3511,21 @@ static void ufshcd_host_memory_configure(struct ufs_hba *hba)
- 				cpu_to_le32(upper_32_bits(cmd_desc_element_addr));
- 
- 		/* Response upiu and prdt offset should be in double words */
--		utrdlp[i].response_upiu_offset =
--			cpu_to_le16(response_offset >> 2);
--		utrdlp[i].prd_table_offset = cpu_to_le16(prdt_offset >> 2);
--		utrdlp[i].response_upiu_length =
--			cpu_to_le16(ALIGNED_UPIU_SIZE >> 2);
-+		if (hba->quirks & UFSHCD_QUIRK_PRDT_BYTE_GRAN) {
-+			utrdlp[i].response_upiu_offset =
-+				cpu_to_le16(response_offset);
-+			utrdlp[i].prd_table_offset =
-+				cpu_to_le16(prdt_offset);
-+			utrdlp[i].response_upiu_length =
-+				cpu_to_le16(ALIGNED_UPIU_SIZE);
-+		} else {
-+			utrdlp[i].response_upiu_offset =
-+				cpu_to_le16(response_offset >> 2);
-+			utrdlp[i].prd_table_offset =
-+				cpu_to_le16(prdt_offset >> 2);
-+			utrdlp[i].response_upiu_length =
-+				cpu_to_le16(ALIGNED_UPIU_SIZE >> 2);
-+		}
- 
- 		ufshcd_init_lrb(hba, &hba->lrb[i], i);
- 	}
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 99dc0ca311899..b3b2d09d8fff3 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -535,6 +535,12 @@ enum ufshcd_quirks {
- 	 * enabled via HCE register.
- 	 */
- 	UFSHCI_QUIRK_BROKEN_HCE				= 1 << 8,
-+
-+	/*
-+	 * This quirk needs to be enabled if the host controller regards
-+	 * resolution of the values of PRDTO and PRDTL in UTRD as byte.
-+	 */
-+	UFSHCD_QUIRK_PRDT_BYTE_GRAN			= 1 << 9,
- };
- 
- enum ufshcd_caps {
+-	if (qp->qplib_qp.state == CMDQ_MODIFY_QP_NEW_STATE_ERR) {
++	if (qp->qplib_qp.state == CMDQ_MODIFY_QP_NEW_STATE_ERR &&
++	    rdma_is_kernel_res(&qp->ib_qp.res)) {
+ 		flags = bnxt_re_lock_cqs(qp);
+ 		bnxt_qplib_add_flush_qp(&qp->qplib_qp);
+ 		bnxt_re_unlock_cqs(qp, flags);
 -- 
 2.25.1
 
