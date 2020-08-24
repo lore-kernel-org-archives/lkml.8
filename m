@@ -2,99 +2,163 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DATE_IN_PAST_12_24,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EC6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F68CC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9F062075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE5E2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="BChT55kF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="st6JUplM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgHYNdA (ORCPT
+        id S1726187AbgHYNgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:33:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:58838 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726159AbgHYNcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:32:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F3D731B;
-        Tue, 25 Aug 2020 06:32:25 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E8E723F66B;
-        Tue, 25 Aug 2020 06:32:23 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com
-Subject: [PATCH 2/2] sched/topology: Move SD_DEGENERATE_GROUPS_MASK out of linux/sched/topology.h
-Date:   Tue, 25 Aug 2020 14:32:16 +0100
-Message-Id: <20200825133216.9163-2-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200825133216.9163-1-valentin.schneider@arm.com>
-References: <20200825133216.9163-1-valentin.schneider@arm.com>
+        Tue, 25 Aug 2020 09:36:09 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:46893 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725926AbgHYNfz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:35:55 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 05F3758043B;
+        Tue, 25 Aug 2020 09:35:53 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:35:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=o3DM9q4xD3PlbYRAzhhVCYF3CET
+        415QdokoMlj6SX04=; b=BChT55kFwSw7j8+CIiHPkKM9sRAi+fc6+qsXnTuQnlJ
+        kshksFW+GAAby5xApz6/s8d4qWwkAU1HoEKvej29hmu3P3XNH9LNmBUnswpr6giG
+        IUFvoB7SWDiJXYw4Z+tjuLHD6ozmF0pWwXkV4MnyypEDGLylGsC88vdjjSz0l29d
+        rzaOpFsHeVHCDDfVqylJI/gynC01t2PVRNOdBa6BeupD8hm150mwja48LsuTlyCg
+        DDh5eFhFRPw2Kw0B0FGyKtXFGqDCPW6U/+Alb3fL7+Ev+3B5sb5YThNEn+S4MS3G
+        JEFMYmUmoAnyRtxvuIv36JqdiqR+2UA1+6DBWZZ/EhA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=o3DM9q
+        4xD3PlbYRAzhhVCYF3CET415QdokoMlj6SX04=; b=st6JUplM5OW35O2QwSHbPq
+        jdwJ8L+dwm2FDSRdFOllNt4+1jzxWSX5Ts6jMhtrUYAFJPKZKTb0PgLqR6FirkE7
+        D8R8c5iq6UO1UkQrH92+t7n5O0Seku0IaXLMJXJ6wmnQFxzxbY/83C0Dxeoj/JRn
+        klbY8OswO7WmC2AQWm8tiYzEC8eJtDKM3mGvbbL89cPJiDko5LLNFsl+KkyRk69h
+        zF3M+zL22cEsJ8qJReNhPrSEeB4VUQ8tfW3pfpOcErsqq4jaS0WBD75C9a4ofP5V
+        CXG321p/ryiEkVPZOZf/8KmOC+vos4krZfApa2qVDrOSDWG9RYpR/fCm2rV8ELvQ
+        ==
+X-ME-Sender: <xms:uBNFX5lLYUUEjymn748AxUjjTsY1dxK14zLdUAvzP3GpzYvhdkgHPw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepieelhfeihedvvdevfefhffettefhledufeevffffleegfedtueehveegtefg
+    teeunecuffhomhgrihhnpehtgihtrdhfrhgvvgenucfkphepledtrdekledrieekrdejie
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgig
+    ihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:uBNFX03CWptI3sDoAEzA0DZYahf2n-Koif-idSUBt707w4sY5YaYHw>
+    <xmx:uBNFX_pAkoxUDQAjF6g6NKEVbnwZ0nYL_Mt1LMgXYh3hbVV9X0TUrg>
+    <xmx:uBNFX5myATgrKHEYy88JTlZiONOK5qE5S0nPESFmmkXfXGWGMOb5Xw>
+    <xmx:uRNFX5yrPKaUDdx4FVY-BUB9M2fNVL48NE0PwnRQXM32poU2vlUMqw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 936D0306005F;
+        Tue, 25 Aug 2020 09:35:52 -0400 (EDT)
+Date:   Mon, 24 Aug 2020 18:59:10 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        yong.deng@magewell.com, p.zabel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 2/7] dt-bindings: media: i2c: Add documentation for ov8865
+Message-ID: <20200824165910.tnsalyxfuimfx5rd@gilmour.lan>
+References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+ <20200821145935.20346-3-kevin.lhopital@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xtnfj6i3cfctyq4u"
+Content-Disposition: inline
+In-Reply-To: <20200821145935.20346-3-kevin.lhopital@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SD_DEGENERATE_GROUPS_MASK is only useful for sched/topology.c, but still
-gets defined for anyone who imports topology.h, leading to a flurry of
-unused variable warnings.
 
-Move it out of the header and place it next to the SD degeneration
-functions in sched/topology.c.
+--xtnfj6i3cfctyq4u
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 4ee4ea443a5d ("sched/topology: Introduce SD metaflag for flags needing > 1 groups")
-Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
- include/linux/sched/topology.h | 7 -------
- kernel/sched/topology.c        | 7 +++++++
- 2 files changed, 7 insertions(+), 7 deletions(-)
+Hi,
 
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index b9b0dab4d067..9ef7bf686a9f 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -25,13 +25,6 @@ enum {
- };
- #undef SD_FLAG
- 
--/* Generate a mask of SD flags with the SDF_NEEDS_GROUPS metaflag */
--#define SD_FLAG(name, mflags) (name * !!((mflags) & SDF_NEEDS_GROUPS)) |
--static const unsigned int SD_DEGENERATE_GROUPS_MASK =
--#include <linux/sched/sd_flags.h>
--0;
--#undef SD_FLAG
--
- #ifdef CONFIG_SCHED_DEBUG
- 
- struct sd_flag_debug {
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 4e1260cb4b44..da3cd60e4b78 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -154,6 +154,13 @@ static inline bool sched_debug(void)
- }
- #endif /* CONFIG_SCHED_DEBUG */
- 
-+/* Generate a mask of SD flags with the SDF_NEEDS_GROUPS metaflag */
-+#define SD_FLAG(name, mflags) (name * !!((mflags) & SDF_NEEDS_GROUPS)) |
-+static const unsigned int SD_DEGENERATE_GROUPS_MASK =
-+#include <linux/sched/sd_flags.h>
-+0;
-+#undef SD_FLAG
-+
- static int sd_degenerate(struct sched_domain *sd)
- {
- 	if (cpumask_weight(sched_domain_span(sd)) == 1)
--- 
-2.27.0
+On Fri, Aug 21, 2020 at 04:59:30PM +0200, K=E9vin L'h=F4pital wrote:
+> Add a documentation for the sensor ov8865 from Omnivision.
+>=20
+> Signed-off-by: K=E9vin L'h=F4pital <kevin.lhopital@bootlin.com>
 
+In order to ease the submission of both drivers, you should probably
+split this series into two, one with the MIPI-CSI driver, and one with
+the ov8865 driver.
+
+> ---
+>  .../devicetree/bindings/media/i2c/ov8865.txt  | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8865.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov8865.txt b/Doc=
+umentation/devicetree/bindings/media/i2c/ov8865.txt
+> new file mode 100644
+> index 000000000000..ac5a662288de
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov8865.txt
+> @@ -0,0 +1,51 @@
+> +* Omnivision OV8865 MIPI CSI-2
+> +
+> +Required Properties:
+> +- compatible: should be "ovti,ov8865"
+> +- clocks: reference to the xclk input clock.
+> +- clock-names: should be "xclk".
+> +- DOVDD-supply: Digital I/O voltage supply, 2.8 volts
+> +- AVDD-supply: Analog voltage supply, 2.8 volts
+> +- AFVDD-supply: Analog voltage supply, 2.8 volts
+> +- DVDD-supply: Digital core voltage supply, 1.2 volts
+> +- reset-gpios: reference to the GPIO connected to the reset pin.
+> +	       This is an active low signal to the OV8865.
+> +- powerdown-gpios: reference to the GPIO connected to the powerdown pin.
+> +		   This is an active low signal to the OV8865.
+> +- rotation: as defined in
+> +	    Documentation/devicetree/bindings/media/video-interfaces.txt,
+> +	    valid values are 0 (sensor mounted upright) and 180 (sensor
+> +	    mounted upside down).
+> +- remote-endpoint: a phandle to the bus receiver's endpoint node.
+> +- clock-lanes: should be set to <0> (clock lane on hardware lane 0).
+> +- data-lanes: should be set to <4> (four CSI-2 lanes supported).
+> +
+> +The device node must contain one 'port' child node for its digital outpu=
+t video
+> +port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+
+Free form DT documentation is deprecated nowadays, you should be doing a
+YAML schema instead (like the ov8856 driver).
+
+Maxime
+
+--xtnfj6i3cfctyq4u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0Px3gAKCRDj7w1vZxhR
+xVh1AQCXN4oPv9EvypG1mqiavakQAN3yVKv1Bxmf8WFmqxncTgD+LX/4kcbBu+/e
+lzYGE1BdHmnYoYTM2IVwfxRIqJryjQM=
+=L8ao
+-----END PGP SIGNATURE-----
+
+--xtnfj6i3cfctyq4u--
