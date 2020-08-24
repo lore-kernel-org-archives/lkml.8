@@ -2,81 +2,53 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB39CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B15D32074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A4D2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UPZAHY3a"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cd1si9Xp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgHXPX0 (ORCPT
+        id S1726473AbgHXPSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:23:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42098 "EHLO
+        Mon, 24 Aug 2020 11:18:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727943AbgHXPWH (ORCPT
+        with ESMTP id S1726912AbgHXPG5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:22:07 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19633C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 08:22:07 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x5so8746167wmi.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 08:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=41TxyHICC+s6aQeo0YedfhOUY4gGQOiE3/gzLfTmhK8=;
-        b=UPZAHY3aoz5wOk5QeAlrKi4lHHftgu9RkgR4o5Ya9tKmdXZ5uBTVvic6ApMuVDqhyB
-         XR68EpCvZpY4FuaAZxe9b83xADELgF314JDi4j9vwEaC9F7Aztuff0iAx3Hk8HOmVG1q
-         4F5/cr83HCraOS/Zj/RsLDTYZ5R137s/z7gAXSeuyMD7PZc/tHHAywxp0Ze6/J+tv78S
-         gvw0ZaXBMg3urwDUFTmw7oawTx/teDC7UYe9e0O+lWAhKF4Luf/UYk9lMUv7AeqEyrR0
-         KU8/yMYTs+s89yq1xx0RhHJ1c1g+ORsrPhq/BltLM1EOAyK5See4M7vf8kJZrJHyhW1U
-         rD9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=41TxyHICC+s6aQeo0YedfhOUY4gGQOiE3/gzLfTmhK8=;
-        b=lIXCXv13BnjbDInh/uIFp65CmBh+VjQXn8UMCgL7mH8CnTTgN8S6GheJkFcKK/8fyT
-         vOPrK66Oh5j6/jEVhaAdHuyEVpJi5TH4u/bgVVNNYZc/JOxYDurkXRJgPy+m+x6i9oXa
-         KMAVBE/K5NS03Rub05Tjn2XLOLWPu8h2F9uJNuYV0w7+x9PHTdc7Mymhku+ly4ZKs3YE
-         HvaugQTMjNvrTv4pt6BG2D+V1e/13zfi76idHMW7XNyTWiWft71oyueKfDd845L/y4kY
-         jW5rCJvicGpDjLU0UnKPiQYGd83RwxioEW37mmpbj4vX8Mv6mKvSbxCdqUY4PyjOzy0H
-         VLKQ==
-X-Gm-Message-State: AOAM533tVBtQEdX8cApWiOU0bmSbEYeFwlpPysIqkK00ofGeBGsOQLpD
-        4YM1pdCehdMRA07vRC4kvQWoH9pbSfGeGn2r
-X-Google-Smtp-Source: ABdhPJwaPewrMNTaq5Qrv5GNb5FK9hQRs4NjNir76JWm9MAnYpHF5q6XegcWvQM597rRBLoVeX1WyA==
-X-Received: by 2002:a7b:c8da:: with SMTP id f26mr6315877wml.126.1598282525798;
-        Mon, 24 Aug 2020 08:22:05 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id l7sm23730928wmh.15.2020.08.24.08.22.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 08:22:05 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-To:     dan.carpenter@oracle.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alex Dewar <alex.dewar90@gmail.com>,
-        "Javier F. Arias" <jarias.linux@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
-        Saiyam Doshi <saiyamdoshi.in@gmail.com>,
-        Magnus Damm <damm+renesas@opensource.se>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: emxx_udc: Fix passing of NULL to dma_alloc_coherent()
-Date:   Mon, 24 Aug 2020 16:19:17 +0100
-Message-Id: <20200824151920.251446-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824142118.GA223827@mwanda>
-References: <20200824142118.GA223827@mwanda>
+        Mon, 24 Aug 2020 11:06:57 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9561C061796;
+        Mon, 24 Aug 2020 07:55:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=PHm5fMNB8ZZgdRcktW4dLlLzoT8t70NROW9gjEwt3r8=; b=Cd1si9Xppq69WitlxSU+3lK401
+        x5ocJ20OiXVPCUyr47XVUJE05GvIRgSpXShDd7Dx3dhVbkLPYWb+vXiJnWuR9JFvipXP+tVskYrtx
+        /AqUQwtxGaRbYBcS25tanxCTzqyBrvEl3SAm2qCEAiY/xohFdRgrHUESaKlTdy1jvoqQkEMb+hinH
+        SfbsHzJzKFEVeIdhw1HgGEKAe5YC+zFWGwnsjs3Pymeb/HgdSMbY068p1bX+a/HRJGB8yS4tDksJ3
+        OOOIaOnZPhoxc83JrfwKcoPVnkVI0pLbgwmjlecZTt4donrJQUj5hzr+ROleN6OWLObS/xuJqzoWG
+        SFHtlkDA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kADsR-0002mX-4j; Mon, 24 Aug 2020 14:55:15 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 7/9] iomap: Convert write_count to byte count
+Date:   Mon, 24 Aug 2020 15:55:08 +0100
+Message-Id: <20200824145511.10500-8-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200824145511.10500-1-willy@infradead.org>
+References: <20200824145511.10500-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,41 +56,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In nbu2ss_eq_queue() memory is allocated with dma_alloc_coherent(),
-though, strangely, NULL is passed as the struct device* argument. Pass
-the UDC's device instead.
+Instead of counting bio segments, count the number of bytes submitted.
+This insulates us from the block layer's definition of what a 'same page'
+is, which is not necessarily clear once THPs are involved.
 
-Build-tested on x86 only.
-
-Fixes: 33aa8d45a4fe ("staging: emxx_udc: Add Emma Mobile USB Gadget driver")
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
+ fs/iomap/buffered-io.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-So I *think* this is the right fix, but I don't have the hardware so
-I've only been able to build-test it. My worry is that I could be
-passing in the wrong struct device* here, which would squelch the
-warning without fixing the breakage.
-
-Can someone cleverer than me tell me if this makes sense?
-
-- Alex
----
- drivers/staging/emxx_udc/emxx_udc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/emxx_udc/emxx_udc.c b/drivers/staging/emxx_udc/emxx_udc.c
-index 03929b9d3a8b..09e91449c08c 100644
---- a/drivers/staging/emxx_udc/emxx_udc.c
-+++ b/drivers/staging/emxx_udc/emxx_udc.c
-@@ -2593,7 +2593,7 @@ static int nbu2ss_ep_queue(struct usb_ep *_ep,
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index c9b44f86d166..8c6187a6f34e 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -1050,7 +1050,7 @@ EXPORT_SYMBOL_GPL(iomap_page_mkwrite);
  
- 	if (req->unaligned) {
- 		if (!ep->virt_buf)
--			ep->virt_buf = dma_alloc_coherent(NULL, PAGE_SIZE,
-+			ep->virt_buf = dma_alloc_coherent(udc->dev, PAGE_SIZE,
- 							  &ep->phys_buf,
- 							  GFP_ATOMIC | GFP_DMA);
- 		if (ep->epnum > 0)  {
+ static void
+ iomap_finish_page_writeback(struct inode *inode, struct page *page,
+-		int error)
++		int error, unsigned int len)
+ {
+ 	struct iomap_page *iop = to_iomap_page(page);
+ 
+@@ -1062,7 +1062,7 @@ iomap_finish_page_writeback(struct inode *inode, struct page *page,
+ 	WARN_ON_ONCE(i_blocks_per_page(inode, page) > 1 && !iop);
+ 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) <= 0);
+ 
+-	if (!iop || atomic_dec_and_test(&iop->write_count))
++	if (!iop || atomic_sub_and_test(len, &iop->write_count))
+ 		end_page_writeback(page);
+ }
+ 
+@@ -1096,7 +1096,8 @@ iomap_finish_ioend(struct iomap_ioend *ioend, int error)
+ 
+ 		/* walk each page on bio, ending page IO on them */
+ 		bio_for_each_segment_all(bv, bio, iter_all)
+-			iomap_finish_page_writeback(inode, bv->bv_page, error);
++			iomap_finish_page_writeback(inode, bv->bv_page, error,
++					bv->bv_len);
+ 		bio_put(bio);
+ 	}
+ 	/* The ioend has been freed by bio_put() */
+@@ -1312,8 +1313,8 @@ iomap_add_to_ioend(struct inode *inode, loff_t offset, struct page *page,
+ 
+ 	merged = __bio_try_merge_page(wpc->ioend->io_bio, page, len, poff,
+ 			&same_page);
+-	if (iop && !same_page)
+-		atomic_inc(&iop->write_count);
++	if (iop)
++		atomic_add(len, &iop->write_count);
+ 
+ 	if (!merged) {
+ 		if (bio_full(wpc->ioend->io_bio, len)) {
 -- 
 2.28.0
 
