@@ -2,102 +2,89 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ADFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F26CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9977920706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A67F20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:32:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJT2i7oN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgHXMbS (ORCPT
+        id S1726502AbgHXMb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:31:18 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:53200 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727000AbgHXMbB (ORCPT
+        Mon, 24 Aug 2020 08:31:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726993AbgHXMbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:31:01 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U6k8x2u_1598272219;
-Received: from localhost(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U6k8x2u_1598272219)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 24 Aug 2020 20:30:51 +0800
-From:   Xunlei Pang <xlpang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Wetp Zhang <wetp.zy@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] sched/fair: Fix wrong cpu selecting from isolated domain
-Date:   Mon, 24 Aug 2020 20:30:19 +0800
-Message-Id: <1598272219-43040-1-git-send-email-xlpang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 24 Aug 2020 08:31:20 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C1EC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:31:20 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id s20so3116750wmj.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:31:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=oyXzsgWOgUSKqh7OmCxpMIN54jigix4a16FwR8oV1Jc=;
+        b=PJT2i7oNvHTb8GIY3pbdq0CKqaYt9NAekVdTmH3v3/3onYeUE/NnOkyeVQk7zQxOTw
+         OCirfXd3t3tTgOXCy3wmga+o2LzoqRGR+mlUiLXAbmWvKVAJCRYBMW1fcUGR3IZBG+H0
+         Eo3XgVXOujSZ7x0hRe6VNl5CBNOzlLQRDT9YqMcOcQ5g7rwiy28NyTkrUfa+dqpfGNJL
+         xpcZjRQ5iPGm5fI1eR8WGCtxBdPBSEJyepuDiM5n6wK1jUDsIkNnPSPKPPJ/CCotBeNr
+         tooMxB1l1uSoZzBcPexlK5hlHt48rIGToAfGYQqHfWN/IqU20mb1N+L3vXfFoKG6G27+
+         qsLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=oyXzsgWOgUSKqh7OmCxpMIN54jigix4a16FwR8oV1Jc=;
+        b=HtbdXoLKPCjcgHZyQbd0ROIoqCya8V9yC5OdfnaCu7eN6BtT7nkS1AZ4JH+1DVz2PE
+         saDGmfAniWXl5qmPo9pPFQe4IWN1edsCdb8AxMWDpGUFEgISe8ojmRvMOAtSaVBkfOMv
+         /khGJku4f8YHwIA/1cn3EBiYzL1V3BcBr/hSn3WspEGqNRie9aVG8dHjKKZAj3HG3jGW
+         8GgyTUPhbxarvOZDTXj7GuFbEjXH6EU8DpOaWUXNlpvm0SlYqu9Kc07r3Z0evBwJSm02
+         GwSJLIHJcU5+FYNdgwpLK019opYi30TZ3tZ27PZLrPcC8PCpcJI4ksVc7hvaOwUdxUS5
+         tivw==
+X-Gm-Message-State: AOAM530j9Ys93irxVhccN+/58sUW349q8fT1TAL0BaH8zLCoiJ5qgJoR
+        vq/d02g6sLvxYULb0TrTOAU=
+X-Google-Smtp-Source: ABdhPJzCG8ZeDcWVct1PS4h/Vf1ItylB7hBVwzVNHzXGcW19wknoM4zUvaEth3ZoSDxUERetRqAPGA==
+X-Received: by 2002:a7b:cf07:: with SMTP id l7mr1519763wmg.93.1598272279039;
+        Mon, 24 Aug 2020 05:31:19 -0700 (PDT)
+Received: from [192.168.0.16] (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id x8sm20292007wrq.42.2020.08.24.05.31.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 05:31:18 -0700 (PDT)
+Subject: Re: [PATCH] ALSA: hda/realtek: Add quirk for Samsung Galaxy Book Ion
+ 15 inches
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     adrien.crivelli@gmail.com
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        perex@perex.cz, tiwai@suse.com
+References: <7210c752-0a1f-3985-91f0-b70facf0293c@gmail.com>
+Message-ID: <30693624-744d-6971-1dc8-8ffe4df6082c@gmail.com>
+Date:   Mon, 24 Aug 2020 13:31:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <7210c752-0a1f-3985-91f0-b70facf0293c@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We've met problems that occasionally tasks with full cpumask
-(e.g. by putting it into a cpuset or setting to full affinity)
-were migrated to our isolated cpus in production environment.
+My mistake -- I didn't read your changelog properly. Sorry!
 
-After some analysis, we found that it is due to the current
-select_idle_smt() not considering the sched_domain mask.
-
-Fix it by checking the valid domain mask in select_idle_smt().
-
-Fixes: 10e2f1acd010 ("sched/core: Rewrite and improve select_idle_siblings())
-Reported-by: Wetp Zhang <wetp.zy@linux.alibaba.com>
-Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
----
- kernel/sched/fair.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1a68a05..fa942c4 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6075,7 +6075,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
- /*
-  * Scan the local SMT mask for idle CPUs.
-  */
--static int select_idle_smt(struct task_struct *p, int target)
-+static int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
- {
- 	int cpu;
- 
-@@ -6083,7 +6083,8 @@ static int select_idle_smt(struct task_struct *p, int target)
- 		return -1;
- 
- 	for_each_cpu(cpu, cpu_smt_mask(target)) {
--		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
-+		if (!cpumask_test_cpu(cpu, p->cpus_ptr) ||
-+		    !cpumask_test_cpu(cpu, sched_domain_span(sd)))
- 			continue;
- 		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
- 			return cpu;
-@@ -6099,7 +6100,7 @@ static inline int select_idle_core(struct task_struct *p, struct sched_domain *s
- 	return -1;
- }
- 
--static inline int select_idle_smt(struct task_struct *p, int target)
-+static inline int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
- {
- 	return -1;
- }
-@@ -6274,7 +6275,7 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 	if ((unsigned)i < nr_cpumask_bits)
- 		return i;
- 
--	i = select_idle_smt(p, target);
-+	i = select_idle_smt(p, sd, target);
- 	if ((unsigned)i < nr_cpumask_bits)
- 		return i;
- 
--- 
-1.8.3.1
+On 24/08/2020 13:30, Alex Dewar wrote:
+> There's a mistake in this. The ID numbers are the wrong way round.
+>
+> Alex
 
