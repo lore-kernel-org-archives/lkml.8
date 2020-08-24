@@ -2,60 +2,53 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99830C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7661C2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8242074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258803;
-	bh=1RUvlJj4UOjBfLIGHgxFknh/nqgcIeP7tjGttnAp8Oo=;
+	s=default; t=1598258807;
+	bh=Ge1Fv6LAeKyYdapeduUL5sLIMyaq4MqgxEoN828ffQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lfFG5UXyc754L80Vg5VQ1mOIwdh2F/faw4gmHgLiEqaOIFNnhQIBJJpfwW7rXLGjZ
-	 gbjKwwCz8h+Ii+NxApLgPopdCCKL/lWLJQNiXZ1uw4ZjwX7r0dZG0JNKAtQVdiNSnu
-	 KW/ULP6PGFrTZSNEjXL9upJ7r0qWpzmS7wN260Os=
+	b=motCUoBEBpzudwWCnNGfLaKYpiH07t6RKq87FWkBdJpV409Dkbu/6ApHBdxaZlcgj
+	 5rRYmhxH9lLbpRtrMiX1upoL7YGPVk9ZgRxEokp+nzA7c8bfH/4yi36sUdokZGCOFw
+	 5APFx69jR9jMrDk0F1rEFavabxxG2jy3mAnguwVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbgHXIqk (ORCPT
+        id S1729373AbgHXIqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:46:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44746 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:46:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729343AbgHXIq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:46:26 -0400
+        id S1728981AbgHXIqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:46:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7270206F0;
-        Mon, 24 Aug 2020 08:46:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA54E204FD;
+        Mon, 24 Aug 2020 08:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258786;
-        bh=1RUvlJj4UOjBfLIGHgxFknh/nqgcIeP7tjGttnAp8Oo=;
+        s=default; t=1598258792;
+        bh=Ge1Fv6LAeKyYdapeduUL5sLIMyaq4MqgxEoN828ffQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z0iuatpNFbQ6+p7OixpymmSQTZYYwcc+inqXkPgJghqEeAudQYro6vZOMyghANyAk
-         3Q8GMOadiS7BkUcZHMOyprMIl3bVJk66nc5pNZksDRJoZm6oq9OSuOALRthgAoACmZ
-         rj6JDGG5Q0h0w955WVCcHhADHW7j5o8hdJ5YHixg=
+        b=Spk5AdKlrkPhECphUtU8JhqPcTOswTM5U8mJaCM9XguZ7m1Ew5Atikh/x4hltROK7
+         KO6ekfGsy8y52p9dqyJZgVPczl636NlBy8m60/XqsGvhtM6kKLLOISz6I6Cl16/rtg
+         Q44BFA5v3p5Y2LdTcWrHkQMI6EsVokK+dctUtDbY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Shi <shy828301@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 015/107] khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
-Date:   Mon, 24 Aug 2020 10:29:41 +0200
-Message-Id: <20200824082405.826004689@linuxfoundation.org>
+        stable@vger.kernel.org, Liang Chen <cl@rock-chips.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Chanho Park <chanho61.park@samsung.com>
+Subject: [PATCH 5.4 039/107] kthread: Do not preempt current task if it is going to call schedule()
+Date:   Mon, 24 Aug 2020 10:30:05 +0200
+Message-Id: <20200824082407.058908921@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -68,51 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Liang Chen <cl@rock-chips.com>
 
-[ Upstream commit f3f99d63a8156c7a4a6b20aac22b53c5579c7dc1 ]
+commit 26c7295be0c5e6da3fa45970e9748be983175b1b upstream.
 
-syzbot crashes on the VM_BUG_ON_MM(khugepaged_test_exit(mm), mm) in
-__khugepaged_enter(): yes, when one thread is about to dump core, has set
-core_state, and is waiting for others, another might do something calling
-__khugepaged_enter(), which now crashes because I lumped the core_state
-test (known as "mmget_still_valid") into khugepaged_test_exit().  I still
-think it's best to lump them together, so just in this exceptional case,
-check mm->mm_users directly instead of khugepaged_test_exit().
+when we create a kthread with ktrhead_create_on_cpu(),the child thread
+entry is ktread.c:ktrhead() which will be preempted by the parent after
+call complete(done) while schedule() is not called yet,then the parent
+will call wait_task_inactive(child) but the child is still on the runqueue,
+so the parent will schedule_hrtimeout() for 1 jiffy,it will waste a lot of
+time,especially on startup.
 
-Fixes: bbe98f9cadff ("khugepaged: khugepaged_test_exit() check mmget_still_valid()")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Yang Shi <shy828301@gmail.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: <stable@vger.kernel.org>	[4.8+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008141503370.18085@eggly.anvils
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  parent                             child
+ktrhead_create_on_cpu()
+  wait_fo_completion(&done) -----> ktread.c:ktrhead()
+                             |----- complete(done);--wakeup and preempted by parent
+ kthread_bind() <------------|  |-> schedule();--dequeue here
+  wait_task_inactive(child)     |
+   schedule_hrtimeout(1 jiffy) -|
+
+So we hope the child just wakeup parent but not preempted by parent, and the
+child is going to call schedule() soon,then the parent will not call
+schedule_hrtimeout(1 jiffy) as the child is already dequeue.
+
+The same issue for ktrhead_park()&&kthread_parkme().
+This patch can save 120ms on rk312x startup with CONFIG_HZ=300.
+
+Signed-off-by: Liang Chen <cl@rock-chips.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lkml.kernel.org/r/20200306070133.18335-2-cl@rock-chips.com
+Signed-off-by: Chanho Park <chanho61.park@samsung.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/khugepaged.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/kthread.c |   17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 76e3e90dbc16e..3623d1c5343f2 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -438,7 +438,7 @@ int __khugepaged_enter(struct mm_struct *mm)
- 		return -ENOMEM;
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -199,8 +199,15 @@ static void __kthread_parkme(struct kthr
+ 		if (!test_bit(KTHREAD_SHOULD_PARK, &self->flags))
+ 			break;
  
- 	/* __khugepaged_exit() must not run from under us */
--	VM_BUG_ON_MM(khugepaged_test_exit(mm), mm);
-+	VM_BUG_ON_MM(atomic_read(&mm->mm_users) == 0, mm);
- 	if (unlikely(test_and_set_bit(MMF_VM_HUGEPAGE, &mm->flags))) {
- 		free_mm_slot(mm_slot);
- 		return 0;
--- 
-2.25.1
-
++		/*
++		 * Thread is going to call schedule(), do not preempt it,
++		 * or the caller of kthread_park() may spend more time in
++		 * wait_task_inactive().
++		 */
++		preempt_disable();
+ 		complete(&self->parked);
+-		schedule();
++		schedule_preempt_disabled();
++		preempt_enable();
+ 	}
+ 	__set_current_state(TASK_RUNNING);
+ }
+@@ -245,8 +252,14 @@ static int kthread(void *_create)
+ 	/* OK, tell user we're spawned, wait for stop or wakeup */
+ 	__set_current_state(TASK_UNINTERRUPTIBLE);
+ 	create->result = current;
++	/*
++	 * Thread is going to call schedule(), do not preempt it,
++	 * or the creator may spend more time in wait_task_inactive().
++	 */
++	preempt_disable();
+ 	complete(done);
+-	schedule();
++	schedule_preempt_disabled();
++	preempt_enable();
+ 
+ 	ret = -EINTR;
+ 	if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
 
 
