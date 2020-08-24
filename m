@@ -2,153 +2,150 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22752C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E0FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEBBF204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LDc1UPXa"
+	by mail.kernel.org (Postfix) with ESMTP id 584522072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598259560;
+	bh=Ugp5lYXLez/YXQk+NIdZCZFpUpaFzz9EnvVK/Mz/9/o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wt5BRQSe+U//d/wjRCLzAhyxMv1derMf/+IQb+GfB8Syirz94UBeH2ooyHNxZzhqw
+	 0anyXUfbMYZViCIzNIAgVUCi4PRFkD5iG+wnPlR5EOHLKKsyJ+QELQ1BlYcatqw/5A
+	 0fNce435JnMqD60P7UuXZgXmnBHB7QSRRQ2D975o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730799AbgHXI7I (ORCPT
+        id S1730803AbgHXI7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:59:08 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51148 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730725AbgHXI56 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:57:58 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07O8tULY092460;
-        Mon, 24 Aug 2020 08:57:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=X3DAykUVn3cBni5mmT6BElwNQ4x1lMO6Npp2yRLlpV4=;
- b=LDc1UPXac3uJKxCNI8StZLNxGMHxFSUOGoKukFVF71GDJT61yrVIGUAom6DFOmn+HYgp
- ueKRys103jantFgV0cqvy6HnGhg3JNcCKi/tfzoV4l5xz+70UaAm5Iz5oAU/QrWjvUfg
- GO3RSBEa5ZcEUI/yZ6maL/NZ7h1W8waFa+g0ECgFpeBFOKdmFOTzVUq5TTiRva635t35
- TKnDGAe98eCdqIIFfEVIenj6qIIBrdNufBUNIG2tn2HOoz68DEBVa+8sSexQcjNvkJAd
- 89LZV6AQ1WnfAtuPQsndeN4ThIoU/uVQBChkQF2q8Yfn1M71k5sLAjap+2J/jRyjn60z AQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 333w6thvmt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Aug 2020 08:57:44 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07O8pDRa107785;
-        Mon, 24 Aug 2020 08:57:43 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 333r9gwkg1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Aug 2020 08:57:43 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07O8vgt2005803;
-        Mon, 24 Aug 2020 08:57:42 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Aug 2020 01:57:42 -0700
-Date:   Mon, 24 Aug 2020 11:57:35 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Stefan Achatz <erazor_de@users.sourceforge.net>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] HID: roccat: add bounds checking in
- kone_sysfs_write_settings()
-Message-ID: <20200824085735.GA208317@mwanda>
+        Mon, 24 Aug 2020 04:59:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730715AbgHXI5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62A11204FD;
+        Mon, 24 Aug 2020 08:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259470;
+        bh=Ugp5lYXLez/YXQk+NIdZCZFpUpaFzz9EnvVK/Mz/9/o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zsL5wtY+IxXtRbGOSsf2hys89l/WpTRW5gcjN3wWbv/mlG9Wzcf9ym72m9P8yix4P
+         wK9jBN+YHfnNcO+WLks6ZvxDj9DffLkna7q1e2N36987mpfQiiuAIXerOoWo/hEoLD
+         id4JpPlrmZXKHNR7g6FOXs8FtJ2qZJWiW/nz1Nhk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sarah Newman <srn@prgmr.com>, Juergen Gross <jgross@suse.com>,
+        Chris Brannon <cmb@prgmr.com>
+Subject: [PATCH 4.19 70/71] xen: dont reschedule in preemption off sections
+Date:   Mon, 24 Aug 2020 10:32:01 +0200
+Message-Id: <20200824082359.458977819@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597819984.4101.16.camel@web.de>
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240067
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008240067
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code doesn't check if "settings->startup_profile" is within bounds
-and that could result in an out of bounds array access.  What the code
-does do is it checks if the settings can be written to the firmware, so
-it's possible that the firmware has a bounds check?  It's safer and
-easier to verify when the bounds checking is done in the kernel.
+From: Juergen Gross <jgross@suse.com>
 
-Fixes: 14bf62cde794 ("HID: add driver for Roccat Kone gaming mouse")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+For support of long running hypercalls xen_maybe_preempt_hcall() is
+calling cond_resched() in case a hypercall marked as preemptible has
+been interrupted.
+
+Normally this is no problem, as only hypercalls done via some ioctl()s
+are marked to be preemptible. In rare cases when during such a
+preemptible hypercall an interrupt occurs and any softirq action is
+started from irq_exit(), a further hypercall issued by the softirq
+handler will be regarded to be preemptible, too. This might lead to
+rescheduling in spite of the softirq handler potentially having set
+preempt_disable(), leading to splats like:
+
+BUG: sleeping function called from invalid context at drivers/xen/preempt.c:37
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 20775, name: xl
+INFO: lockdep is turned off.
+CPU: 1 PID: 20775 Comm: xl Tainted: G D W 5.4.46-1_prgmr_debug.el7.x86_64 #1
+Call Trace:
+<IRQ>
+dump_stack+0x8f/0xd0
+___might_sleep.cold.76+0xb2/0x103
+xen_maybe_preempt_hcall+0x48/0x70
+xen_do_hypervisor_callback+0x37/0x40
+RIP: e030:xen_hypercall_xen_version+0xa/0x20
+Code: ...
+RSP: e02b:ffffc900400dcc30 EFLAGS: 00000246
+RAX: 000000000004000d RBX: 0000000000000200 RCX: ffffffff8100122a
+RDX: ffff88812e788000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffffff83ee3ad0 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000246 R12: ffff8881824aa0b0
+R13: 0000000865496000 R14: 0000000865496000 R15: ffff88815d040000
+? xen_hypercall_xen_version+0xa/0x20
+? xen_force_evtchn_callback+0x9/0x10
+? check_events+0x12/0x20
+? xen_restore_fl_direct+0x1f/0x20
+? _raw_spin_unlock_irqrestore+0x53/0x60
+? debug_dma_sync_single_for_cpu+0x91/0xc0
+? _raw_spin_unlock_irqrestore+0x53/0x60
+? xen_swiotlb_sync_single_for_cpu+0x3d/0x140
+? mlx4_en_process_rx_cq+0x6b6/0x1110 [mlx4_en]
+? mlx4_en_poll_rx_cq+0x64/0x100 [mlx4_en]
+? net_rx_action+0x151/0x4a0
+? __do_softirq+0xed/0x55b
+? irq_exit+0xea/0x100
+? xen_evtchn_do_upcall+0x2c/0x40
+? xen_do_hypervisor_callback+0x29/0x40
+</IRQ>
+? xen_hypercall_domctl+0xa/0x20
+? xen_hypercall_domctl+0x8/0x20
+? privcmd_ioctl+0x221/0x990 [xen_privcmd]
+? do_vfs_ioctl+0xa5/0x6f0
+? ksys_ioctl+0x60/0x90
+? trace_hardirqs_off_thunk+0x1a/0x20
+? __x64_sys_ioctl+0x16/0x20
+? do_syscall_64+0x62/0x250
+? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fix that by testing preempt_count() before calling cond_resched().
+
+In kernel 5.8 this can't happen any more due to the entry code rework
+(more than 100 patches, so not a candidate for backporting).
+
+The issue was introduced in kernel 4.3, so this patch should go into
+all stable kernels in [4.3 ... 5.7].
+
+Reported-by: Sarah Newman <srn@prgmr.com>
+Fixes: 0fa2f5cb2b0ecd8 ("sched/preempt, xen: Use need_resched() instead of should_resched()")
+Cc: Sarah Newman <srn@prgmr.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Tested-by: Chris Brannon <cmb@prgmr.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-v2:  In the v1 patch I added a check against settings->size but that's
-potentially too strict so it was removed.
+ drivers/xen/preempt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/hid/hid-roccat-kone.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+--- a/drivers/xen/preempt.c
++++ b/drivers/xen/preempt.c
+@@ -31,7 +31,7 @@ EXPORT_SYMBOL_GPL(xen_in_preemptible_hca
+ asmlinkage __visible void xen_maybe_preempt_hcall(void)
+ {
+ 	if (unlikely(__this_cpu_read(xen_in_preemptible_hcall)
+-		     && need_resched())) {
++		     && need_resched() && !preempt_count())) {
+ 		/*
+ 		 * Clear flag as we may be rescheduled on a different
+ 		 * cpu.
 
-diff --git a/drivers/hid/hid-roccat-kone.c b/drivers/hid/hid-roccat-kone.c
-index 2ff4c8e366ff..1ca64481145e 100644
---- a/drivers/hid/hid-roccat-kone.c
-+++ b/drivers/hid/hid-roccat-kone.c
-@@ -294,31 +294,40 @@ static ssize_t kone_sysfs_write_settings(struct file *fp, struct kobject *kobj,
- 	struct kone_device *kone = hid_get_drvdata(dev_get_drvdata(dev));
- 	struct usb_device *usb_dev = interface_to_usbdev(to_usb_interface(dev));
- 	int retval = 0, difference, old_profile;
-+	struct kone_settings *settings = (struct kone_settings *)buf;
- 
- 	/* I need to get my data in one piece */
- 	if (off != 0 || count != sizeof(struct kone_settings))
- 		return -EINVAL;
- 
- 	mutex_lock(&kone->kone_lock);
--	difference = memcmp(buf, &kone->settings, sizeof(struct kone_settings));
-+	difference = memcmp(settings, &kone->settings,
-+			    sizeof(struct kone_settings));
- 	if (difference) {
--		retval = kone_set_settings(usb_dev,
--				(struct kone_settings const *)buf);
--		if (retval) {
--			mutex_unlock(&kone->kone_lock);
--			return retval;
-+		if (settings->startup_profile < 1 ||
-+		    settings->startup_profile > 5) {
-+			retval = -EINVAL;
-+			goto unlock;
- 		}
- 
-+		retval = kone_set_settings(usb_dev, settings);
-+		if (retval)
-+			goto unlock;
-+
- 		old_profile = kone->settings.startup_profile;
--		memcpy(&kone->settings, buf, sizeof(struct kone_settings));
-+		memcpy(&kone->settings, settings, sizeof(struct kone_settings));
- 
- 		kone_profile_activated(kone, kone->settings.startup_profile);
- 
- 		if (kone->settings.startup_profile != old_profile)
- 			kone_profile_report(kone, kone->settings.startup_profile);
- 	}
-+unlock:
- 	mutex_unlock(&kone->kone_lock);
- 
-+	if (retval)
-+		return retval;
-+
- 	return sizeof(struct kone_settings);
- }
- static BIN_ATTR(settings, 0660, kone_sysfs_read_settings,
--- 
-2.28.0
 
