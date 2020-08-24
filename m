@@ -2,262 +2,230 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A9DC433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADA2C433E4
 	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2839420774
+	by mail.kernel.org (Postfix) with ESMTP id 85D9022C9F
 	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:35:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N82OtXxz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598268927;
+	bh=LWqsrIej13uQH4Y7Vu2HAhOG7jXgID1+sj9HBtprdHA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=bUhuuwLyYQHLc+98QF5FLDH34FRuOxLR6kXsmjB8UWUqcABNgKvXuNct+ASFkyjG0
+	 SnOcIRotItyvzx8wVDu0NtYf+PbjKKRrcMlSzK3/sDGsVboR8D5od3F2dev7LszpY7
+	 mYcLdcNsSZ9niNgZCV4j10a08JOOtbWohUXpkoRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgHXLd6 (ORCPT
+        id S1727768AbgHXLe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:33:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbgHXLc0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:32:26 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F49C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:32:18 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id s20so2940433wmj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9DiUHolhkNru49P23XOkyQDXz+EeQP5GDOxo76bpdxo=;
-        b=N82OtXxzEv7KNfxea1kKJyIvBhm6oAmVu1OS5Zx6ff698tfVJnjMBvLrwkHPg2N11q
-         evTXJg1xx9TRBnSvInQ1x96tb+1cutj/8oblHmVH3fegXDvsgZoNElu6kNtiDMNeaQ8K
-         KfbiHbU2w+hAzzPOrJaSpMOl5jpUKbdH/w9T7RSRQ3bQbNBFOl8HC8V62qr/x/w2qF0X
-         VMZU5KwuxEuxxmOKrOks2kFswyx3rFmGEHhc0beu8fKirt6s5m9cdkqE06PudufJ9Dwl
-         MOUovMDINJzRGFcGj+n1Dg+CVsjEuVCedvQCpLR4A8TL1QTux1FEN0t15UHvam+d9Hnj
-         e1SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9DiUHolhkNru49P23XOkyQDXz+EeQP5GDOxo76bpdxo=;
-        b=KkGzbsucXQvhOMuOxfBjpZr786S6meyh6D1aJFz+zl3Zb5VQpSwBi9hW6a+2RFEXbN
-         fMIUVuMFRtzbtEWq9jQUazxhUfppg9LQB/j+qFJavddNPnI47DSlsynxv5GdxQ1MZkIF
-         QpCUc/G3wRMaCbkE4vGpp+Dw7aSBy/rTh+fQLgBES8WtIkN6Q8MH3DqZqIGJEkp/u7w+
-         gaNDWDD9RBGGXyBGzCR6RsFqV9LBrhQjg2X6YmFXh4LZQ/88DY1zk/4X5mwbAfrQH8Zh
-         PqC4N5IDfpkGM8aOj+WuXzbZVjHNES0RFVe7nGBZr1t8nolq4yZ4vlu/e0SR2bV+om0e
-         TySw==
-X-Gm-Message-State: AOAM530ncshJAe1e8aLwftQ8SkzPif5sLm+EhHpsbkCthAJ8/O7shOrh
-        xOGgBCCVjNeGil77hETVw/4FBQ9T9fWDI8mqHeU=
-X-Google-Smtp-Source: ABdhPJwaRwEDNW7PLgfF+M/JTI1lLafL7iDUVoIPMhVR0TW1sx5S+xdg3n8hqtmbwfoOfRyAItpXWkz4g86yNi/HzJ4=
-X-Received: by 2002:a1c:f70e:: with SMTP id v14mr5248986wmh.74.1598268737042;
- Mon, 24 Aug 2020 04:32:17 -0700 (PDT)
+        Mon, 24 Aug 2020 07:34:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726938AbgHXLal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 07:30:41 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B70D2074D;
+        Mon, 24 Aug 2020 11:30:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598268640;
+        bh=LWqsrIej13uQH4Y7Vu2HAhOG7jXgID1+sj9HBtprdHA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GynScZa9ZPF3MCAvb5q0RIlGbCGvWOBEXL9HKUM6BdXYORKLy5NANLiaJYYIQC6u4
+         WjltTTsq4zpaQSb2vKsHN+n6isQyiCI+kxDaEXLaEmrbS+08hlSC0KtnPIej4Psred
+         oG+KCBeEadiM68Zf5Ddq6gLwkoLYACm2zAGzbt8Q=
+From:   Will Deacon <will@kernel.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, maz@kernel.org,
+        suzuki.poulose@arm.com, james.morse@arm.com, pbonzini@redhat.com,
+        kernel-team@android.com, Will Deacon <will@kernel.org>,
+        stable@vger.kernel.org
+Subject: [PATCH stable-5.7.y backport 1/2] KVM: Pass MMU notifier range flags to kvm_unmap_hva_range()
+Date:   Mon, 24 Aug 2020 12:30:35 +0100
+Message-Id: <20200824113036.24910-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200822030155.GA414063@google.com>
-In-Reply-To: <20200822030155.GA414063@google.com>
-From:   Vineeth Pillai <vineethrp@gmail.com>
-Date:   Mon, 24 Aug 2020 07:32:05 -0400
-Message-ID: <CAOBnfPjG9=XPCYOP6Hau5rZaKAEb4rYHG=5oORJt36X1_nFPOg@mail.gmail.com>
-Subject: Re: [RFC] Design proposal for upstream core-scheduling interface
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        JulienDesfossez@google.com,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, Kees Cook <keescook@chromium.org>,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        chris hyser <chris.hyser@oracle.com>, dhaval.giani@gmail.com,
-        "Paul E . McKenney" <paulmck@kernel.org>, joshdon@google.com,
-        xii@google.com, haoluo@google.com, bsegall@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Let me know your thoughts and looking forward to a good LPC MC discussion=
-!
->
+commit fdfe7cbd58806522e799e2a50a15aee7f2cbb7b6 upstream.
 
-Nice write up Joel, thanks for taking time to compile this with great detai=
-l!
+The 'flags' field of 'struct mmu_notifier_range' is used to indicate
+whether invalidate_range_{start,end}() are permitted to block. In the
+case of kvm_mmu_notifier_invalidate_range_start(), this field is not
+forwarded on to the architecture-specific implementation of
+kvm_unmap_hva_range() and therefore the backend cannot sensibly decide
+whether or not to block.
 
-After going through the details of interface proposal using cgroup v2
-controllers,
-and based on our discussion offline, would like to note down this idea
-about a new
-pseudo filesystem interface for core scheduling.  We could include
-this also for the
-API discussion during core scheduler MC.
+Add an extra 'flags' parameter to kvm_unmap_hva_range() so that
+architectures are aware as to whether or not they are permitted to block.
 
-coreschedfs: pseudo filesystem interface for Core Scheduling
----------------------------------------------------------------------------=
--------
+Cc: <stable@vger.kernel.org> # v5.7 only
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Message-Id: <20200811102725.7121-2-will@kernel.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+---
+ arch/arm64/include/asm/kvm_host.h   | 2 +-
+ arch/mips/include/asm/kvm_host.h    | 2 +-
+ arch/mips/kvm/mmu.c                 | 3 ++-
+ arch/powerpc/include/asm/kvm_host.h | 3 ++-
+ arch/powerpc/kvm/book3s.c           | 3 ++-
+ arch/powerpc/kvm/e500_mmu_host.c    | 3 ++-
+ arch/x86/include/asm/kvm_host.h     | 3 ++-
+ arch/x86/kvm/mmu/mmu.c              | 3 ++-
+ virt/kvm/arm/mmu.c                  | 2 +-
+ virt/kvm/kvm_main.c                 | 3 ++-
+ 10 files changed, 17 insertions(+), 10 deletions(-)
 
-The basic requirement of core scheduling is simple - we need to group a set
-of tasks into a trust group that can share a core. So we don=E2=80=99t real=
-ly
-need a nested
-hierarchy for the trust groups. Cgroups v2 follow a unified nested
-hierarchy model
-that causes a considerable confusion if the trusted tasks are in
-different levels of the
-hierarchy and we need to allow them to share the core. Cgroup v2's
-single hierarchy
-model makes it difficult to regroup tasks in different levels of
-nesting for core scheduling.
-As noted in this mail, we could use multi-file approach and other
-interfaces like prctl to
-overcome this limitation.
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index 26fca93cd697..397e20a35975 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -440,7 +440,7 @@ int __kvm_arm_vcpu_set_events(struct kvm_vcpu *vcpu,
+ 
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+ int kvm_unmap_hva_range(struct kvm *kvm,
+-			unsigned long start, unsigned long end);
++			unsigned long start, unsigned long end, unsigned flags);
+ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+ int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
+index caa2b936125c..8861e9d4eb1f 100644
+--- a/arch/mips/include/asm/kvm_host.h
++++ b/arch/mips/include/asm/kvm_host.h
+@@ -939,7 +939,7 @@ enum kvm_mips_fault_result kvm_trap_emul_gva_fault(struct kvm_vcpu *vcpu,
+ 
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+ int kvm_unmap_hva_range(struct kvm *kvm,
+-			unsigned long start, unsigned long end);
++			unsigned long start, unsigned long end, unsigned flags);
+ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+ int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
+index 7dad7a293eae..2514e51d908b 100644
+--- a/arch/mips/kvm/mmu.c
++++ b/arch/mips/kvm/mmu.c
+@@ -518,7 +518,8 @@ static int kvm_unmap_hva_handler(struct kvm *kvm, gfn_t gfn, gfn_t gfn_end,
+ 	return 1;
+ }
+ 
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags)
+ {
+ 	handle_hva_to_gpa(kvm, start, end, &kvm_unmap_hva_handler, NULL);
+ 
+diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
+index 1dc63101ffe1..b82e46ecd7fb 100644
+--- a/arch/powerpc/include/asm/kvm_host.h
++++ b/arch/powerpc/include/asm/kvm_host.h
+@@ -58,7 +58,8 @@
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+ 
+ extern int kvm_unmap_hva_range(struct kvm *kvm,
+-			       unsigned long start, unsigned long end);
++			       unsigned long start, unsigned long end,
++			       unsigned flags);
+ extern int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ extern int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+ extern int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+index 5690a1f9b976..13f107dff880 100644
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -837,7 +837,8 @@ void kvmppc_core_commit_memory_region(struct kvm *kvm,
+ 	kvm->arch.kvm_ops->commit_memory_region(kvm, mem, old, new, change);
+ }
+ 
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags)
+ {
+ 	return kvm->arch.kvm_ops->unmap_hva_range(kvm, start, end);
+ }
+diff --git a/arch/powerpc/kvm/e500_mmu_host.c b/arch/powerpc/kvm/e500_mmu_host.c
+index df9989cf7ba3..9b402c345154 100644
+--- a/arch/powerpc/kvm/e500_mmu_host.c
++++ b/arch/powerpc/kvm/e500_mmu_host.c
+@@ -734,7 +734,8 @@ static int kvm_unmap_hva(struct kvm *kvm, unsigned long hva)
+ 	return 0;
+ }
+ 
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags)
+ {
+ 	/* kvm_unmap_hva flushes everything anyways */
+ 	kvm_unmap_hva(kvm, start);
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 86e2e0272c57..d4c5d1d6c6f5 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1606,7 +1606,8 @@ asmlinkage void kvm_spurious_fault(void);
+ 	_ASM_EXTABLE(666b, 667b)
+ 
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end);
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags);
+ int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 70cf2c1a1423..59d096cacb26 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1972,7 +1972,8 @@ static int kvm_handle_hva(struct kvm *kvm, unsigned long hva,
+ 	return kvm_handle_hva_range(kvm, hva, hva + 1, data, handler);
+ }
+ 
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags)
+ {
+ 	return kvm_handle_hva_range(kvm, start, end, 0, kvm_unmap_rmapp);
+ }
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index 8a9d13e8e904..9510965789e3 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -2046,7 +2046,7 @@ static int kvm_unmap_hva_handler(struct kvm *kvm, gpa_t gpa, u64 size, void *dat
+ }
+ 
+ int kvm_unmap_hva_range(struct kvm *kvm,
+-			unsigned long start, unsigned long end)
++			unsigned long start, unsigned long end, unsigned flags)
+ {
+ 	if (!kvm->arch.pgd)
+ 		return 0;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 77aa91fb08d2..66b7a9dbb77d 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -428,7 +428,8 @@ static int kvm_mmu_notifier_invalidate_range_start(struct mmu_notifier *mn,
+ 	 * count is also read inside the mmu_lock critical section.
+ 	 */
+ 	kvm->mmu_notifier_count++;
+-	need_tlb_flush = kvm_unmap_hva_range(kvm, range->start, range->end);
++	need_tlb_flush = kvm_unmap_hva_range(kvm, range->start, range->end,
++					     range->flags);
+ 	need_tlb_flush |= kvm->tlbs_dirty;
+ 	/* we've to flush the tlb before the pages can be freed */
+ 	if (need_tlb_flush)
+-- 
+2.28.0.297.g1956fa8f8d-goog
 
-The idea proposed here to overcome the above limitation is to come up with =
-a new
-pseudo filesystem - =E2=80=9Ccoreschedfs=E2=80=9D. This filesystem is basic=
-ally a flat
-filesystem with
-maximum nesting level of 1. That means, root directory can have
-sub-directories for
-sub-groups, but those sub-directories cannot have more sub-directories
-representing
-trust groups. Root directory is to represent the system wide trust
-group and sub-directories
-represent trusted groups. Each directory including the root directory
-has the following set
-of files/directories:
-
-- cookie_id: User exposed id for a cookie. This can be compared to a
-file descriptor.
-             This could be used in programmatic API to join/leave a group
-
-- properties: This is an interface to specify how child tasks of this
-group should behave.
-              Can be used for specifying future flag requirements as well.
-              Current list of properties include:
-              NEW_COOKIE_FOR_CHILD: All fork() for tasks in this group
-will result in
-                                    creation of a new trust group
-              SAME_COOKIE_FOR_CHILD: All fork() for tasks in this
-group will end up in
-                                     this same group
-              ROOT_COOKIE_FOR_CHILD: All fork() for tasks in this
-group goes to the root group
-
-- tasks: Lists the tasks in this group. Main interface for adding
-removing tasks in a group
-
-- <pid>: A directory per task who is am member of this trust group.
-- <pid>/properties: This file is same as the parent properties file
-but this is to override
-                    the group setting.
-
-This pseudo filesystem can be mounted any where in the root
-filesystem, I propose the default
-to be in =E2=80=9C/sys/kernel/coresched=E2=80=9D
-
-When coresched is enabled, kernel internally creates the framework for
-this filesystem.
-The filesystem gets mounted to the default location and admin can
-change this if needed.
-All tasks by default are in the root group. The admin or programs can
-then create trusted
-groups on top of this filesystem.
-
-Hooks will be placed in fork() and exit() to make sure that the
-filesystem=E2=80=99s view of tasks is
-up-to-date with the system. Also, APIs manipulating core scheduling
-trusted groups should
-also make sure that the filesystem's view is updated.
-
-Note: The above idea is very similar to cgroups v1. Since there is no
-unified hierarchy
-in cgroup v1, most of the features of coreschedfs could be implemented
-as a cgroup v1
-controller. As no new v1 controllers are allowed, I feel the best
-alternative to have
-a simple API is to come up with a new filesystem - coreschedfs.
-
-The advantages of this approach is:
-
-- Detached from cgroup unified hierarchy and hence the very simple requirem=
-ent
-   of core scheduling can be easily materialized.
-- Admin can have fine-grained control of groups using shell and scripting
-- Can have programmatic access to this using existing APIs like mkdir,rmdir=
-,
-   write, read. Or can come up with new APIs using the cookie_id which can =
-wrap
-  t he above linux apis or use a new systemcall for core scheduling.
-- Fine grained permission control using linux filesystem permissions and AC=
-Ls
-
-Disadvantages are
-- yet another psuedo filesystem.
-- very similar to  cgroup v1 and might be re-implementing features
-that are already
-  provided by cgroups v1.
-
-Use Cases
------------------
-
-Usecase 1: Google cloud
----------------------------------
-
-Since we no longer depend on cgroup v2 hierarchies, there will not be
-any issue of
-nesting and sharing. The main daemon can create trusted groups in the
-fileystem and
-provide required permissions for the group. Then the init processes
-for each job can
-be added to respective groups for them to create children tasks as
-needed. Multiple
-jobs under the same customer which needs to share the core can be
-housed in one group.
-
-
-Usecase 2: Chrome browser
-------------------------
-
-We start with one group for the first task and then set properties to
-NEW_COOKIE_FOR_CHILD.
-
-Usecase 3: chrome VMs
----------------------
-
-Similar to chrome browser, the VM task can make each vcpu on its own group.
-
-Usecase 4: Oracle use case
---------------------------
-This is also similar to use case 1 with this interface. All tasks that need=
- to
-be in the root group can be easily added by the admin.
-
-Use case 5: General virtualization
-----------------------------------
-
-The requirement is each VM should be isolated. This can be easily done
-by creating a
-new group per VM
-
-
-Please have a look at the above proposal and let us know your
-thoughts. We shall include
-this also during the interface discussion at core scheduling MC.
-
-
-Thanks,
-Vineeth
