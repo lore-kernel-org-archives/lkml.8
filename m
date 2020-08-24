@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C837207CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE0C2078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287707;
-	bh=kjggIwyu8tGGql/uP4yWKtPejoz6uZLhw5z0iPKYxWk=;
+	s=default; t=1598287766;
+	bh=2lroPYKvHDnCdHwfqA2E7nbTMTuzp4zdCEnhzGfJip8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yg+zKH+G2pWQGUOZYVq+tGoyRGaxyaJz3U85ZrYDWfpGLZh7uIDgeguPzeMgrAhr2
-	 Nxj4+n1fcBcZgx/43EZsDA0MSZryBxturp8PUPYYavGkdf9EcuKV9C9HTAk4ho4tDN
-	 mDUnnf9HvMIxJslBvCMycf4XbUiOVtVhJsD4NJwM=
+	b=AbiaedwJ/rqqKkM1FZkHPn4ktlYbdkGp8ztalq0rgk3UfIm1FPeAIOpWCIW3pLp6o
+	 VKcvL+c0lAi2s7dDWz9+N8AiEdHjohv7oyp+5fYWABDIotmWMlqupcoEd6q/ho4A6p
+	 XpbSagsHF9/TTVjK44k3cR0BsPK4uRWa94lcfJCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgHXQsZ (ORCPT
+        id S1728620AbgHXQtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:48:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40164 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:49:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728555AbgHXQjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:39:11 -0400
+        id S1728553AbgHXQjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:39:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D752022D2A;
-        Mon, 24 Aug 2020 16:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B2CF22D07;
+        Mon, 24 Aug 2020 16:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287151;
-        bh=kjggIwyu8tGGql/uP4yWKtPejoz6uZLhw5z0iPKYxWk=;
+        s=default; t=1598287149;
+        bh=2lroPYKvHDnCdHwfqA2E7nbTMTuzp4zdCEnhzGfJip8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nvZrWObsmoghNZZREZZlhZYSVKkWTyAQO25kQtZtK9Zn3DHiUC0Vr2cZxLBxGoiOv
-         etzSNkSLX9EueyMEgKJEnsSUlNyvMST4eXAbHevuGctBeDXPtBKHPx4b8YJz3F9gWK
-         /nCmo9VuC4OzwE+svCMJfZDdxwzmspopW+OD6cng=
+        b=ogwa8/P716C8VEixkEVOJ4QUPhJppC1eJgkF/o4BSarB6JgkdnfE1o/fTS4kc93mu
+         B9qSoN3OSUHHl4FcvmF0JDVpjEvgt5GVoW3/tOcWXLgwts+DGIdMiZ36tixC5AhfX9
+         lLdK1D9Amr39vquhbnoKylHffvtgodgJ/6uVRt+8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Alvin=20=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/21] macvlan: validate setting of multiple remote source MAC addresses
-Date:   Mon, 24 Aug 2020 12:38:43 -0400
-Message-Id: <20200824163845.606933-19-sashal@kernel.org>
+Cc:     Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 17/21] scsi: qla2xxx: Fix null pointer access during disconnect from subsystem
+Date:   Mon, 24 Aug 2020 12:38:41 -0400
+Message-Id: <20200824163845.606933-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163845.606933-1-sashal@kernel.org>
 References: <20200824163845.606933-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,86 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alvin Šipraga <alsi@bang-olufsen.dk>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 8b61fba503904acae24aeb2bd5569b4d6544d48f ]
+[ Upstream commit 83949613fac61e8e37eadf8275bf072342302f4e ]
 
-Remote source MAC addresses can be set on a 'source mode' macvlan
-interface via the IFLA_MACVLAN_MACADDR_DATA attribute. This commit
-tightens the validation of these MAC addresses to match the validation
-already performed when setting or adding a single MAC address via the
-IFLA_MACVLAN_MACADDR attribute.
+NVMEAsync command is being submitted to QLA while the same NVMe controller
+is in the middle of reset. The reset path has deleted the association and
+freed aen_op->fcp_req.private. Add a check for this private pointer before
+issuing the command.
 
-iproute2 uses IFLA_MACVLAN_MACADDR_DATA for its 'macvlan macaddr set'
-command, and IFLA_MACVLAN_MACADDR for its 'macvlan macaddr add' command,
-which demonstrates the inconsistent behaviour that this commit
-addresses:
+...
+ 6 [ffffb656ca11fce0] page_fault at ffffffff8c00114e
+    [exception RIP: qla_nvme_post_cmd+394]
+    RIP: ffffffffc0d012ba  RSP: ffffb656ca11fd98  RFLAGS: 00010206
+    RAX: ffff8fb039eda228  RBX: ffff8fb039eda200  RCX: 00000000000da161
+    RDX: ffffffffc0d4d0f0  RSI: ffffffffc0d26c9b  RDI: ffff8fb039eda220
+    RBP: 0000000000000013   R8: ffff8fb47ff6aa80   R9: 0000000000000002
+    R10: 0000000000000000  R11: ffffb656ca11fdc8  R12: ffff8fb27d04a3b0
+    R13: ffff8fc46dd98a58  R14: 0000000000000000  R15: ffff8fc4540f0000
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+ 7 [ffffb656ca11fe08] nvme_fc_start_fcp_op at ffffffffc0241568 [nvme_fc]
+ 8 [ffffb656ca11fe50] nvme_fc_submit_async_event at ffffffffc0241901 [nvme_fc]
+ 9 [ffffb656ca11fe68] nvme_async_event_work at ffffffffc014543d [nvme_core]
+10 [ffffb656ca11fe98] process_one_work at ffffffff8b6cd437
+11 [ffffb656ca11fed8] worker_thread at ffffffff8b6cdcef
+12 [ffffb656ca11ff10] kthread at ffffffff8b6d3402
+13 [ffffb656ca11ff50] ret_from_fork at ffffffff8c000255
 
- # ip link add link eth0 name macvlan0 type macvlan mode source
- # ip link set link dev macvlan0 type macvlan macaddr add 01:00:00:00:00:00
- RTNETLINK answers: Cannot assign requested address
- # ip link set link dev macvlan0 type macvlan macaddr set 01:00:00:00:00:00
- # ip -d link show macvlan0
- 5: macvlan0@eth0: <BROADCAST,MULTICAST,DYNAMIC,UP,LOWER_UP> mtu 1500 ...
-     link/ether 2e:ac:fd:2d:69:f8 brd ff:ff:ff:ff:ff:ff promiscuity 0
-     macvlan mode source remotes (1) 01:00:00:00:00:00 numtxqueues 1 ...
+--
+PID: 37824  TASK: ffff8fb033063d80  CPU: 20  COMMAND: "kworker/u97:451"
+ 0 [ffffb656ce1abc28] __schedule at ffffffff8be629e3
+ 1 [ffffb656ce1abcc8] schedule at ffffffff8be62fe8
+ 2 [ffffb656ce1abcd0] schedule_timeout at ffffffff8be671ed
+ 3 [ffffb656ce1abd70] wait_for_completion at ffffffff8be639cf
+ 4 [ffffb656ce1abdd0] flush_work at ffffffff8b6ce2d5
+ 5 [ffffb656ce1abe70] nvme_stop_ctrl at ffffffffc0144900 [nvme_core]
+ 6 [ffffb656ce1abe80] nvme_fc_reset_ctrl_work at ffffffffc0243445 [nvme_fc]
+ 7 [ffffb656ce1abe98] process_one_work at ffffffff8b6cd437
+ 8 [ffffb656ce1abed8] worker_thread at ffffffff8b6cdb50
+ 9 [ffffb656ce1abf10] kthread at ffffffff8b6d3402
+10 [ffffb656ce1abf50] ret_from_fork at ffffffff8c000255
 
-With this change, the 'set' command will (rightly) fail in the same way
-as the 'add' command.
-
-Signed-off-by: Alvin Šipraga <alsi@bang-olufsen.dk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/20200806111014.28434-10-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macvlan.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/scsi/qla2xxx/qla_nvme.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
-index 349123592af0f..e226a96da3a39 100644
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -1230,6 +1230,9 @@ static void macvlan_port_destroy(struct net_device *dev)
- static int macvlan_validate(struct nlattr *tb[], struct nlattr *data[],
- 			    struct netlink_ext_ack *extack)
- {
-+	struct nlattr *nla, *head;
-+	int rem, len;
-+
- 	if (tb[IFLA_ADDRESS]) {
- 		if (nla_len(tb[IFLA_ADDRESS]) != ETH_ALEN)
- 			return -EINVAL;
-@@ -1277,6 +1280,20 @@ static int macvlan_validate(struct nlattr *tb[], struct nlattr *data[],
- 			return -EADDRNOTAVAIL;
- 	}
+diff --git a/drivers/scsi/qla2xxx/qla_nvme.c b/drivers/scsi/qla2xxx/qla_nvme.c
+index 5590d6e8b5762..3e2f8ce1d9a97 100644
+--- a/drivers/scsi/qla2xxx/qla_nvme.c
++++ b/drivers/scsi/qla2xxx/qla_nvme.c
+@@ -477,6 +477,11 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
+ 	struct nvme_private *priv = fd->private;
+ 	struct qla_nvme_rport *qla_rport = rport->private;
  
-+	if (data[IFLA_MACVLAN_MACADDR_DATA]) {
-+		head = nla_data(data[IFLA_MACVLAN_MACADDR_DATA]);
-+		len = nla_len(data[IFLA_MACVLAN_MACADDR_DATA]);
-+
-+		nla_for_each_attr(nla, head, len, rem) {
-+			if (nla_type(nla) != IFLA_MACVLAN_MACADDR ||
-+			    nla_len(nla) != ETH_ALEN)
-+				return -EINVAL;
-+
-+			if (!is_valid_ether_addr(nla_data(nla)))
-+				return -EADDRNOTAVAIL;
-+		}
++	if (!priv) {
++		/* nvme association has been torn down */
++		return rval;
 +	}
 +
- 	if (data[IFLA_MACVLAN_MACADDR_COUNT])
- 		return -EINVAL;
+ 	fcport = qla_rport->fcport;
  
-@@ -1333,10 +1350,6 @@ static int macvlan_changelink_sources(struct macvlan_dev *vlan, u32 mode,
- 		len = nla_len(data[IFLA_MACVLAN_MACADDR_DATA]);
- 
- 		nla_for_each_attr(nla, head, len, rem) {
--			if (nla_type(nla) != IFLA_MACVLAN_MACADDR ||
--			    nla_len(nla) != ETH_ALEN)
--				continue;
--
- 			addr = nla_data(nla);
- 			ret = macvlan_hash_add_source(vlan, addr);
- 			if (ret)
+ 	vha = fcport->vha;
 -- 
 2.25.1
 
