@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC7BC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F828C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFF172063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7952063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289089;
-	bh=q88Q+P2+4EgBQdQl1eeHV49GcwL+Mnk0zzT6hd6Yes8=;
+	s=default; t=1598289095;
+	bh=6v8rcxjk5E46zO64zz2NpKgHnlGR5IMJkXeHxdpH0BU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z2Xnuvk/hv8eXtZ3VSmsnCdQBnE4nyw3XVmb9vU6/fKS2yLnOVNWCKfiieIWFwShq
-	 nPlB/9alkjrsvYXX8bPg3jiVVpoRyiZz17SwvKjCqGqMjCXAJHHHB3gkVVPh2PcRRe
-	 iaOtQUfK39vHJaAIkbIXPSwxp6oXmUZeOAfUXSe4=
+	b=oEXT1y7fCJnPgZrZjQoIKe4XN6bgXLNUim+noEhE+kqrU9Mo7afLOl6uwXJKsek/k
+	 wc9rbpeu78LmlgipVcQ9LrS4DppZvSMVS0VFCZYVH30P3PYFbEjhrxhWZ3RPzHU2l6
+	 Ker2AaU8tDsqcUAIceXAV5Ly/mYLPPgdGwkfpmgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgHXRL2 (ORCPT
+        id S1726793AbgHXRLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:11:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40072 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728403AbgHXQh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728400AbgHXQh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:37:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A65A23100;
-        Mon, 24 Aug 2020 16:37:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 983DB22D08;
+        Mon, 24 Aug 2020 16:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287035;
-        bh=q88Q+P2+4EgBQdQl1eeHV49GcwL+Mnk0zzT6hd6Yes8=;
+        s=default; t=1598287039;
+        bh=6v8rcxjk5E46zO64zz2NpKgHnlGR5IMJkXeHxdpH0BU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ouaGDcHcPL5nS7mjjef5hGCGtVbQfleBdZ7bW2c+n7zWYQ8LhEfFaVuQxhd4riOG9
-         uvfOuCNu7lVbT5R61L9+90qy5a7KDrOsKr+xYz0dnrBUmOcY2so9tEKw1xpCUnq+cP
-         NWFgdymfYGf5/sljDgxAjQI3avx+ETE47iGBj1N0=
+        b=SBPJvsoRNRrR4FJ535hSSVsMnhtxul4W4uRmxCoInXUpzJlJntrDzdx6AEHjUP3nj
+         zSnpfEyBK2FG1SVe/LRza2qVZnPKkxMvZ3IUiDEemfjaQt9JOXlaADIgjsW+NAxCf7
+         amA2oEmp8vOujv8WwEf9ige46M1bF+Ry1YDxuYJg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 30/54] ASoC: wm8994: Avoid attempts to read unreadable registers
-Date:   Mon, 24 Aug 2020 12:36:09 -0400
-Message-Id: <20200824163634.606093-30-sashal@kernel.org>
+Cc:     Mike Christie <michael.christie@oracle.com>,
+        Hannes Reinecke <hare@suse.de>, Lee Duncan <lduncan@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 33/54] scsi: fcoe: Fix I/O path allocation
+Date:   Mon, 24 Aug 2020 12:36:12 -0400
+Message-Id: <20200824163634.606093-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
@@ -61,50 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Mike Christie <michael.christie@oracle.com>
 
-[ Upstream commit f082bb59b72039a2326ec1a44496899fb8aa6d0e ]
+[ Upstream commit fa39ab5184d64563cd36f2fb5f0d3fbad83a432c ]
 
-The driver supports WM1811, WM8994, WM8958 devices but according to
-documentation and the regmap definitions the WM8958_DSP2_* registers
-are only available on WM8958. In current code these registers are
-being accessed as if they were available on all the three chips.
+ixgbe_fcoe_ddp_setup() can be called from the main I/O path and is called
+with a spin_lock held, so we have to use GFP_ATOMIC allocation instead of
+GFP_KERNEL.
 
-When starting playback on WM1811 CODEC multiple errors like:
-"wm8994-codec wm8994-codec: ASoC: error at soc_component_read_no_lock on wm8994-codec: -5"
-can be seen, which is caused by attempts to read an unavailable
-WM8958_DSP2_PROGRAM register. The issue has been uncovered by recent
-commit "e2329ee ASoC: soc-component: add soc_component_err()".
-
-This patch adds a check in wm8958_aif_ev() callback so the DSP2 handling
-is only done for WM8958.
-
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200731173834.23832-1-s.nawrocki@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/1596831813-9839-1-git-send-email-michael.christie@oracle.com
+cc: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8958-dsp2.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/wm8958-dsp2.c b/sound/soc/codecs/wm8958-dsp2.c
-index ca42445b649d4..b471892d84778 100644
---- a/sound/soc/codecs/wm8958-dsp2.c
-+++ b/sound/soc/codecs/wm8958-dsp2.c
-@@ -412,8 +412,12 @@ int wm8958_aif_ev(struct snd_soc_dapm_widget *w,
- 		  struct snd_kcontrol *kcontrol, int event)
- {
- 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-+	struct wm8994 *control = dev_get_drvdata(component->dev->parent);
- 	int i;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
+index ec7a11d13fdc0..9e70b9a674409 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
+@@ -192,7 +192,7 @@ static int ixgbe_fcoe_ddp_setup(struct net_device *netdev, u16 xid,
+ 	}
  
-+	if (control->type != WM8958)
-+		return 0;
-+
- 	switch (event) {
- 	case SND_SOC_DAPM_POST_PMU:
- 	case SND_SOC_DAPM_PRE_PMU:
+ 	/* alloc the udl from per cpu ddp pool */
+-	ddp->udl = dma_pool_alloc(ddp_pool->pool, GFP_KERNEL, &ddp->udp);
++	ddp->udl = dma_pool_alloc(ddp_pool->pool, GFP_ATOMIC, &ddp->udp);
+ 	if (!ddp->udl) {
+ 		e_err(drv, "failed allocated ddp context\n");
+ 		goto out_noddp_unmap;
 -- 
 2.25.1
 
