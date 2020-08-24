@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41909C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21A0F2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCD92071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262877;
-	bh=x369bIKVLiGCDxbll4WzEJyb58NWRRKtTnoVx+10Nk4=;
+	s=default; t=1598262882;
+	bh=2WqdaqYNLMI3GI7UkDLyVTeint5ew7zR2IiT361LbKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qNEVp/AiYWUMOSZ5bK7MldQpv+F2YfDFGvs69folWxi3CFXKE1Qy9FfDepOUlFcEa
-	 jcUKUcowvUwspSibl8v0CSdbozLSDT0j+Ix7CiLk+cBCBOCPFkJM+t+Zo9yfAKk/ex
-	 klJSVI8BES9uwbe42ja/iJNmJpvS5n4VnY6CenDU=
+	b=ceZh4GYYkqE5ia+2xjsFmXvwQvu9lfBtSL0VwizZpRjGwWC3X7qnm19od0lAK0Z2p
+	 KfxjUfzqyRskbhtBHPiNw0nHEmvoGM6IPDesmYrIDjkPwqySqf7aFZ2Ipn6OPsf3D/
+	 i1Zdum1hQNSciJ6bJ7nfztw4faMOxEXCHff95f7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgHXIh1 (ORCPT
+        id S1729346AbgHXJyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:37:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50598 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728387AbgHXIhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:37:19 -0400
+        id S1727821AbgHXIhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:37:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E8332177B;
-        Mon, 24 Aug 2020 08:37:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20575221E2;
+        Mon, 24 Aug 2020 08:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258238;
-        bh=x369bIKVLiGCDxbll4WzEJyb58NWRRKtTnoVx+10Nk4=;
+        s=default; t=1598258243;
+        bh=2WqdaqYNLMI3GI7UkDLyVTeint5ew7zR2IiT361LbKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RR3mTgN1y4lILeGn83o/aRpa+Nf3p0Q71k8gb/SnDPOxhoIGTy4hLgKbvcTKyKC10
-         Q/OMWvv1P10inWzFpJiTMKhF2ggqEf/fhcQcctIBe7zDG/GIQHjb1bbecKw1GypYwp
-         dN9Xa87h/Mxw+AozN4z8bD+XYJeW9fv3LT0kannM=
+        b=cuN1RAoT+MRTzSfI+tR3qQHj1wELBoODBNsLk3hdVPbVeLNPE0k6761nsa4oFf3y3
+         o288VnZbA/YF1Dn6zDJUN4zyZpDAZM8FMEnAnbf+GNJg2t86omAo5SSwXfDklpu9f3
+         DX6TZvCI8sehX07MstiEq31LuX0SOZFIstfvhWLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c1eff8205244ae7e11a6@syzkaller.appspotmail.com,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 126/148] afs: Fix NULL deref in afs_dynroot_depopulate()
-Date:   Mon, 24 Aug 2020 10:30:24 +0200
-Message-Id: <20200824082420.050003623@linuxfoundation.org>
+Subject: [PATCH 5.8 128/148] powerpc: Add POWER10 raw mode cputable entry
+Date:   Mon, 24 Aug 2020 10:30:26 +0200
+Message-Id: <20200824082420.146914546@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -62,86 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
 
-[ Upstream commit 5e0b17b026eb7c6de9baa9b0d45a51b05f05abe1 ]
+[ Upstream commit 327da008e65a25b8206b36b7fc0c9e4edbb36a58 ]
 
-If an error occurs during the construction of an afs superblock, it's
-possible that an error occurs after a superblock is created, but before
-we've created the root dentry.  If the superblock has a dynamic root
-(ie.  what's normally mounted on /afs), the afs_kill_super() will call
-afs_dynroot_depopulate() to unpin any created dentries - but this will
-oops if the root hasn't been created yet.
+Add a raw mode cputable entry for POWER10. Copies most of the fields
+from commit a3ea40d5c736 ("powerpc: Add POWER10 architected mode")
+except for oprofile_cpu_type, machine_check_early, pvr_mask and
+pvr_mask fields. On bare metal systems we use DT CPU features, which
+doesn't need a cputable entry. But in VMs we still rely on the raw
+cputable entry to set the correct values for the PMU related fields.
 
-Fix this by skipping that bit of code if there is no root dentry.
-
-This leads to an oops looking like:
-
-	general protection fault, ...
-	KASAN: null-ptr-deref in range [0x0000000000000068-0x000000000000006f]
-	...
-	RIP: 0010:afs_dynroot_depopulate+0x25f/0x529 fs/afs/dynroot.c:385
-	...
-	Call Trace:
-	 afs_kill_super+0x13b/0x180 fs/afs/super.c:535
-	 deactivate_locked_super+0x94/0x160 fs/super.c:335
-	 afs_get_tree+0x1124/0x1460 fs/afs/super.c:598
-	 vfs_get_tree+0x89/0x2f0 fs/super.c:1547
-	 do_new_mount fs/namespace.c:2875 [inline]
-	 path_mount+0x1387/0x2070 fs/namespace.c:3192
-	 do_mount fs/namespace.c:3205 [inline]
-	 __do_sys_mount fs/namespace.c:3413 [inline]
-	 __se_sys_mount fs/namespace.c:3390 [inline]
-	 __x64_sys_mount+0x27f/0x300 fs/namespace.c:3390
-	 do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-which is oopsing on this line:
-
-	inode_lock(root->d_inode);
-
-presumably because sb->s_root was NULL.
-
-Fixes: 0da0b7fd73e4 ("afs: Display manually added cells in dynamic root mount")
-Reported-by: syzbot+c1eff8205244ae7e11a6@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: a3ea40d5c736 ("powerpc: Add POWER10 architected mode")
+Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+[mpe: Reorder vs cleanup patch and add Fixes tag]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200817005618.3305028-2-maddy@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/dynroot.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ arch/powerpc/kernel/cputable.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
-index b79879aacc02e..7b784af604fd9 100644
---- a/fs/afs/dynroot.c
-+++ b/fs/afs/dynroot.c
-@@ -382,15 +382,17 @@ void afs_dynroot_depopulate(struct super_block *sb)
- 		net->dynroot_sb = NULL;
- 	mutex_unlock(&net->proc_cells_lock);
- 
--	inode_lock(root->d_inode);
--
--	/* Remove all the pins for dirs created for manually added cells */
--	list_for_each_entry_safe(subdir, tmp, &root->d_subdirs, d_child) {
--		if (subdir->d_fsdata) {
--			subdir->d_fsdata = NULL;
--			dput(subdir);
-+	if (root) {
-+		inode_lock(root->d_inode);
-+
-+		/* Remove all the pins for dirs created for manually added cells */
-+		list_for_each_entry_safe(subdir, tmp, &root->d_subdirs, d_child) {
-+			if (subdir->d_fsdata) {
-+				subdir->d_fsdata = NULL;
-+				dput(subdir);
-+			}
- 		}
--	}
- 
--	inode_unlock(root->d_inode);
-+		inode_unlock(root->d_inode);
-+	}
- }
+diff --git a/arch/powerpc/kernel/cputable.c b/arch/powerpc/kernel/cputable.c
+index b4066354f0730..bb0c7f43a8283 100644
+--- a/arch/powerpc/kernel/cputable.c
++++ b/arch/powerpc/kernel/cputable.c
+@@ -75,6 +75,7 @@ extern void __restore_cpu_power10(void);
+ extern long __machine_check_early_realmode_p7(struct pt_regs *regs);
+ extern long __machine_check_early_realmode_p8(struct pt_regs *regs);
+ extern long __machine_check_early_realmode_p9(struct pt_regs *regs);
++extern long __machine_check_early_realmode_p10(struct pt_regs *regs);
+ #endif /* CONFIG_PPC64 */
+ #if defined(CONFIG_E500)
+ extern void __setup_cpu_e5500(unsigned long offset, struct cpu_spec* spec);
+@@ -541,6 +542,25 @@ static struct cpu_spec __initdata cpu_specs[] = {
+ 		.machine_check_early	= __machine_check_early_realmode_p9,
+ 		.platform		= "power9",
+ 	},
++	{	/* Power10 */
++		.pvr_mask		= 0xffff0000,
++		.pvr_value		= 0x00800000,
++		.cpu_name		= "POWER10 (raw)",
++		.cpu_features		= CPU_FTRS_POWER10,
++		.cpu_user_features	= COMMON_USER_POWER10,
++		.cpu_user_features2	= COMMON_USER2_POWER10,
++		.mmu_features		= MMU_FTRS_POWER10,
++		.icache_bsize		= 128,
++		.dcache_bsize		= 128,
++		.num_pmcs		= 6,
++		.pmc_type		= PPC_PMC_IBM,
++		.oprofile_cpu_type	= "ppc64/power10",
++		.oprofile_type		= PPC_OPROFILE_INVALID,
++		.cpu_setup		= __setup_cpu_power10,
++		.cpu_restore		= __restore_cpu_power10,
++		.machine_check_early	= __machine_check_early_realmode_p10,
++		.platform		= "power10",
++	},
+ 	{	/* Cell Broadband Engine */
+ 		.pvr_mask		= 0xffff0000,
+ 		.pvr_value		= 0x00700000,
 -- 
 2.25.1
 
