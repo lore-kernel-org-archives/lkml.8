@@ -2,52 +2,55 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB61CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CCCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6212075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B8CB2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258041;
-	bh=7MMjWtjppeUjXZn3kegXmGywdbugRJzfUujLOMhLPcM=;
+	s=default; t=1598258049;
+	bh=GwWkOnTNSfoqWpRpo6c0fbK/dHqVyF3qlqTjGMu08O8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=deEpTYqy6esPVGHnvt8BQHjb0E/2eF8AJCmcagE6oUSmmmTiaphcWGRjY4adgp7LO
-	 u9Gsux0E63NwkROEeS2PdHS8vLCrrUGn51S8dcZ+d5lkQ3NbxrASMYEVFNHBoI1wPS
-	 /CGJlqszGNiN4Y6y1oxQJ6Np4X9nSN7hhJ36Is5E=
+	b=Gf8QIJLRT/ZyHH5s7c5GepbGn4nEQy+lqo5xpGIkVXM0kRT3gw+4G0NLi7uw//NOE
+	 YdmdeHAZIsCUS04UlyynGt221kchPb32jV1H3JjlRidzh8Ea5Xqk/j8Zv1k4wi8GiA
+	 cxYOoZ5pzVJYlc7hVU8IUx1EdKwa/yflzgX3AeRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgHXIeA (ORCPT
+        id S1727846AbgHXIeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:34:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41900 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:34:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbgHXId4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:33:56 -0400
+        id S1727807AbgHXIdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:33:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3FFC2075B;
-        Mon, 24 Aug 2020 08:33:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6435D206F0;
+        Mon, 24 Aug 2020 08:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258036;
-        bh=7MMjWtjppeUjXZn3kegXmGywdbugRJzfUujLOMhLPcM=;
+        s=default; t=1598258033;
+        bh=GwWkOnTNSfoqWpRpo6c0fbK/dHqVyF3qlqTjGMu08O8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p5i91WrfyeaZ5xzcD0qjIxgEuKkmz7cVF8Pq5kt5qpZy/E8WA+LVIN+WyYzk4X4BM
-         Q2mc+omkvFnCoARE99JzPnxIcgXyjM1POAVc8SYqxfis4wB9LfUtLPd7ERL/pWvRhr
-         5GAK7yDpRl/ibckaQVxUu0ZAh6Cdyamj74Kjl4KQ=
+        b=WsexVZbdKKJH5qBpJvLnhFI0/UnOMo1lpcDO4YwdzF5QNSooIF/jheJrHXVQPBd+Y
+         +0HprYTs1aZmnDZEk3YkpqbySniSIJsY2t9rXkNTICmqw0JIge431MUZSxy/clMRcH
+         +8KFau59otLyfDDq0u6Mlu7RnsE68tLz8G6xPkuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 049/148] f2fs: fix to check page dirty status before writeback
-Date:   Mon, 24 Aug 2020 10:29:07 +0200
-Message-Id: <20200824082416.420939909@linuxfoundation.org>
+        stable@vger.kernel.org, Sajida Bhanu <sbhanu@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 5.8 022/148] opp: Enable resources again if they were disabled earlier
+Date:   Mon, 24 Aug 2020 10:28:40 +0200
+Message-Id: <20200824082415.034408835@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -60,40 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
 
-[ Upstream commit eb1353cfa9c1e9415b03dc117f8399969fa02102 ]
+commit a4501bac0e553bed117b7e1b166d49731caf7260 upstream.
 
-In f2fs_write_raw_pages(), we need to check page dirty status before
-writeback, because there could be a racer (e.g. reclaimer) helps
-writebacking the dirty page.
+dev_pm_opp_set_rate() can now be called with freq = 0 in order
+to either drop performance or bandwidth votes or to disable
+regulators on platforms which support them.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In such cases, a subsequent call to dev_pm_opp_set_rate() with
+the same frequency ends up returning early because 'old_freq == freq'
+
+Instead make it fall through and put back the dropped performance
+and bandwidth votes and/or enable back the regulators.
+
+Cc: v5.3+ <stable@vger.kernel.org> # v5.3+
+Fixes: cd7ea582866f ("opp: Make dev_pm_opp_set_rate() handle freq = 0 to drop performance votes")
+Reported-by: Sajida Bhanu <sbhanu@codeaurora.org>
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Reported-by: Matthias Kaehlcke <mka@chromium.org>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+[ Viresh: Don't skip clk_set_rate() and massaged changelog ]
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/f2fs/compress.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/opp/core.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index f6fbe61b1251e..2390f7943f6c8 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -1310,6 +1310,12 @@ retry_write:
- 				congestion_wait(BLK_RW_ASYNC,
- 						DEFAULT_IO_TIMEOUT);
- 				lock_page(cc->rpages[i]);
-+
-+				if (!PageDirty(cc->rpages[i])) {
-+					unlock_page(cc->rpages[i]);
-+					continue;
-+				}
-+
- 				clear_page_dirty_for_io(cc->rpages[i]);
- 				goto retry_write;
- 			}
--- 
-2.25.1
-
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -901,10 +901,13 @@ int dev_pm_opp_set_rate(struct device *d
+ 
+ 	/* Return early if nothing to do */
+ 	if (old_freq == freq) {
+-		dev_dbg(dev, "%s: old/new frequencies (%lu Hz) are same, nothing to do\n",
+-			__func__, freq);
+-		ret = 0;
+-		goto put_opp_table;
++		if (!opp_table->required_opp_tables && !opp_table->regulators &&
++		    !opp_table->paths) {
++			dev_dbg(dev, "%s: old/new frequencies (%lu Hz) are same, nothing to do\n",
++				__func__, freq);
++			ret = 0;
++			goto put_opp_table;
++		}
+ 	}
+ 
+ 	/*
 
 
