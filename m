@@ -2,164 +2,187 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA95C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C886C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 408CB20706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:53:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="jPuYqFPo"
+	by mail.kernel.org (Postfix) with ESMTP id 6289E20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598309829;
+	bh=22BcqTI+EFX6g2/L1n2dshueIvUnN7Cn3gYOcnM7xzE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I/OYmPPW4mXnvdjixrnf0CyJHdC/0Fi3DYZqKI2zdScVSZztNgmNsDYsZu4Rtie9t
+	 tTtSz+h/iKJSHvCVVPxjqcrlxkJDWCyt8+R4finzQAmwFrae/yR5bi6HTp/z2iNcou
+	 QtUkbCCK7STTL0FdEZRO1Gwyi/PDGiwqH5McY+x8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgHXWxI (ORCPT
+        id S1728077AbgHXW5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:53:08 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:57219 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgHXWxI (ORCPT
+        Mon, 24 Aug 2020 18:57:08 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37367 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgHXW5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 18:53:08 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D23B38011F;
-        Tue, 25 Aug 2020 10:53:04 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1598309584;
-        bh=/gGPixE+zN9sxlkK3LfyjPst9BmKbiY9VyruYUE28dM=;
-        h=From:To:Cc:Subject:Date;
-        b=jPuYqFPoQ83D1hAB6CTyM6ijNsY8dgPPerdKb2jCueR1CFd1Noi8NrQisDFg/SGjz
-         BLYxf0wCmucnz08DsKtKLj26oxv8wRuTDKem+jSMgFbVhbyvAHxldcu/kF7/V6tcfx
-         5VhUUEGe7dYF6ksUJyyzX0LlnOYYSRaQOnYYSiJn11nskShAJ3YyUIo4NtiohlV7y4
-         M0OeTKdw20GaAnGw6D/rFDs2JtbiNR0Iu0Ye2TYKIfkctOQTkmz8Vfs6Yd6eCsisFo
-         5mvujyd4fnS5bVgn+bamp4kejevaRoN/W0q4eL+tJ8rOVxVWmWjVpdWjTcvC8FD54Y
-         jfdl8XI0s6S5A==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f4444d00000>; Tue, 25 Aug 2020 10:53:04 +1200
-Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
-        by smtp (Postfix) with ESMTP id CE5E813ED33;
-        Tue, 25 Aug 2020 10:53:03 +1200 (NZST)
-Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
-        id 760A03410D0; Tue, 25 Aug 2020 10:53:04 +1200 (NZST)
-From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-To:     wsa@kernel.org, gregory.clement@bootlin.com
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Subject: [PATCH v2] i2c: mv64xxx: Add bus error recovery
-Date:   Tue, 25 Aug 2020 10:52:54 +1200
-Message-Id: <20200824225254.1114-1-mark.tomlinson@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.28.0
+        Mon, 24 Aug 2020 18:57:06 -0400
+Received: by mail-io1-f65.google.com with SMTP id b16so10533646ioj.4;
+        Mon, 24 Aug 2020 15:57:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xVGE6rEY1RUDdQNh7SGiTq/hwvuBPw98UGPGdGtkR3s=;
+        b=lQvqzcs3mkwd5VVG3w+U7rs2eFkOK8Vle0sjfYsOfa9VwJckgtOE5XMv2oIifCyMKv
+         w/fOZJgu18iUo8waE5X+tQGOld9pzegHgDXl4jo3OJsFBU6VxVbcLG8Iwd1WraJjXf++
+         NYovcS0CtYqL+FKVLHutecS31xk/L/gdg1DksZYp0su5OjWTVDHn68+IQ/a37CMyzzWU
+         mZ9dc8nWon+1H228Ovx1ttCpa3crUNH8vg4uYseiXYG9w0+igXYZvfh27/3msRXmgAg1
+         jq40fvQIx9awLG5f+YraZuOR8QWxj1sd+PduNKhuExdWWe8ICeDhrYQfnUnknLEyp+I6
+         vbJA==
+X-Gm-Message-State: AOAM530QWX/gXK+vILJxcypfRQzrJv+DY4NsJCX+0trptgbqjlSs6PTo
+        PE/Y2v+xyMezCAHnV9uuWQ==
+X-Google-Smtp-Source: ABdhPJxZzTqlGIuc2GQiyiK402zSrSHAuiMtS1zh+LVYBDoR7GLuyYLF4mBV82z4DWNQVeHgr2UhYQ==
+X-Received: by 2002:a6b:6204:: with SMTP id f4mr6678058iog.56.1598309824569;
+        Mon, 24 Aug 2020 15:57:04 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id i11sm7909593ilr.47.2020.08.24.15.57.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 15:57:03 -0700 (PDT)
+Received: (nullmailer pid 3486301 invoked by uid 1000);
+        Mon, 24 Aug 2020 22:57:02 -0000
+Date:   Mon, 24 Aug 2020 16:57:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krishna Manikandan <mkrishn@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [PATCH 1/2] dt-bindings: msm: disp: add yaml schemas for DPU and
+ DSI bindings
+Message-ID: <20200824225702.GA3460018@bogus>
+References: <1597066683-6044-1-git-send-email-mkrishn@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597066683-6044-1-git-send-email-mkrishn@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds i2c bus recovery to the mv64xxx driver.
+On Mon, Aug 10, 2020 at 07:08:02PM +0530, Krishna Manikandan wrote:
+> MSM Mobile Display Subsytem (MDSS) encapsulates sub-blocks
+> like DPU display controller, DSI etc. Add YAML schema
+> for the device tree bindings for the same.
+> 
+> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+> 
+> Changes in v2:
+>     - Changed dpu to DPU (Sam Ravnborg)
+>     - Fixed indentation issues (Sam Ravnborg)
+>     - Added empty line between different properties (Sam Ravnborg)
+>     - Replaced reference txt files with  their corresponding
+>       yaml files (Sam Ravnborg)
+>     - Modified the file to use "|" only when it is
+>       necessary (Sam Ravnborg)
+> 
+> Changes in v3:
+>     - Corrected the license used (Rob Herring)
+>     - Added maxItems for properties (Rob Herring)
+>     - Dropped generic descriptions (Rob Herring)
+>     - Added ranges property (Rob Herring)
+>     - Corrected the indendation (Rob Herring)
+>     - Added additionalProperties (Rob Herring)
+>     - Split dsi file into two, one for dsi controller
+>       and another one for dsi phy per target (Rob Herring)
+>     - Corrected description for pinctrl-names (Rob Herring)
+>     - Corrected the examples used in yaml file (Rob Herring)
+>     - Delete dsi.txt and dpu.txt (Rob Herring)
+> 
+> Changes in v4:
+>     - Move schema up by one level (Rob Herring)
+>     - Add patternProperties for mdp node (Rob Herring)
+>     - Corrected description of some properties (Rob Herring)
+> 
+> Changes in v5:
+>     - Correct the indentation (Rob Herring)
+>     - Remove unnecessary description from properties (Rob Herring)
+>     - Correct the number of interconnect entries (Rob Herring)
+>     - Add interconnect names for sc7180 (Rob Herring)
+>     - Add description for ports (Rob Herring)
+>     - Remove common properties (Rob Herring)
+>     - Add unevalutatedProperties (Rob Herring)
+>     - Reference existing dsi controller yaml in the common
+>       dsi controller file (Rob Herring)
+>     - Correct the description of clock names to include only the
+>       clocks that are required (Rob Herring)
+>     - Remove properties which are already covered under the common
+>       binding (Rob Herring)
+>     - Add dsi phy supply nodes which are required for sc7180 and
+>       sdm845 targets (Rob Herring)
+>     - Add type ref for syscon-sfpb (Rob Herring)
+> 
+> Changes in v6:
+>     - Fixed errors during dt_binding_check (Rob Herring)
+>     - Add maxItems for phys and phys-names (Rob Herring)
+>     - Use unevaluatedProperties wherever required (Rob Herring)
+>     - Removed interrupt controller from required properties for
+>       dsi controller (Rob Herring)
+>     - Add constraints for dsi-phy reg-names based on the compatible
+>       phy version (Rob Herring)
+>     - Add constraints for dsi-phy supply nodes based on the
+>       compatible phy version (Rob Herring)
+> 
+> Changes in v7:
+>     - Add default value for qcom,mdss-mdp-transfer-time-us (Rob Herring)
+>     - Modify the schema for data-lanes (Rob Herring)
+>     - Split the phy schema into separate schemas based on
+>       the phy version (Rob Herring)
+> 
+> Changes in v8:
+>     - Resolve merge conflicts with latest dsi.txt file
+>     - Include dp yaml change also in the same series
 
-Implement bus recovery to recover from SCL/SDA stuck low.
+I'm done reviewing this because I'm tired of repeating myself and you're 
+just throwing crap at the wall and seeing what sticks. Get someone else 
+working on QCom stuff to review because I'm done until someone I know 
+and trust reviews it.
 
-This uses the generic recovery function, setting the clock/data lines as
-GPIO pins, and sending 9 clocks to try and recover the bus.
+> ---
+>  .../bindings/display/msm/dpu-sc7180.yaml           | 236 +++++++++++++++++++
+>  .../bindings/display/msm/dpu-sdm845.yaml           | 216 ++++++++++++++++++
+>  .../devicetree/bindings/display/msm/dpu.txt        | 141 ------------
+>  .../display/msm/dsi-common-controller.yaml         | 249 +++++++++++++++++++++
+>  .../display/msm/dsi-controller-sc7180.yaml         | 120 ++++++++++
+>  .../display/msm/dsi-controller-sdm845.yaml         | 120 ++++++++++
 
-Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
----
-Changes in v2:
- - use generic GPIO recovery function.
+Once again, what's the difference between dsi-controller-sc7180.yaml and 
+dsi-controller-sdm845.yaml? I don't see one. If there's not a 
+difference, why do we have msm/dsi-common-controller.yaml? If there is a 
+difference dsi-controller-sc7180.yaml and dsi-controller-sdm845.yaml 
+should *only* have what's different because 
+msm/dsi-common-controller.yaml should have everything that is the same.
 
- drivers/i2c/busses/i2c-mv64xxx.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/busses/i2c-mv64xxx.c b/drivers/i2c/busses/i2c-mv=
-64xxx.c
-index 8d9d4ffdcd24..e0f0c76c0d3b 100644
---- a/drivers/i2c/busses/i2c-mv64xxx.c
-+++ b/drivers/i2c/busses/i2c-mv64xxx.c
-@@ -17,6 +17,7 @@
- #include <linux/interrupt.h>
- #include <linux/mv643xx_i2c.h>
- #include <linux/platform_device.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/reset.h>
- #include <linux/io.h>
- #include <linux/of.h>
-@@ -147,6 +148,7 @@ struct mv64xxx_i2c_data {
- 	bool			irq_clear_inverted;
- 	/* Clk div is 2 to the power n, not 2 to the power n + 1 */
- 	bool			clk_n_base_0;
-+	struct i2c_bus_recovery_info	rinfo;
- };
-=20
- static struct mv64xxx_i2c_regs mv64xxx_i2c_regs_mv64xxx =3D {
-@@ -325,7 +327,8 @@ mv64xxx_i2c_fsm(struct mv64xxx_i2c_data *drv_data, u3=
-2 status)
- 			 drv_data->msg->flags);
- 		drv_data->action =3D MV64XXX_I2C_ACTION_SEND_STOP;
- 		mv64xxx_i2c_hw_init(drv_data);
--		drv_data->rc =3D -EIO;
-+		i2c_recover_bus(&drv_data->adapter);
-+		drv_data->rc =3D -EAGAIN;
- 	}
- }
-=20
-@@ -562,6 +565,7 @@ mv64xxx_i2c_wait_for_completion(struct mv64xxx_i2c_da=
-ta *drv_data)
- 				"time_left: %d\n", drv_data->block,
- 				(int)time_left);
- 			mv64xxx_i2c_hw_init(drv_data);
-+			i2c_recover_bus(&drv_data->adapter);
- 		}
- 	} else
- 		spin_unlock_irqrestore(&drv_data->lock, flags);
-@@ -871,6 +875,22 @@ mv64xxx_of_config(struct mv64xxx_i2c_data *drv_data,
- }
- #endif /* CONFIG_OF */
-=20
-+static int mv64xxx_i2c_init_recovery_info(struct mv64xxx_i2c_data *drv_d=
-ata,
-+					  struct device *dev)
-+{
-+	struct i2c_bus_recovery_info *rinfo =3D &drv_data->rinfo;
-+
-+	rinfo->pinctrl =3D devm_pinctrl_get(dev);
-+	if (IS_ERR(rinfo->pinctrl)) {
-+		if (PTR_ERR(rinfo->pinctrl) =3D=3D -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		dev_err(dev, "can't get pinctrl, bus recovery not supported\n");
-+		return PTR_ERR(rinfo->pinctrl);
-+	}
-+	drv_data->adapter.bus_recovery_info =3D rinfo;
-+	return 0;
-+}
-+
- static int
- mv64xxx_i2c_probe(struct platform_device *pd)
- {
-@@ -927,6 +947,10 @@ mv64xxx_i2c_probe(struct platform_device *pd)
- 		goto exit_reset;
- 	}
-=20
-+	rc =3D mv64xxx_i2c_init_recovery_info(drv_data, &pd->dev);
-+	if (rc =3D=3D -EPROBE_DEFER)
-+		goto exit_reset;
-+
- 	drv_data->adapter.dev.parent =3D &pd->dev;
- 	drv_data->adapter.algo =3D &mv64xxx_i2c_algo;
- 	drv_data->adapter.owner =3D THIS_MODULE;
-@@ -950,6 +974,7 @@ mv64xxx_i2c_probe(struct platform_device *pd)
- 			"mv64xxx: Can't add i2c adapter, rc: %d\n", -rc);
- 		goto exit_free_irq;
- 	}
-+	i2c_recover_bus(&drv_data->adapter);
-=20
- 	return 0;
-=20
---=20
-2.28.0
-
+>  .../bindings/display/msm/dsi-phy-10nm.yaml         |  62 +++++
+>  .../bindings/display/msm/dsi-phy-14nm.yaml         |  62 +++++
+>  .../bindings/display/msm/dsi-phy-20nm.yaml         |  66 ++++++
+>  .../bindings/display/msm/dsi-phy-28nm.yaml         |  62 +++++
+>  .../bindings/display/msm/dsi-phy-sc7180.yaml       |  80 +++++++
+>  .../bindings/display/msm/dsi-phy-sdm845.yaml       |  82 +++++++
+>  .../devicetree/bindings/display/msm/dsi.txt        | 247 --------------------
+>  13 files changed, 1355 insertions(+), 388 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sdm845.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/msm/dpu.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-common-controller.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-controller-sc7180.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-controller-sdm845.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-10nm.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-14nm.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-20nm.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-28nm.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/msm/dsi.txt
