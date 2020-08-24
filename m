@@ -2,42 +2,42 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB052C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD16C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE5A2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3FE206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730151AbgHXJHg (ORCPT
+        id S1730539AbgHXJHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:07:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37562 "EHLO
+        Mon, 24 Aug 2020 05:07:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730539AbgHXI40 (ORCPT
+        with ESMTP id S1730535AbgHXI40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 04:56:26 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DD77C06179A;
-        Mon, 24 Aug 2020 01:56:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE695C061798;
+        Mon, 24 Aug 2020 01:56:22 -0700 (PDT)
 Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 7D6BFFDC;
-        Mon, 24 Aug 2020 10:56:17 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id C5AF7F98;
+        Mon, 24 Aug 2020 10:56:13 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
@@ -49,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 50/76] x86/sev-es: Wire up existing #VC exit-code handlers
-Date:   Mon, 24 Aug 2020 10:54:45 +0200
-Message-Id: <20200824085511.7553-51-joro@8bytes.org>
+Subject: [PATCH v6 44/76] x86/sev-es: Setup per-cpu GHCBs for the runtime handler
+Date:   Mon, 24 Aug 2020 10:54:39 +0200
+Message-Id: <20200824085511.7553-45-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
 References: <20200824085511.7553-1-joro@8bytes.org>
@@ -62,60 +62,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Re-use the handlers for CPUID and IOIO caused #VC exceptions in the
-early boot handler.
+The runtime handler needs a GHCB per CPU. Set them up and map them
+unencrypted.
 
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-50-joro@8bytes.org
+Link: https://lore.kernel.org/r/20200724160336.5435-44-joro@8bytes.org
 ---
- arch/x86/kernel/sev-es-shared.c | 7 +++----
- arch/x86/kernel/sev-es.c        | 6 ++++++
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/mem_encrypt.h |  2 ++
+ arch/x86/kernel/sev-es.c           | 56 +++++++++++++++++++++++++++++-
+ arch/x86/kernel/traps.c            |  3 ++
+ 3 files changed, 60 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-index aa77f2eb8d88..a6b41910b8ab 100644
---- a/arch/x86/kernel/sev-es-shared.c
-+++ b/arch/x86/kernel/sev-es-shared.c
-@@ -325,8 +325,7 @@ static enum es_result vc_ioio_exitinfo(struct es_em_ctxt *ctxt, u64 *exitinfo)
- 	return ES_OK;
- }
+diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+index 4e72b73a9cb5..c9f5df0a1c10 100644
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -49,6 +49,7 @@ void __init mem_encrypt_free_decrypted_mem(void);
+ /* Architecture __weak replacement functions */
+ void __init mem_encrypt_init(void);
  
--static enum es_result __maybe_unused
--vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
-+static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- {
- 	struct pt_regs *regs = ctxt->regs;
- 	u64 exit_info_1, exit_info_2;
-@@ -434,8 +433,8 @@ vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- 	return ret;
- }
++void __init sev_es_init_vc_handling(void);
+ bool sme_active(void);
+ bool sev_active(void);
+ bool sev_es_active(void);
+@@ -72,6 +73,7 @@ static inline void __init sme_early_init(void) { }
+ static inline void __init sme_encrypt_kernel(struct boot_params *bp) { }
+ static inline void __init sme_enable(struct boot_params *bp) { }
  
--static enum es_result __maybe_unused vc_handle_cpuid(struct ghcb *ghcb,
--						     struct es_em_ctxt *ctxt)
-+static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
-+				      struct es_em_ctxt *ctxt)
- {
- 	struct pt_regs *regs = ctxt->regs;
- 	u32 cr4 = native_read_cr4();
++static inline void sev_es_init_vc_handling(void) { }
+ static inline bool sme_active(void) { return false; }
+ static inline bool sev_active(void) { return false; }
+ static inline bool sev_es_active(void) { return false; }
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index be4b00d18923..81d94f78d2d4 100644
+index bb3e702a71eb..734afaee378d 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -443,6 +443,12 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	enum es_result result;
+@@ -8,8 +8,13 @@
+  */
  
- 	switch (exit_code) {
-+	case SVM_EXIT_CPUID:
-+		result = vc_handle_cpuid(ghcb, ctxt);
-+		break;
-+	case SVM_EXIT_IOIO:
-+		result = vc_handle_ioio(ghcb, ctxt);
-+		break;
- 	default:
- 		/*
- 		 * Unexpected #VC exception
+ #include <linux/sched/debug.h>	/* For show_regs() */
+-#include <linux/kernel.h>
++#include <linux/percpu-defs.h>
++#include <linux/mem_encrypt.h>
+ #include <linux/printk.h>
++#include <linux/mm_types.h>
++#include <linux/set_memory.h>
++#include <linux/memblock.h>
++#include <linux/kernel.h>
+ #include <linux/mm.h>
+ 
+ #include <asm/sev-es.h>
+@@ -29,6 +34,13 @@ static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
+  */
+ static struct ghcb __initdata *boot_ghcb;
+ 
++/* #VC handler runtime per-cpu data */
++struct sev_es_runtime_data {
++	struct ghcb ghcb_page;
++};
++
++static DEFINE_PER_CPU(struct sev_es_runtime_data*, runtime_data);
++
+ /* Needed in vc_early_forward_exception */
+ void do_early_exception(struct pt_regs *regs, int trapnr);
+ 
+@@ -198,6 +210,48 @@ static bool __init sev_es_setup_ghcb(void)
+ 	return true;
+ }
+ 
++static void __init sev_es_alloc_runtime_data(int cpu)
++{
++	struct sev_es_runtime_data *data;
++
++	data = memblock_alloc(sizeof(*data), PAGE_SIZE);
++	if (!data)
++		panic("Can't allocate SEV-ES runtime data");
++
++	per_cpu(runtime_data, cpu) = data;
++}
++
++static void __init sev_es_init_ghcb(int cpu)
++{
++	struct sev_es_runtime_data *data;
++	int err;
++
++	data = per_cpu(runtime_data, cpu);
++
++	err = early_set_memory_decrypted((unsigned long)&data->ghcb_page,
++					 sizeof(data->ghcb_page));
++	if (err)
++		panic("Can not map GHCBs unencrypted");
++
++	memset(&data->ghcb_page, 0, sizeof(data->ghcb_page));
++}
++
++void __init sev_es_init_vc_handling(void)
++{
++	int cpu;
++
++	BUILD_BUG_ON((offsetof(struct sev_es_runtime_data, ghcb_page) % PAGE_SIZE) != 0);
++
++	if (!sev_es_active())
++		return;
++
++	/* Initialize per-cpu GHCB pages */
++	for_each_possible_cpu(cpu) {
++		sev_es_alloc_runtime_data(cpu);
++		sev_es_init_ghcb(cpu);
++	}
++}
++
+ static void __init vc_early_forward_exception(struct es_em_ctxt *ctxt)
+ {
+ 	int trapnr = ctxt->fi.vector;
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 1f66d2d1e998..74cfe6eb7ebb 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -1077,6 +1077,9 @@ void __init trap_init(void)
+ 	/* Init cpu_entry_area before IST entries are set up */
+ 	setup_cpu_entry_areas();
+ 
++	/* Init GHCB memory pages when running as an SEV-ES guest */
++	sev_es_init_vc_handling();
++
+ 	idt_setup_traps();
+ 
+ 	/*
 -- 
 2.28.0
 
