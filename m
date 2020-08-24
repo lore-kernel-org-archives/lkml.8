@@ -2,134 +2,155 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08157C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE338C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE17D2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:16:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UHKFH64e"
+	by mail.kernel.org (Postfix) with ESMTP id A316920738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:17:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725999AbgHXIQ1 (ORCPT
+        id S1726444AbgHXIRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:16:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725968AbgHXIQ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:16:26 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F33CC061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 01:16:26 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b17so6942171wru.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 01:16:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=WIZAf3x2BneXQTTKPWzLh7lCftlSclIRyCF/Mlb3EW4=;
-        b=UHKFH64eK+dJNPTMUEG2GKmEf2QnNltVe6HCRpFWZspvwFb52ZYmQiiZ4kCn7gaF2n
-         SXWHdJsGJdH3VASepqgugyFAniRVIf2/X+rV8wETDho6CtJwZxWFMEqRrP7qLqT0XnBu
-         YeX+uSKhRk43xBqG+pNd/UgX22Fejf0PMRAWhlTDfbe4xvd6zuPGst55lUXGpU5bGOSi
-         JJc8XAbBvVpdlaTys1EakKWsoJfhau+xKzZ49CNCDNf/Xm8fye7qn+8sIvjmFYZmYqDK
-         51Pg1dKN8+2RkirYUoo7Y6SGAHGMfsl7fyD6/Xi2nyGomPK46Dz9HxN0fIKyv90Y7jg8
-         ho2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=WIZAf3x2BneXQTTKPWzLh7lCftlSclIRyCF/Mlb3EW4=;
-        b=pkQeFymqYK9m8TwMBnQmWiy0SKYaawfQifVQssregNlPmKdV5gfjTIcK2izPlxynJj
-         funCRNJLCQPYWldg9oootMHnZM0OaAz+G6CpRXYWlLu87crDPlD/l4KOQAh6eiIC68et
-         bTvGB0mjr9zoMifgp4VF4+kd6OsZdL+2TWlmVSsdkvJRQW9i31kTY++5Lx+sr+/DNAoS
-         c9ysFpXMK3+oXCQ8aDtG5J827jRi5ausjCaOrA279jEnAX/p9mJlvWfzAUlhybVUp30A
-         RoDxH/huZwGzznenFd5mp36073dAKO210g+j8omOzYnH6HzcXoy0SswbSgWIdAyNW8mb
-         w2oQ==
-X-Gm-Message-State: AOAM533HbAnDYG9TYqberEqLinQdFKhQSJ9RY3+uE8j9vbrFup7MTLW4
-        DURBfolHZQO9s2VCrx3V07N5wg==
-X-Google-Smtp-Source: ABdhPJyQ1dfhud31uvmhWjcNOV9nz6EpZ3fFDfyZlE0Rpp4BVPYFIT8QORlNPZLa72KkbDqugJRCWA==
-X-Received: by 2002:a05:6000:1211:: with SMTP id e17mr4734550wrx.263.1598256984974;
-        Mon, 24 Aug 2020 01:16:24 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id w1sm22294675wmc.18.2020.08.24.01.16.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 01:16:24 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 09:16:22 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Christian Lamparter <chunkeey@gmail.com>
-Cc:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 00/32] Set 2: Rid W=1 warnings in Wireless
-Message-ID: <20200824081622.GI3248864@dell>
-References: <20200821071644.109970-1-lee.jones@linaro.org>
- <a3915e15-0583-413f-1fcf-7cb9933ec0bf@gmail.com>
+        Mon, 24 Aug 2020 04:17:22 -0400
+Received: from mga09.intel.com ([134.134.136.24]:58092 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbgHXIRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:17:21 -0400
+IronPort-SDR: tQuQeOpGEgBXujuvoschzFoz2SmIvIrKZ/QqHY3c1NL1VzFD5PAw9z8qWkR9wD1QafHxIUxs5B
+ QbE397OcEeqg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="156912824"
+X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
+   d="scan'208";a="156912824"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 01:17:20 -0700
+IronPort-SDR: YgZeuobHHY4IZVNhEvjbXlNIhlhPDgpCafSQZqUr0+WRkJPs8YeJx6krWF7wjLBy2aS5sIGnqD
+ 7ByXCkPB6/uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
+   d="scan'208";a="328413608"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 24 Aug 2020 01:17:17 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1kA7fH-00AzkR-9V; Mon, 24 Aug 2020 11:17:15 +0300
+Date:   Mon, 24 Aug 2020 11:17:15 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com
+Subject: Re: [PATCH v10 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200824081715.GA1891694@smile.fi.intel.com>
+References: <cover.1598240097.git.rahul.tanwar@linux.intel.com>
+ <05b664b961e37c1c35fa7d5d1cfc9ae244bc86bc.1598240097.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a3915e15-0583-413f-1fcf-7cb9933ec0bf@gmail.com>
+In-Reply-To: <05b664b961e37c1c35fa7d5d1cfc9ae244bc86bc.1598240097.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 22 Aug 2020, Christian Lamparter wrote:
+On Mon, Aug 24, 2020 at 11:36:37AM +0800, Rahul Tanwar wrote:
+> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+> This PWM controller does not have any other consumer, it is a
+> dedicated PWM controller for fan attached to the system. Add
+> driver for this PWM fan controller.
 
-> On 2020-08-21 09:16, Lee Jones wrote:
-> > This set is part of a larger effort attempting to clean-up W=1
-> > kernel builds, which are currently overwhelmingly riddled with
-> > niggly little warnings.
-> > 
-> I see that after our discussion about the carl9170 change in this
-> thread following your patch: <https://lkml.org/lkml/2020/8/14/291>
-> 
-> you decided the best way to address our requirements, was to "drop"
-> your patch from the series, instead of just implementing the requested
-> changes. :(
+...
 
-No, this is "set 2", not "v2".
+> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
+> +	if (IS_ERR(pc->regmap)) {
+> +		ret = PTR_ERR(pc->regmap);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err_probe(dev, ret, "failed to init register map\n");
+> +		return ret;
+> +	}
+> +
+> +	pc->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(pc->clk)) {
+> +		ret = PTR_ERR(pc->clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err_probe(dev, ret, "failed to get clock\n");
+> +		return ret;
+> +	}
+> +
+> +	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
+> +	if (IS_ERR(pc->rst)) {
+> +		ret = PTR_ERR(pc->rst);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err_probe(dev, ret, "failed to get reset control\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = reset_control_deassert(pc->rst);
+> +	if (ret) {
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err_probe(dev, ret, "cannot deassert reset control\n");
+> +		return ret;
+> +	}
 
-The patch you refer to is in the first set.
+Please, spend a bit of time to understand the changes you are doing. There are
+already few examples how to use dev_err_probe() properly.
 
-Looks like I am waiting for your reply [0]:
+> +	ret = clk_prepare_enable(pc->clk);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable clock\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(dev, lgm_pwm_action, pc);
+> +	if (ret)
+> +		return ret;
 
-[0] https://lkml.org/lkml/2020/8/18/334
+You have also ordering issues here.
 
-> > There are quite a few W=1 warnings in the Wireless.  My plan
-> > is to work through all of them over the next few weeks.
-> > Hopefully it won't be too long before drivers/net/wireless
-> > builds clean with W=1 enabled.
-> 
-> Just a parting note for your consideration:
-> 
-> Since 5.7 [0], it has become rather easy to also compile the linux kernel
-> with clang and the LLVM Utilities.
-> <https://www.kernel.org/doc/html/latest/kbuild/llvm.html>
-> 
-> I hope this information can help you to see beyond that one-unamed
-> "compiler" bias there... I wish you the best of luck in your endeavors.
+So, what I can see about implementation is that
 
-Never used them.
 
-GCC has always worked well for me.  What are their benefits over GCC?
+	static void ..._clk_disable(void *data)
+	{
+		clk_disable_unprepare(data);
+	}
 
-I already build for 5 architectures locally and a great deal more
-(arch * defconfigs) using remote testing infrastructures.  Multiplying
-them without very good reason sounds like a *potential* waste of
-already limited computation resources.
+	static int ..._clk_enable(...)
+	{
+		int ret;
 
-> Christian
-> 
-> [0] <https://www.phoronix.com/scan.php?page=news_item&px=Linux-5.7-Kbuild-Easier-LLVM>
+		ret = clk_preare_enable(...);
+		if (ret)
+			return ret;
+		return devm_add_action_or_reset(..., ..._clk_disable);
+	}
+
+
+Similar for reset control.
+
+Then in the ->probe() something like this:
+
+	ret = devm_reset_control_get...;
+	if (ret)
+		return ret;
+
+	ret = ..._reset_deassert(...);
+	if (ret)
+		return ret;
+
+followed by similar section for the clock.
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
+
+
