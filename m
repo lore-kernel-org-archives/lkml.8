@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD8CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2870C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54C99206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B5F204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258131;
-	bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
+	s=default; t=1598258138;
+	bh=TDK2CWXv9VIzmd0uFJf8Vwj/ZVwsjQ9xuND2ihko3c4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BAklQqB9jiNCHoLmtnYofR8izXH5x3k7hMkvS1e/lT6YZgx+GPvEz46HbYWfmnyK3
-	 EckmH/wzRwfDSMJ9vUJFac5XRg01SBIFI7DUhPdmDzynbn8c5xoxYbBVrbYxrTWeKg
-	 oDEB+h5JL2Sounv89ahr+c+M2uB/9Nxr23yfPjJA=
+	b=IfZrRIhGFHlMLjQtL/l1zdJ2YRl9I98jqtX/wRSdGsOHwfAb0UjxzkaPva9pOvC80
+	 Kj2IJauE9Cm8VxTpnuj7qLMpeSzc9q/JfVC6jahZLXREbMZuVbLXqRO3kIGDKzVi+l
+	 I2gGWDxRXHYWTQn/C/zp2S8K8vwmNmSI+tlzbcDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgHXIf3 (ORCPT
+        id S1726820AbgHXIff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:35:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46124 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:35:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728098AbgHXIf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:35:26 -0400
+        id S1726670AbgHXIfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:35:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB6982177B;
-        Mon, 24 Aug 2020 08:35:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16826204FD;
+        Mon, 24 Aug 2020 08:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258126;
-        bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
+        s=default; t=1598258129;
+        bh=TDK2CWXv9VIzmd0uFJf8Vwj/ZVwsjQ9xuND2ihko3c4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WJFSsMCFh/iBFMfexXySvZ68oE02IrFOOB+Rx7nMphu+UI30IRsB+/B9hxalbXmtN
-         a1p+s5PIy6K2vOnP2IBJmlKzenUrpG86/yWXRAyCnfkVJ0y5fDv/tOWGyqeM+omHhW
-         TKscMGEgYC5brmC9b3/V1G3XITgjTKWkZyZOZ5j0=
+        b=ZA5D3tIULahvUIEEcBFrTSUe9pWooJdwr6IDfo9ZPa9S+ncZCq3sQFa67jYu2b0q6
+         x70kShYs7nJZKo+l7Ky78UCO8kcVQcwVQGfdI8YwAZ7tFQgPhOJFAHdlidn02TflUS
+         oFjmZZs7UGImnKypZO1oWNP3uJJNl9GqwWnSddoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>,
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 055/148] m68knommu: fix overwriting of bits in ColdFire V3 cache control
-Date:   Mon, 24 Aug 2020 10:29:13 +0200
-Message-Id: <20200824082416.702919367@linuxfoundation.org>
+Subject: [PATCH 5.8 056/148] svcrdma: Fix another Receive buffer leak
+Date:   Mon, 24 Aug 2020 10:29:14 +0200
+Message-Id: <20200824082416.752092929@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -59,50 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Ungerer <gerg@linux-m68k.org>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit bdee0e793cea10c516ff48bf3ebb4ef1820a116b ]
+[ Upstream commit 64d26422516b2e347b32e6d9b1d40b3c19a62aae ]
 
-The Cache Control Register (CACR) of the ColdFire V3 has bits that
-control high level caching functions, and also enable/disable the use
-of the alternate stack pointer register (the EUSP bit) to provide
-separate supervisor and user stack pointer registers. The code as
-it is today will blindly clear the EUSP bit on cache actions like
-invalidation. So it is broken for this case - and that will result
-in failed booting (interrupt entry and exit processing will be
-completely hosed).
+During a connection tear down, the Receive queue is flushed before
+the device resources are freed. Typically, all the Receives flush
+with IB_WR_FLUSH_ERR.
 
-This only affects ColdFire V3 parts that support the alternate stack
-register (like the 5329 for example) - generally speaking new parts do,
-older parts don't. It has no impact on ColdFire V3 parts with the single
-stack pointer, like the 5307 for example.
+However, any pending successful Receives flush with IB_WR_SUCCESS,
+and the server automatically posts a fresh Receive to replace the
+completing one. This happens even after the connection has closed
+and the RQ is drained. Receives that are posted after the RQ is
+drained appear never to complete, causing a Receive resource leak.
+The leaked Receive buffer is left DMA-mapped.
 
-Fix the cache bit defines used, so they maintain the EUSP bit when
-carrying out cache actions through the CACR register.
+To prevent these late-posted recv_ctxt's from leaking, block new
+Receive posting after XPT_CLOSE is set.
 
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/include/asm/m53xxacr.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/m68k/include/asm/m53xxacr.h b/arch/m68k/include/asm/m53xxacr.h
-index 9138a624c5c81..692f90e7fecc1 100644
---- a/arch/m68k/include/asm/m53xxacr.h
-+++ b/arch/m68k/include/asm/m53xxacr.h
-@@ -89,9 +89,9 @@
-  * coherency though in all cases. And for copyback caches we will need
-  * to push cached data as well.
-  */
--#define CACHE_INIT	  CACR_CINVA
--#define CACHE_INVALIDATE  CACR_CINVA
--#define CACHE_INVALIDATED CACR_CINVA
-+#define CACHE_INIT        (CACHE_MODE + CACR_CINVA - CACR_EC)
-+#define CACHE_INVALIDATE  (CACHE_MODE + CACR_CINVA)
-+#define CACHE_INVALIDATED (CACHE_MODE + CACR_CINVA)
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+index e426fedb9524f..ac16d83f2d26c 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+@@ -265,6 +265,8 @@ static int svc_rdma_post_recv(struct svcxprt_rdma *rdma)
+ {
+ 	struct svc_rdma_recv_ctxt *ctxt;
  
- #define ACR0_MODE	((CONFIG_RAMBASE & 0xff000000) + \
- 			 (0x000f0000) + \
++	if (test_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags))
++		return 0;
+ 	ctxt = svc_rdma_recv_ctxt_get(rdma);
+ 	if (!ctxt)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
