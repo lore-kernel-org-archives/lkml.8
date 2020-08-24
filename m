@@ -2,116 +2,70 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BACC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88614C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A830206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4F8206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:54:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="R7QLWqV+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r4GUC126"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgHXSxR (ORCPT
+        id S1726803AbgHXSyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:53:17 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:40618 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgHXSxL (ORCPT
+        Mon, 24 Aug 2020 14:54:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgHXSyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:53:11 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4D59320B4908;
-        Mon, 24 Aug 2020 11:53:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4D59320B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598295190;
-        bh=PEVXNrC7qCWoYQ6cBtLYoPpmAUDgidOX4sUr/CphXTg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R7QLWqV+9eLHIC/H822jOb7WbBoiRn0rn1itquDa3hPXynwCr51RWyETdkczvlskK
-         FuYDBXnHn7fnH9PIriiAm57ikZpiyUKWRT/86CvnUmCjDZ6isf2YubKJnDxZIASBTa
-         fZs4mDmS0K7mJNoJ2t+D4iepSFSAoARMBdOTZwKE=
-Date:   Mon, 24 Aug 2020 13:53:08 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] ima: Fix keyrings race condition and other key
- related bugs
-Message-ID: <20200824185308.GD4148@sequoia>
-References: <20200811192621.281675-1-tyhicks@linux.microsoft.com>
- <839d2b185ba482d664edd3fda7c03965543553fa.camel@linux.ibm.com>
+        Mon, 24 Aug 2020 14:54:08 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A37ECC061573;
+        Mon, 24 Aug 2020 11:54:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/RZ8lu4GLqWgx2SJy7gstpvyOrfX+P6Ib1IzLL5uMvU=; b=r4GUC126jrVcHWcAK7iDriIIMT
+        xQQdHj1FiRNXVRnXsSD5TnlV5iKg0relX2TxVrk5gKJfT+iz/+PelC7p5NpgeOhKHPK4UKVPdj0/1
+        GUO9GYv2mQ9+x0RQ6kElcjX4wwgs8J+qm2KROL3HH2GDwNlQZfghoaGk94YF9b+9a1G2yRa2rKn1H
+        y8OB50lIr/isEArR1LHELITcDAwYBB+aJWzDAphJ64foh07hSD9sdklDUBA4Tbs3Xb5ueEno8/IJK
+        vA1p4/W5ihT0FpBgEYptG6cvRIfeFYw0CSupxEcgVmeG9AfKtWS2YhvdGbdVJBY6jg6Xm+if97dVK
+        3cPWSzDA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAHbU-0002Xb-SQ; Mon, 24 Aug 2020 18:54:00 +0000
+Date:   Mon, 24 Aug 2020 19:54:00 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/5] fs/ceph: use pipe_get_pages_alloc() for pipe
+Message-ID: <20200824185400.GE17456@casper.infradead.org>
+References: <20200822042059.1805541-1-jhubbard@nvidia.com>
+ <20200822042059.1805541-6-jhubbard@nvidia.com>
+ <048e78f2b440820d936eb67358495cc45ba579c3.camel@kernel.org>
+ <c943337b-1c1e-9c85-4ded-39931986c6a3@nvidia.com>
+ <af70d334271913a6b09bfd818bc3d81eef5a19b2.camel@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <839d2b185ba482d664edd3fda7c03965543553fa.camel@linux.ibm.com>
+In-Reply-To: <af70d334271913a6b09bfd818bc3d81eef5a19b2.camel@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-24 14:44:55, Mimi Zohar wrote:
-> Hi Tyler,
-> 
-> On Tue, 2020-08-11 at 14:26 -0500, Tyler Hicks wrote:
-> > v2:
-> >  - Always return an ERR_PTR from ima_alloc_rule_opt_list() (Nayna)
-> >  - Add Lakshmi's Reviewed-by to both patches
-> >  - Rebased on commit 3db0d0c276a7 ("integrity: remove redundant
-> >    initialization of variable ret") of next-integrity
-> > v1: https://lore.kernel.org/lkml/20200727140831.64251-1-tyhicks@linux.microsoft.com/
-> > 
-> > Nayna pointed out that the "keyrings=" option in an IMA policy rule
-> > should only be accepted when CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is
-> > enabled:
-> > 
-> >  https://lore.kernel.org/linux-integrity/336cc947-1f70-0286-6506-6df3d1d23a1d@linux.vnet.ibm.com/
-> > 
-> > While fixing this, the compiler warned me about the potential for the
-> > ima_keyrings pointer to be NULL despite it being used, without a check
-> > for NULL, as the destination address for the strcpy() in
-> > ima_match_keyring().
-> > 
-> > It also became apparent that there was not adequate locking around the
-> > use of the pre-allocated buffer that ima_keyrings points to. The kernel
-> > keyring has a lock (.sem member of struct key) that ensures only one key
-> > can be added to a given keyring at a time but there's no protection
-> > against adding multiple keys to different keyrings at the same time.
-> > 
-> > The first patch in this series fixes both ima_keyrings related issues by
-> > parsing the list of keyrings in a KEY_CHECK rule at policy load time
-> > rather than deferring the parsing to policy check time. Once that fix is
-> > in place, the second patch can enforce that
-> > CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS must be enabled in order to use
-> > "func=KEY_CHECK" or "keyrings=" options in IMA policy.
-> 
-> Thank you for fixing and cleaning up the existing keyring policy
-> support. 
-> 
-> > 
-> > The new "keyrings=" value handling is done in a generic manner that can
-> > be reused by other options in the future. This seems to make sense as
-> > "appraise_type=" has similar style (though it doesn't need to be fully
-> > parsed at this time) and using "|" as an alternation delimiter is
-> > becoming the norm in IMA policy.
-> 
-> Yes, thank you.  Better extending existing key value pairs than
-> defining new boot command line options.
-> 
-> This patch set is now queued in next-integrity-testing.
+On Mon, Aug 24, 2020 at 02:47:53PM -0400, Jeff Layton wrote:
+> Ok, I'll plan to pick it up providing no one has issues with exporting that symbol.
 
-Thanks! I'm glad you found it useful.
-
-Tyler
-
-> 
-> Mimi
+_GPL, perhaps?
