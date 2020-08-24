@@ -2,155 +2,118 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A081C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D258E2078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE8062074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:07:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598296041;
+	bh=D49DFnKwX3H2+4/JHutRBjl6onsdr+JMHUvotdX4JOA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=0qcO53aElqlv+2Vui6UBxXtQorO5w1iNE56R5l4mjwISNS7Y8asPMGchC8aV/ImJN
+	 bOB9KqmjKm1DKuOk5WUo4pvyaqNPW3PWoo4C6x2Joxb4OMZp1ui3oKZ55GVONlDWJt
+	 5tdew5NMRI7kb3DQtejUf+FziiwvVI2kqTXk7InE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgHXTE6 (ORCPT
+        id S1726723AbgHXTHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:04:58 -0400
-Received: from comms.puri.sm ([159.203.221.185]:38226 "EHLO comms.puri.sm"
+        Mon, 24 Aug 2020 15:07:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726413AbgHXTE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:04:57 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id A8C79DFB28;
-        Mon, 24 Aug 2020 12:04:26 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nZAS46TPgg2p; Mon, 24 Aug 2020 12:04:24 -0700 (PDT)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     stern@rowland.harvard.edu, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: [PATCH] scsi: add expecting_media_change flag to error path
-Date:   Mon, 24 Aug 2020 21:04:00 +0200
-Message-Id: <20200824190400.12339-1-martin.kepplinger@puri.sm>
-Content-Transfer-Encoding: 8bit
+        id S1725904AbgHXTHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 15:07:16 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF8FC2074D;
+        Mon, 24 Aug 2020 19:07:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598296035;
+        bh=D49DFnKwX3H2+4/JHutRBjl6onsdr+JMHUvotdX4JOA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xroCTR8eKxl6V1lvgh/HrBdL5yumIzn+QzqCpV0HmoTNHLBcd3BOlUqvYqiQ83PtV
+         +jE0X2cY7O73uflWwXcWluqNlVZ9SdesRA885D2C0dd3UtzB5zoCx2kjOhk6I+djzV
+         DXQeTZZ+iNeRWQbKb9Y2vaA8SQNF3ozNUVvJU0vc=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Adam Ford <aford173@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>, Li Jun <jun.li@nxp.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Han Xu <han.xu@nxp.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 01/16] dt-bindings: mfd: rohm,bd71847-pmic: Correct clock properties requirements
+Date:   Mon, 24 Aug 2020 21:06:46 +0200
+Message-Id: <20200824190701.8447-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SD Cardreaders (especially) sometimes lose the state during suspend
-and deliver a "media changed" unit attention when really only a
-(runtime) suspend/resume cycle has been done.
+The input clock and number of clock provider cells are not required for
+the PMIC to operate.  They are needed only for the optional bd718x7
+clock driver.
 
-Add a flag for drivers to use when this is expected. It's handled in the
-scsi core error path and allows to use (runtime) PM when it has
-no been possible before on said hardware.
+Add also clock-output-names as driver takes use of it.
 
-The "downside" is that we rely more on users not to really change
-the medium (SD card) *during* a simple suspend/resume, i.e. when not
-unmounting.
+This fixes dtbs_check warnings like:
 
-How to *use* this flag remains an open problem but for testing (if you
-get "media changed" UA errors when runtime PM enabled as described below),
-simply do to /drivers/scsi/sd.c
+    arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b: 'clocks' is a required property
+    arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b: '#clock-cells' is a required property
 
-@@ -3648,6 +3648,8 @@ static int sd_resume(struct device *dev)
-	if (!sdkp)      /* E.g.: runtime resume at the start of sd_probe() */
-		return 0;
-
-+       sdkp->device->expecting_media_change = 1;
-+
-	if (!sdkp->device->manage_start_stop)
-		return 0;
-
-To enable runtime PM for SD cardreader (here, device number 0:0:0:0),
-do the following:
-
-echo 0 > /sys/module/block/parameters/events_dfl_poll_msecs
-echo 1000 > /sys/bus/scsi/devices/0:0:0:0/power/autosuspend_delay_ms
-echo auto > /sys/bus/scsi/devices/0:0:0:0/power/control
-
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
+ .../devicetree/bindings/mfd/rohm,bd71847-pmic.yaml       | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-
-If you don't want to merge a flag without any user, I understand that
-but we can add a user (sysfs setting to opt-in?) once we agree on
-what it does, right?
-
-Since this patch solves my specific problem, I'd appreciate any more
-feedback and hope we can find a solution that works for everyone.
-
-thanks a lot,
-                               martin
-
-
- drivers/scsi/scsi_error.c  | 31 ++++++++++++++++++++++++++++---
- include/scsi/scsi_device.h |  1 +
- 2 files changed, 29 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
-index 7d3571a2bd89..c99390a5dc31 100644
---- a/drivers/scsi/scsi_error.c
-+++ b/drivers/scsi/scsi_error.c
-@@ -565,6 +565,18 @@ int scsi_check_sense(struct scsi_cmnd *scmd)
- 				return NEEDS_RETRY;
- 			}
- 		}
-+		if (scmd->device->expecting_media_change) {
-+			if (sshdr.asc == 0x28 && sshdr.ascq == 0x00) {
-+				/*
-+				 * clear the expecting_media_change in
-+				 * scsi_decide_disposition() because we
-+				 * need to catch possible "fail fast" overrides
-+				 * that block readahead can cause.
-+				 */
-+				return NEEDS_RETRY;
-+			}
-+		}
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+index 77bcca2d414f..5d531051a153 100644
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+@@ -38,6 +38,9 @@ properties:
+   "#clock-cells":
+     const: 0
+ 
++  clock-output-names:
++    maxItems: 1
 +
- 		/*
- 		 * we might also expect a cc/ua if another LUN on the target
- 		 * reported a UA with an ASC/ASCQ of 3F 0E -
-@@ -1944,9 +1956,22 @@ int scsi_decide_disposition(struct scsi_cmnd *scmd)
- 	 * the request was not marked fast fail.  Note that above,
- 	 * even if the request is marked fast fail, we still requeue
- 	 * for queue congestion conditions (QUEUE_FULL or BUSY) */
--	if ((++scmd->retries) <= scmd->allowed
--	    && !scsi_noretry_cmd(scmd)) {
--		return NEEDS_RETRY;
-+	if ((++scmd->retries) <= scmd->allowed) {
-+		/* but scsi_noretry_cmd() cannot override the
-+		 * expecting_media_change flag.
-+		 */
-+		if (!scsi_noretry_cmd(scmd) ||
-+		    scmd->device->expecting_media_change) {
-+			scmd->device->expecting_media_change = 0;
-+			return NEEDS_RETRY;
-+		} else {
-+			/* Not marked fail fast, or marked but not expected.
-+			 * Clear the flag too because it's meant for the
-+			 * next UA only.
-+			 */
-+			scmd->device->expecting_media_change = 0;
-+			return SUCCESS;
-+		}
- 	} else {
- 		/*
- 		 * no more retries - report this one back to upper level.
-diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-index bc5909033d13..4a67b06742ba 100644
---- a/include/scsi/scsi_device.h
-+++ b/include/scsi/scsi_device.h
-@@ -169,6 +169,7 @@ struct scsi_device {
- 				 * this device */
- 	unsigned expecting_cc_ua:1; /* Expecting a CHECK_CONDITION/UNIT_ATTN
- 				     * because we did a bus reset. */
-+	unsigned expecting_media_change:1; /* Expecting "media changed" UA */
- 	unsigned use_10_for_rw:1; /* first try 10-byte read / write */
- 	unsigned use_10_for_ms:1; /* first try 10-byte mode sense/select */
- 	unsigned set_dbd_for_ms:1; /* Set "DBD" field in mode sense */
+ # The BD71847 abd BD71850 support two different HW states as reset target
+ # states. States are called as SNVS and READY. At READY state all the PMIC
+ # power outputs go down and OTP is reload. At the SNVS state all other logic
+@@ -116,12 +119,14 @@ required:
+   - compatible
+   - reg
+   - interrupts
+-  - clocks
+-  - "#clock-cells"
+   - regulators
+ 
+ additionalProperties: false
+ 
++dependencies:
++  '#clock-cells': [clocks]
++  clocks: ['#clock-cells']
++
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/irq.h>
 -- 
-2.20.1
+2.17.1
 
