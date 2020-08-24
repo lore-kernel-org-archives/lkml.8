@@ -2,145 +2,89 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D345C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3229820738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7EB2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ax2mL3p3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jo/n8f/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgHXS5v (ORCPT
+        id S1726585AbgHXTBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:57:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47612 "EHLO
+        Mon, 24 Aug 2020 15:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgHXS5s (ORCPT
+        with ESMTP id S1725963AbgHXTBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:57:48 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E51A8C061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:57:47 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id b9so5815466oiy.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:57:47 -0700 (PDT)
+        Mon, 24 Aug 2020 15:01:12 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D89BAC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 12:01:11 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l2so10035674wrc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 12:01:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MPucIPCHpwX6Bmh4YO5fRSV0Dn46Pt3wZbjUIXrC1hQ=;
-        b=ax2mL3p3PeTYQEQ/OIlwLBRIpVmZ0zSoroj/pMHcJf0c/JMUnNjBNrFdFd3Yl4AdgZ
-         Y581dRsZuzhftzdplAoRvVpnnhZhWkALQw3Sym+GHzD1MUuHEQKqucLdNBNH0JN99l70
-         GuywBwTgMolo+BDGqCsljUQMKoYK+KLrOzAs1ohAFdDkJwK4g7h/b8hRlKRaK+I9DC9/
-         9RXFcZOGEM7T2iIJQAQs57oWJrUYveZ4xY29oYtoJiPLkvfVfMtf7vmsSeWcP4FhEqRy
-         jgKhYQ1vNUX+HfUHpU8qv9E66lDdJlDmedmZF2Ijkj+y1JOOHBCX5mAdLNsag/oNeBWC
-         btRA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wdQ01BYoCPmw8R8Z00rskwW2KNNCfLcU9jRwV6Y3oLE=;
+        b=Jo/n8f/8sT2IZ+RQoFGB9GMENzmK6MQdXt1FuRuVCZWROngZY4b53ZPyFbwj7zB+Tb
+         JRC/T8o3z3xhgHXn8XQdE4uxvMlT5D10mvkTmpSv8HzHsoMONZ6G3R9503U1BrMRkiXR
+         7GeFKOTV87bkkB1w9eQ4xHNPGCff+4Mo+HxQjb7K0BmL+czAzo17CxDmV1rU9x5/p1Di
+         aKF8XaDrwswFGGnP0o7jABfO7CVx/bb5GPwKWDLnS9UX/06OYuVq5VuTsUl/WP99ukrc
+         wt+fx0bA42yeS7f47JWGF865+/wvNCYmBWqJKIhsfhM0cuvHQR5hzWM/0iuznhUX7fF5
+         O9ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MPucIPCHpwX6Bmh4YO5fRSV0Dn46Pt3wZbjUIXrC1hQ=;
-        b=TQHv56jd0HmgGmRbkuWtTcMXT3p0LKm0ZSCrzN7ppO4vrJ7pjOESqdMJRAQSccnBv0
-         6inRQYf2OOR/TXrzgxs0EhiyDjRleWgj0AkXYK4qFKg9AHDom6aTavdAdmaLbHFuOhOg
-         T9QynbGpU+LDFWmKgm6/3DE52k99rUppbaCrCV8H/5p7tsaQZ6cppJimKBLT6NHyFOHi
-         SmnNHmJoTqtDPtiejm6/sYg6adqkp5fc17D2q+uOdzHgIYzgqGwkrncfM96dGaZDu7Et
-         6gCeuin0uNeqvA6zlmF613tc449Hobp5O7Ao6AFfY4PtSkJWe+HlcmH43Un3piv9gg7x
-         VmIQ==
-X-Gm-Message-State: AOAM533dMdzHzA37mQNz7RMV5rv0uHmzIf77j8IoZBTGi5uOJTXQ0oC2
-        y01O1Iz2xS4NpvaxI959j339s38+w6mVruRjPlVwlA==
-X-Google-Smtp-Source: ABdhPJxXgm1gvFikO0/gwgEgRKtqeJpdMtjhdu4kpc01sdOJdUVy5IKgIlHK+wpjF36VXFvsUVJqbsXbj6mkzmsnBL8=
-X-Received: by 2002:aca:b942:: with SMTP id j63mr504688oif.28.1598295466852;
- Mon, 24 Aug 2020 11:57:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wdQ01BYoCPmw8R8Z00rskwW2KNNCfLcU9jRwV6Y3oLE=;
+        b=e+rpWzmZlk/nU7KqJA57yboPmr+eIftp4ySmvQWO7u+SvuigBOyyCY2+1YR994LAkP
+         hYLpF/vsfeO3vcgP2N8jJImFVNE5uqLCokNyQ6NmocCfVIEO6qIQ4HOhwtae0TP2S+zJ
+         8SxS37kP7fq9WPkjl1zap0CPxY9RTBw4f/CMJAVJDvy4n90vtkahC38gwTQvu0LgoGSq
+         pwGsJGT7XXigaU6+AYW/W31P0WeDuAGoEok6vuIuLqxQfM6iD217su4yTMJ7RfiLHBZ5
+         8nNRqli+kysD0dq1HXoF7ufSphznOVT6JeHrGdsJPvD+uxS0XZJEi/GjkY+oeZ6eR4bs
+         +Tlw==
+X-Gm-Message-State: AOAM531/xEcC13XI0VsULW33kP2hWH1dpjUQ8XrqRMMUBADwH8aW/pr2
+        FN7s6dpfQ9cEwTasrx9U94Qke2/ipCojQ/bn
+X-Google-Smtp-Source: ABdhPJzVvUy6pZx3R8VQKW3UFagoCxt/6r1yvhQT/F1aK33WZ4rvQDJTIiaPfFy5uqn6L2357joejw==
+X-Received: by 2002:adf:ec45:: with SMTP id w5mr7155290wrn.415.1598295669674;
+        Mon, 24 Aug 2020 12:01:09 -0700 (PDT)
+Received: from a-VirtualBox.Dlink ([103.120.71.253])
+        by smtp.gmail.com with ESMTPSA id o5sm765769wmc.33.2020.08.24.12.01.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 12:01:09 -0700 (PDT)
+From:   Bilal Wasim <bilalwasim676@gmail.com>
+To:     enric.balletbo@collabora.com, chunkuang.hu@kernel.org
+Cc:     sam@ravnborg.org, linux-kernel@vger.kernel.org, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, Laurent.pinchart@ideasonboard.com,
+        Bilal Wasim <bilalwasim676@gmail.com>
+Subject: Re: [PATCH v4 0/7] Convert mtk-dsi to drm_bridge API and get EDID for ps8640 bridge
+Date:   Tue, 25 Aug 2020 00:01:02 +0500
+Message-Id: <20200824190102.44454-1-bilalwasim676@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200501152335.1805790-1-enric.balletbo@collabora.com>
+References: <20200501152335.1805790-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-References: <20200401081348.1345307-1-vkuznets@redhat.com> <CALMp9eROXAOg_g=R8JRVfywY7uQXzBtVxKJYXq0dUcob-BfR-g@mail.gmail.com>
- <20200822034046.GE4769@sjchrist-ice>
-In-Reply-To: <20200822034046.GE4769@sjchrist-ice>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Mon, 24 Aug 2020 11:57:35 -0700
-Message-ID: <CALMp9eRHh9KXO12k4GaoenSJazFnSaN68FTVxOGhE9Mxw-hf2A@mail.gmail.com>
-Subject: Re: [PATCH] KVM: VMX: fix crash cleanup when KVM wasn't used
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 8:40 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Thu, Aug 20, 2020 at 01:08:22PM -0700, Jim Mattson wrote:
-> > On Wed, Apr 1, 2020 at 1:13 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> > > ---
-> > >  arch/x86/kvm/vmx/vmx.c | 12 +++++++-----
-> > >  1 file changed, 7 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > > index 3aba51d782e2..39a5dde12b79 100644
-> > > --- a/arch/x86/kvm/vmx/vmx.c
-> > > +++ b/arch/x86/kvm/vmx/vmx.c
-> > > @@ -2257,10 +2257,6 @@ static int hardware_enable(void)
-> > >             !hv_get_vp_assist_page(cpu))
-> > >                 return -EFAULT;
-> > >
-> > > -       INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-> > > -       INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
-> > > -       spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
-> > > -
-> > >         r = kvm_cpu_vmxon(phys_addr);
-> > >         if (r)
-> > >                 return r;
-> > > @@ -8006,7 +8002,7 @@ module_exit(vmx_exit);
-> > >
-> > >  static int __init vmx_init(void)
-> > >  {
-> > > -       int r;
-> > > +       int r, cpu;
-> > >
-> > >  #if IS_ENABLED(CONFIG_HYPERV)
-> > >         /*
-> > > @@ -8060,6 +8056,12 @@ static int __init vmx_init(void)
-> > >                 return r;
-> > >         }
-> > >
-> > > +       for_each_possible_cpu(cpu) {
-> > > +               INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-> > > +               INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
-> > > +               spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
-> > > +       }
-> >
-> > Just above this chunk, we have:
-> >
-> > r = vmx_setup_l1d_flush(vmentry_l1d_flush_param);
-> > if (r) {
-> >         vmx_exit();
-> > ...
-> >
-> > If we take that early exit, because vmx_setup_l1d_flush() fails, we
-> > won't initialize loaded_vmcss_on_cpu. However, vmx_exit() calls
-> > kvm_exit(), which calls on_each_cpu(hardware_disable_nolock, NULL, 1).
-> > Hardware_disable_nolock() then calls kvm_arch_hardware_disable(),
-> > which calls kvm_x86_ops.hardware_disable() [the vmx.c
-> > hardware_disable()], which calls vmclear_local_loaded_vmcss().
-> >
-> > I believe that vmclear_local_loaded_vmcss() will then try to
-> > dereference a NULL pointer, since per_cpu(loaded_vmcss_on_cpu, cpu) is
-> > uninitialzed.
->
-> I agree the code is a mess (kvm_init() and kvm_exit() included), but I'm
-> pretty sure hardware_disable_nolock() is guaranteed to be a nop as it's
-> impossible for kvm_usage_count to be non-zero if vmx_init() hasn't
-> finished.
+Hi Chun-Kuan, Enric,
 
-Unless I'm missing something, there's no check for a non-zero
-kvm_usage_count on this path. There is such a check in
-hardware_disable_all_nolock(), but not in hardware_disable_nolock().
+Is there any plan to merge the following commits in this series to the mainline?
+
+  drm/bridge: ps8640: Get the EDID from eDP control
+  drm/bridge_connector: Set default status connected for eDP connectors
+
+I see that rest of the patchset is already merged and available in 5.9-RC2. 
+
+Thanks,
+Bilal
