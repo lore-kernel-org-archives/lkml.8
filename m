@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA57C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64ACEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAA872074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3977F21775
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258460;
-	bh=0AS/NqJ02rNsmOCbDOMV0JDy+0mcrZ7HiZfRljRPa6U=;
+	s=default; t=1598258468;
+	bh=YyAY6cc7QTViLWyp9xxjMzcu4icKEU23qQoNGK7Dd/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hP+voanf4K8r0YZZ3chhuuXPCUqUKYY0GvXlrqbT6/I6EUyBwXn7k4+RNTMWFwVrt
-	 27XZAir5ZFpU3ecIA5UVb0BdHhdRq8Js19b0Yp0DFgn0P0479HzikN6gIf0k18NNIS
-	 kbmyoNfAc4xoVoUjYHSaa0ROsSODkngLIhPKrgRQ=
+	b=Ix8dpxY8dZo1lSiqaiOOfvE1hkGxo893/WpocIC8ThVS04qcYGRoepLVKPepQxMGG
+	 6JK80ZetOgnT1ymCaHqXNDG1BSW2W4OQZWxw0tRSlPL8dMQj7BFme/oHhWLkU1yYE0
+	 yWs40xLTPuUe1LeZZK0QdjzMyto2u3YEOQeTGBnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgHXIk6 (ORCPT
+        id S1728810AbgHXIlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:40:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58196 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:41:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728782AbgHXIku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:40:50 -0400
+        id S1728782AbgHXIlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:41:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B9F92074D;
-        Mon, 24 Aug 2020 08:40:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BC862075B;
+        Mon, 24 Aug 2020 08:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258449;
-        bh=0AS/NqJ02rNsmOCbDOMV0JDy+0mcrZ7HiZfRljRPa6U=;
+        s=default; t=1598258459;
+        bh=YyAY6cc7QTViLWyp9xxjMzcu4icKEU23qQoNGK7Dd/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PLuzmKeXHFr/kVMaM5h6AMtVmh56SS7cNr7JWa4zIq5Wzq7T2rexfRNphllOTDgG5
-         Vdkc5l6G5xJPHXlyR/AyPBXIPYW2mOivZX3faS9d4ysrG9EKN0ISRQmiODvqWXUet+
-         cTVM6OvhUyW7nihYA4YMMPiSdNODWfHbCr3yRobg=
+        b=Z4Qwhh/cw5fGjhWV6+Fe0qjI3CNclEBX7DA9wBrXE13/5T5Di4b97DpKl663LpSny
+         WWZXJP8aQqV+2aSCppdg0SFbcBdV4kdD275VEWb7BV3oCXY52MY9BvrdZFMYC3WXZL
+         0Zpe4YKHcXNW+wqiigRdiXEd1kf15cbULmiRgj34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Anton Vasilyev <vasilyev@ispras.ru>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 034/124] opp: Put opp table in dev_pm_opp_set_rate() for empty tables
-Date:   Mon, 24 Aug 2020 10:29:28 +0200
-Message-Id: <20200824082411.097960489@linuxfoundation.org>
+Subject: [PATCH 5.7 054/124] media: camss: fix memory leaks on error handling paths in probe
+Date:   Mon, 24 Aug 2020 10:29:48 +0200
+Message-Id: <20200824082412.079888519@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -61,42 +62,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 8979ef70850eb469e1094279259d1ef393ffe85f ]
+[ Upstream commit f45882cfb152f5d3a421fd58f177f227e44843b9 ]
 
-We get the opp_table pointer at the top of the function and so we should
-put the pointer at the end of the function like all other exit paths
-from this function do.
+camss_probe() does not free camss on error handling paths. The patch
+introduces an additional error label for this purpose. Besides, it
+removes call of v4l2_async_notifier_cleanup() from
+camss_of_parse_ports() since its caller, camss_probe(), cleans up all
+its resources itself.
 
-Cc: v5.7+ <stable@vger.kernel.org> # v5.7+
-Fixes: aca48b61f963 ("opp: Manage empty OPP tables with clk handle")
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-[ Viresh: Split the patch into two ]
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Co-developed-by: Anton Vasilyev <vasilyev@ispras.ru>
+Signed-off-by: Anton Vasilyev <vasilyev@ispras.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/opp/core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/media/platform/qcom/camss/camss.c | 30 +++++++++++++++--------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 2d3880b3d6ee0..a55d083e5be21 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -822,8 +822,10 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 		 * have OPP table for the device, while others don't and
- 		 * opp_set_rate() just needs to behave like clk_set_rate().
- 		 */
--		if (!_get_opp_count(opp_table))
--			return 0;
-+		if (!_get_opp_count(opp_table)) {
-+			ret = 0;
-+			goto put_opp_table;
-+		}
+diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
+index 3fdc9f964a3c6..2483641799dfb 100644
+--- a/drivers/media/platform/qcom/camss/camss.c
++++ b/drivers/media/platform/qcom/camss/camss.c
+@@ -504,7 +504,6 @@ static int camss_of_parse_ports(struct camss *camss)
+ 	return num_subdevs;
  
- 		if (!opp_table->required_opp_tables) {
- 			dev_err(dev, "target frequency can't be 0\n");
+ err_cleanup:
+-	v4l2_async_notifier_cleanup(&camss->notifier);
+ 	of_node_put(node);
+ 	return ret;
+ }
+@@ -835,29 +834,38 @@ static int camss_probe(struct platform_device *pdev)
+ 		camss->csid_num = 4;
+ 		camss->vfe_num = 2;
+ 	} else {
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto err_free;
+ 	}
+ 
+ 	camss->csiphy = devm_kcalloc(dev, camss->csiphy_num,
+ 				     sizeof(*camss->csiphy), GFP_KERNEL);
+-	if (!camss->csiphy)
+-		return -ENOMEM;
++	if (!camss->csiphy) {
++		ret = -ENOMEM;
++		goto err_free;
++	}
+ 
+ 	camss->csid = devm_kcalloc(dev, camss->csid_num, sizeof(*camss->csid),
+ 				   GFP_KERNEL);
+-	if (!camss->csid)
+-		return -ENOMEM;
++	if (!camss->csid) {
++		ret = -ENOMEM;
++		goto err_free;
++	}
+ 
+ 	camss->vfe = devm_kcalloc(dev, camss->vfe_num, sizeof(*camss->vfe),
+ 				  GFP_KERNEL);
+-	if (!camss->vfe)
+-		return -ENOMEM;
++	if (!camss->vfe) {
++		ret = -ENOMEM;
++		goto err_free;
++	}
+ 
+ 	v4l2_async_notifier_init(&camss->notifier);
+ 
+ 	num_subdevs = camss_of_parse_ports(camss);
+-	if (num_subdevs < 0)
+-		return num_subdevs;
++	if (num_subdevs < 0) {
++		ret = num_subdevs;
++		goto err_cleanup;
++	}
+ 
+ 	ret = camss_init_subdevices(camss);
+ 	if (ret < 0)
+@@ -936,6 +944,8 @@ err_register_entities:
+ 	v4l2_device_unregister(&camss->v4l2_dev);
+ err_cleanup:
+ 	v4l2_async_notifier_cleanup(&camss->notifier);
++err_free:
++	kfree(camss);
+ 
+ 	return ret;
+ }
 -- 
 2.25.1
 
