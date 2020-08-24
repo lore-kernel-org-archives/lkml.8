@@ -2,54 +2,58 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB0EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4263C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15C8D2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B878920639
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263094;
-	bh=0sF119N4lHEg7qpSVs4LN+sAfHSYIUqUSvoS6KE/u40=;
+	s=default; t=1598263107;
+	bh=zL6LKo2P1koAyupmQ6PvuVWQybcemZ5+MnGyBZXepzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=unLINUkS8zxL/Wb4O25eTy4/DGaecN8UtWZnUyNWK8/6pyBUZP1FjKJdAqsjvKSzV
-	 F9MQr1YhQWM1KH5+kdjsTyjQB0HVWFDeSjNSUzB8P0gh/NpBL9NKFfwH1BaNd6fwmT
-	 C1/jwb3Wl+FwrCi3ssesNuwK3KEJ9AoB13Lmhgas=
+	b=oj+B1/HcMGlFZAJOs8WKGpqczw4PsQQRVPgSNJqB7r/etvhBhM60RfPXEGZs3gT7t
+	 lxpObiepCQTEmrJEKPU89dJjyUmS9SPGrraTMHaJpR0Fb1uyFh/4tMAqpTCNiia5zX
+	 ffN88yFFIy/GZrySGleUPV9r+O67Mrtvvt7Jfz0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgHXJ6L (ORCPT
+        id S1727991AbgHXJ6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:58:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42740 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:58:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727866AbgHXIeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:34:22 -0400
+        id S1727884AbgHXIeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:34:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B0462075B;
-        Mon, 24 Aug 2020 08:34:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E1BF206F0;
+        Mon, 24 Aug 2020 08:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258061;
-        bh=0sF119N4lHEg7qpSVs4LN+sAfHSYIUqUSvoS6KE/u40=;
+        s=default; t=1598258056;
+        bh=zL6LKo2P1koAyupmQ6PvuVWQybcemZ5+MnGyBZXepzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GZtzzhUMM0fyE06RxyzMfcuhjFWDO+vxUzi9E2kMx9mbCX8k9nyEm5ky1DWRtxj2X
-         mMqdkwODfxFRTFkLe/D6U10sw7moQNLmdJKEWd4SIV9fgWHo+0HkR8AKSaGEFj+M5W
-         vstPVhaR6cqzESC/p3LVVJoB3QjH3Qx8E6gvA4+U=
+        b=zEJLW2kpZOW4I23Yu9hu79PG3U4LI00POcbaZZcVTbXgWaavrjvFNNUid05jKVJQ5
+         i1EGyho6Th57eHV9tlBIXZc/0oJTLMS01tba21piewTk00lYWeIEAa7Vaq4MLvENXi
+         osmQL36g+LBOppO6taNGCd9gA0cGfl6BNgdJ8m5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com,
-        Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 061/148] ceph: fix use-after-free for fsc->mdsc
-Date:   Mon, 24 Aug 2020 10:29:19 +0200
-Message-Id: <20200824082416.994206217@linuxfoundation.org>
+        Charan Teja Reddy <charante@codeaurora.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Vinayak Menon <vinmenon@codeaurora.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 019/148] mm, page_alloc: fix core hung in free_pcppages_bulk()
+Date:   Mon, 24 Aug 2020 10:28:37 +0200
+Message-Id: <20200824082414.888818988@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -62,44 +66,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Charan Teja Reddy <charante@codeaurora.org>
 
-[ Upstream commit a7caa88f8b72c136f9a401f498471b8a8e35370d ]
+commit 88e8ac11d2ea3acc003cf01bb5a38c8aa76c3cfd upstream.
 
-If the ceph_mdsc_init() fails, it will free the mdsc already.
+The following race is observed with the repeated online, offline and a
+delay between two successive online of memory blocks of movable zone.
 
-Reported-by: syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+P1						P2
+
+Online the first memory block in
+the movable zone. The pcp struct
+values are initialized to default
+values,i.e., pcp->high = 0 &
+pcp->batch = 1.
+
+					Allocate the pages from the
+					movable zone.
+
+Try to Online the second memory
+block in the movable zone thus it
+entered the online_pages() but yet
+to call zone_pcp_update().
+					This process is entered into
+					the exit path thus it tries
+					to release the order-0 pages
+					to pcp lists through
+					free_unref_page_commit().
+					As pcp->high = 0, pcp->count = 1
+					proceed to call the function
+					free_pcppages_bulk().
+Update the pcp values thus the
+new pcp values are like, say,
+pcp->high = 378, pcp->batch = 63.
+					Read the pcp's batch value using
+					READ_ONCE() and pass the same to
+					free_pcppages_bulk(), pcp values
+					passed here are, batch = 63,
+					count = 1.
+
+					Since num of pages in the pcp
+					lists are less than ->batch,
+					then it will stuck in
+					while(list_empty(list)) loop
+					with interrupts disabled thus
+					a core hung.
+
+Avoid this by ensuring free_pcppages_bulk() is called with proper count of
+pcp list pages.
+
+The mentioned race is some what easily reproducible without [1] because
+pcp's are not updated for the first memory block online and thus there is
+a enough race window for P2 between alloc+free and pcp struct values
+update through onlining of second memory block.
+
+With [1], the race still exists but it is very narrow as we update the pcp
+struct values for the first memory block online itself.
+
+This is not limited to the movable zone, it could also happen in cases
+with the normal zone (e.g., hotplug to a node that only has DMA memory, or
+no other memory yet).
+
+[1]: https://patchwork.kernel.org/patch/11696389/
+
+Fixes: 5f8dcc21211a ("page-allocator: split per-cpu list into one-list-per-migrate-type")
+Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: David Rientjes <rientjes@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Vinayak Menon <vinmenon@codeaurora.org>
+Cc: <stable@vger.kernel.org> [2.6+]
+Link: http://lkml.kernel.org/r/1597150703-19003-1-git-send-email-charante@codeaurora.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/ceph/mds_client.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/page_alloc.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index dea971f9d89ee..946f9a92658ab 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -4361,7 +4361,6 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
- 		goto err_mdsc;
- 	}
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1306,6 +1306,11 @@ static void free_pcppages_bulk(struct zo
+ 	struct page *page, *tmp;
+ 	LIST_HEAD(head);
  
--	fsc->mdsc = mdsc;
- 	init_completion(&mdsc->safe_umount_waiters);
- 	init_waitqueue_head(&mdsc->session_close_wq);
- 	INIT_LIST_HEAD(&mdsc->waiting_for_map);
-@@ -4416,6 +4415,8 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
++	/*
++	 * Ensure proper count is passed which otherwise would stuck in the
++	 * below while (list_empty(list)) loop.
++	 */
++	count = min(pcp->count, count);
+ 	while (count) {
+ 		struct list_head *list;
  
- 	strscpy(mdsc->nodename, utsname()->nodename,
- 		sizeof(mdsc->nodename));
-+
-+	fsc->mdsc = mdsc;
- 	return 0;
- 
- err_mdsmap:
--- 
-2.25.1
-
 
 
