@@ -2,70 +2,89 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55945C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A46C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39E462075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E9D12071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:45:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fS2e3eFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgHXKov (ORCPT
+        id S1727851AbgHXKpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:44:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60504 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727098AbgHXKof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:44:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C61A5AC98;
-        Mon, 24 Aug 2020 10:45:03 +0000 (UTC)
-Date:   Mon, 24 Aug 2020 12:44:31 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Baoquan He <bhe@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Subject: Re: [PATCH v2 03/10] mm/memory_hotplug: simplify page offlining
-Message-ID: <20200824104431.GC6315@linux>
-References: <20200819175957.28465-1-david@redhat.com>
- <20200819175957.28465-4-david@redhat.com>
+        Mon, 24 Aug 2020 06:45:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727120AbgHXKpD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:45:03 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C58A6C061573;
+        Mon, 24 Aug 2020 03:45:02 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f07f0001d1adc8210ec988a.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:f000:1d1a:dc82:10ec:988a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D6E3B1EC0104;
+        Mon, 24 Aug 2020 12:44:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1598265899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=iXpxuVriWvU3M3aiYmzDwnWWzJtCErVklAPMKOlDAEk=;
+        b=fS2e3eFO6CT56yvF10hoqjXs05VZge7E7YK1yU71Tg6skRgdi5uFdlZePV2aXb+A2JVG8w
+        LyNrQAcyd0zTiPuZS95AOdUdLmUxPHPWU6WBmtTXBqKg/pnqunuyP9VEdcHY9yhudf1fd1
+        xRi8B0HFEmL11S+NQIPPeaaVRUJeIPI=
+Date:   Mon, 24 Aug 2020 12:44:51 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v6 02/76] KVM: SVM: Add GHCB definitions
+Message-ID: <20200824104451.GA4732@zn.tnic>
+References: <20200824085511.7553-1-joro@8bytes.org>
+ <20200824085511.7553-3-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200819175957.28465-4-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200824085511.7553-3-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 07:59:50PM +0200, David Hildenbrand wrote:
-> We make sure that we cannot have any memory holes right at the beginning
-> of offline_pages(). We no longer need walk_system_ram_range() and can
-> call test_pages_isolated() and __offline_isolated_pages() directly.
-> 
-> offlined_pages always corresponds to nr_pages, so we can simplify that.
-> 
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Mon, Aug 24, 2020 at 10:53:57AM +0200, Joerg Roedel wrote:
+>  static inline void __unused_size_checks(void)
+>  {
+> -	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 0x298);
+> +	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 1032);
+>  	BUILD_BUG_ON(sizeof(struct vmcb_control_area) != 256);
+> +	BUILD_BUG_ON(sizeof(struct ghcb) != 4096);
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-
+Could those naked numbers be proper, meaningfully named defines?
 
 -- 
-Oscar Salvador
-SUSE L3
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
