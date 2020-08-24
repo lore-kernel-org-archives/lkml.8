@@ -2,215 +2,119 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D380FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD15C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB0552075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261346;
-	bh=xFp7gwbTyvsc4dzlDY9Vyfn/LmD4ZGwMaD/AQ8FfRu4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BMUdLGx4IXAgDQiA+2Ankl5g2X9Xxqiv+ZVzbZ1u8PCjvTt/6GIk1nyLMwH103lnU
-	 XKfNodBwiGESjjgvZ2G5h9oZybmaY4lnkTtGX+4zAaw1Wg0Y3+zyObRSEaDzkWmSVL
-	 iEhPSB66va+8hix9M2HkKt2t1wTMl/2yCtD6hr3g=
+	by mail.kernel.org (Postfix) with ESMTP id 3C5A52074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgHXJ3E (ORCPT
+        id S1730048AbgHXJ3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:29:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:29:24 -0400
+Received: from mga09.intel.com ([134.134.136.24]:60120 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729910AbgHXIvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66851204FD;
-        Mon, 24 Aug 2020 08:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259072;
-        bh=xFp7gwbTyvsc4dzlDY9Vyfn/LmD4ZGwMaD/AQ8FfRu4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vYqVQmkdfI4zYp9oCkNH6h7bm4oTqG4xIEEuyNl5arUQQICUS3Z7QYOFTzI6SyD3A
-         opRy4/e+ZTWxcbQhbc23BeV25BxGlf6Y2ZcmBKkTQcfqix6TNlkNoThzfIWTiuxPkT
-         EbdfqtcYBbRzeU2DvJ6cJnhE/sPJ6Z2uBv5vYRa0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.9 02/39] x86/asm: Add instruction suffixes to bitops
-Date:   Mon, 24 Aug 2020 10:31:01 +0200
-Message-Id: <20200824082348.596398460@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
-References: <20200824082348.445866152@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1727122AbgHXIvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:02 -0400
+IronPort-SDR: vw7163l3gBejpmsPbYAHA1Hvsms0cy5vUs7WarctqQw1Isvqg+AT2z5Te0OWZzMxrYAmCSww6Y
+ 6kTRlOoqtFdw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="156918464"
+X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
+   d="scan'208";a="156918464"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 01:51:01 -0700
+IronPort-SDR: Z/QlW50JtdUITuzynkBomeNe0c4gFDUznebeKbjj0IoTwNFJW5Tt9DqQKMyfwoTP3wgwM02tCd
+ QoVhhZ+f5esg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
+   d="scan'208";a="402253300"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 24 Aug 2020 01:50:58 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 24 Aug 2020 11:50:58 +0300
+Date:   Mon, 24 Aug 2020 11:50:57 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Kenneth R. Crudup" <kenny@panix.com>
+Subject: Re: [PATCH] ACPI: OSL: Prevent acpi_release_memory() from returning
+ too early
+Message-ID: <20200824085057.GA189773@kuha.fi.intel.com>
+References: <6142241.0H6QnnlUA7@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6142241.0H6QnnlUA7@kreacher>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Beulich <JBeulich@suse.com>
+On Fri, Aug 21, 2020 at 07:42:55PM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> After commit 1757659d022b ("ACPI: OSL: Implement deferred unmapping
+> of ACPI memory") in some cases acpi_release_memory() may return
+> before the target memory mappings actually go away, because they
+> are released asynchronously now.
+> 
+> Prevent it from returning prematurely by making it wait for the next
+> RCU grace period to elapse, for all of the RCU callbacks to complete
+> and for all of the scheduled work items to be flushed before
+> returning.
+> 
+> Fixes: 1757659d022b ("ACPI: OSL: Implement deferred unmapping of ACPI memory")
+> Reported-by: Kenneth R. Crudup <kenny@panix.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 22636f8c9511245cb3c8412039f1dd95afb3aa59 upstream.
+FWIW:
 
-Omitting suffixes from instructions in AT&T mode is bad practice when
-operand size cannot be determined by the assembler from register
-operands, and is likely going to be warned about by upstream gas in the
-future (mine does already). Add the missing suffixes here. Note that for
-64-bit this means some operations change from being 32-bit to 64-bit.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Signed-off-by: Jan Beulich <jbeulich@suse.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/5A93F98702000078001ABACC@prv-mh.provo.novell.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  drivers/acpi/osl.c |   19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
+> 
+> Index: linux-pm/drivers/acpi/osl.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/osl.c
+> +++ linux-pm/drivers/acpi/osl.c
+> @@ -1575,11 +1575,26 @@ static acpi_status acpi_deactivate_mem_r
+>  acpi_status acpi_release_memory(acpi_handle handle, struct resource *res,
+>  				u32 level)
+>  {
+> +	acpi_status status;
+> +
+>  	if (!(res->flags & IORESOURCE_MEM))
+>  		return AE_TYPE;
+>  
+> -	return acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
+> -				   acpi_deactivate_mem_region, NULL, res, NULL);
+> +	status = acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
+> +				     acpi_deactivate_mem_region, NULL,
+> +				     res, NULL);
+> +	if (ACPI_FAILURE(status))
+> +		return status;
+> +
+> +	/*
+> +	 * Wait for all of the mappings queued up for removal by
+> +	 * acpi_deactivate_mem_region() to actually go away.
+> +	 */
+> +	synchronize_rcu();
+> +	rcu_barrier();
+> +	flush_scheduled_work();
+> +
+> +	return AE_OK;
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_release_memory);
 
----
- arch/x86/include/asm/bitops.h |   29 ++++++++++++++++-------------
- arch/x86/include/asm/percpu.h |    2 +-
- 2 files changed, 17 insertions(+), 14 deletions(-)
+thanks,
 
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -77,7 +77,7 @@ set_bit(long nr, volatile unsigned long
- 			: "iq" ((u8)CONST_MASK(nr))
- 			: "memory");
- 	} else {
--		asm volatile(LOCK_PREFIX "bts %1,%0"
-+		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
- 			: BITOP_ADDR(addr) : "Ir" (nr) : "memory");
- 	}
- }
-@@ -93,7 +93,7 @@ set_bit(long nr, volatile unsigned long
-  */
- static __always_inline void __set_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile("bts %1,%0" : ADDR : "Ir" (nr) : "memory");
-+	asm volatile(__ASM_SIZE(bts) " %1,%0" : ADDR : "Ir" (nr) : "memory");
- }
- 
- /**
-@@ -114,7 +114,7 @@ clear_bit(long nr, volatile unsigned lon
- 			: CONST_MASK_ADDR(nr, addr)
- 			: "iq" ((u8)~CONST_MASK(nr)));
- 	} else {
--		asm volatile(LOCK_PREFIX "btr %1,%0"
-+		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
- 			: BITOP_ADDR(addr)
- 			: "Ir" (nr));
- 	}
-@@ -136,7 +136,7 @@ static __always_inline void clear_bit_un
- 
- static __always_inline void __clear_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile("btr %1,%0" : ADDR : "Ir" (nr));
-+	asm volatile(__ASM_SIZE(btr) " %1,%0" : ADDR : "Ir" (nr));
- }
- 
- /*
-@@ -168,7 +168,7 @@ static __always_inline void __clear_bit_
-  */
- static __always_inline void __change_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile("btc %1,%0" : ADDR : "Ir" (nr));
-+	asm volatile(__ASM_SIZE(btc) " %1,%0" : ADDR : "Ir" (nr));
- }
- 
- /**
-@@ -187,7 +187,7 @@ static __always_inline void change_bit(l
- 			: CONST_MASK_ADDR(nr, addr)
- 			: "iq" ((u8)CONST_MASK(nr)));
- 	} else {
--		asm volatile(LOCK_PREFIX "btc %1,%0"
-+		asm volatile(LOCK_PREFIX __ASM_SIZE(btc) " %1,%0"
- 			: BITOP_ADDR(addr)
- 			: "Ir" (nr));
- 	}
-@@ -203,7 +203,8 @@ static __always_inline void change_bit(l
-  */
- static __always_inline bool test_and_set_bit(long nr, volatile unsigned long *addr)
- {
--	GEN_BINARY_RMWcc(LOCK_PREFIX "bts", *addr, "Ir", nr, "%0", c);
-+	GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(bts),
-+	                 *addr, "Ir", nr, "%0", c);
- }
- 
- /**
-@@ -232,7 +233,7 @@ static __always_inline bool __test_and_s
- {
- 	bool oldbit;
- 
--	asm("bts %2,%1"
-+	asm(__ASM_SIZE(bts) " %2,%1"
- 	    CC_SET(c)
- 	    : CC_OUT(c) (oldbit), ADDR
- 	    : "Ir" (nr));
-@@ -249,7 +250,8 @@ static __always_inline bool __test_and_s
-  */
- static __always_inline bool test_and_clear_bit(long nr, volatile unsigned long *addr)
- {
--	GEN_BINARY_RMWcc(LOCK_PREFIX "btr", *addr, "Ir", nr, "%0", c);
-+	GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btr),
-+	                 *addr, "Ir", nr, "%0", c);
- }
- 
- /**
-@@ -272,7 +274,7 @@ static __always_inline bool __test_and_c
- {
- 	bool oldbit;
- 
--	asm volatile("btr %2,%1"
-+	asm volatile(__ASM_SIZE(btr) " %2,%1"
- 		     CC_SET(c)
- 		     : CC_OUT(c) (oldbit), ADDR
- 		     : "Ir" (nr));
-@@ -284,7 +286,7 @@ static __always_inline bool __test_and_c
- {
- 	bool oldbit;
- 
--	asm volatile("btc %2,%1"
-+	asm volatile(__ASM_SIZE(btc) " %2,%1"
- 		     CC_SET(c)
- 		     : CC_OUT(c) (oldbit), ADDR
- 		     : "Ir" (nr) : "memory");
-@@ -302,7 +304,8 @@ static __always_inline bool __test_and_c
-  */
- static __always_inline bool test_and_change_bit(long nr, volatile unsigned long *addr)
- {
--	GEN_BINARY_RMWcc(LOCK_PREFIX "btc", *addr, "Ir", nr, "%0", c);
-+	GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc),
-+	                 *addr, "Ir", nr, "%0", c);
- }
- 
- static __always_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
-@@ -315,7 +318,7 @@ static __always_inline bool variable_tes
- {
- 	bool oldbit;
- 
--	asm volatile("bt %2,%1"
-+	asm volatile(__ASM_SIZE(bt) " %2,%1"
- 		     CC_SET(c)
- 		     : CC_OUT(c) (oldbit)
- 		     : "m" (*(unsigned long *)addr), "Ir" (nr));
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -536,7 +536,7 @@ static inline bool x86_this_cpu_variable
- {
- 	bool oldbit;
- 
--	asm volatile("bt "__percpu_arg(2)",%1"
-+	asm volatile("btl "__percpu_arg(2)",%1"
- 			CC_SET(c)
- 			: CC_OUT(c) (oldbit)
- 			: "m" (*(unsigned long __percpu *)addr), "Ir" (nr));
-
-
+-- 
+heikki
