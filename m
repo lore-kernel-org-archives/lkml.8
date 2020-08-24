@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8171C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6B4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9EBD2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F29892067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289424;
-	bh=jt5GKF3ZUZW3OriJu/VnqqbbvLcI5MlWdu6ygcpUs44=;
+	s=default; t=1598289462;
+	bh=lFb2Q2xM9c4Y7D6VE/bsVUu/YFedlovtL8eR4vN3fhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Aqr7R6BNO9AAutiG3kavqh6KArlf9P4Dr3hYz29JGVSMGOT85UoVhFJBaRmhQnxT
-	 kz340DZdulj/FEYiz7YkWygEalRNKbUK0GM8giCLDxdCR24I7lhwx9F3mf4ICjC9gJ
-	 hsY9dNJ2e/4G3DbU94C75a/SIjvwaWbqtNCuCi0Y=
+	b=OzGzrO7kuoRGDJSk9LJM3Dk9WxgtB1IbI6LBnbQgJixIqsE68JRNXCLP6J1FAh7VE
+	 Z+S12/4ICx2czQNj00lCOKFGMN0m4U4jic9C5Ip5i+T753Fl1xdtZL45BvTqhZeZRe
+	 xX+ufxZKDamYwXGCu93Kt4qbM9X3SwIp5Z4c9pN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgHXRRD (ORCPT
+        id S1726706AbgHXRRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:17:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40038 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:17:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbgHXQgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728307AbgHXQgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:36:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E50022D71;
-        Mon, 24 Aug 2020 16:36:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A3BF22CBB;
+        Mon, 24 Aug 2020 16:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286976;
-        bh=jt5GKF3ZUZW3OriJu/VnqqbbvLcI5MlWdu6ygcpUs44=;
+        s=default; t=1598286969;
+        bh=lFb2Q2xM9c4Y7D6VE/bsVUu/YFedlovtL8eR4vN3fhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MznGpjvl0b7rn7EM//s0WCtb7ExOpKi1UsCD4v2/rOSvsIEyOIw9FmOAWqsyp9M4f
-         oh+bvOXe1EzA/KNJOf5IFNK2vLpNa56PsQzsF1P3qNUoC5f1eAA9kJooEsja+ugHAL
-         J24JRklOt80mmZEadtAkLgj7auZPAlAsH9ftj5ow=
+        b=2jktTcpzFd6vezRFcWzBNphXKMUuKtclDx37AeGetC1grg+Uaelxe3LtaIdIZ4uad
+         kCcf1+kYmjQKUldczxKhJSvA4Z+CsINfrudLy+BtmzUj1vBUWFwWj5Bi//qY2jK7Il
+         Its8dVbvQNJZCIdmaY+JiY9bMGwlfvA778vhEOks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guchun Chen <guchun.chen@amd.com>, Tao Zhou <tao.zhou1@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 53/63] drm/amdgpu: fix NULL pointer access issue when unloading driver
-Date:   Mon, 24 Aug 2020 12:34:53 -0400
-Message-Id: <20200824163504.605538-53-sashal@kernel.org>
+Cc:     Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 48/63] scsi: qla2xxx: Fix null pointer access during disconnect from subsystem
+Date:   Mon, 24 Aug 2020 12:34:48 -0400
+Message-Id: <20200824163504.605538-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
 References: <20200824163504.605538-1-sashal@kernel.org>
@@ -60,82 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guchun Chen <guchun.chen@amd.com>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 1a68d96f81b8e7eb2a121fbf9abf9e5974e58832 ]
+[ Upstream commit 83949613fac61e8e37eadf8275bf072342302f4e ]
 
-When unloading driver by "modprobe -r amdgpu", one NULL pointer
-dereference bug occurs in ras debugfs releasing. The cause is the
-duplicated debugfs_remove, as drm debugfs_root dir has been cleaned
-up already by drm_minor_unregister.
+NVMEAsync command is being submitted to QLA while the same NVMe controller
+is in the middle of reset. The reset path has deleted the association and
+freed aen_op->fcp_req.private. Add a check for this private pointer before
+issuing the command.
 
-BUG: kernel NULL pointer dereference, address: 00000000000000a0
-PGD 0 P4D 0
-Oops: 0002 [#1] SMP PTI
-CPU: 11 PID: 1526 Comm: modprobe Tainted: G           OE     5.6.0-guchchen #1
-Hardware name: System manufacturer System Product Name/TUF Z370-PLUS GAMING II, BIOS 0411 09/21/2018
-RIP: 0010:down_write+0x15/0x40
-Code: eb de e8 7e 17 72 ff cc cc cc cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 53 48 89 fb e8 92
-d8 ff ff 31 c0 ba 01 00 00 00 <f0> 48 0f b1 13 75 0f 65 48 8b 04 25 c0 8b 01 00 48 89 43 08 5b c3
-RSP: 0018:ffffb1590386fcd0 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 00000000000000a0 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffffffff85b2fcc2 RDI: 00000000000000a0
-RBP: ffffb1590386fd30 R08: ffffffff85b2fcc2 R09: 000000000002b3c0
-R10: ffff97a330618c40 R11: 00000000000005f6 R12: ffff97a3481beb40
-R13: 00000000000000a0 R14: ffff97a3481beb40 R15: 0000000000000000
-FS:  00007fb11a717540(0000) GS:ffff97a376cc0000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000000000a0 CR3: 00000004066d6006 CR4: 00000000003606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- simple_recursive_removal+0x63/0x370
- ? debugfs_remove+0x60/0x60
- debugfs_remove+0x40/0x60
- amdgpu_ras_fini+0x82/0x230 [amdgpu]
- ? __kernfs_remove.part.17+0x101/0x1f0
- ? kernfs_name_hash+0x12/0x80
- amdgpu_device_fini+0x1c0/0x580 [amdgpu]
- amdgpu_driver_unload_kms+0x3e/0x70 [amdgpu]
- amdgpu_pci_remove+0x36/0x60 [amdgpu]
- pci_device_remove+0x3b/0xb0
- device_release_driver_internal+0xe5/0x1c0
- driver_detach+0x46/0x90
- bus_remove_driver+0x58/0xd0
- pci_unregister_driver+0x29/0x90
- amdgpu_exit+0x11/0x25 [amdgpu]
- __x64_sys_delete_module+0x13d/0x210
- do_syscall_64+0x5f/0x250
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+...
+ 6 [ffffb656ca11fce0] page_fault at ffffffff8c00114e
+    [exception RIP: qla_nvme_post_cmd+394]
+    RIP: ffffffffc0d012ba  RSP: ffffb656ca11fd98  RFLAGS: 00010206
+    RAX: ffff8fb039eda228  RBX: ffff8fb039eda200  RCX: 00000000000da161
+    RDX: ffffffffc0d4d0f0  RSI: ffffffffc0d26c9b  RDI: ffff8fb039eda220
+    RBP: 0000000000000013   R8: ffff8fb47ff6aa80   R9: 0000000000000002
+    R10: 0000000000000000  R11: ffffb656ca11fdc8  R12: ffff8fb27d04a3b0
+    R13: ffff8fc46dd98a58  R14: 0000000000000000  R15: ffff8fc4540f0000
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+ 7 [ffffb656ca11fe08] nvme_fc_start_fcp_op at ffffffffc0241568 [nvme_fc]
+ 8 [ffffb656ca11fe50] nvme_fc_submit_async_event at ffffffffc0241901 [nvme_fc]
+ 9 [ffffb656ca11fe68] nvme_async_event_work at ffffffffc014543d [nvme_core]
+10 [ffffb656ca11fe98] process_one_work at ffffffff8b6cd437
+11 [ffffb656ca11fed8] worker_thread at ffffffff8b6cdcef
+12 [ffffb656ca11ff10] kthread at ffffffff8b6d3402
+13 [ffffb656ca11ff50] ret_from_fork at ffffffff8c000255
 
-Signed-off-by: Guchun Chen <guchun.chen@amd.com>
-Reviewed-by: Tao Zhou <tao.zhou1@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+--
+PID: 37824  TASK: ffff8fb033063d80  CPU: 20  COMMAND: "kworker/u97:451"
+ 0 [ffffb656ce1abc28] __schedule at ffffffff8be629e3
+ 1 [ffffb656ce1abcc8] schedule at ffffffff8be62fe8
+ 2 [ffffb656ce1abcd0] schedule_timeout at ffffffff8be671ed
+ 3 [ffffb656ce1abd70] wait_for_completion at ffffffff8be639cf
+ 4 [ffffb656ce1abdd0] flush_work at ffffffff8b6ce2d5
+ 5 [ffffb656ce1abe70] nvme_stop_ctrl at ffffffffc0144900 [nvme_core]
+ 6 [ffffb656ce1abe80] nvme_fc_reset_ctrl_work at ffffffffc0243445 [nvme_fc]
+ 7 [ffffb656ce1abe98] process_one_work at ffffffff8b6cd437
+ 8 [ffffb656ce1abed8] worker_thread at ffffffff8b6cdb50
+ 9 [ffffb656ce1abf10] kthread at ffffffff8b6d3402
+10 [ffffb656ce1abf50] ret_from_fork at ffffffff8c000255
+
+Link: https://lore.kernel.org/r/20200806111014.28434-10-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_nvme.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-index 50fe08bf2f727..5472fd26b3aa8 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-@@ -1240,7 +1240,6 @@ void amdgpu_ras_debugfs_remove(struct amdgpu_device *adev,
- 	if (!obj || !obj->ent)
- 		return;
+diff --git a/drivers/scsi/qla2xxx/qla_nvme.c b/drivers/scsi/qla2xxx/qla_nvme.c
+index fa695a4007f86..262dfd7635a48 100644
+--- a/drivers/scsi/qla2xxx/qla_nvme.c
++++ b/drivers/scsi/qla2xxx/qla_nvme.c
+@@ -536,6 +536,11 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
+ 	struct nvme_private *priv = fd->private;
+ 	struct qla_nvme_rport *qla_rport = rport->private;
  
--	debugfs_remove(obj->ent);
- 	obj->ent = NULL;
- 	put_obj(obj);
- }
-@@ -1254,7 +1253,6 @@ static void amdgpu_ras_debugfs_remove_all(struct amdgpu_device *adev)
- 		amdgpu_ras_debugfs_remove(adev, &obj->head);
- 	}
++	if (!priv) {
++		/* nvme association has been torn down */
++		return rval;
++	}
++
+ 	fcport = qla_rport->fcport;
  
--	debugfs_remove_recursive(con->dir);
- 	con->dir = NULL;
- }
- /* debugfs end */
+ 	if (!qpair || !fcport || (qpair && !qpair->fw_started) ||
 -- 
 2.25.1
 
