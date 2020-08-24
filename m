@@ -2,198 +2,202 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72713C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E125207CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459C9206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:10:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="bdOvDvfQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l/Qk/h0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgHXPJ4 (ORCPT
+        id S1727829AbgHXPKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:09:56 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:29887 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgHXPJK (ORCPT
+        Mon, 24 Aug 2020 11:10:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727029AbgHXPIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:09:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598281728;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=oJ25+Eo0INS90wWLPFZq+am/532LdNYJA8DfYTYvpuA=;
-        b=bdOvDvfQfXFlZbBAn3yOiAd4ZYcyNwRMG9y9fyhu5CGRrQH3g51diYDZSt6STlwCVP
-        VzpK006H921OKzFbICH/1cVnBcsFchO1A7M9rQyU7/T09f2t9b6WjANsXxRL6TheUPye
-        tVYugudvyE1++scngTmrWH0eP/VfQKYzD6jgQdnXEbbzdpByxNtFCHZPAevUnpufuzyk
-        DQ2FBDArUtIzaRg/xJjE+hh42BERV4MG7KSz6IJKACP7lDH7RGAEMF8DMLC2ri4X5Env
-        s0YRhPlDF9rT2isoAyhb3Y8b9Xs2doM7nXN6JQvi1ul22SztvsJ+APvRQEFDh45z0AUO
-        apLQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7Ic/MbIo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id g0b6c1w7OF8lZF6
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Mon, 24 Aug 2020 17:08:47 +0200 (CEST)
-Date:   Mon, 24 Aug 2020 17:08:42 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Niklas Cassel <nks@flawful.org>
-Subject: Re: [RFC PATCH 3/3] opp: Power on (virtual) power domains managed by
- the OPP core
-Message-ID: <20200824150831.GA842@gerhold.net>
-References: <20200730080146.25185-1-stephan@gerhold.net>
- <20200730080146.25185-4-stephan@gerhold.net>
- <20200824112744.jsyaxrfbybyjpwex@vireshk-i7>
- <20200824115549.GB208090@gerhold.net>
- <CAPDyKFojtArMRfO+Z8YaWCWw2fFYcO62x3eL1paNi5pKRg3Jww@mail.gmail.com>
+        Mon, 24 Aug 2020 11:08:37 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5993AC061798;
+        Mon, 24 Aug 2020 07:55:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=wD3WKtFt1cnznRgdSUY1WyUqGEQPEbuG+Sb3tBG4EoM=; b=l/Qk/h0H2fjqi6K2zYdHPAKr12
+        d6PzknXLBGxZ/gT7/Eu1anApPwE6pY3qW4VqmbGLIBj6NQ6X931vhSuTyFR+idWNrg98/skHqAlQm
+        GDLGfyFw0//Eka3eMNkkdR0yVgNhf0MZqMekWfiAwzg2WUnPKM/VYKHOQ2V7e5tMwXlqrWQ5vynvl
+        Yl01RbK/AIX5fm8VwjQn3QWFdM9hiW72ZMzaAv4HhyBuYt0S86OiRYNRlTNXws7j/RWoQAXCA8Tsj
+        anISLBlS6GUBVN1zFkZmQsh9fl1jv3WLZRz6piJFC3e/mxW3Ig5F9vbXRMj/187Cgw8j8z8+quAWD
+        +neMTvag==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kADsR-0002mn-NG; Mon, 24 Aug 2020 14:55:15 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 9/9] iomap: Change calling convention for zeroing
+Date:   Mon, 24 Aug 2020 15:55:10 +0100
+Message-Id: <20200824145511.10500-10-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200824145511.10500-1-willy@infradead.org>
+References: <20200824145511.10500-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFojtArMRfO+Z8YaWCWw2fFYcO62x3eL1paNi5pKRg3Jww@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 04:36:57PM +0200, Ulf Hansson wrote:
-> On Mon, 24 Aug 2020 at 13:56, Stephan Gerhold <stephan@gerhold.net> wrote:
-> >
-> > On Mon, Aug 24, 2020 at 04:57:44PM +0530, Viresh Kumar wrote:
-> > > On 30-07-20, 10:01, Stephan Gerhold wrote:
-> > > > dev_pm_opp_attach_genpd() allows attaching an arbitrary number of
-> > > > power domains to an OPP table. In that case, the genpd core will
-> > > > create a virtual device for each of the power domains.
-> > > >
-> > > > At the moment, the OPP core only calls
-> > > > dev_pm_genpd_set_performance_state() on these virtual devices.
-> > > > It does not attempt to power on the power domains. Therefore
-> > > > the required power domain might never get turned on.
-> > > >
-> > > > So far, dev_pm_opp_attach_genpd() is only used in qcom-cpufreq-nvmem.c
-> > > > to attach the CPR power domain to the CPU OPP table. The CPR driver
-> > > > does not check if it was actually powered on so this did not cause
-> > > > any problems. However, other drivers (e.g. rpmpd) might ignore the
-> > > > performance state until the power domain is actually powered on.
-> > > >
-> > > > Since these virtual devices are managed exclusively by the OPP core,
-> > > > I would say that it should also be responsible to ensure they are
-> > > > enabled. A similar approach is already used for regulators, see
-> > > > commit 8d45719caaf5 ("opp: core: add regulators enable and disable").
-> > > >
-> > > > This commit implements similar functionality for the virtual genpd
-> > > > devices managed by the OPP core. The power domains are turned on
-> > > > the first time dev_pm_opp_set_rate() is called. They are turned off
-> > > > again when dev_pm_opp_set_rate(dev, 0) is called.
-> > > >
-> > > > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> > > > ---
-> > > > Related discussion: https://lore.kernel.org/linux-arm-msm/20200426123140.GA190483@gerhold.net/
-> > > >
-> > > > There would be also other ways to implement this, e.g. device links,
-> > > > assuming that the device using the OPP table also makes use of runtime PM.
-> > > > My first thought was that it would be most consistent to handle this like
-> > > > regulators, bandwidth votes etc. RFC :)
-> > >
-> > > This stuff was done ages back and I am starting to forget almost
-> > > everything now :)
-> > >
-> > > Ulf, why doesn't pm_runtime_get(dev) take care of enabling multiple
-> > > power domain case ? RFP (request for patience) :)
-> > >
-> >
-> > So I'm really not an expert for power domains, but here is my
-> > understanding:
-> >
-> > We attach the power domains in dev_pm_opp_attach_genpd(opp_dev, names),
-> > where opp_dev is the device the OPP table belongs to.
-> >
-> > To do that, the genpd core creates a set of virtual devices. These
-> > virtual devices are not related to opp_dev in any way. Therefore, the
-> > power domains stay off until we run pm_runtime_get(virt_dev) for each of
-> > the virtual devices. (Which is what is implemented in this patch...)
-> 
-> Just to clarify. The reason why genpd creates virtual devices isn't
-> because of the opp table itself.
-> 
-> Instead this is because we can only attach one PM domain per device.
-> And since a device may have multiple PM domains, we need to create a
-> virtual device and per PM domain and attach that instead. Then it's up
-> to the caller to manage the virtual devices.
-> 
-> In some cases where the PM domains can be managed together, a device
-> link makes sense - while in others it doesn't.
-> 
-> >
-> > If I understand correctly, what you would like to do is to have a single
-> > pm_runtime_get(opp_dev) call also enable all the virtual devices?
-> >
-> > As far as I understand, this can be done by adding "device links"
-> > between opp_dev and the virtual devices, e.g.
-> >
-> >         device_link_add(opp_dev, virt_dev, DL_FLAG_PM_RUNTIME);
-> >
-> > for each of the virtual devices.
-> 
-> Yep.
-> 
-> >
-> > But the problem with that approach is that it assumes that someone
-> > actually calls pm_runtime_get(opp_dev), i.e. we assume that opp_dev is
-> > managed by runtime PM. As far as I know, this isn't the case for the CPU
-> > OPP table for example.
-> >
-> > Maybe Ulf can correct me if I'm wrong :)
-> 
-> If I understand correctly, the opp_dev is the actual consumer device.
-> It could represent an I/O controller for example, or a CPU in the CPU
-> freq case.
-> 
+Pass the full length to iomap_zero() and dax_iomap_zero(), and have
+them return how many bytes they actually handled.  This is preparatory
+work for handling THP, although it looks like DAX could actually take
+advantage of it if there's a larger contiguous area.
 
-Exactly.
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ fs/dax.c               | 13 ++++++-------
+ fs/iomap/buffered-io.c | 33 +++++++++++++++------------------
+ include/linux/dax.h    |  3 +--
+ 3 files changed, 22 insertions(+), 27 deletions(-)
 
-> That said, perhaps should rely on the consumer to deploy runtime PM
-> support, but let the OPP core to set up the device links for the genpd
-> virtual devices!?
-> 
+diff --git a/fs/dax.c b/fs/dax.c
+index 95341af1a966..f2b912cb034e 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -1037,18 +1037,18 @@ static vm_fault_t dax_load_hole(struct xa_state *xas,
+ 	return ret;
+ }
+ 
+-int dax_iomap_zero(loff_t pos, unsigned offset, unsigned size,
+-		   struct iomap *iomap)
++loff_t dax_iomap_zero(loff_t pos, u64 length, struct iomap *iomap)
+ {
+ 	sector_t sector = iomap_sector(iomap, pos & PAGE_MASK);
+ 	pgoff_t pgoff;
+ 	long rc, id;
+ 	void *kaddr;
+ 	bool page_aligned = false;
+-
++	unsigned offset = offset_in_page(pos);
++	unsigned size = min_t(u64, PAGE_SIZE - offset, length);
+ 
+ 	if (IS_ALIGNED(sector << SECTOR_SHIFT, PAGE_SIZE) &&
+-	    IS_ALIGNED(size, PAGE_SIZE))
++	    (size == PAGE_SIZE))
+ 		page_aligned = true;
+ 
+ 	rc = bdev_dax_pgoff(iomap->bdev, sector, PAGE_SIZE, &pgoff);
+@@ -1058,8 +1058,7 @@ int dax_iomap_zero(loff_t pos, unsigned offset, unsigned size,
+ 	id = dax_read_lock();
+ 
+ 	if (page_aligned)
+-		rc = dax_zero_page_range(iomap->dax_dev, pgoff,
+-					 size >> PAGE_SHIFT);
++		rc = dax_zero_page_range(iomap->dax_dev, pgoff, 1);
+ 	else
+ 		rc = dax_direct_access(iomap->dax_dev, pgoff, 1, &kaddr, NULL);
+ 	if (rc < 0) {
+@@ -1072,7 +1071,7 @@ int dax_iomap_zero(loff_t pos, unsigned offset, unsigned size,
+ 		dax_flush(iomap->dax_dev, kaddr + offset, size);
+ 	}
+ 	dax_read_unlock(id);
+-	return 0;
++	return size;
+ }
+ 
+ static loff_t
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 7f618ab4b11e..2dba054095e8 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -901,11 +901,13 @@ iomap_file_unshare(struct inode *inode, loff_t pos, loff_t len,
+ }
+ EXPORT_SYMBOL_GPL(iomap_file_unshare);
+ 
+-static int iomap_zero(struct inode *inode, loff_t pos, unsigned offset,
+-		unsigned bytes, struct iomap *iomap, struct iomap *srcmap)
++static loff_t iomap_zero(struct inode *inode, loff_t pos, u64 length,
++		struct iomap *iomap, struct iomap *srcmap)
+ {
+ 	struct page *page;
+ 	int status;
++	unsigned offset = offset_in_page(pos);
++	unsigned bytes = min_t(u64, PAGE_SIZE - offset, length);
+ 
+ 	status = iomap_write_begin(inode, pos, bytes, 0, &page, iomap, srcmap);
+ 	if (status)
+@@ -917,38 +919,33 @@ static int iomap_zero(struct inode *inode, loff_t pos, unsigned offset,
+ 	return iomap_write_end(inode, pos, bytes, bytes, page, iomap, srcmap);
+ }
+ 
+-static loff_t
+-iomap_zero_range_actor(struct inode *inode, loff_t pos, loff_t count,
+-		void *data, struct iomap *iomap, struct iomap *srcmap)
++static loff_t iomap_zero_range_actor(struct inode *inode, loff_t pos,
++		loff_t length, void *data, struct iomap *iomap,
++		struct iomap *srcmap)
+ {
+ 	bool *did_zero = data;
+ 	loff_t written = 0;
+-	int status;
+ 
+ 	/* already zeroed?  we're done. */
+ 	if (srcmap->type == IOMAP_HOLE || srcmap->type == IOMAP_UNWRITTEN)
+-		return count;
++		return length;
+ 
+ 	do {
+-		unsigned offset, bytes;
+-
+-		offset = offset_in_page(pos);
+-		bytes = min_t(loff_t, PAGE_SIZE - offset, count);
++		loff_t bytes;
+ 
+ 		if (IS_DAX(inode))
+-			status = dax_iomap_zero(pos, offset, bytes, iomap);
++			bytes = dax_iomap_zero(pos, length, iomap);
+ 		else
+-			status = iomap_zero(inode, pos, offset, bytes, iomap,
+-					srcmap);
+-		if (status < 0)
+-			return status;
++			bytes = iomap_zero(inode, pos, length, iomap, srcmap);
++		if (bytes < 0)
++			return bytes;
+ 
+ 		pos += bytes;
+-		count -= bytes;
++		length -= bytes;
+ 		written += bytes;
+ 		if (did_zero)
+ 			*did_zero = true;
+-	} while (count > 0);
++	} while (length > 0);
+ 
+ 	return written;
+ }
+diff --git a/include/linux/dax.h b/include/linux/dax.h
+index 6904d4e0b2e0..80f17946f940 100644
+--- a/include/linux/dax.h
++++ b/include/linux/dax.h
+@@ -214,8 +214,7 @@ vm_fault_t dax_finish_sync_fault(struct vm_fault *vmf,
+ int dax_delete_mapping_entry(struct address_space *mapping, pgoff_t index);
+ int dax_invalidate_mapping_entry_sync(struct address_space *mapping,
+ 				      pgoff_t index);
+-int dax_iomap_zero(loff_t pos, unsigned offset, unsigned size,
+-			struct iomap *iomap);
++loff_t dax_iomap_zero(loff_t pos, u64 length, struct iomap *iomap);
+ static inline bool dax_mapping(struct address_space *mapping)
+ {
+ 	return mapping->host && IS_DAX(mapping->host);
+-- 
+2.28.0
 
-Yes, that would be the alternative option.
-I would be fine with it as long as it also works for the CPUfreq case.
-
-I don't think anything manages runtime PM for the CPU device, just
-like no-one calls dev_pm_opp_set_rate(cpu_dev, 0). So with my patch the
-power domain is essentially kept always-on (except for system suspend).
-At least in my case this is intended.
-
-If device links also keep the power domains on if the consumer device
-does not make use of runtime PM it should work fine for my case.
-
-Personally, I think my original patch (without device links) fits better
-into the OPP API, for the following two reasons.
-
-With device links:
-
-  1. Unlike regulators/interconnects, attached power domains would be
-     controlled by runtime PM instead of dev_pm_opp_set_rate(opp_dev, 0).
-
-  2. ... some driver using OPP tables might not make use of runtime PM.
-     In that case, the power domains would stay on the whole time,
-     even if dev_pm_opp_set_rate(opp_dev, 0) was called.
-
-With my patch, the power domain state is directly related to the
-dev_pm_opp_set_rate(opp_dev, 0) call, which is more intuitive than
-relying on the runtime PM state in my opinion.
-
-Stephan
