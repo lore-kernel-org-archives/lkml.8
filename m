@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738A5C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E34AF20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C1E52074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289841;
-	bh=IrNlftVyvg/6LzoOB5febx5MDjIrfsFuKq2FuQ5ZonA=;
+	s=default; t=1598289843;
+	bh=cLkDo8c1SNPGN7bXjRRVrlna/Rvaono203tgkp3GZBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2r21s+49objD9C4GCIx6vCDT3pd3aGFYDpgT9nJ9i87JgzZs8tdEw+b4spQnU9m9D
-	 G/BHZeqxjgRsb/AT9ktQLpU6Xdm9W6HN/EKZKtq3UA7bc1xIRvcX8nc7HXiEYpSgDe
-	 LCvTfmX2qW4C6bg6N1hjc0doeRi610jfPhG/wSRw=
+	b=Y5xnNy3G6np5GLfIwtIUSv6CD6dPgLPnAHkAPKBS/djpnngWc4gsrtuHhe+gOHZu9
+	 t8PHyUtk4zTLKYeZT7ReF9wZDmgQTgenDMWwR+gbsB8GY2mFLgD2uyaZCP4gZYSeZ7
+	 9QLZ/uL0sjBBcCil7Kf6eRBOrKLImyozpQZCYJp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725601AbgHXRX6 (ORCPT
+        id S1728354AbgHXRX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:23:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40112 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728272AbgHXQfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:35:43 -0400
+        id S1728274AbgHXQfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:35:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F11DF20838;
-        Mon, 24 Aug 2020 16:35:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF40122CB1;
+        Mon, 24 Aug 2020 16:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286942;
-        bh=IrNlftVyvg/6LzoOB5febx5MDjIrfsFuKq2FuQ5ZonA=;
+        s=default; t=1598286945;
+        bh=cLkDo8c1SNPGN7bXjRRVrlna/Rvaono203tgkp3GZBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=myc9DO5p5sUNGpff4V6d4TMHw48Dr6kRU7f3VofSo3BU4ytnpdpyckvVzmYffblz1
-         bnFmaf+PAFUhWCBq/A63zHdKkV/9/QS1YDwgXfExtF/oCnNnK8IpwiplWCmFMlNT++
-         yGiaiNG0ahPhLHMsjOI2Gxp7BH4qdnAylE0xofG0=
+        b=jZCyKnyYdlFxC+O8bKKITv8D0IxCUqYEWDAJ0x/Ur5zeHZURgDr3NGJtrrBI/2ALn
+         AzZ3E2WIeObiuVKFR9E+zw3uJu59xBNSBr67jx9NsD096E3D651I8yslPebTRcweWB
+         GQxkVwGjKFfYPy2srx0Rlh8Az3bZpaG/PSLZ5cBA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Amit Pundir <amit.pundir@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 28/63] selftests/bpf: Correct various core_reloc 64-bit assumptions
-Date:   Mon, 24 Aug 2020 12:34:28 -0400
-Message-Id: <20200824163504.605538-28-sashal@kernel.org>
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.8 30/63] dma-pool: fix coherent pool allocations for IOMMU mappings
+Date:   Mon, 24 Aug 2020 12:34:30 -0400
+Message-Id: <20200824163504.605538-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
 References: <20200824163504.605538-1-sashal@kernel.org>
@@ -61,237 +60,255 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 5705d705832f74395c5465ce93192688f543006a ]
+[ Upstream commit 9420139f516d7fbc248ce17f35275cb005ed98ea ]
 
-Ensure that types are memory layout- and field alignment-compatible regardless
-of 32/64-bitness mix of libbpf and BPF architecture.
+When allocating coherent pool memory for an IOMMU mapping we don't care
+about the DMA mask.  Move the guess for the initial GFP mask into the
+dma_direct_alloc_pages and pass dma_coherent_ok as a function pointer
+argument so that it doesn't get applied to the IOMMU case.
 
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200813204945.1020225-8-andriin@fb.com
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Tested-by: Amit Pundir <amit.pundir@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/bpf/prog_tests/core_reloc.c     | 20 +++---
- .../selftests/bpf/progs/core_reloc_types.h    | 69 ++++++++++---------
- 2 files changed, 47 insertions(+), 42 deletions(-)
+ drivers/iommu/dma-iommu.c   |   4 +-
+ include/linux/dma-direct.h  |   3 -
+ include/linux/dma-mapping.h |   5 +-
+ kernel/dma/direct.c         |  13 ++--
+ kernel/dma/pool.c           | 114 +++++++++++++++---------------------
+ 5 files changed, 62 insertions(+), 77 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/core_reloc.c b/tools/testing/selftests/bpf/prog_tests/core_reloc.c
-index 084ed26a7d78c..a54eafc5e4b31 100644
---- a/tools/testing/selftests/bpf/prog_tests/core_reloc.c
-+++ b/tools/testing/selftests/bpf/prog_tests/core_reloc.c
-@@ -237,8 +237,8 @@
- 		.union_sz = sizeof(((type *)0)->union_field),		\
- 		.arr_sz = sizeof(((type *)0)->arr_field),		\
- 		.arr_elem_sz = sizeof(((type *)0)->arr_field[0]),	\
--		.ptr_sz = sizeof(((type *)0)->ptr_field),		\
--		.enum_sz = sizeof(((type *)0)->enum_field),	\
-+		.ptr_sz = 8, /* always 8-byte pointer for BPF */	\
-+		.enum_sz = sizeof(((type *)0)->enum_field),		\
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 4959f5df21bd0..5141d49a046ba 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -1035,8 +1035,8 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
+ 
+ 	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
+ 	    !gfpflags_allow_blocking(gfp) && !coherent)
+-		cpu_addr = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &page,
+-					       gfp);
++		page = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &cpu_addr,
++					       gfp, NULL);
+ 	else
+ 		cpu_addr = iommu_dma_alloc_pages(dev, size, &page, gfp, attrs);
+ 	if (!cpu_addr)
+diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+index ab2e20cba9514..ba22952c24e24 100644
+--- a/include/linux/dma-direct.h
++++ b/include/linux/dma-direct.h
+@@ -67,9 +67,6 @@ static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
+ }
+ 
+ u64 dma_direct_get_required_mask(struct device *dev);
+-gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
+-				  u64 *phys_mask);
+-bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size);
+ void *dma_direct_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
+ 		gfp_t gfp, unsigned long attrs);
+ void dma_direct_free(struct device *dev, size_t size, void *cpu_addr,
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index a33ed3954ed46..0dc08701d7b7e 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -715,8 +715,9 @@ void *dma_common_pages_remap(struct page **pages, size_t size,
+ 			pgprot_t prot, const void *caller);
+ void dma_common_free_remap(void *cpu_addr, size_t size);
+ 
+-void *dma_alloc_from_pool(struct device *dev, size_t size,
+-			  struct page **ret_page, gfp_t flags);
++struct page *dma_alloc_from_pool(struct device *dev, size_t size,
++		void **cpu_addr, gfp_t flags,
++		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t));
+ bool dma_free_from_pool(struct device *dev, void *start, size_t size);
+ 
+ int
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 67f060b86a73f..f17aec9d01f0c 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -45,7 +45,7 @@ u64 dma_direct_get_required_mask(struct device *dev)
+ 	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
+ }
+ 
+-gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
++static gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
+ 				  u64 *phys_limit)
+ {
+ 	u64 dma_limit = min_not_zero(dma_mask, dev->bus_dma_limit);
+@@ -70,7 +70,7 @@ gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
+ 	return 0;
+ }
+ 
+-bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
++static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
+ {
+ 	return phys_to_dma_direct(dev, phys) + size - 1 <=
+ 			min_not_zero(dev->coherent_dma_mask, dev->bus_dma_limit);
+@@ -163,8 +163,13 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+ 	size = PAGE_ALIGN(size);
+ 
+ 	if (dma_should_alloc_from_pool(dev, gfp, attrs)) {
+-		ret = dma_alloc_from_pool(dev, size, &page, gfp);
+-		if (!ret)
++		u64 phys_mask;
++
++		gfp |= dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
++				&phys_mask);
++		page = dma_alloc_from_pool(dev, size, &ret, gfp,
++				dma_coherent_ok);
++		if (!page)
+ 			return NULL;
+ 		goto done;
+ 	}
+diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+index 6bc74a2d51273..5d071d4a3cbaa 100644
+--- a/kernel/dma/pool.c
++++ b/kernel/dma/pool.c
+@@ -196,93 +196,75 @@ static int __init dma_atomic_pool_init(void)
+ }
+ postcore_initcall(dma_atomic_pool_init);
+ 
+-static inline struct gen_pool *dma_guess_pool_from_device(struct device *dev)
++static inline struct gen_pool *dma_guess_pool(struct gen_pool *prev, gfp_t gfp)
+ {
+-	u64 phys_mask;
+-	gfp_t gfp;
+-
+-	gfp = dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
+-					  &phys_mask);
+-	if (IS_ENABLED(CONFIG_ZONE_DMA) && gfp == GFP_DMA)
++	if (prev == NULL) {
++		if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32))
++			return atomic_pool_dma32;
++		if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA))
++			return atomic_pool_dma;
++		return atomic_pool_kernel;
++	}
++	if (prev == atomic_pool_kernel)
++		return atomic_pool_dma32 ? atomic_pool_dma32 : atomic_pool_dma;
++	if (prev == atomic_pool_dma32)
+ 		return atomic_pool_dma;
+-	if (IS_ENABLED(CONFIG_ZONE_DMA32) && gfp == GFP_DMA32)
+-		return atomic_pool_dma32;
+-	return atomic_pool_kernel;
++	return NULL;
+ }
+ 
+-static inline struct gen_pool *dma_get_safer_pool(struct gen_pool *bad_pool)
++static struct page *__dma_alloc_from_pool(struct device *dev, size_t size,
++		struct gen_pool *pool, void **cpu_addr,
++		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t))
+ {
+-	if (bad_pool == atomic_pool_kernel)
+-		return atomic_pool_dma32 ? : atomic_pool_dma;
++	unsigned long addr;
++	phys_addr_t phys;
+ 
+-	if (bad_pool == atomic_pool_dma32)
+-		return atomic_pool_dma;
++	addr = gen_pool_alloc(pool, size);
++	if (!addr)
++		return NULL;
+ 
+-	return NULL;
+-}
++	phys = gen_pool_virt_to_phys(pool, addr);
++	if (phys_addr_ok && !phys_addr_ok(dev, phys, size)) {
++		gen_pool_free(pool, addr, size);
++		return NULL;
++	}
+ 
+-static inline struct gen_pool *dma_guess_pool(struct device *dev,
+-					      struct gen_pool *bad_pool)
+-{
+-	if (bad_pool)
+-		return dma_get_safer_pool(bad_pool);
++	if (gen_pool_avail(pool) < atomic_pool_size)
++		schedule_work(&atomic_pool_work);
+ 
+-	return dma_guess_pool_from_device(dev);
++	*cpu_addr = (void *)addr;
++	memset(*cpu_addr, 0, size);
++	return pfn_to_page(__phys_to_pfn(phys));
+ }
+ 
+-void *dma_alloc_from_pool(struct device *dev, size_t size,
+-			  struct page **ret_page, gfp_t flags)
++struct page *dma_alloc_from_pool(struct device *dev, size_t size,
++		void **cpu_addr, gfp_t gfp,
++		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t))
+ {
+ 	struct gen_pool *pool = NULL;
+-	unsigned long val = 0;
+-	void *ptr = NULL;
+-	phys_addr_t phys;
+-
+-	while (1) {
+-		pool = dma_guess_pool(dev, pool);
+-		if (!pool) {
+-			WARN(1, "Failed to get suitable pool for %s\n",
+-			     dev_name(dev));
+-			break;
+-		}
+-
+-		val = gen_pool_alloc(pool, size);
+-		if (!val)
+-			continue;
+-
+-		phys = gen_pool_virt_to_phys(pool, val);
+-		if (dma_coherent_ok(dev, phys, size))
+-			break;
+-
+-		gen_pool_free(pool, val, size);
+-		val = 0;
+-	}
+-
+-
+-	if (val) {
+-		*ret_page = pfn_to_page(__phys_to_pfn(phys));
+-		ptr = (void *)val;
+-		memset(ptr, 0, size);
++	struct page *page;
+ 
+-		if (gen_pool_avail(pool) < atomic_pool_size)
+-			schedule_work(&atomic_pool_work);
++	while ((pool = dma_guess_pool(pool, gfp))) {
++		page = __dma_alloc_from_pool(dev, size, pool, cpu_addr,
++					     phys_addr_ok);
++		if (page)
++			return page;
  	}
  
- #define SIZE_CASE(name) {						\
-@@ -432,20 +432,20 @@ static struct core_reloc_test_case test_cases[] = {
- 		.sb4 = -1,
- 		.sb20 = -0x17654321,
- 		.u32 = 0xBEEF,
--		.s32 = -0x3FEDCBA987654321,
-+		.s32 = -0x3FEDCBA987654321LL,
- 	}),
- 	BITFIELDS_CASE(bitfields___bitfield_vs_int, {
--		.ub1 = 0xFEDCBA9876543210,
-+		.ub1 = 0xFEDCBA9876543210LL,
- 		.ub2 = 0xA6,
--		.ub7 = -0x7EDCBA987654321,
--		.sb4 = -0x6123456789ABCDE,
--		.sb20 = 0xD00D,
-+		.ub7 = -0x7EDCBA987654321LL,
-+		.sb4 = -0x6123456789ABCDELL,
-+		.sb20 = 0xD00DLL,
- 		.u32 = -0x76543,
--		.s32 = 0x0ADEADBEEFBADB0B,
-+		.s32 = 0x0ADEADBEEFBADB0BLL,
- 	}),
- 	BITFIELDS_CASE(bitfields___just_big_enough, {
--		.ub1 = 0xF,
--		.ub2 = 0x0812345678FEDCBA,
-+		.ub1 = 0xFLL,
-+		.ub2 = 0x0812345678FEDCBALL,
- 	}),
- 	BITFIELDS_ERR_CASE(bitfields___err_too_big_bitfield),
+-	return ptr;
++	WARN(1, "Failed to get suitable pool for %s\n", dev_name(dev));
++	return NULL;
+ }
  
-diff --git a/tools/testing/selftests/bpf/progs/core_reloc_types.h b/tools/testing/selftests/bpf/progs/core_reloc_types.h
-index 34d84717c9464..69139ed662164 100644
---- a/tools/testing/selftests/bpf/progs/core_reloc_types.h
-+++ b/tools/testing/selftests/bpf/progs/core_reloc_types.h
-@@ -1,5 +1,10 @@
- #include <stdint.h>
- #include <stdbool.h>
+ bool dma_free_from_pool(struct device *dev, void *start, size_t size)
+ {
+ 	struct gen_pool *pool = NULL;
+ 
+-	while (1) {
+-		pool = dma_guess_pool(dev, pool);
+-		if (!pool)
+-			return false;
+-
+-		if (gen_pool_has_addr(pool, (unsigned long)start, size)) {
+-			gen_pool_free(pool, (unsigned long)start, size);
+-			return true;
+-		}
++	while ((pool = dma_guess_pool(pool, 0))) {
++		if (!gen_pool_has_addr(pool, (unsigned long)start, size))
++			continue;
++		gen_pool_free(pool, (unsigned long)start, size);
++		return true;
+ 	}
 +
-+void preserce_ptr_sz_fn(long x) {}
-+
-+#define __bpf_aligned __attribute__((aligned(8)))
-+
- /*
-  * KERNEL
-  */
-@@ -444,51 +449,51 @@ struct core_reloc_primitives {
- 	char a;
- 	int b;
- 	enum core_reloc_primitives_enum c;
--	void *d;
--	int (*f)(const char *);
-+	void *d __bpf_aligned;
-+	int (*f)(const char *) __bpf_aligned;
- };
- 
- struct core_reloc_primitives___diff_enum_def {
- 	char a;
- 	int b;
--	void *d;
--	int (*f)(const char *);
-+	void *d __bpf_aligned;
-+	int (*f)(const char *) __bpf_aligned;
- 	enum {
- 		X = 100,
- 		Y = 200,
--	} c; /* inline enum def with differing set of values */
-+	} c __bpf_aligned; /* inline enum def with differing set of values */
- };
- 
- struct core_reloc_primitives___diff_func_proto {
--	void (*f)(int); /* incompatible function prototype */
--	void *d;
--	enum core_reloc_primitives_enum c;
-+	void (*f)(int) __bpf_aligned; /* incompatible function prototype */
-+	void *d __bpf_aligned;
-+	enum core_reloc_primitives_enum c __bpf_aligned;
- 	int b;
- 	char a;
- };
- 
- struct core_reloc_primitives___diff_ptr_type {
--	const char * const d; /* different pointee type + modifiers */
--	char a;
-+	const char * const d __bpf_aligned; /* different pointee type + modifiers */
-+	char a __bpf_aligned;
- 	int b;
- 	enum core_reloc_primitives_enum c;
--	int (*f)(const char *);
-+	int (*f)(const char *) __bpf_aligned;
- };
- 
- struct core_reloc_primitives___err_non_enum {
- 	char a[1];
- 	int b;
- 	int c; /* int instead of enum */
--	void *d;
--	int (*f)(const char *);
-+	void *d __bpf_aligned;
-+	int (*f)(const char *) __bpf_aligned;
- };
- 
- struct core_reloc_primitives___err_non_int {
- 	char a[1];
--	int *b; /* ptr instead of int */
--	enum core_reloc_primitives_enum c;
--	void *d;
--	int (*f)(const char *);
-+	int *b __bpf_aligned; /* ptr instead of int */
-+	enum core_reloc_primitives_enum c __bpf_aligned;
-+	void *d __bpf_aligned;
-+	int (*f)(const char *) __bpf_aligned;
- };
- 
- struct core_reloc_primitives___err_non_ptr {
-@@ -496,7 +501,7 @@ struct core_reloc_primitives___err_non_ptr {
- 	int b;
- 	enum core_reloc_primitives_enum c;
- 	int d; /* int instead of ptr */
--	int (*f)(const char *);
-+	int (*f)(const char *) __bpf_aligned;
- };
- 
- /*
-@@ -507,7 +512,7 @@ struct core_reloc_mods_output {
- };
- 
- typedef const int int_t;
--typedef const char *char_ptr_t;
-+typedef const char *char_ptr_t __bpf_aligned;
- typedef const int arr_t[7];
- 
- struct core_reloc_mods_substruct {
-@@ -523,9 +528,9 @@ typedef struct {
- struct core_reloc_mods {
- 	int a;
- 	int_t b;
--	char *c;
-+	char *c __bpf_aligned;
- 	char_ptr_t d;
--	int e[3];
-+	int e[3] __bpf_aligned;
- 	arr_t f;
- 	struct core_reloc_mods_substruct g;
- 	core_reloc_mods_substruct_t h;
-@@ -535,9 +540,9 @@ struct core_reloc_mods {
- struct core_reloc_mods___mod_swap {
- 	int b;
- 	int_t a;
--	char *d;
-+	char *d __bpf_aligned;
- 	char_ptr_t c;
--	int f[3];
-+	int f[3] __bpf_aligned;
- 	arr_t e;
- 	struct {
- 		int y;
-@@ -555,7 +560,7 @@ typedef arr1_t arr2_t;
- typedef arr2_t arr3_t;
- typedef arr3_t arr4_t;
- 
--typedef const char * const volatile fancy_char_ptr_t;
-+typedef const char * const volatile fancy_char_ptr_t __bpf_aligned;
- 
- typedef core_reloc_mods_substruct_t core_reloc_mods_substruct_tt;
- 
-@@ -567,7 +572,7 @@ struct core_reloc_mods___typedefs {
- 	arr4_t e;
- 	fancy_char_ptr_t d;
- 	fancy_char_ptr_t c;
--	int3_t b;
-+	int3_t b __bpf_aligned;
- 	int3_t a;
- };
- 
-@@ -739,19 +744,19 @@ struct core_reloc_bitfields___bit_sz_change {
- 	int8_t		sb4: 1;		/*  4 ->  1 */
- 	int32_t		sb20: 30;	/* 20 -> 30 */
- 	/* non-bitfields */
--	uint16_t	u32;		/* 32 -> 16 */
--	int64_t		s32;		/* 32 -> 64 */
-+	uint16_t	u32;			/* 32 -> 16 */
-+	int64_t		s32 __bpf_aligned;	/* 32 -> 64 */
- };
- 
- /* turn bitfield into non-bitfield and vice versa */
- struct core_reloc_bitfields___bitfield_vs_int {
- 	uint64_t	ub1;		/*  3 -> 64 non-bitfield */
- 	uint8_t		ub2;		/* 20 ->  8 non-bitfield */
--	int64_t		ub7;		/*  7 -> 64 non-bitfield signed */
--	int64_t		sb4;		/*  4 -> 64 non-bitfield signed */
--	uint64_t	sb20;		/* 20 -> 16 non-bitfield unsigned */
--	int32_t		u32: 20;	/* 32 non-bitfield -> 20 bitfield */
--	uint64_t	s32: 60;	/* 32 non-bitfield -> 60 bitfield */
-+	int64_t		ub7 __bpf_aligned;	/*  7 -> 64 non-bitfield signed */
-+	int64_t		sb4 __bpf_aligned;	/*  4 -> 64 non-bitfield signed */
-+	uint64_t	sb20 __bpf_aligned;	/* 20 -> 16 non-bitfield unsigned */
-+	int32_t		u32: 20;		/* 32 non-bitfield -> 20 bitfield */
-+	uint64_t	s32: 60 __bpf_aligned;	/* 32 non-bitfield -> 60 bitfield */
- };
- 
- struct core_reloc_bitfields___just_big_enough {
++	return false;
+ }
 -- 
 2.25.1
 
