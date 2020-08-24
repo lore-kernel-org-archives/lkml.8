@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD00C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 834D52087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148FC204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259500;
-	bh=JRJaIuSadhMHjDTscVwGRwHFLMEXH6qLsUGeoTeAi6A=;
+	s=default; t=1598259508;
+	bh=jY0VWFT/oJIHwgbQvttXBniFS0HUikgNTBGZJXm1KJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t42eILmKAtHzy9OyGGjX9dG65KWVGvKSE/RfAEvoLC+jGuL+0k0XLVqkgrTwougfQ
-	 ufQCJZaYoBhFN5pnpoRtcIGQCs54mmmxWVpIa97TyV0cc6DT5SUvaE1lMzqxa05Q7O
-	 ZgfiV3uyRa74TEH0UD3fbiEPKbKpEzNSewnlajXA=
+	b=kVlX3zHCdKRyyPw2630yb5CrE7AjGAb3YYAWZqPoLlgZ2nIjsko1xKnCF20JUG+d2
+	 Rlxyv86/XCp9F4stHheMeT0MUzZB8Jgyrovo4D18ZL9FvtpkGAxu3jtLsDe9Nb+klK
+	 Em7z2/ERwvAlfDIeJeLC6jpV9WruHezAf2WwgNIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730768AbgHXI6R (ORCPT
+        id S1730790AbgHXI61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:58:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45770 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:58:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730733AbgHXI6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:58:00 -0400
+        id S1730765AbgHXI6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:58:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBA9E2074D;
-        Mon, 24 Aug 2020 08:57:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 268C82072D;
+        Mon, 24 Aug 2020 08:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259479;
-        bh=JRJaIuSadhMHjDTscVwGRwHFLMEXH6qLsUGeoTeAi6A=;
+        s=default; t=1598259495;
+        bh=jY0VWFT/oJIHwgbQvttXBniFS0HUikgNTBGZJXm1KJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v3kIy2uOunJn9tvfKDtuE2V4/6PBWPKyu4dPelTxEFnMoFp1B3CM7c3HbBOaHnEdu
-         vt7miGZ7Km1glBjgPC4buiubQiUwZXnXTyFPv/6O8OWOn5AMRIYmLYHp8/uM35jCmb
-         hZ+y3NKe+0rIgzoUJ2BAfrlwOVQIZzggEhmIiyhs=
+        b=e1qPV06IaPMNonerf9PnC9I69utAECcXCIIO5t8lyE431vKOJgBmK2ktYArbi/Nh7
+         9YLT1TaBK4PcPLcY5V9/NcG7BvXLS9uhhzZF5wmMBP/9NTSzhrPBBWrQDh5/NVwJ+G
+         i68ewYstDW7qsyVbO7yDffURK88uHXLnUlHwakow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 54/71] kconfig: qconf: do not limit the pop-up menu to the first row
-Date:   Mon, 24 Aug 2020 10:31:45 +0200
-Message-Id: <20200824082358.598884966@linuxfoundation.org>
+Subject: [PATCH 4.19 50/71] ASoC: intel: Fix memleak in sst_media_open
+Date:   Mon, 24 Aug 2020 10:31:41 +0200
+Message-Id: <20200824082358.412380968@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -59,110 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit fa8de0a3bf3c02e6f00b7746e7e934db522cdda9 ]
+[ Upstream commit 062fa09f44f4fb3776a23184d5d296b0c8872eb9 ]
 
-If you right-click the first row in the option tree, the pop-up menu
-shows up, but if you right-click the second row or below, the event
-is ignored due to the following check:
+When power_up_sst() fails, stream needs to be freed
+just like when try_module_get() fails. However, current
+code is returning directly and ends up leaking memory.
 
-  if (e->y() <= header()->geometry().bottom()) {
-
-Perhaps, the intention was to show the pop-menu only when the tree
-header was right-clicked, but this handler is not called in that case.
-
-Since the origin of e->y() starts from the bottom of the header,
-this check is odd.
-
-Going forward, you can right-click anywhere in the tree to get the
-pop-up menu.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 0121327c1a68b ("ASoC: Intel: mfld-pcm: add control for powering up/down dsp")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200813084112.26205-1-dinghao.liu@zju.edu.cn
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/qconf.cc | 68 ++++++++++++++++++++--------------------
- 1 file changed, 34 insertions(+), 34 deletions(-)
+ sound/soc/intel/atom/sst-mfld-platform-pcm.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 8f004db6f6034..294d4329f4810 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -869,40 +869,40 @@ void ConfigList::focusInEvent(QFocusEvent *e)
+diff --git a/sound/soc/intel/atom/sst-mfld-platform-pcm.c b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+index 6868e71e3a3f0..0572c3c964506 100644
+--- a/sound/soc/intel/atom/sst-mfld-platform-pcm.c
++++ b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+@@ -339,7 +339,7 @@ static int sst_media_open(struct snd_pcm_substream *substream,
  
- void ConfigList::contextMenuEvent(QContextMenuEvent *e)
- {
--	if (e->y() <= header()->geometry().bottom()) {
--		if (!headerPopup) {
--			QAction *action;
--
--			headerPopup = new QMenu(this);
--			action = new QAction("Show Name", this);
--			  action->setCheckable(true);
--			  connect(action, SIGNAL(toggled(bool)),
--				  parent(), SLOT(setShowName(bool)));
--			  connect(parent(), SIGNAL(showNameChanged(bool)),
--				  action, SLOT(setOn(bool)));
--			  action->setChecked(showName);
--			  headerPopup->addAction(action);
--			action = new QAction("Show Range", this);
--			  action->setCheckable(true);
--			  connect(action, SIGNAL(toggled(bool)),
--				  parent(), SLOT(setShowRange(bool)));
--			  connect(parent(), SIGNAL(showRangeChanged(bool)),
--				  action, SLOT(setOn(bool)));
--			  action->setChecked(showRange);
--			  headerPopup->addAction(action);
--			action = new QAction("Show Data", this);
--			  action->setCheckable(true);
--			  connect(action, SIGNAL(toggled(bool)),
--				  parent(), SLOT(setShowData(bool)));
--			  connect(parent(), SIGNAL(showDataChanged(bool)),
--				  action, SLOT(setOn(bool)));
--			  action->setChecked(showData);
--			  headerPopup->addAction(action);
--		}
--		headerPopup->exec(e->globalPos());
--		e->accept();
--	} else
--		e->ignore();
-+	if (!headerPopup) {
-+		QAction *action;
-+
-+		headerPopup = new QMenu(this);
-+		action = new QAction("Show Name", this);
-+		action->setCheckable(true);
-+		connect(action, SIGNAL(toggled(bool)),
-+			parent(), SLOT(setShowName(bool)));
-+		connect(parent(), SIGNAL(showNameChanged(bool)),
-+			action, SLOT(setOn(bool)));
-+		action->setChecked(showName);
-+		headerPopup->addAction(action);
-+
-+		action = new QAction("Show Range", this);
-+		action->setCheckable(true);
-+		connect(action, SIGNAL(toggled(bool)),
-+			parent(), SLOT(setShowRange(bool)));
-+		connect(parent(), SIGNAL(showRangeChanged(bool)),
-+			action, SLOT(setOn(bool)));
-+		action->setChecked(showRange);
-+		headerPopup->addAction(action);
-+
-+		action = new QAction("Show Data", this);
-+		action->setCheckable(true);
-+		connect(action, SIGNAL(toggled(bool)),
-+			parent(), SLOT(setShowData(bool)));
-+		connect(parent(), SIGNAL(showDataChanged(bool)),
-+			action, SLOT(setOn(bool)));
-+		action->setChecked(showData);
-+		headerPopup->addAction(action);
-+	}
-+
-+	headerPopup->exec(e->globalPos());
-+	e->accept();
+ 	ret_val = power_up_sst(stream);
+ 	if (ret_val < 0)
+-		return ret_val;
++		goto out_power_up;
+ 
+ 	/* Make sure, that the period size is always even */
+ 	snd_pcm_hw_constraint_step(substream->runtime, 0,
+@@ -348,8 +348,9 @@ static int sst_media_open(struct snd_pcm_substream *substream,
+ 	return snd_pcm_hw_constraint_integer(runtime,
+ 			 SNDRV_PCM_HW_PARAM_PERIODS);
+ out_ops:
+-	kfree(stream);
+ 	mutex_unlock(&sst_lock);
++out_power_up:
++	kfree(stream);
+ 	return ret_val;
  }
  
- ConfigView*ConfigView::viewList;
 -- 
 2.25.1
 
