@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A71C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B10842071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD87B2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262031;
-	bh=BUqh9hxrrhfBSUuYGJs7qbkTVzJ4kaDSPrSOfKiy10g=;
+	s=default; t=1598262041;
+	bh=Oh3umyAlURcds4JmNFmbVOeFnE76pIx3mR/Qxh/CU5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZbIdb6569LqGBLWTFbT7+dxorb1E7Zma2dqyvY4JBwp/aGMjKoA73MUm4On1MW6IH
-	 pX/T00PxKWqiHlXtn7xCQn5T976vgl1khpHrYu+dCAkS1sTObISiA7R74sAAcLY1iD
-	 NC57riu3yXJ0VKfdy9Klfry5cFDXKRLukLLK9A5A=
+	b=cQZLEMNga5S37bzKNpB8CMMfuieQ6PFGjjFZNkSikNvfPaaLv4r/fUJplfFdmy4y4
+	 Dy1CDl0XgVv2n7AKuvJEYm9/ke5OWl+xvub8PFnyq90MvdKNf3+ZCHuGTUAFWwMDMg
+	 ZsgKprnL+NfPIEI9W6cKL9eWkpP/CZ0z+LYI0HL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbgHXIpz (ORCPT
+        id S1729251AbgHXJkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43398 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729261AbgHXIpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:45:51 -0400
+        id S1729252AbgHXIpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:45:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40AA8206F0;
-        Mon, 24 Aug 2020 08:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B22D2072D;
+        Mon, 24 Aug 2020 08:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258750;
-        bh=BUqh9hxrrhfBSUuYGJs7qbkTVzJ4kaDSPrSOfKiy10g=;
+        s=default; t=1598258744;
+        bh=Oh3umyAlURcds4JmNFmbVOeFnE76pIx3mR/Qxh/CU5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w5LVj4FP3muRYyqs+wRwRdb2YOJUaPLZOyooZgS5dEIGFke9/Neo2VS1Q2V2YRwN+
-         b1rGcGU69Z8qMjB3ykZ5zJa89UHwJebaxU2EdIHi72/ijBrRvGxhWbqLmWFM2670fJ
-         4VNnv6fUXfTXEch2Jlv2kIlbNyuG4cVhdxCPmUzQ=
+        b=h0MI49HxUbLLa8fwnR7zN3f4c3EYnWoZ65C7aitesudSLL5lXW5yl+AMWSQIPkdn/
+         SRNHsS9yzNtBaaGwLAqil9gQfIySbfyynlyXpbK9uWGsPBeKR4skqgCZ1Oo96fGQhj
+         bTn+PUPngTCILjk24+39jYqMHeT5DECAtDRMMH3g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH 5.4 031/107] RDMA/hfi1: Correct an interlock issue for TID RDMA WRITE request
-Date:   Mon, 24 Aug 2020 10:29:57 +0200
-Message-Id: <20200824082406.656234232@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Jason Baron <jbaron@akamai.com>,
+        David Rientjes <rientjes@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 029/107] mm: include CMA pages in lowmem_reserve at boot
+Date:   Mon, 24 Aug 2020 10:29:55 +0200
+Message-Id: <20200824082406.557063413@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -62,63 +64,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Doug Berger <opendmb@gmail.com>
 
-commit b25e8e85e75a61af1ddc88c4798387dd3132dd43 upstream.
+commit e08d3fdfe2dafa0331843f70ce1ff6c1c4900bf4 upstream.
 
-The following message occurs when running an AI application with TID RDMA
-enabled:
+The lowmem_reserve arrays provide a means of applying pressure against
+allocations from lower zones that were targeted at higher zones.  Its
+values are a function of the number of pages managed by higher zones and
+are assigned by a call to the setup_per_zone_lowmem_reserve() function.
 
-hfi1 0000:7f:00.0: hfi1_0: [QP74] hfi1_tid_timeout 4084
-hfi1 0000:7f:00.0: hfi1_0: [QP70] hfi1_tid_timeout 4084
+The function is initially called at boot time by the function
+init_per_zone_wmark_min() and may be called later by accesses of the
+/proc/sys/vm/lowmem_reserve_ratio sysctl file.
 
-The issue happens when TID RDMA WRITE request is followed by an
-IB_WR_RDMA_WRITE_WITH_IMM request, the latter could be completed first on
-the responder side. As a result, no ACK packet for the latter could be
-sent because the TID RDMA WRITE request is still being processed on the
-responder side.
+The function init_per_zone_wmark_min() was moved up from a module_init to
+a core_initcall to resolve a sequencing issue with khugepaged.
+Unfortunately this created a sequencing issue with CMA page accounting.
 
-When the TID RDMA WRITE request is eventually completed, the requester
-will wait for the IB_WR_RDMA_WRITE_WITH_IMM request to be acknowledged.
+The CMA pages are added to the managed page count of a zone when
+cma_init_reserved_areas() is called at boot also as a core_initcall.  This
+makes it uncertain whether the CMA pages will be added to the managed page
+counts of their zones before or after the call to
+init_per_zone_wmark_min() as it becomes dependent on link order.  With the
+current link order the pages are added to the managed count after the
+lowmem_reserve arrays are initialized at boot.
 
-If the next request is another TID RDMA WRITE request, no TID RDMA WRITE
-DATA packet could be sent because the preceding IB_WR_RDMA_WRITE_WITH_IMM
-request is not completed yet.
+This means the lowmem_reserve values at boot may be lower than the values
+used later if /proc/sys/vm/lowmem_reserve_ratio is accessed even if the
+ratio values are unchanged.
 
-Consequently the IB_WR_RDMA_WRITE_WITH_IMM will be retried but it will be
-ignored on the responder side because the responder thinks it has already
-been completed. Eventually the retry will be exhausted and the qp will be
-put into error state on the requester side. On the responder side, the TID
-resource timer will eventually expire because no TID RDMA WRITE DATA
-packets will be received for the second TID RDMA WRITE request.  There is
-also risk of a write-after-write memory corruption due to the issue.
+In many cases the difference is not significant, but for example
+an ARM platform with 1GB of memory and the following memory layout
 
-Fix by adding a requester side interlock to prevent any potential data
-corruption and TID RDMA protocol error.
+  cma: Reserved 256 MiB at 0x0000000030000000
+  Zone ranges:
+    DMA      [mem 0x0000000000000000-0x000000002fffffff]
+    Normal   empty
+    HighMem  [mem 0x0000000030000000-0x000000003fffffff]
 
-Fixes: a0b34f75ec20 ("IB/hfi1: Add interlock between a TID RDMA request and other requests")
-Link: https://lore.kernel.org/r/20200811174931.191210.84093.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org> # 5.4.x+
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+would result in 0 lowmem_reserve for the DMA zone.  This would allow
+userspace to deplete the DMA zone easily.
+
+Funnily enough
+
+  $ cat /proc/sys/vm/lowmem_reserve_ratio
+
+would fix up the situation because as a side effect it forces
+setup_per_zone_lowmem_reserve.
+
+This commit breaks the link order dependency by invoking
+init_per_zone_wmark_min() as a postcore_initcall so that the CMA pages
+have the chance to be properly accounted in their zone(s) and allowing
+the lowmem_reserve arrays to receive consistent values.
+
+Fixes: bc22af74f271 ("mm: update min_free_kbytes from khugepaged after core initialization")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/1597423766-27849-1-git-send-email-opendmb@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/tid_rdma.c |    1 +
- 1 file changed, 1 insertion(+)
+ mm/page_alloc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/hw/hfi1/tid_rdma.c
-+++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
-@@ -3215,6 +3215,7 @@ bool hfi1_tid_rdma_wqe_interlock(struct
- 	case IB_WR_ATOMIC_CMP_AND_SWP:
- 	case IB_WR_ATOMIC_FETCH_AND_ADD:
- 	case IB_WR_RDMA_WRITE:
-+	case IB_WR_RDMA_WRITE_WITH_IMM:
- 		switch (prev->wr.opcode) {
- 		case IB_WR_TID_RDMA_WRITE:
- 			req = wqe_to_tid_req(prev);
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7867,7 +7867,7 @@ int __meminit init_per_zone_wmark_min(vo
+ 
+ 	return 0;
+ }
+-core_initcall(init_per_zone_wmark_min)
++postcore_initcall(init_per_zone_wmark_min)
+ 
+ /*
+  * min_free_kbytes_sysctl_handler - just a wrapper around proc_dointvec() so
 
 
