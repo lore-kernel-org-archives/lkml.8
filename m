@@ -2,313 +2,110 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738A5C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C175DC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1E52074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7B52074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289843;
-	bh=cLkDo8c1SNPGN7bXjRRVrlna/Rvaono203tgkp3GZBY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5xnNy3G6np5GLfIwtIUSv6CD6dPgLPnAHkAPKBS/djpnngWc4gsrtuHhe+gOHZu9
-	 t8PHyUtk4zTLKYeZT7ReF9wZDmgQTgenDMWwR+gbsB8GY2mFLgD2uyaZCP4gZYSeZ7
-	 9QLZ/uL0sjBBcCil7Kf6eRBOrKLImyozpQZCYJp4=
+	s=default; t=1598289891;
+	bh=u6ITf2TE+0Yj01YyyE3ZFTxoh+W/UkoJjDlG96zQlB8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wXbSapswXa/b6hKsZf4XxAms0IS1knCB4rAXh/tlVxlPS0s+2GgQSE5PRH+a8SnB5
+	 LEgnWjzbEl6FgGPYR8mK/eHMXqXc6aNgnAbsPwl72mdtrlyXywO6jQ+FegitoidbnG
+	 jt236uIiBGl/MXyvaltu79pc0ZKTRJi5aMowFb3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgHXRX1 (ORCPT
+        id S1727980AbgHXRYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40164 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:24:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728274AbgHXQfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:35:46 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1727080AbgHXRYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 13:24:14 -0400
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF40122CB1;
-        Mon, 24 Aug 2020 16:35:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7323920738;
+        Mon, 24 Aug 2020 17:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286945;
-        bh=cLkDo8c1SNPGN7bXjRRVrlna/Rvaono203tgkp3GZBY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZCyKnyYdlFxC+O8bKKITv8D0IxCUqYEWDAJ0x/Ur5zeHZURgDr3NGJtrrBI/2ALn
-         AzZ3E2WIeObiuVKFR9E+zw3uJu59xBNSBr67jx9NsD096E3D651I8yslPebTRcweWB
-         GQxkVwGjKFfYPy2srx0Rlh8Az3bZpaG/PSLZ5cBA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.8 30/63] dma-pool: fix coherent pool allocations for IOMMU mappings
-Date:   Mon, 24 Aug 2020 12:34:30 -0400
-Message-Id: <20200824163504.605538-30-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
-References: <20200824163504.605538-1-sashal@kernel.org>
+        s=default; t=1598289853;
+        bh=u6ITf2TE+0Yj01YyyE3ZFTxoh+W/UkoJjDlG96zQlB8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=m9FtahviMbr5P384IS5H5uSVrGUs6/7NH8y15icrkiBkCK+DFwszIICTbKTpcPNkh
+         Zz7xc0u+6Iw2jOvPzsky+c1gEznxeotr5lP+F3+ivqT1NBYYnsJlk+Bmwd9PR7+UzA
+         fujNQZyw4bSqeIX0OO4ScKt2OsDcSCIiY80sfkqw=
+Received: by mail-ot1-f43.google.com with SMTP id i11so956408otr.5;
+        Mon, 24 Aug 2020 10:24:13 -0700 (PDT)
+X-Gm-Message-State: AOAM531McTIrMEOiieC2umWprnKqinWS5r5Pa47xiYCU/p3CdkS3HYdr
+        lQg89eiJz4komRzIGuG3TiUcFp4I9a9zugsNXt4=
+X-Google-Smtp-Source: ABdhPJx54D6AG+VvNZEytOaXrn/shKRo/oQCyztVQLHUm4m/2JTRanN3KarJdrloIn4PZRieB1BNuwnqUHAdUuqZ9Dc=
+X-Received: by 2002:a9d:6251:: with SMTP id i17mr4017155otk.90.1598289852763;
+ Mon, 24 Aug 2020 10:24:12 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com> <1598287583-71762-11-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <1598287583-71762-11-git-send-email-mikelley@microsoft.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 24 Aug 2020 19:24:01 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHKDD5+Na7t=bbkqo2OaiidmnJg+RqermV-2=exj-P77A@mail.gmail.com>
+Message-ID: <CAMj1kXHKDD5+Na7t=bbkqo2OaiidmnJg+RqermV-2=exj-P77A@mail.gmail.com>
+Subject: Re: [PATCH v7 10/10] Drivers: hv: Enable Hyper-V code to be built on ARM64
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>, wei.liu@kernel.org,
+        vkuznets <vkuznets@redhat.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+On Mon, 24 Aug 2020 at 18:48, Michael Kelley <mikelley@microsoft.com> wrote:
+>
+> Update drivers/hv/Kconfig so CONFIG_HYPERV can be selected on
+> ARM64, causing the Hyper-V specific code to be built.
+>
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  drivers/hv/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 79e5356..1113e49 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -4,7 +4,8 @@ menu "Microsoft Hyper-V guest support"
+>
+>  config HYPERV
+>         tristate "Microsoft Hyper-V client drivers"
+> -       depends on X86 && ACPI && X86_LOCAL_APIC && HYPERVISOR_GUEST
+> +       depends on ACPI && \
+> +                       ((X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) || ARM64)
+>         select PARAVIRT
+>         select X86_HV_CALLBACK_VECTOR
+>         help
 
-[ Upstream commit 9420139f516d7fbc248ce17f35275cb005ed98ea ]
+Given the comment in a previous patch
 
-When allocating coherent pool memory for an IOMMU mapping we don't care
-about the DMA mask.  Move the guess for the initial GFP mask into the
-dma_direct_alloc_pages and pass dma_coherent_ok as a function pointer
-argument so that it doesn't get applied to the IOMMU case.
++/*
++ * All data structures defined in the TLFS that are shared between Hyper-V
++ * and a guest VM use Little Endian byte ordering.  This matches the default
++ * byte ordering of Linux running on ARM64, so no special handling is required.
++ */
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Tested-by: Amit Pundir <amit.pundir@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/iommu/dma-iommu.c   |   4 +-
- include/linux/dma-direct.h  |   3 -
- include/linux/dma-mapping.h |   5 +-
- kernel/dma/direct.c         |  13 ++--
- kernel/dma/pool.c           | 114 +++++++++++++++---------------------
- 5 files changed, 62 insertions(+), 77 deletions(-)
-
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 4959f5df21bd0..5141d49a046ba 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -1035,8 +1035,8 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
- 
- 	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
- 	    !gfpflags_allow_blocking(gfp) && !coherent)
--		cpu_addr = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &page,
--					       gfp);
-+		page = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &cpu_addr,
-+					       gfp, NULL);
- 	else
- 		cpu_addr = iommu_dma_alloc_pages(dev, size, &page, gfp, attrs);
- 	if (!cpu_addr)
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index ab2e20cba9514..ba22952c24e24 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -67,9 +67,6 @@ static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
- }
- 
- u64 dma_direct_get_required_mask(struct device *dev);
--gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
--				  u64 *phys_mask);
--bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size);
- void *dma_direct_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
- 		gfp_t gfp, unsigned long attrs);
- void dma_direct_free(struct device *dev, size_t size, void *cpu_addr,
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index a33ed3954ed46..0dc08701d7b7e 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -715,8 +715,9 @@ void *dma_common_pages_remap(struct page **pages, size_t size,
- 			pgprot_t prot, const void *caller);
- void dma_common_free_remap(void *cpu_addr, size_t size);
- 
--void *dma_alloc_from_pool(struct device *dev, size_t size,
--			  struct page **ret_page, gfp_t flags);
-+struct page *dma_alloc_from_pool(struct device *dev, size_t size,
-+		void **cpu_addr, gfp_t flags,
-+		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t));
- bool dma_free_from_pool(struct device *dev, void *start, size_t size);
- 
- int
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 67f060b86a73f..f17aec9d01f0c 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -45,7 +45,7 @@ u64 dma_direct_get_required_mask(struct device *dev)
- 	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
- }
- 
--gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
-+static gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
- 				  u64 *phys_limit)
- {
- 	u64 dma_limit = min_not_zero(dma_mask, dev->bus_dma_limit);
-@@ -70,7 +70,7 @@ gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
- 	return 0;
- }
- 
--bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
-+static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
- {
- 	return phys_to_dma_direct(dev, phys) + size - 1 <=
- 			min_not_zero(dev->coherent_dma_mask, dev->bus_dma_limit);
-@@ -163,8 +163,13 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 	size = PAGE_ALIGN(size);
- 
- 	if (dma_should_alloc_from_pool(dev, gfp, attrs)) {
--		ret = dma_alloc_from_pool(dev, size, &page, gfp);
--		if (!ret)
-+		u64 phys_mask;
-+
-+		gfp |= dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
-+				&phys_mask);
-+		page = dma_alloc_from_pool(dev, size, &ret, gfp,
-+				dma_coherent_ok);
-+		if (!page)
- 			return NULL;
- 		goto done;
- 	}
-diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-index 6bc74a2d51273..5d071d4a3cbaa 100644
---- a/kernel/dma/pool.c
-+++ b/kernel/dma/pool.c
-@@ -196,93 +196,75 @@ static int __init dma_atomic_pool_init(void)
- }
- postcore_initcall(dma_atomic_pool_init);
- 
--static inline struct gen_pool *dma_guess_pool_from_device(struct device *dev)
-+static inline struct gen_pool *dma_guess_pool(struct gen_pool *prev, gfp_t gfp)
- {
--	u64 phys_mask;
--	gfp_t gfp;
--
--	gfp = dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
--					  &phys_mask);
--	if (IS_ENABLED(CONFIG_ZONE_DMA) && gfp == GFP_DMA)
-+	if (prev == NULL) {
-+		if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32))
-+			return atomic_pool_dma32;
-+		if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA))
-+			return atomic_pool_dma;
-+		return atomic_pool_kernel;
-+	}
-+	if (prev == atomic_pool_kernel)
-+		return atomic_pool_dma32 ? atomic_pool_dma32 : atomic_pool_dma;
-+	if (prev == atomic_pool_dma32)
- 		return atomic_pool_dma;
--	if (IS_ENABLED(CONFIG_ZONE_DMA32) && gfp == GFP_DMA32)
--		return atomic_pool_dma32;
--	return atomic_pool_kernel;
-+	return NULL;
- }
- 
--static inline struct gen_pool *dma_get_safer_pool(struct gen_pool *bad_pool)
-+static struct page *__dma_alloc_from_pool(struct device *dev, size_t size,
-+		struct gen_pool *pool, void **cpu_addr,
-+		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t))
- {
--	if (bad_pool == atomic_pool_kernel)
--		return atomic_pool_dma32 ? : atomic_pool_dma;
-+	unsigned long addr;
-+	phys_addr_t phys;
- 
--	if (bad_pool == atomic_pool_dma32)
--		return atomic_pool_dma;
-+	addr = gen_pool_alloc(pool, size);
-+	if (!addr)
-+		return NULL;
- 
--	return NULL;
--}
-+	phys = gen_pool_virt_to_phys(pool, addr);
-+	if (phys_addr_ok && !phys_addr_ok(dev, phys, size)) {
-+		gen_pool_free(pool, addr, size);
-+		return NULL;
-+	}
- 
--static inline struct gen_pool *dma_guess_pool(struct device *dev,
--					      struct gen_pool *bad_pool)
--{
--	if (bad_pool)
--		return dma_get_safer_pool(bad_pool);
-+	if (gen_pool_avail(pool) < atomic_pool_size)
-+		schedule_work(&atomic_pool_work);
- 
--	return dma_guess_pool_from_device(dev);
-+	*cpu_addr = (void *)addr;
-+	memset(*cpu_addr, 0, size);
-+	return pfn_to_page(__phys_to_pfn(phys));
- }
- 
--void *dma_alloc_from_pool(struct device *dev, size_t size,
--			  struct page **ret_page, gfp_t flags)
-+struct page *dma_alloc_from_pool(struct device *dev, size_t size,
-+		void **cpu_addr, gfp_t gfp,
-+		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t))
- {
- 	struct gen_pool *pool = NULL;
--	unsigned long val = 0;
--	void *ptr = NULL;
--	phys_addr_t phys;
--
--	while (1) {
--		pool = dma_guess_pool(dev, pool);
--		if (!pool) {
--			WARN(1, "Failed to get suitable pool for %s\n",
--			     dev_name(dev));
--			break;
--		}
--
--		val = gen_pool_alloc(pool, size);
--		if (!val)
--			continue;
--
--		phys = gen_pool_virt_to_phys(pool, val);
--		if (dma_coherent_ok(dev, phys, size))
--			break;
--
--		gen_pool_free(pool, val, size);
--		val = 0;
--	}
--
--
--	if (val) {
--		*ret_page = pfn_to_page(__phys_to_pfn(phys));
--		ptr = (void *)val;
--		memset(ptr, 0, size);
-+	struct page *page;
- 
--		if (gen_pool_avail(pool) < atomic_pool_size)
--			schedule_work(&atomic_pool_work);
-+	while ((pool = dma_guess_pool(pool, gfp))) {
-+		page = __dma_alloc_from_pool(dev, size, pool, cpu_addr,
-+					     phys_addr_ok);
-+		if (page)
-+			return page;
- 	}
- 
--	return ptr;
-+	WARN(1, "Failed to get suitable pool for %s\n", dev_name(dev));
-+	return NULL;
- }
- 
- bool dma_free_from_pool(struct device *dev, void *start, size_t size)
- {
- 	struct gen_pool *pool = NULL;
- 
--	while (1) {
--		pool = dma_guess_pool(dev, pool);
--		if (!pool)
--			return false;
--
--		if (gen_pool_has_addr(pool, (unsigned long)start, size)) {
--			gen_pool_free(pool, (unsigned long)start, size);
--			return true;
--		}
-+	while ((pool = dma_guess_pool(pool, 0))) {
-+		if (!gen_pool_has_addr(pool, (unsigned long)start, size))
-+			continue;
-+		gen_pool_free(pool, (unsigned long)start, size);
-+		return true;
- 	}
-+
-+	return false;
- }
--- 
-2.25.1
-
+shouldn't this depend on !CONFIG_CPU_BIG_ENDIAN ?
