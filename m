@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B10CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2007C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D11FE2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694372074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598296047;
-	bh=XHlvvAtBERuOAyXXY6dPcG5or9pk/gOG5ME94ky5VIQ=;
+	s=default; t=1598296052;
+	bh=nLniJlTDFKmUOo3eOmVq9DwRia6k7TDCH2R4PPuXY5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ivioQZW4+v7CqPp850Ib13U3g7ll9APbDzelO825q4eWt7rOaLGK2d5aptknjITJV
-	 9+vrt2UUVfYpSwUaGfDNK/uAuA7hqtE9XT6/WQwjqqCpI4PL9VMjwDdf07q2n5XPhS
-	 h3dVR73mQ1guaoaaQYFR4ZtGbCYcFX2ZQ10R2qoQ=
+	b=nnLupr3ryqcodviQWIVtkOirvtoWeSX0JB3aQb3PvX0vdF/aSTnd625u5lR9+788I
+	 KIY+cKfBJjJR7L4Lkdqabzl07rDcC8sijpg5lL2iTBQhf+uggeOsUvzY79KvaPE0br
+	 Zyn8DCKfzGb9V6OxtOc9mBpQfBbqKWOJmU72UNks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgHXTHZ (ORCPT
+        id S1726971AbgHXTHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:07:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57078 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 15:07:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbgHXTHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:07:22 -0400
+        id S1725904AbgHXTH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 15:07:27 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87C9F2078D;
-        Mon, 24 Aug 2020 19:07:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD02C207D3;
+        Mon, 24 Aug 2020 19:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598296041;
-        bh=XHlvvAtBERuOAyXXY6dPcG5or9pk/gOG5ME94ky5VIQ=;
+        s=default; t=1598296046;
+        bh=nLniJlTDFKmUOo3eOmVq9DwRia6k7TDCH2R4PPuXY5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pk63FqLps1QHpow/V9UpEWLK7ynLybVvcGCXAYSHNPZQQKVWQ+6DNVWwsD3KOi1Yj
-         XceVtBLA0n83YgD16ApL8lIttezVrPDKM8YkaTL+2c9mgxYWLrB++UqhMd2SJ8yYFV
-         w98xPVO1LxCi3P6So88BaDiQgK68xDhvu9vUuRO4=
+        b=SpRIrraxKRL7eRfOgA0Z4Yhx2UBDsbhCoUYaxVQFKXY3usMN3fkTnARXaHlOhoizX
+         +nJnallTE17RkkodaiWEWrerOmxfE0setuV1R2xz4XhbDGZSfVc09X08z3NXOtKsUr
+         MYtgdLrdbx3WjYQL/dA76vEl2HwiCvddYCfH6gsg=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -58,9 +58,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 02/16] dt-bindings: mtd: gpmi-nand: Fix matching of clocks on different SoCs
-Date:   Mon, 24 Aug 2020 21:06:47 +0200
-Message-Id: <20200824190701.8447-2-krzk@kernel.org>
+Subject: [PATCH 03/16] arm64: dts: imx8mm-beacon-som.dtsi: Align regulator names with schema
+Date:   Mon, 24 Aug 2020 21:06:48 +0200
+Message-Id: <20200824190701.8447-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200824190701.8447-1-krzk@kernel.org>
 References: <20200824190701.8447-1-krzk@kernel.org>
@@ -69,121 +69,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver requires different amount of clocks for different SoCs.  Describe
-these requirements properly to fix dtbs_check warnings like:
+Device tree schema expects regulator names to be lowercase.  This fixes
+dtbs_check warnings like:
 
-    arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
+    arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b: regulators:LDO1:regulator-name:0: 'LDO1' does not match '^ldo[1-6]$'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../devicetree/bindings/mtd/gpmi-nand.yaml    | 76 +++++++++++++++----
- 1 file changed, 61 insertions(+), 15 deletions(-)
+ .../boot/dts/freescale/imx8mn-ddr4-evk.dts    | 22 +++++++++----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-index 28ff8c581837..9d764e654e1d 100644
---- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-+++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-@@ -9,9 +9,6 @@ title: Freescale General-Purpose Media Interface (GPMI) binding
- maintainers:
-   - Han Xu <han.xu@nxp.com>
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+index a1e5483dbbbe..299caed5d46e 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+@@ -60,7 +60,7 @@
  
--allOf:
--  - $ref: "nand-controller.yaml"
--
- description: |
-   The GPMI nand controller provides an interface to control the NAND
-   flash chips. The device tree may optionally contain sub-nodes
-@@ -58,22 +55,10 @@ properties:
-   clocks:
-     minItems: 1
-     maxItems: 5
--    items:
--      - description: SoC gpmi io clock
--      - description: SoC gpmi apb clock
--      - description: SoC gpmi bch clock
--      - description: SoC gpmi bch apb clock
--      - description: SoC per1 bch clock
+ 		regulators {
+ 			buck1_reg: BUCK1 {
+-				regulator-name = "BUCK1";
++				regulator-name = "buck1";
+ 				regulator-min-microvolt = <700000>;
+ 				regulator-max-microvolt = <1300000>;
+ 				regulator-boot-on;
+@@ -69,7 +69,7 @@
+ 			};
  
-   clock-names:
-     minItems: 1
-     maxItems: 5
--    items:
--      - const: gpmi_io
--      - const: gpmi_apb
--      - const: gpmi_bch
--      - const: gpmi_bch_apb
--      - const: per1_bch
+ 			buck2_reg: BUCK2 {
+-				regulator-name = "BUCK2";
++				regulator-name = "buck2";
+ 				regulator-min-microvolt = <700000>;
+ 				regulator-max-microvolt = <1300000>;
+ 				regulator-boot-on;
+@@ -79,14 +79,14 @@
  
-   fsl,use-minimum-ecc:
-     type: boolean
-@@ -107,6 +92,67 @@ required:
+ 			buck3_reg: BUCK3 {
+ 				// BUCK5 in datasheet
+-				regulator-name = "BUCK3";
++				regulator-name = "buck3";
+ 				regulator-min-microvolt = <700000>;
+ 				regulator-max-microvolt = <1350000>;
+ 			};
  
- unevaluatedProperties: false
+ 			buck4_reg: BUCK4 {
+ 				// BUCK6 in datasheet
+-				regulator-name = "BUCK4";
++				regulator-name = "buck4";
+ 				regulator-min-microvolt = <3000000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+@@ -95,7 +95,7 @@
  
-+allOf:
-+  - $ref: "nand-controller.yaml"
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - fsl,imx23-gpmi-nand
-+              - fsl,imx28-gpmi-nand
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: SoC gpmi io clock
-+        clock-names:
-+          items:
-+            - const: gpmi_io
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - fsl,imx6q-gpmi-nand
-+              - fsl,imx6sx-gpmi-nand
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: SoC gpmi io clock
-+            - description: SoC gpmi apb clock
-+            - description: SoC gpmi bch clock
-+            - description: SoC gpmi bch apb clock
-+            - description: SoC per1 bch clock
-+        clock-names:
-+          items:
-+            - const: gpmi_io
-+            - const: gpmi_apb
-+            - const: gpmi_bch
-+            - const: gpmi_bch_apb
-+            - const: per1_bch
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: fsl,imx7d-gpmi-nand
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: SoC gpmi io clock
-+            - description: SoC gpmi bch apb clock
-+        clock-names:
-+          minItems: 2
-+          maxItems: 2
-+          items:
-+            - const: gpmi_io
-+            - const: gpmi_bch_apb
-+
- examples:
-   - |
-     nand-controller@8000c000 {
+ 			buck5_reg: BUCK5 {
+ 				// BUCK7 in datasheet
+-				regulator-name = "BUCK5";
++				regulator-name = "buck5";
+ 				regulator-min-microvolt = <1605000>;
+ 				regulator-max-microvolt = <1995000>;
+ 				regulator-boot-on;
+@@ -104,7 +104,7 @@
+ 
+ 			buck6_reg: BUCK6 {
+ 				// BUCK8 in datasheet
+-				regulator-name = "BUCK6";
++				regulator-name = "buck6";
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <1400000>;
+ 				regulator-boot-on;
+@@ -112,7 +112,7 @@
+ 			};
+ 
+ 			ldo1_reg: LDO1 {
+-				regulator-name = "LDO1";
++				regulator-name = "ldo1";
+ 				regulator-min-microvolt = <1600000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+@@ -120,7 +120,7 @@
+ 			};
+ 
+ 			ldo2_reg: LDO2 {
+-				regulator-name = "LDO2";
++				regulator-name = "ldo2";
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <900000>;
+ 				regulator-boot-on;
+@@ -128,7 +128,7 @@
+ 			};
+ 
+ 			ldo3_reg: LDO3 {
+-				regulator-name = "LDO3";
++				regulator-name = "ldo3";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+@@ -136,7 +136,7 @@
+ 			};
+ 
+ 			ldo4_reg: LDO4 {
+-				regulator-name = "LDO4";
++				regulator-name = "ldo4";
+ 				regulator-min-microvolt = <900000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-boot-on;
+@@ -144,7 +144,7 @@
+ 			};
+ 
+ 			ldo6_reg: LDO6 {
+-				regulator-name = "LDO6";
++				regulator-name = "ldo6";
+ 				regulator-min-microvolt = <900000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-boot-on;
 -- 
 2.17.1
 
