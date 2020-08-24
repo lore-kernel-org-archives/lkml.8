@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AD0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAD92177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D05B2177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258264;
-	bh=efTXhLA1Wenoo87S0O0Fb0+ibbIN/NCes9dGiWbG7gs=;
+	s=default; t=1598258270;
+	bh=+g15zvWxMTTR9tUD6wqrpflJZ0HmGnEdloiRcOmDlDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zVw8bllHXffPGJRHx4sZpuACgDQksaASVDS9BOC4usu8olB3AN5tCGB6vzZh8Roev
-	 2Ji5KNyj7OFthK7j7AOalxh8AuiI80jT49HMw/OJEkWJkmP4Za7+WQuUY/pfEblr6v
-	 TlB92PrjLNS4qcxUqsEJGXK6wakTe/bLYIEgAsr0=
+	b=Rz1aH/V8bmq1KSFWXnSnLLFBPcHivsQeyGzOzqdTjpyoscIansTJFtfNZCpIlqOe9
+	 tEkuDN1Erl2EQYivYyDLeq/XrTl3KMbjusK1Iriln8P64PIIB6mzplpuQQKns1k3Zt
+	 QNWMtQ0Q6SSxrK3ZVn4TDcZpBhon9SpYqh0kUJ5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgHXIhm (ORCPT
+        id S1728115AbgHXIhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:37:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51108 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:37:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbgHXIhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:37:35 -0400
+        id S1728433AbgHXIhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:37:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 476872177B;
-        Mon, 24 Aug 2020 08:37:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A6BB207DF;
+        Mon, 24 Aug 2020 08:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258254;
-        bh=efTXhLA1Wenoo87S0O0Fb0+ibbIN/NCes9dGiWbG7gs=;
+        s=default; t=1598258262;
+        bh=+g15zvWxMTTR9tUD6wqrpflJZ0HmGnEdloiRcOmDlDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H3TWumbRmXoMt/F2vFjNHSVy6kSZu48qx0kZzGKBpd5IX5Fy3dThtLCf9WtUIubS0
-         ALhCGoR6PnPRxjFOk3difi14wqA0CXlYxmpjegyUH6z0mYfaTQeY/8ocR26Fh3GhCH
-         ar6KnYqxGo7RYoJueXxu6ZHem0t98D2+fWD0lm6k=
+        b=bcMi3o1Aj35zSqidte7CuUGxuKUGTQKTeB80ujB6I1ryhbCso11Aimb9ObnYvHsqm
+         077Id+dAA9Bm2kbMJMDF9e3pt0+iGdzP3Wp9SJmQqUB2CzrVs5ZgMm6ymZUrlM81RY
+         N6X9XEHpb0Bxa9nrW7WpyDzuzdrUPIVO0ssQQWIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Wiesner <jwiesner@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 132/148] bonding: fix active-backup failover for current ARP slave
-Date:   Mon, 24 Aug 2020 10:30:30 +0200
-Message-Id: <20200824082420.339995079@linuxfoundation.org>
+Subject: [PATCH 5.8 117/148] Revert "scsi: qla2xxx: Disable T10-DIF feature with FC-NVMe during probe"
+Date:   Mon, 24 Aug 2020 10:30:15 +0200
+Message-Id: <20200824082419.616434286@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -60,88 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Wiesner <jwiesner@suse.com>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 0410d07190961ac526f05085765a8d04d926545b ]
+[ Upstream commit dca93232b361d260413933903cd4bdbd92ebcc7f ]
 
-When the ARP monitor is used for link detection, ARP replies are
-validated for all slaves (arp_validate=3) and fail_over_mac is set to
-active, two slaves of an active-backup bond may get stuck in a state
-where both of them are active and pass packets that they receive to
-the bond. This state makes IPv6 duplicate address detection fail. The
-state is reached thus:
-1. The current active slave goes down because the ARP target
-   is not reachable.
-2. The current ARP slave is chosen and made active.
-3. A new slave is enslaved. This new slave becomes the current active
-   slave and can reach the ARP target.
-As a result, the current ARP slave stays active after the enslave
-action has finished and the log is littered with "PROBE BAD" messages:
-> bond0: PROBE: c_arp ens10 && cas ens11 BAD
-The workaround is to remove the slave with "going back" status from
-the bond and re-enslave it. This issue was encountered when DPDK PMD
-interfaces were being enslaved to an active-backup bond.
+FCP T10-PI and NVMe features are independent of each other. This patch
+allows both features to co-exist.
 
-I would be possible to fix the issue in bond_enslave() or
-bond_change_active_slave() but the ARP monitor was fixed instead to
-keep most of the actions changing the current ARP slave in the ARP
-monitor code. The current ARP slave is set as inactive and backup
-during the commit phase. A new state, BOND_LINK_FAIL, has been
-introduced for slaves in the context of the ARP monitor. This allows
-administrators to see how slaves are rotated for sending ARP requests
-and attempts are made to find a new active slave.
+This reverts commit 5da05a26b8305a625bc9d537671b981795b46dab.
 
-Fixes: b2220cad583c9 ("bonding: refactor ARP active-backup monitor")
-Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/20200806111014.28434-12-njavali@marvell.com
+Fixes: 5da05a26b830 ("scsi: qla2xxx: Disable T10-DIF feature with FC-NVMe during probe")
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index f438e20fcda1f..500aa3e19a4c7 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2825,6 +2825,9 @@ static int bond_ab_arp_inspect(struct bonding *bond)
- 			if (bond_time_in_interval(bond, last_rx, 1)) {
- 				bond_propose_link_state(slave, BOND_LINK_UP);
- 				commit++;
-+			} else if (slave->link == BOND_LINK_BACK) {
-+				bond_propose_link_state(slave, BOND_LINK_FAIL);
-+				commit++;
- 			}
- 			continue;
- 		}
-@@ -2933,6 +2936,19 @@ static void bond_ab_arp_commit(struct bonding *bond)
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index e92fad99338cd..5c7c22d0fab4b 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -2829,10 +2829,6 @@ qla2x00_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	/* This may fail but that's ok */
+ 	pci_enable_pcie_error_reporting(pdev);
  
- 			continue;
- 
-+		case BOND_LINK_FAIL:
-+			bond_set_slave_link_state(slave, BOND_LINK_FAIL,
-+						  BOND_SLAVE_NOTIFY_NOW);
-+			bond_set_slave_inactive_flags(slave,
-+						      BOND_SLAVE_NOTIFY_NOW);
-+
-+			/* A slave has just been enslaved and has become
-+			 * the current active slave.
-+			 */
-+			if (rtnl_dereference(bond->curr_active_slave))
-+				RCU_INIT_POINTER(bond->current_arp_slave, NULL);
-+			continue;
-+
- 		default:
- 			slave_err(bond->dev, slave->dev,
- 				  "impossible: link_new_state %d on slave\n",
-@@ -2983,8 +2999,6 @@ static bool bond_ab_arp_probe(struct bonding *bond)
- 			return should_notify_rtnl;
- 	}
- 
--	bond_set_slave_inactive_flags(curr_arp_slave, BOND_SLAVE_NOTIFY_LATER);
+-	/* Turn off T10-DIF when FC-NVMe is enabled */
+-	if (ql2xnvmeenable)
+-		ql2xenabledif = 0;
 -
- 	bond_for_each_slave_rcu(bond, slave, iter) {
- 		if (!found && !before && bond_slave_is_up(slave))
- 			before = slave;
+ 	ha = kzalloc(sizeof(struct qla_hw_data), GFP_KERNEL);
+ 	if (!ha) {
+ 		ql_log_pci(ql_log_fatal, pdev, 0x0009,
 -- 
 2.25.1
 
