@@ -2,57 +2,58 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFADC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC9DC2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A382074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598260946;
-	bh=nstCH6mn71s6+t+b0/T4hwQQsqc+bqiv7+SPeqwEVLc=;
+	s=default; t=1598260957;
+	bh=3OTZlymDPzV28010Bf0ZDLIKHdyjPso850u1d4l7nig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ITcFu7ht3Y34K0TKXbaOt8snmQfbhWblOK/jlLw3atBVCiOvpIXg/2LiNMhy0VJYV
-	 ey5RKWuqn0p+28zfY5Q+54DFF+dGbIKBy4yJJMoaJsoIAtH7wAk1tOw8xnishz+fNe
-	 D4DPRxYUIyPeXU9G/WunlcHwhfgyz/2Ee8SqqNA0=
+	b=ZnoxNNjWoPqqgggCPnJjTTHPdj+Fb6vjpIdNTMe1OhObcgAa8extemQb7bK7hCK3J
+	 WT7iAcC2RlDk4uJuXZNqQCMgp83JXeZk+BvpMGcJead3xveUAeTM/NhvNKu2YWpCfc
+	 AC4wwdv685JjsLPWKLw8LyoC1EsfS1533gpwU7iI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbgHXJWW (ORCPT
+        id S1729885AbgHXJWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:22:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36760 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:22:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730395AbgHXIzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:10 -0400
+        id S1730369AbgHXIzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:55:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32AF2204FD;
-        Mon, 24 Aug 2020 08:55:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 881D22072D;
+        Mon, 24 Aug 2020 08:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259309;
-        bh=nstCH6mn71s6+t+b0/T4hwQQsqc+bqiv7+SPeqwEVLc=;
+        s=default; t=1598259307;
+        bh=3OTZlymDPzV28010Bf0ZDLIKHdyjPso850u1d4l7nig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FbbM0E47TJ1z24JO9GWb5IJCWFXsdlDsp+DQcH7XqACugfJ1nXvAWHea14Rq/mqOr
-         1Q0BdH+CuSCTEb0TGZB7apZ+TLClp9vK1A0qn2oH0tCNuOIYWTKF21xt2ENufBCarh
-         rBV30cJD+cMUlY2+SIGtGSzVJB+PS6MnZRpk5f7U=
+        b=AjzUtu+7uLOSVeQTG97DUL/ErClYESYDhOtym/Kl7eYypZ1g9i7gA3vJ2UemPmcvF
+         yUFZ6IEGgvvH+rp0b9c1ev79Jn0sVnwn/24tUhUpfucmLNMRQ1CrvfhKhOvvV/gguk
+         CEWeeuzognAe7hsQwFwfPE8xDmQXVmSuyElWqfa0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 10/71] romfs: fix uninitialized memory leak in romfs_dev_read()
-Date:   Mon, 24 Aug 2020 10:31:01 +0200
-Message-Id: <20200824082356.398552400@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 01/71] drm/vgem: Replace opencoded version of drm_gem_dumb_map_offset()
+Date:   Mon, 24 Aug 2020 10:30:52 +0200
+Message-Id: <20200824082355.941463987@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,55 +62,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit bcf85fcedfdd17911982a3e3564fcfec7b01eebd upstream.
+[ Upstream commit 119c53d2d4044c59c450c4f5a568d80b9d861856 ]
 
-romfs has a superblock field that limits the size of the filesystem; data
-beyond that limit is never accessed.
+drm_gem_dumb_map_offset() now exists and does everything
+vgem_gem_dump_map does and *ought* to do.
 
-romfs_dev_read() fetches a caller-supplied number of bytes from the
-backing device.  It returns 0 on success or an error code on failure;
-therefore, its API can't represent short reads, it's all-or-nothing.
+In particular, vgem_gem_dumb_map() was trying to reject mmapping an
+imported dmabuf by checking the existence of obj->filp. Unfortunately,
+we always allocated an obj->filp, even if unused for an imported dmabuf.
+Instead, the drm_gem_dumb_map_offset(), since commit 90378e589192
+("drm/gem: drm_gem_dumb_map_offset(): reject dma-buf"), uses the
+obj->import_attach to reject such invalid mmaps.
 
-However, when romfs_dev_read() detects that the requested operation would
-cross the filesystem size limit, it currently silently truncates the
-requested number of bytes.  This e.g.  means that when the content of a
-file with size 0x1000 starts one byte before the filesystem size limit,
-->readpage() will only fill a single byte of the supplied page while
-leaving the rest uninitialized, leaking that uninitialized memory to
-userspace.
+This prevents vgem from allowing userspace mmapping the dumb handle and
+attempting to incorrectly fault in remote pages belonging to another
+device, where there may not even be a struct page.
 
-Fix it by returning an error code instead of truncating the read when the
-requested read operation would go beyond the end of the filesystem.
+v2: Use the default drm_gem_dumb_map_offset() callback
 
-Fixes: da4458bda237 ("NOMMU: Make it possible for RomFS to use MTD devices directly")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: David Howells <dhowells@redhat.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200818013202.2246365-1-jannh@google.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: af33a9190d02 ("drm/vgem: Enable dmabuf import interfaces")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: <stable@vger.kernel.org> # v4.13+
+Link: https://patchwork.freedesktop.org/patch/msgid/20200708154911.21236-1-chris@chris-wilson.co.uk
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/romfs/storage.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpu/drm/vgem/vgem_drv.c | 27 ---------------------------
+ 1 file changed, 27 deletions(-)
 
---- a/fs/romfs/storage.c
-+++ b/fs/romfs/storage.c
-@@ -221,10 +221,8 @@ int romfs_dev_read(struct super_block *s
- 	size_t limit;
+diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
+index 4709f08f39e49..1c1a435d354bc 100644
+--- a/drivers/gpu/drm/vgem/vgem_drv.c
++++ b/drivers/gpu/drm/vgem/vgem_drv.c
+@@ -219,32 +219,6 @@ static int vgem_gem_dumb_create(struct drm_file *file, struct drm_device *dev,
+ 	return 0;
+ }
  
- 	limit = romfs_maxsize(sb);
--	if (pos >= limit)
-+	if (pos >= limit || buflen > limit - pos)
- 		return -EIO;
--	if (buflen > limit - pos)
--		buflen = limit - pos;
+-static int vgem_gem_dumb_map(struct drm_file *file, struct drm_device *dev,
+-			     uint32_t handle, uint64_t *offset)
+-{
+-	struct drm_gem_object *obj;
+-	int ret;
+-
+-	obj = drm_gem_object_lookup(file, handle);
+-	if (!obj)
+-		return -ENOENT;
+-
+-	if (!obj->filp) {
+-		ret = -EINVAL;
+-		goto unref;
+-	}
+-
+-	ret = drm_gem_create_mmap_offset(obj);
+-	if (ret)
+-		goto unref;
+-
+-	*offset = drm_vma_node_offset_addr(&obj->vma_node);
+-unref:
+-	drm_gem_object_put_unlocked(obj);
+-
+-	return ret;
+-}
+-
+ static struct drm_ioctl_desc vgem_ioctls[] = {
+ 	DRM_IOCTL_DEF_DRV(VGEM_FENCE_ATTACH, vgem_fence_attach_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+ 	DRM_IOCTL_DEF_DRV(VGEM_FENCE_SIGNAL, vgem_fence_signal_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+@@ -438,7 +412,6 @@ static struct drm_driver vgem_driver = {
+ 	.fops				= &vgem_driver_fops,
  
- #ifdef CONFIG_ROMFS_ON_MTD
- 	if (sb->s_mtd)
+ 	.dumb_create			= vgem_gem_dumb_create,
+-	.dumb_map_offset		= vgem_gem_dumb_map,
+ 
+ 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+ 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+-- 
+2.25.1
+
 
 
