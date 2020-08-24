@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB503C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC27D2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7066D2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598288915;
-	bh=7uPHlcSc/lW+fjqxo4DZS+5UgX9DErVo24aiuWbYjEM=;
+	s=default; t=1598288920;
+	bh=gwBS48L6tFPzDRUM7F1AmJTB1wbMcGF55aDYjN5mE/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fyphOff+FKpnmQabyIDmipUeziyWengJ1MYFIB0gWHn2ERrsLKdN7T46G1vQx7L47
-	 daHomUcQPQveSLXOQcjqMzdd1dUMcZdj2U1wem+8+SUS+AUixKNHWBnTilBgzg2aC+
-	 rzzm8SajP98OKB+RtVle9NeuFilbEpBdaRJVZm5w=
+	b=04z9uHzbGCNU/6KORct0rwjhDd/rA88O0KlBva05KGdUMfF0gXVODUmtwLNRgyvFZ
+	 6JQ5u+MSEYZoC9yrLczcm9H0+B0MqBFs/MUNe0ri+xFlKC+Zta+hWfsWkoVatiIy37
+	 lDjk+adogpTDINKKxmyXk/mtX2cppbGDr2rMsHvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgHXRIe (ORCPT
+        id S1728019AbgHXRIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:08:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39694 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:08:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728239AbgHXQiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728432AbgHXQiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:38:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAD552310A;
-        Mon, 24 Aug 2020 16:37:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71F3E2310D;
+        Mon, 24 Aug 2020 16:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287059;
-        bh=7uPHlcSc/lW+fjqxo4DZS+5UgX9DErVo24aiuWbYjEM=;
+        s=default; t=1598287062;
+        bh=gwBS48L6tFPzDRUM7F1AmJTB1wbMcGF55aDYjN5mE/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tx2SwJCmvtkViCYhbk9PNFVD7xoKZ2WJFon3zIqfhT2j8RelbNes+LxnBmWfFGL+D
-         wPHycFWhKuDI8mGZgpRLtgvE66MvBa6Ejji0bfmk0XkJwmZIfO4cHuADEwVJQB6bKq
-         iDwoSn6tfXHs/T84sTL+oAn0KEnRMxH4dY1rVWRU=
+        b=ILBUaqfEbdRgGaRDjhzuDgtBbyJyX34c1Bpg1xbmaVq6yPTvPSGp/z+TvW4m4B2TG
+         aM/6xmA4tWtDpBI7F1ntHbSZu9WcO4XcLD3zouoOe17Dx0MKWIzrfvCt5ZcssCn8T0
+         3851e2qYluKHl6NnFmlX2edPUhYWpFe2EPA4gtQ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guchun Chen <guchun.chen@amd.com>, Tao Zhou <tao.zhou1@amd.com>,
+Cc:     Jiansong Chen <Jiansong.Chen@amd.com>,
+        Kenneth Feng <kenneth.feng@amd.com>,
+        Tao Zhou <tao.zhou1@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 47/54] drm/amdgpu: fix NULL pointer access issue when unloading driver
-Date:   Mon, 24 Aug 2020 12:36:26 -0400
-Message-Id: <20200824163634.606093-47-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 49/54] Revert "drm/amdgpu: disable gfxoff for navy_flounder"
+Date:   Mon, 24 Aug 2020 12:36:28 -0400
+Message-Id: <20200824163634.606093-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
@@ -60,82 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guchun Chen <guchun.chen@amd.com>
+From: Jiansong Chen <Jiansong.Chen@amd.com>
 
-[ Upstream commit 1a68d96f81b8e7eb2a121fbf9abf9e5974e58832 ]
+[ Upstream commit da2446b66b5e2c7f3ab63912c8d999810e35e8b3 ]
 
-When unloading driver by "modprobe -r amdgpu", one NULL pointer
-dereference bug occurs in ras debugfs releasing. The cause is the
-duplicated debugfs_remove, as drm debugfs_root dir has been cleaned
-up already by drm_minor_unregister.
+This reverts commit 9c9b17a7d19a8e21db2e378784fff1128b46c9d3.
+Newly released sdma fw (51.52) provides a fix for the issue.
 
-BUG: kernel NULL pointer dereference, address: 00000000000000a0
-PGD 0 P4D 0
-Oops: 0002 [#1] SMP PTI
-CPU: 11 PID: 1526 Comm: modprobe Tainted: G           OE     5.6.0-guchchen #1
-Hardware name: System manufacturer System Product Name/TUF Z370-PLUS GAMING II, BIOS 0411 09/21/2018
-RIP: 0010:down_write+0x15/0x40
-Code: eb de e8 7e 17 72 ff cc cc cc cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 53 48 89 fb e8 92
-d8 ff ff 31 c0 ba 01 00 00 00 <f0> 48 0f b1 13 75 0f 65 48 8b 04 25 c0 8b 01 00 48 89 43 08 5b c3
-RSP: 0018:ffffb1590386fcd0 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 00000000000000a0 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffffffff85b2fcc2 RDI: 00000000000000a0
-RBP: ffffb1590386fd30 R08: ffffffff85b2fcc2 R09: 000000000002b3c0
-R10: ffff97a330618c40 R11: 00000000000005f6 R12: ffff97a3481beb40
-R13: 00000000000000a0 R14: ffff97a3481beb40 R15: 0000000000000000
-FS:  00007fb11a717540(0000) GS:ffff97a376cc0000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000000000a0 CR3: 00000004066d6006 CR4: 00000000003606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- simple_recursive_removal+0x63/0x370
- ? debugfs_remove+0x60/0x60
- debugfs_remove+0x40/0x60
- amdgpu_ras_fini+0x82/0x230 [amdgpu]
- ? __kernfs_remove.part.17+0x101/0x1f0
- ? kernfs_name_hash+0x12/0x80
- amdgpu_device_fini+0x1c0/0x580 [amdgpu]
- amdgpu_driver_unload_kms+0x3e/0x70 [amdgpu]
- amdgpu_pci_remove+0x36/0x60 [amdgpu]
- pci_device_remove+0x3b/0xb0
- device_release_driver_internal+0xe5/0x1c0
- driver_detach+0x46/0x90
- bus_remove_driver+0x58/0xd0
- pci_unregister_driver+0x29/0x90
- amdgpu_exit+0x11/0x25 [amdgpu]
- __x64_sys_delete_module+0x13d/0x210
- do_syscall_64+0x5f/0x250
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Guchun Chen <guchun.chen@amd.com>
+Signed-off-by: Jiansong Chen <Jiansong.Chen@amd.com>
+Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
 Reviewed-by: Tao Zhou <tao.zhou1@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-index cd18596b47d33..49c44178ddfae 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-@@ -1170,7 +1170,6 @@ void amdgpu_ras_debugfs_remove(struct amdgpu_device *adev,
- 	if (!obj || !obj->ent)
- 		return;
- 
--	debugfs_remove(obj->ent);
- 	obj->ent = NULL;
- 	put_obj(obj);
- }
-@@ -1184,7 +1183,6 @@ static void amdgpu_ras_debugfs_remove_all(struct amdgpu_device *adev)
- 		amdgpu_ras_debugfs_remove(adev, &obj->head);
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+index 8ee94f4b9b20f..ff94f756978d5 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+@@ -681,9 +681,6 @@ static void gfx_v10_0_check_gfxoff_flag(struct amdgpu_device *adev)
+ 		if (!gfx_v10_0_navi10_gfxoff_should_enable(adev))
+ 			adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
+ 		break;
+-	case CHIP_NAVY_FLOUNDER:
+-		adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
+-		break;
+ 	default:
+ 		break;
  	}
- 
--	debugfs_remove_recursive(con->dir);
- 	con->dir = NULL;
- }
- /* debugfs end */
 -- 
 2.25.1
 
