@@ -5,57 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE005C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82F6920738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6902C206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261555;
-	bh=TYRNxJgDF1sQxxuNs8NuMg2bvxa6NkRqH6CyUWD6aeU=;
+	s=default; t=1598261557;
+	bh=RPfWYGi+QKddpDu5XlK35oVwvWksJylz921MQD9a08I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+QViX8Ejk8AAHsujBplssZjWq5nW25S6BDJhBSagyeeV/LK7wO+HClCgM06XYqsa
-	 VegpYqdcCQaA8RPcaCsEQHQAPezrUeHGxc6/ymtV+K64L7O4ua1NO93amKTmdNGFV9
-	 lJ8Bc1RV0RfMV3ytKuVBWiZqWPugHd5RHaKp+zac=
+	b=tH5+WWaTZH+vstEk3JSYlciWTrM2Fhaw9TbZiul/jXEZ0cd4nOpTKa40lX0XDgvpn
+	 zUe2NaRu8F1TF0OsuRPBDmVidS2Qige1RDB/hMnlxR/Alo68Rs6cAse1P41goCgsU6
+	 e1bGmkVtG5MEm7I54Evap7VsFedPyRu3M4U/CQLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbgHXJcb (ORCPT
+        id S1729796AbgHXIt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:32:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53070 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:49:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbgHXIuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:50:00 -0400
+        id S1729756AbgHXItw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:49:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 343EC20FC3;
-        Mon, 24 Aug 2020 08:49:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A6032075B;
+        Mon, 24 Aug 2020 08:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258999;
-        bh=TYRNxJgDF1sQxxuNs8NuMg2bvxa6NkRqH6CyUWD6aeU=;
+        s=default; t=1598258991;
+        bh=RPfWYGi+QKddpDu5XlK35oVwvWksJylz921MQD9a08I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z+l717PU5uUgOsd6ux1GA43CjKXQIoqDK2Fmn7F5cxMlrvuBJnctXivjFkb+e2zIi
-         rqliD5v5yiWAz2WZS08oi8P4u5hW/8kw6Zr++OR2b7xNfubFrj1UfXJ+F0uky3r+If
-         Nty8WbDx5MBzgS/R0jnd2L1E4MjkQsfpeTDBSP9M=
+        b=M3CQpOi7qTZOVfICZJY0mytBs/QmcdoW/8GAEpz7v8K4I+HE1G1cutvAX1Vtal1By
+         n6XgdRmc6i3hFIulr9Sz32tTlnraLidSlTyuF34vb2Yz74X7i+EwEYGMNptRKE+boS
+         avnK8IsJG9D8FluDCJQBGJX0BaUKSwg4E8p8Aqss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Liu Ying <victor.liu@nxp.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 01/33] drm/imx: imx-ldb: Disable both channels for split mode in enc->disable()
-Date:   Mon, 24 Aug 2020 10:30:57 +0200
-Message-Id: <20200824082346.580405012@linuxfoundation.org>
+        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 05/33] watchdog: f71808e_wdt: remove use of wrong watchdog_info option
+Date:   Mon, 24 Aug 2020 10:31:01 +0200
+Message-Id: <20200824082346.791664700@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
 References: <20200824082346.498653578@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,57 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Ying <victor.liu@nxp.com>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-[ Upstream commit 3b2a999582c467d1883716b37ffcc00178a13713 ]
+[ Upstream commit 802141462d844f2e6a4d63a12260d79b7afc4c34 ]
 
-Both of the two LVDS channels should be disabled for split mode
-in the encoder's ->disable() callback, because they are enabled
-in the encoder's ->enable() callback.
+The flags that should be or-ed into the watchdog_info.options by drivers
+all start with WDIOF_, e.g. WDIOF_SETTIMEOUT, which indicates that the
+driver's watchdog_ops has a usable set_timeout.
 
-Fixes: 6556f7f82b9c ("drm: imx: Move imx-drm driver out of staging")
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Liu Ying <victor.liu@nxp.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+WDIOC_SETTIMEOUT was used instead, which expands to 0xc0045706, which
+equals:
+
+   WDIOF_FANFAULT | WDIOF_EXTERN1 | WDIOF_PRETIMEOUT | WDIOF_ALARMONLY |
+   WDIOF_MAGICCLOSE | 0xc0045000
+
+These were so far indicated to userspace on WDIOC_GETSUPPORT.
+As the driver has not yet been migrated to the new watchdog kernel API,
+the constant can just be dropped without substitute.
+
+Fixes: 96cb4eb019ce ("watchdog: f71808e_wdt: new watchdog driver for Fintek F71808E and F71882FG")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20200611191750.28096-4-a.fatoum@pengutronix.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/imx/imx-ldb.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/watchdog/f71808e_wdt.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/imx/imx-ldb.c b/drivers/gpu/drm/imx/imx-ldb.c
-index 31ca56e593f58..b9dc2ef64ed88 100644
---- a/drivers/gpu/drm/imx/imx-ldb.c
-+++ b/drivers/gpu/drm/imx/imx-ldb.c
-@@ -305,6 +305,7 @@ static void imx_ldb_encoder_disable(struct drm_encoder *encoder)
- {
- 	struct imx_ldb_channel *imx_ldb_ch = enc_to_imx_ldb_ch(encoder);
- 	struct imx_ldb *ldb = imx_ldb_ch->ldb;
-+	int dual = ldb->ldb_ctrl & LDB_SPLIT_MODE_EN;
- 	int mux, ret;
+diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
+index 3577e356e08cc..2b12ef019ae02 100644
+--- a/drivers/watchdog/f71808e_wdt.c
++++ b/drivers/watchdog/f71808e_wdt.c
+@@ -642,8 +642,7 @@ static int __init watchdog_init(int sioaddr)
+ 	 * into the module have been registered yet.
+ 	 */
+ 	watchdog.sioaddr = sioaddr;
+-	watchdog.ident.options = WDIOC_SETTIMEOUT
+-				| WDIOF_MAGICCLOSE
++	watchdog.ident.options = WDIOF_MAGICCLOSE
+ 				| WDIOF_KEEPALIVEPING
+ 				| WDIOF_CARDRESET;
  
- 	/*
-@@ -321,14 +322,14 @@ static void imx_ldb_encoder_disable(struct drm_encoder *encoder)
- 
- 	drm_panel_disable(imx_ldb_ch->panel);
- 
--	if (imx_ldb_ch == &ldb->channel[0])
-+	if (imx_ldb_ch == &ldb->channel[0] || dual)
- 		ldb->ldb_ctrl &= ~LDB_CH0_MODE_EN_MASK;
--	else if (imx_ldb_ch == &ldb->channel[1])
-+	if (imx_ldb_ch == &ldb->channel[1] || dual)
- 		ldb->ldb_ctrl &= ~LDB_CH1_MODE_EN_MASK;
- 
- 	regmap_write(ldb->regmap, IOMUXC_GPR2, ldb->ldb_ctrl);
- 
--	if (ldb->ldb_ctrl & LDB_SPLIT_MODE_EN) {
-+	if (dual) {
- 		clk_disable_unprepare(ldb->clk[0]);
- 		clk_disable_unprepare(ldb->clk[1]);
- 	}
 -- 
 2.25.1
 
