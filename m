@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A5AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A71C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 530C72078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB38206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289121;
-	bh=4YAmf4dSSuVzZiazHPkKQCjkpbtJsu85PXPDdQOTguM=;
+	s=default; t=1598289128;
+	bh=MCxPakGL9ABd29OvlEbGaratiOtRqPYeKeb2GiLmDas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LcoLzifvOmaOJwtbsbQedU/BawJKamNIkMr/naMZIyKWv0ThaC4Cxn+FuH2lg7jIV
-	 Iy0pTNR32fMcKOo07y3/MPSlm6dsNl3wc9F1P8TPSk66+37WCET3RFGlsOw+WQAliY
-	 i5y+Sf36el3Qt5U+05nt8HP2g1WYV2r5DNpHYtBc=
+	b=2hm2VBOZ0403wTy6TqV19G3YEh+SeuuZ5wZN1TyM8OTzyPWyl+yShoOPmUcPqpuyd
+	 15kp1XG5akmO/xjRRsYcoBUPKYJrZN6iWNB+Z07qganJgJpbcXb97oaMGI2uKHeDb4
+	 88FWa7Wvj11m3Gxq9oHcirCFwHitjAs5clplpaOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgHXRLu (ORCPT
+        id S1728372AbgHXRLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:11:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:11:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728391AbgHXQhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728393AbgHXQhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:37:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3A4722CE3;
-        Mon, 24 Aug 2020 16:37:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B600D22D74;
+        Mon, 24 Aug 2020 16:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287027;
-        bh=4YAmf4dSSuVzZiazHPkKQCjkpbtJsu85PXPDdQOTguM=;
+        s=default; t=1598287031;
+        bh=MCxPakGL9ABd29OvlEbGaratiOtRqPYeKeb2GiLmDas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wEUCQbUtLr/wCw1f/OGcUMUoNmpySg31ooDZdfe4m2GjNCvBaoRNAXpPvEfFgKXjz
-         SXlIva1lBudjtUBmX0gq3bUE6WeQaDdW+gUP875YISPf3oE3dbcxVJJfpzDiOJOYx+
-         kqOpp05JOcuBl1tF2e5smhElTki0IvEtsGoIr++I=
+        b=Q/+m0HhQ8GJQHjAc0anjx/ZlQuZVapRNL68QpPbiBL4dD6ubQpNgpzsysePOfzbKA
+         +GhFhfnz8TrIo3MkKhZVdbxZFAFoSd1RhFml4qlhKzYBCHeORbxyQJOFYGYs4gkavc
+         MS+Q3SpMBIVA5M7Jsp8H9cMCndhUzw0cgCw3+Egk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 24/54] selftests/bpf: Fix btf_dump test cases on 32-bit arches
-Date:   Mon, 24 Aug 2020 12:36:03 -0400
-Message-Id: <20200824163634.606093-24-sashal@kernel.org>
+Cc:     Xie He <xie.he.0141@gmail.com>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Martin Schiller <ms@dev.tdt.de>,
+        Andrew Hendry <andrew.hendry@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 27/54] drivers/net/wan/hdlc_x25: Added needed_headroom and a skb->len check
+Date:   Mon, 24 Aug 2020 12:36:06 -0400
+Message-Id: <20200824163634.606093-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
@@ -61,69 +62,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Xie He <xie.he.0141@gmail.com>
 
-[ Upstream commit eed7818adf03e874994b966aa33bc00204dd275a ]
+[ Upstream commit 77b981c82c1df7c7ad32a046f17f007450b46954 ]
 
-Fix btf_dump test cases by hard-coding BPF's pointer size of 8 bytes for cases
-where it's impossible to deterimne the pointer size (no long type in BTF). In
-cases where it's known, validate libbpf correctly determines it as 8.
+1. Added a skb->len check
 
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200813204945.1020225-6-andriin@fb.com
+This driver expects upper layers to include a pseudo header of 1 byte
+when passing down a skb for transmission. This driver will read this
+1-byte header. This patch added a skb->len check before reading the
+header to make sure the header exists.
+
+2. Added needed_headroom and set hard_header_len to 0
+
+When this driver transmits data,
+  first this driver will remove a pseudo header of 1 byte,
+  then the lapb module will prepend the LAPB header of 2 or 3 bytes.
+So the value of needed_headroom in this driver should be 3 - 1.
+
+Because this driver has no header_ops, according to the logic of
+af_packet.c, the value of hard_header_len should be 0.
+
+Reason of setting needed_headroom and hard_header_len at this place:
+
+This driver is written using the API of the hdlc module, the hdlc
+module enables this driver (the protocol driver) to run on any hardware
+that has a driver (the hardware driver) written using the API of the
+hdlc module.
+
+Two other hdlc protocol drivers - hdlc_ppp and hdlc_raw_eth, also set
+things like hard_header_len at this place. In hdlc_ppp, it sets
+hard_header_len after attach_hdlc_protocol and before setting dev->type.
+In hdlc_raw_eth, it sets hard_header_len by calling ether_setup after
+attach_hdlc_protocol and after memcpy the settings.
+
+3. Reset needed_headroom when detaching protocols (in hdlc.c)
+
+When detaching a protocol from a hardware device, the hdlc module will
+reset various parameters of the device (including hard_header_len) to
+the default values. We add needed_headroom here so that needed_headroom
+will also be reset.
+
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Cc: Andrew Hendry <andrew.hendry@gmail.com>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/bpf/prog_tests/btf_dump.c       | 27 ++++++++++++++-----
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ drivers/net/wan/hdlc.c     |  1 +
+ drivers/net/wan/hdlc_x25.c | 17 ++++++++++++++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/btf_dump.c b/tools/testing/selftests/bpf/prog_tests/btf_dump.c
-index cb33a7ee4e04f..39fb81d9daeb5 100644
---- a/tools/testing/selftests/bpf/prog_tests/btf_dump.c
-+++ b/tools/testing/selftests/bpf/prog_tests/btf_dump.c
-@@ -12,15 +12,16 @@ void btf_dump_printf(void *ctx, const char *fmt, va_list args)
- static struct btf_dump_test_case {
- 	const char *name;
- 	const char *file;
-+	bool known_ptr_sz;
- 	struct btf_dump_opts opts;
- } btf_dump_test_cases[] = {
--	{"btf_dump: syntax", "btf_dump_test_case_syntax", {}},
--	{"btf_dump: ordering", "btf_dump_test_case_ordering", {}},
--	{"btf_dump: padding", "btf_dump_test_case_padding", {}},
--	{"btf_dump: packing", "btf_dump_test_case_packing", {}},
--	{"btf_dump: bitfields", "btf_dump_test_case_bitfields", {}},
--	{"btf_dump: multidim", "btf_dump_test_case_multidim", {}},
--	{"btf_dump: namespacing", "btf_dump_test_case_namespacing", {}},
-+	{"btf_dump: syntax", "btf_dump_test_case_syntax", true, {}},
-+	{"btf_dump: ordering", "btf_dump_test_case_ordering", false, {}},
-+	{"btf_dump: padding", "btf_dump_test_case_padding", true, {}},
-+	{"btf_dump: packing", "btf_dump_test_case_packing", true, {}},
-+	{"btf_dump: bitfields", "btf_dump_test_case_bitfields", true, {}},
-+	{"btf_dump: multidim", "btf_dump_test_case_multidim", false, {}},
-+	{"btf_dump: namespacing", "btf_dump_test_case_namespacing", false, {}},
- };
+diff --git a/drivers/net/wan/hdlc.c b/drivers/net/wan/hdlc.c
+index dfc16770458d8..386ed2aa31fd9 100644
+--- a/drivers/net/wan/hdlc.c
++++ b/drivers/net/wan/hdlc.c
+@@ -230,6 +230,7 @@ static void hdlc_setup_dev(struct net_device *dev)
+ 	dev->max_mtu		 = HDLC_MAX_MTU;
+ 	dev->type		 = ARPHRD_RAWHDLC;
+ 	dev->hard_header_len	 = 16;
++	dev->needed_headroom	 = 0;
+ 	dev->addr_len		 = 0;
+ 	dev->header_ops		 = &hdlc_null_ops;
+ }
+diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
+index f70336bb6f524..f52b9fed05931 100644
+--- a/drivers/net/wan/hdlc_x25.c
++++ b/drivers/net/wan/hdlc_x25.c
+@@ -107,8 +107,14 @@ static netdev_tx_t x25_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	int result;
  
- static int btf_dump_all_types(const struct btf *btf,
-@@ -62,6 +63,18 @@ static int test_btf_dump_case(int n, struct btf_dump_test_case *t)
- 		goto done;
- 	}
- 
-+	/* tests with t->known_ptr_sz have no "long" or "unsigned long" type,
-+	 * so it's impossible to determine correct pointer size; but if they
-+	 * do, it should be 8 regardless of host architecture, becaues BPF
-+	 * target is always 64-bit
++	/* There should be a pseudo header of 1 byte added by upper layers.
++	 * Check to make sure it is there before reading it.
 +	 */
-+	if (!t->known_ptr_sz) {
-+		btf__set_pointer_size(btf, 8);
-+	} else {
-+		CHECK(btf__pointer_size(btf) != 8, "ptr_sz", "exp %d, got %zu\n",
-+		      8, btf__pointer_size(btf));
++	if (skb->len < 1) {
++		kfree_skb(skb);
++		return NETDEV_TX_OK;
 +	}
+ 
+-	/* X.25 to LAPB */
+ 	switch (skb->data[0]) {
+ 	case X25_IFACE_DATA:	/* Data to be transmitted */
+ 		skb_pull(skb, 1);
+@@ -294,6 +300,15 @@ static int x25_ioctl(struct net_device *dev, struct ifreq *ifr)
+ 			return result;
+ 
+ 		memcpy(&state(hdlc)->settings, &new_settings, size);
 +
- 	snprintf(out_file, sizeof(out_file), "/tmp/%s.output.XXXXXX", t->file);
- 	fd = mkstemp(out_file);
- 	if (CHECK(fd < 0, "create_tmp", "failed to create file: %d\n", fd)) {
++		/* There's no header_ops so hard_header_len should be 0. */
++		dev->hard_header_len = 0;
++		/* When transmitting data:
++		 * first we'll remove a pseudo header of 1 byte,
++		 * then we'll prepend an LAPB header of at most 3 bytes.
++		 */
++		dev->needed_headroom = 3 - 1;
++
+ 		dev->type = ARPHRD_X25;
+ 		call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE, dev);
+ 		netif_dormant_off(dev);
 -- 
 2.25.1
 
