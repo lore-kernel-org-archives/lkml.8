@@ -2,149 +2,92 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C19CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFCEC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08A25205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA08205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NErKgbZ/"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="XmZMWR3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgHXOeB (ORCPT
+        id S1726391AbgHXOfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 10:34:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34502 "EHLO
+        Mon, 24 Aug 2020 10:35:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbgHXOeA (ORCPT
+        with ESMTP id S1725916AbgHXOfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 10:34:00 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B57EFC061573;
-        Mon, 24 Aug 2020 07:33:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5TRjc06cjrAIo1ZfkhKU/1+DTjwdh2i/eNpjyD9I8Vk=; b=NErKgbZ/Bz82zy/5ueiDeI2Npx
-        ooHQfo1FKSEOsbBLrU/oArD5Yg/aR4AU/Uk37kR9ODYzLl5HbVBkTBeuQmGvHz+jaGsTkzm6ZdBFB
-        rRWNOTIVHriKms4E/79tlYjPJbLdPCqz33MIRsWrQOHJsRbxP3au1l2iiTvp5XDyUn8VjXeyHsIqh
-        BLP1q6DW5sA1nxT8kVw+02umkVPt5i6XpHo7p+c/0h5xPsQoweanQJwSbpMMUaHCZfr4hfgPL/OrB
-        Kwjk3eiW7HPz6+dvVPikbUnu5x5Dy0GA8f1j++5dgy5E920dmQOS23dMMSlRKI2fSr5ZGb6wEdVUP
-        lPuaPrhg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kADXd-0002ut-Vt; Mon, 24 Aug 2020 14:33:46 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4FC6B980DCC; Mon, 24 Aug 2020 16:33:44 +0200 (CEST)
-Date:   Mon, 24 Aug 2020 16:33:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Brendan Jackman <jackmanb@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Paul Renauld <renauld@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, pjt@google.com,
-        Jann Horn <jannh@google.com>, rafael.j.wysocki@intel.com,
-        thgarnie@chromium.org, KP Singh <kpsingh@google.com>,
-        paul.renauld.epfl@gmail.com
-Subject: Re: [RFC] security: replace indirect calls with static calls
-Message-ID: <20200824143344.GB3982@worktop.programming.kicks-ass.net>
-References: <20200820164753.3256899-1-jackmanb@chromium.org>
- <202008201435.97CF8296@keescook>
- <CA+i-1C0XEuWWRm5nMPWCzEPUao7rp5346Eotpt1A_S3Za3Wysw@mail.gmail.com>
+        Mon, 24 Aug 2020 10:35:15 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF2FC061573;
+        Mon, 24 Aug 2020 07:35:15 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f07f000b1b49965430c1c10.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:f000:b1b4:9965:430c:1c10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8B2601EC01A8;
+        Mon, 24 Aug 2020 16:35:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1598279712;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=nH6JxYKkLy9Kr2gBQqL9SmNvqMEUYVecW8js1CIex3c=;
+        b=XmZMWR3oYsrKFToD1jenecjVxz8XYJT81N2Wh2h+aBHJ8K2rkYSg5ql5BZxjynuEovDUIe
+        jJI0uVDIXtw7qWdBvQJ8745fCDF8TeICr6GyPkc8Yf9nPKz5vA7t7A5ojIchS3C8fmcG5T
+        C54weZYwKS+cxu3L0vT+bmVSpFsyRjQ=
+Date:   Mon, 24 Aug 2020 16:35:14 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rric@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS, edac: Calxeda Highbank, handover
+ maintenance to Andre Przywara
+Message-ID: <20200824143514.GC4732@zn.tnic>
+References: <20200824124931.2933-1-rric@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+i-1C0XEuWWRm5nMPWCzEPUao7rp5346Eotpt1A_S3Za3Wysw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200824124931.2933-1-rric@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 04:09:09PM +0200, Brendan Jackman wrote:
-
-> > > Why this trick with a switch statement? The table of static call is defined
-> > > at compile time. The number of hook callbacks that will be defined is
-> > > unknown at that time, and the table cannot be resized at runtime.  Static
-> > > calls do not define a conditional execution for a non-void function, so the
-> > > executed slots must be non-empty.  With this use of the table and the
-> > > switch, it is possible to jump directly to the first used slot and execute
-> > > all of the slots after. This essentially makes the entry point of the table
-> > > dynamic. Instead, it would also be possible to start from 0 and break after
-> > > the final populated slot, but that would require an additional conditional
-> > > after each slot.
-> >
-> > Instead of just "NOP", having the static branches perform a jump would
-> > solve this pretty cleanly, yes? Something like:
-> >
-> >         ret = DEFAULT_RET;
-> >
-> >         ret = A(args); <--- direct call, no retpoline
-> >         if ret != 0:
-> >                 goto out;
-> >
-> >         ret = B(args); <--- direct call, no retpoline
-> >         if ret != 0:
-> >                 goto out;
-> >
-> >         goto out;
-> >         if ret != 0:
-> >                 goto out;
-> >
-> > out:
-> >         return ret;
+On Mon, Aug 24, 2020 at 02:49:31PM +0200, Robert Richter wrote:
+> I do not have hardware anymore, nor there is ongoing development. So
+> handover maintenance to Andre who already maintains the last
+> remainings of Calxeda.
 > 
-> Hmm yeah that's a cool idea. This would either need to be implemented
-> with custom code-modification logic for the LSM hooks, or we'd need to
-> think of a way to express it in a sensible addition to the static_call
-> API. I do wonder if the latter could take the form of a generic system
-> for arrays of static calls.
+> Cc: Andre Przywara <andre.przywara@arm.com>
+> Signed-off-by: Robert Richter <rric@kernel.org>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1b7b0c1a24c8..6ed56e1a7d28 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6148,7 +6148,7 @@ S:	Supported
+>  F:	drivers/edac/bluefield_edac.c
+>  
+>  EDAC-CALXEDA
+> -M:	Robert Richter <rric@kernel.org>
+> +M:	Andre Przywara <andre.przywara@arm.com>
+>  L:	linux-edac@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/edac/highbank*
+> -- 
 
-So you basically want something like:
+Applied, thanks.
 
-	if (A[0] && (ret = static_call(A[0])(...)))
-		return ret;
+-- 
+Regards/Gruss,
+    Boris.
 
-	if (A[1] && (ret = static_call(A[1])(...)))
-		return ret;
-
-	....
-
-	return ret;
-
-Right? The problem with static_call_cond() is that we don't know what to
-do with the return value when !func, which is why it's limited to void
-return type.
-
-You can however construct something like the above with a combination of
-static_branch() and static_call() though. It'll not be pretty, but it
-ought to work:
-
-	if (static_branch_likely(A[0].key)) {
-		ret = static_call(A[0].call)(...);
-		if (ret)
-			return ret;
-	}
-
-	...
-
-	return ret;
-
-
-> It would also need to handle the fact that IIUC at the moment the last
-> static_call may be a tail call, so we'd be patching an existing jump
-> into a jump to a different target, I don't know if we can do that
-> atomically.
-
-Of course we can, the static_call() series supports tail-calls just
-fine. In fact, patching jumps is far easier, it was patching call that
-was the real problem because it mucks about with the stack.
-
+https://people.kernel.org/tglx/notes-about-netiquette
