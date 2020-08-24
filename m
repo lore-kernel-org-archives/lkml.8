@@ -2,110 +2,99 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F225C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDF8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25CA120578
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:15:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yNkmQig7"
+	by mail.kernel.org (Postfix) with ESMTP id AB4122072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:15:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598253356;
+	bh=HsUuNkVSd/8OOPLUALtgwBOCnA4t+XeARd/JsxEFnzA=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=xqcRMb7IjL1ulTIUwN61Anmfh5PwXfpIJssOnlTVLMmH/yP+mbdIhLyjVahCQHsAb
+	 eXw9Q+E37mnUSEydDy76X1DTyFM82Tlw7GMUeTYrrCVQrDK9TcJwqZX12NND/tkFd8
+	 Y7GVfoyX9Xa2OniJhD8dsXhMyngMLdBNYwvgSBDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726158AbgHXHPN (ORCPT
+        id S1726370AbgHXHPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 03:15:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgHXHPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 03:15:12 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3022EC061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 00:15:12 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id h15so813318wrt.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 00:15:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=v2AcXNM/RwmQxoIUWLpETnAZjFM9cKvvsGDBzZ8s8tU=;
-        b=yNkmQig7Z6xT5X9MFS2ygbAucqr3neSCdyX7P6DQ2az6ewTQQeQgeB/e5pC4hppIRe
-         WFQWE0H2wMj3xdaHXYypan0M4OV9qUTKJZhjhMkpa1+1mE7qcmUXn4vXYH3TFDjDqXGv
-         wDo2vjkXC1QsqX8xgGbUMsbPwJ0k52Vna4knmD5Fun5Hb7IFWWWHlMSThenpvwv1QbL4
-         7SUiymFvbNLzdeg3fq/wu4MaQf2YTpm0cyw2/XTxK3InWOTiPFNWPDnRnLTTyuNn46cb
-         xYnDzAD5LT+/eekOZlcyJTp1+qqCZp4Rnyfc1d5g6Po06pXMOy4OZpksYcJEukkohEPa
-         Y1yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v2AcXNM/RwmQxoIUWLpETnAZjFM9cKvvsGDBzZ8s8tU=;
-        b=bjigQfK85ckpoH22kvBSnaauOoYgn0L22oChFnTpSj+oQGjah3nfw4vnsTyiQHDrSA
-         MK3pcIidLm7H/Hxoe6mDi0EJd4wvALsKzDHaOZrBev0338fgv5hBJTOm/WTaZXKo5GQy
-         elm6jxtKpM0I2c04SEGzQH47tlZuHUPMZwDK5Abu51qM18/ae6yrFMtECFmCiP8S1+0y
-         ZNdO4pFFA3enjAl8729TMqu1ZGJt18pJEpOwo/ticg45oaBBUWdEHQAhEm4W2ykj8dcv
-         qmknD1lhkYOFpM5UR5oJxm8sDQhDjGBLkoK5yiSkGX8JY1SIYPbPe25axwYLZYhNtEGI
-         DnHQ==
-X-Gm-Message-State: AOAM53353mfU7i/WLEF7nH9QZq8/RHmbz6ywB7n5R31NOVOsUAdx05PB
-        MHppqAvnGwrX/8iDkOfJH8mADg==
-X-Google-Smtp-Source: ABdhPJxd/szKSLNN6/XQR5TVLz2m2UUS4oEY9/vGslB5tLxWopsB1oAiE1Qk1WuEOYT2R/QxKR9KMQ==
-X-Received: by 2002:adf:ff8a:: with SMTP id j10mr4213992wrr.323.1598253310616;
-        Mon, 24 Aug 2020 00:15:10 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:cd42:2fa4:120f:76b0? ([2a01:e34:ed2f:f020:cd42:2fa4:120f:76b0])
-        by smtp.googlemail.com with ESMTPSA id l1sm23522540wrb.12.2020.08.24.00.15.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 00:15:09 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] thermal: qcom-spmi-temp-alarm: Don't suppress
- negative temp
-To:     Guru Das Srinagesh <gurus@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Veera Vegivada <vvegivad@codeaurora.org>
-References: <944856eb819081268fab783236a916257de120e4.1596040416.git.gurus@codeaurora.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <de23e464-3789-02a2-b16e-eb1cd4e015d5@linaro.org>
-Date:   Mon, 24 Aug 2020 09:15:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <944856eb819081268fab783236a916257de120e4.1596040416.git.gurus@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 24 Aug 2020 03:15:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbgHXHPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 03:15:53 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FB5220720;
+        Mon, 24 Aug 2020 07:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598253352;
+        bh=HsUuNkVSd/8OOPLUALtgwBOCnA4t+XeARd/JsxEFnzA=;
+        h=From:To:Subject:Date:From;
+        b=2e5cIF8QLfBRuwYw8HrgVGN6aimaE0rxlrn/SczbT9SBrURv4GxNYmEwWaBuqsv8i
+         lrJYH/gAXay+6nJvc3MiiTwG7x5NLmCr0p3D59usKNkyAfe8Q+yt+5sZ818txOoBdL
+         +3Ht+9v2ozDeR3Jt7nk1LrwlzZ6lG6Yd+dT6i46A=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Adam Ford <aford173@gmail.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: imx8mm-beacon-baseboard: Correct LED default state
+Date:   Mon, 24 Aug 2020 09:15:46 +0200
+Message-Id: <20200824071546.10050-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/2020 18:52, Guru Das Srinagesh wrote:
-> From: Veera Vegivada <vvegivad@codeaurora.org>
-> 
-> Currently driver is suppressing the negative temperature
-> readings from the vadc. Consumers of the thermal zones need
-> to read the negative temperature too. Don't suppress the
-> readings.
-> 
-> Fixes: c610afaa21d3c6e ("thermal: Add QPNP PMIC temperature alarm driver")
-> Signed-off-by: Veera Vegivada <vvegivad@codeaurora.org>
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
+There is no LED default state "none".  leds-gpio driver maps it to
+"off", so correct them to fix dtbs_check warnings like:
 
-Applied, thanks
+  arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml:
+    leds: led0:default-state:0: 'none' is not one of ['on', 'off', 'keep']
 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-beacon-baseboard.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-beacon-baseboard.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-beacon-baseboard.dtsi
+index baa5f997d018..bf0859f1e1fa 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-beacon-baseboard.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-beacon-baseboard.dtsi
+@@ -10,19 +10,19 @@
+ 		led0 {
+ 			label = "gen_led0";
+ 			gpios = <&pca6416_1 4 GPIO_ACTIVE_HIGH>;
+-			default-state = "none";
++			default-state = "off";
+ 		};
+ 
+ 		led1 {
+ 			label = "gen_led1";
+ 			gpios = <&pca6416_1 5 GPIO_ACTIVE_HIGH>;
+-			default-state = "none";
++			default-state = "off";
+ 		};
+ 
+ 		led2 {
+ 			label = "gen_led2";
+ 			gpios = <&pca6416_1 6 GPIO_ACTIVE_HIGH>;
+-			default-state = "none";
++			default-state = "off";
+ 		};
+ 
+ 		led3 {
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.17.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
