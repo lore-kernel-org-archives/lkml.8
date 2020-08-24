@@ -2,255 +2,145 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1512AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA883C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D48C220578
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287908;
-	bh=2yyuDE3GH4u5UyzVYFwQZaTBS7Fgcx0uIShojRchoL0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=nsGJzDj8vgOi5Ig4GCH7m4YT6AZEhKytYzYVk3NTP76sFW5Wt/uTBJub2dNxpOE9J
-	 SXS6WIO+9IC46KgCmRrX+bvH/KN3fLOJAYey4qgTwrXgPUTva230T7ulwEtJ/iw8Zz
-	 9oNqAeZ6Ct6RpasFc2hZYOr5DuozqY3goPK7+7uE=
+	by mail.kernel.org (Postfix) with ESMTP id 7B66A20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:52:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="Jpv+Uwiv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgHXQvo (ORCPT
+        id S1728150AbgHXQv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:51:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34282 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:51:57 -0400
+Received: from mga09.intel.com ([134.134.136.24]:26297 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728721AbgHXQtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:49:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32F15214F1;
-        Mon, 24 Aug 2020 16:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287734;
-        bh=2yyuDE3GH4u5UyzVYFwQZaTBS7Fgcx0uIShojRchoL0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=B65vaC//+MLCSoX6ipy93I0MfIZDdJeIWF5IFMNTu4dU4QCg3m8rvuHOgPj0Zi+E3
-         ddZyjnrzKFmsk6R6i7odIXTv8Nw1jaBLTLzzcrArpBbx4U/Q9t2CjVhITH8u6jPbn2
-         D4a26doLikeCox7QFo/kUNjyaKafCRne+h36ZBvU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 00/39] 4.9.234-rc2 review
-Date:   Mon, 24 Aug 2020 18:49:12 +0200
-Message-Id: <20200824164720.742523552@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
+        id S1726225AbgHXQvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:51:07 -0400
+IronPort-SDR: 3EdD2ZhbLA0JAsLSsfA4RK+l+Ki68edTSI50JSZZ36M9cLVmdFXcSpiCGHQEEpvK1MPOtix6lA
+ lm4rcLNicaUQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="156996339"
+X-IronPort-AV: E=Sophos;i="5.76,349,1592895600"; 
+   d="scan'208";a="156996339"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 09:51:04 -0700
+IronPort-SDR: lAZ9fGPPdbLsFcRHy5tNux+wc7oSpcm9yFwXivDC+0oVOpdKCbP/A2+5hfuQlFe7zFfxmlw7bM
+ DX4o81ju9qxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,349,1592895600"; 
+   d="scan'208";a="402441452"
+Received: from unknown (HELO fmsmsx604.amr.corp.intel.com) ([10.18.84.214])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Aug 2020 09:51:04 -0700
+Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 24 Aug 2020 09:51:01 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 24 Aug 2020 09:51:01 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.174)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Mon, 24 Aug 2020 09:51:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QEBNhWvwWLrYoBa6peZeDb0iJv1eSqcD9gcbvKd1OlOvnmkPQUkMEMFal13vDrhJUxMkWohmfHjpSZg3UNsTapHwqFyVMKfg4fNXPvViKxMB1qXUVsyIpxR0WTAqMw0rRL4MGl8KAOjNt0BlPoGInzyX4px4AfsFKIx4Pfu6F98dfkYWnU2Yyq0IdkI5ruzYA9sXfqs8ZnrR7TLwnm6LRPXYZ7uT1p/fX6fqfWUmLAsXZOMXJxxW1rBOjdLdil9q3Nphx6h8+UukvccQ5V0K0KSExxpgY5azxusT62Wdxl1c7uqRFQ0Y7hvZnuQ64K/A96GWKA+ilLJOptwVuhH26A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=poPEqJQJzgxu5ZW39+yMxTmTnJ+GT+Hg6Wi0uI5wljM=;
+ b=GDsEtH6Ts57OLjONi3W2TeKY17LzgkcaPQoIprNHYm6u8M7XyLkQj3YviwOoZJmU7hVeNaZCEuh0ZaU2/jRTt7xb4PHSZFijUDQrd4RZbmX3pRr23P7lWeUEC247LzdJi7yhgxExZPBn9ldbZehc3hpPlIezJ/4KTXXmQ5pwIGUPVqXfXGLFCkne+tvLKoWVwX9FHiyqv4/J3kHXYwrmayQ4IH/X24N5E5y+TsDKgWEYJVbKtzfPj3eCFOQu7iUl4mgSpDTOAxMQJ9lKWxERbGHMOily/rd2GJnVIaJrh54/ihF5OYwO1oBYmDA69XY+BGtyEo4lmEC49r8zN3RRrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=poPEqJQJzgxu5ZW39+yMxTmTnJ+GT+Hg6Wi0uI5wljM=;
+ b=Jpv+Uwiv0/52zD9jclnJiFu6Kf4o7agGIvJwr20CVRdvveu4uqUKEgWX+HTQhDwfFf40S1u2vj2QuDz95kI7sy/dPyVHO+B06lyWl+xhlzb3oMnymOslNhR5P0LCMXjN5ZKBAiFXd8pLdpOfA5OIvAHPH42+MTR6wuhSCgfjYWA=
+Received: from SN6PR11MB2574.namprd11.prod.outlook.com (2603:10b6:805:59::14)
+ by SN6PR11MB3341.namprd11.prod.outlook.com (2603:10b6:805:bc::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Mon, 24 Aug
+ 2020 16:50:58 +0000
+Received: from SN6PR11MB2574.namprd11.prod.outlook.com
+ ([fe80::54:b143:c75e:41bd]) by SN6PR11MB2574.namprd11.prod.outlook.com
+ ([fe80::54:b143:c75e:41bd%7]) with mapi id 15.20.3305.026; Mon, 24 Aug 2020
+ 16:50:58 +0000
+From:   "Eads, Gage" <gage.eads@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
+        "Topel, Bjorn" <bjorn.topel@intel.com>
+Subject: RE: [PATCH v2 02/19] dlb2: initialize PF device
+Thread-Topic: [PATCH v2 02/19] dlb2: initialize PF device
+Thread-Index: AQHWcAHJb5iuglkRNE2TgJ9JercuyqlHjFjw
+Date:   Mon, 24 Aug 2020 16:50:58 +0000
+Message-ID: <SN6PR11MB2574E804F9AA4206A6B6AC2EF6560@SN6PR11MB2574.namprd11.prod.outlook.com>
+References: <20200811162732.1369-1-gage.eads@intel.com>
+ <20200811162732.1369-3-gage.eads@intel.com>
+ <20200811170627.GB765993@kroah.com>
+In-Reply-To: <20200811170627.GB765993@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=intel.com;
+x-originating-ip: [68.203.30.51]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cd1b7915-a490-4b27-8cea-08d8484de048
+x-ms-traffictypediagnostic: SN6PR11MB3341:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR11MB3341C1CF80EC773F62C303F9F6560@SN6PR11MB3341.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HgmhLh7gtCyMNy0gsowTwrkltS2l4LtGEh+ptiiNH2aX5VjPQ6jDNxXQi2TkbXj4XyRf3VZHR8ltOBc0FDkScqaBdrcyZL+9Z6AcyaHoKNu05YDLXGkgwauhuo52YCi5KrUt2g5gNZUmZRg979vCPX57HCcu5Ylw6Y2NRxwTAUE/QfBthFrjXWebMTaK3a0BMparvEF/oRqVUdVqcLhichZ9YWLXQitNDyM3byXV0Tlc17+zuyYgnJRMO6OjDKe/d7j5nzBDT9MKDk8DUyglpcNIlK0k5CNZ+SCPww9QYfuN7mJTJhuSIcXiAkLz/6536EpYBnTY8A1qs15qEXjdEQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2574.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(5660300002)(66446008)(478600001)(2906002)(86362001)(107886003)(66476007)(64756008)(4744005)(66556008)(26005)(33656002)(8676002)(7696005)(71200400001)(52536014)(76116006)(66946007)(9686003)(316002)(4326008)(55016002)(54906003)(6916009)(186003)(8936002)(6506007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: nKfvAhGNdKvhhDBX23Dgi43Glu+TrKTcvM6zZgklqU9GhzJOw558mTMkw39Z/y1kTut6WpcbBbQGOnjTEZwO6LuvxhbWto+j7NyThAnFGNLm6EmvARKv42H3zoqjNi4Z/NP8AJdph8JgEqPqoof4X913Y0GyzD7hQhok+qph3ddRHVzQn/osDyv3RXYP+sXuD3DOZI9Y/fI1Y1Edgvx6sxg7zBuC4oYgA27xVYZ/c46Y4XV4dDxUWMclt7UVpvImnk5ZTtii3KPwOlaW10qwu3hUDriUbUhuLSITa3z12Zcy+wCYmtUNgssKj7KJ/PiFDWW1f6rLckXHoGlzBURjfmtkYFb3ESIYbTyd0ajjSp1/Yz9Uc469CVE0uBkwz7mQhJqfDxjcL9wGiLDEIxIBA7RXxkrrtYaSAiw8vsEZimE7fbPCuZWHhKPcFIzfRyoIL82NsWxqJ99mA8RFnlxrwWDEWyMAn8L2xWyeVVUorv+vbRlk28/fMQkjCoQDn8jQpBmDsZ4YdLUHGjl6J7z5/SdCEGVI8ErL9iBhhBG21YEAPoUjXjep2A5P6hWEOZUd5f2lPoTfIdWYEnECi3b1O0hcP0H+D0W1NjdKzPBStsaNDlUEv/iczcG8f37Chyg6ko78CRqGKxV61zyIxb9onQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.234-rc2.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.234-rc2
-X-KernelTest-Deadline: 2020-08-26T16:47+00:00
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2574.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd1b7915-a490-4b27-8cea-08d8484de048
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2020 16:50:58.3608
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ntVs/vys6B7cLsw4GeiUDoGaB9pCCMarN2h47G9z2x70Z982qJ3lqfXNtCeVlvXIkRNY27Ri+CVrZtFfAbrKyg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3341
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.234 release.
-There are 39 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+> > +#include <linux/io.h>
+> > +
+> > +#define DLB2_PCI_REG_READ(addr)        ioread32(addr)
+> > +#define DLB2_PCI_REG_WRITE(reg, value) iowrite32(value, reg)
+>=20
+> Why create a macro that is larger than the native call, this saves
+> nothing except make the reviewer wonder what in the world is happening.
+>=20
+> Just use the real call.
 
-Responses should be made by Wed, 26 Aug 2020 16:47:07 +0000.
-Anything received after that time might be too late.
+Sure, I'll change this in v3. I'll wait for more reviews before re-submitti=
+ng.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.234-rc2.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.234-rc2
-
-Will Deacon <will@kernel.org>
-    KVM: arm/arm64: Don't reschedule in unmap_stage2_range()
-
-Juergen Gross <jgross@suse.com>
-    xen: don't reschedule in preemption off sections
-
-Peter Xu <peterx@redhat.com>
-    mm/hugetlb: fix calculation of adjust_range_if_pmd_sharing_possible
-
-Al Viro <viro@zeniv.linux.org.uk>
-    do_epoll_ctl(): clean the failure exits up a bit
-
-Marc Zyngier <maz@kernel.org>
-    epoll: Keep a reference on files added to the check list
-
-Michael Ellerman <mpe@ellerman.id.au>
-    powerpc: Allow 4224 bytes of stack expansion for the signal frame
-
-Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
-    powerpc/pseries: Do not initiate shutdown when system is running on UPS
-
-Tom Rix <trix@redhat.com>
-    net: dsa: b53: check for timeout
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    ASoC: intel: Fix memleak in sst_media_open
-
-Fugang Duan <fugang.duan@nxp.com>
-    net: fec: correct the error path for regulator disable in probe
-
-Przemyslaw Patynowski <przemyslawx.patynowski@intel.com>
-    i40e: Set RX_ONLY mode for unicast promiscuous on VLAN
-
-Eric Sandeen <sandeen@redhat.com>
-    ext4: fix potential negative array index in do_split()
-
-Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-    alpha: fix annotation of io{read,write}{16,32}be()
-
-Eiichi Tsukata <devel@etsukata.com>
-    xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
-
-Mao Wenan <wenan.mao@linux.alibaba.com>
-    virtio_ring: Avoid loop when vq is broken in virtqueue_poll
-
-Javed Hasan <jhasan@marvell.com>
-    scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
-
-Zhe Li <lizhe67@huawei.com>
-    jffs2: fix UAF problem
-
-Darrick J. Wong <darrick.wong@oracle.com>
-    xfs: fix inode quota reservation checks
-
-Greg Ungerer <gerg@linux-m68k.org>
-    m68knommu: fix overwriting of bits in ColdFire V3 cache control
-
-Xiongfeng Wang <wangxiongfeng2@huawei.com>
-    Input: psmouse - add a newline when printing 'proto' by sysfs
-
-Evgeny Novikov <novikov@ispras.ru>
-    media: vpss: clean up resources in init
-
-Chuhong Yuan <hslester96@gmail.com>
-    media: budget-core: Improve exception handling in budget_register()
-
-Stanley Chu <stanley.chu@mediatek.com>
-    scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
-
-Jan Kara <jack@suse.cz>
-    ext4: fix checking of directory entry validity for inline directories
-
-Eric Biggers <ebiggers@google.com>
-    ext4: clean up ext4_match() and callers
-
-Charan Teja Reddy <charante@codeaurora.org>
-    mm, page_alloc: fix core hung in free_pcppages_bulk()
-
-Doug Berger <opendmb@gmail.com>
-    mm: include CMA pages in lowmem_reserve at boot
-
-Wei Yongjun <weiyongjun1@huawei.com>
-    kernel/relay.c: fix memleak on destroy relay channel
-
-Jann Horn <jannh@google.com>
-    romfs: fix uninitialized memory leak in romfs_dev_read()
-
-Josef Bacik <josef@toxicpanda.com>
-    btrfs: don't show full path of bind mounts in subvol=
-
-Marcos Paulo de Souza <mpdesouza@suse.com>
-    btrfs: export helpers for subvolume name/id resolution
-
-Hugh Dickins <hughd@google.com>
-    khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
-
-Hugh Dickins <hughd@google.com>
-    khugepaged: khugepaged_test_exit() check mmget_still_valid()
-
-Kevin Hao <haokexin@gmail.com>
-    tracing/hwlat: Honor the tracing_cpumask
-
-Steven Rostedt (VMware) <rostedt@goodmis.org>
-    tracing: Clean up the hwlat binding code
-
-Masami Hiramatsu <mhiramat@kernel.org>
-    perf probe: Fix memory leakage when the probe point is not found
-
-Liu Ying <victor.liu@nxp.com>
-    drm/imx: imx-ldb: Disable both channels for split mode in enc->disable()
-
-Jan Beulich <JBeulich@suse.com>
-    x86/asm: Add instruction suffixes to bitops
-
-Uros Bizjak <ubizjak@gmail.com>
-    x86/asm: Remove unnecessary \n\t in front of CC_SET() from asm templates
-
-
--------------
-
-Diffstat:
-
- Makefile                                          |  4 +-
- arch/alpha/include/asm/io.h                       |  8 +-
- arch/arm/kvm/mmu.c                                |  6 --
- arch/m68k/include/asm/m53xxacr.h                  |  6 +-
- arch/powerpc/mm/fault.c                           |  7 +-
- arch/powerpc/platforms/pseries/ras.c              |  1 -
- arch/x86/include/asm/archrandom.h                 |  8 +-
- arch/x86/include/asm/bitops.h                     | 29 ++++---
- arch/x86/include/asm/percpu.h                     |  2 +-
- drivers/gpu/drm/imx/imx-ldb.c                     |  7 +-
- drivers/input/mouse/psmouse-base.c                |  2 +-
- drivers/media/pci/ttpci/budget-core.c             | 11 ++-
- drivers/media/platform/davinci/vpss.c             | 20 ++++-
- drivers/net/dsa/b53/b53_common.c                  |  2 +
- drivers/net/ethernet/freescale/fec_main.c         |  4 +-
- drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h |  2 +-
- drivers/net/ethernet/intel/i40e/i40e_common.c     | 35 ++++++--
- drivers/scsi/libfc/fc_disc.c                      | 12 ++-
- drivers/scsi/ufs/ufs_quirks.h                     |  1 +
- drivers/scsi/ufs/ufshcd.c                         |  2 +
- drivers/virtio/virtio_ring.c                      |  3 +
- drivers/xen/preempt.c                             |  2 +-
- fs/btrfs/ctree.h                                  |  2 +
- fs/btrfs/export.c                                 |  8 +-
- fs/btrfs/export.h                                 |  5 ++
- fs/btrfs/super.c                                  | 18 +++--
- fs/eventpoll.c                                    | 19 +++--
- fs/ext4/namei.c                                   | 99 +++++++++--------------
- fs/jffs2/dir.c                                    |  6 +-
- fs/romfs/storage.c                                |  4 +-
- fs/xfs/xfs_sysfs.h                                |  6 +-
- fs/xfs/xfs_trans_dquot.c                          |  2 +-
- kernel/relay.c                                    |  1 +
- kernel/trace/trace_hwlat.c                        | 37 ++++-----
- mm/hugetlb.c                                      | 24 +++---
- mm/khugepaged.c                                   |  7 +-
- mm/page_alloc.c                                   |  7 +-
- sound/soc/intel/atom/sst-mfld-platform-pcm.c      |  5 +-
- tools/perf/util/probe-finder.c                    |  2 +-
- 39 files changed, 238 insertions(+), 188 deletions(-)
-
-
+Thanks,
+Gage
