@@ -2,100 +2,64 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5138EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A74C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2535C206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598282201;
-	bh=yO9W1Kc0RdGpWZmeTxsnbWWXCS+9065Inn/90nZH8S4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=trD2r17KmrJsh30KdSNKhOyqtWRJQ/9KdUXO/PjfoDmae9G3MpIGx1RunEfGv8zsu
-	 XYnoHpsLoz5SbxTnYCM1nsvfEPdBzEBijhzgrOAC6F28urS6iMBhFeSlkUAk+zQeRJ
-	 pdJUyUnDUw3ZHIHxxawoQK/EqR0uaA85xsk2rmYY=
+	by mail.kernel.org (Postfix) with ESMTP id 017512078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:17:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgHXPQQ (ORCPT
+        id S1726967AbgHXPQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:16:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39172 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 11:16:57 -0400
+Received: from verein.lst.de ([213.95.11.211]:54830 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727068AbgHXPN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:13:28 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B441206B5;
-        Mon, 24 Aug 2020 15:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598281975;
-        bh=yO9W1Kc0RdGpWZmeTxsnbWWXCS+9065Inn/90nZH8S4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=P1OE/CS8PxQYqFGUCpqEisH8/zh3qJNGTtpsU6Euxa2780rFG9iiDIZTS4AEfRC3K
-         YGgqyg0WSsIs23QtW1LkKT8x5UwfFYQL8Jj5v1E2yxogukGObENk0h/D7bpKUjbIFN
-         djdqwoEw4kxSS40Z2aXyYUvOrxzcq0URhp+ObUhg=
-Message-ID: <9b6b670245ae0ca8eab16263c01f6a6d1bd94e4b.camel@kernel.org>
-Subject: Re: [PATCH] ceph: add column 'mds' to show caps in more user
- friendly
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Yanhu Cao <gmayyyha@gmail.com>
-Cc:     idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 24 Aug 2020 11:12:54 -0400
-In-Reply-To: <20200824030058.37786-1-gmayyyha@gmail.com>
-References: <20200824030058.37786-1-gmayyyha@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        id S1727091AbgHXPN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 11:13:29 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 26FBD68AFE; Mon, 24 Aug 2020 17:13:01 +0200 (CEST)
+Date:   Mon, 24 Aug 2020 17:13:00 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     syzbot <syzbot+3f86afd0b1e4bf1cb64c@syzkaller.appspotmail.com>,
+        thomas.tai@oracle.com, airlied@redhat.com, kraxel@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        dri-devel@lists.freedesktop.org, hch@lst.de,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: Is: virtio_gpu_object_shmem_init  issues? Was:Re: upstream
+ boot error: general protection fault in swiotlb_map
+Message-ID: <20200824151300.GA28575@lst.de>
+References: <0000000000000c1f0005ac333382@google.com> <20200824150650.GD21321@char.us.oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824150650.GD21321@char.us.oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-24 at 11:00 +0800, Yanhu Cao wrote:
-> In multi-mds, the 'caps' debugfs file will have duplicate ino,
-> add the 'mds' column to indicate which mds session the cap belongs to.
+On Mon, Aug 24, 2020 at 11:06:51AM -0400, Konrad Rzeszutek Wilk wrote:
+> So it fails at
 > 
-> Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> ---
->  fs/ceph/debugfs.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> 683                 dev_WARN_ONCE(dev, 1,                                           
+> 684                         "swiotlb addr %pad+%zu overflow (mask %llx, bus limit %llx).\n",
+> 685                         &dma_addr, size, *dev->dma_mask, dev->bus_dma_limit);   
 > 
-> diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
-> index 97539b497e4c..47f8971a9c52 100644
-> --- a/fs/ceph/debugfs.c
-> +++ b/fs/ceph/debugfs.c
-> @@ -202,7 +202,8 @@ static int caps_show_cb(struct inode *inode, struct ceph_cap *cap, void *p)
->  {
->  	struct seq_file *s = p;
->  
-> -	seq_printf(s, "0x%-17lx%-17s%-17s\n", inode->i_ino,
-> +	seq_printf(s, "0x%-17lx%-3d%-17s%-17s\n", inode->i_ino,
-> +		   cap->session->s_mds,
->  		   ceph_cap_string(cap->issued),
->  		   ceph_cap_string(cap->implemented));
->  	return 0;
-> @@ -222,8 +223,8 @@ static int caps_show(struct seq_file *s, void *p)
->  		   "reserved\t%d\n"
->  		   "min\t\t%d\n\n",
->  		   total, avail, used, reserved, min);
-> -	seq_printf(s, "ino                issued           implemented\n");
-> -	seq_printf(s, "-----------------------------------------------\n");
-> +	seq_printf(s, "ino              mds  issued           implemented\n");
-> +	seq_printf(s, "--------------------------------------------------\n");
->  
->  	mutex_lock(&mdsc->mutex);
->  	for (i = 0; i < mdsc->max_sessions; i++) {
+> 
+> which makes no sense to me as `dev` surely exists. I can see in the console log:
+> 
+> virtio-pci 0000:00:01.0: vgaarb: deactivate vga console
+> 
+> So what gives?
 
-Looks good. Merged.
-
-Thanks!
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Well, look at the if around the WARN_ON - dma_capable failed on the
+swiotlb buffer. This means the virtio drm thingy has a dma mask
+(either the actual one set by the driver, or bus_dma_mask), which isn't
+enough to address the swiotlb buffer.
