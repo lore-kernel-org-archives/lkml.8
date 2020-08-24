@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCED0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D72CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA2F20774
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4599620774
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598268767;
-	bh=8Yfq5qTV6c1/WBV0unXr4bFQfGW0fL0bt3AzhOicE7g=;
+	s=default; t=1598268807;
+	bh=waSTTYzg5/r4WTVD2fzV10nNsbDbLr11xhip36gAXZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mFA3WxB1FlHPygiROVJoZHOIf/Rjm6rzRGjsNbLuIB2agL4bbHJ/TApKHfUV6O5gu
-	 CNv+9uYzhVKBQ7rlF68mkKsrqNRyR3r+4O0+3EN8fKmYHGG33xEbs+87MtGy68OlLw
-	 qiUEiT+SsUfx+umy1Tnh7SEhpx/uFEtqKS3MAOFM=
+	b=XHkHn0pOVgGzsFmMSA9q8j11Fz/wAeL8gb9+NT0bsgKliwJ1q0460BnBW5XwzDtXH
+	 iniKaNUgsZidBjPzombrkoNtAvlB5qWHzGMhQ9G+y/l9CO8pGdLjtgZddcfsvqfinY
+	 XHha9eHf6WqKJekQub0JBsCFx6t/KxxHYYPJTG+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgHXLcq (ORCPT
+        id S1726834AbgHXLdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:32:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41216 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 07:33:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726939AbgHXLan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:30:43 -0400
+        id S1726956AbgHXLa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 07:30:56 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45F022087D;
-        Mon, 24 Aug 2020 11:30:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5B442078D;
+        Mon, 24 Aug 2020 11:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598268642;
-        bh=8Yfq5qTV6c1/WBV0unXr4bFQfGW0fL0bt3AzhOicE7g=;
+        s=default; t=1598268655;
+        bh=waSTTYzg5/r4WTVD2fzV10nNsbDbLr11xhip36gAXZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=In0oELhSw0ijotQ85+aFN80YmkG2o6ZaZYk6l6Gd1C60Cg49K9QhOdunubinZxmG6
-         1oSWKMwgoqQvb4n8Sh8lUPNV48DXxOKXaUbYKDSB/4RAP9o92UdBWcsfziORHf0cuD
-         8CFFKacNlS0g0Q7qs38+N2D5V4D9DDT1BL3bJ2zc=
+        b=ldws+s10u8AwSM2AaNckYXIlIwN/+Z1FP26tB0Bi9dY0N2vvSdXohIwOmRlHFZ7hn
+         9W7ZnFotfBEoviDJBF+J2jfL85fxelwIEuSOjMCqiotm2eubQ6ahCMhWve8nEDZgAS
+         ZSFnbuOrv95YcS0JsBVPx/Uvxry0SOsenG5yrr+w=
 From:   Will Deacon <will@kernel.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, maz@kernel.org,
         suzuki.poulose@arm.com, james.morse@arm.com, pbonzini@redhat.com,
         kernel-team@android.com, Will Deacon <will@kernel.org>,
         stable@vger.kernel.org
-Subject: [PATCH stable-5.7.y backport 2/2] KVM: arm64: Only reschedule if MMU_NOTIFIER_RANGE_BLOCKABLE is not set
-Date:   Mon, 24 Aug 2020 12:30:36 +0100
-Message-Id: <20200824113036.24910-2-will@kernel.org>
+Subject: [PATCH stable-5.8.y backport 2/2] KVM: arm64: Only reschedule if MMU_NOTIFIER_RANGE_BLOCKABLE is not set
+Date:   Mon, 24 Aug 2020 12:30:48 +0100
+Message-Id: <20200824113048.24960-2-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200824113036.24910-1-will@kernel.org>
-References: <20200824113036.24910-1-will@kernel.org>
+In-Reply-To: <20200824113048.24960-1-will@kernel.org>
+References: <20200824113048.24960-1-will@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -91,7 +91,7 @@ Use the new 'flags' argument to kvm_unmap_hva_range() to ensure that we
 only reschedule if MMU_NOTIFIER_RANGE_BLOCKABLE is set in the notifier
 flags.
 
-Cc: <stable@vger.kernel.org> # v5.7 only
+Cc: <stable@vger.kernel.org> # v5.8 only
 Fixes: 8b3405e345b5 ("kvm: arm/arm64: Fix locking for kvm_free_stage2_pgd")
 Cc: Marc Zyngier <maz@kernel.org>
 Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
@@ -101,14 +101,14 @@ Message-Id: <20200811102725.7121-3-will@kernel.org>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- virt/kvm/arm/mmu.c | 17 +++++++++++++----
+ arch/arm64/kvm/mmu.c | 17 +++++++++++++----
  1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index 9510965789e3..b005685a6de4 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -331,7 +331,8 @@ static void unmap_stage2_puds(struct kvm *kvm, pgd_t *pgd,
+diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+index 5f6b35c33618..bd47f06739d6 100644
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -365,7 +365,8 @@ static void unmap_stage2_p4ds(struct kvm *kvm, pgd_t *pgd,
   * destroying the VM), otherwise another faulting VCPU may come in and mess
   * with things behind our backs.
   */
@@ -118,7 +118,7 @@ index 9510965789e3..b005685a6de4 100644
  {
  	pgd_t *pgd;
  	phys_addr_t addr = start, end = start + size;
-@@ -356,11 +357,16 @@ static void unmap_stage2_range(struct kvm *kvm, phys_addr_t start, u64 size)
+@@ -390,11 +391,16 @@ static void unmap_stage2_range(struct kvm *kvm, phys_addr_t start, u64 size)
  		 * If the range is too large, release the kvm->mmu_lock
  		 * to prevent starvation and lockup detector warnings.
  		 */
@@ -136,7 +136,7 @@ index 9510965789e3..b005685a6de4 100644
  static void stage2_flush_ptes(struct kvm *kvm, pmd_t *pmd,
  			      phys_addr_t addr, phys_addr_t end)
  {
-@@ -2041,7 +2047,10 @@ static int handle_hva_to_gpa(struct kvm *kvm,
+@@ -2198,7 +2204,10 @@ static int handle_hva_to_gpa(struct kvm *kvm,
  
  static int kvm_unmap_hva_handler(struct kvm *kvm, gpa_t gpa, u64 size, void *data)
  {
@@ -148,7 +148,7 @@ index 9510965789e3..b005685a6de4 100644
  	return 0;
  }
  
-@@ -2052,7 +2061,7 @@ int kvm_unmap_hva_range(struct kvm *kvm,
+@@ -2209,7 +2218,7 @@ int kvm_unmap_hva_range(struct kvm *kvm,
  		return 0;
  
  	trace_kvm_unmap_hva_range(start, end);
