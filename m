@@ -2,95 +2,194 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BDCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22DBF2078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000A920738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgHXPmq convert rfc822-to-8bit (ORCPT
+        id S1727930AbgHXPnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:42:46 -0400
-Received: from mga03.intel.com ([134.134.136.65]:4738 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbgHXPj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:39:27 -0400
-IronPort-SDR: Wn9zzGXdoQaIbuan1iLH5Ja1D550aM7G/T48IjjAK4ebNw7f+aKWRzsydQhk7mMFzRUMumPVEv
- zJoJddDux0Og==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="155911950"
-X-IronPort-AV: E=Sophos;i="5.76,349,1592895600"; 
-   d="scan'208";a="155911950"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 08:38:59 -0700
-IronPort-SDR: OXGKpCExxzOcDnP+9+nDPRBYDX0Rz4GWrLd/kIgqZv6PvbbvIW34Ae6s3iWxcqtqzN9OqskkrV
- xaBwVtfE/QSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,349,1592895600"; 
-   d="scan'208";a="499513514"
-Received: from fmsmsx601-2.cps.intel.com (HELO fmsmsx601.amr.corp.intel.com) ([10.18.84.211])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Aug 2020 08:38:59 -0700
-Received: from shsmsx604.ccr.corp.intel.com (10.109.6.214) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 24 Aug 2020 08:38:57 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- SHSMSX604.ccr.corp.intel.com (10.109.6.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 24 Aug 2020 23:38:55 +0800
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Mon, 24 Aug 2020 08:38:53 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     "Tang, Feng" <feng.tang@intel.com>, Borislav Petkov <bp@suse.de>
-CC:     "Chen, Rong A" <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "lkp@lists.01.org" <lkp@lists.01.org>,
-        "Mel Gorman" <mgorman@suse.com>
-Subject: RE: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
- -14.1% regression
-Thread-Topic: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
- -14.1% regression
-Thread-Index: AQHWdTm7eFqn4vHQO0+vfjZnMLG+/6k+S8yAgADZR4CAAyQ1gIAFlB6AgAAFMQD//4tJoA==
-Date:   Mon, 24 Aug 2020 15:38:53 +0000
-Message-ID: <6e996ad05e434a6fb13f069ee72b876b@intel.com>
-References: <20200425114414.GU26573@shao2-debian>
- <20200425130136.GA28245@zn.tnic>
- <20200818082943.GA65567@shbuild999.sh.intel.com>
- <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
- <20200819020437.GA2605@shbuild999.sh.intel.com>
- <20200821020259.GA90000@shbuild999.sh.intel.com>
- <20200824151425.GF4794@zn.tnic>
- <20200824153300.GA56944@shbuild999.sh.intel.com>
-In-Reply-To: <20200824153300.GA56944@shbuild999.sh.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 24 Aug 2020 11:43:47 -0400
+Received: from relay.sw.ru ([185.231.240.75]:54606 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727081AbgHXPid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 11:38:33 -0400
+Received: from [192.168.15.190]
+        by relay3.sw.ru with esmtp (Exim 4.94)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1kAEXY-00105K-KD; Mon, 24 Aug 2020 18:37:44 +0300
+Subject: Re: [PATCH 1/4] mm: Trial do_wp_page() simplification
+To:     Jan Kara <jack@suse.cz>
+Cc:     Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Maya B . Gokhale" <gokhale2@llnl.gov>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        Kirill Shutemov <kirill@shutemov.name>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200821234958.7896-1-peterx@redhat.com>
+ <20200821234958.7896-2-peterx@redhat.com>
+ <42bc9a68-ef9e-2542-0b21-392a7f47bd74@virtuozzo.com>
+ <20200824143010.GG24877@quack2.suse.cz>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <dd6eb3e6-2797-1cf3-e1af-62a809ce83f2@virtuozzo.com>
+Date:   Mon, 24 Aug 2020 18:37:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <20200824143010.GG24877@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Yes, that's what we suspected. And I just did another try to force the
-> percpu mce structure aligned. And the regression seems to be gone (reduced
-> from 14.1% to 2%), which further proved it.
+On 24.08.2020 17:30, Jan Kara wrote:
+> On Mon 24-08-20 11:36:22, Kirill Tkhai wrote:
+>> On 22.08.2020 02:49, Peter Xu wrote:
+>>> From: Linus Torvalds <torvalds@linux-foundation.org>
+>>>
+>>> How about we just make sure we're the only possible valid user fo the
+>>> page before we bother to reuse it?
+>>>
+>>> Simplify, simplify, simplify.
+>>>
+>>> And get rid of the nasty serialization on the page lock at the same time.
+>>>
+>>> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+>>> [peterx: add subject prefix]
+>>> Signed-off-by: Peter Xu <peterx@redhat.com>
+>>> ---
+>>>  mm/memory.c | 59 +++++++++++++++--------------------------------------
+>>>  1 file changed, 17 insertions(+), 42 deletions(-)
+>>>
+>>> diff --git a/mm/memory.c b/mm/memory.c
+>>> index 602f4283122f..cb9006189d22 100644
+>>> --- a/mm/memory.c
+>>> +++ b/mm/memory.c
+>>> @@ -2927,50 +2927,25 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
+>>>  	 * not dirty accountable.
+>>>  	 */
+>>>  	if (PageAnon(vmf->page)) {
+>>> -		int total_map_swapcount;
+>>> -		if (PageKsm(vmf->page) && (PageSwapCache(vmf->page) ||
+>>> -					   page_count(vmf->page) != 1))
+>>> +		struct page *page = vmf->page;
+>>> +
+>>> +		/* PageKsm() doesn't necessarily raise the page refcount */
+>>
+>> No, this is wrong. PageKSM() always raises refcount.
+> 
+> OK, then I'm confused. The comment before get_ksm_page() states:
+> 
+>  * get_ksm_page: checks if the page indicated by the stable node
+>  * is still its ksm page, despite having held no reference to it.
+>  * In which case we can trust the content of the page, and it
+>  * returns the gotten page; but if the page has now been zapped,
+>  * remove the stale node from the stable tree and return NULL.
+> ...
+>  * You would expect the stable_node to hold a reference to the ksm page.
+>  * But if it increments the page's count, swapping out has to wait for
+>  * ksmd to come around again before it can free the page, which may take
+>  * seconds or even minutes: much too unresponsive.  So instead we use a
+>  * "keyhole reference": access to the ksm page from the stable node peeps
+>  * out through its keyhole to see if that page still holds the right key,
+>  * pointing back to this stable node.
+> 
+> So this all seems to indicate that KSM doesn't hold a proper page reference
+> and relies on anyone making page writeable to change page->mapping so that
+> KSM notices this and doesn't use the page anymore... Am I missing
+> something?
 
-I wonder whether it would be useful for bisection of performance issues
-for you to change the global definition of DEFINE_PER_CPU() to make
-all per CPU definitions aligned. Just like you switch compiler flags to make
-all functions aligned.
+Sure, KSM does not increment page counter, when a page becomes PageKsm().
+Is patch comment about that? Even if so, I don't understand what this
+comment is about. "PageKsm() does not take additional counter" is not
+a reason the page can't be reused there. The reason is that readers
+of this page may increase a counter without taking the lock, so
+this page_count() == 1 under the lock does not guarantee anything.
 
--Tony
+>> There was another
+>> problem: KSM may raise refcount without lock_page(), and only then it
+>> takes the lock.  See get_ksm_page(GET_KSM_PAGE_NOLOCK) for the details.
+>>
+>> So, reliable protection against parallel access requires to freeze page
+>> counter, which is made in reuse_ksm_page().
+> 
+> OK, this as well.
+> 
+> 								Honza
+> 
+>>
+>>> +		if (PageKsm(page) || page_count(page) != 1)
+>>> +			goto copy;
+>>> +		if (!trylock_page(page))
+>>> +			goto copy;
+>>> +		if (PageKsm(page) || page_mapcount(page) != 1 || page_count(page) != 1) {
+>>> +			unlock_page(page);
+>>>  			goto copy;
+>>> -		if (!trylock_page(vmf->page)) {
+>>> -			get_page(vmf->page);
+>>> -			pte_unmap_unlock(vmf->pte, vmf->ptl);
+>>> -			lock_page(vmf->page);
+>>> -			vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+>>> -					vmf->address, &vmf->ptl);
+>>> -			if (!pte_same(*vmf->pte, vmf->orig_pte)) {
+>>> -				update_mmu_tlb(vma, vmf->address, vmf->pte);
+>>> -				unlock_page(vmf->page);
+>>> -				pte_unmap_unlock(vmf->pte, vmf->ptl);
+>>> -				put_page(vmf->page);
+>>> -				return 0;
+>>> -			}
+>>> -			put_page(vmf->page);
+>>> -		}
+>>> -		if (PageKsm(vmf->page)) {
+>>> -			bool reused = reuse_ksm_page(vmf->page, vmf->vma,
+>>> -						     vmf->address);
+>>> -			unlock_page(vmf->page);
+>>> -			if (!reused)
+>>> -				goto copy;
+>>> -			wp_page_reuse(vmf);
+>>> -			return VM_FAULT_WRITE;
+>>> -		}
+>>> -		if (reuse_swap_page(vmf->page, &total_map_swapcount)) {
+>>> -			if (total_map_swapcount == 1) {
+>>> -				/*
+>>> -				 * The page is all ours. Move it to
+>>> -				 * our anon_vma so the rmap code will
+>>> -				 * not search our parent or siblings.
+>>> -				 * Protected against the rmap code by
+>>> -				 * the page lock.
+>>> -				 */
+>>> -				page_move_anon_rmap(vmf->page, vma);
+>>> -			}
+>>> -			unlock_page(vmf->page);
+>>> -			wp_page_reuse(vmf);
+>>> -			return VM_FAULT_WRITE;
+>>>  		}
+>>> -		unlock_page(vmf->page);
+>>> +		/*
+>>> +		 * Ok, we've got the only map reference, and the only
+>>> +		 * page count reference, and the page is locked,
+>>> +		 * it's dark out, and we're wearing sunglasses. Hit it.
+>>> +		 */
+>>> +		wp_page_reuse(vmf);
+>>> +		unlock_page(page);
+>>> +		return VM_FAULT_WRITE;
+>>>  	} else if (unlikely((vma->vm_flags & (VM_WRITE|VM_SHARED)) ==
+>>>  					(VM_WRITE|VM_SHARED))) {
+>>>  		return wp_page_shared(vmf);
+>>>
+>>
+
