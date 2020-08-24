@@ -2,88 +2,96 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27C6F206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 664DD206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:09:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uxRmPdWX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgHXPI3 (ORCPT
+        id S1726670AbgHXPJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:08:29 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:45754 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726765AbgHXPFs (ORCPT
+        Mon, 24 Aug 2020 11:09:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgHXPGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:05:48 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-126-7nFhgKAtOJWwj5eufa76-g-1; Mon, 24 Aug 2020 16:05:14 +0100
-X-MC-Unique: 7nFhgKAtOJWwj5eufa76-g-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 24 Aug 2020 16:05:13 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 24 Aug 2020 16:05:13 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Guohua Zhong' <zhongguohua1@huawei.com>,
-        "paubert@iram.es" <paubert@iram.es>
-CC:     "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "nixiaoming@huawei.com" <nixiaoming@huawei.com>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "wangle6@huawei.com" <wangle6@huawei.com>
-Subject: =?utf-8?B?UkU6IFJl77yaUmU6IFtQQVRDSF0gcG93ZXJwYzogRml4IGEgYnVnIGluIF9f?=
- =?utf-8?Q?div64=5F32_if_divisor_is_zero?=
-Thread-Topic: =?utf-8?B?UmXvvJpSZTogW1BBVENIXSBwb3dlcnBjOiBGaXggYSBidWcgaW4gX19kaXY2?=
- =?utf-8?Q?4=5F32_if_divisor_is_zero?=
-Thread-Index: AQHWehocKoZB4BlfFESHO90JupmxU6lHWu5w
-Date:   Mon, 24 Aug 2020 15:05:13 +0000
-Message-ID: <c200b38836674bbbb928bf76cbb978f1@AcuMS.aculab.com>
-References: <20200822172524.GA5451@lt-gp.iram.es>
- <20200824132539.35972-1-zhongguohua1@huawei.com>
-In-Reply-To: <20200824132539.35972-1-zhongguohua1@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 24 Aug 2020 11:06:23 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD2C1C061755;
+        Mon, 24 Aug 2020 07:55:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=ubi2ubkSzmcUgKFA9Ty93Z77356b507gvbujH4zOh5I=; b=uxRmPdWXScdnVsVqrOytVE+3pX
+        AfNakxy/jXMIeQk1mrNaeGszT7gwlzKTJW4zKApginebWwL+8a3GK4DkxG6e3qtrAe6OrV/rKKFoW
+        WLNCWseG6+ZfPiG28STSAnIkkdgyq235kHqwtyi/vvSXY+y7bgCoAFnPzakWr6aGmDXahjy54ojPB
+        iKqWCmjjJVSdMq9U0v1TgmYdal24DeOA1OsPiilA1dB1RlJ6PO11/ekIBoyS6VDi9neoy4W6nvdUh
+        iLjbjh4KAsGEnlLZkShdZexS2paK0ywCcCD/CrO9rGrJhFXFnlTClKUaO0WHz77iQg6i2VilcP4LE
+        lDXtmWtg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kADsP-0002m7-MX; Mon, 24 Aug 2020 14:55:14 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 4/9] iomap: Use bitmap ops to set uptodate bits
+Date:   Mon, 24 Aug 2020 15:55:05 +0100
+Message-Id: <20200824145511.10500-5-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200824145511.10500-1-willy@infradead.org>
+References: <20200824145511.10500-1-willy@infradead.org>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogR3VvaHVhIFpob25nDQo+IFNlbnQ6IDI0IEF1Z3VzdCAyMDIwIDE0OjI2DQo+IA0KPiA+
-PiA+SW4gZ2VuZXJpYyB2ZXJzaW9uIGluIGxpYi9tYXRoL2RpdjY0LmMsIHRoZXJlIGlzIG5vIGNo
-ZWNraW5nIG9mICdiYXNlJw0KPiA+PiA+ZWl0aGVyLg0KPiA+PiA+RG8gd2UgcmVhbGx5IHdhbnQg
-dG8gYWRkIHRoaXMgY2hlY2sgaW4gdGhlIHBvd2VycGMgdmVyc2lvbiBvbmx5ID8NCj4gPj4NCj4g
-Pj4gPlRoZSBvbmx5IHVzZXIgb2YgX19kaXY2NF8zMigpIGlzIGRvX2RpdigpIGluDQo+ID4+ID5p
-bmNsdWRlL2FzbS1nZW5lcmljL2RpdjY0LmguIFdvdWxkbid0IGl0IGJlIGJldHRlciB0byBkbyB0
-aGUgY2hlY2sgdGhlcmUgPw0KPiA+Pg0KPiA+PiA+Q2hyaXN0b3BoZQ0KPiA+Pg0KPiA+PiBZZXQs
-IEkgaGF2ZSBub3RpY2VkIHRoYXQgdGhlcmUgaXMgbm8gY2hlY2tpbmcgb2YgJ2Jhc2UnIGluIHRo
-ZXNlIGZ1bmN0aW9ucy4NCj4gPj4gQnV0IEkgYW0gbm90IHN1cmUgaG93IHRvIGNoZWNrIGlzIGJl
-dHRlci5BcyB3ZSBrbm93IHRoYXQgdGhlIHJlc3VsdCBpcw0KPiA+PiB1bmRlZmluZWQgd2hlbiBk
-aXZpc29yIGlzIHplcm8uIEl0IG1heWJlIGdvb2QgdG8gcHJpbnQgZXJyb3IgYW5kIGR1bXAgc3Rh
-Y2suDQoNCkkgdGhvdWdodCB0aGF0IHRoZSBvbnVzIHdhcyBwdXQgb24gdGhlIGNhbGxlciB0byBh
-dm9pZCBkaXZpZGUgYnkgemVyby4NCg0KT24geDg2IGRpdmlkZSBieSB6ZXJvIGNhdXNlcyBhbiBl
-eGNlcHRpb24gd2hpY2ggKEknbSBwcmV0dHkgc3VyZSkNCmxlYWRzIHRvIGEgb29wcy9wYW5pYy4N
-Cg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2Fk
-LCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5v
-OiAxMzk3Mzg2IChXYWxlcykNCg==
+Now that the bitmap is protected by a spinlock, we can use the
+more efficient bitmap ops instead of individual test/set bit ops.
+
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/iomap/buffered-io.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 639d54a4177e..dbf9572dabe9 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -134,19 +134,11 @@ iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
+ 	struct inode *inode = page->mapping->host;
+ 	unsigned first = off >> inode->i_blkbits;
+ 	unsigned last = (off + len - 1) >> inode->i_blkbits;
+-	bool uptodate = true;
+ 	unsigned long flags;
+-	unsigned int i;
+ 
+ 	spin_lock_irqsave(&iop->uptodate_lock, flags);
+-	for (i = 0; i < i_blocks_per_page(inode, page); i++) {
+-		if (i >= first && i <= last)
+-			set_bit(i, iop->uptodate);
+-		else if (!test_bit(i, iop->uptodate))
+-			uptodate = false;
+-	}
+-
+-	if (uptodate)
++	bitmap_set(iop->uptodate, first, last - first + 1);
++	if (bitmap_full(iop->uptodate, i_blocks_per_page(inode, page)))
+ 		SetPageUptodate(page);
+ 	spin_unlock_irqrestore(&iop->uptodate_lock, flags);
+ }
+-- 
+2.28.0
 
