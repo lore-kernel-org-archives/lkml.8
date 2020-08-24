@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7A2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4927C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 585DC20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87DAD20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287600;
-	bh=FpnvJsQ/MFxUvX0nLrEfcR+kiwscTrNVnhbkPdBa00g=;
+	s=default; t=1598287614;
+	bh=Pw9AvC/5Nu3rmfDksnD5jqwSIKHO6hmHU7Gh8i/qtmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fwXWiP6H/CKq2J2nhiMci7wR6c+uKB93jixYeBwzesfPRSO/j3RRKyvjhmfBimGwt
-	 9cWNVVEZ38bO+ayg/fgIYA6H14CTk8sifn53GP75ERtOltWAuSSV9yGI4IgWCY/pjD
-	 sBDMUjr+2HPhKmjwbfgsIcMs+lVjEdv1sgGAL9wE=
+	b=d0fz91OUE2BDSWDlCNxlh38/AG1u9gexvelZbhIWCU3YcQZgrMHUmSLlh31piKqZj
+	 UkID8OhL2P847GL9Hg0j75V4nd+oR5O2AMWZKrnrCtvNSAfuV9klbqM307oX2hA6Yt
+	 u+8EwIMUxlkHI/thJbSPhtgd+WyRRjMPaLHT66Uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgHXQjT (ORCPT
+        id S1728684AbgHXQqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:39:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39586 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:46:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728249AbgHXQf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:35:28 -0400
+        id S1728570AbgHXQjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:39:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F7D322CBE;
-        Mon, 24 Aug 2020 16:35:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92A2920838;
+        Mon, 24 Aug 2020 16:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286928;
-        bh=FpnvJsQ/MFxUvX0nLrEfcR+kiwscTrNVnhbkPdBa00g=;
+        s=default; t=1598287159;
+        bh=Pw9AvC/5Nu3rmfDksnD5jqwSIKHO6hmHU7Gh8i/qtmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZE35LIHeveHIjLejkR3MX3ND+V4CAzhFJFFitoonvvmOjbj/ZVeyV8G81oNzLU6ES
-         PFVET6mC6iIU/Kw2aYJVaawzoBqreW5zBjalUs7VCL6bRC8cEjzITYsa0R87FCDOVc
-         I3X8diOQtyGG4eqB2SbuAQgQN31OIeIuNy5TOzEw=
+        b=wINo36a62ZjL4rybkveEg9NN3WQAhIZvloF7l7LLE62v0XHQ4rdueQwBOjBjfyx2J
+         5Zz3vU65KGEv12FZ+j34km5WUGOyf5D+2HghYRTWzDj2y9CO3DkHXxuxqRFAYdTeRz
+         a9W8uDFqDh7YH0aRq2zuw/IPrrVs9XJhDAwm1xnk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 18/63] drm/amd/powerplay: correct UVD/VCE PG state on custom pptable uploading
-Date:   Mon, 24 Aug 2020 12:34:18 -0400
-Message-Id: <20200824163504.605538-18-sashal@kernel.org>
+Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/11] jbd2: abort journal if free a async write error metadata buffer
+Date:   Mon, 24 Aug 2020 12:39:06 -0400
+Message-Id: <20200824163914.607152-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
-References: <20200824163504.605538-1-sashal@kernel.org>
+In-Reply-To: <20200824163914.607152-1-sashal@kernel.org>
+References: <20200824163914.607152-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,38 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: "zhangyi (F)" <yi.zhang@huawei.com>
 
-[ Upstream commit 2c5b8080d810d98e3e59617680218499b17c84a1 ]
+[ Upstream commit c044f3d8360d2ecf831ba2cc9f08cf9fb2c699fb ]
 
-The UVD/VCE PG state is managed by UVD and VCE IP. It's error-prone to
-assume the bootup state in SMU based on the dpm status.
+If we free a metadata buffer which has been failed to async write out
+in the background, the jbd2 checkpoint procedure will not detect this
+failure in jbd2_log_do_checkpoint(), so it may lead to filesystem
+inconsistency after cleanup journal tail. This patch abort the journal
+if free a buffer has write_io_error flag to prevent potential further
+inconsistency.
 
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Link: https://lore.kernel.org/r/20200620025427.1756360-5-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c | 6 ------
- 1 file changed, 6 deletions(-)
+ fs/jbd2/transaction.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
-index b7f3f8b62c2ac..9bd2874a122b4 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
-@@ -1640,12 +1640,6 @@ static void vega20_init_powergate_state(struct pp_hwmgr *hwmgr)
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index b4bde0ae10948..3311b1e684def 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -2008,6 +2008,7 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+ {
+ 	struct buffer_head *head;
+ 	struct buffer_head *bh;
++	bool has_write_io_error = false;
+ 	int ret = 0;
  
- 	data->uvd_power_gated = true;
- 	data->vce_power_gated = true;
--
--	if (data->smu_features[GNLD_DPM_UVD].enabled)
--		data->uvd_power_gated = false;
--
--	if (data->smu_features[GNLD_DPM_VCE].enabled)
--		data->vce_power_gated = false;
+ 	J_ASSERT(PageLocked(page));
+@@ -2032,11 +2033,26 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+ 		jbd_unlock_bh_state(bh);
+ 		if (buffer_jbd(bh))
+ 			goto busy;
++
++		/*
++		 * If we free a metadata buffer which has been failed to
++		 * write out, the jbd2 checkpoint procedure will not detect
++		 * this failure and may lead to filesystem inconsistency
++		 * after cleanup journal tail.
++		 */
++		if (buffer_write_io_error(bh)) {
++			pr_err("JBD2: Error while async write back metadata bh %llu.",
++			       (unsigned long long)bh->b_blocknr);
++			has_write_io_error = true;
++		}
+ 	} while ((bh = bh->b_this_page) != head);
+ 
+ 	ret = try_to_free_buffers(page);
+ 
+ busy:
++	if (has_write_io_error)
++		jbd2_journal_abort(journal, -EIO);
++
+ 	return ret;
  }
  
- static int vega20_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 -- 
 2.25.1
 
