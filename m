@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF492C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B246D2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A462071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262065;
-	bh=q2KANpMGXSeyzKEWZM9I8ni3OZPfwzMBznz7DQYRhiE=;
+	s=default; t=1598262075;
+	bh=zskI/d0TIb/JXTXOXNpSCcJMr/Pm3Vu+ILgNO18b/AM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c3bT4eESp8YuIgnblaqemgkfBtE5X5GByx3rUuq2Z/6vmJ136kqgwW9lgpdJdAr4G
-	 kWDHk/bepUZsFDuCAWQ2Vj0EQhegAKllMBKCGB4K7o+lnQ+4Ppnz5Sx8xBk7wtQbFe
-	 77frwWQ0fDFL7r6B5pOI/eQLmKwfjku+JrdNdsOg=
+	b=0AShWaW2JHTwWIKgDCaKJC2jjrpdJZWXbPY9PMuDkzbrHyu/x8r5pgS23NZCOsF0g
+	 96x89G8+RYIw8vd4yRkW8KD1KmGh4qer4/UpiUFuLB8Uqdwt2eNg3zTAgb4dFy+TSv
+	 WQfa47vyFPSGDQ0o0+OnEAdZT4TyYzhICAJX1h5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbgHXJlC (ORCPT
+        id S1729273AbgHXJlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:41:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:41:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729241AbgHXIpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:45:36 -0400
+        id S1726830AbgHXIpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:45:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0140B204FD;
-        Mon, 24 Aug 2020 08:45:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 625FC2072D;
+        Mon, 24 Aug 2020 08:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258735;
-        bh=q2KANpMGXSeyzKEWZM9I8ni3OZPfwzMBznz7DQYRhiE=;
+        s=default; t=1598258732;
+        bh=zskI/d0TIb/JXTXOXNpSCcJMr/Pm3Vu+ILgNO18b/AM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pRN7qhDl+yC+4UyfyJtRDzb7WHFxsHrcdxMETx92RxCE8lGXAkO7pL1cX8alBFXsn
-         kCt4mVyI1y7W0+vkbOkrBBwDMLz6n3mQjAjAIcCkVQqewdWdnodbR7u7fCl8VkrL5e
-         FcHlgliogRHOSmY9+tSnN90ySV9KvACp6MdHuOC8=
+        b=bQpC7gwUGolmsj2PI+Sn5GDBYiFFfAZyleYqUXuHWsOAKuDDhNUqouZwYeXVTzFCG
+         LhNFmtcM0+GUfZLC7QGbC9OyeTxdUGdiMyPQzwvYFUVi+gp+3jCEMX5rtXc3/IiZz2
+         WeZbHM8KkJEuNK+TN1qs4yyin+tijE56P/ft8KlE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 026/107] romfs: fix uninitialized memory leak in romfs_dev_read()
-Date:   Mon, 24 Aug 2020 10:29:52 +0200
-Message-Id: <20200824082406.395752684@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH 5.4 008/107] kbuild: replace AS=clang with LLVM_IAS=1
+Date:   Mon, 24 Aug 2020 10:29:34 +0200
+Message-Id: <20200824082405.456721950@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -61,55 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-commit bcf85fcedfdd17911982a3e3564fcfec7b01eebd upstream.
+commit 7e20e47c70f810d678d02941fa3c671209c4ca97 upstream.
 
-romfs has a superblock field that limits the size of the filesystem; data
-beyond that limit is never accessed.
+The 'AS' variable is unused for building the kernel. Only the remaining
+usage is to turn on the integrated assembler. A boolean flag is a better
+fit for this purpose.
 
-romfs_dev_read() fetches a caller-supplied number of bytes from the
-backing device.  It returns 0 on success or an error code on failure;
-therefore, its API can't represent short reads, it's all-or-nothing.
+AS=clang was added for experts. So, I replaced it with LLVM_IAS=1,
+breaking the backward compatibility.
 
-However, when romfs_dev_read() detects that the requested operation would
-cross the filesystem size limit, it currently silently truncates the
-requested number of bytes.  This e.g.  means that when the content of a
-file with size 0x1000 starts one byte before the filesystem size limit,
-->readpage() will only fill a single byte of the supplied page while
-leaving the rest uninitialized, leaking that uninitialized memory to
-userspace.
-
-Fix it by returning an error code instead of truncating the read when the
-requested read operation would go beyond the end of the filesystem.
-
-Fixes: da4458bda237 ("NOMMU: Make it possible for RomFS to use MTD devices directly")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: David Howells <dhowells@redhat.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200818013202.2246365-1-jannh@google.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/romfs/storage.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ Documentation/kbuild/llvm.rst |    5 ++++-
+ Makefile                      |    2 +-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
---- a/fs/romfs/storage.c
-+++ b/fs/romfs/storage.c
-@@ -217,10 +217,8 @@ int romfs_dev_read(struct super_block *s
- 	size_t limit;
+--- a/Documentation/kbuild/llvm.rst
++++ b/Documentation/kbuild/llvm.rst
+@@ -50,11 +50,14 @@ LLVM Utilities
+ LLVM has substitutes for GNU binutils utilities. These can be invoked as
+ additional parameters to `make`.
  
- 	limit = romfs_maxsize(sb);
--	if (pos >= limit)
-+	if (pos >= limit || buflen > limit - pos)
- 		return -EIO;
--	if (buflen > limit - pos)
--		buflen = limit - pos;
+-	make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
++	make CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
+ 	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-size \\
+ 	  READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
+ 	  HOSTLD=ld.lld
  
- #ifdef CONFIG_ROMFS_ON_MTD
- 	if (sb->s_mtd)
++Currently, the integrated assembler is disabled by default. You can pass
++`LLVM_IAS=1` to enable it.
++
+ Getting Help
+ ------------
+ 
+--- a/Makefile
++++ b/Makefile
+@@ -533,7 +533,7 @@ endif
+ ifneq ($(GCC_TOOLCHAIN),)
+ CLANG_FLAGS	+= --gcc-toolchain=$(GCC_TOOLCHAIN)
+ endif
+-ifeq ($(if $(AS),$(shell $(AS) --version 2>&1 | head -n 1 | grep clang)),)
++ifneq ($(LLVM_IAS),1)
+ CLANG_FLAGS	+= -no-integrated-as
+ endif
+ CLANG_FLAGS	+= -Werror=unknown-warning-option
 
 
