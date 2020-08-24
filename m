@@ -2,210 +2,123 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB08AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF74C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD2432075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:22:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="xVA4Ktes";
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="kn5ejahn"
+	by mail.kernel.org (Postfix) with ESMTP id AA8062074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:22:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598260935;
+	bh=Nv2JwtW1MlhabNmeQfyVOlTAp/34zvL3bmAUIbA/WH4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=01rMzBEeoaovdo3gbEFshhAMuHHVXxsasbYzPoZLuvVo4vbA+rB03gpPJ5iUXFSq0
+	 4ym8yQI4Xex+u0jJ9q/FUBPnTAZ/1mtQVpYc5N+UtFLVVtKFC/c5zKSZQ3nF9rKrCv
+	 N0mTrBuCjqJiCEmKDvLtxiTNIoepKeEN/kasyCso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbgHXJWF (ORCPT
+        id S1730392AbgHXIzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:22:05 -0400
-Received: from smtp73.iad3a.emailsrvr.com ([173.203.187.73]:47919 "EHLO
-        smtp73.iad3a.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728634AbgHXJVu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:21:50 -0400
-X-Greylist: delayed 348 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Aug 2020 05:21:48 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
-        s=20190322-9u7zjiwi; t=1598260560;
-        bh=uNN8RH7yD1tX56e4Kxpu5Me0wrJfDcdmUMAuerB8/Ik=;
-        h=Subject:To:From:Date:From;
-        b=xVA4KtesSPRHbx4Zmp1oT2kJsLYbtmYhBzmL2gmH245/S0dOupAxHQbSWKbqQuMim
-         PNxhjhdpJkjrhYHRMMdi24Ucy4WYpJ1YzL9YsuqWw34wXxkJyuUmJDwF/6tNzO461j
-         9e1g1mV8TMaxTvmNaiB2XMKDebAjwP45LJxSDhR4=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1598260560;
-        bh=uNN8RH7yD1tX56e4Kxpu5Me0wrJfDcdmUMAuerB8/Ik=;
-        h=Subject:To:From:Date:From;
-        b=kn5ejahn1loWVmHP9ZxdMhiJB3U5V3F5ejOE/ui337q4NWpfKPWR64GSGkdC6wZrj
-         8v2RzdtCqHKJEp058oo+HuaWuWShoFzQFCId9xSGRwldgFTz2aUxFPcq19n74feQ8s
-         iJ/qUzhyQwg/KxcIDoBxBv7hLofCq9PzmnQKTZTA=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp34.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id AA51D22A40;
-        Mon, 24 Aug 2020 05:15:59 -0400 (EDT)
-Subject: Re: [PATCH] drivers: staging: comedi: fixed duplicate words from
- checkpatch
-To:     Ethan Edwards <ethancarteredwards@gmail.com>,
-        gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, hsweeten@visionengravers.com,
-        devel@driverdev.osuosl.org
-References: <20200822202131.53kpj2gg35af6vud@archlaptop.localdomain>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-Message-ID: <5ede8454-31d8-25d7-c01a-7b2c94fc499e@mev.co.uk>
-Date:   Mon, 24 Aug 2020 10:15:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 24 Aug 2020 04:55:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730113AbgHXIyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:54:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB1702072D;
+        Mon, 24 Aug 2020 08:54:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259294;
+        bh=Nv2JwtW1MlhabNmeQfyVOlTAp/34zvL3bmAUIbA/WH4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CEd13UVhCMH2jrIlN0cmARGib4U4aCwivnziZK41qyk93gxasl3HafFv80bQV/ntK
+         ynzLAdcfi4ntABSMso6o9ikfDDuTJYDCPFTZ+n0NgGVrGUBtzJNK50LyjARxQVdHUQ
+         Wr1L69PhO7Blw4Brxe7i+kUWaB8y9bReHBpBKzFQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 4.14 46/50] epoll: Keep a reference on files added to the check list
+Date:   Mon, 24 Aug 2020 10:31:47 +0200
+Message-Id: <20200824082354.374727642@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
+References: <20200824082351.823243923@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200822202131.53kpj2gg35af6vud@archlaptop.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Classification-ID: 3ebe9e8a-bc3c-4e53-b469-784198286fc4-1-1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/08/2020 21:21, Ethan Edwards wrote:
-> Fixed various different checkpatch duplicate word warnings, the TODO
-> file said to fix checkpatch warnings.
-> 
-> My old email didn't CC the mailing lists, ignore the old one, sorry.
+From: Marc Zyngier <maz@kernel.org>
 
-Everything above the '---' line ends up in the git commit message 
-(unless edited out manually, and Greg hates that).  The comment about 
-CC'ing email lists doesn't belong in the commit message.  Could you send 
-a '[PATCH v2]' with that line edited out and place a description of the 
-v2 changes just below the '---' line?
+commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682 upstream.
 
-Thanks.
+When adding a new fd to an epoll, and that this new fd is an
+epoll fd itself, we recursively scan the fds attached to it
+to detect cycles, and add non-epool files to a "check list"
+that gets subsequently parsed.
 
-> 
-> Signed-off-by: Ethan Edwards <ethancarteredwards@gmail.com>
-> ---
->   drivers/staging/comedi/comedi.h                  | 4 ++--
->   drivers/staging/comedi/comedidev.h               | 2 +-
->   drivers/staging/comedi/drivers/addi_apci_1564.c  | 4 ++--
->   drivers/staging/comedi/drivers/comedi_8255.c     | 2 +-
->   drivers/staging/comedi/drivers/ni_tiocmd.c       | 2 +-
->   drivers/staging/comedi/drivers/pcmuio.c          | 2 +-
->   drivers/staging/comedi/drivers/quatech_daqp_cs.c | 2 +-
->   7 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/staging/comedi/comedi.h b/drivers/staging/comedi/comedi.h
-> index 09a940066c0e..b5d00a006dbb 100644
-> --- a/drivers/staging/comedi/comedi.h
-> +++ b/drivers/staging/comedi/comedi.h
-> @@ -680,7 +680,7 @@ struct comedi_rangeinfo {
->    * value of 1 volt.
->    *
->    * The only defined flag value is %RF_EXTERNAL (%0x100), indicating that the
-> - * the range needs to be multiplied by an external reference.
-> + * range needs to be multiplied by an external reference.
->    */
->   struct comedi_krange {
->   	int min;
-> @@ -970,7 +970,7 @@ enum i8254_mode {
->    *   major reasons exist why this caused major confusion for users:
->    *   1) The register values are _NOT_ in user documentation, but rather in
->    *     arcane locations, such as a few register programming manuals that are
-> - *     increasingly hard to find and the NI MHDDK (comments in in example code).
-> + *     increasingly hard to find and the NI MHDDK (comments in example code).
->    *     There is no one place to find the various valid values of the registers.
->    *   2) The register values are _NOT_ completely consistent.  There is no way to
->    *     gain any sense of intuition of which values, or even enums one should use
-> diff --git a/drivers/staging/comedi/comedidev.h b/drivers/staging/comedi/comedidev.h
-> index 0dff1ac057cd..0e1b95ef9a4d 100644
-> --- a/drivers/staging/comedi/comedidev.h
-> +++ b/drivers/staging/comedi/comedidev.h
-> @@ -627,7 +627,7 @@ extern const struct comedi_lrange range_unknown;
->    * @range: Array of &struct comedi_krange, one for each range.
->    *
->    * Each element of @range[] describes the minimum and maximum physical range
-> - * range and the type of units.  Typically, the type of unit is %UNIT_volt
-> + * and the type of units.  Typically, the type of unit is %UNIT_volt
->    * (i.e. volts) and the minimum and maximum are in millionths of a volt.
->    * There may also be a flag that indicates the minimum and maximum are merely
->    * scale factors for an unknown, external reference.
-> diff --git a/drivers/staging/comedi/drivers/addi_apci_1564.c b/drivers/staging/comedi/drivers/addi_apci_1564.c
-> index fadefcb5c237..06fc7ed96200 100644
-> --- a/drivers/staging/comedi/drivers/addi_apci_1564.c
-> +++ b/drivers/staging/comedi/drivers/addi_apci_1564.c
-> @@ -544,7 +544,7 @@ static int apci1564_timer_insn_write(struct comedi_device *dev,
->   {
->   	struct apci1564_private *devpriv = dev->private;
->   
-> -	/* just write the last last to the reload register */
-> +	/* just write the last to the reload register */
->   	if (insn->n) {
->   		unsigned int val = data[insn->n - 1];
->   
-> @@ -628,7 +628,7 @@ static int apci1564_counter_insn_write(struct comedi_device *dev,
->   	unsigned int chan = CR_CHAN(insn->chanspec);
->   	unsigned long iobase = devpriv->counters + APCI1564_COUNTER(chan);
->   
-> -	/* just write the last last to the reload register */
-> +	/* just write the last to the reload register */
->   	if (insn->n) {
->   		unsigned int val = data[insn->n - 1];
->   
-> diff --git a/drivers/staging/comedi/drivers/comedi_8255.c b/drivers/staging/comedi/drivers/comedi_8255.c
-> index 3298725b9ba5..b7ca465933ee 100644
-> --- a/drivers/staging/comedi/drivers/comedi_8255.c
-> +++ b/drivers/staging/comedi/drivers/comedi_8255.c
-> @@ -248,7 +248,7 @@ EXPORT_SYMBOL_GPL(subdev_8255_mm_init);
->    * subdev_8255_regbase - get offset of 8255 registers or call-back context
->    * @s: comedi subdevice
->    *
-> - * Returns the 'regbase' parameter that was previously passed to to
-> + * Returns the 'regbase' parameter that was previously passed to
->    * subdev_8255_init() or subdev_8255_mm_init() to set up the subdevice.
->    * Only valid if the subdevice was set up successfully.
->    */
-> diff --git a/drivers/staging/comedi/drivers/ni_tiocmd.c b/drivers/staging/comedi/drivers/ni_tiocmd.c
-> index 2a9f7e9821a7..ab6d9e8269f3 100644
-> --- a/drivers/staging/comedi/drivers/ni_tiocmd.c
-> +++ b/drivers/staging/comedi/drivers/ni_tiocmd.c
-> @@ -286,7 +286,7 @@ int ni_tio_cmdtest(struct comedi_device *dev,
->   		 * This should be done, but we don't yet know the actual
->   		 * register values.  These should be tested and then documented
->   		 * in the ni_route_values/ni_*.csv files, with indication of
-> -		 * who/when/which/how these these were tested.
-> +		 * who/when/which/how these were tested.
->   		 * When at least a e/m/660x series have been tested, this code
->   		 * should be uncommented:
->   		 *
-> diff --git a/drivers/staging/comedi/drivers/pcmuio.c b/drivers/staging/comedi/drivers/pcmuio.c
-> index 7e1fc6ffb48c..b299d648a0eb 100644
-> --- a/drivers/staging/comedi/drivers/pcmuio.c
-> +++ b/drivers/staging/comedi/drivers/pcmuio.c
-> @@ -48,7 +48,7 @@
->    *
->    * In the 48-channel version:
->    *
-> - * On subdev 0, the first 24 channels channels are edge-detect channels.
-> + * On subdev 0, the first 24 channels are edge-detect channels.
->    *
->    * In the 96-channel board you have the following channels that can do edge
->    * detection:
-> diff --git a/drivers/staging/comedi/drivers/quatech_daqp_cs.c b/drivers/staging/comedi/drivers/quatech_daqp_cs.c
-> index 1b1efa4d31f6..fe4408ebf6b3 100644
-> --- a/drivers/staging/comedi/drivers/quatech_daqp_cs.c
-> +++ b/drivers/staging/comedi/drivers/quatech_daqp_cs.c
-> @@ -164,7 +164,7 @@ static int daqp_clear_events(struct comedi_device *dev, int loops)
->   
->   	/*
->   	 * Reset any pending interrupts (my card has a tendency to require
-> -	 * require multiple reads on the status register to achieve this).
-> +	 * multiple reads on the status register to achieve this).
->   	 */
->   	while (--loops) {
->   		status = inb(dev->iobase + DAQP_STATUS_REG);
-> 
+However, this check list isn't completely safe when deletions
+can happen concurrently. To sidestep the issue, make sure that
+a struct file placed on the check list sees its f_count increased,
+ensuring that a concurrent deletion won't result in the file
+disapearing from under our feet.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/eventpoll.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1900,9 +1900,11 @@ static int ep_loop_check_proc(void *priv
+ 			 * not already there, and calling reverse_path_check()
+ 			 * during ep_insert().
+ 			 */
+-			if (list_empty(&epi->ffd.file->f_tfile_llink))
++			if (list_empty(&epi->ffd.file->f_tfile_llink)) {
++				get_file(epi->ffd.file);
+ 				list_add(&epi->ffd.file->f_tfile_llink,
+ 					 &tfile_check_list);
++			}
+ 		}
+ 	}
+ 	mutex_unlock(&ep->mtx);
+@@ -1946,6 +1948,7 @@ static void clear_tfile_check_list(void)
+ 		file = list_first_entry(&tfile_check_list, struct file,
+ 					f_tfile_llink);
+ 		list_del_init(&file->f_tfile_llink);
++		fput(file);
+ 	}
+ 	INIT_LIST_HEAD(&tfile_check_list);
+ }
+@@ -2100,9 +2103,11 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, in
+ 					clear_tfile_check_list();
+ 					goto error_tgt_fput;
+ 				}
+-			} else
++			} else {
++				get_file(tf.file);
+ 				list_add(&tf.file->f_tfile_llink,
+ 							&tfile_check_list);
++			}
+ 			mutex_lock_nested(&ep->mtx, 0);
+ 			if (is_file_epoll(tf.file)) {
+ 				tep = tf.file->private_data;
 
 
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
