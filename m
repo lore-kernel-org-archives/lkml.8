@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 304C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98C5B205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9D4205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598288446;
-	bh=gX242I+Ys66LLIFI8NFdVo8uWb+C82vQGDzHe3iSuT0=;
+	s=default; t=1598288457;
+	bh=48KcJnFUretPa9m4eu33BwX5UY/CjfVBLnIuqyBnw9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B4f3UicNhLj1oaWgzAMaA9Py9BSWP3easTsPyGuyfOfsK88xWVoE5k6uEBZoqqqtq
-	 dmybjEsWErdSbRo4i7j7LuHVib0VHyr0yikw+c4ADqZA98lYBLctCMBd7BIZ/sics0
-	 D+w4tfnJXzHE3GgmGh84KpdgCJHMevlvWwz22WAk=
+	b=e8jw82dw0+vvf6AykyuuquZQ0wq7HD//xtctsLQk/brZQEFe13aoNuXKsgsj7a6ml
+	 0Jb1Yn1Wkp83tatEYJhVciVnje95pH1G4iWjFKov4Wv3LhXMOchY7C4/LNq/h9j3GM
+	 RU2mPthR0LDagMgHz5oVUiShpYW6Ep/3tH9KwFhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgHXRAn (ORCPT
+        id S1726946AbgHXRAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:00:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40038 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:00:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728499AbgHXQin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728498AbgHXQin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:38:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E963722C9F;
-        Mon, 24 Aug 2020 16:38:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABA4022D07;
+        Mon, 24 Aug 2020 16:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287122;
-        bh=gX242I+Ys66LLIFI8NFdVo8uWb+C82vQGDzHe3iSuT0=;
+        s=default; t=1598287118;
+        bh=48KcJnFUretPa9m4eu33BwX5UY/CjfVBLnIuqyBnw9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kWv/eZR/49j2+YEWmOWeGjejxU9/mrBdl1/aRUZliTSNmMsQfNpAgnJMo1i3Gp93Y
-         ApFpBBWJSYXK/Ilzko3H9o3lspkTK8mYYe5+dfZx6I49p95iGG+QVMkfDlORn32gym
-         5his11898NJ8VVW+VprxBgQ7Qqp2gLYtSD3nrYBw=
+        b=1ch8e5SgEdAZhEi0f5tnU80AXTThlfC5s7Pz7Ht1HvEudL8pdWasKvCrRU0mBTwBp
+         PsQAePW0i7CIj8i2aXbVcVBbRPgJUz9jT+s4FsdbntEpd9VG8kLOzyiwnHocRzncpr
+         lN+pDOE1CFeZMgotdDwf8qIWdrwmt7i4fwJquQM0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 37/38] arm64: Move handling of erratum 1418040 into C code
-Date:   Mon, 24 Aug 2020 12:37:49 -0400
-Message-Id: <20200824163751.606577-37-sashal@kernel.org>
+Cc:     Jiansong Chen <Jiansong.Chen@amd.com>,
+        Tao Zhou <tao.zhou1@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 34/38] drm/amdgpu: disable gfxoff for navy_flounder
+Date:   Mon, 24 Aug 2020 12:37:46 -0400
+Message-Id: <20200824163751.606577-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163751.606577-1-sashal@kernel.org>
 References: <20200824163751.606577-1-sashal@kernel.org>
@@ -63,82 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Jiansong Chen <Jiansong.Chen@amd.com>
 
-[ Upstream commit d49f7d7376d0c0daf8680984a37bd07581ac7d38 ]
+[ Upstream commit 9c9b17a7d19a8e21db2e378784fff1128b46c9d3 ]
 
-Instead of dealing with erratum 1418040 on each entry and exit,
-let's move the handling to __switch_to() instead, which has
-several advantages:
+gfxoff is temporarily disabled for navy_flounder,
+since at present the feature has broken some basic
+amdgpu test.
 
-- It can be applied when it matters (switching between 32 and 64
-  bit tasks).
-- It is written in C (yay!)
-- It can rely on static keys rather than alternatives
-
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Acked-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20200731173824.107480-2-maz@kernel.org
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Jiansong Chen <Jiansong.Chen@amd.com>
+Reviewed-by: Tao Zhou <tao.zhou1@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/process.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index fab013c5ee8c9..10190c4b16dc4 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -498,6 +498,39 @@ static void entry_task_switch(struct task_struct *next)
- 	__this_cpu_write(__entry_task, next);
- }
- 
-+/*
-+ * ARM erratum 1418040 handling, affecting the 32bit view of CNTVCT.
-+ * Assuming the virtual counter is enabled at the beginning of times:
-+ *
-+ * - disable access when switching from a 64bit task to a 32bit task
-+ * - enable access when switching from a 32bit task to a 64bit task
-+ */
-+static void erratum_1418040_thread_switch(struct task_struct *prev,
-+					  struct task_struct *next)
-+{
-+	bool prev32, next32;
-+	u64 val;
-+
-+	if (!(IS_ENABLED(CONFIG_ARM64_ERRATUM_1418040) &&
-+	      cpus_have_const_cap(ARM64_WORKAROUND_1418040)))
-+		return;
-+
-+	prev32 = is_compat_thread(task_thread_info(prev));
-+	next32 = is_compat_thread(task_thread_info(next));
-+
-+	if (prev32 == next32)
-+		return;
-+
-+	val = read_sysreg(cntkctl_el1);
-+
-+	if (!next32)
-+		val |= ARCH_TIMER_USR_VCT_ACCESS_EN;
-+	else
-+		val &= ~ARCH_TIMER_USR_VCT_ACCESS_EN;
-+
-+	write_sysreg(val, cntkctl_el1);
-+}
-+
- /*
-  * Thread switching.
-  */
-@@ -514,6 +547,7 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
- 	uao_thread_switch(next);
- 	ptrauth_thread_switch(next);
- 	ssbs_thread_switch(next);
-+	erratum_1418040_thread_switch(prev, next);
- 
- 	/*
- 	 * Complete any pending TLB or cache maintenance on this CPU in case
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+index 64d96eb0a2337..3a5b4efa7a5e6 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+@@ -617,6 +617,9 @@ static void gfx_v10_0_check_gfxoff_flag(struct amdgpu_device *adev)
+ 	case CHIP_NAVI10:
+ 		adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
+ 		break;
++	case CHIP_NAVY_FLOUNDER:
++		adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
++		break;
+ 	default:
+ 		break;
+ 	}
 -- 
 2.25.1
 
