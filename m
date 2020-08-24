@@ -2,201 +2,122 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E958C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7485C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6D1B20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E35520578
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:30:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbLjbs+k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pj6p/JNg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgHXT3s (ORCPT
+        id S1726867AbgHXTaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:29:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52632 "EHLO
+        Mon, 24 Aug 2020 15:30:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgHXT3n (ORCPT
+        with ESMTP id S1725780AbgHXTaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:29:43 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE81C061573;
-        Mon, 24 Aug 2020 12:29:43 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id i26so9127537edv.4;
-        Mon, 24 Aug 2020 12:29:43 -0700 (PDT)
+        Mon, 24 Aug 2020 15:30:03 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79AE8C061573;
+        Mon, 24 Aug 2020 12:30:03 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id b9so5916235oiy.3;
+        Mon, 24 Aug 2020 12:30:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tkyjDeEozETacXNRr3uxxFjEe+DOSkNiETr7ujJ7mA4=;
-        b=gbLjbs+kaoh4rZOxABupqrCM4Qcd3bYtkfeVC/nRU8Z2Wz1U+JbkAQkArH4gmcAbQg
-         +me959Drpnd4CjLnwv1i7I+n39T70i1k9MgfXmM4TdqSH5CHPeQQ704WlNRzvMmsCNE3
-         mHOMfsb2nqxSIfJ5iG/uxSzInfGvZgulDJl2jhM0ZTUq12X/DcNPeCcreRhIEGU5c473
-         tplXuWIWR80tZi94jsXsW9LbmVH0mU1xGrXQJgLidd+oqlPUkRSlZgZ3kJ1zt0Zs4Z/h
-         iVwiFqFsoqXrzRsD/80e0iJI+ElqXVWr+zeUX5i662Lr58YYWQFbC+XEQHqwTrZ52/i7
-         S1hg==
+        bh=deXlORBbZU7IWdokjl5teOi2WJn+pCpbuBcieHq8M0Y=;
+        b=Pj6p/JNgXXnPJgJjTtg1z3fX5AWLe/xjf5LlZUBl0Fka4VNv1o4RyL/mxjO5XZveqm
+         /vDIa0HxL5c0NtrZQ3S717ngsVvpQR6YFr0CnXrHPgMPDGQHKQndZ/UooUSq0iH1LgLs
+         73LltyOK2W6NOdUQI33P0jPw4Ta6I6E0ULmHSwRpa3Hf9WdSgNDyr3OF12KnVrR0ak+3
+         FH97vZfO+WY4kXZF2yHWpsaJwV961t3wx/T2tOwG/Fu5+RxV2EFo6JdL/PTBV0XPfHD0
+         H3Y45fjGVx9H12wOEmGh00ReGgcZsBrFl1s21Hz0JRph7bebsK++5Yo9k1kFc1nGXvq6
+         +QdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tkyjDeEozETacXNRr3uxxFjEe+DOSkNiETr7ujJ7mA4=;
-        b=rEgwT0ZbXNTE+tR82bQrOlKADOrPeQE9BzXIQ40wkQ3nALEqkuNPYO5uXNK6fTvf5L
-         xkslt5ZEM1cN0pNvVQPDQD8+3SVVfNqhkbIrwYhKzrv6ymwVBkz+JLJh6fR8IKOIx6G6
-         v0OddlOcBiWD+jA0M9w+I7dr2fPn7TFoubyzfGJ0cThELC+JFWgPe7XXRBOAWCxoTlKW
-         LLUcA6kpZphz5aUDbASrhefDMDDFxgpC/LiNlN/gydahM9tcSNS1hnH4AcUGt42N1j01
-         g4ViN6/jHTfacWAr4Z9VoUI1ms3XfQs5+3VwLsC1knpMg3lGoifpbyKKJhgkA33HPQk4
-         H/lw==
-X-Gm-Message-State: AOAM531nbeZ+mAt5m9q7abkJtViyJvbkbMUhO89+u+YS8rU7GQPh9Fag
-        a81hGNWqixhUjVpouA5gmztu6EnCidt2h6ECb1c=
-X-Google-Smtp-Source: ABdhPJy8zXxqgoqnCG7czfw4GIuDC9/xFzn6G7zIEQJby4+MpOb+8f/28WY9QeyW1U8+CILxKbHrHp2ZOuZ7tua7MN0=
-X-Received: by 2002:aa7:c983:: with SMTP id c3mr6737425edt.383.1598297381878;
- Mon, 24 Aug 2020 12:29:41 -0700 (PDT)
+        bh=deXlORBbZU7IWdokjl5teOi2WJn+pCpbuBcieHq8M0Y=;
+        b=JM83BzZfqC0Jcv10h5btFl5MYr8lmGoqoIKuPhhBw5MY6ZgWHMdW+mvwUalMoM+9KI
+         HGy31bH8f2kd0+BJDvI/X47Desxnnr1NzEjw7h0BiyH6gA4e7O+5dnlKhd4UtMloShyb
+         52zMvxxDMbuv197YyayJnXy1fVQ7xfBX5pXUJP06UuYUgedrGm6oOw89FoWHDi3WZpbz
+         hxLI4YHPbi/RXd7HncEteJQK67yM94r5n0lZou69XspQFAxoSJ+c4LtWcYQjor22o1x0
+         yDDIpC0M+VM7z/0LvgCUkKLuwVxILG1Y7WCJLRODCXjobsQ/MJGtESpYuvUAL6mSKEPU
+         ipMA==
+X-Gm-Message-State: AOAM531COynI/IQxJjnF8kJAm1qJwOzR71bx0Sv5zC1i7KDPX24j53nj
+        AIiI+P6iDoNX5SH06shcW+KBb2C/2BpKDKeR0lI=
+X-Google-Smtp-Source: ABdhPJyAUcJjgst/CGdSR9bt5PMVqWQ0nTOGdTqMxGP1Nvw1fW3rU+cCYs5SKra6Kls9Yx4MqeJPWmLLw/YJMf/wTC0=
+X-Received: by 2002:a54:4817:: with SMTP id j23mr602022oij.140.1598297402894;
+ Mon, 24 Aug 2020 12:30:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
- <20200819152120.GA106437@ravnborg.org> <20200819153045.GA18469@pendragon.ideasonboard.com>
- <CALAqxLUXnPRec3UYbMKge8yNKBagLOatOeRCagF=JEyPEfWeKA@mail.gmail.com>
- <20200820090326.3f400a15@coco.lan> <20200820100205.GA5962@pendragon.ideasonboard.com>
-In-Reply-To: <20200820100205.GA5962@pendragon.ideasonboard.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Tue, 25 Aug 2020 05:29:29 +1000
-Message-ID: <CAPM=9twzsw7T=GD6Jc1EFenXq9ZhTgf_Nuo71uLfX2W33oa=6w@mail.gmail.com>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Liwei Cai <cailiwei@hisilicon.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liuyao An <anliuyao@huawei.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
+References: <20200822010018.19453-1-nramas@linux.microsoft.com>
+ <CAEjxPJ5Kok-TBfS=XQ+NUC5tuaZRkyLBOawG4UDky51_bsMnGw@mail.gmail.com> <418618c4-a0c6-6b28-6718-2726a29b83c5@linux.microsoft.com>
+In-Reply-To: <418618c4-a0c6-6b28-6718-2726a29b83c5@linux.microsoft.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Mon, 24 Aug 2020 15:29:52 -0400
+Message-ID: <CAEjxPJ6-8WnZRJnADsn=RVakzJiESjEjK-f8nSkscpT7dnricQ@mail.gmail.com>
+Subject: Re: [PATCH] SELinux: Measure state and hash of policy using IMA
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>,
+        tusharsu@linux.microsoft.com, sashal@kernel.org,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 20:02, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
+On Mon, Aug 24, 2020 at 2:13 PM Lakshmi Ramasubramanian
+<nramas@linux.microsoft.com> wrote:
 >
-> Hi Mauro,
+> On 8/24/20 7:00 AM, Stephen Smalley wrote:
 >
-> On Thu, Aug 20, 2020 at 09:03:26AM +0200, Mauro Carvalho Chehab wrote:
-> > Em Wed, 19 Aug 2020 12:52:06 -0700 John Stultz escreveu:
-> > > On Wed, Aug 19, 2020 at 8:31 AM Laurent Pinchart wrote:
-> > > > On Wed, Aug 19, 2020 at 05:21:20PM +0200, Sam Ravnborg wrote:
-> > > > > On Wed, Aug 19, 2020 at 01:45:28PM +0200, Mauro Carvalho Chehab wrote:
-> > > > > > This patch series port the out-of-tree driver for Hikey 970 (which
-> > > > > > should also support Hikey 960) from the official 96boards tree:
-> > > > > >
-> > > > > >    https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-> > > > > >
-> > > > > > Based on his history, this driver seems to be originally written
-> > > > > > for Kernel 4.4, and was later ported to Kernel 4.9. The original
-> > > > > > driver used to depend on ION (from Kernel 4.4) and had its own
-> > > > > > implementation for FB dev API.
-> > > > > >
-> > > > > > As I need to preserve the original history (with has patches from
-> > > > > > both HiSilicon and from Linaro),  I'm starting from the original
-> > > > > > patch applied there. The remaining patches are incremental,
-> > > > > > and port this driver to work with upstream Kernel.
-> > > > > >
-> > > ...
-> > > > > > - Due to legal reasons, I need to preserve the authorship of
-> > > > > >   each one responsbile for each patch. So, I need to start from
-> > > > > >   the original patch from Kernel 4.4;
-> > > ...
-> > > > > I do acknowledge you need to preserve history and all -
-> > > > > but this patchset is not easy to review.
-> > > >
-> > > > Why do we need to preserve history ? Adding relevant Signed-off-by and
-> > > > Co-developed-by should be enough, shouldn't it ? Having a public branch
-> > > > that contains the history is useful if anyone is interested, but I don't
-> > > > think it's required in mainline.
-> > >
-> > > Yea. I concur with Laurent here. I'm not sure what legal reasoning you
-> > > have on this but preserving the "absolute" history here is actively
-> > > detrimental for review and understanding of the patch set.
-> > >
-> > > Preserving Authorship, Signed-off-by lines and adding Co-developed-by
-> > > lines should be sufficient to provide both atribution credit and DCO
-> > > history.
+> >> +int security_read_policy_kernel(struct selinux_state *state,
+> >> +                               void **data, size_t *len)
+> >> +{
+> >> +       int rc;
+> >> +
+> >> +       rc = security_read_policy_len(state, len);
+> >> +       if (rc)
+> >> +               return rc;
+> >> +
+> >> +       *data = vmalloc(*len);
+> >> +       if (!*data)
+> >> +               return -ENOMEM;
+> >>
+> >> +       return security_read_selinux_policy(state, data, len);
+> >>   }
 > >
-> > I'm not convinced that, from legal standpoint, folding things would
-> > be enough. See, there are at least 3 legal systems involved here
-> > among the different patch authors:
+> > See the discussion here:
+> > https://lore.kernel.org/selinux/20200824113015.1375857-1-omosnace@redhat.com/T/#t
 > >
-> >       - civil law;
-> >       - common law;
-> >       - customary law + common law.
+> > In order for this to be safe, you need to ensure that all callers of
+> > security_read_policy_kernel() have taken fsi->mutex in selinuxfs and
+> > any use of security_read_policy_len() occurs while holding the mutex.
+> > Otherwise, the length can change between security_read_policy_len()
+> > and security_read_selinux_policy() if policy is reloaded.
 > >
-> > Merging stuff altogether from different law systems can be problematic,
-> > and trying to discuss this with experienced IP property lawyers will
-> > for sure take a lot of time and efforts. I also bet that different
-> > lawyers will have different opinions, because laws are subject to
-> > interpretation. With that matter I'm not aware of any court rules
-> > with regards to folded patches. So, it sounds to me that folding
-> > patches is something that has yet to be proofed in courts around
-> > the globe.
-> >
-> > At least for US legal system, it sounds that the Country of
-> > origin of a patch is relevant, as they have a concept of
-> > "national technology" that can be subject to export regulations.
-> >
-> > From my side, I really prefer to play safe and stay out of any such
-> > legal discussions.
 >
-> Let's be serious for a moment. If you think there are legal issues in
-> taking GPL-v2.0-only patches and squashing them while retaining
-> authorship information through tags, the Linux kernel if *full* of that.
-> You also routinely modify patches that you commit to the media subsystem
-> to fix "small issues".
+> "struct selinux_fs_info" is available when calling
+> security_read_policy_kernel() - currently in measure.c.
+> Only "struct selinux_state" is.
 >
-> The country of origin argument makes no sense either, the kernel code
-> base if full of code coming from pretty much all country on the planet.
->
-> Keeping the patches separate make this hard to review. Please squash
-> them.
+> Is Ondrej's re-try approach I need to use to workaround policy reload issue?
 
-I'm inclined to agree with Laurent here.
-
-Patches submitted as GPL-v2 with DCO lines and author names/companies
-should be fine to be squashed and rearranged,
-as long as the DCO and Authorship is kept somewhere in the new patch
-that is applied.
-
-Review is more important here.
-
-Dave.
+No, I think perhaps we should move the mutex to selinux_state instead
+of selinux_fs_info.  selinux_fs_info has a pointer to selinux_state so
+it can then use it indirectly.  Note that your patches are going to
+conflict with other ongoing work in the selinux next branch that is
+refactoring policy load and converting the policy rwlock to RCU.
