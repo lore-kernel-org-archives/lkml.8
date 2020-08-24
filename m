@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C35B22B49
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0FE622B43
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258411;
-	bh=J0/8psHqkcXmla2yHdL0e3lJZ5L+/bmM4h8z9edyFBA=;
+	s=default; t=1598258414;
+	bh=3Lblky5qdJxW2bTod3JWKV1FyqeA2Uw3AKWhieYVlac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T3KFun3a0Z2vZOFtDkQU7Bd/sufkvQ/cVUzN0sR3yp90FhfP5pPDm+sTU7MQnQQOO
-	 v1EZf7TNP4lLnctzM2CyDaZstXeX3okbJpyTkp7vNI0e9ZuwTuDW5OSDlzLcvUc+ox
-	 iZoiPYDJbsZ5Bj4OeeRqXzuVxEMR2YbtI2c8v0MI=
+	b=chQTRxajZbNSClAKMndzt2GN0tT1pzte7o4uZGZHxCDo1Xz1QOb+UvtIq87B1I+aR
+	 8RhfgbJq1pn4UmK2/WzXegBS532W5uyExBxQ2bbOWhkdM/WJi1HEFrOKyFoo1inkUh
+	 tVq8Lm2W/YQFmICfLQipFQOXY/OFqM327tsaI9EI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbgHXIkK (ORCPT
+        id S1728734AbgHXIkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:40:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56252 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:40:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbgHXIjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:39:54 -0400
+        id S1727914AbgHXIkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:40:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58A772177B;
-        Mon, 24 Aug 2020 08:39:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2DF022B43;
+        Mon, 24 Aug 2020 08:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258393;
-        bh=J0/8psHqkcXmla2yHdL0e3lJZ5L+/bmM4h8z9edyFBA=;
+        s=default; t=1598258402;
+        bh=3Lblky5qdJxW2bTod3JWKV1FyqeA2Uw3AKWhieYVlac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B/JqG199y7//9Aw/gV/V4hybLyy6UBVu+D988aPeO115XDP/O5XmCWph4FjoO3Hsi
-         ECY/dwyNh06EmCZe0k2ARm1KUr46ttFuG5CKwlOQihwa3/c+hOLlAd4RV/vNAzaX3v
-         Uxps1pTHvQiqqjIB/szEVgYUSCt7oQee+i0T6rfo=
+        b=Hy+StDCkoPlVL2rXCROCdzsucy/10xvk9nk3y1IAxd7vVNQB8cyig/pCwWIu3fyZN
+         HUKFrZFdd6HGewECbRKor6ftuMmmg2136x/gk0a4ppyog8NMPAqaVewzWFb82S58px
+         uS2Waqqsd6Qw8pocndwmAv2mqdcv+Pjz1VJ/ExqA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 030/124] io_uring: cancel all tasks requests on exit
-Date:   Mon, 24 Aug 2020 10:29:24 +0200
-Message-Id: <20200824082410.897068252@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        Ken Raeburn <raeburn@redhat.com>
+Subject: [PATCH 5.7 005/124] bcache: avoid nr_stripes overflow in bcache_device_init()
+Date:   Mon, 24 Aug 2020 10:28:59 +0200
+Message-Id: <20200824082409.656708838@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -59,91 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 44e728b8aae0bb6d4229129083974f9dea43f50b ]
+[ Upstream commit 65f0f017e7be8c70330372df23bcb2a407ecf02d ]
 
-If a process is going away, io_uring_flush() will cancel only 1
-request with a matching pid. Cancel all of them
+For some block devices which large capacity (e.g. 8TB) but small io_opt
+size (e.g. 8 sectors), in bcache_device_init() the stripes number calcu-
+lated by,
+	DIV_ROUND_UP_ULL(sectors, d->stripe_size);
+might be overflow to the unsigned int bcache_device->nr_stripes.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+This patch uses the uint64_t variable to store DIV_ROUND_UP_ULL()
+and after the value is checked to be available in unsigned int range,
+sets it to bache_device->nr_stripes. Then the overflow is avoided.
+
+Reported-and-tested-by: Ken Raeburn <raeburn@redhat.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: stable@vger.kernel.org
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1783075
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io-wq.c    | 14 --------------
- fs/io-wq.h    |  1 -
- fs/io_uring.c | 14 ++++++++++++--
- 3 files changed, 12 insertions(+), 17 deletions(-)
+ drivers/md/bcache/super.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index 6d2e8ccc229e3..2bfa9117bc289 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -1022,20 +1022,6 @@ enum io_wq_cancel io_wq_cancel_work(struct io_wq *wq, struct io_wq_work *cwork)
- 	return io_wq_cancel_cb(wq, io_wq_io_cb_cancel_data, (void *)cwork, false);
- }
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index b4d23d9f30f9b..d5477faa14edd 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -825,19 +825,19 @@ static int bcache_device_init(struct bcache_device *d, unsigned int block_size,
+ 	struct request_queue *q;
+ 	const size_t max_stripes = min_t(size_t, INT_MAX,
+ 					 SIZE_MAX / sizeof(atomic_t));
+-	size_t n;
++	uint64_t n;
+ 	int idx;
  
--static bool io_wq_pid_match(struct io_wq_work *work, void *data)
--{
--	pid_t pid = (pid_t) (unsigned long) data;
--
--	return work->task_pid == pid;
--}
--
--enum io_wq_cancel io_wq_cancel_pid(struct io_wq *wq, pid_t pid)
--{
--	void *data = (void *) (unsigned long) pid;
--
--	return io_wq_cancel_cb(wq, io_wq_pid_match, data, false);
--}
--
- struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data)
- {
- 	int ret = -ENOMEM, node;
-diff --git a/fs/io-wq.h b/fs/io-wq.h
-index 8902903831f25..df8a4cd3236db 100644
---- a/fs/io-wq.h
-+++ b/fs/io-wq.h
-@@ -129,7 +129,6 @@ static inline bool io_wq_is_hashed(struct io_wq_work *work)
+ 	if (!d->stripe_size)
+ 		d->stripe_size = 1 << 31;
  
- void io_wq_cancel_all(struct io_wq *wq);
- enum io_wq_cancel io_wq_cancel_work(struct io_wq *wq, struct io_wq_work *cwork);
--enum io_wq_cancel io_wq_cancel_pid(struct io_wq *wq, pid_t pid);
- 
- typedef bool (work_cancel_fn)(struct io_wq_work *, void *);
- 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index cf32705546773..9bb23edf2363a 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7720,6 +7720,13 @@ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
+-	d->nr_stripes = DIV_ROUND_UP_ULL(sectors, d->stripe_size);
+-
+-	if (!d->nr_stripes || d->nr_stripes > max_stripes) {
+-		pr_err("nr_stripes too large or invalid: %u (start sector beyond end of disk?)",
+-			(unsigned int)d->nr_stripes);
++	n = DIV_ROUND_UP_ULL(sectors, d->stripe_size);
++	if (!n || n > max_stripes) {
++		pr_err("nr_stripes too large or invalid: %llu (start sector beyond end of disk?)\n",
++			n);
+ 		return -ENOMEM;
  	}
- }
++	d->nr_stripes = n;
  
-+static bool io_cancel_pid_cb(struct io_wq_work *work, void *data)
-+{
-+	pid_t pid = (pid_t) (unsigned long) data;
-+
-+	return work->task_pid == pid;
-+}
-+
- static int io_uring_flush(struct file *file, void *data)
- {
- 	struct io_ring_ctx *ctx = file->private_data;
-@@ -7729,8 +7736,11 @@ static int io_uring_flush(struct file *file, void *data)
- 	/*
- 	 * If the task is going away, cancel work it may have pending
- 	 */
--	if (fatal_signal_pending(current) || (current->flags & PF_EXITING))
--		io_wq_cancel_pid(ctx->io_wq, task_pid_vnr(current));
-+	if (fatal_signal_pending(current) || (current->flags & PF_EXITING)) {
-+		void *data = (void *) (unsigned long)task_pid_vnr(current);
-+
-+		io_wq_cancel_cb(ctx->io_wq, io_cancel_pid_cb, data, true);
-+	}
- 
- 	return 0;
- }
+ 	n = d->nr_stripes * sizeof(atomic_t);
+ 	d->stripe_sectors_dirty = kvzalloc(n, GFP_KERNEL);
 -- 
 2.25.1
 
