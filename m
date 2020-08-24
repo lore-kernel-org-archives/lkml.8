@@ -2,190 +2,108 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5903CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8B3C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 270382074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5260E2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:03:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XONJDaKt"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wi+Zu+BG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgHXNDA (ORCPT
+        id S1727877AbgHXNDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:03:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgHXNC5 (ORCPT
+        Mon, 24 Aug 2020 09:03:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11976 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727774AbgHXNDH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 09:03:07 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OD2ZHx095086;
+        Mon, 24 Aug 2020 09:03:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=W2mh9+xogrvrMRCw5xMAGNdHiDT6mqWyQbS8cOp1XkY=;
+ b=Wi+Zu+BGQgMhUNJ/D+bcMUocxMnfFto0qT/BfJ4B9r+5BjPRnKpo05FD+41FlZARhkT/
+ uWhb45mUpPDxDdeRxFCLUgDMWNybV4NWiae+KNN08MFwTcNVNj9mrAXULGZsPs74dxvA
+ 6QYpAW9N1iLZfaxpo36GQnJvTP9qPUTNl4VdSCsFTRajaTGk68dyy2GDMeY0oi8xpqW0
+ g0+C1mq/Y15eL9v+Ioaj+LD7QgdulVBvH5Yc6i2Br0AjxPxTuRtZN5sOKxBuhJeM0/DO
+ 8vN87tz6T0Dix82uX/Ypo/azNqjYIh70nyIMxYlnMp8o9rjrITVoYJwD76OfSy3Lk1SH Kg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 334b5c5ndh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 09:03:03 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07OD2tAJ096823;
         Mon, 24 Aug 2020 09:02:57 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F58C061573;
-        Mon, 24 Aug 2020 06:02:57 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id bs17so7956475edb.1;
-        Mon, 24 Aug 2020 06:02:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=P1Zncp3mBPUwy/XcJd/Yz/e5wA8bamhjeRbMn86RZ00=;
-        b=XONJDaKtbTenPVd8qxPHXGDxygjmiThWQu9BDEYWfQkNXTReQ/uDZ5EpmkZRn48ejm
-         efOlakAgT3CzeiVj7Mb+Xe3MGYfSkK8ChioK5iaE0FrECZyu1NMbrsagF1MD4zeLbQBR
-         YlcHE6GAiOf6uGdxmW7WV6BtF/nYzbopOxDsPzJW8y7ozmI8qbtwt/W/4c/3cQppu7NS
-         uvR+ZYua5Efzwcpl/UYFTfrd/HHrj+o8hEJgQzJ/lWjW5Q/34xZ6iMphmfkOvs8Kryyf
-         VaQ73biFs1164Ey+UwqI8Z3LwrPXz4xep8H74Fgq2ahk0F8imuGO7V4XUm/TyepKgz3W
-         4d0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=P1Zncp3mBPUwy/XcJd/Yz/e5wA8bamhjeRbMn86RZ00=;
-        b=M8SQLHgl7xxa+fdh8q0il3mOQJPjSrL2tqSl64m8EVjQNaXQIzu1ycMZAtLfSn9fxJ
-         q6uaUYmY+laJ+745Bq5aeZ0pc+ttMWJaKDNRiHIp9/vqF8MgKrNYYZC/h+nGB6MMoh9h
-         dpjvwGu6kNFELwOkli0RCYH+TrBqu5V/INBjeu1FBJByN4g1tOx/6Bl7WtFoa5ap4X1O
-         ERfLw5/rxaqtAUKu4D7BjJINE2YLr6VymnfMXYIw7UBB8wPrwFZVyEOepoypLHOBSzQW
-         kYSEq24U8wT8IN6oZgvdiFHCPNYPmKdbpJ2uEdIsTyPtfvA/lPI12tTCqZiwZ1lNeEJ/
-         xv0Q==
-X-Gm-Message-State: AOAM532jwNz2X0QJKzfv9Cqpi9y7Fcz5xfWjRecWfvKU1I4U8s2O1prT
-        23WzId03hOGStJ4ER1xOXbA=
-X-Google-Smtp-Source: ABdhPJzyf2lmrCIi0SqicxviBRWrSr49744XFzc3aRPrmSNXEykr6WnIHEpJxxogoesnOqE2WhNmSQ==
-X-Received: by 2002:a50:c3c4:: with SMTP id i4mr5236603edf.244.1598274175628;
-        Mon, 24 Aug 2020 06:02:55 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d4c:8a00:f0ec:b5d5:8c1c:a145])
-        by smtp.gmail.com with ESMTPSA id g11sm9366898edt.88.2020.08.24.06.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 06:02:55 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Ettore Chimenti <ek5.chimenti@gmail.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH THIRD RESEND] MAINTAINERS: adjust entries to moving CEC platform drivers
-Date:   Mon, 24 Aug 2020 15:02:43 +0200
-Message-Id: <20200824130243.27162-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 334b5c5mve-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 09:02:57 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07OCwAA6009870;
+        Mon, 24 Aug 2020 13:02:19 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06fra.de.ibm.com with ESMTP id 332uwesef0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 13:02:19 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07OD2HR459900208
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Aug 2020 13:02:17 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 016F3A4068;
+        Mon, 24 Aug 2020 13:02:17 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 94C76A4062;
+        Mon, 24 Aug 2020 13:02:15 +0000 (GMT)
+Received: from sig-9-65-254-31.ibm.com (unknown [9.65.254.31])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Aug 2020 13:02:15 +0000 (GMT)
+Message-ID: <681d6bd21410152c0488615b634f4b29140a3974.camel@linux.ibm.com>
+Subject: Re: [PATCH 09/11] ima: Don't remove security.ima if file must not
+ be appraised
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
+Date:   Mon, 24 Aug 2020 09:02:14 -0400
+In-Reply-To: <20200618160458.1579-9-roberto.sassu@huawei.com>
+References: <20200618160329.1263-2-roberto.sassu@huawei.com>
+         <20200618160458.1579-9-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-24_11:2020-08-24,2020-08-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ adultscore=0 spamscore=0 impostorscore=0 suspectscore=3 clxscore=1015
+ phishscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=772
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008240099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 4be5e8648b0c ("media: move CEC platform drivers to a separate
-directory") moved various files into a new directory structure, but did
-not adjust the entries in MAINTAINERS.
+On Thu, 2020-06-18 at 18:04 +0200, Roberto Sassu wrote:
+> Files might come from a remote source and might have xattrs, including
+> security.ima. It should not be IMA task to decide whether security.ima
+> should be kept or not. This patch removes the removexattr() system
+> call in ima_inode_post_setattr().
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 
-Since then, ./scripts/get_maintainer.pl --self-test=patterns complains:
+Yes, this has been previously discussed.
 
-  warning: no file matches F: drivers/media/platform/s5p-cec/
-  warning: no file matches F: drivers/media/platform/tegra-cec/
-  warning: no file matches F: drivers/media/platform/cec-gpio/
-  warning: no file matches F: drivers/media/platform/meson/ao-cec-g12a.c
-  warning: no file matches F: drivers/media/platform/meson/ao-cec.c
-  warning: no file matches F: drivers/media/platform/seco-cec/seco-cec.c
-  warning: no file matches F: drivers/media/platform/seco-cec/seco-cec.h
-  warning: no file matches F: drivers/media/platform/sti/cec/
-
-Update the MAINTAINERS entries to the new file locations.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Mauro, please pick this non-urgent minor clean-up patch.
-  
-applies cleanly on v5.9-rc2 and next-20200824
-
-v1 send here:
-https://lore.kernel.org/lkml/20200418093630.6149-1-lukas.bulwahn@gmail.com/
- 
-v1 first resend here:
-https://lore.kernel.org/lkml/20200506050744.4779-1-lukas.bulwahn@gmail.com/
-
-v2 second resend here:
-https://lore.kernel.org/lkml/20200525142946.8268-1-lukas.bulwahn@gmail.com/
-
- MAINTAINERS | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f0068bceeb61..0cdb71b63f4f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2446,7 +2446,7 @@ L:	linux-samsung-soc@vger.kernel.org (moderated for non-subscribers)
- L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/media/s5p-cec.txt
--F:	drivers/media/platform/s5p-cec/
-+F:	drivers/media/cec/platform/s5p/
- 
- ARM/SAMSUNG S5P SERIES JPEG CODEC SUPPORT
- M:	Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>
-@@ -2591,7 +2591,7 @@ L:	linux-tegra@vger.kernel.org
- L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/media/tegra-cec.txt
--F:	drivers/media/platform/tegra-cec/
-+F:	drivers/media/cec/platform/tegra/
- 
- ARM/TETON BGA MACHINE SUPPORT
- M:	"Mark F. Brown" <mark.brown314@gmail.com>
-@@ -4014,7 +4014,7 @@ S:	Supported
- W:	http://linuxtv.org
- T:	git git://linuxtv.org/media_tree.git
- F:	Documentation/devicetree/bindings/media/cec-gpio.txt
--F:	drivers/media/platform/cec-gpio/
-+F:	drivers/media/cec/platform/cec-gpio/
- 
- CELL BROADBAND ENGINE ARCHITECTURE
- M:	Arnd Bergmann <arnd@arndb.de>
-@@ -11292,8 +11292,7 @@ S:	Supported
- W:	http://linux-meson.com/
- T:	git git://linuxtv.org/media_tree.git
- F:	Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml
--F:	drivers/media/platform/meson/ao-cec-g12a.c
--F:	drivers/media/platform/meson/ao-cec.c
-+F:	drivers/media/cec/platform/meson/
- 
- MESON NAND CONTROLLER DRIVER FOR AMLOGIC SOCS
- M:	Liang Yang <liang.yang@amlogic.com>
-@@ -15476,8 +15475,7 @@ F:	drivers/mmc/host/sdricoh_cs.c
- SECO BOARDS CEC DRIVER
- M:	Ettore Chimenti <ek5.chimenti@gmail.com>
- S:	Maintained
--F:	drivers/media/platform/seco-cec/seco-cec.c
--F:	drivers/media/platform/seco-cec/seco-cec.h
-+F:	drivers/media/cec/platform/seco/
- 
- SECURE COMPUTING
- M:	Kees Cook <keescook@chromium.org>
-@@ -16511,7 +16509,7 @@ STI CEC DRIVER
- M:	Benjamin Gaignard <benjamin.gaignard@linaro.org>
- S:	Maintained
- F:	Documentation/devicetree/bindings/media/stih-cec.txt
--F:	drivers/media/platform/sti/cec/
-+F:	drivers/media/cec/platform/sti/
- 
- STK1160 USB VIDEO CAPTURE DRIVER
- M:	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
--- 
-2.17.1
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
