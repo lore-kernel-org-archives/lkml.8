@@ -2,53 +2,53 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C30BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB5BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5278A2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD5B2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263273;
-	bh=djItqV/kV6AW66PqnX49nw1rlTBXTbemxJL4FdlGbQI=;
+	s=default; t=1598263277;
+	bh=q2KANpMGXSeyzKEWZM9I8ni3OZPfwzMBznz7DQYRhiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j3ezFmtJ5lKcr51r+A+kPoYZI2hzBhPzlA8Jd2c0ATGG6/17UdjZ9szYH8xytHx6S
-	 yn7QANa32yWsMeXApkoeP+kB9k1MtyuIom3kD2vcpsoCOhhGBzu6WobqABrKbBxhiM
-	 H8Q7LsdNGYwFx6mtj9HIOEj2Hl69dGxuzk8e4KaU=
+	b=JQ206EnDgi12ir9binbovw6fBXqLW9pW/vsZg3RMIFVvNHMjTEYISGufXT/hMBLhP
+	 0XndL0y2Z6XL2sxqzrwugu2VzHEe2akKR8LpBqLXeB4vTwLx5lzCF+f2NfAzVbuYyW
+	 on1eJ9T4RrZgaQKFsntkOPAARnq/N8790bMPj3a0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgHXKBK (ORCPT
+        id S1726672AbgHXIcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:01:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39482 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:32:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726413AbgHXIcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:32:33 -0400
+        id S1726580AbgHXIcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:32:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EA772087D;
-        Mon, 24 Aug 2020 08:32:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D08D206F0;
+        Mon, 24 Aug 2020 08:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257952;
-        bh=djItqV/kV6AW66PqnX49nw1rlTBXTbemxJL4FdlGbQI=;
+        s=default; t=1598257934;
+        bh=q2KANpMGXSeyzKEWZM9I8ni3OZPfwzMBznz7DQYRhiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yyT+xGh26f8Zv+mDO3mfriNWGawKhbmzQhThwPOBtE66dlB+4Fa5ybuyeaIULgI5w
-         Ic6AX4E4PdnG8yDXTaN+DbmNSpWRgfGKJQIWKItxR9fVOwW4FDIQ7TLZeGWlHLZ4zn
-         Na1y2IAYsVxHeI3uzasgn+4hNs6Bvj91huuuT0BM=
+        b=v3mUVfsrz5bSIIoO1MQOjETEgQJMkRs3yIuUs9VN8zQDMta1v2nq7864GMiLczgik
+         X89KuZ8l8gg+VzZ7YAXwVO3YnnexrIAbMsGZdqxC/dic6VUOd2nXlZAHcIimViqU8O
+         wb3y9Zxeo5vifRR7jiSoAEPPUHNzLmDFV89ot5nw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 003/148] drm/ast: Remove unused code paths for AST 1180
-Date:   Mon, 24 Aug 2020 10:28:21 +0200
-Message-Id: <20200824082414.106228049@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 014/148] romfs: fix uninitialized memory leak in romfs_dev_read()
+Date:   Mon, 24 Aug 2020 10:28:32 +0200
+Message-Id: <20200824082414.647524908@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -61,241 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Zimmermann <tzimmermann@suse.de>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit 05f13f5b5996d20a9819e0c6fd0cda4956c8aff9 ]
+commit bcf85fcedfdd17911982a3e3564fcfec7b01eebd upstream.
 
-The ast driver contains code paths for AST 1180 chips. The chip is not
-supported and the rsp code has never been tested. Simplify the driver by
-removing the AST 1180 code.
+romfs has a superblock field that limits the size of the filesystem; data
+beyond that limit is never accessed.
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200617080340.29584-2-tzimmermann@suse.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+romfs_dev_read() fetches a caller-supplied number of bytes from the
+backing device.  It returns 0 on success or an error code on failure;
+therefore, its API can't represent short reads, it's all-or-nothing.
+
+However, when romfs_dev_read() detects that the requested operation would
+cross the filesystem size limit, it currently silently truncates the
+requested number of bytes.  This e.g.  means that when the content of a
+file with size 0x1000 starts one byte before the filesystem size limit,
+->readpage() will only fill a single byte of the supplied page while
+leaving the rest uninitialized, leaking that uninitialized memory to
+userspace.
+
+Fix it by returning an error code instead of truncating the read when the
+requested read operation would go beyond the end of the filesystem.
+
+Fixes: da4458bda237 ("NOMMU: Make it possible for RomFS to use MTD devices directly")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200818013202.2246365-1-jannh@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/ast/ast_drv.c  |  1 -
- drivers/gpu/drm/ast/ast_drv.h  |  2 -
- drivers/gpu/drm/ast/ast_main.c | 89 +++++++++++++++-------------------
- drivers/gpu/drm/ast/ast_mode.c | 11 +----
- drivers/gpu/drm/ast/ast_post.c | 10 ++--
- 5 files changed, 43 insertions(+), 70 deletions(-)
+ fs/romfs/storage.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/ast/ast_drv.c b/drivers/gpu/drm/ast/ast_drv.c
-index b7ba22dddcad9..83509106f3ba9 100644
---- a/drivers/gpu/drm/ast/ast_drv.c
-+++ b/drivers/gpu/drm/ast/ast_drv.c
-@@ -59,7 +59,6 @@ static struct drm_driver driver;
- static const struct pci_device_id pciidlist[] = {
- 	AST_VGA_DEVICE(PCI_CHIP_AST2000, NULL),
- 	AST_VGA_DEVICE(PCI_CHIP_AST2100, NULL),
--	/*	AST_VGA_DEVICE(PCI_CHIP_AST1180, NULL), - don't bind to 1180 for now */
- 	{0, 0, 0},
- };
+--- a/fs/romfs/storage.c
++++ b/fs/romfs/storage.c
+@@ -217,10 +217,8 @@ int romfs_dev_read(struct super_block *s
+ 	size_t limit;
  
-diff --git a/drivers/gpu/drm/ast/ast_drv.h b/drivers/gpu/drm/ast/ast_drv.h
-index 656d591b154b3..09f2659e29118 100644
---- a/drivers/gpu/drm/ast/ast_drv.h
-+++ b/drivers/gpu/drm/ast/ast_drv.h
-@@ -52,7 +52,6 @@
+ 	limit = romfs_maxsize(sb);
+-	if (pos >= limit)
++	if (pos >= limit || buflen > limit - pos)
+ 		return -EIO;
+-	if (buflen > limit - pos)
+-		buflen = limit - pos;
  
- #define PCI_CHIP_AST2000 0x2000
- #define PCI_CHIP_AST2100 0x2010
--#define PCI_CHIP_AST1180 0x1180
- 
- 
- enum ast_chip {
-@@ -64,7 +63,6 @@ enum ast_chip {
- 	AST2300,
- 	AST2400,
- 	AST2500,
--	AST1180,
- };
- 
- enum ast_tx_chip {
-diff --git a/drivers/gpu/drm/ast/ast_main.c b/drivers/gpu/drm/ast/ast_main.c
-index e5398e3dabe70..f48a9f62368c0 100644
---- a/drivers/gpu/drm/ast/ast_main.c
-+++ b/drivers/gpu/drm/ast/ast_main.c
-@@ -142,50 +142,42 @@ static int ast_detect_chip(struct drm_device *dev, bool *need_post)
- 	ast_detect_config_mode(dev, &scu_rev);
- 
- 	/* Identify chipset */
--	if (dev->pdev->device == PCI_CHIP_AST1180) {
--		ast->chip = AST1100;
--		DRM_INFO("AST 1180 detected\n");
--	} else {
--		if (dev->pdev->revision >= 0x40) {
--			ast->chip = AST2500;
--			DRM_INFO("AST 2500 detected\n");
--		} else if (dev->pdev->revision >= 0x30) {
--			ast->chip = AST2400;
--			DRM_INFO("AST 2400 detected\n");
--		} else if (dev->pdev->revision >= 0x20) {
--			ast->chip = AST2300;
--			DRM_INFO("AST 2300 detected\n");
--		} else if (dev->pdev->revision >= 0x10) {
--			switch (scu_rev & 0x0300) {
--			case 0x0200:
--				ast->chip = AST1100;
--				DRM_INFO("AST 1100 detected\n");
--				break;
--			case 0x0100:
--				ast->chip = AST2200;
--				DRM_INFO("AST 2200 detected\n");
--				break;
--			case 0x0000:
--				ast->chip = AST2150;
--				DRM_INFO("AST 2150 detected\n");
--				break;
--			default:
--				ast->chip = AST2100;
--				DRM_INFO("AST 2100 detected\n");
--				break;
--			}
--			ast->vga2_clone = false;
--		} else {
--			ast->chip = AST2000;
--			DRM_INFO("AST 2000 detected\n");
-+	if (dev->pdev->revision >= 0x40) {
-+		ast->chip = AST2500;
-+		DRM_INFO("AST 2500 detected\n");
-+	} else if (dev->pdev->revision >= 0x30) {
-+		ast->chip = AST2400;
-+		DRM_INFO("AST 2400 detected\n");
-+	} else if (dev->pdev->revision >= 0x20) {
-+		ast->chip = AST2300;
-+		DRM_INFO("AST 2300 detected\n");
-+	} else if (dev->pdev->revision >= 0x10) {
-+		switch (scu_rev & 0x0300) {
-+		case 0x0200:
-+			ast->chip = AST1100;
-+			DRM_INFO("AST 1100 detected\n");
-+			break;
-+		case 0x0100:
-+			ast->chip = AST2200;
-+			DRM_INFO("AST 2200 detected\n");
-+			break;
-+		case 0x0000:
-+			ast->chip = AST2150;
-+			DRM_INFO("AST 2150 detected\n");
-+			break;
-+		default:
-+			ast->chip = AST2100;
-+			DRM_INFO("AST 2100 detected\n");
-+			break;
- 		}
-+		ast->vga2_clone = false;
-+	} else {
-+		ast->chip = AST2000;
-+		DRM_INFO("AST 2000 detected\n");
- 	}
- 
- 	/* Check if we support wide screen */
- 	switch (ast->chip) {
--	case AST1180:
--		ast->support_wide_screen = true;
--		break;
- 	case AST2000:
- 		ast->support_wide_screen = false;
- 		break;
-@@ -469,15 +461,13 @@ int ast_driver_load(struct drm_device *dev, unsigned long flags)
- 	if (need_post)
- 		ast_post_gpu(dev);
- 
--	if (ast->chip != AST1180) {
--		ret = ast_get_dram_info(dev);
--		if (ret)
--			goto out_free;
--		ast->vram_size = ast_get_vram_info(dev);
--		DRM_INFO("dram MCLK=%u Mhz type=%d bus_width=%d size=%08x\n",
--			 ast->mclk, ast->dram_type,
--			 ast->dram_bus_width, ast->vram_size);
--	}
-+	ret = ast_get_dram_info(dev);
-+	if (ret)
-+		goto out_free;
-+	ast->vram_size = ast_get_vram_info(dev);
-+	DRM_INFO("dram MCLK=%u Mhz type=%d bus_width=%d size=%08x\n",
-+		 ast->mclk, ast->dram_type,
-+		 ast->dram_bus_width, ast->vram_size);
- 
- 	ret = ast_mm_init(ast);
- 	if (ret)
-@@ -496,8 +486,7 @@ int ast_driver_load(struct drm_device *dev, unsigned long flags)
- 	    ast->chip == AST2200 ||
- 	    ast->chip == AST2300 ||
- 	    ast->chip == AST2400 ||
--	    ast->chip == AST2500 ||
--	    ast->chip == AST1180) {
-+	    ast->chip == AST2500) {
- 		dev->mode_config.max_width = 1920;
- 		dev->mode_config.max_height = 2048;
- 	} else {
-diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_mode.c
-index 3a3a511670c9c..73fd76cec5120 100644
---- a/drivers/gpu/drm/ast/ast_mode.c
-+++ b/drivers/gpu/drm/ast/ast_mode.c
-@@ -769,9 +769,6 @@ static void ast_crtc_dpms(struct drm_crtc *crtc, int mode)
- {
- 	struct ast_private *ast = crtc->dev->dev_private;
- 
--	if (ast->chip == AST1180)
--		return;
--
- 	/* TODO: Maybe control display signal generation with
- 	 *       Sync Enable (bit CR17.7).
- 	 */
-@@ -793,16 +790,10 @@ static void ast_crtc_dpms(struct drm_crtc *crtc, int mode)
- static int ast_crtc_helper_atomic_check(struct drm_crtc *crtc,
- 					struct drm_crtc_state *state)
- {
--	struct ast_private *ast = crtc->dev->dev_private;
- 	struct ast_crtc_state *ast_state;
- 	const struct drm_format_info *format;
- 	bool succ;
- 
--	if (ast->chip == AST1180) {
--		DRM_ERROR("AST 1180 modesetting not supported\n");
--		return -EINVAL;
--	}
--
- 	if (!state->enable)
- 		return 0; /* no mode checks if CRTC is being disabled */
- 
-@@ -1044,7 +1035,7 @@ static enum drm_mode_status ast_mode_valid(struct drm_connector *connector,
- 
- 		if ((ast->chip == AST2100) || (ast->chip == AST2200) ||
- 		    (ast->chip == AST2300) || (ast->chip == AST2400) ||
--		    (ast->chip == AST2500) || (ast->chip == AST1180)) {
-+		    (ast->chip == AST2500)) {
- 			if ((mode->hdisplay == 1920) && (mode->vdisplay == 1080))
- 				return MODE_OK;
- 
-diff --git a/drivers/gpu/drm/ast/ast_post.c b/drivers/gpu/drm/ast/ast_post.c
-index 2d1b186197432..af0c8ebb009a1 100644
---- a/drivers/gpu/drm/ast/ast_post.c
-+++ b/drivers/gpu/drm/ast/ast_post.c
-@@ -58,13 +58,9 @@ bool ast_is_vga_enabled(struct drm_device *dev)
- 	struct ast_private *ast = dev->dev_private;
- 	u8 ch;
- 
--	if (ast->chip == AST1180) {
--		/* TODO 1180 */
--	} else {
--		ch = ast_io_read8(ast, AST_IO_VGA_ENABLE_PORT);
--		return !!(ch & 0x01);
--	}
--	return false;
-+	ch = ast_io_read8(ast, AST_IO_VGA_ENABLE_PORT);
-+
-+	return !!(ch & 0x01);
- }
- 
- static const u8 extreginfo[] = { 0x0f, 0x04, 0x1c, 0xff };
--- 
-2.25.1
-
+ #ifdef CONFIG_ROMFS_ON_MTD
+ 	if (sb->s_mtd)
 
 
