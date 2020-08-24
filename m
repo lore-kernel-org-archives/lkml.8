@@ -2,128 +2,121 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582ABC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E85FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31CD3207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:57:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=popple.id.au header.i=@popple.id.au header.b="HOjTtros"
+	by mail.kernel.org (Postfix) with ESMTP id DEB482071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:57:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598263063;
+	bh=TEnAfCRFKqzWR8b/LmW6mBYUZ01Boo0wZb54NQoT21g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SmIx9DSoSLW5xnuHXmWQPoR0Ow89kUB/DAWaSWtjJqXn16LpyiTIiVgKuBTpqbwAK
+	 okd0fPEzyIQ8xRUd1mdCTUbITx/PvL2CNE9NZe/+iE/363U3dW3/Gzzs/dO5RW6R3z
+	 VtCjdpZNaEB+0ySI6FuGcoA/2qclDMDRzFNKe9RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbgHXJ5f (ORCPT
+        id S1729773AbgHXJ5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:57:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:35067 "EHLO ozlabs.org"
+        Mon, 24 Aug 2020 05:57:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728024AbgHXIe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:34:56 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726698AbgHXIev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:34:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BZlmZ05xxz9sTK;
-        Mon, 24 Aug 2020 18:34:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=popple.id.au;
-        s=202006; t=1598258094;
-        bh=yRZeJ8KZbou6GV0bFnhnKPYHStI9GrYCBZFRBYS6p3M=;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ECD8207D3;
+        Mon, 24 Aug 2020 08:34:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598258090;
+        bh=TEnAfCRFKqzWR8b/LmW6mBYUZ01Boo0wZb54NQoT21g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HOjTtrosu7GyKTGzTOdwMv4eWaV9887xNiK29sJw3SipAzIxsF1s3iEQv7+lEhdAZ
-         96V0NiK8cuWicCuwjNfYEDGQBbfYYz2RZ4L5v/Dl21A7nUV6fmfY8HOdBsokKuwzhU
-         jN9MRMYDK+KDiIpK5AuxdrzYYGpiYD2dyxlUgyiTZWjS0W9kZPKPtzLngVzIpp7ayj
-         HNgmn+1pWGBN7pWEmi6du6CeLW1OZHwEDLyiHGrkNWrc5mN3D0zD8NqgnGXIBF7Ird
-         m1lR7A5z8KD+Z3k3go/ItnpzlaDfnbTApho4fqfyZWGKdLUbs/T9y7hTMy79VgGCTK
-         +URC2MAKSCy8Q==
-From:   Alistair Popple <alistair@popple.id.au>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org,
+        b=FPwgfWA4h4XBgqZ4mNNIPJvJtX/NloZ5uSkqx9l0b/0t4HDMJ9KoKLfv03JIAa+Ag
+         Z4VjcGnOjEPgXCwCByLHdlbsqCtV18SAd8VTYroX/tUEtQj0OxubVFE+uI579sGkWv
+         ohSv32cuH6lEzTUeusc7YAJOAB1CmSsa1dLhM+Gw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Alistair Popple <alistair@popple.id.au>, stable@vger.kernel.org
-Subject: [PATCH 2/2] mm/rmap: Fixup copying of soft dirty and uffd ptes
-Date:   Mon, 24 Aug 2020 18:31:28 +1000
-Message-Id: <20200824083128.12684-2-alistair@popple.id.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200824083128.12684-1-alistair@popple.id.au>
-References: <20200824083128.12684-1-alistair@popple.id.au>
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Laurent Vivier <laurent@vivier.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 071/148] fs/signalfd.c: fix inconsistent return codes for signalfd4
+Date:   Mon, 24 Aug 2020 10:29:29 +0200
+Message-Id: <20200824082417.477038233@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
+References: <20200824082413.900489417@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During memory migration a pte is temporarily replaced with a migration
-swap pte. Some pte bits from the existing mapping such as the soft-dirty
-and uffd write-protect bits are preserved by copying these to the
-temporary migration swap pte.
+From: Helge Deller <deller@gmx.de>
 
-However these bits are not stored at the same location for swap and
-non-swap ptes. Therefore testing these bits requires using the
-appropriate helper function for the given pte type.
+[ Upstream commit a089e3fd5a82aea20f3d9ec4caa5f4c65cc2cfcc ]
 
-Unfortunately several code locations were found where the wrong helper
-function is being used to test soft_dirty and uffd_wp bits which leads
-to them getting incorrectly set or cleared during page-migration.
+The kernel signalfd4() syscall returns different error codes when called
+either in compat or native mode.  This behaviour makes correct emulation
+in qemu and testing programs like LTP more complicated.
 
-Fix these by using the correct tests based on pte type.
+Fix the code to always return -in both modes- EFAULT for unaccessible user
+memory, and EINVAL when called with an invalid signal mask.
 
-Fixes: a5430dda8a3a ("mm/migrate: support un-addressable ZONE_DEVICE page in migration")
-Fixes: 8c3328f1f36a ("mm/migrate: migrate_vma() unmap page from vma while collecting pages")
-Fixes: f45ec5ff16a7 ("userfaultfd: wp: support swap and page migration")
-Signed-off-by: Alistair Popple <alistair@popple.id.au>
-Cc: stable@vger.kernel.org
+Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Laurent Vivier <laurent@vivier.eu>
+Link: http://lkml.kernel.org/r/20200530100707.GA10159@ls3530.fritz.box
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/migrate.c | 6 ++++--
- mm/rmap.c    | 9 +++++++--
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ fs/signalfd.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index ddb64253fe3e..5bea19c496af 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2427,9 +2427,11 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
- 			entry = make_migration_entry(page, mpfn &
- 						     MIGRATE_PFN_WRITE);
- 			swp_pte = swp_entry_to_pte(entry);
--			if (pte_soft_dirty(pte))
-+			if ((is_swap_pte(pte) && pte_swp_soft_dirty(pte))
-+				|| (!is_swap_pte(pte) && pte_soft_dirty(pte)))
- 				swp_pte = pte_swp_mksoft_dirty(swp_pte);
--			if (pte_uffd_wp(pte))
-+			if ((is_swap_pte(pte) && pte_swp_uffd_wp(pte))
-+				|| (!is_swap_pte(pte) && pte_uffd_wp(pte)))
- 				swp_pte = pte_swp_mkuffd_wp(swp_pte);
- 			set_pte_at(mm, addr, ptep, swp_pte);
+diff --git a/fs/signalfd.c b/fs/signalfd.c
+index 44b6845b071c3..5b78719be4455 100644
+--- a/fs/signalfd.c
++++ b/fs/signalfd.c
+@@ -314,9 +314,10 @@ SYSCALL_DEFINE4(signalfd4, int, ufd, sigset_t __user *, user_mask,
+ {
+ 	sigset_t mask;
  
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 83cc459edc40..9425260774a1 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1511,9 +1511,14 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 			 */
- 			entry = make_migration_entry(page, 0);
- 			swp_pte = swp_entry_to_pte(entry);
--			if (pte_soft_dirty(pteval))
-+
-+			/*
-+			 * pteval maps a zone device page and is therefore
-+			 * a swap pte.
-+			 */
-+			if (pte_swp_soft_dirty(pteval))
- 				swp_pte = pte_swp_mksoft_dirty(swp_pte);
--			if (pte_uffd_wp(pteval))
-+			if (pte_swp_uffd_wp(pteval))
- 				swp_pte = pte_swp_mkuffd_wp(swp_pte);
- 			set_pte_at(mm, pvmw.address, pvmw.pte, swp_pte);
- 			/*
+-	if (sizemask != sizeof(sigset_t) ||
+-	    copy_from_user(&mask, user_mask, sizeof(mask)))
++	if (sizemask != sizeof(sigset_t))
+ 		return -EINVAL;
++	if (copy_from_user(&mask, user_mask, sizeof(mask)))
++		return -EFAULT;
+ 	return do_signalfd4(ufd, &mask, flags);
+ }
+ 
+@@ -325,9 +326,10 @@ SYSCALL_DEFINE3(signalfd, int, ufd, sigset_t __user *, user_mask,
+ {
+ 	sigset_t mask;
+ 
+-	if (sizemask != sizeof(sigset_t) ||
+-	    copy_from_user(&mask, user_mask, sizeof(mask)))
++	if (sizemask != sizeof(sigset_t))
+ 		return -EINVAL;
++	if (copy_from_user(&mask, user_mask, sizeof(mask)))
++		return -EFAULT;
+ 	return do_signalfd4(ufd, &mask, 0);
+ }
+ 
 -- 
-2.20.1
+2.25.1
+
+
 
