@@ -2,121 +2,132 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBF8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EACC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36EC2206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262863;
-	bh=1w+ZeW5Eq4Fc9nQKvS9ZWp0Qrvgwjaw+QflNsi9usso=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hPE9nabFodQkaTxki4dqqjkPHxTHshdNX9beiTRIpMaqqk+GJBhHPnHTtEeStZbYK
-	 O9aSx/ElzE/wPryWl5k/1VMrB7ylCnu+J2SHtmp0YBiDZh7Fsld6cVCFc6uUhqqe6K
-	 dKjz2Fzi0VK6ZAP/LZxeaEk9mlkIDKbA7AlaHGfI=
+	by mail.kernel.org (Postfix) with ESMTP id C7A7D206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgHXJyS (ORCPT
+        id S1729507AbgHXJya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51292 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:54:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49518 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728424AbgHXIhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:37:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF6452177B;
-        Mon, 24 Aug 2020 08:37:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258260;
-        bh=1w+ZeW5Eq4Fc9nQKvS9ZWp0Qrvgwjaw+QflNsi9usso=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uL9YntxfhFTAZJtWkyeh6q4lywCE/ugEgOwRWNvNVZF/P2UdL+3sy/YpaTnFfjyMC
-         y2XVr8jhgfdV02lLSNNttNQbgM/uMEwG/ffoIjOE3T3zHO/WG/Cy4A+p3NREiWL42a
-         AD5Jk5+NwccVZbMu098JpYhYxGwGQOSq2wfR4Ls0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shay Agroskin <shayagr@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 134/148] net: ena: Change WARN_ON expression in ena_del_napi_in_range()
-Date:   Mon, 24 Aug 2020 10:30:32 +0200
-Message-Id: <20200824082420.437260941@linuxfoundation.org>
+        id S1726332AbgHXJy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:54:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 30C0FACAF;
+        Mon, 24 Aug 2020 09:54:56 +0000 (UTC)
+From:   Jiri Slaby <jslaby@suse.cz>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        syzbot+ad1f53726c3bd11180cb@syzkaller.appspotmail.com,
+        akpm@linux-foundation.org, nico@fluxnic.net
+Subject: [PATCH] Revert "vc_screen: extract vcs_read_buf_header"
+Date:   Mon, 24 Aug 2020 11:54:25 +0200
+Message-Id: <20200824095425.4376-1-jslaby@suse.cz>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
-References: <20200824082413.900489417@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shay Agroskin <shayagr@amazon.com>
+This reverts commit b1c32fcfadf5593ab7a63261cc8a5747c36e627e, because
+Syzkaller reports a use-after-free, a write in vcs_read:
 
-[ Upstream commit 8b147f6f3e7de4e51113e3e9ec44aa2debc02c58 ]
+BUG: KASAN: use-after-free in vcs_read_buf drivers/tty/vt/vc_screen.c:357 [inline]
+BUG: KASAN: use-after-free in vcs_read+0xaa7/0xb40 drivers/tty/vt/vc_screen.c:449
+Write of size 2 at addr ffff8880a8014000 by task syz-executor.5/16936
+CPU: 1 PID: 16936 Comm: syz-executor.5 Not tainted 5.9.0-rc1-next-20200820-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+...
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ vcs_read_buf drivers/tty/vt/vc_screen.c:357 [inline]
+ vcs_read+0xaa7/0xb40 drivers/tty/vt/vc_screen.c:449
 
-The ena_del_napi_in_range() function unregisters the napi handler for
-rings in a given range.
-This function had the following WARN_ON macro:
+There are two issues with the patch:
+1) vcs_read rounds the 'count' *up* to an even number. So if we read odd
+   bytes from the header (3 bytes in the reproducer), the second byte of
+   a (2-byte/ushort) write to temporary con_buf won't fit. It is because
+   with the patch applied, we only subtract the real number read (3 bytes)
+   and not the whole header (4 bytes).
 
-    WARN_ON(ENA_IS_XDP_INDEX(adapter, i) &&
-	    adapter->ena_napi[i].xdp_ring);
+2) in this scenario, we perform unaligned accesses now: there are
+   2-byte/ushort writes to odd addresses. Due to the same reason as
+   above.
 
-This macro prints the call stack if the expression inside of it is
-true [1], but the expression inside of it is the wanted situation.
-The expression checks whether the ring has an XDP queue and its index
-corresponds to a XDP one.
+Revert this for now, re-think and retry later.
 
-This patch changes the expression to
-    !ENA_IS_XDP_INDEX(adapter, i) && adapter->ena_napi[i].xdp_ring
-which indicates an unwanted situation.
-
-Also, change the structure of the function. The napi handler is
-unregistered for all rings, and so there's no need to check whether the
-index is an XDP index or not. By removing this check the code becomes
-much more readable.
-
-Fixes: 548c4940b9f1 ("net: ena: Implement XDP_TX action")
-Signed-off-by: Shay Agroskin <shayagr@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Reported-by: syzbot+ad1f53726c3bd11180cb@syzkaller.appspotmail.com
+Fixes: b1c32fcfadf5 ("vc_screen: extract vcs_read_buf_header")
+Cc: akpm@linux-foundation.org
+Cc: nico@fluxnic.net
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ drivers/tty/vt/vc_screen.c | 31 +++++++++++++------------------
+ 1 file changed, 13 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 1a2a464fb2f5f..000f57198352d 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -2177,13 +2177,10 @@ static void ena_del_napi_in_range(struct ena_adapter *adapter,
- 	int i;
- 
- 	for (i = first_index; i < first_index + count; i++) {
--		/* Check if napi was initialized before */
--		if (!ENA_IS_XDP_INDEX(adapter, i) ||
--		    adapter->ena_napi[i].xdp_ring)
--			netif_napi_del(&adapter->ena_napi[i].napi);
--		else
--			WARN_ON(ENA_IS_XDP_INDEX(adapter, i) &&
--				adapter->ena_napi[i].xdp_ring);
-+		netif_napi_del(&adapter->ena_napi[i].napi);
-+
-+		WARN_ON(!ENA_IS_XDP_INDEX(adapter, i) &&
-+			adapter->ena_napi[i].xdp_ring);
+diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
+index 3e3a6a9a7f44..1850bacdb5b0 100644
+--- a/drivers/tty/vt/vc_screen.c
++++ b/drivers/tty/vt/vc_screen.c
+@@ -293,22 +293,6 @@ static void vcs_read_buf_noattr(const struct vc_data *vc, char *con_buf,
  	}
  }
  
+-static unsigned int vcs_read_buf_header(const struct vc_data *vc, char *con_buf,
+-		unsigned int pos, unsigned int count)
+-{
+-	count = min(HEADER_SIZE - pos, count);
+-
+-	/* clamp header values if they don't fit */
+-	con_buf[0] = min(vc->vc_rows, 0xFFu);
+-	con_buf[1] = min(vc->vc_cols, 0xFFu);
+-	getconsxy(vc, con_buf + 2);
+-
+-	if (pos)
+-		memmove(con_buf, con_buf + pos, count);
+-
+-	return count;
+-}
+-
+ static unsigned int vcs_read_buf(const struct vc_data *vc, char *con_buf,
+ 		unsigned int pos, unsigned int count, bool viewed,
+ 		unsigned int *skip)
+@@ -318,11 +302,22 @@ static unsigned int vcs_read_buf(const struct vc_data *vc, char *con_buf,
+ 	unsigned int filled = count;
+ 
+ 	if (pos < HEADER_SIZE) {
+-		count -= vcs_read_buf_header(vc, con_buf, pos, count);
++		/* clamp header values if they don't fit */
++		con_buf[0] = min(vc->vc_rows, 0xFFu);
++		con_buf[1] = min(vc->vc_cols, 0xFFu);
++		getconsxy(vc, con_buf + 2);
++
++		*skip += pos;
++		count += pos;
++		if (count > CON_BUF_SIZE) {
++			count = CON_BUF_SIZE;
++			filled = count - pos;
++		}
+ 
++		/* Advance state pointers and move on. */
++		count -= min(HEADER_SIZE, count);
+ 		pos = HEADER_SIZE;
+ 		con_buf += HEADER_SIZE;
+-
+ 		/* If count >= 0, then pos is even... */
+ 	} else if (pos & 1) {
+ 		/*
 -- 
-2.25.1
-
-
+2.28.0
 
