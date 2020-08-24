@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B714C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51FC1206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A282206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259713;
-	bh=gvxWGObIISxo8YhAfmnja7GbJmXOyz9fmBcQ6SQKT3g=;
+	s=default; t=1598259719;
+	bh=JEfXC+Sws4SKzA/kAVXNabiY4zkkwATFuH2V42MLfj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lK/arxVVvqbb20QPDoFFc3VIwFR4/RIq5YFmnETsPVZaun06DcXQHDw3PXu13qBmP
-	 gl5mIQ8VlNchNsm88N+woc9Ue4tfVLJs7PkDdUZbEUBUt5QNKNBMjdCz3WKpLpg2RA
-	 T2juxkUXr2FRPBjFdAA8C/tKJ7Jk29CAgV28wW0M=
+	b=oLGZWVaC4JDGoCHO1JL8VQ5AGny9hT1T9ieiKh8CuOzzARYTRcjCgW8UQPbVD5xFn
+	 dSE+fNgmcIq1UNpLBtwtkHSfVGBKukNYfDEccwFVUvNjd7TZJz4ZqXr9mQo95j5JhI
+	 TVEofiubwBd+aJDvWH+m7urM+oV4qAPShGERP5ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730581AbgHXI4n (ORCPT
+        id S1730619AbgHXJB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:56:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39158 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:01:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730420AbgHXIz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:58 -0400
+        id S1729687AbgHXI4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C1DA206F0;
-        Mon, 24 Aug 2020 08:55:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F46F2087D;
+        Mon, 24 Aug 2020 08:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259357;
-        bh=gvxWGObIISxo8YhAfmnja7GbJmXOyz9fmBcQ6SQKT3g=;
+        s=default; t=1598259400;
+        bh=JEfXC+Sws4SKzA/kAVXNabiY4zkkwATFuH2V42MLfj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C+15SiLIdJ6bm4MCJs/SqXs/uEq+Art5RXJxuNKLmgJcfeCY18Zcpgka6B81giHg5
-         538cCny1X7t6T78lqeTF4PhOeARYgPs6woFPAFn5IhuPVZ0Qn0QP2QqetKdw+XKnXy
-         sE4v79HKcgOt1dXaqCPWuYiaq/pEiMY1t+eWMlFE=
+        b=0RDXRoBoIgZteG69y0R3aeZV3nIcZhMsHXWJAIHPA3qGI8uoaKtQRw6IbboKrFUYE
+         mPGWAXQaZxAK6lgafUsJOTF2VECBCSxDh76LTi/eIGiT7/ObjboROhhfK6wG/sOt/c
+         wF1mnYCnLC3HlxGiu3OyR/ldVPmYOr3E+ackvelM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Chandan Babu R <chandanrlinux@gmail.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 29/71] xfs: fix inode quota reservation checks
-Date:   Mon, 24 Aug 2020 10:31:20 +0200
-Message-Id: <20200824082357.345408797@linuxfoundation.org>
+        stable@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 44/71] net: fec: correct the error path for regulator disable in probe
+Date:   Mon, 24 Aug 2020 10:31:35 +0200
+Message-Id: <20200824082358.087115735@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -62,54 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Fugang Duan <fugang.duan@nxp.com>
 
-[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
+[ Upstream commit c6165cf0dbb82ded90163dce3ac183fc7a913dc4 ]
 
-xfs_trans_dqresv is the function that we use to make reservations
-against resource quotas.  Each resource contains two counters: the
-q_core counter, which tracks resources allocated on disk; and the dquot
-reservation counter, which tracks how much of that resource has either
-been allocated or reserved by threads that are working on metadata
-updates.
+Correct the error path for regulator disable.
 
-For disk blocks, we compare the proposed reservation counter against the
-hard and soft limits to decide if we're going to fail the operation.
-However, for inodes we inexplicably compare against the q_core counter,
-not the incore reservation count.
-
-Since the q_core counter is always lower than the reservation count and
-we unlock the dquot between reservation and transaction commit, this
-means that multiple threads can reserve the last inode count before we
-hit the hard limit, and when they commit, we'll be well over the hard
-limit.
-
-Fix this by checking against the incore inode reservation counter, since
-we would appear to maintain that correctly (and that's what we report in
-GETQUOTA).
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: 9269e5560b26 ("net: fec: add phy-reset-gpios PROBE_DEFER check")
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_trans_dquot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/fec_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index c23257a26c2b8..b8f05d5909b59 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -657,7 +657,7 @@ xfs_trans_dqresv(
- 			}
- 		}
- 		if (ninos > 0) {
--			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
-+			total_count = dqp->q_res_icount + ninos;
- 			timer = be32_to_cpu(dqp->q_core.d_itimer);
- 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
- 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 48c58f93b124b..3b6da228140e3 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -3659,11 +3659,11 @@ fec_probe(struct platform_device *pdev)
+ failed_irq:
+ failed_init:
+ 	fec_ptp_stop(pdev);
+-	if (fep->reg_phy)
+-		regulator_disable(fep->reg_phy);
+ failed_reset:
+ 	pm_runtime_put_noidle(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
++	if (fep->reg_phy)
++		regulator_disable(fep->reg_phy);
+ failed_regulator:
+ 	clk_disable_unprepare(fep->clk_ahb);
+ failed_clk_ahb:
 -- 
 2.25.1
 
