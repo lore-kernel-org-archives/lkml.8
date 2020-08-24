@@ -2,145 +2,141 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63257C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A24182072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B68C2087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598259440;
+	bh=Q1TI+LHp6d08jhWY1mKLYG0n33dy9WBxpPYs0q3FpaA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uysMxiMgAaJqDfxYdHYWKwOWeH+z5aV2M95f90+htFxYDw7YFGV/QYIMOtkcvVmT9
+	 LCm/qzAFYKrhKy5Wgm9hRE2aodHt3duv7BkMHIx1rdKels7r89AnbQAKarhtQW8YVz
+	 ihaLumb6xSP+kDMeLUMFkEQX+4pF2xE7GWVgT82A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730646AbgHXI5M (ORCPT
+        id S1730655AbgHXI5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:57:12 -0400
-Received: from 8bytes.org ([81.169.241.247]:38788 "EHLO theia.8bytes.org"
+        Mon, 24 Aug 2020 04:57:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730564AbgHXI4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:35 -0400
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1730579AbgHXI4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 50A5B12D3;
-        Mon, 24 Aug 2020 10:56:27 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Doug Covelli <dcovelli@vmware.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 67/76] x86/vmware: Add VMware specific handling for VMMCALL under SEV-ES
-Date:   Mon, 24 Aug 2020 10:55:02 +0200
-Message-Id: <20200824085511.7553-68-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 31178207DF;
+        Mon, 24 Aug 2020 08:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259402;
+        bh=Q1TI+LHp6d08jhWY1mKLYG0n33dy9WBxpPYs0q3FpaA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R5nIe6RuY4VahOUXely8pQJX5iD2aFC0RrDUfdyy59quJqDvlop+K2+/XD6quiZYL
+         UUxTaaB/Q+0RJGcMu7rAf9IPjsCFBOZoyZQ7Z57CcL+HexSFPLqoZw+IPM6x1+0aa3
+         /71E/TD1QKhQ//i6OKDY+1bLOdMNaH1Yy9Wf6yFw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        Jarod Wilson <jarod@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 45/71] bonding: show saner speed for broadcast mode
+Date:   Mon, 24 Aug 2020 10:31:36 +0200
+Message-Id: <20200824082358.135590476@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Covelli <dcovelli@vmware.com>
+From: Jarod Wilson <jarod@redhat.com>
 
-Add VMware specific handling for #VC faults caused by VMMCALL
-instructions.
+[ Upstream commit 4ca0d9ac3fd8f9f90b72a15d8da2aca3ffb58418 ]
 
-Signed-off-by: Doug Covelli <dcovelli@vmware.com>
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: - Adapt to different paravirt interface ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-67-joro@8bytes.org
+Broadcast mode bonds transmit a copy of all traffic simultaneously out of
+all interfaces, so the "speed" of the bond isn't really the aggregate of
+all interfaces, but rather, the speed of the slowest active interface.
+
+Also, the type of the speed field is u32, not unsigned long, so adjust
+that accordingly, as required to make min() function here without
+complaining about mismatching types.
+
+Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/vmware.c | 50 ++++++++++++++++++++++++++++++++----
- 1 file changed, 45 insertions(+), 5 deletions(-)
+ drivers/net/bonding/bond_main.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index 9b6fafa69be9..924571fe5864 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -33,6 +33,7 @@
- #include <asm/timer.h>
- #include <asm/apic.h>
- #include <asm/vmware.h>
-+#include <asm/svm.h>
- 
- #undef pr_fmt
- #define pr_fmt(fmt)	"vmware: " fmt
-@@ -476,10 +477,49 @@ static bool __init vmware_legacy_x2apic_available(void)
- 	       (eax & (1 << VMWARE_CMD_LEGACY_X2APIC)) != 0;
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 11429df743067..76fd5fc437ebe 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -4200,13 +4200,23 @@ static netdev_tx_t bond_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	return ret;
  }
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+static void vmware_sev_es_hcall_prepare(struct ghcb *ghcb,
-+					struct pt_regs *regs)
++static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
 +{
-+	/* Copy VMWARE specific Hypercall parameters to the GHCB */
-+	ghcb_set_rip(ghcb, regs->ip);
-+	ghcb_set_rbx(ghcb, regs->bx);
-+	ghcb_set_rcx(ghcb, regs->cx);
-+	ghcb_set_rdx(ghcb, regs->dx);
-+	ghcb_set_rsi(ghcb, regs->si);
-+	ghcb_set_rdi(ghcb, regs->di);
-+	ghcb_set_rbp(ghcb, regs->bp);
++	if (speed == 0 || speed == SPEED_UNKNOWN)
++		speed = slave->speed;
++	else
++		speed = min(speed, slave->speed);
++
++	return speed;
 +}
 +
-+static bool vmware_sev_es_hcall_finish(struct ghcb *ghcb, struct pt_regs *regs)
-+{
-+	if (!(ghcb_rbx_is_valid(ghcb) &&
-+	      ghcb_rcx_is_valid(ghcb) &&
-+	      ghcb_rdx_is_valid(ghcb) &&
-+	      ghcb_rsi_is_valid(ghcb) &&
-+	      ghcb_rdi_is_valid(ghcb) &&
-+	      ghcb_rbp_is_valid(ghcb)))
-+		return false;
-+
-+	regs->bx = ghcb->save.rbx;
-+	regs->cx = ghcb->save.rcx;
-+	regs->dx = ghcb->save.rdx;
-+	regs->si = ghcb->save.rsi;
-+	regs->di = ghcb->save.rdi;
-+	regs->bp = ghcb->save.rbp;
-+
-+	return true;
-+}
-+#endif
-+
- const __initconst struct hypervisor_x86 x86_hyper_vmware = {
--	.name			= "VMware",
--	.detect			= vmware_platform,
--	.type			= X86_HYPER_VMWARE,
--	.init.init_platform	= vmware_platform_setup,
--	.init.x2apic_available	= vmware_legacy_x2apic_available,
-+	.name				= "VMware",
-+	.detect				= vmware_platform,
-+	.type				= X86_HYPER_VMWARE,
-+	.init.init_platform		= vmware_platform_setup,
-+	.init.x2apic_available		= vmware_legacy_x2apic_available,
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	.runtime.sev_es_hcall_prepare	= vmware_sev_es_hcall_prepare,
-+	.runtime.sev_es_hcall_finish	= vmware_sev_es_hcall_finish,
-+#endif
- };
+ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
+ 					   struct ethtool_link_ksettings *cmd)
+ {
+ 	struct bonding *bond = netdev_priv(bond_dev);
+-	unsigned long speed = 0;
+ 	struct list_head *iter;
+ 	struct slave *slave;
++	u32 speed = 0;
+ 
+ 	cmd->base.duplex = DUPLEX_UNKNOWN;
+ 	cmd->base.port = PORT_OTHER;
+@@ -4218,8 +4228,13 @@ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
+ 	 */
+ 	bond_for_each_slave(bond, slave, iter) {
+ 		if (bond_slave_can_tx(slave)) {
+-			if (slave->speed != SPEED_UNKNOWN)
+-				speed += slave->speed;
++			if (slave->speed != SPEED_UNKNOWN) {
++				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
++					speed = bond_mode_bcast_speed(slave,
++								      speed);
++				else
++					speed += slave->speed;
++			}
+ 			if (cmd->base.duplex == DUPLEX_UNKNOWN &&
+ 			    slave->duplex != DUPLEX_UNKNOWN)
+ 				cmd->base.duplex = slave->duplex;
 -- 
-2.28.0
+2.25.1
+
+
 
