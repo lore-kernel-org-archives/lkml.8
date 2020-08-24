@@ -2,153 +2,164 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBA2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C6AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54A3C20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905EC2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261884;
-	bh=6w/oszwsnHTIdJ9mfROu3YvYwqGKZVMyT9uEp+7dW+k=;
+	s=default; t=1598261898;
+	bh=FrBso4fIdHgK+2J7oFtYR56l7zEdAlo1N90r7YDQ9WI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bJj3rDtOoZlxxIYMNIJWDy+S7DPi8mP1Xw2wdK1CgGeYoVEHk15EgDdSHWAPaLIBO
-	 l7o0UqLH/OGPCWFnA7oi+UqCDNBEH8I2kIdeTSo1Lklc7NBNU57DO/iE9yTcEjxMY4
-	 IpH2kTDM5ZntyGV2Ws0vHLMNOVlYYqv7NdhVDHEg=
+	b=JGA2+6DToXL1sAT3IE5b+SnXIpoSc0JP/Aoh6gT2FykVvj4wboWmtpgJ5NikCCYbg
+	 uEUA+tM6Ivqwfn+y7U7b7F2io17I4ZxYz4wFf8c2WXTjrh8Cpp/qEgplGeyKfh6oYl
+	 MH7GnohcRXwppzvhvI168zU9oYmDw1dGrMwg6gHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgHXJiC (ORCPT
+        id S1728402AbgHXJiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:38:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47304 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:38:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729467AbgHXIr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:47:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1729460AbgHXIr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:47:26 -0400
+Received: from localhost.localdomain (unknown [122.171.38.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42177204FD;
-        Mon, 24 Aug 2020 08:47:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5324204FD;
+        Mon, 24 Aug 2020 08:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258848;
-        bh=6w/oszwsnHTIdJ9mfROu3YvYwqGKZVMyT9uEp+7dW+k=;
+        s=default; t=1598258845;
+        bh=FrBso4fIdHgK+2J7oFtYR56l7zEdAlo1N90r7YDQ9WI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JC/cdr7pS5nj/0XezxbTMq5JFH3Kk8kPDFh2HYYv8jJ4S/KYqMdq5lAk9ich/xDQh
-         HY/mlKAIYjjFTjhCI9kpeTt4HO3+UXXV/xaPry5jvpTpQMoAvArFa8kTOIauOKlaye
-         VW+2RHEd1XdRCtE1ojF63trVXQIyRkeiDHHpPS9Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
-        Alain Volmat <alain.volmat@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 066/107] spi: stm32: fixes suspend/resume management
-Date:   Mon, 24 Aug 2020 10:30:32 +0200
-Message-Id: <20200824082408.390520053@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
-References: <20200824082405.020301642@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=mxkNnl6RQL4MJs0VwWJz9u5g+UxyDb3kb1U7CqQb2TQi+dAvW29VIywXJmzdgrcmi
+         f55874SPMco08TgiGledUdy4nNV8OW4/7PJPxlUzY9MNibPJxG76JuPOpaKJ8DZB1P
+         ZVgHM67WAaNPD8jYCtLL9bHjCO5hW1ji8XYqfryg=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
+Date:   Mon, 24 Aug 2020 14:17:10 +0530
+Message-Id: <20200824084712.2526079-2-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200824084712.2526079-1-vkoul@kernel.org>
+References: <20200824084712.2526079-1-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+Add devicetree binding documentation for GPI DMA controller
+implemented on Qualcomm SoCs
 
-[ Upstream commit db96bf976a4fc65439be0b4524c0d41427d98814 ]
-
-This patch adds pinctrl power management, and reconfigure spi controller
-in case of resume.
-
-Fixes: 038ac869c9d2 ("spi: stm32: add runtime PM support")
-
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
-Link: https://lore.kernel.org/r/1597043558-29668-5-git-send-email-alain.volmat@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/spi/spi-stm32.c | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.yaml
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index b222ce8d083ef..7e92ab0cc9920 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -14,6 +14,7 @@
- #include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/of_platform.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/pm_runtime.h>
- #include <linux/reset.h>
- #include <linux/spi/spi.h>
-@@ -1986,6 +1987,8 @@ static int stm32_spi_remove(struct platform_device *pdev)
- 
- 	pm_runtime_disable(&pdev->dev);
- 
-+	pinctrl_pm_select_sleep_state(&pdev->dev);
+diff --git a/Documentation/devicetree/bindings/dma/qcom-gpi.yaml b/Documentation/devicetree/bindings/dma/qcom-gpi.yaml
+new file mode 100644
+index 000000000000..c56d601ad2d6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/qcom-gpi.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/gpi-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	return 0;
- }
- 
-@@ -1997,13 +2000,18 @@ static int stm32_spi_runtime_suspend(struct device *dev)
- 
- 	clk_disable_unprepare(spi->clk);
- 
--	return 0;
-+	return pinctrl_pm_select_sleep_state(dev);
- }
- 
- static int stm32_spi_runtime_resume(struct device *dev)
- {
- 	struct spi_master *master = dev_get_drvdata(dev);
- 	struct stm32_spi *spi = spi_master_get_devdata(master);
-+	int ret;
++title: Qualcomm Technologies Inc GPI DMA controller
 +
-+	ret = pinctrl_pm_select_default_state(dev);
-+	if (ret)
-+		return ret;
- 
- 	return clk_prepare_enable(spi->clk);
- }
-@@ -2033,10 +2041,23 @@ static int stm32_spi_resume(struct device *dev)
- 		return ret;
- 
- 	ret = spi_master_resume(master);
--	if (ret)
-+	if (ret) {
- 		clk_disable_unprepare(spi->clk);
-+		return ret;
-+	}
- 
--	return ret;
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret) {
-+		dev_err(dev, "Unable to power device:%d\n", ret);
-+		return ret;
-+	}
++description: |
++  QCOM GPI DMA controller provides DMA capabilities for
++  peripheral buses such as I2C, UART, and SPI.
 +
-+	spi->cfg->config(spi);
++maintainers:
++  - Vinod Koul <vkoul@kernel.org>
 +
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
++allOf:
++  - $ref: "dma-controller.yaml#"
 +
-+	return 0;
- }
- #endif
- 
++properties:
++  compatible:
++    enum:
++      - qcom,gpi-dma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description:
++      Interrupt lines for each GPII instance
++    maxItems: 14
++
++  qcom,max-num-gpii:
++    description:
++      Maximum number of GPII instances available
++    maxItems: 1
++
++  "#dma-cells":
++    const: 1
++
++  qcom,gpii-mask:
++    description:
++      Bitmap of supported GPII instances for OS
++    maxItems: 1
++
++  qcom,ev-factor:
++    description:
++      Event ring transfer size compare to channel transfer ring. Event
++        ring length = ev-factor * transfer ring size
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - qcom,max-num-gpii
++  - qcom,gpii-mask
++  - qcom,ev-factor
++  - "#dma-cells"
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    gpi_dma0: dma@800000 {
++        #dma-cells = <5>;
++        compatible = "qcom,gpi-dma";
++        reg = <0 0x00800000 0 0x60000>;
++        qcom,max-num-gpii = <13>;
++        qcom,gpii-mask = <0xfa>;
++        qcom,ev-factor = <2>;
++        interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 250 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
++    };
++
++...
 -- 
-2.25.1
-
-
+2.26.2
 
