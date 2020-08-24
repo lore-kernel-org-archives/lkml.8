@@ -2,107 +2,116 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E588C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B65A206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6214206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:53:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsCueFr5"
+	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="fb2LMxB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgHXOwk (ORCPT
+        id S1726912AbgHXOxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 10:52:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37424 "EHLO
+        Mon, 24 Aug 2020 10:53:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725968AbgHXOwj (ORCPT
+        with ESMTP id S1725968AbgHXOxY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 10:52:39 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF09C061573;
-        Mon, 24 Aug 2020 07:52:38 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id c15so8962613wrs.11;
-        Mon, 24 Aug 2020 07:52:38 -0700 (PDT)
+        Mon, 24 Aug 2020 10:53:24 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43891C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 07:53:24 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id x69so7609621qkb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 07:53:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=maYxkadvfVGHjTEoYFrkgW4rniaUuEx8JmifeotSE1I=;
-        b=AsCueFr5jn9blAC4tR/EED5jjVRIvRTyBnu2Byudhgi0GeZB1rK4e4rxcO5s3mmf54
-         qrmG6fYf0abHZzh5gcnwt36qLw0Hr3sGY9A2m+JwLEY3IOTWVhHen+Vvg8Ln5rpCJSUZ
-         WfkeFok8pN2RAKPDxy5C2paWFQhXTXtewfVAJttB8ku16cx7JmisjZUFKbc9SMS9HVvQ
-         KQqe8TDNvGy/nR9jy80qs3QHDLZlAUDBBmBgKW0xpT7g0g2yPIi89V4o+8DkHJh5K2oI
-         dlVYSHTEu3Tt+LJdlngi3FJ0LvWXv/KdAgq+BNrK1EuHzLP9kvsk2KVkspYLctHOL0hb
-         heYA==
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3l1KJ9xV7Ihgw4DySoyFjywNiCcO94+hClVbk8PhJDY=;
+        b=fb2LMxB4wNEiqGB/WKAEEee6AInA688gDAPnxIwA0puPxBbgFEpAhmWrqLIOLxwUqO
+         piA7NwBR9xAQhwkmVzCPJ9G+Z2ImOQXCy2uTdCIV2UiN7cqDSLSqGHSaY3r+o7QHbFzb
+         6UwKIJG8yIaKmIe8fDrLVsagZN8ztozhoVOOyiX9GRK7MeLb5iJ7cdsSoAhw10eJs3FA
+         Zs/APyRP4Dxq4B7GHYEeHMbhsApSLIxTDULvAZGwzOIulbJQDZYZtEtonAEhN3GrQ+t+
+         g3jJc1H5ehqin+cLHGaNku5jUhEwLMjHwICNqqVMkEQ+/iSiWNw/lImbU9DeQgGU/9OM
+         MmIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=maYxkadvfVGHjTEoYFrkgW4rniaUuEx8JmifeotSE1I=;
-        b=moD0skMiRKo3S3Jcmebzdtpj5/CW0raPXeq4coGkR8LaypChNZApzYLVy4ZKvwWbux
-         uxVGQaJ36N+r2G08hbIPNWGDhEr1Z+PkdVPzlwpI1A58/3S+Jsth+tRIKyWW8Edbdens
-         yc2vCoYMc+aoCvXvoG4HmejEmnW9Hm4rIf6s7Vi6jz2qR6kt/Lv8yEcjv1qqqcjSGq0r
-         AxttjCUJuwuYPpmLGTJlxXZXTAxUWAGa1vfMeUc3LeZ6nVa5aNNLURhW/yeUbtGz9NAt
-         /JHE5HhRUKE2WZBJBzndHVia+u/I4HNM8goVjNZF0DAXnfuGZE4+vYJ0U7KZ2wfEw5Zh
-         onhQ==
-X-Gm-Message-State: AOAM531PUIfSuxZoq9ISgshH7NHwim1009Af95LqfONQ1XQ0wsxeA3Nf
-        lw+fR0rHWhZx6hnqMUGvvn95+rfJV+jTtBxP
-X-Google-Smtp-Source: ABdhPJx/c+hJHlTuEfjleVzvC1y+b9nSw/44sBGPW74jQ37/FppAKE88ZEXjAoN76vHKzlvkqVF/rQ==
-X-Received: by 2002:adf:ea92:: with SMTP id s18mr6275431wrm.269.1598280757560;
-        Mon, 24 Aug 2020 07:52:37 -0700 (PDT)
-Received: from a-VirtualBox.Dlink ([103.120.71.253])
-        by smtp.gmail.com with ESMTPSA id 126sm25953778wme.42.2020.08.24.07.52.34
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3l1KJ9xV7Ihgw4DySoyFjywNiCcO94+hClVbk8PhJDY=;
+        b=PGF0gA06k57lWAZj3cSJf7mwA2jYkNmpd0I2wnqerx3w2XM75qjMQvy7RsEWTU+PdJ
+         Q8OQDOSYHqG6ilNLFrW29/s5mqywjZSiOUKgJ5TObWI8KMze9dU/1GL9gsMdWRmMpZKI
+         fTlzVK2U67i0twnzJBm1ymB4khCDkoBbS3vPMd8KwbliMeaHBtbqsYjQXUarBOHIaSD+
+         nDVb0vNwoiaYYH+dhplUW43iBj9BPD6mTa6nWq/VrV2VS9FtgTnPOLeO/+yTGOnolaKu
+         OSNMS3dYws7J5kbMrScoCt6AMdybDih2GAookXtE/mVI+F53huMGOTIdSrOXsv9ZADbL
+         nF3w==
+X-Gm-Message-State: AOAM530Z2Kd/qXyQXZW/99hFKRRyM+EL6EmGG+zlf+k4Ky1UVz+dwrcP
+        InfE/EYRq23m+jBv55Y3jYet9w==
+X-Google-Smtp-Source: ABdhPJygUsE4ZNlaDvJkGQu300bpD2xQkMX8JafenyVd3k4nAZAwUqU3DUvpGlvkZmw72SMxoOy2AA==
+X-Received: by 2002:a37:8cc3:: with SMTP id o186mr5193554qkd.390.1598280800264;
+        Mon, 24 Aug 2020 07:53:20 -0700 (PDT)
+Received: from kudzu.us ([136.56.1.171])
+        by smtp.gmail.com with ESMTPSA id f3sm2668691qth.56.2020.08.24.07.53.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 07:52:36 -0700 (PDT)
-From:   Bilal Wasim <bilalwasim676@gmail.com>
-To:     b.zolnierkie@samsung.com, corbet@lwn.net
-Cc:     dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bilal Wasim <bilalwasim676@gmail.com>
-Subject: [PATCH] docs: fb: Correcting the location of FRAMEBUFFER_CONSOLE option.
-Date:   Mon, 24 Aug 2020 19:51:55 +0500
-Message-Id: <20200824145155.42502-1-bilalwasim676@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 24 Aug 2020 07:53:19 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 10:52:47 -0400
+From:   Jon Mason <jdmason@kudzu.us>
+To:     Kaige Li <likaige@loongson.cn>
+Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND] NTB: hw: amd: fix an issue about leak system resources
+Message-ID: <20200824145246.GB27238@kudzu.us>
+References: <1597111197-28563-1-git-send-email-likaige@loongson.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597111197-28563-1-git-send-email-likaige@loongson.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fbcon doc mentions FRAMEBUFFER_CONSOLE option to be under
-Device Drivers->Graphics Support->Frame buffer Devices->
-Console display driver support->Framebuffer Console Support,
-while its under Device Drivers->Graphics Support->
-Console display driver support->Framebuffer Console Support.
+On Tue, Aug 11, 2020 at 09:59:57AM +0800, Kaige Li wrote:
+> The related system resources were not released when pci_set_dma_mask(),
+> pci_set_consistent_dma_mask(), or pci_iomap() return error in the
+> amd_ntb_init_pci() function. Add pci_release_regions() to fix it.
+> 
+> Signed-off-by: Kaige Li <likaige@loongson.cn>
 
-Correcting it in the docs.
+Pulled into my ntb branch.  I added:
+    Fixes: a1b3695820aa ("NTB: Add support for AMD PCI-Express Non-Transparent Bridge")
 
-Signed-off-by: Bilal Wasim <bilalwasim676@gmail.com>
----
- Documentation/fb/fbcon.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks,
+Jon
 
-diff --git a/Documentation/fb/fbcon.rst b/Documentation/fb/fbcon.rst
-index e57a3d1d085a..a7b487cba307 100644
---- a/Documentation/fb/fbcon.rst
-+++ b/Documentation/fb/fbcon.rst
-@@ -20,8 +20,8 @@ A. Configuration
- ================
- 
- The framebuffer console can be enabled by using your favorite kernel
--configuration tool.  It is under Device Drivers->Graphics Support->Frame
--buffer Devices->Console display driver support->Framebuffer Console Support.
-+configuration tool.  It is under Device Drivers->Graphics Support->
-+Console display driver support->Framebuffer Console Support.
- Select 'y' to compile support statically or 'm' for module support.  The
- module will be fbcon.
- 
--- 
-2.25.1
-
+> ---
+> 
+> changed commit massage.
+> 
+>  drivers/ntb/hw/amd/ntb_hw_amd.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_amd.c
+> index 88e1db6..71428d8 100644
+> --- a/drivers/ntb/hw/amd/ntb_hw_amd.c
+> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
+> @@ -1203,6 +1203,7 @@ static int amd_ntb_init_pci(struct amd_ntb_dev *ndev,
+>  
+>  err_dma_mask:
+>  	pci_clear_master(pdev);
+> +	pci_release_regions(pdev);
+>  err_pci_regions:
+>  	pci_disable_device(pdev);
+>  err_pci_enable:
+> -- 
+> 2.1.0
+> 
