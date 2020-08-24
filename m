@@ -2,130 +2,93 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0AFC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BFFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95AF92072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:03:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DhR4iTc4"
+	by mail.kernel.org (Postfix) with ESMTP id 6DBE4207CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598285019;
+	bh=WVP6oGGfC5rnAdSwsJYUk7a337MOLI3+hbhVgHn88+0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wetBb3eWSq93qBSfuSctUOjaBxJDOMncw3PUPyaVYyQZ7fJwR+fy7yW6i/TYI2sS6
+	 WaVStmFPJMyzv9+EVJ5Uo+xkDZ44VwD/YxRGCooxwcmu3KeeWs6l+bVd+2r6sPhd6n
+	 NGiGpo3XWdtn8EUnz0VZVJqhxxZBS86mqKczro3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgHXQD2 (ORCPT
+        id S1727798AbgHXQDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:03:28 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45432 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726727AbgHXQC6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:02:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598284975;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GOOvGMjNbf5XtLNCKd9ysNRuyAgV0fQgbTvlhMQq8xI=;
-        b=DhR4iTc47y+ZBv2Yb0yNRGx26eVpZAbahIMo1FqqP+1ecPzgzFs/MSxB5P+m+doz4kk75H
-        jbrK++sBKQtgLrlvTXKrkvmm7yOLfcEmAxOtRGyetmzgCjhPWDgBAaoDTCCN+b4WDC6dqL
-        Za5fT+WODCbKQumsb6sY4ZjqcfyQdrk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-465-FWvG5sP1NauODAXLjclCsQ-1; Mon, 24 Aug 2020 12:02:52 -0400
-X-MC-Unique: FWvG5sP1NauODAXLjclCsQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 24 Aug 2020 12:03:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726519AbgHXQDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:03:08 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2DC710ABDA5;
-        Mon, 24 Aug 2020 16:02:49 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-112-212.rdu2.redhat.com [10.10.112.212])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 94F411002382;
-        Mon, 24 Aug 2020 16:02:48 +0000 (UTC)
-Subject: Re: [PATCH 3/3] mm/memcg: Unify swap and memsw page counters
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Chris Down <chris@chrisdown.name>,
-        Roman Gushchin <guro@fb.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <20200820130350.3211-1-longman@redhat.com>
- <20200820130350.3211-4-longman@redhat.com>
- <CALvZod7cNkjgd_YWzPSFm=AeC8sy5kWspX3J_Q7237Q9+N5Pxw@mail.gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <18d02675-0c2a-bfc3-6953-42dcd10396b1@redhat.com>
-Date:   Mon, 24 Aug 2020 12:02:48 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CALvZod7cNkjgd_YWzPSFm=AeC8sy5kWspX3J_Q7237Q9+N5Pxw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BED620838;
+        Mon, 24 Aug 2020 16:03:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598284988;
+        bh=WVP6oGGfC5rnAdSwsJYUk7a337MOLI3+hbhVgHn88+0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vsvUw9pGylXscrcAl2TbJdu7ma2AK2D2DieU9U8FKWtE/y7X8K7daNNKkyoPHwPd9
+         tJ8OEmsBzRrKVXjCrctSMkEblsY948DDIch940kC4F+ZDDBJGgS+WT6ogioq6sTGB0
+         6wL+jiP2zSgjhxsvQB7gcGcA7Pzffgt+5fgHNXF0=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 2/4] dt-bindings: arm: fsl: Add binding for Variscite Symphony board with VAR-SOM-MX8MM
+Date:   Mon, 24 Aug 2020 18:02:45 +0200
+Message-Id: <20200824160247.19032-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200824160247.19032-1-krzk@kernel.org>
+References: <20200824160247.19032-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/20 11:46 AM, Shakeel Butt wrote:
-> On Thu, Aug 20, 2020 at 6:04 AM Waiman Long <longman@redhat.com> wrote:
->> The swap page counter is v2 only while memsw is v1 only. As v1 and v2
->> controllers cannot be active at the same time, there is no point to keep
->> both swap and memsw page counters in mem_cgroup. The previous patch has
->> made sure that memsw page counter is updated and accessed only when in
->> v1 code paths. So it is now safe to alias the v1 memsw page counter to v2
->> swap page counter. This saves 14 long's in the size of mem_cgroup. This
->> is a saving of 112 bytes for 64-bit archs.
->>
->> Signed-off-by: Waiman Long <longman@redhat.com>
->> ---
->>   include/linux/memcontrol.h | 3 +--
->>   mm/memcontrol.c            | 8 +++++---
->>   2 files changed, 6 insertions(+), 5 deletions(-)
->>
->> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
->> index d0b036123c6a..d2a819d7db70 100644
->> --- a/include/linux/memcontrol.h
->> +++ b/include/linux/memcontrol.h
->> @@ -216,10 +216,9 @@ struct mem_cgroup {
->>
->>          /* Accounted resources */
->>          struct page_counter memory;
->> -       struct page_counter swap;
->> +       struct page_counter swap;       /* memsw (memory+swap) for v1 */
->>
->>          /* Legacy consumer-oriented counters */
->> -       struct page_counter memsw;
->>          struct page_counter kmem;
->>          struct page_counter tcpmem;
->>
->> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> index d219dca5239f..04c3794cdc98 100644
->> --- a/mm/memcontrol.c
->> +++ b/mm/memcontrol.c
->> @@ -68,6 +68,11 @@
->>
->>   #include <trace/events/vmscan.h>
->>
->> +/*
->> + * The v1 memsw page counter is aliased to the v2 swap page counter.
->> + */
->> +#define memsw  swap
->> +
-> Personally I would prefer a union instead of #define.
+Add a binding for the Variscite Symphony evaluation kit board with
+VAR-SOM-MX8MM System on Module.
 
-Yes, that is also what I am thinking about in the v2.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Cheers,
-Longman
+---
 
+Changes since v1:
+1. None
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 39f3a3d5f524..b378297c390a 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -349,6 +349,12 @@ properties:
+               - variscite,var-som-mx8mm   # i.MX8MM Variscite VAR-SOM-MX8MM module
+           - const: fsl,imx8mm
+ 
++      - description: Variscite VAR-SOM-MX8MM based boards
++        items:
++          - const: variscite,var-som-mx8mm-symphony
++          - const: variscite,var-som-mx8mm
++          - const: fsl,imx8mm
++
+       - description: i.MX8MN based Boards
+         items:
+           - enum:
+-- 
+2.17.1
 
