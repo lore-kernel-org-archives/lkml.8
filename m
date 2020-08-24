@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F93C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE4E204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C2482072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259220;
-	bh=di2ffhM93KuWPbjQWdPka5qwpk5VpGh7Bf232eFp8dU=;
+	s=default; t=1598259225;
+	bh=nG/68UkyJbPFo39KSSnnMAkMSDLG37DYiU7yZfHaGPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aJcnZC8Laaq/PH4o4jBPvryVGN24tEhmb6We/un3qdNoAPKQGV3FdJAMbNoOjYf+2
-	 MZKCiDxOyGwvdyzcyJ7mMVgEPIFSN9MFib72BbNgw+bU0KkUbv4E3SJ0YZWp5t7QY/
-	 7q1TfEpVwqXf5obx+hmFaDVpR+82WzjNwEYQCKec=
+	b=qj5ey5ceP79r70n8yY4cTeKceYAGF6mQoiMX4qiwI/5UyomLKzlMSw4wJQtPxgoW9
+	 cQvNwsECNGePSfl0lhtw2Tqs1VUq6BneSJp58nuALLdf7Dz0RELk/RYVFBT3OOsViB
+	 war/X76z0Pn2FOwNbZYFCOtHrqcCTGo9CipEzlxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbgHXIxj (ORCPT
+        id S1730220AbgHXIxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:53:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60790 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:53:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728423AbgHXIxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:53:24 -0400
+        id S1728534AbgHXIx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:53:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 385222087D;
-        Mon, 24 Aug 2020 08:53:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3D5E207D3;
+        Mon, 24 Aug 2020 08:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259203;
-        bh=di2ffhM93KuWPbjQWdPka5qwpk5VpGh7Bf232eFp8dU=;
+        s=default; t=1598259208;
+        bh=nG/68UkyJbPFo39KSSnnMAkMSDLG37DYiU7yZfHaGPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lH4ki5eKefJqENdm8RiwtW3qs+05WDb7oUv2ssfrARF5RGGD6eQmGshUSPweaX5Q3
-         jvdMUcvewiw5yH5/yG9irpylZH8108ATVxvauWVImK8ycArBg4JnVDFukbUCTuIQZF
-         1Ocn6hMCbqd09+N9xhHPXvB4q5Tgh4RGhbeQ9oMY=
+        b=Xxi4EQf/Hqnu//gHsW4VwgwMHDgu83D4EYu8iTyusifzVwzv6mF7/Klec4Yc4Ukht
+         YsF5/HF2U6zRwUd4hFj9o8K2dZnSPuHLj7Ha0Y4SVsW2KmuDKstX4KQKZ6ZUqB2XFQ
+         xlvv6qPm1sPkWdhq/WBg5+M+oTbzLyqtg1HyrM3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 20/50] scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
-Date:   Mon, 24 Aug 2020 10:31:21 +0200
-Message-Id: <20200824082353.037644430@linuxfoundation.org>
+Subject: [PATCH 4.14 22/50] rtc: goldfish: Enable interrupt in set_alarm() when necessary
+Date:   Mon, 24 Aug 2020 10:31:23 +0200
+Message-Id: <20200824082353.148146093@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -62,50 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-[ Upstream commit c0a18ee0ce78d7957ec1a53be35b1b3beba80668 ]
+[ Upstream commit 22f8d5a1bf230cf8567a4121fc3789babb46336d ]
 
-It is confirmed that Micron device needs DELAY_BEFORE_LPM quirk to have a
-delay before VCC is powered off. Sdd Micron vendor ID and this quirk for
-Micron devices.
+When use goldfish rtc, the "hwclock" command fails with "select() to
+/dev/rtc to wait for clock tick timed out". This is because "hwclock"
+need the set_alarm() hook to enable interrupt when alrm->enabled is
+true. This operation is missing in goldfish rtc (but other rtc drivers,
+such as cmos rtc, enable interrupt here), so add it.
 
-Link: https://lore.kernel.org/r/20200612012625.6615-2-stanley.chu@mediatek.com
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/1592654683-31314-1-git-send-email-chenhc@lemote.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufs_quirks.h | 1 +
- drivers/scsi/ufs/ufshcd.c     | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/rtc/rtc-goldfish.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/ufs/ufs_quirks.h b/drivers/scsi/ufs/ufs_quirks.h
-index 71f73d1d1ad1f..6c944fbefd40a 100644
---- a/drivers/scsi/ufs/ufs_quirks.h
-+++ b/drivers/scsi/ufs/ufs_quirks.h
-@@ -21,6 +21,7 @@
- #define UFS_ANY_VENDOR 0xFFFF
- #define UFS_ANY_MODEL  "ANY_MODEL"
- 
-+#define UFS_VENDOR_MICRON      0x12C
- #define UFS_VENDOR_TOSHIBA     0x198
- #define UFS_VENDOR_SAMSUNG     0x1CE
- #define UFS_VENDOR_SKHYNIX     0x1AD
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 1e2a97a10033b..11e917b44a0f1 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -189,6 +189,8 @@ ufs_get_desired_pm_lvl_for_dev_link_state(enum ufs_dev_pwr_mode dev_state,
- 
- static struct ufs_dev_fix ufs_fixups[] = {
- 	/* UFS cards deviations table */
-+	UFS_FIX(UFS_VENDOR_MICRON, UFS_ANY_MODEL,
-+		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
- 		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL, UFS_DEVICE_NO_VCCQ),
+diff --git a/drivers/rtc/rtc-goldfish.c b/drivers/rtc/rtc-goldfish.c
+index a1c44d0c85578..30cbe22c57a8e 100644
+--- a/drivers/rtc/rtc-goldfish.c
++++ b/drivers/rtc/rtc-goldfish.c
+@@ -87,6 +87,7 @@ static int goldfish_rtc_set_alarm(struct device *dev,
+ 		rtc_alarm64 = rtc_alarm * NSEC_PER_SEC;
+ 		writel((rtc_alarm64 >> 32), base + TIMER_ALARM_HIGH);
+ 		writel(rtc_alarm64, base + TIMER_ALARM_LOW);
++		writel(1, base + TIMER_IRQ_ENABLED);
+ 	} else {
+ 		/*
+ 		 * if this function was called with enabled=0
 -- 
 2.25.1
 
