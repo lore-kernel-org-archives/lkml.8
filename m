@@ -2,118 +2,157 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BA9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8969C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D37A206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5DE920738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:55:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxx2Czwe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgHXSyu (ORCPT
+        id S1727068AbgHXSzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:54:50 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:44979 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgHXSys (ORCPT
+        Mon, 24 Aug 2020 14:55:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726306AbgHXSzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:54:48 -0400
-Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MoNMu-1kz3l80hKq-00opYx; Mon, 24 Aug 2020 20:54:46 +0200
-Received: by mail-qt1-f173.google.com with SMTP id 92so1608532qtb.6;
-        Mon, 24 Aug 2020 11:54:45 -0700 (PDT)
-X-Gm-Message-State: AOAM530Sw9XAS6eh/6Bc/mxp3dT9jsfY8uANLPNkEbpJC6LxRYGMsNgH
-        eaACAsCqP/1pYI7ylz8TGwT+MfUN2eSga6sDrv8=
-X-Google-Smtp-Source: ABdhPJxWBKCBtJZg7nLG3vXIdZFpSx+qr8JPd8D5R08h5RqUSqbkH8qTSGrOV5rDkZoZ134R/OrQyj0lwj9Wx9vY6dY=
-X-Received: by 2002:aed:33e7:: with SMTP id v94mr5942793qtd.18.1598295284718;
- Mon, 24 Aug 2020 11:54:44 -0700 (PDT)
+        Mon, 24 Aug 2020 14:55:24 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1FD8C061573;
+        Mon, 24 Aug 2020 11:55:23 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id w14so10904441ljj.4;
+        Mon, 24 Aug 2020 11:55:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qq+FwKaAL0+i+v9B+INTc0h8RAmxp7NQuyM7xAAxgP4=;
+        b=rxx2CzweB1rd+Z9fgBd8jNjjrS7CPMKwQcKUql4L6YBEzJSjR/wbXY1yE8trzq40wz
+         dWEeONiwi/DR9ws1D+fE102ak1bsSI3DJ4XIPblj4+rQWEVc4eJbOq01CzkjC4W9Vy3K
+         QokcS3iGm1gkC+xSzusq/wSGqKsymeBWx/5r03ZfDF0chjAvO0caMJRTzwQMthtcvEAE
+         aPYD6NlDs5237Nl2f4h7c9Q72PTTtjD0tJrn76aIzkMzsWDrw2yXZN2nOCuPpPgiIfyY
+         FkXt9Y/qBunn3Uxk+6d3rs8yIXVFAOizoKCpgcFpCfz6XH+QnBSyM1AN9BGQWGOo6NZz
+         3Ngw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qq+FwKaAL0+i+v9B+INTc0h8RAmxp7NQuyM7xAAxgP4=;
+        b=p4iwJbd9uZPU+zCK/qSWdeEjgMF5OS1wuPrhrTbHVgNkhfS6rcXH69ehL/aF7dr+qS
+         S5Iu+nuQUYJFdvwMDt96eRO/CIefRHELTxi4nAjxG3G1gk/0sjNu39Jk4P/IOjRLpges
+         7cPI6cpRxnpiTmt8cUVQDjPNyXP1qgn2WLQ3dv7PvOmlVdiAx5uV3SfUdae0ifcTEtlO
+         6aeVaz4KobEyt8dXsyRFB0t+5/uN5obnHMFZdIFfyUmRWl9vX107N2i1QdXieOCZLKsb
+         3l/LI7EzPMAfXvGh0I5XNxhVKgAuc8HGxzuS6lCVECo/kj4w1KBnO+MVACTFLsmhGbKc
+         DDNg==
+X-Gm-Message-State: AOAM531aZOGDPkA9aeWLYTpTRI6ySiGiUnLPWIHu5OI6zXwEd1bW5VER
+        WbgjCdFTdekpl2mEXYTPmACSov2hqe4=
+X-Google-Smtp-Source: ABdhPJzWwTyU3v6bW25kjpxAXFiQU4GbZLc10ZygwhVenWjgzbqGxjhdCEEbHk9fUUyGsaH7gHH01A==
+X-Received: by 2002:a2e:96d9:: with SMTP id d25mr3476883ljj.408.1598295317815;
+        Mon, 24 Aug 2020 11:55:17 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id r1sm2442954lfc.44.2020.08.24.11.55.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 11:55:17 -0700 (PDT)
+Subject: Re: [PATCH v1 2/6] power: supply: Add battery gauge driver for Acer
+ Iconia Tab A500
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Lubomir Rintel <lkundrak@v3.sk>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200823140846.19299-1-digetx@gmail.com>
+ <20200823140846.19299-3-digetx@gmail.com>
+ <20200824140718.apoavlny6hlkm2ql@earth.universe>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <31ec6865-4a33-bde8-73a6-20c188ec2ee7@gmail.com>
+Date:   Mon, 24 Aug 2020 21:55:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com> <1598287583-71762-6-git-send-email-mikelley@microsoft.com>
-In-Reply-To: <1598287583-71762-6-git-send-email-mikelley@microsoft.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 24 Aug 2020 20:54:28 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1hDBVembCd+6=ENUWYFz=72JBTFMrKYZ2aFd+_Q04F+g@mail.gmail.com>
-Message-ID: <CAK8P3a1hDBVembCd+6=ENUWYFz=72JBTFMrKYZ2aFd+_Q04F+g@mail.gmail.com>
-Subject: Re: [PATCH v7 05/10] arm64: hyperv: Add interrupt handlers for VMbus
- and stimer
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>, wei.liu@kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:9q/x3Ahld8KtMCc0YtDFU7o7FSwuMFmzSpqjkOeeBGCz4uhJLvj
- rIOAU8u1JrRton9OJG4K8PrJCVCmcxxLdAD53+JI9LLX344ZgQkn0l5A8RzwGc3IqFlxIY7
- ZRcKLV8DzJ9GaouXST/HIyVj2t+r0orVWqFVizQP5d8YtnU6o+I1m2BJonF20knYQTyTUis
- I0yqbkQHACw6Rut5Cre6A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:f0EUG/PVpFw=:r5JmOnE1KS9QdJf9FaRLqr
- t2cv6uBFRjHM0tcA0sj3PNSgodKzc5y4agqj8piVvVzpJUgdfpaOioDu+xICSja3O7eNL8MRI
- q6qgCQbeWGgyJ2NmbPwcDSYyYJRtqLw0GzFiueubgTWPCMRD1zJUzvsydwhYCRftAPTbp7hcj
- TbSrcPOFDszW3BuNlXPDvTvOY4ZsPlT8CWDNd26NdokkBzRcuemMcAVZ4Kx48yIfbKlBJQu1s
- dgbsTOfNYm+Vc0aGD6pL8n8RTpd6KdJhBbUl0bUnrmudr/ENR/xUTiltkcknD/OyBx/sleFDU
- lmhWrYHMm8+JaY3XyzR+MSNEDGbmiPQi1xyb7MfM2LrvFL53HYxaRJdjEb92H9/8rBi4dx450
- HPAfMlQbALoVDbkBltutf4sPQ2ryFdZdEhNpOpnu54TsEOKBepj50idC4MwNuYEJDLUf8n465
- yVKZmnBA261hima0ocs+0+loUnuiEeJbB+FMx1SnidPeqtgw3IOicGlSssXbUwXll1Y/rb0cs
- sZH7B4ExpoX8x+jxgzEcrfH4DslffxZmNBzHgnKk5vX9VP7EwgUbo2llFQaEkKGioUYmNzXjW
- Z/39OyOm87aWqjKM8qHfsUWKXNAttay3XiEX6bCUUAw5vsLKQnG3f01B4vWZwZmJTBiOy0yEx
- yvKZ9nLwE253wPtuQPRyTIACQe//r9IkD4DwRE6syaRmTzBOXOg2817xqBXoMnXhKZ+DGZmsI
- B00FnBqsmnC2r+ilUz8PCDfozIPJV+tdhbU/BCuau2oit4o5mGxFNtUzk4Be1MT0S0V8LqO4H
- DSsU9fVUl4gG2a65SE7yAuZr6y8pCm9n/f5cqeSFUgMXHbRj4FlBEvJSZm1yuwK5YphzKFMbR
- RFfJaRODz8KI0L+71ehCLEU7SkCeUDrNxeSNL/Z0z6G09zAHSfuhEL93hQkCiUVWpt912cEkO
- L06Tt0AaI41RHMR1sCfDc7eA0W3WehJXkAiwmkudgf6PE6Cy/kyeN
+In-Reply-To: <20200824140718.apoavlny6hlkm2ql@earth.universe>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 6:46 PM Michael Kelley <mikelley@microsoft.com> wrote:
->
-> Add ARM64-specific code to set up and handle the interrupts
-> generated by Hyper-V for VMbus messages and for stimer expiration.
->
-> This code is architecture dependent and is mostly driven by
-> architecture independent code in the VMbus driver and the
-> Hyper-V timer clocksource driver.
->
-> This code is built only when CONFIG_HYPERV is enabled.
->
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->  arch/arm64/hyperv/Makefile        |   2 +-
->  arch/arm64/hyperv/mshyperv.c      | 133 ++++++++++++++++++++++++++++++++++++++
->  arch/arm64/include/asm/mshyperv.h |  70 ++++++++++++++++++++
+24.08.2020 17:07, Sebastian Reichel пишет:
+> Hi,
+...
+>> +static int a500_battery_get_serial_number(struct a500_battery *bat,
+>> +					  union power_supply_propval *val)
+>> +{
+>> +	unsigned int i;
+>> +	s32 ret = 0;
+>> +
+>> +	if (bat->serial[0])
+>> +		goto done;
+>> +
+>> +	a500_ec_lock(bat->ec_chip);
+>> +	for (i = 0; i < BATTERY_SERIAL_LEN / 2; i++) {
+>> +		ret = a500_ec_read_locked(bat->ec_chip,
+>> +					  &ec_data[REG_SERIAL_NUMBER].cmd);
+>> +		if (ret < 0) {
+>> +			bat->serial[0] = '\0';
+>> +			break;
+>> +		}
+>> +
+>> +		bat->serial[i * 2 + 0] = (ret >> 0) & 0xff;
+>> +		bat->serial[i * 2 + 1] = (ret >> 8) & 0xff;
+>> +	}
+>> +	a500_ec_unlock(bat->ec_chip);
+>> +done:
+>> +	val->strval = bat->serial;
+>> +
+>> +	return ret;
+>> +}
+> 
+> If battery is swapped, this will keep the old serial.
 
-I still have the feeling that most of the code in arch/arm64/hyperv/ is
-misplaced: the only callers are loadable modules in drivers/hv/, and the
-code is not really part of the architecture but part of the platform.
+Hello, Sebastian! The battery isn't hot-swappable on A500, but it also
+should be okay to always re-read the serialno. I'll consider removing
+the caching in the v2, thanks.
 
-For the arm64 architecture, we have a rule that platform specific
-code belongs into device drivers rather than into the architecture
-code as we used to do in the linux-2.6 days for arch/arm/.
+...
+>> +	bat->psy = devm_power_supply_register_no_ws(&pdev->dev,
+>> +						    &a500_battery_desc,
+>> +						    &psy_cfg);
+>> +	err = PTR_ERR_OR_ZERO(bat->psy);
+>> +	if (err) {
+>> +		if (err == -EPROBE_DEFER)
+>> +			dev_dbg(&pdev->dev, "failed to register battery, deferring probe\n");
+>> +		else
+>> +			dev_err(&pdev->dev, "failed to register battery: %d\n",
+>> +				err);
+>> +		return err;
+>> +	}
+> 
+> if (IS_ERR(bat->psy))
+>     return dev_err_probe(&pdev->dev, PTR_ERR(err), "failed to register battery\n");
 
-I don't see hyperv being virtual rather than an SoC as a differentiator
-either; it's still just one of many platforms. If you look at
-arch/arm64/xen/, you can see that they have managed to get
-to a much simpler implementation in comparison.
+I didn't know that dev_err_probe() is available now, very nice! I'll use
+it in the v2, thanks.
 
-I'm not sure what the correct solution should be, but what I'd try to
-do here is to move every function that just considers the platform
-rather than the architecture somewhere into drivers/hv where it
-can be linked into the same modules as the existing files when
-building for arm64, while trying to keep architecture specific code
-in the header file where it can be included from those modules.
+...
+>> +MODULE_DESCRIPTION("Battery gauge driver for Acer Iconia Tab A500");
+>> +MODULE_AUTHOR("Dmitry Osipenko <digetx@gmail.com>");
+>> +MODULE_ALIAS("platform:acer-a500-iconia-battery");
+>> +MODULE_LICENSE("GPL v2");
+> 
+> MODULE_LICENSE("GPL");
+> 
+> Otherwise looks good to me.
 
-      Arnd
+Okay, thank you!
