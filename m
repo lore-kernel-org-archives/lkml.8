@@ -2,53 +2,51 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C2AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78F8B20FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C11BB2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258667;
-	bh=y+cdlWwnxSVfXPsP98WjNJycz7BCmcmnk0m4iUv16Bw=;
+	s=default; t=1598258671;
+	bh=BYU4VwRM5xFvzKpaDfvkbDeIvtDQMxsMNHx+jb8xCq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fnx6rh1sTIe01CwKQvjbADpy5WqTcKMF6lwTXY4LTya0oUhyNz6KOY42tyIO08Mqr
-	 82JcWFoMtGNGaXXKJWXtKSvU8FwJCE2AXmhT0at5weJIwQpDfUZKjTACm+lHCROT/I
-	 5k6ckEYw8MFnEELcMX8B88sSvmLGzDyiPI/QtQZ8=
+	b=N7z9DI7niba/GICHAiyacDFL/qVpRfrNtQeiQDarAsU+RZMJ9M3tgyrtOHrl8TdYg
+	 tzv0D76p5PDYqaAynpNVtikWNOaosokl2LwZ8c6qlMmTvG7aGHu3MA9wTMh+7VZJEY
+	 p62sAKL4j6lF8REKY/wHju/yERfOpSM7tftKh+hI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgHXIo0 (ORCPT
+        id S1729148AbgHXIo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:44:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39992 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:44:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729121AbgHXIoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:44:21 -0400
+        id S1728874AbgHXIoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:44:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFE302074D;
-        Mon, 24 Aug 2020 08:44:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7DFC20FC3;
+        Mon, 24 Aug 2020 08:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258661;
-        bh=y+cdlWwnxSVfXPsP98WjNJycz7BCmcmnk0m4iUv16Bw=;
+        s=default; t=1598258658;
+        bh=BYU4VwRM5xFvzKpaDfvkbDeIvtDQMxsMNHx+jb8xCq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vNXRJzHo/VKdAoV/t0sAZ2cIiEVtryDO5hpoLbV2o7HUL+TldR+62eTnFP7wxyWy0
-         B8YGSo3BaGmLATujMxypGAbRxWH7SWbuK6IITAAymm4H563vm1nHClCoGv017V1m7w
-         WCddLTZaJChiXneZJecKZ7euzdc2VukJ3ewt7ME4=
+        b=M0fo4HxQsPijGN1qWP9ORPcm4QYKpse7hxzgwIw/6obB3huZRzvG+geFqVhQuYB+S
+         UiDRAa48Xgt2mCXk16Kbb83o8Bc60b8IuinC1Jiy1Vc8baz481Xe6jX0W+w7OZAy5/
+         GBw93IP1ZIgKbCvsOHquYARPwbUAfK6S9YfpPVaU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 099/124] scsi: ufs: Fix interrupt error message for shared interrupts
-Date:   Mon, 24 Aug 2020 10:30:33 +0200
-Message-Id: <20200824082414.287581819@linuxfoundation.org>
+        Sarah Newman <srn@prgmr.com>, Juergen Gross <jgross@suse.com>,
+        Chris Brannon <cmb@prgmr.com>
+Subject: [PATCH 5.7 124/124] xen: dont reschedule in preemption off sections
+Date:   Mon, 24 Aug 2020 10:30:58 +0200
+Message-Id: <20200824082415.557111781@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -61,39 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit 6337f58cec030b34ced435b3d9d7d29d63c96e36 ]
+For support of long running hypercalls xen_maybe_preempt_hcall() is
+calling cond_resched() in case a hypercall marked as preemptible has
+been interrupted.
 
-The interrupt might be shared, in which case it is not an error for the
-interrupt handler to be called when the interrupt status is zero, so don't
-print the message unless there was enabled interrupt status.
+Normally this is no problem, as only hypercalls done via some ioctl()s
+are marked to be preemptible. In rare cases when during such a
+preemptible hypercall an interrupt occurs and any softirq action is
+started from irq_exit(), a further hypercall issued by the softirq
+handler will be regarded to be preemptible, too. This might lead to
+rescheduling in spite of the softirq handler potentially having set
+preempt_disable(), leading to splats like:
 
-Link: https://lore.kernel.org/r/20200811133936.19171-1-adrian.hunter@intel.com
-Fixes: 9333d7757348 ("scsi: ufs: Fix irq return code")
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+BUG: sleeping function called from invalid context at drivers/xen/preempt.c:37
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 20775, name: xl
+INFO: lockdep is turned off.
+CPU: 1 PID: 20775 Comm: xl Tainted: G D W 5.4.46-1_prgmr_debug.el7.x86_64 #1
+Call Trace:
+<IRQ>
+dump_stack+0x8f/0xd0
+___might_sleep.cold.76+0xb2/0x103
+xen_maybe_preempt_hcall+0x48/0x70
+xen_do_hypervisor_callback+0x37/0x40
+RIP: e030:xen_hypercall_xen_version+0xa/0x20
+Code: ...
+RSP: e02b:ffffc900400dcc30 EFLAGS: 00000246
+RAX: 000000000004000d RBX: 0000000000000200 RCX: ffffffff8100122a
+RDX: ffff88812e788000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffffff83ee3ad0 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000246 R12: ffff8881824aa0b0
+R13: 0000000865496000 R14: 0000000865496000 R15: ffff88815d040000
+? xen_hypercall_xen_version+0xa/0x20
+? xen_force_evtchn_callback+0x9/0x10
+? check_events+0x12/0x20
+? xen_restore_fl_direct+0x1f/0x20
+? _raw_spin_unlock_irqrestore+0x53/0x60
+? debug_dma_sync_single_for_cpu+0x91/0xc0
+? _raw_spin_unlock_irqrestore+0x53/0x60
+? xen_swiotlb_sync_single_for_cpu+0x3d/0x140
+? mlx4_en_process_rx_cq+0x6b6/0x1110 [mlx4_en]
+? mlx4_en_poll_rx_cq+0x64/0x100 [mlx4_en]
+? net_rx_action+0x151/0x4a0
+? __do_softirq+0xed/0x55b
+? irq_exit+0xea/0x100
+? xen_evtchn_do_upcall+0x2c/0x40
+? xen_do_hypervisor_callback+0x29/0x40
+</IRQ>
+? xen_hypercall_domctl+0xa/0x20
+? xen_hypercall_domctl+0x8/0x20
+? privcmd_ioctl+0x221/0x990 [xen_privcmd]
+? do_vfs_ioctl+0xa5/0x6f0
+? ksys_ioctl+0x60/0x90
+? trace_hardirqs_off_thunk+0x1a/0x20
+? __x64_sys_ioctl+0x16/0x20
+? do_syscall_64+0x62/0x250
+? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fix that by testing preempt_count() before calling cond_resched().
+
+In kernel 5.8 this can't happen any more due to the entry code rework
+(more than 100 patches, so not a candidate for backporting).
+
+The issue was introduced in kernel 4.3, so this patch should go into
+all stable kernels in [4.3 ... 5.7].
+
+Reported-by: Sarah Newman <srn@prgmr.com>
+Fixes: 0fa2f5cb2b0ecd8 ("sched/preempt, xen: Use need_resched() instead of should_resched()")
+Cc: Sarah Newman <srn@prgmr.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Tested-by: Chris Brannon <cmb@prgmr.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 2 +-
+ drivers/xen/preempt.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 7298adbcdec85..3b80d692dd2e7 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -5803,7 +5803,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
- 		intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
- 	} while (intr_status && --retries);
- 
--	if (retval == IRQ_NONE) {
-+	if (enabled_intr_status && retval == IRQ_NONE) {
- 		dev_err(hba->dev, "%s: Unhandled interrupt 0x%08x\n",
- 					__func__, intr_status);
- 		ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
--- 
-2.25.1
-
+--- a/drivers/xen/preempt.c
++++ b/drivers/xen/preempt.c
+@@ -27,7 +27,7 @@ EXPORT_SYMBOL_GPL(xen_in_preemptible_hca
+ asmlinkage __visible void xen_maybe_preempt_hcall(void)
+ {
+ 	if (unlikely(__this_cpu_read(xen_in_preemptible_hcall)
+-		     && need_resched())) {
++		     && need_resched() && !preempt_count())) {
+ 		/*
+ 		 * Clear flag as we may be rescheduled on a different
+ 		 * cpu.
 
 
