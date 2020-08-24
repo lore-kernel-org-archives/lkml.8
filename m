@@ -2,137 +2,354 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF2EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635C3C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF0B20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0EE20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1fAtQ2n4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+rvejp7S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wen4iy5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgHXMZC (ORCPT
+        id S1727034AbgHXMZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:25:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbgHXMYw (ORCPT
+        Mon, 24 Aug 2020 08:25:21 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27689 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726830AbgHXMZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:24:52 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9C5C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:24:52 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598271889;
+        Mon, 24 Aug 2020 08:25:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598271898;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=J3kOSuANczljR0oJzMVSEz4vNtkQBEm/4UZxW4w9Euw=;
-        b=1fAtQ2n4yDiLzitucu4ui1UzVtZ4vm815sBCxB4sZTUtT+szYObEPI1qtxX/gDTg6ot2aN
-        u5+nZ1FBV0VoNPUoQJqPuNHhpkl5gGKonx5ZS29SG1JB97c5c53165SUo6e1OGW4IupU9G
-        2xzOFMYu++TETiPirg+PFf4keMJMg1LAGwKUH2hpdooxkGnyKRisE3Ql7pdoeiouZFfu6s
-        +KuSUaspwcFAztI9CqW5a4HGt8nQcD1ZfqtxwwnMLn9nfq9DwIq44mg9rbd/gDpkhq9JWf
-        O2703fBS+An4p8U/MJr+WvPHY28HNPtFdeMdJAn7cKADBHrgadVsnT15PIvcxA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598271889;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=J3kOSuANczljR0oJzMVSEz4vNtkQBEm/4UZxW4w9Euw=;
-        b=+rvejp7S4z6QjE2z59+T2BBhaKwkna4Y2itxsd3pmlThQGXj6wfpx1dKZZ096ml2oshK5e
-        Jma4W26YCUJV4kAA==
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Pu Wen <puwen@hygon.cn>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Dirk Hohndel <dirkhh@vmware.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        "H. Peter Anvin" <hpa@linux.intel.com>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Gordon Tetlow <gordon@tetlows.org>,
-        David Kaplan <David.Kaplan@amd.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: [RFD] x86: Curing the exception and syscall trainwreck in hardware
-Date:   Mon, 24 Aug 2020 14:24:48 +0200
-Message-ID: <875z98jkof.fsf@nanos.tec.linutronix.de>
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+d95Pyxxs3w7EuizFdEpLYSASJLAlQyWQNxxnlomYro=;
+        b=Wen4iy5Mc++DheT2grkPI0naGYblbSd9I7ZcZNFIjaVBE+sKJITwcVW6Rf6w3mK9DYcjbH
+        iaW7k7gf3o7K696EzeWMdsj/SVRJNG5BD/o96nTuJzo6bqUMsgQenJaNbJnqZmyCSx21tx
+        8FN4PG1Ty3NPtmKWGI/MdFsEvvlLuKI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-328-2iQFX1_IPnuZkCEVfhg__Q-1; Mon, 24 Aug 2020 08:24:54 -0400
+X-MC-Unique: 2iQFX1_IPnuZkCEVfhg__Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C3991084C89;
+        Mon, 24 Aug 2020 12:24:52 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B06D10098AE;
+        Mon, 24 Aug 2020 12:24:50 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 2/5] Add manpages for move_mount(2)
+From:   David Howells <dhowells@redhat.com>
+To:     mtk.manpages@gmail.com, viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 24 Aug 2020 13:24:50 +0100
+Message-ID: <159827189025.306468.4916341547843731338.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159827188271.306468.16962617119460123110.stgit@warthog.procyon.org.uk>
+References: <159827188271.306468.16962617119460123110.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's a sad state of affairs that I have to write this mail at all and it's
-nothing else than an act of desperation.
+Add manual pages to document the move_mount() system call.
 
-The x86 exception handling including the various ways of syscall entry/exit
-are a constant source of trouble. Aside of being a functional disaster
-quite some of these issues have severe security implications.
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-There are similar issues on the virtualization side including the handling
-of essential MSRs which are required to run a guest OS and even more so
-with the upcoming virt specific exceptions of various vendors.
+ man2/move_mount.2 |  267 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 267 insertions(+)
+ create mode 100644 man2/move_mount.2
 
-We are asking the vendors for more than a decade to fix this situation, but
-even the most trivial requests like an IRET variant which does not reenable
-NMIs unconditionally and other small things which would make our life less
-miserable aren't happening.
+diff --git a/man2/move_mount.2 b/man2/move_mount.2
+new file mode 100644
+index 000000000..2ceb775d9
+--- /dev/null
++++ b/man2/move_mount.2
+@@ -0,0 +1,267 @@
++'\" t
++.\" Copyright (c) 2020 David Howells <dhowells@redhat.com>
++.\"
++.\" %%%LICENSE_START(VERBATIM)
++.\" Permission is granted to make and distribute verbatim copies of this
++.\" manual provided the copyright notice and this permission notice are
++.\" preserved on all copies.
++.\"
++.\" Permission is granted to copy and distribute modified versions of this
++.\" manual under the conditions for verbatim copying, provided that the
++.\" entire resulting derived work is distributed under the terms of a
++.\" permission notice identical to this one.
++.\"
++.\" Since the Linux kernel and libraries are constantly changing, this
++.\" manual page may be incorrect or out-of-date.  The author(s) assume no
++.\" responsibility for errors or omissions, or for damages resulting from
++.\" the use of the information contained herein.  The author(s) may not
++.\" have taken the same level of care in the production of this manual,
++.\" which is licensed free of charge, as they might when working
++.\" professionally.
++.\"
++.\" Formatted or processed versions of this manual, if unaccompanied by
++.\" the source, must acknowledge the copyright and authors of this work.
++.\" %%%LICENSE_END
++.\"
++.TH MOVE_MOUNT 2 2020-08-24 "Linux" "Linux Programmer's Manual"
++.SH NAME
++move_mount \- Move mount objects around the filesystem topology
++.SH SYNOPSIS
++.nf
++.B #include <sys/types.h>
++.B #include <sys/mount.h>
++.B #include <unistd.h>
++.BR "#include <fcntl.h>           " "/* Definition of AT_* constants */"
++.PP
++.BI "int move_mount(int " from_dirfd ", const char *" from_pathname ","
++.BI "               int " to_dirfd ", const char *" to_pathname ","
++.BI "               unsigned int " flags );
++.fi
++.PP
++.IR Note :
++There is no glibc wrapper for this system call.
++.SH DESCRIPTION
++The
++.BR move_mount ()
++call moves a mount from one place to another; it can also be used to attach an
++unattached mount that was created by
++.BR fsmount "() or " open_tree "() with " OPEN_TREE_CLONE .
++.PP
++If
++.BR move_mount ()
++is called repeatedly with a file descriptor that refers to a mount object,
++then the object will be attached/moved the first time and then moved
++repeatedly, detaching it from the previous mountpoint each time.
++.PP
++To access the source mount object or the destination mountpoint, no
++permissions are required on the object itself, but if either pathname is
++supplied, execute (search) permission is required on all of the directories
++specified in
++.IR from_pathname " or " to_pathname .
++.PP
++The caller does, however, require the appropriate privilege (Linux: the
++.B CAP_SYS_ADMIN
++capability) to move or attach mounts.
++.PP
++.BR move_mount ()
++uses
++.IR from_pathname ", " from_dirfd " and part of " flags
++to locate the mount object to be moved and
++.IR to_pathname ", " to_dirfd " and another part of " flags
++to locate the destination mountpoint.  Each lookup can be done in one of a
++variety of ways:
++.TP
++[*] By absolute path.
++The pathname points to an absolute path and the dirfd is ignored.  The file is
++looked up by name, starting from the root of the filesystem as seen by the
++calling process.
++.TP
++[*] By cwd-relative path.
++The pathname points to a relative path and the dirfd is
++.IR AT_FDCWD .
++The file is looked up by name, starting from the current working directory.
++.TP
++[*] By dir-relative path.
++The pathname points to relative path and the dirfd indicates a file descriptor
++pointing to a directory.  The file is looked up by name, starting from the
++directory specified by
++.IR dirfd .
++.TP
++[*] By file descriptor.  The pathname is an empty string (""), the dirfd
++points directly to the mount object to move or the destination mount point and
++the appropriate
++.B *_EMPTY_PATH
++flag is set.
++.PP
++.I flags
++can be used to influence a path-based lookup.  The value for
++.I flags
++is constructed by OR'ing together zero or more of the following constants:
++.TP
++.BR MOVE_MOUNT_F_EMPTY_PATH
++.\" commit 65cfc6722361570bfe255698d9cd4dccaf47570d
++If
++.I from_pathname
++is an empty string, operate on the file referred to by
++.IR from_dirfd
++(which may have been obtained using the
++.BR open (2)
++.B O_PATH
++flag or
++.BR open_tree ())
++If
++.I from_dirfd
++is
++.BR AT_FDCWD ,
++the call operates on the current working directory.
++In this case,
++.I from_dirfd
++can refer to any type of file, not just a directory.
++This flag is Linux-specific; define
++.B _GNU_SOURCE
++.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
++to obtain its definition.
++.TP
++.B MOVE_MOUNT_T_EMPTY_PATH
++As above, but operating on
++.IR to_pathname " and " to_dirfd .
++.TP
++.B MOVE_MOUNT_F_AUTOMOUNTS
++Don't automount the terminal ("basename") component of
++.I from_pathname
++if it is a directory that is an automount point.  This allows a mount object
++that has an automount point at its root to be moved and prevents unintended
++triggering of an automount point.
++The
++.B MOVE_MOUNT_F_AUTOMOUNTS
++flag has no effect if the automount point has already been mounted over.  This
++flag is Linux-specific; define
++.B _GNU_SOURCE
++.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
++to obtain its definition.
++.TP
++.B MOVE_MOUNT_T_AUTOMOUNTS
++As above, but operating on
++.IR to_pathname " and " to_dirfd .
++This allows an automount point to be manually mounted over.
++.TP
++.B MOVE_MOUNT_F_SYMLINKS
++If
++.I from_pathname
++is a symbolic link, then dereference it.  The default for
++.BR move_mount ()
++is to not follow symlinks.
++.TP
++.B MOVE_MOUNT_T_SYMLINKS
++As above, but operating on
++.IR to_pathname " and " to_dirfd .
++.SH RETURN VALUE
++On success, 0 is returned.  On error, \-1 is returned, and
++.I errno
++is set appropriately.
++.SH ERRORS
++.TP
++.B EACCES
++Search permission is denied for one of the directories
++in the path prefix of
++.IR pathname .
++(See also
++.BR path_resolution (7).)
++.TP
++.B EBADF
++.IR from_dirfd " or " to_dirfd
++is not a valid open file descriptor.
++.TP
++.B EFAULT
++.IR from_pathname " or " to_pathname
++is NULL or either one point to a location outside the process's accessible
++address space.
++.TP
++.B EINVAL
++Reserved flag specified in
++.IR flags .
++.TP
++.B ELOOP
++Too many symbolic links encountered while traversing the pathname.
++.TP
++.B ENAMETOOLONG
++.IR from_pathname " or " to_pathname
++is too long.
++.TP
++.B ENOENT
++A component of
++.IR from_pathname " or " to_pathname
++does not exist, or one is an empty string and the appropriate
++.B *_EMPTY_PATH
++was not specified in
++.IR flags .
++.TP
++.B ENOMEM
++Out of memory (i.e., kernel memory).
++.TP
++.B ENOTDIR
++A component of the path prefix of
++.IR from_pathname " or " to_pathname
++is not a directory or one or the other is relative and the appropriate
++.I *_dirfd
++is a file descriptor referring to a file other than a directory.
++.SH VERSIONS
++.BR move_mount ()
++was added to Linux in kernel 5.2.
++.SH CONFORMING TO
++.BR move_mount ()
++is Linux-specific.
++.SH NOTES
++Glibc does not (yet) provide a wrapper for the
++.BR move_mount ()
++system call; call it using
++.BR syscall (2).
++.SH EXAMPLES
++The
++.BR move_mount ()
++function can be used like the following:
++.PP
++.RS
++.nf
++move_mount(AT_FDCWD, "/a", AT_FDCWD, "/b", 0);
++.fi
++.RE
++.PP
++This would move the object mounted on "/a" to "/b".  It can also be used in
++conjunction with
++.BR open_tree "(2) or " open "(2) with " O_PATH :
++.PP
++.RS
++.nf
++fd = open_tree(AT_FDCWD, "/mnt", 0);
++move_mount(fd, "", AT_FDCWD, "/mnt2", MOVE_MOUNT_F_EMPTY_PATH);
++move_mount(fd, "", AT_FDCWD, "/mnt3", MOVE_MOUNT_F_EMPTY_PATH);
++move_mount(fd, "", AT_FDCWD, "/mnt4", MOVE_MOUNT_F_EMPTY_PATH);
++.fi
++.RE
++.PP
++This would attach the path point for "/mnt" to fd, then it would move the
++mount to "/mnt2", then move it to "/mnt3" and finally to "/mnt4".
++.PP
++It can also be used to attach new mounts:
++.PP
++.RS
++.nf
++sfd = fsopen("ext4", FSOPEN_CLOEXEC);
++fsconfig(sfd, FSCONFIG_SET_STRING, "source", "/dev/sda1", 0);
++fsconfig(sfd, FSCONFIG_SET_FLAG, "user_xattr", NULL, 0);
++fsconfig(sfd, FSCONFIG_CMD_CREATE, NULL, NULL, 0);
++mfd = fsmount(sfd, FSMOUNT_CLOEXEC, MOUNT_ATTR_NODEV);
++move_mount(mfd, "", AT_FDCWD, "/home", MOVE_MOUNT_F_EMPTY_PATH);
++.fi
++.RE
++.PP
++Which would open the Ext4 filesystem mounted on "/dev/sda1", turn on user
++extended attribute support and create a mount object for it.  Finally, the new
++mount object would be attached with
++.BR move_mount ()
++to "/home".
++.SH SEE ALSO
++.BR fsmount (2),
++.BR fsopen (2),
++.BR open_tree (2)
 
-Instead of fixing the underlying design fails first and creating a solid
-base the vendors add even more ill defined exception variants on top of
-the existing pile. Unsurprisingly these add-ons are creating more
-problems than they solve, but being based on the existing house of cards
-that's obviously expected.
 
-This really has to stop and the underlying issues have to be resolved
-before more problems are inflicted upon operating systems and hypervisors.
-The amount of code to workaround these issues is already by far larger than
-the actual functional code. Some of these workarounds are just bandaids
-which try to prevent the most obvious damage, but they are mostly based on
-the hope that the unfixable corner cases never happen.
-
-There is talk about solutions for years, but it's just talk and we have not
-yet seen a coordinated effort accross the x86 vendors to come up with a
-sane replacement for the x86 exception and syscall trainwreck.
-
-The important word here is 'coordinated'. We are not at all interested
-in different solutions from different vendors. It's going to be
-challenging enough to maintain ONE parallel exception/syscall handling
-implementation.  In other words, the kernel is going to support exactly
-ONE new exception/syscall handling mechanism and not going to accomodate
-every vendor.
-
-So I call on the x86 vendors to sit together and come up with a unified
-and consolidated base on which each of the vendors can build their
-differentiating features.
-
-Aside of coordination between the x86 vendors this also requires
-coordination with the people who finally have to deal with that on the
-software side. The prevailing hardware engineering principle "That can
-be fixed in software" does not work; it never worked - especially not in
-the area of x86 exception and syscall handling.
-
-This coordination must include all major operating systems and hypervisors
-whether open source or proprietary to ensure that the different
-requirements are met. This kind of coordination has happened in the context
-of the hardware vulnerability mitigations already in a fruitful way so
-this request is not asking for something impossible.
-
-If the x86 vendors are unable to talk to each other and coordinate on a
-solution, then the ultimate backstop might be to take the first reasonable
-design specification and the first reasonable silicon implementation of it
-as the ONE alternative solution to the existing trainwreck. How the other
-vendors are going to deal with that is none of our business. That's the
-least useful and least desired outcome and will only happen when the x86
-vendors are not able to get their act together and sort that out upfront.
-
-Thanks,
-
-	Thomas
