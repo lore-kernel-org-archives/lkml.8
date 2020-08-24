@@ -2,312 +2,521 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED45CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C47652071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="S8fEnJ4y"
+	by mail.kernel.org (Postfix) with ESMTP id 7D6802071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598262138;
+	bh=qS5QuyegbFPeFKe476tXwKGKPLg6gM2O9DYnkuxon3c=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WlWM8KjWKzWrwvk2lS+kiat+ctPFmfrYaFnedF05oiUlhhGpQD338d6yOvrst9fok
+	 X/535jIKdKDnmD5Qc20xcjLBl3c0zzuTF63HZxia6pWyeb93GtGQLG/97Fb5ki+b6k
+	 xomFb6eyRHmzdUSCoSa52a1gPsApWrRcwLIgFvP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbgHXJmN (ORCPT
+        id S1729258AbgHXJmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:42:13 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:18790 "EHLO mx1.tq-group.com"
+        Mon, 24 Aug 2020 05:42:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729441AbgHXJlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:41:40 -0400
-IronPort-SDR: 43iumKkGatQ9DSLXCWrjGnJtzNUYK+FXkBrKXwFAaOxtP7FxXFlyAEIhAy4kAAz1oM7Tj5eNPp
- 11xuxhkJ0qzITd+5/3Yiqds27cacwJsrtozeP1iGr2oOcArmJxuSwuO6BO+cGTfIsiVii/b5XZ
- ty9amjmCagnruSu+zaUOlsTWWHpSErJt96NNVfOvG6Qf62o34/P4KiNXFNzqWchTJ0cm0FZnh6
- 53rMJ1RymJDEo88urogW+9mH6h4ffgWFv+BvbRSJQobWV1WK78WaLnD4cHldK0V3mp1yCsHk/o
- HCU=
-X-IronPort-AV: E=Sophos;i="5.76,348,1592863200"; 
-   d="scan'208";a="13570930"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 24 Aug 2020 11:41:37 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 24 Aug 2020 11:41:37 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 24 Aug 2020 11:41:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1598262097; x=1629798097;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GybxSl2AJ1rlYcmMGQnA8jxjW1BooVuZAWjnxmbzF1s=;
-  b=S8fEnJ4yIQWO5X4mw6ZG93cFqR8bDK+cvy8z3Aaw7Pu8GAZCtyCOArNn
-   VrALdmM9ZYnbcrR+xpwQj57m48p3HSHCX1cndiJkj7kRJ6d2Y9BqPN2wx
-   TkZIZ34DzIwPRiVFdb1aA+oX1O+9JnNOf0KPJQ6xbzl95HVxhZxV+6SUY
-   exSkgMUpK/TUDtSnS4uO3J+HVDweHUWYoT5fjorkrrU2FNy8p8okN+ikw
-   6M+wJRFfK8va+nniQ7lOGlEEuiEFmxJ1O8acVhT+sXL3ovn2HQ1pXtUYU
-   PsIE1KUQ3TnioVdSMjcAfYbirJEQPOZX5CH470UdlLW6wtkN7MgBgOG0w
-   g==;
-IronPort-SDR: WdBU2jvens77plO1dgYp+YibVFj75kUA4ViV6s6aaZLOc1uSJ8g3JRAWwipqstCtB94qc5ewv2
- 8+DkB4B5eNnEGR7SVJe+p8SE8PjBDyKvuAAMp1qUhSFlCQyqlRU+2YHlrUymRQqRfC2Z1787gf
- iZiWZu1wQ47ozLw050Gr6C9lxqW4xaN0DtgEJuDcCBui1yixbk0IeuQEBvxDx9U1NTgP2i4BKp
- Fh/VEisI8hCbSQYTsVRsiMtmpNtanX5tmxfnzGGtz2/nI1N4pQCmZE1hykNlko+Fk5n+6lRV+b
- qrs=
-X-IronPort-AV: E=Sophos;i="5.76,348,1592863200"; 
-   d="scan'208";a="13570929"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 24 Aug 2020 11:41:37 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id BE31E280065;
-        Mon, 24 Aug 2020 11:41:37 +0200 (CEST)
-Message-ID: <8ee3e4d5843e2dc28c845388620d7ac34d64058b.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: [PATCH mmc-next v2] mmc: allow setting slot index via
- device tree alias
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Mon, 24 Aug 2020 11:41:37 +0200
-In-Reply-To: <CAPDyKFp1uwkmFVWXbCG32bRtu2kkUq_Vog646c=evmTixW6adA@mail.gmail.com>
-References: <20200820075949.19133-1-matthias.schiffer@ew.tq-group.com>
-         <CAPDyKFp1uwkmFVWXbCG32bRtu2kkUq_Vog646c=evmTixW6adA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1729201AbgHXIo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:44:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3C502074D;
+        Mon, 24 Aug 2020 08:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598258697;
+        bh=qS5QuyegbFPeFKe476tXwKGKPLg6gM2O9DYnkuxon3c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oJ2auDIV59z83AnXGuokEVW9MnXZy+0ZgRKeUMibXerL2Amv70DCTxv0NqCAKLII+
+         qBmfsfmSITw5YIvtaXiU/VhFAXUWRcgTVGh5AqKtsjAmDtoEYHE2ORavuOdSGhnL+D
+         ZQEvLlKmQeH/cuq+pkNpyA18QNaJALcJxUMD3R+Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 000/107] 5.4.61-rc1 review
+Date:   Mon, 24 Aug 2020 10:29:26 +0200
+Message-Id: <20200824082405.020301642@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.61-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.61-rc1
+X-KernelTest-Deadline: 2020-08-26T08:24+00:00
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-08-21 at 13:39 +0200, Ulf Hansson wrote:
-> On Thu, 20 Aug 2020 at 09:59, Matthias Schiffer
-> <matthias.schiffer@ew.tq-group.com> wrote:
-> > 
-> > As with GPIO, UART and others, allow specifying the device index
-> > via the
-> > aliases node in the device tree.
-> > 
-> > On embedded devices, there is often a combination of removable
-> > (e.g.
-> > SD card) and non-removable MMC devices (e.g. eMMC).
-> > Therefore the index might change depending on
-> > 
-> > * host of removable device
-> > * removable card present or not
-> > 
-> > This makes it difficult to hardcode the root device, if it is on
-> > the
-> > non-removable device. E.g. if SD card is present eMMC will be
-> > mmcblk1,
-> > if SD card is not present at boot, eMMC will be mmcblk0.
-> 
-> Can you please add some information why Part-UUID/labels don't work
-> well to solve this problem on some embedded systems?
-> 
-> I think that deserves to be in the changelog, after all the long
-> discussions we had in the history around this.
+This is the start of the stable review cycle for the 5.4.61 release.
+There are 107 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Makes sense. I'll wait for your review before I send a v3 with an
-updated description.
+Responses should be made by Wed, 26 Aug 2020 08:23:34 +0000.
+Anything received after that time might be too late.
 
-Matthias
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.61-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.4.61-rc1
+
+Juergen Gross <jgross@suse.com>
+    xen: don't reschedule in preemption off sections
+
+Peter Xu <peterx@redhat.com>
+    mm/hugetlb: fix calculation of adjust_range_if_pmd_sharing_possible
+
+Al Viro <viro@zeniv.linux.org.uk>
+    do_epoll_ctl(): clean the failure exits up a bit
+
+Marc Zyngier <maz@kernel.org>
+    epoll: Keep a reference on files added to the check list
+
+Li Heng <liheng40@huawei.com>
+    efi: add missed destroy_workqueue when efisubsys_init fails
+
+Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
+    powerpc/pseries: Do not initiate shutdown when system is running on UPS
+
+Tom Rix <trix@redhat.com>
+    net: dsa: b53: check for timeout
+
+Haiyang Zhang <haiyangz@microsoft.com>
+    hv_netvsc: Fix the queue_mapping in netvsc_vf_xmit()
+
+Wang Hai <wanghai38@huawei.com>
+    net: gemini: Fix missing free_netdev() in error path of gemini_ethernet_port_probe()
+
+Shay Agroskin <shayagr@amazon.com>
+    net: ena: Prevent reset after device destruction
+
+Jiri Wiesner <jwiesner@suse.com>
+    bonding: fix active-backup failover for current ARP slave
+
+Stephen Boyd <swboyd@chromium.org>
+    ARM64: vdso32: Install vdso32 from vdso_install
+
+David Howells <dhowells@redhat.com>
+    afs: Fix NULL deref in afs_dynroot_depopulate()
+
+Selvin Xavier <selvin.xavier@broadcom.com>
+    RDMA/bnxt_re: Do not add user qps to flushlist
+
+Randy Dunlap <rdunlap@infradead.org>
+    Fix build error when CONFIG_ACPI is not set/enabled:
+
+Juergen Gross <jgross@suse.com>
+    efi: avoid error message when booting under Xen
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kconfig: qconf: fix signal connection to invalid slots
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kconfig: qconf: do not limit the pop-up menu to the first row
+
+Quinn Tran <qutran@marvell.com>
+    Revert "scsi: qla2xxx: Disable T10-DIF feature with FC-NVMe during probe"
+
+Jim Mattson <jmattson@google.com>
+    kvm: x86: Toggling CR4.PKE does not load PDPTEs in PAE mode
+
+Jim Mattson <jmattson@google.com>
+    kvm: x86: Toggling CR4.SMAP does not load PDPTEs in PAE mode
+
+Alex Williamson <alex.williamson@redhat.com>
+    vfio/type1: Add proper error unwind for vfio_iommu_replay()
+
+Dinghao Liu <dinghao.liu@zju.edu.cn>
+    ASoC: intel: Fix memleak in sst_media_open
+
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+    ASoC: msm8916-wcd-analog: fix register Interrupt offset
+
+Heiko Carstens <hca@linux.ibm.com>
+    s390/ptrace: fix storage key handling
+
+Heiko Carstens <hca@linux.ibm.com>
+    s390/runtime_instrumentation: fix storage key handling
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    bonding: fix a potential double-unregister
+
+Zhang Changzhong <zhangchangzhong@huawei.com>
+    can: j1939: add rxtimer for multipacket broadcast session
+
+Zhang Changzhong <zhangchangzhong@huawei.com>
+    can: j1939: abort multipacket broadcast session when timeout occurs
+
+Zhang Changzhong <zhangchangzhong@huawei.com>
+    can: j1939: cancel rxtimer on multipacket broadcast session complete
+
+Zhang Changzhong <zhangchangzhong@huawei.com>
+    can: j1939: fix support for multipacket broadcast message
+
+Jarod Wilson <jarod@redhat.com>
+    bonding: show saner speed for broadcast mode
+
+Fugang Duan <fugang.duan@nxp.com>
+    net: fec: correct the error path for regulator disable in probe
+
+Grzegorz Szczurek <grzegorzx.szczurek@intel.com>
+    i40e: Fix crash during removing i40e driver
+
+Przemyslaw Patynowski <przemyslawx.patynowski@intel.com>
+    i40e: Set RX_ONLY mode for unicast promiscuous on VLAN
+
+Oleksij Rempel <linux@rempel-privat.de>
+    can: j1939: transport: add j1939_session_skb_find_by_offset() function
+
+Oleksij Rempel <linux@rempel-privat.de>
+    can: j1939: transport: j1939_simple_recv(): ignore local J1939 messages send not by J1939 stack
+
+Eric Dumazet <edumazet@google.com>
+    can: j1939: fix kernel-infoleak in j1939_sk_sock2sockaddr_can()
+
+John Fastabend <john.fastabend@gmail.com>
+    bpf: sock_ops sk access may stomp registers when dst_reg = src_reg
+
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+    ASoC: q6routing: add dummy register read/write function
+
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+    ASoC: q6afe-dai: mark all widgets registers as SND_SOC_NOPM
+
+Amelie Delaunay <amelie.delaunay@st.com>
+    spi: stm32: fixes suspend/resume management
+
+Stephen Suryaputra <ssuryaextr@gmail.com>
+    netfilter: nf_tables: nft_exthdr: the presence return value should be little-endian
+
+Jan Kara <jack@suse.cz>
+    ext4: don't allow overlapping system zones
+
+Eric Sandeen <sandeen@redhat.com>
+    ext4: fix potential negative array index in do_split()
+
+Helge Deller <deller@gmx.de>
+    fs/signalfd.c: fix inconsistent return codes for signalfd4
+
+Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+    alpha: fix annotation of io{read,write}{16,32}be()
+
+Eiichi Tsukata <devel@etsukata.com>
+    xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
+
+Gaurav Singh <gaurav1086@gmail.com>
+    tools/testing/selftests/cgroup/cgroup_util.c: cg_read_strcmp: fix null pointer dereference
+
+Evgeny Novikov <novikov@ispras.ru>
+    media: camss: fix memory leaks on error handling paths in probe
+
+Mao Wenan <wenan.mao@linux.alibaba.com>
+    virtio_ring: Avoid loop when vq is broken in virtqueue_poll
+
+Javed Hasan <jhasan@marvell.com>
+    scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
+
+Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+    cpufreq: intel_pstate: Fix cpuinfo_max_freq when MSR_TURBO_RATIO_LIMIT is 0
+
+Boris Ostrovsky <boris.ostrovsky@oracle.com>
+    swiotlb-xen: use vmalloc_to_page on vmalloc virt addresses
+
+Xiubo Li <xiubli@redhat.com>
+    ceph: fix use-after-free for fsc->mdsc
+
+Zhe Li <lizhe67@huawei.com>
+    jffs2: fix UAF problem
+
+Felix Kuehling <Felix.Kuehling@amd.com>
+    drm/ttm: fix offset in VMAs with a pg_offs in ttm_bo_vm_access
+
+Darrick J. Wong <darrick.wong@oracle.com>
+    xfs: fix inode quota reservation checks
+
+Chuck Lever <chuck.lever@oracle.com>
+    svcrdma: Fix another Receive buffer leak
+
+Greg Ungerer <gerg@linux-m68k.org>
+    m68knommu: fix overwriting of bits in ColdFire V3 cache control
+
+Jinyang He <hejinyang@loongson.cn>
+    MIPS: Fix unable to reserve memory for Crash kernel
+
+Xiongfeng Wang <wangxiongfeng2@huawei.com>
+    Input: psmouse - add a newline when printing 'proto' by sysfs
+
+Evgeny Novikov <novikov@ispras.ru>
+    media: vpss: clean up resources in init
+
+Huacai Chen <chenhc@lemote.com>
+    rtc: goldfish: Enable interrupt in set_alarm() when necessary
+
+Chuhong Yuan <hslester96@gmail.com>
+    media: budget-core: Improve exception handling in budget_register()
+
+Bodo Stroesser <bstroesser@ts.fujitsu.com>
+    scsi: target: tcmu: Fix crash in tcmu_flush_dcache_range on ARM
+
+Stanley Chu <stanley.chu@mediatek.com>
+    scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
+
+Rajendra Nayak <rnayak@codeaurora.org>
+    opp: Enable resources again if they were disabled earlier
+
+Liang Chen <cl@rock-chips.com>
+    kthread: Do not preempt current task if it is going to call schedule()
+
+Krunoslav Kovac <Krunoslav.Kovac@amd.com>
+    drm/amd/display: fix pow() crashing when given base 0
+
+Stylon Wang <stylon.wang@amd.com>
+    drm/amd/display: Fix EDID parsing after resume from suspend
+
+Daniel Kolesa <daniel@octaforge.org>
+    drm/amdgpu/display: use GFP_ATOMIC in dcn20_validate_bandwidth_internal
+
+Yang Shi <shy828301@gmail.com>
+    mm/memory.c: skip spurious TLB flush for retried page fault
+
+Steffen Maier <maier@linux.ibm.com>
+    scsi: zfcp: Fix use-after-free in request timeout handlers
+
+zhangyi (F) <yi.zhang@huawei.com>
+    jbd2: add the missing unlock_buffer() in the error path of jbd2_write_superblock()
+
+Jan Kara <jack@suse.cz>
+    ext4: fix checking of directory entry validity for inline directories
+
+Kaike Wan <kaike.wan@intel.com>
+    RDMA/hfi1: Correct an interlock issue for TID RDMA WRITE request
+
+Charan Teja Reddy <charante@codeaurora.org>
+    mm, page_alloc: fix core hung in free_pcppages_bulk()
+
+Doug Berger <opendmb@gmail.com>
+    mm: include CMA pages in lowmem_reserve at boot
+
+Hugh Dickins <hughd@google.com>
+    uprobes: __replace_page() avoid BUG in munlock_vma_page()
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    kernel/relay.c: fix memleak on destroy relay channel
+
+Jann Horn <jannh@google.com>
+    romfs: fix uninitialized memory leak in romfs_dev_read()
+
+Lukas Wunner <lukas@wunner.de>
+    spi: Prevent adding devices below an unregistering controller
+
+Oleksij Rempel <linux@rempel-privat.de>
+    can: j1939: socket: j1939_sk_bind(): make sure ml_priv is allocated
+
+Oleksij Rempel <linux@rempel-privat.de>
+    can: j1939: transport: j1939_session_tx_dat(): fix use-after-free read in j1939_tp_txtimer()
+
+Mike Pozulp <pozulp.kernel@gmail.com>
+    ALSA: hda/realtek: Add quirk for Samsung Galaxy Book Ion
+
+Mike Pozulp <pozulp.kernel@gmail.com>
+    ALSA: hda/realtek: Add quirk for Samsung Galaxy Flex Book
+
+David Sterba <dsterba@suse.com>
+    btrfs: add wrapper for transaction abort predicate
+
+Josef Bacik <josef@toxicpanda.com>
+    btrfs: return EROFS for BTRFS_FS_STATE_ERROR cases
+
+Josef Bacik <josef@toxicpanda.com>
+    btrfs: don't show full path of bind mounts in subvol=
+
+Marcos Paulo de Souza <mpdesouza@suse.com>
+    btrfs: export helpers for subvolume name/id resolution
+
+Coly Li <colyli@suse.de>
+    bcache: avoid nr_stripes overflow in bcache_device_init()
+
+Hugh Dickins <hughd@google.com>
+    khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
+
+Hugh Dickins <hughd@google.com>
+    khugepaged: khugepaged_test_exit() check mmget_still_valid()
+
+Masami Hiramatsu <mhiramat@kernel.org>
+    perf probe: Fix memory leakage when the probe point is not found
+
+Bob Peterson <rpeterso@redhat.com>
+    gfs2: Never call gfs2_block_zero_range with an open transaction
+
+Andreas Gruenbacher <agruenba@redhat.com>
+    gfs2: Improve mmap write vs. punch_hole consistency
+
+Chris Wilson <chris@chris-wilson.co.uk>
+    drm/vgem: Replace opencoded version of drm_gem_dumb_map_offset()
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kbuild: support LLVM=1 to switch the default tools to Clang/LLVM
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kbuild: replace AS=clang with LLVM_IAS=1
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kbuild: remove AS variable
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kbuild: remove PYTHON2 variable
+
+Dmitry Golovin <dima@golovin.in>
+    x86/boot: kbuild: allow readelf executable to be specified
+
+Masahiro Yamada <masahiroy@kernel.org>
+    net: wan: wanxl: use $(M68KCC) instead of $(M68KAS) for rebuilding firmware
+
+Masahiro Yamada <masahiroy@kernel.org>
+    net: wan: wanxl: use allow to pass CROSS_COMPILE_M68k for rebuilding firmware
+
+Fangrui Song <maskray@google.com>
+    Documentation/llvm: fix the name of llvm-size
+
+Nick Desaulniers <ndesaulniers@google.com>
+    Documentation/llvm: add documentation on building w/ Clang/LLVM
 
 
-> 
-> I will continue to review the code in a separate email, in a while.
-> 
-> Kind regards
-> Uffe
-> 
-> > 
-> > All indices defined in the aliases node will be reserved for use by
-> > the
-> > respective MMC device, moving the indices of devices that don't
-> > have an
-> > alias up into the non-reserved range. If the aliases node is not
-> > found,
-> > the driver will act as before.
-> > 
-> > This is a rebased and slightly cleaned up version of
-> > https://www.spinics.net/lists/linux-mmc/msg26588.html .
-> > 
-> > Based-on-patch-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > Link: https://lkml.org/lkml/2020/8/5/194
-> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
-> > >
-> > ---
-> > 
-> > v2: fix missing symbols for modular mmcblock
-> > 
-> >  drivers/mmc/core/block.c | 13 +++++++++++--
-> >  drivers/mmc/core/core.c  | 40
-> > ++++++++++++++++++++++++++++++++++++++++
-> >  drivers/mmc/core/core.h  |  3 +++
-> >  drivers/mmc/core/host.c  | 15 +++++++++++++--
-> >  4 files changed, 67 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-> > index 7896952de1ac..4620afaf0e50 100644
-> > --- a/drivers/mmc/core/block.c
-> > +++ b/drivers/mmc/core/block.c
-> > @@ -38,6 +38,7 @@
-> >  #include <linux/pm_runtime.h>
-> >  #include <linux/idr.h>
-> >  #include <linux/debugfs.h>
-> > +#include <linux/of.h>
-> > 
-> >  #include <linux/mmc/ioctl.h>
-> >  #include <linux/mmc/card.h>
-> > @@ -2260,9 +2261,17 @@ static struct mmc_blk_data
-> > *mmc_blk_alloc_req(struct mmc_card *card,
-> >                                               int area_type)
-> >  {
-> >         struct mmc_blk_data *md;
-> > -       int devidx, ret;
-> > +       int rsvidx, devidx = -1, ret;
-> > +
-> > +       rsvidx = mmc_get_reserved_index(card->host);
-> > +       if (rsvidx >= 0)
-> > +               devidx = ida_simple_get(&mmc_blk_ida, rsvidx,
-> > rsvidx + 1,
-> > +                                       GFP_KERNEL);
-> > +       if (devidx < 0)
-> > +               devidx = ida_simple_get(&mmc_blk_ida,
-> > +                                       mmc_first_nonreserved_index
-> > (),
-> > +                                       max_devices, GFP_KERNEL);
-> 
-> 
-> 
-> > 
-> > -       devidx = ida_simple_get(&mmc_blk_ida, 0, max_devices,
-> > GFP_KERNEL);
-> >         if (devidx < 0) {
-> >                 /*
-> >                  * We get -ENOSPC because there are no more any
-> > available
-> > diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> > index 8ccae6452b9c..5bce281a5faa 100644
-> > --- a/drivers/mmc/core/core.c
-> > +++ b/drivers/mmc/core/core.c
-> > @@ -2419,10 +2419,50 @@ void mmc_unregister_pm_notifier(struct
-> > mmc_host *host)
-> >  }
-> >  #endif
-> > 
-> > +static int mmc_max_reserved_idx = -1;
-> > +
-> > +/**
-> > + * mmc_first_nonreserved_index() - get the first index that is not
-> > reserved
-> > + */
-> > +int mmc_first_nonreserved_index(void)
-> > +{
-> > +       return mmc_max_reserved_idx + 1;
-> > +}
-> > +EXPORT_SYMBOL(mmc_first_nonreserved_index);
-> > +
-> > +/**
-> > + * mmc_get_reserved_index() - get the index reserved for this MMC
-> > host
-> > + *
-> > + * Returns:
-> > + *   The index reserved for this host on success,
-> > + *   negative error if no index is reserved for this host
-> > + */
-> > +int mmc_get_reserved_index(struct mmc_host *host)
-> > +{
-> > +       return of_alias_get_id(host->parent->of_node, "mmc");
-> > +}
-> > +EXPORT_SYMBOL(mmc_get_reserved_index);
-> > +
-> > +static void __init mmc_of_reserve_idx(void)
-> > +{
-> > +       int max;
-> > +
-> > +       max = of_alias_get_highest_id("mmc");
-> > +       if (max < 0)
-> > +               return;
-> > +
-> > +       mmc_max_reserved_idx = max;
-> > +
-> > +       pr_debug("MMC: reserving %d slots for OF aliases\n",
-> > +                mmc_max_reserved_idx + 1);
-> > +}
-> > +
-> >  static int __init mmc_init(void)
-> >  {
-> >         int ret;
-> > 
-> > +       mmc_of_reserve_idx();
-> > +
-> >         ret = mmc_register_bus();
-> >         if (ret)
-> >                 return ret;
-> > diff --git a/drivers/mmc/core/core.h b/drivers/mmc/core/core.h
-> > index 575ac0257af2..6aef6cf4e90f 100644
-> > --- a/drivers/mmc/core/core.h
-> > +++ b/drivers/mmc/core/core.h
-> > @@ -79,6 +79,9 @@ int mmc_attach_mmc(struct mmc_host *host);
-> >  int mmc_attach_sd(struct mmc_host *host);
-> >  int mmc_attach_sdio(struct mmc_host *host);
-> > 
-> > +int mmc_first_nonreserved_index(void);
-> > +int mmc_get_reserved_index(struct mmc_host *host);
-> > +
-> >  /* Module parameters */
-> >  extern bool use_spi_crc;
-> > 
-> > diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> > index ce43f7573d80..386e15afde83 100644
-> > --- a/drivers/mmc/core/host.c
-> > +++ b/drivers/mmc/core/host.c
-> > @@ -387,6 +387,7 @@ struct mmc_host *mmc_alloc_host(int extra,
-> > struct device *dev)
-> >  {
-> >         int err;
-> >         struct mmc_host *host;
-> > +       int alias_id, min_idx, max_idx;
-> > 
-> >         host = kzalloc(sizeof(struct mmc_host) + extra,
-> > GFP_KERNEL);
-> >         if (!host)
-> > @@ -395,7 +396,18 @@ struct mmc_host *mmc_alloc_host(int extra,
-> > struct device *dev)
-> >         /* scanning will be enabled when we're ready */
-> >         host->rescan_disable = 1;
-> > 
-> > -       err = ida_simple_get(&mmc_host_ida, 0, 0, GFP_KERNEL);
-> > +       host->parent = dev;
-> > +
-> > +       alias_id = mmc_get_reserved_index(host);
-> > +       if (alias_id >= 0) {
-> > +               min_idx = alias_id;
-> > +               max_idx = alias_id + 1;
-> > +       } else {
-> > +               min_idx = mmc_first_nonreserved_index();
-> > +               max_idx = 0;
-> > +       }
-> > +
-> > +       err = ida_simple_get(&mmc_host_ida, min_idx, max_idx,
-> > GFP_KERNEL);
-> >         if (err < 0) {
-> >                 kfree(host);
-> >                 return NULL;
-> > @@ -406,7 +418,6 @@ struct mmc_host *mmc_alloc_host(int extra,
-> > struct device *dev)
-> >         dev_set_name(&host->class_dev, "mmc%d", host->index);
-> >         host->ws = wakeup_source_register(NULL, dev_name(&host-
-> > >class_dev));
-> > 
-> > -       host->parent = dev;
-> >         host->class_dev.parent = dev;
-> >         host->class_dev.class = &mmc_host_class;
-> >         device_initialize(&host->class_dev);
-> > --
-> > 2.17.1
-> > 
+-------------
+
+Diffstat:
+
+ Documentation/kbuild/index.rst                     |   1 +
+ Documentation/kbuild/kbuild.rst                    |   5 +
+ Documentation/kbuild/llvm.rst                      |  87 +++++++++
+ MAINTAINERS                                        |   1 +
+ Makefile                                           |  42 +++--
+ arch/alpha/include/asm/io.h                        |   8 +-
+ arch/arm64/Makefile                                |   1 +
+ arch/arm64/kernel/vdso32/Makefile                  |   2 +-
+ arch/m68k/include/asm/m53xxacr.h                   |   6 +-
+ arch/mips/kernel/setup.c                           |   2 +-
+ arch/powerpc/platforms/pseries/ras.c               |   1 -
+ arch/s390/kernel/ptrace.c                          |   7 +-
+ arch/s390/kernel/runtime_instr.c                   |   2 +-
+ arch/x86/boot/compressed/Makefile                  |   2 +-
+ arch/x86/kvm/x86.c                                 |   2 +-
+ arch/x86/pci/xen.c                                 |   1 +
+ drivers/cpufreq/intel_pstate.c                     |   1 +
+ drivers/firmware/efi/efi.c                         |   2 +
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |   1 +
+ .../gpu/drm/amd/display/dc/dcn20/dcn20_resource.c  |   2 +-
+ drivers/gpu/drm/amd/display/include/fixed31_32.h   |   3 +
+ drivers/gpu/drm/ttm/ttm_bo_vm.c                    |   4 +-
+ drivers/gpu/drm/vgem/vgem_drv.c                    |  27 ---
+ drivers/infiniband/hw/bnxt_re/main.c               |   3 +-
+ drivers/infiniband/hw/hfi1/tid_rdma.c              |   1 +
+ drivers/input/mouse/psmouse-base.c                 |   2 +-
+ drivers/md/bcache/super.c                          |  12 +-
+ drivers/media/pci/ttpci/budget-core.c              |  11 +-
+ drivers/media/platform/davinci/vpss.c              |  20 +-
+ drivers/media/platform/qcom/camss/camss.c          |  30 ++-
+ drivers/net/bonding/bond_main.c                    |  42 ++++-
+ drivers/net/dsa/b53/b53_common.c                   |   2 +
+ drivers/net/ethernet/amazon/ena/ena_netdev.c       |  19 +-
+ drivers/net/ethernet/cortina/gemini.c              |   4 +-
+ drivers/net/ethernet/freescale/fec_main.c          |   4 +-
+ drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h  |   2 +-
+ drivers/net/ethernet/intel/i40e/i40e_common.c      |  35 +++-
+ drivers/net/ethernet/intel/i40e/i40e_main.c        |   3 +
+ drivers/net/hyperv/netvsc_drv.c                    |   2 +-
+ drivers/net/wan/Kconfig                            |   2 +-
+ drivers/net/wan/Makefile                           |  12 +-
+ drivers/opp/core.c                                 |  10 +-
+ drivers/rtc/rtc-goldfish.c                         |   1 +
+ drivers/s390/scsi/zfcp_fsf.c                       |   4 +-
+ drivers/scsi/libfc/fc_disc.c                       |  12 +-
+ drivers/scsi/qla2xxx/qla_os.c                      |   4 -
+ drivers/scsi/ufs/ufs_quirks.h                      |   1 +
+ drivers/scsi/ufs/ufshcd.c                          |   2 +
+ drivers/spi/Kconfig                                |   3 +
+ drivers/spi/spi-stm32.c                            |  27 ++-
+ drivers/spi/spi.c                                  |  21 ++-
+ drivers/target/target_core_user.c                  |   2 +-
+ drivers/vfio/vfio_iommu_type1.c                    |  71 ++++++-
+ drivers/video/fbdev/efifb.c                        |   2 +-
+ drivers/virtio/virtio_ring.c                       |   3 +
+ drivers/xen/preempt.c                              |   2 +-
+ drivers/xen/swiotlb-xen.c                          |   8 +-
+ fs/afs/dynroot.c                                   |  20 +-
+ fs/btrfs/block-group.c                             |   2 +-
+ fs/btrfs/ctree.h                                   |   2 +
+ fs/btrfs/delayed-inode.c                           |   2 +-
+ fs/btrfs/export.c                                  |   8 +-
+ fs/btrfs/export.h                                  |   5 +
+ fs/btrfs/extent-tree.c                             |  10 +-
+ fs/btrfs/extent_io.c                               |   2 +-
+ fs/btrfs/scrub.c                                   |   2 +-
+ fs/btrfs/super.c                                   |  20 +-
+ fs/btrfs/transaction.c                             |  30 +--
+ fs/btrfs/transaction.h                             |  12 ++
+ fs/ceph/mds_client.c                               |   3 +-
+ fs/eventpoll.c                                     |  19 +-
+ fs/ext4/block_validity.c                           |  36 ++--
+ fs/ext4/namei.c                                    |  22 ++-
+ fs/gfs2/bmap.c                                     |  68 ++++---
+ fs/jbd2/journal.c                                  |   4 +-
+ fs/jffs2/dir.c                                     |   6 +-
+ fs/romfs/storage.c                                 |   4 +-
+ fs/signalfd.c                                      |  10 +-
+ fs/xfs/xfs_sysfs.h                                 |   6 +-
+ fs/xfs/xfs_trans_dquot.c                           |   2 +-
+ kernel/events/uprobes.c                            |   2 +-
+ kernel/kthread.c                                   |  17 +-
+ kernel/relay.c                                     |   1 +
+ mm/hugetlb.c                                       |  24 +--
+ mm/khugepaged.c                                    |   7 +-
+ mm/memory.c                                        |   3 +
+ mm/page_alloc.c                                    |   7 +-
+ net/can/j1939/socket.c                             |  14 ++
+ net/can/j1939/transport.c                          |  89 +++++++--
+ net/core/filter.c                                  |  49 +++--
+ net/netfilter/nft_exthdr.c                         |   4 +-
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c            |   2 +
+ scripts/kconfig/qconf.cc                           |  70 +++----
+ sound/pci/hda/patch_realtek.c                      |   2 +
+ sound/soc/codecs/msm8916-wcd-analog.c              |   4 +-
+ sound/soc/intel/atom/sst-mfld-platform-pcm.c       |   5 +-
+ sound/soc/qcom/qdsp6/q6afe-dai.c                   | 210 ++++++++++-----------
+ sound/soc/qcom/qdsp6/q6routing.c                   |  16 ++
+ tools/objtool/Makefile                             |   6 +
+ tools/perf/util/probe-finder.c                     |   2 +-
+ tools/testing/selftests/cgroup/cgroup_util.c       |   2 +-
+ 101 files changed, 956 insertions(+), 464 deletions(-)
+
 
