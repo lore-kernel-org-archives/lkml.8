@@ -2,51 +2,53 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F74C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE134206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D322071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262806;
-	bh=5cbQV9c2lHZGlqdrGa8MUGaqrhRQfarfY4yneXqdzGI=;
+	s=default; t=1598262826;
+	bh=aiRh9XyYF6dfGQtKNR2Jle8UKz4fP5jc8wiQswXz8yk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=els1BE/LRF/Du+moYwFDm6i6wUr4/sAUgEkO9aFRY3CVEc5+xL0CKNM8grVrRLOPO
-	 8NjnavntDLWsTH9ZkP4qdle/Q631n3RHfAJsmfDNMcuCO1P3TYDZzdxH2XPZw/BNa4
-	 X5aTJNGbs7nM2azWiZe6+uN4MO0gq2ZteN4e/bes=
+	b=rRaBAJAYTxKVyt3kJZ45hkklO6kb5TkKjxYQYD9KD5iP84wQgrpjEup3syWANCvQE
+	 iTL3OJf+JRKRJXv4GJBSdXoM3HH74a6flw/lBNwqHtiadQBvrvA4nyvR8s6g4sZhTY
+	 N2Eav1bViWqeMqtvKp82LsVgQOtAWXONRtLbZc2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbgHXJxZ (ORCPT
+        id S1729605AbgHXJxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52404 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:53:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728513AbgHXIiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:38:11 -0400
+        id S1728046AbgHXIhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:37:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21E3520FC3;
-        Mon, 24 Aug 2020 08:38:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5423322B43;
+        Mon, 24 Aug 2020 08:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258290;
-        bh=5cbQV9c2lHZGlqdrGa8MUGaqrhRQfarfY4yneXqdzGI=;
+        s=default; t=1598258273;
+        bh=aiRh9XyYF6dfGQtKNR2Jle8UKz4fP5jc8wiQswXz8yk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YVBMMQbQA9mbuFlL8L2rGKq+GCOD8VQrnUaSEhJfe8auPVlQLLpjW90Hkftvy3+6r
-         uhRu7QO+MnhXMytckTeOJQsQiLqujToPrcdAEonV4Ns0IiQ53o06p52rL4J5i4wYXy
-         g8TK2isHY4uuGHWCA/9DaPkpc/MnMHeRsl/ocIhc=
+        b=L8foEBWZvwkAfb2u5bGfLRmjL4OJ+bBzr0Kmfd+UF/uuNNf+guKH7QMWV0pCSQGXG
+         m7tnc7v4hEQHL1InZo2SCxB7lzp54rYEmfrX6SkssomZxVXXNqbYEwTsPgVdnGwGj/
+         PfHTi2tEK8MNsMuBotEvViMZ5s1tHaNMTUyUSB1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Li Heng <liheng40@huawei.com>, Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 5.8 144/148] efi: add missed destroy_workqueue when efisubsys_init fails
-Date:   Mon, 24 Aug 2020 10:30:42 +0200
-Message-Id: <20200824082420.921660253@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 138/148] net: dsa: b53: check for timeout
+Date:   Mon, 24 Aug 2020 10:30:36 +0200
+Message-Id: <20200824082420.627962740@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -59,41 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Heng <liheng40@huawei.com>
+From: Tom Rix <trix@redhat.com>
 
-commit 98086df8b70c06234a8f4290c46064e44dafa0ed upstream.
+[ Upstream commit 774d977abfd024e6f73484544b9abe5a5cd62de7 ]
 
-destroy_workqueue() should be called to destroy efi_rts_wq
-when efisubsys_init() init resources fails.
+clang static analysis reports this problem
 
-Cc: <stable@vger.kernel.org>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Li Heng <liheng40@huawei.com>
-Link: https://lore.kernel.org/r/1595229738-10087-1-git-send-email-liheng40@huawei.com
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+b53_common.c:1583:13: warning: The left expression of the compound
+  assignment is an uninitialized value. The computed value will
+  also be garbage
+        ent.port &= ~BIT(port);
+        ~~~~~~~~ ^
 
+ent is set by a successful call to b53_arl_read().  Unsuccessful
+calls are caught by an switch statement handling specific returns.
+b32_arl_read() calls b53_arl_op_wait() which fails with the
+unhandled -ETIMEDOUT.
+
+So add -ETIMEDOUT to the switch statement.  Because
+b53_arl_op_wait() already prints out a message, do not add another
+one.
+
+Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Signed-off-by: Tom Rix <trix@redhat.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/efi.c |    2 ++
+ drivers/net/dsa/b53/b53_common.c | 2 ++
  1 file changed, 2 insertions(+)
 
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -381,6 +381,7 @@ static int __init efisubsys_init(void)
- 	efi_kobj = kobject_create_and_add("efi", firmware_kobj);
- 	if (!efi_kobj) {
- 		pr_err("efi: Firmware registration failed.\n");
-+		destroy_workqueue(efi_rts_wq);
- 		return -ENOMEM;
- 	}
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index 1df05841ab6b1..86869337223a8 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1555,6 +1555,8 @@ static int b53_arl_op(struct b53_device *dev, int op, int port,
+ 		return ret;
  
-@@ -424,6 +425,7 @@ err_unregister:
- 		generic_ops_unregister();
- err_put:
- 	kobject_put(efi_kobj);
-+	destroy_workqueue(efi_rts_wq);
- 	return error;
- }
- 
+ 	switch (ret) {
++	case -ETIMEDOUT:
++		return ret;
+ 	case -ENOSPC:
+ 		dev_dbg(dev->dev, "{%pM,%.4d} no space left in ARL\n",
+ 			addr, vid);
+-- 
+2.25.1
+
 
 
