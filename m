@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E83C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B1BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9AF206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DCFD206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258809;
-	bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
+	s=default; t=1598258812;
+	bh=ldyMiwBbRauUHe1SIjQNGlhy0uoQPyGhgSory7/YRWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0zgQGNyQCpV1Brlr2YwILHwe5gghu8VZxXyUkPehXWI8zlqS5rPeZmndxb47J4+Tx
-	 cPAQ0nU82/oPazIecMfPFP7FC56Fsq/AY4PXdqVjTbZsHpj4rdC5Zybj7ONO7USJ2Z
-	 nM8rIh/R/ocR2i6AbxGUchCOStytK+C3KnRiAhHk=
+	b=pD13B20yV95ucn/CGN6pDgRp1z6+ZuSxEm5W6eHcn2URFVrLMRKM+nNlV9HmE/XNj
+	 xm+HdOkNXpX+5Q6IWpS7I1TN1vi4gktsanmYFhxxBMMZmtou+I18j9dkUUFY4AvXJ6
+	 vORONG6p0wg7MwQteALrB0w4ZRWrlSrQlu15nS0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbgHXIqr (ORCPT
+        id S1729389AbgHXIqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:46:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45150 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:46:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729362AbgHXIqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:46:35 -0400
+        id S1729350AbgHXIql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:46:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A2DA206F0;
-        Mon, 24 Aug 2020 08:46:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B8E72074D;
+        Mon, 24 Aug 2020 08:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258795;
-        bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
+        s=default; t=1598258800;
+        bh=ldyMiwBbRauUHe1SIjQNGlhy0uoQPyGhgSory7/YRWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ClHfQH1n9v4PQTs+Uqrdq6MeIuxox9RoN5CaAG5LXvslLJeVBnBCVGciHUZBTScr6
-         vyxkWK3YXoo76at0qCmt5Hq3oRKQZNpVBpZnS0ZwalQMwLnnhgpgm234r5/+/yi2FW
-         C10/6Fdx2u4AN4gFWkFYH2mURoxxTYd/9KabeLRs=
+        b=n/ElQ8x4W3PjfUink2TAmBXg3HmmRhQ2GK82j3yxYqZDq9wF1tWjziurP62tP8Qc1
+         6wTnxDiNx83c8nx966fkLgGcEFhNtTHpPzlev4ypWrs3bQSjiBdSOEdLXrydlm6wcu
+         mtdqoXWzmv4rYLc/1IRVIbRZJ4Wr3N4sHAJuVxPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 048/107] m68knommu: fix overwriting of bits in ColdFire V3 cache control
-Date:   Mon, 24 Aug 2020 10:30:14 +0200
-Message-Id: <20200824082407.512298026@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Chandan Babu R <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 050/107] xfs: fix inode quota reservation checks
+Date:   Mon, 24 Aug 2020 10:30:16 +0200
+Message-Id: <20200824082407.611833855@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -59,50 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Ungerer <gerg@linux-m68k.org>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit bdee0e793cea10c516ff48bf3ebb4ef1820a116b ]
+[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
 
-The Cache Control Register (CACR) of the ColdFire V3 has bits that
-control high level caching functions, and also enable/disable the use
-of the alternate stack pointer register (the EUSP bit) to provide
-separate supervisor and user stack pointer registers. The code as
-it is today will blindly clear the EUSP bit on cache actions like
-invalidation. So it is broken for this case - and that will result
-in failed booting (interrupt entry and exit processing will be
-completely hosed).
+xfs_trans_dqresv is the function that we use to make reservations
+against resource quotas.  Each resource contains two counters: the
+q_core counter, which tracks resources allocated on disk; and the dquot
+reservation counter, which tracks how much of that resource has either
+been allocated or reserved by threads that are working on metadata
+updates.
 
-This only affects ColdFire V3 parts that support the alternate stack
-register (like the 5329 for example) - generally speaking new parts do,
-older parts don't. It has no impact on ColdFire V3 parts with the single
-stack pointer, like the 5307 for example.
+For disk blocks, we compare the proposed reservation counter against the
+hard and soft limits to decide if we're going to fail the operation.
+However, for inodes we inexplicably compare against the q_core counter,
+not the incore reservation count.
 
-Fix the cache bit defines used, so they maintain the EUSP bit when
-carrying out cache actions through the CACR register.
+Since the q_core counter is always lower than the reservation count and
+we unlock the dquot between reservation and transaction commit, this
+means that multiple threads can reserve the last inode count before we
+hit the hard limit, and when they commit, we'll be well over the hard
+limit.
 
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Fix this by checking against the incore inode reservation counter, since
+we would appear to maintain that correctly (and that's what we report in
+GETQUOTA).
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/include/asm/m53xxacr.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_trans_dquot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/m68k/include/asm/m53xxacr.h b/arch/m68k/include/asm/m53xxacr.h
-index 9138a624c5c81..692f90e7fecc1 100644
---- a/arch/m68k/include/asm/m53xxacr.h
-+++ b/arch/m68k/include/asm/m53xxacr.h
-@@ -89,9 +89,9 @@
-  * coherency though in all cases. And for copyback caches we will need
-  * to push cached data as well.
-  */
--#define CACHE_INIT	  CACR_CINVA
--#define CACHE_INVALIDATE  CACR_CINVA
--#define CACHE_INVALIDATED CACR_CINVA
-+#define CACHE_INIT        (CACHE_MODE + CACR_CINVA - CACR_EC)
-+#define CACHE_INVALIDATE  (CACHE_MODE + CACR_CINVA)
-+#define CACHE_INVALIDATED (CACHE_MODE + CACR_CINVA)
- 
- #define ACR0_MODE	((CONFIG_RAMBASE & 0xff000000) + \
- 			 (0x000f0000) + \
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index 16457465833ba..904780dd74aa3 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -646,7 +646,7 @@ xfs_trans_dqresv(
+ 			}
+ 		}
+ 		if (ninos > 0) {
+-			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
++			total_count = dqp->q_res_icount + ninos;
+ 			timer = be32_to_cpu(dqp->q_core.d_itimer);
+ 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
+ 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
 -- 
 2.25.1
 
