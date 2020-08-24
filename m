@@ -2,288 +2,255 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1512AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4DCF20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="QBwwG7IA"
+	by mail.kernel.org (Postfix) with ESMTP id D48C220578
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598287908;
+	bh=2yyuDE3GH4u5UyzVYFwQZaTBS7Fgcx0uIShojRchoL0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=nsGJzDj8vgOi5Ig4GCH7m4YT6AZEhKytYzYVk3NTP76sFW5Wt/uTBJub2dNxpOE9J
+	 SXS6WIO+9IC46KgCmRrX+bvH/KN3fLOJAYey4qgTwrXgPUTva230T7ulwEtJ/iw8Zz
+	 9oNqAeZ6Ct6RpasFc2hZYOr5DuozqY3goPK7+7uE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgHXQvc (ORCPT
+        id S1728871AbgHXQvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:51:32 -0400
-Received: from mail-dm6nam12on2104.outbound.protection.outlook.com ([40.107.243.104]:1074
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728738AbgHXQtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:49:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gdv8x8/WPQTVu+yOQylZtAbV7qsUmK8SHBUbdNioy2kQ7SWyNIlvmNJn7xwDw9g9g1UyxeP0PMQlkFLuYDmyPI3TaxyzJEgw7UPQcOOXf9uFI1OtiSHerpS/F5gU5lsExChDHWiN/xSpwNTmGnkEDgTdwr8tK/A3aJ67bD1dZHHgR0BNMsyKAl522i2IW+RuchL38Ys7lPoP3vsL/JB9nI4CkxkMBWtJyaMK5ux74ubiynJ3AEKkW13ERe0Cw8xCH+QhYWVvCUzI6rmiQGdGr3MFwt72NKDEVOcnPL7r2Rii13ktpAdDz+NdJyVchwHfPjGh12ey3fFNcXwLbYE8PQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LHgTfSh2/H9zYVYFD/dOYfqhNAkUx8fqSOk4VlRqeqA=;
- b=lC+vIEMdh8UkxMcASBNuT56M0tQY9c86vbK/+XrfnbSyXok2uvNa9y8d/dPSK30iZqbOPKiRRM3ZsVrOjYY01ZNv6iYfAkkIfMxe4r8HTnv2LpTgGHvxYGzCaohcaZb7hUSdE4EKzqdgUUwpm+VMhxBsPsoxYz3D1NoABTLdDrlFKPLtbg7YiU/HdrNAOOzVK5VfWqAlubqoQuFKUDhSCnU8eN+KyNlFB1XPYLdLh1g3Mblb2Ng29uzBXcq2N8nTqrTU+r3kh1Ie+SkqKjoVEVV5lMX1jLSFXFkM7UdkxRechDjjwN319hLybX4LFXitjuOXOw7NKIiDPlZii7Qy8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LHgTfSh2/H9zYVYFD/dOYfqhNAkUx8fqSOk4VlRqeqA=;
- b=QBwwG7IA9giO4yspRudx2yRMLucV2myBefxCypFrs8j8/tykpimNxUHW4RAYQIFlwEWhPlfTHpIB6VPvg0g3qK6zNoE0CF4OoknNJ20pt5UiiDLU00AvvjNe5ADdG0/YDAW+ja2yVAMt5EBMxvoS7FlLzra4K76aGqj9UwI4hjc=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
-Received: from BN8PR21MB1281.namprd21.prod.outlook.com (2603:10b6:408:a2::19)
- by BN6PR21MB0753.namprd21.prod.outlook.com (2603:10b6:404:9c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.4; Mon, 24 Aug
- 2020 16:48:02 +0000
-Received: from BN8PR21MB1281.namprd21.prod.outlook.com
- ([fe80::e0c9:2634:6fb1:5615]) by BN8PR21MB1281.namprd21.prod.outlook.com
- ([fe80::e0c9:2634:6fb1:5615%3]) with mapi id 15.20.3326.012; Mon, 24 Aug 2020
- 16:48:02 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     will@kernel.org, ardb@kernel.org, arnd@arndb.de,
-        catalin.marinas@arm.com, mark.rutland@arm.com, maz@kernel.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arch@vger.kernel.org,
-        wei.liu@kernel.org, vkuznets@redhat.com, kys@microsoft.com
-Cc:     mikelley@microsoft.com, sunilmut@microsoft.com,
-        boqun.feng@gmail.com
-Subject: [PATCH v7 07/10] arm64: hyperv: Initialize hypervisor on boot
-Date:   Mon, 24 Aug 2020 09:46:20 -0700
-Message-Id: <1598287583-71762-8-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
-References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: CO2PR04CA0145.namprd04.prod.outlook.com (2603:10b6:104::23)
- To BN8PR21MB1281.namprd21.prod.outlook.com (2603:10b6:408:a2::19)
+        Mon, 24 Aug 2020 12:51:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728721AbgHXQtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:49:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32F15214F1;
+        Mon, 24 Aug 2020 16:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598287734;
+        bh=2yyuDE3GH4u5UyzVYFwQZaTBS7Fgcx0uIShojRchoL0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=B65vaC//+MLCSoX6ipy93I0MfIZDdJeIWF5IFMNTu4dU4QCg3m8rvuHOgPj0Zi+E3
+         ddZyjnrzKFmsk6R6i7odIXTv8Nw1jaBLTLzzcrArpBbx4U/Q9t2CjVhITH8u6jPbn2
+         D4a26doLikeCox7QFo/kUNjyaKafCRne+h36ZBvU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/39] 4.9.234-rc2 review
+Date:   Mon, 24 Aug 2020 18:49:12 +0200
+Message-Id: <20200824164720.742523552@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by CO2PR04CA0145.namprd04.prod.outlook.com (2603:10b6:104::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Mon, 24 Aug 2020 16:47:52 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [131.107.159.16]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9294b233-cdce-4fe6-afe5-08d8484d7275
-X-MS-TrafficTypeDiagnostic: BN6PR21MB0753:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN6PR21MB075379189FC4016AAF07299ED7560@BN6PR21MB0753.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nrQPtAK7Jsu8sCnVc4NSVYPNXjIsGjwUWeG2l4gznLVHH6Tj6vv+lf9WYN2jRsIdb2eQjOKuMwXVt8VNUY4a3NZFPFjKy6Mntc9+HD/v+STXe8u1tIMjiDB7vXSJh31oFAVkyGpOHxy5HToT5BghxNtI6vRAWMFnQHQi2S87rUXi6fc/YtPIIeHbGAz7+s3ExxJ9gIY7Zj0ndunbZJq+aldrfxskwb3rscIs2ubVnt1Dv7re7xzKi0Cx0/Ky1woiv1/xaqpNoPp3cvN8pPJvcYbrEOOMg/KhY3Ft0A8YWjw0VV48Wqpm/pDlTW6HLOKfaR+7bWwZ50xA5xZmSXXZlgKREQrhP4FJRN0DWC4GPW6RvjYv6OR3YkFv/XOHsQ5h
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1281.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39860400002)(366004)(376002)(396003)(346002)(8676002)(86362001)(2616005)(956004)(2906002)(6486002)(8936002)(52116002)(10290500003)(5660300002)(66946007)(16576012)(66556008)(4326008)(6636002)(316002)(36756003)(186003)(82950400001)(478600001)(26005)(6666004)(66476007)(82960400001)(83380400001)(7416002)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: p4lJb7dkjAc8d0RMuPlTCwKQzCLM3zmHvyPzgCZFgYg/UWaW/6trianOYiOMePHrCl1pFjMI+Bu4/K0nJPmTHsMP8Cp0LWj6xHyJv74haahVQ9qkNXGW+dGeGfCdPJeR91QSaAFmVBJ/E6ScdoGNDSszxNQEcRz9yDX8Z+OhVFOqkFq5ftmyDxCojG7gm82VJMV0BRa8/e67w9EV6mDv7MZQR5SoAxYAlqyhAArWT+Vmq0TKijSbqecdxawiRJcr24yXc1FIF+Kik3xRNomAw+y5n+ZQy5JBoUZrObnXNnSDiGMJPTWmTsNQ/43QWbt934q1My6JEBkhShesr4L8DKccydgF/92sRm/e6qvnPWOYA2MUdEC9/kk2srdvyYaFp9ovA9He+TcL71w6Oc7pm5a+nHYVzBuoLdRfoVhLYDz+Psf8Uq0+ZzGwwqJoZpUSBTbhjwER44kiznUsxqTuQKB6/oo+pQkKUX6MFAyJrLlVMw58Lw4/K1aqH/CfmQkq0gjwDajaI17vwGy5sBXpKLaaOpepYtSjI/khSXmrCe8a2ynpYNPUKYO04doPBbN2Rz/1xr197uXSamFNwcbwcYArrcrkAHuF/y8rMswirNX7mnXgMF2S8jarbU/rMzdV5CBsIU9KGwm19hS+9Sl15A==
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9294b233-cdce-4fe6-afe5-08d8484d7275
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR21MB1281.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2020 16:47:54.8169
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N7mH9/PkUYdE8WBambmUTI3VJrllwwXNgyce+55+MmYeByFgbhbRNYl4SuUPrf6BihQP69qZ2+KpUl1nHn0TQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0753
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.234-rc2.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.234-rc2
+X-KernelTest-Deadline: 2020-08-26T16:47+00:00
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ARM64-specific code to initialize the Hyper-V
-hypervisor when booting as a guest VM. Provide functions
-and data structures indicating hypervisor status that
-are needed by VMbus driver.
+This is the start of the stable review cycle for the 4.9.234 release.
+There are 39 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-This code is built only when CONFIG_HYPERV is enabled.
+Responses should be made by Wed, 26 Aug 2020 16:47:07 +0000.
+Anything received after that time might be too late.
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- arch/arm64/hyperv/hv_core.c | 144 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.234-rc2.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-diff --git a/arch/arm64/hyperv/hv_core.c b/arch/arm64/hyperv/hv_core.c
-index 966d815..831a69c 100644
---- a/arch/arm64/hyperv/hv_core.c
-+++ b/arch/arm64/hyperv/hv_core.c
-@@ -18,10 +18,41 @@
- #include <linux/slab.h>
- #include <linux/hyperv.h>
- #include <linux/arm-smccc.h>
-+#include <linux/vmalloc.h>
-+#include <linux/acpi.h>
-+#include <linux/module.h>
-+#include <linux/cpuhotplug.h>
-+#include <linux/psci.h>
- #include <asm-generic/bug.h>
- #include <asm/hyperv-tlfs.h>
- #include <asm/mshyperv.h>
-+#include <asm/sysreg.h>
-+#include <clocksource/hyperv_timer.h>
- 
-+static bool    hyperv_initialized;
-+
-+struct         ms_hyperv_info ms_hyperv __ro_after_init;
-+EXPORT_SYMBOL_GPL(ms_hyperv);
-+
-+u32            *hv_vp_index;
-+EXPORT_SYMBOL_GPL(hv_vp_index);
-+
-+u32            hv_max_vp_index;
-+EXPORT_SYMBOL_GPL(hv_max_vp_index);
-+
-+static int hv_cpu_init(unsigned int cpu)
-+{
-+	u64 msr_vp_index;
-+
-+	msr_vp_index = hv_get_vpreg(HV_REGISTER_VPINDEX);
-+
-+	hv_vp_index[smp_processor_id()] = msr_vp_index;
-+
-+	if (msr_vp_index > hv_max_vp_index)
-+		hv_max_vp_index = msr_vp_index;
-+
-+	return 0;
-+}
- 
- /*
-  * Functions for allocating and freeing memory with size and
-@@ -67,6 +98,107 @@ void hv_free_hyperv_page(unsigned long addr)
- 
- 
- /*
-+ * This function is invoked via the ACPI clocksource probe mechanism. We
-+ * don't actually use any values from the ACPI GTDT table, but we set up
-+ * the Hyper-V synthetic clocksource and do other initialization for
-+ * interacting with Hyper-V the first time.  Using early_initcall to invoke
-+ * this function is too late because interrupts are already enabled at that
-+ * point, and hv_init_clocksource() must run before interrupts are enabled.
-+ *
-+ * 1. Setup the guest ID.
-+ * 2. Get features and hints info from Hyper-V
-+ * 3. Setup per-cpu VP indices.
-+ * 4. Initialize the Hyper-V clocksource.
-+ */
-+
-+static int __init hyperv_init(struct acpi_table_header *table)
-+{
-+	struct hv_get_vp_registers_output result;
-+	u32	a, b, c, d;
-+	u64	guest_id;
-+	int	i, cpuhp;
-+
-+	/*
-+	 * If we're in a VM on Hyper-V, the ACPI hypervisor_id field will
-+	 * have the string "MsHyperV".
-+	 */
-+	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
-+		return -EINVAL;
-+
-+	/* Setup the guest ID */
-+	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
-+	hv_set_vpreg(HV_REGISTER_GUEST_OSID, guest_id);
-+
-+	/* Get the features and hints from Hyper-V */
-+	hv_get_vpreg_128(HV_REGISTER_FEATURES, &result);
-+	ms_hyperv.features = result.as32.a;
-+	ms_hyperv.misc_features = result.as32.c;
-+
-+	hv_get_vpreg_128(HV_REGISTER_ENLIGHTENMENTS, &result);
-+	ms_hyperv.hints = result.as32.a;
-+
-+	pr_info("Hyper-V: Features 0x%x, hints 0x%x, misc 0x%x\n",
-+		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
-+
-+	/*
-+	 * If Hyper-V has crash notifications, set crash_kexec_post_notifiers
-+	 * so that we will report the panic to Hyper-V before running kdump.
-+	 */
-+	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE)
-+		crash_kexec_post_notifiers = true;
-+
-+	/* Get information about the Hyper-V host version */
-+	hv_get_vpreg_128(HV_REGISTER_HYPERVISOR_VERSION, &result);
-+	a = result.as32.a;
-+	b = result.as32.b;
-+	c = result.as32.c;
-+	d = result.as32.d;
-+	pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
-+		b >> 16, b & 0xFFFF, a,	d & 0xFFFFFF, c, d >> 24);
-+
-+	/* Allocate and initialize percpu VP index array */
-+	hv_vp_index = kmalloc_array(num_possible_cpus(), sizeof(*hv_vp_index),
-+				    GFP_KERNEL);
-+	if (!hv_vp_index)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < num_possible_cpus(); i++)
-+		hv_vp_index[i] = VP_INVAL;
-+
-+	cpuhp = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
-+			"arm64/hyperv_init:online", hv_cpu_init, NULL);
-+	if (cpuhp < 0)
-+		goto free_vp_index;
-+
-+	hv_init_clocksource();
-+	if (hv_stimer_alloc())
-+		goto remove_cpuhp_state;
-+
-+	hyperv_initialized = true;
-+	return 0;
-+
-+remove_cpuhp_state:
-+	cpuhp_remove_state(cpuhp);
-+free_vp_index:
-+	kfree(hv_vp_index);
-+	hv_vp_index = NULL;
-+	return -EINVAL;
-+}
-+TIMER_ACPI_DECLARE(hyperv, ACPI_SIG_GTDT, hyperv_init);
-+
-+/*
-+ * This routine is called before kexec/kdump, it does the required cleanup.
-+ */
-+void hyperv_cleanup(void)
-+{
-+	/* Reset our OS id */
-+	hv_set_vpreg(HV_REGISTER_GUEST_OSID, 0);
-+
-+}
-+EXPORT_SYMBOL_GPL(hyperv_cleanup);
-+
-+
-+/*
-  * hv_do_hypercall- Invoke the specified hypercall
-  */
- u64 hv_do_hypercall(u64 control, void *input, void *output)
-@@ -291,3 +423,15 @@ void hyperv_report_panic_msg(phys_addr_t pa, size_t size)
- 	       (HV_CRASH_CTL_CRASH_NOTIFY | HV_CRASH_CTL_CRASH_NOTIFY_MSG));
- }
- EXPORT_SYMBOL_GPL(hyperv_report_panic_msg);
-+
-+bool hv_is_hyperv_initialized(void)
-+{
-+	return hyperv_initialized;
-+}
-+EXPORT_SYMBOL_GPL(hv_is_hyperv_initialized);
-+
-+bool hv_is_hibernation_supported(void)
-+{
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(hv_is_hibernation_supported);
--- 
-1.8.3.1
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.234-rc2
+
+Will Deacon <will@kernel.org>
+    KVM: arm/arm64: Don't reschedule in unmap_stage2_range()
+
+Juergen Gross <jgross@suse.com>
+    xen: don't reschedule in preemption off sections
+
+Peter Xu <peterx@redhat.com>
+    mm/hugetlb: fix calculation of adjust_range_if_pmd_sharing_possible
+
+Al Viro <viro@zeniv.linux.org.uk>
+    do_epoll_ctl(): clean the failure exits up a bit
+
+Marc Zyngier <maz@kernel.org>
+    epoll: Keep a reference on files added to the check list
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc: Allow 4224 bytes of stack expansion for the signal frame
+
+Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
+    powerpc/pseries: Do not initiate shutdown when system is running on UPS
+
+Tom Rix <trix@redhat.com>
+    net: dsa: b53: check for timeout
+
+Dinghao Liu <dinghao.liu@zju.edu.cn>
+    ASoC: intel: Fix memleak in sst_media_open
+
+Fugang Duan <fugang.duan@nxp.com>
+    net: fec: correct the error path for regulator disable in probe
+
+Przemyslaw Patynowski <przemyslawx.patynowski@intel.com>
+    i40e: Set RX_ONLY mode for unicast promiscuous on VLAN
+
+Eric Sandeen <sandeen@redhat.com>
+    ext4: fix potential negative array index in do_split()
+
+Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+    alpha: fix annotation of io{read,write}{16,32}be()
+
+Eiichi Tsukata <devel@etsukata.com>
+    xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
+
+Mao Wenan <wenan.mao@linux.alibaba.com>
+    virtio_ring: Avoid loop when vq is broken in virtqueue_poll
+
+Javed Hasan <jhasan@marvell.com>
+    scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
+
+Zhe Li <lizhe67@huawei.com>
+    jffs2: fix UAF problem
+
+Darrick J. Wong <darrick.wong@oracle.com>
+    xfs: fix inode quota reservation checks
+
+Greg Ungerer <gerg@linux-m68k.org>
+    m68knommu: fix overwriting of bits in ColdFire V3 cache control
+
+Xiongfeng Wang <wangxiongfeng2@huawei.com>
+    Input: psmouse - add a newline when printing 'proto' by sysfs
+
+Evgeny Novikov <novikov@ispras.ru>
+    media: vpss: clean up resources in init
+
+Chuhong Yuan <hslester96@gmail.com>
+    media: budget-core: Improve exception handling in budget_register()
+
+Stanley Chu <stanley.chu@mediatek.com>
+    scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
+
+Jan Kara <jack@suse.cz>
+    ext4: fix checking of directory entry validity for inline directories
+
+Eric Biggers <ebiggers@google.com>
+    ext4: clean up ext4_match() and callers
+
+Charan Teja Reddy <charante@codeaurora.org>
+    mm, page_alloc: fix core hung in free_pcppages_bulk()
+
+Doug Berger <opendmb@gmail.com>
+    mm: include CMA pages in lowmem_reserve at boot
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    kernel/relay.c: fix memleak on destroy relay channel
+
+Jann Horn <jannh@google.com>
+    romfs: fix uninitialized memory leak in romfs_dev_read()
+
+Josef Bacik <josef@toxicpanda.com>
+    btrfs: don't show full path of bind mounts in subvol=
+
+Marcos Paulo de Souza <mpdesouza@suse.com>
+    btrfs: export helpers for subvolume name/id resolution
+
+Hugh Dickins <hughd@google.com>
+    khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
+
+Hugh Dickins <hughd@google.com>
+    khugepaged: khugepaged_test_exit() check mmget_still_valid()
+
+Kevin Hao <haokexin@gmail.com>
+    tracing/hwlat: Honor the tracing_cpumask
+
+Steven Rostedt (VMware) <rostedt@goodmis.org>
+    tracing: Clean up the hwlat binding code
+
+Masami Hiramatsu <mhiramat@kernel.org>
+    perf probe: Fix memory leakage when the probe point is not found
+
+Liu Ying <victor.liu@nxp.com>
+    drm/imx: imx-ldb: Disable both channels for split mode in enc->disable()
+
+Jan Beulich <JBeulich@suse.com>
+    x86/asm: Add instruction suffixes to bitops
+
+Uros Bizjak <ubizjak@gmail.com>
+    x86/asm: Remove unnecessary \n\t in front of CC_SET() from asm templates
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                          |  4 +-
+ arch/alpha/include/asm/io.h                       |  8 +-
+ arch/arm/kvm/mmu.c                                |  6 --
+ arch/m68k/include/asm/m53xxacr.h                  |  6 +-
+ arch/powerpc/mm/fault.c                           |  7 +-
+ arch/powerpc/platforms/pseries/ras.c              |  1 -
+ arch/x86/include/asm/archrandom.h                 |  8 +-
+ arch/x86/include/asm/bitops.h                     | 29 ++++---
+ arch/x86/include/asm/percpu.h                     |  2 +-
+ drivers/gpu/drm/imx/imx-ldb.c                     |  7 +-
+ drivers/input/mouse/psmouse-base.c                |  2 +-
+ drivers/media/pci/ttpci/budget-core.c             | 11 ++-
+ drivers/media/platform/davinci/vpss.c             | 20 ++++-
+ drivers/net/dsa/b53/b53_common.c                  |  2 +
+ drivers/net/ethernet/freescale/fec_main.c         |  4 +-
+ drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h |  2 +-
+ drivers/net/ethernet/intel/i40e/i40e_common.c     | 35 ++++++--
+ drivers/scsi/libfc/fc_disc.c                      | 12 ++-
+ drivers/scsi/ufs/ufs_quirks.h                     |  1 +
+ drivers/scsi/ufs/ufshcd.c                         |  2 +
+ drivers/virtio/virtio_ring.c                      |  3 +
+ drivers/xen/preempt.c                             |  2 +-
+ fs/btrfs/ctree.h                                  |  2 +
+ fs/btrfs/export.c                                 |  8 +-
+ fs/btrfs/export.h                                 |  5 ++
+ fs/btrfs/super.c                                  | 18 +++--
+ fs/eventpoll.c                                    | 19 +++--
+ fs/ext4/namei.c                                   | 99 +++++++++--------------
+ fs/jffs2/dir.c                                    |  6 +-
+ fs/romfs/storage.c                                |  4 +-
+ fs/xfs/xfs_sysfs.h                                |  6 +-
+ fs/xfs/xfs_trans_dquot.c                          |  2 +-
+ kernel/relay.c                                    |  1 +
+ kernel/trace/trace_hwlat.c                        | 37 ++++-----
+ mm/hugetlb.c                                      | 24 +++---
+ mm/khugepaged.c                                   |  7 +-
+ mm/page_alloc.c                                   |  7 +-
+ sound/soc/intel/atom/sst-mfld-platform-pcm.c      |  5 +-
+ tools/perf/util/probe-finder.c                    |  2 +-
+ 39 files changed, 238 insertions(+), 188 deletions(-)
+
 
