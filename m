@@ -2,103 +2,66 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE9EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9B52075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:24:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598264683;
-	bh=C3YTLiTEJrWGnbRCgydH4Jhh5WgGVJ9rPOEaMGjkFBo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rwpJhmbHyfVXV3BnAjua710B6+HA+Sdj+6K80bdd8NQjtR1gc72drD+uMdkopRZwj
-	 j+YOPTUldCV3qnQUIHv0yucOWcJelR2e97W1p0rdIgWF+6PgB/X7EZf7o18yFRRijp
-	 wiNAI35XtTCsM2Im7D508anyruBwabP1HGIZljZU=
+	by mail.kernel.org (Postfix) with ESMTP id 0C29D20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgHXKYk (ORCPT
+        id S1726782AbgHXK0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50208 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 06:26:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49980 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbgHXKXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:23:53 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD6292075B;
-        Mon, 24 Aug 2020 10:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598264632;
-        bh=C3YTLiTEJrWGnbRCgydH4Jhh5WgGVJ9rPOEaMGjkFBo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N00I6fphgD0Z14HF7FvDHj7L1K0/1d/gVI3mkDIxMrhi9ow+9ekc/wIc+XWUkjubQ
-         kM1M5QXZCN8KEYaoccd4niRlTKE5uIJqlAwzqIO7gZpizpaXs3mDVvzFLkaM5c3VIW
-         y/t28V7i7BYnOEAZPKfZcu5784lUO0AwLH6fhmoI=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kA9dn-006BQc-5k; Mon, 24 Aug 2020 11:23:51 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: [PATCH 2/9] irqchip/git-v3-its: Implement irq_retrigger callback for device-triggered LPIs
-Date:   Mon, 24 Aug 2020 11:23:10 +0100
-Message-Id: <20200824102317.1038259-3-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200824102317.1038259-1-maz@kernel.org>
-References: <20200824102317.1038259-1-maz@kernel.org>
+        id S1725968AbgHXK0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:26:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 3E79EABEA;
+        Mon, 24 Aug 2020 10:26:36 +0000 (UTC)
+Date:   Mon, 24 Aug 2020 12:26:03 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Subject: Re: [PATCH v2 01/10] mm/memory_hotplug: inline __offline_pages()
+ into offline_pages()
+Message-ID: <20200824102557.GA6315@linux>
+References: <20200819175957.28465-1-david@redhat.com>
+ <20200819175957.28465-2-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, gregory.clement@bootlin.com, jason@lakedaemon.net, laurentiu.tudor@nxp.com, tglx@linutronix.de, valentin.schneider@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819175957.28465-2-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v3-its.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Wed, Aug 19, 2020 at 07:59:48PM +0200, David Hildenbrand wrote:
+> There is only a single user, offline_pages(). Let's inline, to make
+> it look more similar to online_pages().
+> 
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 95f097448f97..2808545a963e 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1720,6 +1720,11 @@ static int its_irq_set_irqchip_state(struct irq_data *d,
- 	return 0;
- }
- 
-+static int its_irq_retrigger(struct irq_data *d)
-+{
-+	return !its_irq_set_irqchip_state(d, IRQCHIP_STATE_PENDING, true);
-+}
-+
- /*
-  * Two favourable cases:
-  *
-@@ -1971,6 +1976,7 @@ static struct irq_chip its_irq_chip = {
- 	.irq_set_affinity	= its_set_affinity,
- 	.irq_compose_msi_msg	= its_irq_compose_msi_msg,
- 	.irq_set_irqchip_state	= its_irq_set_irqchip_state,
-+	.irq_retrigger		= its_irq_retrigger,
- 	.irq_set_vcpu_affinity	= its_irq_set_vcpu_affinity,
- };
- 
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
 -- 
-2.27.0
-
+Oscar Salvador
+SUSE L3
