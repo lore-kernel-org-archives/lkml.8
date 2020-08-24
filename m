@@ -2,112 +2,89 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD76DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BA3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6FEE206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:01:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZdGyEdWr"
+	by mail.kernel.org (Postfix) with ESMTP id BFEC0206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:12:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgHXDBK (ORCPT
+        id S1728074AbgHXDMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 23:01:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727999AbgHXDBJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 23:01:09 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DD4BC061573;
-        Sun, 23 Aug 2020 20:01:09 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id y6so3518980plk.10;
-        Sun, 23 Aug 2020 20:01:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Sd+e9mqpssttKPHG4Vmc6RWj6G6G48PRDU4F/RVT5Ho=;
-        b=ZdGyEdWrQTveFGjbRMDO8OjW4bOlMQM5qKDRp3leiKZ51A4hPjROMAfDMggtFBqpZK
-         d7C/TwKkIM4h46aPUIB9e48MiECI07EnmmfpcmlEFkZg6XTVmXN525aXeFItEqlyfKh6
-         p5p4/FknIqY4PvcSJeeCmvW9bogn4f63HDddphzkShoSLoUnPN886F5kpZCYQRmTcL7Z
-         YYsZ4wnP7Idwi5itH2j6BYsGBm6ZMKRxcFlTEkE/byZQvNYCQIEs8A1F4M+49RX9wDB9
-         zDwIr0r8b2NLhY0cLNxKWHdvqRVsoeWs59go1QwpgeYBv0bNddx4m2jLG1M0495anJj8
-         35lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Sd+e9mqpssttKPHG4Vmc6RWj6G6G48PRDU4F/RVT5Ho=;
-        b=liUqLiOZSKJstgpPrfvXzYfIPlY3ZlVcnThQBMF9n7tOOtuuU1RY8/34pO8oNpjmSZ
-         OxRmWkbLwDFlp9UnMZcomlh0wfq57lm0qw9sek0Wn1xQMgP4qzHY+xeA7BABE6Ug2tOj
-         nmzsEk82QF1yG/VFKsxjzm03yHdhQHeLOFyPJ1m1fZ0EBpQmEcd3cy9gsH6aNTTbm/IE
-         UXccOcEPmu0I7COvJSHiAhdxhL4isjAbErKWJn0qHsSPxqWAYSCcYBuy/0P4szYbg2KX
-         CMlzU86VfDu7+/dOtImEAQ8XL7CRZrPumI0i4Dkk8rjRmiob6Gz2fCRD0zCPD3MhnEQB
-         0Urw==
-X-Gm-Message-State: AOAM530QY2iLwCEfFk/PBpX1/YwytIujcLMHL2Ka/zYJ+nJ+ldGw+76t
-        +jxbKJ3+C2gqgRwsqtMF+vk=
-X-Google-Smtp-Source: ABdhPJzeyhiSO1vJo2MHuImYOXNbsVyKEJazgLqADtaMajhDvY5Q6r8/3E2YNHow3p8CiRT1+AIZjA==
-X-Received: by 2002:a17:90a:c394:: with SMTP id h20mr3092215pjt.22.1598238069049;
-        Sun, 23 Aug 2020 20:01:09 -0700 (PDT)
-Received: from localhost.localdomain ([122.224.153.227])
-        by smtp.gmail.com with ESMTPSA id y65sm9328813pfb.155.2020.08.23.20.01.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Aug 2020 20:01:08 -0700 (PDT)
-From:   Yanhu Cao <gmayyyha@gmail.com>
-To:     jlayton@kernel.org
-Cc:     idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>
-Subject: [PATCH] ceph: add column 'mds' to show caps in more user friendly
-Date:   Mon, 24 Aug 2020 11:00:58 +0800
-Message-Id: <20200824030058.37786-1-gmayyyha@gmail.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 23 Aug 2020 23:12:51 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:24088 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726635AbgHXDMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 23:12:51 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app3 (Coremail) with SMTP id cC_KCgC30d0fMENfP8QbAw--.23170S4;
+        Mon, 24 Aug 2020 11:12:34 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Krzysztof Sobota <krzysztof.sobota@nokia.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] watchdog: Use put_device on error
+Date:   Mon, 24 Aug 2020 11:12:30 +0800
+Message-Id: <20200824031230.31050-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgC30d0fMENfP8QbAw--.23170S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFyxWFW8Cw47Xw1UCFWDCFg_yoWfuwc_ur
+        1xtr9xWr1DGrnaga4Yqa1fZrW0vF10qF4xAr10qFyxA393Xr98WrZ7Xry09w1Dua4UArn8
+        Jryqgrsa9FyDKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+        GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gr4l42xK82IYc2Ij64vIr41l
+        42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+        ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+        0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAF
+        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+        7VUjQBMtUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUCBlZdtPpD7wADsp
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In multi-mds, the 'caps' debugfs file will have duplicate ino,
-add the 'mds' column to indicate which mds session the cap belongs to.
+We should use put_device() instead of freeing device
+directly after device_initialize().
 
-Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+Fixes: cb36e29bb0e4b ("watchdog: initialize device before misc_register")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
- fs/ceph/debugfs.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
-index 97539b497e4c..47f8971a9c52 100644
---- a/fs/ceph/debugfs.c
-+++ b/fs/ceph/debugfs.c
-@@ -202,7 +202,8 @@ static int caps_show_cb(struct inode *inode, struct ceph_cap *cap, void *p)
- {
- 	struct seq_file *s = p;
- 
--	seq_printf(s, "0x%-17lx%-17s%-17s\n", inode->i_ino,
-+	seq_printf(s, "0x%-17lx%-3d%-17s%-17s\n", inode->i_ino,
-+		   cap->session->s_mds,
- 		   ceph_cap_string(cap->issued),
- 		   ceph_cap_string(cap->implemented));
- 	return 0;
-@@ -222,8 +223,8 @@ static int caps_show(struct seq_file *s, void *p)
- 		   "reserved\t%d\n"
- 		   "min\t\t%d\n\n",
- 		   total, avail, used, reserved, min);
--	seq_printf(s, "ino                issued           implemented\n");
--	seq_printf(s, "-----------------------------------------------\n");
-+	seq_printf(s, "ino              mds  issued           implemented\n");
-+	seq_printf(s, "--------------------------------------------------\n");
- 
- 	mutex_lock(&mdsc->mutex);
- 	for (i = 0; i < mdsc->max_sessions; i++) {
+Changelog:
+
+v2: - Use put_device() instead of just removing kfree.
+      Move the memleak part to a separate patch.
+---
+ drivers/watchdog/watchdog_dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index 6798addabd5a..b0fa7f31b1b6 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -1021,7 +1021,7 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
+ 				pr_err("%s: a legacy watchdog module is probably present.\n",
+ 					wdd->info->identity);
+ 			old_wd_data = NULL;
+-			kfree(wd_data);
++			put_device(&wd_data->dev);
+ 			return err;
+ 		}
+ 	}
 -- 
-2.24.3 (Apple Git-128)
+2.17.1
 
