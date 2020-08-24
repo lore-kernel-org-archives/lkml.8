@@ -2,202 +2,95 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4120AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956A5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0834F20706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CADB20866
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:45:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ns3ofsQU"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XFo2LL3y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgHXTnl (ORCPT
+        id S1726656AbgHXTpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:43:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54828 "EHLO
+        Mon, 24 Aug 2020 15:45:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHXTnj (ORCPT
+        with ESMTP id S1726119AbgHXTpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:43:39 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3043C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 12:43:38 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id p36so3796997qtd.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 12:43:38 -0700 (PDT)
+        Mon, 24 Aug 2020 15:45:45 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E84BC061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 12:45:44 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id d4so4746843pjx.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 12:45:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nxMDOV863B6ENn1KD7dBoUHY4CKPemM7ILl1lSFWSeA=;
-        b=Ns3ofsQUsIfBhS2NjmhWjUbJYe4w09LOSkAOOsZFR/gTHwXA3UlezJsPHIi3DHY01X
-         qDGMrkmlJ98B56GcYgKV5dM2egD/ilJ/DQlD0Nb7QtreWLnrmsf/oRQWryuQbePCF5CM
-         7FGUM7175v0YE1YnyDLlfWkrYa6tWlQwZpMvaLsZf+O48EwClYyUUTq/Z+sLMCL9uHm5
-         7i+p+Y6v6XmFR7ezpHVP5Pbi51R/cgpE8mgGsD6EbjwYNBGSR6rLOuKBJ6TO/LgqEyVC
-         8ixgEbtvGq29oR9Uz20U0VTKYupQ9J9LfYdzRBhlwxpyeZQgpifD5xFZ8i0q78E4jFMj
-         2V6g==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=XLzPGl4Eap2WEQDnCBOMpgiVYB87oR4tNzXe04U1Yus=;
+        b=XFo2LL3y7AhxhrbYL3AA5QloXwqCtv51CFv+ivg2vqei/6inK40GT7BuWmfnCoqsag
+         0TB19Ve8hTo23hLyYbP2EB4J627lToJoVqRnzGrN0ziDNgINk1UHHXiIlQxRxVjxoDyO
+         MrfK8UK5FHNIHYSB07msbw8lRemEDR8lfZ74UIMQxiiklijoaS5ZwdC8vGg3NnN/cu9/
+         4aJlQnL7TX1W4yY0mNjKPq+5tV+qzpORVVVTA9X90A8/BN7DIlPfo6iWc5bWHhY20bj+
+         k1SHQTfNN67IP3GLzbkCDC8jlXLCty/OmE3lRGlaYyL/0Ynxx8vKbjUuEIHUWt5FxZJO
+         rKdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nxMDOV863B6ENn1KD7dBoUHY4CKPemM7ILl1lSFWSeA=;
-        b=LqgHvsBDN0QiWYA3jQY8wgqZusnLLO2fP4PYvcLu5fZFhkJ6XPMkANIbZufiT58BRA
-         nrImXfCsVjIu89FUQuwqmgulShrRXKJRkEVepB8psxLbgcO0/mazI7KIuLIKlncJOS5g
-         Hr94f1wSEtwlbZRf2o+g2ppQ6+L1XWgMTPwj2Xm3qx1mDRbNC5MZoyoYCv/cJXDhJ1FP
-         KMoh05QVLRoPa6kDwD4zrCxok6WD917bsipt6RXeqJbOSzntYqVMbCBf/wdik1XG3QVv
-         zB5AwYt/L+YDmjnClp3tOH3iCitmN8Zp6zSFh6c91rYi3UYpslHrGnTz/8fUODV1ayOG
-         KmNA==
-X-Gm-Message-State: AOAM5308lIBUibwHlR5lATCV6t/qv/AdQVszVq76J8t3hAhdIBksqfUa
-        3jKrlQ2sSk8DG8+z3Wxir4s=
-X-Google-Smtp-Source: ABdhPJxIIYFFzWCqhZVqD8ortSRZ+/qSn80WqCZGgy/cfTA61slUxkBK8pavePqMqaGlY80GbgxAJw==
-X-Received: by 2002:ac8:710b:: with SMTP id z11mr6341745qto.64.1598298217743;
-        Mon, 24 Aug 2020 12:43:37 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id a203sm10378314qkg.30.2020.08.24.12.43.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 12:43:37 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 12:43:35 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [GIT PULL] fallthrough pseudo-keyword macro conversions for
- 5.9-rc3
-Message-ID: <20200824194335.GA4082027@ubuntu-n2-xlarge-x86>
-References: <20200824034841.GA29995@embeddedor>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XLzPGl4Eap2WEQDnCBOMpgiVYB87oR4tNzXe04U1Yus=;
+        b=jmDYBetH9YUIe6+tOYTCZuq39C03HwYnuzhIM6U6xXDo1O309SsU+1iNGyzTgU5+A7
+         fScDIlQzOOzRFWe9uoAzG8/fLCoCAaMKFUjR2Ayt0XSZcJ04UlnqAaG2g20ewWBebfWE
+         cfur3G6JFx/vtANr3eWf+tytyHU8S9UMiFuyLj1+j6YVnCF/N87PNK4P/zqe85HSwMTs
+         0GUqjWvWLtPhN+7TFuh1JpX7K/nFhk7w+Oy9fy4yOTLDKb26PCBrovTtfOJOGnVkvqyL
+         +3xsM6PLcDDCk1nAvJUB45NoMCenqfTk9AXkCJxIgizlWZsLfUUUY/TtYduUfNMtka3f
+         ALng==
+X-Gm-Message-State: AOAM53036iDxzK3jrm3TNoduGSWz+SlAsO/ywkcWuMsOGCIzX7CU3etb
+        bZ7vEAAakMqNspzhScrVs8lZOjy9L5X5/t/7
+X-Google-Smtp-Source: ABdhPJwS7A/m7RK1cRDv1D4biUVRSI0CtsgcuILfl5254A5JscLQW1n+XDBrmv9+ubuiC+AL2ZrNnQ==
+X-Received: by 2002:a17:90a:ac07:: with SMTP id o7mr702682pjq.194.1598298343792;
+        Mon, 24 Aug 2020 12:45:43 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c085:21e8::193f? ([2620:10d:c090:400::5:b493])
+        by smtp.gmail.com with ESMTPSA id j14sm1880974pgj.3.2020.08.24.12.45.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 12:45:43 -0700 (PDT)
+Subject: Re: [PATCH] rnbd: fix uninitialized variable
+To:     Tong Zhang <ztong0001@gmail.com>, danil.kipnis@cloud.ionos.com,
+        jinpu.wang@cloud.ionos.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200824194322.337375-1-ztong0001@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <3b904063-ca08-092d-a861-e1c80d511ab1@kernel.dk>
+Date:   Mon, 24 Aug 2020 13:45:41 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824034841.GA29995@embeddedor>
+In-Reply-To: <20200824194322.337375-1-ztong0001@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 23, 2020 at 10:48:41PM -0500, Gustavo A. R. Silva wrote:
-> Hi Linus,
-> 
-> Not sure what the problem was with my pull-request for -rc2. So, I'm giving
-> this a second try because I think it is worth it.
-> 
-> I have build-tested this patch on 10 different architectures: x86_64, i386,
-> arm64, powerpc, s390, sparc64, sh, m68k, powerpc64 and alpha (allyesconfig/
-> allmodconfig for all of them). This is in linux-next already and kernel
-> test robot has also helped me to successfully build-test early versions
-> of this patch[2][3][4][5]. This patch does not introduce any new warnings.
-> 
-> Thank you
-> --
-> Gustavo
-> 
-> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> [2] https://lore.kernel.org/lkml/5f3cc99a.HgvOW3rH0mD0RmkM%25lkp@intel.com/
-> [3] https://lore.kernel.org/lkml/5f3dd1d2.l1axczH+t4hMBZ63%25lkp@intel.com/
-> [4] https://lore.kernel.org/lkml/5f3e977a.mwYHUIObbR4SHr0B%25lkp@intel.com/
-> [5] https://lore.kernel.org/lkml/5f3f9e1c.qsyb%2FaySkiXNpkO4%25lkp@intel.com/
-> 
-> 
-> The following changes since commit d012a7190fc1fd72ed48911e77ca97ba4521bccd:
-> 
->   Linux 5.9-rc2 (2020-08-23 14:08:43 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/fallthrough-pseudo-keyword-5.9-rc3
-> 
-> for you to fetch changes up to df561f6688fef775baa341a0f5d960becd248b11:
-> 
->   treewide: Use fallthrough pseudo-keyword (2020-08-23 17:36:59 -0500)
-> 
-> ----------------------------------------------------------------
-> fallthrough pseudo-keyword macro conversions for 5.9-rc3
-> 
-> Hi Linus,
-> 
-> Please, pull the following tree-wide patch that replaces tons (2484) of
-> /* fall through */ comments, and its variants, with the new pseudo-keyword
-> macro fallthrough[1]. Also, remove unnecessary fall-through markings when
-> it is the case.
-> 
-> There are currently 1167 intances of this fallthrough pseudo-keyword
-> macro in mainline (5.9-rc2), that have been introduced over the last
-> couple of development cycles:
-> 
-> $ git grep -nw 'fallthrough;' | wc -l
-> 1167
-> 
-> The global adoption of the fallthrough pseudo-keyword is something certain
-> to happen; so, better sooner than later. :) This will also save everybody's
-> time and thousands of lines of unnecessarily repetitive changelog text.
-> 
-> After applying this patch on top of 5.9-rc2, we'll have a total of 3651
-> instances of this macro:
-> 
-> $ git grep -nw 'fallthrough;' | wc -l
-> 3651
-> 
-> This treewide patch doesn't address ALL fall-through markings in all
-> subsystems at once because I have previously sent out patches for some of
-> such subsystems separately, and I will follow up on them; however, this
-> definitely contributes most of the work needed to replace all the
-> fall-through markings with the fallthrough pseudo-keyword macro in the
-> whole codebase.
-> 
-> I have build-tested this patch on 10 different architectures: x86_64, i386,
-> arm64, powerpc, s390, sparc64, sh, m68k, powerpc64 and alpha (allyesconfig
-> for all of them). This is in linux-next already and kernel test robot has
-> also helped me to successfully build-test early versions of this
-> patch[2][3][4][5].
-> 
-> Thanks
-> --
-> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> [2] https://lore.kernel.org/lkml/5f3cc99a.HgvOW3rH0mD0RmkM%25lkp@intel.com/
-> [3] https://lore.kernel.org/lkml/5f3dd1d2.l1axczH+t4hMBZ63%25lkp@intel.com/
-> [4] https://lore.kernel.org/lkml/5f3e977a.mwYHUIObbR4SHr0B%25lkp@intel.com/
-> [5] https://lore.kernel.org/lkml/5f3f9e1c.qsyb%2FaySkiXNpkO4%25lkp@intel.com/
-> 
-> ----------------------------------------------------------------
-> Gustavo A. R. Silva (1):
->       treewide: Use fallthrough pseudo-keyword
+On 8/24/20 1:43 PM, Tong Zhang wrote:
+> variable err is uninitialized when bio is an error code
 
-$ scripts/config --file arch/powerpc/configs/powernv_defconfig -e KERNEL_XZ
+It's fixed in Linus's tree:
 
-$ make -skj"$(nproc)" ARCH=powerpc CROSS_COMPILE=powerpc64le-linux- distclean powernv_defconfig zImage
-...
-In file included from arch/powerpc/boot/../../../lib/decompress_unxz.c:234,
-                 from arch/powerpc/boot/decompress.c:38:
-arch/powerpc/boot/../../../lib/xz/xz_dec_stream.c: In function 'dec_main':
-arch/powerpc/boot/../../../lib/xz/xz_dec_stream.c:586:4: error: 'fallthrough' undeclared (first use in this function)
-  586 |    fallthrough;
-      |    ^~~~~~~~~~~
-arch/powerpc/boot/../../../lib/xz/xz_dec_stream.c:586:4: note: each undeclared identifier is reported only once for each function it appears in
-In file included from arch/powerpc/boot/../../../lib/decompress_unxz.c:235,
-                 from arch/powerpc/boot/decompress.c:38:
-arch/powerpc/boot/../../../lib/xz/xz_dec_lzma2.c: In function 'xz_dec_lzma2_run':
-arch/powerpc/boot/../../../lib/xz/xz_dec_lzma2.c:1046:4: error: 'fallthrough' undeclared (first use in this function)
- 1046 |    fallthrough;
-      |    ^~~~~~~~~~~
-make[2]: *** [arch/powerpc/boot/Makefile:215: arch/powerpc/boot/decompress.o] Error 1
-make[2]: Target 'arch/powerpc/boot/zImage' not remade because of errors.
-make[1]: *** [arch/powerpc/Makefile:295: zImage] Error 2
-make: *** [Makefile:335: __build_one_by_one] Error 2
-make: Target 'distclean' not remade because of errors.
-make: Target 'powernv_defconfig' not remade because of errors.
-make: Target 'zImage' not remade because of errors.
+commit 17bc10300c69bd51b82983cdadafa0a7791f074e
+Author: Nathan Chancellor <natechancellor@gmail.com>
+Date:   Mon Aug 17 23:49:25 2020 -0700
 
-This will end up affecting distribution configurations such as Debian
-and OpenSUSE according to my testing. I am not sure what the solution
-is, the PowerPC wrapper does not set -D__KERNEL__ so I am not sure that
-compiler_attributes.h can be safely included. Adding Michael and
-linuxppc-dev to CC.
+    block/rnbd: Ensure err is always initialized in process_rdma
 
-Cheers,
-Nathan
+-- 
+Jens Axboe
+
