@@ -2,111 +2,100 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6320FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BCE22067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287532;
-	bh=RacWlbSMKAJd0bJ0QP8Nbv2sinIB1vEMPGx2J0kjzqs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pJcqJvk5PmbeRIrO66ZNvQJpCdXvzaij2xyEWZVYB3qEKbMXH7iTWjTCQkYJI/3uE
-	 FC5eWCb8IdzXx3lP+cZe3jDGMqBtvUHSDdLNeEmBb1WSPShWnNc+jLPDqhSORHGe0a
-	 yR9u4RKRFMJrjzA5U0Sh6y+FPM2D5KnI0AYKHDn8=
+	by mail.kernel.org (Postfix) with ESMTP id 917F12067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgHXQp2 (ORCPT
+        id S1728719AbgHXQpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:45:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47288 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:45:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58018 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728589AbgHXQj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:39:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6214120838;
-        Mon, 24 Aug 2020 16:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287166;
-        bh=RacWlbSMKAJd0bJ0QP8Nbv2sinIB1vEMPGx2J0kjzqs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zF5eGdzfoo6QwNVkZk5+2PiK8eeXY9pNEOMIQ5z2xK6DBX87KrgEZOloqY1JJAKm/
-         uCx9Je0v/ugS1aM9IzqUaM0CS/K4O4rtStMpLxJW/AaL9DfylGbLaAGtKuh2tl+ikj
-         6NvY5a7NNnv1ylvjhWSZOsIcFeQ1UPLb6D/tadgk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/11] scsi: ufs: Improve interrupt handling for shared interrupts
-Date:   Mon, 24 Aug 2020 12:39:11 -0400
-Message-Id: <20200824163914.607152-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163914.607152-1-sashal@kernel.org>
-References: <20200824163914.607152-1-sashal@kernel.org>
+        id S1728803AbgHXQox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:44:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 3C9E7AC46;
+        Mon, 24 Aug 2020 16:45:22 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 52A8BDA730; Mon, 24 Aug 2020 18:43:44 +0200 (CEST)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 5.9-rc3
+Date:   Mon, 24 Aug 2020 18:43:43 +0200
+Message-Id: <cover.1598283719.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+Hi,
 
-[ Upstream commit 127d5f7c4b653b8be5eb3b2c7bbe13728f9003ff ]
+a few more fixes. Please pull, Thanks.
 
-For shared interrupts, the interrupt status might be zero, so check that
-first.
+- fix swapfile activation on subvolumes with deleted snapshots
 
-Link: https://lore.kernel.org/r/20200811133936.19171-2-adrian.hunter@intel.com
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/ufs/ufshcd.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+- error value mixup when removing directory entries from tree log
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 8144a54371c35..4eaecc3cdebc8 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -5371,7 +5371,7 @@ static void ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
-  */
- static irqreturn_t ufshcd_intr(int irq, void *__hba)
- {
--	u32 intr_status, enabled_intr_status;
-+	u32 intr_status, enabled_intr_status = 0;
- 	irqreturn_t retval = IRQ_NONE;
- 	struct ufs_hba *hba = __hba;
- 	int retries = hba->nutrs;
-@@ -5385,7 +5385,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
- 	 * read, make sure we handle them by checking the interrupt status
- 	 * again in a loop until we process all of the reqs before returning.
- 	 */
--	do {
-+	while (intr_status && retries--) {
- 		enabled_intr_status =
- 			intr_status & ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
- 		if (intr_status)
-@@ -5396,7 +5396,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
- 		}
- 
- 		intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
--	} while (intr_status && --retries);
-+	}
- 
- 	spin_unlock(hba->host->host_lock);
- 	return retval;
--- 
-2.25.1
+- fix lzo compression level reset after previous level setting
 
+- fix space cache memory leak after transaction abort
+
+- fix const function attribute
+
+- more error handling improvements
+
+----------------------------------------------------------------
+The following changes since commit c57dd1f2f6a7cd1bb61802344f59ccdc5278c983:
+
+  btrfs: trim: fix underflow in trim length to prevent access beyond device boundary (2020-08-12 10:15:58 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.9-rc2-tag
+
+for you to fetch changes up to a84d5d429f9eb56f81b388609841ed993f0ddfca:
+
+  btrfs: detect nocow for swap after snapshot delete (2020-08-21 12:21:23 +0200)
+
+----------------------------------------------------------------
+Boris Burkov (1):
+      btrfs: detect nocow for swap after snapshot delete
+
+David Sterba (1):
+      btrfs: use the correct const function attribute for btrfs_get_num_csums
+
+Filipe Manana (1):
+      btrfs: fix space cache memory leak after transaction abort
+
+Johannes Thumshirn (1):
+      btrfs: handle errors from async submission
+
+Josef Bacik (1):
+      btrfs: check the right error variable in btrfs_del_dir_entries_in_log
+
+Marcos Paulo de Souza (1):
+      btrfs: reset compression level for lzo on remount
+
+ fs/btrfs/ctree.c            |  2 +-
+ fs/btrfs/ctree.h            |  6 +++---
+ fs/btrfs/disk-io.c          |  1 +
+ fs/btrfs/extent-tree.c      | 17 +++++++++++------
+ fs/btrfs/file.c             |  2 +-
+ fs/btrfs/free-space-cache.c |  2 +-
+ fs/btrfs/inode.c            | 29 ++++++++++++++---------------
+ fs/btrfs/super.c            |  1 +
+ fs/btrfs/tree-log.c         | 10 ++++++----
+ 9 files changed, 39 insertions(+), 31 deletions(-)
