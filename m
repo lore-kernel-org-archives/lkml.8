@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681ECC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A5AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49832206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 530C72078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289116;
-	bh=K0SFOAY/JWMe1HpZplOrQclXZfKJ0VZJtDyjKj1LbL4=;
+	s=default; t=1598289121;
+	bh=4YAmf4dSSuVzZiazHPkKQCjkpbtJsu85PXPDdQOTguM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ChRMDbr7+qShSgHm/b2WXjyVv5nn/uQ8oSMPAWxOm/Mm3vZb/GotbrGyWWS2lHOPJ
-	 3tnt4M1POl73xEauAOJUpswE/PjjIWthhMxgIPY6nHP7onNjYIDzPF2MUTKNpUvcpU
-	 AR1gbkPI3inR+4Mc13ESRYQV8DGzQ2PdSUEL8IZ4=
+	b=LcoLzifvOmaOJwtbsbQedU/BawJKamNIkMr/naMZIyKWv0ThaC4Cxn+FuH2lg7jIV
+	 Iy0pTNR32fMcKOo07y3/MPSlm6dsNl3wc9F1P8TPSk66+37WCET3RFGlsOw+WQAliY
+	 i5y+Sf36el3Qt5U+05nt8HP2g1WYV2r5DNpHYtBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgHXRLy (ORCPT
+        id S1728407AbgHXRLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:11:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:11:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728396AbgHXQhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:37:54 -0400
+        id S1728391AbgHXQhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:37:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2793D22D37;
-        Mon, 24 Aug 2020 16:37:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3A4722CE3;
+        Mon, 24 Aug 2020 16:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287032;
-        bh=K0SFOAY/JWMe1HpZplOrQclXZfKJ0VZJtDyjKj1LbL4=;
+        s=default; t=1598287027;
+        bh=4YAmf4dSSuVzZiazHPkKQCjkpbtJsu85PXPDdQOTguM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iBlUegtTIVEBUH5C5C8dbZ+9rSx81O6KZxx2RYVXuLv2IJ9kvqUvbwclLAPEBJqp4
-         5BtMcL3ic8cSawqMp/q0Jm731Tm71gqcULYNn8l+ms8vic/mTJGlLqBxWdK/gcLm3v
-         gkHPISl+uNWoKMJmzOKvMfoy/FDbzFHCgtbOR1o4=
+        b=wEUCQbUtLr/wCw1f/OGcUMUoNmpySg31ooDZdfe4m2GjNCvBaoRNAXpPvEfFgKXjz
+         SXlIva1lBudjtUBmX0gq3bUE6WeQaDdW+gUP875YISPf3oE3dbcxVJJfpzDiOJOYx+
+         kqOpp05JOcuBl1tF2e5smhElTki0IvEtsGoIr++I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Pozulp <pozulp.kernel@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 28/54] ALSA: hda/realtek: Add model alc298-samsung-headphone
-Date:   Mon, 24 Aug 2020 12:36:07 -0400
-Message-Id: <20200824163634.606093-28-sashal@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 24/54] selftests/bpf: Fix btf_dump test cases on 32-bit arches
+Date:   Mon, 24 Aug 2020 12:36:03 -0400
+Message-Id: <20200824163634.606093-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
@@ -59,35 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Pozulp <pozulp.kernel@gmail.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 23dc958689449be85e39351a8c809c3d344b155b ]
+[ Upstream commit eed7818adf03e874994b966aa33bc00204dd275a ]
 
-The very quiet and distorted headphone output bug that afflicted my
-Samsung Notebook 9 is appearing in many other Samsung laptops. Expose
-the quirk which fixed my laptop as a model so other users can try it.
+Fix btf_dump test cases by hard-coding BPF's pointer size of 8 bytes for cases
+where it's impossible to deterimne the pointer size (no long type in BTF). In
+cases where it's known, validate libbpf correctly determines it as 8.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207423
-Signed-off-by: Mike Pozulp <pozulp.kernel@gmail.com>
-Link: https://lore.kernel.org/r/20200817043219.458889-1-pozulp.kernel@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200813204945.1020225-6-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../selftests/bpf/prog_tests/btf_dump.c       | 27 ++++++++++++++-----
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 313eecfb91b44..e2bb0b6986182 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7926,6 +7926,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
- 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
- 	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
- 	{.id = ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE, .name = "alc256-medion-headset"},
-+	{.id = ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET, .name = "alc298-samsung-headphone"},
- 	{}
+diff --git a/tools/testing/selftests/bpf/prog_tests/btf_dump.c b/tools/testing/selftests/bpf/prog_tests/btf_dump.c
+index cb33a7ee4e04f..39fb81d9daeb5 100644
+--- a/tools/testing/selftests/bpf/prog_tests/btf_dump.c
++++ b/tools/testing/selftests/bpf/prog_tests/btf_dump.c
+@@ -12,15 +12,16 @@ void btf_dump_printf(void *ctx, const char *fmt, va_list args)
+ static struct btf_dump_test_case {
+ 	const char *name;
+ 	const char *file;
++	bool known_ptr_sz;
+ 	struct btf_dump_opts opts;
+ } btf_dump_test_cases[] = {
+-	{"btf_dump: syntax", "btf_dump_test_case_syntax", {}},
+-	{"btf_dump: ordering", "btf_dump_test_case_ordering", {}},
+-	{"btf_dump: padding", "btf_dump_test_case_padding", {}},
+-	{"btf_dump: packing", "btf_dump_test_case_packing", {}},
+-	{"btf_dump: bitfields", "btf_dump_test_case_bitfields", {}},
+-	{"btf_dump: multidim", "btf_dump_test_case_multidim", {}},
+-	{"btf_dump: namespacing", "btf_dump_test_case_namespacing", {}},
++	{"btf_dump: syntax", "btf_dump_test_case_syntax", true, {}},
++	{"btf_dump: ordering", "btf_dump_test_case_ordering", false, {}},
++	{"btf_dump: padding", "btf_dump_test_case_padding", true, {}},
++	{"btf_dump: packing", "btf_dump_test_case_packing", true, {}},
++	{"btf_dump: bitfields", "btf_dump_test_case_bitfields", true, {}},
++	{"btf_dump: multidim", "btf_dump_test_case_multidim", false, {}},
++	{"btf_dump: namespacing", "btf_dump_test_case_namespacing", false, {}},
  };
- #define ALC225_STANDARD_PINS \
+ 
+ static int btf_dump_all_types(const struct btf *btf,
+@@ -62,6 +63,18 @@ static int test_btf_dump_case(int n, struct btf_dump_test_case *t)
+ 		goto done;
+ 	}
+ 
++	/* tests with t->known_ptr_sz have no "long" or "unsigned long" type,
++	 * so it's impossible to determine correct pointer size; but if they
++	 * do, it should be 8 regardless of host architecture, becaues BPF
++	 * target is always 64-bit
++	 */
++	if (!t->known_ptr_sz) {
++		btf__set_pointer_size(btf, 8);
++	} else {
++		CHECK(btf__pointer_size(btf) != 8, "ptr_sz", "exp %d, got %zu\n",
++		      8, btf__pointer_size(btf));
++	}
++
+ 	snprintf(out_file, sizeof(out_file), "/tmp/%s.output.XXXXXX", t->file);
+ 	fd = mkstemp(out_file);
+ 	if (CHECK(fd < 0, "create_tmp", "failed to create file: %d\n", fd)) {
 -- 
 2.25.1
 
