@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D516C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F37CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637F72074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66072074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:43:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="om7r+X0e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QiFL1Ay9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgHXSnL (ORCPT
+        id S1727957AbgHXSna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:43:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45282 "EHLO
+        Mon, 24 Aug 2020 14:43:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbgHXSm7 (ORCPT
+        with ESMTP id S1727905AbgHXSnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:42:59 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0927DC061573;
-        Mon, 24 Aug 2020 11:42:59 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q1so4665069pjd.1;
-        Mon, 24 Aug 2020 11:42:59 -0700 (PDT)
+        Mon, 24 Aug 2020 14:43:11 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 990DDC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:43:10 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 67so1882808pgd.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:43:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dDODSeOGT6GDQZmHB0/qjAVOZRvYu5agnXzxXU9gFlM=;
-        b=om7r+X0ea/tQnu31rzb519sNTs4LtrAmIhiV7wf5flokkJtN+J6QAQVFgctLl5wTbm
-         DuuJ6/3p2FduFIjqbYSCxtyLVIFvUR1yM9m6BB962QJKO39+uuj0XIT281QcjlxY54eA
-         Sk+0sxTtSMN9sFfvDHe43HXkpmiGrSvToUE3Yrm1WpkUzmzb9Fgj5YxNNAWrcizGo1mg
-         xP57eHVuCehFEOKFFqNMug3Koca+CzwybqkKcERV3jibjzrQf2HX/GivWIbkBHbPcFhg
-         6W1P1IXUM+x+vh7HCzxWXIFQZ9M7TjQh46cmuW8EEZOSvMzfVWkR0n+sPmihk9cLbrjw
-         rIzw==
+        bh=ORHfJz2e9TNUi11ClButtEprelkWs9RC+Iw7WuZZvQo=;
+        b=QiFL1Ay9VZ+o7FljpSkk11RnZQkof5/enbgvZ9/7pqco8XN9U1Hp4Elf8D9nIZRA8C
+         nGD5FCRG+OzA+aDgKTU0oOJMz4fa3mXl7u0lD7n28ZSbHqCti/Zt9QxkqsHpaM4NLC3o
+         enFNf1XQmCmKZJIaP6vQYsb6HzRH3aKXBN4KuqFyPm4ANqDduI5Ao/TPi5ukL0LW4gBC
+         5Uctli6acz1d1aIAAnhKPO5aVrIgSAIZBf3VtqRMv/BoPdq5cT0VOvc+6VYRRTGd2uh/
+         5F8EkZDgWqrbkgaT3QhaajydJj2zkeaBerdXPu5aXqu0i6rs20/nOHeGwvzMmO/X3iAP
+         0afg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dDODSeOGT6GDQZmHB0/qjAVOZRvYu5agnXzxXU9gFlM=;
-        b=YT+0W2U0jNryxETYEbMXNLbssdFCv8zzqPhdjiaUvyhiD+PjKJIWsxmLWAVLSNmtkd
-         K0twwqTZnRpkTjpEOlEFF203HsXNfYwHA5oQJui9HLAWxH0lVCuCruykt3lUUw1zRfNg
-         6DMkjwQZ4n0tHzXWl0H3Lzf6C9W0Y7xPZN0XnzrLcmtiytbO86aWXPhSegkaLHGkRydG
-         M3nbxoc+/sy19nxkR0u9zb6Cw4U/h5Z4NIESWzlcl/CbCdtxeaIJkrWm7wr++py2uT+I
-         b7ozBBuYtRPICNUOMqmMtSKPLGQND5xuRPOV2AwQ+R3o0XbH6iqCqPMvAfj17LLAYICk
-         h5rw==
-X-Gm-Message-State: AOAM533/S1VdsjP3z/cRDrETVEv0xcQ7Jkg1PnM7t6EBmTZNYmMEhRdf
-        AoInLwIwUS27S7wrl3nDVuE=
-X-Google-Smtp-Source: ABdhPJx8zFd3GDs18fP+mD6zW22tzPTmnTSDH2zGF9RvLsiminQJYv8Atnh6MZ1AfajXY+2F0ByfHg==
-X-Received: by 2002:a17:90a:8d0b:: with SMTP id c11mr511436pjo.196.1598294578535;
-        Mon, 24 Aug 2020 11:42:58 -0700 (PDT)
+        bh=ORHfJz2e9TNUi11ClButtEprelkWs9RC+Iw7WuZZvQo=;
+        b=L2w03aXjiiQvQI7VpNuwhQq0RUXc8k9y3F3Lu//KGyFJYUtubvmfH4DZXj9gbmBUd9
+         GqEhNAffnjM+XODS7148mkFYDvrxhCTiNoBzzKwd4LZf4YX+Lv9fs1L0odf6mcPYuost
+         5WPbj52F/BoOjhQnCMbeMh7vDPltt7/JFaol829LWQ6CUohwll+HZapDFKuzYDON6EIQ
+         S7vpqzufN9mQsRmXCsuPmx/9kNsF/2dQFMH7nzo7WRxoZopTxz29sktK1uyvuY97eSh+
+         Rn3ywN5juKhmCa4UfnFuYKe+5nr+K4f05dT9Zn2lKPouqBQoj9JFdTry5nmfeqEUtjTm
+         1niw==
+X-Gm-Message-State: AOAM533+i6wiSrwyrRbR/BO7tanHiwNmKzBw1S869U024LNMnvzxWmod
+        LGb7RUbfRHlX37dUXMaj720=
+X-Google-Smtp-Source: ABdhPJwn5FgCJ9VyPOqih4HSDVzsr7XdR6VCZfi5iJqTQOJt7mF0wpqzXVZYMoaHoEoWg8tPnsqkYA==
+X-Received: by 2002:a17:902:7b82:: with SMTP id w2mr4753119pll.39.1598294590126;
+        Mon, 24 Aug 2020 11:43:10 -0700 (PDT)
 Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id n24sm6351096pgk.59.2020.08.24.11.42.56
+        by smtp.gmail.com with ESMTPSA id l5sm3347202pga.43.2020.08.24.11.43.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 11:42:57 -0700 (PDT)
+        Mon, 24 Aug 2020 11:43:08 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org
 Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
@@ -79,16 +79,15 @@ Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         John Stultz <john.stultz@linaro.org>,
         Jonathan Marek <jonathan@marek.ca>,
         Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 16/20] drm/msm/a6xx: Add support for per-instance pagetables
-Date:   Mon, 24 Aug 2020 11:37:50 -0700
-Message-Id: <20200824183825.1778810-17-robdclark@gmail.com>
+Subject: [PATCH 19/20] iommu/arm-smmu: add a way for implementations to influence SCTLR
+Date:   Mon, 24 Aug 2020 11:37:53 -0700
+Message-Id: <20200824183825.1778810-20-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200824183825.1778810-1-robdclark@gmail.com>
 References: <20200824183825.1778810-1-robdclark@gmail.com>
@@ -99,147 +98,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jordan Crouse <jcrouse@codeaurora.org>
+From: Rob Clark <robdclark@chromium.org>
 
-Add support for using per-instance pagetables if all the dependencies are
-available.
+For the Adreno GPU's SMMU, we want SCTLR.HUPCF set to ensure that
+pending translations are not terminated on iova fault.  Otherwise
+a terminated CP read could hang the GPU by returning invalid
+command-stream data.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Akhil P Oommen <akhilpo@codeaurora.org>
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 63 +++++++++++++++++++++++++++
- drivers/gpu/drm/msm/adreno/a6xx_gpu.h |  1 +
- drivers/gpu/drm/msm/msm_ringbuffer.h  |  1 +
- 3 files changed, 65 insertions(+)
+ drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 6 ++++++
+ drivers/iommu/arm/arm-smmu/arm-smmu.c      | 3 +++
+ drivers/iommu/arm/arm-smmu/arm-smmu.h      | 3 +++
+ 3 files changed, 12 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 5eabb0109577..d7ad6c78d787 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -81,6 +81,49 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
- 	OUT_RING(ring, upper_32_bits(iova));
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+index 5640d9960610..2aa6249050ff 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+@@ -127,6 +127,12 @@ static int qcom_adreno_smmu_init_context(struct arm_smmu_domain *smmu_domain,
+ 	    (smmu_domain->cfg.fmt == ARM_SMMU_CTX_FMT_AARCH64))
+ 		pgtbl_cfg->quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
+ 
++	/*
++	 * On the GPU device we want to process subsequent transactions after a
++	 * fault to keep the GPU from hanging
++	 */
++	smmu_domain->cfg.sctlr_set |= ARM_SMMU_SCTLR_HUPCF;
++
+ 	/*
+ 	 * Initialize private interface with GPU:
+ 	 */
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+index e63a480d7f71..bbec5793faf8 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+@@ -617,6 +617,9 @@ void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+ 	if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
+ 		reg |= ARM_SMMU_SCTLR_E;
+ 
++	reg |= cfg->sctlr_set;
++	reg &= ~cfg->sctlr_clr;
++
+ 	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_SCTLR, reg);
  }
  
-+static void a6xx_set_pagetable(struct a6xx_gpu *a6xx_gpu,
-+		struct msm_ringbuffer *ring, struct msm_file_private *ctx)
-+{
-+	phys_addr_t ttbr;
-+	u32 asid;
-+	u64 memptr = rbmemptr(ring, ttbr0);
-+
-+	if (ctx == a6xx_gpu->cur_ctx)
-+		return;
-+
-+	if (msm_iommu_pagetable_params(ctx->aspace->mmu, &ttbr, &asid))
-+		return;
-+
-+	/* Execute the table update */
-+	OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
-+	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_0_TTBR0_LO(lower_32_bits(ttbr)));
-+
-+	OUT_RING(ring,
-+		CP_SMMU_TABLE_UPDATE_1_TTBR0_HI(upper_32_bits(ttbr)) |
-+		CP_SMMU_TABLE_UPDATE_1_ASID(asid));
-+	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_2_CONTEXTIDR(0));
-+	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_3_CONTEXTBANK(0));
-+
-+	/*
-+	 * Write the new TTBR0 to the memstore. This is good for debugging.
-+	 */
-+	OUT_PKT7(ring, CP_MEM_WRITE, 4);
-+	OUT_RING(ring, CP_MEM_WRITE_0_ADDR_LO(lower_32_bits(memptr)));
-+	OUT_RING(ring, CP_MEM_WRITE_1_ADDR_HI(upper_32_bits(memptr)));
-+	OUT_RING(ring, lower_32_bits(ttbr));
-+	OUT_RING(ring, (asid << 16) | upper_32_bits(ttbr));
-+
-+	/*
-+	 * And finally, trigger a uche flush to be sure there isn't anything
-+	 * lingering in that part of the GPU
-+	 */
-+
-+	OUT_PKT7(ring, CP_EVENT_WRITE, 1);
-+	OUT_RING(ring, 0x31);
-+
-+	a6xx_gpu->cur_ctx = ctx;
-+}
-+
- static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
- {
- 	unsigned int index = submit->seqno % MSM_GPU_SUBMIT_STATS_COUNT;
-@@ -90,6 +133,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
- 	struct msm_ringbuffer *ring = submit->ring;
- 	unsigned int i;
- 
-+	a6xx_set_pagetable(a6xx_gpu, ring, submit->queue->ctx);
-+
- 	get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
- 		rbmemptr_stats(ring, index, cpcycles_start));
- 
-@@ -696,6 +741,8 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
- 	/* Always come up on rb 0 */
- 	a6xx_gpu->cur_ring = gpu->rb[0];
- 
-+	a6xx_gpu->cur_ctx = NULL;
-+
- 	/* Enable the SQE_to start the CP engine */
- 	gpu_write(gpu, REG_A6XX_CP_SQE_CNTL, 1);
- 
-@@ -1008,6 +1055,21 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
- 	return (unsigned long)busy_time;
- }
- 
-+static struct msm_gem_address_space *
-+a6xx_create_private_address_space(struct msm_gpu *gpu)
-+{
-+	struct msm_gem_address_space *aspace = NULL;
-+	struct msm_mmu *mmu;
-+
-+	mmu = msm_iommu_pagetable_create(gpu->aspace->mmu);
-+
-+	if (!IS_ERR(mmu))
-+		aspace = msm_gem_address_space_create(mmu,
-+			"gpu", 0x100000000ULL, 0x1ffffffffULL);
-+
-+	return aspace;
-+}
-+
- static const struct adreno_gpu_funcs funcs = {
- 	.base = {
- 		.get_param = adreno_get_param,
-@@ -1031,6 +1093,7 @@ static const struct adreno_gpu_funcs funcs = {
- 		.gpu_state_put = a6xx_gpu_state_put,
- #endif
- 		.create_address_space = adreno_iommu_create_address_space,
-+		.create_private_address_space = a6xx_create_private_address_space,
- 	},
- 	.get_timestamp = a6xx_get_timestamp,
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+index cd75a33967bb..2df3a70a8a41 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+@@ -144,6 +144,7 @@ enum arm_smmu_cbar_type {
+ #define ARM_SMMU_CB_SCTLR		0x0
+ #define ARM_SMMU_SCTLR_S1_ASIDPNE	BIT(12)
+ #define ARM_SMMU_SCTLR_CFCFG		BIT(7)
++#define ARM_SMMU_SCTLR_HUPCF		BIT(8)
+ #define ARM_SMMU_SCTLR_CFIE		BIT(6)
+ #define ARM_SMMU_SCTLR_CFRE		BIT(5)
+ #define ARM_SMMU_SCTLR_E		BIT(4)
+@@ -341,6 +342,8 @@ struct arm_smmu_cfg {
+ 		u16			asid;
+ 		u16			vmid;
+ 	};
++	u32				sctlr_set;    /* extra bits to set in SCTLR */
++	u32				sctlr_clr;    /* bits to mask in SCTLR */
+ 	enum arm_smmu_cbar_type		cbar;
+ 	enum arm_smmu_context_fmt	fmt;
  };
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-index 03ba60d5b07f..da22d7549d9b 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-@@ -19,6 +19,7 @@ struct a6xx_gpu {
- 	uint64_t sqe_iova;
- 
- 	struct msm_ringbuffer *cur_ring;
-+	struct msm_file_private *cur_ctx;
- 
- 	struct a6xx_gmu gmu;
- };
-diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.h b/drivers/gpu/drm/msm/msm_ringbuffer.h
-index 7764373d0ed2..0987d6bf848c 100644
---- a/drivers/gpu/drm/msm/msm_ringbuffer.h
-+++ b/drivers/gpu/drm/msm/msm_ringbuffer.h
-@@ -31,6 +31,7 @@ struct msm_rbmemptrs {
- 	volatile uint32_t fence;
- 
- 	volatile struct msm_gpu_submit_stats stats[MSM_GPU_SUBMIT_STATS_COUNT];
-+	volatile u64 ttbr0;
- };
- 
- struct msm_ringbuffer {
 -- 
 2.26.2
 
