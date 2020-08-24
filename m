@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C06C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D13AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1685B2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC5D9207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598257938;
-	bh=2FKLRsp/q4hCpwXTaY8+6NDt7k4ARIDqnPQJhxEo6BY=;
+	s=default; t=1598257941;
+	bh=r9frgyjhWWsV5D7gVd3roTJ9g0wLQqxo9jGzikBxuWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JyFa8/xkr9jUI2erpxHlasjs7IsH5eeoticAeNSSkwQifJXcRvj0bBHrNebYbRzT7
-	 2vDM5xEYda8WH//5q9cJ7P2PBGt3Q4lFkOIc4/9vS/jwX0PhHLT0T22rbVocL+Ht/D
-	 +2V/cSgCWTwAD/IuUJybyv0xoPcql61lL7Z+ssTo=
+	b=kYpMOAdYVNs5w7wdU7DnM1s/DMzy0cwnDj+IaJlrSn7pbIZb82sPXcHdt+pO/Nmht
+	 YJqs29jzRSnLD4lyrkGqWDXoFErygysrSqwqRd0uUIWGKRm6VCR+iLNXgk8f6tik19
+	 zfgvFmjRtKEOXRfd5tnB4i3y1m0qQmRLWcR160rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgHXIcR (ORCPT
+        id S1726645AbgHXIcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:32:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38758 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:32:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbgHXIcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:32:09 -0400
+        id S1726086AbgHXIcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:32:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48F592074D;
-        Mon, 24 Aug 2020 08:32:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81D2F2075B;
+        Mon, 24 Aug 2020 08:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257928;
-        bh=2FKLRsp/q4hCpwXTaY8+6NDt7k4ARIDqnPQJhxEo6BY=;
+        s=default; t=1598257932;
+        bh=r9frgyjhWWsV5D7gVd3roTJ9g0wLQqxo9jGzikBxuWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o1T7CkykaxA0ieOGgtps0HycJ9sVwcKeUAh1hc/q/RPG5jHTgrkyEnaSImBkjKwxJ
-         y/5WLOi7ENqGLqt5vxigla+7hnCiqTEoXPEix2PMRzl1f1o6uEx3dOof2N33h+I/IG
-         jySxa8IId3oLNijzxcxhsZq2KylHK7+oHP72zO9U=
+        b=CPcfbZhynu4c3brrLzqkH1LuwkvXgCr2f1doZPmmldmLoIfQTg1HQ3lIx3zcWtQxw
+         /vwE+6Vdkw/vax5UnME/qmltUkGfX98kcnVkmJxL5KZUbLbprViSCteBdr5LqhkWkm
+         u3sj0vryKQETg5D1aoZcENhcjmi4f4pDFY8UmWGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.8 012/148] io_uring: find and cancel head link async work on files exit
-Date:   Mon, 24 Aug 2020 10:28:30 +0200
-Message-Id: <20200824082414.547922920@linuxfoundation.org>
+        stable@vger.kernel.org, Harish Sriram <harish@linux.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 013/148] mm/vunmap: add cond_resched() in vunmap_pmd_range
+Date:   Mon, 24 Aug 2020 10:28:31 +0200
+Message-Id: <20200824082414.598438843@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -59,77 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit b711d4eaf0c408a811311ee3e94d6e9e5a230a9a upstream.
+commit e47110e90584a22e9980510b00d0dfad3a83354e upstream.
 
-Commit f254ac04c874 ("io_uring: enable lookup of links holding inflight files")
-only handled 2 out of the three head link cases we have, we also need to
-lookup and cancel work that is blocked in io-wq if that work has a link
-that's holding a reference to the files structure.
+Like zap_pte_range add cond_resched so that we can avoid softlockups as
+reported below.  On non-preemptible kernel with large I/O map region (like
+the one we get when using persistent memory with sector mode), an unmap of
+the namespace can report below softlockups.
 
-Put the "cancel head links that hold this request pending" logic into
-io_attempt_cancel(), which will to through the motions of finding and
-canceling head links that hold the current inflight files stable request
-pending.
+22724.027334] watchdog: BUG: soft lockup - CPU#49 stuck for 23s! [ndctl:50777]
+ NIP [c0000000000dc224] plpar_hcall+0x38/0x58
+ LR [c0000000000d8898] pSeries_lpar_hpte_invalidate+0x68/0xb0
+ Call Trace:
+    flush_hash_page+0x114/0x200
+    hpte_need_flush+0x2dc/0x540
+    vunmap_page_range+0x538/0x6f0
+    free_unmap_vmap_area+0x30/0x70
+    remove_vm_area+0xfc/0x140
+    __vunmap+0x68/0x270
+    __iounmap.part.0+0x34/0x60
+    memunmap+0x54/0x70
+    release_nodes+0x28c/0x300
+    device_release_driver_internal+0x16c/0x280
+    unbind_store+0x124/0x170
+    drv_attr_store+0x44/0x60
+    sysfs_kf_write+0x64/0x90
+    kernfs_fop_write+0x1b0/0x290
+    __vfs_write+0x3c/0x70
+    vfs_write+0xd8/0x260
+    ksys_write+0xdc/0x130
+    system_call+0x5c/0x70
 
-Cc: stable@vger.kernel.org
-Reported-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: Harish Sriram <harish@linux.ibm.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200807075933.310240-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |   33 +++++++++++++++++++++++++++++----
- 1 file changed, 29 insertions(+), 4 deletions(-)
+ mm/vmalloc.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7609,6 +7609,33 @@ static bool io_timeout_remove_link(struc
- 	return found;
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -102,6 +102,8 @@ static void vunmap_pmd_range(pud_t *pud,
+ 		if (pmd_none_or_clear_bad(pmd))
+ 			continue;
+ 		vunmap_pte_range(pmd, addr, next, mask);
++
++		cond_resched();
+ 	} while (pmd++, addr = next, addr != end);
  }
- 
-+static bool io_cancel_link_cb(struct io_wq_work *work, void *data)
-+{
-+	return io_match_link(container_of(work, struct io_kiocb, work), data);
-+}
-+
-+static void io_attempt_cancel(struct io_ring_ctx *ctx, struct io_kiocb *req)
-+{
-+	enum io_wq_cancel cret;
-+
-+	/* cancel this particular work, if it's running */
-+	cret = io_wq_cancel_work(ctx->io_wq, &req->work);
-+	if (cret != IO_WQ_CANCEL_NOTFOUND)
-+		return;
-+
-+	/* find links that hold this pending, cancel those */
-+	cret = io_wq_cancel_cb(ctx->io_wq, io_cancel_link_cb, req, true);
-+	if (cret != IO_WQ_CANCEL_NOTFOUND)
-+		return;
-+
-+	/* if we have a poll link holding this pending, cancel that */
-+	if (io_poll_remove_link(ctx, req))
-+		return;
-+
-+	/* final option, timeout link is holding this req pending */
-+	io_timeout_remove_link(ctx, req);
-+}
-+
- static void io_uring_cancel_files(struct io_ring_ctx *ctx,
- 				  struct files_struct *files)
- {
-@@ -7665,10 +7692,8 @@ static void io_uring_cancel_files(struct
- 				continue;
- 			}
- 		} else {
--			io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
--			/* could be a link, check and remove if it is */
--			if (!io_poll_remove_link(ctx, cancel_req))
--				io_timeout_remove_link(ctx, cancel_req);
-+			/* cancel this request, or head link requests */
-+			io_attempt_cancel(ctx, cancel_req);
- 			io_put_req(cancel_req);
- 		}
  
 
 
