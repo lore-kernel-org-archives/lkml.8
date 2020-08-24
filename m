@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E5DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDA2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A44E3206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BD92075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598257987;
-	bh=08LLs18QM0BNa51+8+DcjIOpXAZEW8oyN8p2N6kyss4=;
+	s=default; t=1598257995;
+	bh=MF2K8+Ehl/VJaKMb3H22JHtKNRizbexLguEWFkD5l7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AMy4JydAvBG/M0f++Ypkyd/bYSYV7v/gnU6AWM6EwOcbJDCeAJjx1iA05CdwP121K
-	 VXKwqzlB1scvQUtHhw2Yt06EkASNMmk7tKAMvs4dfK8RZQzOLL5IqMifeeBMbztia1
-	 aZW4wfBgAqAvM59YdYQDFop2TFRflrJAlUlWUDwY=
+	b=Rgz9SxqmtJUA0IYyJvziSUvWrz4NALGlqV9d9rzf51kve/oNDpy7Qo5NCbCIGnOJU
+	 ShR47s47Sy7Flo4KAQQZASsMYLMPCgb/rw6f/Lw3kOE4NWr8GYTRRGXm1jAQTNB54i
+	 Qpb5wVdDFrIYId1JJweJ/7fE743VX/at6XFvkWXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgHXIdG (ORCPT
+        id S1726956AbgHXIdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:33:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40156 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:33:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbgHXIcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:32:55 -0400
+        id S1726889AbgHXIdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:33:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DEF0206F0;
-        Mon, 24 Aug 2020 08:32:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3973220FC3;
+        Mon, 24 Aug 2020 08:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257974;
-        bh=08LLs18QM0BNa51+8+DcjIOpXAZEW8oyN8p2N6kyss4=;
+        s=default; t=1598257985;
+        bh=MF2K8+Ehl/VJaKMb3H22JHtKNRizbexLguEWFkD5l7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yw5YbZrV3G4exzG0OK0QLVU/DbdqfcK7dxfLJAt3ibYqMSpNuwJzUbG+3UkmFZxsn
-         5VBLT6duy0QStjDGwEU3LUOCe8PNaGiX0NN/fahO6gZzjb/M4q28A4hxG+WEISWmNH
-         8dlcnqCu3Kt60pnk0q8LNsNuZPdcZgdeYQl/7btU=
+        b=FK9J6MzkcSIPn7jVOL5grbWb5tJRIpFhXvbQUIEHjAkov0bdH65ngkgRznkWJzqbi
+         mCKPFPc9xv5dYtn4iKUUjPRbm4RKp8xo60QngYHgDHld2/0Ql4w21JlbNx4zkaMfmK
+         yI3Wnbi46oYBupbocpqSE4queXOqph1Peii89tfM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.8 020/148] ASoC: amd: renoir: restore two more registers during resume
-Date:   Mon, 24 Aug 2020 10:28:38 +0200
-Message-Id: <20200824082414.938155074@linuxfoundation.org>
+        stable@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: [PATCH 5.8 032/148] s390/pci: re-introduce zpci_remove_device()
+Date:   Mon, 24 Aug 2020 10:28:50 +0200
+Message-Id: <20200824082415.500891407@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -60,98 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Niklas Schnelle <schnelle@linux.ibm.com>
 
-commit ccff7bd468d5e0595176656a051ef67c01f01968 upstream.
+commit 2f0230b2f2d5fd287a85583eefb5aed35b6fe510 upstream.
 
-Recently we found an issue about the suspend and resume. If dmic is
-recording the sound, and we run suspend and resume, after the resume,
-the dmic can't work well anymore. we need to close the app and reopen
-the app, then the dmic could record the sound again.
+For fixing the PF to VF link removal we need to perform some action on
+every removal of a zdev from the common PCI subsystem.
+So in preparation re-introduce zpci_remove_device() and use that instead
+of directly calling the common code functions. This  was actually still
+declared from earlier code but no longer implemented.
 
-For example, we run "arecord -D hw:CARD=acp,DEV=0 -f S32_LE -c 2
--r 48000 test.wav", then suspend and resume, after the system resume
-back, we speak to the dmic. then stop the arecord, use aplay to play
-the test.wav, we could hear the sound recorded after resume is weird,
-it is not what we speak to the dmic.
-
-I found two registers are set in the dai_hw_params(), if the two
-registers are set during the resume, this issue could be fixed.
-Move the code of the dai_hw_params() into the pdm_dai_trigger(), then
-these two registers will be set during resume since pdm_dai_trigger()
-will be called during resume. And delete the empty function
-dai_hw_params().
-
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Reviewed-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200730123138.5659-1-hui.wang@canonical.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/amd/renoir/acp3x-pdm-dma.c |   29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+ arch/s390/pci/pci.c                |   19 ++++++++++++-------
+ arch/s390/pci/pci_event.c          |    4 ++--
+ drivers/pci/hotplug/s390_pci_hpc.c |   12 +++++-------
+ 3 files changed, 19 insertions(+), 16 deletions(-)
 
---- a/sound/soc/amd/renoir/acp3x-pdm-dma.c
-+++ b/sound/soc/amd/renoir/acp3x-pdm-dma.c
-@@ -314,40 +314,30 @@ static int acp_pdm_dma_close(struct snd_
- 	return 0;
+--- a/arch/s390/pci/pci.c
++++ b/arch/s390/pci/pci.c
+@@ -672,6 +672,16 @@ int zpci_disable_device(struct zpci_dev
  }
+ EXPORT_SYMBOL_GPL(zpci_disable_device);
  
--static int acp_pdm_dai_hw_params(struct snd_pcm_substream *substream,
--				 struct snd_pcm_hw_params *params,
--				 struct snd_soc_dai *dai)
-+static int acp_pdm_dai_trigger(struct snd_pcm_substream *substream,
-+			       int cmd, struct snd_soc_dai *dai)
++void zpci_remove_device(struct zpci_dev *zdev)
++{
++	struct zpci_bus *zbus = zdev->zbus;
++	struct pci_dev *pdev;
++
++	pdev = pci_get_slot(zbus->bus, zdev->devfn);
++	if (pdev)
++		pci_stop_and_remove_bus_device_locked(pdev);
++}
++
+ int zpci_create_device(struct zpci_dev *zdev)
  {
- 	struct pdm_stream_instance *rtd;
-+	int ret;
-+	bool pdm_status;
- 	unsigned int ch_mask;
+ 	int rc;
+@@ -716,13 +726,8 @@ void zpci_release_device(struct kref *kr
+ {
+ 	struct zpci_dev *zdev = container_of(kref, struct zpci_dev, kref);
  
- 	rtd = substream->runtime->private_data;
--	switch (params_channels(params)) {
-+	ret = 0;
-+	switch (substream->runtime->channels) {
- 	case TWO_CH:
- 		ch_mask = 0x00;
- 		break;
- 	default:
- 		return -EINVAL;
+-	if (zdev->zbus->bus) {
+-		struct pci_dev *pdev;
+-
+-		pdev = pci_get_slot(zdev->zbus->bus, zdev->devfn);
+-		if (pdev)
+-			pci_stop_and_remove_bus_device_locked(pdev);
+-	}
++	if (zdev->zbus->bus)
++		zpci_remove_device(zdev);
+ 
+ 	switch (zdev->state) {
+ 	case ZPCI_FN_STATE_ONLINE:
+--- a/arch/s390/pci/pci_event.c
++++ b/arch/s390/pci/pci_event.c
+@@ -118,7 +118,7 @@ static void __zpci_event_availability(st
+ 		if (!zdev)
+ 			break;
+ 		if (pdev)
+-			pci_stop_and_remove_bus_device_locked(pdev);
++			zpci_remove_device(zdev);
+ 
+ 		ret = zpci_disable_device(zdev);
+ 		if (ret)
+@@ -137,7 +137,7 @@ static void __zpci_event_availability(st
+ 			/* Give the driver a hint that the function is
+ 			 * already unusable. */
+ 			pdev->error_state = pci_channel_io_perm_failure;
+-			pci_stop_and_remove_bus_device_locked(pdev);
++			zpci_remove_device(zdev);
+ 		}
+ 
+ 		zdev->state = ZPCI_FN_STATE_STANDBY;
+--- a/drivers/pci/hotplug/s390_pci_hpc.c
++++ b/drivers/pci/hotplug/s390_pci_hpc.c
+@@ -83,21 +83,19 @@ static int disable_slot(struct hotplug_s
+ 	struct zpci_dev *zdev = container_of(hotplug_slot, struct zpci_dev,
+ 					     hotplug_slot);
+ 	struct pci_dev *pdev;
+-	struct zpci_bus *zbus = zdev->zbus;
+ 	int rc;
+ 
+ 	if (!zpci_fn_configured(zdev->state))
+ 		return -EIO;
+ 
+-	pdev = pci_get_slot(zbus->bus, zdev->devfn);
+-	if (pdev) {
+-		if (pci_num_vf(pdev))
+-			return -EBUSY;
+-
+-		pci_stop_and_remove_bus_device_locked(pdev);
++	pdev = pci_get_slot(zdev->zbus->bus, zdev->devfn);
++	if (pdev && pci_num_vf(pdev)) {
+ 		pci_dev_put(pdev);
++		return -EBUSY;
  	}
--	rn_writel(ch_mask, rtd->acp_base + ACP_WOV_PDM_NO_OF_CHANNELS);
--	rn_writel(PDM_DECIMATION_FACTOR, rtd->acp_base +
--		  ACP_WOV_PDM_DECIMATION_FACTOR);
--	return 0;
--}
--
--static int acp_pdm_dai_trigger(struct snd_pcm_substream *substream,
--			       int cmd, struct snd_soc_dai *dai)
--{
--	struct pdm_stream_instance *rtd;
--	int ret;
--	bool pdm_status;
--
--	rtd = substream->runtime->private_data;
--	ret = 0;
- 	switch (cmd) {
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		rn_writel(ch_mask, rtd->acp_base + ACP_WOV_PDM_NO_OF_CHANNELS);
-+		rn_writel(PDM_DECIMATION_FACTOR, rtd->acp_base +
-+			  ACP_WOV_PDM_DECIMATION_FACTOR);
- 		rtd->bytescount = acp_pdm_get_byte_count(rtd,
- 							 substream->stream);
- 		pdm_status = check_pdm_dma_status(rtd->acp_base);
-@@ -369,7 +359,6 @@ static int acp_pdm_dai_trigger(struct sn
- }
  
- static struct snd_soc_dai_ops acp_pdm_dai_ops = {
--	.hw_params = acp_pdm_dai_hw_params,
- 	.trigger   = acp_pdm_dai_trigger,
- };
- 
++	zpci_remove_device(zdev);
++
+ 	rc = zpci_disable_device(zdev);
+ 	if (rc)
+ 		return rc;
 
 
