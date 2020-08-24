@@ -2,138 +2,74 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBE4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2E6E2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:47:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598266061;
-	bh=G1EuT7WRdVE2XHuuoDboS9gTa7E+TX7S2m2v/JaoZTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DglK2jG+UtLpTq3wT6FIJUuVDc3KXGhfmZdwTdXkRxUkFvxv05wg39sCZssMxH6cn
-	 Mm2Zv0weC4VtAsgF6nYGPwpY+ttXyDFe1uC2yKKcfeh/rk3+9DLcCY5pDfCXxM+BRc
-	 INJvpkbnLkUevbQHdEr2EsY6psEpGY1LOG0E6DxM=
+	by mail.kernel.org (Postfix) with ESMTP id 38BEE2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgHXKrk (ORCPT
+        id S1727792AbgHXKsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:47:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38486 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 06:48:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33990 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725968AbgHXKrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:47:35 -0400
-Received: from dragon (unknown [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF57F2071E;
-        Mon, 24 Aug 2020 10:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598266054;
-        bh=G1EuT7WRdVE2XHuuoDboS9gTa7E+TX7S2m2v/JaoZTs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c/6rJ9cDMEh8WN0Di+Ss8+wulQMZcrXJZ0RtbJ2Vrqj5eS7W1BzvgoSEphYrUwT6g
-         ovdc8a8Scnywli4DYjN6NP+FsiIvAf0m4qROJ2f25yKKjb6HBg4B4XZjUFfeFYgCBm
-         1681B+Y0+T30BwX6IYJJ4CqYVscfn7ZLEeKU5dAc=
-Date:   Mon, 24 Aug 2020 18:47:19 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] arm64: dts: imx8mm-var-som-symphony: Add
- Variscite Symphony board with VAR-SOM-MX8MM
-Message-ID: <20200824104718.GC12776@dragon>
-References: <20200817070120.4937-1-krzk@kernel.org>
- <20200817070120.4937-4-krzk@kernel.org>
- <20200823020051.GJ30094@dragon>
- <20200823085847.GC2886@kozik-lap>
+        id S1725968AbgHXKsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:48:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 56C81AD12;
+        Mon, 24 Aug 2020 10:48:33 +0000 (UTC)
+Date:   Mon, 24 Aug 2020 12:48:01 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Subject: Re: [PATCH v2 04/10] mm/page_alloc: simplify
+ __offline_isolated_pages()
+Message-ID: <20200824104801.GD6315@linux>
+References: <20200819175957.28465-1-david@redhat.com>
+ <20200819175957.28465-5-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200823085847.GC2886@kozik-lap>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200819175957.28465-5-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 23, 2020 at 10:58:47AM +0200, Krzysztof Kozlowski wrote:
-> On Sun, Aug 23, 2020 at 10:00:51AM +0800, Shawn Guo wrote:
-> > On Mon, Aug 17, 2020 at 09:01:20AM +0200, Krzysztof Kozlowski wrote:
-> > > Add a DTS for Variscite Symphony evaluation kit with VAR-SOM-MX8MM
-> > > System on Module.
-> > > 
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > 
-> > > ---
-> > > 
-> > > Changes since v1:
-> > > 1. Remove duplicated "leds" node,
-> > > 2. Fix heartbeat to active low,
-> > > 3. Add nxp,ptn5150 extcon.
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/Makefile        |   1 +
-> > >  .../dts/freescale/imx8mm-var-som-symphony.dts | 248 ++++++++++++++++++
-> > >  2 files changed, 249 insertions(+)
-> > >  create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> > > index a39f0a1723e0..dcfb8750cd78 100644
-> > > --- a/arch/arm64/boot/dts/freescale/Makefile
-> > > +++ b/arch/arm64/boot/dts/freescale/Makefile
-> > > @@ -29,6 +29,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
-> > >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
-> > >  
-> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
-> > > +dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony.dtb
-> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb
-> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
-> > >  dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk.dtb
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-> > > new file mode 100644
-> > > index 000000000000..2d3c30ac5e04
-> > > --- /dev/null
-> > > +++ b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-> > > @@ -0,0 +1,248 @@
-> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > +/*
-> > > + * Copyright (C) 2020 Krzysztof Kozlowski <krzk@kernel.org>
-> > > + */
-> > > +
-> > > +/dts-v1/;
-> > > +
-> > > +#include "imx8mm-var-som.dtsi"
-> > > +
-> > > +/ {
-> > > +	model = "Variscite VAR-SOM-MX8MM Symphony evaluation board";
-> > > +	compatible = "variscite,var-som-mx8mm-symphony", "variscite,var-som-mx8mm", "fsl,imx8mm";
-> > > +
-> > > +	reg_usdhc2_vmmc: regulator-1 {
-> > 
-> > regulator-usdhc2-vmmc
+On Wed, Aug 19, 2020 at 07:59:51PM +0200, David Hildenbrand wrote:
+> offline_pages() is the only user. __offline_isolated_pages() never gets
+> called with ranges that contain memory holes and we no longer care about
+> the return value. Drop the return value handling and all pfn_valid()
+> checks.
 > 
-> You mean the node name? If so, it's not correct with device tree
-> specification:
-> "The node-name (...) should describe the general class of device.:
-> If appropriate, the name should be one of the following choices:
-> (...)
->  - regulator"
+> Update the documentation.
 > 
-> Adding specific function/type/usage to the name of the node is a
-> opposite choice to "general class".
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Well, the node is named in general class, i.e. regulator-xxx, and we
-would like the suffix to be a bit more specific.  We have been using
-this name schema for fixed-regulator on i.MX platforms for long time.
+pretty nice
 
-Shawn
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
+
+-- 
+Oscar Salvador
+SUSE L3
