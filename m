@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBD7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E5DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2A9206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44E3206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598257977;
-	bh=4lfC820QhPBDhQE6625XVGr3vYKEq47um7c7pWPAE1s=;
+	s=default; t=1598257987;
+	bh=08LLs18QM0BNa51+8+DcjIOpXAZEW8oyN8p2N6kyss4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YmU37QaUdwzrSzw8FfmBFpO3LoMfCvczk4QTuYZNPMLFtoIwd3AEQ2zmIA+nXqz1v
-	 5/g1WKbc+G9Xzg3sW0KNUP8BAWe79lyDxdMUhDjIVaG1SKsh1zoiYoh/9sFQrR1nmB
-	 VRsFXMdUO3bp7bjVkc2jANS8NQnc7b3ZtlvJWxQc=
+	b=AMy4JydAvBG/M0f++Ypkyd/bYSYV7v/gnU6AWM6EwOcbJDCeAJjx1iA05CdwP121K
+	 VXKwqzlB1scvQUtHhw2Yt06EkASNMmk7tKAMvs4dfK8RZQzOLL5IqMifeeBMbztia1
+	 aZW4wfBgAqAvM59YdYQDFop2TFRflrJAlUlWUDwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgHXIcy (ORCPT
+        id S1726894AbgHXIdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:32:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39902 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:33:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbgHXIcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:32:47 -0400
+        id S1726874AbgHXIcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:32:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAEEA2074D;
-        Mon, 24 Aug 2020 08:32:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DEF0206F0;
+        Mon, 24 Aug 2020 08:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257966;
-        bh=4lfC820QhPBDhQE6625XVGr3vYKEq47um7c7pWPAE1s=;
+        s=default; t=1598257974;
+        bh=08LLs18QM0BNa51+8+DcjIOpXAZEW8oyN8p2N6kyss4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K1KkMARh0bwxajtS2CJtaJaxihP3//ZmaaNonl+OFuoaV70gzPjosqfGcOqBFjSgv
-         BAeM6Z+TwNGZFok8h9jfhrGeAJk8s3O/7StClx3ekBQoqytYnmqf4AAA5EGtoy7qyi
-         I/7xX3qFF7iD+5eMcJ2zyWAvRrk2L8a8F7R2qwjg=
+        b=Yw5YbZrV3G4exzG0OK0QLVU/DbdqfcK7dxfLJAt3ibYqMSpNuwJzUbG+3UkmFZxsn
+         5VBLT6duy0QStjDGwEU3LUOCe8PNaGiX0NN/fahO6gZzjb/M4q28A4hxG+WEISWmNH
+         8dlcnqCu3Kt60pnk0q8LNsNuZPdcZgdeYQl/7btU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Pozulp <pozulp.kernel@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.8 008/148] ALSA: hda/realtek: Add quirk for Samsung Galaxy Book Ion
-Date:   Mon, 24 Aug 2020 10:28:26 +0200
-Message-Id: <20200824082414.348992779@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.8 020/148] ASoC: amd: renoir: restore two more registers during resume
+Date:   Mon, 24 Aug 2020 10:28:38 +0200
+Message-Id: <20200824082414.938155074@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -59,34 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Pozulp <pozulp.kernel@gmail.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit e17f02d0559c174cf1f6435e45134490111eaa37 upstream.
+commit ccff7bd468d5e0595176656a051ef67c01f01968 upstream.
 
-The Galaxy Book Ion uses the same ALC298 codec as other Samsung laptops
-which have the no headphone sound bug, like my Samsung Notebook. The
-Galaxy Book owner confirmed that this patch fixes the bug.
+Recently we found an issue about the suspend and resume. If dmic is
+recording the sound, and we run suspend and resume, after the resume,
+the dmic can't work well anymore. we need to close the app and reopen
+the app, then the dmic could record the sound again.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207423
-Signed-off-by: Mike Pozulp <pozulp.kernel@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200818165446.499821-1-pozulp.kernel@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+For example, we run "arecord -D hw:CARD=acp,DEV=0 -f S32_LE -c 2
+-r 48000 test.wav", then suspend and resume, after the system resume
+back, we speak to the dmic. then stop the arecord, use aplay to play
+the test.wav, we could hear the sound recorded after resume is weird,
+it is not what we speak to the dmic.
+
+I found two registers are set in the dai_hw_params(), if the two
+registers are set during the resume, this issue could be fixed.
+Move the code of the dai_hw_params() into the pdm_dai_trigger(), then
+these two registers will be set during resume since pdm_dai_trigger()
+will be called during resume. And delete the empty function
+dai_hw_params().
+
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Reviewed-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200730123138.5659-1-hui.wang@canonical.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/amd/renoir/acp3x-pdm-dma.c |   29 +++++++++--------------------
+ 1 file changed, 9 insertions(+), 20 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7697,6 +7697,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x144d, 0xc176, "Samsung Notebook 9 Pro (NP930MBE-K04US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x144d, 0xc189, "Samsung Galaxy Flex Book (NT950QCG-X716)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
-+	SND_PCI_QUIRK(0x144d, 0xc18a, "Samsung Galaxy Book Ion (NT950XCJ-X716A)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x144d, 0xc740, "Samsung Ativ book 8 (NP870Z5G)", ALC269_FIXUP_ATIV_BOOK_8),
- 	SND_PCI_QUIRK(0x144d, 0xc812, "Samsung Notebook Pen S (NT950SBE-X58)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x1458, 0xfa53, "Gigabyte BXBT-2807", ALC283_FIXUP_HEADSET_MIC),
+--- a/sound/soc/amd/renoir/acp3x-pdm-dma.c
++++ b/sound/soc/amd/renoir/acp3x-pdm-dma.c
+@@ -314,40 +314,30 @@ static int acp_pdm_dma_close(struct snd_
+ 	return 0;
+ }
+ 
+-static int acp_pdm_dai_hw_params(struct snd_pcm_substream *substream,
+-				 struct snd_pcm_hw_params *params,
+-				 struct snd_soc_dai *dai)
++static int acp_pdm_dai_trigger(struct snd_pcm_substream *substream,
++			       int cmd, struct snd_soc_dai *dai)
+ {
+ 	struct pdm_stream_instance *rtd;
++	int ret;
++	bool pdm_status;
+ 	unsigned int ch_mask;
+ 
+ 	rtd = substream->runtime->private_data;
+-	switch (params_channels(params)) {
++	ret = 0;
++	switch (substream->runtime->channels) {
+ 	case TWO_CH:
+ 		ch_mask = 0x00;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+-	rn_writel(ch_mask, rtd->acp_base + ACP_WOV_PDM_NO_OF_CHANNELS);
+-	rn_writel(PDM_DECIMATION_FACTOR, rtd->acp_base +
+-		  ACP_WOV_PDM_DECIMATION_FACTOR);
+-	return 0;
+-}
+-
+-static int acp_pdm_dai_trigger(struct snd_pcm_substream *substream,
+-			       int cmd, struct snd_soc_dai *dai)
+-{
+-	struct pdm_stream_instance *rtd;
+-	int ret;
+-	bool pdm_status;
+-
+-	rtd = substream->runtime->private_data;
+-	ret = 0;
+ 	switch (cmd) {
+ 	case SNDRV_PCM_TRIGGER_START:
+ 	case SNDRV_PCM_TRIGGER_RESUME:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++		rn_writel(ch_mask, rtd->acp_base + ACP_WOV_PDM_NO_OF_CHANNELS);
++		rn_writel(PDM_DECIMATION_FACTOR, rtd->acp_base +
++			  ACP_WOV_PDM_DECIMATION_FACTOR);
+ 		rtd->bytescount = acp_pdm_get_byte_count(rtd,
+ 							 substream->stream);
+ 		pdm_status = check_pdm_dma_status(rtd->acp_base);
+@@ -369,7 +359,6 @@ static int acp_pdm_dai_trigger(struct sn
+ }
+ 
+ static struct snd_soc_dai_ops acp_pdm_dai_ops = {
+-	.hw_params = acp_pdm_dai_hw_params,
+ 	.trigger   = acp_pdm_dai_trigger,
+ };
+ 
 
 
