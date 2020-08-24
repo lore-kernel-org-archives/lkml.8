@@ -2,64 +2,86 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A74C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 017512078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAB0206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:19:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mYU+Wo1z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgHXPQ5 (ORCPT
+        id S1727879AbgHXPTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:16:57 -0400
-Received: from verein.lst.de ([213.95.11.211]:54830 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727091AbgHXPN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:13:29 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 26FBD68AFE; Mon, 24 Aug 2020 17:13:01 +0200 (CEST)
-Date:   Mon, 24 Aug 2020 17:13:00 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc:     syzbot <syzbot+3f86afd0b1e4bf1cb64c@syzkaller.appspotmail.com>,
-        thomas.tai@oracle.com, airlied@redhat.com, kraxel@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        dri-devel@lists.freedesktop.org, hch@lst.de,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, robin.murphy@arm.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: Is: virtio_gpu_object_shmem_init  issues? Was:Re: upstream
- boot error: general protection fault in swiotlb_map
-Message-ID: <20200824151300.GA28575@lst.de>
-References: <0000000000000c1f0005ac333382@google.com> <20200824150650.GD21321@char.us.oracle.com>
+        Mon, 24 Aug 2020 11:19:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbgHXPG5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 11:06:57 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83E8C06179A;
+        Mon, 24 Aug 2020 07:55:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=rtPWePEP2e2MrA1B6+d56D/W6SCtPdzXjGVhB68Hm9E=; b=mYU+Wo1zHLWgAf8PtstxsMTzeM
+        l89zOmYzJ4RAebFtunciW1qLOccTUYbRyCdTC0HFhRUaFysVsGgifHdVuV+nAICugexygDYupVHqV
+        Pgx88p5wQgJt3gvzhQmSRhuRsWVxpyeb3EOAahpwBmkUxMJssYiXiFutGNnBlHme91mw0lrufX/dt
+        bx5Jm4KquFZu8cyiMXr7xv+0CHqsS7c/CnzDPyx3OGlyMbSVg+plp6m2GJXAthNPGuz3oVbU9HsFS
+        C9b1dq1AShibohWaSk/lWESu2oP6BM+zNJFGDBsrG1QOBj4Tc/Kwcp9qKnijfzIHWXVdM+9wKdOXa
+        ZIB2/1BA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kADsO-0002lr-Li; Mon, 24 Aug 2020 14:55:12 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/9] THP iomap patches for 5.10
+Date:   Mon, 24 Aug 2020 15:55:01 +0100
+Message-Id: <20200824145511.10500-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824150650.GD21321@char.us.oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 11:06:51AM -0400, Konrad Rzeszutek Wilk wrote:
-> So it fails at
-> 
-> 683                 dev_WARN_ONCE(dev, 1,                                           
-> 684                         "swiotlb addr %pad+%zu overflow (mask %llx, bus limit %llx).\n",
-> 685                         &dma_addr, size, *dev->dma_mask, dev->bus_dma_limit);   
-> 
-> 
-> which makes no sense to me as `dev` surely exists. I can see in the console log:
-> 
-> virtio-pci 0000:00:01.0: vgaarb: deactivate vga console
-> 
-> So what gives?
+These patches are carefully plucked from the THP series.  I would like
+them to hit 5.10 to make the THP patchset merge easier.  Some of these
+are just generic improvements that make sense on their own terms, but
+the overall intent is to support THPs in iomap.
 
-Well, look at the if around the WARN_ON - dma_capable failed on the
-swiotlb buffer. This means the virtio drm thingy has a dma mask
-(either the actual one set by the driver, or bus_dma_mask), which isn't
-enough to address the swiotlb buffer.
+I'll send another patch series later today which are the changes to
+iomap which don't pay their own way until we actually have THPs in the
+page cache.  I would like those to be reviewed with an eye to merging
+them into 5.11.
+
+Matthew Wilcox (Oracle) (9):
+  iomap: Fix misplaced page flushing
+  fs: Introduce i_blocks_per_page
+  iomap: Use kzalloc to allocate iomap_page
+  iomap: Use bitmap ops to set uptodate bits
+  iomap: Support arbitrarily many blocks per page
+  iomap: Convert read_count to byte count
+  iomap: Convert write_count to byte count
+  iomap: Convert iomap_write_end types
+  iomap: Change calling convention for zeroing
+
+ fs/dax.c                |  13 ++--
+ fs/iomap/buffered-io.c  | 145 ++++++++++++++++------------------------
+ fs/jfs/jfs_metapage.c   |   2 +-
+ fs/xfs/xfs_aops.c       |   2 +-
+ include/linux/dax.h     |   3 +-
+ include/linux/pagemap.h |  16 +++++
+ 6 files changed, 83 insertions(+), 98 deletions(-)
+
+-- 
+2.28.0
+
