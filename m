@@ -2,385 +2,152 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E692CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8679C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E56E2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE812078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:40:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="ehIdmOpw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SR05v7vE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgHXLkk (ORCPT
+        id S1727894AbgHXLkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:40:40 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:20125 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgHXLjf (ORCPT
+        Mon, 24 Aug 2020 07:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726929AbgHXLh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:39:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598269159;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=OgBWb5/e0fM6FSTpD6xUNkpmwto7nNXyjiyffYP56y0=;
-        b=ehIdmOpwoahmSfgofKnAwuV8TnfYfAqulJqqeJyWgBzjyy4fqvBbVvYJc+rlX6M+Ec
-        Xh/m8mSkqODqRVyNiUWDpQ1xCNaFVkpXCS6vM3cIB883VaJDWZbZ4F1nThakBI7Gxqdj
-        V8J7dumkbMA0/D6hO/MbL3lHvSsKTzzGvUi0Zw7rwatFxndycmrUUjAA7YRia64g6mEC
-        7y5jCJbDWNNQTfZY4A87hHo5XiikTtSOBoVYtlPH73gPEanLFK9Vkgkoy1pu6fHUpfYp
-        3JWFvzcsIyj0YtbYqK6f0O8D3+1Tpj0+lf4j9QJ6+6K4nzUM1goU+GwcH+Z+K9C65ugF
-        JGwA==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7Ic/MbIo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id g0b6c1w7OBdBWpE
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Mon, 24 Aug 2020 13:39:11 +0200 (CEST)
-Date:   Mon, 24 Aug 2020 13:39:10 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     ulf.hansson@linaro.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>, nks@flawful.org,
-        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] opp: Allow dev_pm_opp_get_opp_table() to return
- -EPROBE_DEFER
-Message-ID: <20200824113910.GB131681@gerhold.net>
-References: <24ff92dd1b0ee1b802b45698520f2937418f8094.1598260050.git.viresh.kumar@linaro.org>
+        Mon, 24 Aug 2020 07:37:28 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26CDBC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:36:34 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id x2so1888824vkd.8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:36:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JV6tfVfklUu/NgG7bOgXNfj+ClShTy9jxY/fWbFwF1Q=;
+        b=SR05v7vEY5sKMrTnPQXPXjzApuQk/oa1b/hk2ngKloy/+6+cKi9GyhYUL4kt+JBbkY
+         pFsINiplBoi0Ijf2LF4x2ZBTFIlXpzah5m1eCE1AAbUdy18LYtncpit+/50yr2Bi39Ny
+         hvRSdgcNB9nMuCfwtSzRJ3WblfiSUa/jY0qujdILepfgqr9S+YVHx3xavukh/XkrBCxv
+         E5SNrxD4DJuOb8KyVzuWTGGv1qeL/evptBdSvJ/beTaeUmXX8B59rdysWiEuUI2k47r7
+         /W9m4FCDtZmVl9PidXfCiGiCOpanM1+y208zn60nqEDwUoD5RyT3KQ7KcBmpcDGMkL2G
+         SRnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JV6tfVfklUu/NgG7bOgXNfj+ClShTy9jxY/fWbFwF1Q=;
+        b=XIu0JNJDdkGoRVqdEFxpelGIrG0TjmkZzYLpJhKPKH4/Ao6+tuk/8tn9L433wbbuau
+         mi0WVqbbt3l6dZkG94U9eB3kV0sIdA87SLA7S1K/ReFTX7NO0sQwtiAnIBaWxaMRaj/l
+         TM7h1TgNQmvMaLhv1NbMMxmiiL2WMrfCLHYAkfV5nyQbkkukqnl2lQieomIIhVn7F4bT
+         40AbH1X9W8d5xjb04fk6VYkYwrP0Ee+4oWWL0SxyTfPU9l20jYyHTuLDtE+W71g8+W02
+         QsdusF6RHGn2hNMID1DG7+Pa/4Z+k/nVl1DpbO6GK1g273WDnJqpUuvvRUQ3XV0FQUT7
+         DSCQ==
+X-Gm-Message-State: AOAM530apV6ruTjy6PJkZVa3B58ectWmpTkWWiJhANFLp3VNvX6bAfzA
+        nfAtXhux9jJ4hXAciIK3nxs5SztsKcqbFu/gtj2P2A==
+X-Google-Smtp-Source: ABdhPJwV339wbAhfl6NpdVN6lNoSFp1QLhcdRK1T9FWMbikCYbOeJPxGF0aDPlZioYf/71LuBla4tnSiHVkKQV97zsY=
+X-Received: by 2002:a1f:2895:: with SMTP id o143mr2131690vko.59.1598268993288;
+ Mon, 24 Aug 2020 04:36:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <24ff92dd1b0ee1b802b45698520f2937418f8094.1598260050.git.viresh.kumar@linaro.org>
+References: <1597831670-17401-1-git-send-email-mkshah@codeaurora.org> <1597831670-17401-2-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1597831670-17401-2-git-send-email-mkshah@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 24 Aug 2020 13:35:57 +0200
+Message-ID: <CAPDyKFrY=U45K6NSkoJwvYuWWzMUdZNLaQn5XmnMGkJnCLgvdQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Revert "drivers: qcom: rpmh-rsc: Use rcuidle
+ tracepoints for rpmh"
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 02:39:32PM +0530, Viresh Kumar wrote:
-> From: Stephan Gerhold <stephan@gerhold.net>
-> 
-> The OPP core manages various resources, e.g. clocks or interconnect paths.
-> These resources are looked up when the OPP table is allocated once
-> dev_pm_opp_get_opp_table() is called the first time (either directly
-> or indirectly through one of the many helper functions).
-> 
-> At this point, the resources may not be available yet, i.e. looking them
-> up will result in -EPROBE_DEFER. Unfortunately, dev_pm_opp_get_opp_table()
-> is currently unable to propagate this error code since it only returns
-> the allocated OPP table or NULL.
-> 
-> This means that all consumers of the OPP core are required to make sure
-> that all necessary resources are available. Usually this happens by
-> requesting them, checking the result and releasing them immediately after.
-> 
-> For example, we have added "dev_pm_opp_of_find_icc_paths(dev, NULL)" to
-> several drivers now just to make sure the interconnect providers are
-> ready before the OPP table is allocated. If this call is missing,
-> the OPP core will only warn about this and then attempt to continue
-> without interconnect. This will eventually fail horribly, e.g.:
-> 
->     cpu cpu0: _allocate_opp_table: Error finding interconnect paths: -517
->     ... later ...
->     of: _read_bw: Mismatch between opp-peak-kBps and paths (1 0)
->     cpu cpu0: _opp_add_static_v2: opp key field not found
->     cpu cpu0: _of_add_opp_table_v2: Failed to add OPP, -22
-> 
-> This example happens when trying to use interconnects for a CPU OPP
-> table together with qcom-cpufreq-nvmem.c. qcom-cpufreq-nvmem calls
-> dev_pm_opp_set_supported_hw(), which ends up allocating the OPP table
-> early. To fix the problem with the current approach we would need to add
-> yet another call to dev_pm_opp_of_find_icc_paths(dev, NULL).
-> But actually qcom-cpufreq-nvmem.c has nothing to do with interconnects...
-> 
-> This commit attempts to make this more robust by allowing
-> dev_pm_opp_get_opp_table() to return an error pointer. Fixing all
-> the usages is trivial because the function is usually used indirectly
-> through another helper (e.g. dev_pm_opp_set_supported_hw() above).
-> These other helpers already return an error pointer.
-> 
-> The example above then works correctly because set_supported_hw() will
-> return -EPROBE_DEFER, and qcom-cpufreq-nvmem.c already propagates that
-> error. It should also be possible to remove the remaining usages of
-> "dev_pm_opp_of_find_icc_paths(dev, NULL)" from other drivers as well.
-> 
-> Note that this commit currently only handles -EPROBE_DEFER for the
-> clock/interconnects within _allocate_opp_table(). Other errors are just
-> ignored as before. Eventually those should be propagated as well.
-> 
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> [ Viresh: skip checking return value of dev_pm_opp_get_opp_table() for
-> 	  EPROBE_DEFER in domain.c, fix NULL return value and reorder
-> 	  code a bit in core.c, and update exynos-asv.c ]
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+On Wed, 19 Aug 2020 at 12:08, Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+> This change was done based on an test results of unmerged series of
+> adding RSC power domain and using .power_off callback of genpd to
+> invoke rpmh_flush().
+>
+>      Call trace:
+>       dump_backtrace+0x0/0x174
+>       show_stack+0x20/0x2c
+>       dump_stack+0xc8/0x124
+>       lockdep_rcu_suspicious+0xe4/0x104
+>       __tcs_buffer_write+0x230/0x2d0
+>       rpmh_rsc_write_ctrl_data+0x210/0x270
+>       rpmh_flush+0x84/0x24c
+>       rpmh_domain_power_off+0x78/0x98
+>       _genpd_power_off+0x40/0xc0
+>       genpd_power_off+0x168/0x208
+>
+> Later the final merged solution is to use CPU PM notification to invoke
+> rpmh_flush() and .power_off callback of genpd is not implemented in the
+> driver.
+>
+> Remove this change since RCU will not be idle during CPU PM notifications
+> hence not required to use _rcuidle tracepoint. Using _rcuidle tracepoint
+> prevented rpmh driver to be loadable module as these are not exported
+> symbols.
+>
+> This reverts commit efde2659b0fe835732047357b2902cca14f054d9.
+>
+> Cc: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+
+Along with Stephen's comments, feel free to add:
+
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Also note, when using the PSCI OSI mode, I am proposing to use "genpd
+on/off notifiers" [1]. This may lead to similar RCU issues, but let's
+come back to adress that later on, when/if needed.
+
+Kind regards
+Uffe
+
+[1]
+https://www.spinics.net/lists/kernel/msg3629443.html
+
+
 > ---
-> Stephan, I have made some changes to the code. Please try it again and
-> lemme know if it works fine.
-> 
-
-I tested the problem I described in the commit message above
-(qcom-cpufreq-nvmem with interconnects) and it works fine
-with this patch.
-
-I also tested probe deferal with interconnects with just cpufreq-dt
-(second patch), and that works fine as well.
-
-And the changes look good to me too. :)
-
-Thank you!
-Stephan
-
->  drivers/base/power/domain.c      | 14 +++++----
->  drivers/opp/core.c               | 53 +++++++++++++++++++-------------
->  drivers/opp/of.c                 |  8 ++---
->  drivers/soc/samsung/exynos-asv.c |  2 +-
->  4 files changed, 44 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> index 2cb5e04cf86c..b92bb61550d3 100644
-> --- a/drivers/base/power/domain.c
-> +++ b/drivers/base/power/domain.c
-> @@ -2044,8 +2044,9 @@ int of_genpd_add_provider_simple(struct device_node *np,
->  	if (genpd->set_performance_state) {
->  		ret = dev_pm_opp_of_add_table(&genpd->dev);
->  		if (ret) {
-> -			dev_err(&genpd->dev, "Failed to add OPP table: %d\n",
-> -				ret);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(&genpd->dev, "Failed to add OPP table: %d\n",
-> +					ret);
->  			goto unlock;
->  		}
->  
-> @@ -2054,7 +2055,7 @@ int of_genpd_add_provider_simple(struct device_node *np,
->  		 * state.
->  		 */
->  		genpd->opp_table = dev_pm_opp_get_opp_table(&genpd->dev);
-> -		WARN_ON(!genpd->opp_table);
-> +		WARN_ON(IS_ERR(genpd->opp_table));
->  	}
->  
->  	ret = genpd_add_provider(np, genpd_xlate_simple, genpd);
-> @@ -2111,8 +2112,9 @@ int of_genpd_add_provider_onecell(struct device_node *np,
->  		if (genpd->set_performance_state) {
->  			ret = dev_pm_opp_of_add_table_indexed(&genpd->dev, i);
->  			if (ret) {
-> -				dev_err(&genpd->dev, "Failed to add OPP table for index %d: %d\n",
-> -					i, ret);
-> +				if (ret != -EPROBE_DEFER)
-> +					dev_err(&genpd->dev, "Failed to add OPP table for index %d: %d\n",
-> +						i, ret);
->  				goto error;
->  			}
->  
-> @@ -2121,7 +2123,7 @@ int of_genpd_add_provider_onecell(struct device_node *np,
->  			 * performance state.
->  			 */
->  			genpd->opp_table = dev_pm_opp_get_opp_table_indexed(&genpd->dev, i);
-> -			WARN_ON(!genpd->opp_table);
-> +			WARN_ON(IS_ERR(genpd->opp_table));
->  		}
->  
->  		genpd->provider = &np->fwnode;
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 6978b9218c6e..8c69a764d0a4 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -1068,7 +1068,7 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
->  	 */
->  	opp_table = kzalloc(sizeof(*opp_table), GFP_KERNEL);
->  	if (!opp_table)
-> -		return NULL;
-> +		return ERR_PTR(-ENOMEM);
->  
->  	mutex_init(&opp_table->lock);
->  	mutex_init(&opp_table->genpd_virt_dev_lock);
-> @@ -1079,8 +1079,8 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
->  
->  	opp_dev = _add_opp_dev(dev, opp_table);
->  	if (!opp_dev) {
-> -		kfree(opp_table);
-> -		return NULL;
-> +		ret = -ENOMEM;
-> +		goto err;
->  	}
->  
->  	_of_init_opp_table(opp_table, dev, index);
-> @@ -1089,16 +1089,21 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
->  	opp_table->clk = clk_get(dev, NULL);
->  	if (IS_ERR(opp_table->clk)) {
->  		ret = PTR_ERR(opp_table->clk);
-> -		if (ret != -EPROBE_DEFER)
-> -			dev_dbg(dev, "%s: Couldn't find clock: %d\n", __func__,
-> -				ret);
-> +		if (ret == -EPROBE_DEFER)
-> +			goto err;
-> +
-> +		dev_dbg(dev, "%s: Couldn't find clock: %d\n", __func__, ret);
->  	}
->  
->  	/* Find interconnect path(s) for the device */
->  	ret = dev_pm_opp_of_find_icc_paths(dev, opp_table);
-> -	if (ret)
-> +	if (ret) {
-> +		if (ret == -EPROBE_DEFER)
-> +			goto err;
-> +
->  		dev_warn(dev, "%s: Error finding interconnect paths: %d\n",
->  			 __func__, ret);
-> +	}
->  
->  	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
->  	INIT_LIST_HEAD(&opp_table->opp_list);
-> @@ -1107,6 +1112,10 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
->  	/* Secure the device table modification */
->  	list_add(&opp_table->node, &opp_tables);
->  	return opp_table;
-> +
-> +err:
-> +	kfree(opp_table);
-> +	return ERR_PTR(ret);
->  }
->  
->  void _get_opp_table_kref(struct opp_table *opp_table)
-> @@ -1129,7 +1138,7 @@ static struct opp_table *_opp_get_opp_table(struct device *dev, int index)
->  	if (opp_table) {
->  		if (!_add_opp_dev_unlocked(dev, opp_table)) {
->  			dev_pm_opp_put_opp_table(opp_table);
-> -			opp_table = NULL;
-> +			opp_table = ERR_PTR(-ENOMEM);
->  		}
->  		goto unlock;
->  	}
-> @@ -1573,8 +1582,8 @@ struct opp_table *dev_pm_opp_set_supported_hw(struct device *dev,
->  	struct opp_table *opp_table;
->  
->  	opp_table = dev_pm_opp_get_opp_table(dev);
-> -	if (!opp_table)
-> -		return ERR_PTR(-ENOMEM);
-> +	if (IS_ERR(opp_table))
-> +		return opp_table;
->  
->  	/* Make sure there are no concurrent readers while updating opp_table */
->  	WARN_ON(!list_empty(&opp_table->opp_list));
-> @@ -1632,8 +1641,8 @@ struct opp_table *dev_pm_opp_set_prop_name(struct device *dev, const char *name)
->  	struct opp_table *opp_table;
->  
->  	opp_table = dev_pm_opp_get_opp_table(dev);
-> -	if (!opp_table)
-> -		return ERR_PTR(-ENOMEM);
-> +	if (IS_ERR(opp_table))
-> +		return opp_table;
->  
->  	/* Make sure there are no concurrent readers while updating opp_table */
->  	WARN_ON(!list_empty(&opp_table->opp_list));
-> @@ -1725,8 +1734,8 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
->  	int ret, i;
->  
->  	opp_table = dev_pm_opp_get_opp_table(dev);
-> -	if (!opp_table)
-> -		return ERR_PTR(-ENOMEM);
-> +	if (IS_ERR(opp_table))
-> +		return opp_table;
->  
->  	/* This should be called before OPPs are initialized */
->  	if (WARN_ON(!list_empty(&opp_table->opp_list))) {
-> @@ -1833,8 +1842,8 @@ struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const char *name)
->  	int ret;
->  
->  	opp_table = dev_pm_opp_get_opp_table(dev);
-> -	if (!opp_table)
-> -		return ERR_PTR(-ENOMEM);
-> +	if (IS_ERR(opp_table))
-> +		return opp_table;
->  
->  	/* This should be called before OPPs are initialized */
->  	if (WARN_ON(!list_empty(&opp_table->opp_list))) {
-> @@ -1901,8 +1910,8 @@ struct opp_table *dev_pm_opp_register_set_opp_helper(struct device *dev,
->  		return ERR_PTR(-EINVAL);
->  
->  	opp_table = dev_pm_opp_get_opp_table(dev);
-> -	if (!opp_table)
-> -		return ERR_PTR(-ENOMEM);
-> +	if (!IS_ERR(opp_table))
-> +		return opp_table;
->  
->  	/* This should be called before OPPs are initialized */
->  	if (WARN_ON(!list_empty(&opp_table->opp_list))) {
-> @@ -1982,8 +1991,8 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
->  	const char **name = names;
->  
->  	opp_table = dev_pm_opp_get_opp_table(dev);
-> -	if (!opp_table)
-> -		return ERR_PTR(-ENOMEM);
-> +	if (IS_ERR(opp_table))
-> +		return opp_table;
->  
->  	/*
->  	 * If the genpd's OPP table isn't already initialized, parsing of the
-> @@ -2153,8 +2162,8 @@ int dev_pm_opp_add(struct device *dev, unsigned long freq, unsigned long u_volt)
->  	int ret;
->  
->  	opp_table = dev_pm_opp_get_opp_table(dev);
-> -	if (!opp_table)
-> -		return -ENOMEM;
-> +	if (IS_ERR(opp_table))
-> +		return PTR_ERR(opp_table);
->  
->  	/* Fix regulator count for dynamic OPPs */
->  	opp_table->regulator_count = 1;
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 7d9d4455a59e..e39ddcc779af 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -947,8 +947,8 @@ int dev_pm_opp_of_add_table(struct device *dev)
->  	int ret;
->  
->  	opp_table = dev_pm_opp_get_opp_table_indexed(dev, 0);
-> -	if (!opp_table)
-> -		return -ENOMEM;
-> +	if (IS_ERR(opp_table))
-> +		return PTR_ERR(opp_table);
->  
->  	/*
->  	 * OPPs have two version of bindings now. Also try the old (v1)
-> @@ -1002,8 +1002,8 @@ int dev_pm_opp_of_add_table_indexed(struct device *dev, int index)
->  	}
->  
->  	opp_table = dev_pm_opp_get_opp_table_indexed(dev, index);
-> -	if (!opp_table)
-> -		return -ENOMEM;
-> +	if (IS_ERR(opp_table))
-> +		return PTR_ERR(opp_table);
->  
->  	ret = _of_add_opp_table_v2(dev, opp_table);
->  	if (ret)
-> diff --git a/drivers/soc/samsung/exynos-asv.c b/drivers/soc/samsung/exynos-asv.c
-> index 30bb7b7cc769..8abf4dfaa5c5 100644
-> --- a/drivers/soc/samsung/exynos-asv.c
-> +++ b/drivers/soc/samsung/exynos-asv.c
-> @@ -93,7 +93,7 @@ static int exynos_asv_update_opps(struct exynos_asv *asv)
->  			continue;
->  
->  		opp_table = dev_pm_opp_get_opp_table(cpu);
-> -		if (IS_ERR_OR_NULL(opp_table))
-> +		if (IS_ERR(opp_table))
->  			continue;
->  
->  		if (!last_opp_table || opp_table != last_opp_table) {
-> -- 
-> 2.25.0.rc1.19.g042ed3e048af
-> 
+>  drivers/soc/qcom/rpmh-rsc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index ae66757..fabe390d 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -495,7 +495,7 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
+>                 write_tcs_cmd(drv, RSC_DRV_CMD_MSGID, tcs_id, j, msgid);
+>                 write_tcs_cmd(drv, RSC_DRV_CMD_ADDR, tcs_id, j, cmd->addr);
+>                 write_tcs_cmd(drv, RSC_DRV_CMD_DATA, tcs_id, j, cmd->data);
+> -               trace_rpmh_send_msg_rcuidle(drv, tcs_id, j, msgid, cmd);
+> +               trace_rpmh_send_msg(drv, tcs_id, j, msgid, cmd);
+>         }
+>
+>         write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, cmd_complete);
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
