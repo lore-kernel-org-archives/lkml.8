@@ -2,98 +2,160 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E391C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9C4C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB622074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD13620639
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598265167;
+	bh=s/W4PKXgWUkkGboyqaRnGg6EErq3S4D75Ndhx0xS3SA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oO2nEE706rGYqX0OOv72T1F/9ywjAJRY51Z2H+HBwV9zDtigh2mFj0bB5U7T+6pF5
+	 cAnPJKMknL8PziKvHfBNtGnLJy62l+/kcZh9EPioXRs1BkWT+ybDsWKOfVN4IL7dBw
+	 IyWff02WTbdFXmPfEEa2ZUHBpTw24Pe5Nzb35PRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgHXKcS (ORCPT
+        id S1726938AbgHXKcq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:32:18 -0400
-Received: from mailout04.rmx.de ([94.199.90.94]:38741 "EHLO mailout04.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725968AbgHXKcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:32:18 -0400
-Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout04.rmx.de (Postfix) with ESMTPS id 4BZpMx1LRJz3qxPc;
-        Mon, 24 Aug 2020 12:32:13 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin02.retarus.com (Postfix) with ESMTPS id 4BZpMX3Q7Vz2TS6b;
-        Mon, 24 Aug 2020 12:31:52 +0200 (CEST)
-Received: from n95hx1g2.localnet (192.168.54.40) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 24 Aug
- 2020 12:31:41 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Richard Leitner <richard.leitner@skidata.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] Add two new configuration drivers for Microchip USB hubs
-Date:   Mon, 24 Aug 2020 12:31:40 +0200
-Message-ID: <3231735.vQvGARyy4L@n95hx1g2>
-Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-In-Reply-To: <20200817075426.GA560469@pcleri>
-References: <20200726084116.GD448215@kroah.com> <20200727083333.19623-1-ceggers@arri.de> <20200817075426.GA560469@pcleri>
+        Mon, 24 Aug 2020 06:32:46 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44609 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725968AbgHXKco (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:32:44 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c15so8105705wrs.11;
+        Mon, 24 Aug 2020 03:32:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=3kC1j2VGz3irmMnTu7OSvcIF5sgB8GN7svCyG6bNmQc=;
+        b=GwtRoBAqEhZXPoO6GRQC0NFLkAKbwreCd8CzvDJlOnNI+CyR7tVsp5c2wAr7Y6At26
+         ZiDKoD2iOmyNbkaqpnH/sm8Z6uV9OrKiMLUWcyjLic0r5Vn2L8MsEaPSIojq8ALuW3eT
+         Nj3oiME+eEnLIP0S8MPayC4j2o7dGagtLdLVI/uk5IZsLNA+z9qLfKjyQyZYIcp82I87
+         UEo37ielR9G8fZL5XypFRzEk4+Re6HEj7qdIJB58lNaP7cup8PVsGfbNKuLuOuNRL281
+         bh/rkTv4VvGQTZIccPWtfAzhhfnVgwJ8jE2kk7gsSM43qQ9L3CW7Uvdykb83LunqpvvU
+         E0sg==
+X-Gm-Message-State: AOAM530AdW6lg5HRHJaFr+Lz8okp38HGiJNxNx8GMDrLq+KFLP+HZsdL
+        SpGtqE3B5EZW3h1c7/gImEE=
+X-Google-Smtp-Source: ABdhPJweVUT7a41DfLWZjKJnJ7ppNGMhfph8/pfsheA41o3Lgtr9MDX7LDVdL1I0kuB6ivdiZ0Q/PQ==
+X-Received: by 2002:adf:e68f:: with SMTP id r15mr5135544wrm.196.1598265161023;
+        Mon, 24 Aug 2020 03:32:41 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id b1sm614772wmj.8.2020.08.24.03.32.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 03:32:40 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 12:32:37 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Bough Chen <haibo.chen@nxp.com>
+Cc:     Dong Aisheng <dongas86@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+Subject: Re: [PATCH 21/22] arm64: dts: imx8qxp: Remove i.MX7 compatible from
+ USDHC
+Message-ID: <20200824103237.GA26120@kozik-lap>
+References: <20200823161550.3981-1-krzk@kernel.org>
+ <20200823161550.3981-21-krzk@kernel.org>
+ <AM6PR04MB49668B0F67B02B2A33603B4880560@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <20200824091102.GA20819@kozik-lap>
+ <CAA+hA=S=2SoF8egOq8h-eB9wZGDqrAw66VtW-bU9oBmzFSj9Bw@mail.gmail.com>
+ <VI1PR04MB52949085DFA5D29C2858094290560@VI1PR04MB5294.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Originating-IP: [192.168.54.40]
-X-RMX-ID: 20200824-123154-4BZpMX3Q7Vz2TS6b-0@kdin02
-X-RMX-SOURCE: 217.111.95.66
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <VI1PR04MB52949085DFA5D29C2858094290560@VI1PR04MB5294.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+On Mon, Aug 24, 2020 at 10:31:31AM +0000, Bough Chen wrote:
+> > -----Original Message-----
+> > From: Dong Aisheng [mailto:dongas86@gmail.com]
+> > Sent: 2020年8月24日 17:45
+> > To: Krzysztof Kozlowski <krzk@kernel.org>
+> > Cc: Aisheng Dong <aisheng.dong@nxp.com>; devicetree@vger.kernel.org;
+> > linux-serial@vger.kernel.org; Anson Huang <anson.huang@nxp.com>;
+> > linux-gpio@vger.kernel.org; Fabio Estevam <festevam@gmail.com>; Linus
+> > Walleij <linus.walleij@linaro.org>; linux-pm@vger.kernel.org;
+> > linux-mmc@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-pwm@vger.kernel.org; Bartosz Golaszewski
+> > <bgolaszewski@baylibre.com>; Rob Herring <robh+dt@kernel.org>;
+> > linux-mtd@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>; Pengutronix
+> > Kernel Team <kernel@pengutronix.de>; Thierry Reding
+> > <thierry.reding@gmail.com>; Shawn Guo <shawnguo@kernel.org>; Sascha
+> > Hauer <s.hauer@pengutronix.de>; linux-arm-kernel@lists.infradead.org;
+> > linux-watchdog@vger.kernel.org; Bough Chen <haibo.chen@nxp.com>
+> > Subject: Re: [PATCH 21/22] arm64: dts: imx8qxp: Remove i.MX7 compatible
+> > from USDHC
+> > 
+> > On Mon, Aug 24, 2020 at 5:15 PM Krzysztof Kozlowski <krzk@kernel.org>
+> > wrote:
+> > >
+> > > On Mon, Aug 24, 2020 at 09:00:19AM +0000, Aisheng Dong wrote:
+> > > > > From: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > > Sent: Monday, August 24, 2020 12:16 AM
+> > > > >
+> > > > > The USDHC on i.MX 8QXP has its own compatible described in
+> > > > > bindings and used in the driver (with its own quirks).  Remove
+> > > > > additional fsl,imx7d-usdhc compatible to fix dtbs_check warnings like:
+> > > > >
+> > > > >   arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml:
+> > mmc@5b010000:
+> > > > >     compatible: ['fsl,imx8qxp-usdhc', 'fsl,imx7d-usdhc'] is too long
+> > > > >     From schema:
+> > > > > /ocumentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> > > > >
+> > > > >   arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml:
+> > mmc@5b010000:
+> > > > >     compatible: Additional items are not allowed
+> > > > > ('fsl,imx7d-usdhc' was
+> > > > > unexpected)
+> > > > >
+> > > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > >
+> > > > For Patch 19-22, I think we should fix dt binding doc.
+> > >
+> > > Are you sure that these USDHC controllers are compatible with i.MX 7D?
+> > > Could they really run with fsl,imx7d-usdhc compatible?
+> > 
+> > AFAIK uSDHC on QXP is derived from the former platforms with adding a few
+> > more new features. e.g. HS400ES/CMDQ.
+> > Let me loop in uSDHC driver owner Haibo Chen to double confirm.
+> 
+> Yes, usdhc of imx8qxp can work by using the compatible "fsl, imx7d-usdhc", but will not support HS400ES/Command Queue any more. Also imx8qxp support Auto CMD23, but imx7d not.
+> And imx8qxp need to re-config the clock rate after system PM, imx7d do not need to do this.
 
-On Monday, 17 August 2020, 09:54:26 CEST, Richard Leitner wrote:
-> Hi Christian,
-> sorry for the late reply. My MUA somehow didn't show me that series
-> earlier...
-likewise... I was on holiday last week.
+Then we can leave the compatible in DTS and I will correct the device
+tree schema.
 
-> I haven't looked into the patches in detail, but at a first glance it
-> looks like a lot copy-n-paste.
-> Have you thought about merging the (after your series) 3 hub drivers
-> into one? Something like a "microchip i2c usb hub driver"?
-> Would that be feasible for your point of view?
-I'm not sure about the criteria for having separate drivers vs. a combined 
-one.
-As changing the driver usually requires testing with real hardware, keeping 
-them separate may be easier. On the other hand, I already synced some changes 
-from usb251xb into "my" drivers, so it is likely that such work will also have 
-to done in future.
-
-Rob Herring already suggested to create a common yaml document for the
-device tree bindings. It would probably make sense to share the device tree 
-code between our drivers. But I would like to keep the "hardware" side of the 
-drivers independent, as there are subtle differences between the different hub 
-series.
-
-Compared to usb251x, the new drivers don't write the full configuration memory 
-of the hub (the configuration memory space is much bigger than 8 bit and has 
-many holes). They rely on the defaults after hardware reset on perform read-
-modify-write for the properties set in the device tree.
-
-If the usb251xb hubs could be programmed in a similar way, merging all drivers 
-should be possible using a mic_usb_hub_ops struct with function pointers for 
-applying the (common) device tree properties (e.g. set_product_id(), 
-set_device_id(), ..., set_oc_delay(), set_manufacturer_string(), ...).
-
-Best regards
-Christian
-
-
-
-
+Best regards,
+Krzysztof
