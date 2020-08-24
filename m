@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DD3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99AB920738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528722067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289609;
-	bh=1YRBpfcEYrGnghyLyLgK06HG7AO8Cm74B/emJ+NPNMo=;
+	s=default; t=1598289610;
+	bh=JrO0rNYfZZRRiSSWbnJS7Bxk9mHDi4/rY9wiVVge+Hs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TH5JGEf4A/fR9bUIoMA2tFo+ycMSVEZstZehdzJL2r08AyuJlDiYJgN7uPc8VysW/
-	 oEP0qPvkuCkZ6FwkWi84DrmzAuAsjaz4csqfdyi26TiLKbkbpS7aQxV/2VkdpKTVkC
-	 zrXCGWnXA+5sAQvhO+QJDQCt7SZ8pBnjkcG1Cv58=
+	b=2u6Zj30HdszHz6U2zLwDyQ8tXeVEWBEC7sfKXGLpA9iMCdFXx/qgMdNshTl5w3rRe
+	 FPLAsflFDimE4kCPYTDsYIVfvIPHopz2a5QzO4XB9PWu1qhkFWIdxZg2aNIOu1Crpg
+	 DTZXEu/TV+TUkTWeD5ypBioKYpvuX8Nys8YXksg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgHXRUG (ORCPT
+        id S1728478AbgHXRUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39632 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbgHXQgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728324AbgHXQgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:36:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4112B22D3E;
-        Mon, 24 Aug 2020 16:36:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBC0022D70;
+        Mon, 24 Aug 2020 16:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286967;
-        bh=1YRBpfcEYrGnghyLyLgK06HG7AO8Cm74B/emJ+NPNMo=;
+        s=default; t=1598286973;
+        bh=JrO0rNYfZZRRiSSWbnJS7Bxk9mHDi4/rY9wiVVge+Hs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xTZ2DnB4vc+HsXtj8/g+RJhsO1CyKBMXi/bslXLkR5wjTA9yzeLgUdvHUjbx2JGjv
-         m8dq2mUbxk0isWRkiMBOzxdLtRyFd1C5DIQDWqWW96kUJqsX1xx2oEh/k8u1zyChQt
-         C0tlgKiSeA9t8GZIn7XsoF2SNeQFUwybQ4cupvR8=
+        b=e0j4s0PL8uSXC/6wp28MBxUiQGBB30N22njJkeuTrcFtezXvwxwwJ6UoZ6ivuc6Fq
+         sLOLFhzqoeW42ihaq50A/mvQ0MyUnJbDnYg4TXxEPj0+HDcZRPKzg2bnOiWeCbnb/T
+         yhTy7LVXvo7n4RJDg5gdjRsr0A1cB+lhNSPstWbc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 46/63] scsi: qla2xxx: Fix login timeout
-Date:   Mon, 24 Aug 2020 12:34:46 -0400
-Message-Id: <20200824163504.605538-46-sashal@kernel.org>
+Cc:     Sumera Priyadarsini <sylphrenadin@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 51/63] net: gianfar: Add of_node_put() before goto statement
+Date:   Mon, 24 Aug 2020 12:34:51 -0400
+Message-Id: <20200824163504.605538-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
 References: <20200824163504.605538-1-sashal@kernel.org>
@@ -61,71 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Sumera Priyadarsini <sylphrenadin@gmail.com>
 
-[ Upstream commit abb31aeaa9b20680b0620b23fea5475ea4591e31 ]
+[ Upstream commit 989e4da042ca4a56bbaca9223d1a93639ad11e17 ]
 
-Multipath errors were seen during failback due to login timeout.  The
-remote device sent LOGO, the local host tore down the session and did
-relogin. The RSCN arrived indicates remote device is going through failover
-after which the relogin is in a 20s timeout phase.  At this point the
-driver is stuck in the relogin process.  Add a fix to delete the session as
-part of abort/flush the login.
+Every iteration of for_each_available_child_of_node() decrements
+reference count of the previous node, however when control
+is transferred from the middle of the loop, as in the case of
+a return or break or goto, there is no decrement thus ultimately
+resulting in a memory leak.
 
-Link: https://lore.kernel.org/r/20200806111014.28434-5-njavali@marvell.com
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fix a potential memory leak in gianfar.c by inserting of_node_put()
+before the goto statement.
+
+Issue found with Coccinelle.
+
+Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_gs.c     | 18 +++++++++++++++---
- drivers/scsi/qla2xxx/qla_target.c |  2 +-
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/freescale/gianfar.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
-index 3bfb5678f6515..de9fd7f688d01 100644
---- a/drivers/scsi/qla2xxx/qla_gs.c
-+++ b/drivers/scsi/qla2xxx/qla_gs.c
-@@ -3538,10 +3538,22 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
- 		}
+diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
+index b513b8c5c3b5e..41dd3d0f34524 100644
+--- a/drivers/net/ethernet/freescale/gianfar.c
++++ b/drivers/net/ethernet/freescale/gianfar.c
+@@ -750,8 +750,10 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
+ 				continue;
  
- 		if (fcport->scan_state != QLA_FCPORT_FOUND) {
-+			bool do_delete = false;
-+
-+			if (fcport->scan_needed &&
-+			    fcport->disc_state == DSC_LOGIN_PEND) {
-+				/* Cable got disconnected after we sent
-+				 * a login. Do delete to prevent timeout.
-+				 */
-+				fcport->logout_on_delete = 1;
-+				do_delete = true;
+ 			err = gfar_parse_group(child, priv, model);
+-			if (err)
++			if (err) {
++				of_node_put(child);
+ 				goto err_grp_init;
 +			}
-+
- 			fcport->scan_needed = 0;
--			if ((qla_dual_mode_enabled(vha) ||
--				qla_ini_mode_enabled(vha)) &&
--			    atomic_read(&fcport->state) == FCS_ONLINE) {
-+			if (((qla_dual_mode_enabled(vha) ||
-+			      qla_ini_mode_enabled(vha)) &&
-+			    atomic_read(&fcport->state) == FCS_ONLINE) ||
-+				do_delete) {
- 				if (fcport->loop_id != FC_NO_LOOP_ID) {
- 					if (fcport->flags & FCF_FCP2_DEVICE)
- 						fcport->logout_on_delete = 0;
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index fbb80a043b4fe..90289162dbd4c 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -1270,7 +1270,7 @@ void qlt_schedule_sess_for_deletion(struct fc_port *sess)
- 
- 	qla24xx_chk_fcp_state(sess);
- 
--	ql_dbg(ql_dbg_tgt, sess->vha, 0xe001,
-+	ql_dbg(ql_dbg_disc, sess->vha, 0xe001,
- 	    "Scheduling sess %p for deletion %8phC\n",
- 	    sess, sess->port_name);
- 
+ 		}
+ 	} else { /* SQ_SG_MODE */
+ 		err = gfar_parse_group(np, priv, model);
 -- 
 2.25.1
 
