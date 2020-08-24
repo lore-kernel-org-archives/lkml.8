@@ -2,105 +2,153 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22752C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1DF2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259550;
-	bh=DelIoaeiEZbBrXv0EwlYF+Peu9qsXkt1ZV8pvbha2MU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A60VWGExjvDQRJwjWU8VT4tlkeTND+Rc972HtYiyAQzNOT+vUVehx2z9oPJiHTLnI
-	 +9Q2gdgbnzA6m8YkWSbhk+MfYLSBSFo9ee2KStLCZw+HQYoXAtgYeZB1Ad0ptjFr3n
-	 X9pbP+rcKieDUT3PWHM0KtWNf0x86Dc/EBPimnSM=
+	by mail.kernel.org (Postfix) with ESMTP id EEBBF204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LDc1UPXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730060AbgHXI7J (ORCPT
+        id S1730799AbgHXI7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:59:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730726AbgHXI55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:57:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52B31204FD;
-        Mon, 24 Aug 2020 08:57:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259476;
-        bh=DelIoaeiEZbBrXv0EwlYF+Peu9qsXkt1ZV8pvbha2MU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FT8vh1MjbylGw9lK9bTRTpe4KSXReMabrJKhrL5/Nk1KYbKO/kPpF6HLxCsm8I/fB
-         Pp8KiBhoQh22WCf8NfjL1paVU0uv84hsJwuJ51U5yqGE/nozZoVUSurAWPOq/CNzdX
-         OQTRHHwAXSvrNVEcsmWp0pp8gs+IROUE7djszdig=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huaitong Han <huaitong.han@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 53/71] kvm: x86: Toggling CR4.PKE does not load PDPTEs in PAE mode
-Date:   Mon, 24 Aug 2020 10:31:44 +0200
-Message-Id: <20200824082358.552868647@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
-References: <20200824082355.848475917@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Aug 2020 04:59:08 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51148 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730725AbgHXI56 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:58 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07O8tULY092460;
+        Mon, 24 Aug 2020 08:57:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2020-01-29; bh=X3DAykUVn3cBni5mmT6BElwNQ4x1lMO6Npp2yRLlpV4=;
+ b=LDc1UPXac3uJKxCNI8StZLNxGMHxFSUOGoKukFVF71GDJT61yrVIGUAom6DFOmn+HYgp
+ ueKRys103jantFgV0cqvy6HnGhg3JNcCKi/tfzoV4l5xz+70UaAm5Iz5oAU/QrWjvUfg
+ GO3RSBEa5ZcEUI/yZ6maL/NZ7h1W8waFa+g0ECgFpeBFOKdmFOTzVUq5TTiRva635t35
+ TKnDGAe98eCdqIIFfEVIenj6qIIBrdNufBUNIG2tn2HOoz68DEBVa+8sSexQcjNvkJAd
+ 89LZV6AQ1WnfAtuPQsndeN4ThIoU/uVQBChkQF2q8Yfn1M71k5sLAjap+2J/jRyjn60z AQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 333w6thvmt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Aug 2020 08:57:44 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07O8pDRa107785;
+        Mon, 24 Aug 2020 08:57:43 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 333r9gwkg1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Aug 2020 08:57:43 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07O8vgt2005803;
+        Mon, 24 Aug 2020 08:57:42 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Aug 2020 01:57:42 -0700
+Date:   Mon, 24 Aug 2020 11:57:35 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Stefan Achatz <erazor_de@users.sourceforge.net>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH v2] HID: roccat: add bounds checking in
+ kone_sysfs_write_settings()
+Message-ID: <20200824085735.GA208317@mwanda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597819984.4101.16.camel@web.de>
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008240067
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008240067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+This code doesn't check if "settings->startup_profile" is within bounds
+and that could result in an out of bounds array access.  What the code
+does do is it checks if the settings can be written to the firmware, so
+it's possible that the firmware has a bounds check?  It's safer and
+easier to verify when the bounds checking is done in the kernel.
 
-[ Upstream commit cb957adb4ea422bd758568df5b2478ea3bb34f35 ]
-
-See the SDM, volume 3, section 4.4.1:
-
-If PAE paging would be in use following an execution of MOV to CR0 or
-MOV to CR4 (see Section 4.1.1) and the instruction is modifying any of
-CR0.CD, CR0.NW, CR0.PG, CR4.PAE, CR4.PGE, CR4.PSE, or CR4.SMEP; then
-the PDPTEs are loaded from the address in CR3.
-
-Fixes: b9baba8614890 ("KVM, pkeys: expose CPUID/CR4 to guest")
-Cc: Huaitong Han <huaitong.han@intel.com>
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Reviewed-by: Oliver Upton <oupton@google.com>
-Message-Id: <20200817181655.3716509-1-jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 14bf62cde794 ("HID: add driver for Roccat Kone gaming mouse")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- arch/x86/kvm/x86.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2:  In the v1 patch I added a check against settings->size but that's
+potentially too strict so it was removed.
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ff1f764c4709a..430a4bc66f604 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -857,7 +857,7 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- {
- 	unsigned long old_cr4 = kvm_read_cr4(vcpu);
- 	unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
--				   X86_CR4_SMEP | X86_CR4_PKE;
-+				   X86_CR4_SMEP;
+ drivers/hid/hid-roccat-kone.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/hid/hid-roccat-kone.c b/drivers/hid/hid-roccat-kone.c
+index 2ff4c8e366ff..1ca64481145e 100644
+--- a/drivers/hid/hid-roccat-kone.c
++++ b/drivers/hid/hid-roccat-kone.c
+@@ -294,31 +294,40 @@ static ssize_t kone_sysfs_write_settings(struct file *fp, struct kobject *kobj,
+ 	struct kone_device *kone = hid_get_drvdata(dev_get_drvdata(dev));
+ 	struct usb_device *usb_dev = interface_to_usbdev(to_usb_interface(dev));
+ 	int retval = 0, difference, old_profile;
++	struct kone_settings *settings = (struct kone_settings *)buf;
  
- 	if (kvm_valid_cr4(vcpu, cr4))
- 		return 1;
+ 	/* I need to get my data in one piece */
+ 	if (off != 0 || count != sizeof(struct kone_settings))
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&kone->kone_lock);
+-	difference = memcmp(buf, &kone->settings, sizeof(struct kone_settings));
++	difference = memcmp(settings, &kone->settings,
++			    sizeof(struct kone_settings));
+ 	if (difference) {
+-		retval = kone_set_settings(usb_dev,
+-				(struct kone_settings const *)buf);
+-		if (retval) {
+-			mutex_unlock(&kone->kone_lock);
+-			return retval;
++		if (settings->startup_profile < 1 ||
++		    settings->startup_profile > 5) {
++			retval = -EINVAL;
++			goto unlock;
+ 		}
+ 
++		retval = kone_set_settings(usb_dev, settings);
++		if (retval)
++			goto unlock;
++
+ 		old_profile = kone->settings.startup_profile;
+-		memcpy(&kone->settings, buf, sizeof(struct kone_settings));
++		memcpy(&kone->settings, settings, sizeof(struct kone_settings));
+ 
+ 		kone_profile_activated(kone, kone->settings.startup_profile);
+ 
+ 		if (kone->settings.startup_profile != old_profile)
+ 			kone_profile_report(kone, kone->settings.startup_profile);
+ 	}
++unlock:
+ 	mutex_unlock(&kone->kone_lock);
+ 
++	if (retval)
++		return retval;
++
+ 	return sizeof(struct kone_settings);
+ }
+ static BIN_ATTR(settings, 0660, kone_sysfs_read_settings,
 -- 
-2.25.1
-
-
+2.28.0
 
