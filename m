@@ -2,328 +2,121 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C2BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370E4C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 985E2206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1351F2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598260284;
+	bh=XIIXTbt/QIRGAo/NW8dnaqnoj6NT/0V7mQ4/PLFvF3o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OmGO7HSqPUFCnE0okZ3DoCtOrscV46G4XEFF1VoMG6hU/WagH5sJnQz5v6589H05s
+	 zIpVm9Snj/evUntP9OwFGJ0uk4P5o0uT4tzBhPXkvc6hXOBpo+HopdW8VrJT/mPzj1
+	 zg14CDyX+Tsfv6VcbNvIgWm2lDfZfwFHt+63YwK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbgHXJLO (ORCPT
+        id S1729530AbgHXJLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730240AbgHXI4U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:20 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B1BC061755;
-        Mon, 24 Aug 2020 01:56:19 -0700 (PDT)
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Mon, 24 Aug 2020 05:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728730AbgHXI4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id E29D2F91;
-        Mon, 24 Aug 2020 10:56:12 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 43/76] x86/sev-es: Setup GHCB based boot #VC handler
-Date:   Mon, 24 Aug 2020 10:54:38 +0200
-Message-Id: <20200824085511.7553-44-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 83A342074D;
+        Mon, 24 Aug 2020 08:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259379;
+        bh=XIIXTbt/QIRGAo/NW8dnaqnoj6NT/0V7mQ4/PLFvF3o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=02jrR+c1HiNWgyQjPL44WXqA3huuySDTcOK1La3eFi/e57n3jxwo+oFO/dAR2JKIZ
+         FvuZdFboOegWV7Ag/LzWX8Qn9pwWTOZpPTrMF9cLPUHs5QHJEZG0R7oEowqcU1JIX9
+         McOcepWJpHlzh6GPlBax+I6j+ZpQq451skwVxKko=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 37/71] alpha: fix annotation of io{read,write}{16,32}be()
+Date:   Mon, 24 Aug 2020 10:31:28 +0200
+Message-Id: <20200824082357.742942639@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-Add the infrastructure to handle #VC exceptions when the kernel runs
-on virtual addresses and has a GHCB mapped. This handler will be used
-until the runtime #VC handler takes over.
+[ Upstream commit bd72866b8da499e60633ff28f8a4f6e09ca78efe ]
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-43-joro@8bytes.org
+These accessors must be used to read/write a big-endian bus.  The value
+returned or written is native-endian.
+
+However, these accessors are defined using be{16,32}_to_cpu() or
+cpu_to_be{16,32}() to make the endian conversion but these expect a
+__be{16,32} when none is present.  Keeping them would need a force cast
+that would solve nothing at all.
+
+So, do the conversion using swab{16,32}, like done in asm-generic for
+similar situations.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Richard Henderson <rth@twiddle.net>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Link: http://lkml.kernel.org/r/20200622114232.80039-1-luc.vanoostenryck@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/segment.h  |   2 +-
- arch/x86/include/asm/sev-es.h   |   1 +
- arch/x86/kernel/head64.c        |   6 ++
- arch/x86/kernel/sev-es-shared.c |  14 ++--
- arch/x86/kernel/sev-es.c        | 116 ++++++++++++++++++++++++++++++++
- arch/x86/mm/extable.c           |   1 +
- 6 files changed, 132 insertions(+), 8 deletions(-)
+ arch/alpha/include/asm/io.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/segment.h b/arch/x86/include/asm/segment.h
-index 517920928989..7fdd4facfce7 100644
---- a/arch/x86/include/asm/segment.h
-+++ b/arch/x86/include/asm/segment.h
-@@ -226,7 +226,7 @@
- #define NUM_EXCEPTION_VECTORS		32
- 
- /* Bitmask of exception vectors which push an error code on the stack: */
--#define EXCEPTION_ERRCODE_MASK		0x00027d00
-+#define EXCEPTION_ERRCODE_MASK		0x20027d00
- 
- #define GDT_SIZE			(GDT_ENTRIES*8)
- #define GDT_ENTRY_TLS_ENTRIES		3
-diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
-index ec0e112a742b..824e9e6b067c 100644
---- a/arch/x86/include/asm/sev-es.h
-+++ b/arch/x86/include/asm/sev-es.h
-@@ -75,5 +75,6 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
- 
- /* Early IDT entry points for #VC handler */
- extern void vc_no_ghcb(void);
-+extern bool handle_vc_boot_ghcb(struct pt_regs *regs);
- 
+diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
+index eb09d5aee9106..0bba9e991189d 100644
+--- a/arch/alpha/include/asm/io.h
++++ b/arch/alpha/include/asm/io.h
+@@ -507,10 +507,10 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
+ }
  #endif
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 250fae33bf66..ce2d8284edb9 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -403,6 +403,12 @@ void __init do_early_exception(struct pt_regs *regs, int trapnr)
- 	    early_make_pgtable(native_read_cr2()))
- 		return;
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	if (trapnr == X86_TRAP_VC &&
-+	    handle_vc_boot_ghcb(regs))
-+		return;
-+#endif
-+
- 	early_fixup_exception(regs, trapnr);
- }
+-#define ioread16be(p) be16_to_cpu(ioread16(p))
+-#define ioread32be(p) be32_to_cpu(ioread32(p))
+-#define iowrite16be(v,p) iowrite16(cpu_to_be16(v), (p))
+-#define iowrite32be(v,p) iowrite32(cpu_to_be32(v), (p))
++#define ioread16be(p) swab16(ioread16(p))
++#define ioread32be(p) swab32(ioread32(p))
++#define iowrite16be(v,p) iowrite16(swab16(v), (p))
++#define iowrite32be(v,p) iowrite32(swab32(v), (p))
  
-diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-index 18619279a46f..aa77f2eb8d88 100644
---- a/arch/x86/kernel/sev-es-shared.c
-+++ b/arch/x86/kernel/sev-es-shared.c
-@@ -9,7 +9,7 @@
-  * and is included directly into both code-bases.
-  */
- 
--static void __maybe_unused sev_es_terminate(unsigned int reason)
-+static void sev_es_terminate(unsigned int reason)
- {
- 	u64 val = GHCB_SEV_TERMINATE;
- 
-@@ -27,7 +27,7 @@ static void __maybe_unused sev_es_terminate(unsigned int reason)
- 		asm volatile("hlt\n" : : : "memory");
- }
- 
--static bool __maybe_unused sev_es_negotiate_protocol(void)
-+static bool sev_es_negotiate_protocol(void)
- {
- 	u64 val;
- 
-@@ -46,7 +46,7 @@ static bool __maybe_unused sev_es_negotiate_protocol(void)
- 	return true;
- }
- 
--static void __maybe_unused vc_ghcb_invalidate(struct ghcb *ghcb)
-+static void vc_ghcb_invalidate(struct ghcb *ghcb)
- {
- 	memset(ghcb->save.valid_bitmap, 0, sizeof(ghcb->save.valid_bitmap));
- }
-@@ -58,9 +58,9 @@ static bool vc_decoding_needed(unsigned long exit_code)
- 		 exit_code <= SVM_EXIT_LAST_EXCP);
- }
- 
--static enum es_result __maybe_unused vc_init_em_ctxt(struct es_em_ctxt *ctxt,
--						     struct pt_regs *regs,
--						     unsigned long exit_code)
-+static enum es_result vc_init_em_ctxt(struct es_em_ctxt *ctxt,
-+				      struct pt_regs *regs,
-+				      unsigned long exit_code)
- {
- 	enum es_result ret = ES_OK;
- 
-@@ -73,7 +73,7 @@ static enum es_result __maybe_unused vc_init_em_ctxt(struct es_em_ctxt *ctxt,
- 	return ret;
- }
- 
--static void __maybe_unused vc_finish_insn(struct es_em_ctxt *ctxt)
-+static void vc_finish_insn(struct es_em_ctxt *ctxt)
- {
- 	ctxt->regs->ip += ctxt->insn.length;
- }
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 0b698b653c0b..bb3e702a71eb 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -7,7 +7,9 @@
-  * Author: Joerg Roedel <jroedel@suse.de>
-  */
- 
-+#include <linux/sched/debug.h>	/* For show_regs() */
- #include <linux/kernel.h>
-+#include <linux/printk.h>
- #include <linux/mm.h>
- 
- #include <asm/sev-es.h>
-@@ -18,6 +20,18 @@
- #include <asm/trapnr.h>
- #include <asm/svm.h>
- 
-+/* For early boot hypervisor communication in SEV-ES enabled guests */
-+static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
-+
-+/*
-+ * Needs to be in the .data section because we need it NULL before bss is
-+ * cleared
-+ */
-+static struct ghcb __initdata *boot_ghcb;
-+
-+/* Needed in vc_early_forward_exception */
-+void do_early_exception(struct pt_regs *regs, int trapnr);
-+
- static inline u64 sev_es_rd_ghcb_msr(void)
- {
- 	return native_read_msr(MSR_AMD64_SEV_ES_GHCB);
-@@ -161,3 +175,105 @@ static enum es_result vc_read_mem(struct es_em_ctxt *ctxt,
- 
- /* Include code shared with pre-decompression boot stage */
- #include "sev-es-shared.c"
-+
-+/*
-+ * This function runs on the first #VC exception after the kernel
-+ * switched to virtual addresses.
-+ */
-+static bool __init sev_es_setup_ghcb(void)
-+{
-+	/* First make sure the hypervisor talks a supported protocol. */
-+	if (!sev_es_negotiate_protocol())
-+		return false;
-+
-+	/*
-+	 * Clear the boot_ghcb. The first exception comes in before the bss
-+	 * section is cleared.
-+	 */
-+	memset(&boot_ghcb_page, 0, PAGE_SIZE);
-+
-+	/* Alright - Make the boot-ghcb public */
-+	boot_ghcb = &boot_ghcb_page;
-+
-+	return true;
-+}
-+
-+static void __init vc_early_forward_exception(struct es_em_ctxt *ctxt)
-+{
-+	int trapnr = ctxt->fi.vector;
-+
-+	if (trapnr == X86_TRAP_PF)
-+		native_write_cr2(ctxt->fi.cr2);
-+
-+	ctxt->regs->orig_ax = ctxt->fi.error_code;
-+	do_early_exception(ctxt->regs, trapnr);
-+}
-+
-+static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
-+					 struct ghcb *ghcb,
-+					 unsigned long exit_code)
-+{
-+	enum es_result result;
-+
-+	switch (exit_code) {
-+	default:
-+		/*
-+		 * Unexpected #VC exception
-+		 */
-+		result = ES_UNSUPPORTED;
-+	}
-+
-+	return result;
-+}
-+
-+bool __init handle_vc_boot_ghcb(struct pt_regs *regs)
-+{
-+	unsigned long exit_code = regs->orig_ax;
-+	struct es_em_ctxt ctxt;
-+	enum es_result result;
-+
-+	/* Do initial setup or terminate the guest */
-+	if (unlikely(boot_ghcb == NULL && !sev_es_setup_ghcb()))
-+		sev_es_terminate(GHCB_SEV_ES_REASON_GENERAL_REQUEST);
-+
-+	vc_ghcb_invalidate(boot_ghcb);
-+
-+	result = vc_init_em_ctxt(&ctxt, regs, exit_code);
-+	if (result == ES_OK)
-+		result = vc_handle_exitcode(&ctxt, boot_ghcb, exit_code);
-+
-+	/* Done - now check the result */
-+	switch (result) {
-+	case ES_OK:
-+		vc_finish_insn(&ctxt);
-+		break;
-+	case ES_UNSUPPORTED:
-+		early_printk("PANIC: Unsupported exit-code 0x%02lx in early #VC exception (IP: 0x%lx)\n",
-+				exit_code, regs->ip);
-+		goto fail;
-+	case ES_VMM_ERROR:
-+		early_printk("PANIC: Failure in communication with VMM (exit-code 0x%02lx IP: 0x%lx)\n",
-+				exit_code, regs->ip);
-+		goto fail;
-+	case ES_DECODE_FAILED:
-+		early_printk("PANIC: Failed to decode instruction (exit-code 0x%02lx IP: 0x%lx)\n",
-+				exit_code, regs->ip);
-+		goto fail;
-+	case ES_EXCEPTION:
-+		vc_early_forward_exception(&ctxt);
-+		break;
-+	case ES_RETRY:
-+		/* Nothing to do */
-+		break;
-+	default:
-+		BUG();
-+	}
-+
-+	return true;
-+
-+fail:
-+	show_regs(regs);
-+
-+	while (true)
-+		halt();
-+}
-diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
-index 1d6cb07f4f86..3966749d07ac 100644
---- a/arch/x86/mm/extable.c
-+++ b/arch/x86/mm/extable.c
-@@ -5,6 +5,7 @@
- #include <xen/xen.h>
- 
- #include <asm/fpu/internal.h>
-+#include <asm/sev-es.h>
- #include <asm/traps.h>
- #include <asm/kdebug.h>
- 
+ #define inb_p		inb
+ #define inw_p		inw
 -- 
-2.28.0
+2.25.1
+
+
 
