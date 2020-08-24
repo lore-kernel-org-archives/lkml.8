@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF457C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5289AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2F202067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA9B2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287500;
-	bh=HcQS+VMvWdRoEZwki/4Ya7RkFs+DvHo1w0eac91M6eo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v1j/TQuggs/RQvy21kekkcKfg6NCVkIHe41ezeuRiU00bQ5R4HsLqIiJON7/bUbX8
-	 Pu//GgfkTQEcN8/pWvkmp1lpNk6PpupOiVup7n+TJw4Yi31Yip24798V/TmfYWjgfX
-	 l9bRgMA94r+aiiyWjz2yEMqUybUKkHoiO5Ia44sU=
+	s=default; t=1598287517;
+	bh=I5sszpnEsWLW9bceSHEeRvrJ/DB70tDxtWUEm34wodg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=obwOzMAgV0FP+TR28PVhW/GtFs4iA32tAoQu7YfXHkZIB7PUt5WVQB3/MW8h/jm/T
+	 z+omLwkjFWvSMTiKNX3Z9iKzBOafw6s4QkVFsW/ZNCbTWekSHKiex7DMAh8rfzFLej
+	 TKg8pwFpauFStVNauOoe70joSmxy3LRk3HGD24IE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgHXQo7 (ORCPT
+        id S1728714AbgHXQpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:44:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47570 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:45:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728594AbgHXQjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728598AbgHXQjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:39:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5970E22D02;
-        Mon, 24 Aug 2020 16:39:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65DEB22D0B;
+        Mon, 24 Aug 2020 16:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287169;
-        bh=HcQS+VMvWdRoEZwki/4Ya7RkFs+DvHo1w0eac91M6eo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iw/sYglRxHsqjGq03PGyV5EkwoQ5EUG+2bqoWTr8soblljIWcCwebac6nMmXkmLbn
-         jO+WezdhEQzT3omcWih9rxFCHK72lDbbSCeVh5LBsp4F8m60tPm6mf9T4Qxu/Sd6Y1
-         riP9gmBr8sX3HMpYOv23BcKjmffn7ItHIybOxsBI=
+        s=default; t=1598287173;
+        bh=I5sszpnEsWLW9bceSHEeRvrJ/DB70tDxtWUEm34wodg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Nlm2sMBw37V5t1Sw2QmSN5DXZOQ5t/1ENEcNi9tmOqxV9xN6Eo+urX0QrWWdnjcC/
+         KqeTG03OoARXnObDYwOOxLj2jEKMaYw+OapqzOWE7EzgSEHb4AbinHfimnc0RfP2VI
+         e6MAGBlNqOyF9/nam3O5hpbydVhMNhgC6hFUDF5g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sumera Priyadarsini <sylphrenadin@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/11] net: gianfar: Add of_node_put() before goto statement
-Date:   Mon, 24 Aug 2020 12:39:13 -0400
-Message-Id: <20200824163914.607152-10-sashal@kernel.org>
+Cc:     Lukas Czerner <lczerner@redhat.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 1/8] jbd2: make sure jh have b_transaction set in refile/unfile_buffer
+Date:   Mon, 24 Aug 2020 12:39:24 -0400
+Message-Id: <20200824163931.607291-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163914.607152-1-sashal@kernel.org>
-References: <20200824163914.607152-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,44 +57,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumera Priyadarsini <sylphrenadin@gmail.com>
+From: Lukas Czerner <lczerner@redhat.com>
 
-[ Upstream commit 989e4da042ca4a56bbaca9223d1a93639ad11e17 ]
+[ Upstream commit 24dc9864914eb5813173cfa53313fcd02e4aea7d ]
 
-Every iteration of for_each_available_child_of_node() decrements
-reference count of the previous node, however when control
-is transferred from the middle of the loop, as in the case of
-a return or break or goto, there is no decrement thus ultimately
-resulting in a memory leak.
+Callers of __jbd2_journal_unfile_buffer() and
+__jbd2_journal_refile_buffer() assume that the b_transaction is set. In
+fact if it's not, we can end up with journal_head refcounting errors
+leading to crash much later that might be very hard to track down. Add
+asserts to make sure that is the case.
 
-Fix a potential memory leak in gianfar.c by inserting of_node_put()
-before the goto statement.
+We also make sure that b_next_transaction is NULL in
+__jbd2_journal_unfile_buffer() since the callers expect that as well and
+we should not get into that stage in this state anyway, leading to
+problems later on if we do.
 
-Issue found with Coccinelle.
+Tested with fstests.
 
-Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200617092549.6712-1-lczerner@redhat.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/gianfar.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/jbd2/transaction.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
-index e4a2c74a9b47e..6b95334e172d1 100644
---- a/drivers/net/ethernet/freescale/gianfar.c
-+++ b/drivers/net/ethernet/freescale/gianfar.c
-@@ -844,8 +844,10 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
- 				continue;
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 8de458d64134a..1478512ecab3e 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1896,6 +1896,9 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
+  */
+ static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
+ {
++	J_ASSERT_JH(jh, jh->b_transaction != NULL);
++	J_ASSERT_JH(jh, jh->b_next_transaction == NULL);
++
+ 	__jbd2_journal_temp_unlink_buffer(jh);
+ 	jh->b_transaction = NULL;
+ 	jbd2_journal_put_journal_head(jh);
+@@ -2443,6 +2446,13 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
  
- 			err = gfar_parse_group(child, priv, model);
--			if (err)
-+			if (err) {
-+				of_node_put(child);
- 				goto err_grp_init;
-+			}
- 		}
- 	} else { /* SQ_SG_MODE */
- 		err = gfar_parse_group(np, priv, model);
+ 	was_dirty = test_clear_buffer_jbddirty(bh);
+ 	__jbd2_journal_temp_unlink_buffer(jh);
++
++	/*
++	 * b_transaction must be set, otherwise the new b_transaction won't
++	 * be holding jh reference
++	 */
++	J_ASSERT_JH(jh, jh->b_transaction != NULL);
++
+ 	/*
+ 	 * We set b_transaction here because b_next_transaction will inherit
+ 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
 -- 
 2.25.1
 
