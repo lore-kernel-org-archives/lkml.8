@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA45AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 812E5206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B713D206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598288830;
-	bh=VqZEGlV5YySvxvIOAiaROZF3nCTEX0kSUQga34yXjE4=;
+	s=default; t=1598288843;
+	bh=uIhW5tHOuw8G1JjTU52rcRogwkRDRzPM6/2NCn4Zdw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WlHrjMPavK35fxrvNMa02jJc7pu9U+erKFa2iCnrL/i4/ac7klCeTyiQRLaGqiXMX
-	 94Z1FXJZOl70ynlCQtLm1k4hTOXT6zljgavRvhU8Pf/Sq4X8a5/oHN/iyxS9cQ9aNm
-	 EMLa/KekNUqZ3gwlibrvAQVc0P5HVNX4AOQVoOvs=
+	b=gtk2Nkh9S1oFlnze6cVomWtvVn20iKUFRf5nspUMhfg7RSLJxr7uRr3ZXkVgtvDNU
+	 OJu7ZIbptKrkt+dNkNVcflQG9J7ta+Jsfs85RetuRjB5fPIvMor+hDQc2jOJ3IetMk
+	 r+UcJZfIkoY9vt7s7W6GAgGqe7amJie4M29yct2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgHXRHD (ORCPT
+        id S1727124AbgHXRHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:07:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40652 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728439AbgHXQi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:38:28 -0400
+        id S1728052AbgHXQi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:38:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FC7E22DA9;
-        Mon, 24 Aug 2020 16:37:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 796D822DD6;
+        Mon, 24 Aug 2020 16:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287078;
-        bh=VqZEGlV5YySvxvIOAiaROZF3nCTEX0kSUQga34yXjE4=;
+        s=default; t=1598287074;
+        bh=uIhW5tHOuw8G1JjTU52rcRogwkRDRzPM6/2NCn4Zdw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C5vyMOC/AlYn8D9BXuh1uhWDSW024SCosunIOQ0ycP3Aq0GU/GFmEVUBQLTIcQg7U
-         GedzWFJSNJvDyWKEfygH8njqquMfTXxheOlV6O3FojBGXeZP1eRmKkMlDhjgDrg/yA
-         5nNglODbQMBB+RYr8wkfrvRrKS1pEk5NcY3Z9hmU=
+        b=ZhZ3s1Zea4Kj9TICb753hWZ3/ti2mblBzpL3BxBy3JQ/nmRjpiPljhy2wiCGji5BW
+         3MCHJMfr/YV9gc7oCtm14S/Qnv7NPAZ0crr3dktOm2llxmPscxUzHTIPpb1Asaddb1
+         a0zyomzvWaQYZd0HERRyGrEGytpedaHNAf551X4s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/38] jbd2: abort journal if free a async write error metadata buffer
-Date:   Mon, 24 Aug 2020 12:37:17 -0400
-Message-Id: <20200824163751.606577-5-sashal@kernel.org>
+Cc:     Lukas Czerner <lczerner@redhat.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 02/38] jbd2: make sure jh have b_transaction set in refile/unfile_buffer
+Date:   Mon, 24 Aug 2020 12:37:14 -0400
+Message-Id: <20200824163751.606577-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163751.606577-1-sashal@kernel.org>
 References: <20200824163751.606577-1-sashal@kernel.org>
@@ -58,64 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: Lukas Czerner <lczerner@redhat.com>
 
-[ Upstream commit c044f3d8360d2ecf831ba2cc9f08cf9fb2c699fb ]
+[ Upstream commit 24dc9864914eb5813173cfa53313fcd02e4aea7d ]
 
-If we free a metadata buffer which has been failed to async write out
-in the background, the jbd2 checkpoint procedure will not detect this
-failure in jbd2_log_do_checkpoint(), so it may lead to filesystem
-inconsistency after cleanup journal tail. This patch abort the journal
-if free a buffer has write_io_error flag to prevent potential further
-inconsistency.
+Callers of __jbd2_journal_unfile_buffer() and
+__jbd2_journal_refile_buffer() assume that the b_transaction is set. In
+fact if it's not, we can end up with journal_head refcounting errors
+leading to crash much later that might be very hard to track down. Add
+asserts to make sure that is the case.
 
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Link: https://lore.kernel.org/r/20200620025427.1756360-5-yi.zhang@huawei.com
+We also make sure that b_next_transaction is NULL in
+__jbd2_journal_unfile_buffer() since the callers expect that as well and
+we should not get into that stage in this state anyway, leading to
+problems later on if we do.
+
+Tested with fstests.
+
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200617092549.6712-1-lczerner@redhat.com
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/transaction.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ fs/jbd2/transaction.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index 0b663269771d4..90453309345d5 100644
+index de992a70ddfef..0b663269771d4 100644
 --- a/fs/jbd2/transaction.c
 +++ b/fs/jbd2/transaction.c
-@@ -2077,6 +2077,7 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+@@ -1983,6 +1983,9 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
+  */
+ static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
  {
- 	struct buffer_head *head;
- 	struct buffer_head *bh;
-+	bool has_write_io_error = false;
- 	int ret = 0;
- 
- 	J_ASSERT(PageLocked(page));
-@@ -2101,11 +2102,26 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
- 		jbd_unlock_bh_state(bh);
- 		if (buffer_jbd(bh))
- 			goto busy;
++	J_ASSERT_JH(jh, jh->b_transaction != NULL);
++	J_ASSERT_JH(jh, jh->b_next_transaction == NULL);
 +
-+		/*
-+		 * If we free a metadata buffer which has been failed to
-+		 * write out, the jbd2 checkpoint procedure will not detect
-+		 * this failure and may lead to filesystem inconsistency
-+		 * after cleanup journal tail.
-+		 */
-+		if (buffer_write_io_error(bh)) {
-+			pr_err("JBD2: Error while async write back metadata bh %llu.",
-+			       (unsigned long long)bh->b_blocknr);
-+			has_write_io_error = true;
-+		}
- 	} while ((bh = bh->b_this_page) != head);
+ 	__jbd2_journal_temp_unlink_buffer(jh);
+ 	jh->b_transaction = NULL;
+ 	jbd2_journal_put_journal_head(jh);
+@@ -2530,6 +2533,13 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
  
- 	ret = try_to_free_buffers(page);
- 
- busy:
-+	if (has_write_io_error)
-+		jbd2_journal_abort(journal, -EIO);
+ 	was_dirty = test_clear_buffer_jbddirty(bh);
+ 	__jbd2_journal_temp_unlink_buffer(jh);
 +
- 	return ret;
- }
- 
++	/*
++	 * b_transaction must be set, otherwise the new b_transaction won't
++	 * be holding jh reference
++	 */
++	J_ASSERT_JH(jh, jh->b_transaction != NULL);
++
+ 	/*
+ 	 * We set b_transaction here because b_next_transaction will inherit
+ 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
 -- 
 2.25.1
 
