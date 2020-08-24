@@ -2,192 +2,93 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216C4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B1FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9432067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68977205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:15:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DMCiLDcu"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iaY8oodz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgHXVL3 (ORCPT
+        id S1726939AbgHXVPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:11:29 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12810 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgHXVL2 (ORCPT
+        Mon, 24 Aug 2020 17:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbgHXVPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 17:11:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f442cc20001>; Mon, 24 Aug 2020 14:10:26 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 24 Aug 2020 14:11:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 24 Aug 2020 14:11:27 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Aug
- 2020 21:11:27 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 24 Aug 2020 21:11:27 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.58.8]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f442cff0000>; Mon, 24 Aug 2020 14:11:27 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     <jens.wiklander@linaro.org>
-List-Id: <soc.lore.kernel.org>
-CC:     <arm@kernel.org>, <jhubbard@nvidia.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <olof@lixom.net>, <soc@kernel.org>,
-        <tee-dev@lists.linaro.org>, Sumit Semwal <sumit.semwal@linaro.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>
-Subject: [PATCH v3] tee: convert convert get_user_pages() --> pin_user_pages()
-Date:   Mon, 24 Aug 2020 14:11:25 -0700
-Message-ID: <20200824211125.1867329-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <CAHUa44FrxidzSUOM_JchOTa5pF6P+j8uZJA5DpKfGLWaS6tCcw@mail.gmail.com>
-References: <CAHUa44FrxidzSUOM_JchOTa5pF6P+j8uZJA5DpKfGLWaS6tCcw@mail.gmail.com>
+        Mon, 24 Aug 2020 17:15:18 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE90C061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 14:15:17 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id g33so5258720pgb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 14:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=MJ8XfWNGGP7wiDdGWRcPF7YeSYjIipUSnFlPxS9I+QI=;
+        b=iaY8oodzVk638aaEvZq4/GPPWWhIMSiVq1vxdx7MrV0QYpzha2W9GN88Ye9LZJiQzZ
+         7TGVH0AcUf91WylTcbJJgzO5/hiz60LIrawOw0q25XUhN+TXnrccNNLPPgokXalw9Nu3
+         XEIrFZi0CnD0ucQgzvoqa6VPn68U6xU9V6VdyYXxNMAnwMxOtGMYNC8xD+l6zAUkPo7p
+         wi/9tU0cmDURf8xYpKv90DJgfdNSdA36AhjNVZPr6A5vzxj8uFPJwxX43QtRdDuN8Eof
+         bIpcleHXQuYO3ulhdLJuN5+eSddDgtEJsGyI3+e77KuwCANWcwIAS/wyvqvBO0xKGU39
+         9b2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=MJ8XfWNGGP7wiDdGWRcPF7YeSYjIipUSnFlPxS9I+QI=;
+        b=M8oEKyWwHu7fbrFNCK5kY/IbvcV8T1c0vwO9Be4tE2t3y+TqCrV+xYNG0MmYQPz+MQ
+         O0OPERt3EYh0ZYEFl3I1RQqsYCwN0h4nh4XS7pgFFqtGZ8RTxvCM8I8a87Ui0zJt6E01
+         qcGHuE7MmStQIcSmy6jUf2756/xtn9YpkX2r62chkLCL8cmFpvtujOMV5O+Aynl7X3DJ
+         GY5C4CGvlzfdsUm6b/KPOIXGh0rOuMyv/653z7c0879Bu1zPULKJ4Tj5L3iHHsRh+iqG
+         4siGKhO+Q6TSYy9cPOj00Tl2Gj+fKRdXkiEe2HLkFteqimXyQPdILrPV7tA0pdJgJL6B
+         ruZg==
+X-Gm-Message-State: AOAM532AZR/Etf7CwBg5KcT7Qzcrd3dU+gJZLsbD7xMu1lB097xijUjc
+        qisKPDv5+7UFJwWYANXwG1/nAw==
+X-Google-Smtp-Source: ABdhPJwZHuR5OTtw9TTATDnf6mUcMkl8mrdaaHq9gdoGIJi4IGzp/W3a4vARzXQH6bAbPvfGVX1g5g==
+X-Received: by 2002:a17:902:61:: with SMTP id 88mr5018879pla.151.1598303717277;
+        Mon, 24 Aug 2020 14:15:17 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id v2sm5569888pfn.116.2020.08.24.14.15.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 14:15:16 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH] ARM: dts: meson: move the L2 cache-controller inside the SoC node
+In-Reply-To: <20200815182223.408965-1-martin.blumenstingl@googlemail.com>
+References: <20200815182223.408965-1-martin.blumenstingl@googlemail.com>
+Date:   Mon, 24 Aug 2020 14:15:15 -0700
+Message-ID: <7hft8bu4nw.fsf@baylibre.com>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598303426; bh=sPKT2vVWDEL5uCOVvAzzh/qnGwDPnupB1+gNHfgo2wA=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=DMCiLDcu/bbZ0HfTovzGNWhZ32KGT2RI2dt39vFl1huAYVropJDqFzm95VE0bDl17
-         2iKl7y4XYSQN7sP9FAZMlRVcoc/USP4iaa04eQ7aXDmCVYNO767uZnlAmtC6qoBwSL
-         fPhaLcdA2bU0nPQSEaYElAz9fEBZOrQj2TOCj8kKL5eZ7LC2xqisYmnZ6lgpBZP2GL
-         sc1CODEDr1LwWbDI2cyEsedGFLX8WmgiHSiUuLZ80FM/PcQqRoj1db3hi3k8oT0RVD
-         QHtHVMRDNGMP/tpWp7jgNH8DS27MP6YoKI7d8OAKpTnFrTMezxD/WDZj4q1zJ0GVZZ
-         8N4VPH4CgRURg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code was using get_user_pages*(), in a "Case 2" scenario
-(DMA/RDMA), using the categorization from [1]. That means that it's
-time to convert the get_user_pages*() + put_page() calls to
-pin_user_pages*() + unpin_user_pages() calls.
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-Factor out a new, small release_registered_pages() function, in
-order to consolidate the logic for discerning between
-TEE_SHM_USER_MAPPED and TEE_SHM_KERNEL_MAPPED pages. This also
-absorbs the kfree() call that is also required there.
+> All IO mapped SoC peripherals should be within the "soc" node. Move the
+> L2 cache-controller there as well since it's the only one not following
+> this pattern.
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-There is some helpful background in [2]: basically, this is a small
-part of fixing a long-standing disconnect between pinning pages, and
-file systems' use of those pages.
+Boot tested on meson8b-odroidc1
 
-[1] Documentation/core-api/pin_user_pages.rst
+Tested-by: Kevin Hilman <khilman@baylibre.com>
 
-[2] "Explicit pinning of user-space pages":
-    https://lwn.net/Articles/807108/
+Queuing for v5.10.
 
-Cc: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: tee-dev@lists.linaro.org
-Cc: linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linaro-mm-sig@lists.linaro.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
+Thanks,
 
-OK, one more try, this time actually handling the _USER_MAPPED vs.
-_KERNEL_MAPPED pages!
-
-thanks,
-John Hubbard
-NVIDIA
-
- drivers/tee/tee_shm.c | 32 +++++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-index 827ac3d0fea9..00472f5ce22e 100644
---- a/drivers/tee/tee_shm.c
-+++ b/drivers/tee/tee_shm.c
-@@ -12,6 +12,22 @@
- #include <linux/uio.h>
- #include "tee_private.h"
-=20
-+static void release_registered_pages(struct tee_shm *shm)
-+{
-+	if (shm->pages) {
-+		if (shm->flags & TEE_SHM_USER_MAPPED) {
-+			unpin_user_pages(shm->pages, shm->num_pages);
-+		} else {
-+			size_t n;
-+
-+			for (n =3D 0; n < shm->num_pages; n++)
-+				put_page(shm->pages[n]);
-+		}
-+
-+		kfree(shm->pages);
-+	}
-+}
-+
- static void tee_shm_release(struct tee_shm *shm)
- {
- 	struct tee_device *teedev =3D shm->ctx->teedev;
-@@ -32,17 +48,13 @@ static void tee_shm_release(struct tee_shm *shm)
-=20
- 		poolm->ops->free(poolm, shm);
- 	} else if (shm->flags & TEE_SHM_REGISTER) {
--		size_t n;
- 		int rc =3D teedev->desc->ops->shm_unregister(shm->ctx, shm);
-=20
- 		if (rc)
- 			dev_err(teedev->dev.parent,
- 				"unregister shm %p failed: %d", shm, rc);
-=20
--		for (n =3D 0; n < shm->num_pages; n++)
--			put_page(shm->pages[n]);
--
--		kfree(shm->pages);
-+		release_registered_pages(shm);
- 	}
-=20
- 	teedev_ctx_put(shm->ctx);
-@@ -228,7 +240,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ct=
-x, unsigned long addr,
- 	}
-=20
- 	if (flags & TEE_SHM_USER_MAPPED) {
--		rc =3D get_user_pages_fast(start, num_pages, FOLL_WRITE,
-+		rc =3D pin_user_pages_fast(start, num_pages, FOLL_WRITE,
- 					 shm->pages);
- 	} else {
- 		struct kvec *kiov;
-@@ -292,18 +304,12 @@ struct tee_shm *tee_shm_register(struct tee_context *=
-ctx, unsigned long addr,
- 	return shm;
- err:
- 	if (shm) {
--		size_t n;
--
- 		if (shm->id >=3D 0) {
- 			mutex_lock(&teedev->mutex);
- 			idr_remove(&teedev->idr, shm->id);
- 			mutex_unlock(&teedev->mutex);
- 		}
--		if (shm->pages) {
--			for (n =3D 0; n < shm->num_pages; n++)
--				put_page(shm->pages[n]);
--			kfree(shm->pages);
--		}
-+		release_registered_pages(shm);
- 	}
- 	kfree(shm);
- 	teedev_ctx_put(ctx);
---=20
-2.28.0
-
+Kevin
