@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9541C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEE6520738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978B820738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287289;
-	bh=msI9Izo9L4J+yHwpIL1IKf+9sn3TvKT/LB9B3RnpodM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=haMZLAQZgJWCD6yMDXiNsbuoVvqc+g0fNslzgL3zZ+fsFXJipJyD3e7josoYoYVxn
-	 bPP102miXC9KxtBPFdT0uTt9B8BzMe19lAf3+A/CceKU+WTxaJ4PzJpGBZ/d0WPJS6
-	 i9aaqKjAgr4pTfojYxHecwyXxm+7/RG1CGN7AZ5o=
+	s=default; t=1598287300;
+	bh=UtSy+++UvUXgQi8IO+BabQaaW3cdDfWIWClOwtAohrs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oHCc+XHyV08yDqjsZjZYCzaRTOE5DpuyKIRF2a97cZRIhG3KuYEl99MHFEUcQKRA2
+	 PBzN7VbTUq9VXpv3JTuuJ/6mwyd+KL44W4mGRQqSByuGB8vdxn3C3XYMuhI2z19165
+	 IAqr3qksr6aTCIwdFRaDSeK73MWWHUDgiCdFAwAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgHXQlW (ORCPT
+        id S1728508AbgHXQlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:41:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47866 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:41:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbgHXQjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:39:45 -0400
+        id S1728013AbgHXQjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:39:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C7BD22CB1;
-        Mon, 24 Aug 2020 16:39:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A0D822BED;
+        Mon, 24 Aug 2020 16:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287185;
-        bh=msI9Izo9L4J+yHwpIL1IKf+9sn3TvKT/LB9B3RnpodM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=E8e/v10YdAdK387IXaImTRDm+GiebBuMTjLwusEzImLSzCrOjNhN41cxHpxtVtTSz
-         WrRYZwhrSC76TKBYUb+O2SBWTh9tneOmhIHmfok3hKKed4QAXXRJfp1S56o14yrklL
-         rWzNJoYl2E6XeFjOjZr0+gjcv8YfCl3VvUAKfai0=
+        s=default; t=1598287189;
+        bh=UtSy+++UvUXgQi8IO+BabQaaW3cdDfWIWClOwtAohrs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gEpdgCazfjlXX6oCoykLLB8UgkN4XA5DWY6ht7RFlVUCym5igzWCPNVS3dA3S+ZG6
+         mx/xlIWr74h7PjqB25bloWlLarFw1dvQQksAyHRCMy+ZLBKbwyR6/jvRK+mR4/mleZ
+         viS2jOQvMTMLNHf8AEfsGIq4zeTgo98KQC/lIgJA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukas Czerner <lczerner@redhat.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 1/6] jbd2: make sure jh have b_transaction set in refile/unfile_buffer
-Date:   Mon, 24 Aug 2020 12:39:38 -0400
-Message-Id: <20200824163943.607406-1-sashal@kernel.org>
+Cc:     Stanley Chu <stanley.chu@mediatek.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 4/6] scsi: ufs: Fix possible infinite loop in ufshcd_hold
+Date:   Mon, 24 Aug 2020 12:39:41 -0400
+Message-Id: <20200824163943.607406-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200824163943.607406-1-sashal@kernel.org>
+References: <20200824163943.607406-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,60 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit 24dc9864914eb5813173cfa53313fcd02e4aea7d ]
+[ Upstream commit 93b6c5db06028a3b55122bbb74d0715dd8ca4ae0 ]
 
-Callers of __jbd2_journal_unfile_buffer() and
-__jbd2_journal_refile_buffer() assume that the b_transaction is set. In
-fact if it's not, we can end up with journal_head refcounting errors
-leading to crash much later that might be very hard to track down. Add
-asserts to make sure that is the case.
+In ufshcd_suspend(), after clk-gating is suspended and link is set
+as Hibern8 state, ufshcd_hold() is still possibly invoked before
+ufshcd_suspend() returns. For example, MediaTek's suspend vops may
+issue UIC commands which would call ufshcd_hold() during the command
+issuing flow.
 
-We also make sure that b_next_transaction is NULL in
-__jbd2_journal_unfile_buffer() since the callers expect that as well and
-we should not get into that stage in this state anyway, leading to
-problems later on if we do.
+Now if UFSHCD_CAP_HIBERN8_WITH_CLK_GATING capability is enabled,
+then ufshcd_hold() may enter infinite loops because there is no
+clk-ungating work scheduled or pending. In this case, ufshcd_hold()
+shall just bypass, and keep the link as Hibern8 state.
 
-Tested with fstests.
-
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200617092549.6712-1-lczerner@redhat.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: https://lore.kernel.org/r/20200809050734.18740-1-stanley.chu@mediatek.com
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Co-developed-by: Andy Teng <andy.teng@mediatek.com>
+Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/transaction.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/scsi/ufs/ufshcd.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index 3233e5ac9774f..622610934c9ad 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1906,6 +1906,9 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
-  */
- static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index d15cd7a02f9b4..d7a0a64f64536 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -575,6 +575,7 @@ static void ufshcd_ungate_work(struct work_struct *work)
+ int ufshcd_hold(struct ufs_hba *hba, bool async)
  {
-+	J_ASSERT_JH(jh, jh->b_transaction != NULL);
-+	J_ASSERT_JH(jh, jh->b_next_transaction == NULL);
-+
- 	__jbd2_journal_temp_unlink_buffer(jh);
- 	jh->b_transaction = NULL;
- 	jbd2_journal_put_journal_head(jh);
-@@ -2453,6 +2456,13 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
+ 	int rc = 0;
++	bool flush_result;
+ 	unsigned long flags;
  
- 	was_dirty = test_clear_buffer_jbddirty(bh);
- 	__jbd2_journal_temp_unlink_buffer(jh);
-+
-+	/*
-+	 * b_transaction must be set, otherwise the new b_transaction won't
-+	 * be holding jh reference
-+	 */
-+	J_ASSERT_JH(jh, jh->b_transaction != NULL);
-+
- 	/*
- 	 * We set b_transaction here because b_next_transaction will inherit
- 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
+ 	if (!ufshcd_is_clkgating_allowed(hba))
+@@ -601,7 +602,9 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
+ 				break;
+ 			}
+ 			spin_unlock_irqrestore(hba->host->host_lock, flags);
+-			flush_work(&hba->clk_gating.ungate_work);
++			flush_result = flush_work(&hba->clk_gating.ungate_work);
++			if (hba->clk_gating.is_suspended && !flush_result)
++				goto out;
+ 			spin_lock_irqsave(hba->host->host_lock, flags);
+ 			goto start;
+ 		}
 -- 
 2.25.1
 
