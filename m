@@ -7,53 +7,59 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2442207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7876F2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259323;
-	bh=9fAn6yvTNYRybXEOoUFrVTBvErh/xKIBcFay/eU4W7w=;
+	s=default; t=1598259329;
+	bh=MdqGIJpCx/+wgQQjrkGUNZbwGiGXF25VfSr3JxxELIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=idDkd/isiG1J7H8KQsTSFqDvwKgNKjpVJa4vYGOM4RpMMIVFZ5xOPjU6af/fb42dM
-	 3B+SZDLaJ4zqtp4MmlnOZVtvKKj0A3FBCPQ/hj84LJLqFGX1hXOi/dThXnOMWc4BdB
-	 e2SgrZbRgYz0HGpNCvR3GTk7LAqg2ZwEUFt7x+K4=
+	b=t4SRajqOOEWMA0PXGiTVWInXYW6pZJ/llkMflQuHkqN0rIp/uBFjOCwWoz0kum5yW
+	 HqBxbjEoWVwmP1mXU7VsPVh7/kRzaVzykqWZvF814w1WtidfDhbYxDp8sdxhKwGHyZ
+	 sLHJgsnmdPt5qiyMlCvXCJ8yD+H6ggl3yzCpDq7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730414AbgHXIzU (ORCPT
+        id S1730416AbgHXIzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:55:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36380 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:55:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729505AbgHXIzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:00 -0400
+        id S1730211AbgHXIzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:55:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 405D7204FD;
-        Mon, 24 Aug 2020 08:54:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F2FD2087D;
+        Mon, 24 Aug 2020 08:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259299;
-        bh=9fAn6yvTNYRybXEOoUFrVTBvErh/xKIBcFay/eU4W7w=;
+        s=default; t=1598259312;
+        bh=MdqGIJpCx/+wgQQjrkGUNZbwGiGXF25VfSr3JxxELIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PCVTJoJg1CCxzXhIrMosXTbpS4Q2QmcOSM2R9HJJABjOhe254xY3pTFLb4e7QBcDH
-         qRZtDUCIx/zCbv4rqcUt1Mjy85QFLPtSatHZ9L1Bf9jiJUWelX+ZmbWbXTC0Rh6Wt4
-         a3UeN8jO0K+qaiIZKQcKyqeTgXTVFpoZDK+5rf1g=
+        b=AOQQvdBvv8wej/kPWzY0DRs8oCeNtU1GG+m/ANDEt6ofZnYQheiO5R8mRRcnQiiFI
+         GzI0p8710D1Nf4ckDXeQ9ISyVdmymlQytSkl5AU8oi1KLjPrtc39OTq3PwH9MsCn/t
+         0UGmga/6YkV4j0sP8gIWNAIsISgx0LS4GEx3Wk0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        David Rientjes <rientjes@google.com>,
+        Michel Lespinasse <walken@google.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Akash Goel <akash.goel@intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 48/50] mm/hugetlb: fix calculation of adjust_range_if_pmd_sharing_possible
-Date:   Mon, 24 Aug 2020 10:31:49 +0200
-Message-Id: <20200824082354.469722286@linuxfoundation.org>
+Subject: [PATCH 4.19 11/71] kernel/relay.c: fix memleak on destroy relay channel
+Date:   Mon, 24 Aug 2020 10:31:02 +0200
+Message-Id: <20200824082356.454106164@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
-References: <20200824082351.823243923@linuxfoundation.org>
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,91 +69,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Xu <peterx@redhat.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit 75802ca66354a39ab8e35822747cd08b3384a99a upstream.
+commit 71e843295c680898959b22dc877ae3839cc22470 upstream.
 
-This is found by code observation only.
+kmemleak report memory leak as follows:
 
-Firstly, the worst case scenario should assume the whole range was covered
-by pmd sharing.  The old algorithm might not work as expected for ranges
-like (1g-2m, 1g+2m), where the adjusted range should be (0, 1g+2m) but the
-expected range should be (0, 2g).
+  unreferenced object 0x607ee4e5f948 (size 8):
+  comm "syz-executor.1", pid 2098, jiffies 4295031601 (age 288.468s)
+  hex dump (first 8 bytes):
+  00 00 00 00 00 00 00 00 ........
+  backtrace:
+     relay_open kernel/relay.c:583 [inline]
+     relay_open+0xb6/0x970 kernel/relay.c:563
+     do_blk_trace_setup+0x4a8/0xb20 kernel/trace/blktrace.c:557
+     __blk_trace_setup+0xb6/0x150 kernel/trace/blktrace.c:597
+     blk_trace_ioctl+0x146/0x280 kernel/trace/blktrace.c:738
+     blkdev_ioctl+0xb2/0x6a0 block/ioctl.c:613
+     block_ioctl+0xe5/0x120 fs/block_dev.c:1871
+     vfs_ioctl fs/ioctl.c:48 [inline]
+     __do_sys_ioctl fs/ioctl.c:753 [inline]
+     __se_sys_ioctl fs/ioctl.c:739 [inline]
+     __x64_sys_ioctl+0x170/0x1ce fs/ioctl.c:739
+     do_syscall_64+0x33/0x40 arch/x86/entry/common.c:46
+     entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Since at it, remove the loop since it should not be required.  With that,
-the new code should be faster too when the invalidating range is huge.
+'chan->buf' is malloced in relay_open() by alloc_percpu() but not free
+while destroy the relay channel.  Fix it by adding free_percpu() before
+return from relay_destroy_channel().
 
-Mike said:
-
-: With range (1g-2m, 1g+2m) within a vma (0, 2g) the existing code will only
-: adjust to (0, 1g+2m) which is incorrect.
-:
-: We should cc stable.  The original reason for adjusting the range was to
-: prevent data corruption (getting wrong page).  Since the range is not
-: always adjusted correctly, the potential for corruption still exists.
-:
-: However, I am fairly confident that adjust_range_if_pmd_sharing_possible
-: is only gong to be called in two cases:
-:
-: 1) for a single page
-: 2) for range == entire vma
-:
-: In those cases, the current code should produce the correct results.
-:
-: To be safe, let's just cc stable.
-
-Fixes: 017b1660df89 ("mm: migration: fix migration of huge PMD shared pages")
-Signed-off-by: Peter Xu <peterx@redhat.com>
+Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Michel Lespinasse <walken@google.com>
+Cc: Daniel Axtens <dja@axtens.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Akash Goel <akash.goel@intel.com>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200730201636.74778-1-peterx@redhat.com
+Link: http://lkml.kernel.org/r/20200817122826.48518-1-weiyongjun1@huawei.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- mm/hugetlb.c |   24 ++++++++++--------------
- 1 file changed, 10 insertions(+), 14 deletions(-)
 
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4575,25 +4575,21 @@ static bool vma_shareable(struct vm_area
- void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
- 				unsigned long *start, unsigned long *end)
+---
+ kernel/relay.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -197,6 +197,7 @@ free_buf:
+ static void relay_destroy_channel(struct kref *kref)
  {
--	unsigned long check_addr = *start;
-+	unsigned long a_start, a_end;
- 
- 	if (!(vma->vm_flags & VM_MAYSHARE))
- 		return;
- 
--	for (check_addr = *start; check_addr < *end; check_addr += PUD_SIZE) {
--		unsigned long a_start = check_addr & PUD_MASK;
--		unsigned long a_end = a_start + PUD_SIZE;
-+	/* Extend the range to be PUD aligned for a worst case scenario */
-+	a_start = ALIGN_DOWN(*start, PUD_SIZE);
-+	a_end = ALIGN(*end, PUD_SIZE);
- 
--		/*
--		 * If sharing is possible, adjust start/end if necessary.
--		 */
--		if (range_in_vma(vma, a_start, a_end)) {
--			if (a_start < *start)
--				*start = a_start;
--			if (a_end > *end)
--				*end = a_end;
--		}
--	}
-+	/*
-+	 * Intersect the range with the vma range, since pmd sharing won't be
-+	 * across vma after all
-+	 */
-+	*start = max(vma->vm_start, a_start);
-+	*end = min(vma->vm_end, a_end);
+ 	struct rchan *chan = container_of(kref, struct rchan, kref);
++	free_percpu(chan->buf);
+ 	kfree(chan);
  }
  
- /*
 
 
