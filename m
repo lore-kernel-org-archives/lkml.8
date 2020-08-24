@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E682BC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAB372074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F09EA207CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:42:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQFccb1v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vDZcQosI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgHXSmk (ORCPT
+        id S1727768AbgHXSmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:42:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45186 "EHLO
+        Mon, 24 Aug 2020 14:42:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727013AbgHXSmg (ORCPT
+        with ESMTP id S1726630AbgHXSmc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:42:36 -0400
+        Mon, 24 Aug 2020 14:42:32 -0400
 Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB423C061573;
-        Mon, 24 Aug 2020 11:42:35 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id w186so2885833pgb.8;
-        Mon, 24 Aug 2020 11:42:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AC70C061573;
+        Mon, 24 Aug 2020 11:42:32 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id v15so4987855pgh.6;
+        Mon, 24 Aug 2020 11:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TgmnMQLoiRPZYn8p3pBkSLGRfsZVFEAqTMCkytd7tqE=;
-        b=AQFccb1vE3ZJOZDHXG2CAwpWP9Vj6Pzketi7xFHRZ3xPiYa9Lx/b1V2s+12ipJRgBr
-         Ed44XLsci7HdkH0EG78JFNTwzQsTgK35knQgahPOUWOMykVML+pFC7511oHlONc9gFLF
-         g1MsR4+SsZqjS1d5ePDeMe5bq8P0CZhIcnEyeEy2hBKdg/05Gi0pHlRD0gwFlxAFEpdo
-         qZrvkLnUFr1AiIvnsbcbeQlp8QdMnKkUB/wJ88fTV3Wdq0dvH750mOJoV0Xk0KNLD689
-         faSAWcGnYXWnIT2nYij1ge1ncOXw807fBiFYgr/aHGGEu6M5vF39c9EnniluqODnq6Te
-         NnWw==
+        bh=8jrJbdIXQQAFjo/ry7i+txJOnZIwex0ahQyZ/9frdio=;
+        b=vDZcQosIOwttT+7YVD0YcJH63i/4ANBtWVWvB3iylHAaQulSk6Zt7LO0aYaQGeR8La
+         Nf8A20AmUnyBL5dyL5YvhbxVitCshAaCyxzgTjfew1FhVN8rwvRSHF+nw1IRTCT+HJEy
+         LgfiPuvEKOs/thV8w202+qBEZDCU+r1Zl8SLot+h3dwwLhotl/DUgl81PJRW1yM79dcZ
+         9QGffNgb65T+Rovp82CSbUGQINp+vpJ8/XXTWUFo6wLY6s7ajEGZZXyDUVmzzrVB1BeB
+         DA6m6erABwDeEATCGThEYV5o1xN7WllNV2le6drxEfsYY72ehk5qdU1vkRSxeuJJeZFW
+         XY5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TgmnMQLoiRPZYn8p3pBkSLGRfsZVFEAqTMCkytd7tqE=;
-        b=AIfP+OEN1yaLFXZQsnTCxm7nluuPvI1/Wcq85jXfHED24TBv0wRCvt9KPiLfnVmyZm
-         5pG2BZ1653RgwQiGFZFk3slTQWf38TTm4GmqxcoaRyDWi9TXh12P2eUxP7585isB2Veg
-         59yvys6va1D9wV5OAJK7DpCGDHkTLBDSU5K3/XvbJB53WaJkRESx02OuiuPtVjHLlVuE
-         7GQ8WYQXYNUWbiUqYjSd3rfbwGmC7WleIJtcaXXfKqUMblYvteqWLRTslDzWXUkNHRsa
-         deBp2xKbPUB34R+fXVYQjFVbMEJ/Cl8/ZnR3/XfDzLG1G66jjEXr1jnbJn8JF1wAQvdr
-         uetw==
-X-Gm-Message-State: AOAM532nqGVwiriXfs9dXc5iB1JUs+BCa6GO35UMEgC8n1VkxdrvzFKt
-        FLcDtVtsWNvlAwcYIOmaqoI=
-X-Google-Smtp-Source: ABdhPJwGHT5z2lr6C/hDdHZTg/q6yyREx5XnGJGwDoZ3KWPp9FTCxLMjCb0+Sgx9G0DKOkzvCSF4fw==
-X-Received: by 2002:a17:902:9a8e:: with SMTP id w14mr1302612plp.6.1598294555266;
-        Mon, 24 Aug 2020 11:42:35 -0700 (PDT)
+        bh=8jrJbdIXQQAFjo/ry7i+txJOnZIwex0ahQyZ/9frdio=;
+        b=NzdVbx+GF2RlSAWZxmMuUHsyJGX0cbTMrk2tkfHw4ZylOU/IfAVknDyMlNpeePvz8q
+         K3it9VMYYaHd18kYcTTahCmmCtx8iWrnH0ShLQkFI4bvTX8kLAnSOKxtuw4GiXv19Asc
+         187h3XY9SJKhQ+gS/CZSnuYcJpDyx0pgvqBSPm2O8ooVrM0tuZb5dlcCbyuoI9HEiRkl
+         lwSLzFwG+a+VzdnWZpIWt7iSSpGvc+tq8f5IxsW0uaykil5aYe3UqGx/nK7nXAUjqDm8
+         pwE2MdHVOS0mbJJxojhL3SpglCA88Ek6smJ5+t0A7h9O2h8tqo7QsBXy88uQwi80mRZm
+         kAGQ==
+X-Gm-Message-State: AOAM530La9GwL8zf323mcH623tcB1o450HIlNXKm808QJVQXBJDY//QH
+        iHBeh8t6SNUytkmIlIqllxA=
+X-Google-Smtp-Source: ABdhPJz3GfCDsrY2e8D8NgnMkrpU5oev72R67ENvd+ltLeKwaHWMDwrcr34kf5ZWRUkLqlnrTXmo9w==
+X-Received: by 2002:a63:ca4e:: with SMTP id o14mr4352543pgi.213.1598294551624;
+        Mon, 24 Aug 2020 11:42:31 -0700 (PDT)
 Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id 12sm12038489pfn.173.2020.08.24.11.42.33
+        by smtp.gmail.com with ESMTPSA id il13sm251907pjb.0.2020.08.24.11.42.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 11:42:33 -0700 (PDT)
+        Mon, 24 Aug 2020 11:42:30 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org
 Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
@@ -79,14 +79,14 @@ Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         John Stultz <john.stultz@linaro.org>,
         Jonathan Marek <jonathan@marek.ca>,
         Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 11/20] drm/msm: Add a context pointer to the submitqueue
-Date:   Mon, 24 Aug 2020 11:37:45 -0700
-Message-Id: <20200824183825.1778810-12-robdclark@gmail.com>
+        Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 10/20] dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
+Date:   Mon, 24 Aug 2020 11:37:44 -0700
+Message-Id: <20200824183825.1778810-11-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200824183825.1778810-1-robdclark@gmail.com>
 References: <20200824183825.1778810-1-robdclark@gmail.com>
@@ -99,157 +99,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jordan Crouse <jcrouse@codeaurora.org>
 
-Each submitqueue is attached to a context. Add a pointer to the
-context to the submitqueue at create time and refcount it so
-that it stays around through the life of the queue.
+Every Qcom Adreno GPU has an embedded SMMU for its own use. These
+devices depend on unique features such as split pagetables,
+different stall/halt requirements and other settings. Identify them
+with a compatible string so that they can be identified in the
+arm-smmu implementation specific code.
 
-Co-developed-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/gpu/drm/msm/msm_drv.c         |  3 ++-
- drivers/gpu/drm/msm/msm_drv.h         | 20 ++++++++++++++++++++
- drivers/gpu/drm/msm/msm_gem.h         |  1 +
- drivers/gpu/drm/msm/msm_gem_submit.c  |  6 +++---
- drivers/gpu/drm/msm/msm_gpu.h         |  1 +
- drivers/gpu/drm/msm/msm_submitqueue.c |  3 +++
- 6 files changed, 30 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 79333842f70a..75cd7639f560 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -594,6 +594,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
- 	if (!ctx)
- 		return -ENOMEM;
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+index 503160a7b9a0..3b63f2ae24db 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+@@ -28,8 +28,6 @@ properties:
+           - enum:
+               - qcom,msm8996-smmu-v2
+               - qcom,msm8998-smmu-v2
+-              - qcom,sc7180-smmu-v2
+-              - qcom,sdm845-smmu-v2
+           - const: qcom,smmu-v2
  
-+	kref_init(&ctx->ref);
- 	msm_submitqueue_init(dev, ctx);
- 
- 	ctx->aspace = priv->gpu ? priv->gpu->aspace : NULL;
-@@ -615,7 +616,7 @@ static int msm_open(struct drm_device *dev, struct drm_file *file)
- static void context_close(struct msm_file_private *ctx)
- {
- 	msm_submitqueue_close(ctx);
--	kfree(ctx);
-+	msm_file_private_put(ctx);
- }
- 
- static void msm_postclose(struct drm_device *dev, struct drm_file *file)
-diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-index af259b0573ea..4561bfb5e745 100644
---- a/drivers/gpu/drm/msm/msm_drv.h
-+++ b/drivers/gpu/drm/msm/msm_drv.h
-@@ -57,6 +57,7 @@ struct msm_file_private {
- 	struct list_head submitqueues;
- 	int queueid;
- 	struct msm_gem_address_space *aspace;
-+	struct kref ref;
- };
- 
- enum msm_mdp_plane_property {
-@@ -428,6 +429,25 @@ void msm_submitqueue_close(struct msm_file_private *ctx);
- 
- void msm_submitqueue_destroy(struct kref *kref);
- 
-+static inline void __msm_file_private_destroy(struct kref *kref)
-+{
-+	struct msm_file_private *ctx = container_of(kref,
-+		struct msm_file_private, ref);
-+
-+	kfree(ctx);
-+}
-+
-+static inline void msm_file_private_put(struct msm_file_private *ctx)
-+{
-+	kref_put(&ctx->ref, __msm_file_private_destroy);
-+}
-+
-+static inline struct msm_file_private *msm_file_private_get(
-+	struct msm_file_private *ctx)
-+{
-+	kref_get(&ctx->ref);
-+	return ctx;
-+}
- 
- #define DBG(fmt, ...) DRM_DEBUG_DRIVER(fmt"\n", ##__VA_ARGS__)
- #define VERB(fmt, ...) if (0) DRM_DEBUG_DRIVER(fmt"\n", ##__VA_ARGS__)
-diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
-index 972490b14ba5..9c573c4269cb 100644
---- a/drivers/gpu/drm/msm/msm_gem.h
-+++ b/drivers/gpu/drm/msm/msm_gem.h
-@@ -142,6 +142,7 @@ struct msm_gem_submit {
- 	bool valid;         /* true if no cmdstream patching needed */
- 	bool in_rb;         /* "sudo" mode, copy cmds into RB */
- 	struct msm_ringbuffer *ring;
-+	struct msm_file_private *ctx;
- 	unsigned int nr_cmds;
- 	unsigned int nr_bos;
- 	u32 ident;	   /* A "identifier" for the submit for logging */
-diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
-index 8cb9aa15ff90..1464b04d25d3 100644
---- a/drivers/gpu/drm/msm/msm_gem_submit.c
-+++ b/drivers/gpu/drm/msm/msm_gem_submit.c
-@@ -27,7 +27,7 @@
- #define BO_PINNED   0x2000
- 
- static struct msm_gem_submit *submit_create(struct drm_device *dev,
--		struct msm_gpu *gpu, struct msm_gem_address_space *aspace,
-+		struct msm_gpu *gpu,
- 		struct msm_gpu_submitqueue *queue, uint32_t nr_bos,
- 		uint32_t nr_cmds)
- {
-@@ -43,7 +43,7 @@ static struct msm_gem_submit *submit_create(struct drm_device *dev,
- 		return NULL;
- 
- 	submit->dev = dev;
--	submit->aspace = aspace;
-+	submit->aspace = queue->ctx->aspace;
- 	submit->gpu = gpu;
- 	submit->fence = NULL;
- 	submit->cmd = (void *)&submit->bos[nr_bos];
-@@ -677,7 +677,7 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
- 		}
- 	}
- 
--	submit = submit_create(dev, gpu, ctx->aspace, queue, args->nr_bos,
-+	submit = submit_create(dev, gpu, queue, args->nr_bos,
- 		args->nr_cmds);
- 	if (!submit) {
- 		ret = -ENOMEM;
-diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-index f91b141add75..97c527e98391 100644
---- a/drivers/gpu/drm/msm/msm_gpu.h
-+++ b/drivers/gpu/drm/msm/msm_gpu.h
-@@ -190,6 +190,7 @@ struct msm_gpu_submitqueue {
- 	u32 flags;
- 	u32 prio;
- 	int faults;
-+	struct msm_file_private *ctx;
- 	struct list_head node;
- 	struct kref ref;
- };
-diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
-index 90c9d84e6155..c3d206105d28 100644
---- a/drivers/gpu/drm/msm/msm_submitqueue.c
-+++ b/drivers/gpu/drm/msm/msm_submitqueue.c
-@@ -12,6 +12,8 @@ void msm_submitqueue_destroy(struct kref *kref)
- 	struct msm_gpu_submitqueue *queue = container_of(kref,
- 		struct msm_gpu_submitqueue, ref);
- 
-+	msm_file_private_put(queue->ctx);
-+
- 	kfree(queue);
- }
- 
-@@ -83,6 +85,7 @@ int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
- 
- 	write_lock(&ctx->queuelock);
- 
-+	queue->ctx = msm_file_private_get(ctx);
- 	queue->id = ctx->queueid++;
- 
- 	if (id)
+       - description: Qcom SoCs implementing "arm,mmu-500"
+@@ -40,6 +38,13 @@ properties:
+               - qcom,sm8150-smmu-500
+               - qcom,sm8250-smmu-500
+           - const: arm,mmu-500
++      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
++        items:
++          - enum:
++              - qcom,sc7180-smmu-v2
++              - qcom,sdm845-smmu-v2
++          - const: qcom,adreno-smmu
++          - const: qcom,smmu-v2
+       - description: Marvell SoCs implementing "arm,mmu-500"
+         items:
+           - const: marvell,ap806-smmu-500
 -- 
 2.26.2
 
