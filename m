@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F3CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06ECAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4FC02067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D912067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289365;
-	bh=rpauGeZABoOovO9KdfgP02+QEUTjAZ89+rWMnfA0VKo=;
+	s=default; t=1598289384;
+	bh=BgjkH+en7+kW2CLN1WT3ryTGuJJpA+Dy/5tLtJauIiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EkfV/S9Y9y1RliGV+VDliB6fQAjmUhhyrIbFJUrtxnzSBbp3ua6eEP5quSKdpWF83
-	 mfdLIokujPdzXHUWYbZBIvY9jkHe5fJoPBWjiwTeUYVH4sD3Q/qEATdEOhkFDkRES0
-	 E6PlGlYiaOmRXcy4SFG2UdC2+OE/oLrnkzE1fuPs=
+	b=RSI5L3KMInBqFdNrC62T2Baa1336hNyZ5gXgGziN4R1ObUtwdkF3WtChIBPCQcIP3
+	 4WAWG4H11fXXKftkrHjtbywHR3y6P7uqnhiTLDvLFmNitIbOJ/xUA1fguM2ldM5Aaw
+	 Rua4Tz9eg13Kc2idkQv6zh9b3dr9j7YAr5reNQMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgHXRQD (ORCPT
+        id S1726767AbgHXRQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:16:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40652 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:16:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728356AbgHXQg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728357AbgHXQg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:36:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CC2922D00;
-        Mon, 24 Aug 2020 16:36:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CF9622D0B;
+        Mon, 24 Aug 2020 16:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286990;
-        bh=rpauGeZABoOovO9KdfgP02+QEUTjAZ89+rWMnfA0VKo=;
+        s=default; t=1598286997;
+        bh=BgjkH+en7+kW2CLN1WT3ryTGuJJpA+Dy/5tLtJauIiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dix/HYaMCzNiuwxc3S0vIaVZ746c+uV+u71RhZeQkww9q9fRksHCuVAQtNdeqsvFJ
-         ycy2r58HiAhtErbUhGYGiwEZGOm2NvjUyxE16JrZ2tiR4XOeXkx92ihUenAB/tIt6b
-         rrkAPl77QeWWMMssgfM1JF29xrPamTz9/VPt2H0c=
+        b=FCu1RRR549NJ5q189ILAhsySsABktzOI/lQstzQ5dPELRSRvPg+nSg03g4en0Rnt/
+         Ra7QFel5+v3XHl7lEZNB1jhcQcKzq36DbdpMphSEEITNwsXMvz9CKhrDADt1bV0qGj
+         i9VX44IidvxeUqPtVWProw7PVvL2TrgNwjjUetYA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 62/63] arm64: Move handling of erratum 1418040 into C code
-Date:   Mon, 24 Aug 2020 12:35:02 -0400
-Message-Id: <20200824163504.605538-62-sashal@kernel.org>
+Cc:     Lukas Czerner <lczerner@redhat.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 02/54] jbd2: make sure jh have b_transaction set in refile/unfile_buffer
+Date:   Mon, 24 Aug 2020 12:35:41 -0400
+Message-Id: <20200824163634.606093-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
-References: <20200824163504.605538-1-sashal@kernel.org>
+In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
+References: <20200824163634.606093-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,122 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Lukas Czerner <lczerner@redhat.com>
 
-[ Upstream commit d49f7d7376d0c0daf8680984a37bd07581ac7d38 ]
+[ Upstream commit 24dc9864914eb5813173cfa53313fcd02e4aea7d ]
 
-Instead of dealing with erratum 1418040 on each entry and exit,
-let's move the handling to __switch_to() instead, which has
-several advantages:
+Callers of __jbd2_journal_unfile_buffer() and
+__jbd2_journal_refile_buffer() assume that the b_transaction is set. In
+fact if it's not, we can end up with journal_head refcounting errors
+leading to crash much later that might be very hard to track down. Add
+asserts to make sure that is the case.
 
-- It can be applied when it matters (switching between 32 and 64
-  bit tasks).
-- It is written in C (yay!)
-- It can rely on static keys rather than alternatives
+We also make sure that b_next_transaction is NULL in
+__jbd2_journal_unfile_buffer() since the callers expect that as well and
+we should not get into that stage in this state anyway, leading to
+problems later on if we do.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Acked-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20200731173824.107480-2-maz@kernel.org
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Tested with fstests.
+
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200617092549.6712-1-lczerner@redhat.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/entry.S   | 21 ---------------------
- arch/arm64/kernel/process.c | 34 ++++++++++++++++++++++++++++++++++
- 2 files changed, 34 insertions(+), 21 deletions(-)
+ fs/jbd2/transaction.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 35de8ba60e3d5..44445d471442d 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -169,19 +169,6 @@ alternative_cb_end
- 	stp	x28, x29, [sp, #16 * 14]
- 
- 	.if	\el == 0
--	.if	\regsize == 32
--	/*
--	 * If we're returning from a 32-bit task on a system affected by
--	 * 1418040 then re-enable userspace access to the virtual counter.
--	 */
--#ifdef CONFIG_ARM64_ERRATUM_1418040
--alternative_if ARM64_WORKAROUND_1418040
--	mrs	x0, cntkctl_el1
--	orr	x0, x0, #2	// ARCH_TIMER_USR_VCT_ACCESS_EN
--	msr	cntkctl_el1, x0
--alternative_else_nop_endif
--#endif
--	.endif
- 	clear_gp_regs
- 	mrs	x21, sp_el0
- 	ldr_this_cpu	tsk, __entry_task, x20
-@@ -337,14 +324,6 @@ alternative_else_nop_endif
- 	tst	x22, #PSR_MODE32_BIT		// native task?
- 	b.eq	3f
- 
--#ifdef CONFIG_ARM64_ERRATUM_1418040
--alternative_if ARM64_WORKAROUND_1418040
--	mrs	x0, cntkctl_el1
--	bic	x0, x0, #2			// ARCH_TIMER_USR_VCT_ACCESS_EN
--	msr	cntkctl_el1, x0
--alternative_else_nop_endif
--#endif
--
- #ifdef CONFIG_ARM64_ERRATUM_845719
- alternative_if ARM64_WORKAROUND_845719
- #ifdef CONFIG_PID_IN_CONTEXTIDR
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 6089638c7d43f..d8a10cf28f827 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -515,6 +515,39 @@ static void entry_task_switch(struct task_struct *next)
- 	__this_cpu_write(__entry_task, next);
- }
- 
-+/*
-+ * ARM erratum 1418040 handling, affecting the 32bit view of CNTVCT.
-+ * Assuming the virtual counter is enabled at the beginning of times:
-+ *
-+ * - disable access when switching from a 64bit task to a 32bit task
-+ * - enable access when switching from a 32bit task to a 64bit task
-+ */
-+static void erratum_1418040_thread_switch(struct task_struct *prev,
-+					  struct task_struct *next)
-+{
-+	bool prev32, next32;
-+	u64 val;
-+
-+	if (!(IS_ENABLED(CONFIG_ARM64_ERRATUM_1418040) &&
-+	      cpus_have_const_cap(ARM64_WORKAROUND_1418040)))
-+		return;
-+
-+	prev32 = is_compat_thread(task_thread_info(prev));
-+	next32 = is_compat_thread(task_thread_info(next));
-+
-+	if (prev32 == next32)
-+		return;
-+
-+	val = read_sysreg(cntkctl_el1);
-+
-+	if (!next32)
-+		val |= ARCH_TIMER_USR_VCT_ACCESS_EN;
-+	else
-+		val &= ~ARCH_TIMER_USR_VCT_ACCESS_EN;
-+
-+	write_sysreg(val, cntkctl_el1);
-+}
-+
- /*
-  * Thread switching.
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index e91aad3637a23..e65e0aca28261 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -2026,6 +2026,9 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
   */
-@@ -530,6 +563,7 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
- 	entry_task_switch(next);
- 	uao_thread_switch(next);
- 	ssbs_thread_switch(next);
-+	erratum_1418040_thread_switch(prev, next);
+ static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
+ {
++	J_ASSERT_JH(jh, jh->b_transaction != NULL);
++	J_ASSERT_JH(jh, jh->b_next_transaction == NULL);
++
+ 	__jbd2_journal_temp_unlink_buffer(jh);
+ 	jh->b_transaction = NULL;
+ }
+@@ -2572,6 +2575,13 @@ bool __jbd2_journal_refile_buffer(struct journal_head *jh)
  
+ 	was_dirty = test_clear_buffer_jbddirty(bh);
+ 	__jbd2_journal_temp_unlink_buffer(jh);
++
++	/*
++	 * b_transaction must be set, otherwise the new b_transaction won't
++	 * be holding jh reference
++	 */
++	J_ASSERT_JH(jh, jh->b_transaction != NULL);
++
  	/*
- 	 * Complete any pending TLB or cache maintenance on this CPU in case
+ 	 * We set b_transaction here because b_next_transaction will inherit
+ 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
 -- 
 2.25.1
 
