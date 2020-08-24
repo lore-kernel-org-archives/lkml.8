@@ -7,56 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AB9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53EE5221E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB7A207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258999;
-	bh=7CNvVz8rGhDFYm7q2EFtNcKpYiN/FyhHfc/Pr+CZ0p0=;
+	s=default; t=1598259009;
+	bh=zKQ8ZtWYpiM4WvCVnO7PZSUwlvnZhnWf8oE8kLvil2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJxpkD7rlH5FPimxiaXHZ/cadFunychZvKuYciKaCI6ilkcrz4uFq6QIZJ1obiMnm
-	 7YbnS1WmbvJDK2LF61uaD+rRCb3nDg6D4xAwjuQY9Xz3neu4w0Oq5ONNlfHjEG2qu4
-	 PeCcNt1bPoJ8DfgUUgZaxxf1UNf2/YvukqJlzZOM=
+	b=xurU5c0Rs122YwsjDojgYPJki2dIyFOJm1m4HNZ1C0TN/0m9JV/kZluZllxrDQ7WN
+	 5UAvEa8lafnFTNM7vodhM+PTwrT9TpZ2x/9/v1QLga4dRuPna8CzFOUoR45HZY3gMO
+	 SXZKkUKIf37RYHbN2SmPkd2Et4hLOAIA9ERpLiqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbgHXIt5 (ORCPT
+        id S1729520AbgHXIuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:49:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52816 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:50:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729506AbgHXIty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:49:54 -0400
+        id S1729811AbgHXIuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:50:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B175D204FD;
-        Mon, 24 Aug 2020 08:49:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88B00207D3;
+        Mon, 24 Aug 2020 08:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258994;
-        bh=7CNvVz8rGhDFYm7q2EFtNcKpYiN/FyhHfc/Pr+CZ0p0=;
+        s=default; t=1598259002;
+        bh=zKQ8ZtWYpiM4WvCVnO7PZSUwlvnZhnWf8oE8kLvil2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w5aZV2SgyK6u//X1ChrrUXHoVyQKpVjuNMqjxBPOWL6X2JrgVPcn1058WedJZSnkT
-         DJ8+iYIPgIpZBICdXE2OaG3XYkvE1ntZi9cL9rGAoLxbtf2Bn6GgrIK+T3MglyfsjY
-         LkuU6tGllQV3M6HwHixMhRy0eiQRcJefx7qUyPb8=
+        b=qj8YaQTjSrNrnv3fhi5zYT4DWd1eoEvAsrGqA8CDq2sKGrB1nAF8pz9apUmtolR6w
+         690vRqdOom6wuJi+YMlC6moQ7IZ+o0vUheT9pbnCeiZb0BZZo2u6k6yRHTDsQx/YeP
+         KitZUeyKqzLiKKzUZpA1W+fYHaAuuifqZSN7nkV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Peter Xu <peterx@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Marcos Paulo de Souza <mpdesouza@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 06/33] coredump: fix race condition between collapse_huge_page() and core dumping
-Date:   Mon, 24 Aug 2020 10:31:02 +0200
-Message-Id: <20200824082346.835996655@linuxfoundation.org>
+Subject: [PATCH 4.4 09/33] btrfs: export helpers for subvolume name/id resolution
+Date:   Mon, 24 Aug 2020 10:31:05 +0200
+Message-Id: <20200824082346.992358892@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
 References: <20200824082346.498653578@linuxfoundation.org>
@@ -69,101 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Arcangeli <aarcange@redhat.com>
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-[ Upstream commit 59ea6d06cfa9247b586a695c21f94afa7183af74 ]
+[ Upstream commit c0c907a47dccf2cf26251a8fb4a8e7a3bf79ce84 ]
 
-When fixing the race conditions between the coredump and the mmap_sem
-holders outside the context of the process, we focused on
-mmget_not_zero()/get_task_mm() callers in 04f5866e41fb70 ("coredump: fix
-race condition between mmget_not_zero()/get_task_mm() and core
-dumping"), but those aren't the only cases where the mmap_sem can be
-taken outside of the context of the process as Michal Hocko noticed
-while backporting that commit to older -stable kernels.
+The functions will be used outside of export.c and super.c to allow
+resolving subvolume name from a given id, eg. for subvolume deletion by
+id ioctl.
 
-If mmgrab() is called in the context of the process, but then the
-mm_count reference is transferred outside the context of the process,
-that can also be a problem if the mmap_sem has to be taken for writing
-through that mm_count reference.
-
-khugepaged registration calls mmgrab() in the context of the process,
-but the mmap_sem for writing is taken later in the context of the
-khugepaged kernel thread.
-
-collapse_huge_page() after taking the mmap_sem for writing doesn't
-modify any vma, so it's not obvious that it could cause a problem to the
-coredump, but it happens to modify the pmd in a way that breaks an
-invariant that pmd_trans_huge_lock() relies upon.  collapse_huge_page()
-needs the mmap_sem for writing just to block concurrent page faults that
-call pmd_trans_huge_lock().
-
-Specifically the invariant that "!pmd_trans_huge()" cannot become a
-"pmd_trans_huge()" doesn't hold while collapse_huge_page() runs.
-
-The coredump will call __get_user_pages() without mmap_sem for reading,
-which eventually can invoke a lockless page fault which will need a
-functional pmd_trans_huge_lock().
-
-So collapse_huge_page() needs to use mmget_still_valid() to check it's
-not running concurrently with the coredump...  as long as the coredump
-can invoke page faults without holding the mmap_sem for reading.
-
-This has "Fixes: khugepaged" to facilitate backporting, but in my view
-it's more a bug in the coredump code that will eventually have to be
-rewritten to stop invoking page faults without the mmap_sem for reading.
-So the long term plan is still to drop all mmget_still_valid().
-
-Link: http://lkml.kernel.org/r/20190607161558.32104-1-aarcange@redhat.com
-Fixes: ba76149f47d8 ("thp: khugepaged")
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-Reported-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ split from the next patch ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h | 4 ++++
- mm/huge_memory.c   | 3 +++
- 2 files changed, 7 insertions(+)
+ fs/btrfs/ctree.h  | 2 ++
+ fs/btrfs/export.c | 8 ++++----
+ fs/btrfs/export.h | 5 +++++
+ fs/btrfs/super.c  | 8 ++++----
+ 4 files changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 03cf5526e4456..2b17d2fca4299 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1123,6 +1123,10 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
-  * followed by taking the mmap_sem for writing before modifying the
-  * vmas or anything the coredump pretends not to change from under it.
-  *
-+ * It also has to be called when mmgrab() is used in the context of
-+ * the process, but then the mm_count refcount is transferred outside
-+ * the context of the process to run down_write() on that pinned mm.
-+ *
-  * NOTE: find_extend_vma() called from GUP context is the only place
-  * that can modify the "mm" (notably the vm_start/end) under mmap_sem
-  * for reading and outside the context of the process, so it is also
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 465786cd6490e..c5628ebc0fc29 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2587,6 +2587,9 @@ static void collapse_huge_page(struct mm_struct *mm,
- 	 * handled by the anon_vma lock + PG_lock.
- 	 */
- 	down_write(&mm->mmap_sem);
-+	result = SCAN_ANY_PROCESS;
-+	if (!mmget_still_valid(mm))
-+		goto out;
- 	if (unlikely(khugepaged_test_exit(mm)))
- 		goto out;
+diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
+index 0b06d4942da77..8fb9a1e0048be 100644
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -4096,6 +4096,8 @@ ssize_t btrfs_listxattr(struct dentry *dentry, char *buffer, size_t size);
+ /* super.c */
+ int btrfs_parse_options(struct btrfs_root *root, char *options);
+ int btrfs_sync_fs(struct super_block *sb, int wait);
++char *btrfs_get_subvol_name_from_objectid(struct btrfs_fs_info *fs_info,
++					  u64 subvol_objectid);
  
+ #ifdef CONFIG_PRINTK
+ __printf(2, 3)
+diff --git a/fs/btrfs/export.c b/fs/btrfs/export.c
+index 2513a7f533342..92f80ed642194 100644
+--- a/fs/btrfs/export.c
++++ b/fs/btrfs/export.c
+@@ -55,9 +55,9 @@ static int btrfs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
+ 	return type;
+ }
+ 
+-static struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
+-				       u64 root_objectid, u32 generation,
+-				       int check_generation)
++struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
++				u64 root_objectid, u32 generation,
++				int check_generation)
+ {
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(sb);
+ 	struct btrfs_root *root;
+@@ -150,7 +150,7 @@ static struct dentry *btrfs_fh_to_dentry(struct super_block *sb, struct fid *fh,
+ 	return btrfs_get_dentry(sb, objectid, root_objectid, generation, 1);
+ }
+ 
+-static struct dentry *btrfs_get_parent(struct dentry *child)
++struct dentry *btrfs_get_parent(struct dentry *child)
+ {
+ 	struct inode *dir = d_inode(child);
+ 	struct btrfs_root *root = BTRFS_I(dir)->root;
+diff --git a/fs/btrfs/export.h b/fs/btrfs/export.h
+index 074348a95841f..7a305e5549991 100644
+--- a/fs/btrfs/export.h
++++ b/fs/btrfs/export.h
+@@ -16,4 +16,9 @@ struct btrfs_fid {
+ 	u64 parent_root_objectid;
+ } __attribute__ ((packed));
+ 
++struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
++				u64 root_objectid, u32 generation,
++				int check_generation);
++struct dentry *btrfs_get_parent(struct dentry *child);
++
+ #endif
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index 404051bf5cba9..540e6f141745a 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -843,8 +843,8 @@ out:
+ 	return error;
+ }
+ 
+-static char *get_subvol_name_from_objectid(struct btrfs_fs_info *fs_info,
+-					   u64 subvol_objectid)
++char *btrfs_get_subvol_name_from_objectid(struct btrfs_fs_info *fs_info,
++					  u64 subvol_objectid)
+ {
+ 	struct btrfs_root *root = fs_info->tree_root;
+ 	struct btrfs_root *fs_root;
+@@ -1323,8 +1323,8 @@ static struct dentry *mount_subvol(const char *subvol_name, u64 subvol_objectid,
+ 				goto out;
+ 			}
+ 		}
+-		subvol_name = get_subvol_name_from_objectid(btrfs_sb(mnt->mnt_sb),
+-							    subvol_objectid);
++		subvol_name = btrfs_get_subvol_name_from_objectid(
++					btrfs_sb(mnt->mnt_sb), subvol_objectid);
+ 		if (IS_ERR(subvol_name)) {
+ 			root = ERR_CAST(subvol_name);
+ 			subvol_name = NULL;
 -- 
 2.25.1
 
