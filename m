@@ -2,87 +2,146 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F97C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61E752065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:35:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598276130;
-	bh=L8KDTgoqa6Rk0gELQzO81+l0O3LH5zmLEgt6iWlP4DA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=Olpig/PNHteUBFeYiXmRh+C6lgQ0+3/QMo1dS14BcyrbQzkRup05jgPzV50tBEEsY
-	 6mH7UqX7Loe76QKnZ0U08ry64G0Vtf+6e2+MpGXT+RkxjqP5VULCHhN/+9E7tnobbJ
-	 Jm3ZbV7irq1E7Th5KyiCelH4CutfP/WXAoc2RH1E=
+	by mail.kernel.org (Postfix) with ESMTP id D483B2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:36:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myGAulX+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgHXNfQ (ORCPT
+        id S1727097AbgHXNf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:35:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbgHXNci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:32:38 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 134BD2065F;
-        Mon, 24 Aug 2020 13:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598275947;
-        bh=L8KDTgoqa6Rk0gELQzO81+l0O3LH5zmLEgt6iWlP4DA=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=HnGV+hGbGoHAsl/D02nLKokpz+Qg0uJk07vdVxhFlzwcYZ1cou5dHKpbD/dEnTsWB
-         L2/QDcaFx/1WE54P+h+qyimTr7Lv5ysRT42opWU0P8wn4cGziA6SXWxHsMwJf4yvBY
-         uHg2evRpQziMR55EX46TqDcMwNvlEahjdkUAJ8tk=
-Date:   Mon, 24 Aug 2020 14:31:53 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     lgirdwood@gmail.com, cy_huang <u0084500@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, gene_chen@richtek.com,
-        cy_huang@richtek.com
-In-Reply-To: <1598234713-8532-1-git-send-email-u0084500@gmail.com>
-References: <1598234713-8532-1-git-send-email-u0084500@gmail.com>
-Subject: Re: [PATCH] regulator: rt4801: Fix W=1 build warning when CONFIG_OF=n
-Message-Id: <159827590802.48129.16240965662426470036.b4-ty@kernel.org>
+        Mon, 24 Aug 2020 09:35:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbgHXNfT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 09:35:19 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54449C061573;
+        Mon, 24 Aug 2020 06:35:19 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id d11so11729408ejt.13;
+        Mon, 24 Aug 2020 06:35:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qBlPQKIK+Sf7xnyBmBOxFqnfqkDGJ7ZbBkjJFcCppis=;
+        b=myGAulX+pUpcUtuzXi8/ExHy7RBGxysvvhPJAYGx1lH5EEqh9Cnme9j3kPo5dMV6h2
+         /bwQ7L37JAHRCg5FrBZ1t1bJICI7yIpgMcUO1QcPtYSZitZjpbTS3McvwiD4IuX8YhGn
+         OweCm0GoVCaAQKXr25YzIi9fmNAHU9tJRGivXBDxXAg6VYiMRpAS+MVDTH1/9DgAyfSO
+         5UcyeaVNjlPc4GlTR4FIQqb6SV69PN+kMACyCYLf7iE8wtWkwWe4eSaBcVoMtamqbQ/7
+         533jc/8Cn+gkrWqb/C4B3oZtt6M57HKQKhc+YiZyUT/4vAX/XWFqH/GOvy9YW6Uo+20Y
+         sMLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qBlPQKIK+Sf7xnyBmBOxFqnfqkDGJ7ZbBkjJFcCppis=;
+        b=TaEVN8zDfn0Jp2e48XX3egAoT+C6X8nB3RUqYLpnS6BqmYvMeot0sznftmZ4+VgsWG
+         ysjYg7MqghIA/ixWCIBYzfeEtnxx15NneJlY3HPAMt03F2vAG1kYjMLL3rDhM3orTlDF
+         wr5lPwq5PA3tQhUgyQMhT9F20lp+mh05UtZBYaicWXbIHt2+StT5l4mGwE4WkKXgAWqb
+         rOSEzNPqbZTeFPcxPeBZn0JASbPvU/sM6a7i/jeagUzaeRBBOUfk+szx33WsWKp6QS6J
+         kxmKhs6v6goQl56kianjZyRid3R8r8bORrQmKpdiNVNS0b6Ry3b0na/7enIsYiDlJjQC
+         I2gQ==
+X-Gm-Message-State: AOAM532OJFoznYsnOcvEFy5OvNNO6PHq+Fa95aZitxlJbfnE9vcBgkks
+        Otb0gaonumGgzNY81pE3JHE=
+X-Google-Smtp-Source: ABdhPJy65pU8bdTG9sbTEPvCuA2gIvTWDt31MWk9H33q/YltEelKWAmDpJ8s5mvLZNd5HPHZsDgBzw==
+X-Received: by 2002:a17:906:359b:: with SMTP id o27mr5890797ejb.103.1598276117958;
+        Mon, 24 Aug 2020 06:35:17 -0700 (PDT)
+Received: from skbuf ([86.126.22.216])
+        by smtp.gmail.com with ESMTPSA id ay5sm9590726edb.2.2020.08.24.06.35.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 06:35:17 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 16:35:15 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Sumera Priyadarsini <sylphrenadin@gmail.com>
+Cc:     davem@davemloft.net, Julia.Lawall@lip6.fr, andrew@lunn.ch,
+        sean.wang@mediatek.com, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, kuba@kernel.org, matthias.bgg@gmail.com,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3] net: dsa: Add of_node_put() before break and return
+ statements
+Message-ID: <20200824133515.j6ujfm2tl2hqjo5u@skbuf>
+References: <20200823193054.29336-1-sylphrenadin@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200823193054.29336-1-sylphrenadin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020 10:05:13 +0800, cy_huang wrote:
-> Fix below warning when CONFIG_OF=n:
+On Mon, Aug 24, 2020 at 01:00:54AM +0530, Sumera Priyadarsini wrote:
+> Every iteration of for_each_child_of_node() decrements
+> the reference count of the previous node, however when control
+> is transferred from the middle of the loop, as in the case of
+> a return or break or goto, there is no decrement thus ultimately
+> resulting in a memory leak.
 > 
-> drivers/regulator/rt4801-regulator.c:206:34: warning: unused variable 'rt4801_of_id' [-Wunused-const-variable]
->   206 | static const struct of_device_id rt4801_of_id[] = {
->       |                                  ^~~~~~~~~~~~
+> Fix a potential memory leak in mt7530.c by inserting of_node_put()
+> before the break and return statements.
+> 
+> Issue found with Coccinelle.
+> 
+> ---
+> Changes in v2:
+> 	Add another of_node_put() in for_each_child_of_node() as pointed
+> out by Andrew.
+> 
+> Changes in v3:
+> 	- Correct syntax errors
+> 	- Modify commit message
+> 
+> ---
+> 
+> Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+> 
+> Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+> ---
 
-Applied to
+If you need to resend anyway, can we please have a proper commit prefix?
+A patch on mt7530.c shouldn't be "net: dsa: " but "net: dsa: mt7530: "
+as "git log" will tell you. The difference is relevant because "net:
+dsa: " typically refers to the generic code in net/dsa/.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
-
-Thanks!
-
-[1/1] regulator: rt4801: Fix W=1 build warning when CONFIG_OF=n
-      commit: c8b2c8949c45b01d75237331fc1387036b952d58
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+>  drivers/net/dsa/mt7530.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+> index 8dcb8a49ab67..4b4701c69fe1 100644
+> --- a/drivers/net/dsa/mt7530.c
+> +++ b/drivers/net/dsa/mt7530.c
+> @@ -1326,14 +1326,17 @@ mt7530_setup(struct dsa_switch *ds)
+>  
+>  			if (phy_node->parent == priv->dev->of_node->parent) {
+>  				ret = of_get_phy_mode(mac_np, &interface);
+> -				if (ret && ret != -ENODEV)
+> +				if (ret && ret != -ENODEV) {
+> +					of_node_put(mac_np);
+>  					return ret;
+> +				}
+>  				id = of_mdio_parse_addr(ds->dev, phy_node);
+>  				if (id == 0)
+>  					priv->p5_intf_sel = P5_INTF_SEL_PHY_P0;
+>  				if (id == 4)
+>  					priv->p5_intf_sel = P5_INTF_SEL_PHY_P4;
+>  			}
+> +			of_node_put(mac_np);
+>  			of_node_put(phy_node);
+>  			break;
+>  		}
+> -- 
+> 2.17.1
+> 
 
 Thanks,
-Mark
+-Vladimir
