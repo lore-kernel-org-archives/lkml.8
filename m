@@ -2,112 +2,145 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF46A2087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259428;
-	bh=fcu9tkV638RyO4qXm29ePKUITiCHaZxHndRULWlEA/o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ikJhSZ2RY0a7e0xx0RJEhwpPJwocZ1+ky0KQBUhCjwV4/Dpo/dIdVYP7FOhU11HUm
-	 mbrz7ezhmx/zsPNDrqI1+Mqz1VQG7KXXDwROxFd1IRHONgLuITU+YtA/wmWbAjwu+f
-	 5+0wmrXvm0M8k2CBbQRMU+MX8vGkVy64K4Bgu1aQ=
+	by mail.kernel.org (Postfix) with ESMTP id A24182072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbgHXI5G (ORCPT
+        id S1730646AbgHXI5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:57:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40232 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:57:12 -0400
+Received: from 8bytes.org ([81.169.241.247]:38788 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730485AbgHXI4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730564AbgHXI4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:35 -0400
+Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6539322BF5;
-        Mon, 24 Aug 2020 08:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259371;
-        bh=fcu9tkV638RyO4qXm29ePKUITiCHaZxHndRULWlEA/o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CCo5Vn56ObMEqAaHN59pV9Ur3SPwQWk2JF3GvGlGALkBQwPpEKu4Ug+W9y+SmBYkK
-         Jcdd7YyO/7Byu4TzI93T1sToYTRlVV9yHTUOoFJTqRczXwmdcg1m6Sj4Wyysy6iIVB
-         XoajMSPQxPrw0KSlChvWdyjsWoplUbsUhx9UI0fU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mao Wenan <wenan.mao@linux.alibaba.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 34/71] virtio_ring: Avoid loop when vq is broken in virtqueue_poll
-Date:   Mon, 24 Aug 2020 10:31:25 +0200
-Message-Id: <20200824082357.590278239@linuxfoundation.org>
+        by theia.8bytes.org (Postfix) with ESMTPSA id 50A5B12D3;
+        Mon, 24 Aug 2020 10:56:27 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        Doug Covelli <dcovelli@vmware.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v6 67/76] x86/vmware: Add VMware specific handling for VMMCALL under SEV-ES
+Date:   Mon, 24 Aug 2020 10:55:02 +0200
+Message-Id: <20200824085511.7553-68-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
-References: <20200824082355.848475917@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
+References: <20200824085511.7553-1-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <wenan.mao@linux.alibaba.com>
+From: Doug Covelli <dcovelli@vmware.com>
 
-[ Upstream commit 481a0d7422db26fb63e2d64f0652667a5c6d0f3e ]
+Add VMware specific handling for #VC faults caused by VMMCALL
+instructions.
 
-The loop may exist if vq->broken is true,
-virtqueue_get_buf_ctx_packed or virtqueue_get_buf_ctx_split
-will return NULL, so virtnet_poll will reschedule napi to
-receive packet, it will lead cpu usage(si) to 100%.
-
-call trace as below:
-virtnet_poll
-	virtnet_receive
-		virtqueue_get_buf_ctx
-			virtqueue_get_buf_ctx_packed
-			virtqueue_get_buf_ctx_split
-	virtqueue_napi_complete
-		virtqueue_poll           //return true
-		virtqueue_napi_schedule //it will reschedule napi
-
-to fix this, return false if vq is broken in virtqueue_poll.
-
-Signed-off-by: Mao Wenan <wenan.mao@linux.alibaba.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Link: https://lore.kernel.org/r/1596354249-96204-1-git-send-email-wenan.mao@linux.alibaba.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Doug Covelli <dcovelli@vmware.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: - Adapt to different paravirt interface ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Link: https://lore.kernel.org/r/20200724160336.5435-67-joro@8bytes.org
 ---
- drivers/virtio/virtio_ring.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kernel/cpu/vmware.c | 50 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 45 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index 6228b48d1e127..df7980aef927a 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -828,6 +828,9 @@ bool virtqueue_poll(struct virtqueue *_vq, unsigned last_used_idx)
- {
- 	struct vring_virtqueue *vq = to_vvq(_vq);
+diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
+index 9b6fafa69be9..924571fe5864 100644
+--- a/arch/x86/kernel/cpu/vmware.c
++++ b/arch/x86/kernel/cpu/vmware.c
+@@ -33,6 +33,7 @@
+ #include <asm/timer.h>
+ #include <asm/apic.h>
+ #include <asm/vmware.h>
++#include <asm/svm.h>
  
-+	if (unlikely(vq->broken))
+ #undef pr_fmt
+ #define pr_fmt(fmt)	"vmware: " fmt
+@@ -476,10 +477,49 @@ static bool __init vmware_legacy_x2apic_available(void)
+ 	       (eax & (1 << VMWARE_CMD_LEGACY_X2APIC)) != 0;
+ }
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++static void vmware_sev_es_hcall_prepare(struct ghcb *ghcb,
++					struct pt_regs *regs)
++{
++	/* Copy VMWARE specific Hypercall parameters to the GHCB */
++	ghcb_set_rip(ghcb, regs->ip);
++	ghcb_set_rbx(ghcb, regs->bx);
++	ghcb_set_rcx(ghcb, regs->cx);
++	ghcb_set_rdx(ghcb, regs->dx);
++	ghcb_set_rsi(ghcb, regs->si);
++	ghcb_set_rdi(ghcb, regs->di);
++	ghcb_set_rbp(ghcb, regs->bp);
++}
++
++static bool vmware_sev_es_hcall_finish(struct ghcb *ghcb, struct pt_regs *regs)
++{
++	if (!(ghcb_rbx_is_valid(ghcb) &&
++	      ghcb_rcx_is_valid(ghcb) &&
++	      ghcb_rdx_is_valid(ghcb) &&
++	      ghcb_rsi_is_valid(ghcb) &&
++	      ghcb_rdi_is_valid(ghcb) &&
++	      ghcb_rbp_is_valid(ghcb)))
 +		return false;
 +
- 	virtio_mb(vq->weak_barriers);
- 	return (u16)last_used_idx != virtio16_to_cpu(_vq->vdev, vq->vring.used->idx);
- }
++	regs->bx = ghcb->save.rbx;
++	regs->cx = ghcb->save.rcx;
++	regs->dx = ghcb->save.rdx;
++	regs->si = ghcb->save.rsi;
++	regs->di = ghcb->save.rdi;
++	regs->bp = ghcb->save.rbp;
++
++	return true;
++}
++#endif
++
+ const __initconst struct hypervisor_x86 x86_hyper_vmware = {
+-	.name			= "VMware",
+-	.detect			= vmware_platform,
+-	.type			= X86_HYPER_VMWARE,
+-	.init.init_platform	= vmware_platform_setup,
+-	.init.x2apic_available	= vmware_legacy_x2apic_available,
++	.name				= "VMware",
++	.detect				= vmware_platform,
++	.type				= X86_HYPER_VMWARE,
++	.init.init_platform		= vmware_platform_setup,
++	.init.x2apic_available		= vmware_legacy_x2apic_available,
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	.runtime.sev_es_hcall_prepare	= vmware_sev_es_hcall_prepare,
++	.runtime.sev_es_hcall_finish	= vmware_sev_es_hcall_finish,
++#endif
+ };
 -- 
-2.25.1
-
-
+2.28.0
 
