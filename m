@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7D8C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5A952074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3272074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261293;
-	bh=6aHggL1RkTAzBEHv4FvfQ9+Mk3/6PJyf2EJjPbmIUQE=;
+	s=default; t=1598261295;
+	bh=1IES0gm3oirDe7IZ79Li86odL9lbx2TB4xRbdXUVcBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KtyAmFzTJ8BfmYr0b4qsOJVQo5PB7A7z2BWROj15VetuY+rULvA1rK4fibnGu9skF
-	 RdPfOWJbfHWglU/u9PJzYwe4+Ky+7v+vpqLwKmZG/jRok+sB4Ul8RbHaFmtXbvKYsD
-	 0uO2giJr2XYWekrCxXbPaP1vGDC04nhA2GBDxluk=
+	b=ASSKRxxSQjQzLJ0AqS/ULiGYVXIRmxTs66rPMj+NKlQj7P707UTjVml7VSnypSwUc
+	 Fb4gXO/GkiIiFEgUTGppLYWVGgGJmmmI/GirhwB5SMzVQEp7+Eij+TUs2k3r75HrUp
+	 gm1MU4F7Cs13cobfeUzB3g72JEVAiFRCvOhM/rAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730002AbgHXIvu (ORCPT
+        id S1729995AbgHXIvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:51:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57040 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:51:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729978AbgHXIvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:46 -0400
+        id S1729956AbgHXIvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BC9C2075B;
-        Mon, 24 Aug 2020 08:51:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 372752075B;
+        Mon, 24 Aug 2020 08:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259105;
-        bh=6aHggL1RkTAzBEHv4FvfQ9+Mk3/6PJyf2EJjPbmIUQE=;
+        s=default; t=1598259100;
+        bh=1IES0gm3oirDe7IZ79Li86odL9lbx2TB4xRbdXUVcBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=APzmcX5ibV+TXN/HuNjRlCNf5/AW7EtqnqkfXb2NxkueEUzGaFriOqF8igl2N4thu
-         pv7o7gzX2uBvqMaqEe+FAmstQux0bDNO3SNbDv6ubNbhcK1/+qNYw3svZ7SUfWhcYm
-         4zNZ40DuygdZ3jL6m5dVTf9eRf9OlkxXc7whryUA=
+        b=cvuwiHvjdudpbgNQnZAlNZO7nhNXcR5eGE7EeRyDapwym+UFx7McRAkBQrjg80CjV
+         vlfj0TriVTyM+qvCdDibE2UihmD5THSkhjGRVq2kQnk+am8kLeM4t79KoFRzGvVGcY
+         OB1VJ/SSjgPMjh+dghg4vxcNKZ5HwVkafMZLz4zM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 22/39] m68knommu: fix overwriting of bits in ColdFire V3 cache control
-Date:   Mon, 24 Aug 2020 10:31:21 +0200
-Message-Id: <20200824082349.687014923@linuxfoundation.org>
+Subject: [PATCH 4.9 20/39] media: vpss: clean up resources in init
+Date:   Mon, 24 Aug 2020 10:31:19 +0200
+Message-Id: <20200824082349.579327492@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
@@ -59,50 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Ungerer <gerg@linux-m68k.org>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit bdee0e793cea10c516ff48bf3ebb4ef1820a116b ]
+[ Upstream commit 9c487b0b0ea7ff22127fe99a7f67657d8730ff94 ]
 
-The Cache Control Register (CACR) of the ColdFire V3 has bits that
-control high level caching functions, and also enable/disable the use
-of the alternate stack pointer register (the EUSP bit) to provide
-separate supervisor and user stack pointer registers. The code as
-it is today will blindly clear the EUSP bit on cache actions like
-invalidation. So it is broken for this case - and that will result
-in failed booting (interrupt entry and exit processing will be
-completely hosed).
+If platform_driver_register() fails within vpss_init() resources are not
+cleaned up. The patch fixes this issue by introducing the corresponding
+error handling.
 
-This only affects ColdFire V3 parts that support the alternate stack
-register (like the 5329 for example) - generally speaking new parts do,
-older parts don't. It has no impact on ColdFire V3 parts with the single
-stack pointer, like the 5307 for example.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Fix the cache bit defines used, so they maintain the EUSP bit when
-carrying out cache actions through the CACR register.
-
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/include/asm/m53xxacr.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/platform/davinci/vpss.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/arch/m68k/include/asm/m53xxacr.h b/arch/m68k/include/asm/m53xxacr.h
-index 3177ce8331d69..baee0c77b9818 100644
---- a/arch/m68k/include/asm/m53xxacr.h
-+++ b/arch/m68k/include/asm/m53xxacr.h
-@@ -88,9 +88,9 @@
-  * coherency though in all cases. And for copyback caches we will need
-  * to push cached data as well.
-  */
--#define CACHE_INIT	  CACR_CINVA
--#define CACHE_INVALIDATE  CACR_CINVA
--#define CACHE_INVALIDATED CACR_CINVA
-+#define CACHE_INIT        (CACHE_MODE + CACR_CINVA - CACR_EC)
-+#define CACHE_INVALIDATE  (CACHE_MODE + CACR_CINVA)
-+#define CACHE_INVALIDATED (CACHE_MODE + CACR_CINVA)
+diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
+index c2c68988e38ac..9884b34d6f406 100644
+--- a/drivers/media/platform/davinci/vpss.c
++++ b/drivers/media/platform/davinci/vpss.c
+@@ -519,19 +519,31 @@ static void vpss_exit(void)
  
- #define ACR0_MODE	((CONFIG_RAMBASE & 0xff000000) + \
- 			 (0x000f0000) + \
+ static int __init vpss_init(void)
+ {
++	int ret;
++
+ 	if (!request_mem_region(VPSS_CLK_CTRL, 4, "vpss_clock_control"))
+ 		return -EBUSY;
+ 
+ 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
+ 	if (unlikely(!oper_cfg.vpss_regs_base2)) {
+-		release_mem_region(VPSS_CLK_CTRL, 4);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_ioremap;
+ 	}
+ 
+ 	writel(VPSS_CLK_CTRL_VENCCLKEN |
+-		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++	       VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++
++	ret = platform_driver_register(&vpss_driver);
++	if (ret)
++		goto err_pd_register;
++
++	return 0;
+ 
+-	return platform_driver_register(&vpss_driver);
++err_pd_register:
++	iounmap(oper_cfg.vpss_regs_base2);
++err_ioremap:
++	release_mem_region(VPSS_CLK_CTRL, 4);
++	return ret;
+ }
+ subsys_initcall(vpss_init);
+ module_exit(vpss_exit);
 -- 
 2.25.1
 
