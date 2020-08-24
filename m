@@ -4,178 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BC1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEA5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6BFE20706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC5020706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgHXM5G (ORCPT
+        id S1728078AbgHXM5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:57:06 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:32871 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727081AbgHXMza (ORCPT
+        Mon, 24 Aug 2020 08:57:11 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:47083 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbgHXM5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:55:30 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R411e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0U6k9-bl_1598273712;
-Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6k9-bl_1598273712)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 24 Aug 2020 20:55:23 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, willy@infradead.org,
-        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        shakeelb@google.com, iamjoonsoo.kim@lge.com,
-        richard.weiyang@gmail.com, kirill@shutemov.name,
-        alexander.duyck@gmail.com, rong.a.chen@intel.com, mhocko@suse.com,
-        vdavydov.dev@gmail.com, shy828301@gmail.com
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH v18 28/32] mm/compaction: Drop locked from isolate_migratepages_block
-Date:   Mon, 24 Aug 2020 20:55:01 +0800
-Message-Id: <1598273705-69124-29-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+        Mon, 24 Aug 2020 08:57:00 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v12so4209177lfo.13;
+        Mon, 24 Aug 2020 05:56:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rmefo9JeNKbiRxEroXLrRSeRCr+DW21/6Xw4UwzMQoc=;
+        b=XcKMfPCEpXGeYjpqTmoaXolEKE/Ivw/H1eykj8pfM7ZYKbv2kf93GuTy0GlPL5r7tf
+         mhNYlITtlA2qU1TzVpRoN/STVT6I4Bix+G6hbbQ524s2bINamWMzscCB11E5wRojTv41
+         xacrMeFKBgS7cpfwZgaekoo2V4UYjxNVpdiZAJc4D7xfMIylJ4nmgX3pK7kfMYRlUYFU
+         5HWMdarsdfFS27PSN0p3fe2V4hI8za2O586oUwFmEnyu8SZ5S4wXGikHyA6KWLEHtTVa
+         nkwPX6VDGtEw6VAfa3Sa3G6UGAyqgWSPWpfZImhodl/xMiJ0UtU+j+kNibsTYNB8VucV
+         2hsw==
+X-Gm-Message-State: AOAM530qxg7LlFbAjSUznbp4I7dlfCBUxJ6WftbS8YsakrLVrGXC5tOv
+        3wMAJJTGlmkc1+ezw2rLgeI=
+X-Google-Smtp-Source: ABdhPJxtnD6qvH6S/v6pUQKAXjJ3kPM7Was6MUf+d493WDabRGlk5LdXUSSZL6wSpamAK3++ZnAtrA==
+X-Received: by 2002:ac2:46d4:: with SMTP id p20mr2560894lfo.109.1598273817247;
+        Mon, 24 Aug 2020 05:56:57 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.147.111])
+        by smtp.googlemail.com with ESMTPSA id z18sm2171906lji.107.2020.08.24.05.56.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 05:56:56 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] namei: use current_fsuid() in may_follow_link()
+Date:   Mon, 24 Aug 2020 15:56:32 +0300
+Message-Id: <20200824125632.487331-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Modify may_follow_link() to use current_fsuid()
 
-We can drop the need for the locked variable by making use of the
-lruvec_holds_page_lru_lock function. By doing this we can avoid some rcu
-locking ugliness for the case where the lruvec is still holding the LRU
-lock associated with the page. Instead we can just use the lruvec and if it
-is NULL we assume the lock was released.
-
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- mm/compaction.c | 46 +++++++++++++++++++++-------------------------
- 1 file changed, 21 insertions(+), 25 deletions(-)
+ fs/namei.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index b724eacf6421..6bf5ccd8fcf6 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -803,9 +803,8 @@ static bool too_many_isolated(pg_data_t *pgdat)
- {
- 	pg_data_t *pgdat = cc->zone->zone_pgdat;
- 	unsigned long nr_scanned = 0, nr_isolated = 0;
--	struct lruvec *lruvec;
-+	struct lruvec *lruvec = NULL;
- 	unsigned long flags = 0;
--	struct lruvec *locked = NULL;
- 	struct page *page = NULL, *valid_page = NULL;
- 	unsigned long start_pfn = low_pfn;
- 	bool skip_on_failure = false;
-@@ -866,9 +865,9 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 		 * a fatal signal is pending.
- 		 */
- 		if (!(low_pfn % SWAP_CLUSTER_MAX)) {
--			if (locked) {
--				unlock_page_lruvec_irqrestore(locked, flags);
--				locked = NULL;
-+			if (lruvec) {
-+				unlock_page_lruvec_irqrestore(lruvec, flags);
-+				lruvec = NULL;
- 			}
+diff --git a/fs/namei.c b/fs/namei.c
+index e99e2a9da0f7..1a47c9d8ce13 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -958,7 +958,7 @@ static inline int may_follow_link(struct nameidata *nd, const struct inode *inod
+ 		return 0;
  
- 			if (fatal_signal_pending(current)) {
-@@ -949,9 +948,9 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 			 */
- 			if (unlikely(__PageMovable(page)) &&
- 					!PageIsolated(page)) {
--				if (locked) {
--					unlock_page_lruvec_irqrestore(locked, flags);
--					locked = NULL;
-+				if (lruvec) {
-+					unlock_page_lruvec_irqrestore(lruvec, flags);
-+					lruvec = NULL;
- 				}
+ 	/* Allowed if owner and follower match. */
+-	if (uid_eq(current_cred()->fsuid, inode->i_uid))
++	if (uid_eq(current_fsuid(), inode->i_uid))
+ 		return 0;
  
- 				if (!isolate_movable_page(page, isolate_mode))
-@@ -992,16 +991,14 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 		if (!TestClearPageLRU(page))
- 			goto isolate_fail_put;
- 
--		rcu_read_lock();
--		lruvec = mem_cgroup_page_lruvec(page, pgdat);
--
- 		/* If we already hold the lock, we can skip some rechecking */
--		if (lruvec != locked) {
--			if (locked)
--				unlock_page_lruvec_irqrestore(locked, flags);
-+		if (!lruvec || !lruvec_holds_page_lru_lock(page, lruvec)) {
-+			if (lruvec)
-+				unlock_page_lruvec_irqrestore(lruvec, flags);
- 
-+			rcu_read_lock();
-+			lruvec = mem_cgroup_page_lruvec(page, pgdat);
- 			compact_lock_irqsave(&lruvec->lru_lock, &flags, cc);
--			locked = lruvec;
- 			rcu_read_unlock();
- 
- 			lruvec_memcg_debug(lruvec, page);
-@@ -1023,8 +1020,7 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 				SetPageLRU(page);
- 				goto isolate_fail_put;
- 			}
--		} else
--			rcu_read_unlock();
-+		}
- 
- 		/* The whole page is taken off the LRU; skip the tail pages. */
- 		if (PageCompound(page))
-@@ -1057,9 +1053,9 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 
- isolate_fail_put:
- 		/* Avoid potential deadlock in freeing page under lru_lock */
--		if (locked) {
--			unlock_page_lruvec_irqrestore(locked, flags);
--			locked = NULL;
-+		if (lruvec) {
-+			unlock_page_lruvec_irqrestore(lruvec, flags);
-+			lruvec = NULL;
- 		}
- 		put_page(page);
- 
-@@ -1073,9 +1069,9 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 		 * page anyway.
- 		 */
- 		if (nr_isolated) {
--			if (locked) {
--				unlock_page_lruvec_irqrestore(locked, flags);
--				locked = NULL;
-+			if (lruvec) {
-+				unlock_page_lruvec_irqrestore(lruvec, flags);
-+				lruvec = NULL;
- 			}
- 			putback_movable_pages(&cc->migratepages);
- 			cc->nr_migratepages = 0;
-@@ -1102,8 +1098,8 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 	page = NULL;
- 
- isolate_abort:
--	if (locked)
--		unlock_page_lruvec_irqrestore(locked, flags);
-+	if (lruvec)
-+		unlock_page_lruvec_irqrestore(lruvec, flags);
- 	if (page) {
- 		SetPageLRU(page);
- 		put_page(page);
+ 	/* Allowed if parent directory not sticky and world-writable. */
 -- 
-1.8.3.1
+2.26.2
 
