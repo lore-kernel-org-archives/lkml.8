@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A41C7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ADBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2B620639
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3BC8208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263158;
-	bh=4CNSfVrCBAZQkhDGS1J1IlqaAAqRPrPo8zCzlL0vzx4=;
+	s=default; t=1598263160;
+	bh=BUqh9hxrrhfBSUuYGJs7qbkTVzJ4kaDSPrSOfKiy10g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T+slWZ43+NCStLeavRitkxS5cv7wQPCnliH9wWautEX03pe10jXUxLkHX51g3XIyF
-	 mazz0Lp9Hliumu9wNw10OQl4aC+qRAdYX8PQRd7iBd7ys8nOtt/27fsvOK5xvOaqPZ
-	 4kEOvhKWHOsceuG6hjEiOzcsikKbE5mM0FQKexG0=
+	b=tjeA7RWMVg5jODjorl6ATvZCrUG81NLEo9XEALuZfgE0hf0GzxOf6xV9yd7XgvtJz
+	 rDLu2UZYxxdS89ngTSP0pBY02wrzo8uQA/e6qQgIOJUCAX9DYzfr0bpLguuQsUPfuV
+	 fSSj5DCYph8w3qs00eNHmbEC3gaY8Gh1TC1r7B7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgHXIdh (ORCPT
+        id S1727061AbgHXIde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:33:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:33:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbgHXId0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:33:26 -0400
+        id S1727019AbgHXIdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:33:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06913206F0;
-        Mon, 24 Aug 2020 08:33:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E87206F0;
+        Mon, 24 Aug 2020 08:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258006;
-        bh=4CNSfVrCBAZQkhDGS1J1IlqaAAqRPrPo8zCzlL0vzx4=;
+        s=default; t=1598258004;
+        bh=BUqh9hxrrhfBSUuYGJs7qbkTVzJ4kaDSPrSOfKiy10g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=btzR8/g2fMZy85OD4fnQAjSGjwrZoSWKFtQA/0c4yffhLXIs8NjcCW6iVlyY9HWvq
-         1cih+fWF1Uxj/Msixn8TMBgFdACXmCmn82TYh0X1WW1ekig1ye8uhCQHsvlzVqhw85
-         QE00NMODi8Ub81yr8YC1CWdaUmYA7ANLzC5uk5kk=
+        b=GS/6haiS2H/L3k9Y/KakDt+UJ8fTI/qdHJ592r8Q3sM48GSUcVK4jYRAzkTuvYIuo
+         EtLaD4OyXm4OPHgk2nMs8QopWVEGsnTMb0vHkUyJCh/aEWrrSp4uDy5oPgiXE0ExlJ
+         /wulgpafAMjwqpSlev98xNdI+vHzxylHQNMxGrC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stylon Wang <stylon.wang@amd.com>,
-        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
-        Qingqing Zhuo <qingqing.zhuo@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.8 039/148] drm/amd/display: Fix EDID parsing after resume from suspend
-Date:   Mon, 24 Aug 2020 10:28:57 +0200
-Message-Id: <20200824082415.919874230@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Subject: [PATCH 5.8 021/148] RDMA/hfi1: Correct an interlock issue for TID RDMA WRITE request
+Date:   Mon, 24 Aug 2020 10:28:39 +0200
+Message-Id: <20200824082414.985790869@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -61,40 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stylon Wang <stylon.wang@amd.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-commit b24bdc37d03a0478189e20a50286092840f414fa upstream.
+commit b25e8e85e75a61af1ddc88c4798387dd3132dd43 upstream.
 
-[Why]
-Resuming from suspend, CEA blocks from EDID are not parsed and no video
-modes can support YUV420. When this happens, output bpc cannot go over
-8-bit with 4K modes on HDMI.
+The following message occurs when running an AI application with TID RDMA
+enabled:
 
-[How]
-In amdgpu_dm_update_connector_after_detect(), drm_add_edid_modes() is
-called after drm_connector_update_edid_property() to fully parse EDID
-and update display info.
+hfi1 0000:7f:00.0: hfi1_0: [QP74] hfi1_tid_timeout 4084
+hfi1 0000:7f:00.0: hfi1_0: [QP70] hfi1_tid_timeout 4084
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Stylon Wang <stylon.wang@amd.com>
-Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
-Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The issue happens when TID RDMA WRITE request is followed by an
+IB_WR_RDMA_WRITE_WITH_IMM request, the latter could be completed first on
+the responder side. As a result, no ACK packet for the latter could be
+sent because the TID RDMA WRITE request is still being processed on the
+responder side.
+
+When the TID RDMA WRITE request is eventually completed, the requester
+will wait for the IB_WR_RDMA_WRITE_WITH_IMM request to be acknowledged.
+
+If the next request is another TID RDMA WRITE request, no TID RDMA WRITE
+DATA packet could be sent because the preceding IB_WR_RDMA_WRITE_WITH_IMM
+request is not completed yet.
+
+Consequently the IB_WR_RDMA_WRITE_WITH_IMM will be retried but it will be
+ignored on the responder side because the responder thinks it has already
+been completed. Eventually the retry will be exhausted and the qp will be
+put into error state on the requester side. On the responder side, the TID
+resource timer will eventually expire because no TID RDMA WRITE DATA
+packets will be received for the second TID RDMA WRITE request.  There is
+also risk of a write-after-write memory corruption due to the issue.
+
+Fix by adding a requester side interlock to prevent any potential data
+corruption and TID RDMA protocol error.
+
+Fixes: a0b34f75ec20 ("IB/hfi1: Add interlock between a TID RDMA request and other requests")
+Link: https://lore.kernel.org/r/20200811174931.191210.84093.stgit@awfm-01.aw.intel.com
+Cc: <stable@vger.kernel.org> # 5.4.x+
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |    1 +
+ drivers/infiniband/hw/hfi1/tid_rdma.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -2184,6 +2184,7 @@ void amdgpu_dm_update_connector_after_de
- 
- 			drm_connector_update_edid_property(connector,
- 							   aconnector->edid);
-+			drm_add_edid_modes(connector, aconnector->edid);
- 
- 			if (aconnector->dc_link->aux_mode)
- 				drm_dp_cec_set_edid(&aconnector->dm_dp_aux.aux,
+--- a/drivers/infiniband/hw/hfi1/tid_rdma.c
++++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
+@@ -3215,6 +3215,7 @@ bool hfi1_tid_rdma_wqe_interlock(struct
+ 	case IB_WR_ATOMIC_CMP_AND_SWP:
+ 	case IB_WR_ATOMIC_FETCH_AND_ADD:
+ 	case IB_WR_RDMA_WRITE:
++	case IB_WR_RDMA_WRITE_WITH_IMM:
+ 		switch (prev->wr.opcode) {
+ 		case IB_WR_TID_RDMA_WRITE:
+ 			req = wqe_to_tid_req(prev);
 
 
