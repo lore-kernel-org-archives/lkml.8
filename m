@@ -2,165 +2,92 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AA9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5367206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:10:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CisPEMty"
+	by mail.kernel.org (Postfix) with ESMTP id 0B27C206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgHXPKQ (ORCPT
+        id S1727851AbgHXPK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:10:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727019AbgHXPIg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:08:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9F1C061575;
-        Mon, 24 Aug 2020 07:55:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=9t5Nd6itfXneJoCG+4+nlOQPHaX5dotOdJBb6HG6NCQ=; b=CisPEMtyv9tHJ8UXhEjITSj6ro
-        e55s5UhIYB9KqOc0tY7ShmdbSSODyCcIGIv56v/qFmbGtSzJpV8lU+uTTyzThFKH8onX15DBFgokQ
-        6Pr334cFBhSX34CWshalSFv2drBRGB2bRqemwBS/UGUz2S8kAHPRFda8gauJIjZOsm1//3GVVeC+w
-        6uJ53dj4fYOjll48a6T1b3hjthIGtWdsXQO05I6X8bXrgCYqMXblLL+N0fpyvXt2bdVTERlSTP/9w
-        kn4ziZ+OVhYtBgG7xC4azdO4De+orNL9OCGXJgeZ1ZHdF9TXTMucj+w1r7T4N4SUqMGAkff4YBaIw
-        U99ubkdg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kADsP-0002lz-8X; Mon, 24 Aug 2020 14:55:13 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 2/9] fs: Introduce i_blocks_per_page
-Date:   Mon, 24 Aug 2020 15:55:03 +0100
-Message-Id: <20200824145511.10500-3-willy@infradead.org>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20200824145511.10500-1-willy@infradead.org>
-References: <20200824145511.10500-1-willy@infradead.org>
+        Mon, 24 Aug 2020 11:10:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38938 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727019AbgHXPKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 11:10:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 17128AB8B;
+        Mon, 24 Aug 2020 15:10:47 +0000 (UTC)
+Date:   Mon, 24 Aug 2020 17:10:13 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>, akpm@linux-foundation.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, nao.horiguchi@gmail.com,
+        osalvador@suse.de, mike.kravetz@oracle.com
+Subject: Re: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead
+ page charged
+Message-ID: <20200824151013.GB3415@dhcp22.suse.cz>
+References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200820145850.GA4622@lca.pw>
+ <20200821080127.GD32537@dhcp22.suse.cz>
+ <20200821123934.GA4314@lca.pw>
+ <20200821134842.GF32537@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821134842.GF32537@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This helper is useful for both THPs and for supporting block size larger
-than page size.  Convert all users that I could find (we have a few
-different ways of writing this idiom, and I may have missed some).
+On Fri 21-08-20 15:48:44, Michal Hocko wrote:
+> On Fri 21-08-20 08:39:37, Qian Cai wrote:
+> > On Fri, Aug 21, 2020 at 10:01:27AM +0200, Michal Hocko wrote:
+> > > On Thu 20-08-20 10:58:51, Qian Cai wrote:
+> > > > On Tue, Aug 11, 2020 at 07:10:27PM +0800, Alex Shi wrote:
+> > > > > Since readahead page is charged on memcg too, in theory we don't have to
+> > > > > check this exception now. Before safely remove them all, add a warning
+> > > > > for the unexpected !memcg.
+> > > > > 
+> > > > > Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> > > > > Acked-by: Michal Hocko <mhocko@suse.com>
+> > > > 
+> > > > This will trigger,
+> > > 
+> > > Thanks for the report!
+> > >  
+> > > > [ 1863.916499] LTP: starting move_pages12
+> > > > [ 1863.946520] page:000000008ccc1062 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1fd3c0
+> > > > [ 1863.946553] head:000000008ccc1062 order:5 compound_mapcount:0 compound_pincount:0
+> > > 
+> > > Hmm, this is really unexpected. How did we get order-5 page here? Is
+> > > this some special mappaing that sys_move_pages should just ignore?
+> > 
+> > Well, I thought everybody should be able to figure out where to find the LTP
+> > tests source code at this stage to see what it does. Anyway, the test simply
+> > migrate hugepages while soft offlining, so order 5 is expected as that is 2M
+> > hugepage on powerpc (also reproduced on x86 below). It might be easier to
+> > reproduce using our linux-mm random bug collection on NUMA systems.
+> 
+> OK, I must have missed that this was on ppc. The order makes more sense
+> now. I will have a look at this next week.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
- fs/iomap/buffered-io.c  |  8 ++++----
- fs/jfs/jfs_metapage.c   |  2 +-
- fs/xfs/xfs_aops.c       |  2 +-
- include/linux/pagemap.h | 16 ++++++++++++++++
- 4 files changed, 22 insertions(+), 6 deletions(-)
+OK, so I've had a look and I know what's going on there. The
+move_pages12 is migrating hugetlb pages. Those are not charged to any
+memcg. We have completely missed this case. There are two ways going
+around that. Drop the warning and update the comment so that we do not
+forget about that or special case hugetlb pages.
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index cffd575e57b6..13d5cdab8dcd 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -46,7 +46,7 @@ iomap_page_create(struct inode *inode, struct page *page)
- {
- 	struct iomap_page *iop = to_iomap_page(page);
- 
--	if (iop || i_blocksize(inode) == PAGE_SIZE)
-+	if (iop || i_blocks_per_page(inode, page) <= 1)
- 		return iop;
- 
- 	iop = kmalloc(sizeof(*iop), GFP_NOFS | __GFP_NOFAIL);
-@@ -147,7 +147,7 @@ iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
- 	unsigned int i;
- 
- 	spin_lock_irqsave(&iop->uptodate_lock, flags);
--	for (i = 0; i < PAGE_SIZE / i_blocksize(inode); i++) {
-+	for (i = 0; i < i_blocks_per_page(inode, page); i++) {
- 		if (i >= first && i <= last)
- 			set_bit(i, iop->uptodate);
- 		else if (!test_bit(i, iop->uptodate))
-@@ -1078,7 +1078,7 @@ iomap_finish_page_writeback(struct inode *inode, struct page *page,
- 		mapping_set_error(inode->i_mapping, -EIO);
- 	}
- 
--	WARN_ON_ONCE(i_blocksize(inode) < PAGE_SIZE && !iop);
-+	WARN_ON_ONCE(i_blocks_per_page(inode, page) > 1 && !iop);
- 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) <= 0);
- 
- 	if (!iop || atomic_dec_and_test(&iop->write_count))
-@@ -1374,7 +1374,7 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
- 	int error = 0, count = 0, i;
- 	LIST_HEAD(submit_list);
- 
--	WARN_ON_ONCE(i_blocksize(inode) < PAGE_SIZE && !iop);
-+	WARN_ON_ONCE(i_blocks_per_page(inode, page) > 1 && !iop);
- 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) != 0);
- 
- 	/*
-diff --git a/fs/jfs/jfs_metapage.c b/fs/jfs/jfs_metapage.c
-index a2f5338a5ea1..176580f54af9 100644
---- a/fs/jfs/jfs_metapage.c
-+++ b/fs/jfs/jfs_metapage.c
-@@ -473,7 +473,7 @@ static int metapage_readpage(struct file *fp, struct page *page)
- 	struct inode *inode = page->mapping->host;
- 	struct bio *bio = NULL;
- 	int block_offset;
--	int blocks_per_page = PAGE_SIZE >> inode->i_blkbits;
-+	int blocks_per_page = i_blocks_per_page(inode, page);
- 	sector_t page_start;	/* address of page in fs blocks */
- 	sector_t pblock;
- 	int xlen;
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index b35611882ff9..55d126d4e096 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -544,7 +544,7 @@ xfs_discard_page(
- 			page, ip->i_ino, offset);
- 
- 	error = xfs_bmap_punch_delalloc_range(ip, start_fsb,
--			PAGE_SIZE / i_blocksize(inode));
-+			i_blocks_per_page(inode, page));
- 	if (error && !XFS_FORCED_SHUTDOWN(mp))
- 		xfs_alert(mp, "page discard unable to remove delalloc mapping.");
- out_invalidate:
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 7de11dcd534d..853733286138 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -899,4 +899,20 @@ static inline int page_mkwrite_check_truncate(struct page *page,
- 	return offset;
- }
- 
-+/**
-+ * i_blocks_per_page - How many blocks fit in this page.
-+ * @inode: The inode which contains the blocks.
-+ * @page: The page (head page if the page is a THP).
-+ *
-+ * If the block size is larger than the size of this page, return zero.
-+ *
-+ * Context: The caller should hold a refcount on the page to prevent it
-+ * from being split.
-+ * Return: The number of filesystem blocks covered by this page.
-+ */
-+static inline
-+unsigned int i_blocks_per_page(struct inode *inode, struct page *page)
-+{
-+	return thp_size(page) >> inode->i_blkbits;
-+}
- #endif /* _LINUX_PAGEMAP_H */
+I think the first option is better.
 -- 
-2.28.0
-
+Michal Hocko
+SUSE Labs
