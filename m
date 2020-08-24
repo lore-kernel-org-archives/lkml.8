@@ -2,183 +2,101 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D10FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C13C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 20:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2716320706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:58:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="LPFNXUNp"
+	by mail.kernel.org (Postfix) with ESMTP id EA10D20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 20:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgHXT6x (ORCPT
+        id S1726711AbgHXUAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:58:53 -0400
-Received: from gateway22.websitewelcome.com ([192.185.46.233]:31393 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725904AbgHXT6w (ORCPT
+        Mon, 24 Aug 2020 16:00:18 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:52834 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgHXUAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:58:52 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id BEC549907
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 14:58:48 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id AIcCkjIqZLFNkAIcCkEGXs; Mon, 24 Aug 2020 14:58:48 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=qY6Sfg1kz68T/rZ73AVuz7ThUgycADm5KdaAnfoGZa8=; b=LPFNXUNpzpoVYJr6HhNgJzzdnY
-        wpn/h+62sCkeN6FCjJl40Eg77XA8Xi7dl5JaGY/ls6KFX5dPh7Qayg70R2BByrw/vLsnIEj7QBZcT
-        MzAlRs/13WVXwiVpV2w7tKyTHtere/r1U7rdX9l2oDWEP3bomsDa5m3wpctlYUKG3t05aQdnZ/g29
-        k0DsXlt2Q5J29z/6u7+cwSFA+3agv9sUEHSzjxijAtYRpF+kOaojUZeE0je5xGklXBcGF7PMLCLP4
-        /1okj0bJCwJOebvD7K2LJTrnx4nvqs8zigFjF0bp5DP0Z+07zWchWIy6WlYW+CPqe43t1wHINOXbj
-        6wTA/ECw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:41402 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1kAIcB-001owc-NE; Mon, 24 Aug 2020 14:58:47 -0500
-Subject: Re: [GIT PULL] fallthrough pseudo-keyword macro conversions for
- 5.9-rc3
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20200824034841.GA29995@embeddedor>
- <20200824194335.GA4082027@ubuntu-n2-xlarge-x86>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <a2f6c262-d097-01f2-2e09-074f3ae6d4f0@embeddedor.com>
-Date:   Mon, 24 Aug 2020 15:04:44 -0500
+        Mon, 24 Aug 2020 16:00:15 -0400
+Received: by mail-pj1-f68.google.com with SMTP id z18so1669pjr.2;
+        Mon, 24 Aug 2020 13:00:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oLMQNel22K0XPYFA+YJ2r/SjoNNOFVt/AXP7lcsHH6E=;
+        b=QBwKwdf3vDcZM4RwiZqx+hCx9YXWINCwPZgpwzLH6Qo8wX+v9VMunMqLfJ+yXQD8L6
+         4rJiQXV3qH6PZ47pMWB19y7yEz5U9xCablAz/tX1m/4nlab41/R3jSaYr30MHWamGfEy
+         zeybrj+GsofiGSy3K+KND8TGOeyS+1FKp1QNMlBae/YXUXO+gml7/jaGjhNRq+KChJES
+         S/PF8wXeVfWToflwcmem31EW2JHZK9xIyEFvF3EmZRH3mxBn466e6AtyptCIKe2sZlfn
+         SNKut+gtgU1p2l/qpXaTjI62Tg7jhAYgABvK6mXlKHkSMEF/HoPA1zfDHbgx9DbX2KRL
+         LBNw==
+X-Gm-Message-State: AOAM531ZV/OMElb9UTEtbwbXxzXcBDOBBPC1Otvx0PYshQoSSekqLa8f
+        pSrUtsk9VEPYecvFpFbHM+C2IksWqOZxAw==
+X-Google-Smtp-Source: ABdhPJxkXtPnQIfoqZclGU1KUvAU1SWFGHzEauVD8GGFzTLF4PgIbdKtItlflQtR0lu+x3wVtk9pGg==
+X-Received: by 2002:a17:90a:fe82:: with SMTP id co2mr755235pjb.216.1598299213590;
+        Mon, 24 Aug 2020 13:00:13 -0700 (PDT)
+Received: from ?IPv6:2601:647:4802:9070:cda6:bf68:c972:645d? ([2601:647:4802:9070:cda6:bf68:c972:645d])
+        by smtp.gmail.com with ESMTPSA id r186sm13677304pfr.162.2020.08.24.13.00.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 13:00:12 -0700 (PDT)
+Subject: Re: [PATCH] nvmet-fc: Fix a missed _irqsave version of spin_lock in
+ 'nvmet_fc_fod_op_done()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        james.smart@broadcom.com, hch@lst.de, chaitanya.kulkarni@wdc.com
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20200821075819.152474-1-christophe.jaillet@wanadoo.fr>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <823cd0d7-1688-7d11-1e9b-2de29b6065a6@grimberg.me>
+Date:   Mon, 24 Aug 2020 13:00:11 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200824194335.GA4082027@ubuntu-n2-xlarge-x86>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200821075819.152474-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1kAIcB-001owc-NE
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:41402
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nathan,
-
-On 8/24/20 14:43, Nathan Chancellor wrote:
-
->> Gustavo A. R. Silva (1):
->>       treewide: Use fallthrough pseudo-keyword
+> The way 'spin_lock()' and 'spin_lock_irqsave()' are used is not consistent
+> in this function.
 > 
-> $ scripts/config --file arch/powerpc/configs/powernv_defconfig -e KERNEL_XZ
+> Use 'spin_lock_irqsave()' also here, as there is no guarantee that
+> interruptions are disabled at that point, according to surrounding code.
 > 
-> $ make -skj"$(nproc)" ARCH=powerpc CROSS_COMPILE=powerpc64le-linux- distclean powernv_defconfig zImage
-> ...
-> In file included from arch/powerpc/boot/../../../lib/decompress_unxz.c:234,
->                  from arch/powerpc/boot/decompress.c:38:
-> arch/powerpc/boot/../../../lib/xz/xz_dec_stream.c: In function 'dec_main':
-> arch/powerpc/boot/../../../lib/xz/xz_dec_stream.c:586:4: error: 'fallthrough' undeclared (first use in this function)
->   586 |    fallthrough;
->       |    ^~~~~~~~~~~
-> arch/powerpc/boot/../../../lib/xz/xz_dec_stream.c:586:4: note: each undeclared identifier is reported only once for each function it appears in
-> In file included from arch/powerpc/boot/../../../lib/decompress_unxz.c:235,
->                  from arch/powerpc/boot/decompress.c:38:
-> arch/powerpc/boot/../../../lib/xz/xz_dec_lzma2.c: In function 'xz_dec_lzma2_run':
-> arch/powerpc/boot/../../../lib/xz/xz_dec_lzma2.c:1046:4: error: 'fallthrough' undeclared (first use in this function)
->  1046 |    fallthrough;
->       |    ^~~~~~~~~~~
-> make[2]: *** [arch/powerpc/boot/Makefile:215: arch/powerpc/boot/decompress.o] Error 1
-> make[2]: Target 'arch/powerpc/boot/zImage' not remade because of errors.
-> make[1]: *** [arch/powerpc/Makefile:295: zImage] Error 2
-> make: *** [Makefile:335: __build_one_by_one] Error 2
-> make: Target 'distclean' not remade because of errors.
-> make: Target 'powernv_defconfig' not remade because of errors.
-> make: Target 'zImage' not remade because of errors.
+> Fixes: a97ec51b37ef ("nvmet_fc: Rework target side abort handling")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Not tested, only based on what looks logical to me according to
+> surrounding code
+> ---
+>   drivers/nvme/target/fc.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> This will end up affecting distribution configurations such as Debian
-> and OpenSUSE according to my testing. I am not sure what the solution
-> is, the PowerPC wrapper does not set -D__KERNEL__ so I am not sure that
-> compiler_attributes.h can be safely included. Adding Michael and
-> linuxppc-dev to CC.
+> diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
+> index 55bafd56166a..e6861cc10e7d 100644
+> --- a/drivers/nvme/target/fc.c
+> +++ b/drivers/nvme/target/fc.c
+> @@ -2342,9 +2342,9 @@ nvmet_fc_fod_op_done(struct nvmet_fc_fcp_iod *fod)
+>   			return;
+>   		if (fcpreq->fcp_error ||
+>   		    fcpreq->transferred_length != fcpreq->transfer_length) {
+> -			spin_lock(&fod->flock);
+> +			spin_lock_irqsave(&fod->flock, flags);
+>   			fod->abort = true;
+> -			spin_unlock(&fod->flock);
+> +			spin_unlock_irqrestore(&fod->flock, flags);
+>   
+>   			nvmet_req_complete(&fod->req, NVME_SC_INTERNAL);
+>   			return;
 > 
 
-Thanks for the report. I think, for now, the best solution is to
-use /* fall through */ comments instead of the pseudo-keyword in
-lib/
-
-I'll send a fix for that right away.
-
-Thanks
---
-Gustavo
+James, can I get a reviewed-by from you on this?
