@@ -2,234 +2,150 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E949CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FEEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCCE02074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8146F206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RG0osOb6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KhgJl73n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgHXLoV (ORCPT
+        id S1726986AbgHXLpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:44:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:44642 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726862AbgHXLoT (ORCPT
+        Mon, 24 Aug 2020 07:45:22 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59842 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726611AbgHXLpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:44:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598269457;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MfpV3F203s4Q5WIfbp3LWTnnzoF+cnouMwo8pG1/1kU=;
-        b=RG0osOb6C7KFTNUFoNb3QMxxPSqJWMtOIRDNENX8i888eLz/4mPwtD7Kg3fzJpQsHVUprZ
-        wtz7C67ESUGN/sFIQdY9Mk63jFfKYEF6nAXYbjWsU1CZ0czZO2KTHHJg2gOBM2jdX4Stsj
-        ZO4Frg7TyC/fKtyDh/CYgOhaU4KgmUc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-514-8vo1trLeOMSDM4ElnaAnTA-1; Mon, 24 Aug 2020 07:44:15 -0400
-X-MC-Unique: 8vo1trLeOMSDM4ElnaAnTA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35CCD807331;
-        Mon, 24 Aug 2020 11:44:14 +0000 (UTC)
-Received: from starship (unknown [10.35.206.221])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D53E42BFBF;
-        Mon, 24 Aug 2020 11:43:31 +0000 (UTC)
-Message-ID: <4858fb924edbda58b6c46bdd4ed803bda0ceebbb.camel@redhat.com>
-Subject: Re: [PATCH v2 3/7] KVM: SVM: refactor msr permission bitmap
- allocation
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Date:   Mon, 24 Aug 2020 14:43:22 +0300
-In-Reply-To: <CALMp9eRoYLqFEGqcVf2tExGvG4bJwy6CURrHiAnYqQ9TrS4eDg@mail.gmail.com>
-References: <20200820133339.372823-1-mlevitsk@redhat.com>
-         <20200820133339.372823-4-mlevitsk@redhat.com>
-         <CALMp9eRoYLqFEGqcVf2tExGvG4bJwy6CURrHiAnYqQ9TrS4eDg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Mon, 24 Aug 2020 07:45:19 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07OBj8To046466;
+        Mon, 24 Aug 2020 06:45:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598269508;
+        bh=ylz2yEP7MNmFHxlW15UvscwqbJnFF/9ciAx038v5df0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=KhgJl73nvKfP0FUEZHVllgKaMVUa28jQXsIQhjiSMskfHwuFbIUjBdELvE0/chWKv
+         0GvfctxAIt8BuiaykVbNakghsJIdpFvQb7EcE+bQHHKg/CxCeR0CMbDiA6pmjH2My3
+         3qa+i3KMBqk8p+m6q+i/0j5XbLgiwradbP4HAYPA=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07OBj8mn126368;
+        Mon, 24 Aug 2020 06:45:08 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 24
+ Aug 2020 06:45:07 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 24 Aug 2020 06:45:08 -0500
+Received: from [10.250.235.166] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07OBj4ck089288;
+        Mon, 24 Aug 2020 06:45:04 -0500
+Subject: Re: [RESEND PATCH v3 5/8] mtd: spi-nor: cadence-quadspi: Handle probe
+ deferral while requesting DMA channel
+To:     Jan Kiszka <jan.kiszka@web.de>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     Boris Brezillon <bbrezillon@kernel.org>,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
+        <dinguyen@kernel.org>, <marex@denx.de>
+References: <20200601070444.16923-1-vigneshr@ti.com>
+ <20200601070444.16923-6-vigneshr@ti.com>
+ <6c8d9bff-3a67-0e6c-d4d1-36b7ed5007b9@web.de>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <8cebd31a-2366-4584-b1d1-faa30c18ed6a@ti.com>
+Date:   Mon, 24 Aug 2020 17:15:03 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <6c8d9bff-3a67-0e6c-d4d1-36b7ed5007b9@web.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-20 at 14:26 -0700, Jim Mattson wrote:
-> On Thu, Aug 20, 2020 at 6:34 AM Maxim Levitsky <mlevitsk@redhat.com> wrote:
-> > Replace svm_vcpu_init_msrpm with svm_vcpu_alloc_msrpm, that also allocates
-> > the msr bitmap and add svm_vcpu_free_msrpm to free it.
-> > 
-> > This will be used later to move the nested msr permission bitmap allocation
-> > to nested.c
-> > 
-> > No functional change intended.
-> > 
-> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > ---
-> >  arch/x86/kvm/svm/svm.c | 45 +++++++++++++++++++++---------------------
-> >  1 file changed, 23 insertions(+), 22 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> > index d33013b9b4d7..7bb094bf6494 100644
-> > --- a/arch/x86/kvm/svm/svm.c
-> > +++ b/arch/x86/kvm/svm/svm.c
-> > @@ -609,18 +609,29 @@ static void set_msr_interception(u32 *msrpm, unsigned msr,
-> >         msrpm[offset] = tmp;
-> >  }
-> > 
-> > -static void svm_vcpu_init_msrpm(u32 *msrpm)
-> > +static u32 *svm_vcpu_alloc_msrpm(void)
-> 
-> I prefer the original name, since this function does more than allocation.
-But it also allocates it. I don't mind using the old name though.
-> 
-> >  {
-> >         int i;
-> > +       u32 *msrpm;
-> > +       struct page *pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
-> > +
-> > +       if (!pages)
-> > +               return NULL;
-> > 
-> > +       msrpm = page_address(pages);
-> >         memset(msrpm, 0xff, PAGE_SIZE * (1 << MSRPM_ALLOC_ORDER));
-> > 
-> >         for (i = 0; direct_access_msrs[i].index != MSR_INVALID; i++) {
-> >                 if (!direct_access_msrs[i].always)
-> >                         continue;
-> > -
-> >                 set_msr_interception(msrpm, direct_access_msrs[i].index, 1, 1);
-> >         }
-> > +       return msrpm;
-> > +}
-> > +
-> > +static void svm_vcpu_free_msrpm(u32 *msrpm)
-> > +{
-> > +       __free_pages(virt_to_page(msrpm), MSRPM_ALLOC_ORDER);
-> >  }
-> > 
-> >  static void add_msr_offset(u32 offset)
-> > @@ -1172,9 +1183,7 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
-> >  {
-> >         struct vcpu_svm *svm;
-> >         struct page *vmcb_page;
-> > -       struct page *msrpm_pages;
-> >         struct page *hsave_page;
-> > -       struct page *nested_msrpm_pages;
-> >         int err;
-> > 
-> >         BUILD_BUG_ON(offsetof(struct vcpu_svm, vcpu) != 0);
-> > @@ -1185,21 +1194,13 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
-> >         if (!vmcb_page)
-> >                 goto out;
-> > 
-> > -       msrpm_pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
-> > -       if (!msrpm_pages)
-> > -               goto free_page1;
-> > -
-> > -       nested_msrpm_pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
-> > -       if (!nested_msrpm_pages)
-> > -               goto free_page2;
-> > -
-> 
-> Reordering the allocations does seem like a functional change to me,
-> albeit one that should (hopefully) be benign. For example, if the
-> MSRPM_ALLOC_ORDER allocations fail, in the new version of the code,
-> the hsave_page will be cleared, but in the old version of the code, no
-> page would be cleared.
-Noted.
-> 
-> >         hsave_page = alloc_page(GFP_KERNEL_ACCOUNT);
-> 
-> Speaking of clearing pages, why not add __GFP_ZERO to the flags above
-> and skip the clear_page() call below?
-I haven't thought about it, I don't see a reason to not use __GFP_ZERO,
-but this is how the old code was.
-
-> 
-> >         if (!hsave_page)
-> > -               goto free_page3;
-> > +               goto free_page1;
-> > 
-> >         err = avic_init_vcpu(svm);
-> >         if (err)
-> > -               goto free_page4;
-> > +               goto free_page2;
-> > 
-> >         /* We initialize this flag to true to make sure that the is_running
-> >          * bit would be set the first time the vcpu is loaded.
-> > @@ -1210,11 +1211,13 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
-> >         svm->nested.hsave = page_address(hsave_page);
-> >         clear_page(svm->nested.hsave);
-> > 
-> > -       svm->msrpm = page_address(msrpm_pages);
-> > -       svm_vcpu_init_msrpm(svm->msrpm);
-> > +       svm->msrpm = svm_vcpu_alloc_msrpm();
-> > +       if (!svm->msrpm)
-> > +               goto free_page2;
-> > 
-> > -       svm->nested.msrpm = page_address(nested_msrpm_pages);
-> > -       svm_vcpu_init_msrpm(svm->nested.msrpm);
-> > +       svm->nested.msrpm = svm_vcpu_alloc_msrpm();
-> > +       if (!svm->nested.msrpm)
-> > +               goto free_page3;
-> > 
-> >         svm->vmcb = page_address(vmcb_page);
-> >         clear_page(svm->vmcb);
-> > @@ -1227,12 +1230,10 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
-> > 
-> >         return 0;
-> > 
-> > -free_page4:
-> > -       __free_page(hsave_page);
-> >  free_page3:
-> > -       __free_pages(nested_msrpm_pages, MSRPM_ALLOC_ORDER);
-> > +       svm_vcpu_free_msrpm(svm->msrpm);
-> >  free_page2:
-> > -       __free_pages(msrpm_pages, MSRPM_ALLOC_ORDER);
-> > +       __free_page(hsave_page);
-> >  free_page1:
-> >         __free_page(vmcb_page);
-> >  out:
-> 
-> While you're here, could you improve these labels? Coding-style.rst says:
-> 
-> Choose label names which say what the goto does or why the goto exists.  An
-> example of a good name could be ``out_free_buffer:`` if the goto frees
-> ``buffer``.
-> Avoid using GW-BASIC names like ``err1:`` and ``err2:``, as you would have to
-> renumber them if you ever add or remove exit paths, and they make correctness
-> difficult to verify anyway.
-I noticed that and I agree. I'll do this in follow up patch.
-
-Thanks for review,
-	Best regards,
-		Maxim Levitsky
 
 
+On 8/22/20 11:35 PM, Jan Kiszka wrote:
+> On 01.06.20 09:04, Vignesh Raghavendra wrote:
+>> dma_request_chan_by_mask() can throw EPROBE_DEFER if DMA provider
+>> is not yet probed. Currently driver just falls back to using PIO mode
+>> (which is less efficient) in this case. Instead return probe deferral
+>> error as is so that driver will be re probed once DMA provider is
+>> available.
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+>> ---
+[...]
+>>
+>>  static const struct spi_nor_controller_ops cqspi_controller_ops = {
+>> @@ -1269,8 +1274,11 @@ static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
+>>  			dev_dbg(nor->dev, "using direct mode for %s\n",
+>>  				mtd->name);
+>>
+>> -			if (!cqspi->rx_chan)
+>> -				cqspi_request_mmap_dma(cqspi);
+>> +			if (!cqspi->rx_chan) {
+>> +				ret = cqspi_request_mmap_dma(cqspi);
+>> +				if (ret == -EPROBE_DEFER)
+>> +					goto err;
+>> +			}
+>>  		}
+>>  	}
+>>
+>>
 > 
+> This seem to break reading the SPI flash on our IOT2050 [1] (didn't test
+> the eval board yet).
+> 
+> Without that commit, read happens via PIO, and that works. With the
+> commit, the pattern
+> 
+> with open("out.bin", "wb") as out:
+>     pos = 0
+>     while pos < 2:
+>         with open("/dev/mtd0", "rb") as mtd:
+>            mtd.seek(pos * 0x10000)
+>            out.write(mtd.read(0x10000))
+>         pos += 1
+> 
+> gives the wrong result for the second block while
 
+Interesting... Could you please explain wrong result? Is the data move
+around or completely garbage?
 
+Does this fail even on AM654 EVM? Could you share full script for me to
+test locally?
+
+What is the flash on the board?
+
+> 
+> with open("out2.bin", "wb") as out:
+>     with open("/dev/mtd0", "rb") as mtd:
+>         out.write(mtd.read(0x20000))
+> 
+> (or "mtd_debug read") is fine.
+> 
+> What could be the reason? Our DTBs and k3-am654-base-board.dtb had some
+> deviations /wrt the ospi node, but aligning ours to the base board made
+> no difference.
+> 
+> Jan
+> 
+> [1] https://github.com/siemens/linux/commits/jan/iot2050
+> 
