@@ -2,89 +2,78 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BA3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7107DC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFEC0206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A909206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgHXDMv (ORCPT
+        id S1727956AbgHXDOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 23:12:51 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:24088 "EHLO zju.edu.cn"
+        Sun, 23 Aug 2020 23:14:23 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10314 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726635AbgHXDMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 23:12:51 -0400
-Received: from localhost.localdomain (unknown [210.32.144.184])
-        by mail-app3 (Coremail) with SMTP id cC_KCgC30d0fMENfP8QbAw--.23170S4;
-        Mon, 24 Aug 2020 11:12:34 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Krzysztof Sobota <krzysztof.sobota@nokia.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] watchdog: Use put_device on error
-Date:   Mon, 24 Aug 2020 11:12:30 +0800
-Message-Id: <20200824031230.31050-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgC30d0fMENfP8QbAw--.23170S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrZFyxWFW8Cw47Xw1UCFWDCFg_yoWfuwc_ur
-        1xtr9xWr1DGrnaga4Yqa1fZrW0vF10qF4xAr10qFyxA393Xr98WrZ7Xry09w1Dua4UArn8
-        Jryqgrsa9FyDKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
-        GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gr4l42xK82IYc2Ij64vIr41l
-        42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-        ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-        0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAF
-        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-        7VUjQBMtUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUCBlZdtPpD7wADsp
+        id S1726635AbgHXDOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 23:14:22 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 83A993791F83814236E6;
+        Mon, 24 Aug 2020 11:14:19 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 24 Aug 2020 11:14:13 +0800
+From:   Yang Shen <shenyang39@huawei.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
+Subject: [PATCH RESEND 00/10] crypto: hisilicon/zip - misc clean up
+Date:   Mon, 24 Aug 2020 11:11:39 +0800
+Message-ID: <1598238709-58699-1-git-send-email-shenyang39@huawei.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should use put_device() instead of freeing device
-directly after device_initialize().
+This patchset make some clean up:
+patch 1:remove useless parameters
+patch 4:replace 'sprintf' with 'scnprintf'
+patch 7:fix static check warning
+and the rest patch fix some coding style
 
-Fixes: cb36e29bb0e4b ("watchdog: initialize device before misc_register")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
+Resend this patch series because it depends on
+https://patchwork.kernel.org/cover/11715927/
+(crypto: hisilicon/qm - misc fixes).
+Now the patch series(crypto: hisilicon/qm - misc fixes) has been applied.
+So this patch series will apply against cryptodev.
 
-Changelog:
+Shukun Tan (1):
+  crypto: hisilicon/zip - modify debugfs interface parameters
 
-v2: - Use put_device() instead of just removing kfree.
-      Move the memleak part to a separate patch.
----
- drivers/watchdog/watchdog_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yang Shen (9):
+  crypto: hisilicon/zip - remove some useless parameters
+  crypto: hisilicon/zip - unify naming style for functions and macros
+  crypto: hisilicon/zip - replace 'sprintf' with 'scnprintf'
+  crypto: hisilicon/zip - use a enum parameter instead of some macros
+  crypto: hisilicon/zip - add print for error branch
+  crypto: hisilicon/zip - fix static check warning
+  crypto: hisilicon/zip - move some private macros from 'zip.h' to
+    'zip_crypto.c'
+  crypto: hisilicon/zip - supplement some comments
+  crypto: hisilicon/zip - fix some coding styles
 
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index 6798addabd5a..b0fa7f31b1b6 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -1021,7 +1021,7 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
- 				pr_err("%s: a legacy watchdog module is probably present.\n",
- 					wdd->info->identity);
- 			old_wd_data = NULL;
--			kfree(wd_data);
-+			put_device(&wd_data->dev);
- 			return err;
- 		}
- 	}
--- 
-2.17.1
+ drivers/crypto/hisilicon/zip/zip.h        |  15 ----
+ drivers/crypto/hisilicon/zip/zip_crypto.c | 126 ++++++++++++++++++++---------
+ drivers/crypto/hisilicon/zip/zip_main.c   | 130 ++++++++++++++----------------
+ 3 files changed, 148 insertions(+), 123 deletions(-)
+
+--
+2.7.4
 
