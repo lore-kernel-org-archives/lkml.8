@@ -2,171 +2,138 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E753C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA263C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC172071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAE192074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598266399;
-	bh=cTeo0zWq2ywPS3zyZESGXSQGBCrunzsym3wsfcZXJmU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TvYuRZWd1fDRU8Lrt3OwPsx3+h85zdjyhDnEsWMFpF7HHoXQiW9JX92+orOmllxsR
-	 pqufZjuPtdOoIZFWHL34AHAG2gTsTalDwCvUQ7d5y6b3plp7lwilyIeKjK7P26WdFh
-	 0y69kWE0e9ljYYKN+xdwHi+K8aK2Dk7hkCaEBiI8=
+	s=default; t=1598266423;
+	bh=qH9tu8/66AnvcmnbDrUOe52jE1Smh8r+3XYyB4XlwpE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=hj3MLB2GpBgmp5DHU4Sjg11UiYYGWPH3KYMQxfqbNdEnHDRDC7L9lmEw1GCictJtl
+	 SQ+qztP8rDkiRjO9f1IWvuUWXLGM2Tc/K061kr4frRA2JtAKc0cnjaoBw7T+j/ngHT
+	 PCBF/VNaKNZlFSkzrPDPZ/aYF4ozZA5SkVl/B5z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgHXKxQ (ORCPT
+        id S1727105AbgHXKxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:53:16 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36687 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgHXKxI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:53:08 -0400
-Received: by mail-wm1-f67.google.com with SMTP id b66so5443230wmb.1;
-        Mon, 24 Aug 2020 03:53:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8tUXtK9Uo1WfECoGzPEeRZ8dUOgvco4xZiJV1j3yK2Y=;
-        b=KJfa5XMoviMpfpxHxveMMsX1Z/NCgcZ0qRXS8U1RX+CqqsC49enqGycEGlBzHFiLD6
-         bCsTi5y8k7H/EWkL0W+YQ2wMYKSijA5FOwZdJ3CHGGdQx7gSo4DHciN4dWkn+o7qdSzR
-         1KDDZivwgkKxYUeO+Z1hB2NY8BrR8KwidZYZTLOD8sPMkrx+35feHNHt79eavZCax4Zi
-         KF1NpV2XyppC7+bKcbDDcorzi0nm65/3l0XAdrWEnq3dEvgxeRYLgMZGZarnBRwUiwDU
-         i751KbwWbhirN32eyTDt7lmljmlJMkExX1iD3CXM7zALw4dYFfzjLQDtug214viVT+Xw
-         n8CQ==
-X-Gm-Message-State: AOAM531kS1MoxmDEDZfOIFtXsa8o+mdtNKfLg5cvbmKzse0C4FFpDQ6I
-        mCOKDjUIF67Wu+zsRzKGLXs=
-X-Google-Smtp-Source: ABdhPJxWWIX9hAxIRnMQN/xNYUKKY4EpLDyOC668+DgpUXg2I6pfWXrVb3ipIlX9lnWcCo3YPXiVDQ==
-X-Received: by 2002:a7b:c1c1:: with SMTP id a1mr5187679wmj.137.1598266386477;
-        Mon, 24 Aug 2020 03:53:06 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id m1sm22881072wmc.28.2020.08.24.03.53.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 03:53:05 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 12:53:03 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] arm64: dts: imx8mm-var-som-symphony: Add
- Variscite Symphony board with VAR-SOM-MX8MM
-Message-ID: <20200824105303.GA32211@kozik-lap>
-References: <20200817070120.4937-1-krzk@kernel.org>
- <20200817070120.4937-4-krzk@kernel.org>
- <20200823020051.GJ30094@dragon>
- <20200823085847.GC2886@kozik-lap>
- <20200824104718.GC12776@dragon>
+        Mon, 24 Aug 2020 06:53:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727022AbgHXKxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:53:38 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCF082071E;
+        Mon, 24 Aug 2020 10:53:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598266416;
+        bh=qH9tu8/66AnvcmnbDrUOe52jE1Smh8r+3XYyB4XlwpE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=HqjPVk4t1jp1MayrpuV57WmBoGVegaoD8GrQl82u/Vio8K/GP/BCgrbESv+PT51ur
+         wu4x1lBLs17gp9cWFVnCtWfwZvtiJCI6bokKbwMD2upcCCNi9Sw7eEBKS8BFbYRQCx
+         BOo0ClFbxA7dS2oWLRAo1OC7wqhkSTeCI39L6tmg=
+Message-ID: <048e78f2b440820d936eb67358495cc45ba579c3.camel@kernel.org>
+Subject: Re: [PATCH 5/5] fs/ceph: use pipe_get_pages_alloc() for pipe
+From:   Jeff Layton <jlayton@kernel.org>
+To:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Mon, 24 Aug 2020 06:53:34 -0400
+In-Reply-To: <20200822042059.1805541-6-jhubbard@nvidia.com>
+References: <20200822042059.1805541-1-jhubbard@nvidia.com>
+         <20200822042059.1805541-6-jhubbard@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200824104718.GC12776@dragon>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 06:47:19PM +0800, Shawn Guo wrote:
-> On Sun, Aug 23, 2020 at 10:58:47AM +0200, Krzysztof Kozlowski wrote:
-> > On Sun, Aug 23, 2020 at 10:00:51AM +0800, Shawn Guo wrote:
-> > > On Mon, Aug 17, 2020 at 09:01:20AM +0200, Krzysztof Kozlowski wrote:
-> > > > Add a DTS for Variscite Symphony evaluation kit with VAR-SOM-MX8MM
-> > > > System on Module.
-> > > > 
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > 
-> > > > ---
-> > > > 
-> > > > Changes since v1:
-> > > > 1. Remove duplicated "leds" node,
-> > > > 2. Fix heartbeat to active low,
-> > > > 3. Add nxp,ptn5150 extcon.
-> > > > ---
-> > > >  arch/arm64/boot/dts/freescale/Makefile        |   1 +
-> > > >  .../dts/freescale/imx8mm-var-som-symphony.dts | 248 ++++++++++++++++++
-> > > >  2 files changed, 249 insertions(+)
-> > > >  create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-> > > > 
-> > > > diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> > > > index a39f0a1723e0..dcfb8750cd78 100644
-> > > > --- a/arch/arm64/boot/dts/freescale/Makefile
-> > > > +++ b/arch/arm64/boot/dts/freescale/Makefile
-> > > > @@ -29,6 +29,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
-> > > >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
-> > > >  
-> > > >  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
-> > > > +dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony.dtb
-> > > >  dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb
-> > > >  dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
-> > > >  dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk.dtb
-> > > > diff --git a/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-> > > > new file mode 100644
-> > > > index 000000000000..2d3c30ac5e04
-> > > > --- /dev/null
-> > > > +++ b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-> > > > @@ -0,0 +1,248 @@
-> > > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > > +/*
-> > > > + * Copyright (C) 2020 Krzysztof Kozlowski <krzk@kernel.org>
-> > > > + */
-> > > > +
-> > > > +/dts-v1/;
-> > > > +
-> > > > +#include "imx8mm-var-som.dtsi"
-> > > > +
-> > > > +/ {
-> > > > +	model = "Variscite VAR-SOM-MX8MM Symphony evaluation board";
-> > > > +	compatible = "variscite,var-som-mx8mm-symphony", "variscite,var-som-mx8mm", "fsl,imx8mm";
-> > > > +
-> > > > +	reg_usdhc2_vmmc: regulator-1 {
-> > > 
-> > > regulator-usdhc2-vmmc
-> > 
-> > You mean the node name? If so, it's not correct with device tree
-> > specification:
-> > "The node-name (...) should describe the general class of device.:
-> > If appropriate, the name should be one of the following choices:
-> > (...)
-> >  - regulator"
-> > 
-> > Adding specific function/type/usage to the name of the node is a
-> > opposite choice to "general class".
+On Fri, 2020-08-21 at 21:20 -0700, John Hubbard wrote:
+> This reduces, by one, the number of callers of iov_iter_get_pages().
+> That's helpful because these calls are being audited and converted over
+> to use iov_iter_pin_user_pages(), where applicable. And this one here is
+> already known by the caller to be only for ITER_PIPE, so let's just
+> simplify it now.
 > 
-> Well, the node is named in general class, i.e. regulator-xxx, and we
-> would like the suffix to be a bit more specific.  We have been using
-> this name schema for fixed-regulator on i.MX platforms for long time.
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  fs/ceph/file.c      | 3 +--
+>  include/linux/uio.h | 3 ++-
+>  lib/iov_iter.c      | 6 +++---
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index d51c3f2fdca0..d3d7dd957390 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -879,8 +879,7 @@ static ssize_t ceph_sync_read(struct kiocb *iocb, struct iov_iter *to,
+>  		more = len < iov_iter_count(to);
+>  
+>  		if (unlikely(iov_iter_is_pipe(to))) {
+> -			ret = iov_iter_get_pages_alloc(to, &pages, len,
+> -						       &page_off);
+> +			ret = pipe_get_pages_alloc(to, &pages, len, &page_off);
+>  			if (ret <= 0) {
+>  				ceph_osdc_put_request(req);
+>  				ret = -ENOMEM;
+> diff --git a/include/linux/uio.h b/include/linux/uio.h
+> index 62bcf5e45f2b..76cd47ab3dfd 100644
+> --- a/include/linux/uio.h
+> +++ b/include/linux/uio.h
+> @@ -227,7 +227,8 @@ ssize_t iov_iter_get_pages(struct iov_iter *i, struct page **pages,
+>  ssize_t iov_iter_get_pages_alloc(struct iov_iter *i, struct page ***pages,
+>  			size_t maxsize, size_t *start);
+>  int iov_iter_npages(const struct iov_iter *i, int maxpages);
+> -
+> +ssize_t pipe_get_pages_alloc(struct iov_iter *i, struct page ***pages,
+> +			     size_t maxsize, size_t *start);
+>  const void *dup_iter(struct iov_iter *new, struct iov_iter *old, gfp_t flags);
+>  
+>  ssize_t iov_iter_pin_user_pages(struct bio *bio, struct iov_iter *i, struct page **pages,
+> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+> index a4bc1b3a3fda..f571fe3ddbe8 100644
+> --- a/lib/iov_iter.c
+> +++ b/lib/iov_iter.c
+> @@ -1396,9 +1396,8 @@ static struct page **get_pages_array(size_t n)
+>  	return kvmalloc_array(n, sizeof(struct page *), GFP_KERNEL);
+>  }
+>  
+> -static ssize_t pipe_get_pages_alloc(struct iov_iter *i,
+> -		   struct page ***pages, size_t maxsize,
+> -		   size_t *start)
+> +ssize_t pipe_get_pages_alloc(struct iov_iter *i, struct page ***pages,
+> +			     size_t maxsize, size_t *start)
+>  {
+>  	struct page **p;
+>  	unsigned int iter_head, npages;
+> @@ -1428,6 +1427,7 @@ static ssize_t pipe_get_pages_alloc(struct iov_iter *i,
+>  		kvfree(p);
+>  	return n;
+>  }
+> +EXPORT_SYMBOL(pipe_get_pages_alloc);
+>  
+>  ssize_t iov_iter_pin_user_pages_alloc(struct bio *bio, struct iov_iter *i,
+>  		   struct page ***pages, size_t maxsize,
 
-Name "regulator-usdhc2-vmmc" is not general, it is specific. The DT
-specification gives the example of generic name and it is "regulator".
 
-It is the same with CPU nodes having names "cpu@0", not "cpu-a53@0" or
-whatever other suffix. It is the same reason why I2C is "i2c@12345678",
-not "i2c_1@" or "i2c_for_abcd".
+This looks fine to me. Let me know if you need this merged via the ceph
+tree. Thanks!
 
-The suffix is not needed as Linux does not use it (instead uses
-regulator-name which is specific). Humans on the other hand can
-understand the specifics from the label and from the regulator name.
-Therefore they also do not need the suffix.
-
-I know that other i.MX DTSes follow this pattern but it is still not the
-recommended one. It's a pattern which should be replaced.
-
-Anyway, if the names of regulators stop this patch from being applied, I
-will change them to expected.
-
-Best regards,
-Krzysztof
+Acked-by: Jeff Layton <jlayton@kernel.org>
 
