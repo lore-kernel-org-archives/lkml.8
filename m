@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B631C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD64AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4944D20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB10920738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289493;
-	bh=r9HBhZi5uRfTCPjOUZlAFzjcdKyoVIqdk98dp7qcDAI=;
+	s=default; t=1598289511;
+	bh=fmxv0V4N9+tf7rxMDoxnYF0FThFSVdaQ05vU8gSpJss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EQAntaBRVZj0iNlH95IxAL9l++MLFxHiTXlOXpq3O09k/L5UgARGgEgO2iPaSi2zf
-	 1bXUF8BPr+QIM57GjVD3cIc70E9le7Kr5dC0C4C4FxcGJRYuoTZEl6pjyRj2JKeOzo
-	 nmUXnkoWl+cMnusnbIwGNtb8LYQF08a9gdLzsG9U=
+	b=JH9R8eek/B1ccZ0a+vCEjvPLf7+HAMsDQUp5l3Fy2WV2+f8D5dU0tWNBvzRLYslYU
+	 /RdBWYIylB6nl96H+mgErHUzffsnZgY+q2RQ9M1E5xpP2oybhNdxz0MVNXmKTaK+DA
+	 hZfN4JJAzDt03bMCxjPuwM2vYnqioCRlr8+N+wEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgHXRR6 (ORCPT
+        id S1728463AbgHXRSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40164 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:18:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbgHXQgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728306AbgHXQgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:36:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8D9722D04;
-        Mon, 24 Aug 2020 16:36:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D14E922D6E;
+        Mon, 24 Aug 2020 16:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286961;
-        bh=r9HBhZi5uRfTCPjOUZlAFzjcdKyoVIqdk98dp7qcDAI=;
+        s=default; t=1598286972;
+        bh=fmxv0V4N9+tf7rxMDoxnYF0FThFSVdaQ05vU8gSpJss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hgBcG/7KD9bulRRhKzF5njETlnlqZvZr8oORAZMQ3eJAQu/lmXi54JMcnhvKFLdBO
-         VwqptH+aebpv8Xrq5NPfFNqyJnTfzOSBnHHO+vEmhsO2lawgX/Ic0kUoT/9+J/uYQl
-         1lZjSNF0B8uJj+9LYkw6rSmEakfQQiWQjCVDXzf0=
+        b=BQukTa4IIRPv//vB+ZPt1THeWHsspESdh9J0TWAnD9pEjhNWMT1WRac/rqxIFjO7F
+         Dqoy9fqstOJ3AVdrVMq3grd+a+NHCneoKT0mqK7DwOyBvyiU6nBxmiyuTS52JWSjsX
+         dLVN2KspDpMwvuZvd3iCGuEf3f2HeOdqevL9YaW0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Gilbert <dgilbert@interlog.com>,
-        John Garry <john.garry@huawei.com>,
-        Lee Duncan <lduncan@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 42/63] scsi: scsi_debug: Fix scp is NULL errors
-Date:   Mon, 24 Aug 2020 12:34:42 -0400
-Message-Id: <20200824163504.605538-42-sashal@kernel.org>
+Cc:     =?UTF-8?q?Alvin=20=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 50/63] macvlan: validate setting of multiple remote source MAC addresses
+Date:   Mon, 24 Aug 2020 12:34:50 -0400
+Message-Id: <20200824163504.605538-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
 References: <20200824163504.605538-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,51 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Gilbert <dgilbert@interlog.com>
+From: Alvin Šipraga <alsi@bang-olufsen.dk>
 
-[ Upstream commit 223f91b48079227f914657f07d2d686f7b60aa26 ]
+[ Upstream commit 8b61fba503904acae24aeb2bd5569b4d6544d48f ]
 
-John Garry reported 'sdebug_q_cmd_complete: scp is NULL' failures that were
-mainly seen on aarch64 machines (e.g. RPi 4 with four A72 CPUs). The
-problem was tracked down to a missing critical section on a "short circuit"
-path. Namely, the time to process the current command so far has already
-exceeded the requested command duration (i.e. the number of nanoseconds in
-the ndelay parameter).
+Remote source MAC addresses can be set on a 'source mode' macvlan
+interface via the IFLA_MACVLAN_MACADDR_DATA attribute. This commit
+tightens the validation of these MAC addresses to match the validation
+already performed when setting or adding a single MAC address via the
+IFLA_MACVLAN_MACADDR attribute.
 
-The random=1 parameter setting was pivotal in finding this error.  The
-failure scenario involved first taking that "short circuit" path (due to a
-very short command duration) and then taking the more likely
-hrtimer_start() path (due to a longer command duration). With random=1 each
-command's duration is taken from the uniformly distributed [0..ndelay)
-interval.  The fio utility also helped by reliably generating the error
-scenario at about once per minute on a RPi 4 (64 bit OS).
+iproute2 uses IFLA_MACVLAN_MACADDR_DATA for its 'macvlan macaddr set'
+command, and IFLA_MACVLAN_MACADDR for its 'macvlan macaddr add' command,
+which demonstrates the inconsistent behaviour that this commit
+addresses:
 
-Link: https://lore.kernel.org/r/20200813155738.109298-1-dgilbert@interlog.com
-Reported-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Douglas Gilbert <dgilbert@interlog.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+ # ip link add link eth0 name macvlan0 type macvlan mode source
+ # ip link set link dev macvlan0 type macvlan macaddr add 01:00:00:00:00:00
+ RTNETLINK answers: Cannot assign requested address
+ # ip link set link dev macvlan0 type macvlan macaddr set 01:00:00:00:00:00
+ # ip -d link show macvlan0
+ 5: macvlan0@eth0: <BROADCAST,MULTICAST,DYNAMIC,UP,LOWER_UP> mtu 1500 ...
+     link/ether 2e:ac:fd:2d:69:f8 brd ff:ff:ff:ff:ff:ff promiscuity 0
+     macvlan mode source remotes (1) 01:00:00:00:00:00 numtxqueues 1 ...
+
+With this change, the 'set' command will (rightly) fail in the same way
+as the 'add' command.
+
+Signed-off-by: Alvin Šipraga <alsi@bang-olufsen.dk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_debug.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/macvlan.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
-index b0d93bf79978f..25faad7f8e617 100644
---- a/drivers/scsi/scsi_debug.c
-+++ b/drivers/scsi/scsi_debug.c
-@@ -5486,9 +5486,11 @@ static int schedule_resp(struct scsi_cmnd *cmnd, struct sdebug_dev_info *devip,
- 				u64 d = ktime_get_boottime_ns() - ns_from_boot;
+diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
+index 4942f6112e51f..5da04e9979894 100644
+--- a/drivers/net/macvlan.c
++++ b/drivers/net/macvlan.c
+@@ -1269,6 +1269,9 @@ static void macvlan_port_destroy(struct net_device *dev)
+ static int macvlan_validate(struct nlattr *tb[], struct nlattr *data[],
+ 			    struct netlink_ext_ack *extack)
+ {
++	struct nlattr *nla, *head;
++	int rem, len;
++
+ 	if (tb[IFLA_ADDRESS]) {
+ 		if (nla_len(tb[IFLA_ADDRESS]) != ETH_ALEN)
+ 			return -EINVAL;
+@@ -1316,6 +1319,20 @@ static int macvlan_validate(struct nlattr *tb[], struct nlattr *data[],
+ 			return -EADDRNOTAVAIL;
+ 	}
  
- 				if (kt <= d) {	/* elapsed duration >= kt */
-+					spin_lock_irqsave(&sqp->qc_lock, iflags);
- 					sqcp->a_cmnd = NULL;
- 					atomic_dec(&devip->num_in_q);
- 					clear_bit(k, sqp->in_use_bm);
-+					spin_unlock_irqrestore(&sqp->qc_lock, iflags);
- 					if (new_sd_dp)
- 						kfree(sd_dp);
- 					/* call scsi_done() from this thread */
++	if (data[IFLA_MACVLAN_MACADDR_DATA]) {
++		head = nla_data(data[IFLA_MACVLAN_MACADDR_DATA]);
++		len = nla_len(data[IFLA_MACVLAN_MACADDR_DATA]);
++
++		nla_for_each_attr(nla, head, len, rem) {
++			if (nla_type(nla) != IFLA_MACVLAN_MACADDR ||
++			    nla_len(nla) != ETH_ALEN)
++				return -EINVAL;
++
++			if (!is_valid_ether_addr(nla_data(nla)))
++				return -EADDRNOTAVAIL;
++		}
++	}
++
+ 	if (data[IFLA_MACVLAN_MACADDR_COUNT])
+ 		return -EINVAL;
+ 
+@@ -1372,10 +1389,6 @@ static int macvlan_changelink_sources(struct macvlan_dev *vlan, u32 mode,
+ 		len = nla_len(data[IFLA_MACVLAN_MACADDR_DATA]);
+ 
+ 		nla_for_each_attr(nla, head, len, rem) {
+-			if (nla_type(nla) != IFLA_MACVLAN_MACADDR ||
+-			    nla_len(nla) != ETH_ALEN)
+-				continue;
+-
+ 			addr = nla_data(nla);
+ 			ret = macvlan_hash_add_source(vlan, addr);
+ 			if (ret)
 -- 
 2.25.1
 
