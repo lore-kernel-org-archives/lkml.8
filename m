@@ -2,104 +2,87 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6AAC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C894B204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F2D204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598276538;
+	bh=227dtBv6s+osOfbFZGxhSmc7Pp+0HyhRJcvJKsfk/9g=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=sQpY8Ncjnfu3xD8mSW6lNsX8q8uc281lsZBEeSR5IPRtIuWIerkYoZ1FJoH6u7t/T
+	 vgu2oEiXb3fOtnIVW1qYamLMRPDWB97GbJMyx5KU1j/Vgz1uFuRREGPp7odFaReXhu
+	 OXKUqDB7VAjrTl5SCPvtOO4vObHMs4uU09l7Xac0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgHXNmC (ORCPT
+        id S1728021AbgHXNmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:42:02 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:53898 "EHLO honk.sigxcpu.org"
+        Mon, 24 Aug 2020 09:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726967AbgHXNfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:35:30 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 673CAFB03;
-        Mon, 24 Aug 2020 15:35:22 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aJ1hfcJNSXF6; Mon, 24 Aug 2020 15:35:20 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 4E43A45869; Mon, 24 Aug 2020 15:35:20 +0200 (CEST)
-Date:   Mon, 24 Aug 2020 15:35:20 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Martin Kepplinger <martink@posteo.de>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Li Jun <jun.li@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Walle <michael@walle.cc>,
-        Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] arm64: dts: imx8mq: Add NWL DSI host controller
- to Librem 5 Devkit
-Message-ID: <20200824133520.GA20386@bogon.m.sigxcpu.org>
-References: <cover.1598166983.git.agx@sigxcpu.org>
- <20200824124635.GE12776@dragon>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200824124635.GE12776@dragon>
+        id S1726723AbgHXNcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 09:32:16 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8482D21741;
+        Mon, 24 Aug 2020 13:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598275936;
+        bh=227dtBv6s+osOfbFZGxhSmc7Pp+0HyhRJcvJKsfk/9g=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=Z25Zek48M4ObQQW2U6XdS3pJxww3Z1DSNLI8UqjLpwPj7TjLcv9jq/hDBS7TZxXBz
+         PwAYzNfPyBe7m3m7hAflDuszz4SPdFZt8uk3/1PvneCwtIgK1oHyPtIOcu5ZXXkRIh
+         +gvrqVF80qrTRsXNt3NvpKlh9BukPWX9YazDowiE=
+Date:   Mon, 24 Aug 2020 14:31:41 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Xiubo.Lee@gmail.com, tiwai@suse.com, timur@kernel.org,
+        alsa-devel@alsa-project.org, festevam@gmail.com,
+        Shengjiu Wang <shengjiu.wang@nxp.com>, lgirdwood@gmail.com,
+        perex@perex.cz, nicoleotsuka@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <1598255887-1391-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1598255887-1391-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: Re: [PATCH RESEND] ASoC: fsl_sai: Add -EPROBE_DEFER check for regmap init
+Message-Id: <159827589162.47809.7720594849042451325.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Mon, Aug 24, 2020 at 08:46:36PM +0800, Shawn Guo wrote:
-> On Sun, Aug 23, 2020 at 09:18:06AM +0200, Guido Günther wrote:
-> > These patches add the NWL host controller to the imx8mq and make use of it on
-> > the Librem 5 Devkit enabling the built in MIPI DSI LCD panel.
-> > 
-> > I opted to add imx8mq internal ports and endpoints between nwl and lcdif to the
-> > generic dtsi since those are SOC rather than board specific properties.
-> > 
-> > Changes from v3
-> > - Rebase patch 3 and 4 against Shawn's imx/defconfig
-> >   Patches 1 an 2 got already applies, thanks!
-> > 
-> > Changes from v2
-> > - Add Tested-by from Martin Kepplinger, thanks!
-> >   https://lore.kernel.org/linux-arm-kernel/cover.1597913263.git.agx@sigxcpu.org/T/#m067f2d659fcd1c0cb7792b22d0c4db06ed235815
-> >   https://lore.kernel.org/linux-arm-kernel/cover.1597913263.git.agx@sigxcpu.org/T/#m9aff315ee38fd9bbcd3a896876726c14b2fb7048
-> > 
-> > Changes from v1
-> > - Add Reviewed-by from Fabio Estevam, thanks!
-> >   https://lore.kernel.org/linux-arm-kernel/CAOMZO5DUA5eS8apZPbte0EcSQ4Vwpg6YLK7D0YdjSUy+kdBu8Q@mail.gmail.com/
-> >   https://lore.kernel.org/linux-arm-kernel/CAOMZO5ANrd2JCmHyxZ0Sv0WNcU9T-q3MbaeADxbOwf+31MQ4LQ@mail.gmail.com/#t
-> >   https://lore.kernel.org/linux-arm-kernel/CAOMZO5Dg5NGpJ0SQkYny04Kv3ky0619J7YwT-0eE1dsK19o1-w@mail.gmail.com/
-> > - As per review comment by Fabio Estevam
-> >   Re-sync DRM related defconfig bits. I didn't resyc the whole defconfig since
-> >   this is pretty much kernel version dependent.
-> > 
-> > Guido Günther (2):
-> >   arm64: defconfig: re-sync DRM related defconfig bits
-> >   arm64: defconfig: Enable imx8mq-librem5-devkit display stack
-> 
-> Applied both, thanks.
+On Mon, 24 Aug 2020 15:58:07 +0800, Shengjiu Wang wrote:
+> Regmap initialization may return -EPROBE_DEFER for clock
+> may not be ready, so check -EPROBE_DEFER error type before
+> start another Regmap initialization.
+
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
 Thanks!
- -- Guido
+
+[1/1] ASoC: fsl_sai: Add -EPROBE_DEFER check for regmap init
+      commit: c1e47e8919da525c803d1557a30e44441db1e5ee
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
