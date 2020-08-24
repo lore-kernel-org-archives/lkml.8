@@ -2,124 +2,116 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C84C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5098820639
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263198;
-	bh=lVVAh9Z9McLW3SoXxl5P+4DwQWEYitbI4AmCQQ3aerw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jpGjGMr85yVHHHVbE7V9HZ527UT8mkzI5JFqzLWWoS/3FgwO97mF8rTqnHyPd217h
-	 HwZyzh74PTYlB0JjCKVHgfwqLhRbyjSmS89QTPwIk5XGVgPmeghHU6k2Qug5m1CJcX
-	 445tmuxeT2U7jY8P7RFogN/6ca0AbHqG52B4cuA4=
+	by mail.kernel.org (Postfix) with ESMTP id B39F22074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbgHXJ7z (ORCPT
+        id S1727982AbgHXKAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:59:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbgHXIdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:33:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70762206F0;
-        Mon, 24 Aug 2020 08:32:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257980;
-        bh=lVVAh9Z9McLW3SoXxl5P+4DwQWEYitbI4AmCQQ3aerw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LlVQrELTLpGyA0Nb8FpolZ+vOVwma5sBDGd+0ec0iStlvvKA9G64YvLeipqwYvTjh
-         fOZUjpxe1AbWNiLFTNqXEvdHeFFQHsJhBqPo3fGZSZuzE5FUuP/VN2VvvAkFRHJV/K
-         4ZeKI2oeiXADPLX1j7E6S47SuaMQemnBEpTz4fUc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Weijiang <weijiang.yang@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.8 030/148] selftests: kvm: Use a shorter encoding to clear RAX
-Date:   Mon, 24 Aug 2020 10:28:48 +0200
-Message-Id: <20200824082415.398316113@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
-References: <20200824082413.900489417@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Aug 2020 06:00:01 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:33983 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726884AbgHXJ7v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:59:51 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0U6g21Wa_1598263186;
+Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U6g21Wa_1598263186)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 24 Aug 2020 17:59:47 +0800
+Reply-To: xlpang@linux.alibaba.com
+Subject: Re: [PATCH 1/2] mm/slub: Introduce two counters for the partial
+ objects
+To:     Pekka Enberg <penberg@gmail.com>,
+        Christopher Lameter <cl@linux.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Roman Gushchin <guro@fb.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        David Rientjes <rientjes@google.com>
+References: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
+ <a53f9039-5cba-955b-009e-12e8c5ffb345@suse.cz>
+ <CAOJsxLHX62P0yvHZcXdje41zm_2demzTraqvHXAvfhVPp2HKsA@mail.gmail.com>
+ <alpine.DEB.2.22.394.2008071258020.55871@www.lameter.com>
+ <CAOJsxLGqrCTgQhdOTTWKcCz0TsVfh_AxTCVWNGj6Mo4hyE5E2Q@mail.gmail.com>
+ <alpine.DEB.2.22.394.2008111250170.86069@www.lameter.com>
+ <CAOJsxLHnTDjY3X69zVVaZ0MbpRab-1+Rk3L5AnZD3oQEceHD7Q@mail.gmail.com>
+From:   xunlei <xlpang@linux.alibaba.com>
+Message-ID: <9811b473-e09f-c2aa-cdd8-c71c34fe4707@linux.alibaba.com>
+Date:   Mon, 24 Aug 2020 17:59:46 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOJsxLHnTDjY3X69zVVaZ0MbpRab-1+Rk3L5AnZD3oQEceHD7Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Weijiang <weijiang.yang@intel.com>
+On 2020/8/20 PM9:58, Pekka Enberg wrote:
+> Hi Christopher,
+> 
+> On Tue, Aug 11, 2020 at 3:52 PM Christopher Lameter <cl@linux.com> wrote:
+>>
+>> On Fri, 7 Aug 2020, Pekka Enberg wrote:
+>>
+>>> Why do you consider this to be a fast path? This is all partial list
+>>> accounting when we allocate/deallocate a slab, no? Just like
+>>> ___slab_alloc() says, I assumed this to be the slow path... What am I
+>>> missing?
+>>
+>> I thought these were per object counters? If you just want to count the
+>> number of slabs then you do not need the lock at all. We already have a
+>> counter for the number of slabs.
+> 
+> The patch attempts to speed up count_partial(), which holds on to the
+> "n->list_lock" (with IRQs off) for the whole duration it takes to walk
+> the partial slab list:
+> 
+>         spin_lock_irqsave(&n->list_lock, flags);
+>         list_for_each_entry(page, &n->partial, slab_list)
+>                 x += get_count(page);
+>         spin_unlock_irqrestore(&n->list_lock, flags);
+> 
+> It's counting the number of *objects*, but the counters are only
+> updated in bulk when we add/remove a slab to/from the partial list.
+> The counter updates are therefore *not* in the fast-path AFAICT.
+> 
+> Xunlei, please correct me if I'm reading your patches wrong.
 
-commit 98b0bf02738004829d7e26d6cb47b2e469aaba86 upstream.
+Yes, it's all in slow-path.
 
-If debug_regs.c is built with newer binutils, the resulting binary is "optimized"
-by the assembler:
+> 
+> On Tue, Aug 11, 2020 at 3:52 PM Christopher Lameter <cl@linux.com> wrote:
+>>> No objections to alternative fixes, of course, but wrapping the
+>>> counters under CONFIG_DEBUG seems like just hiding the actual issue...
+>>
+>> CONFIG_DEBUG is on by default. It just compiles in the debug code and
+>> disables it so we can enable it with a kernel boot option. This is because
+>> we have had numerous issues in the past with "production" kernels that
+>> could not be recompiled with debug options. So just running the prod
+>> kernel with another option will allow you to find hard to debug issues in
+>> a full scale producton deployment with potentially proprietary modules
+>> etc.
+> 
+> Yeah, it's been too long since I last looked at the code and did not
+> realize even count_partial() is wrapped in CONFIG_DEBUG. So by all
 
-asm volatile("ss_start: "
-             "xor %%rax,%%rax\n\t"
-             "cpuid\n\t"
-             "movl $0x1a0,%%ecx\n\t"
-             "rdmsr\n\t"
-             : : : "rax", "ecx");
+Besides CONFIG_DEBUG, count_partial() is also wrapped in CONFIG_SYSFS.
 
-is translated to :
-
-  000000000040194e <ss_start>:
-  40194e:       31 c0                   xor    %eax,%eax     <----- rax->eax?
-  401950:       0f a2                   cpuid
-  401952:       b9 a0 01 00 00          mov    $0x1a0,%ecx
-  401957:       0f 32                   rdmsr
-
-As you can see rax is replaced with eax in target binary code.
-This causes a difference is the length of xor instruction (2 Byte vs 3 Byte),
-and makes the hard-coded instruction length check fail:
-
-        /* Instruction lengths starting at ss_start */
-        int ss_size[4] = {
-                3,              /* xor */   <-------- 2 or 3?
-                2,              /* cpuid */
-                5,              /* mov */
-                2,              /* rdmsr */
-        };
-
-Encode the shorter version directly and, while at it, fix the "clobbers"
-of the asm.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- tools/testing/selftests/kvm/x86_64/debug_regs.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/tools/testing/selftests/kvm/x86_64/debug_regs.c
-+++ b/tools/testing/selftests/kvm/x86_64/debug_regs.c
-@@ -40,11 +40,11 @@ static void guest_code(void)
- 
- 	/* Single step test, covers 2 basic instructions and 2 emulated */
- 	asm volatile("ss_start: "
--		     "xor %%rax,%%rax\n\t"
-+		     "xor %%eax,%%eax\n\t"
- 		     "cpuid\n\t"
- 		     "movl $0x1a0,%%ecx\n\t"
- 		     "rdmsr\n\t"
--		     : : : "rax", "ecx");
-+		     : : : "eax", "ebx", "ecx", "edx");
- 
- 	/* DR6.BD test */
- 	asm volatile("bd_start: mov %%dr0, %%rax" : : : "rax");
-
-
+> means, let's also wrap the counters with that too.
+> 
+> - Pekka
+> 
