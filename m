@@ -2,137 +2,109 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC331C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D61E8C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA1CE2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262530;
-	bh=nzildonZ2Cp5d5EqEk9pDNpe/ArGo68DTb1T0ykhnEU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CGITivIxkcXl/DSMQhjt+4G4QIKP/DXIlndu8WBhHqb1ELF/r2I4oOC5v5q6vJbGh
-	 Co99c7L7OLM0KeGKDcX1by0SNFoEKgFFPM+Omyb7LodNmjxbn0behC4hTX8T8creJB
-	 TgDgqO/6BdXTV9exRlzUu1294j7DoE7/POYShyrs=
+	by mail.kernel.org (Postfix) with ESMTP id AFB302075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e+FZ645c";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LeesnAIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbgHXJst (ORCPT
+        id S1728773AbgHXJsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgHXIkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:40:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E33CA20FC3;
-        Mon, 24 Aug 2020 08:40:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258435;
-        bh=nzildonZ2Cp5d5EqEk9pDNpe/ArGo68DTb1T0ykhnEU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K10/7dWCD2gV4mwLXb9GbUgnytC2E2ILOl3JxOoNYq/Mx5nztlw1J4EnJQ/dLlKqt
-         2vSkqKq5iRGuDzVQ8qJUA1Y6sRRPzR195O3QCydc+m1DrRDaVRbcdgcnvfTFw9eWUu
-         Gy5FIaVDEc7yCRY8EKFsMpXf/zReSuJHnsIJP8MA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 047/124] riscv: Fixup static_obj() fail
-Date:   Mon, 24 Aug 2020 10:29:41 +0200
-Message-Id: <20200824082411.740393222@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
-References: <20200824082409.368269240@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Aug 2020 05:48:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728763AbgHXIkl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:40:41 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4E49C061573;
+        Mon, 24 Aug 2020 01:40:40 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 08:40:30 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598258431;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oi/gwlF9UK0Dj6KRXzgzltwh1bdA+sQUViRUrZHY+us=;
+        b=e+FZ645cd6LWZaO7VwD/zzo7QB6pxc2qPdp59/DCjgQbWRy01pZhvh6HRG26aXG8wA0y1Y
+        dh4UzG9XZB/bfbPpNpos0BW0yt70tpew2rRK7goJrJKV/hUuj1JxkCENj0HTqNVib0c4Au
+        qW6MjqHX4Dm6jtFhgkEwKDLpPRMjVoPsv1Xpx9iObrfaBdOMpYuqQouUqWgrgVuaJ6zCS1
+        Gpg8F5Jhc3h4nhC9ShjlkihdgGpPuO7dTrCVlXraf0w2b9UZHALom3+bCs4Yhxiv6l5Rg8
+        jUkd43dsXtKdhuX2a4cXYiaCnGfSjoEABMZF7v5hfntidl179bFhJS7RjLB/ZQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598258431;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oi/gwlF9UK0Dj6KRXzgzltwh1bdA+sQUViRUrZHY+us=;
+        b=LeesnAIKOWqiZTpc1slbnxt20lb2DgEyxCGdI7DlF6wLeYyoebq8gowR8XUeF/crZggwoT
+        4TIT3dkWg0XgyWCg==
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/fsgsbase] x86/entry/64: Correct the comment over
+ SAVE_AND_SET_GSBASE
+Cc:     Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200821090710.GE12181@zn.tnic>
+References: <20200821090710.GE12181@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <159825843012.389.11997668879998573740.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+The following commit has been merged into the x86/fsgsbase branch of tip:
 
-[ Upstream commit 6184358da0004c8fd940afda6c0a0fa4027dc911 ]
+Commit-ID:     0b2c605fa4ee3117c00b97b7af67791576b28f88
+Gitweb:        https://git.kernel.org/tip/0b2c605fa4ee3117c00b97b7af67791576b28f88
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Thu, 20 Aug 2020 11:10:15 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 24 Aug 2020 10:23:40 +02:00
 
-When enable LOCKDEP, static_obj() will cause error. Because some
-__initdata static variables is before _stext:
+x86/entry/64: Correct the comment over SAVE_AND_SET_GSBASE
 
-static int static_obj(const void *obj)
-{
-        unsigned long start = (unsigned long) &_stext,
-                      end   = (unsigned long) &_end,
-                      addr  = (unsigned long) obj;
+Add the proper explanation why an LFENCE is not needed in the FSGSBASE
+case.
 
-        /*
-         * static variable?
-         */
-        if ((addr >= start) && (addr < end))
-                return 1;
-
-[    0.067192] INFO: trying to register non-static key.
-[    0.067325] the code is fine but needs lockdep annotation.
-[    0.067449] turning off the locking correctness validator.
-[    0.067718] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7-dirty #44
-[    0.067945] Call Trace:
-[    0.068369] [<ffffffe00020323c>] walk_stackframe+0x0/0xa4
-[    0.068506] [<ffffffe000203422>] show_stack+0x2a/0x34
-[    0.068631] [<ffffffe000521e4e>] dump_stack+0x94/0xca
-[    0.068757] [<ffffffe000255a4e>] register_lock_class+0x5b8/0x5bc
-[    0.068969] [<ffffffe000255abe>] __lock_acquire+0x6c/0x1d5c
-[    0.069101] [<ffffffe0002550fe>] lock_acquire+0xae/0x312
-[    0.069228] [<ffffffe000989a8e>] _raw_spin_lock_irqsave+0x40/0x5a
-[    0.069357] [<ffffffe000247c64>] complete+0x1e/0x50
-[    0.069479] [<ffffffe000984c38>] rest_init+0x1b0/0x28a
-[    0.069660] [<ffffffe0000016a2>] 0xffffffe0000016a2
-[    0.069779] [<ffffffe000001b84>] 0xffffffe000001b84
-[    0.069953] [<ffffffe000001092>] 0xffffffe000001092
-
-static __initdata DECLARE_COMPLETION(kthreadd_done);
-
-noinline void __ref rest_init(void)
-{
-	...
-	complete(&kthreadd_done);
-
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: c82965f9e530 ("x86/entry/64: Handle FSGSBASE enabled paranoid entry/exit")
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200821090710.GE12181@zn.tnic
 ---
- arch/riscv/kernel/vmlinux.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/entry/entry_64.S | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-index 0339b6bbe11ab..bf3f34dbe630b 100644
---- a/arch/riscv/kernel/vmlinux.lds.S
-+++ b/arch/riscv/kernel/vmlinux.lds.S
-@@ -22,6 +22,7 @@ SECTIONS
- 	/* Beginning of code and text segment */
- 	. = LOAD_OFFSET;
- 	_start = .;
-+	_stext = .;
- 	HEAD_TEXT_SECTION
- 	. = ALIGN(PAGE_SIZE);
- 
-@@ -49,7 +50,6 @@ SECTIONS
- 	. = ALIGN(SECTION_ALIGN);
- 	.text : {
- 		_text = .;
--		_stext = .;
- 		TEXT_TEXT
- 		SCHED_TEXT
- 		CPUIDLE_TEXT
--- 
-2.25.1
-
-
-
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 70dea93..bf78de4 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -840,8 +840,9 @@ SYM_CODE_START_LOCAL(paranoid_entry)
+ 	 * retrieve and set the current CPUs kernel GSBASE. The stored value
+ 	 * has to be restored in paranoid_exit unconditionally.
+ 	 *
+-	 * The MSR write ensures that no subsequent load is based on a
+-	 * mispredicted GSBASE. No extra FENCE required.
++	 * The unconditional write to GS base below ensures that no subsequent
++	 * loads based on a mispredicted GS base can happen, therefore no LFENCE
++	 * is needed here.
+ 	 */
+ 	SAVE_AND_SET_GSBASE scratch_reg=%rax save_reg=%rbx
+ 	ret
