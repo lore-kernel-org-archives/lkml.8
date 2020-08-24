@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E06C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A65C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3039E2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE8020738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262244;
-	bh=6oxOZpWrQo9kN1mC1GueTlX0Zw9pU1kiTxY3jJZ9PZM=;
+	s=default; t=1598262254;
+	bh=/DMNXdWyR44RKoBGbBNhca/NOo7MsflkjKpNszxYWNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ddve5MFpuTyzORx0v4NP/K8rf6q4/gjtrTpZEvPP5VBWmf77fYnB6HL1fc1tjS1GF
-	 hKsKXUtRdLETxfVHMG+q+qhaZXIVxUxVXZQdfjWLIQO+Jl2keUdt29DwXeC9OZnKRm
-	 9k42kFHdLsHyM675OxYQUFFAcv+UvyKgj9YoS+B0=
+	b=ZyLHIhHG1gKfxTIWJahD/RZG0BamAvwlMzf3QnSSAToeRsjTL5keipXdWCuFmPqf9
+	 8e/xwjPD7DS0+8f/7e+7mBl4QSScmJyDOnQ3DWgnZXL1dTG2JlyTwfImfvyZr3Nyp9
+	 +AULFqqL5d0Mz2cfv5bVGWMI9lInzLKCFubB9eXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgHXInp (ORCPT
+        id S1728700AbgHXJoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:43:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37634 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:44:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728482AbgHXInY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:43:24 -0400
+        id S1728495AbgHXInb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:43:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAFC62074D;
-        Mon, 24 Aug 2020 08:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20D2F2087D;
+        Mon, 24 Aug 2020 08:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258602;
-        bh=6oxOZpWrQo9kN1mC1GueTlX0Zw9pU1kiTxY3jJZ9PZM=;
+        s=default; t=1598258610;
+        bh=/DMNXdWyR44RKoBGbBNhca/NOo7MsflkjKpNszxYWNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sw2Whet/HEsIoT489KJ04ngEBYRqjoKWEvj+tH9wKeHJrUxfpIlbXIiqfjoiE/tql
-         /iN/P5RViDZuJ1qIFVKmpo2EFtD92QVSIFcOtBBX8WUAyfYIVL2dmQ/O/1rmVztirg
-         bcIYZgPYJmjbGqlYYfUt5zTtFqpeT185HNXRXOkc=
+        b=AM/8/7e8z26W8wqDEAD6Tbeb+GoKU90CEeScQiANPbCgHg1mXNQndirvVn6g1v1nI
+         C9eLYRVNq/U9Q/X5Ns5UztvKx5roM8pOQGxvxFVD01bGhH8BWH8VMklsiaDqlH7JFj
+         Gj2d4M3aLuOFO0mNt50oPZ4Mu1oTxrKvo2Cze/zs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        Kiwoong Kim <kwmad.kim@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 097/124] scsi: ufs: Add quirk to fix abnormal ocs fatal error
-Date:   Mon, 24 Aug 2020 10:30:31 +0200
-Message-Id: <20200824082414.194098752@linuxfoundation.org>
+Subject: [PATCH 5.7 108/124] powerpc/fixmap: Fix the size of the early debug area
+Date:   Mon, 24 Aug 2020 10:30:42 +0200
+Message-Id: <20200824082414.719735807@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -62,60 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kiwoong Kim <kwmad.kim@samsung.com>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-[ Upstream commit d779a6e90e189f4883ce6f900da02995fb000df5 ]
+[ Upstream commit fdc6edbb31fba76fd25d7bd016b675a92908d81e ]
 
-Some controller like Exynos determines if FATAL ERROR (0x7) in OCS field in
-UTRD occurs for values other than GOOD (0x0) in STATUS field in response
-upiu as well as errors that a host controller can't cover.  This patch is
-to prevent from reporting command results in those cases.
+Commit ("03fd42d458fb powerpc/fixmap: Fix FIX_EARLY_DEBUG_BASE when
+page size is 256k") reworked the setup of the early debug area and
+mistakenly replaced 128 * 1024 by SZ_128.
 
-Link: https://lore.kernel.org/r/20200528011658.71590-6-alim.akhtar@samsung.com
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Kiwoong Kim <kwmad.kim@samsung.com>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Change to SZ_128K to restore the original 128 kbytes size of the area.
+
+Fixes: 03fd42d458fb ("powerpc/fixmap: Fix FIX_EARLY_DEBUG_BASE when page size is 256k")
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/996184974d674ff984643778cf1cdd7fe58cc065.1597644194.git.christophe.leroy@csgroup.eu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 6 ++++++
- drivers/scsi/ufs/ufshcd.h | 6 ++++++
- 2 files changed, 12 insertions(+)
+ arch/powerpc/include/asm/fixmap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 4d5e8f6a31438..7298adbcdec85 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4799,6 +4799,12 @@ ufshcd_transfer_rsp_status(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
- 	/* overall command status of utrd */
- 	ocs = ufshcd_get_tr_ocs(lrbp);
- 
-+	if (hba->quirks & UFSHCD_QUIRK_BROKEN_OCS_FATAL_ERROR) {
-+		if (be32_to_cpu(lrbp->ucd_rsp_ptr->header.dword_1) &
-+					MASK_RSP_UPIU_RESULT)
-+			ocs = OCS_SUCCESS;
-+	}
-+
- 	switch (ocs) {
- 	case OCS_SUCCESS:
- 		result = ufshcd_get_req_rsp(lrbp->ucd_rsp_ptr);
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index b3b2d09d8fff3..59ca93b64bb08 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -541,6 +541,12 @@ enum ufshcd_quirks {
- 	 * resolution of the values of PRDTO and PRDTL in UTRD as byte.
- 	 */
- 	UFSHCD_QUIRK_PRDT_BYTE_GRAN			= 1 << 9,
-+
-+	/*
-+	 * This quirk needs to be enabled if the host controller reports
-+	 * OCS FATAL ERROR with device error through sense data
-+	 */
-+	UFSHCD_QUIRK_BROKEN_OCS_FATAL_ERROR		= 1 << 10,
- };
- 
- enum ufshcd_caps {
+diff --git a/arch/powerpc/include/asm/fixmap.h b/arch/powerpc/include/asm/fixmap.h
+index 77ab25a199740..e808461e6532e 100644
+--- a/arch/powerpc/include/asm/fixmap.h
++++ b/arch/powerpc/include/asm/fixmap.h
+@@ -52,7 +52,7 @@ enum fixed_addresses {
+ 	FIX_HOLE,
+ 	/* reserve the top 128K for early debugging purposes */
+ 	FIX_EARLY_DEBUG_TOP = FIX_HOLE,
+-	FIX_EARLY_DEBUG_BASE = FIX_EARLY_DEBUG_TOP+(ALIGN(SZ_128, PAGE_SIZE)/PAGE_SIZE)-1,
++	FIX_EARLY_DEBUG_BASE = FIX_EARLY_DEBUG_TOP+(ALIGN(SZ_128K, PAGE_SIZE)/PAGE_SIZE)-1,
+ #ifdef CONFIG_HIGHMEM
+ 	FIX_KMAP_BEGIN,	/* reserved pte's for temporary kernel mappings */
+ 	FIX_KMAP_END = FIX_KMAP_BEGIN+(KM_TYPE_NR*NR_CPUS)-1,
 -- 
 2.25.1
 
