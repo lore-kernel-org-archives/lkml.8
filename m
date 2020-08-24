@@ -6,57 +6,62 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD22EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86F7F20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9193020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgHXXSQ (ORCPT
+        id S1728152AbgHXXTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:18:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59928 "EHLO
+        Mon, 24 Aug 2020 19:19:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXXSQ (ORCPT
+        with ESMTP id S1726090AbgHXXTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 19:18:16 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15822C061574;
-        Mon, 24 Aug 2020 16:18:15 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 9CFC42CB;
-        Mon, 24 Aug 2020 23:18:15 +0000 (UTC)
-Date:   Mon, 24 Aug 2020 17:18:14 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the jc_docs
- tree
-Message-ID: <20200824171814.7905b7c9@lwn.net>
-In-Reply-To: <20200825091346.63395129@canb.auug.org.au>
-References: <20200825091346.63395129@canb.auug.org.au>
-Organization: LWN.net
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+        Mon, 24 Aug 2020 19:19:40 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4F7C061574;
+        Mon, 24 Aug 2020 16:19:40 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 25A1D12924E97;
+        Mon, 24 Aug 2020 16:02:53 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 16:19:37 -0700 (PDT)
+Message-Id: <20200824.161937.197785505315942083.davem@davemloft.net>
+To:     f.fainelli@gmail.com
+Cc:     netdev@vger.kernel.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-netdev@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, andrew@lunn.ch,
+        hkallweit1@gmail.com, linux@armlinux.org.uk
+Subject: Re: [PATCH net-next 0/6] MAINTAINERS: Remove self from PHY LIBRARY
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200822201126.8253-1-f.fainelli@gmail.com>
+References: <20200822201126.8253-1-f.fainelli@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Aug 2020 16:02:53 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 09:13:46 +1000
-Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Sat, 22 Aug 2020 13:11:20 -0700
 
-> Commit
+> Hi David, Heiner, Andrew, Russell,
 > 
->   09824ed3a906 ("Documentation/locking/locktypes: fix local_locks documentation")
+> This patch series aims at allowing myself to keep track of the Ethernet
+> PHY and MDIO bus drivers that I authored or contributed to without
+> being listed as a maintainer in the PHY library anymore.
 > 
-> is missing a Signed-off-by from its committer.
+> Thank you for the fish, I will still be around.
 
-*That* is weird...it was applied with the same "git am" script as all the
-rest...  Thanks for the heads-up, sure wish I knew what's going on.
+I applied this to 'net' because I think it's important to MAINTAINERS
+information to be as uptodate as possible.
 
-jon
+Thanks Florian.
