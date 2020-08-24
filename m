@@ -2,267 +2,83 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB03C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 953A62074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:26:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QOX7hFSx"
+	by mail.kernel.org (Postfix) with ESMTP id 6804C2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgHXM0C (ORCPT
+        id S1726878AbgHXM2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:26:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43231 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726809AbgHXMZI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:25:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598271905;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PlDXYkMf8XCvclTdTig9DMVLeOaWXFPXZoOvIMWb/Bg=;
-        b=QOX7hFSxcv55FHfc8PL/MIQE6s8QqcASeg3+D9LkCgkUsXc//COHbBX4OLZjRNT08fMSuj
-        S1/2DTP5X6Kxn9TPvg40oS8oh45gmO1UCCc4SZLKcPRegzRslRE6HBnAkjwxpmTLXs2FKk
-        c+xsrdlrMEsBYsaopY4LQTKYiLbPVIc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-54-rTfguJBhNXu0qjvWlWWvWQ-1; Mon, 24 Aug 2020 08:25:01 -0400
-X-MC-Unique: rTfguJBhNXu0qjvWlWWvWQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3D6681F008;
-        Mon, 24 Aug 2020 12:24:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 73B2F7C869;
-        Mon, 24 Aug 2020 12:24:58 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 3/5] Add manpage for fspick(2)
-From:   David Howells <dhowells@redhat.com>
-To:     mtk.manpages@gmail.com, viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 24 Aug 2020 13:24:57 +0100
-Message-ID: <159827189767.306468.1803062787718957199.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159827188271.306468.16962617119460123110.stgit@warthog.procyon.org.uk>
-References: <159827188271.306468.16962617119460123110.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Mon, 24 Aug 2020 08:28:36 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:7288 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725906AbgHXM2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 08:28:35 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app4 (Coremail) with SMTP id cS_KCgBH_RxEskNfoIhFAQ--.47575S4;
+        Mon, 24 Aug 2020 20:27:52 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sean Young <sean@mess.org>, Brad Love <brad@nextdimension.cc>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dvbdev: Fix memleak in dvb_register_device
+Date:   Mon, 24 Aug 2020 20:27:46 +0800
+Message-Id: <20200824122749.27147-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgBH_RxEskNfoIhFAQ--.47575S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7XrWkAw48Gw47Zw1kCw15Jwb_yoWfZrcEkw
+        1Fvr97Wrn3KF43Cr12ya15ZryjkrZrurZ3WFWrta18CF1UXrWDWr9Fqr17Gry7Ga1YqFn8
+        Xa4UZws3CrWrKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
+        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+        7VUjsjjDUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUCBlZdtPpD7wAVs-
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a manual page to document the fspick() system call.
+When device_create() fails, dvbdev and dvbdevfops should
+be freed just like when dvb_register_media_device() fails.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
+ drivers/media/dvb-core/dvbdev.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- man2/fspick.2 |  180 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 180 insertions(+)
- create mode 100644 man2/fspick.2
-
-diff --git a/man2/fspick.2 b/man2/fspick.2
-new file mode 100644
-index 000000000..72bf645dd
---- /dev/null
-+++ b/man2/fspick.2
-@@ -0,0 +1,180 @@
-+'\" t
-+.\" Copyright (c) 2020 David Howells <dhowells@redhat.com>
-+.\"
-+.\" %%%LICENSE_START(VERBATIM)
-+.\" Permission is granted to make and distribute verbatim copies of this
-+.\" manual provided the copyright notice and this permission notice are
-+.\" preserved on all copies.
-+.\"
-+.\" Permission is granted to copy and distribute modified versions of this
-+.\" manual under the conditions for verbatim copying, provided that the
-+.\" entire resulting derived work is distributed under the terms of a
-+.\" permission notice identical to this one.
-+.\"
-+.\" Since the Linux kernel and libraries are constantly changing, this
-+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
-+.\" responsibility for errors or omissions, or for damages resulting from
-+.\" the use of the information contained herein.  The author(s) may not
-+.\" have taken the same level of care in the production of this manual,
-+.\" which is licensed free of charge, as they might when working
-+.\" professionally.
-+.\"
-+.\" Formatted or processed versions of this manual, if unaccompanied by
-+.\" the source, must acknowledge the copyright and authors of this work.
-+.\" %%%LICENSE_END
-+.\"
-+.TH FSPICK 2 2020-08-24 "Linux" "Linux Programmer's Manual"
-+.SH NAME
-+fspick \- Select filesystem for reconfiguration
-+.SH SYNOPSIS
-+.nf
-+.B #include <sys/types.h>
-+.B #include <sys/mount.h>
-+.B #include <unistd.h>
-+.BR "#include <fcntl.h>           " "/* Definition of AT_* constants */"
-+.PP
-+.BI "int fspick(int " dirfd ", const char *" pathname ", unsigned int " flags );
-+.fi
-+.PP
-+.IR Note :
-+There is no glibc wrapper for this system call.
-+.SH DESCRIPTION
-+.PP
-+.BR fspick ()
-+creates a new filesystem configuration context within the kernel and attaches a
-+pre-existing superblock to it so that it can be reconfigured (similar to
-+.BR mount (8)
-+with the "-o remount" option).  The configuration context is marked as being in
-+reconfiguration mode and attached to a file descriptor, which is returned to
-+the caller.  The file descriptor can be marked close-on-exec by setting
-+.B FSPICK_CLOEXEC
-+in
-+.IR flags .
-+.PP
-+The target is whichever superblock backs the object determined by
-+.IR dfd ", " pathname " and " flags .
-+The following can be set in
-+.I flags
-+to control the pathwalk to that object:
-+.TP
-+.B FSPICK_SYMLINK_NOFOLLOW
-+Don't follow symbolic links in the final component of the path.
-+.TP
-+.B FSPICK_NO_AUTOMOUNT
-+Don't follow automounts in the final component of the path.
-+.TP
-+.B FSPICK_EMPTY_PATH
-+Allow an empty string to be specified as the pathname.  This allows
-+.I dirfd
-+to specify the target mount exactly.
-+.PP
-+After calling fspick(), the file descriptor should be passed to the
-+.BR fsconfig (2)
-+system call, using that to specify the desired changes to filesystem and
-+security parameters.
-+.PP
-+When the parameters are all set, the
-+.BR fsconfig ()
-+system call should then be called again with
-+.B FSCONFIG_CMD_RECONFIGURE
-+as the command argument to effect the reconfiguration.
-+.PP
-+After the reconfiguration has taken place, the context is wiped clean (apart
-+from the superblock attachment, which remains) and can be reused to make
-+another reconfiguration.
-+.PP
-+The file descriptor also serves as a channel by which more comprehensive error,
-+warning and information messages may be retrieved from the kernel using
-+.BR read (2).
-+.SS Message Retrieval Interface
-+The context file descriptor may be queried for message strings at any time by
-+calling
-+.BR read (2)
-+on the file descriptor.  This will return formatted messages that are prefixed
-+to indicate their class:
-+.TP
-+\fB"e <message>"\fP
-+An error message string was logged.
-+.TP
-+\fB"i <message>"\fP
-+An informational message string was logged.
-+.TP
-+\fB"w <message>"\fP
-+An warning message string was logged.
-+.PP
-+Messages are removed from the queue as they're read and the queue has a limited
-+depth of 8 messages, so it's possible for some to get lost.
-+.SH RETURN VALUE
-+On success, the function returns a file descriptor.  On error, \-1 is returned,
-+and
-+.I errno
-+is set appropriately.
-+.SH ERRORS
-+The error values given below result from filesystem type independent errors.
-+Additionally, each filesystem type may have its own special errors and its own
-+special behavior.  See the Linux kernel source code for details.
-+.TP
-+.B EACCES
-+A component of a path was not searchable.
-+(See also
-+.BR path_resolution (7).)
-+.TP
-+.B EFAULT
-+.I pathname
-+points outside the user address space.
-+.TP
-+.B EINVAL
-+.I flags
-+includes an undefined value.
-+.TP
-+.B ELOOP
-+Too many links encountered during pathname resolution.
-+.TP
-+.B EMFILE
-+The system has too many open files to create more.
-+.TP
-+.B ENFILE
-+The process has too many open files to create more.
-+.TP
-+.B ENAMETOOLONG
-+A pathname was longer than
-+.BR MAXPATHLEN .
-+.TP
-+.B ENOENT
-+A pathname was empty or had a nonexistent component.
-+.TP
-+.B ENOMEM
-+The kernel could not allocate sufficient memory to complete the call.
-+.TP
-+.B EPERM
-+The caller does not have the required privileges.
-+.SH CONFORMING TO
-+These functions are Linux-specific and should not be used in programs intended
-+to be portable.
-+.SH VERSIONS
-+.BR fsopen "(), " fsmount "() and " fspick ()
-+were added to Linux in kernel 5.2.
-+.SH EXAMPLES
-+To illustrate the process, here's an example whereby this can be used to
-+reconfigure a filesystem:
-+.PP
-+.in +4n
-+.nf
-+sfd = fspick(AT_FDCWD, "/mnt", FSPICK_NO_AUTOMOUNT | FSPICK_CLOEXEC);
-+fsconfig(sfd, FSCONFIG_SET_FLAG, "ro", NULL, 0);
-+fsconfig(sfd, FSCONFIG_SET_STRING, "user_xattr", "false", 0);
-+fsconfig(sfd, FSCONFIG_CMD_RECONFIGURE, NULL, NULL, 0);
-+.fi
-+.in
-+.PP
-+.SH NOTES
-+Glibc does not (yet) provide a wrapper for the
-+.BR fspick "()"
-+system call; call it using
-+.BR syscall (2).
-+.SH SEE ALSO
-+.BR mountpoint (1),
-+.BR fsconfig (2),
-+.BR fsopen (2),
-+.BR path_resolution (7),
-+.BR mount (8)
-
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index 959fa2820259..5ff7bedee247 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -539,6 +539,9 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+ 	if (IS_ERR(clsdev)) {
+ 		pr_err("%s: failed to create device dvb%d.%s%d (%ld)\n",
+ 		       __func__, adap->num, dnames[type], id, PTR_ERR(clsdev));
++		dvb_media_device_free(dvbdev);
++		kfree(dvbdevfops);
++		kfree(dvbdev);
+ 		return PTR_ERR(clsdev);
+ 	}
+ 	dprintk("DVB: register adapter%d/%s%d @ minor: %i (0x%02x)\n",
+-- 
+2.17.1
 
