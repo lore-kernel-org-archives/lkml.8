@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EA3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE39C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4778B204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E0B204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259336;
-	bh=CS9yBYvOyCspT8lvpjzMasnEsr4lb4jrjYWhggxhOWI=;
+	s=default; t=1598259345;
+	bh=YmMkGDCzuMOp8TtDnyNzcwbeuxefZcMKSq0PW3kxMDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dU+M2kA/sz8lXl8Z3RJGTysoWZ7L3Aa5DNH0EnTKBMKFRS5IVLV0lIssdOWOK4w1s
-	 ySvYqZAmVuxvfQWyN0QJdIU9b9AqgC+a71vLnvRwr9iubyXHDNyw3bomczK6qS6jaJ
-	 0gFSTcm3tGNPndlMpvuYP4yxiD8GtEZoAmCtWClU=
+	b=gXxB9uPb26XPEdCerbc7g3DoC373rrklR9HW4HVWck3Fnf3m7n9kG9+oQGqpRRtYG
+	 Thbjg1gYyIE2fJpNh2IOtEgn49wp2zOZAvTGWbN3mrZModHNs6AFkSiu/eo6C/hI4P
+	 j/cR/+GOiECZQH5XCFPTY8fZB7yJtcqFqSF3pKQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgHXIze (ORCPT
+        id S1729952AbgHXIzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:55:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbgHXIzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:17 -0400
+        id S1730408AbgHXIzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:55:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F2F6208E4;
-        Mon, 24 Aug 2020 08:55:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CACA82072D;
+        Mon, 24 Aug 2020 08:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259316;
-        bh=CS9yBYvOyCspT8lvpjzMasnEsr4lb4jrjYWhggxhOWI=;
+        s=default; t=1598259319;
+        bh=YmMkGDCzuMOp8TtDnyNzcwbeuxefZcMKSq0PW3kxMDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QThR91gM6BroE889NeE3p7/y9Z0WvIckLWOo7LcLxMLZFCS9xrDHFWamMs5jLqQl+
-         ZPgerQNuWg8VwNG7GXL/g8UJBtFyAfKYe32O/i8bctt4baCKt5jzZRZZ4p7IF9qdbm
-         h70rDwoSV3gQrEbRv1c+hMtYzi6ds4DaVBKZ6SL8=
+        b=S+rYZVewReyMWJXXAnMGgAOoUnOHXxCaROG2kSvCvEWULsgOFNSWrS+tDkk8egU37
+         unEA+1+DDwTa+lPODl5YdRfkw9MZyqqF9I77RUvCedDwKrQDa9tc+Eb1Sqcr9uUFon
+         jiihtRw6XVlpjPktPxowfdZhCNznhmzQ4FRQo2D4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charan Teja Reddy <charante@codeaurora.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Vinayak Menon <vinmenon@codeaurora.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 13/71] mm, page_alloc: fix core hung in free_pcppages_bulk()
-Date:   Mon, 24 Aug 2020 10:31:04 +0200
-Message-Id: <20200824082356.557329090@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.19 14/71] ext4: fix checking of directory entry validity for inline directories
+Date:   Mon, 24 Aug 2020 10:31:05 +0200
+Message-Id: <20200824082356.611465553@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -66,100 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charan Teja Reddy <charante@codeaurora.org>
+From: Jan Kara <jack@suse.cz>
 
-commit 88e8ac11d2ea3acc003cf01bb5a38c8aa76c3cfd upstream.
+commit 7303cb5bfe845f7d43cd9b2dbd37dbb266efda9b upstream.
 
-The following race is observed with the repeated online, offline and a
-delay between two successive online of memory blocks of movable zone.
+ext4_search_dir() and ext4_generic_delete_entry() can be called both for
+standard director blocks and for inline directories stored inside inode
+or inline xattr space. For the second case we didn't call
+ext4_check_dir_entry() with proper constraints that could result in
+accepting corrupted directory entry as well as false positive filesystem
+errors like:
 
-P1						P2
+EXT4-fs error (device dm-0): ext4_search_dir:1395: inode #28320400:
+block 113246792: comm dockerd: bad entry in directory: directory entry too
+close to block end - offset=0, inode=28320403, rec_len=32, name_len=8,
+size=4096
 
-Online the first memory block in
-the movable zone. The pcp struct
-values are initialized to default
-values,i.e., pcp->high = 0 &
-pcp->batch = 1.
+Fix the arguments passed to ext4_check_dir_entry().
 
-					Allocate the pages from the
-					movable zone.
-
-Try to Online the second memory
-block in the movable zone thus it
-entered the online_pages() but yet
-to call zone_pcp_update().
-					This process is entered into
-					the exit path thus it tries
-					to release the order-0 pages
-					to pcp lists through
-					free_unref_page_commit().
-					As pcp->high = 0, pcp->count = 1
-					proceed to call the function
-					free_pcppages_bulk().
-Update the pcp values thus the
-new pcp values are like, say,
-pcp->high = 378, pcp->batch = 63.
-					Read the pcp's batch value using
-					READ_ONCE() and pass the same to
-					free_pcppages_bulk(), pcp values
-					passed here are, batch = 63,
-					count = 1.
-
-					Since num of pages in the pcp
-					lists are less than ->batch,
-					then it will stuck in
-					while(list_empty(list)) loop
-					with interrupts disabled thus
-					a core hung.
-
-Avoid this by ensuring free_pcppages_bulk() is called with proper count of
-pcp list pages.
-
-The mentioned race is some what easily reproducible without [1] because
-pcp's are not updated for the first memory block online and thus there is
-a enough race window for P2 between alloc+free and pcp struct values
-update through onlining of second memory block.
-
-With [1], the race still exists but it is very narrow as we update the pcp
-struct values for the first memory block online itself.
-
-This is not limited to the movable zone, it could also happen in cases
-with the normal zone (e.g., hotplug to a node that only has DMA memory, or
-no other memory yet).
-
-[1]: https://patchwork.kernel.org/patch/11696389/
-
-Fixes: 5f8dcc21211a ("page-allocator: split per-cpu list into one-list-per-migrate-type")
-Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: David Rientjes <rientjes@google.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Vinayak Menon <vinmenon@codeaurora.org>
-Cc: <stable@vger.kernel.org> [2.6+]
-Link: http://lkml.kernel.org/r/1597150703-19003-1-git-send-email-charante@codeaurora.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 109ba779d6cc ("ext4: check for directory entries too close to block end")
+CC: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200731162135.8080-1-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_alloc.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/ext4/namei.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1115,6 +1115,11 @@ static void free_pcppages_bulk(struct zo
- 	struct page *page, *tmp;
- 	LIST_HEAD(head);
- 
-+	/*
-+	 * Ensure proper count is passed which otherwise would stuck in the
-+	 * below while (list_empty(list)) loop.
-+	 */
-+	count = min(pcp->count, count);
- 	while (count) {
- 		struct list_head *list;
- 
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1309,8 +1309,8 @@ int ext4_search_dir(struct buffer_head *
+ 		    ext4_match(fname, de)) {
+ 			/* found a match - just to be sure, do
+ 			 * a full check */
+-			if (ext4_check_dir_entry(dir, NULL, de, bh, bh->b_data,
+-						 bh->b_size, offset))
++			if (ext4_check_dir_entry(dir, NULL, de, bh, search_buf,
++						 buf_size, offset))
+ 				return -1;
+ 			*res_dir = de;
+ 			return 1;
+@@ -2344,7 +2344,7 @@ int ext4_generic_delete_entry(handle_t *
+ 	de = (struct ext4_dir_entry_2 *)entry_buf;
+ 	while (i < buf_size - csum_size) {
+ 		if (ext4_check_dir_entry(dir, NULL, de, bh,
+-					 bh->b_data, bh->b_size, i))
++					 entry_buf, buf_size, i))
+ 			return -EFSCORRUPTED;
+ 		if (de == de_del)  {
+ 			if (pde)
 
 
