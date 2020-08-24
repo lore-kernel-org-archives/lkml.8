@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC00C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A411C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9792D2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498F32074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261016;
-	bh=Gl4jNOH4OH/fe6YEFEorvVIhkVY8kwj2SMw84rehO6c=;
+	s=default; t=1598261019;
+	bh=q4ZJIPRsmUADwzfFX4V5HvPf+nuvNA6nOU5SWOTd+ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u8DDXPpzV9Bi8dlwjsyMdD8QbxJ3uoZdKTSUJdTAx6mkcgr4l69YDD3QQenJTfIW3
-	 w3n5lxo3gPNGMkzh/paapb0YXkAFgwet+yZm+7O3H9mMZa5IoTSaIRmHeTYEQ4pe+U
-	 orc2wJU7NJY/w/gYDYbQWxef+hfFZH+dDGYstZ9E=
+	b=sCbXRNA/Dm71ecvXw6+QrJbcCaMQx/e9/h2IvVquewfDrwpiQSkSTyYMTB/4An2Lj
+	 H2NGq3ApNbOOMGgBMoN686SNHqWh67NVIDDeIaSkFUlm4Xfp2Pt1yWrOWxzztZ09h+
+	 UQIQHhOv4tjnCK7+XPk0LZWQ09eaVnv/fAN77pLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbgHXJXb (ORCPT
+        id S1730299AbgHXIyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:23:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34544 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:54:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730309AbgHXIyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:54:18 -0400
+        id S1730283AbgHXIyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:54:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87895207DF;
-        Mon, 24 Aug 2020 08:54:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C427208E4;
+        Mon, 24 Aug 2020 08:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259258;
-        bh=Gl4jNOH4OH/fe6YEFEorvVIhkVY8kwj2SMw84rehO6c=;
+        s=default; t=1598259250;
+        bh=q4ZJIPRsmUADwzfFX4V5HvPf+nuvNA6nOU5SWOTd+ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Z6z9cmS7MR8TYiioz68QuzK3XHAZjntrQwijkNJzAZLDh7Zn50XuXUKJW3uu1XpY
-         /q4Wjhx56W3u9vy/c1OLcHAA+8pkGpaYCfPmioo2wvRFmvKz/pD7etBI+IGSQZ+ing
-         Tz/WPG7CcU+Cn5qZhYoS+oJl/bdvEQwh6YjSY1Vo=
+        b=GQCF6YdeGF85ZuXp/mR7nhkKT5juiYuREmF39lm5skXqcxaCWdgAquRPNDNR09VKi
+         p475id0MeYGDN18x71Lra0gdMZ16NhZY+kG8nDd9xcYg7dbAkVBiRacV5zR9LN9SlV
+         f2Z2cMwDnFsl0WF8ED+u5Pv5mJ1PMxZrd6Yv3r0I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        Jarod Wilson <jarod@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 39/50] ASoC: msm8916-wcd-analog: fix register Interrupt offset
-Date:   Mon, 24 Aug 2020 10:31:40 +0200
-Message-Id: <20200824082354.029293409@linuxfoundation.org>
+Subject: [PATCH 4.14 37/50] bonding: show saner speed for broadcast mode
+Date:   Mon, 24 Aug 2020 10:31:38 +0200
+Message-Id: <20200824082353.927129203@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -62,40 +64,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Jarod Wilson <jarod@redhat.com>
 
-[ Upstream commit ff69c97ef84c9f7795adb49e9f07c9adcdd0c288 ]
+[ Upstream commit 4ca0d9ac3fd8f9f90b72a15d8da2aca3ffb58418 ]
 
-For some reason interrupt set and clear register offsets are
-not set correctly.
-This patch corrects them!
+Broadcast mode bonds transmit a copy of all traffic simultaneously out of
+all interfaces, so the "speed" of the bond isn't really the aggregate of
+all interfaces, but rather, the speed of the slowest active interface.
 
-Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200811103452.20448-1-srinivas.kandagatla@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Also, the type of the speed field is u32, not unsigned long, so adjust
+that accordingly, as required to make min() function here without
+complaining about mismatching types.
+
+Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/msm8916-wcd-analog.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/bonding/bond_main.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
-index 3633eb30dd135..4f949ad50d6a7 100644
---- a/sound/soc/codecs/msm8916-wcd-analog.c
-+++ b/sound/soc/codecs/msm8916-wcd-analog.c
-@@ -16,8 +16,8 @@
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 1f867e275408e..9ddbafdca3b05 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -4156,13 +4156,23 @@ static netdev_tx_t bond_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	return ret;
+ }
  
- #define CDC_D_REVISION1			(0xf000)
- #define CDC_D_PERPH_SUBTYPE		(0xf005)
--#define CDC_D_INT_EN_SET		(0x015)
--#define CDC_D_INT_EN_CLR		(0x016)
-+#define CDC_D_INT_EN_SET		(0xf015)
-+#define CDC_D_INT_EN_CLR		(0xf016)
- #define MBHC_SWITCH_INT			BIT(7)
- #define MBHC_MIC_ELECTRICAL_INS_REM_DET	BIT(6)
- #define MBHC_BUTTON_PRESS_DET		BIT(5)
++static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
++{
++	if (speed == 0 || speed == SPEED_UNKNOWN)
++		speed = slave->speed;
++	else
++		speed = min(speed, slave->speed);
++
++	return speed;
++}
++
+ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
+ 					   struct ethtool_link_ksettings *cmd)
+ {
+ 	struct bonding *bond = netdev_priv(bond_dev);
+-	unsigned long speed = 0;
+ 	struct list_head *iter;
+ 	struct slave *slave;
++	u32 speed = 0;
+ 
+ 	cmd->base.duplex = DUPLEX_UNKNOWN;
+ 	cmd->base.port = PORT_OTHER;
+@@ -4174,8 +4184,13 @@ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
+ 	 */
+ 	bond_for_each_slave(bond, slave, iter) {
+ 		if (bond_slave_can_tx(slave)) {
+-			if (slave->speed != SPEED_UNKNOWN)
+-				speed += slave->speed;
++			if (slave->speed != SPEED_UNKNOWN) {
++				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
++					speed = bond_mode_bcast_speed(slave,
++								      speed);
++				else
++					speed += slave->speed;
++			}
+ 			if (cmd->base.duplex == DUPLEX_UNKNOWN &&
+ 			    slave->duplex != DUPLEX_UNKNOWN)
+ 				cmd->base.duplex = slave->duplex;
 -- 
 2.25.1
 
