@@ -5,49 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9772A207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28721206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258909;
-	bh=D+Vmybzmzen28AV30V9SfoitNCjmhrlbMMUqq2jVhw8=;
+	s=default; t=1598258916;
+	bh=wp8LIuscKuYSAmiPVftb+5sKuyKhkbhHTw8iaVTj5i4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XRuEow2hi1FgtOamUdhk5Po+4hI657zKJjcrUfqYKG5khXByTSqeDfX9ig4492P2j
-	 frMY5nbw0X3BHU/HtyZemET+9pltl5tEUGFVpdCagemuqHDqhiuigGR7zlExwaaOz2
-	 JNwEJIU+DgwYRg95Q+qS4hDOFLnnv/37aVBz3dJQ=
+	b=vmbcSJqFwjbCovzc7ldHxr/v+ynyDuXG4ItGFNoh3ifV+cGR9BBWF6dOvNDI7MMpp
+	 8gYDuy2yB5AUt+1MOVpwM/q52aUQ0j+BVmdTs0e3WlOCcIUQvg0sm/LKbjahTJOlBl
+	 ETdOW5PCZpSjU0+JnERvNDvnBaTstludTtot6y4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbgHXIs1 (ORCPT
+        id S1729561AbgHXIsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:48:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48728 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:48:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729091AbgHXIsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:48:04 -0400
+        id S1729528AbgHXIsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:48:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8323F204FD;
-        Mon, 24 Aug 2020 08:48:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9951204FD;
+        Mon, 24 Aug 2020 08:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258884;
-        bh=D+Vmybzmzen28AV30V9SfoitNCjmhrlbMMUqq2jVhw8=;
+        s=default; t=1598258889;
+        bh=wp8LIuscKuYSAmiPVftb+5sKuyKhkbhHTw8iaVTj5i4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=00y9SttHYIr7OEDDTWtoLvfKE/db2gHcXGgCm88EINZNAr1HUeFMGQj9hpYlQcRFP
-         UL03j2TIkDf1J3/owI7hUkcm6A32RvjHktzqQGGkRKqhTekbTKb0OSj3gJJePnTDHL
-         tH7vt+Rg/sha4zCX/rfq08Ctr+6/KqGfP3nMkHXU=
+        b=LLQDwEo2lO5wp3bHnA68BsccGixdvqLIrmJSCA5iU8wdWZmofIfw0WEuAflIiWauv
+         dAZL5kA76H+OePV7CR1t2G/3+KSvsiRbtqotvpAzMqG7ySPJ79G6o2cXpeLgRazC9c
+         fHcyHoYM8DNsV2SlUaLcrWe96Dhvwy1NBPBOt8K4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org,
+        syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 071/107] can: j1939: transport: j1939_simple_recv(): ignore local J1939 messages send not by J1939 stack
-Date:   Mon, 24 Aug 2020 10:30:37 +0200
-Message-Id: <20200824082408.639964158@linuxfoundation.org>
+Subject: [PATCH 5.4 081/107] bonding: fix a potential double-unregister
+Date:   Mon, 24 Aug 2020 10:30:47 +0200
+Message-Id: <20200824082409.130142710@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -60,60 +65,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit b43e3a82bc432c1caaed8950e7662c143470c54c ]
+[ Upstream commit 832707021666411d04795c564a4adea5d6b94f17 ]
 
-In current J1939 stack implementation, we process all locally send
-messages as own messages. Even if it was send by CAN_RAW socket.
+When we tear down a network namespace, we unregister all
+the netdevices within it. So we may queue a slave device
+and a bonding device together in the same unregister queue.
 
-To reproduce it use following commands:
-testj1939 -P -r can0:0x80 &
-cansend can0 18238040#0123
+If the only slave device is non-ethernet, it would
+automatically unregister the bonding device as well. Thus,
+we may end up unregistering the bonding device twice.
 
-This step will trigger false positive not critical warning:
-j1939_simple_recv: Received already invalidated message
+Workaround this special case by checking reg_state.
 
-With this patch we add additional check to make sure, related skb is own
-echo message.
-
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Link: https://lore.kernel.org/r/20200807105200.26441-2-o.rempel@pengutronix.de
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fixes: 9b5e383c11b0 ("net: Introduce unregister_netdevice_many()")
+Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Cc: Andy Gospodarek <andy@greyhouse.net>
+Cc: Jay Vosburgh <j.vosburgh@gmail.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/j1939/socket.c    | 1 +
- net/can/j1939/transport.c | 4 ++++
- 2 files changed, 5 insertions(+)
+ drivers/net/bonding/bond_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
-index 1b7dc1a8547f3..bf9fd6ee88fe0 100644
---- a/net/can/j1939/socket.c
-+++ b/net/can/j1939/socket.c
-@@ -398,6 +398,7 @@ static int j1939_sk_init(struct sock *sk)
- 	spin_lock_init(&jsk->sk_session_queue_lock);
- 	INIT_LIST_HEAD(&jsk->sk_session_queue);
- 	sk->sk_destruct = j1939_sk_sock_destruct;
-+	sk->sk_protocol = CAN_J1939;
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 11c014586d466..ce829a7a92101 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2037,7 +2037,8 @@ static int bond_release_and_destroy(struct net_device *bond_dev,
+ 	int ret;
  
- 	return 0;
- }
-diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index 5bfe6bf15a999..30957c9a8eb7a 100644
---- a/net/can/j1939/transport.c
-+++ b/net/can/j1939/transport.c
-@@ -2032,6 +2032,10 @@ void j1939_simple_recv(struct j1939_priv *priv, struct sk_buff *skb)
- 	if (!skb->sk)
- 		return;
- 
-+	if (skb->sk->sk_family != AF_CAN ||
-+	    skb->sk->sk_protocol != CAN_J1939)
-+		return;
-+
- 	j1939_session_list_lock(priv);
- 	session = j1939_session_get_simple(priv, skb);
- 	j1939_session_list_unlock(priv);
+ 	ret = __bond_release_one(bond_dev, slave_dev, false, true);
+-	if (ret == 0 && !bond_has_slaves(bond)) {
++	if (ret == 0 && !bond_has_slaves(bond) &&
++	    bond_dev->reg_state != NETREG_UNREGISTERING) {
+ 		bond_dev->priv_flags |= IFF_DISABLE_NETPOLL;
+ 		netdev_info(bond_dev, "Destroying bond\n");
+ 		bond_remove_proc_entry(bond);
 -- 
 2.25.1
 
