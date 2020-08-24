@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E577EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C051A2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167772078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgaUrq3I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PuQRr8H0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgHXSmV (ORCPT
+        id S1727041AbgHXSm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45122 "EHLO
+        Mon, 24 Aug 2020 14:42:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726886AbgHXSmP (ORCPT
+        with ESMTP id S1726886AbgHXSmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:42:15 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CCB7C061573;
-        Mon, 24 Aug 2020 11:42:15 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id j13so4656015pjd.4;
-        Mon, 24 Aug 2020 11:42:15 -0700 (PDT)
+        Mon, 24 Aug 2020 14:42:23 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C186C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:42:22 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u128so5312653pfb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:42:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OaIqnFEnSkG5jht+rvtzHghjtM2fJzi44KHW2/E9B5c=;
-        b=AgaUrq3IFFV5Lf01o7fJOsRYsvGbkYY3/ima/MrQvHWPWBb2drUk030D42JzUT9kZ8
-         /acRI0/VCLzKQYh3EcubguRil6MUbbyqmtzAcaD5c1WOayFSleoMpts0FjHzv6pE+pvt
-         NuhjGiPbKCriwoy9J5x5Yh+CeaXA4DJN9J/XEwzb+4op2GAZecSriSoIZdHR5r/ZbJG3
-         sGac31uioQhiN2nFsC3ve5ZNOFyi+nBZS7qPWhdGCH82bd32jBcVwWM8mrKTI2ogRCMV
-         ckK57GELg7KFkiJaPYHgFCc7UCCf+Rpon5pq/0esktb9QUrhVxaRWk2gBmNrL0ycVwaB
-         WrJg==
+        bh=kSk9Ml31XbJOG2f57h64F+Z+u/H7LjegKljJVlxq3/o=;
+        b=PuQRr8H0J0Wm/JwS7TDm/n1aaDYpCp+u0Xhtd6ySCS+jIDk3G8tZ+NTj4I9yJl9Xi0
+         ESlNd1bOyyh7orw4FugAlt6b+4E1XyjwB3dT9M21/hTZnBuqymaPtGRryP6vooFDmeCg
+         WBeYpuFK/VhIFBz/ID3oiWyAmocmTWpc71sVReALesHl5XDdOuMmx5BRB2l0jgjEdjjL
+         7NTUSfmUhr5gmrltKw5aeVI4wrDhmcyD8K51sVTFDE2s9RgvK0yi5wbt0jyc43vGwnz6
+         llUJuwX98+NWd8VFREqSV3FObuRD5JQgg65Tdc9SiDaD++ha9SxdK+F2yxcFANSDRVgN
+         6ErA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OaIqnFEnSkG5jht+rvtzHghjtM2fJzi44KHW2/E9B5c=;
-        b=iOD5NPsXexYGhUEZJ9uG7t+Id1JUj67mHyD3i1LN8IXLMvXjPaSGMrvHnFkcP2jrDc
-         KnONzivzGcRJzIPsX2bYdNb2EJ3E5/F+WRbglsPoHDEeCjUfzuz8p2ag+H8zfyxvCw6x
-         voiqe6rKpsewJzclLWMHnmdzNozV+kMauxs1XHgl2eVVenwo9BEVgc4UPiR7YoFncALH
-         xaxL2CcZNhxoIVOtrrwp3k4LnvL4QZv/C8eVAA4IP192L32lyLyj3H+Nk8y4fooJNwue
-         4wHdyTeCMRAa3WU3rVYeQGopjyz6ozNaJ8ggy2xsNJewG8C+ih3p+Ssr+chy8GrgM76Q
-         qhWQ==
-X-Gm-Message-State: AOAM531QHAmtuDOm1gdQX72gx8jNxH1aktcfaYnVyc02zZ2cQtS4l/gD
-        uG5WJLW4n/ii519mcvtuHtI=
-X-Google-Smtp-Source: ABdhPJweO3UyH2UJ+2+a0TD5oHmb7hduBj4c5LDpUnnEK2vzWIpwK/LZ/DbqTaanUusvrGqkAfuuzg==
-X-Received: by 2002:a17:90b:ec1:: with SMTP id gz1mr516986pjb.48.1598294534710;
-        Mon, 24 Aug 2020 11:42:14 -0700 (PDT)
+        bh=kSk9Ml31XbJOG2f57h64F+Z+u/H7LjegKljJVlxq3/o=;
+        b=bMUEDwNffkZfLvtNIzC2be63GWEQM9Gg8KGLKlThkAqRFduPTAcdvNT+EgaHAdHbc1
+         2YoCi5u9oOZ+C3oLUWuZFKzR1RtG0cKinws8tPIG1CyURi6AgoCiPL8BaxpfTE86d8IC
+         b/ZbAEepdob7u7fARw+hgwHmrwY4oe7FmUrZEIrx0AxmmigwzT3ygEtK3kx2mQHjywwL
+         XO4GxsC+an6wzI1rcCk1TwM7DzJw8vlB1QWfYxCD6eTy6ay+iZaOrK1WL4bUr49yKzPw
+         aaN20kCbuHy4wv88MVK7ccOmMBIE8Yj74PXbvdUNAl9I7TyfsUueebtZAuHlgq2JPXgm
+         zY8g==
+X-Gm-Message-State: AOAM530Z9PdMhXIMIcUA3Pbo8EMxYSFSIaw69cz2BcGbFjA21jYcSlIg
+        ILN4C3TnHWu0JutEm8HJhUs=
+X-Google-Smtp-Source: ABdhPJypoRetU1pm/hYk35duEuEDV/9I1qEX2ndUelby0c1VRDwOv61H6tDsCuRdB0ISZKdafjLiDQ==
+X-Received: by 2002:a17:902:7792:: with SMTP id o18mr4697906pll.150.1598294542026;
+        Mon, 24 Aug 2020 11:42:22 -0700 (PDT)
 Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id o16sm13248453pfu.188.2020.08.24.11.42.13
+        by smtp.gmail.com with ESMTPSA id p12sm11985571pff.110.2020.08.24.11.42.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 11:42:13 -0700 (PDT)
+        Mon, 24 Aug 2020 11:42:20 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org
 Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
@@ -79,16 +79,12 @@ Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         John Stultz <john.stultz@linaro.org>,
         Jonathan Marek <jonathan@marek.ca>,
         Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        Krishna Reddy <vdumpa@nvidia.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 06/20] drm/msm/gpu: add dev_to_gpu() helper
-Date:   Mon, 24 Aug 2020 11:37:40 -0700
-Message-Id: <20200824183825.1778810-7-robdclark@gmail.com>
+Subject: [PATCH 08/20] iommu/arm-smmu: constify some helpers
+Date:   Mon, 24 Aug 2020 11:37:42 -0700
+Message-Id: <20200824183825.1778810-9-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200824183825.1778810-1-robdclark@gmail.com>
 References: <20200824183825.1778810-1-robdclark@gmail.com>
@@ -101,105 +97,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rob Clark <robdclark@chromium.org>
 
-In a later patch, the drvdata will not directly be 'struct msm_gpu *',
-so add a helper to reduce the churn.
+Sprinkle a few `const`s where helpers don't need write access.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
- drivers/gpu/drm/msm/adreno/adreno_device.c | 10 ++++------
- drivers/gpu/drm/msm/msm_gpu.c              |  6 +++---
- drivers/gpu/drm/msm/msm_gpu.h              |  5 +++++
- 3 files changed, 12 insertions(+), 9 deletions(-)
+ drivers/iommu/arm/arm-smmu/arm-smmu.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-index 9eeb46bf2a5d..26664e1b30c0 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-@@ -282,7 +282,7 @@ struct msm_gpu *adreno_load_gpu(struct drm_device *dev)
- 	int ret;
- 
- 	if (pdev)
--		gpu = platform_get_drvdata(pdev);
-+		gpu = dev_to_gpu(&pdev->dev);
- 
- 	if (!gpu) {
- 		dev_err_once(dev->dev, "no GPU device was found\n");
-@@ -425,7 +425,7 @@ static int adreno_bind(struct device *dev, struct device *master, void *data)
- static void adreno_unbind(struct device *dev, struct device *master,
- 		void *data)
- {
--	struct msm_gpu *gpu = dev_get_drvdata(dev);
-+	struct msm_gpu *gpu = dev_to_gpu(dev);
- 
- 	pm_runtime_force_suspend(dev);
- 	gpu->funcs->destroy(gpu);
-@@ -490,16 +490,14 @@ static const struct of_device_id dt_match[] = {
- #ifdef CONFIG_PM
- static int adreno_resume(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct msm_gpu *gpu = platform_get_drvdata(pdev);
-+	struct msm_gpu *gpu = dev_to_gpu(dev);
- 
- 	return gpu->funcs->pm_resume(gpu);
- }
- 
- static int adreno_suspend(struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
--	struct msm_gpu *gpu = platform_get_drvdata(pdev);
-+	struct msm_gpu *gpu = dev_to_gpu(dev);
- 
- 	return gpu->funcs->pm_suspend(gpu);
- }
-diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-index d5645472b25d..6aa9e04e52e7 100644
---- a/drivers/gpu/drm/msm/msm_gpu.c
-+++ b/drivers/gpu/drm/msm/msm_gpu.c
-@@ -24,7 +24,7 @@
- static int msm_devfreq_target(struct device *dev, unsigned long *freq,
- 		u32 flags)
- {
--	struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
-+	struct msm_gpu *gpu = dev_to_gpu(dev);
- 	struct dev_pm_opp *opp;
- 
- 	opp = devfreq_recommended_opp(dev, freq, flags);
-@@ -45,7 +45,7 @@ static int msm_devfreq_target(struct device *dev, unsigned long *freq,
- static int msm_devfreq_get_dev_status(struct device *dev,
- 		struct devfreq_dev_status *status)
- {
--	struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
-+	struct msm_gpu *gpu = dev_to_gpu(dev);
- 	ktime_t time;
- 
- 	if (gpu->funcs->gpu_get_freq)
-@@ -64,7 +64,7 @@ static int msm_devfreq_get_dev_status(struct device *dev,
- 
- static int msm_devfreq_get_cur_freq(struct device *dev, unsigned long *freq)
- {
--	struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
-+	struct msm_gpu *gpu = dev_to_gpu(dev);
- 
- 	if (gpu->funcs->gpu_get_freq)
- 		*freq = gpu->funcs->gpu_get_freq(gpu);
-diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-index 0db117a7339b..8bda7beaed4b 100644
---- a/drivers/gpu/drm/msm/msm_gpu.h
-+++ b/drivers/gpu/drm/msm/msm_gpu.h
-@@ -141,6 +141,11 @@ struct msm_gpu {
- 	struct msm_gpu_state *crashstate;
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+index 59ff3fc5c6c8..27c83333fc50 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+@@ -377,7 +377,7 @@ struct arm_smmu_master_cfg {
+ 	s16				smendx[];
  };
  
-+static inline struct msm_gpu *dev_to_gpu(struct device *dev)
-+{
-+	return dev_get_drvdata(dev);
-+}
-+
- /* It turns out that all targets use the same ringbuffer size */
- #define MSM_GPU_RINGBUFFER_SZ SZ_32K
- #define MSM_GPU_RINGBUFFER_BLKSIZE 32
+-static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
++static inline u32 arm_smmu_lpae_tcr(const struct io_pgtable_cfg *cfg)
+ {
+ 	u32 tcr = FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
+ 		FIELD_PREP(ARM_SMMU_TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
+@@ -398,13 +398,13 @@ static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
+ 	return tcr;
+ }
+ 
+-static inline u32 arm_smmu_lpae_tcr2(struct io_pgtable_cfg *cfg)
++static inline u32 arm_smmu_lpae_tcr2(const struct io_pgtable_cfg *cfg)
+ {
+ 	return FIELD_PREP(ARM_SMMU_TCR2_PASIZE, cfg->arm_lpae_s1_cfg.tcr.ips) |
+ 	       FIELD_PREP(ARM_SMMU_TCR2_SEP, ARM_SMMU_TCR2_SEP_UPSTREAM);
+ }
+ 
+-static inline u32 arm_smmu_lpae_vtcr(struct io_pgtable_cfg *cfg)
++static inline u32 arm_smmu_lpae_vtcr(const struct io_pgtable_cfg *cfg)
+ {
+ 	return ARM_SMMU_VTCR_RES1 |
+ 	       FIELD_PREP(ARM_SMMU_VTCR_PS, cfg->arm_lpae_s2_cfg.vtcr.ps) |
 -- 
 2.26.2
 
