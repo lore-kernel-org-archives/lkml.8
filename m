@@ -5,52 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BA3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 661D822B3F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DBB221E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258212;
-	bh=P1YFOqrouA8yrEQ8MUFTsSAPi/ZHWBfDY5S/J5gFgyE=;
+	s=default; t=1598258223;
+	bh=H+uLnd8Ut5PKe8fiM0NYrsTav4GenGextlwAo79bW5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qke7Y5dMqt3cK63BkdjGZfkIPzuJDixXkbypnOeDuRZUr3rYmVrrBLLacZl6P6ob7
-	 mBszr5CMNGtj1kqS+TYiF6ukuXqR2OQDEw2+zlx6uCvMYPfhdzQzZQbxWoRcfPHHFG
-	 71fVE8O6NX0+BM79MR/DvmCUsw7KFZAuvO055pEc=
+	b=lM9b9xIaSJzKz/3eUqmwlLjpN5Ve6n7HQs6ZthF7hs5labGh4bevL+BTRCdG00sy/
+	 5LbG+zAxGw1pp5bw7Bn0kicnJh0k8IprI+AxrAWU7VzoX9Xj6pCWMm9MyVa78IdX6B
+	 DLQ5wCWjrzdaVBx9VBH33H/sjJnGCluSA5F778bA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgHXIgt (ORCPT
+        id S1728327AbgHXIhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:36:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbgHXIgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:36:39 -0400
+        id S1728051AbgHXIg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:36:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B4182177B;
-        Mon, 24 Aug 2020 08:36:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86C66207DF;
+        Mon, 24 Aug 2020 08:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258198;
-        bh=P1YFOqrouA8yrEQ8MUFTsSAPi/ZHWBfDY5S/J5gFgyE=;
+        s=default; t=1598258217;
+        bh=H+uLnd8Ut5PKe8fiM0NYrsTav4GenGextlwAo79bW5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WbYjVdd+GeFjb6HZrIvhlneZf+XweVBSdVRwrxIcWnSD5iPA1Ht7jueBV6npRvUaa
-         B25wqDnPck515KHX97qhq0Z1F8JnNXCEN6lctq/9L+XjvauyNjLSfXKyYMWXPDHKor
-         tZGQT9r3x60pysXvCdX/PphLA8fXqoKypEnfROLg=
+        b=taz0I2hhB6En78Cu28aAuoBBDTBaDiD/2lBG9c2OZkG8TV+N+WzqszCLSt+P4GE2f
+         tm+lAXF/NnQ1EU54WLo+EFRjdAVfrha303rCMPhkY0atpQmT4BWmKooZUVNoVFTQjj
+         JYGNdY1vXJ2tYeUHJl+oW84Y4USrVFNOlYj/q1gQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Can Guo <cang@codeaurora.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Seungwon Jeon <essuuj@gmail.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Przemyslaw Patynowski <przemyslawx.patynowski@intel.com>,
+        Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
+        Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 110/148] scsi: ufs: Add quirk to fix mishandling utrlclr/utmrlclr
-Date:   Mon, 24 Aug 2020 10:30:08 +0200
-Message-Id: <20200824082419.287805815@linuxfoundation.org>
+Subject: [PATCH 5.8 088/148] i40e: Set RX_ONLY mode for unicast promiscuous on VLAN
+Date:   Mon, 24 Aug 2020 10:29:46 +0200
+Message-Id: <20200824082418.266774375@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -63,71 +64,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alim Akhtar <alim.akhtar@samsung.com>
+From: Przemyslaw Patynowski <przemyslawx.patynowski@intel.com>
 
-[ Upstream commit 871838412adf533ffda0b4a0ede0c2984e3511e7 ]
+[ Upstream commit 4bd5e02a2ed1575c2f65bd3c557a077dd399f0e8 ]
 
-With the correct behavior, setting the bit to '0' indicates clear and '1'
-indicates no change. If host controller handles this the other way around,
-UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR can be used.
+Trusted VF with unicast promiscuous mode set, could listen to TX
+traffic of other VFs.
+Set unicast promiscuous mode to RX traffic, if VSI has port VLAN
+configured. Rename misleading I40E_AQC_SET_VSI_PROMISC_TX bit to
+I40E_AQC_SET_VSI_PROMISC_RX_ONLY. Aligned unicast promiscuous with
+VLAN to the one without VLAN.
 
-Link: https://lore.kernel.org/r/20200528011658.71590-2-alim.akhtar@samsung.com
-Reviewed-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 6c41a7606967 ("i40e: Add promiscuous on VLAN support")
+Fixes: 3b1200891b7f ("i40e: When in promisc mode apply promisc mode to Tx Traffic as well")
+Signed-off-by: Przemyslaw Patynowski <przemyslawx.patynowski@intel.com>
+Signed-off-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
+Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 11 +++++++++--
- drivers/scsi/ufs/ufshcd.h |  5 +++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ .../net/ethernet/intel/i40e/i40e_adminq_cmd.h |  2 +-
+ drivers/net/ethernet/intel/i40e/i40e_common.c | 35 ++++++++++++++-----
+ 2 files changed, 28 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index dec56e99335f0..9da44a389becb 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -674,7 +674,11 @@ static inline int ufshcd_get_tr_ocs(struct ufshcd_lrb *lrbp)
-  */
- static inline void ufshcd_utrl_clear(struct ufs_hba *hba, u32 pos)
- {
--	ufshcd_writel(hba, ~(1 << pos), REG_UTP_TRANSFER_REQ_LIST_CLEAR);
-+	if (hba->quirks & UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR)
-+		ufshcd_writel(hba, (1 << pos), REG_UTP_TRANSFER_REQ_LIST_CLEAR);
-+	else
-+		ufshcd_writel(hba, ~(1 << pos),
-+				REG_UTP_TRANSFER_REQ_LIST_CLEAR);
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h b/drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h
+index aa5f1c0aa7215..0921785a10795 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h
++++ b/drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h
+@@ -1211,7 +1211,7 @@ struct i40e_aqc_set_vsi_promiscuous_modes {
+ #define I40E_AQC_SET_VSI_PROMISC_BROADCAST	0x04
+ #define I40E_AQC_SET_VSI_DEFAULT		0x08
+ #define I40E_AQC_SET_VSI_PROMISC_VLAN		0x10
+-#define I40E_AQC_SET_VSI_PROMISC_TX		0x8000
++#define I40E_AQC_SET_VSI_PROMISC_RX_ONLY	0x8000
+ 	__le16	seid;
+ #define I40E_AQC_VSI_PROM_CMD_SEID_MASK		0x3FF
+ 	__le16	vlan_tag;
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_common.c b/drivers/net/ethernet/intel/i40e/i40e_common.c
+index 45b90eb11adba..21e44c6cd5eac 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_common.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_common.c
+@@ -1969,6 +1969,21 @@ i40e_status i40e_aq_set_phy_debug(struct i40e_hw *hw, u8 cmd_flags,
+ 	return status;
  }
  
- /**
-@@ -684,7 +688,10 @@ static inline void ufshcd_utrl_clear(struct ufs_hba *hba, u32 pos)
-  */
- static inline void ufshcd_utmrl_clear(struct ufs_hba *hba, u32 pos)
- {
--	ufshcd_writel(hba, ~(1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
-+	if (hba->quirks & UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR)
-+		ufshcd_writel(hba, (1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
-+	else
-+		ufshcd_writel(hba, ~(1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
- }
- 
- /**
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 16187be98a94c..2ddf4c2f76f55 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -520,6 +520,11 @@ enum ufshcd_quirks {
- 	 * ops (get_ufs_hci_version) to get the correct version.
- 	 */
- 	UFSHCD_QUIRK_BROKEN_UFS_HCI_VERSION		= 1 << 5,
++/**
++ * i40e_is_aq_api_ver_ge
++ * @aq: pointer to AdminQ info containing HW API version to compare
++ * @maj: API major value
++ * @min: API minor value
++ *
++ * Assert whether current HW API version is greater/equal than provided.
++ **/
++static bool i40e_is_aq_api_ver_ge(struct i40e_adminq_info *aq, u16 maj,
++				  u16 min)
++{
++	return (aq->api_maj_ver > maj ||
++		(aq->api_maj_ver == maj && aq->api_min_ver >= min));
++}
 +
-+	/*
-+	 * Clear handling for transfer/task request list is just opposite.
-+	 */
-+	UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR		= 1 << 6,
- };
+ /**
+  * i40e_aq_add_vsi
+  * @hw: pointer to the hw struct
+@@ -2094,18 +2109,16 @@ i40e_status i40e_aq_set_vsi_unicast_promiscuous(struct i40e_hw *hw,
  
- enum ufshcd_caps {
+ 	if (set) {
+ 		flags |= I40E_AQC_SET_VSI_PROMISC_UNICAST;
+-		if (rx_only_promisc &&
+-		    (((hw->aq.api_maj_ver == 1) && (hw->aq.api_min_ver >= 5)) ||
+-		     (hw->aq.api_maj_ver > 1)))
+-			flags |= I40E_AQC_SET_VSI_PROMISC_TX;
++		if (rx_only_promisc && i40e_is_aq_api_ver_ge(&hw->aq, 1, 5))
++			flags |= I40E_AQC_SET_VSI_PROMISC_RX_ONLY;
+ 	}
+ 
+ 	cmd->promiscuous_flags = cpu_to_le16(flags);
+ 
+ 	cmd->valid_flags = cpu_to_le16(I40E_AQC_SET_VSI_PROMISC_UNICAST);
+-	if (((hw->aq.api_maj_ver >= 1) && (hw->aq.api_min_ver >= 5)) ||
+-	    (hw->aq.api_maj_ver > 1))
+-		cmd->valid_flags |= cpu_to_le16(I40E_AQC_SET_VSI_PROMISC_TX);
++	if (i40e_is_aq_api_ver_ge(&hw->aq, 1, 5))
++		cmd->valid_flags |=
++			cpu_to_le16(I40E_AQC_SET_VSI_PROMISC_RX_ONLY);
+ 
+ 	cmd->seid = cpu_to_le16(seid);
+ 	status = i40e_asq_send_command(hw, &desc, NULL, 0, cmd_details);
+@@ -2202,11 +2215,17 @@ enum i40e_status_code i40e_aq_set_vsi_uc_promisc_on_vlan(struct i40e_hw *hw,
+ 	i40e_fill_default_direct_cmd_desc(&desc,
+ 					  i40e_aqc_opc_set_vsi_promiscuous_modes);
+ 
+-	if (enable)
++	if (enable) {
+ 		flags |= I40E_AQC_SET_VSI_PROMISC_UNICAST;
++		if (i40e_is_aq_api_ver_ge(&hw->aq, 1, 5))
++			flags |= I40E_AQC_SET_VSI_PROMISC_RX_ONLY;
++	}
+ 
+ 	cmd->promiscuous_flags = cpu_to_le16(flags);
+ 	cmd->valid_flags = cpu_to_le16(I40E_AQC_SET_VSI_PROMISC_UNICAST);
++	if (i40e_is_aq_api_ver_ge(&hw->aq, 1, 5))
++		cmd->valid_flags |=
++			cpu_to_le16(I40E_AQC_SET_VSI_PROMISC_RX_ONLY);
+ 	cmd->seid = cpu_to_le16(seid);
+ 	cmd->vlan_tag = cpu_to_le16(vid | I40E_AQC_SET_VSI_VLAN_VALID);
+ 
 -- 
 2.25.1
 
