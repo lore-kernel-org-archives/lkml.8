@@ -2,29 +2,29 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 207F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1F2C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0060F20706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707DF20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgHXM4m (ORCPT
+        id S1728019AbgHXM4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:56:42 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:22355 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727872AbgHXMzf (ORCPT
+        Mon, 24 Aug 2020 08:56:47 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:43108 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727851AbgHXMze (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:55:35 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U6k9-bl_1598273712;
+        Mon, 24 Aug 2020 08:55:34 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0U6k9-bl_1598273712;
 Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6k9-bl_1598273712)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 24 Aug 2020 20:55:18 +0800
+          Mon, 24 Aug 2020 20:55:23 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
@@ -35,9 +35,11 @@ To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         richard.weiyang@gmail.com, kirill@shutemov.name,
         alexander.duyck@gmail.com, rong.a.chen@intel.com, mhocko@suse.com,
         vdavydov.dev@gmail.com, shy828301@gmail.com
-Subject: [PATCH v18 15/32] mm/lru: move lock into lru_note_cost
-Date:   Mon, 24 Aug 2020 20:54:48 +0800
-Message-Id: <1598273705-69124-16-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH v18 29/32] mm: Identify compound pages sooner in isolate_migratepages_block
+Date:   Mon, 24 Aug 2020 20:55:02 +0800
+Message-Id: <1598273705-69124-30-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -46,77 +48,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have to move lru_lock into lru_note_cost, since it cycle up on memcg
-tree, for future per lruvec lru_lock replace. It's a bit ugly and may
-cost a bit more locking, but benefit from multiple memcg locking could
-cover the lost.
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
+Since we are holding a reference to the page much sooner in
+isolate_migratepages_block we can move the PageCompound check out of the
+LRU locked section and instead just place it after get_page_unless_zero. By
+doing this we can allow any of the items that might trigger a failure to
+trigger a failure for the compound page rather than the order 0 page and as
+a result we should be able to process the pageblock faster.
+
+In addition by testing for PageCompound sooner we can avoid having the LRU
+flag cleared and then reset in the exception case. As a result this should
+prevent possible races where another thread might be attempting to pull the
+LRU pages from the list.
+
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
 Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
 ---
- mm/swap.c   | 5 +++--
- mm/vmscan.c | 4 +---
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ mm/compaction.c | 33 ++++++++++++++++++---------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 906255db6006..f80ccd6f3cb4 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -269,7 +269,9 @@ void lru_note_cost(struct lruvec *lruvec, bool file, unsigned int nr_pages)
- {
- 	do {
- 		unsigned long lrusize;
-+		struct pglist_data *pgdat = lruvec_pgdat(lruvec);
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 6bf5ccd8fcf6..a0e48d079124 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -984,6 +984,24 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 		if (unlikely(!get_page_unless_zero(page)))
+ 			goto isolate_fail;
  
-+		spin_lock_irq(&pgdat->lru_lock);
- 		/* Record cost event */
- 		if (file)
- 			lruvec->file_cost += nr_pages;
-@@ -293,15 +295,14 @@ void lru_note_cost(struct lruvec *lruvec, bool file, unsigned int nr_pages)
- 			lruvec->file_cost /= 2;
- 			lruvec->anon_cost /= 2;
++		/*
++		 * Page is compound. We know the order before we know if it is
++		 * on the LRU so we cannot assume it is THP. However since the
++		 * page will have the LRU validated shortly we can use the value
++		 * to skip over this page for now or validate the LRU is set and
++		 * then isolate the entire compound page if we are isolating to
++		 * generate a CMA page.
++		 */
++		if (PageCompound(page)) {
++			const unsigned int order = compound_order(page);
++
++			if (likely(order < MAX_ORDER))
++				low_pfn += (1UL << order) - 1;
++
++			if (!cc->alloc_contig)
++				goto isolate_fail_put;
++		}
++
+ 		if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
+ 			goto isolate_fail_put;
+ 
+@@ -1009,23 +1027,8 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 				if (test_and_set_skip(cc, page, low_pfn))
+ 					goto isolate_abort;
+ 			}
+-
+-			/*
+-			 * Page become compound since the non-locked check,
+-			 * and it's on LRU. It can only be a THP so the order
+-			 * is safe to read and it's 0 for tail pages.
+-			 */
+-			if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
+-				low_pfn += compound_nr(page) - 1;
+-				SetPageLRU(page);
+-				goto isolate_fail_put;
+-			}
  		}
-+		spin_unlock_irq(&pgdat->lru_lock);
- 	} while ((lruvec = parent_lruvec(lruvec)));
- }
  
- void lru_note_cost_page(struct page *page)
- {
--	spin_lock_irq(&page_pgdat(page)->lru_lock);
- 	lru_note_cost(mem_cgroup_page_lruvec(page, page_pgdat(page)),
- 		      page_is_file_lru(page), thp_nr_pages(page));
--	spin_unlock_irq(&page_pgdat(page)->lru_lock);
- }
- 
- static void __activate_page(struct page *page, struct lruvec *lruvec)
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index ffccb94defaf..7b7b36bd1448 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1971,19 +1971,17 @@ static int current_may_throttle(void)
- 				&stat, false);
- 
- 	spin_lock_irq(&pgdat->lru_lock);
+-		/* The whole page is taken off the LRU; skip the tail pages. */
+-		if (PageCompound(page))
+-			low_pfn += compound_nr(page) - 1;
 -
- 	move_pages_to_lru(lruvec, &page_list);
- 
- 	__mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, -nr_taken);
--	lru_note_cost(lruvec, file, stat.nr_pageout);
- 	item = current_is_kswapd() ? PGSTEAL_KSWAPD : PGSTEAL_DIRECT;
- 	if (!cgroup_reclaim(sc))
- 		__count_vm_events(item, nr_reclaimed);
- 	__count_memcg_events(lruvec_memcg(lruvec), item, nr_reclaimed);
- 	__count_vm_events(PGSTEAL_ANON + file, nr_reclaimed);
--
- 	spin_unlock_irq(&pgdat->lru_lock);
- 
-+	lru_note_cost(lruvec, file, stat.nr_pageout);
- 	mem_cgroup_uncharge_list(&page_list);
- 	free_unref_page_list(&page_list);
- 
+ 		/* Successfully isolated */
+ 		del_page_from_lru_list(page, lruvec, page_lru(page));
+ 		mod_node_page_state(page_pgdat(page),
 -- 
 1.8.3.1
 
