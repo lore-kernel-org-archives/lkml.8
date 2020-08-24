@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B251C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD4FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D317B2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D4B2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258451;
-	bh=/S/5fcNXp1qF0dj5Sh7EBvrVNQQbog7E1B1vZS/c6vk=;
+	s=default; t=1598258455;
+	bh=qIN9iri9QNfy/KZFqXfOtLmo6m1lKdco5QEV4ggVQxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iWKv9qWpjLDLPSk5Xv3ZmvvCIGOM3GwgHemBwB5c7xPS9C6AoJPjO5Mdq6d5Smwkb
-	 qKwH52jwu2Fek2dK9o62XTiWG8jMkKOsuAJKpTflhHZzkWzdcoA9EicqBWeGQ8m/tU
-	 nIIl0WBpEfHpN2H3mbpvSzQSzlKfFAJWFl1cjbX4=
+	b=iJTDGWHq4fRpgD9H6O7IYTmNGgbqwlBa0wvMD1hOa7oc+0TzGRGbq0pFWN0yb7sJr
+	 H9dXx25ldGdq/9d8A/ixcsKpoNySaj2R10JqMRq1hbkgJCCx+lMTQtU3ZprZuzza8N
+	 5LN9sSEZwzn9TahoCHWfv7BUJO+PQrMn3imEgRKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbgHXIkt (ORCPT
+        id S1728790AbgHXIkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:40:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57986 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:40:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728775AbgHXIko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:40:44 -0400
+        id S1728747AbgHXIkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:40:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99C1D2075B;
-        Mon, 24 Aug 2020 08:40:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D2D62074D;
+        Mon, 24 Aug 2020 08:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258444;
-        bh=/S/5fcNXp1qF0dj5Sh7EBvrVNQQbog7E1B1vZS/c6vk=;
+        s=default; t=1598258447;
+        bh=qIN9iri9QNfy/KZFqXfOtLmo6m1lKdco5QEV4ggVQxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vE9HDkEzhbQHrWq2zTEXrcSZLZIoUSDtowyAyy997HUnsH305p50bzboYWQLsjJvL
-         N4SUsJwtwyf8HsomWMBlYWlo+2oZACjqY5rVVZjeWLZ94nS4xxQwzlHwGCsdw6oQzH
-         8L8yd7zuAkBmPXHHLjtEwQo6QFjdMa7Z2ogs7yuA=
+        b=Q8OfAEzgHqGy8QK31Ea7ObKuABiIW+Mjvd8ydQSF0lYrWUa/TmQGLc9ADhqPTKpvB
+         TEUgVFpN6LgG08nSU07dnEFYCQmNsh+M3XdrOR0JweEFbZ8YNynXENONbIFvGNejg7
+         zHWzHanb3gab2ea+Xa3JwsRtFwawVn3zTqbcQ7/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <stefano.stabellini@xilinx.com>,
-        Corey Minyard <cminyard@mvista.com>,
-        Roman Shaposhnik <roman@zededa.com>,
-        Juergen Gross <jgross@suse.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 050/124] swiotlb-xen: use vmalloc_to_page on vmalloc virt addresses
-Date:   Mon, 24 Aug 2020 10:29:44 +0200
-Message-Id: <20200824082411.881127143@linuxfoundation.org>
+Subject: [PATCH 5.7 051/124] cpufreq: intel_pstate: Fix cpuinfo_max_freq when MSR_TURBO_RATIO_LIMIT is 0
+Date:   Mon, 24 Aug 2020 10:29:45 +0200
+Message-Id: <20200824082411.929783239@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -64,61 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-[ Upstream commit 8b1e868f66076490189a36d984fcce286cdd6295 ]
+[ Upstream commit 4daca379c703ff55edc065e8e5173dcfeecf0148 ]
 
-xen_alloc_coherent_pages might return pages for which virt_to_phys and
-virt_to_page don't work, e.g. ioremap'ed pages.
+The MSR_TURBO_RATIO_LIMIT can be 0. This is not an error. User can update
+this MSR via BIOS settings on some systems or can use msr tools to update.
+Also some systems boot with value = 0.
 
-So in xen_swiotlb_free_coherent we can't assume that virt_to_page works.
-Instead add a is_vmalloc_addr check and use vmalloc_to_page on vmalloc
-virt addresses.
+This results in display of cpufreq/cpuinfo_max_freq wrong. This value
+will be equal to cpufreq/base_frequency, even though turbo is enabled.
 
-This patch fixes the following crash at boot on RPi4 (the underlying
-issue is not RPi4 specific):
-https://marc.info/?l=xen-devel&m=158862573216800
+But platform will still function normally in HWP mode as we get max
+1-core frequency from the MSR_HWP_CAPABILITIES. This MSR is already used
+to calculate cpu->pstate.turbo_freq, which is used for to set
+policy->cpuinfo.max_freq. But some other places cpu->pstate.turbo_pstate
+is used. For example to set policy->max.
 
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Tested-by: Corey Minyard <cminyard@mvista.com>
-Tested-by: Roman Shaposhnik <roman@zededa.com>
-Link: https://lore.kernel.org/r/20200710223427.6897-1-sstabellini@kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
+To fix this, also update cpu->pstate.turbo_pstate when updating
+cpu->pstate.turbo_freq.
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/swiotlb-xen.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/cpufreq/intel_pstate.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index b6d27762c6f8c..5fbadd07819bd 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -335,6 +335,7 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
- 	int order = get_order(size);
- 	phys_addr_t phys;
- 	u64 dma_mask = DMA_BIT_MASK(32);
-+	struct page *page;
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 4d3429b2058fc..8c4d86032c7a3 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -1572,6 +1572,7 @@ static void intel_pstate_get_cpu_pstates(struct cpudata *cpu)
  
- 	if (hwdev && hwdev->coherent_dma_mask)
- 		dma_mask = hwdev->coherent_dma_mask;
-@@ -346,9 +347,14 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
- 	/* Convert the size to actually allocated. */
- 	size = 1UL << (order + XEN_PAGE_SHIFT);
- 
-+	if (is_vmalloc_addr(vaddr))
-+		page = vmalloc_to_page(vaddr);
-+	else
-+		page = virt_to_page(vaddr);
-+
- 	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
- 		     range_straddles_page_boundary(phys, size)) &&
--	    TestClearPageXenRemapped(virt_to_page(vaddr)))
-+	    TestClearPageXenRemapped(page))
- 		xen_destroy_contiguous_region(phys, order);
- 
- 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
+ 		intel_pstate_get_hwp_max(cpu->cpu, &phy_max, &current_max);
+ 		cpu->pstate.turbo_freq = phy_max * cpu->pstate.scaling;
++		cpu->pstate.turbo_pstate = phy_max;
+ 	} else {
+ 		cpu->pstate.turbo_freq = cpu->pstate.turbo_pstate * cpu->pstate.scaling;
+ 	}
 -- 
 2.25.1
 
