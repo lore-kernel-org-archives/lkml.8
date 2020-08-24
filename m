@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A65C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA62C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE8020738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A5120738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262254;
-	bh=/DMNXdWyR44RKoBGbBNhca/NOo7MsflkjKpNszxYWNE=;
+	s=default; t=1598262255;
+	bh=AmwGl3nbdomZR9X6hN9fQPE1qXogeoBgob+2uxXlRpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZyLHIhHG1gKfxTIWJahD/RZG0BamAvwlMzf3QnSSAToeRsjTL5keipXdWCuFmPqf9
-	 8e/xwjPD7DS0+8f/7e+7mBl4QSScmJyDOnQ3DWgnZXL1dTG2JlyTwfImfvyZr3Nyp9
-	 +AULFqqL5d0Mz2cfv5bVGWMI9lInzLKCFubB9eXE=
+	b=vL+hnbTYIh78K7+UcszXUbpH0Nc2jr+b151m6O4hG/fPvsY/EpHtn4b1i05RxpEct
+	 45vD9+2xgdMlYXsb0U56wj7FhvzYFgumMZuIJpD7LPBJejWrrqpAddV1KXaxOFO1as
+	 m7obJ8Py7thD87QbjgCYn2t0TZiELJtyk3ePQF4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728700AbgHXJoL (ORCPT
+        id S1728850AbgHXJoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38010 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:44:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbgHXInb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:43:31 -0400
+        id S1728752AbgHXIni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:43:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20D2F2087D;
-        Mon, 24 Aug 2020 08:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D44E82075B;
+        Mon, 24 Aug 2020 08:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258610;
-        bh=/DMNXdWyR44RKoBGbBNhca/NOo7MsflkjKpNszxYWNE=;
+        s=default; t=1598258616;
+        bh=AmwGl3nbdomZR9X6hN9fQPE1qXogeoBgob+2uxXlRpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AM/8/7e8z26W8wqDEAD6Tbeb+GoKU90CEeScQiANPbCgHg1mXNQndirvVn6g1v1nI
-         C9eLYRVNq/U9Q/X5Ns5UztvKx5roM8pOQGxvxFVD01bGhH8BWH8VMklsiaDqlH7JFj
-         Gj2d4M3aLuOFO0mNt50oPZ4Mu1oTxrKvo2Cze/zs=
+        b=IwPIFZBKmgi0L1F8C4f9HjVUvHxVz5XuS1ulBFAQerrF9b/gUJX+YAJtAoxSww2pT
+         lvu5jy/r/WChwDPydAo+cjdVAj6sYWz92qH+cdECesrd4KwJTWKna09RQJYplSaz8h
+         AKUHfoRbhDnZiF8cXqZi5HdHZvmItC6dyAYPPzx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Jiri Wiesner <jwiesner@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 108/124] powerpc/fixmap: Fix the size of the early debug area
-Date:   Mon, 24 Aug 2020 10:30:42 +0200
-Message-Id: <20200824082414.719735807@linuxfoundation.org>
+Subject: [PATCH 5.7 110/124] bonding: fix active-backup failover for current ARP slave
+Date:   Mon, 24 Aug 2020 10:30:44 +0200
+Message-Id: <20200824082414.818405009@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -61,38 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Jiri Wiesner <jwiesner@suse.com>
 
-[ Upstream commit fdc6edbb31fba76fd25d7bd016b675a92908d81e ]
+[ Upstream commit 0410d07190961ac526f05085765a8d04d926545b ]
 
-Commit ("03fd42d458fb powerpc/fixmap: Fix FIX_EARLY_DEBUG_BASE when
-page size is 256k") reworked the setup of the early debug area and
-mistakenly replaced 128 * 1024 by SZ_128.
+When the ARP monitor is used for link detection, ARP replies are
+validated for all slaves (arp_validate=3) and fail_over_mac is set to
+active, two slaves of an active-backup bond may get stuck in a state
+where both of them are active and pass packets that they receive to
+the bond. This state makes IPv6 duplicate address detection fail. The
+state is reached thus:
+1. The current active slave goes down because the ARP target
+   is not reachable.
+2. The current ARP slave is chosen and made active.
+3. A new slave is enslaved. This new slave becomes the current active
+   slave and can reach the ARP target.
+As a result, the current ARP slave stays active after the enslave
+action has finished and the log is littered with "PROBE BAD" messages:
+> bond0: PROBE: c_arp ens10 && cas ens11 BAD
+The workaround is to remove the slave with "going back" status from
+the bond and re-enslave it. This issue was encountered when DPDK PMD
+interfaces were being enslaved to an active-backup bond.
 
-Change to SZ_128K to restore the original 128 kbytes size of the area.
+I would be possible to fix the issue in bond_enslave() or
+bond_change_active_slave() but the ARP monitor was fixed instead to
+keep most of the actions changing the current ARP slave in the ARP
+monitor code. The current ARP slave is set as inactive and backup
+during the commit phase. A new state, BOND_LINK_FAIL, has been
+introduced for slaves in the context of the ARP monitor. This allows
+administrators to see how slaves are rotated for sending ARP requests
+and attempts are made to find a new active slave.
 
-Fixes: 03fd42d458fb ("powerpc/fixmap: Fix FIX_EARLY_DEBUG_BASE when page size is 256k")
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/996184974d674ff984643778cf1cdd7fe58cc065.1597644194.git.christophe.leroy@csgroup.eu
+Fixes: b2220cad583c9 ("bonding: refactor ARP active-backup monitor")
+Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/fixmap.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/bonding/bond_main.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/fixmap.h b/arch/powerpc/include/asm/fixmap.h
-index 77ab25a199740..e808461e6532e 100644
---- a/arch/powerpc/include/asm/fixmap.h
-+++ b/arch/powerpc/include/asm/fixmap.h
-@@ -52,7 +52,7 @@ enum fixed_addresses {
- 	FIX_HOLE,
- 	/* reserve the top 128K for early debugging purposes */
- 	FIX_EARLY_DEBUG_TOP = FIX_HOLE,
--	FIX_EARLY_DEBUG_BASE = FIX_EARLY_DEBUG_TOP+(ALIGN(SZ_128, PAGE_SIZE)/PAGE_SIZE)-1,
-+	FIX_EARLY_DEBUG_BASE = FIX_EARLY_DEBUG_TOP+(ALIGN(SZ_128K, PAGE_SIZE)/PAGE_SIZE)-1,
- #ifdef CONFIG_HIGHMEM
- 	FIX_KMAP_BEGIN,	/* reserved pte's for temporary kernel mappings */
- 	FIX_KMAP_END = FIX_KMAP_BEGIN+(KM_TYPE_NR*NR_CPUS)-1,
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 02f2428cbc3ba..07624e89b96d6 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2825,6 +2825,9 @@ static int bond_ab_arp_inspect(struct bonding *bond)
+ 			if (bond_time_in_interval(bond, last_rx, 1)) {
+ 				bond_propose_link_state(slave, BOND_LINK_UP);
+ 				commit++;
++			} else if (slave->link == BOND_LINK_BACK) {
++				bond_propose_link_state(slave, BOND_LINK_FAIL);
++				commit++;
+ 			}
+ 			continue;
+ 		}
+@@ -2933,6 +2936,19 @@ static void bond_ab_arp_commit(struct bonding *bond)
+ 
+ 			continue;
+ 
++		case BOND_LINK_FAIL:
++			bond_set_slave_link_state(slave, BOND_LINK_FAIL,
++						  BOND_SLAVE_NOTIFY_NOW);
++			bond_set_slave_inactive_flags(slave,
++						      BOND_SLAVE_NOTIFY_NOW);
++
++			/* A slave has just been enslaved and has become
++			 * the current active slave.
++			 */
++			if (rtnl_dereference(bond->curr_active_slave))
++				RCU_INIT_POINTER(bond->current_arp_slave, NULL);
++			continue;
++
+ 		default:
+ 			slave_err(bond->dev, slave->dev,
+ 				  "impossible: link_new_state %d on slave\n",
+@@ -2983,8 +2999,6 @@ static bool bond_ab_arp_probe(struct bonding *bond)
+ 			return should_notify_rtnl;
+ 	}
+ 
+-	bond_set_slave_inactive_flags(curr_arp_slave, BOND_SLAVE_NOTIFY_LATER);
+-
+ 	bond_for_each_slave_rcu(bond, slave, iter) {
+ 		if (!found && !before && bond_slave_is_up(slave))
+ 			before = slave;
 -- 
 2.25.1
 
