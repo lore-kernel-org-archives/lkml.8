@@ -2,158 +2,98 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5E7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B147C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1494820738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D19120738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:16:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J7Wbx9Em"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgHXKQU convert rfc822-to-8bit (ORCPT
+        id S1726706AbgHXKQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:16:20 -0400
-Received: from gw-eagle1.siemens.com ([194.138.20.72]:13465 "EHLO
-        gw-eagle1.siemens.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgHXKQT (ORCPT
+        Mon, 24 Aug 2020 06:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgHXKQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:16:19 -0400
-Received: from mail2.dc4ca.siemens.de (mail2.dc4ca.siemens.de [139.25.224.94])
-        by gw-eagle1.siemens.com (Postfix) with ESMTPS id B17CF4F000C;
-        Mon, 24 Aug 2020 12:16:16 +0200 (CEST)
-Received: from DEMCHDC8A0A.ad011.siemens.net (demchdc8a0a.ad011.siemens.net [139.25.226.106])
-        by mail2.dc4ca.siemens.de (Postfix) with ESMTPS id A09241552FD70;
-        Mon, 24 Aug 2020 12:16:16 +0200 (CEST)
-Received: from CNPEK01M06MSX.ad011.siemens.net (139.24.237.223) by
- DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2044.4; Mon, 24 Aug 2020 12:16:15 +0200
-Received: from CNPEK01M06MSX.ad011.siemens.net ([139.24.237.223]) by
- CNPEK01M06MSX.ad011.siemens.net ([139.24.237.223]) with mapi id
- 15.01.2044.004; Mon, 24 Aug 2020 18:16:13 +0800
-From:   "Wang, Sheng Long" <shenglong.wang.ext@siemens.com>
-To:     Johan Hovold <johan@kernel.org>
-CC:     Sheng Long Wang <china_shenglong@163.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Kiszka, Jan" <jan.kiszka@siemens.com>
-Subject: RE: [PATCH v3] usb-serial:cp210x: add support to software flow
- control
-Thread-Topic: [PATCH v3] usb-serial:cp210x: add support to software flow
- control
-Thread-Index: AQHWdscbn5u/RYWMnkqBpjeEIyjP+KlBhWMAgATzlACAAInCwP//fcsAgAABwoCAAIlwwA==
-Date:   Mon, 24 Aug 2020 10:16:13 +0000
-Message-ID: <8f7594e92e464bd4bd2e51218541ed58@siemens.com>
-References: <20200820075240.13321-1-china_shenglong@163.com>
- <97836b78-740b-cf70-4803-27305b6e0a4d@siemens.com>
- <20200824090948.GC21288@localhost>
- <f21d4cc8b12d4ec6870623472ca7df09@siemens.com>
- <faddf44e-db1d-46e5-b6db-88168b0cc808@siemens.com>
- <20200824094307.GE21288@localhost>
-In-Reply-To: <20200824094307.GE21288@localhost>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcejAwNDNjYnhcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1kNTExZjY4MC1lNWYyLTExZWEtYmU1OS1iMDBjZDE2OTA4NjRcYW1lLXRlc3RcZDUxMWY2ODItZTVmMi0xMWVhLWJlNTktYjAwY2QxNjkwODY0Ym9keS50eHQiIHN6PSIzNzk1IiB0PSIxMzI0MjczNzc3MTc5NTI4NzMiIGg9InJOcG0xVXZ2UExhOTF2SWFMeHlaUTNvQmNIRT0iIGlkPSIiIGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUhBQUFBQnBRV3FYLzNuV0FicEhzb1NSRFMwQnVrZXloSkVOTFFFQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUJBQUFBVGFuck9nQUFBQUFBQUFBQUFBQUFBQT09Ii8+PC9tZXRhPg==
-x-dg-rorf: 
-x-document-confidentiality: NotClassified
-x-originating-ip: [139.24.108.238]
-x-tm-snts-smtp: 94F92D4091750FD798C19F9F04C1FE6D889768A1769DE3843207CD8ED0E527E12000:8
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 24 Aug 2020 06:16:43 -0400
+Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67BA5C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 03:16:43 -0700 (PDT)
+Received: by mail-vk1-xa31.google.com with SMTP id m12so1848650vko.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 03:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OiCnBS3GYYoc2kTu6U4ScV/ziyrA981gLnUbVdRpKoY=;
+        b=J7Wbx9EmaRP0OLY3dh6kuTXPZs9/tD8i70xzq0R0UJLlPGvI+QuyEXm0317YUV78wI
+         77sU+R+hq+azI2/J3yBcN9y9LuvaLS324FEGORsIJh/EYAoQzPM5NSmMFrtrKOoCKHoS
+         DTBZaI9c1Iv4jWmPWv1q4GM6oz1jvOPwLVfPZDpkOSK242goI8eNhpuE9qsEducUHHKS
+         Qsm/CmGzEqNmI7ykmtkIxxS6iv2obxKOq+t1LMYhf44YZQ9+3r2WokkeTKvha/Z6JcRQ
+         qSUpWFpThpFDZGhtXOBxIdJpjbakZLgukJxr6JWI2bI5E3cRp8rI1dr71zWdENcEg0eG
+         r6Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OiCnBS3GYYoc2kTu6U4ScV/ziyrA981gLnUbVdRpKoY=;
+        b=mFE/kCwbiZTImphBRnGFCoAxGIlJPsVuQVvaPoY+7udAHYkNFou3NaD+WUg3jXC0xE
+         OKz0tLSvJUuVonvSEGprW34/h9J4qm8wpPVUcC4op6nhO1ElXEPT3aCwAnQW9g5iXzLb
+         1EHNrNrbabsVLynJXAeNHcKIjL7+F/eMa2fN/4vmVmZ0Oug3d59pS9ioRBvhdNmdAr0e
+         pLzNjwCzgBrf7FQVqbzDPVwOmXz74h9U0ybMX//UZS/6IV94zV03NwaoPWwU1+0Z1rQh
+         fX7KAWjKhMkUlfHIkoJUrGZL8dyGShQzZLZpoU3HZOcA2Gety2b6Fcf8zS3FQIwGoE1t
+         JRNg==
+X-Gm-Message-State: AOAM53132OCX4KiJh/yCBDokRON8LVJDHU3eMf9YkZoCzE3KZoAUeCS5
+        nmkXB2dySzNl5bmmPpHKQkML/0XX2yfFMdGdfqXYBA==
+X-Google-Smtp-Source: ABdhPJyL/7mPRqeQIbvTo4BErUCy3JkI6gdC46co6kFSio+FPo/F2dgD3SAvRWGLInV9c6P76V1Lf7HyDhKIwGTMGWA=
+X-Received: by 2002:a1f:a256:: with SMTP id l83mr1859945vke.78.1598264202330;
+ Mon, 24 Aug 2020 03:16:42 -0700 (PDT)
 MIME-Version: 1.0
+References: <CA+G9fYt=oYWHEG6VNkfEh8+UxbReS6_+9hnz+1bOYZHj5j1F_Q@mail.gmail.com>
+In-Reply-To: <CA+G9fYt=oYWHEG6VNkfEh8+UxbReS6_+9hnz+1bOYZHj5j1F_Q@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 24 Aug 2020 15:46:30 +0530
+Message-ID: <CA+G9fYtVCb6p_eeBayp_bzJGYFBOx+yG+Bgpda3KcFy-Yj1VgA@mail.gmail.com>
+Subject: Re: BUG: Bad page state in process true  pfn:a8fed on arm
+To:     linux-mm <linux-mm@kvack.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LTP List <ltp@lists.linux.it>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Xu <peterx@redhat.com>, opendmb@gmail.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        afzal.mohd.ma@gmail.com, Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Johan
+On Mon, 24 Aug 2020 at 15:14, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> Kernel BUG noticed on arm architecture on linux next 20200824 tag kernel
+> while running LTP CVE "thp01 -I 120" , LTP mm, LTP hugetlb test cases
+> and libhugetlbfs test suite.
 
-  So, Is it currently possible for me to use which Branch?  :)
- 
-  https://github.com/torvalds/linux  master branch
+BAD: next-20200820
+GOOD: next-20200819
 
- Or use  https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git
+We are trying to bisect this problem and get back to you shortly.
 
-Thanks!
-BR/Sheng Long
-
------Original Message-----
-From: Johan Hovold <johan@kernel.org> 
-Sent: Monday, August 24, 2020 5:43 PM
-To: Kiszka, Jan (CT RDA IOT SES-DE) <jan.kiszka@siemens.com>
-Cc: Wang, Sheng Long (EXT) (RC-CN DI FA R&D SW) <shenglong.wang.ext@siemens.com>; Johan Hovold <johan@kernel.org>; Sheng Long Wang <china_shenglong@163.com>; gregkh@linuxfoundation.org; linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] usb-serial:cp210x: add support to software flow control
-
-On Mon, Aug 24, 2020 at 11:36:50AM +0200, Jan Kiszka wrote:
-> On 24.08.20 11:28, Wang, Sheng Long (EXT) (RC-CN DI FA R&D SW) wrote:
-> > Hi Johan,
-> > 
-> >     Thanks for your reminding. I am adjusting patch according to the latest Linux Master branch.
-> 
-> Use git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git, 
-> branch is likely usb-linus, as Johan requested - just in case there is 
-> another conflict due to a patch not yet in Linux master but in that tree.
-
-The usb-next is used for new features like this one, but again, currently Linus's master branch works as well.
-
-> > -----Original Message-----
-> > From: Johan Hovold <johan@kernel.org>
-> > Sent: Monday, August 24, 2020 5:10 PM
-> > To: Kiszka, Jan (CT RDA IOT SES-DE) <jan.kiszka@siemens.com>
-> > Cc: Sheng Long Wang <china_shenglong@163.com>; Wang, Sheng Long 
-> > (EXT) (RC-CN DI FA R&D SW) <shenglong.wang.ext@siemens.com>; 
-> > johan@kernel.org; gregkh@linuxfoundation.org; 
-> > linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v3] usb-serial:cp210x: add support to software 
-> > flow control
-> > 
-> > On Fri, Aug 21, 2020 at 07:32:58AM +0200, Jan Kiszka wrote:
-> >> On 20.08.20 09:52, Sheng Long Wang wrote:
-> >>> From: Wang Sheng Long <shenglong.wang.ext@siemens.com>
-> >>>
-> >>> When data is transmitted between two serial ports, the phenomenon 
-> >>> of data loss often occurs. The two kinds of flow control commonly 
-> >>> used in serial communication are hardware flow control and 
-> >>> software flow control.
-> >>>
-> >>> In serial communication, If you only use RX/TX/GND Pins, you can't 
-> >>> do hardware flow. So we often used software flow control and 
-> >>> prevent data loss. The user sets the software flow control through 
-> >>> the application program, and the application program sets the 
-> >>> software flow control mode for the serial port chip through the driver.
-> >>>
-> >>> For the cp210 serial port chip, its driver lacks the software flow 
-> >>> control setting code, so the user cannot set the software flow 
-> >>> control function through the application program. This adds the 
-> >>> missing software flow control.
-> >>>
-> >>> Signed-off-by: Wang Sheng Long <shenglong.wang.ext@siemens.com>
-> >>>
-> >>> Changes in v3:
-> >>> -fixed code style, It mainly adjusts the code style acccording  to 
-> >>> kernel specification.
-> >>
-> >> Patch does not apply. You forgot to rebase over latest tty/tty-next 
-> >> or linux master.
-> > 
-> > That should be the usb-next branch of the usb-serial tree:
-> > 
-> > 	
-> > https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git
-> > /
-> > 
-> > or linux-next (or, currently, Linus's master branch).
-> > 
-> > You can use "scripts/get_maintainer.sh --scm" to determine which tree to base your work against.
-> 
-> Thanks for correcting! But it's scripts/get_maintainer.pl. ;)
-
-Heh. Thanks for catching that.
-
-Johan
+- Naresh
