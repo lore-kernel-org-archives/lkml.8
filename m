@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D49C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA2BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 877A220FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130292072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259203;
-	bh=VyrxVLT2B6bAeYKclJpDgYcMOjJOkTXF9Q4q0rVyOAc=;
+	s=default; t=1598259205;
+	bh=PUJTT+mvojLPKfKdvotvaGnazPV+ZH4/F2kZwgWr1l8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wXcRjlDsHEeKffCnu1YypwMg4KfcaARzJoiaZah03iPainA0Zri7Tbu5I8YxgXguQ
-	 li7NbhghIGTkc0Yp46LvQhpaHnqr9JNAYAQV2LEoeHVHjKUMyJf/nxzq+ujHuGrQhg
-	 JzRrGfxbTQKMDG3ktTjFKogpe27X8PNM1URKXZQQ=
+	b=QKHgrbEPefPilZao1pDgk63hC08s5v2RpawN1TeGjPxqDxtZeZFSn5pa48+0TciHd
+	 Ige7Wy6TCtUApnt727ktppSIFZl1teeRr33bEeN9IeXT0Th8tbbdPHJ9PerHp7jUm1
+	 Wu4/CKJnUoc5bT3Qx6AJ/ZM5M+QDoZRVNLWvvizU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730181AbgHXIxU (ORCPT
+        id S1730182AbgHXIxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:53:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60068 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:53:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729855AbgHXIxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:53:04 -0400
+        id S1729205AbgHXIxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:53:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3532E204FD;
-        Mon, 24 Aug 2020 08:53:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61D9E2075B;
+        Mon, 24 Aug 2020 08:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259183;
-        bh=VyrxVLT2B6bAeYKclJpDgYcMOjJOkTXF9Q4q0rVyOAc=;
+        s=default; t=1598259188;
+        bh=PUJTT+mvojLPKfKdvotvaGnazPV+ZH4/F2kZwgWr1l8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yX8kjW86cFZM46qRn8pYhRHM/KFp/L28eeqpIaSIOLAPxN5z3K6rbLr7ammMTI4gs
-         II9kqGBV5faP+BPKbriKdjktCeVjIhNNuecAFs2mtcv6IWoFi0MUTmbMsImfOyvnEI
-         /lep17Z8jAh/uy5AYLq0z2shUnaGPdbBXvDGFvRk=
+        b=T2TLZwrTj7KhXu5ImCDeA0ZT01WGgYIb0UtZu6pYNKisI6EkZ2Rp7kk4pfgbJLk1O
+         9voE0AGC9jvFLkFHXKH4nfsZ0Mw6HHvj7j2zrYfO5uqOxpYDoJ9uxGZFbCu45r/ilU
+         8ihTlQoJDzFwpc0DU2knXO1tN5M4Dx6LgkyMH+4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Shi <shy828301@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Tom Lane <tgl@sss.pgh.pa.us>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 04/50] khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
-Date:   Mon, 24 Aug 2020 10:31:05 +0200
-Message-Id: <20200824082352.096703729@linuxfoundation.org>
+Subject: [PATCH 4.14 06/50] powerpc: Allow 4224 bytes of stack expansion for the signal frame
+Date:   Mon, 24 Aug 2020 10:31:07 +0200
+Message-Id: <20200824082352.230998550@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -68,49 +61,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit f3f99d63a8156c7a4a6b20aac22b53c5579c7dc1 ]
+[ Upstream commit 63dee5df43a31f3844efabc58972f0a206ca4534 ]
 
-syzbot crashes on the VM_BUG_ON_MM(khugepaged_test_exit(mm), mm) in
-__khugepaged_enter(): yes, when one thread is about to dump core, has set
-core_state, and is waiting for others, another might do something calling
-__khugepaged_enter(), which now crashes because I lumped the core_state
-test (known as "mmget_still_valid") into khugepaged_test_exit().  I still
-think it's best to lump them together, so just in this exceptional case,
-check mm->mm_users directly instead of khugepaged_test_exit().
+We have powerpc specific logic in our page fault handling to decide if
+an access to an unmapped address below the stack pointer should expand
+the stack VMA.
 
-Fixes: bbe98f9cadff ("khugepaged: khugepaged_test_exit() check mmget_still_valid()")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Yang Shi <shy828301@gmail.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: <stable@vger.kernel.org>	[4.8+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008141503370.18085@eggly.anvils
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The code was originally added in 2004 "ported from 2.4". The rough
+logic is that the stack is allowed to grow to 1MB with no extra
+checking. Over 1MB the access must be within 2048 bytes of the stack
+pointer, or be from a user instruction that updates the stack pointer.
+
+The 2048 byte allowance below the stack pointer is there to cover the
+288 byte "red zone" as well as the "about 1.5kB" needed by the signal
+delivery code.
+
+Unfortunately since then the signal frame has expanded, and is now
+4224 bytes on 64-bit kernels with transactional memory enabled. This
+means if a process has consumed more than 1MB of stack, and its stack
+pointer lies less than 4224 bytes from the next page boundary, signal
+delivery will fault when trying to expand the stack and the process
+will see a SEGV.
+
+The total size of the signal frame is the size of struct rt_sigframe
+(which includes the red zone) plus __SIGNAL_FRAMESIZE (128 bytes on
+64-bit).
+
+The 2048 byte allowance was correct until 2008 as the signal frame
+was:
+
+struct rt_sigframe {
+        struct ucontext    uc;                           /*     0  1440 */
+        /* --- cacheline 11 boundary (1408 bytes) was 32 bytes ago --- */
+        long unsigned int          _unused[2];           /*  1440    16 */
+        unsigned int               tramp[6];             /*  1456    24 */
+        struct siginfo *           pinfo;                /*  1480     8 */
+        void *                     puc;                  /*  1488     8 */
+        struct siginfo     info;                         /*  1496   128 */
+        /* --- cacheline 12 boundary (1536 bytes) was 88 bytes ago --- */
+        char                       abigap[288];          /*  1624   288 */
+
+        /* size: 1920, cachelines: 15, members: 7 */
+        /* padding: 8 */
+};
+
+1920 + 128 = 2048
+
+Then in commit ce48b2100785 ("powerpc: Add VSX context save/restore,
+ptrace and signal support") (Jul 2008) the signal frame expanded to
+2304 bytes:
+
+struct rt_sigframe {
+        struct ucontext    uc;                           /*     0  1696 */	<--
+        /* --- cacheline 13 boundary (1664 bytes) was 32 bytes ago --- */
+        long unsigned int          _unused[2];           /*  1696    16 */
+        unsigned int               tramp[6];             /*  1712    24 */
+        struct siginfo *           pinfo;                /*  1736     8 */
+        void *                     puc;                  /*  1744     8 */
+        struct siginfo     info;                         /*  1752   128 */
+        /* --- cacheline 14 boundary (1792 bytes) was 88 bytes ago --- */
+        char                       abigap[288];          /*  1880   288 */
+
+        /* size: 2176, cachelines: 17, members: 7 */
+        /* padding: 8 */
+};
+
+2176 + 128 = 2304
+
+At this point we should have been exposed to the bug, though as far as
+I know it was never reported. I no longer have a system old enough to
+easily test on.
+
+Then in 2010 commit 320b2b8de126 ("mm: keep a guard page below a
+grow-down stack segment") caused our stack expansion code to never
+trigger, as there was always a VMA found for a write up to PAGE_SIZE
+below r1.
+
+That meant the bug was hidden as we continued to expand the signal
+frame in commit 2b0a576d15e0 ("powerpc: Add new transactional memory
+state to the signal context") (Feb 2013):
+
+struct rt_sigframe {
+        struct ucontext    uc;                           /*     0  1696 */
+        /* --- cacheline 13 boundary (1664 bytes) was 32 bytes ago --- */
+        struct ucontext    uc_transact;                  /*  1696  1696 */	<--
+        /* --- cacheline 26 boundary (3328 bytes) was 64 bytes ago --- */
+        long unsigned int          _unused[2];           /*  3392    16 */
+        unsigned int               tramp[6];             /*  3408    24 */
+        struct siginfo *           pinfo;                /*  3432     8 */
+        void *                     puc;                  /*  3440     8 */
+        struct siginfo     info;                         /*  3448   128 */
+        /* --- cacheline 27 boundary (3456 bytes) was 120 bytes ago --- */
+        char                       abigap[288];          /*  3576   288 */
+
+        /* size: 3872, cachelines: 31, members: 8 */
+        /* padding: 8 */
+        /* last cacheline: 32 bytes */
+};
+
+3872 + 128 = 4000
+
+And commit 573ebfa6601f ("powerpc: Increase stack redzone for 64-bit
+userspace to 512 bytes") (Feb 2014):
+
+struct rt_sigframe {
+        struct ucontext    uc;                           /*     0  1696 */
+        /* --- cacheline 13 boundary (1664 bytes) was 32 bytes ago --- */
+        struct ucontext    uc_transact;                  /*  1696  1696 */
+        /* --- cacheline 26 boundary (3328 bytes) was 64 bytes ago --- */
+        long unsigned int          _unused[2];           /*  3392    16 */
+        unsigned int               tramp[6];             /*  3408    24 */
+        struct siginfo *           pinfo;                /*  3432     8 */
+        void *                     puc;                  /*  3440     8 */
+        struct siginfo     info;                         /*  3448   128 */
+        /* --- cacheline 27 boundary (3456 bytes) was 120 bytes ago --- */
+        char                       abigap[512];          /*  3576   512 */	<--
+
+        /* size: 4096, cachelines: 32, members: 8 */
+        /* padding: 8 */
+};
+
+4096 + 128 = 4224
+
+Then finally in 2017, commit 1be7107fbe18 ("mm: larger stack guard
+gap, between vmas") exposed us to the existing bug, because it changed
+the stack VMA to be the correct/real size, meaning our stack expansion
+code is now triggered.
+
+Fix it by increasing the allowance to 4224 bytes.
+
+Hard-coding 4224 is obviously unsafe against future expansions of the
+signal frame in the same way as the existing code. We can't easily use
+sizeof() because the signal frame structure is not in a header. We
+will either fix that, or rip out all the custom stack expansion
+checking logic entirely.
+
+Fixes: ce48b2100785 ("powerpc: Add VSX context save/restore, ptrace and signal support")
+Cc: stable@vger.kernel.org # v2.6.27+
+Reported-by: Tom Lane <tgl@sss.pgh.pa.us>
+Tested-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200724092528.1578671-2-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/khugepaged.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/mm/fault.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index a1b7475c05d04..9dfe364d4c0d1 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -407,7 +407,7 @@ int __khugepaged_enter(struct mm_struct *mm)
- 		return -ENOMEM;
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 998c77e600a43..ebe97e5500ee5 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -224,6 +224,9 @@ static bool bad_kernel_fault(bool is_exec, unsigned long error_code,
+ 	return is_exec || (address >= TASK_SIZE);
+ }
  
- 	/* __khugepaged_exit() must not run from under us */
--	VM_BUG_ON_MM(khugepaged_test_exit(mm), mm);
-+	VM_BUG_ON_MM(atomic_read(&mm->mm_users) == 0, mm);
- 	if (unlikely(test_and_set_bit(MMF_VM_HUGEPAGE, &mm->flags))) {
- 		free_mm_slot(mm_slot);
- 		return 0;
++// This comes from 64-bit struct rt_sigframe + __SIGNAL_FRAMESIZE
++#define SIGFRAME_MAX_SIZE	(4096 + 128)
++
+ static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
+ 				struct vm_area_struct *vma, unsigned int flags,
+ 				bool *must_retry)
+@@ -231,7 +234,7 @@ static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
+ 	/*
+ 	 * N.B. The POWER/Open ABI allows programs to access up to
+ 	 * 288 bytes below the stack pointer.
+-	 * The kernel signal delivery code writes up to about 1.5kB
++	 * The kernel signal delivery code writes a bit over 4KB
+ 	 * below the stack pointer (r1) before decrementing it.
+ 	 * The exec code can write slightly over 640kB to the stack
+ 	 * before setting the user r1.  Thus we allow the stack to
+@@ -256,7 +259,7 @@ static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
+ 		 * between the last mapped region and the stack will
+ 		 * expand the stack rather than segfaulting.
+ 		 */
+-		if (address + 2048 >= uregs->gpr[1])
++		if (address + SIGFRAME_MAX_SIZE >= uregs->gpr[1])
+ 			return false;
+ 
+ 		if ((flags & FAULT_FLAG_WRITE) && (flags & FAULT_FLAG_USER) &&
 -- 
 2.25.1
 
