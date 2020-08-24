@@ -2,174 +2,88 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9191C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA4E3207CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:07:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lB8woOsv"
+	by mail.kernel.org (Postfix) with ESMTP id 27C6F206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:08:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgHXPHJ (ORCPT
+        id S1726993AbgHXPI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:07:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgHXPFb (ORCPT
+        Mon, 24 Aug 2020 11:08:29 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:45754 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726765AbgHXPFs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:05:31 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78682C0617A9
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 08:05:11 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id 83so8661634wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 08:05:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4Z9CfRsQ0JPDJK+OdpY56vYSFlw0MvtWCYo+D9zzr0o=;
-        b=lB8woOsvvYhCqqAhBrrOI4RyghVGWXTQFIz7QP/geKRTgxJ5Ydbnf0ULekEb2fnx6E
-         LIx5ZXOroEf5QkkzXGFUuatWpWzKU8BXTOBLol8vcK0GyEzvqLzwcxlZnouQiPxO3vQ9
-         YGWWtTbmSO/FTFZTk4MxFuHaMnbSLcTjsA1ixnxCiRwMl/N9Pfkdkvi4wlAN5mU6s9lB
-         gfGU+rWbIdYtgAAD952agaykme1dVHqFB5Gh+HyTuc0ShwRZSGX5SVSVxfFojiNsdqwW
-         dbYPzTJBm3+Wps1nFdfCfuJTK4Z1wFTBwlBSW4yF/FROXrF4h55RK2I5C2uAGtuCIbGW
-         1k+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4Z9CfRsQ0JPDJK+OdpY56vYSFlw0MvtWCYo+D9zzr0o=;
-        b=Y5Z2XUBiIy6BDMw7VJ03CRmWmKkYiQw4M1/A2ldPEt7ogyjSsNjU9DmeE3vRSKNMxe
-         m/1eIJ+sN57lA9xJ9y8Bn4BDHP9QRZf27s5sJB/lJgswPXI/lZudW8NC9YN7e1gXz3q9
-         UFx8otVpmN+crIVXqRoDlvF4KDJ+z9eivaLn3WREjaNiiYMNbw7LPS07NTPGjYYTHXP+
-         KOa5FhQexo0Tpz4ng+uoTVmcroNPXqU13XGVVxsQOPCDHJqsyL75sNghheioUMDNvEfI
-         +PKYVEDv5tAlQ4jihQSg3A6FAvtSw6ehte7inyPRrER71+4Zv+LMbHb6xT6gPG1WRp8c
-         JBLA==
-X-Gm-Message-State: AOAM532yo6frPGV8wHyVNBFzu2IUddxjtwbCGpiZoiXfZGNZMfA/5ePH
-        pvHXoM/TztzwSieGhaSJe9BtAA==
-X-Google-Smtp-Source: ABdhPJz3KjGHHQA/f94TebnygpE4VIUsNqkOfejclgeosK32BVVg2F+4exTc1VOTgF6WyK7QdPxObw==
-X-Received: by 2002:a7b:cd88:: with SMTP id y8mr5875966wmj.14.1598281509685;
-        Mon, 24 Aug 2020 08:05:09 -0700 (PDT)
-Received: from google.com ([2a00:79e0:42:204:1ea0:b8ff:fe80:839])
-        by smtp.gmail.com with ESMTPSA id y13sm14526834wrn.48.2020.08.24.08.05.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 08:05:08 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 17:05:04 +0200
-From:   Brendan Jackman <jackmanb@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, pjt@google.com,
-        Jann Horn <jannh@google.com>, rafael.j.wysocki@intel.com,
-        thgarnie@chromium.org, KP Singh <kpsingh@google.com>,
-        paul.renauld.epfl@gmail.com
-Subject: Re: [RFC] security: replace indirect calls with static calls
-Message-ID: <20200824150504.GA575149@google.com>
-References: <20200820164753.3256899-1-jackmanb@chromium.org>
- <202008201435.97CF8296@keescook>
- <CA+i-1C0XEuWWRm5nMPWCzEPUao7rp5346Eotpt1A_S3Za3Wysw@mail.gmail.com>
- <20200824143344.GB3982@worktop.programming.kicks-ass.net>
+        Mon, 24 Aug 2020 11:05:48 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-126-7nFhgKAtOJWwj5eufa76-g-1; Mon, 24 Aug 2020 16:05:14 +0100
+X-MC-Unique: 7nFhgKAtOJWwj5eufa76-g-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 24 Aug 2020 16:05:13 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 24 Aug 2020 16:05:13 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Guohua Zhong' <zhongguohua1@huawei.com>,
+        "paubert@iram.es" <paubert@iram.es>
+CC:     "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "nixiaoming@huawei.com" <nixiaoming@huawei.com>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "wangle6@huawei.com" <wangle6@huawei.com>
+Subject: =?utf-8?B?UkU6IFJl77yaUmU6IFtQQVRDSF0gcG93ZXJwYzogRml4IGEgYnVnIGluIF9f?=
+ =?utf-8?Q?div64=5F32_if_divisor_is_zero?=
+Thread-Topic: =?utf-8?B?UmXvvJpSZTogW1BBVENIXSBwb3dlcnBjOiBGaXggYSBidWcgaW4gX19kaXY2?=
+ =?utf-8?Q?4=5F32_if_divisor_is_zero?=
+Thread-Index: AQHWehocKoZB4BlfFESHO90JupmxU6lHWu5w
+Date:   Mon, 24 Aug 2020 15:05:13 +0000
+Message-ID: <c200b38836674bbbb928bf76cbb978f1@AcuMS.aculab.com>
+References: <20200822172524.GA5451@lt-gp.iram.es>
+ <20200824132539.35972-1-zhongguohua1@huawei.com>
+In-Reply-To: <20200824132539.35972-1-zhongguohua1@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824143344.GB3982@worktop.programming.kicks-ass.net>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 04:33:44PM +0200, Peter Zijlstra wrote:
-> On Mon, Aug 24, 2020 at 04:09:09PM +0200, Brendan Jackman wrote:
-> 
-> > > > Why this trick with a switch statement? The table of static call is defined
-> > > > at compile time. The number of hook callbacks that will be defined is
-> > > > unknown at that time, and the table cannot be resized at runtime.  Static
-> > > > calls do not define a conditional execution for a non-void function, so the
-> > > > executed slots must be non-empty.  With this use of the table and the
-> > > > switch, it is possible to jump directly to the first used slot and execute
-> > > > all of the slots after. This essentially makes the entry point of the table
-> > > > dynamic. Instead, it would also be possible to start from 0 and break after
-> > > > the final populated slot, but that would require an additional conditional
-> > > > after each slot.
-> > >
-> > > Instead of just "NOP", having the static branches perform a jump would
-> > > solve this pretty cleanly, yes? Something like:
-> > >
-> > >         ret = DEFAULT_RET;
-> > >
-> > >         ret = A(args); <--- direct call, no retpoline
-> > >         if ret != 0:
-> > >                 goto out;
-> > >
-> > >         ret = B(args); <--- direct call, no retpoline
-> > >         if ret != 0:
-> > >                 goto out;
-> > >
-> > >         goto out;
-> > >         if ret != 0:
-> > >                 goto out;
-> > >
-> > > out:
-> > >         return ret;
-> > 
-> > Hmm yeah that's a cool idea. This would either need to be implemented
-> > with custom code-modification logic for the LSM hooks, or we'd need to
-> > think of a way to express it in a sensible addition to the static_call
-> > API. I do wonder if the latter could take the form of a generic system
-> > for arrays of static calls.
-> 
-> So you basically want something like:
-> 
-> 	if (A[0] && (ret = static_call(A[0])(...)))
-> 		return ret;
-> 
-> 	if (A[1] && (ret = static_call(A[1])(...)))
-> 		return ret;
-> 
-> 	....
-> 
-> 	return ret;
-> 
-> Right? The problem with static_call_cond() is that we don't know what to
-> do with the return value when !func, which is why it's limited to void
-> return type.
-> 
-> You can however construct something like the above with a combination of
-> static_branch() and static_call() though. It'll not be pretty, but it
-> ought to work:
-> 
-> 	if (static_branch_likely(A[0].key)) {
-> 		ret = static_call(A[0].call)(...);
-> 		if (ret)
-> 			return ret;
-> 	}
-> 
-> 	...
-> 
-> 	return ret;
-> 
-Right. That's actually exactly what Paul's first implementation
-looked like for call_int_hook. But we thought the switch thing was
-easier to understand.
+RnJvbTogR3VvaHVhIFpob25nDQo+IFNlbnQ6IDI0IEF1Z3VzdCAyMDIwIDE0OjI2DQo+IA0KPiA+
+PiA+SW4gZ2VuZXJpYyB2ZXJzaW9uIGluIGxpYi9tYXRoL2RpdjY0LmMsIHRoZXJlIGlzIG5vIGNo
+ZWNraW5nIG9mICdiYXNlJw0KPiA+PiA+ZWl0aGVyLg0KPiA+PiA+RG8gd2UgcmVhbGx5IHdhbnQg
+dG8gYWRkIHRoaXMgY2hlY2sgaW4gdGhlIHBvd2VycGMgdmVyc2lvbiBvbmx5ID8NCj4gPj4NCj4g
+Pj4gPlRoZSBvbmx5IHVzZXIgb2YgX19kaXY2NF8zMigpIGlzIGRvX2RpdigpIGluDQo+ID4+ID5p
+bmNsdWRlL2FzbS1nZW5lcmljL2RpdjY0LmguIFdvdWxkbid0IGl0IGJlIGJldHRlciB0byBkbyB0
+aGUgY2hlY2sgdGhlcmUgPw0KPiA+Pg0KPiA+PiA+Q2hyaXN0b3BoZQ0KPiA+Pg0KPiA+PiBZZXQs
+IEkgaGF2ZSBub3RpY2VkIHRoYXQgdGhlcmUgaXMgbm8gY2hlY2tpbmcgb2YgJ2Jhc2UnIGluIHRo
+ZXNlIGZ1bmN0aW9ucy4NCj4gPj4gQnV0IEkgYW0gbm90IHN1cmUgaG93IHRvIGNoZWNrIGlzIGJl
+dHRlci5BcyB3ZSBrbm93IHRoYXQgdGhlIHJlc3VsdCBpcw0KPiA+PiB1bmRlZmluZWQgd2hlbiBk
+aXZpc29yIGlzIHplcm8uIEl0IG1heWJlIGdvb2QgdG8gcHJpbnQgZXJyb3IgYW5kIGR1bXAgc3Rh
+Y2suDQoNCkkgdGhvdWdodCB0aGF0IHRoZSBvbnVzIHdhcyBwdXQgb24gdGhlIGNhbGxlciB0byBh
+dm9pZCBkaXZpZGUgYnkgemVyby4NCg0KT24geDg2IGRpdmlkZSBieSB6ZXJvIGNhdXNlcyBhbiBl
+eGNlcHRpb24gd2hpY2ggKEknbSBwcmV0dHkgc3VyZSkNCmxlYWRzIHRvIGEgb29wcy9wYW5pYy4N
+Cg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2Fk
+LCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5v
+OiAxMzk3Mzg2IChXYWxlcykNCg==
 
-> 
-> > It would also need to handle the fact that IIUC at the moment the last
-> > static_call may be a tail call, so we'd be patching an existing jump
-> > into a jump to a different target, I don't know if we can do that
-> > atomically.
-> 
-> Of course we can, the static_call() series supports tail-calls just
-> fine. In fact, patching jumps is far easier, it was patching call that
-> was the real problem because it mucks about with the stack.
-> 
-OK great. I had a vague apprehension that we could only patch to or from
-a NOP.
