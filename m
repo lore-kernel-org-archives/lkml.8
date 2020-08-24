@@ -2,175 +2,164 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E17C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6A362074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096092074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zxdfow5V"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Tqplxy11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHXLTD (ORCPT
+        id S1726831AbgHXLTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:19:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbgHXLSY (ORCPT
+        Mon, 24 Aug 2020 07:19:16 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:22650 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgHXLPy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:18:24 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3435EC061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:18:24 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id nv17so4115472pjb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:18:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=924oG4r/zA6EzR8f8iU/QlmiDvBYHOesbZuQXAnUB10=;
-        b=Zxdfow5V0kAcBrq4HyfZh+a/jeM8RuH/QWWl4uQWICbgi4ozmRA63KsdSAHLhF8RiC
-         TPVWAZUuoiA39AUM4rVBi11nop10GYFklMD5p7kB7eRSosa+GwNpILRbnbjMv2tEt0WD
-         0gUgg4C1UMHcvbANDr33grnpH/zGnvxn5Edm/iukgbIqhVVH1pCA6MpSFxzyc53pawLI
-         25AO2othQE3ahdOwe9X7uX2mv2bxFKxzn/u3W8vmofOE125InZArTR7yNS+1uWgYWSVS
-         rGXDf5/i9TkwffvnmwUadm2zSXnyyqJwoy7nhsZq1N1N7NrMKdK7wsJJfLMW5WcnJkh9
-         0Bvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=924oG4r/zA6EzR8f8iU/QlmiDvBYHOesbZuQXAnUB10=;
-        b=lxI3KQtV7pi4ARFrbyG+7tJZNT6uz7gQdMYyoLr4z81JsEGeFySaUBF+PvnSg44AXz
-         +9F3O14AJrPMn7zN3/BHd5s/WqDwXrkXUpBGufleO5T2UqpSSoqnAD9aRF3fAnhS/KTR
-         f7irVstUQs8k/fgU9ITr0oe44R122+T7xq0G/R6pfrlxpFcL+nbLn+RS8JfrjngbC6Nb
-         uuJ/vfvYbPw1LyqNzDz1DsPz7vUEt2MfqiIBv+pDK418YgEwYFtKINp3N+fYpcqHR/Zb
-         jNpquAhLWvlsKSV1GVEOMpytC4E//TywbZl2sGWbIJBaogx5gU6v/Emdcmdc4Whp9Vjy
-         9w7A==
-X-Gm-Message-State: AOAM531MRP3/4REUa6lHVSIB2JFp25aCKnb5mVi2PZsULg4NgJGaW2CQ
-        1mAxUcWfWjmx2jswg/92AyHybA==
-X-Google-Smtp-Source: ABdhPJw9nAi06D5xVylFBDMZzBl0YAscU8qmQ45LkHNjgXXHlWA3I00bTnYySLilETWRcKxo2mlI8g==
-X-Received: by 2002:a17:90a:4fe2:: with SMTP id q89mr4578766pjh.70.1598267903407;
-        Mon, 24 Aug 2020 04:18:23 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id 5sm11527604pfw.25.2020.08.24.04.18.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 04:18:22 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 16:48:20 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Niklas Cassel <nks@flawful.org>
-Subject: Re: [RFC PATCH 1/3] opp: Reduce code duplication in
- _set_required_opps()
-Message-ID: <20200824111820.rcaingohxw3wozgd@vireshk-i7>
-References: <20200730080146.25185-1-stephan@gerhold.net>
- <20200730080146.25185-2-stephan@gerhold.net>
+        Mon, 24 Aug 2020 07:15:54 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200824111552epoutp04aff855f1cae440b8d3c7bbaf1f92850f~uMA1vOvIF0056000560epoutp04Z
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:15:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200824111552epoutp04aff855f1cae440b8d3c7bbaf1f92850f~uMA1vOvIF0056000560epoutp04Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598267752;
+        bh=8W8cNXrqYNIrL1SpnMmJXymJ3jP7SON2RlFo0RKTPCo=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=Tqplxy11VCrkiYy+FyLsThHlg7xfjnfj/97LoqxPBX2vuy/hmaTkX5x5CYN1UoN0J
+         XP5bxskWlb0QD9YT0im9II5y5GoWS7iyA+DlpkQRpruuZYP19HQvv2nrQGqh/yjjDr
+         sBl9y7nDKIodZKspt8yHzLeDwf30U6VD2zYxPHgk=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200824111550epcas1p2902f9df8958938e07886084dbda7fdbd~uMA0dsLBD0328203282epcas1p2m;
+        Mon, 24 Aug 2020 11:15:50 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4BZqLD17H9zMqYkW; Mon, 24 Aug
+        2020 11:15:48 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5F.CA.18978.361A34F5; Mon, 24 Aug 2020 20:15:48 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200824111547epcas1p3fe21d43cdcc593bab9e9bff288923bc7~uMAxdjQU22287822878epcas1p3b;
+        Mon, 24 Aug 2020 11:15:47 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200824111547epsmtrp2bcf0369d19a17e188b1656e9e692e667~uMAxc2Pxn2446424464epsmtrp2Z;
+        Mon, 24 Aug 2020 11:15:47 +0000 (GMT)
+X-AuditID: b6c32a35-603ff70000004a22-82-5f43a1639525
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F5.30.08382.361A34F5; Mon, 24 Aug 2020 20:15:47 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200824111547epsmtip1f265e716eb7484628c13ebd7150c6af7~uMAxOHdC_1651116511epsmtip1P;
+        Mon, 24 Aug 2020 11:15:47 +0000 (GMT)
+Subject: Re: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
+To:     vadivel.muruganx.ramuthevar@linux.intel.com,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <b6ec12af-5573-ce86-9f6b-16fcbc36b1a3@samsung.com>
+Date:   Mon, 24 Aug 2020 20:28:15 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730080146.25185-2-stephan@gerhold.net>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <2879914d-7ad6-4d98-8b9c-a7646719f766@linux.intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCJsWRmVeSWpSXmKPExsWy7bCmvm7KQud4g8ZtjBbzj5xjtTh/fgO7
+        xeVdc9gsbjeuYLNo3XuE3WLDsftsFi/3T2d1YPfYOesuu8emVZ1sHvNOBnr0bVnF6PF5k1wA
+        a1S2TUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QFUoK
+        ZYk5pUChgMTiYiV9O5ui/NKSVIWM/OISW6XUgpScAssCveLE3OLSvHS95PxcK0MDAyNToMKE
+        7IzHc7ayFPxmrXja+IG1gfEQSxcjB4eEgInE83/1XYycHEICOxgldl1W7GLkArI/MUq8WHGG
+        CcL5xijx7m0vI0zD0StQ8b2MEn/OrGWBcN4zSlzdfY0dZJSwgKvEsW//wGwRgclMEpPaJUBs
+        NgEtif0vbrCB2PwCihJXfzxmBLF5BewkFn54wgxiswioSrw9sI8VxBYVCJM4ua0FqkZQ4uTM
+        JywgNqeAs8Tj53+YQGxmAXGJW0/mQ9nyEs1bZzODHCQh0MshMWvOI7BlEgIuEud3T2SGsIUl
+        Xh3fwg5hS0l8frcXqqZaYuXJI2wQzR2MElv2X2CFSBhL7F86mQnkfWYBTYn1u/QhwooSO3/P
+        ZYRYzCfx7msPKySEeCU62oQgSpQlLj+4ywRhS0osbu9kgyjxkNh3OXoCo+IsJJ/NQvLNLCTf
+        zELYu4CRZRWjWGpBcW56arFhgSFyVG9iBCdPLdMdjBPfftA7xMjEwXiIUYKDWUmE9/Ym+3gh
+        3pTEyqrUovz4otKc1OJDjKbAsJ7ILCWanA9M33kl8YamRsbGxhYmhmamhoZK4rwPbynECwmk
+        J5akZqemFqQWwfQxcXBKNTCVKfF8X6UR8+34Fdv/i56JfLYtvbXj+GSWrsr1C4PSdr922jrj
+        zjymJ0pPiueof2He2z+PafrK1RLKFXd/yzY9vBRrcvd6kIVr4rcm68MnmrZVcIdwbWE5/etd
+        g5y1rvycfN5lHsFaW2Jj4oINxWI5bkwyMJNTvXpH7dEkqa26Hx0Kp8uYbT5+IrznuYCs2Q9b
+        ZSH5LyLrTl36PHvTyTu7w3jFP2w8/LX3zrpvHpv6dois6HNpXXC4f9+XsN8BhaXHX4svPq54
+        VbYy73Zdfnpzz0m5lS9Eb5zps07ffO1SrM7ymB3bb3p3tS8qXMW5td6i797y5Wdrpka3srlF
+        Xu9c+1i3vqP7VYfqojUuj2/YKbEUZyQaajEXFScCAA8PVygnBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsWy7bCSnG7yQud4g939Qhbzj5xjtTh/fgO7
+        xeVdc9gsbjeuYLNo3XuE3WLDsftsFi/3T2d1YPfYOesuu8emVZ1sHvNOBnr0bVnF6PF5k1wA
+        axSXTUpqTmZZapG+XQJXxuM5W1kKfrNWPG38wNrAeIili5GDQ0LAROLoFaYuRi4OIYHdjBI7
+        Lt4FcjiB4pIS0y4eZYaoEZY4fLgYouYto8SXh21gNcICrhLHvv1jB7FFBKYySUx75wZRdIBR
+        4vbETkaQBJuAlsT+FzfYQGx+AUWJqz8eg8V5BewkFn54wgxiswioSrw9sI8VxBYVCJPYueQx
+        E0SNoMTJmU9YQGxOAWeJx8//gMWZBdQl/sy7xAxhi0vcejIfKi4v0bx1NvMERqFZSNpnIWmZ
+        haRlFpKWBYwsqxglUwuKc9Nziw0LDPNSy/WKE3OLS/PS9ZLzczcxgmNGS3MH4/ZVH/QOMTJx
+        MB5ilOBgVhLhvb3JPl6INyWxsiq1KD++qDQntfgQozQHi5I4743ChXFCAumJJanZqakFqUUw
+        WSYOTqkGJsGVJ+vXS5jO2zvn7HqJ/tPsiUG7bTh9LZntDJ7ey/gVaN7rdFT5x0ter3yD+Dc8
+        Tm1BqZOtNi8ynHNoRYRVxYr25YtdJI9ahpx5VOBzYHdfxQybCnmOzGfroz80Hpe7t2qWoPbL
+        +BdVbp9Xbv12KepCQ2rkzA+RSoaKazfc2rHeTIx90bamzDlKcp/n/ni86sjsh25Gry9tq1+9
+        NL29T/LnbSWRDK1JFVvbHobe/3IkuKV7+j2nC9vS3TaseNzpKL5P9+uXomVnl8h8df5wr/nH
+        qiuL9me9qz3a4nEp0Kx6R+eqaOE01+qjZz/WRdq8eLe3xPnd2Z0VDYtTVj3+xva2otArllPj
+        3DktPXnuO1pKLMUZiYZazEXFiQCnKn9bCAMAAA==
+X-CMS-MailID: 20200824111547epcas1p3fe21d43cdcc593bab9e9bff288923bc7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200824103713epcas1p4ae0d5d821fd468163ec5948dd59d0d15
+References: <20200817070009.4631-1-krzk@kernel.org>
+        <CGME20200824103713epcas1p4ae0d5d821fd468163ec5948dd59d0d15@epcas1p4.samsung.com>
+        <2879914d-7ad6-4d98-8b9c-a7646719f766@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-07-20, 10:01, Stephan Gerhold wrote:
-> Move call to dev_pm_genpd_set_performance_state() to a separate
-> function so we can avoid duplicating the code for the single and
-> multiple genpd case.
-> 
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> ---
->  drivers/opp/core.c | 40 +++++++++++++++++++++-------------------
->  1 file changed, 21 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 9d7fb45b1786..f7a476b55069 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -781,6 +781,21 @@ static int _set_opp_custom(const struct opp_table *opp_table,
->  	return opp_table->set_opp(data);
->  }
->  
-> +static int _set_required_opp(struct device *dev, struct device *pd_dev,
-> +			     struct dev_pm_opp *opp, int i)
-> +{
-> +	unsigned int pstate = likely(opp) ? opp->required_opps[i]->pstate : 0;
-> +	int ret;
-> +
-> +	ret = dev_pm_genpd_set_performance_state(pd_dev, pstate);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to set performance rate of %s: %d (%d)\n",
-> +			dev_name(pd_dev), pstate, ret);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  /* This is only called for PM domain for now */
->  static int _set_required_opps(struct device *dev,
->  			      struct opp_table *opp_table,
-> @@ -788,22 +803,15 @@ static int _set_required_opps(struct device *dev,
->  {
->  	struct opp_table **required_opp_tables = opp_table->required_opp_tables;
->  	struct device **genpd_virt_devs = opp_table->genpd_virt_devs;
-> -	unsigned int pstate;
-> +	struct device *pd_dev;
->  	int i, ret = 0;
->  
->  	if (!required_opp_tables)
->  		return 0;
->  
->  	/* Single genpd case */
-> -	if (!genpd_virt_devs) {
-> -		pstate = likely(opp) ? opp->required_opps[0]->pstate : 0;
-> -		ret = dev_pm_genpd_set_performance_state(dev, pstate);
-> -		if (ret) {
-> -			dev_err(dev, "Failed to set performance state of %s: %d (%d)\n",
-> -				dev_name(dev), pstate, ret);
-> -		}
-> -		return ret;
-> -	}
-> +	if (!genpd_virt_devs)
-> +		return _set_required_opp(dev, dev, opp, 0);
->  
->  	/* Multiple genpd case */
->  
-> @@ -814,17 +822,11 @@ static int _set_required_opps(struct device *dev,
->  	mutex_lock(&opp_table->genpd_virt_dev_lock);
->  
->  	for (i = 0; i < opp_table->required_opp_count; i++) {
-> -		pstate = likely(opp) ? opp->required_opps[i]->pstate : 0;
-> -
-> -		if (!genpd_virt_devs[i])
-> -			continue;
+Hi,
 
-Don't we need this check anymore ?
+On 8/24/20 7:36 PM, Ramuthevar, Vadivel MuruganX wrote:
+> Hi,
+> 
+>  Thank you for the patches and optimized the code as well.
+>  I have applied your patches and tested, it's working fine
+>  with few minor changes as per Intel's LGM board.
 
-> +		pd_dev = genpd_virt_devs[i];
->  
-> -		ret = dev_pm_genpd_set_performance_state(genpd_virt_devs[i], pstate);
-> -		if (ret) {
-> -			dev_err(dev, "Failed to set performance rate of %s: %d (%d)\n",
-> -				dev_name(genpd_virt_devs[i]), pstate, ret);
-> +		ret = _set_required_opp(dev, pd_dev, opp, i);
-> +		if (ret)
->  			break;
-> -		}
->  	}
->  	mutex_unlock(&opp_table->genpd_virt_dev_lock);
->  
-> -- 
-> 2.27.0
+Thanks for the test.
+
+> 
+>  can I send the patches along with patches or we need to wait until
+>  your patch get merge?
+> 
+>  Please suggest to me go further, Thanks!
+
+I applied these patches. You better to send your patches
+based on extcon-next. Thanks.
+
+> 
+> On 17/8/2020 2:59 pm, Krzysztof Kozlowski wrote:
+>> Hi,
+>>
+>> Changes since v1:
+>> 1. Mutex unlock fix in patch 8/13.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+> 
+> 
+
 
 -- 
-viresh
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
