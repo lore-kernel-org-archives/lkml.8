@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAA0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4453CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEA42071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1306C2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261941;
-	bh=UfnvacykJk5ebnnFuOHKhcQ5y/mX76Whr9BDBzHGjPA=;
+	s=default; t=1598261947;
+	bh=lnxsdBh+zE47m4uo4Po/DXympUpbxUrHQw2OAbpZ/no=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w9wHkW+YFWFQpK3c1nfKDspwenk/JLJlP7wgq9oPbbM3GLQg7GpmwW4ntJIUpMjy8
-	 vcm8jbY03FJH9eUuQ2v6e7fkjQPBAYuW5jVpPcgnpcauBdXxqk6VjWlQ5MUfa9qVxu
-	 jIFLpxYZ0RROVhsBOOU+QG3fcmISKtCkBI60PeFQ=
+	b=EZ2A28wW4Ta6SoWUrDtv6AZDsK6gIiBSwq1pEK/qaWigisdvMg/zVVvDD5XQalxu/
+	 xma17tnJwezpAbyhyLZT4CFfP4hOUZ3U9tUxd8KK7Po3GHUfpFSBB7k/XnQBrYoQbZ
+	 hQ7cAEqx+HNAqOuhY42RoheX9QEH69Z8Nms3nv7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbgHXIq7 (ORCPT
+        id S1729261AbgHXJjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:46:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:39:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729136AbgHXIqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:46:53 -0400
+        id S1728962AbgHXIq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:46:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 103342075B;
-        Mon, 24 Aug 2020 08:46:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EB0C206F0;
+        Mon, 24 Aug 2020 08:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258812;
-        bh=UfnvacykJk5ebnnFuOHKhcQ5y/mX76Whr9BDBzHGjPA=;
+        s=default; t=1598258817;
+        bh=lnxsdBh+zE47m4uo4Po/DXympUpbxUrHQw2OAbpZ/no=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QjOOROX1rA9r8jheftVu3mlDfVRzVST6usZLuhBK9Frsxu6EkEYkHg3AcLiSyZ0GX
-         naEENP07qeL7yJBAEjqbMG7CmXVNRzIKUUEIHehLI0r3TjjaV7l1/Esa0urlgP5hzz
-         iDGv/uc456z4QrgnyZTrNvk6ES2PLUnQlhipnbYU=
+        b=nU9jwLwvgeFBxr8+L+uKwdIWiEcE4hbrstJqoI09fyPusdz1MpRzoX+zWTH4uzCop
+         buckfkDv/t0vJUNXaQ2wkrAoT4BTv+E4Xsu799w5iTtgy5ik9TiKzhxGTOb7ujm/Gm
+         mEIrhFEIZ9ZxB18pynNpUlTLQF0diTYMGyZW4TNc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <stefano.stabellini@xilinx.com>,
-        Corey Minyard <cminyard@mvista.com>,
-        Roman Shaposhnik <roman@zededa.com>,
-        Juergen Gross <jgross@suse.com>,
+        stable@vger.kernel.org, Girish Basrur <gbasrur@marvell.com>,
+        Santosh Vernekar <svernekar@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        Shyam Sundar <ssundar@marvell.com>,
+        Javed Hasan <jhasan@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 054/107] swiotlb-xen: use vmalloc_to_page on vmalloc virt addresses
-Date:   Mon, 24 Aug 2020 10:30:20 +0200
-Message-Id: <20200824082407.798928966@linuxfoundation.org>
+Subject: [PATCH 5.4 056/107] scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
+Date:   Mon, 24 Aug 2020 10:30:22 +0200
+Message-Id: <20200824082407.890680921@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -64,61 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Javed Hasan <jhasan@marvell.com>
 
-[ Upstream commit 8b1e868f66076490189a36d984fcce286cdd6295 ]
+[ Upstream commit ec007ef40abb6a164d148b0dc19789a7a2de2cc8 ]
 
-xen_alloc_coherent_pages might return pages for which virt_to_phys and
-virt_to_page don't work, e.g. ioremap'ed pages.
+In fc_disc_gpn_id_resp(), skb is supposed to get freed in all cases except
+for PTR_ERR. However, in some cases it didn't.
 
-So in xen_swiotlb_free_coherent we can't assume that virt_to_page works.
-Instead add a is_vmalloc_addr check and use vmalloc_to_page on vmalloc
-virt addresses.
+This fix is to call fc_frame_free(fp) before function returns.
 
-This patch fixes the following crash at boot on RPi4 (the underlying
-issue is not RPi4 specific):
-https://marc.info/?l=xen-devel&m=158862573216800
-
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Tested-by: Corey Minyard <cminyard@mvista.com>
-Tested-by: Roman Shaposhnik <roman@zededa.com>
-Link: https://lore.kernel.org/r/20200710223427.6897-1-sstabellini@kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Link: https://lore.kernel.org/r/20200729081824.30996-2-jhasan@marvell.com
+Reviewed-by: Girish Basrur <gbasrur@marvell.com>
+Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
+Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
+Reviewed-by: Shyam Sundar <ssundar@marvell.com>
+Signed-off-by: Javed Hasan <jhasan@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/swiotlb-xen.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/scsi/libfc/fc_disc.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index bd3a10dfac157..06346422f7432 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -335,6 +335,7 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
- 	int order = get_order(size);
- 	phys_addr_t phys;
- 	u64 dma_mask = DMA_BIT_MASK(32);
-+	struct page *page;
+diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
+index 2b865c6423e29..e00dc4693fcbd 100644
+--- a/drivers/scsi/libfc/fc_disc.c
++++ b/drivers/scsi/libfc/fc_disc.c
+@@ -581,8 +581,12 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
  
- 	if (hwdev && hwdev->coherent_dma_mask)
- 		dma_mask = hwdev->coherent_dma_mask;
-@@ -346,9 +347,14 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
- 	/* Convert the size to actually allocated. */
- 	size = 1UL << (order + XEN_PAGE_SHIFT);
+ 	if (PTR_ERR(fp) == -FC_EX_CLOSED)
+ 		goto out;
+-	if (IS_ERR(fp))
+-		goto redisc;
++	if (IS_ERR(fp)) {
++		mutex_lock(&disc->disc_mutex);
++		fc_disc_restart(disc);
++		mutex_unlock(&disc->disc_mutex);
++		goto out;
++	}
  
-+	if (is_vmalloc_addr(vaddr))
-+		page = vmalloc_to_page(vaddr);
-+	else
-+		page = virt_to_page(vaddr);
-+
- 	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
- 		     range_straddles_page_boundary(phys, size)) &&
--	    TestClearPageXenRemapped(virt_to_page(vaddr)))
-+	    TestClearPageXenRemapped(page))
- 		xen_destroy_contiguous_region(phys, order);
- 
- 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
+ 	cp = fc_frame_payload_get(fp, sizeof(*cp));
+ 	if (!cp)
+@@ -609,7 +613,7 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 				new_rdata->disc_id = disc->disc_id;
+ 				fc_rport_login(new_rdata);
+ 			}
+-			goto out;
++			goto free_fp;
+ 		}
+ 		rdata->disc_id = disc->disc_id;
+ 		mutex_unlock(&rdata->rp_mutex);
+@@ -626,6 +630,8 @@ redisc:
+ 		fc_disc_restart(disc);
+ 		mutex_unlock(&disc->disc_mutex);
+ 	}
++free_fp:
++	fc_frame_free(fp);
+ out:
+ 	kref_put(&rdata->kref, fc_rport_destroy);
+ 	if (!IS_ERR(fp))
 -- 
 2.25.1
 
