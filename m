@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8581C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395CDC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 782722075B
+	by mail.kernel.org (Postfix) with ESMTP id ECD8A2074D
 	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598264671;
-	bh=sggu6pj/oQ8QePbPrz42wiG5AT6WR9prGNVAkCslxNk=;
+	s=default; t=1598264672;
+	bh=UPvZFIB7IJHrWz6+r8r9NMtbtlF6iARp2n92VLsqWtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tNND2rDMb2YnjxEzBaAmnK6LA1Bt2t/cP3XNc87854shnOXXWf/WsthAC+GNfPaq6
-	 6Lt8sVOr0OUlljy0WEIsO2Hs7xjzXUEv2UDB24D1yLDLPMcPR8eelclc456be4MwqC
-	 JHj/lowT6G82E51/2pxdTLa4Zf6wWFoyVnStq6O0=
+	b=bIjF/xlivTBMaH3BMkibeyOwZ71bX2Ibvl9NwXivbVU+wsDRuM0FAzavjmpi77rxZ
+	 QRE4J9hVoDrXsm2rhrH5MJW6vMGRQPcF/iFouUvCZglGlVSuqelV4J6wdXPBAF5l1Z
+	 FoC1bPbug2ZF6HK/jpi5ICb+3kNutg9Pc3n5bSZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgHXKYa (ORCPT
+        id S1726975AbgHXKY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:24:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50428 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 06:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbgHXKX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:23:57 -0400
+        id S1726666AbgHXKX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:23:58 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4117C208E4;
+        by mail.kernel.org (Postfix) with ESMTPSA id D817A20738;
         Mon, 24 Aug 2020 10:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598264637;
-        bh=sggu6pj/oQ8QePbPrz42wiG5AT6WR9prGNVAkCslxNk=;
+        s=default; t=1598264638;
+        bh=UPvZFIB7IJHrWz6+r8r9NMtbtlF6iARp2n92VLsqWtk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQaDRLWwBXdR8XCUc55k/6hIf/bzMFN1R9QStWUY3umdmN5WbSSkC291L29y82Pph
-         gprxFXog9c0904g8yYeNemapsdEAxI1s4Foq7GUqBrDuEAC/1DkS+1/vli5lLiZ3+N
-         cOcRwrBs2uqJkMsR//PTbaxWcYBBl/sfsbIlSXtY=
+        b=eJ6A8a03PfAc+c0+LwVBnuIRpRuqTwm2bV0Cqeulef4ZDj0QqEFtKhNsbDtnTGBj0
+         +iW8mCnueV5gw6EMbyjRaB7oj0FB4IuwsujHEeaQH5xQYSZKZfLTOBnMHEf6NGzaT4
+         ZD0zOpaLSTxo7NBt9Af/VaTT1qyQbsvh9ML+N9E8=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1kA9dr-006BQc-OP; Mon, 24 Aug 2020 11:23:55 +0100
+        id 1kA9ds-006BQc-B0; Mon, 24 Aug 2020 11:23:56 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
@@ -53,9 +53,9 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Laurentiu Tudor <laurentiu.tudor@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Valentin Schneider <valentin.schneider@arm.com>
-Subject: [PATCH 6/9] irqchip/mbigen: Use hierarchy retrigger helper
-Date:   Mon, 24 Aug 2020 11:23:14 +0100
-Message-Id: <20200824102317.1038259-7-maz@kernel.org>
+Subject: [PATCH 7/9] irqchip/mvebu-icu: Use hierarchy retrigger helper
+Date:   Mon, 24 Aug 2020 11:23:15 +0100
+Message-Id: <20200824102317.1038259-8-maz@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200824102317.1038259-1-maz@kernel.org>
 References: <20200824102317.1038259-1-maz@kernel.org>
@@ -72,21 +72,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-mbigen.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/irqchip/irq-mvebu-icu.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
-index ff7627b57772..8af35225b46d 100644
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -142,6 +142,7 @@ static struct irq_chip mbigen_irq_chip = {
- 	.irq_eoi =		mbigen_eoi_irq,
- 	.irq_set_type =		mbigen_set_type,
- 	.irq_set_affinity =	irq_chip_set_affinity_parent,
-+	.irq_retrigger = 	irq_chip_retrigger_hierarchy,
+diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+index 91adf771f185..02f4cc899824 100644
+--- a/drivers/irqchip/irq-mvebu-icu.c
++++ b/drivers/irqchip/irq-mvebu-icu.c
+@@ -136,6 +136,7 @@ static struct irq_chip mvebu_icu_nsr_chip = {
+ 	.irq_eoi		= irq_chip_eoi_parent,
+ 	.irq_set_type		= irq_chip_set_type_parent,
+ 	.irq_set_affinity	= irq_chip_set_affinity_parent,
++	.irq_retrigger		= irq_chip_retrigger_hierarchy,
  };
  
- static void mbigen_write_msg(struct msi_desc *desc, struct msi_msg *msg)
+ static struct irq_chip mvebu_icu_sei_chip = {
+@@ -145,6 +146,7 @@ static struct irq_chip mvebu_icu_sei_chip = {
+ 	.irq_unmask		= irq_chip_unmask_parent,
+ 	.irq_set_type		= irq_chip_set_type_parent,
+ 	.irq_set_affinity	= irq_chip_set_affinity_parent,
++	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+ };
+ 
+ static int
 -- 
 2.27.0
 
