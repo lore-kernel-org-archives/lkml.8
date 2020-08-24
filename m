@@ -2,97 +2,200 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14626C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86C002072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259660;
-	bh=G5jUKukagXKkOLJ4BybzKWHms8rDfx8sUQRQ+hdxnbI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t4dtPrrMX6hSz/5ozJHEzayn+nyBY7plZa9Tdyh0ytfACEmV56NkuSVr4JaojKYO5
-	 AgylNZIWZBS/3BWybDUX7wsiTGJVMWw30KLztyYCGscpOZze3myt/eaI7gEQya1vrI
-	 V0N/HDtSMOuXJhFdAZ4YNsB873CJNTNdfQOsVGds=
+	by mail.kernel.org (Postfix) with ESMTP id E90BB206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730817AbgHXJA6 (ORCPT
+        id S1730606AbgHXI5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:00:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43790 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:57:04 -0400
+Received: from 8bytes.org ([81.169.241.247]:37840 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbgHXI5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:57:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730480AbgHXI4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:11 -0400
+Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB0352072D;
-        Mon, 24 Aug 2020 08:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259429;
-        bh=G5jUKukagXKkOLJ4BybzKWHms8rDfx8sUQRQ+hdxnbI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JsPpGv6WgfIvuTe1F0zlcaELFTn1h+Q+UFv5dbwmawNjyqUrgJRN4k3hg//U5Pd/O
-         cWVewum0cWb+NCKMbihzwJTMNi4IIsxdhF48lgcxGC4TtvD74NdiczSNyxGEY5IDFO
-         fTqa7HotMB+2VlohCPEIuHeRyL91zPsYLlzqaRDo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 26/71] Input: psmouse - add a newline when printing proto by sysfs
-Date:   Mon, 24 Aug 2020 10:31:17 +0200
-Message-Id: <20200824082357.197272472@linuxfoundation.org>
+        by theia.8bytes.org (Postfix) with ESMTPSA id 8845BF84;
+        Mon, 24 Aug 2020 10:56:07 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v6 37/76] x86/head/64: Move early exception dispatch to C code
+Date:   Mon, 24 Aug 2020 10:54:32 +0200
+Message-Id: <20200824085511.7553-38-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
-References: <20200824082355.848475917@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
+References: <20200824085511.7553-1-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit 4aec14de3a15cf9789a0e19c847f164776f49473 ]
+Move the assembly coded dispatch between page-faults and all other
+exceptions to C code to make it easier to maintain and extend.
 
-When I cat parameter 'proto' by sysfs, it displays as follows. It's
-better to add a newline for easy reading.
+Also change the return-type of early_make_pgtable() to bool and make it
+static.
 
-root@syzkaller:~# cat /sys/module/psmouse/parameters/proto
-autoroot@syzkaller:~#
-
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200720073846.120724-1-wangxiongfeng2@huawei.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Link: https://lore.kernel.org/r/20200724160336.5435-37-joro@8bytes.org
 ---
- drivers/input/mouse/psmouse-base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/pgtable.h |  2 +-
+ arch/x86/include/asm/setup.h   |  4 +++-
+ arch/x86/kernel/head64.c       | 19 +++++++++++++++----
+ arch/x86/kernel/head_64.S      | 11 +----------
+ 4 files changed, 20 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
-index d3ff1fc09af71..a9040c0fb4c3f 100644
---- a/drivers/input/mouse/psmouse-base.c
-+++ b/drivers/input/mouse/psmouse-base.c
-@@ -2044,7 +2044,7 @@ static int psmouse_get_maxproto(char *buffer, const struct kernel_param *kp)
- {
- 	int type = *((unsigned int *)kp->arg);
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 5e0dcc20614d..a02c67291cfc 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -28,7 +28,7 @@
+ #include <asm-generic/pgtable_uffd.h>
  
--	return sprintf(buffer, "%s", psmouse_protocol_by_type(type)->name);
-+	return sprintf(buffer, "%s\n", psmouse_protocol_by_type(type)->name);
+ extern pgd_t early_top_pgt[PTRS_PER_PGD];
+-int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
++bool __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
+ 
+ void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm);
+ void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index 5c09f50ecf1c..cafae86813ae 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -39,6 +39,8 @@ void vsmp_init(void);
+ static inline void vsmp_init(void) { }
+ #endif
+ 
++struct pt_regs;
++
+ void setup_bios_corruption_check(void);
+ void early_platform_quirks(void);
+ 
+@@ -49,9 +51,9 @@ extern void i386_reserve_resources(void);
+ extern unsigned long __startup_64(unsigned long physaddr, struct boot_params *bp);
+ extern unsigned long __startup_secondary_64(void);
+ extern void startup_64_setup_env(unsigned long physbase);
+-extern int early_make_pgtable(unsigned long address);
+ extern void early_idt_setup_early_handler(unsigned long physaddr);
+ extern void early_load_idt(void);
++extern void __init do_early_exception(struct pt_regs *regs, int trapnr);
+ 
+ #ifdef CONFIG_X86_INTEL_MID
+ extern void x86_intel_mid_early_setup(void);
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 096b09d06d1c..41514ec1e6f0 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -37,6 +37,8 @@
+ #include <asm/kasan.h>
+ #include <asm/fixmap.h>
+ #include <asm/realmode.h>
++#include <asm/extable.h>
++#include <asm/trapnr.h>
+ 
+ /*
+  * Manage page tables very early on.
+@@ -314,7 +316,7 @@ static void __init reset_early_page_tables(void)
  }
  
- static int __init psmouse_init(void)
+ /* Create a new PMD entry */
+-int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
++bool __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
+ {
+ 	unsigned long physaddr = address - __PAGE_OFFSET;
+ 	pgdval_t pgd, *pgd_p;
+@@ -324,7 +326,7 @@ int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
+ 
+ 	/* Invalid address or early pgt is done ?  */
+ 	if (physaddr >= MAXMEM || read_cr3_pa() != __pa_nodebug(early_top_pgt))
+-		return -1;
++		return false;
+ 
+ again:
+ 	pgd_p = &early_top_pgt[pgd_index(address)].pgd;
+@@ -381,10 +383,10 @@ int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
+ 	}
+ 	pmd_p[pmd_index(address)] = pmd;
+ 
+-	return 0;
++	return true;
+ }
+ 
+-int __init early_make_pgtable(unsigned long address)
++static bool __init early_make_pgtable(unsigned long address)
+ {
+ 	unsigned long physaddr = address - __PAGE_OFFSET;
+ 	pmdval_t pmd;
+@@ -394,6 +396,15 @@ int __init early_make_pgtable(unsigned long address)
+ 	return __early_make_pgtable(address, pmd);
+ }
+ 
++void __init do_early_exception(struct pt_regs *regs, int trapnr)
++{
++	if (trapnr == X86_TRAP_PF &&
++	    early_make_pgtable(native_read_cr2()))
++		return;
++
++	early_fixup_exception(regs, trapnr);
++}
++
+ /* Don't add a printk in there. printk relies on the PDA which is not initialized 
+    yet. */
+ static void __init clear_bss(void)
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 28de83fecda3..08412f308de3 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -349,18 +349,9 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
+ 	pushq %r15				/* pt_regs->r15 */
+ 	UNWIND_HINT_REGS
+ 
+-	cmpq $14,%rsi		/* Page fault? */
+-	jnz 10f
+-	GET_CR2_INTO(%rdi)	/* can clobber %rax if pv */
+-	call early_make_pgtable
+-	andl %eax,%eax
+-	jz 20f			/* All good */
+-
+-10:
+ 	movq %rsp,%rdi		/* RDI = pt_regs; RSI is already trapnr */
+-	call early_fixup_exception
++	call do_early_exception
+ 
+-20:
+ 	decl early_recursion_flag(%rip)
+ 	jmp restore_regs_and_return_to_kernel
+ SYM_CODE_END(early_idt_handler_common)
 -- 
-2.25.1
-
-
+2.28.0
 
