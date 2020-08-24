@@ -2,118 +2,70 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3342C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55945C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6222074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598265865;
-	bh=3l8WzknNXfhzUyAA+S1LsiqNXpJF9mm+PW6eO9kKss4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=a29vQAGBOlg0BLnHPnLkrbTLE0vkPsbddmfGO4tLK0PkcSKHizIxGpg/5unHrKWLZ
-	 R7TXAERHUv/2V9Of3fSS/9FRODAtd98qo6+ksI+RcRbKwjpBU2MjNQrjmnH1rLttVR
-	 rFXbxMdcdrNhnDFF0V+2N/gjJ0U3Qor7zENe8nYA=
+	by mail.kernel.org (Postfix) with ESMTP id 39E462075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgHXKoW (ORCPT
+        id S1727116AbgHXKov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:44:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34884 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 06:44:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60504 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbgHXKoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:44:21 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E57E206B5;
-        Mon, 24 Aug 2020 10:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598265860;
-        bh=3l8WzknNXfhzUyAA+S1LsiqNXpJF9mm+PW6eO9kKss4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BccWYz/+Yq/4XQTFnF4MLZBs3ob2vp1ZTPTkswtvBk2Ha1Y3H8sRq2aJcrVfOb7cB
-         Pyac9Ut6Cr/975o9zG/KXj+AyDryZzBoCekShMW3lE3gKWCoq4qEQr9wQc3slh3jFz
-         P8KDmJmzNfYbycaGcR7IXy/hY1d9OJyGOxWdnHH8=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Gal Pressman <galpress@amazon.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Mark Zhang <markz@nvidia.com>
-Subject: [PATCH rdma-next 00/14] Track memory allocation with restrack DB help
-Date:   Mon, 24 Aug 2020 13:44:01 +0300
-Message-Id: <20200824104415.1090901-1-leon@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        id S1727098AbgHXKof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:44:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C61A5AC98;
+        Mon, 24 Aug 2020 10:45:03 +0000 (UTC)
+Date:   Mon, 24 Aug 2020 12:44:31 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Subject: Re: [PATCH v2 03/10] mm/memory_hotplug: simplify page offlining
+Message-ID: <20200824104431.GC6315@linux>
+References: <20200819175957.28465-1-david@redhat.com>
+ <20200819175957.28465-4-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819175957.28465-4-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Wed, Aug 19, 2020 at 07:59:50PM +0200, David Hildenbrand wrote:
+> We make sure that we cannot have any memory holes right at the beginning
+> of offline_pages(). We no longer need walk_system_ram_range() and can
+> call test_pages_isolated() and __offline_isolated_pages() directly.
+> 
+> offlined_pages always corresponds to nr_pages, so we can simplify that.
+> 
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-The resource tracker has built-in kref counter to synchronize object
-release. It makes restrack perfect choice to be responsible for the
-memory lifetime of any object in which restrack entry is embedded.
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
-In order to make it, the restrack was changed to be mandatory and all
-callers of rdma_restrack_add() started to rely on result returned from
-that call. Being mandatory means that all objects specific to restrack
-type must be tracked.
 
-Before this series, the restrack and rdmatool were aid tools in debug
-session of user space applications, this caused to some of the
-functionality to be left behind, like support XRC QPs, device memory MRs
-and QP0/QP1 in multi-port devices.
-
-This series fixes all mentioned above without extending rdmatool at all.
-
-Thanks
-
-Leon Romanovsky (13):
-  RDMA/cma: Delete from restrack DB after successful destroy
-  RDMA/mlx5: Don't call to restrack recursively
-  RDMA/restrack: Count references to the verbs objects
-  RDMA/restrack: Simplify restrack tracking in kernel flows
-  RDMA/restrack: Improve readability in task name management
-  RDMA/cma: Be strict with attaching to CMA device
-  RDMA/core: Allow drivers to disable restrack DB
-  RDMA/counter: Combine allocation and bind logic
-  RDMA/restrack: Store all special QPs in restrack DB
-  RDMA/restrack: Make restrack DB mandatory for IB objects
-  RDMA/restrack: Support all QP types
-  RDMA/core: Track device memory MRs
-  RDMA/restrack: Drop valid restrack field as source of ambiguity
-
-Maor Gottlieb (1):
-  RDMA/verbs: Assign port number of special QPs
-
- drivers/infiniband/core/cma.c                 | 224 +++++++++++-------
- drivers/infiniband/core/core_priv.h           |  40 ++--
- drivers/infiniband/core/counters.c            | 178 +++++++-------
- drivers/infiniband/core/cq.c                  |  24 +-
- drivers/infiniband/core/rdma_core.c           |   3 +-
- drivers/infiniband/core/restrack.c            | 208 ++++++++--------
- drivers/infiniband/core/restrack.h            |  10 +-
- drivers/infiniband/core/uverbs_cmd.c          |  50 +++-
- drivers/infiniband/core/uverbs_std_types_cq.c |  12 +-
- drivers/infiniband/core/uverbs_std_types_mr.c |  10 +
- drivers/infiniband/core/uverbs_std_types_qp.c |   4 +-
- drivers/infiniband/core/verbs.c               |  94 ++++++--
- drivers/infiniband/hw/mlx5/gsi.c              |  16 +-
- drivers/infiniband/hw/mlx5/qp.c               |   2 +-
- include/rdma/ib_verbs.h                       |  10 +-
- include/rdma/restrack.h                       |  46 ++--
- 16 files changed, 541 insertions(+), 390 deletions(-)
-
---
-2.26.2
-
+-- 
+Oscar Salvador
+SUSE L3
