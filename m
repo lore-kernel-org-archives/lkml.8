@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF501C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFF3F20FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B953F20FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258371;
-	bh=5A2VtyRJR0QYn/NUiPF8cKX4wWAD7dQLc9ZXAmgRtV8=;
+	s=default; t=1598258374;
+	bh=lVVAh9Z9McLW3SoXxl5P+4DwQWEYitbI4AmCQQ3aerw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FAcdvryiIm6BfFtLAgKxQ/F42J/iy5gaEtwJZdKi56uOQeIm+/svpe3HTO5uV57Ne
-	 WWmXycnuSCAx+ku8Ic2Cn+Lax6d/tSzTWSocDELIFLH1gqccNvyW7y1C5gzCz5hFXf
-	 MB+DmAG/qt49YPRkJx/Bxrf9pM6b5LCm2/O1Ui9A=
+	b=GVabgSPng4YAIaXQw1faa0HxpZE9xuNWfKSNBeeONZvVPqS+zsi5ajdXNDPnZuIFL
+	 0ffYDWijOJaQqiqG1v63uczps4qmS1OO8eQYfp2+nJLsyyJh6ICd+r+hSdW6uFaLpT
+	 L0uRGe8QRxBvtPQH5RhqQwagGiYsch4OmIbZcLmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgHXIja (ORCPT
+        id S1728653AbgHXIjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:39:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:39:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728633AbgHXIjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:39:21 -0400
+        id S1727902AbgHXIjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:39:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BE8A20FC3;
-        Mon, 24 Aug 2020 08:39:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 872762177B;
+        Mon, 24 Aug 2020 08:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258360;
-        bh=5A2VtyRJR0QYn/NUiPF8cKX4wWAD7dQLc9ZXAmgRtV8=;
+        s=default; t=1598258364;
+        bh=lVVAh9Z9McLW3SoXxl5P+4DwQWEYitbI4AmCQQ3aerw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tRejIB/9BVcvlTlTy9AFt5aaVRhdTiCWBuYnxkQYIdfIhfZw5SmezP+Zey2qaNMzx
-         oJWHtTHmAG0HRGsBLIhr4zlYLk5OXR+vv4B1l61cDXFFDEKJ9dX55UWxP9+h7Nz7yJ
-         JtHXBHTPOFd12XSK0a+z/gcI5Poaakb9PGxcAzXU=
+        b=W+Eupww3+KqMvt4UTtKmTwLpOT+EUbUaiJzrMicBAaxqdz9h9wFdB87/E6ot+EUnO
+         5expdivR/CwdQWRtuQ96ZKqbe+isgZ1P6jtR2Ds9OWiqh5entt5Pr1dOEgvZbbTIT4
+         XNHVA/hyZAPuBbgNabNgnRnreWYghEp6Xwo24ss8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.7 020/124] scsi: zfcp: Fix use-after-free in request timeout handlers
-Date:   Mon, 24 Aug 2020 10:29:14 +0200
-Message-Id: <20200824082410.412275851@linuxfoundation.org>
+        stable@vger.kernel.org, Yang Weijiang <weijiang.yang@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.7 021/124] selftests: kvm: Use a shorter encoding to clear RAX
+Date:   Mon, 24 Aug 2020 10:29:15 +0200
+Message-Id: <20200824082410.462355707@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -60,85 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Yang Weijiang <weijiang.yang@intel.com>
 
-commit 2d9a2c5f581be3991ba67fa9e7497c711220ea8e upstream.
+commit 98b0bf02738004829d7e26d6cb47b2e469aaba86 upstream.
 
-Before v4.15 commit 75492a51568b ("s390/scsi: Convert timers to use
-timer_setup()"), we intentionally only passed zfcp_adapter as context
-argument to zfcp_fsf_request_timeout_handler(). Since we only trigger
-adapter recovery, it was unnecessary to sync against races between timeout
-and (late) completion.  Likewise, we only passed zfcp_erp_action as context
-argument to zfcp_erp_timeout_handler(). Since we only wakeup an ERP action,
-it was unnecessary to sync against races between timeout and (late)
-completion.
+If debug_regs.c is built with newer binutils, the resulting binary is "optimized"
+by the assembler:
 
-Meanwhile the timeout handlers get timer_list as context argument and do a
-timer-specific container-of to zfcp_fsf_req which can have been freed.
+asm volatile("ss_start: "
+             "xor %%rax,%%rax\n\t"
+             "cpuid\n\t"
+             "movl $0x1a0,%%ecx\n\t"
+             "rdmsr\n\t"
+             : : : "rax", "ecx");
 
-Fix it by making sure that any request timeout handlers, that might just
-have started before del_timer(), are completed by using del_timer_sync()
-instead. This ensures the request free happens afterwards.
+is translated to :
 
-Space time diagram of potential use-after-free:
+  000000000040194e <ss_start>:
+  40194e:       31 c0                   xor    %eax,%eax     <----- rax->eax?
+  401950:       0f a2                   cpuid
+  401952:       b9 a0 01 00 00          mov    $0x1a0,%ecx
+  401957:       0f 32                   rdmsr
 
-Basic idea is to have 2 or more pending requests whose timeouts run out at
-almost the same time.
+As you can see rax is replaced with eax in target binary code.
+This causes a difference is the length of xor instruction (2 Byte vs 3 Byte),
+and makes the hard-coded instruction length check fail:
 
-req 1 timeout     ERP thread        req 2 timeout
-----------------  ----------------  ---------------------------------------
-zfcp_fsf_request_timeout_handler
-fsf_req = from_timer(fsf_req, t, timer)
-adapter = fsf_req->adapter
-zfcp_qdio_siosl(adapter)
-zfcp_erp_adapter_reopen(adapter,...)
-                  zfcp_erp_strategy
-                  ...
-                  zfcp_fsf_req_dismiss_all
-                  list_for_each_entry_safe
-                    zfcp_fsf_req_complete 1
-                    del_timer 1
-                    zfcp_fsf_req_free 1
-                    zfcp_fsf_req_complete 2
-                                    zfcp_fsf_request_timeout_handler
-                    del_timer 2
-                                    fsf_req = from_timer(fsf_req, t, timer)
-                    zfcp_fsf_req_free 2
-                                    adapter = fsf_req->adapter
-                                              ^^^^^^^ already freed
+        /* Instruction lengths starting at ss_start */
+        int ss_size[4] = {
+                3,              /* xor */   <-------- 2 or 3?
+                2,              /* cpuid */
+                5,              /* mov */
+                2,              /* rdmsr */
+        };
 
-Link: https://lore.kernel.org/r/20200813152856.50088-1-maier@linux.ibm.com
-Fixes: 75492a51568b ("s390/scsi: Convert timers to use timer_setup()")
-Cc: <stable@vger.kernel.org> #4.15+
-Suggested-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Encode the shorter version directly and, while at it, fix the "clobbers"
+of the asm.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/scsi/zfcp_fsf.c |    4 ++--
+ tools/testing/selftests/kvm/x86_64/debug_regs.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/s390/scsi/zfcp_fsf.c
-+++ b/drivers/s390/scsi/zfcp_fsf.c
-@@ -430,7 +430,7 @@ static void zfcp_fsf_req_complete(struct
- 		return;
- 	}
+--- a/tools/testing/selftests/kvm/x86_64/debug_regs.c
++++ b/tools/testing/selftests/kvm/x86_64/debug_regs.c
+@@ -40,11 +40,11 @@ static void guest_code(void)
  
--	del_timer(&req->timer);
-+	del_timer_sync(&req->timer);
- 	zfcp_fsf_protstatus_eval(req);
- 	zfcp_fsf_fsfstatus_eval(req);
- 	req->handler(req);
-@@ -905,7 +905,7 @@ static int zfcp_fsf_req_send(struct zfcp
- 	req->qdio_req.qdio_outb_usage = atomic_read(&qdio->req_q_free);
- 	req->issued = get_tod_clock();
- 	if (zfcp_qdio_send(qdio, &req->qdio_req)) {
--		del_timer(&req->timer);
-+		del_timer_sync(&req->timer);
- 		/* lookup request again, list might have changed */
- 		zfcp_reqlist_find_rm(adapter->req_list, req_id);
- 		zfcp_erp_adapter_reopen(adapter, 0, "fsrs__1");
+ 	/* Single step test, covers 2 basic instructions and 2 emulated */
+ 	asm volatile("ss_start: "
+-		     "xor %%rax,%%rax\n\t"
++		     "xor %%eax,%%eax\n\t"
+ 		     "cpuid\n\t"
+ 		     "movl $0x1a0,%%ecx\n\t"
+ 		     "rdmsr\n\t"
+-		     : : : "rax", "ecx");
++		     : : : "eax", "ebx", "ecx", "edx");
+ 
+ 	/* DR6.BD test */
+ 	asm volatile("bd_start: mov %%dr0, %%rax" : : : "rax");
 
 
