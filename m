@@ -2,121 +2,146 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB4AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F276C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17D2E2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF3A2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="frrID6iX"
+	dkim=pass (2048-bit key) header.d=eclypsium.com header.i=@eclypsium.com header.b="faxhd+E/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgHXP64 (ORCPT
+        id S1725963AbgHXQBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:58:56 -0400
-Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:27649 "EHLO
-        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbgHXP6t (ORCPT
+        Mon, 24 Aug 2020 12:01:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbgHXQAy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:58:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1598284729;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=ekSyY2qHZjohrMi/ErCReXQ4Ow5pgNEtu5DGbXh0X+s=;
-  b=frrID6iXFQpHp7PXW3sowgD0vlpKJolLSrLsD4XVLrLQcvO6ADmKeYt+
-   Por/tPTf7nOCxMd01Lih62rfxxtcAZ9O8u88XPnQtKjRRkKf8jtbMGRAZ
-   qcJOUGiIWepyF1FK9d+Kux3nXg5FXvTAub1AWt7xbawUA6c8ID+HCzSpX
-   0=;
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: tHj33tqIHgCXymvnOYLLEBfAQj7VddiLPac4gs7q7F0Pli/isHdjb++5CEbv083JhpFtexRV4n
- dbvqUX+YX1R0i35X6ayU1ebc1sYOOc5AfG52Prmcq4M+G/ZL5GBR/pGQeWxbgMja/Tsux774oe
- fGrc6tE2HrNa5BhyOqhRzJ8/p8VbX6sbI2ErSqmq+jtezTHvZ7R5gidPPmSqBFqdxmKnq1ff4p
- Bx/a5uSP0jIV4ioFBhDwlRF7XzTMIeBU5UIITmdyfUKWSXm1YOg5YFsdXbo7Cb48kUcC1fjRu8
- +yE=
-X-SBRS: 2.7
-X-MesageID: 25501271
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.76,349,1592884800"; 
-   d="scan'208";a="25501271"
-Subject: Re: [PATCH] x86/entry: Fix AC assertion
-To:     <peterz@infradead.org>
-CC:     <x86@kernel.org>, Juergen Gross <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-References: <20200824101428.GS1362448@hirez.programming.kicks-ass.net>
- <d2b0c6a5-19d8-f868-e092-e5c197ab0d0e@citrix.com>
- <20200824152135.GV1362448@hirez.programming.kicks-ass.net>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <a79f11e4-2b9f-ea8d-a032-dee84a500f73@citrix.com>
-Date:   Mon, 24 Aug 2020 16:58:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 24 Aug 2020 12:00:54 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B7B7C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 09:00:54 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id cs12so3955374qvb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 09:00:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eclypsium.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wo1WKRputxQ5WEmQk/gfcqmvWhqh/EvoPHmhOwUKjX8=;
+        b=faxhd+E/EzFyd/c68LZgtAVunAl5IlW4VnAzDC/LPPaQqJAjfXfz1Zv3ouYnuFvQbr
+         Fjy+/maJndRntNt2Z9xRNria6z74hHH7EBXKX8IZyFXp4UfwR2+SPrDfbnftHoGu149l
+         5QW/NTTmJxaD9hFTK+idq2D4J0LAzu8R72eImcM1Ndmrm5R3+3rJQwtBz38Culyj77nf
+         +ccE2m+1yVQXIaHoDgs0UyvdWHfZTO0g0ED4g/KnQr0M9DMO1m1zmiG6lbIsRZW8+Fze
+         9xYmeRGu6X5GUYF4sfN3U3reo8HXANvRGwyyoPHAUGtdnlAAc94bDTR8C4X77KmLP7kI
+         kpdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wo1WKRputxQ5WEmQk/gfcqmvWhqh/EvoPHmhOwUKjX8=;
+        b=iO+gjEtfCmOTxBQH4qunTZM740C4R2c3EEkIGGs7QKHrxFgZBEbI0+NZlLaTww7Xr9
+         bw3KFfPa1lROnSE9pLaPoRdXhjdFxtLJ24xBo5tngsytc13W6NAPyOrffC4wXx5iC0PX
+         JGmpl0tVHJzy3ENppeR9Jpr88RqOY6iYpC+fZTe/tc/paf6ZZ+nXbqu0yYlahHV3k+vF
+         i3hhY8HUwrrdeHdefJRzvxUlrz+vTM38vOB0wOLjUxql2/qlUEwIgoVeRYAwU8Hc4Ick
+         VIDiE8YZLX6aZA2LTBnCrxdi1LNGqIFsB9LAB7ov0cLKP1liAyXjqpfFj2ivqQLpl+UZ
+         xj6A==
+X-Gm-Message-State: AOAM532QDdU3LyT+VHKAvpjR8GtBk+Gtgs/RdHXR0zQ0QDzwXKhL6/zX
+        3tvus/IxWEaVyNmIbU8DT/6jjbSY2i74Ir7XXMFrdg==
+X-Google-Smtp-Source: ABdhPJz9Uq9KfBaA/7xCW6fnYSxivTewgXPC1ApnfvXHigkpcg5iq1x4FMZbrqUsBPU5PZfwuip2Yxzi0/Zj0fYxZgw=
+X-Received: by 2002:ad4:55ca:: with SMTP id bt10mr5553951qvb.200.1598284853742;
+ Mon, 24 Aug 2020 09:00:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200824152135.GV1362448@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+References: <CAK8P3a2_RV33kiJ0c34aopZ4iG7LYBR-u=-+BbC+Upyjh1T0Eg@mail.gmail.com>
+ <CAFmMkTHqQO1Gj7VeXr4Y_Umb1KzZc2Pf=1pDQvPPpb_XeAFPqQ@mail.gmail.com>
+ <20200819065721.GA1375436@lahna.fi.intel.com> <CAK8P3a0Bq-ucgC4Xue+B_HV97pTX8YRr4hYh1gfrfGBV_H1EUQ@mail.gmail.com>
+ <20200819091123.GE1375436@lahna.fi.intel.com> <CAK8P3a19MLfQARXEWzCD-ySq4t9nsyryB+con33HsQ193+muMw@mail.gmail.com>
+ <20200824082227.GU1375436@lahna.fi.intel.com> <CAK8P3a0==cZDHwZfqvCuvUg9jfjBOBG+AAomE9eqJ2xm-xNLvQ@mail.gmail.com>
+ <20200824091542.GC1375436@lahna.fi.intel.com> <CAK8P3a2ipcVLOzZ5jsDSmWkm=rsE7UQ8rgTU-o6me+vX+gVa9g@mail.gmail.com>
+ <20200824094448.GE1375436@lahna.fi.intel.com>
+In-Reply-To: <20200824094448.GE1375436@lahna.fi.intel.com>
+From:   Daniel Gutson <daniel@eclypsium.com>
+Date:   Mon, 24 Aug 2020 13:00:42 -0300
+Message-ID: <CAFmMkTFVVxqeg6bWj_4iSfSRwcOhxgBpMbyO8mFA2ze4q6LUFA@mail.gmail.com>
+Subject: Re: [PATCH] mtd: spi-nor: intel-spi: Do not try to make the SPI flash
+ chip writable
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/08/2020 16:21, peterz@infradead.org wrote:
-> On Mon, Aug 24, 2020 at 03:22:06PM +0100, Andrew Cooper wrote:
->> On 24/08/2020 11:14, peterz@infradead.org wrote:
->>> The WARN added in commit 3c73b81a9164 ("x86/entry, selftests: Further
->>> improve user entry sanity checks") unconditionally triggers on my IVB
->>> machine because it does not support SMAP.
->>>
->>> For !SMAP hardware we patch out CLAC/STAC instructions and thus if
->>> userspace sets AC, we'll still have it set after entry.
->> Technically, you don't patch in, rather than patch out.
-> True.
+On Mon, Aug 24, 2020 at 6:44 AM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
 >
->>> Fixes: 3c73b81a9164 ("x86/entry, selftests: Further improve user entry sanity checks")
->>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->>> Acked-by: Andy Lutomirski <luto@kernel.org>
->>> ---
->>>  arch/x86/include/asm/entry-common.h |   11 +++++++++--
->>>  1 file changed, 9 insertions(+), 2 deletions(-)
->>>
->>> --- a/arch/x86/include/asm/entry-common.h
->>> +++ b/arch/x86/include/asm/entry-common.h
->>> @@ -18,8 +18,15 @@ static __always_inline void arch_check_u
->>>  		 * state, not the interrupt state as imagined by Xen.
->>>  		 */
->>>  		unsigned long flags = native_save_fl();
->>> -		WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
->>> -				      X86_EFLAGS_NT));
->>> +		unsigned long mask = X86_EFLAGS_DF | X86_EFLAGS_NT;
->>> +
->>> +		/*
->>> +		 * For !SMAP hardware we patch out CLAC on entry.
->>> +		 */
->>> +		if (boot_cpu_has(X86_FEATURE_SMAP))
->>> +			mask |= X86_EFLAGS_AC;
->> The Xen PV ABI clears AC on entry for 64bit guests, because Linux is
->> actually running in Ring 3, and therefore susceptible to #AC's which
->> wouldn't occur natively.
-> So do you then want it to be something like:
+> On Mon, Aug 24, 2020 at 11:31:40AM +0200, Arnd Bergmann wrote:
+> > On Mon, Aug 24, 2020 at 11:15 AM Mika Westerberg
+> > <mika.westerberg@linux.intel.com> wrote:
+> > > On Mon, Aug 24, 2020 at 11:08:33AM +0200, Arnd Bergmann wrote:
+> > > > On Mon, Aug 24, 2020 at 10:22 AM Mika Westerberg
+> > > > <mika.westerberg@linux.intel.com> wrote:
+> > > > > On Sat, Aug 22, 2020 at 06:06:03PM +0200, Arnd Bergmann wrote:
+> > > > > > On Wed, Aug 19, 2020 at 11:11 AM Mika Westerberg
+> > > > > >
+> > > > > > The mtd core just checks both the permissions on the device node (which
+> > > > > > default to 0600 without any special udev rules) and the MTD_WRITEABLE
+> > > > > > on the underlying device that is controlled by the module parameter
+> > > > > > in case of intel-spi{,-platform,-pci}.c.
+> > > > >
+> > > > > OK, thanks.
+> > > > >
+> > > > > Since we cannot really get rid of the module parameter (AFAIK there are
+> > > > > users for it), I still think we should just make the "writeable" to
+> > > > > apply to the PCI part as well. That should at least make it consistent,
+> > > > > and it also solves Daniel's case.
+> > > >
+> > > > Can you explain Daniel's case then? I still don't understand what he
+> > > > actually wants.
+> > > >
+> > > > As I keep repeating, the module parameter *does* apply to the pci
+> > > > driver front-end since it determines whether the driver will disallow
+> > > > writes to the mtd device without it. The only difference is that the pci
+> > > > driver will attempt to set the hardware bit without checking the
+> > > > module parameter first, while the platform driver does not. If the
+> > > > module parameter is not set however, the state of the hardware
+> > > > bit is never checked again.
+> > >
+> > > I think Daniel wants the PCI driver not to set the hardware bit by
+> > > default (same as the platform driver).
+> >
+> > Sure, but *why*?
 >
-> 	if (boot_cpu_has(X86_FEATURE_SMAP) ||
-> 	    (IS_ENABLED(CONFIG_64_BIT) && boot_cpu_has(X86_FEATURE_XENPV)))
->
-> ? Or are you fine with the proposed?
+> Because this is part of the platform firmware security check patch he is
+> also working on and, I guess making the flash chip writeable by default
+> is triggering some of the checks in that patch. Or something along those
+> lines ;-)
 
-Dealers choice, but this option would be slightly better overall.
+Correct. I need these drivers to be enabled by default, but they are
+documented as "DANGEROUS", so I want to also split the driver
+in read-only mode and R/W mode. Currently, the driver is R/W,
+and this would be a little first step in that direction.
 
-(Are there any other cases where Linux will be running in Ring 3?  I
-haven't been paying attention to recent changes in PVOps.)
+-- 
+Daniel Gutson
+Argentina Site Director
+Enginieering Director
+Eclypsium
 
-~Andrew
+Below The Surface: Get the latest threat research and insights on
+firmware and supply chain threats from the research team at Eclypsium.
+https://eclypsium.com/research/#threatreport
