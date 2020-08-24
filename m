@@ -2,116 +2,110 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42252C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6214206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB9E206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:58:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="fb2LMxB4"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="aujTPU5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgHXOxZ (ORCPT
+        id S1726225AbgHXO6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 10:53:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725968AbgHXOxY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 10:53:24 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43891C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 07:53:24 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id x69so7609621qkb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 07:53:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3l1KJ9xV7Ihgw4DySoyFjywNiCcO94+hClVbk8PhJDY=;
-        b=fb2LMxB4wNEiqGB/WKAEEee6AInA688gDAPnxIwA0puPxBbgFEpAhmWrqLIOLxwUqO
-         piA7NwBR9xAQhwkmVzCPJ9G+Z2ImOQXCy2uTdCIV2UiN7cqDSLSqGHSaY3r+o7QHbFzb
-         6UwKIJG8yIaKmIe8fDrLVsagZN8ztozhoVOOyiX9GRK7MeLb5iJ7cdsSoAhw10eJs3FA
-         Zs/APyRP4Dxq4B7GHYEeHMbhsApSLIxTDULvAZGwzOIulbJQDZYZtEtonAEhN3GrQ+t+
-         g3jJc1H5ehqin+cLHGaNku5jUhEwLMjHwICNqqVMkEQ+/iSiWNw/lImbU9DeQgGU/9OM
-         MmIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3l1KJ9xV7Ihgw4DySoyFjywNiCcO94+hClVbk8PhJDY=;
-        b=PGF0gA06k57lWAZj3cSJf7mwA2jYkNmpd0I2wnqerx3w2XM75qjMQvy7RsEWTU+PdJ
-         Q8OQDOSYHqG6ilNLFrW29/s5mqywjZSiOUKgJ5TObWI8KMze9dU/1GL9gsMdWRmMpZKI
-         fTlzVK2U67i0twnzJBm1ymB4khCDkoBbS3vPMd8KwbliMeaHBtbqsYjQXUarBOHIaSD+
-         nDVb0vNwoiaYYH+dhplUW43iBj9BPD6mTa6nWq/VrV2VS9FtgTnPOLeO/+yTGOnolaKu
-         OSNMS3dYws7J5kbMrScoCt6AMdybDih2GAookXtE/mVI+F53huMGOTIdSrOXsv9ZADbL
-         nF3w==
-X-Gm-Message-State: AOAM530Z2Kd/qXyQXZW/99hFKRRyM+EL6EmGG+zlf+k4Ky1UVz+dwrcP
-        InfE/EYRq23m+jBv55Y3jYet9w==
-X-Google-Smtp-Source: ABdhPJygUsE4ZNlaDvJkGQu300bpD2xQkMX8JafenyVd3k4nAZAwUqU3DUvpGlvkZmw72SMxoOy2AA==
-X-Received: by 2002:a37:8cc3:: with SMTP id o186mr5193554qkd.390.1598280800264;
-        Mon, 24 Aug 2020 07:53:20 -0700 (PDT)
-Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id f3sm2668691qth.56.2020.08.24.07.53.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 07:53:19 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 10:52:47 -0400
-From:   Jon Mason <jdmason@kudzu.us>
-To:     Kaige Li <likaige@loongson.cn>
-Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND] NTB: hw: amd: fix an issue about leak system resources
-Message-ID: <20200824145246.GB27238@kudzu.us>
-References: <1597111197-28563-1-git-send-email-likaige@loongson.cn>
+        Mon, 24 Aug 2020 10:58:34 -0400
+Received: from cmta19.telus.net ([209.171.16.92]:38679 "EHLO cmta19.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725921AbgHXO5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 10:57:30 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id ADs7kzTNopULuADs8k2802; Mon, 24 Aug 2020 08:54:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1598280898; bh=J3BJ7qX7HVt5vAQT7eANT29lUGuCe6JLwEzkmWDSZh4=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=aujTPU5q0SWxI9dXbNemMM2wZfAJfyN3DMY5OMLYBI4UVfmY1BviO/ySRAUq6eELC
+         lO8z7h/3eCL31F6WR4LATLiru0AfOOE2o/uKp3RMPt8tqQURtDCCVsPgPEWNn423yY
+         +rI27kp6tqriuYAIZpsKnChNvHSy1y+j4yjf7HQMOGv32AAxia7GxfG3JK1nitH313
+         SiDyP2RYw53Tx2hLdkYylUCjLLCU54SS91yTrdLMV9jEZsRFABrEq8QR0PV14RUqG0
+         NxFjlvoNpCfnTh1CmX2S+OwOGMuw/U4QMk92S9TGQcIWy9c7i2DgqhN0J1ODlSqyqd
+         kx3VDQX/CEtpw==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=T9TysMCQ c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=gu6fZOg2AAAA:8
+ a=cUYKOWGz9U0kq_ISi6IA:9 a=CjuIK1q_8ugA:10 a=-FEs8UIgK8oA:10
+ a=NWVoK91CQyQA:10 a=2RSlZUUhi9gRBrsHwhhZ:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Len Brown'" <len.brown@intel.com>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
+        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>
+References: <3169564.ZRsPWhXyMD@kreacher>
+In-Reply-To: <3169564.ZRsPWhXyMD@kreacher>
+Subject: RE: [RFC/RFT][PATCH] cpufreq: intel_pstate: Work in passive mode with HWP enabled
+Date:   Mon, 24 Aug 2020 07:54:54 -0700
+Message-ID: <000f01d67a26$891b9340$9b52b9c0$@net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597111197-28563-1-git-send-email-likaige@loongson.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdYvk3X5bnwqpX6hRwi7ciAthJfS0BKjLYKg
+X-CMAE-Envelope: MS4wfOmjarjI9dsl1fU5e3KC3UMjpvV86vTn7EqucnGmaYrvCTJMINyW1WAcl5RIEfPIyez1VwmkpoBOhjwxq0cQooS8KsWwvbzM+Kimxtun2h0rx1xQ4S4A
+ KatdgSXQGwJgJ4lqX8flOjl6mTJXwBh3gEkSXzly/uBvMpdKXOWjKm9w83w5GU/ZEGbJvXR+zOr3+KHXQO2HlMj+iO06zAneBZ+fMv1PnUJ0Rvo4k1AK8ldw
+ l+I/6ND2WpxO1fFl0uVL7qwkP4OMzTF+waySQZC6KgL4nPPePJYpNfpYnvXI7zDucVrHCn/LCMuojwGa4D9iW5tO0rDo+Z9vP/fD6WzBUkcDHAvomsSbXR0+
+ pP8SnzMe0ATFLg0xqTwAxU7VQjAOzvy/JWNRLH0K+zJzj1cKPQj7O5/rsWP+JOUYmpnknS4E
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 09:59:57AM +0800, Kaige Li wrote:
-> The related system resources were not released when pci_set_dma_mask(),
-> pci_set_consistent_dma_mask(), or pci_iomap() return error in the
-> amd_ntb_init_pci() function. Add pci_release_regions() to fix it.
-> 
-> Signed-off-by: Kaige Li <likaige@loongson.cn>
+On 2020.05.21 10:16 Rafael J. Wysocki wrote:
 
-Pulled into my ntb branch.  I added:
-    Fixes: a1b3695820aa ("NTB: Add support for AMD PCI-Express Non-Transparent Bridge")
+...
+> 
+> The INTEL_CPUFREQ_TRANSITION_DELAY_HWP value has been guessed and it very well
+> may turn out to be either too high or too low for the general use, which is one
+> reason why getting as much testing coverage as possible is key here.
+> 
+> If you can play with different INTEL_CPUFREQ_TRANSITION_DELAY_HWP values,
+> please do so and let me know the conclusions.
+...
 
-Thanks,
-Jon
+Hi Rafael,
 
-> ---
-> 
-> changed commit massage.
-> 
->  drivers/ntb/hw/amd/ntb_hw_amd.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_amd.c
-> index 88e1db6..71428d8 100644
-> --- a/drivers/ntb/hw/amd/ntb_hw_amd.c
-> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
-> @@ -1203,6 +1203,7 @@ static int amd_ntb_init_pci(struct amd_ntb_dev *ndev,
->  
->  err_dma_mask:
->  	pci_clear_master(pdev);
-> +	pci_release_regions(pdev);
->  err_pci_regions:
->  	pci_disable_device(pdev);
->  err_pci_enable:
-> -- 
-> 2.1.0
-> 
+Since my v7 reply the other day about results for 347 Hz work/sleep frequency
+periodic workflows [1], I have been testing at 73 Hertz work/sleep frequency.
+And am now testing this:
+
+-#define INTEL_CPUFREQ_TRANSITION_DELAY_HWP     5000
++#define INTEL_CPUFREQ_TRANSITION_DELAY_HWP     10000
+
+Which shows promise for the schedutil governor, which no
+longer drives prematurely into the turbo range, consuming
+excessive amounts of energy as compared to passive without
+HWP.
+
+The ondemand governor is still very bad. The only way I
+have found to get it behave is to force max=min=target_pstate,
+in addition to the above.
+
+It will be quite some time before I have well organized feedback.
+In the meantime if anyone has suggestions for an optimal
+INTEL_CPUFREQ_TRANSITION_DELAY_HWP value, I would be grateful.
+Otherwise I'll attempt to find it via tests.
+
+... Doug
+
+[1] https://marc.info/?l=linux-pm&m=159769839401767&w=2
+
+
