@@ -2,208 +2,220 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C71C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71AE2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED9232074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:29:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Ni6sIR0P"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gaTgkDFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgHXP2J (ORCPT
+        id S1726986AbgHXP3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:28:09 -0400
-Received: from mail.efficios.com ([167.114.26.124]:34856 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbgHXP1x (ORCPT
+        Mon, 24 Aug 2020 11:29:14 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23335 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727095AbgHXP1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:27:53 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id CA17524B433;
-        Mon, 24 Aug 2020 11:27:49 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id JI11sT3keksC; Mon, 24 Aug 2020 11:27:49 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 3E03E24B430;
-        Mon, 24 Aug 2020 11:27:49 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3E03E24B430
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1598282869;
-        bh=k/FdiPr2ljyOg552ab2M3cf84irwVHEhJWysUBT9k9g=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Ni6sIR0PEc0CgtxVKZ6wMIzbQLDCkss7nxiW46dTEyDGBmXV1o4xpP5c3ZK/4x9xs
-         3DXZGmkoG/0Kq/SbYlsaUWlJBVnaJeu+P8O1Ft2uozdPTpt0BpZxKqRZIBuygV/uZy
-         Z95bDo2v5iaKVoWZTI1y/irli//d0B/yNqNWclGJ2Ee0REScmqVTznLbVsvXAN1tND
-         syWol4QMIDiXtEhgeC63MoNJd7ZXOsq9hPUv1WYHSDKzQiQDriXiskHlTzIfrBEcfo
-         Hnu9MkX0FltWdgQtMBWXKeETP0vclvB6Fy/DDDwbm7cq5+4W6HVbw3HVzRY/sJyXSy
-         +exTORLV6+JpA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id lVS9NMqoVrkb; Mon, 24 Aug 2020 11:27:49 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 2F35124B8E7;
-        Mon, 24 Aug 2020 11:27:49 -0400 (EDT)
-Date:   Mon, 24 Aug 2020 11:27:49 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, paulmck <paulmck@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Nicholas Piggin <npiggin@gmail.com>
-Message-ID: <764014395.16126.1598282869127.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200816152907.GB87259@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200814164358.4783-1-mathieu.desnoyers@efficios.com> <20200814164358.4783-3-mathieu.desnoyers@efficios.com> <20200816152907.GB87259@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-Subject: Re: [RFC PATCH 2/3] sched: membarrier: cover kthread_use_mm (v2)
+        Mon, 24 Aug 2020 11:27:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598282863;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Pi1uzJfERgfFWmgM6UYAK6ASgLDYuQWOOL3VyRC2LTU=;
+        b=gaTgkDFqE4P3WhxSTOihWPbvPKkvB7ylw3Ocj1ibyOqnWUHkfcLld2NabTPU+dLmKiGBvt
+        l1mzOvc9NFkzo4iFm8tx1GRP5rnFn4kvVCNquxXbrgP+pZvG/mH6G1fkNFKaTS2UhzQM7U
+        yMImu48qCJT9Bdlibg8t5Hs0oQ0z4wE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-330-zNVOyuFhNP-iiZLLTEszfQ-1; Mon, 24 Aug 2020 11:27:41 -0400
+X-MC-Unique: zNVOyuFhNP-iiZLLTEszfQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AB26D18BFEF8;
+        Mon, 24 Aug 2020 15:27:34 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0139E5F206;
+        Mon, 24 Aug 2020 15:27:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200807160531.GA1345000@erythro.dev.benboeckel.internal>
+References: <20200807160531.GA1345000@erythro.dev.benboeckel.internal> <159681277616.35436.11229310534842613599.stgit@warthog.procyon.org.uk>
+To:     me@benboeckel.net
+Cc:     dhowells@redhat.com, mtk.manpages@gmail.com,
+        torvalds@linux-foundation.org, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-man@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] Add a manpage for watch_queue(7)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF79 (Linux)/8.8.15_GA_3953)
-Thread-Topic: sched: membarrier: cover kthread_use_mm (v2)
-Thread-Index: s276cd/5raHQhg/Q8ooEoMEfpwMdNA==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <329585.1598282852.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 24 Aug 2020 16:27:32 +0100
+Message-ID: <329586.1598282852@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Aug 16, 2020, at 11:29 AM, Boqun Feng boqun.feng@gmail.com wrote:
+Ben Boeckel <me@benboeckel.net> wrote:
 
-> On Fri, Aug 14, 2020 at 12:43:57PM -0400, Mathieu Desnoyers wrote:
->> Add comments and memory barrier to kthread_use_mm and kthread_unuse_mm
->> to allow the effect of membarrier(2) to apply to kthreads accessing
->> user-space memory as well.
->> 
->> Given that no prior kthread use this guarantee and that it only affects
->> kthreads, adding this guarantee does not affect user-space ABI.
->> 
->> Refine the check in membarrier_global_expedited to exclude runqueues
->> running the idle thread rather than all kthreads from the IPI cpumask.
->> 
->> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Paul E. McKenney <paulmck@kernel.org>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Andy Lutomirski <luto@amacapital.net>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> ---
->> Changes since v1:
->> - Add WARN_ON_ONCE(current->mm) in play_idle_precise (PeterZ),
->> - Use smp_mb__after_spinlock rather than smp_mb after task_lock.
->> ---
->>  kernel/kthread.c          | 19 +++++++++++++++++++
->>  kernel/sched/idle.c       |  1 +
->>  kernel/sched/membarrier.c |  8 ++------
->>  3 files changed, 22 insertions(+), 6 deletions(-)
->> 
->> diff --git a/kernel/kthread.c b/kernel/kthread.c
->> index 3edaa380dc7b..77aaaa7bc8d9 100644
->> --- a/kernel/kthread.c
->> +++ b/kernel/kthread.c
->> @@ -1255,8 +1255,19 @@ void kthread_use_mm(struct mm_struct *mm)
->>  	finish_arch_post_lock_switch();
->>  #endif
->>  
->> +	/*
->> +	 * When a kthread starts operating on an address space, the loop
->> +	 * in membarrier_{private,global}_expedited() may not observe
->> +	 * that tsk->mm, and not issue an IPI. Membarrier requires a
->> +	 * memory barrier after storing to tsk->mm, before accessing
->> +	 * user-space memory. A full memory barrier for membarrier
->> +	 * {PRIVATE,GLOBAL}_EXPEDITED is implicitly provided by
->> +	 * mmdrop(), or explicitly with smp_mb().
->> +	 */
->>  	if (active_mm != mm)
->>  		mmdrop(active_mm);
->> +	else
->> +		smp_mb();
-> 
-> Similar question here: could smp_mb() guarantee the correctness of
-> GLOBAL_EXPEDITED? Don't you need membarrier_switch_mm() here and in
-> kthread_unuse_mm(), too?
-> 
-> Am I miss something here?
+> > +In the case of message loss,
+> > +.BR read (2)
+> > +will fabricate a loss message and pass that to userspace immediately =
+after the
+> > +point at which the loss occurred.
+> =
 
-I think you have a good point there. Which brings me to wonder why we
-don't have membarrier_switch_mm() when entering/leaving lazy TLB mode.
-This means an IPI can be sent to a kthread even if it does not use an
-mm, just because the membarrier state in the runqueue is that of the
-active_mm.
+> If multiple messages are dropped in a row, is there one loss message per
+> loss message or per loss event?
 
-Thoughts ?
+One loss message.  I set a flag on the last slot in the pipe ring to say t=
+hat
+message loss occurred, but there's insufficient space to store a counter
+without making the slot larger (and I really don't want to do that).
 
-Thanks,
+Note that every slot in the pipe ring has such a flag, so you could,
+theoretically, get a loss message after every normal message that you read
+out.
 
-Mathieu
+> > +A notification pipe allocates a certain amount of locked kernel memor=
+y (so that
+> > +the kernel can write a notification into it from contexts where alloc=
+ation is
+> > +restricted), and so is subject to pipe resource limit restrictions.
+> =
 
-> 
-> Regards,
-> Boqun
-> 
->>  
->>  	to_kthread(tsk)->oldfs = force_uaccess_begin();
->>  }
->> @@ -1276,6 +1287,14 @@ void kthread_unuse_mm(struct mm_struct *mm)
->>  	force_uaccess_end(to_kthread(tsk)->oldfs);
->>  
->>  	task_lock(tsk);
->> +	/*
->> +	 * When a kthread stops operating on an address space, the loop
->> +	 * in membarrier_{private,global}_expedited() may not observe
->> +	 * that tsk->mm, and not issue an IPI. Membarrier requires a
->> +	 * memory barrier after accessing user-space memory, before
->> +	 * clearing tsk->mm.
->> +	 */
->> +	smp_mb__after_spinlock();
->>  	sync_mm_rss(mm);
->>  	local_irq_disable();
->>  	tsk->mm = NULL;
->> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
->> index 6bf34986f45c..3443ee8335d0 100644
->> --- a/kernel/sched/idle.c
->> +++ b/kernel/sched/idle.c
->> @@ -341,6 +341,7 @@ void play_idle_precise(u64 duration_ns, u64 latency_ns)
->>  	WARN_ON_ONCE(!(current->flags & PF_KTHREAD));
->>  	WARN_ON_ONCE(!(current->flags & PF_NO_SETAFFINITY));
->>  	WARN_ON_ONCE(!duration_ns);
->> +	WARN_ON_ONCE(current->mm);
->>  
->>  	rcu_sleep_check();
->>  	preempt_disable();
->> diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
->> index 168479a7d61b..8a294483074d 100644
->> --- a/kernel/sched/membarrier.c
->> +++ b/kernel/sched/membarrier.c
->> @@ -100,13 +100,9 @@ static int membarrier_global_expedited(void)
->>  		    MEMBARRIER_STATE_GLOBAL_EXPEDITED))
->>  			continue;
->>  
->> -		/*
->> -		 * Skip the CPU if it runs a kernel thread. The scheduler
->> -		 * leaves the prior task mm in place as an optimization when
->> -		 * scheduling a kthread.
->> -		 */
->> +		/* Skip the CPU if it runs the idle thread. */
->>  		p = rcu_dereference(cpu_rq(cpu)->curr);
->> -		if (p->flags & PF_KTHREAD)
->> +		if (is_idle_task(p))
->>  			continue;
->>  
->>  		__cpumask_set_cpu(cpu, tmpmask);
->> --
->> 2.11.0
+> A reference to the relevant manpage for resource limitations would be
+> nice here. I'd assume `setrlimit(2)`, but I don't see anything
+> pipe-specific there.
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+I can change that to:
+
+	... and so is subject to pipe resource limit restrictions - see
+	.BR pipe (7),
+	in the section on
+	.BR "/proc files" .
+
+> > +of interest to the watcher, a filter can be set on a queue to determi=
+ne whether
+> =
+
+> "a filter can be set"? If multiple filters are allowed, "filters can be
+> added" might work better here to indicate that multiple filters are
+> allowed. Otherwise, "a single filter" would make it clearer that only
+> one is supported.
+
+How about:
+
+	Because a source can produce a lot of different events, not all of
+	which may be of interest to the watcher, a single set of filters can
+	be set on a queue to determine whether a particular event will get
+	inserted in a queue at the point of posting inside the kernel.
+
+> Are there macros for extracting these fields available?
+
+WATCH_INFO_LENGTH, WATCH_INFO_ID and WATCH_INFO_TYPE_INFO are masks.  Ther=
+e
+are also shift macros (you add __SHIFT to the mask macro name).  I'm not s=
+ure
+how best to do this in troff.
+
+> Why not also have bitfields for these?
+
+It makes it a lot simpler to filter.
+
+> Or is there some ABI issues with
+> non-power-of-2 bitfield sizes? For clarity, which bit is bit 0? Low addr=
+ess
+> or LSB? Is this documented in some other manpage?
+
+bit 0 is 2^0 in this case.  I'm not sure how better to describe it.
+
+> Also, bit 7 is unused (for alignment I assume)? Is it always 0, 1, or
+> indeterminate?
+
+It's reserved and should always be 0 - but that's solely at the kernel's
+discretion (ie. userspace doesn't gets to set it).
+
+> > +This is used to set filters on the notifications that get written int=
+o the
+> =
+
+> "set" -> "add"? If I call this multiple times, is only the last call
+> effective or do I need to keep a list of all filters myself so I can
+> append in the future (since I see no analogous GET_FILTER call)?
+
+"Set".  You cannot add filters, you can only set/replace/remove the whole =
+set.
+
+Also, I didn't provide a GET_FILTER, assuming that you could probably keep
+track of them yourself.
+
+> Does this have implications for criu restoring a process?
+
+Maybe?
+
+> > +	unsigned char buf[128];
+> =
+
+> Is 128 the maximum message size?
+
+127 actually.  This is specified earlier in the manual page.
+
+> Do we have a macro for this? If it isn't, shouldn't there be code for
+> detecting ENOBUFS and using a bigger buffer? Or at least not rolling wit=
+h a
+> busted buffer.
+
+WATCH_INFO_LENGTH can be used for this.  I'll make the example say:
+
+	unsigned char buf[WATCH_INFO_LENGTH];
+
+> > +	case WATCH_TYPE_META:
+> =
+
+> From above, if a filter is added, all messages not matching a filter are
+> dropped. Are WATCH_TYPE_META messages special in this case?
+
+Yes.  They only do two things at the moment: Tell you that something you w=
+ere
+watching went away and tell you that messages were lost.  I've amended the
+filter section to note that this cannot be filtered.
+
+> The Rust developer in me wants to see:
+
+I don't touch Rust ;-)
+
+> 	default:
+> 		/* Subtypes may be added in future kernel versions. */
+> 		printf("unrecognized meta subtype: %d\n", n->subtype);
+> 		break;
+> =
+
+> unless we're guaranteeing that no other subtypes exist for this type
+> (updating the docs with new types doesn't help those who copy/paste from
+> here as a seed).
+
+I'm trying to keep the example small.  It's pseudo-code rather than real c=
+ode.
+I *could* expand it to a fully working program, but that would make it a l=
+ot
+bigger and harder to read.  As you pointed out, I haven't bothered with th=
+e
+error checking, for example.
+
+David
+
