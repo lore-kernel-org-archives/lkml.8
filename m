@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAA9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA37FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81C072075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8002087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258506;
-	bh=2OGik1si2CQz73pb1R1EN1XL5l9NZWL7GYoRLCxjPrY=;
+	s=default; t=1598258508;
+	bh=Sg+HY/SjwdFSUsZ8B4+SllnIJRTPqzEqXtxp20azwPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VL6jQCMqS7+JoMoH9MIwNk2M2PDVmL9dQjeyWnEW+pev/PtoywWUOXhD92ggEa7If
-	 Dc2u+Mik/HUoU9VxECZlS/9DGh9IL7vsjiWZ1EENkcwlD57XukaSLtzAcvGFowJKAv
-	 5PoydZoJjpwtty3RpRb++5mJWP1HAi1j4MzSEgJ0=
+	b=O+8W05et7LKOKpIc1xbGCZ7mEGg/lvDINI4SO6T+6bdDYdmRXA4Ne4tTw6BWtVqag
+	 1uhxQcH2Nquxq90wUMN89ExFPsFCe9bClYThpwWVfliqyjFPXqgTUeClF8fz1atWFc
+	 eWnHSjOVaJRrUEpr+WXgAM0DofipODPh8w6VYhhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbgHXIlo (ORCPT
+        id S1728540AbgHXIlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:41:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60246 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbgHXIll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:41:41 -0400
+        id S1728873AbgHXIlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:41:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 667A32074D;
-        Mon, 24 Aug 2020 08:41:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05C882087D;
+        Mon, 24 Aug 2020 08:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258501;
-        bh=2OGik1si2CQz73pb1R1EN1XL5l9NZWL7GYoRLCxjPrY=;
+        s=default; t=1598258503;
+        bh=Sg+HY/SjwdFSUsZ8B4+SllnIJRTPqzEqXtxp20azwPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PZChjbF63tHb6n5uEdO9CKCZBMybgpG9/4yOUMmiJBv3jbfyJCES6ya/ZWXT2AtIu
-         1LrmKEYipFlBhMgjFcHPCW4CgcfLhtd+PDVwqvVmbPu3iFPArxvNdAPwevXulh93KL
-         QNBsw1+uqkHtj3+anFueApxypO1mAoG9cnj7cCiY=
+        b=qHJh77D4MRssaNfk04++u4cPLaRoxiLch3aHIrl6XpvQwMHboZ4M1BKca+HhWYvBg
+         Ar6vXbc5RLcIGna6ioYaMXhJjIJnHNlqlx1gG/Tvr5/JVoO7Gff0HO2WSeZFf8x6Eq
+         17k+J31J71xkWK/JkH5KbW6EYMkgtYIUhzvDHWyQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 039/124] rtc: goldfish: Enable interrupt in set_alarm() when necessary
-Date:   Mon, 24 Aug 2020 10:29:33 +0200
-Message-Id: <20200824082411.339511124@linuxfoundation.org>
+Subject: [PATCH 5.7 040/124] media: vpss: clean up resources in init
+Date:   Mon, 24 Aug 2020 10:29:34 +0200
+Message-Id: <20200824082411.390612980@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -61,37 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 22f8d5a1bf230cf8567a4121fc3789babb46336d ]
+[ Upstream commit 9c487b0b0ea7ff22127fe99a7f67657d8730ff94 ]
 
-When use goldfish rtc, the "hwclock" command fails with "select() to
-/dev/rtc to wait for clock tick timed out". This is because "hwclock"
-need the set_alarm() hook to enable interrupt when alrm->enabled is
-true. This operation is missing in goldfish rtc (but other rtc drivers,
-such as cmos rtc, enable interrupt here), so add it.
+If platform_driver_register() fails within vpss_init() resources are not
+cleaned up. The patch fixes this issue by introducing the corresponding
+error handling.
 
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Link: https://lore.kernel.org/r/1592654683-31314-1-git-send-email-chenhc@lemote.com
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-goldfish.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/davinci/vpss.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/rtc/rtc-goldfish.c b/drivers/rtc/rtc-goldfish.c
-index cb6b0ad7ec3f2..5dd92147f1680 100644
---- a/drivers/rtc/rtc-goldfish.c
-+++ b/drivers/rtc/rtc-goldfish.c
-@@ -73,6 +73,7 @@ static int goldfish_rtc_set_alarm(struct device *dev,
- 		rtc_alarm64 = rtc_tm_to_time64(&alrm->time) * NSEC_PER_SEC;
- 		writel((rtc_alarm64 >> 32), base + TIMER_ALARM_HIGH);
- 		writel(rtc_alarm64, base + TIMER_ALARM_LOW);
-+		writel(1, base + TIMER_IRQ_ENABLED);
- 	} else {
- 		/*
- 		 * if this function was called with enabled=0
+diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
+index d38d2bbb6f0f8..7000f0bf0b353 100644
+--- a/drivers/media/platform/davinci/vpss.c
++++ b/drivers/media/platform/davinci/vpss.c
+@@ -505,19 +505,31 @@ static void vpss_exit(void)
+ 
+ static int __init vpss_init(void)
+ {
++	int ret;
++
+ 	if (!request_mem_region(VPSS_CLK_CTRL, 4, "vpss_clock_control"))
+ 		return -EBUSY;
+ 
+ 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
+ 	if (unlikely(!oper_cfg.vpss_regs_base2)) {
+-		release_mem_region(VPSS_CLK_CTRL, 4);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_ioremap;
+ 	}
+ 
+ 	writel(VPSS_CLK_CTRL_VENCCLKEN |
+-		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++	       VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++
++	ret = platform_driver_register(&vpss_driver);
++	if (ret)
++		goto err_pd_register;
++
++	return 0;
+ 
+-	return platform_driver_register(&vpss_driver);
++err_pd_register:
++	iounmap(oper_cfg.vpss_regs_base2);
++err_ioremap:
++	release_mem_region(VPSS_CLK_CTRL, 4);
++	return ret;
+ }
+ subsys_initcall(vpss_init);
+ module_exit(vpss_exit);
 -- 
 2.25.1
 
