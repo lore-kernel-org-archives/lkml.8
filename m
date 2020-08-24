@@ -2,159 +2,111 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9B4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEB9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 839ED206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705E3206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598259708;
+	bh=6s+LfmSm2tHtB+r5qdc2/fKe1QoC776GhXu++sKHNeA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1N5vfs3rLPCtvEP6ttPKT0WIb0L52VTSMyt1KlY3pBqu0O3RcAIYbTHfmL2An5VW1
+	 ZxsVOE1fGT+AZPVxZkRWQ0ywn8DkuaNuN5+FV3bSxPtvT6CvhQ88KvKP+R+O3zJDP5
+	 cEwgIKDnIQUhkYnVsEgIHFH6b8fx9PoArL/c0AXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbgHXI4u (ORCPT
+        id S1730592AbgHXJBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:56:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730437AbgHXIz7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:59 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E264C061795;
-        Mon, 24 Aug 2020 01:55:58 -0700 (PDT)
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Mon, 24 Aug 2020 05:01:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730569AbgHXI4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 9C6FB869;
-        Mon, 24 Aug 2020 10:55:53 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 14/76] x86/boot/compressed/64: Rename kaslr_64.c to ident_map_64.c
-Date:   Mon, 24 Aug 2020 10:54:09 +0200
-Message-Id: <20200824085511.7553-15-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id EBE20206F0;
+        Mon, 24 Aug 2020 08:56:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259405;
+        bh=6s+LfmSm2tHtB+r5qdc2/fKe1QoC776GhXu++sKHNeA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=T2zC/U16X2h25EjyOoClUvVHRdp8b7lzXUJN1fBlZ2wbdRhHGybJGP0hvrB7sYAN1
+         aClBLaMN02hBgnW5D6xAm/NXLviZvpzyuORbi/o4/FTEJXwc52c5yZAo1bFgK3mcVx
+         m0wkm2DQYXYiB4AVvNoB88zfB67bDI9taH8ckGJM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 46/71] bonding: fix a potential double-unregister
+Date:   Mon, 24 Aug 2020 10:31:37 +0200
+Message-Id: <20200824082358.185932364@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-The file contains only code related to identity mapped page-tables.
-Rename the file and compile it always in.
+[ Upstream commit 832707021666411d04795c564a4adea5d6b94f17 ]
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20200724160336.5435-14-joro@8bytes.org
+When we tear down a network namespace, we unregister all
+the netdevices within it. So we may queue a slave device
+and a bonding device together in the same unregister queue.
+
+If the only slave device is non-ethernet, it would
+automatically unregister the bonding device as well. Thus,
+we may end up unregistering the bonding device twice.
+
+Workaround this special case by checking reg_state.
+
+Fixes: 9b5e383c11b0 ("net: Introduce unregister_netdevice_many()")
+Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Cc: Andy Gospodarek <andy@greyhouse.net>
+Cc: Jay Vosburgh <j.vosburgh@gmail.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/Makefile                       | 2 +-
- arch/x86/boot/compressed/{kaslr_64.c => ident_map_64.c} | 9 +++++++++
- arch/x86/boot/compressed/kaslr.c                        | 9 ---------
- arch/x86/boot/compressed/misc.h                         | 8 ++++++++
- 4 files changed, 18 insertions(+), 10 deletions(-)
- rename arch/x86/boot/compressed/{kaslr_64.c => ident_map_64.c} (95%)
+ drivers/net/bonding/bond_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index ce85b24898b8..822e61a0d51b 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -77,7 +77,7 @@ vmlinux-objs-y := $(obj)/vmlinux.lds $(obj)/kernel_info.o $(obj)/head_$(BITS).o
- vmlinux-objs-$(CONFIG_EARLY_PRINTK) += $(obj)/early_serial_console.o
- vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr.o
- ifdef CONFIG_X86_64
--	vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr_64.o
-+	vmlinux-objs-y += $(obj)/ident_map_64.o
- 	vmlinux-objs-y += $(obj)/idt_64.o $(obj)/idt_handlers_64.o
- 	vmlinux-objs-y += $(obj)/mem_encrypt.o
- 	vmlinux-objs-y += $(obj)/pgtable_64.o
-diff --git a/arch/x86/boot/compressed/kaslr_64.c b/arch/x86/boot/compressed/ident_map_64.c
-similarity index 95%
-rename from arch/x86/boot/compressed/kaslr_64.c
-rename to arch/x86/boot/compressed/ident_map_64.c
-index f9c5c13d979b..d9932a133ac9 100644
---- a/arch/x86/boot/compressed/kaslr_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -29,6 +29,15 @@
- #define __PAGE_OFFSET __PAGE_OFFSET_BASE
- #include "../../mm/ident_map.c"
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 76fd5fc437ebe..ee7138a92d5e7 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2029,7 +2029,8 @@ static int  bond_release_and_destroy(struct net_device *bond_dev,
+ 	int ret;
  
-+#ifdef CONFIG_X86_5LEVEL
-+unsigned int __pgtable_l5_enabled;
-+unsigned int pgdir_shift = 39;
-+unsigned int ptrs_per_p4d = 1;
-+#endif
-+
-+/* Used by PAGE_KERN* macros: */
-+pteval_t __default_kernel_pte_mask __read_mostly = ~0;
-+
- /* Used to track our page table allocation area. */
- struct alloc_pgt_data {
- 	unsigned char *pgt_buf;
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 0e9fbc90ddc4..0b1551f19920 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -40,17 +40,8 @@
- #include <asm/setup.h>	/* For COMMAND_LINE_SIZE */
- #undef _SETUP
- 
--#ifdef CONFIG_X86_5LEVEL
--unsigned int __pgtable_l5_enabled;
--unsigned int pgdir_shift __ro_after_init = 39;
--unsigned int ptrs_per_p4d __ro_after_init = 1;
--#endif
--
- extern unsigned long get_cmd_line_ptr(void);
- 
--/* Used by PAGE_KERN* macros: */
--pteval_t __default_kernel_pte_mask __read_mostly = ~0;
--
- /* Simplified build-specific string for starting entropy. */
- static const char build_str[] = UTS_RELEASE " (" LINUX_COMPILE_BY "@"
- 		LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION;
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 8feb5f6f329e..98b7a1df9c59 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -134,6 +134,14 @@ int count_immovable_mem_regions(void);
- static inline int count_immovable_mem_regions(void) { return 0; }
- #endif
- 
-+/* ident_map_64.c */
-+#ifdef CONFIG_X86_5LEVEL
-+extern unsigned int __pgtable_l5_enabled, pgdir_shift, ptrs_per_p4d;
-+#endif
-+
-+/* Used by PAGE_KERN* macros: */
-+extern pteval_t __default_kernel_pte_mask;
-+
- /* idt_64.c */
- extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
- extern struct desc_ptr boot_idt_desc;
+ 	ret = __bond_release_one(bond_dev, slave_dev, false, true);
+-	if (ret == 0 && !bond_has_slaves(bond)) {
++	if (ret == 0 && !bond_has_slaves(bond) &&
++	    bond_dev->reg_state != NETREG_UNREGISTERING) {
+ 		bond_dev->priv_flags |= IFF_DISABLE_NETPOLL;
+ 		netdev_info(bond_dev, "Destroying bond %s\n",
+ 			    bond_dev->name);
 -- 
-2.28.0
+2.25.1
+
+
 
