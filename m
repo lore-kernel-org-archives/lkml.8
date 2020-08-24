@@ -2,60 +2,51 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA24C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A373C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC39C2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 390C92074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598257963;
-	bh=v9UYRrKpN87tXhldWDkb2mAuALsYnsp19MYKQXXH2zY=;
+	s=default; t=1598257969;
+	bh=FjtyRzKl5dNr/nqa1SPE8npl47++2SYycFDGps+xMo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Id3GZK1CTaf5oJ3UN4DCrx0F2NhN388OVO/+n3iu5H7ApaxrA0F2AEGbPUqnlcD2W
-	 uXgijIWNZJ4SXeqCBV6A792DoGgBQcL6sPBfPKR63sDAkBuokIr7FsMrf+oVpx+Kb5
-	 gz39a/E3dKVcRoCa/RuXkUHAFTQd7kUAvh+neEZM=
+	b=X2ZuT8j2i7wmNMPF70Gu2MSOrawj4AyWCdds9mOiYIEKXqRM9YXKFaw2abXjmjF0A
+	 q0/6EjVWgRFEiPd6x5omdrDmGkF3keNWCSlYDWiWpEoBgpvghF5EtOe1y4xoDnYLKL
+	 sW9XvBrXIqYEavRocU5tS0vV+tVljcGr4TkdOjlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgHXIcm (ORCPT
+        id S1726830AbgHXIcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:32:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39630 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:32:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbgHXIci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:32:38 -0400
+        id S1726802AbgHXIcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:32:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 626B02074D;
-        Mon, 24 Aug 2020 08:32:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30202207DF;
+        Mon, 24 Aug 2020 08:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257958;
-        bh=v9UYRrKpN87tXhldWDkb2mAuALsYnsp19MYKQXXH2zY=;
+        s=default; t=1598257960;
+        bh=FjtyRzKl5dNr/nqa1SPE8npl47++2SYycFDGps+xMo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SiRL3o64lEKZ+9lZUvfYsuKTu6jnxmfEthgzyI/dNn8qB9pQCGFN9sYiblf86+yqT
-         ijCtjmL6tjgZ+90GmWDEnHPwe9o2EDs5Q/GaFUduWLcoHZ1Lh03MtR0Z8d6R0uozdT
-         ikoTHp79SCPoIqCP01l05Kq2dpvD5GLlAVDRo8HY=
+        b=Inzly5gOWaWeTX1zrER6RY4VUdxVDNUrFbF5S90+jMM99bXmDdY+f8JrhSyxwztwh
+         ljpQ8bJcLhbL7xtrwLxhf/I1D8SdkEaz7OTnw/T21p+NbXaYT9y698VvRxzRvmKUnW
+         9YJIgFS3C5so0pfa87an4mlPdT1uO2dGJ2fWCG6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Shi <shy828301@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 005/148] khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
-Date:   Mon, 24 Aug 2020 10:28:23 +0200
-Message-Id: <20200824082414.207669334@linuxfoundation.org>
+        stable@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.8 006/148] ALSA: hda: avoid reset of sdo_limit
+Date:   Mon, 24 Aug 2020 10:28:24 +0200
+Message-Id: <20200824082414.257003100@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -68,51 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Sameer Pujar <spujar@nvidia.com>
 
-[ Upstream commit f3f99d63a8156c7a4a6b20aac22b53c5579c7dc1 ]
+commit b90b925fd52c75ee7531df739d850a1f7c58ef06 upstream.
 
-syzbot crashes on the VM_BUG_ON_MM(khugepaged_test_exit(mm), mm) in
-__khugepaged_enter(): yes, when one thread is about to dump core, has set
-core_state, and is waiting for others, another might do something calling
-__khugepaged_enter(), which now crashes because I lumped the core_state
-test (known as "mmget_still_valid") into khugepaged_test_exit().  I still
-think it's best to lump them together, so just in this exceptional case,
-check mm->mm_users directly instead of khugepaged_test_exit().
+By default 'sdo_limit' is initialized with a default value of '8'
+as per spec. This is overridden in cases where a different value is
+required. However this is getting reset when snd_hdac_bus_init_chip()
+is called again, which happens during runtime PM cycle.
 
-Fixes: bbe98f9cadff ("khugepaged: khugepaged_test_exit() check mmget_still_valid()")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Yang Shi <shy828301@gmail.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: <stable@vger.kernel.org>	[4.8+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008141503370.18085@eggly.anvils
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Avoid this reset by moving 'sdo_limit' setup to 'snd_hdac_bus_init()'
+function which would be called only once.
+
+Fixes: 67ae482a59e9 ("ALSA: hda: add member to store ratio for stripe control")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Link: https://lore.kernel.org/r/1597851130-6765-1-git-send-email-spujar@nvidia.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- mm/khugepaged.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/hda/hdac_bus.c        |   12 ++++++++++++
+ sound/hda/hdac_controller.c |   11 -----------
+ 2 files changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index ac04b332a373a..1d6a9b0b6a9fd 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -466,7 +466,7 @@ int __khugepaged_enter(struct mm_struct *mm)
- 		return -ENOMEM;
+--- a/sound/hda/hdac_bus.c
++++ b/sound/hda/hdac_bus.c
+@@ -46,6 +46,18 @@ int snd_hdac_bus_init(struct hdac_bus *b
+ 	INIT_LIST_HEAD(&bus->hlink_list);
+ 	init_waitqueue_head(&bus->rirb_wq);
+ 	bus->irq = -1;
++
++	/*
++	 * Default value of '8' is as per the HD audio specification (Rev 1.0a).
++	 * Following relation is used to derive STRIPE control value.
++	 *  For sample rate <= 48K:
++	 *   { ((num_channels * bits_per_sample) / number of SDOs) >= 8 }
++	 *  For sample rate > 48K:
++	 *   { ((num_channels * bits_per_sample * rate/48000) /
++	 *	number of SDOs) >= 8 }
++	 */
++	bus->sdo_limit = 8;
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_bus_init);
+--- a/sound/hda/hdac_controller.c
++++ b/sound/hda/hdac_controller.c
+@@ -529,17 +529,6 @@ bool snd_hdac_bus_init_chip(struct hdac_
  
- 	/* __khugepaged_exit() must not run from under us */
--	VM_BUG_ON_MM(khugepaged_test_exit(mm), mm);
-+	VM_BUG_ON_MM(atomic_read(&mm->mm_users) == 0, mm);
- 	if (unlikely(test_and_set_bit(MMF_VM_HUGEPAGE, &mm->flags))) {
- 		free_mm_slot(mm_slot);
- 		return 0;
--- 
-2.25.1
-
+ 	bus->chip_init = true;
+ 
+-	/*
+-	 * Default value of '8' is as per the HD audio specification (Rev 1.0a).
+-	 * Following relation is used to derive STRIPE control value.
+-	 *  For sample rate <= 48K:
+-	 *   { ((num_channels * bits_per_sample) / number of SDOs) >= 8 }
+-	 *  For sample rate > 48K:
+-	 *   { ((num_channels * bits_per_sample * rate/48000) /
+-	 *	number of SDOs) >= 8 }
+-	 */
+-	bus->sdo_limit = 8;
+-
+ 	return true;
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_bus_init_chip);
 
 
