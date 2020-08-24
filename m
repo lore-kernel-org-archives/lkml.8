@@ -2,47 +2,46 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC82C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76035C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE1D2078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45CFD2078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="MdmzlP1F"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="tv1pHU3M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgHXLfX (ORCPT
+        id S1726709AbgHXLnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:35:23 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:13489 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgHXLal (ORCPT
+        Mon, 24 Aug 2020 07:43:13 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:9933 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726306AbgHXLnI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:30:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598268623;
+        Mon, 24 Aug 2020 07:43:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598269386;
         s=strato-dkim-0002; d=gerhold.net;
         h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=LNrpIGVjKdlFFg7JrV48iDL/9D5btHkuQx1faS/GNEU=;
-        b=MdmzlP1FocVEqd05o+I0ToPylCOtIS6VLYqpWPGuqLgzYwMMxdDcPhkLJ/GMU/6XE0
-        7h3x3SU7tC1fHdA6zLYLI8O+KmbNT++Dvl52SclXHSJoU7nhc4kgXaxZYOFTzpyxsyU2
-        qM3FkngAxR3goZPpBIDzLkiSjBsgi2Xx9KjFGFDQTd+GuD+CYWwti3gcSGkWJO7uisQG
-        aw3TIomsglInr/qMpKc4owMnymEmEC97tpa6O8QLegh4KG/WtYFUkaIxQgt/rwkXTO7I
-        g5keka+Aqwi+Qw8zHT13OV7OxCSvoj4xx8ENlrkH2VVqqU6vqG1mUjBUgd2WuTsLRZvH
-        tlBg==
+        bh=L8FpAL/QNc5PlqFAg2tSEIydb3LWy4d4tNr31Xlb1hQ=;
+        b=tv1pHU3MHv1Mrz4JHi/uE2Uv2FBEHTAoFa5fgL9RD9aoZb0srjDvyE4mGws8oI5z97
+        Uy6sGLFNjNgAseyLCKQ0TIjYDfvv9qSPY631y0J1WKwetGFjqtgVc6hh/F+CmAA9wSv3
+        DLYIgvd4FjvxLOJsm228zPBMp0/7Imop2muOxVYZurbmeDprMsaqYsaGYbUCYfR+7eOj
+        rGc/TgyyuXWybVITNWrk+HUI4S5JBoBUY+hW1XGd75Ac6r2lQ16P6EQpITtO0nstIeEQ
+        6+USbti05nUucoxo4xqoZMSigOf5CWMVcY6X2LvWcoROpABTHi9B0QXQBePStKJvwZwI
+        mkUw==
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7Ic/MbIo="
 X-RZG-CLASS-ID: mo00
 Received: from gerhold.net
         by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id g0b6c1w7OBULWmA
+        with ESMTPSA id g0b6c1w7OBh4WqW
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Mon, 24 Aug 2020 13:30:21 +0200 (CEST)
-Date:   Mon, 24 Aug 2020 13:30:16 +0200
+        Mon, 24 Aug 2020 13:43:04 +0200 (CEST)
+Date:   Mon, 24 Aug 2020 13:42:54 +0200
 From:   Stephan Gerhold <stephan@gerhold.net>
 To:     Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
@@ -51,119 +50,49 @@ Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
         linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Niklas Cassel <nks@flawful.org>
-Subject: Re: [RFC PATCH 1/3] opp: Reduce code duplication in
- _set_required_opps()
-Message-ID: <20200824113016.GA131681@gerhold.net>
+Subject: Re: [RFC PATCH 2/3] opp: Set required OPPs in reverse order when
+ scaling down
+Message-ID: <20200824114254.GA208090@gerhold.net>
 References: <20200730080146.25185-1-stephan@gerhold.net>
- <20200730080146.25185-2-stephan@gerhold.net>
- <20200824111820.rcaingohxw3wozgd@vireshk-i7>
+ <20200730080146.25185-3-stephan@gerhold.net>
+ <20200821163152.GA3422@gerhold.net>
+ <20200824113027.lzh6fp4bottjl6cc@vireshk-i7>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824111820.rcaingohxw3wozgd@vireshk-i7>
+In-Reply-To: <20200824113027.lzh6fp4bottjl6cc@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 04:48:20PM +0530, Viresh Kumar wrote:
-> On 30-07-20, 10:01, Stephan Gerhold wrote:
-> > Move call to dev_pm_genpd_set_performance_state() to a separate
-> > function so we can avoid duplicating the code for the single and
-> > multiple genpd case.
+On Mon, Aug 24, 2020 at 05:00:27PM +0530, Viresh Kumar wrote:
+> On 21-08-20, 18:31, Stephan Gerhold wrote:
+> > This patch does not apply anymore after the cleanup you pushed to
+> > opp/linux-next. I would be happy to send a v2 with that fixed.
 > > 
-> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> > ---
-> >  drivers/opp/core.c | 40 +++++++++++++++++++++-------------------
-> >  1 file changed, 21 insertions(+), 19 deletions(-)
-> > 
-> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> > index 9d7fb45b1786..f7a476b55069 100644
-> > --- a/drivers/opp/core.c
-> > +++ b/drivers/opp/core.c
-> > @@ -781,6 +781,21 @@ static int _set_opp_custom(const struct opp_table *opp_table,
-> >  	return opp_table->set_opp(data);
-> >  }
-> >  
-> > +static int _set_required_opp(struct device *dev, struct device *pd_dev,
-> > +			     struct dev_pm_opp *opp, int i)
-> > +{
-> > +	unsigned int pstate = likely(opp) ? opp->required_opps[i]->pstate : 0;
-> > +	int ret;
-> > +
-> > +	ret = dev_pm_genpd_set_performance_state(pd_dev, pstate);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to set performance rate of %s: %d (%d)\n",
-> > +			dev_name(pd_dev), pstate, ret);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  /* This is only called for PM domain for now */
-> >  static int _set_required_opps(struct device *dev,
-> >  			      struct opp_table *opp_table,
-> > @@ -788,22 +803,15 @@ static int _set_required_opps(struct device *dev,
-> >  {
-> >  	struct opp_table **required_opp_tables = opp_table->required_opp_tables;
-> >  	struct device **genpd_virt_devs = opp_table->genpd_virt_devs;
-> > -	unsigned int pstate;
-> > +	struct device *pd_dev;
-> >  	int i, ret = 0;
-> >  
-> >  	if (!required_opp_tables)
-> >  		return 0;
-> >  
-> >  	/* Single genpd case */
-> > -	if (!genpd_virt_devs) {
-> > -		pstate = likely(opp) ? opp->required_opps[0]->pstate : 0;
-> > -		ret = dev_pm_genpd_set_performance_state(dev, pstate);
-> > -		if (ret) {
-> > -			dev_err(dev, "Failed to set performance state of %s: %d (%d)\n",
-> > -				dev_name(dev), pstate, ret);
-> > -		}
-> > -		return ret;
-> > -	}
-> > +	if (!genpd_virt_devs)
-> > +		return _set_required_opp(dev, dev, opp, 0);
-> >  
-> >  	/* Multiple genpd case */
-> >  
-> > @@ -814,17 +822,11 @@ static int _set_required_opps(struct device *dev,
-> >  	mutex_lock(&opp_table->genpd_virt_dev_lock);
-> >  
-> >  	for (i = 0; i < opp_table->required_opp_count; i++) {
-> > -		pstate = likely(opp) ? opp->required_opps[i]->pstate : 0;
-> > -
-> > -		if (!genpd_virt_devs[i])
-> > -			continue;
+> > On my other OPP patch set you mentioned that you might apply these
+> > directly with some of your own changes - would you also prefer to do it
+> > yourself in this case or should I send a v2?
 > 
-> Don't we need this check anymore ?
+> I will pick the first 2 myself, that's fine. Lets see where we go with
+> the third one :)
 > 
 
-You're right. Not sure why I removed it.
+OK, please ignore my question in my reply to PATCH 1/3 then. I replied
+before I read this one. Just add back the NULL checks and it should be
+fine :)
 
-I suspect I had it in _set_required_opp() at some point, but I moved
-code around several times until I was happy with the result.
+> > Still looking for your feedback on both patch sets by the way! :)
+> 
+> Sorry about the delay, I was on vacation for over a week in between and
+> this and the other patchset was a bit tricky (which you may have not
+> realized, not sure, as I wondered if something will not work within
+> the OPP core for v1 binding, but it did finally I believe) :)
+> 
 
-We should just add it back.
-Should I send a v2 with it fixed or would you like to handle it?
+No problem! I guess I did indeed not realize potential problems for the
+v1 bindings, all this compatibility code is quite confusing. :)
 
-Thanks,
+Thanks!
 Stephan
-
-> > +		pd_dev = genpd_virt_devs[i];
-> >  
-> > -		ret = dev_pm_genpd_set_performance_state(genpd_virt_devs[i], pstate);
-> > -		if (ret) {
-> > -			dev_err(dev, "Failed to set performance rate of %s: %d (%d)\n",
-> > -				dev_name(genpd_virt_devs[i]), pstate, ret);
-> > +		ret = _set_required_opp(dev, pd_dev, opp, i);
-> > +		if (ret)
-> >  			break;
-> > -		}
-> >  	}
-> >  	mutex_unlock(&opp_table->genpd_virt_dev_lock);
-> >  
-> > -- 
-> > 2.27.0
