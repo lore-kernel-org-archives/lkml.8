@@ -2,53 +2,52 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB69C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD44C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D116C2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3742071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262157;
-	bh=ywTZQoPHFm5xNDERvgrcnsMxT2rIgAxrrrPjsaiuDCM=;
+	s=default; t=1598262161;
+	bh=Z9lKzba1BAVgIqYEc7h0WsfNDzOkK9y1hwS3TfHMqKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DEutPiQI6mhDEoZTUCSq70UCDQW5ZJ8LSq6MpN6emsWv3o/wTVgNscyrvhLbOFeOP
-	 SoJzgX6Zo4+msTFUUQGK8m9Flqy5HjFgaAm3osIfNgbBEf0O9C1CQ6aMmAlXsEwgaW
-	 qQkR0Hbiz7c13y5hiRmJXEsWqYLL6/EfV+Y/gmHs=
+	b=0Bpap2KD+6VF4Ge63EU8+qYN/b7ID4YynzVvmSe6wdrHpENr1y3s3prZtbUmPKzaE
+	 lTW1WIiYsewrw0VSCaGtTGBHn7a5YRcyUzsY+gxqXniD+nRDNQFszjnK/bhLTRQSzC
+	 RNOVahs/58ecUTHwouG1UHofn89NsjBIJsw5MjIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgHXIo5 (ORCPT
+        id S1729557AbgHXJmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:44:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41052 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728923AbgHXIor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:44:47 -0400
+        id S1728945AbgHXIoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:44:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BEBA2074D;
-        Mon, 24 Aug 2020 08:44:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E57382075B;
+        Mon, 24 Aug 2020 08:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258686;
-        bh=ywTZQoPHFm5xNDERvgrcnsMxT2rIgAxrrrPjsaiuDCM=;
+        s=default; t=1598258694;
+        bh=Z9lKzba1BAVgIqYEc7h0WsfNDzOkK9y1hwS3TfHMqKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZwTVWrSf3lw1X6nLNglZKT4AOBOCOxj9yEcBav+z/whIYDtCCEfRA60fZfaV7/n27
-         h9OpKuOagY1GuSgWOsfsznlna9HD5Hw3r+xQoPnt3b39Mj19/P+BJQsyf6F4WYCLic
-         PRImefFz8dD+vaa5g/DmUPTmAoqEgAjrZY26yaFY=
+        b=xJ000ManXxChTzQZgytvbOjs5PSqftfxAmmSThN0I7Ce5alHJNPaIl+dLzmzt8sKr
+         TrtdVfX58/sBL2074y+0xm+vgIqHZeTmm13vSry5t32nR8yJn60FTuWN1aYBT29m68
+         i4yBRSUzcIW9nHRhm/NSg3ZxQmeSRLz9wh3fdTis=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fangrui Song <maskray@google.com>,
+        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
         Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 5.4 002/107] Documentation/llvm: fix the name of llvm-size
-Date:   Mon, 24 Aug 2020 10:29:28 +0200
-Message-Id: <20200824082405.149935933@linuxfoundation.org>
+Subject: [PATCH 5.4 005/107] x86/boot: kbuild: allow readelf executable to be specified
+Date:   Mon, 24 Aug 2020 10:29:31 +0200
+Message-Id: <20200824082405.298221904@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -61,33 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fangrui Song <maskray@google.com>
+From: Dmitry Golovin <dima@golovin.in>
 
-commit 0f44fbc162b737ff6251ae248184390ae2279fee upstream.
+commit eefb8c124fd969e9a174ff2bedff86aa305a7438 upstream.
 
-The tool is called llvm-size, not llvm-objsize.
+Introduce a new READELF variable to top-level Makefile, so the name of
+readelf binary can be specified.
 
-Fixes: fcf1b6a35c16 ("Documentation/llvm: add documentation on building w/ Clang/LLVM")
-Signed-off-by: Fangrui Song <maskray@google.com>
+Before this change the name of the binary was hardcoded to
+"$(CROSS_COMPILE)readelf" which might not be present for every
+toolchain.
+
+This allows to build with LLVM Object Reader by using make parameter
+READELF=llvm-readelf.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/771
+Signed-off-by: Dmitry Golovin <dima@golovin.in>
 Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/kbuild/llvm.rst |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Makefile                          |    3 ++-
+ arch/x86/boot/compressed/Makefile |    2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
---- a/Documentation/kbuild/llvm.rst
-+++ b/Documentation/kbuild/llvm.rst
-@@ -51,7 +51,7 @@ LLVM has substitutes for GNU binutils ut
- additional parameters to `make`.
+--- a/Makefile
++++ b/Makefile
+@@ -414,6 +414,7 @@ STRIP		= $(CROSS_COMPILE)strip
+ OBJCOPY		= $(CROSS_COMPILE)objcopy
+ OBJDUMP		= $(CROSS_COMPILE)objdump
+ OBJSIZE		= $(CROSS_COMPILE)size
++READELF		= $(CROSS_COMPILE)readelf
+ PAHOLE		= pahole
+ LEX		= flex
+ YACC		= bison
+@@ -472,7 +473,7 @@ GCC_PLUGINS_CFLAGS :=
+ CLANG_FLAGS :=
  
- 	make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
--	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \\
-+	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-size \\
- 	  READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
- 	  HOSTLD=ld.lld
+ export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
+-export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE PAHOLE LEX YACC AWK INSTALLKERNEL
++export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
+ export PERL PYTHON PYTHON2 PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
+ export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
  
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -102,7 +102,7 @@ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(ob
+ quiet_cmd_check_data_rel = DATAREL $@
+ define cmd_check_data_rel
+ 	for obj in $(filter %.o,$^); do \
+-		${CROSS_COMPILE}readelf -S $$obj | grep -qF .rel.local && { \
++		$(READELF) -S $$obj | grep -qF .rel.local && { \
+ 			echo "error: $$obj has data relocations!" >&2; \
+ 			exit 1; \
+ 		} || true; \
 
 
