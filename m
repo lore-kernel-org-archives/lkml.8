@@ -2,51 +2,55 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605D8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 941DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3291C204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1DF2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259546;
-	bh=CCOg6YcDob3vQqntrLoC6A5RQVbfcFciQ4LH6jL9ox8=;
+	s=default; t=1598259550;
+	bh=DelIoaeiEZbBrXv0EwlYF+Peu9qsXkt1ZV8pvbha2MU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NNOA4VI+fYB+q/6JgrImcSywt8Ux5qXtf9J+Nk5zFYAhFdHtby/D1PE3I3af/TG5b
-	 +xNjy2R4uhB2rJ5Dms7HUWZJleOVJm/f5uh5hyTVfRtJXJqCg7xD6BG/WirScyBLxw
-	 9Kdyddi11A7g+vxZLDhUTP0DBFqnc3nYIIqkD26Y=
+	b=A60VWGExjvDQRJwjWU8VT4tlkeTND+Rc972HtYiyAQzNOT+vUVehx2z9oPJiHTLnI
+	 +9Q2gdgbnzA6m8YkWSbhk+MfYLSBSFo9ee2KStLCZw+HQYoXAtgYeZB1Ad0ptjFr3n
+	 X9pbP+rcKieDUT3PWHM0KtWNf0x86Dc/EBPimnSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730727AbgHXI55 (ORCPT
+        id S1730060AbgHXI7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:57:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44932 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:59:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730263AbgHXI5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:57:39 -0400
+        id S1730726AbgHXI55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69073204FD;
-        Mon, 24 Aug 2020 08:57:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52B31204FD;
+        Mon, 24 Aug 2020 08:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259458;
-        bh=CCOg6YcDob3vQqntrLoC6A5RQVbfcFciQ4LH6jL9ox8=;
+        s=default; t=1598259476;
+        bh=DelIoaeiEZbBrXv0EwlYF+Peu9qsXkt1ZV8pvbha2MU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HMw4IdQXPrtaNX0MP3IqgmCcx+DA2IRdA1H0LccH6LlQTMH59Va80Hb8pAXF8x2gY
-         +MUZ0lk5zBjm8jhlDTsAiXjrISsdJSzdDc2+PM7e74ensNE6z3pEysrI0GPTRqjnCO
-         YgPDaqbQIqqh1L4qcROhskwzkDjj5CHYYWXp7/hE=
+        b=FT8vh1MjbylGw9lK9bTRTpe4KSXReMabrJKhrL5/Nk1KYbKO/kPpF6HLxCsm8I/fB
+         Pp8KiBhoQh22WCf8NfjL1paVU0uv84hsJwuJ51U5yqGE/nozZoVUSurAWPOq/CNzdX
+         OQTRHHwAXSvrNVEcsmWp0pp8gs+IROUE7djszdig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 4.19 67/71] epoll: Keep a reference on files added to the check list
-Date:   Mon, 24 Aug 2020 10:31:58 +0200
-Message-Id: <20200824082359.318904388@linuxfoundation.org>
+        stable@vger.kernel.org, Huaitong Han <huaitong.han@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 53/71] kvm: x86: Toggling CR4.PKE does not load PDPTEs in PAE mode
+Date:   Mon, 24 Aug 2020 10:31:44 +0200
+Message-Id: <20200824082358.552868647@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -59,66 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Jim Mattson <jmattson@google.com>
 
-commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682 upstream.
+[ Upstream commit cb957adb4ea422bd758568df5b2478ea3bb34f35 ]
 
-When adding a new fd to an epoll, and that this new fd is an
-epoll fd itself, we recursively scan the fds attached to it
-to detect cycles, and add non-epool files to a "check list"
-that gets subsequently parsed.
+See the SDM, volume 3, section 4.4.1:
 
-However, this check list isn't completely safe when deletions
-can happen concurrently. To sidestep the issue, make sure that
-a struct file placed on the check list sees its f_count increased,
-ensuring that a concurrent deletion won't result in the file
-disapearing from under our feet.
+If PAE paging would be in use following an execution of MOV to CR0 or
+MOV to CR4 (see Section 4.1.1) and the instruction is modifying any of
+CR0.CD, CR0.NW, CR0.PG, CR4.PAE, CR4.PGE, CR4.PSE, or CR4.SMEP; then
+the PDPTEs are loaded from the address in CR3.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: b9baba8614890 ("KVM, pkeys: expose CPUID/CR4 to guest")
+Cc: Huaitong Han <huaitong.han@intel.com>
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Reviewed-by: Oliver Upton <oupton@google.com>
+Message-Id: <20200817181655.3716509-1-jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/eventpoll.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1890,9 +1890,11 @@ static int ep_loop_check_proc(void *priv
- 			 * not already there, and calling reverse_path_check()
- 			 * during ep_insert().
- 			 */
--			if (list_empty(&epi->ffd.file->f_tfile_llink))
-+			if (list_empty(&epi->ffd.file->f_tfile_llink)) {
-+				get_file(epi->ffd.file);
- 				list_add(&epi->ffd.file->f_tfile_llink,
- 					 &tfile_check_list);
-+			}
- 		}
- 	}
- 	mutex_unlock(&ep->mtx);
-@@ -1936,6 +1938,7 @@ static void clear_tfile_check_list(void)
- 		file = list_first_entry(&tfile_check_list, struct file,
- 					f_tfile_llink);
- 		list_del_init(&file->f_tfile_llink);
-+		fput(file);
- 	}
- 	INIT_LIST_HEAD(&tfile_check_list);
- }
-@@ -2095,9 +2098,11 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, in
- 					clear_tfile_check_list();
- 					goto error_tgt_fput;
- 				}
--			} else
-+			} else {
-+				get_file(tf.file);
- 				list_add(&tf.file->f_tfile_llink,
- 							&tfile_check_list);
-+			}
- 			mutex_lock_nested(&ep->mtx, 0);
- 			if (is_file_epoll(tf.file)) {
- 				tep = tf.file->private_data;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index ff1f764c4709a..430a4bc66f604 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -857,7 +857,7 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+ {
+ 	unsigned long old_cr4 = kvm_read_cr4(vcpu);
+ 	unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
+-				   X86_CR4_SMEP | X86_CR4_PKE;
++				   X86_CR4_SMEP;
+ 
+ 	if (kvm_valid_cr4(vcpu, cr4))
+ 		return 1;
+-- 
+2.25.1
+
 
 
