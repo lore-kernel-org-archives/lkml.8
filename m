@@ -2,128 +2,74 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB68FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4641FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4F5D20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598310602;
-	bh=JBQQSfuc8r8UB9wsYF3B3FsKcykzN5voEytrZO2RMGw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OEweKXmIZ5OlScJGUcUFf6aRzMxU8Dqt1h/BzkzZozdgg/++iZDKx07oVjNnTcdc0
-	 S74wpH54GnnqdKPybEWQCr8qDeO3eFMF7jG0qYG0XaY/mZWZjTpKU/4+SI78gHoQ6v
-	 Ac4/xDgzIYln5LnuzXwEq8OsDlIExAiCXa3kPXjQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1F08520706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgHXXKB (ORCPT
+        id S1728106AbgHXXNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:10:01 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37783 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXXKB (ORCPT
+        Mon, 24 Aug 2020 19:13:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHXXNu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 19:10:01 -0400
-Received: by mail-il1-f196.google.com with SMTP id v2so8827720ilq.4;
-        Mon, 24 Aug 2020 16:10:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pNW+FpExzUZzKAgdzLbbC3mRjgc/ErkF14qzkePzpao=;
-        b=rCGPujwGgeuFwBJk9BqeNd7TFwV8sYSsw3S3vkJzcLzULZnDUnVbwv8pxDYZsRmx3A
-         SrH6Sb0mMVh+ToK/wemOglj+9l0DV6bwazvD1R0XnNeDzuXDL483kkSI6M2EeqEler76
-         kxqQHeD7zlMJXZQPdb9ENbBsxN+vVnVxswK8MBQv5QBHrWlabnwhnNJI3Bbgz3ukD9NY
-         uAwaVBX60vKaB0VoND4UWDxF+AfHKJtVqAfA3jVXyLYcSxhZIfm/Bv+cq6QZwuXKHTR4
-         0QnmnlJXI2k3kBjSYJ8dioD+S679U11Db8WssC6KLBd6FAF4lj2ZsobU6PBcBgxqXi4S
-         qBmg==
-X-Gm-Message-State: AOAM532KPMGGoQldfLTE5F5cJR2QoyvtDwVOE6AdMFRxL0KAEGUQhngV
-        f5j+QycN9A6meVkG9gmOehDYeSX1CA==
-X-Google-Smtp-Source: ABdhPJye+VWIVLJXB8wHyD0hNc5m+JPXvkFWV50q8MkRfj/wsTQkYrcYnZUWZ+rtqsOfgrGDN5f5SA==
-X-Received: by 2002:a05:6e02:13ee:: with SMTP id w14mr7059209ilj.4.1598310599896;
-        Mon, 24 Aug 2020 16:09:59 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id n7sm7456664iop.45.2020.08.24.16.09.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 16:09:58 -0700 (PDT)
-Received: (nullmailer pid 3506628 invoked by uid 1000);
-        Mon, 24 Aug 2020 23:09:56 -0000
-Date:   Mon, 24 Aug 2020 17:09:56 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Finley Xiao <finley.xiao@rock-chips.com>
-Cc:     heiko@sntech.de, rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        huangtao@rock-chips.com, tony.xie@rock-chips.com, cl@rock-chips.com
-Subject: Re: [PATCH v1] thermal/of: Introduce k-po, k-pu and k-i for a
- thermal zone
-Message-ID: <20200824230956.GA3500214@bogus>
-References: <20200811123115.8144-1-finley.xiao@rock-chips.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811123115.8144-1-finley.xiao@rock-chips.com>
+        Mon, 24 Aug 2020 19:13:50 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43370C061574;
+        Mon, 24 Aug 2020 16:13:48 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5BC41129242A0;
+        Mon, 24 Aug 2020 15:57:01 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 16:13:46 -0700 (PDT)
+Message-Id: <20200824.161346.1009201417411312987.davem@davemloft.net>
+To:     natechancellor@gmail.com
+Cc:     olteanv@gmail.com, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] net: dsa: sja1105: Do not use address of compatible
+ member in sja1105_check_device_id
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200821222515.414167-1-natechancellor@gmail.com>
+References: <20200821222515.414167-1-natechancellor@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Aug 2020 15:57:01 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 08:31:15PM +0800, Finley Xiao wrote:
-> The default value for k_pu is:
->     2 * sustainable_power / (desired_temperature - switch_on_temp)
-> The default value for k_po is:
->     sustainable_power / (desired_temperature - switch_on_temp)
-> The default value for k_i is 10.
+From: Nathan Chancellor <natechancellor@gmail.com>
+Date: Fri, 21 Aug 2020 15:25:16 -0700
+
+> Clang warns:
 > 
-> Even though these parameters of the PID controller can be changed
-> by the following sysfs files:
->     /sys/class/thermal/thermal_zoneX/k_pu
->     /sys/class/thermal/thermal_zoneX/k_po
->     /sys/class/thermal/thermal_zoneX/k_i
+> drivers/net/dsa/sja1105/sja1105_main.c:3418:38: warning: address of
+> array 'match->compatible' will always evaluate to 'true'
+> [-Wpointer-bool-conversion]
+>         for (match = sja1105_dt_ids; match->compatible; match++) {
+>         ~~~                          ~~~~~~~^~~~~~~~~~
+> 1 warning generated.
 > 
-> But it's still more convenient to change the default values by devicetree,
-> so introduce these three optional properties. If provided these properties,
-> they will be parsed and associated with the thermal zone via the thermal
-> zone parameters.
+> We should check the value of the first character in compatible to see if
+> it is empty or not. This matches how the rest of the tree iterates over
+> IDs.
 > 
-> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-> ---
->  Documentation/devicetree/bindings/thermal/thermal.txt | 14 ++++++++++++++
+> Fixes: 0b0e299720bb ("net: dsa: sja1105: use detected device id instead of DT one on mismatch")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1139
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Bindings should be a separate file and this one is a DT schema now.
-
->  drivers/thermal/thermal_of.c                          |  7 +++++++
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-> index f78bec19ca35..ebe936b57ded 100644
-> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> @@ -165,6 +165,20 @@ Optional property:
->  			2000mW, while on a 10'' tablet is around
->  			4500mW.
->  
-> +- k-po:			Proportional parameter of the PID controller when
-> +			current temperature is above the target.
-> +  Type: signed
-> +  Size: one cell
-> +
-> +- k-pu:			Proportional parameter of the PID controller when
-> +			current temperature is below the target.
-> +  Type: signed
-> +  Size: one cell
-> +
-> +- k-i:			Integral parameter of the PID controller.
-> +  Type: signed
-> +  Size: one cell
-
-What's PID?
-
-I know nothing about the sysfs params, but the binding needs to stand on 
-it's own and needs enough detail to educate me.
-
-Rob
+Applied, thanks.
