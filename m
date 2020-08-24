@@ -2,54 +2,52 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2EB207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26844207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259290;
-	bh=/l3kxZEZb0y6ZPSOwU/MPXaoK9+QJjJUVCDdfVcSO8Y=;
+	s=default; t=1598259296;
+	bh=eJmoOkOwIKJr1fsns/ZDCxgBG69hF1jWCUYyZljgpgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xfc3Da9840+2JBgXIKXi4TKgExEWPz1kUz0nq8urqXcC3i09TEHlZlLxDy7u4o4nP
-	 7ml+K/tSJx0PKBol8JmjVgNG3n4mJ8StmlxcLYop7U6MmvLRshE9ITryY10lPdIceq
-	 BrWoJK4OEKeatqPKOTT7NprC1xJcb7XYmSWc+r9E=
+	b=aJFi+XoN75S7bHIXbCaPOGFvOcTha1GatbaB/cqOWtSXX0eElH4ukGimKsQlfGv/E
+	 GV7pbnLOQEhbnyxk5fqaFZ7SHgRSEWFyKArnUQYNfh1lo57l0WCri665ZS6/CZ1PF1
+	 iNpgI7ssVANGp6zuG3mNFOmuoZLphZ8vtmOPNNPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbgHXIyt (ORCPT
+        id S1730376AbgHXIyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:54:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35610 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:54:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730349AbgHXIym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:54:42 -0400
+        id S1730355AbgHXIyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:54:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3385F204FD;
-        Mon, 24 Aug 2020 08:54:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 962052072D;
+        Mon, 24 Aug 2020 08:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259281;
-        bh=/l3kxZEZb0y6ZPSOwU/MPXaoK9+QJjJUVCDdfVcSO8Y=;
+        s=default; t=1598259284;
+        bh=eJmoOkOwIKJr1fsns/ZDCxgBG69hF1jWCUYyZljgpgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ziBwemXdPjYbV09RU+SMtKZJzslAs9ckVyUSm8Mb4Z+inbq+Al10Nbin0oBgPlvMN
-         RMoExj1u63P92T15DM14HWP3tegCcUh45al0XhTUbahqycgm1vg/lrooXg+bLYABHd
-         W6ToYAJJlIf1AlPeBeHsPNYfqEC/j36bpS0B92Cs=
+        b=zPDCZu7VDlipoLV7dZdsWLQ3jJAqvhvS+SGishZW1qw06yIvnwRvlRHPjQlQr2HMQ
+         mb19aUqrROHWFIv1EsYYMx4psXxhEhzR9Nhy9rd6sxe+tW46BIbf/v4TF/qF9HLGwb
+         PgEMyd732m3ctHEE38mEatTiKHNqrKKe8KpYezfQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: [PATCH 4.14 50/50] clk: Evict unregistered clks from parent caches
-Date:   Mon, 24 Aug 2020 10:31:51 +0200
-Message-Id: <20200824082354.579427212@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Wiesner <jwiesner@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 42/50] bonding: fix active-backup failover for current ARP slave
+Date:   Mon, 24 Aug 2020 10:31:43 +0200
+Message-Id: <20200824082354.176090532@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -62,129 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+From: Jiri Wiesner <jwiesner@suse.com>
 
-commit bdcf1dc253248542537a742ae1e7ccafdd03f2d3 upstream.
+[ Upstream commit 0410d07190961ac526f05085765a8d04d926545b ]
 
-We leave a dangling pointer in each clk_core::parents array that has an
-unregistered clk as a potential parent when that clk_core pointer is
-freed by clk{_hw}_unregister(). It is impossible for the true parent of
-a clk to be set with clk_set_parent() once the dangling pointer is left
-in the cache because we compare parent pointers in
-clk_fetch_parent_index() instead of checking for a matching clk name or
-clk_hw pointer.
+When the ARP monitor is used for link detection, ARP replies are
+validated for all slaves (arp_validate=3) and fail_over_mac is set to
+active, two slaves of an active-backup bond may get stuck in a state
+where both of them are active and pass packets that they receive to
+the bond. This state makes IPv6 duplicate address detection fail. The
+state is reached thus:
+1. The current active slave goes down because the ARP target
+   is not reachable.
+2. The current ARP slave is chosen and made active.
+3. A new slave is enslaved. This new slave becomes the current active
+   slave and can reach the ARP target.
+As a result, the current ARP slave stays active after the enslave
+action has finished and the log is littered with "PROBE BAD" messages:
+> bond0: PROBE: c_arp ens10 && cas ens11 BAD
+The workaround is to remove the slave with "going back" status from
+the bond and re-enslave it. This issue was encountered when DPDK PMD
+interfaces were being enslaved to an active-backup bond.
 
-Before commit ede77858473a ("clk: Remove global clk traversal on fetch
-parent index"), we would check clk_hw pointers, which has a higher
-chance of being the same between registration and unregistration, but it
-can still be allocated and freed by the clk provider. In fact, this has
-been a long standing problem since commit da0f0b2c3ad2 ("clk: Correct
-lookup logic in clk_fetch_parent_index()") where we stopped trying to
-compare clk names and skipped over entries in the cache that weren't
-NULL.
+I would be possible to fix the issue in bond_enslave() or
+bond_change_active_slave() but the ARP monitor was fixed instead to
+keep most of the actions changing the current ARP slave in the ARP
+monitor code. The current ARP slave is set as inactive and backup
+during the commit phase. A new state, BOND_LINK_FAIL, has been
+introduced for slaves in the context of the ARP monitor. This allows
+administrators to see how slaves are rotated for sending ARP requests
+and attempts are made to find a new active slave.
 
-There are good (performance) reasons to not do the global tree lookup in
-cases where the cache holds dangling pointers to parents that have been
-unregistered. Let's take the performance hit on the uncommon
-registration path instead. Loop through all the clk_core::parents arrays
-when a clk is unregistered and set the entry to NULL when the parent
-cache entry and clk being unregistered are the same pointer. This will
-fix this problem and avoid the overhead for the "normal" case.
-
-Based on a patch by Bjorn Andersson.
-
-Fixes: da0f0b2c3ad2 ("clk: Correct lookup logic in clk_fetch_parent_index()")
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20190828181959.204401-1-sboyd@kernel.org
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: b2220cad583c9 ("bonding: refactor ARP active-backup monitor")
+Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk.c |   52 +++++++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 41 insertions(+), 11 deletions(-)
+ drivers/net/bonding/bond_main.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -39,6 +39,17 @@ static HLIST_HEAD(clk_root_list);
- static HLIST_HEAD(clk_orphan_list);
- static LIST_HEAD(clk_notifier_list);
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index a6d8d3b3c903d..861d2c0a521a4 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2753,6 +2753,9 @@ static int bond_ab_arp_inspect(struct bonding *bond)
+ 			if (bond_time_in_interval(bond, last_rx, 1)) {
+ 				bond_propose_link_state(slave, BOND_LINK_UP);
+ 				commit++;
++			} else if (slave->link == BOND_LINK_BACK) {
++				bond_propose_link_state(slave, BOND_LINK_FAIL);
++				commit++;
+ 			}
+ 			continue;
+ 		}
+@@ -2863,6 +2866,19 @@ static void bond_ab_arp_commit(struct bonding *bond)
  
-+static struct hlist_head *all_lists[] = {
-+	&clk_root_list,
-+	&clk_orphan_list,
-+	NULL,
-+};
-+
-+static struct hlist_head *orphan_list[] = {
-+	&clk_orphan_list,
-+	NULL,
-+};
-+
- /***    private data structures    ***/
+ 			continue;
  
- struct clk_core {
-@@ -1993,17 +2004,6 @@ static int inited = 0;
- static DEFINE_MUTEX(clk_debug_lock);
- static HLIST_HEAD(clk_debug_list);
- 
--static struct hlist_head *all_lists[] = {
--	&clk_root_list,
--	&clk_orphan_list,
--	NULL,
--};
--
--static struct hlist_head *orphan_list[] = {
--	&clk_orphan_list,
--	NULL,
--};
--
- static void clk_summary_show_one(struct seq_file *s, struct clk_core *c,
- 				 int level)
- {
-@@ -2735,6 +2735,34 @@ static const struct clk_ops clk_nodrv_op
- 	.set_parent	= clk_nodrv_set_parent,
- };
- 
-+static void clk_core_evict_parent_cache_subtree(struct clk_core *root,
-+						struct clk_core *target)
-+{
-+	int i;
-+	struct clk_core *child;
++		case BOND_LINK_FAIL:
++			bond_set_slave_link_state(slave, BOND_LINK_FAIL,
++						  BOND_SLAVE_NOTIFY_NOW);
++			bond_set_slave_inactive_flags(slave,
++						      BOND_SLAVE_NOTIFY_NOW);
 +
-+	for (i = 0; i < root->num_parents; i++)
-+		if (root->parents[i] == target)
-+			root->parents[i] = NULL;
++			/* A slave has just been enslaved and has become
++			 * the current active slave.
++			 */
++			if (rtnl_dereference(bond->curr_active_slave))
++				RCU_INIT_POINTER(bond->current_arp_slave, NULL);
++			continue;
 +
-+	hlist_for_each_entry(child, &root->children, child_node)
-+		clk_core_evict_parent_cache_subtree(child, target);
-+}
-+
-+/* Remove this clk from all parent caches */
-+static void clk_core_evict_parent_cache(struct clk_core *core)
-+{
-+	struct hlist_head **lists;
-+	struct clk_core *root;
-+
-+	lockdep_assert_held(&prepare_lock);
-+
-+	for (lists = all_lists; *lists; lists++)
-+		hlist_for_each_entry(root, *lists, child_node)
-+			clk_core_evict_parent_cache_subtree(root, core);
-+
-+}
-+
- /**
-  * clk_unregister - unregister a currently registered clock
-  * @clk: clock to unregister
-@@ -2773,6 +2801,8 @@ void clk_unregister(struct clk *clk)
- 			clk_core_set_parent(child, NULL);
+ 		default:
+ 			netdev_err(bond->dev, "impossible: new_link %d on slave %s\n",
+ 				   slave->link_new_state, slave->dev->name);
+@@ -2912,8 +2928,6 @@ static bool bond_ab_arp_probe(struct bonding *bond)
+ 			return should_notify_rtnl;
  	}
  
-+	clk_core_evict_parent_cache(clk->core);
-+
- 	hlist_del_init(&clk->core->child_node);
- 
- 	if (clk->core->prepare_count)
+-	bond_set_slave_inactive_flags(curr_arp_slave, BOND_SLAVE_NOTIFY_LATER);
+-
+ 	bond_for_each_slave_rcu(bond, slave, iter) {
+ 		if (!found && !before && bond_slave_is_up(slave))
+ 			before = slave;
+-- 
+2.25.1
+
 
 
