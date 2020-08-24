@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F699C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF457C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9CAB2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F202067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287453;
-	bh=75Bie9OU8MrRuaLihnpcNDnU86VQmJoXU5qfWfKM3ig=;
+	s=default; t=1598287500;
+	bh=HcQS+VMvWdRoEZwki/4Ya7RkFs+DvHo1w0eac91M6eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DcQ4f07TAERjCudv7NPpSyhMF/BGJ33wVfTJAyHNz2/KscjtXQAv3++L43kPMFUSj
-	 p/yCTnxEAiK/xgrCHAx1a5ulNLYOknOMMATUVHsXW+rJke7LOWh78x06uuhO6VZbVD
-	 NWoDMXsmvLsA7KyM2WEJIe+SEDaD3b2ViOuETMTc=
+	b=v1j/TQuggs/RQvy21kekkcKfg6NCVkIHe41ezeuRiU00bQ5R4HsLqIiJON7/bUbX8
+	 Pu//GgfkTQEcN8/pWvkmp1lpNk6PpupOiVup7n+TJw4Yi31Yip24798V/TmfYWjgfX
+	 l9bRgMA94r+aiiyWjz2yEMqUybUKkHoiO5Ia44sU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbgHXQnx (ORCPT
+        id S1728562AbgHXQo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:43:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:44:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728599AbgHXQjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:39:39 -0400
+        id S1728594AbgHXQjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:39:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E22F22D6D;
-        Mon, 24 Aug 2020 16:39:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5970E22D02;
+        Mon, 24 Aug 2020 16:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287178;
-        bh=75Bie9OU8MrRuaLihnpcNDnU86VQmJoXU5qfWfKM3ig=;
+        s=default; t=1598287169;
+        bh=HcQS+VMvWdRoEZwki/4Ya7RkFs+DvHo1w0eac91M6eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zhJVv/npPECVFr0XYHM1D5VSjF+X9zD3dVkEUbUE9qbwbPHsGyQbwrilh5f5Qa5w4
-         1dy8skVcyAP3p+F7+75UaPexKySBwzGxwmQTJKu+tA1jviaAnXi5hNdMQvdvw1p0nL
-         hcSBn9lMLiv6diRaDBWl9h877fGdCT11ocVYVM3w=
+        b=Iw/sYglRxHsqjGq03PGyV5EkwoQ5EUG+2bqoWTr8soblljIWcCwebac6nMmXkmLbn
+         jO+WezdhEQzT3omcWih9rxFCHK72lDbbSCeVh5LBsp4F8m60tPm6mf9T4Qxu/Sd6Y1
+         riP9gmBr8sX3HMpYOv23BcKjmffn7ItHIybOxsBI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 5/8] scsi: ufs: Fix possible infinite loop in ufshcd_hold
-Date:   Mon, 24 Aug 2020 12:39:28 -0400
-Message-Id: <20200824163931.607291-5-sashal@kernel.org>
+Cc:     Sumera Priyadarsini <sylphrenadin@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 10/11] net: gianfar: Add of_node_put() before goto statement
+Date:   Mon, 24 Aug 2020 12:39:13 -0400
+Message-Id: <20200824163914.607152-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163931.607291-1-sashal@kernel.org>
-References: <20200824163931.607291-1-sashal@kernel.org>
+In-Reply-To: <20200824163914.607152-1-sashal@kernel.org>
+References: <20200824163914.607152-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,55 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Sumera Priyadarsini <sylphrenadin@gmail.com>
 
-[ Upstream commit 93b6c5db06028a3b55122bbb74d0715dd8ca4ae0 ]
+[ Upstream commit 989e4da042ca4a56bbaca9223d1a93639ad11e17 ]
 
-In ufshcd_suspend(), after clk-gating is suspended and link is set
-as Hibern8 state, ufshcd_hold() is still possibly invoked before
-ufshcd_suspend() returns. For example, MediaTek's suspend vops may
-issue UIC commands which would call ufshcd_hold() during the command
-issuing flow.
+Every iteration of for_each_available_child_of_node() decrements
+reference count of the previous node, however when control
+is transferred from the middle of the loop, as in the case of
+a return or break or goto, there is no decrement thus ultimately
+resulting in a memory leak.
 
-Now if UFSHCD_CAP_HIBERN8_WITH_CLK_GATING capability is enabled,
-then ufshcd_hold() may enter infinite loops because there is no
-clk-ungating work scheduled or pending. In this case, ufshcd_hold()
-shall just bypass, and keep the link as Hibern8 state.
+Fix a potential memory leak in gianfar.c by inserting of_node_put()
+before the goto statement.
 
-Link: https://lore.kernel.org/r/20200809050734.18740-1-stanley.chu@mediatek.com
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Co-developed-by: Andy Teng <andy.teng@mediatek.com>
-Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Issue found with Coccinelle.
+
+Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/gianfar.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index af4b0a2021d6c..1eee82b18be4e 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -657,6 +657,7 @@ static void ufshcd_ungate_work(struct work_struct *work)
- int ufshcd_hold(struct ufs_hba *hba, bool async)
- {
- 	int rc = 0;
-+	bool flush_result;
- 	unsigned long flags;
+diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
+index e4a2c74a9b47e..6b95334e172d1 100644
+--- a/drivers/net/ethernet/freescale/gianfar.c
++++ b/drivers/net/ethernet/freescale/gianfar.c
+@@ -844,8 +844,10 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
+ 				continue;
  
- 	if (!ufshcd_is_clkgating_allowed(hba))
-@@ -688,7 +689,9 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
- 				break;
- 			}
- 			spin_unlock_irqrestore(hba->host->host_lock, flags);
--			flush_work(&hba->clk_gating.ungate_work);
-+			flush_result = flush_work(&hba->clk_gating.ungate_work);
-+			if (hba->clk_gating.is_suspended && !flush_result)
-+				goto out;
- 			spin_lock_irqsave(hba->host->host_lock, flags);
- 			goto start;
+ 			err = gfar_parse_group(child, priv, model);
+-			if (err)
++			if (err) {
++				of_node_put(child);
+ 				goto err_grp_init;
++			}
  		}
+ 	} else { /* SQ_SG_MODE */
+ 		err = gfar_parse_group(np, priv, model);
 -- 
 2.25.1
 
