@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB5BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD5B2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036E82071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263277;
-	bh=q2KANpMGXSeyzKEWZM9I8ni3OZPfwzMBznz7DQYRhiE=;
+	s=default; t=1598263287;
+	bh=hwaAYTxU9ShV0QTbj+Oo85m5JIPfVll379yiha5uFyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JQ206EnDgi12ir9binbovw6fBXqLW9pW/vsZg3RMIFVvNHMjTEYISGufXT/hMBLhP
-	 0XndL0y2Z6XL2sxqzrwugu2VzHEe2akKR8LpBqLXeB4vTwLx5lzCF+f2NfAzVbuYyW
-	 on1eJ9T4RrZgaQKFsntkOPAARnq/N8790bMPj3a0=
+	b=e4qYXOcyLsbZo2q5IDv1yXdGGNXwTsc8Bi/lUWT6eypY03nFlt5hyUs79g7J7UpNm
+	 eujv2Jpt365Ip9/cCX/sDGw9YsGkFJA+fTRu6quBoQYrPyJT34GVLXOWsBHsJ21HyZ
+	 H9vImJFmKG9T3a8R55x4h+8Vw7JMWw6czuoXqqJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgHXIcX (ORCPT
+        id S1728089AbgHXKBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:32:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38888 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 06:01:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726580AbgHXIcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:32:15 -0400
+        id S1726086AbgHXIcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:32:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D08D206F0;
-        Mon, 24 Aug 2020 08:32:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FB5A206F0;
+        Mon, 24 Aug 2020 08:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257934;
-        bh=q2KANpMGXSeyzKEWZM9I8ni3OZPfwzMBznz7DQYRhiE=;
+        s=default; t=1598257940;
+        bh=hwaAYTxU9ShV0QTbj+Oo85m5JIPfVll379yiha5uFyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v3mUVfsrz5bSIIoO1MQOjETEgQJMkRs3yIuUs9VN8zQDMta1v2nq7864GMiLczgik
-         X89KuZ8l8gg+VzZ7YAXwVO3YnnexrIAbMsGZdqxC/dic6VUOd2nXlZAHcIimViqU8O
-         wb3y9Zxeo5vifRR7jiSoAEPPUHNzLmDFV89ot5nw=
+        b=ZamW+jDLFb6u9SMvVXRwHegeT6XlZyE+1i7qlh+q9miQGB4d55d5rn5qV1jTBgk14
+         RrQxnMqPH5psW+v5yFNSge2I4dneX3eLXd/Ke8fAg3rJLGNHUA47ODs9U5eRs4Tpyl
+         JI7E51PvCRwvJhJrtMCQ5pAYsfgQNp6X90o54RJw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Hugh Dickins <hughd@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Song Liu <songliubraving@fb.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 014/148] romfs: fix uninitialized memory leak in romfs_dev_read()
-Date:   Mon, 24 Aug 2020 10:28:32 +0200
-Message-Id: <20200824082414.647524908@linuxfoundation.org>
+Subject: [PATCH 5.8 016/148] uprobes: __replace_page() avoid BUG in munlock_vma_page()
+Date:   Mon, 24 Aug 2020 10:28:34 +0200
+Message-Id: <20200824082414.746586028@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -61,55 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Hugh Dickins <hughd@google.com>
 
-commit bcf85fcedfdd17911982a3e3564fcfec7b01eebd upstream.
+commit c17c3dc9d08b9aad9a55a1e53f205187972f448e upstream.
 
-romfs has a superblock field that limits the size of the filesystem; data
-beyond that limit is never accessed.
+syzbot crashed on the VM_BUG_ON_PAGE(PageTail) in munlock_vma_page(), when
+called from uprobes __replace_page().  Which of many ways to fix it?
+Settled on not calling when PageCompound (since Head and Tail are equals
+in this context, PageCompound the usual check in uprobes.c, and the prior
+use of FOLL_SPLIT_PMD will have cleared PageMlocked already).
 
-romfs_dev_read() fetches a caller-supplied number of bytes from the
-backing device.  It returns 0 on success or an error code on failure;
-therefore, its API can't represent short reads, it's all-or-nothing.
-
-However, when romfs_dev_read() detects that the requested operation would
-cross the filesystem size limit, it currently silently truncates the
-requested number of bytes.  This e.g.  means that when the content of a
-file with size 0x1000 starts one byte before the filesystem size limit,
-->readpage() will only fill a single byte of the supplied page while
-leaving the rest uninitialized, leaking that uninitialized memory to
-userspace.
-
-Fix it by returning an error code instead of truncating the read when the
-requested read operation would go beyond the end of the filesystem.
-
-Fixes: da4458bda237 ("NOMMU: Make it possible for RomFS to use MTD devices directly")
-Signed-off-by: Jann Horn <jannh@google.com>
+Fixes: 5a52c9df62b4 ("uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT")
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: David Howells <dhowells@redhat.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200818013202.2246365-1-jannh@google.com
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: <stable@vger.kernel.org>	[5.4+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008161338360.20413@eggly.anvils
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/romfs/storage.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/events/uprobes.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/romfs/storage.c
-+++ b/fs/romfs/storage.c
-@@ -217,10 +217,8 @@ int romfs_dev_read(struct super_block *s
- 	size_t limit;
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -205,7 +205,7 @@ static int __replace_page(struct vm_area
+ 		try_to_free_swap(old_page);
+ 	page_vma_mapped_walk_done(&pvmw);
  
- 	limit = romfs_maxsize(sb);
--	if (pos >= limit)
-+	if (pos >= limit || buflen > limit - pos)
- 		return -EIO;
--	if (buflen > limit - pos)
--		buflen = limit - pos;
+-	if (vma->vm_flags & VM_LOCKED)
++	if ((vma->vm_flags & VM_LOCKED) && !PageCompound(old_page))
+ 		munlock_vma_page(old_page);
+ 	put_page(old_page);
  
- #ifdef CONFIG_ROMFS_ON_MTD
- 	if (sb->s_mtd)
 
 
