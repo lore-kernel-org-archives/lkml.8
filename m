@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23934C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E535820639
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDAD620639
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258753;
-	bh=bwJDBs57T0HWecCtTiQwXS+EX5zVLlTne8P+SfQfMyA=;
+	s=default; t=1598258754;
+	bh=fKxUG6pFb12sFDw3b1VR9N2fW73B3Gv9sp5kDgMzyq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kt5nab4K8A8cVcAXmrn/TVSPL3uHsx2u8PgaWhNpGfo81DVMAoYtGkv0k3p/Y6d6t
-	 wcR86tq5u1x7cELZCTw/LL9/i1FMZ6GWmAlI54QHigU02QWZJF9HflUa1vqfOLZL9g
-	 cZvPqA84CPf1w0qoruGK3hshTp13Ebgr4vVTfWuY=
+	b=k2E831+HxMyBUQk1qz4gJNu7zTWafREIMaTfoXGbsau7GWbb2pU04Ity7lYvoMDdx
+	 RcyFnv3M4klx9FSXWH6gypUyfyCOpt9CeihlpYjd1JVLed35UJ+28P38CGfqNIc1H5
+	 eqVCgBZtWL0zUdRvy+p0b4VfT/CIskBNpevjWXOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgHXIpu (ORCPT
+        id S1729268AbgHXIpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:45:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43070 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:45:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729245AbgHXIpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:45:42 -0400
+        id S1729232AbgHXIps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:45:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46046206F0;
-        Mon, 24 Aug 2020 08:45:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1BC3204FD;
+        Mon, 24 Aug 2020 08:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258742;
-        bh=bwJDBs57T0HWecCtTiQwXS+EX5zVLlTne8P+SfQfMyA=;
+        s=default; t=1598258747;
+        bh=fKxUG6pFb12sFDw3b1VR9N2fW73B3Gv9sp5kDgMzyq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fdRpS36dcc9bF5t18oQsFuU5X9ou0R1h9UCjkQAi3N9kp8KQqHaaGhK98efcVDGMu
-         4OyUc/y1K09jVgWecheKcmL1TaNDUOX21b2m/8zPMxo27BJvhgZSMLlDyumvo9G247
-         u4R+GJRCnkWFppUN1JHX86KCoIrPwpmv8uMve8Qs=
+        b=WmebvA+0ziOfcqRYjRCCUxZo3JkkWP1EpSZpLQWWF+jXjllWtcmUpO09f4Qo8Mhr+
+         r/0MdJeTPtD1/xaCeC0j9QgG2950KUxK9iik9MociuXTwqqvF891I3DDN1JOgAqSem
+         YCmXGRYQMHZeRGF70ppPtx+YAtoIURlxqMm1D6b0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Hugh Dickins <hughd@google.com>,
+        stable@vger.kernel.org,
+        Charan Teja Reddy <charante@codeaurora.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Song Liu <songliubraving@fb.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Vinayak Menon <vinmenon@codeaurora.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 028/107] uprobes: __replace_page() avoid BUG in munlock_vma_page()
-Date:   Mon, 24 Aug 2020 10:29:54 +0200
-Message-Id: <20200824082406.505127550@linuxfoundation.org>
+Subject: [PATCH 5.4 030/107] mm, page_alloc: fix core hung in free_pcppages_bulk()
+Date:   Mon, 24 Aug 2020 10:29:56 +0200
+Message-Id: <20200824082406.605935413@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -65,43 +66,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Charan Teja Reddy <charante@codeaurora.org>
 
-commit c17c3dc9d08b9aad9a55a1e53f205187972f448e upstream.
+commit 88e8ac11d2ea3acc003cf01bb5a38c8aa76c3cfd upstream.
 
-syzbot crashed on the VM_BUG_ON_PAGE(PageTail) in munlock_vma_page(), when
-called from uprobes __replace_page().  Which of many ways to fix it?
-Settled on not calling when PageCompound (since Head and Tail are equals
-in this context, PageCompound the usual check in uprobes.c, and the prior
-use of FOLL_SPLIT_PMD will have cleared PageMlocked already).
+The following race is observed with the repeated online, offline and a
+delay between two successive online of memory blocks of movable zone.
 
-Fixes: 5a52c9df62b4 ("uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Hugh Dickins <hughd@google.com>
+P1						P2
+
+Online the first memory block in
+the movable zone. The pcp struct
+values are initialized to default
+values,i.e., pcp->high = 0 &
+pcp->batch = 1.
+
+					Allocate the pages from the
+					movable zone.
+
+Try to Online the second memory
+block in the movable zone thus it
+entered the online_pages() but yet
+to call zone_pcp_update().
+					This process is entered into
+					the exit path thus it tries
+					to release the order-0 pages
+					to pcp lists through
+					free_unref_page_commit().
+					As pcp->high = 0, pcp->count = 1
+					proceed to call the function
+					free_pcppages_bulk().
+Update the pcp values thus the
+new pcp values are like, say,
+pcp->high = 378, pcp->batch = 63.
+					Read the pcp's batch value using
+					READ_ONCE() and pass the same to
+					free_pcppages_bulk(), pcp values
+					passed here are, batch = 63,
+					count = 1.
+
+					Since num of pages in the pcp
+					lists are less than ->batch,
+					then it will stuck in
+					while(list_empty(list)) loop
+					with interrupts disabled thus
+					a core hung.
+
+Avoid this by ensuring free_pcppages_bulk() is called with proper count of
+pcp list pages.
+
+The mentioned race is some what easily reproducible without [1] because
+pcp's are not updated for the first memory block online and thus there is
+a enough race window for P2 between alloc+free and pcp struct values
+update through onlining of second memory block.
+
+With [1], the race still exists but it is very narrow as we update the pcp
+struct values for the first memory block online itself.
+
+This is not limited to the movable zone, it could also happen in cases
+with the normal zone (e.g., hotplug to a node that only has DMA memory, or
+no other memory yet).
+
+[1]: https://patchwork.kernel.org/patch/11696389/
+
+Fixes: 5f8dcc21211a ("page-allocator: split per-cpu list into one-list-per-migrate-type")
+Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: <stable@vger.kernel.org>	[5.4+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008161338360.20413@eggly.anvils
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: David Rientjes <rientjes@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Vinayak Menon <vinmenon@codeaurora.org>
+Cc: <stable@vger.kernel.org> [2.6+]
+Link: http://lkml.kernel.org/r/1597150703-19003-1-git-send-email-charante@codeaurora.org
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/events/uprobes.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/page_alloc.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -211,7 +211,7 @@ static int __replace_page(struct vm_area
- 		try_to_free_swap(old_page);
- 	page_vma_mapped_walk_done(&pvmw);
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1256,6 +1256,11 @@ static void free_pcppages_bulk(struct zo
+ 	struct page *page, *tmp;
+ 	LIST_HEAD(head);
  
--	if (vma->vm_flags & VM_LOCKED)
-+	if ((vma->vm_flags & VM_LOCKED) && !PageCompound(old_page))
- 		munlock_vma_page(old_page);
- 	put_page(old_page);
++	/*
++	 * Ensure proper count is passed which otherwise would stuck in the
++	 * below while (list_empty(list)) loop.
++	 */
++	count = min(pcp->count, count);
+ 	while (count) {
+ 		struct list_head *list;
  
 
 
