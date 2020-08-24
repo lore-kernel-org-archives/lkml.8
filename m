@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E633C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B241C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85738206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D810206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbgHXJMS (ORCPT
+        id S1728620AbgHXJMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:12:18 -0400
-Received: from 8bytes.org ([81.169.241.247]:37890 "EHLO theia.8bytes.org"
+        Mon, 24 Aug 2020 05:12:51 -0400
+Received: from 8bytes.org ([81.169.241.247]:37380 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730133AbgHXI4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:13 -0400
+        id S1729014AbgHXI4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:10 -0400
 Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id A2D13F87;
-        Mon, 24 Aug 2020 10:56:09 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id DB23EF6F;
+        Mon, 24 Aug 2020 10:56:06 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 38/76] x86/head/64: Set CR4.FSGSBASE early
-Date:   Mon, 24 Aug 2020 10:54:33 +0200
-Message-Id: <20200824085511.7553-39-joro@8bytes.org>
+Subject: [PATCH v6 36/76] x86/head/64: Load IDT earlier
+Date:   Mon, 24 Aug 2020 10:54:31 +0200
+Message-Id: <20200824085511.7553-37-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
 References: <20200824085511.7553-1-joro@8bytes.org>
@@ -60,33 +60,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Early exception handling will use rd/wrgsbase in paranoid_entry/exit.
-Enable the feature to avoid #UD exceptions on boot APs.
+Load the IDT right after switching to virtual addresses in head_64.S
+so that the kernel can handle #VC exceptions.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-38-joro@8bytes.org
+Link: https://lore.kernel.org/r/20200724160336.5435-36-joro@8bytes.org
 ---
- arch/x86/kernel/head_64.S | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/include/asm/setup.h |  3 +++
+ arch/x86/kernel/head64.c     |  3 +++
+ arch/x86/kernel/head_64.S    |  5 +++++
+ arch/x86/kernel/idt.c        | 23 +++++++++++++++++++++++
+ 4 files changed, 34 insertions(+)
 
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index 8aa6ba0427b0..5c09f50ecf1c 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -50,6 +50,8 @@ extern unsigned long __startup_64(unsigned long physaddr, struct boot_params *bp
+ extern unsigned long __startup_secondary_64(void);
+ extern void startup_64_setup_env(unsigned long physbase);
+ extern int early_make_pgtable(unsigned long address);
++extern void early_idt_setup_early_handler(unsigned long physaddr);
++extern void early_load_idt(void);
+ 
+ #ifdef CONFIG_X86_INTEL_MID
+ extern void x86_intel_mid_early_setup(void);
+@@ -66,6 +68,7 @@ static inline void x86_ce4100_early_setup(void) { }
+ #ifndef _SETUP
+ 
+ #include <asm/espfix.h>
++#include <asm/sections.h>
+ #include <linux/kernel.h>
+ 
+ /*
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 8703292a35e9..096b09d06d1c 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -286,6 +286,9 @@ unsigned long __head __startup_64(unsigned long physaddr,
+ 		}
+ 	}
+ 
++	/* Setup IDT with early handlers */
++	early_idt_setup_early_handler(physaddr);
++
+ 	/*
+ 	 * Return the SME encryption mask (if SME is active) to be used as a
+ 	 * modifier for the initial pgdir entry programmed into CR3.
 diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 08412f308de3..4622940134a5 100644
+index a5e1939d1dc9..28de83fecda3 100644
 --- a/arch/x86/kernel/head_64.S
 +++ b/arch/x86/kernel/head_64.S
-@@ -153,6 +153,13 @@ SYM_CODE_START(secondary_startup_64)
- 	orl	$X86_CR4_LA57, %ecx
- 1:
- #endif
-+
-+	ALTERNATIVE "jmp .Lstartup_write_cr4", "", X86_FEATURE_FSGSBASE
-+
-+	/* Early exception handling uses FSGSBASE on APs */
-+	orl	$X86_CR4_FSGSBASE, %ecx
-+
-+.Lstartup_write_cr4:
- 	movq	%rcx, %cr4
+@@ -206,6 +206,11 @@ SYM_CODE_START(secondary_startup_64)
+ 	 */
+ 	movq initial_stack(%rip), %rsp
  
- 	/* Setup early boot stage 4-/5-level pagetables. */
++	/* Load IDT */
++	pushq	%rsi
++	call	early_load_idt
++	popq	%rsi
++
+ 	/* Check if nx is implemented */
+ 	movl	$0x80000001, %eax
+ 	cpuid
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index c19773174221..e2777cc264f5 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -10,6 +10,7 @@
+ #include <asm/proto.h>
+ #include <asm/desc.h>
+ #include <asm/hw_irq.h>
++#include <asm/setup.h>
+ 
+ struct idt_data {
+ 	unsigned int	vector;
+@@ -385,3 +386,25 @@ void __init alloc_intr_gate(unsigned int n, const void *addr)
+ 	if (!WARN_ON(test_and_set_bit(n, system_vectors)))
+ 		set_intr_gate(n, addr);
+ }
++
++void __init early_idt_setup_early_handler(unsigned long physaddr)
++{
++	gate_desc *idt;
++	int i;
++
++	idt = fixup_pointer(idt_table, physaddr);
++
++	for (i = 0; i < NUM_EXCEPTION_VECTORS; i++) {
++		struct idt_data data;
++		gate_desc desc;
++
++		init_idt_data(&data, i, early_idt_handler_array[i]);
++		idt_init_desc(&desc, &data);
++		native_write_idt_entry(idt, i, &desc);
++	}
++}
++
++void early_load_idt(void)
++{
++	load_idt(&idt_descr);
++}
 -- 
 2.28.0
 
