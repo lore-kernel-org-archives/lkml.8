@@ -2,194 +2,187 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9934CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 000A920738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2222078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:44:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RItE8EEV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgHXPnr (ORCPT
+        id S1728057AbgHXPoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:43:47 -0400
-Received: from relay.sw.ru ([185.231.240.75]:54606 "EHLO relay3.sw.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727081AbgHXPid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:38:33 -0400
-Received: from [192.168.15.190]
-        by relay3.sw.ru with esmtp (Exim 4.94)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1kAEXY-00105K-KD; Mon, 24 Aug 2020 18:37:44 +0300
-Subject: Re: [PATCH 1/4] mm: Trial do_wp_page() simplification
-To:     Jan Kara <jack@suse.cz>
-Cc:     Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Maya B . Gokhale" <gokhale2@llnl.gov>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mon, 24 Aug 2020 11:44:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727924AbgHXPiA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 11:38:00 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76846C0613ED;
+        Mon, 24 Aug 2020 08:37:59 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id x69so7760291qkb.1;
+        Mon, 24 Aug 2020 08:37:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Yrl/C8FqKmoOKWHTpqylWzEmmhY9cYd3FuadfFi1qcU=;
+        b=RItE8EEVLrQqxhHs3ZQx7Foq2ps0SM+5TqKNvM/s7lfy4kor2yBW+T08mxhNfvBWdd
+         2RGDEzkzR8jhYgMV3q7iDQIFJ5N3+DPafuAHlDCJjomPLEEaQCEiUHaXB/fY9433YTsC
+         z4u23zXtSA57ff5mbtLKaqvEvZLJ+9p0xfEpVwFss6stu2xMCbmkqgJvkbrdqwsittxM
+         vxEsBpyiDThrdVRko7aOAFnRIcOS3OruLiTt18HlFoE4bY7VQ4/Se9LhQo94miRVqNqE
+         zltvwW6JVmIcXiauJaAOAdvAv7LmqDFpUiL4nh1upk4yoUY62xPrZP3zlYv/LPKosakr
+         rJZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Yrl/C8FqKmoOKWHTpqylWzEmmhY9cYd3FuadfFi1qcU=;
+        b=IpsKEpB+NTXdpJBZsRb5QX9BEijoih79NMp/ZnC9ToImJaucR8Q3G9eWL0m5fPM0K+
+         ydXwAp+p6aqTFY39IK4aFS6mEFtbuP8nU6bnG1OSVVSO09BoxpI0ijAJvxdQqR81Ei4y
+         uGxMG24FoB7zTCWmucoB/ie0Q1TH0soJGPkTKa5eT26KgOzl3ACqZOdY2jg4Qlebctfn
+         X3Y55729e1R+M5G6YmcpM5RbZFfn1+xfpcJW7MXEmu/bJkOsaRl8f5l7ESxNUyMhPrVV
+         Z84f/El9nE1XpBIuKmx66jKiRtV7VhBl16vH7INGTpoLcGjPLNUqk3OjDMbAisfJ1YRC
+         Tx7g==
+X-Gm-Message-State: AOAM530Ra13zzwZuaNFhJqPR9kAvqIY5+fuI4NBuRT6Ksye+AGtzvUTr
+        +Of/oBxDiMA65NUmjTaxoyg=
+X-Google-Smtp-Source: ABdhPJxM2LRyHFxWMV0ffiXTNeWLlg2RxoQyqcPYMgKOZkQDeMNmnS+2daox8wpkc2aWlsKTKcbtIg==
+X-Received: by 2002:a37:a981:: with SMTP id s123mr4697387qke.324.1598283478654;
+        Mon, 24 Aug 2020 08:37:58 -0700 (PDT)
+Received: from dschatzberg-fedora-PC0Y6AEN.thefacebook.com ([2620:10d:c091:480::1:dd21])
+        by smtp.gmail.com with ESMTPSA id m17sm10942758qkn.45.2020.08.24.08.37.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 08:37:57 -0700 (PDT)
+From:   Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, Chris Down <chris@chrisdown.name>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Li Zefan <lizefan@huawei.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
         Yang Shi <yang.shi@linux.alibaba.com>,
-        Marty Mcfadden <mcfadden8@llnl.gov>,
-        Kirill Shutemov <kirill@shutemov.name>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200821234958.7896-1-peterx@redhat.com>
- <20200821234958.7896-2-peterx@redhat.com>
- <42bc9a68-ef9e-2542-0b21-392a7f47bd74@virtuozzo.com>
- <20200824143010.GG24877@quack2.suse.cz>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <dd6eb3e6-2797-1cf3-e1af-62a809ce83f2@virtuozzo.com>
-Date:   Mon, 24 Aug 2020 18:37:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Jakub Kicinski <kuba@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michel Lespinasse <walken@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-block@vger.kernel.org (open list:BLOCK LAYER),
+        linux-kernel@vger.kernel.org (open list),
+        linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
+        infrastructure)),
+        cgroups@vger.kernel.org (open list:CONTROL GROUP (CGROUP)),
+        linux-mm@kvack.org (open list:CONTROL GROUP - MEMORY RESOURCE
+        CONTROLLER (MEMCG))
+Subject: [PATCH 3/4] mm: Charge active memcg when no mm is set
+Date:   Mon, 24 Aug 2020 11:36:01 -0400
+Message-Id: <20200824153607.6595-4-schatzberg.dan@gmail.com>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200824153607.6595-1-schatzberg.dan@gmail.com>
+References: <20200824153607.6595-1-schatzberg.dan@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200824143010.GG24877@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.08.2020 17:30, Jan Kara wrote:
-> On Mon 24-08-20 11:36:22, Kirill Tkhai wrote:
->> On 22.08.2020 02:49, Peter Xu wrote:
->>> From: Linus Torvalds <torvalds@linux-foundation.org>
->>>
->>> How about we just make sure we're the only possible valid user fo the
->>> page before we bother to reuse it?
->>>
->>> Simplify, simplify, simplify.
->>>
->>> And get rid of the nasty serialization on the page lock at the same time.
->>>
->>> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
->>> [peterx: add subject prefix]
->>> Signed-off-by: Peter Xu <peterx@redhat.com>
->>> ---
->>>  mm/memory.c | 59 +++++++++++++++--------------------------------------
->>>  1 file changed, 17 insertions(+), 42 deletions(-)
->>>
->>> diff --git a/mm/memory.c b/mm/memory.c
->>> index 602f4283122f..cb9006189d22 100644
->>> --- a/mm/memory.c
->>> +++ b/mm/memory.c
->>> @@ -2927,50 +2927,25 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
->>>  	 * not dirty accountable.
->>>  	 */
->>>  	if (PageAnon(vmf->page)) {
->>> -		int total_map_swapcount;
->>> -		if (PageKsm(vmf->page) && (PageSwapCache(vmf->page) ||
->>> -					   page_count(vmf->page) != 1))
->>> +		struct page *page = vmf->page;
->>> +
->>> +		/* PageKsm() doesn't necessarily raise the page refcount */
->>
->> No, this is wrong. PageKSM() always raises refcount.
-> 
-> OK, then I'm confused. The comment before get_ksm_page() states:
-> 
->  * get_ksm_page: checks if the page indicated by the stable node
->  * is still its ksm page, despite having held no reference to it.
->  * In which case we can trust the content of the page, and it
->  * returns the gotten page; but if the page has now been zapped,
->  * remove the stale node from the stable tree and return NULL.
-> ...
->  * You would expect the stable_node to hold a reference to the ksm page.
->  * But if it increments the page's count, swapping out has to wait for
->  * ksmd to come around again before it can free the page, which may take
->  * seconds or even minutes: much too unresponsive.  So instead we use a
->  * "keyhole reference": access to the ksm page from the stable node peeps
->  * out through its keyhole to see if that page still holds the right key,
->  * pointing back to this stable node.
-> 
-> So this all seems to indicate that KSM doesn't hold a proper page reference
-> and relies on anyone making page writeable to change page->mapping so that
-> KSM notices this and doesn't use the page anymore... Am I missing
-> something?
+memalloc_use_memcg() worked for kernel allocations but was silently
+ignored for user pages.
 
-Sure, KSM does not increment page counter, when a page becomes PageKsm().
-Is patch comment about that? Even if so, I don't understand what this
-comment is about. "PageKsm() does not take additional counter" is not
-a reason the page can't be reused there. The reason is that readers
-of this page may increase a counter without taking the lock, so
-this page_count() == 1 under the lock does not guarantee anything.
+This patch establishes a precedence order for who gets charged:
 
->> There was another
->> problem: KSM may raise refcount without lock_page(), and only then it
->> takes the lock.  See get_ksm_page(GET_KSM_PAGE_NOLOCK) for the details.
->>
->> So, reliable protection against parallel access requires to freeze page
->> counter, which is made in reuse_ksm_page().
-> 
-> OK, this as well.
-> 
-> 								Honza
-> 
->>
->>> +		if (PageKsm(page) || page_count(page) != 1)
->>> +			goto copy;
->>> +		if (!trylock_page(page))
->>> +			goto copy;
->>> +		if (PageKsm(page) || page_mapcount(page) != 1 || page_count(page) != 1) {
->>> +			unlock_page(page);
->>>  			goto copy;
->>> -		if (!trylock_page(vmf->page)) {
->>> -			get_page(vmf->page);
->>> -			pte_unmap_unlock(vmf->pte, vmf->ptl);
->>> -			lock_page(vmf->page);
->>> -			vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
->>> -					vmf->address, &vmf->ptl);
->>> -			if (!pte_same(*vmf->pte, vmf->orig_pte)) {
->>> -				update_mmu_tlb(vma, vmf->address, vmf->pte);
->>> -				unlock_page(vmf->page);
->>> -				pte_unmap_unlock(vmf->pte, vmf->ptl);
->>> -				put_page(vmf->page);
->>> -				return 0;
->>> -			}
->>> -			put_page(vmf->page);
->>> -		}
->>> -		if (PageKsm(vmf->page)) {
->>> -			bool reused = reuse_ksm_page(vmf->page, vmf->vma,
->>> -						     vmf->address);
->>> -			unlock_page(vmf->page);
->>> -			if (!reused)
->>> -				goto copy;
->>> -			wp_page_reuse(vmf);
->>> -			return VM_FAULT_WRITE;
->>> -		}
->>> -		if (reuse_swap_page(vmf->page, &total_map_swapcount)) {
->>> -			if (total_map_swapcount == 1) {
->>> -				/*
->>> -				 * The page is all ours. Move it to
->>> -				 * our anon_vma so the rmap code will
->>> -				 * not search our parent or siblings.
->>> -				 * Protected against the rmap code by
->>> -				 * the page lock.
->>> -				 */
->>> -				page_move_anon_rmap(vmf->page, vma);
->>> -			}
->>> -			unlock_page(vmf->page);
->>> -			wp_page_reuse(vmf);
->>> -			return VM_FAULT_WRITE;
->>>  		}
->>> -		unlock_page(vmf->page);
->>> +		/*
->>> +		 * Ok, we've got the only map reference, and the only
->>> +		 * page count reference, and the page is locked,
->>> +		 * it's dark out, and we're wearing sunglasses. Hit it.
->>> +		 */
->>> +		wp_page_reuse(vmf);
->>> +		unlock_page(page);
->>> +		return VM_FAULT_WRITE;
->>>  	} else if (unlikely((vma->vm_flags & (VM_WRITE|VM_SHARED)) ==
->>>  					(VM_WRITE|VM_SHARED))) {
->>>  		return wp_page_shared(vmf);
->>>
->>
+1. If there is a memcg associated with the page already, that memcg is
+   charged. This happens during swapin.
+
+2. If an explicit mm is passed, mm->memcg is charged. This happens
+   during page faults, which can be triggered in remote VMs (eg gup).
+
+3. Otherwise consult the current process context. If it has configured
+   a current->active_memcg, use that. Otherwise, current->mm->memcg.
+
+Previously, if a NULL mm was passed to mem_cgroup_try_charge (case 3) it
+would always charge the root cgroup. Now it looks up the current
+active_memcg first (falling back to charging the root cgroup if not
+set).
+
+Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Acked-by: Chris Down <chris@chrisdown.name>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+---
+ mm/memcontrol.c | 11 ++++++++---
+ mm/shmem.c      |  5 +++--
+ 2 files changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index b2468c80085d..79c70eef3ec3 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6676,7 +6676,8 @@ void mem_cgroup_calculate_protection(struct mem_cgroup *root,
+  * @gfp_mask: reclaim mode
+  *
+  * Try to charge @page to the memcg that @mm belongs to, reclaiming
+- * pages according to @gfp_mask if necessary.
++ * pages according to @gfp_mask if necessary. if @mm is NULL, try to
++ * charge to the active memcg.
+  *
+  * Returns 0 on success. Otherwise, an error code is returned.
+  */
+@@ -6712,8 +6713,12 @@ int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask)
+ 		rcu_read_unlock();
+ 	}
+ 
+-	if (!memcg)
+-		memcg = get_mem_cgroup_from_mm(mm);
++	if (!memcg) {
++		if (!mm)
++			memcg = get_mem_cgroup_from_current();
++		else
++			memcg = get_mem_cgroup_from_mm(mm);
++	}
+ 
+ 	ret = try_charge(memcg, gfp_mask, nr_pages);
+ 	if (ret)
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 271548ca20f3..77c908730be4 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -1695,7 +1695,8 @@ static int shmem_swapin_page(struct inode *inode, pgoff_t index,
+ {
+ 	struct address_space *mapping = inode->i_mapping;
+ 	struct shmem_inode_info *info = SHMEM_I(inode);
+-	struct mm_struct *charge_mm = vma ? vma->vm_mm : current->mm;
++	struct mm_struct *charge_mm = vma ? vma->vm_mm : NULL;
++	struct mem_cgroup *memcg;
+ 	struct page *page;
+ 	swp_entry_t swap;
+ 	int error;
+@@ -1809,7 +1810,7 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
+ 	}
+ 
+ 	sbinfo = SHMEM_SB(inode->i_sb);
+-	charge_mm = vma ? vma->vm_mm : current->mm;
++	charge_mm = vma ? vma->vm_mm : NULL;
+ 
+ 	page = find_lock_entry(mapping, index);
+ 	if (xa_is_value(page)) {
+-- 
+2.24.1
 
