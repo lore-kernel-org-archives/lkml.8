@@ -2,104 +2,145 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1912FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD52E206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:05:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598267143;
-	bh=9APzb+PIK28bYSi6UfNZRcD15AFZZuBMXg3adS+rpc8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q37bvhOV/W/KnlPa7T5pXMF+gVRsOi6NDqlRgT6epNy6ceD3gNdojulkW6BSkQOmf
-	 8q/28I2a1L3r1/XWzztW4SKhvOlsd3Y9Lp0g3uhJY/sIrBwXEvAvT+M8nD/4WhBWVF
-	 +JEnTdYfdaRbGXqKjwmatueBqYYnZu+egOoesr5o=
+	by mail.kernel.org (Postfix) with ESMTP id C945E206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:05:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ve2GIfUB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbgHXLFl (ORCPT
+        id S1726691AbgHXLFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:05:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbgHXLFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:05:33 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        Mon, 24 Aug 2020 07:05:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgHXLFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 07:05:46 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA05EC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zhwpULV7sbo9c+kR118DE6xGLTOEKy7x9DA1lEdSc4Y=; b=Ve2GIfUB3B3dnL4bE2EFuZ4uvn
+        jQLOVRM0fr2Nyt/FWeIKUAcj91h2WMHI3kajD4KGmiEApbH/k4gScwnUnFmss2W7fqWn6Bm+RpLUw
+        VPya4stIu67JESmkPldqFeIGuWyNLhB2vyoUCt087XBA+G4MkEs3W1mw+v9ZMb2oDSravteRvr0pq
+        3a+tFhoYMm4Tn3o2bNP766pAzBskXuCyptUVOciyyZZFnbEl59zkb82feIVN6bkxbUKza8M14hEga
+        q7YcTdFevmelnTUufa51FgHuvrlDqEyXS0yvGheMUb46cuPvFcrejh0ACbIdAUodb0DEvp6UAiN/0
+        7meCiNqw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAAHf-0007bc-Ev; Mon, 24 Aug 2020 11:05:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0443206B5;
-        Mon, 24 Aug 2020 11:05:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598267133;
-        bh=9APzb+PIK28bYSi6UfNZRcD15AFZZuBMXg3adS+rpc8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uI7LWHi3gy3FVvYd39Lj7Q3nWy2hq5jsyryJzwcxW8RTZqgwfjWbctyzU/z8DKTwN
-         hEGSqZctJAo3maBX3X/U31Vy/iO8Kc6l+uyjeNlDBFRcy9QqzfncV+KgQ//CNQHSX7
-         YpwbJwTP39TX8nppWsgCeYU3GGpGn9siQaUw/yoo=
-Date:   Mon, 24 Aug 2020 12:04:58 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Gene Chen <gene_chen@richtek.com>
-Subject: Re: [PATCH v3 1/2] regulator: mt6360: Add support for MT6360
- regulator
-Message-ID: <20200824110458.GB4676@sirena.org.uk>
-References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
- <1597910022-22617-2-git-send-email-gene.chen.richtek@gmail.com>
- <20200820114524.GC5854@sirena.org.uk>
- <CAE+NS34WuWnT7zvsHhaciWVLT2y0wpwt0wXAp3UmjEuJ2its6A@mail.gmail.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 98FAA30015A;
+        Mon, 24 Aug 2020 13:05:01 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 72F5C2BEC485E; Mon, 24 Aug 2020 13:05:01 +0200 (CEST)
+Date:   Mon, 24 Aug 2020 13:05:01 +0200
+From:   peterz@infradead.org
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Kyle Huey <me@kylehuey.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Robert O'Callahan" <rocallahan@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v2 5/8] x86/debug: Simplify #DB signal code
+Message-ID: <20200824110501.GT1362448@hirez.programming.kicks-ass.net>
+References: <20200821093912.815135402@infradead.org>
+ <20200821102053.034965283@infradead.org>
+ <CALCETrVBB3YNCqCQ6bFBrSM10OTe354zyh=WbPFaEBxK1_Sa7g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAE+NS34WuWnT7zvsHhaciWVLT2y0wpwt0wXAp3UmjEuJ2its6A@mail.gmail.com>
-X-Cookie: Weekend, where are you?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CALCETrVBB3YNCqCQ6bFBrSM10OTe354zyh=WbPFaEBxK1_Sa7g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Aug 23, 2020 at 04:09:42PM -0700, Andy Lutomirski wrote:
+> On Fri, Aug 21, 2020 at 3:21 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > Get rid of the two variables, avoid computing si_code when not needed
+> > and be consistent about which dr6 value is used.
+> >
+> 
+> > -       if (tsk->thread.debugreg6 & (DR_STEP | DR_TRAP_BITS) || user_icebp)
+> > -               send_sigtrap(regs, 0, si_code);
+> > +       /*
+> > +        * If dr6 has no reason to give us about the origin of this trap,
+> > +        * then it's very likely the result of an icebp/int01 trap.
+> > +        * User wants a sigtrap for that.
+> > +        */
+> > +       if (dr6 & (DR_STEP | DR_TRAP_BITS) || !dr6)
+> > +               send_sigtrap(regs, 0, get_si_code(dr6));
+> 
+> The old condition was ... || (actual DR6 value) and the new condition
+> was ... || (stupid notifier-modified DR6 value).  I think the old code
+> was more correct.
 
---s/l3CgOIzMHHjg/5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hurmph.. /me goes re-read the SDM.
 
-On Mon, Aug 24, 2020 at 06:23:19PM +0800, Gene Chen wrote:
-> Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8820=E6=97=
-=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:45=E5=AF=AB=E9=81=93=EF=BC=9A
+INT1 is a trap,
+instruction breakpoint is a fault
 
-> > This device only exists in the context of a single parent device, there
-> > should be no need for a compatible string here - this is just a detail
-> > of how Linux does things.  The MFD should just instntiate the platform
-> > device.
+So if you have:
 
-> Trying to autoload module without of_id_table will cause run-time error:
-> ueventd: LoadWithAliases was unable to load
-> of:NregulatorT(null)Cmediatek,mt6360-regulator
+	INT1
+1:	some-instr
 
-You shouldn't have this described in the device tree at all, like I say
-the MFD should just instantiate the platform device.
+and set an X breakpoint on 1, we'll loose the INT1, right?
 
---s/l3CgOIzMHHjg/5
-Content-Type: application/pgp-signature; name="signature.asc"
+And because INT1 is a trap, we can't easily decode the instruction
+stream either :-(
 
------BEGIN PGP SIGNATURE-----
+Now, OTOH, I suppose you're right in that looking at DR6 early (before
+we let people muck about with it) is more reliable for detecting INT1.
+Esp since the hw_breakpoint crud can consume all bits.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9DntoACgkQJNaLcl1U
-h9AI7Qf/aKJwrqZi6N40mt5MpwiV+hZ9suHb3xMS5nDmfB/Wbs5e2QhLRELVG8Di
-V/J+aX+cSq7xN9elG/yRpB6Rv3jEZ+HuzNgWnZT6EEwTO6BFa8JdiDS9Ya9JzOf4
-I9mT76nHMMxb0io4hTy0YjxbZIh0BtHU9NK97n3LsG7btQLsQD2eZfdVQHU6RUFy
-A55EqlQAvNBZ/fRrl0uJmE7iuuOz9KISKypEcBi96+ztklTRTsoet/9XqoqghOkO
-ch9U8SL21g3Y5/GNW1eyHCA+ZVTeTQQ/mxO7ptJoeMU1FF9/gc7gzd0n/O17MbXH
-SSApfApl1vKX5VfDD8xKLFEM+9khCw==
-=rBbb
------END PGP SIGNATURE-----
+So I'll go fix that. What a giant pain in the ass all this is.
 
---s/l3CgOIzMHHjg/5--
+> The right fix is to get rid of the notifier garbage.  Want to pick up
+> these two changes into your series:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/entry&id=b695a5adfdd661a10eead1eebd4002d08400e7ef
+> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/entry&id=40ca016606bd39a465feaf5802a8dc3e937aaa06
+> 
+> And then there is no code left that modifies ->debugreg6 out from under you.
+
+I'm not convinced. Even with those patches applied we have to use
+debugreg6, and that code very much relies on clearing DR_TRAP_BITS
+early, and then having ptrace_triggered() re-set bits in it.
+
+This is so that hw_breakpoint handlers can use breakpoints in userspace
+without causing send_sigtrap() on them.
+
+So while I hate notifiers as much as the next person, I'm not sure those
+patches actually help anything at all in this particular case.
+
+We can't actually remove the notifier, we can't remove debugreg6 and
+debugreg6 will still get modified.
+
+
