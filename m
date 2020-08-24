@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A538C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC477C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA1E2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5EA2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgHXRsQ (ORCPT
+        id S1727838AbgHXRs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:48:16 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:58178 "EHLO
+        Mon, 24 Aug 2020 13:48:27 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:50048 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgHXRsL (ORCPT
+        with ESMTP id S1726804AbgHXRsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:48:11 -0400
+        Mon, 24 Aug 2020 13:48:17 -0400
 Received: from 89-64-88-199.dynamic.chello.pl (89.64.88.199) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.459)
- id 9859b31d30dcfd9f; Mon, 24 Aug 2020 19:48:09 +0200
+ id 5322221e19cca5bb; Mon, 24 Aug 2020 19:48:14 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Doug Smythies <dsmythies@telus.net>
-Subject: [PATCH v2 5/5] cpufreq: intel_pstate: Restore cached EPP value during offline
-Date:   Mon, 24 Aug 2020 19:47:59 +0200
-Message-ID: <6584670.ihXX3PbFol@kreacher>
+Subject: [PATCH v2 1/5] cpufreq: intel_pstate: Refuse to turn off with HWP enabled
+Date:   Mon, 24 Aug 2020 19:41:08 +0200
+Message-ID: <1838142.qObzxHvn5B@kreacher>
 In-Reply-To: <4169555.5IIHXK4Dsd@kreacher>
 References: <4169555.5IIHXK4Dsd@kreacher>
 MIME-Version: 1.0
@@ -43,67 +43,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Because hwp_req_cached contains the effective EPP value (0) when the
-"performance" scaling algorithm is used in the active mode, replace
-it with the cached EPP value during CPU offline to prevent it from
-being used (unexpectedly) after switching over from the active mode
-to the passive mode.
+After commit f6ebbcf08f37 ("cpufreq: intel_pstate: Implement passive
+mode with HWP enabled") it is possible to change the driver status
+to "off" via sysfs with HWP enabled, which effectively causes the
+driver to unregister itself, but HWP remains active and it forces the
+minimum performance, so even if another cpufreq driver is loaded,
+it will not be able to control the CPU frequency.
 
-Also rename intel_pstate_hwp_force_min_perf() because it will do more
-than just forcing the minimum performance now.
+For this reason, make the driver refuse to change the status to
+"off" with HWP enabled.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
 
--> v2: New patch.
+-> v2: No changes.
 
 ---
- drivers/cpufreq/intel_pstate.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ drivers/cpufreq/intel_pstate.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index 37731d45f0ea..61d7179bccdd 100644
+index e0220a6fbc69..bcda1e700a73 100644
 --- a/drivers/cpufreq/intel_pstate.c
 +++ b/drivers/cpufreq/intel_pstate.c
-@@ -904,14 +904,25 @@ static void intel_pstate_hwp_set(unsigned int cpu)
- 	wrmsrl_on_cpu(cpu, MSR_HWP_REQUEST, value);
- }
- 
--static void intel_pstate_hwp_force_min_perf(int cpu)
-+static void intel_pstate_hwp_offline(int cpu)
+@@ -2716,9 +2716,15 @@ static int intel_pstate_update_status(const char *buf, size_t size)
  {
--	u64 value;
-+	struct cpudata *cpudata = all_cpu_data[cpu];
-+	u64 value = READ_ONCE(cpudata->hwp_req_cached);
- 	int min_perf;
+ 	int ret;
  
--	value = all_cpu_data[cpu]->hwp_req_cached;
-+	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
-+		/*
-+		 * In case the EPP has been set to "performance" by the
-+		 * active mode "performance" scaling algorithm, replace that
-+		 * temporary value with the cached EPP one.
-+		 */
-+		value &= ~GENMASK_ULL(31, 24);
-+		value |= HWP_ENERGY_PERF_PREFERENCE(cpudata->epp_cached);
-+		WRITE_ONCE(cpudata->hwp_req_cached, value);
-+	}
+-	if (size == 3 && !strncmp(buf, "off", size))
+-		return intel_pstate_driver ?
+-			intel_pstate_unregister_driver() : -EINVAL;
++	if (size == 3 && !strncmp(buf, "off", size)) {
++		if (!intel_pstate_driver)
++			return -EINVAL;
 +
- 	value &= ~GENMASK_ULL(31, 0);
--	min_perf = HWP_LOWEST_PERF(all_cpu_data[cpu]->hwp_cap_cached);
-+	min_perf = HWP_LOWEST_PERF(cpudata->hwp_cap_cached);
++		if (hwp_active)
++			return -EBUSY;
++
++		return intel_pstate_unregister_driver();
++	}
  
- 	/* Set hwp_max = hwp_min */
- 	value |= HWP_MAX_PERF(min_perf);
-@@ -2313,7 +2324,7 @@ static int intel_pstate_cpu_offline(struct cpufreq_policy *policy)
- 	 * performance on CPU offline to prevent that from happening.
- 	 */
- 	if (hwp_active)
--		intel_pstate_hwp_force_min_perf(policy->cpu);
-+		intel_pstate_hwp_offline(policy->cpu);
- 	else
- 		intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
- 
+ 	if (size == 6 && !strncmp(buf, "active", size)) {
+ 		if (intel_pstate_driver) {
 -- 
 2.26.2
 
