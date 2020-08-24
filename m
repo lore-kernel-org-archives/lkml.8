@@ -4,84 +4,165 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2397C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C34E20706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF9A20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgHXMyx (ORCPT
+        id S1727068AbgHXMzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:54:53 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38061 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHXMyw (ORCPT
+        Mon, 24 Aug 2020 08:55:19 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:33565 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726968AbgHXMzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:54:52 -0400
-Received: by mail-lf1-f65.google.com with SMTP id k10so1434336lfm.5;
-        Mon, 24 Aug 2020 05:54:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SfkQJO0WX7QYvcvwyypgBXvjdOGetP3yae225kbDPA0=;
-        b=OjwtheQlj2je4vqPGpUnKbo8Nk9Er2JZnzMOQPWbAYMaHqsHzkb/rhZYKzsybwKj9I
-         HfncScfOwRDOyYELReLPAF3TmWYUAD+ZPbubTe9c/UPN9GthSxPpapZyTN5Lr3E326WX
-         hDdj2SBaufTdIFkSD+8sXifnDU+hlL/C4/ujHQtermMKju2eDvpm6Q2Mhm66t94xMoAK
-         mW9AfLjj5cECSlwayNI9XBTI2hV61QjAa4m4RFgldOS45VsMhFg0KvQfhytQAtc8UOyo
-         Bj4VzJxmKw5ESGyOp1GdBNvQsA7xUH3xAY8XcwbGqLr+5ovieR6/ZMfZQ4CoUkGC304y
-         p8QA==
-X-Gm-Message-State: AOAM533cYqJgJzmlqbPsDdcVeNHPjakK8W2aCaCHEwtykTFUB2xCqY8B
-        SLfckJv8xGFFnlME5TEtfig=
-X-Google-Smtp-Source: ABdhPJwyAl2uc3oyptrluwFV1MiM+VwGe1DqD+6Z1SICiQM/MTtZ2Ox39NlC1Wchh/4jnEE/Sv9NkA==
-X-Received: by 2002:a19:4290:: with SMTP id p138mr1743951lfa.187.1598273689854;
-        Mon, 24 Aug 2020 05:54:49 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.147.111])
-        by smtp.googlemail.com with ESMTPSA id e17sm2177112ljg.85.2020.08.24.05.54.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 05:54:49 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-Cc:     Denis Efremov <efremov@linux.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] integrity: Use current_uid() in integrity_audit_message()
-Date:   Mon, 24 Aug 2020 15:54:35 +0300
-Message-Id: <20200824125435.487194-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 24 Aug 2020 08:55:17 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U6k9-bl_1598273712;
+Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6k9-bl_1598273712)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 24 Aug 2020 20:55:14 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, willy@infradead.org,
+        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        shakeelb@google.com, iamjoonsoo.kim@lge.com,
+        richard.weiyang@gmail.com, kirill@shutemov.name,
+        alexander.duyck@gmail.com, rong.a.chen@intel.com, mhocko@suse.com,
+        vdavydov.dev@gmail.com, shy828301@gmail.com
+Subject: [PATCH v18 03/32] mm/thp: move lru_add_page_tail func to huge_memory.c
+Date:   Mon, 24 Aug 2020 20:54:36 +0800
+Message-Id: <1598273705-69124-4-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify integrity_audit_message() to use current_uid().
+The func is only used in huge_memory.c, defining it in other file with a
+CONFIG_TRANSPARENT_HUGEPAGE macro restrict just looks weird.
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
+Let's move it THP. And make it static as Hugh Dickin suggested.
+
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
 ---
- security/integrity/integrity_audit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/swap.h |  2 --
+ mm/huge_memory.c     | 30 ++++++++++++++++++++++++++++++
+ mm/swap.c            | 33 ---------------------------------
+ 3 files changed, 30 insertions(+), 35 deletions(-)
 
-diff --git a/security/integrity/integrity_audit.c b/security/integrity/integrity_audit.c
-index f25e7df099c8..29220056207f 100644
---- a/security/integrity/integrity_audit.c
-+++ b/security/integrity/integrity_audit.c
-@@ -47,7 +47,7 @@ void integrity_audit_message(int audit_msgno, struct inode *inode,
- 	ab = audit_log_start(audit_context(), GFP_KERNEL, audit_msgno);
- 	audit_log_format(ab, "pid=%d uid=%u auid=%u ses=%u",
- 			 task_pid_nr(current),
--			 from_kuid(&init_user_ns, current_cred()->uid),
-+			 from_kuid(&init_user_ns, current_uid()),
- 			 from_kuid(&init_user_ns, audit_get_loginuid(current)),
- 			 audit_get_sessionid(current));
- 	audit_log_task_context(ab);
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 661046994db4..43e6b3458f58 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -338,8 +338,6 @@ extern void lru_note_cost(struct lruvec *lruvec, bool file,
+ 			  unsigned int nr_pages);
+ extern void lru_note_cost_page(struct page *);
+ extern void lru_cache_add(struct page *);
+-extern void lru_add_page_tail(struct page *page, struct page *page_tail,
+-			 struct lruvec *lruvec, struct list_head *head);
+ extern void activate_page(struct page *);
+ extern void mark_page_accessed(struct page *);
+ extern void lru_add_drain(void);
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 2ccff8472cd4..84fb64e8faa1 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2313,6 +2313,36 @@ static void remap_page(struct page *page)
+ 	}
+ }
+ 
++static void lru_add_page_tail(struct page *page, struct page *page_tail,
++				struct lruvec *lruvec, struct list_head *list)
++{
++	VM_BUG_ON_PAGE(!PageHead(page), page);
++	VM_BUG_ON_PAGE(PageCompound(page_tail), page);
++	VM_BUG_ON_PAGE(PageLRU(page_tail), page);
++	lockdep_assert_held(&lruvec_pgdat(lruvec)->lru_lock);
++
++	if (!list)
++		SetPageLRU(page_tail);
++
++	if (likely(PageLRU(page)))
++		list_add_tail(&page_tail->lru, &page->lru);
++	else if (list) {
++		/* page reclaim is reclaiming a huge page */
++		get_page(page_tail);
++		list_add_tail(&page_tail->lru, list);
++	} else {
++		/*
++		 * Head page has not yet been counted, as an hpage,
++		 * so we must account for each subpage individually.
++		 *
++		 * Put page_tail on the list at the correct position
++		 * so they all end up in order.
++		 */
++		add_page_to_lru_list_tail(page_tail, lruvec,
++					  page_lru(page_tail));
++	}
++}
++
+ static void __split_huge_page_tail(struct page *head, int tail,
+ 		struct lruvec *lruvec, struct list_head *list)
+ {
+diff --git a/mm/swap.c b/mm/swap.c
+index d16d65d9b4e0..c674fb441fe9 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -935,39 +935,6 @@ void __pagevec_release(struct pagevec *pvec)
+ }
+ EXPORT_SYMBOL(__pagevec_release);
+ 
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-/* used by __split_huge_page_refcount() */
+-void lru_add_page_tail(struct page *page, struct page *page_tail,
+-		       struct lruvec *lruvec, struct list_head *list)
+-{
+-	VM_BUG_ON_PAGE(!PageHead(page), page);
+-	VM_BUG_ON_PAGE(PageCompound(page_tail), page);
+-	VM_BUG_ON_PAGE(PageLRU(page_tail), page);
+-	lockdep_assert_held(&lruvec_pgdat(lruvec)->lru_lock);
+-
+-	if (!list)
+-		SetPageLRU(page_tail);
+-
+-	if (likely(PageLRU(page)))
+-		list_add_tail(&page_tail->lru, &page->lru);
+-	else if (list) {
+-		/* page reclaim is reclaiming a huge page */
+-		get_page(page_tail);
+-		list_add_tail(&page_tail->lru, list);
+-	} else {
+-		/*
+-		 * Head page has not yet been counted, as an hpage,
+-		 * so we must account for each subpage individually.
+-		 *
+-		 * Put page_tail on the list at the correct position
+-		 * so they all end up in order.
+-		 */
+-		add_page_to_lru_list_tail(page_tail, lruvec,
+-					  page_lru(page_tail));
+-	}
+-}
+-#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+-
+ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
+ 				 void *arg)
+ {
 -- 
-2.26.2
+1.8.3.1
 
