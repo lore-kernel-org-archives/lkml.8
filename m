@@ -2,122 +2,123 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8913AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E76C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F49320866
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FFA207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:03:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgHXVCV convert rfc822-to-8bit (ORCPT
+        id S1727774AbgHXVDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:02:21 -0400
-Received: from mailoutvs45.siol.net ([185.57.226.236]:55130 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726541AbgHXVCO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 17:02:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id DAF8D5255E6;
-        Mon, 24 Aug 2020 23:02:10 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 8smrMg2Df_S6; Mon, 24 Aug 2020 23:02:10 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 836F5525654;
-        Mon, 24 Aug 2020 23:02:10 +0200 (CEST)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 31CFF5255E6;
-        Mon, 24 Aug 2020 23:02:10 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org,
-        Pablo =?ISO-8859-1?Q?Sebasti=E1n?= Greco 
-        <pgreco@centosproject.org>
-Cc:     robh+dt@kernel.org, icenowy@aosc.io, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [linux-sunxi] [PATCH] ARM: dts: sun8i: r40: bananapi-m2-ultra: Fix dcdc1 regulator
-Date:   Mon, 24 Aug 2020 23:02:09 +0200
-Message-ID: <2982591.9ztLHtxLPI@jernej-laptop>
-In-Reply-To: <a25ee214-5316-f6c8-53ce-676aa3c8a8ca@centosproject.org>
-References: <20200824193649.978197-1-jernej.skrabec@siol.net> <a25ee214-5316-f6c8-53ce-676aa3c8a8ca@centosproject.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+        Mon, 24 Aug 2020 17:03:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:43014 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgHXVDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 17:03:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3255D1FB;
+        Mon, 24 Aug 2020 14:03:47 -0700 (PDT)
+Received: from e108754-lin.cambridge.arm.com (e108754-lin.cambridge.arm.com [10.1.199.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B7A403F71F;
+        Mon, 24 Aug 2020 14:03:45 -0700 (PDT)
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        dietmar.eggemann@arm.com, catalin.marinas@arm.com,
+        sudeep.holla@arm.com, will@kernel.org, valentin.schneider@arm.com
+Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, ionela.voinescu@arm.com
+Subject: [PATCH v3 0/5] cpufreq: improve frequency invariance support
+Date:   Mon, 24 Aug 2020 22:02:47 +0100
+Message-Id: <20200824210252.27486-1-ionela.voinescu@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne ponedeljek, 24. avgust 2020 ob 22:54:01 CEST je Pablo Sebastián Greco 
-napisal(a):
-> On 24/8/20 16:36, Jernej Skrabec wrote:
-> > DCDC1 regulator powers many different subsystems. While some of them can
-> > work at 3.0 V, some of them can not. For example, VCC-HDMI can only work
-> > between 3.24 V and 3.36 V. According to OS images provided by the board
-> > manufacturer this regulator should be set to 3.3 V.
-> > 
-> > Set DCDC1 and DCDC1SW to 3.3 V in order to fix this.
-> > 
-> > Fixes: da7ac948fa93 ("ARM: dts: sun8i: Add board dts file for Banana Pi M2
-> > 
-> > 		      Ultra")
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >   arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 10 +++++-----
-> >   1 file changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> > b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts index
-> > 42d62d1ba1dc..ea15073f0c79 100644
-> > --- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> > +++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> > @@ -223,16 +223,16 @@ &reg_aldo3 {
-> > 
-> >   };
-> >   
-> >   &reg_dc1sw {
-> > 
-> > -	regulator-min-microvolt = <3000000>;
-> > -	regulator-max-microvolt = <3000000>;
-> > +	regulator-min-microvolt = <3300000>;
-> > +	regulator-max-microvolt = <3300000>;
-> > 
-> >   	regulator-name = "vcc-gmac-phy";
-> >   
-> >   };
-> >   
-> >   &reg_dcdc1 {
-> >   
-> >   	regulator-always-on;
-> > 
-> > -	regulator-min-microvolt = <3000000>;
-> > -	regulator-max-microvolt = <3000000>;
-> > -	regulator-name = "vcc-3v0";
-> > +	regulator-min-microvolt = <3300000>;
-> > +	regulator-max-microvolt = <3300000>;
-> > +	regulator-name = "vcc-3v3";
-> > 
-> >   };
-> >   
-> >   &reg_dcdc2 {
-> 
-> Should this be done also for the bananapi-m2-berry?, it is basically the
-> same device
-> sun8i-v40-bananapi-m2-berry.dts
+Hi guys,
 
-I think so but I would rather not do that without testing and I don't have 
-that board.
+Sorry for the delay in sending v3. Please find below the changes to this
+series:
 
-Best regards,
-Jernej
+v2->v3
+ - v2 can be found at [2]
+ - 1/5 was introduced to check input frequencies to
+   arch_set_freq_scale() as recommended by Rafael
+ - The previous 2/7 was squashed into 1/7 - now 2/5, with additions to
+   the changelog as suggested by Rafael.
+ - The previous 3/7 (BL_SWITCHER handling) was dropped to be handled
+   in a separate patch. This does not change the current functionality.
+ - The previous 4/7 - now 3/5 is simplified as suggested by Viresh.
+ - 3/5 - cpufreq_supports_freq_invariance() replaces
+   cpufreq_sets_freq_scale(). The meaning chosen for
+   cpufreq_supports_freq_invariance() is whether it can set the frequency
+   scale factor, not whether arch_set_freq_scale() actually does.
+ - 4/5 - Change after Catalin's Ack: The changes to
+   arch_set_thermal_pressure() were dropped as they were done in a separate
+   patch. Therefore this patch now has a subset of the previous changes
+   at 5/7
+ - 5/5 - Change after Catalin's Ack:
+   s/cpufreq_sets_freq_scale/cpufreq_supports_freq_invariance
+ - v3 is based on linux-next 20200814
 
 
+v1 -> v2:
+ - v1 can be found at [1]
+ - No cpufreq flags are introduced
+ - Previous patches 2/8 and 3/8 were squashed in this series under 1/7,
+   to ensure bisection.
+ - 2/7 was introduced as a proposal for Viresh's suggestion to use
+   policy->cur in the call to arch_set_freq_scale() and is extended to
+   support drivers that implement the target() callback as well
+ - Additional commit message changes are added to 1/7 and 2/7, to
+   clarify that the definition of arch_set_freq_scale() will filter 
+   settings of the scale factor, if unwanted
+ - 3/7 disables setting of the scale factor for
+   CONFIG_BL_SWITCHER, as Dietmar suggested
+ - Small change introduced in 4/7 to disable cpufreq-based frequency
+   invariance for the users of the default arch_set_freq_scale() call
+   which will not actually set a scale factor
+ - build issue solved (reported by 0day test)
+ - v2 is based on linux-next 20200716
+ - all functional tests in v1 were repeated for v2
+
+
+[1] https://lore.kernel.org/lkml/20200701090751.7543-1-ionela.voinescu@arm.com/
+[2] https://lore.kernel.org/lkml/20200722093732.14297-1-ionela.voinescu@arm.com/
+
+Thank you,
+Ionela.
+
+Ionela Voinescu (3):
+  arch_topology: validate input frequencies to arch_set_freq_scale()
+  cpufreq: move invariance setter calls in cpufreq core
+  cpufreq: report whether cpufreq supports Frequency Invariance (FI)
+
+Valentin Schneider (2):
+  arch_topology, cpufreq: constify arch_* cpumasks
+  arch_topology, arm, arm64: define arch_scale_freq_invariant()
+
+ arch/arm/include/asm/topology.h        |  1 +
+ arch/arm64/include/asm/topology.h      |  1 +
+ arch/arm64/kernel/topology.c           |  9 ++++++-
+ drivers/base/arch_topology.c           | 13 +++++++--
+ drivers/cpufreq/cpufreq-dt.c           | 10 +------
+ drivers/cpufreq/cpufreq.c              | 37 +++++++++++++++++++++++---
+ drivers/cpufreq/qcom-cpufreq-hw.c      |  9 +------
+ drivers/cpufreq/scmi-cpufreq.c         | 12 ++-------
+ drivers/cpufreq/scpi-cpufreq.c         |  6 +----
+ drivers/cpufreq/vexpress-spc-cpufreq.c | 12 ++-------
+ include/linux/arch_topology.h          |  4 ++-
+ include/linux/cpufreq.h                |  8 +++++-
+ 12 files changed, 72 insertions(+), 50 deletions(-)
+
+
+base-commit: 4993e4fe12af2d71b6a3ad16e1fcdc566795fda1
+-- 
+2.17.1
 
