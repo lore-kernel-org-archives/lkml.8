@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 388F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9730DC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14B04204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751E3207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259046;
-	bh=/MhY6KOjYV5UQvfUwKDgkfVxzvA4mJRDHMCk6YPmWPk=;
+	s=default; t=1598259050;
+	bh=WU9Cp9/8P3kOMFHd/RIax9t7lnpfab+jVUzqXoxeiAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vyj70l9233X74EhuFsWdk5V3EISv8jhjy7GpLVycWWQC/QdFNKIjeX3n6kInyIRFW
-	 MQtP/i8FlK2lJ7/dJGOG+obsCA3KvKEaveu9XwBnrt33B9+nu2QEmEd666SIHUfVTL
-	 6lcxG5wgbv1OgniT+NkzgjXWPzCK7jc69jYj1HW4=
+	b=VIBkYIszZ2JTzrYyRow4UP5W3qaQHZMMy+6rAWNnr344ijLBEsXO+LgssBx+s8+mJ
+	 0pihNwKmLdX9R00rF48CRyhDexlkXrPqCxqvCsxKMdFaWRnCk0XcmkXe1zwSXGrQn0
+	 DHKI/MarFB2k4XtbWfQf+ih1TOCz/WPPHBkM7wAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728700AbgHXIum (ORCPT
+        id S1729538AbgHXIut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:50:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54370 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:50:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729848AbgHXIuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:50:35 -0400
+        id S1729487AbgHXIuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:50:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A808204FD;
-        Mon, 24 Aug 2020 08:50:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B95F20FC3;
+        Mon, 24 Aug 2020 08:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259034;
-        bh=/MhY6KOjYV5UQvfUwKDgkfVxzvA4mJRDHMCk6YPmWPk=;
+        s=default; t=1598259039;
+        bh=WU9Cp9/8P3kOMFHd/RIax9t7lnpfab+jVUzqXoxeiAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MRJ6dWezHAJGibmMMlJSpoesqwBiyaCIkuc6ZzLizY8Xk0Rk7MWGQ1r+nPJHJeLOq
-         2k4ugAFMZQ5N/+Z5Tuem5ghee5Ip/zBfLxaoN84fW7eejvsZX2i/9RTzuqRtYqvb6T
-         qmhIGXfL8Qr5F7IBFs/LYToFGwrEZs9qk2VEgGjY=
+        b=HIpnfNAkR6o3TO0mu54GXHbVoCK7uvxpZquLKo0WvxB7Kz85sj9FaEjHVo7e1sjxh
+         VOhwzRv9tcm3ect4kHfRbxaOWj7M5wijDfHJHTEZVs1a6jSMS3kIwMMQPaJCyfL1xS
+         HzwqGuH7ks7rudMYWLRBBjtrD4zB3FEoVzkMA3Pk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 4.4 29/33] epoll: Keep a reference on files added to the check list
-Date:   Mon, 24 Aug 2020 10:31:25 +0200
-Message-Id: <20200824082348.000514221@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 31/33] mm/hugetlb: fix calculation of adjust_range_if_pmd_sharing_possible
+Date:   Mon, 24 Aug 2020 10:31:27 +0200
+Message-Id: <20200824082348.096619666@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
 References: <20200824082346.498653578@linuxfoundation.org>
@@ -59,66 +63,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Peter Xu <peterx@redhat.com>
 
-commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682 upstream.
+commit 75802ca66354a39ab8e35822747cd08b3384a99a upstream.
 
-When adding a new fd to an epoll, and that this new fd is an
-epoll fd itself, we recursively scan the fds attached to it
-to detect cycles, and add non-epool files to a "check list"
-that gets subsequently parsed.
+This is found by code observation only.
 
-However, this check list isn't completely safe when deletions
-can happen concurrently. To sidestep the issue, make sure that
-a struct file placed on the check list sees its f_count increased,
-ensuring that a concurrent deletion won't result in the file
-disapearing from under our feet.
+Firstly, the worst case scenario should assume the whole range was covered
+by pmd sharing.  The old algorithm might not work as expected for ranges
+like (1g-2m, 1g+2m), where the adjusted range should be (0, 1g+2m) but the
+expected range should be (0, 2g).
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Since at it, remove the loop since it should not be required.  With that,
+the new code should be faster too when the invalidating range is huge.
+
+Mike said:
+
+: With range (1g-2m, 1g+2m) within a vma (0, 2g) the existing code will only
+: adjust to (0, 1g+2m) which is incorrect.
+:
+: We should cc stable.  The original reason for adjusting the range was to
+: prevent data corruption (getting wrong page).  Since the range is not
+: always adjusted correctly, the potential for corruption still exists.
+:
+: However, I am fairly confident that adjust_range_if_pmd_sharing_possible
+: is only gong to be called in two cases:
+:
+: 1) for a single page
+: 2) for range == entire vma
+:
+: In those cases, the current code should produce the correct results.
+:
+: To be safe, let's just cc stable.
+
+Fixes: 017b1660df89 ("mm: migration: fix migration of huge PMD shared pages")
+Signed-off-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200730201636.74778-1-peterx@redhat.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/eventpoll.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ mm/hugetlb.c |   25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1719,9 +1719,11 @@ static int ep_loop_check_proc(void *priv
- 			 * not already there, and calling reverse_path_check()
- 			 * during ep_insert().
- 			 */
--			if (list_empty(&epi->ffd.file->f_tfile_llink))
-+			if (list_empty(&epi->ffd.file->f_tfile_llink)) {
-+				get_file(epi->ffd.file);
- 				list_add(&epi->ffd.file->f_tfile_llink,
- 					 &tfile_check_list);
-+			}
- 		}
- 	}
- 	mutex_unlock(&ep->mtx);
-@@ -1765,6 +1767,7 @@ static void clear_tfile_check_list(void)
- 		file = list_first_entry(&tfile_check_list, struct file,
- 					f_tfile_llink);
- 		list_del_init(&file->f_tfile_llink);
-+		fput(file);
- 	}
- 	INIT_LIST_HEAD(&tfile_check_list);
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -4257,6 +4257,7 @@ static bool vma_shareable(struct vm_area
+ 	return false;
  }
-@@ -1906,9 +1909,11 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, in
- 					clear_tfile_check_list();
- 					goto error_tgt_fput;
- 				}
--			} else
-+			} else {
-+				get_file(tf.file);
- 				list_add(&tf.file->f_tfile_llink,
- 							&tfile_check_list);
-+			}
- 			mutex_lock_nested(&ep->mtx, 0);
- 			if (is_file_epoll(tf.file)) {
- 				tep = tf.file->private_data;
+ 
++#define ALIGN_DOWN(x, a)	__ALIGN_KERNEL((x) - ((a) - 1), (a))
+ /*
+  * Determine if start,end range within vma could be mapped by shared pmd.
+  * If yes, adjust start and end to cover range associated with possible
+@@ -4265,25 +4266,21 @@ static bool vma_shareable(struct vm_area
+ void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
+ 				unsigned long *start, unsigned long *end)
+ {
+-	unsigned long check_addr = *start;
++	unsigned long a_start, a_end;
+ 
+ 	if (!(vma->vm_flags & VM_MAYSHARE))
+ 		return;
+ 
+-	for (check_addr = *start; check_addr < *end; check_addr += PUD_SIZE) {
+-		unsigned long a_start = check_addr & PUD_MASK;
+-		unsigned long a_end = a_start + PUD_SIZE;
++	/* Extend the range to be PUD aligned for a worst case scenario */
++	a_start = ALIGN_DOWN(*start, PUD_SIZE);
++	a_end = ALIGN(*end, PUD_SIZE);
+ 
+-		/*
+-		 * If sharing is possible, adjust start/end if necessary.
+-		 */
+-		if (range_in_vma(vma, a_start, a_end)) {
+-			if (a_start < *start)
+-				*start = a_start;
+-			if (a_end > *end)
+-				*end = a_end;
+-		}
+-	}
++	/*
++	 * Intersect the range with the vma range, since pmd sharing won't be
++	 * across vma after all
++	 */
++	*start = max(vma->vm_start, a_start);
++	*end = min(vma->vm_end, a_end);
+ }
+ 
+ /*
 
 
