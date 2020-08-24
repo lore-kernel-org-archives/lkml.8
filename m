@@ -2,51 +2,52 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19054C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B953F20FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C6222B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258374;
-	bh=lVVAh9Z9McLW3SoXxl5P+4DwQWEYitbI4AmCQQ3aerw=;
+	s=default; t=1598258378;
+	bh=FFaw75yiFjKfBsZ9/FI71IAOExrSv7wL9MF/7Pubngg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GVabgSPng4YAIaXQw1faa0HxpZE9xuNWfKSNBeeONZvVPqS+zsi5ajdXNDPnZuIFL
-	 0ffYDWijOJaQqiqG1v63uczps4qmS1OO8eQYfp2+nJLsyyJh6ICd+r+hSdW6uFaLpT
-	 L0uRGe8QRxBvtPQH5RhqQwagGiYsch4OmIbZcLmE=
+	b=UjHBV71ChIkIo7+TFG4eeC9QHMetnrMAq3BUYu1EXAPZx3n/VGCAG7AABEZ9C4Bi+
+	 Y/8ybWQVj5Pb3xP+MlWvyTAuL7pNhAca6O+obIwGxbSKlHlcvN2hgdiCHIPgJuQTvb
+	 JlP/4CQ7RGaUy6iJiKs6M98rKBzxjuvSmevuytog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbgHXIjd (ORCPT
+        id S1728659AbgHXIjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:39:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55154 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:39:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbgHXIjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:39:24 -0400
+        id S1726243AbgHXIjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:39:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 872762177B;
-        Mon, 24 Aug 2020 08:39:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A15A7221E2;
+        Mon, 24 Aug 2020 08:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258364;
-        bh=lVVAh9Z9McLW3SoXxl5P+4DwQWEYitbI4AmCQQ3aerw=;
+        s=default; t=1598258358;
+        bh=FFaw75yiFjKfBsZ9/FI71IAOExrSv7wL9MF/7Pubngg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W+Eupww3+KqMvt4UTtKmTwLpOT+EUbUaiJzrMicBAaxqdz9h9wFdB87/E6ot+EUnO
-         5expdivR/CwdQWRtuQ96ZKqbe+isgZ1P6jtR2Ds9OWiqh5entt5Pr1dOEgvZbbTIT4
-         XNHVA/hyZAPuBbgNabNgnRnreWYghEp6Xwo24ss8=
+        b=zG0dPd0FB0/fHnPlOS/3xtECdgWnCLWt3uhynhzHT5U0Jmkp/yB4jvT8IDduGR9K2
+         G/ExzAkP27fxVUBYxwTSWnxbcU+KPpAqb6mtJKUffjdckAsR14n4mSAkZbdMq7iXxo
+         poDcdcJCYanJWZKuJDwq0xxd80OUQlWZASBgye7s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Weijiang <weijiang.yang@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.7 021/124] selftests: kvm: Use a shorter encoding to clear RAX
-Date:   Mon, 24 Aug 2020 10:29:15 +0200
-Message-Id: <20200824082410.462355707@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 002/124] drm/panel-simple: Fix inverted V/H SYNC for Frida FRD350H54004 panel
+Date:   Mon, 24 Aug 2020 10:28:56 +0200
+Message-Id: <20200824082409.496866539@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -59,67 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Weijiang <weijiang.yang@intel.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-commit 98b0bf02738004829d7e26d6cb47b2e469aaba86 upstream.
+[ Upstream commit bad20a2dbfdfaf01560026909506b6ed69d65ba2 ]
 
-If debug_regs.c is built with newer binutils, the resulting binary is "optimized"
-by the assembler:
+The FRD350H54004 panel was marked as having active-high VSYNC and HSYNC
+signals, which sorts-of worked, but resulted in the picture fading out
+under certain circumstances.
 
-asm volatile("ss_start: "
-             "xor %%rax,%%rax\n\t"
-             "cpuid\n\t"
-             "movl $0x1a0,%%ecx\n\t"
-             "rdmsr\n\t"
-             : : : "rax", "ecx");
+Fix this issue by marking VSYNC and HSYNC signals active-low.
 
-is translated to :
+v2: Rebase on drm-misc-next
 
-  000000000040194e <ss_start>:
-  40194e:       31 c0                   xor    %eax,%eax     <----- rax->eax?
-  401950:       0f a2                   cpuid
-  401952:       b9 a0 01 00 00          mov    $0x1a0,%ecx
-  401957:       0f 32                   rdmsr
-
-As you can see rax is replaced with eax in target binary code.
-This causes a difference is the length of xor instruction (2 Byte vs 3 Byte),
-and makes the hard-coded instruction length check fail:
-
-        /* Instruction lengths starting at ss_start */
-        int ss_size[4] = {
-                3,              /* xor */   <-------- 2 or 3?
-                2,              /* cpuid */
-                5,              /* mov */
-                2,              /* rdmsr */
-        };
-
-Encode the shorter version directly and, while at it, fix the "clobbers"
-of the asm.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 7b6bd8433609 ("drm/panel: simple: Add support for the Frida FRD350H54004 panel")
+Cc: stable@vger.kernel.org # v5.5
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200716125647.10964-1-paul@crapouillou.net
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/x86_64/debug_regs.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/panel/panel-simple.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/testing/selftests/kvm/x86_64/debug_regs.c
-+++ b/tools/testing/selftests/kvm/x86_64/debug_regs.c
-@@ -40,11 +40,11 @@ static void guest_code(void)
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 346e3f9fd505a..a68eff1fb4297 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1537,7 +1537,7 @@ static const struct drm_display_mode frida_frd350h54004_mode = {
+ 	.vsync_end = 240 + 2 + 6,
+ 	.vtotal = 240 + 2 + 6 + 2,
+ 	.vrefresh = 60,
+-	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
++	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+ };
  
- 	/* Single step test, covers 2 basic instructions and 2 emulated */
- 	asm volatile("ss_start: "
--		     "xor %%rax,%%rax\n\t"
-+		     "xor %%eax,%%eax\n\t"
- 		     "cpuid\n\t"
- 		     "movl $0x1a0,%%ecx\n\t"
- 		     "rdmsr\n\t"
--		     : : : "rax", "ecx");
-+		     : : : "eax", "ebx", "ecx", "edx");
- 
- 	/* DR6.BD test */
- 	asm volatile("bd_start: mov %%dr0, %%rax" : : : "rax");
+ static const struct panel_desc frida_frd350h54004 = {
+-- 
+2.25.1
+
 
 
