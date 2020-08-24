@@ -2,100 +2,106 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8A5C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28D332078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BB02074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:15:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KTv84FgO"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="l6QVX2hL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgHXMKK (ORCPT
+        id S1726502AbgHXMPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:10:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgHXMKI (ORCPT
+        Mon, 24 Aug 2020 08:15:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13384 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725906AbgHXMPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:10:08 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC046C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:10:07 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id v16so4139349plo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:10:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UE8GsvqgRfc/MyLKuyAyg2OP5wLsadeZZ0TASbpeOos=;
-        b=KTv84FgOZYRLZaVzaKcnEGSiCtWts+r2p99KbkS11TfoNQ/BrCBvN7N4i/4/qHxOsq
-         CP1xcENdSEXYN3VrgKiqm3XSXW5FZLjPbs2bnilRxS0c5ke1bpt6oMDLCBzVUaNmI80H
-         Uu2UdzVMM5csaNwdlcoX5mKA85TnAmliqBPhjktUQ6XmF+2ys2vH5kzZ+JlPDWoLUdiV
-         Hzkwd7Ff+WKIKcm7fLxxNJivNlQEmdVhz/ohvd2+cyIRibD6OjtMjt2+pN+F8sHqYPzS
-         Cyzh7HmJxTSzw7GgnJBd6B0xw5MX0UN3U/zwLzLPWvlekTPwJpjnEqlUGPtg5808CLSM
-         96tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UE8GsvqgRfc/MyLKuyAyg2OP5wLsadeZZ0TASbpeOos=;
-        b=I32iB00RdlylmFAVT4dnSz5wiLCluq+WrnMVerlxQQeDtlS/NErWH1auIma5OXCgOF
-         cMDf0Zs310rS13gyjUOmfYBNWfSOYBgkiFBkLAfTjbsN4yUQuFQORuaR49NJmGKvGnhl
-         Ome2JyDJ9R7lpF/4/fZ/yS3w445knfiJNgZ1k+zBrQUQTgJSt6d2amWZOHoh4Jyad/wr
-         DAdmucSRV3FV3QtI2Aed7cEzKUDuaGx8P8tCLvX0a+N0a4HM3nfYefvuY/nQ6/0yDlMN
-         ymoIBqGObBWGTNu33/mVoLENs84usJwqBFTjjx64XTFIhVNhCHvYo+82/bZsINxAaDcU
-         kLFQ==
-X-Gm-Message-State: AOAM530gp1AGqpy9y39n3cprNXjibfjfZirmRoi7YZQQQb4//ZyCLSlJ
-        RBtoKfZCb2T9PM0tqkgzCo275w==
-X-Google-Smtp-Source: ABdhPJzTb31VyJiQjxBciWNtrTi8EcV65QqVW5MQGVt8MNlXhG3Y/Wn8eVkWOXBIr1qDQ+OLlpCMkQ==
-X-Received: by 2002:a17:90a:dc13:: with SMTP id i19mr4052844pjv.161.1598271007440;
-        Mon, 24 Aug 2020 05:10:07 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id 124sm11616600pfb.19.2020.08.24.05.10.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 05:10:06 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 17:40:04 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Niklas Cassel <nks@flawful.org>
-Subject: Re: [RFC PATCH 1/3] opp: Reduce code duplication in
- _set_required_opps()
-Message-ID: <20200824121004.mvssnqu4khg75cyb@vireshk-i7>
-References: <20200730080146.25185-1-stephan@gerhold.net>
- <20200730080146.25185-2-stephan@gerhold.net>
- <20200824111820.rcaingohxw3wozgd@vireshk-i7>
- <20200824113016.GA131681@gerhold.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824113016.GA131681@gerhold.net>
-User-Agent: NeoMutt/20180716-391-311a52
+        Mon, 24 Aug 2020 08:15:00 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OC235Z146980;
+        Mon, 24 Aug 2020 08:14:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=ilaU6IUDf52Jth9wTolQYR+bi5i9FlQ3hnQWsivcPRE=;
+ b=l6QVX2hLXEf/1hDtQuWvBcZ4rvLQ6h0urOXN8QpiEf9FxQwO51ZyP3xKQO3pFd6smLaE
+ hebJABxG8PpAUYEaIWBXn+SCnWwDgeyNmf9AukG+FlYDgb22u5ZhERjoio+Zm+mddIKC
+ KxDwG9oTPWYp6r8toFCAbSPatHMivlk9SUJvNhKuTqkLWTiturRlD7uIZbZ1Ggl3g0Jw
+ WhvIaRIbh6I+/9UnXXwZ3DJBOVw84BygJ7ZqTZoQGmnBTmyjBx/2pv+RAFGPifdkI9MN
+ sQ1GfcQEYi0hnXpMJZtCwSxIaYqDqarOQRMAsvQ2Ye1IvoZRFcdyVVja2K83ESPB32vT 3Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 334b09msjj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 08:14:53 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07OC26uI147048;
+        Mon, 24 Aug 2020 08:14:53 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 334b09mshv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 08:14:52 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07OCEIY2004082;
+        Mon, 24 Aug 2020 12:14:51 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma06ams.nl.ibm.com with ESMTP id 332uk6ab3n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 12:14:51 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07OCDJ7C61342054
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Aug 2020 12:13:19 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0F0EA404D;
+        Mon, 24 Aug 2020 12:14:48 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 52496A4040;
+        Mon, 24 Aug 2020 12:14:47 +0000 (GMT)
+Received: from sig-9-65-254-31.ibm.com (unknown [9.65.254.31])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Aug 2020 12:14:47 +0000 (GMT)
+Message-ID: <1a30cf978efa004efb5583c2c1aef0121eaa6caa.camel@linux.ibm.com>
+Subject: Re: [PATCH 04/11] evm: Check size of security.evm before using it
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date:   Mon, 24 Aug 2020 08:14:46 -0400
+In-Reply-To: <20200618160133.937-4-roberto.sassu@huawei.com>
+References: <20200618160133.937-1-roberto.sassu@huawei.com>
+         <20200618160133.937-4-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-24_08:2020-08-24,2020-08-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ impostorscore=0 phishscore=0 clxscore=1015 mlxscore=0 bulkscore=0
+ spamscore=0 lowpriorityscore=0 priorityscore=1501 mlxlogscore=788
+ suspectscore=3 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008240092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-08-20, 13:30, Stephan Gerhold wrote:
-> You're right. Not sure why I removed it.
+On Thu, 2020-06-18 at 18:01 +0200, Roberto Sassu wrote:
+> This patch checks the size for the EVM_IMA_XATTR_DIGSIG and
+> EVM_XATTR_PORTABLE_DIGSIG types to ensure that the algorithm is read from
+> the buffer returned by vfs_getxattr_alloc().
 > 
-> I suspect I had it in _set_required_opp() at some point, but I moved
-> code around several times until I was happy with the result.
-> 
-> We should just add it back.
-> Should I send a v2 with it fixed or would you like to handle it?
+> Cc: stable@vger.kernel.org # 4.19.x
+> Fixes: 5feeb61183dde ("evm: Allow non-SHA1 digital signatures")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 
-I have applied the first two patches to linux-next branch in my tree,
-please have a look.
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
--- 
-viresh
