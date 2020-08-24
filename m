@@ -2,328 +2,143 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F89C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4A5206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 282C72074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="lDTDrg4n"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LcfH3zh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgHXLNz (ORCPT
+        id S1725962AbgHXLPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:13:55 -0400
-Received: from mail-eopbgr690085.outbound.protection.outlook.com ([40.107.69.85]:45126
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725999AbgHXLNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:13:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YlIk1BdmdmIyrM4XvfV6jrsEmcxyC5e92EVtJw9R/G5ndTPrU0V2KlEk3Othh4dhSWwv4wTXp7D6V+prhJHm0+9TalIswWC7+qGmGeyV1JC3lRk9KjIBmJjcSeAuqJNqhDGUG2vDea4htL56HhQn5sbm0TmOaLwu21ceQjqTTNknOYafh7a2Q0iXTtVlvNUtgQUv1JKk0QS752CBYZzCUvxez01eqQyFs2eOZmzkUiApeLn47br+Ux0K5SeeL3l9BNe6dBaObmw+D8Ta3BPVoELAEf1htdZxOBi/aU9syh6EFe70AU6VFeJgDm8ylPlRo55RUD9hFX3JcBX6Vkzy/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2njqb41UOPWik1Ygi/QrhiJrallP5/P7NIReVN4Z0nk=;
- b=RIURJZgvnZOBX+YQvquF/xKQY7P9MhMvI4jOV5k3d8B3kQrXdRp1YGDmIqPziJ8eRL1vxv9S6GmbAuxy4L58GbI4PpdR6iJLZJ0+lZOvBh6t54xfD+LoB7wsSwdI5fhiroYx+euCAVIRRVQSUeYG/YkuKGSuJ9RQQA+VHo5p+Gu5T+ZaTEbtyRwFihRzGQvTZ04lK9xQ97F1y3H6cmeBAgVVJKJZvqsUmo02GBM45nWjwpAQWTn8xe/uHq7cyoSX762N51tV/T8o8p6qL0d5joo9LpNcIzHCjoTefi0tGHPIX8yvbsTINvYHRPG509wPf9asJtDMbdgZsSTt9vb4KA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2njqb41UOPWik1Ygi/QrhiJrallP5/P7NIReVN4Z0nk=;
- b=lDTDrg4nSBob9l6ATL35kRT6GYuFB796OGjWZ1+DzEl8J/c4UkAZlo8qzIYuxtK3PAihzaSE6BL5oiMbcxSQDznCBx0ozPQnzEkyYU9Q+MLiPFLz7tRh9bfomII7d6abZSM4+RuatZ4CR08QXw4ZNyeR+i8M9p8+FFxvBJ7MmDg=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3540.namprd12.prod.outlook.com (2603:10b6:408:6c::33)
- by BN8PR12MB3217.namprd12.prod.outlook.com (2603:10b6:408:6e::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.20; Mon, 24 Aug
- 2020 11:13:31 +0000
-Received: from BN8PR12MB3540.namprd12.prod.outlook.com
- ([fe80::b5a6:78c7:bdd1:543]) by BN8PR12MB3540.namprd12.prod.outlook.com
- ([fe80::b5a6:78c7:bdd1:543%7]) with mapi id 15.20.3305.026; Mon, 24 Aug 2020
- 11:13:31 +0000
-Subject: Re: [PATCH v5 2/3] dmaengine: ptdma: register PTDMA controller as a
- DMA resource
-To:     Vinod Koul <vkoul@kernel.org>, Sanjay R Mehta <Sanju.Mehta@amd.com>
-Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Naveenkumar.YA@amd.com
-References: <1592356288-42064-1-git-send-email-Sanju.Mehta@amd.com>
- <1592356288-42064-3-git-send-email-Sanju.Mehta@amd.com>
- <20200703073704.GK273932@vkoul-mobl>
-From:   Sanjay R Mehta <sanmehta@amd.com>
-Message-ID: <44882bd8-c0f6-adf8-9481-b7dc5079d428@amd.com>
-Date:   Mon, 24 Aug 2020 16:43:18 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200703073704.GK273932@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8
+        Mon, 24 Aug 2020 07:15:43 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:53919 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgHXLO4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 07:14:56 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200824111447epoutp03bd05d20eb5cb5b452b6451c07a8cfe8e~uL-52EmqR2867628676epoutp039
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:14:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200824111447epoutp03bd05d20eb5cb5b452b6451c07a8cfe8e~uL-52EmqR2867628676epoutp039
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598267687;
+        bh=8WDpye9ll5Rw3/XZ5sZwXTyq5y6EIcg6tb3iQpuN7nQ=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=LcfH3zh1rVVHhyJ1biTKfoMiSbJf0dd7GKnFBApXDT5E/g2F9a2DkXYJttlL/8e1M
+         dWqKi/Flh6E6gFaDAAF9ONIfiB/F0RcjgHuAmvt4jeA/zRAwTQrmtiWl7F3Lj7h9tp
+         0EL5I69Gbv8QkC49aLccXfzAGqAdc6pUreFSbMBE=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200824111446epcas1p26f0d23ab5f2ed77e5d10ceeb84d978c7~uL-41-DtW1227812278epcas1p2d;
+        Mon, 24 Aug 2020 11:14:46 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.155]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4BZqJz2vKczMqYkf; Mon, 24 Aug
+        2020 11:14:43 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E4.A5.29173.321A34F5; Mon, 24 Aug 2020 20:14:43 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200824111442epcas1p44030022c3b9f5efba6e4613b45d6b1aa~uL-1HRWfa0548505485epcas1p4E;
+        Mon, 24 Aug 2020 11:14:42 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200824111442epsmtrp2db6ed69b9c84d0021aa06bc8da1ddfdc~uL-1GnnZi2446424464epsmtrp28;
+        Mon, 24 Aug 2020 11:14:42 +0000 (GMT)
+X-AuditID: b6c32a37-9cdff700000071f5-0e-5f43a12387e8
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        74.00.08382.221A34F5; Mon, 24 Aug 2020 20:14:42 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200824111442epsmtip2035faacd7f7c3884733c992f84b486e1~uL-08yOxs2184021840epsmtip2M;
+        Mon, 24 Aug 2020 11:14:42 +0000 (GMT)
+Subject: Re: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <028fb879-dc74-b822-c399-7f3c9628ec47@samsung.com>
+Date:   Mon, 24 Aug 2020 20:27:10 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
+MIME-Version: 1.0
+In-Reply-To: <20200817070009.4631-1-krzk@kernel.org>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BM1PR01CA0145.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:68::15) To BN8PR12MB3540.namprd12.prod.outlook.com
- (2603:10b6:408:6c::33)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BM1PR01CA0145.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:68::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Mon, 24 Aug 2020 11:13:27 +0000
-X-Originating-IP: [165.204.159.242]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ffd399f9-0a45-47e4-03c9-08d8481ebbdf
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3217:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN8PR12MB3217AAA552A890572AAD5B68E5560@BN8PR12MB3217.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1850;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jWVKMXi0DJlT9y8djlx1hCwQZ7Ub4tm8as8LPFIQGUerihPz5zR7+/wJK29LhwBD6jPG0mn6n/zQLf1lxyy2wtIvNfhtnoG8JtLKVjZgMK/sjeJe3/84CnS8QXcniUpiApde1UpXBptwvBQRipSAxHeT1s/eTXfpyCe7iUAPrxZRFMfrLSW8R4ehXfyyUw7N2c4Yf/qNpoZqXDrvpb/R1KeZAEVSr+uI+DT5ioepCW/YqfZ07sgm+SUcHjpX5R+jAqqDkNow5EB24tpA/8aksN5MeWGX0lWD5B/7611Tuja4+UY+j26HVzSBvq+S9/9XXIwvRE24f/J9TMKOLui+eqmJrCKrLuCdklFtT1jMabKXTxbVQYRhzvXMj9A+qTtW
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3540.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(39860400002)(376002)(346002)(136003)(2616005)(31696002)(66476007)(5660300002)(83380400001)(66946007)(8936002)(956004)(186003)(36756003)(66556008)(110136005)(2906002)(6666004)(4326008)(53546011)(52116002)(6486002)(316002)(31686004)(16576012)(26005)(8676002)(6636002)(478600001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: lgRtMFaX/hu6YwWxdw35Xa1OEzQQRaPVR/YNBphhYHNeYYGUOyLW3/Bbh1blbGXQuZYSf/3ZW5BVYnOYnUEErtWYhBXGiDFu20O1DHdn8JOeprvHVlTx8bQ6RILn++9fxuP0jU9ZDiq0bykAhyd15N8p6FKI1nfOwCwy0GmsCTLdWdzMmlB+C6H9ghoU0Dl2GQd87fWFQGFEHaUE5rxmtIW18324yxReQruJghjuXTUG2GNUvjbnSV8C9zTREMj7bo0SVDIoESCdDDLa2+mkwfG854f5osVXHVAE1sQxhF5j/FcK6Xm3gfniLA/IpaSPwh/5N3Tq3IiO07dRv3d86yKwxBijFtMhwHyJ7M4ezTyo9ibqSb43R4ZNfzdeyPliM1WU093XFr/6vjzllE92qw+X6h8SkQEVVwhLZlWaF9x9V0qGQCEIGfGnG9KOYoeKszqFASxDU8rJkfffxQTocXfZtN0hUndWyarOqZFm97AyRioU4HoyfDFr3uFDxxYDfWPsjRf4DMVL8JKx3SFgqlWAjgeK8GSwitQJriS/ntWRVZeHMroZ+gbWvoZJBYbuK4fAYZRnPyLJ9XAMgQ5zOJXAw6uIDsrYFjcMdXwAc9/2x/8CqAmIvwGDovswKYzMY2RsXU2o1ODhIpPoegv+mQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ffd399f9-0a45-47e4-03c9-08d8481ebbdf
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3540.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2020 11:13:31.5156
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HOQI8toG9H4IqlwGKguTLWySV/T7YZaD7BRvdCGbc9jxxrMTmTvp6SrVVmc5Mw5P3RqT6O1F29B0CFWbxQJ9hA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3217
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnk+LIzCtJLcpLzFFi42LZdlhTV1d5oXO8waefAhbzj5xjtTh/fgO7
+        xeVdc9gsbjeuYLNo3XuE3eLl/umsDmweO2fdZffYtKqTzaNvyypGj8+b5AJYorJtMlITU1KL
+        FFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4CWKymUJeaUAoUCEouL
+        lfTtbIryS0tSFTLyi0tslVILUnIKLAv0ihNzi0vz0vWS83OtDA0MjEyBChOyM05PXsVa0MxU
+        sWP3AZYGxn2MXYycHBICJhKLVs5lA7GFBHYwSpyaU93FyAVkf2KUeD7jPSuE841R4vKrZeww
+        He17nrBDJPYySsx8d44RwnnPKLGw5QkrSJWwgKvEsW//wKpEBJ4xSjTfvsIMkmAT0JLY/+IG
+        2EJ+AUWJqz8egx3CK2An8evhQyYQm0VAVeLJsVlg60QFwiRObmuBqhGUODnzCQuIzQl0xvzH
+        F8BqmAXEJW49mc8EYctLbH87hxlksYRAI4fElbebWSDudpE4u/Yt1A/CEq+Ob4GypSQ+v9vL
+        BmFXS6w8eYQNormDUWLL/gusEAljif1LJwNt4ADaoCmxfpc+RFhRYufvuYwQi/kk3n3tYQUp
+        kRDglehoE4IoUZa4/OAuE4QtKbG4vRNqlYfE5+8XmCYwKs5C8tosJO/MQvLOLITFCxhZVjGK
+        pRYU56anFhsWGCNH9yZGcMrUMt/BOO3tB71DjEwcjIcYJTiYlUR4b2+yjxfiTUmsrEotyo8v
+        Ks1JLT7EaAoM7InMUqLJ+cCknVcSb2hqZGxsbGFiaGZqaKgkzvvwlkK8kEB6YklqdmpqQWoR
+        TB8TB6dUA9O17rVbrL4sfVjmlLL1UPCdiObz12ftbFD9/NwgKIl1wu5r1af3r0gs/2tbm23B
+        I5SzLF7pUPXb84p+wmbuQibLJmfzrM+P3tRinVI06y/jBFd1fUbh5in8j3+8nzWHxXtpf+/5
+        iAWz1647eF9uTv5JK+bo2qbV5d5TJMOSj8x4szlvs1kuh+Edx4bvTucCuF7ukkoJcf8/QfHj
+        g9dflx7Vc+NK3dZs8PrWv8r65MRgvfQHeSn/GV4/7slg2jX9SSWzd0t3jeNFuchszsCEGSsa
+        t376ITBZzTExnWedutuU1kkF8Y9NXqtufPeNQ1IiougK3/4ZdmFuF3085CJLOKZurZSVd6ix
+        TZASabjlq8RSnJFoqMVcVJwIAK0BwX0iBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHLMWRmVeSWpSXmKPExsWy7bCSvK7SQud4g3WtShbzj5xjtTh/fgO7
+        xeVdc9gsbjeuYLNo3XuE3eLl/umsDmweO2fdZffYtKqTzaNvyypGj8+b5AJYorhsUlJzMstS
+        i/TtErgyTk9exVrQzFSxY/cBlgbGfYxdjJwcEgImEu17nrB3MXJxCAnsZpQ48+giE0RCUmLa
+        xaPMXYwcQLawxOHDxRA1bxklrrX+YAWpERZwlTj27R9Ys4jAM0aJ01NuQU1qZ5T4umk3M0gV
+        m4CWxP4XN9hAbH4BRYmrPx6DreYVsJP49fAh2DYWAVWJJ8dmsYPYogJhEjuXPGaCqBGUODnz
+        CQuIzQl06vzHF8BqmAXUJf7Mu8QMYYtL3HoynwnClpfY/nYO8wRGoVlI2mchaZmFpGUWkpYF
+        jCyrGCVTC4pz03OLDQsM81LL9YoTc4tL89L1kvNzNzGCo0RLcwfj9lUf9A4xMnEwHmKU4GBW
+        EuG9vck+Xog3JbGyKrUoP76oNCe1+BCjNAeLkjjvjcKFcUIC6YklqdmpqQWpRTBZJg5OqQam
+        Etun2Ut+K74XVRKLqRaYVv/sTuT5M7E1CZtmrTl1fYb1hKO1L6+YnGLs+xX68eNmhZdeDp1x
+        bjvc27yzF5xR5DrYcNaXQ2/5vMtNCrlN624pesycUbXjxdXusoDVC9PyNjoKM5eddbZeK1X9
+        tzC6gu399usvQzU/ighz3TPk3N/x7pbgglNqAS+/n36beWV/9q2ZJx+3Kdw4820ao90qLdYD
+        paoLX/BpJrNPX2q7NUvqrvDjLHf7pjl/0sK4pjxX7vfPbG38u2TWxs/T0+ezXCpi1XJ328m6
+        2FZeq389D2vN7XMXb1WJzvp7cb9S9yX9lsLzOs80GnYuWRihOP+q9xrlMM9Osx2rP1oGLZvG
+        p8RSnJFoqMVcVJwIAO7Mx8kBAwAA
+X-CMS-MailID: 20200824111442epcas1p44030022c3b9f5efba6e4613b45d6b1aa
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200817070046epcas1p4c047a86ccef2e5604f31e674782c9c6c
+References: <CGME20200817070046epcas1p4c047a86ccef2e5604f31e674782c9c6c@epcas1p4.samsung.com>
+        <20200817070009.4631-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Krzysztof,
 
+On 8/17/20 3:59 PM, Krzysztof Kozlowski wrote:
+> Hi,
+> 
+> Changes since v1:
+> 1. Mutex unlock fix in patch 8/13.
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
 
-On 7/3/2020 1:07 PM, Vinod Koul wrote:
-> 
-> On 16-06-20, 20:11, Sanjay R Mehta wrote:
-> 
->> --- a/drivers/dma/ptdma/Makefile
->> +++ b/drivers/dma/ptdma/Makefile
->> @@ -5,6 +5,7 @@
->>
->>  obj-$(CONFIG_AMD_PTDMA) += ptdma.o
->>
->> -ptdma-objs := ptdma-dev.o
->> +ptdma-objs := ptdma-dev.o \
->> +           ptdma-dmaengine.o
-> 
-> Single line?
-> 
-Yes.
+Applied them. Thanks.
 
->> +static void pt_free_chan_resources(struct dma_chan *dma_chan)
->> +{
->> +     struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
->> +                                              vc.chan);
->> +
->> +     dev_dbg(chan->pt->dev, "%s - chan=%p\n", __func__, chan);
-> 
-> drop the dbg artifacts here and other places in this and other patches
-> 
-Sure. Will fix this in the next version of patch.
->> +static void pt_do_cleanup(struct virt_dma_desc       *vd)
->> +
->> +{
->> +     struct pt_dma_desc *desc = container_of(vd, struct pt_dma_desc, vd);
->> +     struct pt_device *pt = desc->pt;
->> +     struct pt_dma_chan *chan;
->> +
->> +     chan = container_of(desc->vd.tx.chan, struct pt_dma_chan,
->> +                         vc.chan);
-> 
-> add a to_pt_chan() macro for this?
-> 
-Will fix this in the next version of patch.
->> +static int pt_issue_next_cmd(struct pt_dma_desc *desc)
->> +{
->> +     struct pt_passthru_engine *pt_engine;
->> +     struct pt_dma_cmd *cmd;
->> +     struct pt_device *pt;
->> +     struct pt_cmd *pt_cmd;
->> +     struct pt_cmd_queue *cmd_q;
->> +
->> +     cmd = list_first_entry(&desc->cmdlist, struct pt_dma_cmd, entry);
->> +     desc->actv = 1;
-> 
-> active?
-> 
-This is used to indicate that the command has been submitted to the PTDMA queue.
-This variable is being used in many places in the code.
-If the name "actv" is confusing here, I'll change to something else.
-
->> +
->> +     dev_dbg(desc->pt->dev, "%s - tx %d, cmd=%p\n", __func__,
->> +             desc->vd.tx.cookie, cmd);
->> +
->> +     pt_cmd = &cmd->pt_cmd;
->> +     pt = pt_cmd->pt;
->> +     cmd_q = &pt->cmd_q;
->> +     pt_engine = &pt_cmd->passthru;
->> +
->> +     if (!pt_engine->final)
->> +             return -EINVAL;
-> 
-> what does final mean here?
-This was used to indicate completion in the initial version of code. This has no use now.
-Will remove in the next version of patch.
->> +
->> +     if (!pt_engine->src_dma || !pt_engine->dst_dma)
->> +             return -EINVAL;
-> 
-> what does this check do? we have a valid cmd which IIUC implies a valid
-> dma txn so why would one of this be invalid?
-> 
-Yes, you are right. Will fix this in the next version of patch.
-
->> +static struct pt_dma_desc *__pt_next_dma_desc(struct pt_dma_chan *chan)
->> +{
->> +     /* Get the next DMA descriptor on the active list */
->> +     struct virt_dma_desc *vd = vchan_next_desc(&chan->vc);
->> +
->> +     if (list_empty(&chan->vc.desc_submitted))
->> +             return NULL;
->> +
->> +     vd = list_empty(&chan->vc.desc_issued) ?
->> +               list_first_entry(&chan->vc.desc_submitted,
->> +                                struct virt_dma_desc, node) : NULL;
-> 
-> Always remember there might already be a macro, so check. In this case
-> use of list_first_entry_or_null() looks apt
-> 
-Sure. Will fix this in the next version of patch.
->> +static struct pt_dma_desc *pt_handle_active_desc(struct pt_dma_chan *chan,
->> +                                              struct pt_dma_desc *desc)
->> +{
->> +     struct dma_async_tx_descriptor *tx_desc;
->> +     struct virt_dma_desc *vd;
->> +     unsigned long flags;
->> +
->> +     /* Loop over descriptors until one is found with commands */
-> 
-> This bit is strange, am not sure I follow. The fn name tell me it would
-> handle and active descriptor which is passed as an arg, so why do you
-> loop?
-> 
-> Can you explain this?
-> 
-There are two tasks this function handles.
-
-First, this function checks whether the passed descriptor is already submitted
-for the PDMA queue or not. If not, it will return the descriptor to submit for
-the DMA txn to the queue.
-
-Secondly, it loops through all the descriptors from the issued list and checks
-if the all descriptor has been handled or not. If not, then processes them in the loop.
-
->> +static void pt_issue_pending(struct dma_chan *dma_chan)
->> +{
->> +     struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
->> +                                              vc.chan);
->> +     struct pt_dma_desc *desc;
->> +     unsigned long flags;
->> +
->> +     dev_dbg(chan->pt->dev, "%s\n", __func__);
->> +
->> +     spin_lock_irqsave(&chan->vc.lock, flags);
->> +
->> +     desc = __pt_next_dma_desc(chan);
->> +
->> +     spin_unlock_irqrestore(&chan->vc.lock, flags);
->> +
->> +     /* If there was nothing active, start processing */
-> 
-> What if channel is already active and doing a transaction? This should
-> check it first..
-> 
-This case is handled by PTDMA engine. Therefore,the channel busy case is not checked here.
-
-The PTDMA hardware queue has two pointers to manage the queue "head" and "tail" pointer.
-The head pointer points to first (oldest) command in the queue and only the initial value
-written by software prior to enabling queue. Hardware updates this pointer when it fetches
-a Command Descriptor from memory. Software is not allowed to modify this register.
-
-The software is supposed to update only the tail pointer of the queue with DMA txn.
-
->> +int pt_dmaengine_register(struct pt_device *pt)
->> +{
->> +     struct pt_dma_chan *chan;
->> +     struct dma_device *dma_dev = &pt->dma_dev;
->> +     struct dma_chan *dma_chan;
->> +     char *dma_cmd_cache_name;
->> +     char *dma_desc_cache_name;
->> +     int ret;
->> +
->> +     pt->pt_dma_chan = devm_kcalloc(pt->dev, 1,
->> +                                    sizeof(*pt->pt_dma_chan),
->> +                                    GFP_KERNEL);
-> 
-> If n is 1, why you kcalloc, why not devm_kzalloc()?
-Will fix this in the next version of patch.
-> 
->> +     if (!pt->pt_dma_chan)
->> +             return -ENOMEM;
->> +
->> +     dma_cmd_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
->> +                                         "%s-dmaengine-cmd-cache",
->> +                                         pt->name);
->> +     if (!dma_cmd_cache_name)
->> +             return -ENOMEM;
->> +
->> +     pt->dma_cmd_cache = kmem_cache_create(dma_cmd_cache_name,
->> +                                           sizeof(struct pt_dma_cmd),
->> +                                           sizeof(void *),
->> +                                           SLAB_HWCACHE_ALIGN, NULL);
->> +     if (!pt->dma_cmd_cache)
->> +             return -ENOMEM;
->> +
->> +     dma_desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
->> +                                          "%s-dmaengine-desc-cache",
->> +                                          pt->name);
->> +     if (!dma_desc_cache_name) {
->> +             ret = -ENOMEM;
->> +             goto err_cache;
->> +     }
->> +
->> +     pt->dma_desc_cache = kmem_cache_create(dma_desc_cache_name,
->> +                                            sizeof(struct pt_dma_desc),
->> +                                            sizeof(void *),
->> +                                            SLAB_HWCACHE_ALIGN, NULL);
->> +     if (!pt->dma_desc_cache) {
->> +             ret = -ENOMEM;
->> +             goto err_cache;
->> +     }
->> +
->> +     dma_dev->dev = pt->dev;
->> +     dma_dev->src_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
->> +     dma_dev->dst_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
->> +     dma_dev->directions = DMA_MEM_TO_MEM;
->> +     dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
->> +     dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
->> +     dma_cap_set(DMA_INTERRUPT, dma_dev->cap_mask);
->> +     dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
-> 
-> Why DMA_PRIVATE if it supports only memcpy? Also have you tested this
-> with dmatest?
-> 
-This DMA controller is intended to use with AMD Non-Transparent Bridge devices
-and not for general purpose slave DMA. Therefore we made it as DMA_PRIVATE.
-
-Yes, I had verified with the dmatest.
-
-> --
-> ~Vinod
-> 
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
