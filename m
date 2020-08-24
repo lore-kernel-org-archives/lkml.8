@@ -7,54 +7,55 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD64C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA24C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA9D2074D
+	by mail.kernel.org (Postfix) with ESMTP id DC39C2074D
 	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1598257963;
-	bh=t8QFWqTolVo7c1qLgcmQjDz0wNlZ8unAbXNGpquMF7c=;
+	bh=v9UYRrKpN87tXhldWDkb2mAuALsYnsp19MYKQXXH2zY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EgWlDIIyIBvGZdJjzCSrjfTbsAlfn5DTa/EQpN8WPL8nWz/TwOAKZMR09UB5P7XG/
-	 L6Uql5eSH+6xkYMRikLOM+dI1l6b4NXkqGeA1mtJ0m9WtI4fCKY4O31GXI66dnnboV
-	 9V2PKHkZASTprse405Ihveco0RQBmgWShAI33fHY=
+	b=Id3GZK1CTaf5oJ3UN4DCrx0F2NhN388OVO/+n3iu5H7ApaxrA0F2AEGbPUqnlcD2W
+	 uXgijIWNZJ4SXeqCBV6A792DoGgBQcL6sPBfPKR63sDAkBuokIr7FsMrf+oVpx+Kb5
+	 gz39a/E3dKVcRoCa/RuXkUHAFTQd7kUAvh+neEZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHXIcj (ORCPT
+        id S1726806AbgHXIcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:32:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39538 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:32:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726718AbgHXIcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:32:36 -0400
+        id S1726673AbgHXIci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:32:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14228206F0;
-        Mon, 24 Aug 2020 08:32:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 626B02074D;
+        Mon, 24 Aug 2020 08:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257955;
-        bh=t8QFWqTolVo7c1qLgcmQjDz0wNlZ8unAbXNGpquMF7c=;
+        s=default; t=1598257958;
+        bh=v9UYRrKpN87tXhldWDkb2mAuALsYnsp19MYKQXXH2zY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9qrY1E/L8ae2sNuqRomQfOzugotw0vUhHd7xBdG6mtoywRKMLKsMD4ZcvVm5VgGF
-         5a0jq3Jl+lu7GMGxNtVc5R/aqjs/W+jnbLoOLsTBReSp5a+FBvhTIFizp9Ta/xFMBE
-         FxQe/dxh8Irq6PXyV618On3TKmtvaz+69kzT6UN0=
+        b=SiRL3o64lEKZ+9lZUvfYsuKTu6jnxmfEthgzyI/dNn8qB9pQCGFN9sYiblf86+yqT
+         ijCtjmL6tjgZ+90GmWDEnHPwe9o2EDs5Q/GaFUduWLcoHZ1Lh03MtR0Z8d6R0uozdT
+         ikoTHp79SCPoIqCP01l05Kq2dpvD5GLlAVDRo8HY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>,
-        "Y.C. Chen" <yc_chen@aspeedtech.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <shy828301@gmail.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 004/148] drm/ast: Initialize DRAM type before posting GPU
-Date:   Mon, 24 Aug 2020 10:28:22 +0200
-Message-Id: <20200824082414.156735452@linuxfoundation.org>
+Subject: [PATCH 5.8 005/148] khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
+Date:   Mon, 24 Aug 2020 10:28:23 +0200
+Message-Id: <20200824082414.207669334@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -67,60 +68,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Zimmermann <tzimmermann@suse.de>
+From: Hugh Dickins <hughd@google.com>
 
-[ Upstream commit 244d012801dae30c91983b360457c78d481584b0 ]
+[ Upstream commit f3f99d63a8156c7a4a6b20aac22b53c5579c7dc1 ]
 
-Posting the GPU requires the correct DRAM type to be stored in
-struct ast_private. Therefore first initialize the DRAM info and
-then post the GPU. This restores the original order of instructions
-in this function.
+syzbot crashes on the VM_BUG_ON_MM(khugepaged_test_exit(mm), mm) in
+__khugepaged_enter(): yes, when one thread is about to dump core, has set
+core_state, and is waiting for others, another might do something calling
+__khugepaged_enter(), which now crashes because I lumped the core_state
+test (known as "mmget_still_valid") into khugepaged_test_exit().  I still
+think it's best to lump them together, so just in this exceptional case,
+check mm->mm_users directly instead of khugepaged_test_exit().
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Fixes: bad09da6deab ("drm/ast: Fixed vram size incorrect issue on POWER")
-Cc: Joel Stanley <joel@jms.id.au>
-Cc: Y.C. Chen <yc_chen@aspeedtech.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Gerd Hoffmann <kraxel@redhat.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Emil Velikov <emil.l.velikov@gmail.com>
-Cc: "Y.C. Chen" <yc_chen@aspeedtech.com>
-Cc: <stable@vger.kernel.org> # v4.11+
-Link: https://patchwork.freedesktop.org/patch/msgid/20200716125353.31512-6-tzimmermann@suse.de
+Fixes: bbe98f9cadff ("khugepaged: khugepaged_test_exit() check mmget_still_valid()")
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Yang Shi <shy828301@gmail.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: <stable@vger.kernel.org>	[4.8+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008141503370.18085@eggly.anvils
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ast/ast_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ mm/khugepaged.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/ast/ast_main.c b/drivers/gpu/drm/ast/ast_main.c
-index f48a9f62368c0..99c11b51f0207 100644
---- a/drivers/gpu/drm/ast/ast_main.c
-+++ b/drivers/gpu/drm/ast/ast_main.c
-@@ -458,9 +458,6 @@ int ast_driver_load(struct drm_device *dev, unsigned long flags)
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index ac04b332a373a..1d6a9b0b6a9fd 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -466,7 +466,7 @@ int __khugepaged_enter(struct mm_struct *mm)
+ 		return -ENOMEM;
  
- 	ast_detect_chip(dev, &need_post);
- 
--	if (need_post)
--		ast_post_gpu(dev);
--
- 	ret = ast_get_dram_info(dev);
- 	if (ret)
- 		goto out_free;
-@@ -469,6 +466,9 @@ int ast_driver_load(struct drm_device *dev, unsigned long flags)
- 		 ast->mclk, ast->dram_type,
- 		 ast->dram_bus_width, ast->vram_size);
- 
-+	if (need_post)
-+		ast_post_gpu(dev);
-+
- 	ret = ast_mm_init(ast);
- 	if (ret)
- 		goto out_free;
+ 	/* __khugepaged_exit() must not run from under us */
+-	VM_BUG_ON_MM(khugepaged_test_exit(mm), mm);
++	VM_BUG_ON_MM(atomic_read(&mm->mm_users) == 0, mm);
+ 	if (unlikely(test_and_set_bit(MMF_VM_HUGEPAGE, &mm->flags))) {
+ 		free_mm_slot(mm_slot);
+ 		return 0;
 -- 
 2.25.1
 
