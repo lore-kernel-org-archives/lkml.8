@@ -2,118 +2,98 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B0AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF54E206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6FB205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:46:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ifmaty39"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dk17feOT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uoxPrnEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbgHXPpy (ORCPT
+        id S1728097AbgHXPqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:45:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49149 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728080AbgHXPpB (ORCPT
+        Mon, 24 Aug 2020 11:46:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbgHXPqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:45:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598283892;
+        Mon, 24 Aug 2020 11:46:09 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01417C061575;
+        Mon, 24 Aug 2020 08:46:08 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 17:46:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598283966;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=n4X+McYKm2HPSDcgicm1bNMEAs9UALlLnJpaukedpRI=;
-        b=Ifmaty39oca7k2cs5AtOjFCOLmlnxjTWweiebXpd7v6uknUIJQhXZAfrNFgnr+AjgRptsa
-        KB9tg2WVOO0/swPM+KTikKgV6dSvJiny+X0HuQahc6hZW+hOS2X0+/vHrMKt67j6EHHt4d
-        XvYzkI57m/5uRX21WgStcnplrCi+kEs=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-Bx59mTLWP6uqSWRHeOAtPw-1; Mon, 24 Aug 2020 11:44:51 -0400
-X-MC-Unique: Bx59mTLWP6uqSWRHeOAtPw-1
-Received: by mail-qt1-f200.google.com with SMTP id w15so7098832qtv.11
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 08:44:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=n4X+McYKm2HPSDcgicm1bNMEAs9UALlLnJpaukedpRI=;
-        b=hMnKYWZKMoRLwQwkjTTD3YTWr2YeqQBkdKQYgGGihVXXtwfbPESWRPfNxGf3te2Vz2
-         zeOVtxQpCHFnN6QJvQIrR89JEsMDIAgjBQ6IEeg51UDNShc4eNvqy1w7BNiv1rrKjkmo
-         V2MVHtpx/pmIMWBAkJJuMvc4K3/rms4ufo9YzNfz0tJcoEqRFSf9DkbN9yvYa6+UTw2U
-         fCdBiElBpJ1husOhUqCgftPOJKTSIV4pXxveagAzayCZTrUNap4N4RRbNuTHMj/0Jh5K
-         Cjf5atVkRrDAQNSTWNFVsDvFRbLRL6CCsqBCJ9Qy6ys/pGbgVP/YlYrERyTNmkJBISWZ
-         spPw==
-X-Gm-Message-State: AOAM532TkCTVg9cwbaoB3Xqe8Bkfxbe7GkXG6WUABvp6zNwPEq/WkSjt
-        AVGiGG+KYZq/8VQwg1ELyjDCWXTYvzPnAc2922j9vp0ae4W3rolb+9VBfT5ZWOqc9SBTw7LG3TV
-        rPVb51K2E+RoKJAcxV/DfGmRH
-X-Received: by 2002:ac8:794f:: with SMTP id r15mr5292558qtt.383.1598283890944;
-        Mon, 24 Aug 2020 08:44:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyj33JTZ3mBohbfbvoSOhP7o0yBfz9MoVA2SvBqR0S20h54m5UaHWiw9nh8PxL9WOsgX6JFQw==
-X-Received: by 2002:ac8:794f:: with SMTP id r15mr5292543qtt.383.1598283890719;
-        Mon, 24 Aug 2020 08:44:50 -0700 (PDT)
-Received: from xz-x1 (bras-vprn-toroon474qw-lp130-11-70-53-122-15.dsl.bell.ca. [70.53.122.15])
-        by smtp.gmail.com with ESMTPSA id 199sm7679284qkm.13.2020.08.24.08.44.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 08:44:50 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 11:44:52 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Alistair Popple <alistair@popple.id.au>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ralph Campbell <rcampbell@nvidia.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm/migrate: Fixup setting UFFD_WP flag
-Message-ID: <20200824154452.GB8605@xz-x1>
-References: <20200824083128.12684-1-alistair@popple.id.au>
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=XW44TtTM39puFK29r2Z1U/n2rm1H4SidXLcRJnMMlmA=;
+        b=dk17feOTeW+1t5Q/8v7UsiKCKLnvXMcdkw/NRcBOjStCnViSBi2PLuh2RgtdYvtnuhe5hN
+        AaQ2+dMoRBrjz5CL+iWWlkXQFTtUdqgPzoyLX7u5u+6EH7murKCuffAtn3dlNyia/S/sYU
+        /lHuPSoVpxEm8zY9Fz//rXmbwqeFdfD1jX1yyyVPqJi/xdzKbcO5r0CylSmCdBb/pZd9/s
+        eblSFmhZR8Q6HBh1dxO//24ofbQvVSh/SIicYVBIesjozQOQ7SmySAf2BnCZzgRd2d+as5
+        6tHEUslyN/zCxDa3nx2TZgVCmW0EQDZz7aBH+HbcVhEcNsYD+B2bWTgFsJofEQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598283966;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=XW44TtTM39puFK29r2Z1U/n2rm1H4SidXLcRJnMMlmA=;
+        b=uoxPrnEimQi6WRdAXuN/Xr3MXTD5nNxslAPBCH0UvkXxxTgtLxmePw/Yzz+GlKR0nHNh9J
+        hMsGaUBbbUgUSEDQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [ANNOUNCE] v5.9-rc2-rt1
+Message-ID: <20200824154605.v66t2rsxobt3r5jg@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200824083128.12684-1-alistair@popple.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 06:31:27PM +1000, Alistair Popple wrote:
-> Commit f45ec5ff16a75 ("userfaultfd: wp: support swap and page
-> migration") introduced support for tracking the uffd wp bit during page
-> migration. However the non-swap PTE variant was used to set the flag for
-> zone device private pages which are a type of swap page.
-> 
-> This leads to corruption of the swap offset if the original PTE has the
-> uffd_wp flag set.
-> 
-> Fixes: f45ec5ff16a75 ("userfaultfd: wp: support swap and page migration")
-> Signed-off-by: Alistair Popple <alistair@popple.id.au>
-> Cc: stable@vger.kernel.org
-> ---
->  mm/migrate.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 34a842a8eb6a..ddb64253fe3e 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -251,7 +251,7 @@ static bool remove_migration_pte(struct page *page, struct vm_area_struct *vma,
->  				entry = make_device_private_entry(new, pte_write(pte));
->  				pte = swp_entry_to_pte(entry);
->  				if (pte_swp_uffd_wp(*pvmw.pte))
-> -					pte = pte_mkuffd_wp(pte);
-> +					pte = pte_swp_mkuffd_wp(pte);
->  			}
->  		}
+Dear RT folks!
 
-Looks correct... thanks!
+I'm pleased to announce the v5.9-rc2-rt1 patch set. 
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
+Changes since v5.6.19-rt12:
 
--- 
-Peter Xu
+  - Rebase to v5.9-rc2
 
+  - The seqcount related patches have been replaced on top of the
+    seqcount series by Ahmed S. Darwis which landed mainline. 
+
+  - The posix-timer patches have been dropped because upstream changes
+    cover all of was needed on RT's side. As a result RT relies on
+    HAVE_POSIX_CPU_TIMERS_TASK_WORK. This is provided only by x86.
+    The RT patch provides this option for ARM/ARM64/POWERPC as long as
+    KVM is disabled. The reason is that the task work must be handled
+    before KVM returns to guest.
+
+Known issues
+     - It has been pointed out that due to changes to the printk code the
+       internal buffer representation changed. This is only an issue if tools
+       like `crash' are used to extract the printk buffer from a kernel memory
+       image.
+
+You can get this release via the git tree at:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v5.9-rc2-rt1
+
+The RT patch against v5.9-rc2 can be found here:
+
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.9/older/patch-5.9-rc2-rt1.patch.xz
+
+The split quilt queue is available at:
+
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.9/older/patches-5.9-rc2-rt1.tar.xz
+
+Sebastian
