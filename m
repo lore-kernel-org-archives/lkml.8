@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEECDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAB4F2177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B1E22B4D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258290;
-	bh=ngj6WiQUPERZ5q4EO+GD7YhTNCR/Src7jBSoABAThGI=;
+	s=default; t=1598258295;
+	bh=hlzry09vfblQCH17lYd45+z4FSPaJl6SUXXtsfStYoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XnFf7MrYinIYFlKFgxK6v8Rn6wDgD8tUgeDJhGtF7gcJJWh7iYNFl+CsEjr0yHSIR
-	 XDb5ESBwYjz+cLN3MYRhiPIV/3f8ffVdaBY1Me5IRo2wPJfg786NOwtsoGgsDTZw2S
-	 sr136RB7K7duiWGfAzJpcb7yehPuk7MAluOVN9dw=
+	b=Wz3p0ls+ih+zMeSNOI66tESBuWFoeCbFAWBCs27MTC/OFErNr3eIWpzWDx7axwl5C
+	 h+T0IEPLl1cBhpbbOFHxCfabBL2Tm3Za4VkpgJ/6xZvpSfZbybeP953ghHH1n13cwI
+	 B9fOAEVzS12Nb9HJiM1bb1qPgGWK7oimj+hb571U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgHXIiG (ORCPT
+        id S1728007AbgHXIiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:38:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52086 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:38:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbgHXIiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:38:02 -0400
+        id S1728495AbgHXIiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:38:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B40FD22B43;
-        Mon, 24 Aug 2020 08:38:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ACAC22B43;
+        Mon, 24 Aug 2020 08:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258282;
-        bh=ngj6WiQUPERZ5q4EO+GD7YhTNCR/Src7jBSoABAThGI=;
+        s=default; t=1598258288;
+        bh=hlzry09vfblQCH17lYd45+z4FSPaJl6SUXXtsfStYoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ch3omN4yJlqc3mT+MOg2OPPzyLfzr8inQH8i0KiMz7FowDz9XSOS/4cUGZ8YRQ9LL
-         +G1k/MPdn8A439ghw2CCjtNoJl7nINc15sAFGZ1UePagbrKXNVxn2RXhneQpfeHcxU
-         6plIJlZ3dgpv0jMqTJ1JiwmTP1gIXfP9jbYF7NA0=
+        b=xa97x8AiWygqctiD3xEuIHD7hXYLI2KpsF2qm90OKLrqEhCqY6oTVGEzqgw0XoWZB
+         aLoIkuZI1aHV1P6ZrxMctkVD6PsPiFnkilYvXkSB6Dhe1fvYkbwabGgdAIlDJQX1f/
+         n0qaEu6RsbjWvapF4JqeSCmYGtVpkTBRF82UficA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.8 141/148] powerpc/pseries: Do not initiate shutdown when system is running on UPS
-Date:   Mon, 24 Aug 2020 10:30:39 +0200
-Message-Id: <20200824082420.773511688@linuxfoundation.org>
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 5.8 143/148] efi/x86: Mark kernel rodata non-executable for mixed mode
+Date:   Mon, 24 Aug 2020 10:30:41 +0200
+Message-Id: <20200824082420.872500412@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -60,66 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-commit 90a9b102eddf6a3f987d15f4454e26a2532c1c98 upstream.
+commit c8502eb2d43b6b9b1dc382299a4d37031be63876 upstream.
 
-As per PAPR we have to look for both EPOW sensor value and event
-modifier to identify the type of event and take appropriate action.
+When remapping the kernel rodata section RO in the EFI pagetables, the
+protection flags that were used for the text section are being reused,
+but the rodata section should not be marked executable.
 
-In LoPAPR v1.1 section 10.2.2 includes table 136 "EPOW Action Codes":
-
-  SYSTEM_SHUTDOWN 3
-
-  The system must be shut down. An EPOW-aware OS logs the EPOW error
-  log information, then schedules the system to be shut down to begin
-  after an OS defined delay internal (default is 10 minutes.)
-
-Then in section 10.3.2.2.8 there is table 146 "Platform Event Log
-Format, Version 6, EPOW Section", which includes the "EPOW Event
-Modifier":
-
-  For EPOW sensor value = 3
-  0x01 = Normal system shutdown with no additional delay
-  0x02 = Loss of utility power, system is running on UPS/Battery
-  0x03 = Loss of system critical functions, system should be shutdown
-  0x04 = Ambient temperature too high
-  All other values = reserved
-
-We have a user space tool (rtas_errd) on LPAR to monitor for
-EPOW_SHUTDOWN_ON_UPS. Once it gets an event it initiates shutdown
-after predefined time. It also starts monitoring for any new EPOW
-events. If it receives "Power restored" event before predefined time
-it will cancel the shutdown. Otherwise after predefined time it will
-shutdown the system.
-
-Commit 79872e35469b ("powerpc/pseries: All events of
-EPOW_SYSTEM_SHUTDOWN must initiate shutdown") changed our handling of
-the "on UPS/Battery" case, to immediately shutdown the system. This
-breaks existing setups that rely on the userspace tool to delay
-shutdown and let the system run on the UPS.
-
-Fixes: 79872e35469b ("powerpc/pseries: All events of EPOW_SYSTEM_SHUTDOWN must initiate shutdown")
-Cc: stable@vger.kernel.org # v4.0+
-Signed-off-by: Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
-[mpe: Massage change log and add PAPR references]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200820061844.306460-1-hegdevasant@linux.vnet.ibm.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Link: https://lore.kernel.org/r/20200717194526.3452089-1-nivedita@alum.mit.edu
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/pseries/ras.c |    1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/platform/efi/efi_64.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/powerpc/platforms/pseries/ras.c
-+++ b/arch/powerpc/platforms/pseries/ras.c
-@@ -184,7 +184,6 @@ static void handle_system_shutdown(char
- 	case EPOW_SHUTDOWN_ON_UPS:
- 		pr_emerg("Loss of system power detected. System is running on"
- 			 " UPS/battery. Check RTAS error log for details\n");
--		orderly_poweroff(true);
- 		break;
- 
- 	case EPOW_SHUTDOWN_LOSS_OF_CRITICAL_FUNCTIONS:
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -268,6 +268,8 @@ int __init efi_setup_page_tables(unsigne
+ 	npages = (__end_rodata - __start_rodata) >> PAGE_SHIFT;
+ 	rodata = __pa(__start_rodata);
+ 	pfn = rodata >> PAGE_SHIFT;
++
++	pf = _PAGE_NX | _PAGE_ENC;
+ 	if (kernel_map_pages_in_pgd(pgd, pfn, rodata, npages, pf)) {
+ 		pr_err("Failed to map kernel rodata 1:1\n");
+ 		return 1;
 
 
