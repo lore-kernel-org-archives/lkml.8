@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD34CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 799B9206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F2E206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261432;
-	bh=Ugp5lYXLez/YXQk+NIdZCZFpUpaFzz9EnvVK/Mz/9/o=;
+	s=default; t=1598261465;
+	bh=6CWT5yFJGbIhKo0odsI5tP10yt8cR+KoeyWEK6OjVoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LKgsMcAk5aFc9qtLbqasipD7G22otBdAjSoZPl9DBzNllV1wXubR2wF0dZt58BONc
-	 FTL06Cfrucg82sWig32L9W9uqfCz0w4wZzCE311qJ8vFlulZ+5M+AOBgT1M8BC9hwh
-	 8M1zhhsIpH65XpbnKNaHf46SmU3U7jxHvZeUcsSM=
+	b=b1mv1/5qS0gBApf8VIxpWj8iKxwYcEaefYUwMgXwWR27lHUQh+MEj24ThdEXxe2e2
+	 aL8z/5fgobUHiI0SX9lFpSXMZBLCWqnxlkRlqg0/r5xDnyiLQa0qJJojnTWcY4we4r
+	 dQIvFPx54kHRq3ikGAc8b3xfceJZvwRXtnNB2p60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgHXIuw (ORCPT
+        id S1729626AbgHXJbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:50:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54740 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:31:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729855AbgHXIum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:50:42 -0400
+        id S1729345AbgHXIuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:50:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B768F207DF;
-        Mon, 24 Aug 2020 08:50:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B612A2075B;
+        Mon, 24 Aug 2020 08:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259042;
-        bh=Ugp5lYXLez/YXQk+NIdZCZFpUpaFzz9EnvVK/Mz/9/o=;
+        s=default; t=1598259037;
+        bh=6CWT5yFJGbIhKo0odsI5tP10yt8cR+KoeyWEK6OjVoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AyddoIxEJHOhFdya1lMxLOjwWiMd7yj0WMoXfAXYRmDijGp6BrwSGrPdKYK+ti2sH
-         GlMq4s/tgAHC1QN59pUS8njKaYyfOqT3VTm3Beqhu53/mkLLYOX1re9t9AcrUbVNJP
-         VMFIXoewdgUnXAbtHFln/7ZhxqdVNU+kGR9eB9ww=
+        b=KGBsNAsQsNoZHA27Zj50RSev44yX+5B+4JEVx8XEfI0nDK341tWveSkYU2gcFKxn7
+         NL4FsAQ17rZoP58OmPEusDKys9Hs5noByZ8cg0bVQuT76E0MkenwaWfAP/CF62uCG9
+         FeuhIStSBptY3GGrbDfVWwnF0ILDk4htPKR/qc5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sarah Newman <srn@prgmr.com>, Juergen Gross <jgross@suse.com>,
-        Chris Brannon <cmb@prgmr.com>
-Subject: [PATCH 4.4 32/33] xen: dont reschedule in preemption off sections
-Date:   Mon, 24 Aug 2020 10:31:28 +0200
-Message-Id: <20200824082348.141846246@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.4 30/33] do_epoll_ctl(): clean the failure exits up a bit
+Date:   Mon, 24 Aug 2020 10:31:26 +0200
+Message-Id: <20200824082348.042955499@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
 References: <20200824082346.498653578@linuxfoundation.org>
@@ -59,93 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-For support of long running hypercalls xen_maybe_preempt_hcall() is
-calling cond_resched() in case a hypercall marked as preemptible has
-been interrupted.
+commit 52c479697c9b73f628140dcdfcd39ea302d05482 upstream.
 
-Normally this is no problem, as only hypercalls done via some ioctl()s
-are marked to be preemptible. In rare cases when during such a
-preemptible hypercall an interrupt occurs and any softirq action is
-started from irq_exit(), a further hypercall issued by the softirq
-handler will be regarded to be preemptible, too. This might lead to
-rescheduling in spite of the softirq handler potentially having set
-preempt_disable(), leading to splats like:
-
-BUG: sleeping function called from invalid context at drivers/xen/preempt.c:37
-in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 20775, name: xl
-INFO: lockdep is turned off.
-CPU: 1 PID: 20775 Comm: xl Tainted: G D W 5.4.46-1_prgmr_debug.el7.x86_64 #1
-Call Trace:
-<IRQ>
-dump_stack+0x8f/0xd0
-___might_sleep.cold.76+0xb2/0x103
-xen_maybe_preempt_hcall+0x48/0x70
-xen_do_hypervisor_callback+0x37/0x40
-RIP: e030:xen_hypercall_xen_version+0xa/0x20
-Code: ...
-RSP: e02b:ffffc900400dcc30 EFLAGS: 00000246
-RAX: 000000000004000d RBX: 0000000000000200 RCX: ffffffff8100122a
-RDX: ffff88812e788000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffffff83ee3ad0 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000246 R12: ffff8881824aa0b0
-R13: 0000000865496000 R14: 0000000865496000 R15: ffff88815d040000
-? xen_hypercall_xen_version+0xa/0x20
-? xen_force_evtchn_callback+0x9/0x10
-? check_events+0x12/0x20
-? xen_restore_fl_direct+0x1f/0x20
-? _raw_spin_unlock_irqrestore+0x53/0x60
-? debug_dma_sync_single_for_cpu+0x91/0xc0
-? _raw_spin_unlock_irqrestore+0x53/0x60
-? xen_swiotlb_sync_single_for_cpu+0x3d/0x140
-? mlx4_en_process_rx_cq+0x6b6/0x1110 [mlx4_en]
-? mlx4_en_poll_rx_cq+0x64/0x100 [mlx4_en]
-? net_rx_action+0x151/0x4a0
-? __do_softirq+0xed/0x55b
-? irq_exit+0xea/0x100
-? xen_evtchn_do_upcall+0x2c/0x40
-? xen_do_hypervisor_callback+0x29/0x40
-</IRQ>
-? xen_hypercall_domctl+0xa/0x20
-? xen_hypercall_domctl+0x8/0x20
-? privcmd_ioctl+0x221/0x990 [xen_privcmd]
-? do_vfs_ioctl+0xa5/0x6f0
-? ksys_ioctl+0x60/0x90
-? trace_hardirqs_off_thunk+0x1a/0x20
-? __x64_sys_ioctl+0x16/0x20
-? do_syscall_64+0x62/0x250
-? entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fix that by testing preempt_count() before calling cond_resched().
-
-In kernel 5.8 this can't happen any more due to the entry code rework
-(more than 100 patches, so not a candidate for backporting).
-
-The issue was introduced in kernel 4.3, so this patch should go into
-all stable kernels in [4.3 ... 5.7].
-
-Reported-by: Sarah Newman <srn@prgmr.com>
-Fixes: 0fa2f5cb2b0ecd8 ("sched/preempt, xen: Use need_resched() instead of should_resched()")
-Cc: Sarah Newman <srn@prgmr.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Tested-by: Chris Brannon <cmb@prgmr.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/xen/preempt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/eventpoll.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
---- a/drivers/xen/preempt.c
-+++ b/drivers/xen/preempt.c
-@@ -31,7 +31,7 @@ EXPORT_SYMBOL_GPL(xen_in_preemptible_hca
- asmlinkage __visible void xen_maybe_preempt_hcall(void)
- {
- 	if (unlikely(__this_cpu_read(xen_in_preemptible_hcall)
--		     && need_resched())) {
-+		     && need_resched() && !preempt_count())) {
- 		/*
- 		 * Clear flag as we may be rescheduled on a different
- 		 * cpu.
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1905,10 +1905,8 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, in
+ 			mutex_lock(&epmutex);
+ 			if (is_file_epoll(tf.file)) {
+ 				error = -ELOOP;
+-				if (ep_loop_check(ep, tf.file) != 0) {
+-					clear_tfile_check_list();
++				if (ep_loop_check(ep, tf.file) != 0)
+ 					goto error_tgt_fput;
+-				}
+ 			} else {
+ 				get_file(tf.file);
+ 				list_add(&tf.file->f_tfile_llink,
+@@ -1937,8 +1935,6 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, in
+ 			error = ep_insert(ep, &epds, tf.file, fd, full_check);
+ 		} else
+ 			error = -EEXIST;
+-		if (full_check)
+-			clear_tfile_check_list();
+ 		break;
+ 	case EPOLL_CTL_DEL:
+ 		if (epi)
+@@ -1959,8 +1955,10 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, in
+ 	mutex_unlock(&ep->mtx);
+ 
+ error_tgt_fput:
+-	if (full_check)
++	if (full_check) {
++		clear_tfile_check_list();
+ 		mutex_unlock(&epmutex);
++	}
+ 
+ 	fdput(tf);
+ error_fput:
 
 
