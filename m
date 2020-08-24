@@ -2,187 +2,150 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D77DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA67AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45FD5206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E16206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:17:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598260668;
+	bh=xH8C/wX2D0QP9RUL/qMv0EswjmIrMieua1aVSmMTXCs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zlFv1n7AZOsFEi95bDhQzatLZaLU3tfdspJa/f74+Pk9/drEidlgoTF/KkTN9uwu4
+	 wbV2rtKWtOWll4SCO9MHkokJXn77hXulDb+kBATqDZFBGZ4C3zQW927F3kegWLmRCA
+	 pduU2JoJvJp23ymaJ/k3SYeCJvZXEFc+dT/v9ZuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgHXJRg (ORCPT
+        id S1730345AbgHXJRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:17:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730426AbgHXIz6 (ORCPT
+        Mon, 24 Aug 2020 05:17:43 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36345 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729770AbgHXJRa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:58 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1454C061574;
-        Mon, 24 Aug 2020 01:55:57 -0700 (PDT)
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id DB0F660E;
-        Mon, 24 Aug 2020 10:55:50 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 09/76] x86/umip: Factor out instruction decoding
-Date:   Mon, 24 Aug 2020 10:54:04 +0200
-Message-Id: <20200824085511.7553-10-joro@8bytes.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
+        Mon, 24 Aug 2020 05:17:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x7so1838496wro.3;
+        Mon, 24 Aug 2020 02:17:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=piFoeKFrUJtBI57BDIALP5epFRujdzh3bH9V8VDZYAo=;
+        b=GZFVbseRjfzRmeYXFX0EmDZgoFijYc9/oWlgTjr1qb3y1gWhSj062+vqjo0XQHsKvZ
+         rT/uE7jzYeGTiQId2VtFzRakfIp+s5E3/q2ofYEFSwR8vz9i30nPz+jPbnQCKJ/Fszzg
+         hTUxIan7Idq2mQighRB7F3qdaWkfu07luZJAv4fREbQUwMb/lQlGSLN26Um5/yupQd/P
+         RloQRNiw8OxcfDDtBfHIeB0uo4rHYpAuX5lad1X6l9GVySCF/vnuqO8iBo3pitodgRKa
+         fFM+9S+gHfzADpUPBk6OERZdjVeSKXwMScrXFUrOAPvd22AOPvDWBE/JlNX8lEQB6ly9
+         0AYQ==
+X-Gm-Message-State: AOAM530au0AWrCR9k4K55GfIL0C6KB7BVdsybT+PxWfY8FTVN3YFPA2B
+        JMz424n7lhB5AQkxmmSJrXU=
+X-Google-Smtp-Source: ABdhPJzySf+UXQLxcG9X2DZIMX9284mRLw4G7ickfby9Bst4b2X7s+cUhUsK3Zq0OPsQTu9d2qfDhQ==
+X-Received: by 2002:a05:6000:d0:: with SMTP id q16mr4847868wrx.389.1598260647712;
+        Mon, 24 Aug 2020 02:17:27 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id u7sm22138521wrq.89.2020.08.24.02.17.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 02:17:27 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 11:17:24 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     ulf.hansson@linaro.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>, nks@flawful.org,
+        georgi.djakov@linaro.org, Stephan Gerhold <stephan@gerhold.net>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH V2 1/2] opp: Allow dev_pm_opp_get_opp_table() to return
+ -EPROBE_DEFER
+Message-ID: <20200824091724.GB20819@kozik-lap>
+References: <24ff92dd1b0ee1b802b45698520f2937418f8094.1598260050.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <24ff92dd1b0ee1b802b45698520f2937418f8094.1598260050.git.viresh.kumar@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Mon, Aug 24, 2020 at 02:39:32PM +0530, Viresh Kumar wrote:
+> From: Stephan Gerhold <stephan@gerhold.net>
+> 
+> The OPP core manages various resources, e.g. clocks or interconnect paths.
+> These resources are looked up when the OPP table is allocated once
+> dev_pm_opp_get_opp_table() is called the first time (either directly
+> or indirectly through one of the many helper functions).
+> 
+> At this point, the resources may not be available yet, i.e. looking them
+> up will result in -EPROBE_DEFER. Unfortunately, dev_pm_opp_get_opp_table()
+> is currently unable to propagate this error code since it only returns
+> the allocated OPP table or NULL.
+> 
+> This means that all consumers of the OPP core are required to make sure
+> that all necessary resources are available. Usually this happens by
+> requesting them, checking the result and releasing them immediately after.
+> 
+> For example, we have added "dev_pm_opp_of_find_icc_paths(dev, NULL)" to
+> several drivers now just to make sure the interconnect providers are
+> ready before the OPP table is allocated. If this call is missing,
+> the OPP core will only warn about this and then attempt to continue
+> without interconnect. This will eventually fail horribly, e.g.:
+> 
+>     cpu cpu0: _allocate_opp_table: Error finding interconnect paths: -517
+>     ... later ...
+>     of: _read_bw: Mismatch between opp-peak-kBps and paths (1 0)
+>     cpu cpu0: _opp_add_static_v2: opp key field not found
+>     cpu cpu0: _of_add_opp_table_v2: Failed to add OPP, -22
+> 
+> This example happens when trying to use interconnects for a CPU OPP
+> table together with qcom-cpufreq-nvmem.c. qcom-cpufreq-nvmem calls
+> dev_pm_opp_set_supported_hw(), which ends up allocating the OPP table
+> early. To fix the problem with the current approach we would need to add
+> yet another call to dev_pm_opp_of_find_icc_paths(dev, NULL).
+> But actually qcom-cpufreq-nvmem.c has nothing to do with interconnects...
+> 
+> This commit attempts to make this more robust by allowing
+> dev_pm_opp_get_opp_table() to return an error pointer. Fixing all
+> the usages is trivial because the function is usually used indirectly
+> through another helper (e.g. dev_pm_opp_set_supported_hw() above).
+> These other helpers already return an error pointer.
+> 
+> The example above then works correctly because set_supported_hw() will
+> return -EPROBE_DEFER, and qcom-cpufreq-nvmem.c already propagates that
+> error. It should also be possible to remove the remaining usages of
+> "dev_pm_opp_of_find_icc_paths(dev, NULL)" from other drivers as well.
+> 
+> Note that this commit currently only handles -EPROBE_DEFER for the
+> clock/interconnects within _allocate_opp_table(). Other errors are just
+> ignored as before. Eventually those should be propagated as well.
+> 
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> [ Viresh: skip checking return value of dev_pm_opp_get_opp_table() for
+> 	  EPROBE_DEFER in domain.c, fix NULL return value and reorder
+> 	  code a bit in core.c, and update exynos-asv.c ]
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+> Stephan, I have made some changes to the code. Please try it again and
+> lemme know if it works fine.
+> 
+>  drivers/base/power/domain.c      | 14 +++++----
+>  drivers/opp/core.c               | 53 +++++++++++++++++++-------------
+>  drivers/opp/of.c                 |  8 ++---
+>  drivers/soc/samsung/exynos-asv.c |  2 +-
+>  4 files changed, 44 insertions(+), 33 deletions(-)
 
-Factor out the code used to decode an instruction with the correct
-address and operand sizes to a helper function.
+For Samsung:
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-No functional changes.
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-9-joro@8bytes.org
----
- arch/x86/include/asm/insn-eval.h |  2 ++
- arch/x86/kernel/umip.c           | 23 +---------------
- arch/x86/lib/insn-eval.c         | 45 ++++++++++++++++++++++++++++++++
- 3 files changed, 48 insertions(+), 22 deletions(-)
-
-diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
-index b8b9ef1bbd06..392b4fe377f9 100644
---- a/arch/x86/include/asm/insn-eval.h
-+++ b/arch/x86/include/asm/insn-eval.h
-@@ -21,5 +21,7 @@ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
- int insn_get_code_seg_params(struct pt_regs *regs);
- int insn_fetch_from_user(struct pt_regs *regs,
- 			 unsigned char buf[MAX_INSN_SIZE]);
-+bool insn_decode(struct insn *insn, struct pt_regs *regs,
-+		 unsigned char buf[MAX_INSN_SIZE], int buf_size);
- 
- #endif /* _ASM_X86_INSN_EVAL_H */
-diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-index ad135be4f1f0..f6225bf22c02 100644
---- a/arch/x86/kernel/umip.c
-+++ b/arch/x86/kernel/umip.c
-@@ -342,7 +342,6 @@ bool fixup_umip_exception(struct pt_regs *regs)
- 	unsigned long *reg_addr;
- 	void __user *uaddr;
- 	struct insn insn;
--	int seg_defs;
- 
- 	if (!regs)
- 		return false;
-@@ -357,27 +356,7 @@ bool fixup_umip_exception(struct pt_regs *regs)
- 	if (!nr_copied)
- 		return false;
- 
--	insn_init(&insn, buf, nr_copied, user_64bit_mode(regs));
--
--	/*
--	 * Override the default operand and address sizes with what is specified
--	 * in the code segment descriptor. The instruction decoder only sets
--	 * the address size it to either 4 or 8 address bytes and does nothing
--	 * for the operand bytes. This OK for most of the cases, but we could
--	 * have special cases where, for instance, a 16-bit code segment
--	 * descriptor is used.
--	 * If there is an address override prefix, the instruction decoder
--	 * correctly updates these values, even for 16-bit defaults.
--	 */
--	seg_defs = insn_get_code_seg_params(regs);
--	if (seg_defs == -EINVAL)
--		return false;
--
--	insn.addr_bytes = INSN_CODE_SEG_ADDR_SZ(seg_defs);
--	insn.opnd_bytes = INSN_CODE_SEG_OPND_SZ(seg_defs);
--
--	insn_get_length(&insn);
--	if (nr_copied < insn.length)
-+	if (!insn_decode(&insn, regs, buf, nr_copied))
- 		return false;
- 
- 	umip_inst = identify_insn(&insn);
-diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-index 0c4f7ebc261b..f52046f90dd3 100644
---- a/arch/x86/lib/insn-eval.c
-+++ b/arch/x86/lib/insn-eval.c
-@@ -1407,3 +1407,48 @@ int insn_fetch_from_user(struct pt_regs *regs, unsigned char buf[MAX_INSN_SIZE])
- 
- 	return MAX_INSN_SIZE - not_copied;
- }
-+
-+/**
-+ * insn_decode() - Decode an instruction
-+ * @insn:	Structure to store decoded instruction
-+ * @regs:	Structure with register values as seen when entering kernel mode
-+ * @buf:	Buffer containing the instruction bytes
-+ * @buf_size:   Number of instruction bytes available in buf
-+ *
-+ * Decodes the instruction provided in buf and stores the decoding results in
-+ * insn. Also determines the correct address and operand sizes.
-+ *
-+ * Returns:
-+ *
-+ * True if instruction was decoded, False otherwise.
-+ */
-+bool insn_decode(struct insn *insn, struct pt_regs *regs,
-+		 unsigned char buf[MAX_INSN_SIZE], int buf_size)
-+{
-+	int seg_defs;
-+
-+	insn_init(insn, buf, buf_size, user_64bit_mode(regs));
-+
-+	/*
-+	 * Override the default operand and address sizes with what is specified
-+	 * in the code segment descriptor. The instruction decoder only sets
-+	 * the address size it to either 4 or 8 address bytes and does nothing
-+	 * for the operand bytes. This OK for most of the cases, but we could
-+	 * have special cases where, for instance, a 16-bit code segment
-+	 * descriptor is used.
-+	 * If there is an address override prefix, the instruction decoder
-+	 * correctly updates these values, even for 16-bit defaults.
-+	 */
-+	seg_defs = insn_get_code_seg_params(regs);
-+	if (seg_defs == -EINVAL)
-+		return false;
-+
-+	insn->addr_bytes = INSN_CODE_SEG_ADDR_SZ(seg_defs);
-+	insn->opnd_bytes = INSN_CODE_SEG_OPND_SZ(seg_defs);
-+
-+	insn_get_length(insn);
-+	if (buf_size < insn->length)
-+		return false;
-+
-+	return true;
-+}
--- 
-2.28.0
-
+Best regards,
+Krzysztof
