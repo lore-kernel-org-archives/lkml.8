@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BF4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169FBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10FF5204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D398D204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259275;
-	bh=nstCH6mn71s6+t+b0/T4hwQQsqc+bqiv7+SPeqwEVLc=;
+	s=default; t=1598259280;
+	bh=xOX+SwTOlNIxhk6gQijcKh/CkN51KLIb4w/T9XLKpJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1I9HmEiBqEYGwe4mtk4wvUlXl28+4vxkuWOfWQmZFOgeC7HJgVZlooClIaR9vb2d9
-	 SQRRchZf84IHpghQkMZxxPim1CdnL4dP21AVQ1L9hcAmS6wJt3Xu76+gg49UgZ7hHg
-	 n+CcFga2Y6iIGiYORoAXoXXsK59iCkjL6z5Wb6UM=
+	b=c9W7ea2jmJQsKa9pdpaU7XD2gq6mYNPa8EOQ0tnRIhi1o8Q0/b2zYTzzPTgGWW8oe
+	 dWlgHGDJGFFqFyr4aedGprr1aPwvSBnmMJUEs8yvZwx1KaRGoB/knDw5g7TwVbmu2+
+	 oh3XgQQNs19sGZ70NMnokSwEmY3syrE1bm3MjPNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbgHXIyb (ORCPT
+        id S1730346AbgHXIyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:54:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34672 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:54:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729980AbgHXIyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:54:21 -0400
+        id S1728586AbgHXIyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:54:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A669204FD;
-        Mon, 24 Aug 2020 08:54:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 247EF2087D;
+        Mon, 24 Aug 2020 08:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259260;
-        bh=nstCH6mn71s6+t+b0/T4hwQQsqc+bqiv7+SPeqwEVLc=;
+        s=default; t=1598259270;
+        bh=xOX+SwTOlNIxhk6gQijcKh/CkN51KLIb4w/T9XLKpJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UI4CRGP0dnGdyHjmQMMgiJzRpN5jMtMKOEI6oME4wSn5uRZ0ZYpBYgtX7nXmwIPMN
-         3M4Wo/JdP4vrbj5leG3fBca7qYQP8HFUYQaBXRGQYPdrsJYvmBU54Q/xzQMq/wfY/b
-         RTqxf5avb5rRS8FD6FjTKRr/UtlIR8OBlu7LlMGE=
+        b=c7csoRdzS5IGFSoCPjOVM28C/C1r7AGflGBGnSBiYmNWVZw+ybAwo1ebAqu84QZXS
+         6tNdc+uMZLiBv71QDvcd44h91MWMQ9LbESEcLVjwhVyxjf7P5bTMUoqHk+fXb/qkCC
+         uZUU8qG0JiDOTUQC+9mzAb5DZ/QEf4I/NmbKHFjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 12/50] romfs: fix uninitialized memory leak in romfs_dev_read()
-Date:   Mon, 24 Aug 2020 10:31:13 +0200
-Message-Id: <20200824082352.591103294@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.14 16/50] ext4: fix checking of directory entry validity for inline directories
+Date:   Mon, 24 Aug 2020 10:31:17 +0200
+Message-Id: <20200824082352.813159011@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -61,55 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Jan Kara <jack@suse.cz>
 
-commit bcf85fcedfdd17911982a3e3564fcfec7b01eebd upstream.
+commit 7303cb5bfe845f7d43cd9b2dbd37dbb266efda9b upstream.
 
-romfs has a superblock field that limits the size of the filesystem; data
-beyond that limit is never accessed.
+ext4_search_dir() and ext4_generic_delete_entry() can be called both for
+standard director blocks and for inline directories stored inside inode
+or inline xattr space. For the second case we didn't call
+ext4_check_dir_entry() with proper constraints that could result in
+accepting corrupted directory entry as well as false positive filesystem
+errors like:
 
-romfs_dev_read() fetches a caller-supplied number of bytes from the
-backing device.  It returns 0 on success or an error code on failure;
-therefore, its API can't represent short reads, it's all-or-nothing.
+EXT4-fs error (device dm-0): ext4_search_dir:1395: inode #28320400:
+block 113246792: comm dockerd: bad entry in directory: directory entry too
+close to block end - offset=0, inode=28320403, rec_len=32, name_len=8,
+size=4096
 
-However, when romfs_dev_read() detects that the requested operation would
-cross the filesystem size limit, it currently silently truncates the
-requested number of bytes.  This e.g.  means that when the content of a
-file with size 0x1000 starts one byte before the filesystem size limit,
-->readpage() will only fill a single byte of the supplied page while
-leaving the rest uninitialized, leaking that uninitialized memory to
-userspace.
+Fix the arguments passed to ext4_check_dir_entry().
 
-Fix it by returning an error code instead of truncating the read when the
-requested read operation would go beyond the end of the filesystem.
-
-Fixes: da4458bda237 ("NOMMU: Make it possible for RomFS to use MTD devices directly")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: David Howells <dhowells@redhat.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200818013202.2246365-1-jannh@google.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 109ba779d6cc ("ext4: check for directory entries too close to block end")
+CC: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200731162135.8080-1-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/romfs/storage.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/ext4/namei.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/romfs/storage.c
-+++ b/fs/romfs/storage.c
-@@ -221,10 +221,8 @@ int romfs_dev_read(struct super_block *s
- 	size_t limit;
- 
- 	limit = romfs_maxsize(sb);
--	if (pos >= limit)
-+	if (pos >= limit || buflen > limit - pos)
- 		return -EIO;
--	if (buflen > limit - pos)
--		buflen = limit - pos;
- 
- #ifdef CONFIG_ROMFS_ON_MTD
- 	if (sb->s_mtd)
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1308,8 +1308,8 @@ int ext4_search_dir(struct buffer_head *
+ 		    ext4_match(fname, de)) {
+ 			/* found a match - just to be sure, do
+ 			 * a full check */
+-			if (ext4_check_dir_entry(dir, NULL, de, bh, bh->b_data,
+-						 bh->b_size, offset))
++			if (ext4_check_dir_entry(dir, NULL, de, bh, search_buf,
++						 buf_size, offset))
+ 				return -1;
+ 			*res_dir = de;
+ 			return 1;
+@@ -2353,7 +2353,7 @@ int ext4_generic_delete_entry(handle_t *
+ 	de = (struct ext4_dir_entry_2 *)entry_buf;
+ 	while (i < buf_size - csum_size) {
+ 		if (ext4_check_dir_entry(dir, NULL, de, bh,
+-					 bh->b_data, bh->b_size, i))
++					 entry_buf, buf_size, i))
+ 			return -EFSCORRUPTED;
+ 		if (de == de_del)  {
+ 			if (pde)
 
 
