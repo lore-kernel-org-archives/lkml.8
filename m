@@ -2,161 +2,250 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 100FA206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:30:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="gICO99E2"
+	by mail.kernel.org (Postfix) with ESMTP id 1DB492067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:30:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgHXRaS (ORCPT
+        id S1728192AbgHXQfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:30:18 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:37847 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727944AbgHXRaG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:30:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598290206; x=1629826206;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Kc02Ox8RiLoMndQ+/wq8VKCoeGmpKrhiNnSaTHgu8KE=;
-  b=gICO99E2l0tEp/vEaIbDT2gy990zJkMGzDBwH8AOO3MGXo4S/rhUgbDI
-   VPOzVMkxVgK98CPF9NnaEq1M12+A7IYr2EMKPaOJxF+wchjDPX0O3nNGR
-   iR/x3TR+i9EZAzsiroYt/tIH5sPXmgOgHN5bYgARjWmka0HCH5+/p/NnT
-   c=;
-X-IronPort-AV: E=Sophos;i="5.76,349,1592870400"; 
-   d="scan'208";a="69254893"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 24 Aug 2020 17:29:53 +0000
-Received: from EX13MTAUWC002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id 1759EA1D83;
-        Mon, 24 Aug 2020 17:29:44 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 24 Aug 2020 17:29:44 +0000
-Received: from Alexanders-MacBook-Air.local (10.43.161.145) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 24 Aug 2020 17:29:25 +0000
-Subject: Re: [patch V9 21/39] x86/irq: Convey vector as argument and not in
- ptregs
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        <avi@scylladb.com>, "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        <robketr@amazon.de>, <amos@scylladb.com>
-References: <20200521200513.656533920@linutronix.de>
- <20200521202118.796915981@linutronix.de>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <f0079706-4cb3-b3e3-9a5e-97aaba0aa0eb@amazon.com>
-Date:   Mon, 24 Aug 2020 19:29:23 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:78.0)
- Gecko/20100101 Thunderbird/78.1.1
-MIME-Version: 1.0
-In-Reply-To: <20200521202118.796915981@linutronix.de>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.145]
-X-ClientProxiedBy: EX13D21UWA004.ant.amazon.com (10.43.160.252) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+        Mon, 24 Aug 2020 12:35:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50708 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728120AbgHXQdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:33:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 49EBAAF7A;
+        Mon, 24 Aug 2020 16:33:59 +0000 (UTC)
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 10/12] MIPS: Get rid of BCM1250_M3_WAR
+Date:   Mon, 24 Aug 2020 18:32:52 +0200
+Message-Id: <20200824163257.44533-11-tsbogend@alpha.franken.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20200824163257.44533-1-tsbogend@alpha.franken.de>
+References: <20200824163257.44533-1-tsbogend@alpha.franken.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVGhvbWFzLAoKT24gMjEuMDUuMjAgMjI6MDUsIFRob21hcyBHbGVpeG5lciB3cm90ZToKPiBG
-cm9tOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4KPiAKPiBEZXZpY2UgaW50
-ZXJydXB0cyB3aGljaCBnbyB0aHJvdWdoIGRvX0lSUSgpIG9yIHRoZSBzcHVyaW91cyBpbnRlcnJ1
-cHQKPiBoYW5kbGVyIGhhdmUgdGhlaXIgc2VwYXJhdGUgZW50cnkgY29kZSBvbiA2NCBiaXQgZm9y
-IG5vIGdvb2QgcmVhc29uLgo+IAo+IEJvdGggMzIgYW5kIDY0IGJpdCB0cmFuc3BvcnQgdGhlIHZl
-Y3RvciBudW1iZXIgdGhyb3VnaCBPUklHX1tSRV1BWCBpbgo+IHB0X3JlZ3MuIEZ1cnRoZXIgdGhl
-IHZlY3RvciBudW1iZXIgaXMgZm9yY2VkIHRvIGZpdCBpbnRvIGFuIHU4IGFuZCBpcwo+IGNvbXBs
-ZW1lbnRlZCBhbmQgb2Zmc2V0IGJ5IDB4ODAgc28gaXQncyBpbiB0aGUgc2lnbmVkIGNoYXJhY3Rl
-cgo+IHJhbmdlLiBPdGhlcndpc2UgR0FTIHdvdWxkIGV4cGFuZCB0aGUgcHVzaHEgdG8gYSA1IGJ5
-dGUgaW5zdHJ1Y3Rpb24gZm9yIGFueQo+IHZlY3RvciA+IDB4N0YuCj4gCj4gVHJlYXQgdGhlIHZl
-Y3RvciBudW1iZXIgbGlrZSBhbiBlcnJvciBjb2RlIGFuZCBoYW5kIGl0IHRvIHRoZSBDIGZ1bmN0
-aW9uIGFzCj4gYXJndW1lbnQuIFRoaXMgYWxsb3dzIHRvIGdldCByaWQgb2YgdGhlIGV4dHJhIGVu
-dHJ5IGNvZGUgaW4gYSBsYXRlciBzdGVwLgo+IAo+IFNpbXBsaWZ5IHRoZSBlcnJvciBjb2RlIHB1
-c2ggbWFnaWMgYnkgaW1wbGVtZW50aW5nIHRoZSBwdXNocSBpbW04IHZpYSBhCj4gJy5ieXRlIDB4
-NmEsIHZlY3Rvcicgc2VxdWVuY2Ugc28gR0FTIGlzIG5vdCBhYmxlIHRvIHNjcmV3IGl0IHVwLiBB
-cyB0aGUKPiBwdXNocSBpbW04IGlzIHNpZ24gZXh0ZW5kaW5nIHRoZSByZXN1bHRpbmcgZXJyb3Ig
-Y29kZSBuZWVkcyB0byBiZSB0cnVuY2F0ZWQKPiB0byA4IGJpdHMgaW4gQyBjb2RlLgo+IAo+IE9y
-aWdpbmFsbHktYnk6IEFuZHkgTHV0b21pcnNraSA8bHV0b0BrZXJuZWwub3JnPgo+IFNpZ25lZC1v
-ZmYtYnk6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPgo+IEFja2VkLWJ5OiBB
-bmR5IEx1dG9taXJza2kgPGx1dG9Aa2VybmVsLm9yZz4KCkknbSBjdXJyZW50bHkgdHJ5aW5nIHRv
-IHVuZGVyc3RhbmQgYSBwZXJmb3JtYW5jZSByZWdyZXNzaW9uIHdpdGggClNjeWxsYURCIG9uIGkz
-ZW4uM3hsYXJnZSAoS1ZNIGJhc2VkIFZNIG9uIFNreWxha2UpIHdoaWNoIHdlIHJlbGlhYmx5IApi
-aXNlY3RlZCBkb3duIHRvIHRoaXMgY29tbWl0OgoKICAgaHR0cHM6Ly9naXRodWIuY29tL3NjeWxs
-YWRiL3NjeWxsYS9pc3N1ZXMvNzAzNgoKV2hhdCB3ZSdyZSBzZWVpbmcgaXMgdGhhdCBzeXNjYWxs
-cyBzdWNoIGFzIG1lbWJhcnJpZXIoKSB0YWtlIGZvcmV2ZXIgCigwLTEwIMK1cyB3b3VsZCBiZSBu
-b3JtYWwpOgoKJSB0aW1lICAgICBzZWNvbmRzICB1c2Vjcy9jYWxsICAgICBjYWxscyAgICBlcnJv
-cnMgc3lzY2FsbAotLS0tLS0gLS0tLS0tLS0tLS0gLS0tLS0tLS0tLS0gLS0tLS0tLS0tIC0tLS0t
-LS0tLSAtLS0tLS0tLS0tLS0tLS0tCiAgNTMuMjYgICAxMi40NTg4ODEgICAgICAxODU5NTMgICAg
-ICAgIDY3ICAgICAgICAgICBtZW1iYXJyaWVyCiAgMTUuNzkgICAgMy42OTM2NTEgICAgICAgMTc4
-NDMgICAgICAgMjA3ICAgICAgICA0OSByZWFkCiAgMTEuMTcgICAgMi42MTMzNTAgICAgICAgNjcw
-MDggICAgICAgIDM5ICAgICAgICAgICBpb19wZ2V0ZXZlbnRzCiAgMTAuODkgICAgMi41NDc3NzIg
-ICAgICAgMTE3OTUgICAgICAgMjE2ICAgICAgICAgICB0aW1lcmZkX3NldHRpbWUKICAgNi45MSAg
-ICAxLjYxNjgwMiAgICAgICAxMTA3MyAgICAgICAxNDYgICAgICAgICAgIHJ0X3NpZ3Byb2NtYXNr
-CiAgIDEuMzkgICAgMC4zMjU5NTUgICAgICAgIDM1NDIgICAgICAgIDkyICAgICAgICAgICB0aW1l
-cl9zZXR0aW1lCiAgIDAuMzYgICAgMC4wODM2OTEgICAgICAgICA1MjYgICAgICAgMTU5ICAgICAg
-ICAgICBpb19zdWJtaXQKICAgMC4yMiAgICAwLjA1MTM5OSAgICAgICAgIDUzNSAgICAgICAgOTYg
-ICAgICAgICAgIHdyaXRlCiAgIDAuMDAgICAgMC4wMDA3ODMgICAgICAgICAgMzcgICAgICAgIDIx
-ICAgICAgICAgICBzZW5kbXNnCiAgIDAuMDAgICAgMC4wMDAwNTcgICAgICAgICAgIDMgICAgICAg
-IDE4ICAgICAgICAgOSBpb2N0bAotLS0tLS0gLS0tLS0tLS0tLS0gLS0tLS0tLS0tLS0gLS0tLS0t
-LS0tIC0tLS0tLS0tLSAtLS0tLS0tLS0tLS0tLS0tCjEwMC4wMCAgIDIzLjM5MjM0MSAgICAgICAg
-ICAgICAgICAgIDEwNjEgICAgICAgIDU4IHRvdGFsCgpUaGF0IGFnYWluIHNlZW1zIHRvIHN0ZW0g
-ZnJvbSBhIHZhc3RseSBzbG93ZWQgZG93biAKc21wX2NhbGxfZnVuY3Rpb25fbWFueV9jb25kKCk6
-CgpTYW1wbGVzOiAyMThLIG9mIGV2ZW50ICdjcHUtY2xvY2snLCA0MDAwIEh6Ck92ZXJoZWFkICBT
-aGFyZWQgT2JqZWN0ICAgICAgICBTeW1ib2wKICAgOTQuNTElICBba2VybmVsXSAgICAgICAgICAg
-ICBba10gc21wX2NhbGxfZnVuY3Rpb25fbWFueV9jb25kCiAgICAwLjc2JSAgW2tlcm5lbF0gICAg
-ICAgICAgICAgW2tdIF9fZG9fc29mdGlycQogICAgMC4zMiUgIFtrZXJuZWxdICAgICAgICAgICAg
-IFtrXSBuYXRpdmVfcXVldWVkX3NwaW5fbG9ja19zbG93cGF0aApbLi4uXQoKd2hpY2ggaXMgc3R1
-Y2sgaW4KCiAgICAgICAg4pSCICAgICBjc2RfbG9ja193YWl0KCk6CiAgICAgICAg4pSCICAgICAg
-ICAgICAgIHNtcF9jb25kX2xvYWRfYWNxdWlyZSgmY3NkLT5mbGFncywgIShWQUwgJgogICAwLjAw
-IOKUgiAgICAgICBtb3YgICAgMHg4KCVyY3gpLCVlZHgKICAgMC4wMCDilIIgICAgICAgYW5kICAg
-ICQweDEsJWVkeAogICAgICAgIOKUgiAgICAg4oaTIGplICAgICAyYjkKICAgICAgICDilIIgICAg
-IHJlcF9ub3AoKToKICAgMC43MCDilIIyYWY6ICAgcGF1c2UKICAgICAgICDilIIgICAgIGNzZF9s
-b2NrX3dhaXQoKToKICA5Mi44MiDilIIgICAgICAgbW92ICAgIDB4OCglcmN4KSwlZWR4CiAgIDYu
-NDgg4pSCICAgICAgIGFuZCAgICAkMHgxLCVlZHgKICAgMC4wMCDilIIgICAgIOKGkSBqbmUgICAg
-MmFmCiAgIDAuMDAg4pSCMmI5OiDihpEgam1wICAgIDI4MgoKCkdpdmVuIHRoZSBwYXRjaCBhdCBo
-YW5kIEkgd2FzIGV4cGVjdGluZyBsb3N0IElQSXMsIGJ1dCBJIGNhbid0IHF1aXRlIHNlZSAKYW55
-dGhpbmcgZ2V0dGluZyBsb3N0LgoKRG8geW91IGhhdmUgYW55IGZ1cnRoZXIgcG9pbnRlcnMgSSBj
-b3VsZCBsb29rIGF0PwoKClRoYW5rcywKCkFsZXgKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRl
-ciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVo
-cnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0g
-QW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxp
-bgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
+BCM1250_M3_WAR is depending on CONFIG_CONFIG_SB1_PASS_2_WORKAROUNDS.
+So using this option directly lets and remove define.
+
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+---
+ arch/mips/include/asm/mach-cavium-octeon/war.h |  2 --
+ arch/mips/include/asm/mach-generic/war.h       |  2 --
+ arch/mips/include/asm/mach-ip22/war.h          |  2 --
+ arch/mips/include/asm/mach-ip27/war.h          |  2 --
+ arch/mips/include/asm/mach-ip28/war.h          |  2 --
+ arch/mips/include/asm/mach-ip30/war.h          |  2 --
+ arch/mips/include/asm/mach-ip32/war.h          |  2 --
+ arch/mips/include/asm/mach-malta/war.h         |  2 --
+ arch/mips/include/asm/mach-rc32434/war.h       |  2 --
+ arch/mips/include/asm/mach-rm/war.h            |  2 --
+ arch/mips/include/asm/mach-sibyte/war.h        | 14 --------------
+ arch/mips/include/asm/mach-tx49xx/war.h        |  2 --
+ arch/mips/include/asm/war.h                    | 14 --------------
+ arch/mips/mm/tlbex.c                           |  6 +++++-
+ 14 files changed, 5 insertions(+), 51 deletions(-)
+
+diff --git a/arch/mips/include/asm/mach-cavium-octeon/war.h b/arch/mips/include/asm/mach-cavium-octeon/war.h
+index 0a2bf6b7af94..616de70e697c 100644
+--- a/arch/mips/include/asm/mach-cavium-octeon/war.h
++++ b/arch/mips/include/asm/mach-cavium-octeon/war.h
+@@ -9,8 +9,6 @@
+ #ifndef __ASM_MIPS_MACH_CAVIUM_OCTEON_WAR_H
+ #define __ASM_MIPS_MACH_CAVIUM_OCTEON_WAR_H
+ 
+-#define BCM1250_M3_WAR			0
+-
+ #define CAVIUM_OCTEON_DCACHE_PREFETCH_WAR	\
+ 	OCTEON_IS_MODEL(OCTEON_CN6XXX)
+ 
+diff --git a/arch/mips/include/asm/mach-generic/war.h b/arch/mips/include/asm/mach-generic/war.h
+index 6b7de91435e3..94796ad7e7de 100644
+--- a/arch/mips/include/asm/mach-generic/war.h
++++ b/arch/mips/include/asm/mach-generic/war.h
+@@ -8,6 +8,4 @@
+ #ifndef __ASM_MACH_GENERIC_WAR_H
+ #define __ASM_MACH_GENERIC_WAR_H
+ 
+-#define BCM1250_M3_WAR			0
+-
+ #endif /* __ASM_MACH_GENERIC_WAR_H */
+diff --git a/arch/mips/include/asm/mach-ip22/war.h b/arch/mips/include/asm/mach-ip22/war.h
+index 70de6a5008d3..12cf05dd46d3 100644
+--- a/arch/mips/include/asm/mach-ip22/war.h
++++ b/arch/mips/include/asm/mach-ip22/war.h
+@@ -8,6 +8,4 @@
+ #ifndef __ASM_MIPS_MACH_IP22_WAR_H
+ #define __ASM_MIPS_MACH_IP22_WAR_H
+ 
+-#define BCM1250_M3_WAR			0
+-
+ #endif /* __ASM_MIPS_MACH_IP22_WAR_H */
+diff --git a/arch/mips/include/asm/mach-ip27/war.h b/arch/mips/include/asm/mach-ip27/war.h
+index 5b01e8fe245f..0852fe64594d 100644
+--- a/arch/mips/include/asm/mach-ip27/war.h
++++ b/arch/mips/include/asm/mach-ip27/war.h
+@@ -8,6 +8,4 @@
+ #ifndef __ASM_MIPS_MACH_IP27_WAR_H
+ #define __ASM_MIPS_MACH_IP27_WAR_H
+ 
+-#define BCM1250_M3_WAR			0
+-
+ #endif /* __ASM_MIPS_MACH_IP27_WAR_H */
+diff --git a/arch/mips/include/asm/mach-ip28/war.h b/arch/mips/include/asm/mach-ip28/war.h
+index ba4267e2d34d..32796925700a 100644
+--- a/arch/mips/include/asm/mach-ip28/war.h
++++ b/arch/mips/include/asm/mach-ip28/war.h
+@@ -8,6 +8,4 @@
+ #ifndef __ASM_MIPS_MACH_IP28_WAR_H
+ #define __ASM_MIPS_MACH_IP28_WAR_H
+ 
+-#define BCM1250_M3_WAR			0
+-
+ #endif /* __ASM_MIPS_MACH_IP28_WAR_H */
+diff --git a/arch/mips/include/asm/mach-ip30/war.h b/arch/mips/include/asm/mach-ip30/war.h
+index f404e22b7798..ea77545f5128 100644
+--- a/arch/mips/include/asm/mach-ip30/war.h
++++ b/arch/mips/include/asm/mach-ip30/war.h
+@@ -5,6 +5,4 @@
+ #ifndef __ASM_MIPS_MACH_IP30_WAR_H
+ #define __ASM_MIPS_MACH_IP30_WAR_H
+ 
+-#define BCM1250_M3_WAR			0
+-
+ #endif /* __ASM_MIPS_MACH_IP30_WAR_H */
+diff --git a/arch/mips/include/asm/mach-ip32/war.h b/arch/mips/include/asm/mach-ip32/war.h
+index 01475db746ec..3e81408795b4 100644
+--- a/arch/mips/include/asm/mach-ip32/war.h
++++ b/arch/mips/include/asm/mach-ip32/war.h
+@@ -8,6 +8,4 @@
+ #ifndef __ASM_MIPS_MACH_IP32_WAR_H
+ #define __ASM_MIPS_MACH_IP32_WAR_H
+ 
+-#define BCM1250_M3_WAR			0
+-
+ #endif /* __ASM_MIPS_MACH_IP32_WAR_H */
+diff --git a/arch/mips/include/asm/mach-malta/war.h b/arch/mips/include/asm/mach-malta/war.h
+index 68b204ff59a6..0f5401c0e888 100644
+--- a/arch/mips/include/asm/mach-malta/war.h
++++ b/arch/mips/include/asm/mach-malta/war.h
+@@ -8,6 +8,4 @@
+ #ifndef __ASM_MIPS_MACH_MIPS_WAR_H
+ #define __ASM_MIPS_MACH_MIPS_WAR_H
+ 
+-#define BCM1250_M3_WAR			0
+-
+ #endif /* __ASM_MIPS_MACH_MIPS_WAR_H */
+diff --git a/arch/mips/include/asm/mach-rc32434/war.h b/arch/mips/include/asm/mach-rc32434/war.h
+index 68b204ff59a6..0f5401c0e888 100644
+--- a/arch/mips/include/asm/mach-rc32434/war.h
++++ b/arch/mips/include/asm/mach-rc32434/war.h
+@@ -8,6 +8,4 @@
+ #ifndef __ASM_MIPS_MACH_MIPS_WAR_H
+ #define __ASM_MIPS_MACH_MIPS_WAR_H
+ 
+-#define BCM1250_M3_WAR			0
+-
+ #endif /* __ASM_MIPS_MACH_MIPS_WAR_H */
+diff --git a/arch/mips/include/asm/mach-rm/war.h b/arch/mips/include/asm/mach-rm/war.h
+index 093a3894ae41..723c9de79ea1 100644
+--- a/arch/mips/include/asm/mach-rm/war.h
++++ b/arch/mips/include/asm/mach-rm/war.h
+@@ -8,6 +8,4 @@
+ #ifndef __ASM_MIPS_MACH_RM_WAR_H
+ #define __ASM_MIPS_MACH_RM_WAR_H
+ 
+-#define BCM1250_M3_WAR			0
+-
+ #endif /* __ASM_MIPS_MACH_RM_WAR_H */
+diff --git a/arch/mips/include/asm/mach-sibyte/war.h b/arch/mips/include/asm/mach-sibyte/war.h
+index 71eff5bc3f53..157eca1be328 100644
+--- a/arch/mips/include/asm/mach-sibyte/war.h
++++ b/arch/mips/include/asm/mach-sibyte/war.h
+@@ -8,18 +8,4 @@
+ #ifndef __ASM_MIPS_MACH_SIBYTE_WAR_H
+ #define __ASM_MIPS_MACH_SIBYTE_WAR_H
+ 
+-#if defined(CONFIG_SB1_PASS_2_WORKAROUNDS)
+-
+-#ifndef __ASSEMBLY__
+-extern int sb1250_m3_workaround_needed(void);
+-#endif
+-
+-#define BCM1250_M3_WAR	sb1250_m3_workaround_needed()
+-
+-#else
+-
+-#define BCM1250_M3_WAR	0
+-
+-#endif
+-
+ #endif /* __ASM_MIPS_MACH_SIBYTE_WAR_H */
+diff --git a/arch/mips/include/asm/mach-tx49xx/war.h b/arch/mips/include/asm/mach-tx49xx/war.h
+index 0dc2beb5bf5a..edf50e2bbb34 100644
+--- a/arch/mips/include/asm/mach-tx49xx/war.h
++++ b/arch/mips/include/asm/mach-tx49xx/war.h
+@@ -8,6 +8,4 @@
+ #ifndef __ASM_MIPS_MACH_TX49XX_WAR_H
+ #define __ASM_MIPS_MACH_TX49XX_WAR_H
+ 
+-#define BCM1250_M3_WAR			0
+-
+ #endif /* __ASM_MIPS_MACH_TX49XX_WAR_H */
+diff --git a/arch/mips/include/asm/war.h b/arch/mips/include/asm/war.h
+index 2ce5cd61a072..c20c04855089 100644
+--- a/arch/mips/include/asm/war.h
++++ b/arch/mips/include/asm/war.h
+@@ -72,18 +72,4 @@
+ #define DADDI_WAR 0
+ #endif
+ 
+-/*
+- * Workaround for the Sibyte M3 errata the text of which can be found at
+- *
+- *   http://sibyte.broadcom.com/hw/bcm1250/docs/pass2errata.txt
+- *
+- * This will enable the use of a special TLB refill handler which does a
+- * consistency check on the information in c0_badvaddr and c0_entryhi and
+- * will just return and take the exception again if the information was
+- * found to be inconsistent.
+- */
+-#ifndef BCM1250_M3_WAR
+-#error Check setting of BCM1250_M3_WAR for your platform
+-#endif
+-
+ #endif /* _ASM_WAR_H */
+diff --git a/arch/mips/mm/tlbex.c b/arch/mips/mm/tlbex.c
+index e931eb06af57..a7521b8f7658 100644
+--- a/arch/mips/mm/tlbex.c
++++ b/arch/mips/mm/tlbex.c
+@@ -83,9 +83,13 @@ static inline int r4k_250MHZhwbug(void)
+ 	return 0;
+ }
+ 
++extern int sb1250_m3_workaround_needed(void);
++
+ static inline int __maybe_unused bcm1250_m3_war(void)
+ {
+-	return BCM1250_M3_WAR;
++	if (IS_ENABLED(CONFIG_SB1_PASS_2_WORKAROUNDS))
++		return sb1250_m3_workaround_needed();
++	return 0;
+ }
+ 
+ static inline int __maybe_unused r10000_llsc_war(void)
+-- 
+2.16.4
 
