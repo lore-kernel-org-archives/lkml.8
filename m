@@ -2,510 +2,870 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB09C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD61EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFFF6206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4A48206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgHXC3m (ORCPT
+        id S1728071AbgHXC3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 22:29:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:55915 "EHLO mga05.intel.com"
+        Sun, 23 Aug 2020 22:29:46 -0400
+Received: from mga05.intel.com ([192.55.52.43]:56548 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727074AbgHXC3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 22:29:42 -0400
-IronPort-SDR: MrDtyrY4g9kMw5u3fIoWEekdUzg9asDeVNuAa0geNf055RIN7H8+zUoWx5MqaZ35/hjjY4gUIW
- KVqhF875PxSA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="240647630"
+        id S1726737AbgHXC3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 22:29:43 -0400
+IronPort-SDR: CxWY0FXOi2zRVsdFDlnsk5cP5IpKbLbsFZnQT/wZ6RUQSfTAhT3FxZX4i65fty5gClRFsGhVnJ
+ Ae1y9Q6wlipw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="240648372"
 X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
-   d="gz'50?scan'50,208,50";a="240647630"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+   d="scan'208";a="240648372"
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2020 19:17:37 -0700
-IronPort-SDR: HnqPJI3u2hcuQZBtSLcaH9e2eAbHtobsQLcX1HfU0EnRqr80qOWzUvC8sokHWIwKHaj3wum/Ff
- 5u52naIC+eRw==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2020 19:29:41 -0700
+IronPort-SDR: YD/e1yb0zayoCOT/vkNCiJpYYlXqJEIotAhgR4WVtWN//yx4e4jznLUsXDq3UA/Ey9Ye28JUJR
+ 9E0rpwzwIv4Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
-   d="gz'50?scan'50,208,50";a="330795780"
-Received: from lkp-server01.sh.intel.com (HELO 91ed66e1ca04) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 23 Aug 2020 19:17:36 -0700
-Received: from kbuild by 91ed66e1ca04 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kA23D-0002Ks-AR; Mon, 24 Aug 2020 02:17:35 +0000
-Date:   Mon, 24 Aug 2020 10:17:19 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: {standard input}:5973: Error: operand out of range (512 is not
- between -512 and 511)
-Message-ID: <202008241018.RkyIlLKd%lkp@intel.com>
+   d="scan'208";a="402121796"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Aug 2020 19:29:37 -0700
+Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>, Wu Hao <hao.wu@intel.com>
+Subject: Re: [PATCH v2 3/9] iommu/ioasid: Introduce ioasid_set APIs
+To:     Jacob Pan <jacob.pan.linux@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+References: <1598070918-21321-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1598070918-21321-4-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <4bae40d2-6ee5-85da-677c-0917f0429c07@linux.intel.com>
+Date:   Mon, 24 Aug 2020 10:24:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="vkogqOf2sHV7VnPd"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1598070918-21321-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacob,
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 8/22/20 12:35 PM, Jacob Pan wrote:
+> ioasid_set was introduced as an arbitrary token that are shared by a
+> group of IOASIDs. For example, if IOASID #1 and #2 are allocated via the
+> same ioasid_set*, they are viewed as to belong to the same set.
+> 
+> For guest SVA usages, system-wide IOASID resources need to be
+> partitioned such that VMs can have its own quota and being managed
+> separately. ioasid_set is the perfect candidate for meeting such
+> requirements. This patch redefines and extends ioasid_set with the
+> following new fields:
+> - Quota
+> - Reference count
+> - Storage of its namespace
+> - The token is stored in the new ioasid_set but with optional types
+> 
+> ioasid_set level APIs are introduced that wires up these new data.
+> Existing users of IOASID APIs are converted where a host IOASID set is
+> allocated for bare-metal usage.
+> 
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>   drivers/iommu/intel/iommu.c |  27 ++-
+>   drivers/iommu/intel/pasid.h |   1 +
+>   drivers/iommu/intel/svm.c   |   8 +-
+>   drivers/iommu/ioasid.c      | 390 +++++++++++++++++++++++++++++++++++++++++---
+>   include/linux/ioasid.h      |  82 ++++++++--
+>   5 files changed, 465 insertions(+), 43 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index a3a0b5c8921d..5813eeaa5edb 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -42,6 +42,7 @@
+>   #include <linux/crash_dump.h>
+>   #include <linux/numa.h>
+>   #include <linux/swiotlb.h>
+> +#include <linux/ioasid.h>
+>   #include <asm/irq_remapping.h>
+>   #include <asm/cacheflush.h>
+>   #include <asm/iommu.h>
+> @@ -103,6 +104,9 @@
+>    */
+>   #define INTEL_IOMMU_PGSIZES	(~0xFFFUL)
+>   
+> +/* PASIDs used by host SVM */
+> +struct ioasid_set *host_pasid_set;
+> +
+>   static inline int agaw_to_level(int agaw)
+>   {
+>   	return agaw + 2;
+> @@ -3103,8 +3107,8 @@ static void intel_vcmd_ioasid_free(ioasid_t ioasid, void *data)
+>   	 * Sanity check the ioasid owner is done at upper layer, e.g. VFIO
+>   	 * We can only free the PASID when all the devices are unbound.
+>   	 */
+> -	if (ioasid_find(NULL, ioasid, NULL)) {
+> -		pr_alert("Cannot free active IOASID %d\n", ioasid);
+> +	if (IS_ERR(ioasid_find(host_pasid_set, ioasid, NULL))) {
+> +		pr_err("Cannot free IOASID %d, not in system set\n", ioasid);
+>   		return;
+>   	}
+>   	vcmd_free_pasid(iommu, ioasid);
+> @@ -3288,6 +3292,19 @@ static int __init init_dmars(void)
+>   	if (ret)
+>   		goto free_iommu;
+>   
+> +	/* PASID is needed for scalable mode irrespective to SVM */
+> +	if (intel_iommu_sm) {
+> +		ioasid_install_capacity(intel_pasid_max_id);
+> +		/* We should not run out of IOASIDs at boot */
+> +		host_pasid_set = ioasid_alloc_set(NULL, PID_MAX_DEFAULT,
+> +						IOASID_SET_TYPE_NULL);
+> +		if (IS_ERR_OR_NULL(host_pasid_set)) {
+> +			pr_err("Failed to enable host PASID allocator %lu\n",
+> +				PTR_ERR(host_pasid_set));
+> +			intel_iommu_sm = 0;
+> +		}
+> +	}
+> +
+>   	/*
+>   	 * for each drhd
+>   	 *   enable fault log
+> @@ -5149,7 +5166,7 @@ static void auxiliary_unlink_device(struct dmar_domain *domain,
+>   	domain->auxd_refcnt--;
+>   
+>   	if (!domain->auxd_refcnt && domain->default_pasid > 0)
+> -		ioasid_free(domain->default_pasid);
+> +		ioasid_free(host_pasid_set, domain->default_pasid);
+>   }
+>   
+>   static int aux_domain_add_dev(struct dmar_domain *domain,
+> @@ -5167,7 +5184,7 @@ static int aux_domain_add_dev(struct dmar_domain *domain,
+>   		int pasid;
+>   
+>   		/* No private data needed for the default pasid */
+> -		pasid = ioasid_alloc(NULL, PASID_MIN,
+> +		pasid = ioasid_alloc(host_pasid_set, PASID_MIN,
+>   				     pci_max_pasids(to_pci_dev(dev)) - 1,
+>   				     NULL);
+>   		if (pasid == INVALID_IOASID) {
+> @@ -5210,7 +5227,7 @@ static int aux_domain_add_dev(struct dmar_domain *domain,
+>   	spin_unlock(&iommu->lock);
+>   	spin_unlock_irqrestore(&device_domain_lock, flags);
+>   	if (!domain->auxd_refcnt && domain->default_pasid > 0)
+> -		ioasid_free(domain->default_pasid);
+> +		ioasid_free(host_pasid_set, domain->default_pasid);
+>   
+>   	return ret;
+>   }
+> diff --git a/drivers/iommu/intel/pasid.h b/drivers/iommu/intel/pasid.h
+> index c9850766c3a9..ccdc23446015 100644
+> --- a/drivers/iommu/intel/pasid.h
+> +++ b/drivers/iommu/intel/pasid.h
+> @@ -99,6 +99,7 @@ static inline bool pasid_pte_is_present(struct pasid_entry *pte)
+>   }
+>   
+>   extern u32 intel_pasid_max_id;
+> +extern struct ioasid_set *host_pasid_set;
+>   int intel_pasid_alloc_id(void *ptr, int start, int end, gfp_t gfp);
+>   void intel_pasid_free_id(int pasid);
+>   void *intel_pasid_lookup_id(int pasid);
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index 37a9beabc0ca..634e191ca2c3 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -551,7 +551,7 @@ intel_svm_bind_mm(struct device *dev, int flags, struct svm_dev_ops *ops,
+>   			pasid_max = intel_pasid_max_id;
+>   
+>   		/* Do not use PASID 0, reserved for RID to PASID */
+> -		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
+> +		svm->pasid = ioasid_alloc(host_pasid_set, PASID_MIN,
+>   					  pasid_max - 1, svm);
+>   		if (svm->pasid == INVALID_IOASID) {
+>   			kfree(svm);
+> @@ -568,7 +568,7 @@ intel_svm_bind_mm(struct device *dev, int flags, struct svm_dev_ops *ops,
+>   		if (mm) {
+>   			ret = mmu_notifier_register(&svm->notifier, mm);
+>   			if (ret) {
+> -				ioasid_free(svm->pasid);
+> +				ioasid_free(host_pasid_set, svm->pasid);
+>   				kfree(svm);
+>   				kfree(sdev);
+>   				goto out;
+> @@ -586,7 +586,7 @@ intel_svm_bind_mm(struct device *dev, int flags, struct svm_dev_ops *ops,
+>   		if (ret) {
+>   			if (mm)
+>   				mmu_notifier_unregister(&svm->notifier, mm);
+> -			ioasid_free(svm->pasid);
+> +			ioasid_free(host_pasid_set, svm->pasid);
+>   			kfree(svm);
+>   			kfree(sdev);
+>   			goto out;
+> @@ -655,7 +655,7 @@ static int intel_svm_unbind_mm(struct device *dev, int pasid)
+>   			kfree_rcu(sdev, rcu);
+>   
+>   			if (list_empty(&svm->devs)) {
+> -				ioasid_free(svm->pasid);
+> +				ioasid_free(host_pasid_set, svm->pasid);
+>   				if (svm->mm)
+>   					mmu_notifier_unregister(&svm->notifier, svm->mm);
+>   				list_del(&svm->list);
+> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> index 5f63af07acd5..f73b3dbfc37a 100644
+> --- a/drivers/iommu/ioasid.c
+> +++ b/drivers/iommu/ioasid.c
+> @@ -1,22 +1,58 @@
+>   // SPDX-License-Identifier: GPL-2.0
+>   /*
+>    * I/O Address Space ID allocator. There is one global IOASID space, split into
+> - * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
+> - * free IOASIDs with ioasid_alloc and ioasid_free.
+> + * subsets. Users create a subset with ioasid_alloc_set, then allocate/free IDs
+> + * with ioasid_alloc and ioasid_free.
+>    */
+> -#include <linux/ioasid.h>
+>   #include <linux/module.h>
+>   #include <linux/slab.h>
+>   #include <linux/spinlock.h>
+>   #include <linux/xarray.h>
+> +#include <linux/ioasid.h>
+> +
+> +static DEFINE_XARRAY_ALLOC(ioasid_sets);
+> +enum ioasid_state {
+> +	IOASID_STATE_INACTIVE,
+> +	IOASID_STATE_ACTIVE,
+> +	IOASID_STATE_FREE_PENDING,
+> +};
+>   
+> +/**
+> + * struct ioasid_data - Meta data about ioasid
+> + *
+> + * @id:		Unique ID
+> + * @users	Number of active users
+> + * @state	Track state of the IOASID
+> + * @set		Meta data of the set this IOASID belongs to
+> + * @private	Private data associated with the IOASID
+> + * @rcu		For free after RCU grace period
+> + */
+>   struct ioasid_data {
+>   	ioasid_t id;
+>   	struct ioasid_set *set;
+> +	refcount_t users;
+> +	enum ioasid_state state;
+>   	void *private;
+>   	struct rcu_head rcu;
+>   };
+>   
+> +/* Default to PCIe standard 20 bit PASID */
+> +#define PCI_PASID_MAX 0x100000
+> +static ioasid_t ioasid_capacity = PCI_PASID_MAX;
+> +static ioasid_t ioasid_capacity_avail = PCI_PASID_MAX;
+> +
+> +void ioasid_install_capacity(ioasid_t total)
+> +{
+> +	ioasid_capacity = ioasid_capacity_avail = total;
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   d012a7190fc1fd72ed48911e77ca97ba4521bccd
-commit: de8f5e4f2dc1f032b46afda0a78cab5456974f89 lockdep: Introduce wait-type checks
-date:   5 months ago
-config: arc-randconfig-r004-20200824 (attached as .config)
-compiler: arc-elf-gcc (GCC) 9.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git checkout de8f5e4f2dc1f032b46afda0a78cab5456974f89
-        # save the attached .config to linux build tree
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=arc 
+Need any check for multiple settings or setting after used?
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_install_capacity);
+> +
+> +ioasid_t ioasid_get_capacity()
+> +{
+> +	return ioasid_capacity;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_get_capacity);
+> +
+>   /*
+>    * struct ioasid_allocator_data - Internal data structure to hold information
+>    * about an allocator. There are two types of allocators:
+> @@ -306,11 +342,23 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+>   {
+>   	struct ioasid_data *data;
+>   	void *adata;
+> -	ioasid_t id;
+> +	ioasid_t id = INVALID_IOASID;
+> +
+> +	spin_lock(&ioasid_allocator_lock);
+> +	/* Check if the IOASID set has been allocated and initialized */
+> +	if (WARN_ON(xa_load(&ioasid_sets, set->sid) != set)) {
+> +		pr_warn("Invalid set\n");
+> +		goto done_unlock;
+> +	}
+> +
+> +	if (set->quota <= set->nr_ioasids) {
+> +		pr_err("IOASID set %d out of quota %d\n", set->sid, set->quota);
+> +		goto done_unlock;
+> +	}
+>   
+>   	data = kzalloc(sizeof(*data), GFP_ATOMIC);
+>   	if (!data)
+> -		return INVALID_IOASID;
+> +		goto done_unlock;
+>   
+>   	data->set = set;
+>   	data->private = private;
+> @@ -319,7 +367,6 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+>   	 * Custom allocator needs allocator data to perform platform specific
+>   	 * operations.
+>   	 */
+> -	spin_lock(&ioasid_allocator_lock);
+>   	adata = active_allocator->flags & IOASID_ALLOCATOR_CUSTOM ? active_allocator->ops->pdata : data;
+>   	id = active_allocator->ops->alloc(min, max, adata);
+>   	if (id == INVALID_IOASID) {
+> @@ -335,42 +382,339 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+>   		goto exit_free;
+>   	}
+>   	data->id = id;
+> +	data->state = IOASID_STATE_ACTIVE;
+> +	refcount_set(&data->users, 1);
+> +
+> +	/* Store IOASID in the per set data */
+> +	if (xa_err(xa_store(&set->xa, id, data, GFP_ATOMIC))) {
+> +		pr_err("Failed to ioasid %d in set %d\n", id, set->sid);
+> +		goto exit_free;
+> +	}
+> +	set->nr_ioasids++;
+> +	goto done_unlock;
+>   
+> -	spin_unlock(&ioasid_allocator_lock);
+> -	return id;
+>   exit_free:
+> -	spin_unlock(&ioasid_allocator_lock);
+>   	kfree(data);
+> -	return INVALID_IOASID;
+> +done_unlock:
+> +	spin_unlock(&ioasid_allocator_lock);
+> +	return id;
+>   }
+>   EXPORT_SYMBOL_GPL(ioasid_alloc);
+>   
+> +static void ioasid_do_free(struct ioasid_data *data)
+> +{
+> +	struct ioasid_data *ioasid_data;
+> +	struct ioasid_set *sdata;
+> +
+> +	active_allocator->ops->free(data->id, active_allocator->ops->pdata);
+> +	/* Custom allocator needs additional steps to free the xa element */
+> +	if (active_allocator->flags & IOASID_ALLOCATOR_CUSTOM) {
+> +		ioasid_data = xa_erase(&active_allocator->xa, data->id);
+> +		kfree_rcu(ioasid_data, rcu);
+> +	}
+> +
+> +	sdata = xa_load(&ioasid_sets, data->set->sid);
+> +	if (!sdata) {
+> +		pr_err("No set %d for IOASID %d\n", data->set->sid,
+> +		       data->id);
+> +		return;
+> +	}
+> +	xa_erase(&sdata->xa, data->id);
+> +	sdata->nr_ioasids--;
+> +}
+> +
+> +static void ioasid_free_locked(struct ioasid_set *set, ioasid_t ioasid)
+> +{
+> +	struct ioasid_data *data;
+> +
+> +	data = xa_load(&active_allocator->xa, ioasid);
+> +	if (!data) {
+> +		pr_err("Trying to free unknown IOASID %u\n", ioasid);
+> +		return;
+> +	}
+> +
+> +	if (data->set != set) {
+> +		pr_warn("Cannot free IOASID %u due to set ownership\n", ioasid);
+> +		return;
+> +	}
+> +	data->state = IOASID_STATE_FREE_PENDING;
+> +
+> +	if (!refcount_dec_and_test(&data->users))
+> +		return;
+> +
+> +	ioasid_do_free(data);
+> +}
+> +
+>   /**
+> - * ioasid_free - Free an IOASID
+> - * @ioasid: the ID to remove
+> + * ioasid_free - Drop reference on an IOASID. Free if refcount drops to 0,
+> + *               including free from its set and system-wide list.
+> + * @set:	The ioasid_set to check permission with. If not NULL, IOASID
+> + *		free will fail if the set does not match.
+> + * @ioasid:	The IOASID to remove
+>    */
+> -void ioasid_free(ioasid_t ioasid)
+> +void ioasid_free(struct ioasid_set *set, ioasid_t ioasid)
+>   {
+> -	struct ioasid_data *ioasid_data;
+> +	spin_lock(&ioasid_allocator_lock);
+> +	ioasid_free_locked(set, ioasid);
+> +	spin_unlock(&ioasid_allocator_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_free);
+>   
+> +/**
+> + * ioasid_alloc_set - Allocate a new IOASID set for a given token
+> + *
+> + * @token:	Unique token of the IOASID set, cannot be NULL
 
-All errors (new ones prefixed by >>):
+What's the use of @token? I might be able to find the answer in the
+code, but i have no idea when i comes here first time. :-)
 
-   {standard input}: Assembler messages:
->> {standard input}:5973: Error: operand out of range (512 is not between -512 and 511)
+This line of comment says that token cannot be NULL. It seems not to
+match the real code, where token could be NULL if type is
+IOASID_SET_TYPE_NULL.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> + * @quota:	Quota allowed in this set. Only for new set creation
+> + * @flags:	Special requirements
+> + *
+> + * IOASID can be limited system-wide resource that requires quota management.
+> + * If caller does not wish to enforce quota, use IOASID_SET_NO_QUOTA flag.
 
---vkogqOf2sHV7VnPd
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+If you are not going to add NO_QUOTA support this time, I'd suggest you
+to remove above comment.
 
-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
+> + *
+> + * Token will be stored in the ioasid_set returned. A reference will be taken
+> + * upon finding a matching set or newly created set.
+> + * IOASID allocation within the set and other per set operations will use
+> + * the retured ioasid_set *.
 
---vkogqOf2sHV7VnPd--
+nit: remove *, or you mean the ioasid_set pointer?
+
+> + *
+> + */
+> +struct ioasid_set *ioasid_alloc_set(void *token, ioasid_t quota, int type)
+> +{
+> +	struct ioasid_set *sdata;
+> +	unsigned long index;
+> +	ioasid_t id;
+> +
+> +	if (type >= IOASID_SET_TYPE_NR)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	/*
+> +	 * Need to check space available if we share system-wide quota.
+> +	 * TODO: we may need to support quota free sets in the future.
+> +	 */
+>   	spin_lock(&ioasid_allocator_lock);
+> -	ioasid_data = xa_load(&active_allocator->xa, ioasid);
+> -	if (!ioasid_data) {
+> -		pr_err("Trying to free unknown IOASID %u\n", ioasid);
+> +	if (quota > ioasid_capacity_avail) {
+
+Thinking that ioasid_set itself needs an ioasid, so the check might be
+
+	(quota + 1 > ioasid_capacity_avail)?
+
+> +		pr_warn("Out of IOASID capacity! ask %d, avail %d\n",
+> +			quota, ioasid_capacity_avail);
+> +		sdata = ERR_PTR(-ENOSPC);
+>   		goto exit_unlock;
+>   	}
+>   
+> -	active_allocator->ops->free(ioasid, active_allocator->ops->pdata);
+> -	/* Custom allocator needs additional steps to free the xa element */
+> -	if (active_allocator->flags & IOASID_ALLOCATOR_CUSTOM) {
+> -		ioasid_data = xa_erase(&active_allocator->xa, ioasid);
+> -		kfree_rcu(ioasid_data, rcu);
+> +	/*
+> +	 * Token is only unique within its types but right now we have only
+> +	 * mm type. If we have more token types, we have to match type as well.
+> +	 */
+> +	switch (type) {
+> +	case IOASID_SET_TYPE_MM:
+> +		/* Search existing set tokens, reject duplicates */
+> +		xa_for_each(&ioasid_sets, index, sdata) {
+> +			if (sdata->token == token &&
+> +				sdata->type == IOASID_SET_TYPE_MM) {
+> +				sdata = ERR_PTR(-EEXIST);
+> +				goto exit_unlock;
+> +			}
+> +		}
+
+Do you need to enforce non-NULL token policy here?
+
+> +		break;
+> +	case IOASID_SET_TYPE_NULL:
+> +		if (!token)
+> +			break;
+> +		fallthrough;
+> +	default:
+> +		pr_err("Invalid token and IOASID type\n");
+> +		sdata = ERR_PTR(-EINVAL);
+> +		goto exit_unlock;
+>   	}
+>   
+> +	/* REVISIT: may support set w/o quota, use system available */
+> +	if (!quota) {
+> +		sdata = ERR_PTR(-EINVAL);
+> +		goto exit_unlock;
+> +	}
+> +
+> +	sdata = kzalloc(sizeof(*sdata), GFP_ATOMIC);
+> +	if (!sdata) {
+> +		sdata = ERR_PTR(-ENOMEM);
+> +		goto exit_unlock;
+> +	}
+> +
+> +	if (xa_alloc(&ioasid_sets, &id, sdata,
+> +			XA_LIMIT(0, ioasid_capacity_avail - quota),
+> +			GFP_ATOMIC)) {
+> +		kfree(sdata);
+> +		sdata = ERR_PTR(-ENOSPC);
+> +		goto exit_unlock;
+> +	}
+> +
+> +	sdata->token = token;
+> +	sdata->type = type;
+> +	sdata->quota = quota;
+> +	sdata->sid = id;
+> +	refcount_set(&sdata->ref, 1);
+> +
+> +	/*
+> +	 * Per set XA is used to store private IDs within the set, get ready
+> +	 * for ioasid_set private ID and system-wide IOASID allocation
+> +	 * results.
+> +	 */
+
+I'm not sure that I understood the per-set XA correctly. Is it used to
+save both private ID and real ID allocated from the system-wide pool? If
+so, isn't private id might be equal to real ID?
+
+> +	xa_init_flags(&sdata->xa, XA_FLAGS_ALLOC);
+> +	ioasid_capacity_avail -= quota;
+
+As mentioned above, the ioasid_set consumed one extra ioasid, so
+
+	ioasid_capacity_avail -= (quota + 1);
+
+?
+
+> +
+>   exit_unlock:
+>   	spin_unlock(&ioasid_allocator_lock);
+> +
+> +	return sdata;
+>   }
+> -EXPORT_SYMBOL_GPL(ioasid_free);
+> +EXPORT_SYMBOL_GPL(ioasid_alloc_set);
+> +
+> +void ioasid_set_get_locked(struct ioasid_set *set)
+> +{
+> +	if (WARN_ON(xa_load(&ioasid_sets, set->sid) != set)) {
+> +		pr_warn("Invalid set data\n");
+> +		return;
+> +	}
+> +
+> +	refcount_inc(&set->ref);
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_set_get_locked);
+> +
+> +void ioasid_set_get(struct ioasid_set *set)
+> +{
+> +	spin_lock(&ioasid_allocator_lock);
+> +	ioasid_set_get_locked(set);
+> +	spin_unlock(&ioasid_allocator_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_set_get);
+> +
+> +void ioasid_set_put_locked(struct ioasid_set *set)
+> +{
+> +	struct ioasid_data *entry;
+> +	unsigned long index;
+> +
+> +	if (WARN_ON(xa_load(&ioasid_sets, set->sid) != set)) {
+
+There are multiple occurences of this line of code, how about defining
+it as a inline helper?
+
+static inline bool ioasid_is_valid(struct ioasid_set *set)
+{
+	return xa_load(&ioasid_sets, set->sid) == set;
+}
+
+> +		pr_warn("Invalid set data\n");
+> +		return;
+> +	}
+> +
+> +	if (!refcount_dec_and_test(&set->ref)) {
+> +		pr_debug("%s: IOASID set %d has %d users\n",
+> +			__func__, set->sid, refcount_read(&set->ref));
+> +		return;
+> +	}
+> +
+> +	/* The set is already empty, we just destroy the set. */
+> +	if (xa_empty(&set->xa))
+> +		goto done_destroy;
+> +
+> +	/*
+> +	 * Free all PASIDs from system-wide IOASID pool, all subscribers gets
+> +	 * notified and do cleanup of their own.
+> +	 * Note that some references of the IOASIDs within the set can still
+> +	 * be held after the free call. This is OK in that the IOASIDs will be
+> +	 * marked inactive, the only operations can be done is ioasid_put.
+> +	 * No need to track IOASID set states since there is no reclaim phase.
+> +	 */
+> +	xa_for_each(&set->xa, index, entry) {
+> +		ioasid_free_locked(set, index);
+> +		/* Free from per set private pool */
+> +		xa_erase(&set->xa, index);
+> +	}
+> +
+> +done_destroy:
+> +	/* Return the quota back to system pool */
+> +	ioasid_capacity_avail += set->quota;
+> +	kfree_rcu(set, rcu);
+> +
+> +	/*
+> +	 * Token got released right away after the ioasid_set is freed.
+> +	 * If a new set is created immediately with the newly released token,
+> +	 * it will not allocate the same IOASIDs unless they are reclaimed.
+> +	 */
+> +	xa_erase(&ioasid_sets, set->sid);
+
+No. pointer is used after free.
+
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_set_put_locked);
+> +
+> +/**
+> + * ioasid_set_put - Drop a reference to the IOASID set. Free all IOASIDs within
+> + *                  the set if there are no more users.
+> + *
+> + * @set:	The IOASID set ID to be freed
+> + *
+> + * If refcount drops to zero, all IOASIDs allocated within the set will be
+> + * freed.
+> + */
+> +void ioasid_set_put(struct ioasid_set *set)
+> +{
+> +	spin_lock(&ioasid_allocator_lock);
+> +	ioasid_set_put_locked(set);
+> +	spin_unlock(&ioasid_allocator_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_set_put);
+> +
+> +/**
+> + * ioasid_adjust_set - Adjust the quota of an IOASID set
+> + * @set:	IOASID set to be assigned
+> + * @quota:	Quota allowed in this set
+> + *
+> + * Return 0 on success. If the new quota is smaller than the number of
+> + * IOASIDs already allocated, -EINVAL will be returned. No change will be
+> + * made to the existing quota.
+> + */
+> +int ioasid_adjust_set(struct ioasid_set *set, int quota)
+> +{
+> +	int ret = 0;
+> +
+> +	spin_lock(&ioasid_allocator_lock);
+> +	if (set->nr_ioasids > quota) {
+> +		pr_err("New quota %d is smaller than outstanding IOASIDs %d\n",
+> +			quota, set->nr_ioasids);
+> +		ret = -EINVAL;
+> +		goto done_unlock;
+> +	}
+> +
+> +	if (quota >= ioasid_capacity_avail) {
+
+This check doesn't make sense since you are updating (not asking for) a
+quota.
+
+if ((quota > set->quota) &&
+     (quota - set->quota > ioasid_capacity_avail))
+
+> +		ret = -ENOSPC;
+> +		goto done_unlock;
+> +	}
+> +
+> +	/* Return the delta back to system pool */
+> +	ioasid_capacity_avail += set->quota - quota;
+
+ioasid_capacity_avail is defined as a unsigned int, hence this always
+increase the available capacity value even the caller is asking for a
+bigger quota?
+
+> +
+> +	/*
+> +	 * May have a policy to prevent giving all available IOASIDs
+> +	 * to one set. But we don't enforce here, it should be in the
+> +	 * upper layers.
+> +	 */
+> +	set->quota = quota;
+> +
+> +done_unlock:
+> +	spin_unlock(&ioasid_allocator_lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_adjust_set);
+> +
+> +/**
+> + * ioasid_set_for_each_ioasid - Iterate over all the IOASIDs within the set
+> + *
+> + * Caller must hold a reference of the set and handles its own locking.
+
+Do you need to hold ioasid_allocator_lock here?
+
+> + */
+> +int ioasid_set_for_each_ioasid(struct ioasid_set *set,
+> +			       void (*fn)(ioasid_t id, void *data),
+> +			       void *data)
+> +{
+> +	struct ioasid_data *entry;
+> +	unsigned long index;
+> +	int ret = 0;
+> +
+> +	if (xa_empty(&set->xa)) {
+> +		pr_warn("No IOASIDs in the set %d\n", set->sid);
+> +		return -ENOENT;
+> +	}
+> +
+> +	xa_for_each(&set->xa, index, entry) {
+> +		fn(index, data);
+> +	}
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_set_for_each_ioasid);
+>   
+>   /**
+>    * ioasid_find - Find IOASID data
+> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+> index 9c44947a68c8..412d025d440e 100644
+> --- a/include/linux/ioasid.h
+> +++ b/include/linux/ioasid.h
+> @@ -10,8 +10,35 @@ typedef unsigned int ioasid_t;
+>   typedef ioasid_t (*ioasid_alloc_fn_t)(ioasid_t min, ioasid_t max, void *data);
+>   typedef void (*ioasid_free_fn_t)(ioasid_t ioasid, void *data);
+>   
+> +/* IOASID set types */
+> +enum ioasid_set_type {
+> +	IOASID_SET_TYPE_NULL = 1, /* Set token is NULL */
+> +	IOASID_SET_TYPE_MM,	  /* Set token is a mm_struct,
+> +				   * i.e. associated with a process
+> +				   */
+> +	IOASID_SET_TYPE_NR,
+> +};
+> +
+> +/**
+> + * struct ioasid_set - Meta data about ioasid_set
+> + * @type:	Token types and other features
+> + * @token:	Unique to identify an IOASID set
+> + * @xa:		XArray to store ioasid_set private IDs, can be used for
+> + *		guest-host IOASID mapping, or just a private IOASID namespace.
+> + * @quota:	Max number of IOASIDs can be allocated within the set
+> + * @nr_ioasids	Number of IOASIDs currently allocated in the set
+> + * @sid:	ID of the set
+> + * @ref:	Reference count of the users
+> + */
+>   struct ioasid_set {
+> -	int dummy;
+> +	void *token;
+> +	struct xarray xa;
+> +	int type;
+> +	int quota;
+> +	int nr_ioasids;
+> +	int sid;
+> +	refcount_t ref;
+> +	struct rcu_head rcu;
+>   };
+>   
+>   /**
+> @@ -29,31 +56,64 @@ struct ioasid_allocator_ops {
+>   	void *pdata;
+>   };
+>   
+> -#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
+> -
+>   #if IS_ENABLED(CONFIG_IOASID)
+> +void ioasid_install_capacity(ioasid_t total);
+> +ioasid_t ioasid_get_capacity(void);
+> +struct ioasid_set *ioasid_alloc_set(void *token, ioasid_t quota, int type);
+> +int ioasid_adjust_set(struct ioasid_set *set, int quota);
+> +void ioasid_set_get_locked(struct ioasid_set *set);
+> +void ioasid_set_put_locked(struct ioasid_set *set);
+> +void ioasid_set_put(struct ioasid_set *set);
+> +
+>   ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+>   		      void *private);
+> -void ioasid_free(ioasid_t ioasid);
+> -void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+> -		  bool (*getter)(void *));
+> +void ioasid_free(struct ioasid_set *set, ioasid_t ioasid);
+> +
+> +bool ioasid_is_active(ioasid_t ioasid);
+> +
+> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid, bool (*getter)(void *));
+> +int ioasid_attach_data(ioasid_t ioasid, void *data);
+>   int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
+>   void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
+> -int ioasid_attach_data(ioasid_t ioasid, void *data);
+> -
+> +void ioasid_is_in_set(struct ioasid_set *set, ioasid_t ioasid);
+> +int ioasid_set_for_each_ioasid(struct ioasid_set *sdata,
+> +			       void (*fn)(ioasid_t id, void *data),
+> +			       void *data);
+>   #else /* !CONFIG_IOASID */
+> +static inline void ioasid_install_capacity(ioasid_t total)
+> +{
+> +}
+> +
+> +static inline ioasid_t ioasid_get_capacity(void)
+> +{
+> +	return 0;
+> +}
+> +
+>   static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
+>   				    ioasid_t max, void *private)
+>   {
+>   	return INVALID_IOASID;
+>   }
+>   
+> -static inline void ioasid_free(ioasid_t ioasid)
+> +static inline void ioasid_free(struct ioasid_set *set, ioasid_t ioasid)
+> +{
+> +}
+> +
+> +static inline bool ioasid_is_active(ioasid_t ioasid)
+> +{
+> +	return false;
+> +}
+> +
+> +static inline struct ioasid_set *ioasid_alloc_set(void *token, ioasid_t quota, int type)
+> +{
+> +	return ERR_PTR(-ENOTSUPP);
+> +}
+> +
+> +static inline void ioasid_set_put(struct ioasid_set *set)
+>   {
+>   }
+>   
+> -static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+> -				bool (*getter)(void *))
+> +static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid, bool (*getter)(void *))
+>   {
+>   	return NULL;
+>   }
+> 
+
+Best regards,
+baolu
