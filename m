@@ -2,99 +2,103 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A84C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8ADC2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598296167;
-	bh=WM1mj9GPK7MyD6GlnY/K1UotRAuqdew7qiTlVR6AOSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gK4tQvaI/oKqy7E4D7xn19tIdDjDsyhB8FF0grVsV0f9iwfdTJHJ7V//nJ46KrP99
-	 KphWF3C9CXrIyQqoJLMDCS/d2yA7nRYmj0Vzp9yykwdBY5sW7Azgfs3dhh2rRIyaMe
-	 RnR6KY+RjT5GCyfkmJ3/m4l3z5QNPlkKFy38PyWY=
+	by mail.kernel.org (Postfix) with ESMTP id 4A22D2078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgHXTJZ (ORCPT
+        id S1726784AbgHXTJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:09:25 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53280 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbgHXTJW (ORCPT
+        Mon, 24 Aug 2020 15:09:59 -0400
+Received: from smtprelay0021.hostedemail.com ([216.40.44.21]:50168 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725976AbgHXTJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:09:22 -0400
-Received: by mail-wm1-f68.google.com with SMTP id u18so9781804wmc.3;
-        Mon, 24 Aug 2020 12:09:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lkYuZ+AU/xmAHBPjtK9v9v+eSex3YmMEccb9nQ0uFOg=;
-        b=YDbdWh6Sf+rnXJK525OJXzbExo+KGCvF7M9T2/tnRY0ZGHjg6y0KgtDqvGHWPRLdS1
-         YxP5bD0RVtWohGGfP0KQQxmVOl9vspQbZE3et/y5aod64ap6UpkwBeuVdyn5s/zo6g+p
-         yIvzw0RkG3cOU1u29tc6i/AI0v++d02mdee9ThYC6k7j+GdvA58sD95zEBNO6MGKuh9Q
-         Hmni0aauuziq03Cpt1M6qP68GjPQbd4URfARf/H5g5pItJJNeGoKgvGOp0dDbAe5zcKj
-         IN1H1MLz8k2KNuljUi6CoKvNWEJMBl8QwLtPp8qzq8ObhMmSdSDbDLbdsgayNPetGIfG
-         VyEg==
-X-Gm-Message-State: AOAM5319HyF/l7dLtPmAhB7xqUYrzNzh4pICffzDvpzEYANqw8voa4s4
-        r7bU0FyXBYJaLjv8wooULFI=
-X-Google-Smtp-Source: ABdhPJyqfbE+cdOfZ4IGBp4XY991J2Mg2zGm1lFpUETzbAozdFqX/22fzbavZUIVBbh0wo3qFzcasA==
-X-Received: by 2002:a1c:4b0e:: with SMTP id y14mr672535wma.60.1598296160696;
-        Mon, 24 Aug 2020 12:09:20 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id o66sm954229wmb.27.2020.08.24.12.09.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 12:09:20 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 21:09:17 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/4] arm64: dts: imx8mm-var-som: Add Variscite
- VAR-SOM-MX8MM System on Module
-Message-ID: <20200824190917.GA8631@kozik-lap>
-References: <20200824160247.19032-1-krzk@kernel.org>
- <20200824160247.19032-3-krzk@kernel.org>
- <CAOMZO5DquPR9BmQP0kZfTqNJmRabPe1Vtc801M9CVCPFCd1usQ@mail.gmail.com>
- <20200824185713.GA5343@kozik-lap>
- <CAOMZO5B71L7+d_bUY2D=fjhhg5QFEnTsq=U84+7k9nhhmxV04g@mail.gmail.com>
+        Mon, 24 Aug 2020 15:09:58 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id CE64A837F24A;
+        Mon, 24 Aug 2020 19:09:57 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: lace57_3816ffb27055
+X-Filterd-Recvd-Size: 2902
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 24 Aug 2020 19:09:56 +0000 (UTC)
+Message-ID: <1bf51283e26e6dd5f3c3e017d15cbb50dd84e507.camel@perches.com>
+Subject: Re: [PATCH 2/3] dyndbg: refine export, rename to
+ dynamic_debug_exec_queries()
+From:   Joe Perches <joe@perches.com>
+To:     Jim Cromie <jim.cromie@gmail.com>, jbaron@akamai.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Date:   Mon, 24 Aug 2020 12:09:55 -0700
+In-Reply-To: <20200824185412.1617174-3-jim.cromie@gmail.com>
+References: <20200824185412.1617174-1-jim.cromie@gmail.com>
+         <20200824185412.1617174-3-jim.cromie@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5B71L7+d_bUY2D=fjhhg5QFEnTsq=U84+7k9nhhmxV04g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 04:03:53PM -0300, Fabio Estevam wrote:
-> On Mon, Aug 24, 2020 at 3:57 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Mon, 2020-08-24 at 12:54 -0600, Jim Cromie wrote:
+> commit 59cf47e7df31 dyndbg: export ddebug_exec_queries
+> left a few configs broken, fix them with ifdef-stubs.
 > 
-> > True, I'll fix it up, thanks.
-> >
-> > Any comments for the Symphony DTS before v4?
+> Rename the export to dynamic_debug_exec_queries().  This is a more
+> canonical function name, instead of exposing the 'ddebug' internal
+> name prefix.  Do this now, before export hits v5.9.0
 > 
-> It looks good.
-> 
-> One suggestion is to remove pinctrl_pcie0 for now and add it when PCI
-> support is in place.
+> Implement as new function wrapping ddebug_exec_queries(now static
+> again), which copies the query-string, preserving ddebug_exec_queries'
+> in-place parsing, while allowing users to pass "const strings".
+[]
+> diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
+[]
+> @@ -210,6 +215,13 @@ static inline int ddebug_dyndbg_module_param_cb(char *param, char *val,
+>  		print_hex_dump(KERN_DEBUG, prefix_str, prefix_type,	\
+>  				rowsize, groupsize, buf, len, ascii);	\
+>  	} while (0)
+> -#endif
+> +
+> +static inline int dynamic_debug_exec_queries(const char *query, const char *modname)
+> +{
+> +	printk(KERN_WARNING "kernel not built w CONFIG_DYNAMIC_DEBUG_CORE\n");
 
-Indeed, a left over from a removed PCIe node.
+pr_warn and w should be with
 
-Thanks for review.
+> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+[]
+> @@ -557,7 +557,27 @@ int ddebug_exec_queries(char *query, const char *modname)
+>  		return exitcode;
+>  	return nfound;
+>  }
+> -EXPORT_SYMBOL_GPL(ddebug_exec_queries);
+> +
+> +/**
+> + * dynamic_debug_exec_queries - apply changes to selected dynamic-debug prints
+> + * @query: string with callsite-selectors +enablement+decorations
+> + * @modname: string containing module name
+> + *
+> + * This implements the >/proc/dynamic_debug/control reader, allowing
+> + * module authors to modify their dynamic-debug callsites. The modname
+> + * is canonically struct module.mod_name, but can also be null or a
+> + * module-wildcard, for example: "drm*".
+> + */
+> +int dynamic_debug_exec_queries(const char *query, const char *modname)
+> +{
+> +	char *qry = kmalloc(PAGE_SIZE, GFP_KERNEL);
+> +	int rc;
+> +	strncpy(qry, query, PAGE_SIZE);
 
-Best regards,
-Krzysztof
+kstrndup?
+
 
