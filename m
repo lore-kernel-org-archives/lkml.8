@@ -2,60 +2,87 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4014F22B40
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D1B02072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598285414;
+	bh=0gWHk87xcbVBllUJKQt0YOJrPLVaKT8GXW9QXecvXGU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=01YT4e9h2/4vUk0drhY6+fLQL9GPeYECHArOlohA/OY2K4vhzuTEj3Y0Czfni97xe
+	 zP5OIO0riesU5DFCE6XdlFWS69Z6Dci4mp+31XUg9yEJEKJPTcu91GXGL15uwj3CQz
+	 VYkrpi64P3GdEvESd0lSNfvvgBh5MR6QPQPwRfLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgHXQJl (ORCPT
+        id S1727079AbgHXQKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:09:41 -0400
-Received: from elvis.franken.de ([193.175.24.41]:60794 "EHLO elvis.franken.de"
+        Mon, 24 Aug 2020 12:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726854AbgHXQJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:09:33 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1kAF2I-0000tt-00; Mon, 24 Aug 2020 18:09:30 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 29165C0DBF; Mon, 24 Aug 2020 18:08:58 +0200 (CEST)
-Date:   Mon, 24 Aug 2020 18:08:58 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: Paravirt: remove remaining pieces of paravirt
-Message-ID: <20200824160858.GA7827@alpha.franken.de>
-References: <20200822080251.65555-1-tsbogend@alpha.franken.de>
+        id S1726519AbgHXQKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:10:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10A912072D;
+        Mon, 24 Aug 2020 16:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598285403;
+        bh=0gWHk87xcbVBllUJKQt0YOJrPLVaKT8GXW9QXecvXGU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Scgpb744nC6We6ULD4ryYR1ZO2SoL3xuRTFsiPR56Sp6eCS4Py88EfvxtKFP6rd63
+         HMVbNjK2yxRjNa5+Dnss3AvOb2Z859AXtcfqE06iVnag5yorNgHuZOZE9AOvfupnTu
+         XVmU+rk5N5hfYux1Uzk/awYkCcHpMKKThy5oPSLc=
+Date:   Mon, 24 Aug 2020 18:10:21 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     stable@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH - for v5.7 stable] opp: Put opp table in
+ dev_pm_opp_set_rate() for empty tables
+Message-ID: <20200824161021.GD435319@kroah.com>
+References: <e7e9f887328c06800a79f3b48feb623fd15aa3d5.1598261323.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200822080251.65555-1-tsbogend@alpha.franken.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <e7e9f887328c06800a79f3b48feb623fd15aa3d5.1598261323.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 10:02:51AM +0200, Thomas Bogendoerfer wrote:
-> Commit 35546aeede8e ("MIPS: Retire kvm paravirt") removed
-> kvm paravirt support, but missed arch/mips/include/mach-paravirt.
-> Remove it as well.
+On Mon, Aug 24, 2020 at 03:00:03PM +0530, Viresh Kumar wrote:
+> From: Stephen Boyd <swboyd@chromium.org>
 > 
-> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> commit 8979ef70850eb469e1094279259d1ef393ffe85f upstream.
+> 
+> We get the opp_table pointer at the top of the function and so we should
+> put the pointer at the end of the function like all other exit paths
+> from this function do.
+> 
+> Cc: v5.7+ <stable@vger.kernel.org> # v5.7+
+> Fixes: aca48b61f963 ("opp: Manage empty OPP tables with clk handle")
+> Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> [ Viresh: Split the patch into two ]
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> [ Viresh: Update the code for v5.7-stable ]
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
->  .../asm/mach-paravirt/cpu-feature-overrides.h      | 35 ---------------
->  arch/mips/include/asm/mach-paravirt/irq.h          | 19 --------
->  .../include/asm/mach-paravirt/kernel-entry-init.h  | 52 ----------------------
+>  drivers/opp/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-applied to mips-next.
+This is already in the 5.7-stable queue, why add it again?
 
-Thomas.
+confused,
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+greg k-h
