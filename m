@@ -2,52 +2,53 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266A8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 116F82071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4162071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262223;
-	bh=Nv0ZlxUL9h0hYla9KnlDJLL4zcpnRj1q4g8kfSDWpuY=;
+	s=default; t=1598262230;
+	bh=pngDmzjCwlGKNuJGJk2YxEo8QG7GioDD4bOubk+qg6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X7zZaKqj7/9Us3aCOFzzqgYofBemKa9+xPQfx7EpUK4K0OTJIsuxmvveg7AES1paT
-	 mJ2NEjRMmS/WA1kxc1cUDxeYQvXqV5jDooyxWfqyg538gLyx+JrIcWJ092FnKtO5nj
-	 13V66GCVpet8Z+HqBVodok+etPc2O3KCUFj0q8PQ=
+	b=k5x3gqYMiOPKLhLTHDUzW02Zr6Xb25T6pCjotmB3wuJN2YPUut0LU17ut6V2N7aIx
+	 QrzrcS5iqXFzfzzFoDunxclrrJmE8pC2TXycierD5imT6HWGQUJ4v3jfZKhD0SzkWn
+	 kyqPU43zVSzgSh72JU+Nm51Xm5nIT5xnnvGq23KE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbgHXJnl (ORCPT
+        id S1729061AbgHXJns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:43:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39202 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:43:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728816AbgHXIoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:44:01 -0400
+        id S1728794AbgHXInv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:43:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA2C421741;
-        Mon, 24 Aug 2020 08:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EA322074D;
+        Mon, 24 Aug 2020 08:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258641;
-        bh=Nv0ZlxUL9h0hYla9KnlDJLL4zcpnRj1q4g8kfSDWpuY=;
+        s=default; t=1598258630;
+        bh=pngDmzjCwlGKNuJGJk2YxEo8QG7GioDD4bOubk+qg6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FgIwuFPc/KxpnnUwTiKqRNrVMeWVZrfssQhE4vtg0XGTMNuM19OwrbbljrH3pMFNC
-         5/Gr933s/kuuFdNZ9bgxorU7xUNbx+e7GcYncO1SzUoaphb59ahg/r/1q4Wg2ThExv
-         j9FNMBx4Vbi4RmLhge435pi5E1JCfLvCd0ZPbikk=
+        b=D40+t6uu/+3L0Fk5CJShnm+xthVqQydCd2V4EcyR4Twd/m0DN9lZuCkFw+b0V20Rf
+         yj+/fds+AI8WgSjYjCx5pSHcqOdfFvku0bnG8gz6yPNCGq2Olp1zN6s0yIy9jLtHMV
+         JO6pHumNvCYB74fMR1onCqx7ADPM+aTo9r5c6cXM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gabriele Paoloni <gabriele.paoloni@intel.com>,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.7 118/124] EDAC/{i7core,sb,pnd2,skx}: Fix error event severity
-Date:   Mon, 24 Aug 2020 10:30:52 +0200
-Message-Id: <20200824082415.209791272@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 115/124] net: dsa: b53: check for timeout
+Date:   Mon, 24 Aug 2020 10:30:49 +0200
+Message-Id: <20200824082415.062403806@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -60,86 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Luck <tony.luck@intel.com>
+From: Tom Rix <trix@redhat.com>
 
-commit 45bc6098a3e279d8e391d22428396687562797e2 upstream.
+[ Upstream commit 774d977abfd024e6f73484544b9abe5a5cd62de7 ]
 
-IA32_MCG_STATUS.RIPV indicates whether the return RIP value pushed onto
-the stack as part of machine check delivery is valid or not.
+clang static analysis reports this problem
 
-Various drivers copied a code fragment that uses the RIPV bit to
-determine the severity of the error as either HW_EVENT_ERR_UNCORRECTED
-or HW_EVENT_ERR_FATAL, but this check is reversed (marking errors where
-RIPV is set as "FATAL").
+b53_common.c:1583:13: warning: The left expression of the compound
+  assignment is an uninitialized value. The computed value will
+  also be garbage
+        ent.port &= ~BIT(port);
+        ~~~~~~~~ ^
 
-Reverse the tests so that the error is marked fatal when RIPV is not set.
+ent is set by a successful call to b53_arl_read().  Unsuccessful
+calls are caught by an switch statement handling specific returns.
+b32_arl_read() calls b53_arl_op_wait() which fails with the
+unhandled -ETIMEDOUT.
 
-Reported-by: Gabriele Paoloni <gabriele.paoloni@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200707194324.14884-1-tony.luck@intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+So add -ETIMEDOUT to the switch statement.  Because
+b53_arl_op_wait() already prints out a message, do not add another
+one.
 
+Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Signed-off-by: Tom Rix <trix@redhat.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/i7core_edac.c |    4 ++--
- drivers/edac/pnd2_edac.c   |    2 +-
- drivers/edac/sb_edac.c     |    4 ++--
- drivers/edac/skx_common.c  |    4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/net/dsa/b53/b53_common.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/edac/i7core_edac.c
-+++ b/drivers/edac/i7core_edac.c
-@@ -1710,9 +1710,9 @@ static void i7core_mce_output_error(stru
- 	if (uncorrected_error) {
- 		core_err_cnt = 1;
- 		if (ripv)
--			tp_event = HW_EVENT_ERR_FATAL;
--		else
- 			tp_event = HW_EVENT_ERR_UNCORRECTED;
-+		else
-+			tp_event = HW_EVENT_ERR_FATAL;
- 	} else {
- 		tp_event = HW_EVENT_ERR_CORRECTED;
- 	}
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -1155,7 +1155,7 @@ static void pnd2_mce_output_error(struct
- 	u32 optypenum = GET_BITFIELD(m->status, 4, 6);
- 	int rc;
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index c283593bef17e..dc1979096302b 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1556,6 +1556,8 @@ static int b53_arl_op(struct b53_device *dev, int op, int port,
+ 		return ret;
  
--	tp_event = uc_err ? (ripv ? HW_EVENT_ERR_FATAL : HW_EVENT_ERR_UNCORRECTED) :
-+	tp_event = uc_err ? (ripv ? HW_EVENT_ERR_UNCORRECTED : HW_EVENT_ERR_FATAL) :
- 						 HW_EVENT_ERR_CORRECTED;
- 
- 	/*
---- a/drivers/edac/sb_edac.c
-+++ b/drivers/edac/sb_edac.c
-@@ -2982,9 +2982,9 @@ static void sbridge_mce_output_error(str
- 	if (uncorrected_error) {
- 		core_err_cnt = 1;
- 		if (ripv) {
--			tp_event = HW_EVENT_ERR_FATAL;
--		} else {
- 			tp_event = HW_EVENT_ERR_UNCORRECTED;
-+		} else {
-+			tp_event = HW_EVENT_ERR_FATAL;
- 		}
- 	} else {
- 		tp_event = HW_EVENT_ERR_CORRECTED;
---- a/drivers/edac/skx_common.c
-+++ b/drivers/edac/skx_common.c
-@@ -494,9 +494,9 @@ static void skx_mce_output_error(struct
- 	if (uncorrected_error) {
- 		core_err_cnt = 1;
- 		if (ripv) {
--			tp_event = HW_EVENT_ERR_FATAL;
--		} else {
- 			tp_event = HW_EVENT_ERR_UNCORRECTED;
-+		} else {
-+			tp_event = HW_EVENT_ERR_FATAL;
- 		}
- 	} else {
- 		tp_event = HW_EVENT_ERR_CORRECTED;
+ 	switch (ret) {
++	case -ETIMEDOUT:
++		return ret;
+ 	case -ENOSPC:
+ 		dev_dbg(dev->dev, "{%pM,%.4d} no space left in ARL\n",
+ 			addr, vid);
+-- 
+2.25.1
+
 
 
