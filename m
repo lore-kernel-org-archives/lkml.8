@@ -2,112 +2,129 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BD5C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5CDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBF721775
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:42:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287379;
-	bh=UHGPWOeMMPesFHOhN85ifiETrCaVltIOD1OiXejC61g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C/s+b5f/uQW8r54gin7TOl2+O2c29eHGUX8r2/c99Ycoaas3yZR7bPJhzVv4d7ywH
-	 Jv7g+Wlf809Zx94+TabrR4BIyfGSbSKMg9aUq7rR73nR7Ga5mwT/mwYV/2zy0RJzMj
-	 H49okT7hLZ9KWWyg+awnIyt1XORVB/ewuirKGEt4=
+	by mail.kernel.org (Postfix) with ESMTP id BB9E720738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tzUKyh8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgHXQmy (ORCPT
+        id S1728610AbgHXQnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:42:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728605AbgHXQjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:39:43 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5EBC22C9F;
-        Mon, 24 Aug 2020 16:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287182;
-        bh=UHGPWOeMMPesFHOhN85ifiETrCaVltIOD1OiXejC61g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qHa1y1NbZd3c/pBuiBwKoGpFW2R6bicXWDVdGA0fk8tFCHLMAlb6Jadb+46pyAiK/
-         tBJwTn4aAB6q9m3vLIKrSuqPrPKO8QDEWeJBNFk8nYcgJUhaCjBYAc6M19YoeqAn4o
-         Rfg0Uf9f6vzNl88aiGbMsZhGyuMyLq1UHB9G0/9A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 8/8] powerpc/perf: Fix soft lockups due to missed interrupt accounting
-Date:   Mon, 24 Aug 2020 12:39:31 -0400
-Message-Id: <20200824163931.607291-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163931.607291-1-sashal@kernel.org>
-References: <20200824163931.607291-1-sashal@kernel.org>
+        Mon, 24 Aug 2020 12:43:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728717AbgHXQmS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:42:18 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30154C061575
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 09:42:17 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id j7so8808247oij.9
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 09:42:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cCBCq0smwjMsQiJp7+SlIOuIjjFC1mVZRWyztc0HMaw=;
+        b=tzUKyh8cbZXfplMGX1hzIr2igvRn/W0uccmqfu1ctMcLyMVDkN+CQZbHVWbzsMZ7Ho
+         fewxaFLsEY8HT7IBt2VFzqVoPlvcHqSD8GJocHx7tRYLWWDwOCyTul/8MBpW1dtK7kDo
+         Bga3bS3sMCdSXNMqEEPKOy2ZYe91oCJP53bNEQe/dcRNGn29NuZdlIGgMGpOENhtZzOn
+         OUxjHSwDvAgAbcVlPRvusMYP2tPvo7WaGc9EEsphpsl/jCxZtvipPGX5RP+ICQ7GPsRG
+         Ynt2gRdgXua5zKC8omb3OrkyX1QqIKspR3qTI6BhDrPk9JS0FHIPnhg+uQPzMnBp7f6M
+         GOrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cCBCq0smwjMsQiJp7+SlIOuIjjFC1mVZRWyztc0HMaw=;
+        b=JtfxUTH2CXVGbSB2IMhzxASyycoH98VNos/jn7vq+91FvkKSve6vutfE2QvCyyzqVD
+         t3gYyDgqGDL3EnmkdjzU2W1rk8dThUKseX1Q0g7fGVnTRRQkVQofhjJXj79F57Gxv5A1
+         voS382GfmlC0D8KbyNBMHDqGy2lITtp/7POSaV3svvJ25O3cy5Iay28pGJrRS8Sc059R
+         +7y2ahDZ9Iqbl7+uIjYhlGJwVxow3RvmvBK1UisJ0r0cIiQ2/VsTnt580K/VJppJlLoB
+         hahs3+WXvlk0QiaW34lDThTzkJ2BTGJz8tTFIRsltZvsoc+Egv8la1kHoBRlesUtr31m
+         9kwQ==
+X-Gm-Message-State: AOAM531azHhTNcGsJV8WAuH4vJYx0fkFyePFlkzEIBs8UcugwTtCovSt
+        B+GLszREDVRkcsOE3gmfwtnirw==
+X-Google-Smtp-Source: ABdhPJyUsgnTMuoRHaD0AXUL/sdNx23OYcYq/51u75IfcA3X1IE5/xmqfStdQKejGbL8gHVy8NqSbA==
+X-Received: by 2002:aca:a9d0:: with SMTP id s199mr125719oie.154.1598287336742;
+        Mon, 24 Aug 2020 09:42:16 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id 143sm2102701oie.11.2020.08.24.09.42.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 09:42:16 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 09:42:12 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Sibi Sankar <sibis@codeaurora.org>, khilman@kernel.org,
+        ulf.hansson@linaro.org, rjw@rjwysocki.net, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, pavel@ucw.cz,
+        len.brown@intel.com, rnayak@codeaurora.org, dianders@chromium.org,
+        mka@chromium.org
+Subject: Re: [PATCH v2 1/2] PM / Domains: Add GENPD_FLAG_NO_SUSPEND/RESUME
+ flags
+Message-ID: <20200824164212.GA3715@yoga>
+References: <20200821204921.32536-1-sibis@codeaurora.org>
+ <159804608868.334488.2486130699850456264@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159804608868.334488.2486130699850456264@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+On Fri 21 Aug 14:41 PDT 2020, Stephen Boyd wrote:
 
-[ Upstream commit 17899eaf88d689529b866371344c8f269ba79b5f ]
+> Quoting Sibi Sankar (2020-08-21 13:49:20)
+> > Add GENPD_FLAG_NO_SUSPEND/RESUME flags to instruct genpd to keep the
+> > status of the PM domain unaltered during suspend/resume respectively.
+> > The flags are aimed at power domains coupled to co-processors which
+> > enter low-power modes independent to that of the application processor.
+> > 
+> > Specifically the flags are to be used by the power domains exposed
+> > by the AOSS QMP driver linked to modem, adsp, cdsp remoteprocs. These
+> > power domains are used to notify the Always on Subsystem (AOSS) that
+> > a particular co-processor is up. AOSS uses this information to wait
+> > for the co-processors to suspend before starting its sleep sequence.
+> > The application processor powers off these power domains only if the
+> > co-processor has crashed or powered off and remains unaltered during
+> > system suspend/resume.
+> 
+> Why are these power domains instead of some QMP message sent during
+> remote proc power up?
 
-Performance monitor interrupt handler checks if any counter has
-overflown and calls record_and_restart() in core-book3s which invokes
-perf_event_overflow() to record the sample information. Apart from
-creating sample, perf_event_overflow() also does the interrupt and
-period checks via perf_event_account_interrupt().
+The understanding I gained as I researched this, was that with this
+property enabled resources related to the particular subsystem will be
+kept enabled when the apss enters some power save mode. So my
+interpretation was that it does "keep something powered".
 
-Currently we record information only if the SIAR (Sampled Instruction
-Address Register) valid bit is set (using siar_valid() check) and
-hence the interrupt check.
+> If this has been discussed before feel free to
+> disregard and please link to prior mailing list discussions.
+> 
 
-But it is possible that we do sampling for some events that are not
-generating valid SIAR, and hence there is no chance to disable the
-event if interrupts are more than max_samples_per_tick. This leads to
-soft lockup.
+There where some discussions related to the "QDSS clk" in that series,
+but I don't remember getting any feedback on modelling these things as
+power-domains.
 
-Fix this by adding perf_event_account_interrupt() in the invalid SIAR
-code path for a sampling event. ie if SIAR is invalid, just do
-interrupt check and don't record the sample information.
+> I find it odd that this is modeled as a power domain instead of some
+> Qualcomm specific message that the remoteproc driver sends to AOSS. Is
+> there some sort of benefit the driver gets from using the power domain
+> APIs for this vs. using a custom API?
 
-Reported-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1596717992-7321-1-git-send-email-atrajeev@linux.vnet.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/perf/core-book3s.c | 4 ++++
- 1 file changed, 4 insertions(+)
+We need to send "up" and "down" notifications and this needs to happen
+at the same time as other standard resources are enabled/disabled.
 
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index ba49ae6625f1b..a10b67df83bae 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -2042,6 +2042,10 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
- 
- 		if (perf_event_overflow(event, &data, regs))
- 			power_pmu_stop(event, 0);
-+	} else if (period) {
-+		/* Account for interrupt in case of invalid SIAR */
-+		if (perf_event_account_interrupt(event))
-+			power_pmu_stop(event, 0);
- 	}
- }
- 
--- 
-2.25.1
+Further more, at the time the all resources handled by the downstream
+driver was either power-domains (per above understanding) or clocks, so
+it made sense to me not to spin up a custom API.
 
+Regards,
+Bjorn
