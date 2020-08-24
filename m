@@ -2,125 +2,118 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1400C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3342C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8838206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:43:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zYrP/1bz"
+	by mail.kernel.org (Postfix) with ESMTP id 8A6222074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598265865;
+	bh=3l8WzknNXfhzUyAA+S1LsiqNXpJF9mm+PW6eO9kKss4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=a29vQAGBOlg0BLnHPnLkrbTLE0vkPsbddmfGO4tLK0PkcSKHizIxGpg/5unHrKWLZ
+	 R7TXAERHUv/2V9Of3fSS/9FRODAtd98qo6+ksI+RcRbKwjpBU2MjNQrjmnH1rLttVR
+	 rFXbxMdcdrNhnDFF0V+2N/gjJ0U3Qor7zENe8nYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgHXKnn (ORCPT
+        id S1727013AbgHXKoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:43:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgHXKnl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:43:41 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90060C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 03:43:40 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g75so7667308wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 03:43:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=vfeJpdo+reXlUp8I9Xltf/bKT4P5/2EZI29RPHRcGTo=;
-        b=zYrP/1bzSHAaUnEcj4HL//n+vYvLSDc9feOiIUJl31IuKVau98RwHMSK/ozNps5bTR
-         oYKfl5nukEcPBR6oPloC6dUWnJMYinAJ5ZTA0uCMCnjENm12q3qNJLyM9fX7fpZsWKwf
-         sAjPWWliJ59AzuScUI1swcfCyVp7j0p8T+bs9qKTAtSAIjqsg799vQKGdoz1rKObLU80
-         SnesywaeXAUN22biSQs84mCq1cEZwFAayZBmrDkSk+3c1GHDVa2eLVFKtTdmZE4yO4bU
-         pDA3wJDt5ycrQrRl1889ScC1ZC/OoaxJjElqCH337TWJtCl4rjt6zn/82C+A0UGm+nIp
-         4SzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vfeJpdo+reXlUp8I9Xltf/bKT4P5/2EZI29RPHRcGTo=;
-        b=FP8JHANab+vDdP/xSXP8dBmlwe7v4U4f5qWHTn7E2uNnkct/l1FtVLzFhK3yDOTJA4
-         r08+qaXxv1Ku6sKxkmlT6554bCYlz9SSgjFO82aE5o7pMDv1SsBqk5sBUgrTer3FqQHq
-         yTWWCgOxwr94QmUJevt81HCxRubfxsl+GUCD6iSiAfm8MEHXy5IIin66EPKmj0w+NhnH
-         x9X8GP3GcNEw5CkekxTfBdEnf6Qf0P86+fILkxy6gnltdUsnP8PNupjbOviU3vOnxxI2
-         PG7PHdvX+8eyLq1JY4yvMUYmAw1nw/DABpPvNvJ14IYIuwiqfL1RXjeeMYBHy7X1vmtf
-         f9jw==
-X-Gm-Message-State: AOAM53052gGkr4kOCBTOOcMQoF1Crvi5loGAIcj778hXcsKncH5zgGZa
-        YT2AubnfKCpr0GA9i+JVbrrmkA==
-X-Google-Smtp-Source: ABdhPJyv9b5avO7XGdhprlSuqd/FKoiXA07sKRZlFBmahtp9hFgwnfD9BWbBCvoEh+hvSuNaA8PC7w==
-X-Received: by 2002:a1c:68c3:: with SMTP id d186mr5179539wmc.68.1598265818867;
-        Mon, 24 Aug 2020 03:43:38 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id f9sm1783125wrm.5.2020.08.24.03.43.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 03:43:38 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 11:43:36 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/6] mfd: Add driver for Embedded Controller found on
- Acer Iconia Tab A500
-Message-ID: <20200824104336.GK3248864@dell>
-References: <20200823140846.19299-1-digetx@gmail.com>
- <20200823140846.19299-2-digetx@gmail.com>
- <20200823181653.GC209852@demiurge.local>
- <82abab10-9af6-a9c4-b241-d5a3af5b588d@gmail.com>
- <20200824073331.GG3248864@dell>
- <f12d287a-f088-4c43-479d-5c044e554b30@gmail.com>
+        Mon, 24 Aug 2020 06:44:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725976AbgHXKoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:44:21 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E57E206B5;
+        Mon, 24 Aug 2020 10:44:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598265860;
+        bh=3l8WzknNXfhzUyAA+S1LsiqNXpJF9mm+PW6eO9kKss4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BccWYz/+Yq/4XQTFnF4MLZBs3ob2vp1ZTPTkswtvBk2Ha1Y3H8sRq2aJcrVfOb7cB
+         Pyac9Ut6Cr/975o9zG/KXj+AyDryZzBoCekShMW3lE3gKWCoq4qEQr9wQc3slh3jFz
+         P8KDmJmzNfYbycaGcR7IXy/hY1d9OJyGOxWdnHH8=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Leon Romanovsky <leonro@nvidia.com>,
+        Gal Pressman <galpress@amazon.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Mark Zhang <markz@nvidia.com>
+Subject: [PATCH rdma-next 00/14] Track memory allocation with restrack DB help
+Date:   Mon, 24 Aug 2020 13:44:01 +0300
+Message-Id: <20200824104415.1090901-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f12d287a-f088-4c43-479d-5c044e554b30@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020, Dmitry Osipenko wrote:
+From: Leon Romanovsky <leonro@nvidia.com>
 
-> 24.08.2020 10:33, Lee Jones пишет:
-> >> ...
-> >>>> +static struct a500_ec *a500_ec_scratch;
-> >>>
-> >>> If this is only used for power_off, please rename it. I've been told to
-> >>> do so in my driver: https://lore.kernel.org/lkml/20200519104933.GX271301@dell/
-> >>
-> >> I don't mind to rename the variable, but not sure whether it will be a
-> >> worthwhile change since _scratch is also a common naming scheme among
-> >> MFD drivers. Please see max77620_scratch for example, which I added
-> >> about a year ago.
-> > 
-> > If something is used once, it does not make it 'common'.
-> > 
-> > Not sure how this slipped my notice before, but I don't like it.
-> > 
-> > Ensure any global struct used for power_off only includes items
-> > required for this purpose.  It's unfortunate this API requires a
-> > global variable at all.
-> > 
-> 
-> Okay! I'll change it in the v2, thanks!
-> 
-> Thierry Reding was working on the shutdown API which should replace the
-> global variables, unfortunately he doesn't have enough time to finish
-> that work yet.
+The resource tracker has built-in kref counter to synchronize object
+release. It makes restrack perfect choice to be responsible for the
+memory lifetime of any object in which restrack entry is embedded.
 
-That would be really good. :)
+In order to make it, the restrack was changed to be mandatory and all
+callers of rdma_restrack_add() started to rely on result returned from
+that call. Being mandatory means that all objects specific to restrack
+type must be tracked.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Before this series, the restrack and rdmatool were aid tools in debug
+session of user space applications, this caused to some of the
+functionality to be left behind, like support XRC QPs, device memory MRs
+and QP0/QP1 in multi-port devices.
+
+This series fixes all mentioned above without extending rdmatool at all.
+
+Thanks
+
+Leon Romanovsky (13):
+  RDMA/cma: Delete from restrack DB after successful destroy
+  RDMA/mlx5: Don't call to restrack recursively
+  RDMA/restrack: Count references to the verbs objects
+  RDMA/restrack: Simplify restrack tracking in kernel flows
+  RDMA/restrack: Improve readability in task name management
+  RDMA/cma: Be strict with attaching to CMA device
+  RDMA/core: Allow drivers to disable restrack DB
+  RDMA/counter: Combine allocation and bind logic
+  RDMA/restrack: Store all special QPs in restrack DB
+  RDMA/restrack: Make restrack DB mandatory for IB objects
+  RDMA/restrack: Support all QP types
+  RDMA/core: Track device memory MRs
+  RDMA/restrack: Drop valid restrack field as source of ambiguity
+
+Maor Gottlieb (1):
+  RDMA/verbs: Assign port number of special QPs
+
+ drivers/infiniband/core/cma.c                 | 224 +++++++++++-------
+ drivers/infiniband/core/core_priv.h           |  40 ++--
+ drivers/infiniband/core/counters.c            | 178 +++++++-------
+ drivers/infiniband/core/cq.c                  |  24 +-
+ drivers/infiniband/core/rdma_core.c           |   3 +-
+ drivers/infiniband/core/restrack.c            | 208 ++++++++--------
+ drivers/infiniband/core/restrack.h            |  10 +-
+ drivers/infiniband/core/uverbs_cmd.c          |  50 +++-
+ drivers/infiniband/core/uverbs_std_types_cq.c |  12 +-
+ drivers/infiniband/core/uverbs_std_types_mr.c |  10 +
+ drivers/infiniband/core/uverbs_std_types_qp.c |   4 +-
+ drivers/infiniband/core/verbs.c               |  94 ++++++--
+ drivers/infiniband/hw/mlx5/gsi.c              |  16 +-
+ drivers/infiniband/hw/mlx5/qp.c               |   2 +-
+ include/rdma/ib_verbs.h                       |  10 +-
+ include/rdma/restrack.h                       |  46 ++--
+ 16 files changed, 541 insertions(+), 390 deletions(-)
+
+--
+2.26.2
+
