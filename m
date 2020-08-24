@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82DFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1923C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 857562063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F3CD206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289039;
-	bh=tkg9bPdu0y9UhxNaRVT+Km3iLfj26SZ4ErlN1m0KU+0=;
+	s=default; t=1598289041;
+	bh=suhF0qwwSU0yECNHcaKgTLO11nlKyMh0NmEMGkWs6+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WR1ZLVX3f0VswlPX3bg95/lNi95F9mxaYRIRXoROl9gu6nB87ZtO3U1idmmBGdv7y
-	 FsIDvXjOHYvf614OdZhI8Iaox6uOo+IGy0sPmgf+CZF3pNVhW+TnO9tiVkhx6WO6h0
-	 dGWTTny0aFHZLw7fL6hMRBmMSRilDW4utZfWqf7Q=
+	b=B5nNKuMBI/2pG05mqIKDBm0pf7eyM1ZQegJPzYt3Aa+mhTdTtSkYdpZNjeoFoIvcm
+	 CJBixCs3NJAPgLfkfX3BULDxMhZAtT8ENUuStWhLwk3+fgaDOxRY/uJZ8YncfiUvAQ
+	 oQN8TRhOCm2osp18+9tsQEUevl25GNbAz58tkqos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgHXRKh (ORCPT
+        id S1728101AbgHXRKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:10:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:10:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728409AbgHXQh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:37:57 -0400
+        id S1728401AbgHXQh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:37:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22F1122DA7;
-        Mon, 24 Aug 2020 16:37:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D7C923105;
+        Mon, 24 Aug 2020 16:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287041;
-        bh=tkg9bPdu0y9UhxNaRVT+Km3iLfj26SZ4ErlN1m0KU+0=;
+        s=default; t=1598287038;
+        bh=suhF0qwwSU0yECNHcaKgTLO11nlKyMh0NmEMGkWs6+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=106jkt8Wa769B+hbkeGRoPFa1jNgnDE+3pCsz97kOHgoEyFYOLNRkZ9yMeshXqBS0
-         FP7BYGuHyebhm4E6vTQXiwwdiwnZ5WqdI2t1KqswZALSBREMDBFh484Po2RJswGDBK
-         o8XltN0be8rFbiXV/Tl4e0BnuiQihn9qeY3NHc7Q=
+        b=M+xCNdvG20GxjI+BUUm/EbNsraOiCvWiyS/3RMheKyCTbL5wexWH52Ur+PJeBRuii
+         ZBFCAofJioEEuXd8bJcQtRVbVhRsPW46a3MwTUQ02lfLbdylax4E+M3lxmzzuyxGS4
+         WvGjaHowze2OH9aUvnPqre8mQXubGNBSTGJB+Koo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 34/54] scsi: ufs: Fix possible infinite loop in ufshcd_hold
-Date:   Mon, 24 Aug 2020 12:36:13 -0400
-Message-Id: <20200824163634.606093-34-sashal@kernel.org>
+Cc:     David Ahern <dsahern@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 32/54] selftests: disable rp_filter for icmp_redirect.sh
+Date:   Mon, 24 Aug 2020 12:36:11 -0400
+Message-Id: <20200824163634.606093-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
@@ -63,55 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: David Ahern <dsahern@kernel.org>
 
-[ Upstream commit 93b6c5db06028a3b55122bbb74d0715dd8ca4ae0 ]
+[ Upstream commit bcf7ddb0186d366f761f86196b480ea6dd2dc18c ]
 
-In ufshcd_suspend(), after clk-gating is suspended and link is set
-as Hibern8 state, ufshcd_hold() is still possibly invoked before
-ufshcd_suspend() returns. For example, MediaTek's suspend vops may
-issue UIC commands which would call ufshcd_hold() during the command
-issuing flow.
+h1 is initially configured to reach h2 via r1 rather than the
+more direct path through r2. If rp_filter is set and inherited
+for r2, forwarding fails since the source address of h1 is
+reachable from eth0 vs the packet coming to it via r1 and eth1.
+Since rp_filter setting affects the test, explicitly reset it.
 
-Now if UFSHCD_CAP_HIBERN8_WITH_CLK_GATING capability is enabled,
-then ufshcd_hold() may enter infinite loops because there is no
-clk-ungating work scheduled or pending. In this case, ufshcd_hold()
-shall just bypass, and keep the link as Hibern8 state.
-
-Link: https://lore.kernel.org/r/20200809050734.18740-1-stanley.chu@mediatek.com
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Co-developed-by: Andy Teng <andy.teng@mediatek.com>
-Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: David Ahern <dsahern@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/icmp_redirect.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 477b6cfff381b..a61f95ffd45fd 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1540,6 +1540,7 @@ static void ufshcd_ungate_work(struct work_struct *work)
- int ufshcd_hold(struct ufs_hba *hba, bool async)
- {
- 	int rc = 0;
-+	bool flush_result;
- 	unsigned long flags;
+diff --git a/tools/testing/selftests/net/icmp_redirect.sh b/tools/testing/selftests/net/icmp_redirect.sh
+index 18c5de53558af..bf361f30d6ef9 100755
+--- a/tools/testing/selftests/net/icmp_redirect.sh
++++ b/tools/testing/selftests/net/icmp_redirect.sh
+@@ -180,6 +180,8 @@ setup()
+ 			;;
+ 		r[12]) ip netns exec $ns sysctl -q -w net.ipv4.ip_forward=1
+ 		       ip netns exec $ns sysctl -q -w net.ipv4.conf.all.send_redirects=1
++		       ip netns exec $ns sysctl -q -w net.ipv4.conf.default.rp_filter=0
++		       ip netns exec $ns sysctl -q -w net.ipv4.conf.all.rp_filter=0
  
- 	if (!ufshcd_is_clkgating_allowed(hba))
-@@ -1571,7 +1572,9 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
- 				break;
- 			}
- 			spin_unlock_irqrestore(hba->host->host_lock, flags);
--			flush_work(&hba->clk_gating.ungate_work);
-+			flush_result = flush_work(&hba->clk_gating.ungate_work);
-+			if (hba->clk_gating.is_suspended && !flush_result)
-+				goto out;
- 			spin_lock_irqsave(hba->host->host_lock, flags);
- 			goto start;
- 		}
+ 		       ip netns exec $ns sysctl -q -w net.ipv6.conf.all.forwarding=1
+ 		       ip netns exec $ns sysctl -q -w net.ipv6.route.mtu_expires=10
 -- 
 2.25.1
 
