@@ -2,71 +2,130 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A49C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACFC2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A882074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:27:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sFvK/cjq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgHXP0s (ORCPT
+        id S1726880AbgHXP1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:26:48 -0400
-Received: from mailoutvs5.siol.net ([185.57.226.196]:58204 "EHLO mail.siol.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726661AbgHXPEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:04:52 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id C9FE7525761;
-        Mon, 24 Aug 2020 17:04:47 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id FnGb3Jyiudtj; Mon, 24 Aug 2020 17:04:47 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 76D4552576B;
-        Mon, 24 Aug 2020 17:04:47 +0200 (CEST)
-Received: from localhost.localdomain (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id B9A56525761;
-        Mon, 24 Aug 2020 17:04:44 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, heiko@sntech.de,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com
-Subject: [PATCH 0/2] ARM: dts: sun8i: r40: Enable mali400 GPU
-Date:   Mon, 24 Aug 2020 17:04:32 +0200
-Message-Id: <20200824150434.951693-1-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.28.0
+        Mon, 24 Aug 2020 11:27:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbgHXP1J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 11:27:09 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDCC1C061573;
+        Mon, 24 Aug 2020 08:27:08 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h19so10118610ljg.13;
+        Mon, 24 Aug 2020 08:27:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sZNoB46D8/M/M2PgyVIiT6V2NCFpqgPFmRkE3BbQYY0=;
+        b=sFvK/cjqd0IY2FPppcw4ggSbTyzS+/bWDuEn6APnjzaEMODweGr843dqvGmIuZ+7+l
+         gh06YDRForm905ZwwSXfCS10xvIyJHfBRec0N9sQKOlmpvcQiDXtyT/bqdhRpw7tZUNu
+         UEt8sEEUrr11VVRAa01f+JHkf5pvNVeBCA7po2V2tGY66x0vz7fDMP2/dIH8JrUq37HC
+         8bfccDyUTlVyGazDcn+uLQRca/72M8adtNfMbKh3TutR5L2eUnXkaE1OEV1wT1R0bjyc
+         7Ir8HxkHJ7jEa/cc/qgxI3W57DzAosbcngWFKAECdSjK8/+4rinCdsDecBnH4RjzY/1q
+         m2Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sZNoB46D8/M/M2PgyVIiT6V2NCFpqgPFmRkE3BbQYY0=;
+        b=gGRWGha3WcfILFzg2rb2LW8XxMEg1iMfsXG/iR/0/4sT+iJ/tG3o7xZXyobYoqzMyd
+         aSlPAP3eTM52Yu1MBKKjL4alqscKJKLn4Q9Lh77WT1xOb+Uhus1AESL7jMytx8OKtPiS
+         +m7Q+b/wZtLo9YfJkHirxdGUL1hw6PpxetPl+2o0sukiWSSnc0qCI38Uh/fZH87QugCe
+         tF/LxxCMGJQ5DopjVysOE7WTfv6Re9BH4g6UacM/uGoUXz/ULsVva8VlHSVwas9Gmk/j
+         Ug5wy5UXaWKbaYt4KzRrBLI2+mGOtKoZ+0E73lt/8+tB99JxrgVxl3E9cwyNlkrY0hxM
+         qmCA==
+X-Gm-Message-State: AOAM530UWit5etDGObjrMvo7RV5hh8UXG9DQHwJVpFJSLfCpVQUNoq0/
+        klZ/GqYQRnMyG2FFR+iAy24xniYdYmk=
+X-Google-Smtp-Source: ABdhPJwS3dpy3Zm6zjcqPm81pjWD00BirHl7L/nEzT8MmwndTfEiqXTyjQEML9iDc7lMLRZgUCDamw==
+X-Received: by 2002:a2e:2c0e:: with SMTP id s14mr3038795ljs.28.1598282826933;
+        Mon, 24 Aug 2020 08:27:06 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id z3sm2239976ljz.109.2020.08.24.08.27.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 08:27:06 -0700 (PDT)
+Subject: Re: [PATCH v1] brcmfmac: increase F2 watermark for BCM4329
+To:     Arend Van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200823142004.21990-1-digetx@gmail.com>
+ <93536fd4-8abc-e167-a184-5a5e36d4205a@broadcom.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1ac6d0f3-d639-e947-4108-17ecc0220a1e@gmail.com>
+Date:   Mon, 24 Aug 2020 18:27:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <93536fd4-8abc-e167-a184-5a5e36d4205a@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Following two patches enable Mali400 GPU on Allwinner R40 SoC. At this
-point I didn't add table for frequency switching because it would
-require far more testing and defaults work stable and reasonably well.
+24.08.2020 11:28, Arend Van Spriel пишет:
+> 
+> 
+> On 8/23/2020 4:20 PM, Dmitry Osipenko wrote:
+>> This patch fixes SDHCI CRC errors during of RX throughput testing on
+>> BCM4329 chip if SDIO BUS is clocked above 25MHz. In particular the
+>> checksum problem is observed on NVIDIA Tegra20 SoCs. The good watermark
+>> value is borrowed from downstream BCMDHD driver and it's the same as the
+>> value used for the BCM4339 chip, hence let's re-use it for BCM4329.
+> 
+> one comment, but when fixed you can add my....
+> 
+> Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>   drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>> b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>> index 3c07d1bbe1c6..ac3ee93a2378 100644
+>> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>> @@ -4278,6 +4278,7 @@ static void brcmf_sdio_firmware_callback(struct
+>> device *dev, int err,
+>>               brcmf_sdiod_writeb(sdiod, SBSDIO_FUNC1_MESBUSYCTRL,
+>>                          CY_43012_MESBUSYCTRL, &err);
+>>               break;
+>> +        case SDIO_DEVICE_ID_BROADCOM_4329:
+>>           case SDIO_DEVICE_ID_BROADCOM_4339:
+>>               brcmf_dbg(INFO, "set F2 watermark to 0x%x*4 bytes for
+>> 4339\n",
+> 
+> Maybe better to drop the chip id from the debug message. The chip id is
+> printed elsewhere already so it does not add info here and could only
+> cause confusion. Maybe you can also remove it from the 43455 message a
+> bit below.
 
-Please take a look.
-
-Best regards,
-Jernej
-
-Jernej Skrabec (2):
-  dt-bindings: gpu: mali-utgard: Add Allwinner R40 compatible
-  ARM: dts: sun8i: r40: Add Mali node
-
- .../bindings/gpu/arm,mali-utgard.yaml         |  2 ++
- arch/arm/boot/dts/sun8i-r40.dtsi              | 22 +++++++++++++++++++
- 2 files changed, 24 insertions(+)
-
---=20
-2.28.0
-
+Hello, Arend! Thank you for the review! I'll prepare v2 with the cleaned
+debug messages and couple more small changes!
