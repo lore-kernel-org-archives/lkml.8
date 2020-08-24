@@ -2,172 +2,139 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DCBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE24EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51AD0208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262383;
-	bh=rcxkiAp2mUiWSLyuix0BybFPmDsEZCspJKmcKwP9mks=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2TMMGcHeqc2h0JVUk9UPvxxk/kDT5Ljn7yd5Bv3341m/A4dy2wmmpdKWHZn+A5i2
-	 J3APvvoMpgodjmYp63nveOzDMv/nOJIjNpDakl1pMlDxPsKRhkEIK4NIAYn+EebOLU
-	 rgWXLxiYDUTI9JAiXDe+ke1IrBgqmX+8SywjFxG8=
+	by mail.kernel.org (Postfix) with ESMTP id C4787206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QP3WPu9b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbgHXJqU (ORCPT
+        id S1729164AbgHXJqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:46:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgHXImX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:42:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E639B2074D;
-        Mon, 24 Aug 2020 08:42:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258542;
-        bh=rcxkiAp2mUiWSLyuix0BybFPmDsEZCspJKmcKwP9mks=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DYIDcDy6kZFT3C5Udq6uEyRB2iI2RuH3747OuHu4txKId54DcBCI0rT/3zSLxwy4I
-         i93BbMtB2EP7im/4mPG5r1q5+1k3hL6yrKJJbOmLS0vRQTnjzm8HxbhhMqHo6i7hlT
-         RlovI+/CjRvxQ60Lc6VB+eJbiGtmsVpX/LUlJVYM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mahesh Bandewar <maheshb@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 083/124] ipvlan: fix device features
-Date:   Mon, 24 Aug 2020 10:30:17 +0200
-Message-Id: <20200824082413.494136151@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
-References: <20200824082409.368269240@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Aug 2020 05:46:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728937AbgHXImU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:42:20 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 436DDC061573;
+        Mon, 24 Aug 2020 01:42:19 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a5so7812800wrm.6;
+        Mon, 24 Aug 2020 01:42:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FbqblzJhgrxr4jZgi3Lq34QqMg+Ttkj3vGhG8H42MbE=;
+        b=QP3WPu9b1QKlz3sDPT/E0l4eLPgQXgf9j16xq2ixoEUc4YlJj12mlVBgfq9loGF/TJ
+         inbamtbamkfPkYT3SfI0Eh4mq32N8+pl52ApN5zilY94tGLgqlZnZYGEg3vBl30ec3Rc
+         lRekNLBhwn7fVnXk6ocbZNYwxvicu0x1ikJHlNCEtv/eZmpH0IShjDQNXnVLqgCSsCM7
+         66JACXsjbYo5b75KtgOu33NpuUIcU/PsrlkUQ72cIXvlI+CtvFNRiFB0TS50tEk2t43h
+         PbfgiKOCWJRUf+GNeUadfRHUmsRxLBN0hqYkbF0TzgTh2NrcqM1Yw3UzBJbNiIaHD2Hi
+         WuiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FbqblzJhgrxr4jZgi3Lq34QqMg+Ttkj3vGhG8H42MbE=;
+        b=ZQ18iiHRs/prN1Ei63AtBQJJL//DQBzTxXkw2fXaI4AlVfHCMxAlnx9UG5DljWnDzv
+         gaqewKYe1YZWpUmKTsnDKmIoPhUfCeXh5dr8xc6S17j9z4wnsrjnRucBfw8QrFnHNjzX
+         xsAtz17ZubqtTHe57JU6BW6+ly0EI6hWTRfHP8+2I7IRGuRolJcP4XBNiMlS9KTt4ZT2
+         jMUum3FS2riayoYtIEOVpHK9CdqTx/Mxz5nEKfY1cWvF7bW1yK7OqFjH8CTI/q700cdZ
+         mrv5I2JuzY6/wkUhbsGTJRxLWA/flNJ4DpgBzf6Npc9XRqWh13j4ZSO2vtYbwarJCP9w
+         q1Hg==
+X-Gm-Message-State: AOAM532BI97XU5AVvURpGpNSiwCUGiAFcoSXByA0NPYoHH+cFGSNfruz
+        D/v2dSYZqvUrkWSzmDvarlF80vJ8rTOckKUFJVJzirDaJE3fQA==
+X-Google-Smtp-Source: ABdhPJzAg8uQC8Mrf0XcBKdIu2nrOS4XC7CNiYSaA3zhrvxiaasEP+kVaYJgjFUamKAVfjf08TugaCoK1jLRBUkbid8=
+X-Received: by 2002:adf:9283:: with SMTP id 3mr4718276wrn.70.1598258537988;
+ Mon, 24 Aug 2020 01:42:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1597376585.git.huangqiwu@xiaomi.com> <ced256ea8ac2f3e54c33677facc4c2ef04dee643.1597376585.git.huangqiwu@xiaomi.com>
+ <20200814060909.GD1409566@kroah.com> <CAPtXDt1e3fi7ymW0-FSknUAYCQ80aL=4btbeA2e4Xre7+e7OtA@mail.gmail.com>
+ <20200818060707.GB1742213@kroah.com> <CAPtXDt26DdOi6JG7x3mTrR5YwArjkAeXY2TogRnK_xkSabhL2g@mail.gmail.com>
+ <20200824074357.GB4133866@kroah.com>
+In-Reply-To: <20200824074357.GB4133866@kroah.com>
+From:   Qiwu Huang <yanziily@gmail.com>
+Date:   Mon, 24 Aug 2020 16:42:06 +0800
+Message-ID: <CAPtXDt0yW7Kh6a9JGfXaha_wKVjae7U74m6K=631Ofh8_m4uvg@mail.gmail.com>
+Subject: Re: [PATCH v8 1/4] power: supply: core: add quick charge type property
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qiwu Huang <huangqiwu@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mahesh Bandewar <maheshb@google.com>
+On Mon, Aug 24, 2020 at 3:43 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Aug 24, 2020 at 08:54:56AM +0800, Qiwu Huang wrote:
+> > On Tue, Aug 18, 2020 at 2:07 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Aug 18, 2020 at 09:56:28AM +0800, Qiwu Huang wrote:
+> > > > On Fri, Aug 14, 2020 at 2:09 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > >
+> > > > > On Fri, Aug 14, 2020 at 11:46:54AM +0800, Qiwu Huang wrote:
+> > > > > > From: Qiwu Huang <huangqiwu@xiaomi.com>
+> > > > > >
+> > > > > > Reports the kind of quick charge type based on
+> > > > > > different adapter power.
+> > > > > >
+> > > > > > Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+> > > > > > ---
+> > > > > >  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++
+> > > > > >  drivers/power/supply/power_supply_sysfs.c   |  1 +
+> > > > > >  drivers/power/supply/qcom_smbb.c            | 51 +++++++++++++++++++++
+> > > > > >  include/linux/power_supply.h                | 14 ++++++
+> > > > > >  4 files changed, 87 insertions(+)
+> > > > >
+> > > > > You should also submit your driver that uses these new attributes at the
+> > > > > same time.  What happened to that request?  Otherwise no one really
+> > > > > knows how these are being used, or if they even are used by anyone.
+> > > > >
+> > > >
+> > > > I don't think I can submit the whole driver because our drivers are
+> > > > divided into three parts, the first part is in ADSP, the second part
+> > > > is in kernel and the third part is in Android Hal.This is the second
+> > > > part.
+> > >
+> > > WHat is "ADSP"?
+> >
+> > ADSP: advanced digital signal processor
+>
+> Ok, then just send the kernel driver.
+>
+> > > Just submit your kernel driver code, that's all we care about here.
+> > > Userspace code is not anything we can do anything with :)
+> >
+> > If we ported the full driver, we would break the existing driver
+> > structure because we would introduce more Qualcomm code. I think
+> > that's an unreasonable change.
+>
+> That doesn't make much sense.  You have a working driver for these apis,
+> just submit it for inclusion, it should never break any existing
+> drivers, otherwise your code wouldn't work either.
 
-[ Upstream commit d0f5c7076e01fef6fcb86988d9508bf3ce258bd4 ]
+We're an Android device, we're working on a Qualcomm based code, and
+from the current code tree, the current code tree is missing the QTI
+Charger code
 
-Processing NETDEV_FEAT_CHANGE causes IPvlan links to lose
-NETIF_F_LLTX feature because of the incorrect handling of
-features in ipvlan_fix_features().
+>
+> thanks,
+>
+> greg k-h
 
---before--
-lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
-tx-lockless: on [fixed]
-lpaa10:~# ethtool -K ipvl0 tso off
-Cannot change tcp-segmentation-offload
-Actual changes:
-vlan-challenged: off [fixed]
-tx-lockless: off [fixed]
-lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
-tx-lockless: off [fixed]
-lpaa10:~#
 
---after--
-lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
-tx-lockless: on [fixed]
-lpaa10:~# ethtool -K ipvl0 tso off
-Cannot change tcp-segmentation-offload
-Could not change any device features
-lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
-tx-lockless: on [fixed]
-lpaa10:~#
 
-Fixes: 2ad7bf363841 ("ipvlan: Initial check-in of the IPVLAN driver.")
-Signed-off-by: Mahesh Bandewar <maheshb@google.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ipvlan/ipvlan_main.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
-index f195f278a83aa..7768f1120c1f6 100644
---- a/drivers/net/ipvlan/ipvlan_main.c
-+++ b/drivers/net/ipvlan/ipvlan_main.c
-@@ -106,12 +106,21 @@ static void ipvlan_port_destroy(struct net_device *dev)
- 	kfree(port);
- }
- 
-+#define IPVLAN_ALWAYS_ON_OFLOADS \
-+	(NETIF_F_SG | NETIF_F_HW_CSUM | \
-+	 NETIF_F_GSO_ROBUST | NETIF_F_GSO_SOFTWARE | NETIF_F_GSO_ENCAP_ALL)
-+
-+#define IPVLAN_ALWAYS_ON \
-+	(IPVLAN_ALWAYS_ON_OFLOADS | NETIF_F_LLTX | NETIF_F_VLAN_CHALLENGED)
-+
- #define IPVLAN_FEATURES \
--	(NETIF_F_SG | NETIF_F_CSUM_MASK | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
-+	(NETIF_F_SG | NETIF_F_HW_CSUM | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
- 	 NETIF_F_GSO | NETIF_F_ALL_TSO | NETIF_F_GSO_ROBUST | \
- 	 NETIF_F_GRO | NETIF_F_RXCSUM | \
- 	 NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_HW_VLAN_STAG_FILTER)
- 
-+	/* NETIF_F_GSO_ENCAP_ALL NETIF_F_GSO_SOFTWARE Newly added */
-+
- #define IPVLAN_STATE_MASK \
- 	((1<<__LINK_STATE_NOCARRIER) | (1<<__LINK_STATE_DORMANT))
- 
-@@ -125,7 +134,9 @@ static int ipvlan_init(struct net_device *dev)
- 	dev->state = (dev->state & ~IPVLAN_STATE_MASK) |
- 		     (phy_dev->state & IPVLAN_STATE_MASK);
- 	dev->features = phy_dev->features & IPVLAN_FEATURES;
--	dev->features |= NETIF_F_LLTX | NETIF_F_VLAN_CHALLENGED;
-+	dev->features |= IPVLAN_ALWAYS_ON;
-+	dev->vlan_features = phy_dev->vlan_features & IPVLAN_FEATURES;
-+	dev->vlan_features |= IPVLAN_ALWAYS_ON_OFLOADS;
- 	dev->hw_enc_features |= dev->features;
- 	dev->gso_max_size = phy_dev->gso_max_size;
- 	dev->gso_max_segs = phy_dev->gso_max_segs;
-@@ -225,7 +236,14 @@ static netdev_features_t ipvlan_fix_features(struct net_device *dev,
- {
- 	struct ipvl_dev *ipvlan = netdev_priv(dev);
- 
--	return features & (ipvlan->sfeatures | ~IPVLAN_FEATURES);
-+	features |= NETIF_F_ALL_FOR_ALL;
-+	features &= (ipvlan->sfeatures | ~IPVLAN_FEATURES);
-+	features = netdev_increment_features(ipvlan->phy_dev->features,
-+					     features, features);
-+	features |= IPVLAN_ALWAYS_ON;
-+	features &= (IPVLAN_FEATURES | IPVLAN_ALWAYS_ON);
-+
-+	return features;
- }
- 
- static void ipvlan_change_rx_flags(struct net_device *dev, int change)
-@@ -732,10 +750,9 @@ static int ipvlan_device_event(struct notifier_block *unused,
- 
- 	case NETDEV_FEAT_CHANGE:
- 		list_for_each_entry(ipvlan, &port->ipvlans, pnode) {
--			ipvlan->dev->features = dev->features & IPVLAN_FEATURES;
- 			ipvlan->dev->gso_max_size = dev->gso_max_size;
- 			ipvlan->dev->gso_max_segs = dev->gso_max_segs;
--			netdev_features_change(ipvlan->dev);
-+			netdev_update_features(ipvlan->dev);
- 		}
- 		break;
- 
 -- 
-2.25.1
+Thanks
 
-
-
+Qiwu
