@@ -2,186 +2,272 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3B2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA674C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3A12067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:30:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598290244;
-	bh=k9EA6Yz5BlgytRW2iMDZ8yHVhMkyTP3Gu35nJjpBIVE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m28z0vmeGtiYUyt/Fmbno5nhfGwtRApxgJNjU7bgFtV0DSD5wvQ2MrDM928D35l7/
-	 9h8bzobtoSZtp22HC22yOTu9HFZHKfOcAYhTMvGn80mZ8uTJrSlg5p38ehVW2MCiMv
-	 7KgsPGJFSqhcO/yf7aLwY0OG8htiO6R5O7t2m5Og=
+	by mail.kernel.org (Postfix) with ESMTP id B6D7B2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:30:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MQXLFuQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgHXRaj (ORCPT
+        id S1728334AbgHXRau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:30:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728152AbgHXQfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:35:21 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D9E922B49;
-        Mon, 24 Aug 2020 16:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286920;
-        bh=k9EA6Yz5BlgytRW2iMDZ8yHVhMkyTP3Gu35nJjpBIVE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qcAbktjSglz3BueAt3UEOLno8+6B2bP3jNG+75S0NVdqEFfXm96DVwJXTwEQpWNSI
-         bGL83legWAc7lSUDAYrTMccTnFXXH2he8dvEK8+iEUisMUS5/jErto6vmEwCeZk8XQ
-         iNsRM9b2e9BwC3I7xabD5GiWntFw8lSBDPVjiYGw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xianting Tian <xianting_tian@126.com>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 12/63] fs: prevent BUG_ON in submit_bh_wbc()
-Date:   Mon, 24 Aug 2020 12:34:12 -0400
-Message-Id: <20200824163504.605538-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
-References: <20200824163504.605538-1-sashal@kernel.org>
+        Mon, 24 Aug 2020 13:30:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgHXRa2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 13:30:28 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67144C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:30:27 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id oz20so7992778ejb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:30:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0pv9P9U6pxLlwMoplcSWHM0HVEAc+hsmuC2XIfXUykA=;
+        b=MQXLFuQXuwoKlu3fd4XyBErZA9e2H8z9kAXsrL9JfqOnhiArUFNm5rTXpHuyaca30B
+         j3+Hb+BLsOR6HAmseGR/njI2ubT9hInGmg3VFUve5o7gAsNT0w9XzR1I3+fUD512IgTP
+         eEEIU2xOtudBI0wVeRc4FJOElyTL0U0PmPFBg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0pv9P9U6pxLlwMoplcSWHM0HVEAc+hsmuC2XIfXUykA=;
+        b=THO5RI5LACvQUjSrhhvjqbNBoEZfRdqPngIuKA0+50cAe6g7sIBI6bj4AMB3W/i9pX
+         wRwY5OG/eL1RqglW9TWmrdlMJpmaq+cCQqFBEajBFeuIHSJYDBj0s00Ex4F7RMmvaqJ2
+         VHATa7ukcAIy4Yhh9Lt5obo5jk0hv43jU6KwyKkrWz4oyMVV09f5+x167uOEBh9cYHIm
+         RWch8x43QKsFjKjhcD85RFvZoVULAAV1ivCYUbLCsAN3nGuP6/ARi5k4sziy0fnfAwwo
+         TzlUzYvQ+YR2+OhGZ9ySL8KKOCrL7tHkvL5MeN7T7KKh641PWGG2UiKFbOq95T9gBb8v
+         /Cbw==
+X-Gm-Message-State: AOAM531D9kdueAKmOmV/0F3FEZOYFuY4oDH+Vvd3Sp3LKECeHgOypmh7
+        dNrjUuHRtEd0unVXT9G1H3jObNxmPNpoxQ==
+X-Google-Smtp-Source: ABdhPJz70U6aOlRYmiw+q3HWKOA2YFhdpPmTgnl0a4qK/7Z+daiLRPp/BRAJfpOLPYPbFQBjjSPO/A==
+X-Received: by 2002:a17:906:2bdb:: with SMTP id n27mr6772899ejg.12.1598290221305;
+        Mon, 24 Aug 2020 10:30:21 -0700 (PDT)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com. [209.85.128.50])
+        by smtp.gmail.com with ESMTPSA id o5sm10165846edi.3.2020.08.24.10.30.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 10:30:21 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id x9so5092908wmi.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:30:20 -0700 (PDT)
+X-Received: by 2002:a05:600c:2314:: with SMTP id 20mr256519wmo.183.1598289877815;
+ Mon, 24 Aug 2020 10:24:37 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200728050140.996974-1-tientzu@chromium.org> <20200728050140.996974-5-tientzu@chromium.org>
+ <20200731205804.GB756942@bogus> <CALiNf2-BGQ+8Lm6A61oM6v+6N1zRTJYvod7LQLsCmK-ADsrMaw@mail.gmail.com>
+ <CAAFQd5Cm+ZGx9ia2sAdvHQC6zC1U=+9AWs7iW7o-qE4g7wZgsw@mail.gmail.com> <CAAFQd5AfbN0V3sGCs8vhmeD-MNn3bTvfWBCaT-OY3hgjBUs-LQ@mail.gmail.com>
+In-Reply-To: <CAAFQd5AfbN0V3sGCs8vhmeD-MNn3bTvfWBCaT-OY3hgjBUs-LQ@mail.gmail.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Mon, 24 Aug 2020 19:24:25 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5B_LAb0uU3J9umGWBhaVSKT3N9SynnvTxw_PVEwHu4Cww@mail.gmail.com>
+Message-ID: <CAAFQd5B_LAb0uU3J9umGWBhaVSKT3N9SynnvTxw_PVEwHu4Cww@mail.gmail.com>
+Subject: Re: [RFC v2 4/5] dt-bindings: of: Add plumbing for restricted DMA pool
+To:     Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>, suzuki.poulose@arm.com,
+        dan.j.williams@intel.com, heikki.krogerus@linux.intel.com,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Claire Chang <tientzu@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xianting Tian <xianting_tian@126.com>
+On Tue, Aug 11, 2020 at 11:15 AM Tomasz Figa <tfiga@chromium.org> wrote:
+>
+> On Mon, Aug 3, 2020 at 5:15 PM Tomasz Figa <tfiga@chromium.org> wrote:
+> >
+> > Hi Claire and Rob,
+> >
+> > On Mon, Aug 3, 2020 at 4:26 PM Claire Chang <tientzu@chromium.org> wrote:
+> > >
+> > > On Sat, Aug 1, 2020 at 4:58 AM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Tue, Jul 28, 2020 at 01:01:39PM +0800, Claire Chang wrote:
+> > > > > Introduce the new compatible string, device-swiotlb-pool, for restricted
+> > > > > DMA. One can specify the address and length of the device swiotlb memory
+> > > > > region by device-swiotlb-pool in the device tree.
+> > > > >
+> > > > > Signed-off-by: Claire Chang <tientzu@chromium.org>
+> > > > > ---
+> > > > >  .../reserved-memory/reserved-memory.txt       | 35 +++++++++++++++++++
+> > > > >  1 file changed, 35 insertions(+)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> > > > > index 4dd20de6977f..78850896e1d0 100644
+> > > > > --- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> > > > > +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> > > > > @@ -51,6 +51,24 @@ compatible (optional) - standard definition
+> > > > >            used as a shared pool of DMA buffers for a set of devices. It can
+> > > > >            be used by an operating system to instantiate the necessary pool
+> > > > >            management subsystem if necessary.
+> > > > > +        - device-swiotlb-pool: This indicates a region of memory meant to be
+> > > >
+> > > > swiotlb is a Linux thing. The binding should be independent.
+> > > Got it. Thanks for pointing this out.
+> > >
+> > > >
+> > > > > +          used as a pool of device swiotlb buffers for a given device. When
+> > > > > +          using this, the no-map and reusable properties must not be set, so the
+> > > > > +          operating system can create a virtual mapping that will be used for
+> > > > > +          synchronization. Also, there must be a restricted-dma property in the
+> > > > > +          device node to specify the indexes of reserved-memory nodes. One can
+> > > > > +          specify two reserved-memory nodes in the device tree. One with
+> > > > > +          shared-dma-pool to handle the coherent DMA buffer allocation, and
+> > > > > +          another one with device-swiotlb-pool for regular DMA to/from system
+> > > > > +          memory, which would be subject to bouncing. The main purpose for
+> > > > > +          restricted DMA is to mitigate the lack of DMA access control on
+> > > > > +          systems without an IOMMU, which could result in the DMA accessing the
+> > > > > +          system memory at unexpected times and/or unexpected addresses,
+> > > > > +          possibly leading to data leakage or corruption. The feature on its own
+> > > > > +          provides a basic level of protection against the DMA overwriting buffer
+> > > > > +          contents at unexpected times. However, to protect against general data
+> > > > > +          leakage and system memory corruption, the system needs to provide a
+> > > > > +          way to restrict the DMA to a predefined memory region.
+> > > >
+> > > > I'm pretty sure we already support per device carveouts and I don't
+> > > > understand how this is different.
+> > > We use this to bounce streaming DMA in and out of a specially allocated region.
+> > > I'll try to merge this with the existing one (i.e., shared-dma-pool)
+> > > to see if that
+> > > makes things clearer.
+> > >
+> >
+> > Indeed, from the firmware point of view, this is just a carveout, for
+> > which we have the "shared-dma-pool" compatible string defined already.
+> >
+> > However, depending on the device and firmware setup, the way the
+> > carevout is used may change. I can see the following scenarios:
+> >
+> > 1) coherent DMA (dma_alloc_*) within a reserved pool and no
+> > non-coherent DMA (dma_map_*).
+> >
+> > This is how the "memory-region" property is handled today in Linux for
+> > devices which can only DMA from/to the given memory region. However,
+> > I'm not sure if no non-coherent DMA is actually enforced in any way by
+> > the DMA subsystem.
+> >
+> > 2) coherent DMA from a reserved pool and non-coherent DMA from system memory
+> >
+> > This is the case for the systems which have some dedicated part of
+> > memory which is guaranteed to be coherent with the DMA, but still can
+> > do non-coherent DMA to any part of the system memory. Linux handles it
+> > the same way as 1), which is what made me believe that 1) might not
+> > actually be handled correctly.
+> >
+> > 3) coherent DMA and bounced non-coherent DMA within a reserved pool
+> > 4) coherent DMA within one pool and bounced non-coherent within another pool
+> >
+> > These are the two cases we're interested in. Basically they make it
+> > possible for non-coherent DMA from arbitrary system memory to be
+> > bounced through a reserved pool, which the device has access to. The
+> > current series implements 4), but I'd argue that it:
+> >
+> > - is problematic from the firmware point of view, because on most of
+> > the systems, both pools would be just some carveouts and the fact that
+> > Linux would use one for coherent and the other for non-coherent DMA
+> > would be an OS implementation detail,
+> > - suffers from the static memory split between coherent and
+> > non-coherent DMA, which could either result in some wasted memory or
+> > the DMA stopped working after a kernel update if the driver changes
+> > its allocation pattern,
+> >
+> > and so we should rather go with 3).
+> >
+> > Now, from the firmware point of view, it doesn't matter how the OS
+> > uses the carveout, but I think it's still necessary to tell the OS
+> > about the device DMA capability. Right now we use "memory-region" for
+> > any kind of reserved memory, but looking at the above scenarios, there
+> > are 2 cases:
+> >
+> > a) the memory region is preferred for the device, e.g. it enables
+> > coherency, but the device can still DMA across the rest of the system
+> > memory. This is the case in scenario 2) and is kind of assumed in the
+> > Linux DMA subsystem, although it's certainly not the case for a lot of
+> > hardware, even if they use the "memory-region" binding.
+> >
+> > b) the memory region is the only region that the device can access.
+> > This is the case in scenarios 1), 3) and 4).
+> >
+> > For this, I'd like to propose a "restricted-dma-region" (feel free to
+> > suggest a better name) binding, which is explicitly specified to be
+> > the only DMA-able memory for this device and make Linux use the given
+> > pool for coherent DMA allocations and bouncing non-coherent DMA.
+> >
+> > What do you think?
+>
+> Rob, Robin, we'd appreciate your feedback on this when you have a
+> chance to take a look again. Thanks!
 
-[ Upstream commit 377254b2cd2252c7c3151b113cbdf93a7736c2e9 ]
+Gentle ping.
 
-If a device is hot-removed --- for example, when a physical device is
-unplugged from pcie slot or a nbd device's network is shutdown ---
-this can result in a BUG_ON() crash in submit_bh_wbc().  This is
-because the when the block device dies, the buffer heads will have
-their Buffer_Mapped flag get cleared, leading to the crash in
-submit_bh_wbc.
-
-We had attempted to work around this problem in commit a17712c8
-("ext4: check superblock mapped prior to committing").  Unfortunately,
-it's still possible to hit the BUG_ON(!buffer_mapped(bh)) if the
-device dies between when the work-around check in ext4_commit_super()
-and when submit_bh_wbh() is finally called:
-
-Code path:
-ext4_commit_super
-    judge if 'buffer_mapped(sbh)' is false, return <== commit a17712c8
-          lock_buffer(sbh)
-          ...
-          unlock_buffer(sbh)
-               __sync_dirty_buffer(sbh,...
-                    lock_buffer(sbh)
-                        judge if 'buffer_mapped(sbh))' is false, return <== added by this patch
-                            submit_bh(...,sbh)
-                                submit_bh_wbc(...,sbh,...)
-
-[100722.966497] kernel BUG at fs/buffer.c:3095! <== BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc()
-[100722.966503] invalid opcode: 0000 [#1] SMP
-[100722.966566] task: ffff8817e15a9e40 task.stack: ffffc90024744000
-[100722.966574] RIP: 0010:submit_bh_wbc+0x180/0x190
-[100722.966575] RSP: 0018:ffffc90024747a90 EFLAGS: 00010246
-[100722.966576] RAX: 0000000000620005 RBX: ffff8818a80603a8 RCX: 0000000000000000
-[100722.966576] RDX: ffff8818a80603a8 RSI: 0000000000020800 RDI: 0000000000000001
-[100722.966577] RBP: ffffc90024747ac0 R08: 0000000000000000 R09: ffff88207f94170d
-[100722.966578] R10: 00000000000437c8 R11: 0000000000000001 R12: 0000000000020800
-[100722.966578] R13: 0000000000000001 R14: 000000000bf9a438 R15: ffff88195f333000
-[100722.966580] FS:  00007fa2eee27700(0000) GS:ffff88203d840000(0000) knlGS:0000000000000000
-[100722.966580] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[100722.966581] CR2: 0000000000f0b008 CR3: 000000201a622003 CR4: 00000000007606e0
-[100722.966582] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[100722.966583] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[100722.966583] PKRU: 55555554
-[100722.966583] Call Trace:
-[100722.966588]  __sync_dirty_buffer+0x6e/0xd0
-[100722.966614]  ext4_commit_super+0x1d8/0x290 [ext4]
-[100722.966626]  __ext4_std_error+0x78/0x100 [ext4]
-[100722.966635]  ? __ext4_journal_get_write_access+0xca/0x120 [ext4]
-[100722.966646]  ext4_reserve_inode_write+0x58/0xb0 [ext4]
-[100722.966655]  ? ext4_dirty_inode+0x48/0x70 [ext4]
-[100722.966663]  ext4_mark_inode_dirty+0x53/0x1e0 [ext4]
-[100722.966671]  ? __ext4_journal_start_sb+0x6d/0xf0 [ext4]
-[100722.966679]  ext4_dirty_inode+0x48/0x70 [ext4]
-[100722.966682]  __mark_inode_dirty+0x17f/0x350
-[100722.966686]  generic_update_time+0x87/0xd0
-[100722.966687]  touch_atime+0xa9/0xd0
-[100722.966690]  generic_file_read_iter+0xa09/0xcd0
-[100722.966694]  ? page_cache_tree_insert+0xb0/0xb0
-[100722.966704]  ext4_file_read_iter+0x4a/0x100 [ext4]
-[100722.966707]  ? __inode_security_revalidate+0x4f/0x60
-[100722.966709]  __vfs_read+0xec/0x160
-[100722.966711]  vfs_read+0x8c/0x130
-[100722.966712]  SyS_pread64+0x87/0xb0
-[100722.966716]  do_syscall_64+0x67/0x1b0
-[100722.966719]  entry_SYSCALL64_slow_path+0x25/0x25
-
-To address this, add the check of 'buffer_mapped(bh)' to
-__sync_dirty_buffer().  This also has the benefit of fixing this for
-other file systems.
-
-With this addition, we can drop the workaround in ext4_commit_supper().
-
-[ Commit description rewritten by tytso. ]
-
-Signed-off-by: Xianting Tian <xianting_tian@126.com>
-Link: https://lore.kernel.org/r/1596211825-8750-1-git-send-email-xianting_tian@126.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/buffer.c     | 9 +++++++++
- fs/ext4/super.c | 7 -------
- 2 files changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 64fe82ec65ff1..75a8849abb5d2 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -3160,6 +3160,15 @@ int __sync_dirty_buffer(struct buffer_head *bh, int op_flags)
- 	WARN_ON(atomic_read(&bh->b_count) < 1);
- 	lock_buffer(bh);
- 	if (test_clear_buffer_dirty(bh)) {
-+		/*
-+		 * The bh should be mapped, but it might not be if the
-+		 * device was hot-removed. Not much we can do but fail the I/O.
-+		 */
-+		if (!buffer_mapped(bh)) {
-+			unlock_buffer(bh);
-+			return -EIO;
-+		}
-+
- 		get_bh(bh);
- 		bh->b_end_io = end_buffer_write_sync;
- 		ret = submit_bh(REQ_OP_WRITE, op_flags, bh);
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 4c8253188d8df..f3614299ffd09 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -5204,13 +5204,6 @@ static int ext4_commit_super(struct super_block *sb, int sync)
- 	if (!sbh || block_device_ejected(sb))
- 		return error;
- 
--	/*
--	 * The superblock bh should be mapped, but it might not be if the
--	 * device was hot-removed. Not much we can do but fail the I/O.
--	 */
--	if (!buffer_mapped(sbh))
--		return error;
--
- 	/*
- 	 * If the file system is mounted read-only, don't update the
- 	 * superblock write time.  This avoids updating the superblock
--- 
-2.25.1
-
+>
+> Best regards,
+> Tomasz
+>
+> >
+> > Best regards,
+> > Tomasz
+> >
+> > > >
+> > > > What is the last sentence supposed to imply? You need an IOMMU?
+> > > The main purpose is to mitigate the lack of DMA access control on
+> > > systems without an IOMMU.
+> > > For example, we plan to use this plus a MPU for our PCIe WiFi which is
+> > > not behind an IOMMU.
+> > >
+> > > >
+> > > > >          - vendor specific string in the form <vendor>,[<device>-]<usage>
+> > > > >  no-map (optional) - empty property
+> > > > >      - Indicates the operating system must not create a virtual mapping
+> > > > > @@ -117,6 +135,16 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
+> > > > >                       compatible = "acme,multimedia-memory";
+> > > > >                       reg = <0x77000000 0x4000000>;
+> > > > >               };
+> > > > > +
+> > > > > +             wifi_coherent_mem_region: wifi_coherent_mem_region {
+> > > > > +                     compatible = "shared-dma-pool";
+> > > > > +                     reg = <0x50000000 0x400000>;
+> > > > > +             };
+> > > > > +
+> > > > > +             wifi_device_swiotlb_region: wifi_device_swiotlb_region {
+> > > > > +                     compatible = "device-swiotlb-pool";
+> > > > > +                     reg = <0x50400000 0x4000000>;
+> > > > > +             };
+> > > > >       };
+> > > > >
+> > > > >       /* ... */
+> > > > > @@ -135,4 +163,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
+> > > > >               memory-region = <&multimedia_reserved>;
+> > > > >               /* ... */
+> > > > >       };
+> > > > > +
+> > > > > +     pcie_wifi: pcie_wifi@0,0 {
+> > > > > +             memory-region = <&wifi_coherent_mem_region>,
+> > > > > +                      <&wifi_device_swiotlb_region>;
+> > > > > +             restricted-dma = <0>, <1>;
+> > > > > +             /* ... */
+> > > > > +     };
+> > > > >  };
+> > > > > --
+> > > > > 2.28.0.rc0.142.g3c755180ce-goog
+> > > > >
