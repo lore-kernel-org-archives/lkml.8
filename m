@@ -2,171 +2,153 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBA2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6AD2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A3C20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261879;
-	bh=0ASM38NtqHvLkfihwuFhfZDcSaxHNeAcxdPp58Kpa4o=;
+	s=default; t=1598261884;
+	bh=6w/oszwsnHTIdJ9mfROu3YvYwqGKZVMyT9uEp+7dW+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mRxdYeBLJRl+QckyNeX1f7pRry6z53UzYoI5b85HB/H5pfpWg4czwX0J4vHGB3xC8
-	 snsdVzBN554Y5fQvKWmldj0JY/rbsl6Lo13koYwZD2jW5MzbczXftsW+8DWsuo5hh+
-	 P16IHJOjkyCFg3ck85jxEWj9JAhMNz+1t/4xtBPo=
+	b=bJj3rDtOoZlxxIYMNIJWDy+S7DPi8mP1Xw2wdK1CgGeYoVEHk15EgDdSHWAPaLIBO
+	 l7o0UqLH/OGPCWFnA7oi+UqCDNBEH8I2kIdeTSo1Lklc7NBNU57DO/iE9yTcEjxMY4
+	 IpH2kTDM5ZntyGV2Ws0vHLMNOVlYYqv7NdhVDHEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbgHXJh5 (ORCPT
+        id S1726799AbgHXJiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:37:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47318 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:38:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727111AbgHXIr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729467AbgHXIr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 04:47:29 -0400
-Received: from localhost.localdomain (unknown [122.171.38.130])
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28FD22072D;
-        Mon, 24 Aug 2020 08:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42177204FD;
+        Mon, 24 Aug 2020 08:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598258848;
-        bh=0ASM38NtqHvLkfihwuFhfZDcSaxHNeAcxdPp58Kpa4o=;
+        bh=6w/oszwsnHTIdJ9mfROu3YvYwqGKZVMyT9uEp+7dW+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0gzmVpTI2iar2LvRnsjGkjkzApTW6XVndHLQEY3qt0D8XTS42IHBGP0dgVmubv0aZ
-         FqcCNSMULXxLDNsju8mdgsXxYtQ/rm66bzd0zRfxqenI5czhowATCehVbQeJf5Q2vi
-         WMJX1C7ea6zTVH2tEWBSvjvlt851G0WzmqythizQ=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     dmaengine@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 2/3] dmaengine: add peripheral configuration
-Date:   Mon, 24 Aug 2020 14:17:11 +0530
-Message-Id: <20200824084712.2526079-3-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200824084712.2526079-1-vkoul@kernel.org>
-References: <20200824084712.2526079-1-vkoul@kernel.org>
+        b=JC/cdr7pS5nj/0XezxbTMq5JFH3Kk8kPDFh2HYYv8jJ4S/KYqMdq5lAk9ich/xDQh
+         HY/mlKAIYjjFTjhCI9kpeTt4HO3+UXXV/xaPry5jvpTpQMoAvArFa8kTOIauOKlaye
+         VW+2RHEd1XdRCtE1ojF63trVXQIyRkeiDHHpPS9Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
+        Alain Volmat <alain.volmat@st.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 066/107] spi: stm32: fixes suspend/resume management
+Date:   Mon, 24 Aug 2020 10:30:32 +0200
+Message-Id: <20200824082408.390520053@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
+References: <20200824082405.020301642@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some complex dmaengine controllers have capability to program the
-peripheral device, so pass on the peripheral configuration as part of
-dma_slave_config
+From: Amelie Delaunay <amelie.delaunay@st.com>
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+[ Upstream commit db96bf976a4fc65439be0b4524c0d41427d98814 ]
+
+This patch adds pinctrl power management, and reconfigure spi controller
+in case of resume.
+
+Fixes: 038ac869c9d2 ("spi: stm32: add runtime PM support")
+
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Link: https://lore.kernel.org/r/1597043558-29668-5-git-send-email-alain.volmat@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/dmaengine.h | 75 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+ drivers/spi/spi-stm32.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 6fbd5c99e30c..264643ca9209 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -380,6 +380,73 @@ enum dma_slave_buswidth {
- 	DMA_SLAVE_BUSWIDTH_64_BYTES = 64,
- };
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index b222ce8d083ef..7e92ab0cc9920 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -14,6 +14,7 @@
+ #include <linux/iopoll.h>
+ #include <linux/module.h>
+ #include <linux/of_platform.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/reset.h>
+ #include <linux/spi/spi.h>
+@@ -1986,6 +1987,8 @@ static int stm32_spi_remove(struct platform_device *pdev)
  
-+/**
-+ * enum spi_transfer_cmd - spi transfer commands
-+ */
-+enum spi_transfer_cmd {
-+	SPI_TX = 1,
-+	SPI_RX,
-+	SPI_DUPLEX,
-+};
-+
-+/**
-+ * struct dmaengine_spi_config - spi config for peripheral
-+ *
-+ * @loopback_en: spi loopback enable when set
-+ * @clock_pol: clock polarity
-+ * @data_pol: data polarity
-+ * @pack_en: process tx/rx buffers as packed
-+ * @word_len: spi word length
-+ * @clk_div: source clock divider
-+ * @clk_src: serial clock
-+ * @cmd: spi cmd
-+ * @cs: chip select toggle
-+ * @rx_len: receive length for spi buffer
-+ */
-+struct dmaengine_spi_config {
-+	u8 loopback_en;
-+	u8 clock_pol;
-+	u8 data_pol;
-+	u8 pack_en;
-+	u8 word_len;
-+	u32 clk_div;
-+	u32 clk_src;
-+	u8 fragmentation;
-+	enum spi_transfer_cmd cmd;
-+	u8 cs;
-+	u32 rx_len;
-+};
-+
-+/**
-+ * struct dmaengine_i2c_config - i2c config for peripheral
-+ *
-+ * @pack_enable: process tx/rx buffers as packed
-+ * @cycle_count: clock cycles to be sent
-+ * @high_count: high period of clock
-+ * @low_count: low period of clock
-+ * @clk_div: source clock divider
-+ * @addr: i2c bus address
-+ * @strech: strech the clock at eot
-+ * @op: i2c cmd
-+ */
-+struct dmaengine_i2c_config {
-+	u8 pack_enable;
-+	u8 cycle_count;
-+	u8 high_count;
-+	u8 low_count;
-+	u16 clk_div;
-+	u8 addr;
-+	u8 strech;
-+	u8 op;
-+};
-+
-+enum dmaengine_peripheral {
-+	DMAENGINE_PERIPHERAL_SPI,
-+	DMAENGINE_PERIPHERAL_I2C,
-+	DMAENGINE_PERIPHERAL_UART,
-+	DMAENGINE_PERIPHERAL_LAST = DMAENGINE_PERIPHERAL_UART,
-+};
-+
- /**
-  * struct dma_slave_config - dma slave channel runtime config
-  * @direction: whether the data shall go in or out on this slave
-@@ -418,6 +485,10 @@ enum dma_slave_buswidth {
-  * @slave_id: Slave requester id. Only valid for slave channels. The dma
-  * slave peripheral will have unique id as dma requester which need to be
-  * pass as slave config.
-+ * @peripheral: type of peripheral to DMA to/from
-+ * @set_config: set peripheral config
-+ * @spi: peripheral config for spi
-+ * @:i2c peripheral config for i2c
-  *
-  * This struct is passed in as configuration data to a DMA engine
-  * in order to set up a certain channel for DMA transport at runtime.
-@@ -443,6 +514,10 @@ struct dma_slave_config {
- 	u32 dst_port_window_size;
- 	bool device_fc;
- 	unsigned int slave_id;
-+	enum dmaengine_peripheral peripheral;
-+	u8 set_config;
-+	struct dmaengine_spi_config spi;
-+	struct dmaengine_i2c_config i2c;
- };
+ 	pm_runtime_disable(&pdev->dev);
  
- /**
++	pinctrl_pm_select_sleep_state(&pdev->dev);
++
+ 	return 0;
+ }
+ 
+@@ -1997,13 +2000,18 @@ static int stm32_spi_runtime_suspend(struct device *dev)
+ 
+ 	clk_disable_unprepare(spi->clk);
+ 
+-	return 0;
++	return pinctrl_pm_select_sleep_state(dev);
+ }
+ 
+ static int stm32_spi_runtime_resume(struct device *dev)
+ {
+ 	struct spi_master *master = dev_get_drvdata(dev);
+ 	struct stm32_spi *spi = spi_master_get_devdata(master);
++	int ret;
++
++	ret = pinctrl_pm_select_default_state(dev);
++	if (ret)
++		return ret;
+ 
+ 	return clk_prepare_enable(spi->clk);
+ }
+@@ -2033,10 +2041,23 @@ static int stm32_spi_resume(struct device *dev)
+ 		return ret;
+ 
+ 	ret = spi_master_resume(master);
+-	if (ret)
++	if (ret) {
+ 		clk_disable_unprepare(spi->clk);
++		return ret;
++	}
+ 
+-	return ret;
++	ret = pm_runtime_get_sync(dev);
++	if (ret) {
++		dev_err(dev, "Unable to power device:%d\n", ret);
++		return ret;
++	}
++
++	spi->cfg->config(spi);
++
++	pm_runtime_mark_last_busy(dev);
++	pm_runtime_put_autosuspend(dev);
++
++	return 0;
+ }
+ #endif
+ 
 -- 
-2.26.2
+2.25.1
+
+
 
