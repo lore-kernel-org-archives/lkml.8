@@ -2,163 +2,235 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F113C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74805C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6D5320738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8F320738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:43:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZOiYUyUZ"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="LjjMN8oa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgHXQnQ (ORCPT
+        id S1728660AbgHXQnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728648AbgHXQm4 (ORCPT
+        Mon, 24 Aug 2020 12:43:31 -0400
+Received: from sonic312-30.consmr.mail.ne1.yahoo.com ([66.163.191.211]:34574
+        "EHLO sonic312-30.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728738AbgHXQnB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:42:56 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 204CCC061573;
-        Mon, 24 Aug 2020 09:42:56 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t11so4500153plr.5;
-        Mon, 24 Aug 2020 09:42:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=w41OmkoPspYNv6XjOAw8ahtDnY6c9BDmvOxAxpZTttk=;
-        b=ZOiYUyUZBx+y2twZVDLNRNj7XcDKPZeSrlH1pKR2XVXQPyltnrUiF5XIL2Pi3UOJE0
-         QESR928QCAsMbVv7IvrTsNl9dzQkt7ttEVo22hbkdd8dUrifgdVOREvnTvtePmoSa168
-         LUMoDzFfey129AAzeHQzzhMcEFJEBuPwK0iIGyg5eV7eeKQsyzjJYoSHqPx+kktCO0WP
-         gucacHnk+svFErQYZFyKb3ISKViLF8l6FlE982tB0lCYr6KbI36mn3lZKElTno2t7VnW
-         88Qp4uOlQ1ROHrTxVoECzjBJHSxrk7CtSabgsYgfuVEBBLi35E8V9OKPG1xS/gAt6i3x
-         vcgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=w41OmkoPspYNv6XjOAw8ahtDnY6c9BDmvOxAxpZTttk=;
-        b=XWjF0UWuEodlXjHNgp8i//apwu5KIYoieQSC4toxkMu09gFzWdCQnk3rS7/xvpeNtD
-         st+6SV3Z1J2s+bRDB4RQQbJIHEb7VVgJ0VYZJuxeTpRHHmgBKfeqEkT1xU96ZGk6ccyv
-         Dk3w1Ez/sKQjAoPebUPk3ekkwdbf3CiHE6iFUd4M88Dtxy2ywb4mURuPKPSYLRtLuBNC
-         FPtjfd43LhwlLAdd07FHAmmdkevC7pom7i3JkTfxVFsecOj9SpGIxlAK5/pcnicV8FWy
-         Jnra4iO/MrFRGiQqrzopEhPbqxhgXWx9axkA9dnAdkVXwmO1gWw2lQo35G9qwdQTzm59
-         bgJQ==
-X-Gm-Message-State: AOAM532xbyb0CjwGzPbVqBnXExJ6zXrEpBj5In+HIk6sk0oV9TD5yPAy
-        UQgr2Blrw3iSF/zN7FltwEo=
-X-Google-Smtp-Source: ABdhPJxoYGplA4PD2xcotuP1hn0qFIYRCnXteeEmPRirh/XXpaV6W9tmtVZLocyIxdzG6AVoTaXu5g==
-X-Received: by 2002:a17:90a:850b:: with SMTP id l11mr142577pjn.15.1598287375409;
-        Mon, 24 Aug 2020 09:42:55 -0700 (PDT)
-Received: from [10.67.51.206] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 2sm72768pjg.32.2020.08.24.09.42.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 09:42:54 -0700 (PDT)
-Subject: Re: [PATCH stable v4.9 v2] arm64: entry: Place an SB sequence
- following an ERET instruction
-To:     Will Deacon <will@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL VIRTUAL MACHINE FOR ARM64 (KVM/arm64)" 
-        <kvmarm@lists.cs.columbia.edu>
-References: <20200709195034.15185-1-f.fainelli@gmail.com>
- <20200720130411.GB494210@kroah.com>
- <df1de420-ac59-3647-3b81-a0c163783225@gmail.com>
- <9c29080e-8b3a-571c-3296-e0487fa473fa@gmail.com>
- <20200807131429.GB664450@kroah.com> <20200821160316.GE21517@willie-the-truck>
- <7480435b-355d-b9f7-3a42-b72a9c4b6f63@gmail.com>
- <20200824163208.GA25316@willie-the-truck>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <f47841b0-bbbf-f03a-dfd1-88e92f4db7c6@gmail.com>
-Date:   Mon, 24 Aug 2020 09:42:53 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.1.1
+        Mon, 24 Aug 2020 12:43:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1598287379; bh=B7Ew0G0TXa2KKNlI0pJDDyrSW+TqKo0gQIsvxCgL1U0=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=LjjMN8oatFn1E4o2uThfFQUkDWeiJcLShVEEL2+YfUmrRpp8VyurV0ASkXKniqHZufwl1eub2Uf1kSBnVzkynlf2N6ZVvJh/txObrndvQpd53UGlb4DF98mHVzCRsA1XNb7SBjQZHdNosKvqeHFAKTScvLMwfgjl63ApW5t+iZaXvTTx5DPNQILG7jyhXxnmmUG/oYx99o0qCCPQwUFMxHHmm3zhGgFyiGxoo4QG1H0DZuszkyZguxE8DpsEPya8fsraxwpygSi9r+2qZEYIfzeF4WHebssPkHyYJNJaHhyj/jk6a00c1lpshuKbp6A2PwdZG6EAilBMxfpVR6pn/A==
+X-YMail-OSG: Q0MWEB8VM1mPbN44l7Ltn.YJrFw0Pw1ViTR6Y_3Y352.gfnJnhYp29R.FfBB93D
+ JHi1ZyiDhKmggGDxnOdYMszA1Dw4qQUyB4KGj3rvD3lruGn2g0uMsPyiam5FxDQsmA4.xmTTQA.G
+ k1OwgGp17Hqn4zFUU6C0eSeEA75HwV7BnsmIk0I26EYOXCwk8Uv0q_XEMaBn_Gx6hYWt7uLQbpW_
+ 9KBU7I_NSw7AgJHKcXi9Mqj5xD9j9itnSoBDSZpdpFt1hfU8W7eDXVNXQXU2rKd.PstvUR3qqNB1
+ 2KKI.cz2eqmqb980IfeG4KqFWUjUFHSb4hx0ERYsUmedfLM2YiBSU_iWlivhV4g1HduC6gXL748w
+ aKdhNprdrj.VhVYC7Lx.SPPhBlMm6iIApVdBOQgacpaQK3EIBnhNe8UKjINOXjJod3UHzglSLR.s
+ M3Ub55fVXPBW1Fk7x3vAkYuD7hw.JD4OyMb4VEcJtG4xbc7vqdORMPZHTEWT7DwdCdlsUM7c.gi1
+ EJ1I_U3wSrZ.BMFo6vd1wnOf.MuCLbbQemXMTQmZnkMpwitxOYp86oRk.4BUnsl0sGa5KBex68lV
+ g_FONJmqv4eT7SuL1WxdQk6V4S0qtkbGUcoRa33SmxgH6Whb3LK7d11RkOK1xX7Be_kdZD7EK1uf
+ r.JgM.2TKGLe2JbQHX_Q1Em77GweA6l12eO65sHyFmP.qCa2TBRd.aNmucLZyUAlGEoJmrH1Rhdt
+ oZGqptVWMdB2j8LgSoPLKuyNsj7D7AbnkAN4MdAKvWnuIONvezS9GzV8meTZC5p6FYwfhv0_f8m.
+ F_A9yiG.q0fsehftKQk7HLpqoT6VvHbU.llBqJCxdBPyeJbuGb0Powo1fK1vNXsu9OV.WbyogokE
+ DbU8Cd9FfLXP408vJl3uQW4J_NYMvHuYyRbC2XUQbF670_5Hl19kBug0lg9BTcyesj971ab9.SXm
+ 0tNQ5WjyeAikaIeccOEKlgq2FnSqYw5cFDVOCriEQWQ9sWMHNdrHwFJftGGlWkoc___uIE7jJLzb
+ kZxAVpy.ofAryCY988BmFBJUkBkg.sB3aEv41eGP.deirxKATsD6TVfBOLyjimcGO07lPMPO9_zj
+ lF7ZkHiy.8K3PXOQFVrwZIhBmYYnTJuXKPrkmza5zjPQqmXJOdqWYpg_Mf23.ES84LUIxKKGFMbw
+ qlKmtsWOPmTq8c8mUc3UFWeOVRS74nbKl4ZPZCQJUnQ4hba2r8vwtEb.UAns4tFXjWkn5g_lF9BK
+ 7jXTaXjgCLcI6ZzXT.6SVm.wJTQkA383m60Kss_yJhz3fU4OqAaHGpy7vJynLuSsHglBfkxPRLe3
+ 3qiylcGl0e0k5EQ_o6TkTZrb4O_Z3WOZ7w3wq_B31P.l80Nl26WR6ZxNCasn11q4gDSA_53j1Syk
+ vwHLtaVBDhK_tATG6umaMFeWmETMxolmgb5ScCXME.SR1w1s0yYi1TOBvWDCk09E7VoJfuj0MouM
+ BLWhAEUaKe1gn7sAWcVjN4e0PDyhW7tc8WI5roJ0UAPxQJVDaBCS1gVcft3VNxo2.fxIBKxnhU2I
+ 9BBOctfPrGcCWTiuDJQ--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.ne1.yahoo.com with HTTP; Mon, 24 Aug 2020 16:42:59 +0000
+Received: by smtp417.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 0d00dcda49cce8273293f2c695656539;
+          Mon, 24 Aug 2020 16:42:57 +0000 (UTC)
+Subject: Re: [RFC] security: replace indirect calls with static calls
+To:     Brendan Jackman <jackmanb@google.com>
+Cc:     Brendan Jackman <jackmanb@chromium.org>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Paul Renauld <renauld@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rafael.j.wysocki@intel.com, Kees Cook <keescook@chromium.org>,
+        thgarnie@chromium.org, KP Singh <kpsingh@google.com>,
+        paul.renauld.epfl@gmail.com,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <20200820164753.3256899-1-jackmanb@chromium.org>
+ <42fb4180-772c-5579-ef3e-b4003e2b784b@schaufler-ca.com>
+ <CA+i-1C09YZ8aCr6p5NOA2e3Ji5TKwdET=qAy=M328NK--L=0RA@mail.gmail.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <66a35f25-53be-17c3-8ab3-7cb32b0bc77a@schaufler-ca.com>
+Date:   Mon, 24 Aug 2020 09:42:54 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200824163208.GA25316@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CA+i-1C09YZ8aCr6p5NOA2e3Ji5TKwdET=qAy=M328NK--L=0RA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.16455 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/24/2020 8:20 AM, Brendan Jackman wrote:
+> On Fri, 21 Aug 2020 at 00:46, Casey Schaufler <casey@schaufler-ca.com> wrote:
+>> On 8/20/2020 9:47 AM, Brendan Jackman wrote:
+> [...]
+>> What does NOP really look like?
+> The NOP is the same as a regular function call but the CALL
+> instruction is replaced with a NOP instruction. The code that sets up
+> the call parameters is unchanged, and so is the code that expects to
+> get the return value in eax or whatever.
+
+Right. Are you saying that NOP is in-line assembler in your switch?
+
+> That means we cannot actually
+> call the static_calls for NULL slots, we'd get undefined behaviour
+> (except for void hooks) - this is what Peter is talking about in the
+> sibling thread.
+
+Referring to the "sibling thread" is kinda confusing, and
+assumes everyone is one all the right mailing lists, and knows
+which other thread you're talking about.
+
+>
+> For this reason, there are _no gaps_ in the callback table. For a
+> given LSM hook, all the slots after base_slot_idx are filled,
+
+Why go to all the trouble of maintaining the base_slot_idx
+if NOP is so cheap? Why not fill all unused slots with NOP?
+Worst case would be a hook with no users, in which case you
+have 11 NOPS in the void hook case and 11 "if (ret != DEFAULT_RET)"
+and 11 NOPS in the int case. No switch magic required. Even
+better, in the int case you have two calls/slot, the first is the
+module supplied function (or NOP) and the second is
+	int isit(int ret) { return (ret != DEFAULT_RET) ? ret : 0; }
+(or NOP).
+
+The no security module case degenerates to 22 NOP instructions
+and no if checks of any sort. I'm not the performance guy, but
+that seems better than maintaining and checking base_slot_idx
+to me.
+ 
+
+>  and all
+> before are empty, so jumping to base_slot_idx ensures that we don't
+> reach an empty slot. That's what the switch trick is all about.
+
+I hates tricks. They're so susceptible to clever attacks.
 
 
-On 8/24/2020 9:32 AM, Will Deacon wrote:
-> Hi Florian,
-> 
-> On Fri, Aug 21, 2020 at 10:16:23AM -0700, Florian Fainelli wrote:
->> On 8/21/20 9:03 AM, Will Deacon wrote:
->>> On Fri, Aug 07, 2020 at 03:14:29PM +0200, Greg KH wrote:
->>>> On Thu, Aug 06, 2020 at 01:00:54PM -0700, Florian Fainelli wrote:
->>>>> Greg, did you have a chance to queue those changes for 4.9, 4.14 and 4.19?
->>>>>
->>>>> https://lore.kernel.org/linux-arm-kernel/20200720182538.13304-1-f.fainelli@gmail.com/
->>>>> https://lore.kernel.org/linux-arm-kernel/20200720182937.14099-1-f.fainelli@gmail.com/
->>>>> https://lore.kernel.org/linux-arm-kernel/20200709195034.15185-1-f.fainelli@gmail.com/
->>>>
->>>> Nope, I was waiting for Will's "ack" for these.
+>>>                         if ret != 0:
+>> I assume you'd want "ret != DEFAULT_RET" instead of "ret != 0".
+> Yeah that's a good question - but the existing behaviour is to always
+> check against 0 (DEFAULT_RET is called IRC in the real code),
+> which does seem strange.
+
+If you don't do this correctly you'll make a real mess of the security.
+
+>> So what goes in for empty slots? What about gaps in the table?
+> It's a NOP, but we never execute it (explained above). There are no gaps.
+
+Right. Unused slots have NOP. NOP is (assumed to be) cheap.
+
+
+>>> +#define __UNROLL_MACRO_LOOP_20(MACRO, ...) \
+>>> + __UNROLL_MACRO_LOOP_19(MACRO, __VA_ARGS__) \
+>>> + MACRO(19, __VA_ARGS__)
+>>> +
+>> Where does "20" come from? Why are you unrolling beyond 11?
+> It's just an arbitrary limit on the unrolling macro implementation, we
+> aren't actually unrolling beyond 11 where the macro is used (N is set
+> to 11).
+
+I'm not a fan of including macros you can't use, especially
+when they're just obvious variants of other macros.
+
+
+>>>   With this use of the table and the
+>>> switch, it is possible to jump directly to the first used slot and execute
+>>> all of the slots after. This essentially makes the entry point of the table
+>>> dynamic. Instead, it would also be possible to start from 0 and break after
+>>> the final populated slot, but that would require an additional conditional
+>>> after each slot.
 >>>
->>> This patch doesn't even build for me (the 'sb' macro is not defined in 4.9),
->>> and I really wonder why we bother backporting it at all. Nobody's ever shown
->>> it to be a problem in practice, and it's clear that this is just being
->>> submitted to tick a box rather than anything else (otherwise it would build,
->>> right?).
+>>> This macro is used to generate the code for each static slot, (e.g. each
+>>> case statement in the previous example). This will expand into a call to
+>>> MACRO for each static slot defined. For example, if with again 5 slots:
+>>>
+>>> SECURITY_FOREACH_STATIC_SLOT(MACRO, x, y) ->
+>>>
+>>>       MACRO(0, x, y)
+>>>       MACRO(1, x, y)
+>>>       MACRO(2, x, y)
+>>>       MACRO(3, x, y)
+>>>       MACRO(4, x, y)
+>>>
+>>> This is used in conjunction with LSM_HOOK definitions in
+>>> linux/lsm_hook_defs.h to execute a macro for each static slot of each LSM
+>>> hook.
+>>>
+>>> The patches for static calls [6] are not upstreamed yet.
+>>>
+>>> The number of available slots for each LSM hook is currently fixed at
+>>> 11 (the number of LSMs in the kernel). Ideally, it should automatically
+>>> adapt to the number of LSMs compiled into the kernel.
+>> #define SECURITY_STATIC_SLOT_COUNT ( \
+>>         1 + /* Capability module is always there */ \
+>>         (IS_ENABLED(CONFIG_SECURITY_SELINUX) ? 1 : 0) + \
+>>         (IS_ENABLED(CONFIG_SECURITY_SMACK) ? 1 : 0) + \
+>>         ... \
+>>         (IS_ENABLED(CONFIG_BPF_LSM) ? 1 : 0))
 >>
->> Doh, I completely missed submitting the patch this depended on that's
->> why I did not notice the build failure locally, sorry about that, what a
->> shame.
+> Yeah, that's exactly what we need but it needs to be expanded to an
+> integer literal at preprocessor time, those +s won't work :(
+
+???? Gosh. It works in my module stacking code.
+
+
+>>> If there’s no practical way to implement such automatic adaptation, an
+>>> option instead would be to remove the panic call by falling-back to the old
+>>> linked-list mechanism, which is still present anyway (see below).
+>>>
+>>> A few special cases of LSM don't use the macro call_[int/void]_hook but
+>>> have their own calling logic. The linked-lists are kept as a possible slow
+>>> path fallback for them.
+>> Unfortunately, the stacking effort is increasing the number of hooks
+>> that will require special handling. security_secid_to_secctx() is one
+>> example.
 >>
->> Would not be the same "tick a box" argument be used against your
->> original submission then? Sure, I have not been able to demonstrate in
->> real life this was a problem, however the same can be said about a lot
->> security related fixes.
-> 
-> Sort of, although I wrote the original patch because it was dead easy to do
-> and saved having to think too much about the problem, whereas the complexity
-> of backporting largerly diminishes that imo.
-> 
->> What if it becomes exploitable in the future, would not it be nice to
->> have it in a 6 year LTS kernel?
-> 
-> Even if people are stuck on an old LTS, they should still be taking the
-> regular updates for it, and we would obviously need to backport the fix if
-> it turned out to be exploitable (and hey, we could even test it then!).
-> 
->>> So I'm not going to Ack any of them. As with a lot of this side-channel
->>> stuff the cure is far worse than the disease.
->> Assuming that my v3 does build correctly, which it will, would you be
->> keen on changing your position?
-> 
-> Note that I'm not trying to block this patch from going in, I'm just saying
-> that I'm not supportive of it. Perhaps somebody from Arm can review it if
-> they think it's worth the effort.
+>>> Before:
+>>>
+>>> https://gist.githubusercontent.com/PaulRenauld/fe3ee7b51121556e03c181432c8b3dd5/raw/62437b1416829ca0e8a0ed9101530bc90fd42d69/lsm-performance.png
+>>>
+>>> After:
+>>>
+>>> https://gist.githubusercontent.com/PaulRenauld/fe3ee7b51121556e03c181432c8b3dd5/raw/00e414b73e0c38c2eae8f05d5363a745179ba285/faster-lsm-results.png
+>>>
+>>> With this implementation, any overhead of the indirect call in the LSM
+>>> framework is completely mitigated (performance results: [7]). This
+>>> facilitates the adoption of "bpf" LSM on production machines and also
+>>> benefits all other LSMs.
+>> Your numbers for a system with BPF are encouraging. What do the numbers
+>> look like for a system with SELinux, Smack or AppArmor?
+> Yeah that's a good question. As I said in the sibling thread the
+> motivating example is very lightweight LSM callbacks in very hot
+> codepaths, but I'll get some broader data too and report back.
 
-How about I submit the actual full series (two patches) and we take the 
-discussion from there?
+Even IoT systems are using security modules these days. You'll be
+hard pressed to identify a class of systems that don't use an
+LSM or two. My bet is that your fiendishly clever scheme is going
+to make everyone's life better, but as with all things, it does
+need to have hard evidence.
 
-Thanks for responding!
--- 
-Florian
