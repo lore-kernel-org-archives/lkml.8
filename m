@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A28EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB4C2087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E39204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259534;
-	bh=yDI7kyIrfEtwCe9LMag+1+fPE95GOwlxTupO1hn7NEc=;
+	s=default; t=1598259542;
+	bh=l+IlGmVgTkHi1c1y8iGMegmvpD5qjDYAPHHILkNqBvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=juuToNrjnYUAnpWf7trH0Cw3m1B//lKtDp4zsWEJavlVWEVy6lGYcNi0Wq9QZTjf7
-	 d5krfcfsRbOtUXbClMcUzNmna7yuHqYj2MlWt3Pihr8wqnIk/xEyyvfxEYnnThYQgW
-	 9IYe9UWuQ6/xHY4XDDn9TDoRPEwMJihYpnA8Qdf8=
+	b=Iir4VWBHQGL79euPvWMgVdcx+DtRzD5YJzhQhE6pVHx35of+Hj14B/g2qZTUAJly4
+	 7U32ZxFxrpKctk6SWBBQuOCm97ro9v0p4KgSayYyTqFI0WDH0bpeKq+FQ9JdZdpjDJ
+	 n0egstuJ1p7K9YdI1H3guBwp7Z7Usrz4UyW/efJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbgHXI6u (ORCPT
+        id S1730610AbgHXI7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:58:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:59:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730451AbgHXI6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:58:05 -0400
+        id S1730372AbgHXI6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:58:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD9132072D;
-        Mon, 24 Aug 2020 08:58:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6078B204FD;
+        Mon, 24 Aug 2020 08:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259485;
-        bh=yDI7kyIrfEtwCe9LMag+1+fPE95GOwlxTupO1hn7NEc=;
+        s=default; t=1598259482;
+        bh=l+IlGmVgTkHi1c1y8iGMegmvpD5qjDYAPHHILkNqBvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KUmloRlOxDpuaHkxTmbmbiBWd6cuMC0CZc+OwRHP4rjcD8E8NYg3RFBaFrDhHmEGR
-         DZlGMZNSsXEG3qmplhEa2/cPTY2jGTigtD8WgNhSkV36+zyZ+jlxbkdRJh4g6Sm3Ma
-         lQDc1L6AJGW+w1ZeyH4xHaSCgfVwPQceuL6+pTgA=
+        b=BsnT7VFhV2Lh4Rzr2890oBrGI0ewQYEalp8un2ina9ZewFjUf16dDFNthvBybaSPA
+         kJ0wAKEX3j7hNUceXAXkFd0rAQoh5BJQu/9J+NQeBURWsmS4VOuS88PUokbh5UpSRz
+         g1CfCeyzZmIjHWYVDFM/xAEL6ZqQckwURWMXz03k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 56/71] efi: avoid error message when booting under Xen
-Date:   Mon, 24 Aug 2020 10:31:47 +0200
-Message-Id: <20200824082358.698146893@linuxfoundation.org>
+Subject: [PATCH 4.19 55/71] kconfig: qconf: fix signal connection to invalid slots
+Date:   Mon, 24 Aug 2020 10:31:46 +0200
+Message-Id: <20200824082358.650771922@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -61,37 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 6163a985e50cb19d5bdf73f98e45b8af91a77658 ]
+[ Upstream commit d85de3399f97467baa2026fbbbe587850d01ba8a ]
 
-efifb_probe() will issue an error message in case the kernel is booted
-as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoid
-that message by calling efi_mem_desc_lookup() only if EFI_MEMMAP is set.
+If you right-click in the ConfigList window, you will see the following
+messages in the console:
 
-Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+QObject::connect: No such slot QAction::setOn(bool) in scripts/kconfig/qconf.cc:888
+QObject::connect:  (sender name:   'config')
+QObject::connect: No such slot QAction::setOn(bool) in scripts/kconfig/qconf.cc:897
+QObject::connect:  (sender name:   'config')
+QObject::connect: No such slot QAction::setOn(bool) in scripts/kconfig/qconf.cc:906
+QObject::connect:  (sender name:   'config')
+
+Right, there is no such slot in QAction. I think this is a typo of
+setChecked.
+
+Due to this bug, when you toggled the menu "Option->Show Name/Range/Data"
+the state of the context menu was not previously updated. Fix this.
+
+Fixes: d5d973c3f8a9 ("Port xconfig to Qt5 - Put back some of the old implementation(part 2)")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/efifb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/kconfig/qconf.cc | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
-index cc1006375cacb..f50cc1a7c31a9 100644
---- a/drivers/video/fbdev/efifb.c
-+++ b/drivers/video/fbdev/efifb.c
-@@ -449,7 +449,7 @@ static int efifb_probe(struct platform_device *dev)
- 	info->apertures->ranges[0].base = efifb_fix.smem_start;
- 	info->apertures->ranges[0].size = size_remap;
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index 294d4329f4810..1ee33d2e15bf8 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -878,7 +878,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
+ 		connect(action, SIGNAL(toggled(bool)),
+ 			parent(), SLOT(setShowName(bool)));
+ 		connect(parent(), SIGNAL(showNameChanged(bool)),
+-			action, SLOT(setOn(bool)));
++			action, SLOT(setChecked(bool)));
+ 		action->setChecked(showName);
+ 		headerPopup->addAction(action);
  
--	if (efi_enabled(EFI_BOOT) &&
-+	if (efi_enabled(EFI_MEMMAP) &&
- 	    !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
- 		if ((efifb_fix.smem_start + efifb_fix.smem_len) >
- 		    (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
+@@ -887,7 +887,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
+ 		connect(action, SIGNAL(toggled(bool)),
+ 			parent(), SLOT(setShowRange(bool)));
+ 		connect(parent(), SIGNAL(showRangeChanged(bool)),
+-			action, SLOT(setOn(bool)));
++			action, SLOT(setChecked(bool)));
+ 		action->setChecked(showRange);
+ 		headerPopup->addAction(action);
+ 
+@@ -896,7 +896,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
+ 		connect(action, SIGNAL(toggled(bool)),
+ 			parent(), SLOT(setShowData(bool)));
+ 		connect(parent(), SIGNAL(showDataChanged(bool)),
+-			action, SLOT(setOn(bool)));
++			action, SLOT(setChecked(bool)));
+ 		action->setChecked(showData);
+ 		headerPopup->addAction(action);
+ 	}
+@@ -1228,7 +1228,7 @@ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
+ 
+ 	action->setCheckable(true);
+ 	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
+-	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
++	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setChecked(bool)));
+ 	action->setChecked(showDebug());
+ 	popup->addSeparator();
+ 	popup->addAction(action);
 -- 
 2.25.1
 
