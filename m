@@ -2,108 +2,181 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D58C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD12C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13C2F204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:22:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598307720;
-	bh=F1f+Uvhd2Fc+fuiyWpwSVDsJgkEyesCO8tafSe+rpLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gHUR3awsoCNzgNMsVZO9wnpZ1oqmff4f4oVOn4zPhEUfh5I1jFTtFNLZV9dbTv+tc
-	 EnnOvr1XinETIL+vvOlnIoFk17Qp8za7lELnxBlDC5rHiZjWAN3akjhupkq2gl5mc8
-	 BmXbyeo8UlwcTG/kFnbph1pUl9TDqh+1ZOR3Kxqs=
+	by mail.kernel.org (Postfix) with ESMTP id 86FB7204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:23:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h53JpEW4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgHXWV7 (ORCPT
+        id S1728002AbgHXWX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:21:59 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43929 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbgHXWV5 (ORCPT
+        Mon, 24 Aug 2020 18:23:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgHXWX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 18:21:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id s1so10438581iot.10;
-        Mon, 24 Aug 2020 15:21:57 -0700 (PDT)
+        Mon, 24 Aug 2020 18:23:29 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DFB5C061574;
+        Mon, 24 Aug 2020 15:23:29 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id c15so10647180wrs.11;
+        Mon, 24 Aug 2020 15:23:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IfUS4URwAi9r1GH23nLJXNeKi/lPL1y8e7MUKSPEyJk=;
+        b=h53JpEW4YIJmyyVBDXBjaDiiHabRPoQDtG9UAFheRNC4uDo5OxZgXllhXKrUnud+gC
+         rsk0MMTDvZG/VhY9AsqPv1TGHfvX98ooecgUYKr69PaL+wq0jbnm2maQ7xI3lKy2QbmU
+         BAWrYfgk4SJ2YhgH6uSX+PrM1x4hgsbPwtGj3k6q7cSFMCGW7P7UEXrgPsPechZtauhu
+         TVzyrdCuO/fOw2l36+Fain+nuGerXvns/OtZVk9JfcYkitEtBY6JrA90G87yKe9bDHXw
+         6oKylGSpRwzkisXJQI21HgsBkZatEm+1Md/c4qhorX0wC2NzbmS3qSdM2+Y1So6Q/wKF
+         hpQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HpXqLEs8eq8CnFuePFbsaPw/4gNKLcGm8cN6g5HaO/Y=;
-        b=BuSm0NOteXNoDsUaXcGErbtGzBHkYctVHE7gnMfm8btJlGNO4lJLF+6gL8ZL9synw9
-         mu2ZuGiBxbYMne3oTk907nGytcqU7MRFeUC5v//hpaIsOGsobNvCvGy68vPs0zpJyL6F
-         Je7UxNsHuRcJAKWMVT3K7d2nJmA92mHrmnIsJTX5xbNNYutr7LRifpLngwrfT/B5vfVp
-         N7MUtiBgAfVrZGaMKVokMvSE4oER+tN762cLNNNp+2RkzLT3Sy1/4y0hx3WiKflgMNpy
-         xFGMd9iqEW4VoL+yQXroQWs7Hj73MIpShJfjWEQIibppv5HzaRM50teTMmVBr36DJfmg
-         lO3Q==
-X-Gm-Message-State: AOAM532hH40upz0lycHOpfN7hPMkyh+Ij4UVmlPsvlEqVpnDXi1TzOz2
-        l8WUDnHTZ0cXvisAwtseww==
-X-Google-Smtp-Source: ABdhPJyAsy9/gCtzYJlEu23h7nJFsyNQGwP4wLzftbw/oFPSfiFCfFrcFRhQENx14Unflu6NLIpU9g==
-X-Received: by 2002:a02:9f87:: with SMTP id a7mr7474361jam.35.1598307716802;
-        Mon, 24 Aug 2020 15:21:56 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id q1sm7268485ioh.0.2020.08.24.15.21.55
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IfUS4URwAi9r1GH23nLJXNeKi/lPL1y8e7MUKSPEyJk=;
+        b=qs9iISbCWSXv8JAxu/obU+WQlnU6t2xUs+0P7O8AICGCXg97dEDso0Q61uRskssG3s
+         cme2/bpukVEstfj+Dq0yw+o1aX1jwTYhlBnbuoP+HW7s89+fbQuH5qlHvogu4DRb4kYU
+         Tc4W1IKlgxETVvWL3PfXW3Ieq0Kbcj5fRGd5tjZbkOSbH2tHlrDe0u15MQTdOG2DHd+G
+         aRxkRezj+HGPgXTaBKxQvPeZYT6DYgt+9AAT29+4e2RUTfDabCndFXY35B9aHlQWRel6
+         66LZKzIPqK58YTjIhaIY2vb9GrHGTX7IOJxRwbrTs2VC6nlhYpl2IHI6v2JMme8OHXao
+         /cMA==
+X-Gm-Message-State: AOAM530jzHzvckMaQlbhNWmj5pCk1YdXID8+t5fZ7I2pXNqBZTbujLgh
+        tpEB63TxiKKFKZ6aj4sazEN4SxQi97rYoMtC
+X-Google-Smtp-Source: ABdhPJwtNgrtupYuEecY4fweDInf/YX+rSI1iRu+EDXbSQJDjJjbadB9q0kUBoYvYlnRYZxj6dFypQ==
+X-Received: by 2002:adf:f58c:: with SMTP id f12mr7286242wro.45.1598307807824;
+        Mon, 24 Aug 2020 15:23:27 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id 5sm1838236wmz.22.2020.08.24.15.23.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 15:21:56 -0700 (PDT)
-Received: (nullmailer pid 3423089 invoked by uid 1000);
-        Mon, 24 Aug 2020 22:21:54 -0000
-Date:   Mon, 24 Aug 2020 16:21:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Grant Feng <von81@163.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] leds: Add an optional property named 'sdb-gpios'
-Message-ID: <20200824222154.GA3421740@bogus>
-References: <20200808033731.15695-1-von81@163.com>
- <20200808033731.15695-2-von81@163.com>
+        Mon, 24 Aug 2020 15:23:27 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        accessrunner-general@lists.sourceforge.net,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+Date:   Mon, 24 Aug 2020 23:23:20 +0100
+Message-Id: <20200824222322.22962-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200808033731.15695-2-von81@163.com>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 08, 2020 at 11:37:31AM +0800, Grant Feng wrote:
-> The chip enters hardware shutdown when the SDB pin is pulled low.
-> The chip releases hardware shutdown when the SDB pin is pulled high.
-> 
-> Signed-off-by: Grant Feng <von81@163.com>
-> ---
->  Documentation/devicetree/bindings/leds/leds-is31fl319x.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
-> index fc2603484544..e8bef4be57dc 100644
-> --- a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
-> +++ b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
-> @@ -16,6 +16,7 @@ Optional properties:
->  - audio-gain-db : audio gain selection for external analog modulation input.
->  	Valid values: 0 - 21, step by 3 (rounded down)
->  	Default: 0
-> +- sdb-gpios : Specifier of the GPIO connected to SDB pin.
+kernel/cpu.c: don't use snprintf() for sysfs attrs
 
-We normally use 'shutdown-gpios' for a shutdown GPIO.
+As per the documentation (Documentation/filesystems/sysfs.rst),
+snprintf() should not be used for formatting values returned by sysfs.
 
->  
->  Each led is represented as a sub-node of the issi,is31fl319x device.
->  There can be less leds subnodes than the chip can support but not more.
-> @@ -44,6 +45,7 @@ fancy_leds: leds@65 {
->  	#address-cells = <1>;
->  	#size-cells = <0>;
->  	reg = <0x65>;
-> +	sdb-gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
->  
->  	red_aux: led@1 {
->  		label = "red:aux";
-> -- 
-> 2.17.1
-> 
-> 
+In all of these cases, sprintf() suffices as we know that the formatted
+strings will be less than PAGE_SIZE in length.
+
+Issue identified by Coccinelle.
+
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/usb/atm/cxacru.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/usb/atm/cxacru.c b/drivers/usb/atm/cxacru.c
+index ea66f8f385bae..e62a770a5d3bf 100644
+--- a/drivers/usb/atm/cxacru.c
++++ b/drivers/usb/atm/cxacru.c
+@@ -230,12 +230,12 @@ CXACRU__ATTR_INIT(_name)
+ 
+ static ssize_t cxacru_sysfs_showattr_u32(u32 value, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%u\n", value);
++	return sprintf(buf, "%u\n", value);
+ }
+ 
+ static ssize_t cxacru_sysfs_showattr_s8(s8 value, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", value);
++	return sprintf(buf, "%d\n", value);
+ }
+ 
+ static ssize_t cxacru_sysfs_showattr_dB(s16 value, char *buf)
+@@ -255,8 +255,8 @@ static ssize_t cxacru_sysfs_showattr_bool(u32 value, char *buf)
+ 	static char *str[] = { "no", "yes" };
+ 
+ 	if (unlikely(value >= ARRAY_SIZE(str)))
+-		return snprintf(buf, PAGE_SIZE, "%u\n", value);
+-	return snprintf(buf, PAGE_SIZE, "%s\n", str[value]);
++		return sprintf(buf, "%u\n", value);
++	return sprintf(buf, "%s\n", str[value]);
+ }
+ 
+ static ssize_t cxacru_sysfs_showattr_LINK(u32 value, char *buf)
+@@ -264,8 +264,8 @@ static ssize_t cxacru_sysfs_showattr_LINK(u32 value, char *buf)
+ 	static char *str[] = { NULL, "not connected", "connected", "lost" };
+ 
+ 	if (unlikely(value >= ARRAY_SIZE(str) || str[value] == NULL))
+-		return snprintf(buf, PAGE_SIZE, "%u\n", value);
+-	return snprintf(buf, PAGE_SIZE, "%s\n", str[value]);
++		return sprintf(buf, "%u\n", value);
++	return sprintf(buf, "%s\n", str[value]);
+ }
+ 
+ static ssize_t cxacru_sysfs_showattr_LINE(u32 value, char *buf)
+@@ -275,8 +275,8 @@ static ssize_t cxacru_sysfs_showattr_LINE(u32 value, char *buf)
+ 		"waiting", "initialising"
+ 	};
+ 	if (unlikely(value >= ARRAY_SIZE(str)))
+-		return snprintf(buf, PAGE_SIZE, "%u\n", value);
+-	return snprintf(buf, PAGE_SIZE, "%s\n", str[value]);
++		return sprintf(buf, "%u\n", value);
++	return sprintf(buf, "%s\n", str[value]);
+ }
+ 
+ static ssize_t cxacru_sysfs_showattr_MODU(u32 value, char *buf)
+@@ -288,8 +288,8 @@ static ssize_t cxacru_sysfs_showattr_MODU(u32 value, char *buf)
+ 			"ITU-T G.992.2 (G.LITE)"
+ 	};
+ 	if (unlikely(value >= ARRAY_SIZE(str)))
+-		return snprintf(buf, PAGE_SIZE, "%u\n", value);
+-	return snprintf(buf, PAGE_SIZE, "%s\n", str[value]);
++		return sprintf(buf, "%u\n", value);
++	return sprintf(buf, "%s\n", str[value]);
+ }
+ 
+ /*
+@@ -309,8 +309,7 @@ static ssize_t mac_address_show(struct device *dev,
+ 	if (instance == NULL || instance->usbatm->atm_dev == NULL)
+ 		return -ENODEV;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%pM\n",
+-		instance->usbatm->atm_dev->esi);
++	return sprintf(buf, "%pM\n", instance->usbatm->atm_dev->esi);
+ }
+ 
+ static ssize_t adsl_state_show(struct device *dev,
+@@ -326,8 +325,8 @@ static ssize_t adsl_state_show(struct device *dev,
+ 
+ 	value = instance->card_info[CXINF_LINE_STARTABLE];
+ 	if (unlikely(value >= ARRAY_SIZE(str)))
+-		return snprintf(buf, PAGE_SIZE, "%u\n", value);
+-	return snprintf(buf, PAGE_SIZE, "%s\n", str[value]);
++		return sprintf(buf, "%u\n", value);
++	return sprintf(buf, "%s\n", str[value]);
+ }
+ 
+ static ssize_t adsl_state_store(struct device *dev,
+-- 
+2.28.0
+
