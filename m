@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCD1C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E31CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E138C21741
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2569C20FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258436;
-	bh=8ZfPDjBednZIPM4jhBpxyi85ckrUlCtixwY+7Murw8M=;
+	s=default; t=1598258441;
+	bh=COjiY0b/wWEh1aAE8ioSHBgdaNmtR5MlWi3AkEpblWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LYkoeWKiYD3Q9h8/Yj2OygKURN9EzocMMu8UOyxWUh+NN1GAnyfa7z5/A3xkp5yuc
-	 NiejrPXHyJpWSQ2jJDoUd9XUfoQ4vgSTDToR5dukkMspEOYt79W/UDpPdfQu5RCgs7
-	 iEP/ILJnT5gc2GiTsx7eQBnWn0AeB+e5LBvz+zU4=
+	b=hpyBDBSGQZTbh1E7WhUwo2oGHrqkE9QbRuz57MvV1mnDbyGmo2a2lJTLjRQSL5fSa
+	 lLnavx5N/kofSC/yMKcMYGEtiwsMd07/pLOt20/q7OlAv6FLAdV9llBTgK0Hg3JypU
+	 fjvZdf9AuTUauXXUjLsARt/sF7ChlUYWifPK7REo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgHXIkb (ORCPT
+        id S1728759AbgHXIkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:40:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57112 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:40:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgHXIkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:40:20 -0400
+        id S1726894AbgHXIkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:40:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62D4D22B49;
-        Mon, 24 Aug 2020 08:40:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50AE522B4D;
+        Mon, 24 Aug 2020 08:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258419;
-        bh=8ZfPDjBednZIPM4jhBpxyi85ckrUlCtixwY+7Murw8M=;
+        s=default; t=1598258422;
+        bh=COjiY0b/wWEh1aAE8ioSHBgdaNmtR5MlWi3AkEpblWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fe7TPdhXQH7uOIMjXKaUnWJ1zVckJvCA09eV3tuBNu+py6EA541Krb3IkwgrtYTZP
-         vc16egeTbjA1WpSARULDs2uhBJFJcOX3JGmgrHLQqs6Wb2+20tN+AhHMj7uX+urRzI
-         U/oLANdnRw3opUWaBrEZvdqDr7WJfbmdrNBNfvcs=
+        b=qsRMoPTbweuJKWwsUOzAHHAGI8jIeesoON4IAse2BhpGXl5Kr3xwwAPMwlpl+BEs3
+         FAOuSDt0C3IRV1xPP5xAgdUVBXvTk6ZKHGQPn1aMFZ17y2zQu8japdQ640oZWtdf8h
+         Ix6Zr8kJ0AE7wNc0IZMH6ulSKr3QXulkX5UrT+zk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
+        stable@vger.kernel.org, Jinyang He <hejinyang@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 033/124] opp: Reorder the code for !target_freq case
-Date:   Mon, 24 Aug 2020 10:29:27 +0200
-Message-Id: <20200824082411.048028270@linuxfoundation.org>
+Subject: [PATCH 5.7 042/124] MIPS: Fix unable to reserve memory for Crash kernel
+Date:   Mon, 24 Aug 2020 10:29:36 +0200
+Message-Id: <20200824082411.494141128@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -62,52 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Jinyang He <hejinyang@loongson.cn>
 
-[ Upstream commit b23dfa3543f31fbb8c0098925bf90fc23193d17a ]
+[ Upstream commit b1ce9716f3b5ed3b49badf1f003b9e34b7ead0f9 ]
 
-Reorder the code a bit to make it more readable. Add additional comment
-as well.
+Use 0 as the align parameter in memblock_find_in_range() is
+incorrect when we reserve memory for Crash kernel.
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Clément Péron <peron.clem@gmail.com>
-Tested-by: Clément Péron <peron.clem@gmail.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+The environment as follows:
+[    0.000000] MIPS: machine is loongson,loongson64c-4core-rs780e
+...
+[    1.951016]     crashkernel=64M@128M
+
+The warning as follows:
+[    0.000000] Invalid memory region reserved for crash kernel
+
+And the iomem as follows:
+00200000-0effffff : System RAM
+  04000000-0484009f : Kernel code
+  048400a0-04ad7fff : Kernel data
+  04b40000-05c4c6bf : Kernel bss
+1a000000-1bffffff : pci@1a000000
+...
+
+The align parameter may be finally used by round_down() or round_up().
+Like the following call tree:
+
+mips-next: mm/memblock.c
+
+memblock_find_in_range
+└── memblock_find_in_range_node
+    ├── __memblock_find_range_bottom_up
+    │   └── round_up
+    └── __memblock_find_range_top_down
+        └── round_down
+\#define round_up(x, y) ((((x)-1) | __round_mask(x, y))+1)
+\#define round_down(x, y) ((x) & ~__round_mask(x, y))
+\#define __round_mask(x, y) ((__typeof__(x))((y)-1))
+
+The round_down(or round_up)'s second parameter must be a power of 2.
+If the second parameter is 0, it both will return 0.
+
+Use 1 as the parameter to fix the bug and the iomem as follows:
+00200000-0effffff : System RAM
+  04000000-0484009f : Kernel code
+  048400a0-04ad7fff : Kernel data
+  04b40000-05c4c6bf : Kernel bss
+  08000000-0bffffff : Crash kernel
+1a000000-1bffffff : pci@1a000000
+...
+
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/opp/core.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ arch/mips/kernel/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 195fcaff18448..2d3880b3d6ee0 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -817,15 +817,21 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 573509e0f2d4e..3ace115740dd1 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -497,7 +497,7 @@ static void __init mips_parse_crashkernel(void)
+ 	if (ret != 0 || crash_size <= 0)
+ 		return;
+ 
+-	if (!memblock_find_in_range(crash_base, crash_base + crash_size, crash_size, 0)) {
++	if (!memblock_find_in_range(crash_base, crash_base + crash_size, crash_size, 1)) {
+ 		pr_warn("Invalid memory region reserved for crash kernel\n");
+ 		return;
  	}
- 
- 	if (unlikely(!target_freq)) {
--		if (opp_table->required_opp_tables) {
--			ret = _set_required_opps(dev, opp_table, NULL);
--		} else if (!_get_opp_count(opp_table)) {
-+		/*
-+		 * Some drivers need to support cases where some platforms may
-+		 * have OPP table for the device, while others don't and
-+		 * opp_set_rate() just needs to behave like clk_set_rate().
-+		 */
-+		if (!_get_opp_count(opp_table))
- 			return 0;
--		} else {
-+
-+		if (!opp_table->required_opp_tables) {
- 			dev_err(dev, "target frequency can't be 0\n");
- 			ret = -EINVAL;
-+			goto put_opp_table;
- 		}
- 
-+		ret = _set_required_opps(dev, opp_table, NULL);
- 		goto put_opp_table;
- 	}
- 
 -- 
 2.25.1
 
