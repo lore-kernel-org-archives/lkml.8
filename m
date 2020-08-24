@@ -2,112 +2,167 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C86DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBD44207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261374;
-	bh=ib3ov4ByJ2KzNtKTgGjw5zSsvyIJbB/3U+DgfprOU6E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SkWpF0m+fFm5o6h+B/hM97MD3JPFgbnPX0bf82Z8vVKm89zxck4JEHMo/VNraJ/0p
-	 8f7a9hWHUwvqkBfRgAbDHgP4GmtDzZc55T3fEOKpoYTMBz2tm0eXanyf0pgf8wntD6
-	 yvlKfx9xNELog9kma0UeKsXSqiGiru6STE0+4E4k=
+	by mail.kernel.org (Postfix) with ESMTP id 768992075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:29:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZkDEphbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730129AbgHXJ3d (ORCPT
+        id S1729989AbgHXJ3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:29:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729947AbgHXIvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C332D207D3;
-        Mon, 24 Aug 2020 08:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259095;
-        bh=ib3ov4ByJ2KzNtKTgGjw5zSsvyIJbB/3U+DgfprOU6E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QP2WetXphjtEAWvebVDTBZAl2LTXHaVRoEKc6phxuhRVKtgEOFn65PiHCGXNTfCJE
-         mLpQ3mJhMhySRsDE7nMLpegocwrKqduqUCznTS+gg5Mq9xkC2xzOfDr2OZQ/LjRSj1
-         RICFVj8U18Efn/pWkpnx9OQP0MYxEFrU6zboAGno=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 18/39] scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
-Date:   Mon, 24 Aug 2020 10:31:17 +0200
-Message-Id: <20200824082349.435003610@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
-References: <20200824082348.445866152@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 24 Aug 2020 05:29:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729436AbgHXIvi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:38 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EBAEC061573;
+        Mon, 24 Aug 2020 01:51:37 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id b17so7045768wru.2;
+        Mon, 24 Aug 2020 01:51:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=uTdKQ5clD4r2ToOsU82FKuGY0/oAS0sA2b3OkSN5Zpg=;
+        b=ZkDEphbp87qPwg7y4agT8NB/4n8w+C0e9Jewlx//TTpCFePPG1ec/nrGDnfw5404iS
+         Fm9ZKmN28ldI0dxZI6vuP9tBrWjqz6tKEKh2OEeoIwHc2mboJUjeziXneOtr7KhrReJt
+         DuaL8ssq5eEPp5aoPWexv4X+yt5EIoXI/HA44jYLWbVLrmtG10vPP/cXSWDIvSxhCntf
+         3IH9TxsTBURfwGFkdqCkLwkpx6qgJDWrxrdDrzrG5huGYH5jAeYSsZzBHk1nmmILpUtF
+         lHxyBQgdxQNgXZn/eQKzlgP49DMHp6eZDzbHaHOqwqUVxe6nWg0v1yqUXt8A0iDZBiiB
+         iLbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uTdKQ5clD4r2ToOsU82FKuGY0/oAS0sA2b3OkSN5Zpg=;
+        b=f4UcIyyeTEhIoPVFWPjuWgqZwVJ/jl9VePzsGwD2wVbVyZ1aaOQ3OTWdooQOcjjuDx
+         SAZLXH1P7+cB7ud556eGwnrCgoe26pN4AzCz4LbfRbU4aPgpqhol3/bj1KGwbdyZVVPb
+         YK81NNyGP1hAAqrdefDo3w+9mKnbQxEO0S4A0GonTfy8zTH2Ie9MVGgtgBUPbb+vraEm
+         gQa5JYi2a2HoXYBn2k4LXFkSRkBssFXHR6sUX8WITraoLnUr2AuAG1Hai9Cm6n1jT2Nh
+         2GKqN48GuDFs6pOf7BzuQerQiSL1lCIDss2zgpFOBIrBQULa5WgdjRbICB0MI5lQ+Evk
+         zKYA==
+X-Gm-Message-State: AOAM531PNHkIm/f03rpKwJbt8NokGxG1qm2gdycj4ufGO1z8BADKZHY9
+        Z9FRMZ7m13XrynVLmSt6VZM=
+X-Google-Smtp-Source: ABdhPJxsKgQ9wDqvKQpQNa2EKUcLm0a5wgrSnP2iQunmlTDMK7yxZgtojvcdEyQBb3/+Dv5RAF/h/A==
+X-Received: by 2002:adf:ef44:: with SMTP id c4mr4718306wrp.84.1598259095843;
+        Mon, 24 Aug 2020 01:51:35 -0700 (PDT)
+Received: from ubuntu18_1.cisco.com ([173.38.220.43])
+        by smtp.gmail.com with ESMTPSA id o2sm21622456wrh.70.2020.08.24.01.51.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 01:51:35 -0700 (PDT)
+From:   Ahmed Abdelsalam <ahabdels@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     andrea.mayer@uniroma2.it, ahabdels@gmail.com
+Subject: [net-next v4] seg6: using DSCP of inner IPv4 packets
+Date:   Mon, 24 Aug 2020 08:51:24 +0000
+Message-Id: <20200824085124.2488-1-ahabdels@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+This patch allows copying the DSCP from inner IPv4 header to the
+outer IPv6 header, when doing SRv6 Encapsulation.
 
-[ Upstream commit c0a18ee0ce78d7957ec1a53be35b1b3beba80668 ]
+This allows forwarding packet across the SRv6 fabric based on their
+original traffic class.
 
-It is confirmed that Micron device needs DELAY_BEFORE_LPM quirk to have a
-delay before VCC is powered off. Sdd Micron vendor ID and this quirk for
-Micron devices.
-
-Link: https://lore.kernel.org/r/20200612012625.6615-2-stanley.chu@mediatek.com
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Ahmed Abdelsalam <ahabdels@gmail.com>
 ---
- drivers/scsi/ufs/ufs_quirks.h | 1 +
- drivers/scsi/ufs/ufshcd.c     | 2 ++
- 2 files changed, 3 insertions(+)
+ net/ipv6/seg6_iptunnel.c | 36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufs_quirks.h b/drivers/scsi/ufs/ufs_quirks.h
-index 71f73d1d1ad1f..6c944fbefd40a 100644
---- a/drivers/scsi/ufs/ufs_quirks.h
-+++ b/drivers/scsi/ufs/ufs_quirks.h
-@@ -21,6 +21,7 @@
- #define UFS_ANY_VENDOR 0xFFFF
- #define UFS_ANY_MODEL  "ANY_MODEL"
+diff --git a/net/ipv6/seg6_iptunnel.c b/net/ipv6/seg6_iptunnel.c
+index 897fa59c47de..7eaa7adc296b 100644
+--- a/net/ipv6/seg6_iptunnel.c
++++ b/net/ipv6/seg6_iptunnel.c
+@@ -104,8 +104,7 @@ static void set_tun_src(struct net *net, struct net_device *dev,
+ }
  
-+#define UFS_VENDOR_MICRON      0x12C
- #define UFS_VENDOR_TOSHIBA     0x198
- #define UFS_VENDOR_SAMSUNG     0x1CE
- #define UFS_VENDOR_SKHYNIX     0x1AD
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index af4b0a2021d6c..a7f520581cb0f 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -178,6 +178,8 @@ ufs_get_pm_lvl_to_link_pwr_state(enum ufs_pm_level lvl)
+ /* Compute flowlabel for outer IPv6 header */
+-static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb,
+-				  struct ipv6hdr *inner_hdr)
++static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb)
+ {
+ 	int do_flowlabel = net->ipv6.sysctl.seg6_flowlabel;
+ 	__be32 flowlabel = 0;
+@@ -116,7 +115,7 @@ static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb,
+ 		hash = rol32(hash, 16);
+ 		flowlabel = (__force __be32)hash & IPV6_FLOWLABEL_MASK;
+ 	} else if (!do_flowlabel && skb->protocol == htons(ETH_P_IPV6)) {
+-		flowlabel = ip6_flowlabel(inner_hdr);
++		flowlabel = ip6_flowlabel(ipv6_hdr(skb));
+ 	}
+ 	return flowlabel;
+ }
+@@ -130,6 +129,7 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
+ 	struct ipv6_sr_hdr *isrh;
+ 	int hdrlen, tot_len, err;
+ 	__be32 flowlabel;
++	u8 tos = 0, hop_limit;
  
- static struct ufs_dev_fix ufs_fixups[] = {
- 	/* UFS cards deviations table */
-+	UFS_FIX(UFS_VENDOR_MICRON, UFS_ANY_MODEL,
-+		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
- 		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL, UFS_DEVICE_NO_VCCQ),
+ 	hdrlen = (osrh->hdrlen + 1) << 3;
+ 	tot_len = hdrlen + sizeof(*hdr);
+@@ -138,30 +138,32 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
+ 	if (unlikely(err))
+ 		return err;
+ 
+-	inner_hdr = ipv6_hdr(skb);
+-	flowlabel = seg6_make_flowlabel(net, skb, inner_hdr);
+-
+-	skb_push(skb, tot_len);
+-	skb_reset_network_header(skb);
+-	skb_mac_header_rebuild(skb);
+-	hdr = ipv6_hdr(skb);
+-
+ 	/* inherit tc, flowlabel and hlim
+ 	 * hlim will be decremented in ip6_forward() afterwards and
+ 	 * decapsulation will overwrite inner hlim with outer hlim
+ 	 */
+ 
++	flowlabel = seg6_make_flowlabel(net, skb);
++	hop_limit = ip6_dst_hoplimit(skb_dst(skb));
++
+ 	if (skb->protocol == htons(ETH_P_IPV6)) {
+-		ip6_flow_hdr(hdr, ip6_tclass(ip6_flowinfo(inner_hdr)),
+-			     flowlabel);
+-		hdr->hop_limit = inner_hdr->hop_limit;
++		inner_hdr = ipv6_hdr(skb);
++		hop_limit = inner_hdr->hop_limit;
++		tos = ip6_tclass(ip6_flowinfo(inner_hdr));
++	} else if (skb->protocol == htons(ETH_P_IP)) {
++		tos = ip_hdr(skb)->tos;
++		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+ 	} else {
+-		ip6_flow_hdr(hdr, 0, flowlabel);
+-		hdr->hop_limit = ip6_dst_hoplimit(skb_dst(skb));
+-
+ 		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+ 	}
+ 
++	skb_push(skb, tot_len);
++	skb_reset_network_header(skb);
++	skb_mac_header_rebuild(skb);
++
++	hdr = ipv6_hdr(skb);
++	ip6_flow_hdr(hdr, tos, flowlabel);
++	hdr->hop_limit = hop_limit;
+ 	hdr->nexthdr = NEXTHDR_ROUTING;
+ 
+ 	isrh = (void *)hdr + sizeof(*hdr);
 -- 
-2.25.1
-
-
+2.17.1
 
