@@ -5,49 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2570AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 026E6207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BFF207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258074;
-	bh=U3/ZBaHYO/v3cl833Rr/LLMeh0E43V8IkoRMGx8wbCM=;
+	s=default; t=1598258075;
+	bh=/S/5fcNXp1qF0dj5Sh7EBvrVNQQbog7E1B1vZS/c6vk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A4UOir0FwngXiZ8+ODeV2jaFS47Y6qg6011cBTdHQrOM+QY91xr3GifF/gB+dZdGX
-	 ADHiDGVFAVNmp+3LcEK2VxUXNJMY7JDM+30PxgYVylLopRFpSPa8sKT9YmEkRR3d2U
-	 ZNPFWrwp5TFDUDO02Gj3Q6ro3f8eCJ/UYNkU8RQ8=
+	b=CWC8LLup55eBG+cdza6e4UTG+RbYJNsi2BoLSu9mRMEkPaHmrHj8C06GGieN3mXdy
+	 LeuDa7YFhf4Cc8erw1HjldllAd0jnYz9bCOIBwailzR0bE0+0gpHFp4S5VWCSA0e8W
+	 ARHbRnH82dUbIieSf1YHFkzk+S+KTiKDFGKLJhBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgHXIec (ORCPT
+        id S1727941AbgHXIee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:34:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42650 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:34:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727897AbgHXIeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:34:19 -0400
+        id S1727912AbgHXIeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:34:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC66421741;
-        Mon, 24 Aug 2020 08:34:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DE05206F0;
+        Mon, 24 Aug 2020 08:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258059;
-        bh=U3/ZBaHYO/v3cl833Rr/LLMeh0E43V8IkoRMGx8wbCM=;
+        s=default; t=1598258064;
+        bh=/S/5fcNXp1qF0dj5Sh7EBvrVNQQbog7E1B1vZS/c6vk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n1zD32rzXI1ML+NHhydhLJddoiocXJEgbzNmfalDkRL0u8uPMAGZWe4DgigsZBeaX
-         Zt4jTmXxlQXIKGD57uK9c2SzB3VbFbiYm4vu1CFSejevnS8XPzzuERcI6W+rTR0mpd
-         pUg+OxJXcGd9k2ZqBWKAfGWOj69nM3+wJmCLDQow=
+        b=Vt+otLZRZtwDOZFRAjcN85nhbvYQi2LscemcqtCnSWKzCiFMqWiCumvN0L0eDITh5
+         fGYLsPWRGcGNLcOenR7TS5r3en412Cvvq8hnhOK0FoG+Q1jNNsKdk9z0se65DNraJ6
+         cmgwu/w7yx50BaGTfuyGiAgW3Cp2lygvtDnaGVBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhiguo Niu <Zhiguo.Niu@unisoc.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>,
+        Corey Minyard <cminyard@mvista.com>,
+        Roman Shaposhnik <roman@zededa.com>,
+        Juergen Gross <jgross@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 052/148] f2fs: should avoid inode eviction in synchronous path
-Date:   Mon, 24 Aug 2020 10:29:10 +0200
-Message-Id: <20200824082416.560602391@linuxfoundation.org>
+Subject: [PATCH 5.8 062/148] swiotlb-xen: use vmalloc_to_page on vmalloc virt addresses
+Date:   Mon, 24 Aug 2020 10:29:20 +0200
+Message-Id: <20200824082417.041872160@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -60,69 +64,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-[ Upstream commit b0f3b87fb3abc42c81d76c6c5795f26dbdb2f04b ]
+[ Upstream commit 8b1e868f66076490189a36d984fcce286cdd6295 ]
 
-https://bugzilla.kernel.org/show_bug.cgi?id=208565
+xen_alloc_coherent_pages might return pages for which virt_to_phys and
+virt_to_page don't work, e.g. ioremap'ed pages.
 
-PID: 257    TASK: ecdd0000  CPU: 0   COMMAND: "init"
-  #0 [<c0b420ec>] (__schedule) from [<c0b423c8>]
-  #1 [<c0b423c8>] (schedule) from [<c0b459d4>]
-  #2 [<c0b459d4>] (rwsem_down_read_failed) from [<c0b44fa0>]
-  #3 [<c0b44fa0>] (down_read) from [<c044233c>]
-  #4 [<c044233c>] (f2fs_truncate_blocks) from [<c0442890>]
-  #5 [<c0442890>] (f2fs_truncate) from [<c044d408>]
-  #6 [<c044d408>] (f2fs_evict_inode) from [<c030be18>]
-  #7 [<c030be18>] (evict) from [<c030a558>]
-  #8 [<c030a558>] (iput) from [<c047c600>]
-  #9 [<c047c600>] (f2fs_sync_node_pages) from [<c0465414>]
- #10 [<c0465414>] (f2fs_write_checkpoint) from [<c04575f4>]
- #11 [<c04575f4>] (f2fs_sync_fs) from [<c0441918>]
- #12 [<c0441918>] (f2fs_do_sync_file) from [<c0441098>]
- #13 [<c0441098>] (f2fs_sync_file) from [<c0323fa0>]
- #14 [<c0323fa0>] (vfs_fsync_range) from [<c0324294>]
- #15 [<c0324294>] (do_fsync) from [<c0324014>]
- #16 [<c0324014>] (sys_fsync) from [<c0108bc0>]
+So in xen_swiotlb_free_coherent we can't assume that virt_to_page works.
+Instead add a is_vmalloc_addr check and use vmalloc_to_page on vmalloc
+virt addresses.
 
-This can be caused by flush_dirty_inode() in f2fs_sync_node_pages() where
-iput() requires f2fs_lock_op() again resulting in livelock.
+This patch fixes the following crash at boot on RPi4 (the underlying
+issue is not RPi4 specific):
+https://marc.info/?l=xen-devel&m=158862573216800
 
-Reported-by: Zhiguo Niu <Zhiguo.Niu@unisoc.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Tested-by: Corey Minyard <cminyard@mvista.com>
+Tested-by: Roman Shaposhnik <roman@zededa.com>
+Link: https://lore.kernel.org/r/20200710223427.6897-1-sstabellini@kernel.org
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/node.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/xen/swiotlb-xen.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 03e24df1c84f5..e61ce7fb0958b 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1924,8 +1924,12 @@ continue_unlock:
- 				goto continue_unlock;
- 			}
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index b6d27762c6f8c..5fbadd07819bd 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -335,6 +335,7 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
+ 	int order = get_order(size);
+ 	phys_addr_t phys;
+ 	u64 dma_mask = DMA_BIT_MASK(32);
++	struct page *page;
  
--			/* flush inline_data, if it's async context. */
--			if (do_balance && is_inline_node(page)) {
-+			/* flush inline_data/inode, if it's async context. */
-+			if (!do_balance)
-+				goto write_node;
+ 	if (hwdev && hwdev->coherent_dma_mask)
+ 		dma_mask = hwdev->coherent_dma_mask;
+@@ -346,9 +347,14 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
+ 	/* Convert the size to actually allocated. */
+ 	size = 1UL << (order + XEN_PAGE_SHIFT);
+ 
++	if (is_vmalloc_addr(vaddr))
++		page = vmalloc_to_page(vaddr);
++	else
++		page = virt_to_page(vaddr);
 +
-+			/* flush inline_data */
-+			if (is_inline_node(page)) {
- 				clear_inline_node(page);
- 				unlock_page(page);
- 				flush_inline_data(sbi, ino_of_node(page));
-@@ -1938,7 +1942,7 @@ continue_unlock:
- 				if (flush_dirty_inode(page))
- 					goto lock_node;
- 			}
--
-+write_node:
- 			f2fs_wait_on_page_writeback(page, NODE, true, true);
+ 	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
+ 		     range_straddles_page_boundary(phys, size)) &&
+-	    TestClearPageXenRemapped(virt_to_page(vaddr)))
++	    TestClearPageXenRemapped(page))
+ 		xen_destroy_contiguous_region(phys, order);
  
- 			if (!clear_page_dirty_for_io(page))
+ 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
 -- 
 2.25.1
 
