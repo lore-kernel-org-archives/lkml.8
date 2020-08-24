@@ -2,106 +2,88 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A2EC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBC9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCEFD20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:16:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GjhX+lMi"
+	by mail.kernel.org (Postfix) with ESMTP id 1DA1C208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598296712;
+	bh=Jfwa0GB0ZLb8gVwHhi0OjtkS/JePmX7U96zqz3dMCNQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=by33cjFMmksWkSavJEug23lW47Ffr/G8zFGa+C4Z0skQs4Auc4xlcua+Sc+HSBZqU
+	 JbvqlFDlGmPL9nqTdJETbWiF+94qHqywVhh/HCZWFyjwBR5LtebtXATkITvYtY7jhA
+	 AUsG7eoSeWrtgDBMGNS8LzzA9hvdlV9smvdSDWRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgHXTQn (ORCPT
+        id S1726990AbgHXTSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:16:43 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1907 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbgHXTQD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:16:03 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4411b50000>; Mon, 24 Aug 2020 12:15:01 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 24 Aug 2020 12:16:02 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 24 Aug 2020 12:16:02 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Aug
- 2020 19:16:02 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 24 Aug 2020 19:16:02 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.186]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4411f10000>; Mon, 24 Aug 2020 12:16:01 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <robh+dt@kernel.org>
-CC:     <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: [PATCH v4 2/7] sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
-Date:   Mon, 24 Aug 2020 12:15:52 -0700
-Message-ID: <1598296557-32020-3-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598296557-32020-1-git-send-email-skomatineni@nvidia.com>
-References: <1598296557-32020-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
-MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598296501; bh=mXqaDHZAnjiA2FC3TMHhwQF8i9i1LflPE/o4KLabvD8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=GjhX+lMiPI8VUJDopPttINNU4y1BHlJT72xtFKOw82Ecv1VqFgdpCQFCIYjcw50lb
-         3tToFhNhR/XnwKveia5PJK/xGpWiSeDTbCYZlHtDyuBwys8jDuHUPIgZ9kbIzEZvfa
-         vrJw2ZhFMOR6Y2EkKIcFmbM686eDRPX4i6MxQSum6QUpZiHgHO6i8V8tdyUeoSwT3Z
-         1/Vkb7ioXNb+MjPvSTkbLGb2tdb/fE3Ff59g9RNLKSf4DTJCqIQ3+TQ7N8mnYtJWJX
-         wab3uVzQKdqtf2kyKmF+RQLrN8twFyv/SApexrcI7W5ak4LGt6D1mWByQ/rN0xfyS+
-         lNBArKGCTJAkg==
+        Mon, 24 Aug 2020 15:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726519AbgHXTS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 15:18:28 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D89B020578;
+        Mon, 24 Aug 2020 19:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598296708;
+        bh=Jfwa0GB0ZLb8gVwHhi0OjtkS/JePmX7U96zqz3dMCNQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1blOXHtC28gYM4YCJ6ugjvip2y7cy3vtrg0Tn9fvtv9hwp/T0+uMdDrJJlIEQmQkf
+         9jvOafZVtH7EzFG4luNzpKZ54NY7as9F1KGSFqFlyErmAL7K7UpzfLzz7vqdgSHilp
+         zsyGHGpgcqa2KxVXxmdyLwv+5mB/rQDpkgOc5Ur8=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v4 1/4] dt-bindings: arm: fsl: Add binding for Variscite VAR-SOM-MX8MM module
+Date:   Mon, 24 Aug 2020 21:18:16 +0200
+Message-Id: <20200824191819.11057-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 4346b7c7941d ("mmc: tegra: Add Tegra186 support")
+Add a binding for the Variscite VAR-SOM-MX8MM System on Module.
 
-SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK is set for Tegra186 from the
-beginning of its support in driver.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Tegra186 SDMMC hardware by default uses timeout clock (TMCLK) instead
-of SDCLK and this quirk should not be set.
-
-So, this patch remove this quirk for Tegra186.
-
-Fixes: 4346b7c7941d ("mmc: tegra: Add Tegra186 support")
-Cc: stable <stable@vger.kernel.org> # 5.4
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/mmc/host/sdhci-tegra.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 2be3511..31ed321 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -1455,7 +1455,6 @@ static const struct sdhci_ops tegra186_sdhci_ops = {
+Based on top of:
+https://lore.kernel.org/linux-arm-kernel/20200823172019.18606-1-krzk@kernel.org/
+
+Changes since v1:
+1. None
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index b48dbf924cfe..39f3a3d5f524 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -346,6 +346,7 @@ properties:
+           - enum:
+               - beacon,imx8mm-beacon-kit  # i.MX8MM Beacon Development Kit
+               - fsl,imx8mm-evk            # i.MX8MM EVK Board
++              - variscite,var-som-mx8mm   # i.MX8MM Variscite VAR-SOM-MX8MM module
+           - const: fsl,imx8mm
  
- static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_TIMEOUT_VAL |
--		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
- 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
- 		  SDHCI_QUIRK_NO_HISPD_BIT |
- 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
+       - description: i.MX8MN based Boards
 -- 
-2.7.4
+2.17.1
 
