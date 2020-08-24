@@ -5,50 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD2E1207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2E5207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258080;
-	bh=iXmAtY7BG2mwDIC/wHHpkcNbC6q/kDidRTK1GVKOgL8=;
+	s=default; t=1598258087;
+	bh=DaLrVr7gb8fmO/aKLBWZESC8SZ7KeLFUyl9HyttA2JA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kg3QsFTke/qj39b7xjZwoZFnaTWLbrlxlCO3kY+dTJaoXAhK71qq3+U6QtkZKR0a/
-	 leyKf4c8t5+5NZHQNYiAURRFLuCQIHc5RS/eAHohdWIrL5Isjr8e0XLw5Z8d0q1GVd
-	 KYImjabCh/zNKQ7yS07E3DvJl2KdigDaMKRLAxYI=
+	b=CvqPdg+HrLFbiaFBw9ZuypgD7+b2SJPBJGu2Tyeaac5fTfDff9T9A/sDgYrFwAxkO
+	 p79dMXI+/R02n2F05+YSiYtGjicgm/ZaSech19pBhOFLz5QYWCoFytcgcN5o+Ls9Kk
+	 nmuF8ftsttBjQ+ltZNJhH8QkExFTl86cTO6EWZ6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgHXIej (ORCPT
+        id S1728000AbgHXIeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:34:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43180 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:34:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727927AbgHXIec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:34:32 -0400
+        id S1727954AbgHXIeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:34:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE305207D3;
-        Mon, 24 Aug 2020 08:34:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9972E207DF;
+        Mon, 24 Aug 2020 08:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258072;
-        bh=iXmAtY7BG2mwDIC/wHHpkcNbC6q/kDidRTK1GVKOgL8=;
+        s=default; t=1598258077;
+        bh=DaLrVr7gb8fmO/aKLBWZESC8SZ7KeLFUyl9HyttA2JA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AVx20JkuChPYFk0BII1ZoVNoG/NslPGtg5k5A/vlXfoAlfG/6XTtuOGWgzSWoodGM
-         F/9grSQB/Z6jM8lPq5/bAKW9F1+4kRYl20ABKH/uGkShvbstprVa1968k5swVPGypr
-         fZZThsht4JQ2y33dytzDGrGxwq75uKvZ4a9GO9oo=
+        b=uF3m21ujGI+Z7GSsR7xznZ6JqYs5hJ5Nah+O5Mw3lTpBrOd2Ikz2w3VHoyAeCYF91
+         cpNURw+0U+Aahg8kDlVYxWwt9v/ww6fAJTmp9UDUlXqwZePjL4aoFDrZYqpYUJ4tdx
+         afYCer5hVae7KasDBAULzfyjLoqu+L8UwDqDGIWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mao Wenan <wenan.mao@linux.alibaba.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
+        stable@vger.kernel.org, Gaurav Singh <gaurav1086@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Michal Koutn <mkoutny@suse.com>, Roman Gushchin <guro@fb.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Chris Down <chris@chrisdown.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 065/148] virtio_ring: Avoid loop when vq is broken in virtqueue_poll
-Date:   Mon, 24 Aug 2020 10:29:23 +0200
-Message-Id: <20200824082417.187044418@linuxfoundation.org>
+Subject: [PATCH 5.8 067/148] tools/testing/selftests/cgroup/cgroup_util.c: cg_read_strcmp: fix null pointer dereference
+Date:   Mon, 24 Aug 2020 10:29:25 +0200
+Message-Id: <20200824082417.286266595@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -61,51 +65,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <wenan.mao@linux.alibaba.com>
+From: Gaurav Singh <gaurav1086@gmail.com>
 
-[ Upstream commit 481a0d7422db26fb63e2d64f0652667a5c6d0f3e ]
+[ Upstream commit d830020656c5b68ced962ed3cb51a90e0a89d4c4 ]
 
-The loop may exist if vq->broken is true,
-virtqueue_get_buf_ctx_packed or virtqueue_get_buf_ctx_split
-will return NULL, so virtnet_poll will reschedule napi to
-receive packet, it will lead cpu usage(si) to 100%.
+Haven't reproduced this issue. This PR is does a minor code cleanup.
 
-call trace as below:
-virtnet_poll
-	virtnet_receive
-		virtqueue_get_buf_ctx
-			virtqueue_get_buf_ctx_packed
-			virtqueue_get_buf_ctx_split
-	virtqueue_napi_complete
-		virtqueue_poll           //return true
-		virtqueue_napi_schedule //it will reschedule napi
-
-to fix this, return false if vq is broken in virtqueue_poll.
-
-Signed-off-by: Mao Wenan <wenan.mao@linux.alibaba.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Link: https://lore.kernel.org/r/1596354249-96204-1-git-send-email-wenan.mao@linux.alibaba.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Michal Koutn <mkoutny@suse.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Chris Down <chris@chrisdown.name>
+Link: http://lkml.kernel.org/r/20200726013808.22242-1-gaurav1086@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virtio/virtio_ring.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/testing/selftests/cgroup/cgroup_util.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index 58b96baa8d488..4f7c73e6052f6 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -1960,6 +1960,9 @@ bool virtqueue_poll(struct virtqueue *_vq, unsigned last_used_idx)
- {
- 	struct vring_virtqueue *vq = to_vvq(_vq);
+diff --git a/tools/testing/selftests/cgroup/cgroup_util.c b/tools/testing/selftests/cgroup/cgroup_util.c
+index 8a637ca7d73a4..05853b0b88318 100644
+--- a/tools/testing/selftests/cgroup/cgroup_util.c
++++ b/tools/testing/selftests/cgroup/cgroup_util.c
+@@ -106,7 +106,7 @@ int cg_read_strcmp(const char *cgroup, const char *control,
  
-+	if (unlikely(vq->broken))
-+		return false;
-+
- 	virtio_mb(vq->weak_barriers);
- 	return vq->packed_ring ? virtqueue_poll_packed(_vq, last_used_idx) :
- 				 virtqueue_poll_split(_vq, last_used_idx);
+ 	/* Handle the case of comparing against empty string */
+ 	if (!expected)
+-		size = 32;
++		return -1;
+ 	else
+ 		size = strlen(expected) + 1;
+ 
 -- 
 2.25.1
 
