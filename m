@@ -2,127 +2,115 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D5DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55470206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:04:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259870;
-	bh=Ys87Lof4nlIwJI1DRGTlm7+7kotLyXnT2dUplrWM5vU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eqEvK46eGrN18shzWskTuQOeyWzELlNDm/3ccuU1yqUJzZVpqypt6xfhPO4cWIJ6+
-	 JrEasEMDwLgksiX2YhK3tiUrBhUmYQKRJ/9LCHexsH8dFI8OPr1idyimvJBj7ZfOEF
-	 jU/waWaR+XOmExKXXJOEVA82pooigL71vfEdPZE4=
+	by mail.kernel.org (Postfix) with ESMTP id DC82E206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730857AbgHXJET (ORCPT
+        id S1730673AbgHXJEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:04:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730560AbgHXI4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 24 Aug 2020 05:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730563AbgHXI4f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:35 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 208D5C0613ED;
+        Mon, 24 Aug 2020 01:56:33 -0700 (PDT)
+Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDAE1207DF;
-        Mon, 24 Aug 2020 08:56:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259392;
-        bh=Ys87Lof4nlIwJI1DRGTlm7+7kotLyXnT2dUplrWM5vU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=khPcGEHEZxzp8PMr7zZQIHjAFlh4BfEs3pWOFpiSYzsLzHYpAlYkCklsXUVViaH0+
-         b8UcufUE4JbgtMcFiHYtJH/YlCSvJgysHdakBUSIMkSV4oLwli8mVuSpQ/DdLjQRLc
-         1CLVr/JZJIfGeewrDwUXV/wlcEl3H6jCl+6LOpeA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 41/71] ASoC: q6routing: add dummy register read/write function
-Date:   Mon, 24 Aug 2020 10:31:32 +0200
-Message-Id: <20200824082357.943890893@linuxfoundation.org>
+        by theia.8bytes.org (Postfix) with ESMTPSA id 9C03112C7;
+        Mon, 24 Aug 2020 10:56:25 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v6 64/76] x86/sev-es: Handle #DB Events
+Date:   Mon, 24 Aug 2020 10:54:59 +0200
+Message-Id: <20200824085511.7553-65-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
-References: <20200824082355.848475917@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
+References: <20200824085511.7553-1-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit 796a58fe2b8c9b6668db00d92512ec84be663027 ]
+Handle #VC exceptions caused by #DB exceptions in the guest. Those
+must be handled outside of instrumentation_begin()/end() so that the
+handler will not be raised recursivly.
 
-Most of the DAPM widgets for DSP ASoC components reuse reg field
-of the widgets for its internal calculations, however these are not
-real registers. So read/writes to these numbers are not really
-valid. However ASoC core will read these registers to get default
-state during startup.
+Handle them by calling the kernels debug exception handler.
 
-With recent changes to ASoC core, every register read/write
-failures are reported very verbosely. Prior to this fails to reads
-are totally ignored, so we never saw any error messages.
-
-To fix this add dummy read/write function to return default value.
-
-Fixes: e3a33673e845 ("ASoC: qdsp6: q6routing: Add q6routing driver")
-Reported-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200811120205.21805-2-srinivas.kandagatla@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Link: https://lore.kernel.org/r/20200724160336.5435-64-joro@8bytes.org
 ---
- sound/soc/qcom/qdsp6/q6routing.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/x86/kernel/sev-es.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
-index c6b51571be945..44eee18c658ae 100644
---- a/sound/soc/qcom/qdsp6/q6routing.c
-+++ b/sound/soc/qcom/qdsp6/q6routing.c
-@@ -968,6 +968,20 @@ static int msm_routing_probe(struct snd_soc_component *c)
- 	return 0;
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index ee0950f01590..e1f3ebbcc122 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -922,6 +922,14 @@ static enum es_result vc_handle_trap_ac(struct ghcb *ghcb,
+ 	return ES_EXCEPTION;
  }
  
-+static unsigned int q6routing_reg_read(struct snd_soc_component *component,
-+				       unsigned int reg)
++static __always_inline void vc_handle_trap_db(struct pt_regs *regs)
 +{
-+	/* default value */
-+	return 0;
++	if (user_mode(regs))
++		noist_exc_debug(regs);
++	else
++		exc_debug(regs);
 +}
 +
-+static int q6routing_reg_write(struct snd_soc_component *component,
-+			       unsigned int reg, unsigned int val)
-+{
-+	/* dummy */
-+	return 0;
-+}
-+
- static const struct snd_soc_component_driver msm_soc_routing_component = {
- 	.ops = &q6pcm_routing_ops,
- 	.probe = msm_routing_probe,
-@@ -976,6 +990,8 @@ static const struct snd_soc_component_driver msm_soc_routing_component = {
- 	.num_dapm_widgets = ARRAY_SIZE(msm_qdsp6_widgets),
- 	.dapm_routes = intercon,
- 	.num_dapm_routes = ARRAY_SIZE(intercon),
-+	.read = q6routing_reg_read,
-+	.write = q6routing_reg_write,
- };
+ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 					 struct ghcb *ghcb,
+ 					 unsigned long exit_code)
+@@ -1033,6 +1041,15 @@ DEFINE_IDTENTRY_VC_SAFE_STACK(exc_vmm_communication)
+ 	struct ghcb *ghcb;
  
- static int q6pcm_routing_probe(struct platform_device *pdev)
+ 	lockdep_assert_irqs_disabled();
++
++	/*
++	 * Handle #DB before calling into !noinstr code to avoid recursive #DB.
++	 */
++	if (error_code == SVM_EXIT_EXCP_BASE + X86_TRAP_DB) {
++		vc_handle_trap_db(regs);
++		return;
++	}
++
+ 	instrumentation_begin();
+ 
+ 	/*
 -- 
-2.25.1
-
-
+2.28.0
 
