@@ -2,52 +2,51 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0FE622B43
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183D022B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258414;
-	bh=3Lblky5qdJxW2bTod3JWKV1FyqeA2Uw3AKWhieYVlac=;
+	s=default; t=1598258417;
+	bh=HLMAsXt1RVcl9qu5BXO6Mz/mvjPSCnG4BohMGqYDItA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=chQTRxajZbNSClAKMndzt2GN0tT1pzte7o4uZGZHxCDo1Xz1QOb+UvtIq87B1I+aR
-	 8RhfgbJq1pn4UmK2/WzXegBS532W5uyExBxQ2bbOWhkdM/WJi1HEFrOKyFoo1inkUh
-	 tVq8Lm2W/YQFmICfLQipFQOXY/OFqM327tsaI9EI=
+	b=Bp0fTDHqH4wVT7cHxphHtPeD/Vagpin/lZQxitcUJqfFC1ENuAK1tUHh7cZ9IcAqE
+	 0Jv8n+RnfC98YU5PShF0U3LCEgLDJ7N5AsBOtQOXCzBjiCZnTA+nxzsh0E6yg9IdzA
+	 lM7f2aKaOu/A4pt/OLaN/v1TwQ8xs1ZtgBbckRlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbgHXIkM (ORCPT
+        id S1728307AbgHXIkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:40:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56510 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727914AbgHXIkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:40:02 -0400
+        id S1727095AbgHXIkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:40:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2DF022B43;
-        Mon, 24 Aug 2020 08:40:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F16422B4D;
+        Mon, 24 Aug 2020 08:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258402;
-        bh=3Lblky5qdJxW2bTod3JWKV1FyqeA2Uw3AKWhieYVlac=;
+        s=default; t=1598258405;
+        bh=HLMAsXt1RVcl9qu5BXO6Mz/mvjPSCnG4BohMGqYDItA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hy+StDCkoPlVL2rXCROCdzsucy/10xvk9nk3y1IAxd7vVNQB8cyig/pCwWIu3fyZN
-         HUKFrZFdd6HGewECbRKor6ftuMmmg2136x/gk0a4ppyog8NMPAqaVewzWFb82S58px
-         uS2Waqqsd6Qw8pocndwmAv2mqdcv+Pjz1VJ/ExqA=
+        b=ULMCTzJ3dz47XIHYgEaZ21w0ddhzCGWscen/W187lqhCfViG+zzOhy9Ba2UAmniLQ
+         AO26silPVzJkgQBxWHjt1XLbkRD1HUYXYZirzcpFmda7+HmzhjcqnrrQHmMXUXNtjd
+         XrG93y7nOtgTImnq3vp1UbaHm6jHt0t1wvBwOSRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        Ken Raeburn <raeburn@redhat.com>
-Subject: [PATCH 5.7 005/124] bcache: avoid nr_stripes overflow in bcache_device_init()
-Date:   Mon, 24 Aug 2020 10:28:59 +0200
-Message-Id: <20200824082409.656708838@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Pozulp <pozulp.kernel@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 006/124] ALSA: hda/realtek: Add quirk for Samsung Galaxy Flex Book
+Date:   Mon, 24 Aug 2020 10:29:00 +0200
+Message-Id: <20200824082409.706165512@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -60,62 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Mike Pozulp <pozulp.kernel@gmail.com>
 
-[ Upstream commit 65f0f017e7be8c70330372df23bcb2a407ecf02d ]
+commit f70fff83cda63bbf596f99edc131b9daaba07458 upstream.
 
-For some block devices which large capacity (e.g. 8TB) but small io_opt
-size (e.g. 8 sectors), in bcache_device_init() the stripes number calcu-
-lated by,
-	DIV_ROUND_UP_ULL(sectors, d->stripe_size);
-might be overflow to the unsigned int bcache_device->nr_stripes.
+The Flex Book uses the same ALC298 codec as other Samsung laptops which
+have the no headphone sound bug, like my Samsung Notebook. The Flex Book
+owner used Early Patching to confirm that this quirk fixes the bug.
 
-This patch uses the uint64_t variable to store DIV_ROUND_UP_ULL()
-and after the value is checked to be available in unsigned int range,
-sets it to bache_device->nr_stripes. Then the overflow is avoided.
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207423
+Signed-off-by: Mike Pozulp <pozulp.kernel@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200814045346.645367-1-pozulp.kernel@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Reported-and-tested-by: Ken Raeburn <raeburn@redhat.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: stable@vger.kernel.org
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=1783075
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index b4d23d9f30f9b..d5477faa14edd 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -825,19 +825,19 @@ static int bcache_device_init(struct bcache_device *d, unsigned int block_size,
- 	struct request_queue *q;
- 	const size_t max_stripes = min_t(size_t, INT_MAX,
- 					 SIZE_MAX / sizeof(atomic_t));
--	size_t n;
-+	uint64_t n;
- 	int idx;
- 
- 	if (!d->stripe_size)
- 		d->stripe_size = 1 << 31;
- 
--	d->nr_stripes = DIV_ROUND_UP_ULL(sectors, d->stripe_size);
--
--	if (!d->nr_stripes || d->nr_stripes > max_stripes) {
--		pr_err("nr_stripes too large or invalid: %u (start sector beyond end of disk?)",
--			(unsigned int)d->nr_stripes);
-+	n = DIV_ROUND_UP_ULL(sectors, d->stripe_size);
-+	if (!n || n > max_stripes) {
-+		pr_err("nr_stripes too large or invalid: %llu (start sector beyond end of disk?)\n",
-+			n);
- 		return -ENOMEM;
- 	}
-+	d->nr_stripes = n;
- 
- 	n = d->nr_stripes * sizeof(atomic_t);
- 	d->stripe_sectors_dirty = kvzalloc(n, GFP_KERNEL);
--- 
-2.25.1
-
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7666,6 +7666,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x144d, 0xc109, "Samsung Ativ book 9 (NP900X3G)", ALC269_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x144d, 0xc176, "Samsung Notebook 9 Pro (NP930MBE-K04US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
++	SND_PCI_QUIRK(0x144d, 0xc189, "Samsung Galaxy Flex Book (NT950QCG-X716)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x144d, 0xc740, "Samsung Ativ book 8 (NP870Z5G)", ALC269_FIXUP_ATIV_BOOK_8),
+ 	SND_PCI_QUIRK(0x144d, 0xc812, "Samsung Notebook Pen S (NT950SBE-X58)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x1458, 0xfa53, "Gigabyte BXBT-2807", ALC283_FIXUP_HEADSET_MIC),
 
 
