@@ -2,56 +2,59 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD64C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8FC2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AA9D2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598257959;
-	bh=bGHoihwNgRP0bpvVcIfzDqoTfVNDf6obxnmjGwqEChY=;
+	s=default; t=1598257963;
+	bh=t8QFWqTolVo7c1qLgcmQjDz0wNlZ8unAbXNGpquMF7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k44dbreJqPBVZgRnFnYX46yUQM0qVM5V3eFKyZicL27L/S/RAjdnPVbjkAD0wbnMA
-	 OJc3hN5oGhcYe6S11lODJum5nwQHbhmu6WvtmqLnmUikk/yTgtMtCZ+d2l643Q+Pd3
-	 uYw3pm5xFOzfOY/+NwLKeaboddSPqW841Qem94Qw=
+	b=EgWlDIIyIBvGZdJjzCSrjfTbsAlfn5DTa/EQpN8WPL8nWz/TwOAKZMR09UB5P7XG/
+	 L6Uql5eSH+6xkYMRikLOM+dI1l6b4NXkqGeA1mtJ0m9WtI4fCKY4O31GXI66dnnboV
+	 9V2PKHkZASTprse405Ihveco0RQBmgWShAI33fHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgHXIce (ORCPT
+        id S1726793AbgHXIcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:32:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:32:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbgHXIc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:32:27 -0400
+        id S1726718AbgHXIcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:32:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3EF2206F0;
-        Mon, 24 Aug 2020 08:32:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14228206F0;
+        Mon, 24 Aug 2020 08:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257946;
-        bh=bGHoihwNgRP0bpvVcIfzDqoTfVNDf6obxnmjGwqEChY=;
+        s=default; t=1598257955;
+        bh=t8QFWqTolVo7c1qLgcmQjDz0wNlZ8unAbXNGpquMF7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rs7udDsJ4OuaX/YvuaopFQ3mW+Au5epKoWX2mtS3OPHXF6TZdeTDM4Xj30qH/Z3KA
-         6hzqVgqwA9eOyL5C8C5dUX/6eiSFKN7wyI6owNODvF9Imi8oJvVL2dX6E8lBKEGdZa
-         f9FQoagoTVf1vRJgW2Jt1CtgRf82Mo3WlghhJM2s=
+        b=N9qrY1E/L8ae2sNuqRomQfOzugotw0vUhHd7xBdG6mtoywRKMLKsMD4ZcvVm5VgGF
+         5a0jq3Jl+lu7GMGxNtVc5R/aqjs/W+jnbLoOLsTBReSp5a+FBvhTIFizp9Ta/xFMBE
+         FxQe/dxh8Irq6PXyV618On3TKmtvaz+69kzT6UN0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Jason Baron <jbaron@akamai.com>,
-        David Rientjes <rientjes@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 018/148] mm: include CMA pages in lowmem_reserve at boot
-Date:   Mon, 24 Aug 2020 10:28:36 +0200
-Message-Id: <20200824082414.841404139@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Joel Stanley <joel@jms.id.au>,
+        "Y.C. Chen" <yc_chen@aspeedtech.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 004/148] drm/ast: Initialize DRAM type before posting GPU
+Date:   Mon, 24 Aug 2020 10:28:22 +0200
+Message-Id: <20200824082414.156735452@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -64,85 +67,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Thomas Zimmermann <tzimmermann@suse.de>
 
-commit e08d3fdfe2dafa0331843f70ce1ff6c1c4900bf4 upstream.
+[ Upstream commit 244d012801dae30c91983b360457c78d481584b0 ]
 
-The lowmem_reserve arrays provide a means of applying pressure against
-allocations from lower zones that were targeted at higher zones.  Its
-values are a function of the number of pages managed by higher zones and
-are assigned by a call to the setup_per_zone_lowmem_reserve() function.
+Posting the GPU requires the correct DRAM type to be stored in
+struct ast_private. Therefore first initialize the DRAM info and
+then post the GPU. This restores the original order of instructions
+in this function.
 
-The function is initially called at boot time by the function
-init_per_zone_wmark_min() and may be called later by accesses of the
-/proc/sys/vm/lowmem_reserve_ratio sysctl file.
-
-The function init_per_zone_wmark_min() was moved up from a module_init to
-a core_initcall to resolve a sequencing issue with khugepaged.
-Unfortunately this created a sequencing issue with CMA page accounting.
-
-The CMA pages are added to the managed page count of a zone when
-cma_init_reserved_areas() is called at boot also as a core_initcall.  This
-makes it uncertain whether the CMA pages will be added to the managed page
-counts of their zones before or after the call to
-init_per_zone_wmark_min() as it becomes dependent on link order.  With the
-current link order the pages are added to the managed count after the
-lowmem_reserve arrays are initialized at boot.
-
-This means the lowmem_reserve values at boot may be lower than the values
-used later if /proc/sys/vm/lowmem_reserve_ratio is accessed even if the
-ratio values are unchanged.
-
-In many cases the difference is not significant, but for example
-an ARM platform with 1GB of memory and the following memory layout
-
-  cma: Reserved 256 MiB at 0x0000000030000000
-  Zone ranges:
-    DMA      [mem 0x0000000000000000-0x000000002fffffff]
-    Normal   empty
-    HighMem  [mem 0x0000000030000000-0x000000003fffffff]
-
-would result in 0 lowmem_reserve for the DMA zone.  This would allow
-userspace to deplete the DMA zone easily.
-
-Funnily enough
-
-  $ cat /proc/sys/vm/lowmem_reserve_ratio
-
-would fix up the situation because as a side effect it forces
-setup_per_zone_lowmem_reserve.
-
-This commit breaks the link order dependency by invoking
-init_per_zone_wmark_min() as a postcore_initcall so that the CMA pages
-have the chance to be properly accounted in their zone(s) and allowing
-the lowmem_reserve arrays to receive consistent values.
-
-Fixes: bc22af74f271 ("mm: update min_free_kbytes from khugepaged after core initialization")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Jason Baron <jbaron@akamai.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/1597423766-27849-1-git-send-email-opendmb@gmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Fixes: bad09da6deab ("drm/ast: Fixed vram size incorrect issue on POWER")
+Cc: Joel Stanley <joel@jms.id.au>
+Cc: Y.C. Chen <yc_chen@aspeedtech.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Gerd Hoffmann <kraxel@redhat.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: "Y.C. Chen" <yc_chen@aspeedtech.com>
+Cc: <stable@vger.kernel.org> # v4.11+
+Link: https://patchwork.freedesktop.org/patch/msgid/20200716125353.31512-6-tzimmermann@suse.de
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_alloc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/ast/ast_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -7881,7 +7881,7 @@ int __meminit init_per_zone_wmark_min(vo
+diff --git a/drivers/gpu/drm/ast/ast_main.c b/drivers/gpu/drm/ast/ast_main.c
+index f48a9f62368c0..99c11b51f0207 100644
+--- a/drivers/gpu/drm/ast/ast_main.c
++++ b/drivers/gpu/drm/ast/ast_main.c
+@@ -458,9 +458,6 @@ int ast_driver_load(struct drm_device *dev, unsigned long flags)
  
- 	return 0;
- }
--core_initcall(init_per_zone_wmark_min)
-+postcore_initcall(init_per_zone_wmark_min)
+ 	ast_detect_chip(dev, &need_post);
  
- /*
-  * min_free_kbytes_sysctl_handler - just a wrapper around proc_dointvec() so
+-	if (need_post)
+-		ast_post_gpu(dev);
+-
+ 	ret = ast_get_dram_info(dev);
+ 	if (ret)
+ 		goto out_free;
+@@ -469,6 +466,9 @@ int ast_driver_load(struct drm_device *dev, unsigned long flags)
+ 		 ast->mclk, ast->dram_type,
+ 		 ast->dram_bus_width, ast->vram_size);
+ 
++	if (need_post)
++		ast_post_gpu(dev);
++
+ 	ret = ast_mm_init(ast);
+ 	if (ret)
+ 		goto out_free;
+-- 
+2.25.1
+
 
 
