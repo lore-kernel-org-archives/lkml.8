@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DD3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D10CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C76222074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8972074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598260981;
-	bh=VLxyeZYkenFDg1boaLTN/3BvGt362DubtCiD0r8yk0I=;
+	s=default; t=1598260988;
+	bh=guEBnYs7vYaGJWWSLALjN97mlt8HGTIaUiWnp2CCR4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=baUhLX0DBduWCFkSfK6xtavhi4K8uyM5h/LVYoP/KFP5D/JJuYrss5QsGgeLtt7bY
-	 HuVsKd7I1zBXmDIs55JYe49RwTkaIrFijyxDQChQMwPVXIVp9YcUQUo/hnYjkT8ar0
-	 Sqth351nIpk+liM6Xu4vx124gOiHbShF6VFQHRpA=
+	b=2Wt+9ZBizB/Q5JjHXYeDzclJwr3mN8ohBoWZFylwSju9AW2PU0gjgYk0QC6TzVPmN
+	 JxF3n5EbKFp0SVeaBnfhnJG8xk5sXt7I6DsorO6AEtW/zW72ffrCaK/wQUY0KfqXgu
+	 C1osOUieQjpZoR2yfb1m+tM6/7jsYqlGAb+ebmwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbgHXJW7 (ORCPT
+        id S1730105AbgHXJXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35502 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:23:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727932AbgHXIyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:54:39 -0400
+        id S1730343AbgHXIyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:54:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADCA02072D;
-        Mon, 24 Aug 2020 08:54:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5BC7204FD;
+        Mon, 24 Aug 2020 08:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259279;
-        bh=VLxyeZYkenFDg1boaLTN/3BvGt362DubtCiD0r8yk0I=;
+        s=default; t=1598259276;
+        bh=guEBnYs7vYaGJWWSLALjN97mlt8HGTIaUiWnp2CCR4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H723QC66mle7NOLyEUv4Bs6WfuuuqBIAmc5ReKvTOPqz3fyhBDPfKAmF38eMqHVN5
-         y9ITx5rNiqFl6gAw7uNavQo1RLnUCeYv3LR81rzJPCJ0dRXCHcD+TbTN4OfOioZHTl
-         W2tqu+5NQZiUpmkXrGzMUVbzxV6x8TRnz9TiVcnU=
+        b=BEnqC0FGjgcndl4dv2/NegHpQSJeHiVuFFQR7eKLhFPzqi/uQiaaX5+BKO7K1cdbm
+         o5oGW/piJIGvPUcHFxfkdP8n9WwzQLFcWsVvY6xEA9rT9dM5XHqTgUbUia+Lq/M8SV
+         USW6tucz3UHcjVcbTHCImnOTA08pt5w5spWUOprw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhiyi Guo <zhguo@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Chris Murphy <chris@colorremedies.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 41/50] vfio/type1: Add proper error unwind for vfio_iommu_replay()
-Date:   Mon, 24 Aug 2020 10:31:42 +0200
-Message-Id: <20200824082354.134279106@linuxfoundation.org>
+Subject: [PATCH 4.14 08/50] btrfs: dont show full path of bind mounts in subvol=
+Date:   Mon, 24 Aug 2020 10:31:09 +0200
+Message-Id: <20200824082352.319650562@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -61,162 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit aae7a75a821a793ed6b8ad502a5890fb8e8f172d ]
+[ Upstream commit 3ef3959b29c4a5bd65526ab310a1a18ae533172a ]
 
-The vfio_iommu_replay() function does not currently unwind on error,
-yet it does pin pages, perform IOMMU mapping, and modify the vfio_dma
-structure to indicate IOMMU mapping.  The IOMMU mappings are torn down
-when the domain is destroyed, but the other actions go on to cause
-trouble later.  For example, the iommu->domain_list can be empty if we
-only have a non-IOMMU backed mdev attached.  We don't currently check
-if the list is empty before getting the first entry in the list, which
-leads to a bogus domain pointer.  If a vfio_dma entry is erroneously
-marked as iommu_mapped, we'll attempt to use that bogus pointer to
-retrieve the existing physical page addresses.
+Chris Murphy reported a problem where rpm ostree will bind mount a bunch
+of things for whatever voodoo it's doing.  But when it does this
+/proc/mounts shows something like
 
-This is the scenario that uncovered this issue, attempting to hot-add
-a vfio-pci device to a container with an existing mdev device and DMA
-mappings, one of which could not be pinned, causing a failure adding
-the new group to the existing container and setting the conditions
-for a subsequent attempt to explode.
+  /dev/sda /mnt/test btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
+  /dev/sda /mnt/test/baz btrfs rw,relatime,subvolid=256,subvol=/foo/bar 0 0
 
-To resolve this, we can first check if the domain_list is empty so
-that we can reject replay of a bogus domain, should we ever encounter
-this inconsistent state again in the future.  The real fix though is
-to add the necessary unwind support, which means cleaning up the
-current pinning if an IOMMU mapping fails, then walking back through
-the r-b tree of DMA entries, reading from the IOMMU which ranges are
-mapped, and unmapping and unpinning those ranges.  To be able to do
-this, we also defer marking the DMA entry as IOMMU mapped until all
-entries are processed, in order to allow the unwind to know the
-disposition of each entry.
+Despite subvolid=256 being subvol=/foo.  This is because we're just
+spitting out the dentry of the mount point, which in the case of bind
+mounts is the source path for the mountpoint.  Instead we should spit
+out the path to the actual subvol.  Fix this by looking up the name for
+the subvolid we have mounted.  With this fix the same test looks like
+this
 
-Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
-Reported-by: Zhiyi Guo <zhguo@redhat.com>
-Tested-by: Zhiyi Guo <zhguo@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+  /dev/sda /mnt/test btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
+  /dev/sda /mnt/test/baz btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
+
+Reported-by: Chris Murphy <chris@colorremedies.com>
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/vfio_iommu_type1.c | 71 ++++++++++++++++++++++++++++++---
- 1 file changed, 66 insertions(+), 5 deletions(-)
+ fs/btrfs/super.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 35a3750a6ddd3..f22425501bc16 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -1086,13 +1086,16 @@ static int vfio_bus_type(struct device *dev, void *data)
- static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 			     struct vfio_domain *domain)
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index ca95e57b60ee1..eb64d4b159e07 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -1221,6 +1221,7 @@ static int btrfs_show_options(struct seq_file *seq, struct dentry *dentry)
  {
--	struct vfio_domain *d;
-+	struct vfio_domain *d = NULL;
- 	struct rb_node *n;
- 	unsigned long limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
- 	int ret;
+ 	struct btrfs_fs_info *info = btrfs_sb(dentry->d_sb);
+ 	char *compress_type;
++	const char *subvol_name;
  
- 	/* Arbitrarily pick the first domain in the list for lookups */
--	d = list_first_entry(&iommu->domain_list, struct vfio_domain, next);
-+	if (!list_empty(&iommu->domain_list))
-+		d = list_first_entry(&iommu->domain_list,
-+				     struct vfio_domain, next);
-+
- 	n = rb_first(&iommu->dma_list);
- 
- 	for (; n; n = rb_next(n)) {
-@@ -1110,6 +1113,11 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 				phys_addr_t p;
- 				dma_addr_t i;
- 
-+				if (WARN_ON(!d)) { /* mapped w/o a domain?! */
-+					ret = -EINVAL;
-+					goto unwind;
-+				}
-+
- 				phys = iommu_iova_to_phys(d->domain, iova);
- 
- 				if (WARN_ON(!phys)) {
-@@ -1139,7 +1147,7 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 				if (npage <= 0) {
- 					WARN_ON(!npage);
- 					ret = (int)npage;
--					return ret;
-+					goto unwind;
- 				}
- 
- 				phys = pfn << PAGE_SHIFT;
-@@ -1148,14 +1156,67 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 
- 			ret = iommu_map(domain->domain, iova, phys,
- 					size, dma->prot | domain->prot);
--			if (ret)
--				return ret;
-+			if (ret) {
-+				if (!dma->iommu_mapped)
-+					vfio_unpin_pages_remote(dma, iova,
-+							phys >> PAGE_SHIFT,
-+							size >> PAGE_SHIFT,
-+							true);
-+				goto unwind;
-+			}
- 
- 			iova += size;
- 		}
+ 	if (btrfs_test_opt(info, DEGRADED))
+ 		seq_puts(seq, ",degraded");
+@@ -1307,8 +1308,13 @@ static int btrfs_show_options(struct seq_file *seq, struct dentry *dentry)
+ #endif
+ 	seq_printf(seq, ",subvolid=%llu",
+ 		  BTRFS_I(d_inode(dentry))->root->root_key.objectid);
+-	seq_puts(seq, ",subvol=");
+-	seq_dentry(seq, dentry, " \t\n\\");
++	subvol_name = btrfs_get_subvol_name_from_objectid(info,
++			BTRFS_I(d_inode(dentry))->root->root_key.objectid);
++	if (!IS_ERR(subvol_name)) {
++		seq_puts(seq, ",subvol=");
++		seq_escape(seq, subvol_name, " \t\n\\");
++		kfree(subvol_name);
 +	}
-+
-+	/* All dmas are now mapped, defer to second tree walk for unwind */
-+	for (n = rb_first(&iommu->dma_list); n; n = rb_next(n)) {
-+		struct vfio_dma *dma = rb_entry(n, struct vfio_dma, node);
-+
- 		dma->iommu_mapped = true;
- 	}
-+
  	return 0;
-+
-+unwind:
-+	for (; n; n = rb_prev(n)) {
-+		struct vfio_dma *dma = rb_entry(n, struct vfio_dma, node);
-+		dma_addr_t iova;
-+
-+		if (dma->iommu_mapped) {
-+			iommu_unmap(domain->domain, dma->iova, dma->size);
-+			continue;
-+		}
-+
-+		iova = dma->iova;
-+		while (iova < dma->iova + dma->size) {
-+			phys_addr_t phys, p;
-+			size_t size;
-+			dma_addr_t i;
-+
-+			phys = iommu_iova_to_phys(domain->domain, iova);
-+			if (!phys) {
-+				iova += PAGE_SIZE;
-+				continue;
-+			}
-+
-+			size = PAGE_SIZE;
-+			p = phys + size;
-+			i = iova + size;
-+			while (i < dma->iova + dma->size &&
-+			       p == iommu_iova_to_phys(domain->domain, i)) {
-+				size += PAGE_SIZE;
-+				p += PAGE_SIZE;
-+				i += PAGE_SIZE;
-+			}
-+
-+			iommu_unmap(domain->domain, iova, size);
-+			vfio_unpin_pages_remote(dma, iova, phys >> PAGE_SHIFT,
-+						size >> PAGE_SHIFT, true);
-+		}
-+	}
-+
-+	return ret;
  }
  
- /*
 -- 
 2.25.1
 
