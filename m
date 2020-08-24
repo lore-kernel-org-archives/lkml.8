@@ -2,93 +2,145 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55F6C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 902A720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:21:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598311273;
-	bh=/5N86twYxI4EOqGjvFSLOCPWrz5bWFFe3dXOW1QKBBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uvEeejZQLsM+m3M4+EGAibUm/l3ImFIUEgkG262ZZ8wui2wJZ3uZ/7++dHWHnDXtX
-	 BwxYD8iSJF0Ah4h8NeIJ5E4yVRPoz+KGNareeCPICgBFFdAUAEW2Ff/8Bn3HJDh98T
-	 P8orxFrewaaIDL/um3yQusVSkHW3C21PHcYgAFvM=
+	by mail.kernel.org (Postfix) with ESMTP id 6FE8F20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:22:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dwHmQnD2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgHXXVM (ORCPT
+        id S1728190AbgHXXWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:21:12 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:34318 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXXVL (ORCPT
+        Mon, 24 Aug 2020 19:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHXXWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 19:21:11 -0400
-Received: by mail-il1-f196.google.com with SMTP id t4so8858384iln.1;
-        Mon, 24 Aug 2020 16:21:11 -0700 (PDT)
+        Mon, 24 Aug 2020 19:22:47 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A926C061574;
+        Mon, 24 Aug 2020 16:22:47 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id v9so11650542ljk.6;
+        Mon, 24 Aug 2020 16:22:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tJC/UBgyWpfgi2eM97bxX8k1Z19oULrPgPyyWbwUwmw=;
+        b=dwHmQnD2RQ9x9a0EgnJ6wBZSSpi2fEDGnepPRGx2uPWjCqllwwmP9vDI6bm5i8Z4Om
+         aX5ElKLCKGiXpTMd5biNiwAcICYUBfFGvWiI+NwJBeyQkyuGo6OnF/DeS7H9eeA7AzhU
+         MvnQcWu83AZvE8pvHxlUuCo6XKw8OzMerYecmwPRIT5D9n2zZu57hPspuwTacUNPXPCK
+         kqkYGXak3+jEZuA8EeSgTdxiUSskqWBEXSfqL+X45uq/Iib4XyuNe5LgEJZJDonjtOk5
+         dQL/P7g52jafoj3ugJ1laDxFkNxfJroxoG7IIj15hMxMgxJhEKyPHhYsOUq4HRYfCVPr
+         HMug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dHT21K2ThCYKCWY29jE8gV7M7hztSi8jrOrYJdoMcr0=;
-        b=rtNgqi0PWAYDY8+XfLOTCTxyJgLrHgU+uMJtEXvUKMZL9qMVNHvKaHSt+w0J1r+46N
-         7r4LInvO1gYo79LQjS5kOdfHnDKakU6RjD8bAV5lnPA8xSrJkqJeL4jt8utPAc78MqN9
-         oyixe3T+UigdY1eRHSwUmSe3/eTppclWa2aeRHadxWFOVB9iSLDZ6mPY4tYE96SKa1SZ
-         nNg6FTi+UrXJ1T7D12OOjTvwDrI0Q+Ss8/cYIxhSclxRHg1Raf37oqC0LeirLAiasINY
-         OIs48ogv7WDUxk4GPiggpgQEih3hGFmWsTQHonBpEHpVN7G+fuwq6/2x4qh4J/lRD5Ar
-         yQbQ==
-X-Gm-Message-State: AOAM530lkhn1EqD3PZrueOlJwPUpM7yZOAW+PHVAtW9ixewJBW+A5nko
-        9QuBhaLCtOY4asaZ351EsA==
-X-Google-Smtp-Source: ABdhPJwiumbOUZIb5eWkoPu21UOZDeJrET/huZ74qaDExYc53dFYCFj1qMLSr538p/WawFhjmM5vhg==
-X-Received: by 2002:a05:6e02:134e:: with SMTP id k14mr6989994ilr.271.1598311270740;
-        Mon, 24 Aug 2020 16:21:10 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id a11sm7966826ilh.74.2020.08.24.16.21.08
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tJC/UBgyWpfgi2eM97bxX8k1Z19oULrPgPyyWbwUwmw=;
+        b=q6xa3Zn68GK6dDI95/+g93AFVwz1Qj/SMBRwtcUXrBZeQjKHs5XaMfj94HOhGsR+Ao
+         A07+n+FSFS50PvlQ7yPwFWe/95ZHhYE55OfrEUNzaoXm96Gj2j36M+Ad3fJWTW3LcGOo
+         xwJqe0u+gBYsg5IK9+fJXglj3iUY0PcbbkEz2sNjbBksdOuxJtWt0o9aTuql3EXwdJTs
+         Ocr6ZZ6Hwi2FIZB6rEVk7Bbzo7CggJ0Vcj08JC7KhVAFgkG0NVVFeOwhDckrytHLMkmp
+         F8AN1LpfptXJq3ezoLoAy0ijgVfr8PKdseKYKzboQDhKW6Bk5pwAxuhnQqV0R0T+v1Ib
+         buPQ==
+X-Gm-Message-State: AOAM531P6/WVjVN8zB9wcc9EFpUOSdgxvKQvsWvQ7entrqzku2UCxZXu
+        7126HibFHWIlJOHNxe7+DqyQ+toOOo+sOQ==
+X-Google-Smtp-Source: ABdhPJwBfzQamH/59LWQDRfJZrX8tHgPvlC6jdfu4OpMpb0Gha5XCBFcvaV6Hklo2fImc9985Vuyaw==
+X-Received: by 2002:a2e:918a:: with SMTP id f10mr3749128ljg.78.1598311365605;
+        Mon, 24 Aug 2020 16:22:45 -0700 (PDT)
+Received: from localhost.localdomain (h-82-196-111-59.NA.cust.bahnhof.se. [82.196.111.59])
+        by smtp.gmail.com with ESMTPSA id o16sm2454414ljc.66.2020.08.24.16.22.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 16:21:10 -0700 (PDT)
-Received: (nullmailer pid 3525044 invoked by uid 1000);
-        Mon, 24 Aug 2020 23:21:07 -0000
-Date:   Mon, 24 Aug 2020 17:21:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Conor Culhane <conor.culhane@silvaco.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: Add vendor prefix for Silvaco
-Message-ID: <20200824232107.GA3525014@bogus>
-References: <20200812141312.3331-1-miquel.raynal@bootlin.com>
+        Mon, 24 Aug 2020 16:22:44 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ricardo Rivera-Matos <r-rivera-matos@ti.com>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH] power: supply: bq2515x: Constify static variables
+Date:   Tue, 25 Aug 2020 01:22:28 +0200
+Message-Id: <20200824232228.38423-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812141312.3331-1-miquel.raynal@bootlin.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Aug 2020 16:13:09 +0200, Miquel Raynal wrote:
-> Silvaco, Inc. is an EDA provider of software tools used for process
-> and device development and for analog/mixed-signal, power IC and
-> memory design [1].
-> 
-> [1] https://www.silvaco.com/company/profile/profile.html
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
-> 
-> Changes in v2:
-> * Change the prefix 'svc,' -> 'silvaco,'.
-> 
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Constify a number of static variables that are not modified to allow the
+compiler to put them in read-only memory.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
+ drivers/power/supply/bq2515x_charger.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/power/supply/bq2515x_charger.c b/drivers/power/supply/bq2515x_charger.c
+index 36b0c8c98d40..9dcb61ea4cf2 100644
+--- a/drivers/power/supply/bq2515x_charger.c
++++ b/drivers/power/supply/bq2515x_charger.c
+@@ -188,7 +188,7 @@ struct bq2515x_device {
+ 	struct bq2515x_init_data init_data;
+ };
+ 
+-static struct reg_default bq25150_reg_defaults[] = {
++static const struct reg_default bq25150_reg_defaults[] = {
+ 	{BQ2515X_FLAG0, 0x0},
+ 	{BQ2515X_FLAG1, 0x0},
+ 	{BQ2515X_FLAG2, 0x0},
+@@ -227,7 +227,7 @@ static struct reg_default bq25150_reg_defaults[] = {
+ 	{BQ2515X_DEVICE_ID, 0x20},
+ };
+ 
+-static struct reg_default bq25155_reg_defaults[] = {
++static const struct reg_default bq25155_reg_defaults[] = {
+ 	{BQ2515X_FLAG0, 0x0},
+ 	{BQ2515X_FLAG1, 0x0},
+ 	{BQ2515X_FLAG2, 0x0},
+@@ -886,14 +886,14 @@ static int bq2515x_battery_get_property(struct power_supply *psy,
+ 	return 0;
+ }
+ 
+-static enum power_supply_property bq2515x_battery_properties[] = {
++static const enum power_supply_property bq2515x_battery_properties[] = {
+ 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+ 	POWER_SUPPLY_PROP_CURRENT_NOW,
+ 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
+ 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
+ };
+ 
+-static enum power_supply_property bq2515x_mains_properties[] = {
++static const enum power_supply_property bq2515x_mains_properties[] = {
+ 	POWER_SUPPLY_PROP_ONLINE,
+ 	POWER_SUPPLY_PROP_STATUS,
+ 	POWER_SUPPLY_PROP_HEALTH,
+@@ -905,7 +905,7 @@ static enum power_supply_property bq2515x_mains_properties[] = {
+ 	POWER_SUPPLY_PROP_PRECHARGE_CURRENT,
+ };
+ 
+-static struct power_supply_desc bq2515x_mains_desc = {
++static const struct power_supply_desc bq2515x_mains_desc = {
+ 	.name			= "bq2515x-mains",
+ 	.type			= POWER_SUPPLY_TYPE_MAINS,
+ 	.get_property		= bq2515x_mains_get_property,
+@@ -915,7 +915,7 @@ static struct power_supply_desc bq2515x_mains_desc = {
+ 	.property_is_writeable	= bq2515x_power_supply_property_is_writeable,
+ };
+ 
+-static struct power_supply_desc bq2515x_battery_desc = {
++static const struct power_supply_desc bq2515x_battery_desc = {
+ 	.name			= "bq2515x-battery",
+ 	.type			= POWER_SUPPLY_TYPE_BATTERY,
+ 	.get_property		= bq2515x_battery_get_property,
+-- 
+2.28.0
+
