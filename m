@@ -2,121 +2,114 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FB1C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE823206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619F1206F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:31:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bY8Fx18r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uvA44k96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgHXA3D (ORCPT
+        id S1727056AbgHXAba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 20:29:03 -0400
-Received: from ozlabs.org ([203.11.71.1]:38199 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726737AbgHXA3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 20:29:03 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BZXzv4Gb0z9sPC;
-        Mon, 24 Aug 2020 10:28:59 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598228941;
-        bh=vHs4RTWcZM5T3fu2Aa9rbVkBMT/eMxX4oKyudLhBnWc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=bY8Fx18r17qxgxX1fLNE5HlLn9B1vHUmnsj3alS/3F9UhnMjghoXIdsC+N+HL3zw2
-         hs+Ah49qlj9VSP8vFycRLkbZP32bqvqpOnn8CjFL3PAqDmUrIxbgkLeV1BOEXpqNdb
-         /iw4HZP7aCb7WAwYjWyGl5BAXZ7m+jaOCTX5iL8tfhX7lGOlxb6yj827osd/pXI/kE
-         5yg4jV8uCu6W860we2Qna8A2SvoiVAeCFsdGjROws/HWnMFCvenw8tipaxKEQXhKLx
-         5wXilOU7fXD6yzX4UktoG3+3vgwa1GB9ireX+yRUmYNh3yhd99K56EdZQ0pSz1RNZS
-         CmT1gf8P193Nw==
-Date:   Mon, 24 Aug 2020 10:28:58 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Kitt <steve@sk2.org>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: linux-next: build failure after merge of the hwmon-staging tree
-Message-ID: <20200824102858.5554a2b2@canb.auug.org.au>
+        Sun, 23 Aug 2020 20:31:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgHXAb3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 20:31:29 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96D5C061573;
+        Sun, 23 Aug 2020 17:31:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=iM0SYJEwCSfM/KX5jOc8DR6fgqQxcRAOf/ZjYNYJiLg=; b=uvA44k96e2xJrd+e1flZL8Yw8F
+        Bv6IOBb6LU0hfu4SDw3Quxz6eddj8qf2YVsGrV4WxnE3cvxXWh5Tc6u8DCAB7sj+NQyYrfMxyRKYN
+        pnkQIRkhxiQIzNLbou0rvV4RG8jpjdefb3a9iDfY0quCuZDelXA5B+4t0/DFE72LTeZwSZgOadZ0q
+        u1FkTLW9FiLgfbSeA8Deb1VlcdMxXsP/mucUw9kVwPk9ZZaqJpcIbu+3sF3hdMOJJmpO65bfNQIgn
+        oJP8bIWd20jzznmBh3XWU10IsOOzT17KVn5CMpJqmk7KD7OFABKVpjHDH+qtjb5nMJUd2S7DEnMSl
+        LMpmhnag==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kA0OM-0003lt-Dd; Mon, 24 Aug 2020 00:31:18 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] Documentation/powerpc: fix malformed table in syscall64-abi
+Message-ID: <e06de4d3-a36f-2745-9775-467e125436cc@infradead.org>
+Date:   Sun, 23 Aug 2020 17:31:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.lLsBfq8uOnJ6g0GogGX27A";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.lLsBfq8uOnJ6g0GogGX27A
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Hi all,
+Fix malformed table warning in powerpc/syscall64-abi.rst by making
+two tables and moving the headings.
 
-After merging the hwmon-staging tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Documentation/powerpc/syscall64-abi.rst:53: WARNING: Malformed table.
+Text in column margin in table line 2.
 
-drivers/hwmon/pmbus/adm1266.c: In function 'adm1266_probe':
-drivers/hwmon/pmbus/adm1266.c:478:31: error: passing argument 2 of 'pmbus_d=
-o_probe' from incompatible pointer type [-Werror=3Dincompatible-pointer-typ=
-es]
-  478 |  ret =3D pmbus_do_probe(client, id, &data->info);
-      |                               ^~
-      |                               |
-      |                               const struct i2c_device_id *
-In file included from drivers/hwmon/pmbus/adm1266.c:20:
-drivers/hwmon/pmbus/pmbus.h:492:73: note: expected 'struct pmbus_driver_inf=
-o *' but argument is of type 'const struct i2c_device_id *'
-  492 | int pmbus_do_probe(struct i2c_client *client, struct pmbus_driver_i=
-nfo *info);
-      |                                               ~~~~~~~~~~~~~~~~~~~~~=
-~~~~~^~~~
-drivers/hwmon/pmbus/adm1266.c:478:8: error: too many arguments to function =
-'pmbus_do_probe'
-  478 |  ret =3D pmbus_do_probe(client, id, &data->info);
-      |        ^~~~~~~~~~~~~~
-In file included from drivers/hwmon/pmbus/adm1266.c:20:
-drivers/hwmon/pmbus/pmbus.h:492:5: note: declared here
-  492 | int pmbus_do_probe(struct i2c_client *client, struct pmbus_driver_i=
-nfo *info);
-      |     ^~~~~~~~~~~~~~
-cc1: some warnings being treated as errors
+=========== ============= ========================================
+--- For the sc instruction, differences with the ELF ABI ---
+r0          Volatile      (System call number.)
+r3          Volatile      (Parameter 1, and return value.)
+r4-r8       Volatile      (Parameters 2-6.)
+cr0         Volatile      (cr0.SO is the return error condition.)
+cr1, cr5-7  Nonvolatile
+lr          Nonvolatile
 
-Caused by commit
+--- For the scv 0 instruction, differences with the ELF ABI ---
+r0          Volatile      (System call number.)
+r3          Volatile      (Parameter 1, and return value.)
+r4-r8       Volatile      (Parameters 2-6.)
+=========== ============= ========================================
 
-  9832ecffd8f8 ("hwmon: (pmbus) Add support for ADM1266")
+Fixes: 7fa95f9adaee ("powerpc/64s: system call support for scv/rfscv instructions")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+---
+ Documentation/powerpc/syscall64-abi.rst |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-interacting with commit
+--- lnx-59-rc2.orig/Documentation/powerpc/syscall64-abi.rst
++++ lnx-59-rc2/Documentation/powerpc/syscall64-abi.rst
+@@ -49,16 +49,18 @@ Register preservation rules
+ Register preservation rules match the ELF ABI calling sequence with the
+ following differences:
+ 
+-=========== ============= ========================================
+ --- For the sc instruction, differences with the ELF ABI ---
++=========== ============= ========================================
+ r0          Volatile      (System call number.)
+ r3          Volatile      (Parameter 1, and return value.)
+ r4-r8       Volatile      (Parameters 2-6.)
+ cr0         Volatile      (cr0.SO is the return error condition.)
+ cr1, cr5-7  Nonvolatile
+ lr          Nonvolatile
++=========== ============= ========================================
+ 
+ --- For the scv 0 instruction, differences with the ELF ABI ---
++=========== ============= ========================================
+ r0          Volatile      (System call number.)
+ r3          Volatile      (Parameter 1, and return value.)
+ r4-r8       Volatile      (Parameters 2-6.)
 
-  d46dc459db38 ("hwmon (pmbus) use simple i2c probe function")
 
-I have used the hwmon-staging tree from next-20200821 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.lLsBfq8uOnJ6g0GogGX27A
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9DCcoACgkQAVBC80lX
-0GxVJgf9FBfGDPCdyvIcnk7535AEPUTXPEgAvQmAlEubLxbOe/TCk/nePS/IRK/D
-vcojQdq1yQre2/WvN4gDHmANfvQRAzAvx2zn/ZbTgPf/G+5sySYl2o2CSbuJgfM7
-OvouEOQJN7x16oMR0/9eQxRY7Cgk7w8lJkV0Yvb3O+YblCJIJJvJk6wzXAThY5In
-/eKNhjxpMWCHFPyKkcI9ALnEQvvyqsrZTilk4/6lhFY6w5b1sUAnZDgjpkKcTg7m
-w0mRY+x7eS776/XzIxhNdFx/5gi9N/JwRcMTKZ7eYGE9awPLmZIt6lE9ybln4F92
-NcoHaldBz2bLllX0XHfSr3BEKFJKMg==
-=0W4C
------END PGP SIGNATURE-----
-
---Sig_/.lLsBfq8uOnJ6g0GogGX27A--
