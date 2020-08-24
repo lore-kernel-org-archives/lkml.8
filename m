@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF05C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACD5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D45DA206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BEDE206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261516;
-	bh=zS1P8t9Wnw9TYrZUY4555coXnHbQY28UejCWY2f+zUc=;
+	s=default; t=1598261523;
+	bh=iJe/3JHxc52K59A8RyXOFoprL91A7wLriuBsahOuwoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2I9jwFx9FVchH6jyp44yDIKeQLkeW6VuOZMtH4cht/jxzAlu0izVyWHCMRk8IIObu
-	 tOPipsUcywZj7CHjHQGUuH/YqbU0NFBQExlCaSNI2nDUbSZH4NmmVA6oqUQI1CLcJs
-	 qHlGWpDoK5+Ae7Un373SDbrC7oFdETNV6OfNAeUU=
+	b=Q3xErOA11cZNvAeRf0nBKrYLKR/bL08k8uqkRYFnvfMeCauvFzuUAZQPN5QSa+SUo
+	 xgr0lhhNFdN+2fSsK2I/kpGzV0NzdnOrS2cXz25Yk5+eiE/htTg8oz6wLBUXGyMVTW
+	 R8QqEokPGcWpfbzqcqKjHFPv7G78x+ku8ilbHfEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728543AbgHXJbz (ORCPT
+        id S1729833AbgHXIuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:31:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53802 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:50:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729841AbgHXIuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:50:20 -0400
+        id S1729824AbgHXIuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:50:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43832207D3;
-        Mon, 24 Aug 2020 08:50:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D15DF207D3;
+        Mon, 24 Aug 2020 08:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259019;
-        bh=zS1P8t9Wnw9TYrZUY4555coXnHbQY28UejCWY2f+zUc=;
+        s=default; t=1598259009;
+        bh=iJe/3JHxc52K59A8RyXOFoprL91A7wLriuBsahOuwoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=drXBGtP8sI7QB0icdbkcgBk5mJOZ2PvhEcKHOKAWz19McW5gQBH0pzFu//PI7gnaW
-         +m9JU+HrpfhYjG0S8rFGmYiApv1tdkz45VazaHSdJ5nnO5p6e6YSlRIy48yH5FRxqO
-         /aHUw9pf0kMq+8rw+oQWrc52H62A4qFvGUC76sN8=
+        b=pWen/vtQEqlwx/tGCOK+gZX9okcOrhOdZEukARlBotBIkqyf3FXmNfXdLG51Xd2PU
+         Ps6shK+dWYpSdtP6HN3wsYTzdkYfFZkIXQWXoqwnycIdqyCycccP5gNU72MnYf2/Ys
+         jzAKjA3k6PxsBcUetB99Etwelw7r+vnPoaOKO0WQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eiichi Tsukata <devel@etsukata.com>,
+        stable@vger.kernel.org,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 24/33] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
-Date:   Mon, 24 Aug 2020 10:31:20 +0200
-Message-Id: <20200824082347.749330035@linuxfoundation.org>
+        Allison Collins <allison.henderson@oracle.com>,
+        Chandan Babu R <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 20/33] xfs: fix inode quota reservation checks
+Date:   Mon, 24 Aug 2020 10:31:16 +0200
+Message-Id: <20200824082347.559533589@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
 References: <20200824082346.498653578@linuxfoundation.org>
@@ -60,57 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eiichi Tsukata <devel@etsukata.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit 96cf2a2c75567ff56195fe3126d497a2e7e4379f ]
+[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
 
-If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
-shows the following warning:
+xfs_trans_dqresv is the function that we use to make reservations
+against resource quotas.  Each resource contains two counters: the
+q_core counter, which tracks resources allocated on disk; and the dquot
+reservation counter, which tracks how much of that resource has either
+been allocated or reserved by threads that are working on metadata
+updates.
 
-  UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
-  member access within null pointer of type 'struct xfs_kobj'
-  Call Trace:
-   dump_stack+0x10e/0x195
-   ubsan_type_mismatch_common+0x241/0x280
-   __ubsan_handle_type_mismatch_v1+0x32/0x40
-   init_xfs_fs+0x12b/0x28f
-   do_one_initcall+0xdd/0x1d0
-   do_initcall_level+0x151/0x1b6
-   do_initcalls+0x50/0x8f
-   do_basic_setup+0x29/0x2b
-   kernel_init_freeable+0x19f/0x20b
-   kernel_init+0x11/0x1e0
-   ret_from_fork+0x22/0x30
+For disk blocks, we compare the proposed reservation counter against the
+hard and soft limits to decide if we're going to fail the operation.
+However, for inodes we inexplicably compare against the q_core counter,
+not the incore reservation count.
 
-Fix it by checking parent_kobj before the code accesses its member.
+Since the q_core counter is always lower than the reservation count and
+we unlock the dquot between reservation and transaction commit, this
+means that multiple threads can reserve the last inode count before we
+hit the hard limit, and when they commit, we'll be well over the hard
+limit.
 
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-[darrick: minor whitespace edits]
+Fix this by checking against the incore inode reservation counter, since
+we would appear to maintain that correctly (and that's what we report in
+GETQUOTA).
+
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_sysfs.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_trans_dquot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
-index be692e59938db..c457b010c623d 100644
---- a/fs/xfs/xfs_sysfs.h
-+++ b/fs/xfs/xfs_sysfs.h
-@@ -44,9 +44,11 @@ xfs_sysfs_init(
- 	struct xfs_kobj		*parent_kobj,
- 	const char		*name)
- {
-+	struct kobject		*parent;
-+
-+	parent = parent_kobj ? &parent_kobj->kobject : NULL;
- 	init_completion(&kobj->complete);
--	return kobject_init_and_add(&kobj->kobject, ktype,
--				    &parent_kobj->kobject, "%s", name);
-+	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
- }
- 
- static inline void
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index ce78534a047ee..bb8de2dddabe2 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -662,7 +662,7 @@ xfs_trans_dqresv(
+ 			}
+ 		}
+ 		if (ninos > 0) {
+-			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
++			total_count = dqp->q_res_icount + ninos;
+ 			timer = be32_to_cpu(dqp->q_core.d_itimer);
+ 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
+ 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
 -- 
 2.25.1
 
