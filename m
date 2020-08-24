@@ -2,68 +2,116 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F67C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96F14206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 857562063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598289039;
+	bh=tkg9bPdu0y9UhxNaRVT+Km3iLfj26SZ4ErlN1m0KU+0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WR1ZLVX3f0VswlPX3bg95/lNi95F9mxaYRIRXoROl9gu6nB87ZtO3U1idmmBGdv7y
+	 FsIDvXjOHYvf614OdZhI8Iaox6uOo+IGy0sPmgf+CZF3pNVhW+TnO9tiVkhx6WO6h0
+	 dGWTTny0aFHZLw7fL6hMRBmMSRilDW4utZfWqf7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgHXRKH convert rfc822-to-8bit (ORCPT
+        id S1727780AbgHXRKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:10:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:38342 "EHLO foss.arm.com"
+        Mon, 24 Aug 2020 13:10:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728082AbgHXRJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:09:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 940281FB;
-        Mon, 24 Aug 2020 10:09:57 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AADB13F71F;
-        Mon, 24 Aug 2020 10:09:46 -0700 (PDT)
-References: <20200824153902.57875-1-andriy.shevchenko@linux.intel.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH v1] sched/topology: Make compiler happy about unused constant definitions
-In-reply-to: <20200824153902.57875-1-andriy.shevchenko@linux.intel.com>
-Date:   Mon, 24 Aug 2020 18:09:41 +0100
-Message-ID: <jhjeenwdl7u.mognet@arm.com>
+        id S1728409AbgHXQh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:37:57 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22F1122DA7;
+        Mon, 24 Aug 2020 16:37:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598287041;
+        bh=tkg9bPdu0y9UhxNaRVT+Km3iLfj26SZ4ErlN1m0KU+0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=106jkt8Wa769B+hbkeGRoPFa1jNgnDE+3pCsz97kOHgoEyFYOLNRkZ9yMeshXqBS0
+         FP7BYGuHyebhm4E6vTQXiwwdiwnZ5WqdI2t1KqswZALSBREMDBFh484Po2RJswGDBK
+         o8XltN0be8rFbiXV/Tl4e0BnuiQihn9qeY3NHc7Q=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Stanley Chu <stanley.chu@mediatek.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 34/54] scsi: ufs: Fix possible infinite loop in ufshcd_hold
+Date:   Mon, 24 Aug 2020 12:36:13 -0400
+Message-Id: <20200824163634.606093-34-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
+References: <20200824163634.606093-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-Hi,
+[ Upstream commit 93b6c5db06028a3b55122bbb74d0715dd8ca4ae0 ]
 
-On 24/08/20 16:39, Andy Shevchenko wrote:
-> Compilation of almost each file ends up with
->
->  In file included from .../include/linux/energy_model.h:10,
->                 from .../include/linux/device.h:16,
->                 from .../drivers/spi/spi.c:8:
->  .../include/linux/sched/topology.h:30:27: warning: ‘SD_DEGENERATE_GROUPS_MASK’ defined but not used [-Wunused-const-variable=]
->     30 | static const unsigned int SD_DEGENERATE_GROUPS_MASK =
->        |                           ^~~~~~~~~~~~~~~~~~~~~~~~~
->  ...
->
-> Make compiler happy by annotating the static constants with __maybwe_unused.
->
+In ufshcd_suspend(), after clk-gating is suspended and link is set
+as Hibern8 state, ufshcd_hold() is still possibly invoked before
+ufshcd_suspend() returns. For example, MediaTek's suspend vops may
+issue UIC commands which would call ufshcd_hold() during the command
+issuing flow.
 
-That should see some use as long as the build is for SMP. This whole region
-is guarded by #ifdef CONFIG_SMP, so an !SMP build shouldn't trigger this.
+Now if UFSHCD_CAP_HIBERN8_WITH_CLK_GATING capability is enabled,
+then ufshcd_hold() may enter infinite loops because there is no
+clk-ungating work scheduled or pending. In this case, ufshcd_hold()
+shall just bypass, and keep the link as Hibern8 state.
 
-With what config/kernel are you getting this?
+Link: https://lore.kernel.org/r/20200809050734.18740-1-stanley.chu@mediatek.com
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Co-developed-by: Andy Teng <andy.teng@mediatek.com>
+Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 477b6cfff381b..a61f95ffd45fd 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1540,6 +1540,7 @@ static void ufshcd_ungate_work(struct work_struct *work)
+ int ufshcd_hold(struct ufs_hba *hba, bool async)
+ {
+ 	int rc = 0;
++	bool flush_result;
+ 	unsigned long flags;
+ 
+ 	if (!ufshcd_is_clkgating_allowed(hba))
+@@ -1571,7 +1572,9 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
+ 				break;
+ 			}
+ 			spin_unlock_irqrestore(hba->host->host_lock, flags);
+-			flush_work(&hba->clk_gating.ungate_work);
++			flush_result = flush_work(&hba->clk_gating.ungate_work);
++			if (hba->clk_gating.is_suspended && !flush_result)
++				goto out;
+ 			spin_lock_irqsave(hba->host->host_lock, flags);
+ 			goto start;
+ 		}
+-- 
+2.25.1
+
