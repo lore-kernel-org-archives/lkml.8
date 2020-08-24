@@ -2,135 +2,137 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4072BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10B012074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 293382074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgHXNFt (ORCPT
+        id S1726495AbgHXNHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:05:49 -0400
-Received: from mga04.intel.com ([192.55.52.120]:26057 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726158AbgHXNFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:05:47 -0400
-IronPort-SDR: QN4buq9gNgMJ9luGosHs4mPhXFm+nSpM3mRhPfc9i7MVbvqiUvIRKxjIjv3H4jXPH5NlKNmuVI
- S2ilqdr724Gw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="153302899"
-X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
-   d="scan'208";a="153302899"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 06:05:00 -0700
-IronPort-SDR: glWWwqLpFaUo/CuOVMUTSluWKXlQFEkR/gwSjhw10bFmVJ+dIY/MC0+LPvGLg1B9IY1DWQJ7lP
- M3Omj83EY+0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
-   d="scan'208";a="402345797"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 24 Aug 2020 06:04:57 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 24 Aug 2020 16:04:56 +0300
-Date:   Mon, 24 Aug 2020 16:04:56 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, jonathan.derrick@intel.com,
-        Mario.Limonciello@dell.com, Heiner Kallweit <hkallweit1@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Message-ID: <20200824130456.GJ1375436@lahna.fi.intel.com>
-References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
+        Mon, 24 Aug 2020 09:07:19 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:43639 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgHXNHR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 09:07:17 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id A30383C0579;
+        Mon, 24 Aug 2020 15:07:13 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id rS9E865DscdH; Mon, 24 Aug 2020 15:07:08 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 920423C0016;
+        Mon, 24 Aug 2020 15:07:08 +0200 (CEST)
+Received: from lxhi-065.adit-jv.com (10.72.94.3) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 24 Aug
+ 2020 15:07:08 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Dongli Zhang <dongli.zhang@oracle.com>
+CC:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, <linux-mm@kvack.org>,
+        <stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: [PATCH v2] mm: slub: fix conversion of freelist_corrupted()
+Date:   Mon, 24 Aug 2020 15:06:43 +0200
+Message-ID: <20200824130643.10291-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821123222.32093-1-kai.heng.feng@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.72.94.3]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Commit 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in
+deactivate_slab()") suffered an update when picked up from LKML [1].
 
-On Fri, Aug 21, 2020 at 08:32:20PM +0800, Kai-Heng Feng wrote:
-> New Intel laptops with VMD cannot reach deeper power saving state,
-> renders very short battery time.
-> 
-> As BIOS may not be able to program the config space for devices under
-> VMD domain, ASPM needs to be programmed manually by software. This is
-> also the case under Windows.
-> 
-> The VMD controller itself is a root complex integrated endpoint that
-> doesn't have ASPM capability, so we can't propagate the ASPM settings to
-> devices under it. Hence, simply apply ASPM_STATE_ALL to the links under
-> VMD domain, unsupported states will be cleared out anyway.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/pci/pcie/aspm.c |  3 ++-
->  drivers/pci/quirks.c    | 11 +++++++++++
->  include/linux/pci.h     |  2 ++
->  3 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 253c30cc1967..dcc002dbca19 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -624,7 +624,8 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
->  		aspm_calc_l1ss_info(link, &upreg, &dwreg);
->  
->  	/* Save default state */
-> -	link->aspm_default = link->aspm_enabled;
-> +	link->aspm_default = parent->dev_flags & PCI_DEV_FLAGS_ENABLE_ASPM ?
-> +			     ASPM_STATE_ALL : link->aspm_enabled;
->  
->  	/* Setup initial capable state. Will be updated later */
->  	link->aspm_capable = link->aspm_support;
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index bdf9b52567e0..2e2f525bd892 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5632,3 +5632,14 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
->  }
->  DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
->  			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
-> +
-> +/*
-> + * Device [8086:9a09]
-> + * BIOS may not be able to access config space of devices under VMD domain, so
-> + * it relies on software to enable ASPM for links under VMD.
-> + */
-> +static void pci_fixup_enable_aspm(struct pci_dev *pdev)
-> +{
-> +	pdev->dev_flags |= PCI_DEV_FLAGS_ENABLE_ASPM;
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a09, pci_fixup_enable_aspm);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 835530605c0d..66a45916c7c6 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -227,6 +227,8 @@ enum pci_dev_flags {
->  	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
->  	/* Don't use Relaxed Ordering for TLPs directed at this device */
->  	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-> +	/* Enable ASPM regardless of how LnkCtl is programmed */
-> +	PCI_DEV_FLAGS_ENABLE_ASPM = (__force pci_dev_flags_t) (1 << 12),
+Specifically, relocating 'freelist = NULL' into 'freelist_corrupted()'
+created a no-op statement. Fix it by sticking to the behavior intended
+in the original patch [1]. In addition, make freelist_corrupted()
+immune to passing NULL instead of &freelist.
 
-I wonder if instead of dev_flags this should have a bit field in struct
-pci_dev? Not sure which one is prefered actually, both seem to include
-quirks as well ;-)
+The issue has been spotted via static analysis and code review.
 
->  };
->  
->  enum pci_irq_reroute_variant {
-> -- 
-> 2.17.1
+[1] https://lore.kernel.org/linux-mm/20200331031450.12182-1-dongli.zhang@oracle.com/
+
+Fixes: 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in deactivate_slab()")
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+---
+
+v2:
+ - Address the review finding from Dongli Zhang in:
+   https://lore.kernel.org/linux-mm/f93a9f06-8608-6f28-27c0-b17f86dca55b@oracle.com/
+
+   -------8<-------
+   This is good to me.
+   However, this would confuse people when CONFIG_SLUB_DEBUG is not defined.
+   While reading the source code, people may be curious why to reset freelist when
+   CONFIG_SLUB_DEBUG is even not defined.
+   -------8<-------
+
+v1:
+ - https://lore.kernel.org/linux-mm/20200811124656.10308-1-erosca@de.adit-jv.com/
+
+ mm/slub.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/mm/slub.c b/mm/slub.c
+index 68c02b2eecd9..d4177aecedf6 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -672,12 +672,12 @@ static void slab_fix(struct kmem_cache *s, char *fmt, ...)
+ }
+ 
+ static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
+-			       void *freelist, void *nextfree)
++			       void **freelist, void *nextfree)
+ {
+ 	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
+-	    !check_valid_pointer(s, page, nextfree)) {
+-		object_err(s, page, freelist, "Freechain corrupt");
+-		freelist = NULL;
++	    !check_valid_pointer(s, page, nextfree) && freelist) {
++		object_err(s, page, *freelist, "Freechain corrupt");
++		*freelist = NULL;
+ 		slab_fix(s, "Isolate corrupted freechain");
+ 		return true;
+ 	}
+@@ -1494,7 +1494,7 @@ static inline void dec_slabs_node(struct kmem_cache *s, int node,
+ 							int objects) {}
+ 
+ static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
+-			       void *freelist, void *nextfree)
++			       void **freelist, void *nextfree)
+ {
+ 	return false;
+ }
+@@ -2184,7 +2184,7 @@ static void deactivate_slab(struct kmem_cache *s, struct page *page,
+ 		 * 'freelist' is already corrupted.  So isolate all objects
+ 		 * starting at 'freelist'.
+ 		 */
+-		if (freelist_corrupted(s, page, freelist, nextfree))
++		if (freelist_corrupted(s, page, &freelist, nextfree))
+ 			break;
+ 
+ 		do {
+-- 
+2.28.0
+
