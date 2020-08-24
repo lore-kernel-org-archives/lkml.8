@@ -2,143 +2,127 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D358C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 06:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C16C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 06:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFB322071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 06:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598251790;
-	bh=MoR5l415tOqXO7qDvbGK3qkYCXTWIk9BbyxnSBH+NOA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=iGJXD9fM5fZa6dEy9nFChi2BSU3lsKGEKUxiP4PTeqw/+2DBs0K7zX6hwra7pMuzn
-	 wCSjBA8GJ+LIiW+NtfLaC4c+iD84IsAMATbkup5DKySVC3+d8vEINSMRu6Z5Eyp/SY
-	 aFJndz3MAaE9leLjB3HGeGOZ3n/JZB1KcYQTPV1c=
+	by mail.kernel.org (Postfix) with ESMTP id AF2052067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 06:51:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="thY/ZBCP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgHXGtn (ORCPT
+        id S1726257AbgHXGvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 02:49:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgHXGtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 02:49:42 -0400
-Received: from coco.lan (unknown [95.90.213.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB28A2067C;
-        Mon, 24 Aug 2020 06:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598251781;
-        bh=MoR5l415tOqXO7qDvbGK3qkYCXTWIk9BbyxnSBH+NOA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=d8Fa9jnF4RxQAHQUfTQiJnd1/Cv3peOrzUsQ+uvrMSfO9dxpXk5FFmL8qQR+62r2d
-         /5Z+CzrXnWZx+hAETh664fBPlISrF9QHDL0J3KIvyrE+0W2sam4bZO9CkasBh6uuiy
-         Lifm+3q0OlCTMYdbS1UXGwLbhr7/E/XclY5RLP1s=
-Date:   Mon, 24 Aug 2020 08:49:30 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Clark <robdclark@chromium.org>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Liuyao An <anliuyao@huawei.com>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, Wei Xu <xuwei5@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Chen Feng <puck.chen@hisilicon.com>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-Message-ID: <20200824084853.10560ed1@coco.lan>
-In-Reply-To: <CALAqxLULQvW3UikCHpEzSDnpeYnBy8wDSsWZNbSrmivQTW3_Sg@mail.gmail.com>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
-        <CALAqxLU3bt6fT4nGHZFSnzyQq4xJo2On=c_Oa9ONED9-jhaFgw@mail.gmail.com>
-        <CALAqxLW98nVc-=8Q6nx-wRP1z8pzkw1_zNc9M7V3GhnJQqM9rg@mail.gmail.com>
-        <CALAqxLULQvW3UikCHpEzSDnpeYnBy8wDSsWZNbSrmivQTW3_Sg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 24 Aug 2020 02:51:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgHXGvS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 02:51:18 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9908C061573
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 23:51:18 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id k63so1684775oob.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 23:51:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PpxiLXTGal/wt3ks6BO05b4YlWK5pFB0UQ1qa3viVm4=;
+        b=thY/ZBCPhvnCSfiETySrPCkEtlwF3IA4JcEb7+CvArxtKe42Nm8ATYMoU3SM07dIca
+         +viAwtfw7spoq+oQu/5KgngzQqddDvW9QMP4dPQBvVJSScCMU0RozcVFsExAVsFXv5pk
+         MYrTbyfxr74tKSqd757P/hwmx6T3hvsfJe/iJ7+Q55FcLg1dauWTnrmyGixeRg88Sbf5
+         Chxw13aO/9h9HHUa7G6dsVn7i5WgUrDqLOoiF5+5bNtjhA+Rd/Uuxc5rdjtZozliNdDm
+         cxDBROoFbxmOeHAslfKOm8hU4iKYea2PtepHME2LYEot8P+MlH8dQiYI6LrmxU2VQ0F1
+         cClw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PpxiLXTGal/wt3ks6BO05b4YlWK5pFB0UQ1qa3viVm4=;
+        b=EcG9sqA9G9oqLx5LylZE3GAogT+MrXv7HfnlfOpvAgTL0dCVkpr+Ne2PrtzkED78dH
+         eMSYXNvNCclEYMsLCqXsVXpM3kRTlR7IAA6tHowvQb6LBYQhFuywOEzbx6OsPYtmSelj
+         bjeGNPj/NsYDfsJAqP4EjWInUuo2e5/8zO+VQhLQj/fFRzDBMKv2noV4PPnxgHI00Fju
+         +JddgHVodNj9RzZGK9C2vorCBNvgKiLB6ukhlow3V62cQ/u6XW8009OY1VElF7HCXQTV
+         XuGRDSerMASAVm+M6vDeWD7VxLzp9Ti33WDnPnv0w1MVOK725Or5YJF+s/HC/mVQDzf4
+         niaw==
+X-Gm-Message-State: AOAM531DD1Icz6m2pSrI8+7b2gG7OfkNM27O4R4a3ok6cqg1drUD2qIB
+        pTdOSnSc5aqD/OMTEyUCKIw58CUqpXXQJdx4iXCAgw==
+X-Google-Smtp-Source: ABdhPJx+Pj9zYdHc0o9HEQP/cnQvVo4D2yJy70EETkyBnkGfnjDIhe/IXjscXff+atY7613QMCnz/jk5xwktqR01AhQ=
+X-Received: by 2002:a4a:e88c:: with SMTP id g12mr2812812ooe.49.1598251877951;
+ Sun, 23 Aug 2020 23:51:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200526131259.GA97001@jade> <20200821184910.GB3407@lx2k>
+ <f7c8bb6e-e732-2565-8b50-20f5504701c9@nvidia.com> <CAOesGMjKq3ECJuaMANq=AyDMLXYvorafMYS3LDr9YMH6M9VdYA@mail.gmail.com>
+In-Reply-To: <CAOesGMjKq3ECJuaMANq=AyDMLXYvorafMYS3LDr9YMH6M9VdYA@mail.gmail.com>
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+Date:   Mon, 24 Aug 2020 08:51:06 +0200
+Message-ID: <CAHUa44EGf1yayXhHUJLUmbNpueKMZ9jArT4narJLzOVWujHR9A@mail.gmail.com>
+Subject: Re: [GIT PULL] tee subsystem pin_user_pages for v5.8
+To:     Olof Johansson <olof@lixom.net>
+List-Id: <soc.lore.kernel.org>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        ARM-SoC Maintainers <arm@kernel.org>,
+        SoC Team <soc@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+On Fri, Aug 21, 2020 at 11:19 PM Olof Johansson <olof@lixom.net> wrote:
+>
+> On Fri, Aug 21, 2020 at 12:58 PM John Hubbard <jhubbard@nvidia.com> wrote:
+> >
+> > On 8/21/20 11:49 AM, Olof Johansson wrote:
+> > > On Tue, May 26, 2020 at 03:12:59PM +0200, Jens Wiklander wrote:
+> > >> Hello arm-soc maintainers,
+> > >>
+> > >> Please pull this small patch converting the tee subsystem to use
+> > >> pin_user_pages() instead of get_user_pages().
+> > >>
+> > >> Thanks,
+> > >> Jens
+> > >>
+> > >> The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+> > >>
+> > >>    Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+> > >>
+> > >> are available in the Git repository at:
+> > >>
+> > >>    git://git.linaro.org:/people/jens.wiklander/linux-tee.git tags/tee-pin-user-pages-for-5.8
+> > >>
+> > >> for you to fetch changes up to 37f6b4d5f47b600ec4ab6682c005a44a1bfca530:
+> > >>
+> > >>    tee: convert get_user_pages() --> pin_user_pages() (2020-05-26 10:42:41 +0200)
+> > >
+> > > Hi, I noticed this never got merged, but I don't see any follow-up here that
+> > > retracts it. Is it still pending merge such that I should queue it for v5.10?
+> > >
+> >
+> > I think so. I had marked it in my notes as "accepted, and the maintainer will
+> > eventually merge it", and I left it at that. It's still desirable.
+> >
+>
+> Looks like it conflicts with some of the later work. Jens, given the
+> timelines here it's probably easiest all around if you rebase/respin
+> and send a fresh pull request. I could fix it up but you'd still need
+> to review that so the amount of work is probably less if you do it
+> directly.
 
-Em Wed, 19 Aug 2020 20:28:44 -0700
-John Stultz <john.stultz@linaro.org> escreveu:
-
-
-> That said even with the patches I've got on top of your series, I
-> still see a few issues:
-> 1) I'm seeing red-blue swap with your driver.  I need to dig a bit to
-> see what the difference is, I know gralloc has a config option for
-> this, and maybe the version of the driver I'm carrying has it wrong?
-
-Maybe it is due to this:
-
-	drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c:      hal_fmt = HISI_FB_PIXEL_FORMAT_BGRA_8888;/* dss_get_format(fb->pixel_format); */
-
-It sounds to me that someone added a hack hardcoding BGRA_8888 over
-there.
-
-Btw, I removed the hack, with:
-
-
-diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c
-index a68db1a27bbf..ba64aae371e4 100644
---- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c
-+++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c
-@@ -857,7 +857,7 @@ void hisi_fb_pan_display(struct drm_plane *plane)
-        rect.right = src_w - 1;
-        rect.top = 0;
-        rect.bottom = src_h - 1;
--       hal_fmt = HISI_FB_PIXEL_FORMAT_BGRA_8888;/* dss_get_format(fb->pixel_format); */
-+       hal_fmt = dss_get_format(fb->format->format);
- 
-        DRM_DEBUG_DRIVER("channel%d: src:(%d,%d, %dx%d) crtc:(%d,%d, %dx%d), rect(%d,%d,%d,%d),fb:%dx%d, pixel_format=%d, stride=%d, paddr=0x%x, bpp=%d.\n",
-                         chn_idx, src_x, src_y, src_w, src_h,
-
-
-And now red and blue are swapped on my HDMI screen too.
-
-I'll compare this part with your version, but I guess the bug is
-on this logic.
-
+Agree, I'll send a fresh pull request once we have this rebased.
+The conflict is with the recently added call to get_kernel_pages()
+when kernel memory is shared.
+The conflict isn't trivial, I guess we need to handle the different
+types of pages differently when releasing them.
+John, would you mind rebasing and posting the patch again?
 
 Thanks,
-Mauro
+Jens
