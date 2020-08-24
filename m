@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F211C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB0EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 617922071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C8D2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263091;
-	bh=9R6DF0z8Riev++arCUBM7qjB7dhQ/99mOWwnn9pjiuM=;
+	s=default; t=1598263094;
+	bh=0sF119N4lHEg7qpSVs4LN+sAfHSYIUqUSvoS6KE/u40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPfL/if/4Vt8NIr7SkvWuxwMzMVjIKVBeGftjuLoV9qXwCL7Mb7AonmCGGB8euIU5
-	 n9qTxYjDNH7h4vDV8wDQkTbxKZS+FTDuXvZpGgqfUiFfhrEBTmGkIRZwN947W8Ja1M
-	 JlrKRJW4GXqb0rgPlfZ/lLeqlRQuVPT7qhkpPff8=
+	b=unLINUkS8zxL/Wb4O25eTy4/DGaecN8UtWZnUyNWK8/6pyBUZP1FjKJdAqsjvKSzV
+	 F9MQr1YhQWM1KH5+kdjsTyjQB0HVWFDeSjNSUzB8P0gh/NpBL9NKFfwH1BaNd6fwmT
+	 C1/jwb3Wl+FwrCi3ssesNuwK3KEJ9AoB13Lmhgas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgHXJ6K (ORCPT
+        id S1728641AbgHXJ6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:58:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42938 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:58:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbgHXIe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:34:27 -0400
+        id S1727866AbgHXIeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:34:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13DD4207D3;
-        Mon, 24 Aug 2020 08:34:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B0462075B;
+        Mon, 24 Aug 2020 08:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258066;
-        bh=9R6DF0z8Riev++arCUBM7qjB7dhQ/99mOWwnn9pjiuM=;
+        s=default; t=1598258061;
+        bh=0sF119N4lHEg7qpSVs4LN+sAfHSYIUqUSvoS6KE/u40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TKYJRVLoWluDzLEXNTmym1gHt48YSy9t7YvRHHOMEawU4qKWGwuD4jYZdnLiZuEa0
-         O8LJ6FHSl7doWGDezOY/oVSsKZpDxQkyBm5giKNzOM0207p4ZfiZi+ElqWEYNs94Mc
-         JeQo1qp+ioRdj6WH/FKM1uRAVY1GZdURCsKTAQS0=
+        b=GZtzzhUMM0fyE06RxyzMfcuhjFWDO+vxUzi9E2kMx9mbCX8k9nyEm5ky1DWRtxj2X
+         mMqdkwODfxFRTFkLe/D6U10sw7moQNLmdJKEWd4SIV9fgWHo+0HkR8AKSaGEFj+M5W
+         vstPVhaR6cqzESC/p3LVVJoB3QjH3Qx8E6gvA4+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com,
+        Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 063/148] cpufreq: intel_pstate: Fix cpuinfo_max_freq when MSR_TURBO_RATIO_LIMIT is 0
-Date:   Mon, 24 Aug 2020 10:29:21 +0200
-Message-Id: <20200824082417.090573734@linuxfoundation.org>
+Subject: [PATCH 5.8 061/148] ceph: fix use-after-free for fsc->mdsc
+Date:   Mon, 24 Aug 2020 10:29:19 +0200
+Message-Id: <20200824082416.994206217@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -61,45 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit 4daca379c703ff55edc065e8e5173dcfeecf0148 ]
+[ Upstream commit a7caa88f8b72c136f9a401f498471b8a8e35370d ]
 
-The MSR_TURBO_RATIO_LIMIT can be 0. This is not an error. User can update
-this MSR via BIOS settings on some systems or can use msr tools to update.
-Also some systems boot with value = 0.
+If the ceph_mdsc_init() fails, it will free the mdsc already.
 
-This results in display of cpufreq/cpuinfo_max_freq wrong. This value
-will be equal to cpufreq/base_frequency, even though turbo is enabled.
-
-But platform will still function normally in HWP mode as we get max
-1-core frequency from the MSR_HWP_CAPABILITIES. This MSR is already used
-to calculate cpu->pstate.turbo_freq, which is used for to set
-policy->cpuinfo.max_freq. But some other places cpu->pstate.turbo_pstate
-is used. For example to set policy->max.
-
-To fix this, also update cpu->pstate.turbo_pstate when updating
-cpu->pstate.turbo_freq.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reported-by: syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/intel_pstate.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ceph/mds_client.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index 7e0f7880b21a6..c7540ad28995b 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -1572,6 +1572,7 @@ static void intel_pstate_get_cpu_pstates(struct cpudata *cpu)
- 
- 		intel_pstate_get_hwp_max(cpu->cpu, &phy_max, &current_max);
- 		cpu->pstate.turbo_freq = phy_max * cpu->pstate.scaling;
-+		cpu->pstate.turbo_pstate = phy_max;
- 	} else {
- 		cpu->pstate.turbo_freq = cpu->pstate.turbo_pstate * cpu->pstate.scaling;
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index dea971f9d89ee..946f9a92658ab 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -4361,7 +4361,6 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
+ 		goto err_mdsc;
  	}
+ 
+-	fsc->mdsc = mdsc;
+ 	init_completion(&mdsc->safe_umount_waiters);
+ 	init_waitqueue_head(&mdsc->session_close_wq);
+ 	INIT_LIST_HEAD(&mdsc->waiting_for_map);
+@@ -4416,6 +4415,8 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
+ 
+ 	strscpy(mdsc->nodename, utsname()->nodename,
+ 		sizeof(mdsc->nodename));
++
++	fsc->mdsc = mdsc;
+ 	return 0;
+ 
+ err_mdsmap:
 -- 
 2.25.1
 
