@@ -2,94 +2,87 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D80C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10468206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:05:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="abBFOKCu"
+	by mail.kernel.org (Postfix) with ESMTP id D405E206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgHXPEz (ORCPT
+        id S1726799AbgHXPFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:04:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgHXPE0 (ORCPT
+        Mon, 24 Aug 2020 11:05:51 -0400
+Received: from mailoutvs49.siol.net ([185.57.226.240]:58240 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726519AbgHXPEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:04:26 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C3D0C0617A9;
-        Mon, 24 Aug 2020 08:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8CP6fVQFmATmTA1mY6X4BjyYws+1260yHBdv8vP3vaA=; b=abBFOKCuZv5f3di1oL2KpM+NYX
-        3jL/ZHpavzavy6HHSEvGScySN4B2OLgWxbltw14zWrUpj7tQFvq2IlvmFiLgtzkhTcycrFXioZVCj
-        jVUGq4nLATCW0S1bNtYkidrzspSdwR8K60jIsr0RPBF2cxijXTBLeOJ1WeOMZSp/vBHi+UpQV85/0
-        5fSNqFHc+ZTkoHT8XmdxHNDlmHH8fdzjWJF/uE49Z8OYVBbH348GA0dQ8c7yT06WZcSIL7cdyySc8
-        SAu7lKtuxV8m9AJo5nGSa8Hw5lYXnAqpy8p0CTJuO4czS5S6jQgEEHkR8bD5CEjMjb9QrJeMOK2Wd
-        iZalW7Yg==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAE1B-0003Nv-An; Mon, 24 Aug 2020 15:04:17 +0000
-Date:   Mon, 24 Aug 2020 16:04:17 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        willy@infradead.org
-Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
-Message-ID: <20200824150417.GA12258@infradead.org>
-References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
- <20200820231140.GE7941@dread.disaster.area>
- <20200821044533.BBFD1A405F@d06av23.portsmouth.uk.ibm.com>
- <20200821215358.GG7941@dread.disaster.area>
- <20200822131312.GA17997@infradead.org>
- <20200824142823.GA295033@bfoster>
+        Mon, 24 Aug 2020 11:04:53 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 64E9E525762;
+        Mon, 24 Aug 2020 17:04:50 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id SoJTlRNGNgBS; Mon, 24 Aug 2020 17:04:50 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 1DB8252576D;
+        Mon, 24 Aug 2020 17:04:50 +0200 (CEST)
+Received: from localhost.localdomain (89-212-178-211.dynamic.t-2.net [89.212.178.211])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id 79D1452576C;
+        Mon, 24 Aug 2020 17:04:47 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org
+Cc:     airlied@linux.ie, daniel@ffwll.ch, heiko@sntech.de,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com
+Subject: [PATCH 1/2] dt-bindings: gpu: mali-utgard: Add Allwinner R40 compatible
+Date:   Mon, 24 Aug 2020 17:04:33 +0200
+Message-Id: <20200824150434.951693-2-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824150434.951693-1-jernej.skrabec@siol.net>
+References: <20200824150434.951693-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824142823.GA295033@bfoster>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:28:23AM -0400, Brian Foster wrote:
-> Do I understand the current code (__bio_try_merge_page() ->
-> page_is_mergeable()) correctly in that we're checking for physical page
-> contiguity and not necessarily requiring a new bio_vec per physical
-> page?
+Allwinner R40 SoC contains Mali400, so add its specific compatible to
+bindings.
 
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+---
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Yes.
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b=
+/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+index 6226d31ec4b7..d4d785790eaa 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+@@ -25,6 +25,7 @@ properties:
+               - allwinner,sun4i-a10-mali
+               - allwinner,sun7i-a20-mali
+               - allwinner,sun8i-h3-mali
++              - allwinner,sun8i-r40-mali
+               - allwinner,sun50i-a64-mali
+               - rockchip,rk3036-mali
+               - rockchip,rk3066-mali
+@@ -129,6 +130,7 @@ allOf:
+             enum:
+               - allwinner,sun4i-a10-mali
+               - allwinner,sun7i-a20-mali
++              - allwinner,sun8i-r40-mali
+               - allwinner,sun50i-a64-mali
+               - allwinner,sun50i-h5-mali
+               - amlogic,meson8-mali
+--=20
+2.28.0
 
-> With regard to Dave's earlier point around seeing excessively sized bio
-> chains.. If I set up a large memory box with high dirty mem ratios and
-> do contiguous buffered overwrites over a 32GB range followed by fsync, I
-> can see upwards of 1GB per bio and thus chains on the order of 32+ bios
-> for the entire write. If I play games with how the buffered overwrite is
-> submitted (i.e., in reverse) however, then I can occasionally reproduce
-> a ~32GB chain of ~32k bios, which I think is what leads to problems in
-> I/O completion on some systems. Granted, I don't reproduce soft lockup
-> issues on my system with that behavior, so perhaps there's more to that
-> particular issue.
-> 
-> Regardless, it seems reasonable to me to at least have a conservative
-> limit on the length of an ioend bio chain. Would anybody object to
-> iomap_ioend growing a chain counter and perhaps forcing into a new ioend
-> if we chain something like more than 1k bios at once?
-
-So what exactly is the problem of processing a long chain in the
-workqueue vs multiple small chains?  Maybe we need a cond_resched()
-here and there, but I don't see how we'd substantially change behavior.
