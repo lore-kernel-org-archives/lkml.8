@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F07CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A23EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7A4D2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4B42078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cd1si9Xp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oOk8U/QD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgHXPSf (ORCPT
+        id S1727992AbgHXPXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:18:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39718 "EHLO
+        Mon, 24 Aug 2020 11:23:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgHXPG5 (ORCPT
+        with ESMTP id S1727838AbgHXPR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:06:57 -0400
+        Mon, 24 Aug 2020 11:17:56 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9561C061796;
-        Mon, 24 Aug 2020 07:55:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F914C06179B;
+        Mon, 24 Aug 2020 08:17:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=PHm5fMNB8ZZgdRcktW4dLlLzoT8t70NROW9gjEwt3r8=; b=Cd1si9Xppq69WitlxSU+3lK401
-        x5ocJ20OiXVPCUyr47XVUJE05GvIRgSpXShDd7Dx3dhVbkLPYWb+vXiJnWuR9JFvipXP+tVskYrtx
-        /AqUQwtxGaRbYBcS25tanxCTzqyBrvEl3SAm2qCEAiY/xohFdRgrHUESaKlTdy1jvoqQkEMb+hinH
-        SfbsHzJzKFEVeIdhw1HgGEKAe5YC+zFWGwnsjs3Pymeb/HgdSMbY068p1bX+a/HRJGB8yS4tDksJ3
-        OOOIaOnZPhoxc83JrfwKcoPVnkVI0pLbgwmjlecZTt4donrJQUj5hzr+ROleN6OWLObS/xuJqzoWG
-        SFHtlkDA==;
+        bh=Huo6sRbyJX9efH4aMnmRbcXQABN82YlWzJMQK7nzbq8=; b=oOk8U/QDtTn5eoOaAbpATFETeZ
+        RO5j/88tOn7AiH6SAv7tSpzye6OMyYDvhOKVfTs9Rv04yGxu1zLhlxg2z5pBJDB3qNzoFAvQ2YZCK
+        Xc2BwJyRybfzVEhAhLVarz3sEuywitv0peWEW7G2anq/cOFH0oDDER1Nwhy9zpVLuSlIadNEqpDtB
+        YTeLFVX5FCN00qjYm83jsVT7jyxAXHkOE/DwswSNis1nLInBZBlg8B2N7vNAz+TnYKGhrjq5omxpv
+        b6ZHaMFKe8uinPq6Hdn0gW65hyGzXYlGYw3YUbAnXVupRW3Sdgyln54DIVwUv42pL0M6WOyvXnQQ8
+        ZiFY94nQ==;
 Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kADsR-0002mX-4j; Mon, 24 Aug 2020 14:55:15 +0000
+        id 1kAEDZ-0004E1-RG; Mon, 24 Aug 2020 15:17:05 +0000
 From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
 To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 7/9] iomap: Convert write_count to byte count
-Date:   Mon, 24 Aug 2020 15:55:08 +0100
-Message-Id: <20200824145511.10500-8-willy@infradead.org>
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 11/11] iomap: Handle tail pages in iomap_page_mkwrite
+Date:   Mon, 24 Aug 2020 16:17:00 +0100
+Message-Id: <20200824151700.16097-12-willy@infradead.org>
 X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20200824145511.10500-1-willy@infradead.org>
-References: <20200824145511.10500-1-willy@infradead.org>
+In-Reply-To: <20200824151700.16097-1-willy@infradead.org>
+References: <20200824151700.16097-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,58 +57,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of counting bio segments, count the number of bytes submitted.
-This insulates us from the block layer's definition of what a 'same page'
-is, which is not necessarily clear once THPs are involved.
+iomap_page_mkwrite() can be called with a tail page.  If we are,
+operate on the head page, since we're treating the entire thing as a
+single unit and the whole page is dirtied at the same time.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/iomap/buffered-io.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ fs/iomap/buffered-io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index c9b44f86d166..8c6187a6f34e 100644
+index ca2aa1995519..eb8202424665 100644
 --- a/fs/iomap/buffered-io.c
 +++ b/fs/iomap/buffered-io.c
-@@ -1050,7 +1050,7 @@ EXPORT_SYMBOL_GPL(iomap_page_mkwrite);
+@@ -1043,7 +1043,7 @@ iomap_page_mkwrite_actor(struct inode *inode, loff_t pos, loff_t length,
  
- static void
- iomap_finish_page_writeback(struct inode *inode, struct page *page,
--		int error)
-+		int error, unsigned int len)
+ vm_fault_t iomap_page_mkwrite(struct vm_fault *vmf, const struct iomap_ops *ops)
  {
- 	struct iomap_page *iop = to_iomap_page(page);
- 
-@@ -1062,7 +1062,7 @@ iomap_finish_page_writeback(struct inode *inode, struct page *page,
- 	WARN_ON_ONCE(i_blocks_per_page(inode, page) > 1 && !iop);
- 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) <= 0);
- 
--	if (!iop || atomic_dec_and_test(&iop->write_count))
-+	if (!iop || atomic_sub_and_test(len, &iop->write_count))
- 		end_page_writeback(page);
- }
- 
-@@ -1096,7 +1096,8 @@ iomap_finish_ioend(struct iomap_ioend *ioend, int error)
- 
- 		/* walk each page on bio, ending page IO on them */
- 		bio_for_each_segment_all(bv, bio, iter_all)
--			iomap_finish_page_writeback(inode, bv->bv_page, error);
-+			iomap_finish_page_writeback(inode, bv->bv_page, error,
-+					bv->bv_len);
- 		bio_put(bio);
- 	}
- 	/* The ioend has been freed by bio_put() */
-@@ -1312,8 +1313,8 @@ iomap_add_to_ioend(struct inode *inode, loff_t offset, struct page *page,
- 
- 	merged = __bio_try_merge_page(wpc->ioend->io_bio, page, len, poff,
- 			&same_page);
--	if (iop && !same_page)
--		atomic_inc(&iop->write_count);
-+	if (iop)
-+		atomic_add(len, &iop->write_count);
- 
- 	if (!merged) {
- 		if (bio_full(wpc->ioend->io_bio, len)) {
+-	struct page *page = vmf->page;
++	struct page *page = thp_head(vmf->page);
+ 	struct inode *inode = file_inode(vmf->vma->vm_file);
+ 	unsigned long length;
+ 	loff_t offset;
 -- 
 2.28.0
 
