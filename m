@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E18C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F10EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A85921741
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4372087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258573;
-	bh=22Rhiqu71rCRioEpH8pUYQ6I0BMWTCOHnKEzfT7deRY=;
+	s=default; t=1598258576;
+	bh=3nDsga2bpnQ7gibh7J1sl5vVziLsJsa7Ai2+ydM4siQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DiIPYQ+d4gR6deRYR+uqo2ixbOQfJvMvjSCQYBeu9OTg4/ixY4GxmKK1BUnP8C5zw
-	 hZdv54tKck+3Lxa6gBdpBIDJM7LWEQvE6gXFKH/ZFNmn2Ly8innZf1CHyieu+ZB58Y
-	 t6H/dQZyEfvO/66vAFFT+3/HTi61vQaZf51QcQio=
+	b=uCKmktNFwHEBynQm3g/sDrOs2T6tEAJKGop2HfBNKZTNEPUBtnVKQEZQkVDuUgxdu
+	 XN+jC4tq8m1D/asUWCLe6lcCC5De1N27fVg/QtYCSCYO4BWQb+58ZDaEQBWGIC1dix
+	 R4HfYP3820qW+CCJSLyq4lkYh+7W2FhZFRRmrRXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgHXImw (ORCPT
+        id S1728995AbgHXImy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:42:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35024 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:42:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728649AbgHXImh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:42:37 -0400
+        id S1728671AbgHXImt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:42:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9A312075B;
-        Mon, 24 Aug 2020 08:42:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A8DC2075B;
+        Mon, 24 Aug 2020 08:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258556;
-        bh=22Rhiqu71rCRioEpH8pUYQ6I0BMWTCOHnKEzfT7deRY=;
+        s=default; t=1598258568;
+        bh=3nDsga2bpnQ7gibh7J1sl5vVziLsJsa7Ai2+ydM4siQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SzIzEVdB2t1C+EMGH55u+bh0CzAnAEOZI4y/FWJxEyrQ6VdD4Z3YVqYfTwVqgKcvk
-         XBBRBF7wZrVgxBR1nr2IQdIXs5i/am7MH3/yUG4EkGU8qfD32RMtGACPWJMKfBHqV7
-         tEvr5Q45FsW4yCTLuiWTuh9PWOQHrBpzPzGnd9jk=
+        b=je/j17Sq+t/j5sydvEwZvJlDq/GUJqsmzQmPkWgjBViMN2FPQq6tAAoDs5W4bBp0G
+         nek109R5dyRqrj70mvScTQKPXY6ZvA1qZHUNF4ZgM+MZfmI5IaN67fbLYJRqUfmbT+
+         7SXZVOdp+aLC/Dve51IGSZBWtUGp5G6CsA8YSRUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 087/124] ASoC: intel: Fix memleak in sst_media_open
-Date:   Mon, 24 Aug 2020 10:30:21 +0200
-Message-Id: <20200824082413.693679686@linuxfoundation.org>
+Subject: [PATCH 5.7 092/124] scsi: ufs: ti-j721e-ufs: Fix error return in ti_j721e_ufs_probe()
+Date:   Mon, 24 Aug 2020 10:30:26 +0200
+Message-Id: <20200824082413.946229004@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -61,48 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Jing Xiangfeng <jingxiangfeng@huawei.com>
 
-[ Upstream commit 062fa09f44f4fb3776a23184d5d296b0c8872eb9 ]
+[ Upstream commit 2138d1c918246e3d8193c3cb8b6d22d0bb888061 ]
 
-When power_up_sst() fails, stream needs to be freed
-just like when try_module_get() fails. However, current
-code is returning directly and ends up leaking memory.
+Fix to return error code PTR_ERR() from the error handling case instead of
+0.
 
-Fixes: 0121327c1a68b ("ASoC: Intel: mfld-pcm: add control for powering up/down dsp")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200813084112.26205-1-dinghao.liu@zju.edu.cn
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20200806070135.67797-1-jingxiangfeng@huawei.com
+Fixes: 22617e216331 ("scsi: ufs: ti-j721e-ufs: Fix unwinding of pm_runtime changes")
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/atom/sst-mfld-platform-pcm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ti-j721e-ufs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/intel/atom/sst-mfld-platform-pcm.c b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-index 82f2b6357778d..a3cb05d925846 100644
---- a/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-+++ b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-@@ -331,7 +331,7 @@ static int sst_media_open(struct snd_pcm_substream *substream,
- 
- 	ret_val = power_up_sst(stream);
- 	if (ret_val < 0)
--		return ret_val;
-+		goto out_power_up;
- 
- 	/* Make sure, that the period size is always even */
- 	snd_pcm_hw_constraint_step(substream->runtime, 0,
-@@ -340,8 +340,9 @@ static int sst_media_open(struct snd_pcm_substream *substream,
- 	return snd_pcm_hw_constraint_integer(runtime,
- 			 SNDRV_PCM_HW_PARAM_PERIODS);
- out_ops:
--	kfree(stream);
- 	mutex_unlock(&sst_lock);
-+out_power_up:
-+	kfree(stream);
- 	return ret_val;
- }
- 
+diff --git a/drivers/scsi/ufs/ti-j721e-ufs.c b/drivers/scsi/ufs/ti-j721e-ufs.c
+index 46bb905b4d6a9..eafe0db98d542 100644
+--- a/drivers/scsi/ufs/ti-j721e-ufs.c
++++ b/drivers/scsi/ufs/ti-j721e-ufs.c
+@@ -38,6 +38,7 @@ static int ti_j721e_ufs_probe(struct platform_device *pdev)
+ 	/* Select MPHY refclk frequency */
+ 	clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(clk)) {
++		ret = PTR_ERR(clk);
+ 		dev_err(dev, "Cannot claim MPHY clock.\n");
+ 		goto clk_err;
+ 	}
 -- 
 2.25.1
 
