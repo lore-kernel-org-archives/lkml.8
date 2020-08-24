@@ -2,154 +2,154 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32573C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB95C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1489B206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9FD42072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbgHXJD1 (ORCPT
+        id S1730838AbgHXJCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:03:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56362 "EHLO mx2.suse.de"
+        Mon, 24 Aug 2020 05:02:36 -0400
+Received: from 8bytes.org ([81.169.241.247]:37840 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730752AbgHXJCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:02:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9313AB74E;
-        Mon, 24 Aug 2020 09:03:09 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 76A931E1316; Mon, 24 Aug 2020 11:02:39 +0200 (CEST)
-Date:   Mon, 24 Aug 2020 11:02:39 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Yang Shi <shy828301@gmail.com>
-Cc:     jack@suse.cz, akpm@linux-foundation.org, stable@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: madvise: fix vma user-after-free
-Message-ID: <20200824090239.GA24877@quack2.suse.cz>
-References: <20200816141204.162624-1-shy828301@gmail.com>
+        id S1730574AbgHXI4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:38 -0400
+Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 248CC12E7;
+        Mon, 24 Aug 2020 10:56:30 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v6 72/76] x86/head/64: Rename start_cpu0
+Date:   Mon, 24 Aug 2020 10:55:07 +0200
+Message-Id: <20200824085511.7553-73-joro@8bytes.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
+References: <20200824085511.7553-1-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200816141204.162624-1-shy828301@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 16-08-20 07:12:04, Yang Shi wrote:
-> The syzbot reported the below use-after-free:
-> 
-> BUG: KASAN: use-after-free in madvise_willneed mm/madvise.c:293 [inline]
-> BUG: KASAN: use-after-free in madvise_vma mm/madvise.c:942 [inline]
-> BUG: KASAN: use-after-free in do_madvise.part.0+0x1c8b/0x1cf0 mm/madvise.c:1145
-> Read of size 8 at addr ffff8880a6163eb0 by task syz-executor.0/9996
-> 
-> CPU: 0 PID: 9996 Comm: syz-executor.0 Not tainted 5.9.0-rc1-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x18f/0x20d lib/dump_stack.c:118
->  print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
->  __kasan_report mm/kasan/report.c:513 [inline]
->  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
->  madvise_willneed mm/madvise.c:293 [inline]
->  madvise_vma mm/madvise.c:942 [inline]
->  do_madvise.part.0+0x1c8b/0x1cf0 mm/madvise.c:1145
->  do_madvise mm/madvise.c:1169 [inline]
->  __do_sys_madvise mm/madvise.c:1171 [inline]
->  __se_sys_madvise mm/madvise.c:1169 [inline]
->  __x64_sys_madvise+0xd9/0x110 mm/madvise.c:1169
->  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> RIP: 0033:0x45d4d9
-> Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f04f7464c78 EFLAGS: 00000246 ORIG_RAX: 000000000000001c
-> RAX: ffffffffffffffda RBX: 0000000000020800 RCX: 000000000045d4d9
-> RDX: 0000000000000003 RSI: 0000000000600003 RDI: 0000000020000000
-> RBP: 000000000118d020 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cfec
-> R13: 00007ffc579cce7f R14: 00007f04f74659c0 R15: 000000000118cfec
-> 
-> Allocated by task 9992:
->  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
->  kasan_set_track mm/kasan/common.c:56 [inline]
->  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
->  slab_post_alloc_hook mm/slab.h:518 [inline]
->  slab_alloc mm/slab.c:3312 [inline]
->  kmem_cache_alloc+0x138/0x3a0 mm/slab.c:3482
->  vm_area_alloc+0x1c/0x110 kernel/fork.c:347
->  mmap_region+0x8e5/0x1780 mm/mmap.c:1743
->  do_mmap+0xcf9/0x11d0 mm/mmap.c:1545
->  vm_mmap_pgoff+0x195/0x200 mm/util.c:506
->  ksys_mmap_pgoff+0x43a/0x560 mm/mmap.c:1596
->  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Freed by task 9992:
->  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
->  kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
->  kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
->  __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
->  __cache_free mm/slab.c:3418 [inline]
->  kmem_cache_free.part.0+0x67/0x1f0 mm/slab.c:3693
->  remove_vma+0x132/0x170 mm/mmap.c:184
->  remove_vma_list mm/mmap.c:2613 [inline]
->  __do_munmap+0x743/0x1170 mm/mmap.c:2869
->  do_munmap mm/mmap.c:2877 [inline]
->  mmap_region+0x257/0x1780 mm/mmap.c:1716
->  do_mmap+0xcf9/0x11d0 mm/mmap.c:1545
->  vm_mmap_pgoff+0x195/0x200 mm/util.c:506
->  ksys_mmap_pgoff+0x43a/0x560 mm/mmap.c:1596
->  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> It is because vma is accessed after releasing mmap_sem, but someone else
-> acquired the mmap_sem and the vma is gone.
-> 
-> Releasing mmap_sem after accessing vma should fix the problem.
-> 
-> Fixes: 692fe62433d4c ("mm: Handle MADV_WILLNEED through vfs_fadvise()")
-> Reported-by: syzbot+b90df26038d1d5d85c97@syzkaller.appspotmail.com
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: <stable@vger.kernel.org> v5.4+
-> Signed-off-by: Yang Shi <shy828301@gmail.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-Yeah, good catch! Thanks for fixing this. You can add:
+For SEV-ES this entry point will be used for restarting APs after they
+have been offlined. Remove the '0' from the name to reflect that.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20200724160336.5435-72-joro@8bytes.org
+---
+ arch/x86/include/asm/cpu.h | 2 +-
+ arch/x86/kernel/head_32.S  | 4 ++--
+ arch/x86/kernel/head_64.S  | 6 +++---
+ arch/x86/kernel/smpboot.c  | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-								Honza
-
-> ---
->  mm/madvise.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index dd1d43cf026d..d4aa5f776543 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -289,9 +289,9 @@ static long madvise_willneed(struct vm_area_struct *vma,
->  	 */
->  	*prev = NULL;	/* tell sys_madvise we drop mmap_lock */
->  	get_file(file);
-> -	mmap_read_unlock(current->mm);
->  	offset = (loff_t)(start - vma->vm_start)
->  			+ ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
-> +	mmap_read_unlock(current->mm);
->  	vfs_fadvise(file, offset, end - start, POSIX_FADV_WILLNEED);
->  	fput(file);
->  	mmap_read_lock(current->mm);
-> -- 
-> 2.26.2
-> 
+diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+index da78ccbd493b..1536b607971f 100644
+--- a/arch/x86/include/asm/cpu.h
++++ b/arch/x86/include/asm/cpu.h
+@@ -29,7 +29,7 @@ struct x86_cpu {
+ #ifdef CONFIG_HOTPLUG_CPU
+ extern int arch_register_cpu(int num);
+ extern void arch_unregister_cpu(int);
+-extern void start_cpu0(void);
++extern void start_cpu(void);
+ #ifdef CONFIG_DEBUG_HOTPLUG_CPU0
+ extern int _debug_hotplug_cpu(int cpu, int action);
+ #endif
+diff --git a/arch/x86/kernel/head_32.S b/arch/x86/kernel/head_32.S
+index 7ed84c282233..f63e1b7f4141 100644
+--- a/arch/x86/kernel/head_32.S
++++ b/arch/x86/kernel/head_32.S
+@@ -143,12 +143,12 @@ SYM_CODE_END(startup_32)
+  * up already except stack. We just set up stack here. Then call
+  * start_secondary().
+  */
+-SYM_FUNC_START(start_cpu0)
++SYM_FUNC_START(start_cpu)
+ 	movl initial_stack, %ecx
+ 	movl %ecx, %esp
+ 	call *(initial_code)
+ 1:	jmp 1b
+-SYM_FUNC_END(start_cpu0)
++SYM_FUNC_END(start_cpu)
+ #endif
+ 
+ /*
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index a708107688a2..352311c5d8d1 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -309,15 +309,15 @@ SYM_CODE_END(secondary_startup_64)
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+ /*
+- * Boot CPU0 entry point. It's called from play_dead(). Everything has been set
++ * CPU entry point. It's called from play_dead(). Everything has been set
+  * up already except stack. We just set up stack here. Then call
+  * start_secondary() via .Ljump_to_C_code.
+  */
+-SYM_CODE_START(start_cpu0)
++SYM_CODE_START(start_cpu)
+ 	UNWIND_HINT_EMPTY
+ 	movq	initial_stack(%rip), %rsp
+ 	jmp	.Ljump_to_C_code
+-SYM_CODE_END(start_cpu0)
++SYM_CODE_END(start_cpu)
+ #endif
+ 
+ 	/* Both SMP bootup and ACPI suspend change these variables */
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index fb55d28332e2..c6311c55b84c 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1726,7 +1726,7 @@ static inline void mwait_play_dead(void)
+ 		 * If NMI wants to wake up CPU0, start CPU0.
+ 		 */
+ 		if (wakeup_cpu0())
+-			start_cpu0();
++			start_cpu();
+ 	}
+ }
+ 
+@@ -1741,7 +1741,7 @@ void hlt_play_dead(void)
+ 		 * If NMI wants to wake up CPU0, start CPU0.
+ 		 */
+ 		if (wakeup_cpu0())
+-			start_cpu0();
++			start_cpu();
+ 	}
+ }
+ 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.28.0
+
