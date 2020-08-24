@@ -6,67 +6,65 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A412FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71B1D2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE8F52063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598275999;
-	bh=RwBqFz941Jt/SoLTcwza2Sjh1YRsxek+wKn59iLih64=;
+	s=default; t=1598276043;
+	bh=rbqXQJGmHZXen0FPJYIQEZ+d/rRSjBw4X5GiaHWayBI=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=LoNzA7yB5qWcufn3r5egSBJfLSgfRTE/GmcKKur0zpMBo7igcTxNYWdbtT03AZMx0
-	 inJBaZupVme/cdxlYM+AOq3zFoX5sXHW/KdjHHGoAS705+bBHhmx3snuZw6IopkHgI
-	 t9YawgbMCNaDlMcwKxcHJ98CvROgsiJmvKPzQK/g=
+	b=nWkGmdP0BTkfD+n/X/3InmJZL1qyofdBjBhhoEoo+lfVWE07Fseb7v9BmIZw69YeM
+	 ZY1qFEwM1DfhLgqtwnisz7dGHwTu+VR3tu3MJPl8MSN12+4VyOM/srTPIEvuS/i9Jq
+	 idukKvhApvEvPSusYxqRFRbxDp2SYPA+7UAZaN5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgHXNdO (ORCPT
+        id S1727110AbgHXNeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:33:14 -0400
+        Mon, 24 Aug 2020 09:34:01 -0400
 Received: from mail.kernel.org ([198.145.29.99]:58574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727110AbgHXNcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:32:22 -0400
+        id S1727781AbgHXNci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 09:32:38 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E297E2063A;
-        Mon, 24 Aug 2020 13:32:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3151207CD;
+        Mon, 24 Aug 2020 13:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598275942;
-        bh=RwBqFz941Jt/SoLTcwza2Sjh1YRsxek+wKn59iLih64=;
+        s=default; t=1598275958;
+        bh=rbqXQJGmHZXen0FPJYIQEZ+d/rRSjBw4X5GiaHWayBI=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=VDJob3z4g8SfZlGkZJdO47OAJ3aFcr1Pysg+cEPSPqc6ZdbgCzYTclHQKwmkRofP7
-         OR+Swz/nxkb+Iri0+EMFCZfLp5EISySn/gWdK3XMFGzCvpCqks8BEaVth9W/mxJnZ9
-         YMDRc6tqs4At4z4nENzBNfPmEgqf1uU8ud/Mux0I=
-Date:   Mon, 24 Aug 2020 14:31:48 +0100
+        b=Z7PF7QeBSX1TxnlAcCetcFjQLQcBSXqt3dXnI8fV/cAIKdGlDR6kreZQnHugIyXgq
+         oPBS4pAqwfYYKT7hnGiMG/48cBiCpVHRFuS738g8DStk2XgRxjWaUbWXXmQLMWKaf0
+         N5smIXS15CzR4+khDL2Dx7WS2G7+l12pVCToJ3V0=
+Date:   Mon, 24 Aug 2020 14:32:03 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20200824102402.4047fa5f@xhacker.debian>
-References: <20200824102402.4047fa5f@xhacker.debian>
-Subject: Re: [PATCH] regulator: mp886x: use "mps,switch-frequency-hz"
-Message-Id: <159827590802.48129.18246424059084988195.b4-ty@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, angelo.dureghello@timesys.com,
+        linux-spi@vger.kernel.org
+In-Reply-To: <20200823212657.2400075-1-olteanv@gmail.com>
+References: <20200823212657.2400075-1-olteanv@gmail.com>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: delete EOQ transfer mode
+Message-Id: <159827591891.48232.1958676153438917876.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020 10:32:14 +0800, Jisheng Zhang wrote:
-> As Rob suggested, use the "mps,switch-frequency-hz" instead of the
-> "mps,switch-frequency" for switch frequency. Fortunately, the switch
-> frequency support isn't released, so we can modify it now without
-> any concern.
+On Mon, 24 Aug 2020 00:26:57 +0300, Vladimir Oltean wrote:
+> After the only user of the limited EOQ mode has now been converted to
+> DMA as of commit b09058bbf5f0 ("spi: spi-fsl-dspi: set ColdFire to DMA
+> mode"), we can finally delete this code.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] regulator: mp886x: use "mps,switch-frequency-hz"
-      commit: a5f7949570dc7262d3239739b0cdaa001f935d4b
+[1/1] spi: spi-fsl-dspi: delete EOQ transfer mode
+      commit: 20c05a05506361a6c355e9944d5616f5ed1e01c8
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
