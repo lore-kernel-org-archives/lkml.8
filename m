@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEB9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B714C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 705E3206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FC1206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259708;
-	bh=6s+LfmSm2tHtB+r5qdc2/fKe1QoC776GhXu++sKHNeA=;
+	s=default; t=1598259713;
+	bh=gvxWGObIISxo8YhAfmnja7GbJmXOyz9fmBcQ6SQKT3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1N5vfs3rLPCtvEP6ttPKT0WIb0L52VTSMyt1KlY3pBqu0O3RcAIYbTHfmL2An5VW1
-	 ZxsVOE1fGT+AZPVxZkRWQ0ywn8DkuaNuN5+FV3bSxPtvT6CvhQ88KvKP+R+O3zJDP5
-	 cEwgIKDnIQUhkYnVsEgIHFH6b8fx9PoArL/c0AXQ=
+	b=lK/arxVVvqbb20QPDoFFc3VIwFR4/RIq5YFmnETsPVZaun06DcXQHDw3PXu13qBmP
+	 gl5mIQ8VlNchNsm88N+woc9Ue4tfVLJs7PkDdUZbEUBUt5QNKNBMjdCz3WKpLpg2RA
+	 T2juxkUXr2FRPBjFdAA8C/tKJ7Jk29CAgV28wW0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbgHXJBr (ORCPT
+        id S1730581AbgHXI4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:01:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42754 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:56:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730569AbgHXI4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:46 -0400
+        id S1730420AbgHXIz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:55:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBE20206F0;
-        Mon, 24 Aug 2020 08:56:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C1DA206F0;
+        Mon, 24 Aug 2020 08:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259405;
-        bh=6s+LfmSm2tHtB+r5qdc2/fKe1QoC776GhXu++sKHNeA=;
+        s=default; t=1598259357;
+        bh=gvxWGObIISxo8YhAfmnja7GbJmXOyz9fmBcQ6SQKT3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T2zC/U16X2h25EjyOoClUvVHRdp8b7lzXUJN1fBlZ2wbdRhHGybJGP0hvrB7sYAN1
-         aClBLaMN02hBgnW5D6xAm/NXLviZvpzyuORbi/o4/FTEJXwc52c5yZAo1bFgK3mcVx
-         m0wkm2DQYXYiB4AVvNoB88zfB67bDI9taH8ckGJM=
+        b=C+15SiLIdJ6bm4MCJs/SqXs/uEq+Art5RXJxuNKLmgJcfeCY18Zcpgka6B81giHg5
+         538cCny1X7t6T78lqeTF4PhOeARYgPs6woFPAFn5IhuPVZ0Qn0QP2QqetKdw+XKnXy
+         sE4v79HKcgOt1dXaqCPWuYiaq/pEiMY1t+eWMlFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 46/71] bonding: fix a potential double-unregister
-Date:   Mon, 24 Aug 2020 10:31:37 +0200
-Message-Id: <20200824082358.185932364@linuxfoundation.org>
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Chandan Babu R <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 29/71] xfs: fix inode quota reservation checks
+Date:   Mon, 24 Aug 2020 10:31:20 +0200
+Message-Id: <20200824082357.345408797@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -65,46 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit 832707021666411d04795c564a4adea5d6b94f17 ]
+[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
 
-When we tear down a network namespace, we unregister all
-the netdevices within it. So we may queue a slave device
-and a bonding device together in the same unregister queue.
+xfs_trans_dqresv is the function that we use to make reservations
+against resource quotas.  Each resource contains two counters: the
+q_core counter, which tracks resources allocated on disk; and the dquot
+reservation counter, which tracks how much of that resource has either
+been allocated or reserved by threads that are working on metadata
+updates.
 
-If the only slave device is non-ethernet, it would
-automatically unregister the bonding device as well. Thus,
-we may end up unregistering the bonding device twice.
+For disk blocks, we compare the proposed reservation counter against the
+hard and soft limits to decide if we're going to fail the operation.
+However, for inodes we inexplicably compare against the q_core counter,
+not the incore reservation count.
 
-Workaround this special case by checking reg_state.
+Since the q_core counter is always lower than the reservation count and
+we unlock the dquot between reservation and transaction commit, this
+means that multiple threads can reserve the last inode count before we
+hit the hard limit, and when they commit, we'll be well over the hard
+limit.
 
-Fixes: 9b5e383c11b0 ("net: Introduce unregister_netdevice_many()")
-Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix this by checking against the incore inode reservation counter, since
+we would appear to maintain that correctly (and that's what we report in
+GETQUOTA).
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_trans_dquot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 76fd5fc437ebe..ee7138a92d5e7 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2029,7 +2029,8 @@ static int  bond_release_and_destroy(struct net_device *bond_dev,
- 	int ret;
- 
- 	ret = __bond_release_one(bond_dev, slave_dev, false, true);
--	if (ret == 0 && !bond_has_slaves(bond)) {
-+	if (ret == 0 && !bond_has_slaves(bond) &&
-+	    bond_dev->reg_state != NETREG_UNREGISTERING) {
- 		bond_dev->priv_flags |= IFF_DISABLE_NETPOLL;
- 		netdev_info(bond_dev, "Destroying bond %s\n",
- 			    bond_dev->name);
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index c23257a26c2b8..b8f05d5909b59 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -657,7 +657,7 @@ xfs_trans_dqresv(
+ 			}
+ 		}
+ 		if (ninos > 0) {
+-			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
++			total_count = dqp->q_res_icount + ninos;
+ 			timer = be32_to_cpu(dqp->q_core.d_itimer);
+ 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
+ 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
 -- 
 2.25.1
 
