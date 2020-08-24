@@ -2,53 +2,51 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E83C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB8242074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9AF206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258807;
-	bh=Ge1Fv6LAeKyYdapeduUL5sLIMyaq4MqgxEoN828ffQ4=;
+	s=default; t=1598258809;
+	bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=motCUoBEBpzudwWCnNGfLaKYpiH07t6RKq87FWkBdJpV409Dkbu/6ApHBdxaZlcgj
-	 5rRYmhxH9lLbpRtrMiX1upoL7YGPVk9ZgRxEokp+nzA7c8bfH/4yi36sUdokZGCOFw
-	 5APFx69jR9jMrDk0F1rEFavabxxG2jy3mAnguwVc=
+	b=0zgQGNyQCpV1Brlr2YwILHwe5gghu8VZxXyUkPehXWI8zlqS5rPeZmndxb47J4+Tx
+	 cPAQ0nU82/oPazIecMfPFP7FC56Fsq/AY4PXdqVjTbZsHpj4rdC5Zybj7ONO7USJ2Z
+	 nM8rIh/R/ocR2i6AbxGUchCOStytK+C3KnRiAhHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgHXIqo (ORCPT
+        id S1729382AbgHXIqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:46:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45014 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:46:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728981AbgHXIqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:46:33 -0400
+        id S1729362AbgHXIqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:46:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA54E204FD;
-        Mon, 24 Aug 2020 08:46:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A2DA206F0;
+        Mon, 24 Aug 2020 08:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258792;
-        bh=Ge1Fv6LAeKyYdapeduUL5sLIMyaq4MqgxEoN828ffQ4=;
+        s=default; t=1598258795;
+        bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Spk5AdKlrkPhECphUtU8JhqPcTOswTM5U8mJaCM9XguZ7m1Ew5Atikh/x4hltROK7
-         KO6ekfGsy8y52p9dqyJZgVPczl636NlBy8m60/XqsGvhtM6kKLLOISz6I6Cl16/rtg
-         Q44BFA5v3p5Y2LdTcWrHkQMI6EsVokK+dctUtDbY=
+        b=ClHfQH1n9v4PQTs+Uqrdq6MeIuxox9RoN5CaAG5LXvslLJeVBnBCVGciHUZBTScr6
+         vyxkWK3YXoo76at0qCmt5Hq3oRKQZNpVBpZnS0ZwalQMwLnnhgpgm234r5/+/yi2FW
+         C10/6Fdx2u4AN4gFWkFYH2mURoxxTYd/9KabeLRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liang Chen <cl@rock-chips.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Chanho Park <chanho61.park@samsung.com>
-Subject: [PATCH 5.4 039/107] kthread: Do not preempt current task if it is going to call schedule()
-Date:   Mon, 24 Aug 2020 10:30:05 +0200
-Message-Id: <20200824082407.058908921@linuxfoundation.org>
+        stable@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 048/107] m68knommu: fix overwriting of bits in ColdFire V3 cache control
+Date:   Mon, 24 Aug 2020 10:30:14 +0200
+Message-Id: <20200824082407.512298026@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -61,76 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liang Chen <cl@rock-chips.com>
+From: Greg Ungerer <gerg@linux-m68k.org>
 
-commit 26c7295be0c5e6da3fa45970e9748be983175b1b upstream.
+[ Upstream commit bdee0e793cea10c516ff48bf3ebb4ef1820a116b ]
 
-when we create a kthread with ktrhead_create_on_cpu(),the child thread
-entry is ktread.c:ktrhead() which will be preempted by the parent after
-call complete(done) while schedule() is not called yet,then the parent
-will call wait_task_inactive(child) but the child is still on the runqueue,
-so the parent will schedule_hrtimeout() for 1 jiffy,it will waste a lot of
-time,especially on startup.
+The Cache Control Register (CACR) of the ColdFire V3 has bits that
+control high level caching functions, and also enable/disable the use
+of the alternate stack pointer register (the EUSP bit) to provide
+separate supervisor and user stack pointer registers. The code as
+it is today will blindly clear the EUSP bit on cache actions like
+invalidation. So it is broken for this case - and that will result
+in failed booting (interrupt entry and exit processing will be
+completely hosed).
 
-  parent                             child
-ktrhead_create_on_cpu()
-  wait_fo_completion(&done) -----> ktread.c:ktrhead()
-                             |----- complete(done);--wakeup and preempted by parent
- kthread_bind() <------------|  |-> schedule();--dequeue here
-  wait_task_inactive(child)     |
-   schedule_hrtimeout(1 jiffy) -|
+This only affects ColdFire V3 parts that support the alternate stack
+register (like the 5329 for example) - generally speaking new parts do,
+older parts don't. It has no impact on ColdFire V3 parts with the single
+stack pointer, like the 5307 for example.
 
-So we hope the child just wakeup parent but not preempted by parent, and the
-child is going to call schedule() soon,then the parent will not call
-schedule_hrtimeout(1 jiffy) as the child is already dequeue.
+Fix the cache bit defines used, so they maintain the EUSP bit when
+carrying out cache actions through the CACR register.
 
-The same issue for ktrhead_park()&&kthread_parkme().
-This patch can save 120ms on rk312x startup with CONFIG_HZ=300.
-
-Signed-off-by: Liang Chen <cl@rock-chips.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://lkml.kernel.org/r/20200306070133.18335-2-cl@rock-chips.com
-Signed-off-by: Chanho Park <chanho61.park@samsung.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kthread.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/m68k/include/asm/m53xxacr.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -199,8 +199,15 @@ static void __kthread_parkme(struct kthr
- 		if (!test_bit(KTHREAD_SHOULD_PARK, &self->flags))
- 			break;
+diff --git a/arch/m68k/include/asm/m53xxacr.h b/arch/m68k/include/asm/m53xxacr.h
+index 9138a624c5c81..692f90e7fecc1 100644
+--- a/arch/m68k/include/asm/m53xxacr.h
++++ b/arch/m68k/include/asm/m53xxacr.h
+@@ -89,9 +89,9 @@
+  * coherency though in all cases. And for copyback caches we will need
+  * to push cached data as well.
+  */
+-#define CACHE_INIT	  CACR_CINVA
+-#define CACHE_INVALIDATE  CACR_CINVA
+-#define CACHE_INVALIDATED CACR_CINVA
++#define CACHE_INIT        (CACHE_MODE + CACR_CINVA - CACR_EC)
++#define CACHE_INVALIDATE  (CACHE_MODE + CACR_CINVA)
++#define CACHE_INVALIDATED (CACHE_MODE + CACR_CINVA)
  
-+		/*
-+		 * Thread is going to call schedule(), do not preempt it,
-+		 * or the caller of kthread_park() may spend more time in
-+		 * wait_task_inactive().
-+		 */
-+		preempt_disable();
- 		complete(&self->parked);
--		schedule();
-+		schedule_preempt_disabled();
-+		preempt_enable();
- 	}
- 	__set_current_state(TASK_RUNNING);
- }
-@@ -245,8 +252,14 @@ static int kthread(void *_create)
- 	/* OK, tell user we're spawned, wait for stop or wakeup */
- 	__set_current_state(TASK_UNINTERRUPTIBLE);
- 	create->result = current;
-+	/*
-+	 * Thread is going to call schedule(), do not preempt it,
-+	 * or the creator may spend more time in wait_task_inactive().
-+	 */
-+	preempt_disable();
- 	complete(done);
--	schedule();
-+	schedule_preempt_disabled();
-+	preempt_enable();
- 
- 	ret = -EINTR;
- 	if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
+ #define ACR0_MODE	((CONFIG_RAMBASE & 0xff000000) + \
+ 			 (0x000f0000) + \
+-- 
+2.25.1
+
 
 
