@@ -5,53 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D7BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE5D204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 706E8207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258961;
-	bh=67NKfojbCGWv2hUDoau8jNJpjbEzin4x+MY9ySUplyM=;
+	s=default; t=1598258969;
+	bh=Szw6jA3d8Pxqmf1JA6WaAVW8AEfSzqqzAAso5Yu42xk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZVEBhMh95JNp//2vLioDqr9IDdQC0MW6hl9TZDpidio5/mrq2dYvhDMnYp6dJD6TM
-	 EaufbF/Wfh2BiLk52z5PDhzOmgrcnimWrvptKFEP5cNpT8qBA0KFFpl6pxTMrQo0dU
-	 USM8fZRoDWzlVqeG4v6m/Mtl+44X0+Q7ERR7M/TM=
+	b=nxWSpcJGFLGLFou+mu5huXIgNirEf2FdemsAvjQQjrBavhF2eScMD1OztynGSb3b+
+	 CvhqVqXOo6cgjCOXERdY0aktdjh3WjaYAgG3RXcdXvuAX1OBLTfqZPR4HNTAEug1S4
+	 tL6A4eZjS+tiAGZgimTeH4J1UD/d1RWL9z3hnw9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbgHXItU (ORCPT
+        id S1729439AbgHXIt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:49:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51350 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:49:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729675AbgHXItO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:49:14 -0400
+        id S1729688AbgHXItQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:49:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 504092072D;
-        Mon, 24 Aug 2020 08:49:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EFFB204FD;
+        Mon, 24 Aug 2020 08:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258953;
-        bh=67NKfojbCGWv2hUDoau8jNJpjbEzin4x+MY9ySUplyM=;
+        s=default; t=1598258956;
+        bh=Szw6jA3d8Pxqmf1JA6WaAVW8AEfSzqqzAAso5Yu42xk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qvj6KVhhu5/s50pXdxJqxWIEM25SmCl6zF8bJWycd/fiejVpvFmt5BkQJa4dPj3UA
-         /q6KsMZqWruZ39405s6+OiIbGf2EESTjS+l4gVCedk9ndTG9rwu1nHackU+IOS+cRn
-         PPeJkhQTus0nngo7jQbD7beXFPlPPMeDGyAZj5io=
+        b=qM3CDyAjh3iQesSUS3idK/NugNSkf+lX/swF0Lb6sNhIB+WBuWIe9Cln+60GykTzv
+         44usMxnzYu84MC9aWYeTgJSzYf43reMdCUlWEC5hE/ALvE59WFreOCq+ICvmFWDoys
+         69t7CAWW93jwegV+jdhgCyIq5bU6WfP90dlpz0Wg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Jarod Wilson <jarod@redhat.com>,
+        stable@vger.kernel.org,
+        Zhang Changzhong <zhangchangzhong@huawei.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 076/107] bonding: show saner speed for broadcast mode
-Date:   Mon, 24 Aug 2020 10:30:42 +0200
-Message-Id: <20200824082408.880725524@linuxfoundation.org>
+Subject: [PATCH 5.4 077/107] can: j1939: fix support for multipacket broadcast message
+Date:   Mon, 24 Aug 2020 10:30:43 +0200
+Message-Id: <20200824082408.931023464@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -64,77 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarod Wilson <jarod@redhat.com>
+From: Zhang Changzhong <zhangchangzhong@huawei.com>
 
-[ Upstream commit 4ca0d9ac3fd8f9f90b72a15d8da2aca3ffb58418 ]
+[ Upstream commit f4fd77fd87e9b214c26bb2ebd4f90055eaea5ade ]
 
-Broadcast mode bonds transmit a copy of all traffic simultaneously out of
-all interfaces, so the "speed" of the bond isn't really the aggregate of
-all interfaces, but rather, the speed of the slowest active interface.
+Currently j1939_tp_im_involved_anydir() in j1939_tp_recv() check the previously
+set flags J1939_ECU_LOCAL_DST and J1939_ECU_LOCAL_SRC of incoming skb, thus
+multipacket broadcast message was aborted by receive side because it may come
+from remote ECUs and have no exact dst address. Similarly, j1939_tp_cmd_recv()
+and j1939_xtp_rx_dat() didn't process broadcast message.
 
-Also, the type of the speed field is u32, not unsigned long, so adjust
-that accordingly, as required to make min() function here without
-complaining about mismatching types.
+So fix it by checking and process broadcast message in j1939_tp_recv(),
+j1939_tp_cmd_recv() and j1939_xtp_rx_dat().
 
-Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+Link: https://lore.kernel.org/r/1596599425-5534-2-git-send-email-zhangchangzhong@huawei.com
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ net/can/j1939/transport.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 499845c32b1bc..11c014586d466 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -4246,13 +4246,23 @@ static netdev_tx_t bond_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	return ret;
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index 90a2baac8a4aa..67189b4c482c5 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -1673,8 +1673,12 @@ static void j1939_xtp_rx_rts(struct j1939_priv *priv, struct sk_buff *skb,
+ 			return;
+ 		}
+ 		session = j1939_xtp_rx_rts_session_new(priv, skb);
+-		if (!session)
++		if (!session) {
++			if (cmd == J1939_TP_CMD_BAM && j1939_sk_recv_match(priv, skcb))
++				netdev_info(priv->ndev, "%s: failed to create TP BAM session\n",
++					    __func__);
+ 			return;
++		}
+ 	} else {
+ 		if (j1939_xtp_rx_rts_session_active(session, skb)) {
+ 			j1939_session_put(session);
+@@ -1852,6 +1856,13 @@ static void j1939_xtp_rx_dat(struct j1939_priv *priv, struct sk_buff *skb)
+ 		else
+ 			j1939_xtp_rx_dat_one(session, skb);
+ 	}
++
++	if (j1939_cb_is_broadcast(skcb)) {
++		session = j1939_session_get_by_addr(priv, &skcb->addr, false,
++						    false);
++		if (session)
++			j1939_xtp_rx_dat_one(session, skb);
++	}
  }
  
-+static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
-+{
-+	if (speed == 0 || speed == SPEED_UNKNOWN)
-+		speed = slave->speed;
-+	else
-+		speed = min(speed, slave->speed);
-+
-+	return speed;
-+}
-+
- static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
- 					   struct ethtool_link_ksettings *cmd)
- {
- 	struct bonding *bond = netdev_priv(bond_dev);
--	unsigned long speed = 0;
- 	struct list_head *iter;
- 	struct slave *slave;
-+	u32 speed = 0;
+ /* j1939 main intf */
+@@ -1943,7 +1954,7 @@ static void j1939_tp_cmd_recv(struct j1939_priv *priv, struct sk_buff *skb)
+ 		if (j1939_tp_im_transmitter(skcb))
+ 			j1939_xtp_rx_rts(priv, skb, true);
  
- 	cmd->base.duplex = DUPLEX_UNKNOWN;
- 	cmd->base.port = PORT_OTHER;
-@@ -4264,8 +4274,13 @@ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
- 	 */
- 	bond_for_each_slave(bond, slave, iter) {
- 		if (bond_slave_can_tx(slave)) {
--			if (slave->speed != SPEED_UNKNOWN)
--				speed += slave->speed;
-+			if (slave->speed != SPEED_UNKNOWN) {
-+				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
-+					speed = bond_mode_bcast_speed(slave,
-+								      speed);
-+				else
-+					speed += slave->speed;
-+			}
- 			if (cmd->base.duplex == DUPLEX_UNKNOWN &&
- 			    slave->duplex != DUPLEX_UNKNOWN)
- 				cmd->base.duplex = slave->duplex;
+-		if (j1939_tp_im_receiver(skcb))
++		if (j1939_tp_im_receiver(skcb) || j1939_cb_is_broadcast(skcb))
+ 			j1939_xtp_rx_rts(priv, skb, false);
+ 
+ 		break;
+@@ -2007,7 +2018,7 @@ int j1939_tp_recv(struct j1939_priv *priv, struct sk_buff *skb)
+ {
+ 	struct j1939_sk_buff_cb *skcb = j1939_skb_to_cb(skb);
+ 
+-	if (!j1939_tp_im_involved_anydir(skcb))
++	if (!j1939_tp_im_involved_anydir(skcb) && !j1939_cb_is_broadcast(skcb))
+ 		return 0;
+ 
+ 	switch (skcb->addr.pgn) {
 -- 
 2.25.1
 
