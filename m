@@ -2,51 +2,53 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACACAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A488EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 815CA206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82469207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262758;
-	bh=FHuqGYt9PkW0yhIUAUqjGzka7TWB2CLzxU6+I4s4Uao=;
+	s=default; t=1598262761;
+	bh=Uhj6dEJu6AGEjcDWmhyIdamP5e5R5Xf5Z/7H+u4JIm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nb7XFgLWOkTgJdNjIX11TMPCBgT43xEwFKH+t9/MUybWsPDHNrO54N9HkXR8TOvAS
-	 AJuQaFqn0ZmNCPMAICc2VVkHf6/k7mjLxk0jSpoUac3Z9bJ4xl9SLjEKmnAcSRrVTv
-	 5XB/7iFwDBGfFny7FuAEmGXbXb9oWW//EPdqovec=
+	b=RZg0WVTPFWFplN139nC9zRWjNKmCWv/anjZGIgxnd3O3HHIH2DBz5cSrAuvSL2o3B
+	 wdb6TobSzQREaW0JL786FoJpSGCW8Eh9oD0Qaapp6fxgA0fnJtbUatablDheUZ7fOv
+	 Zz69KbSf/4LQpNq5cdR0CnWPtCHk0fazGMxYmJaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgHXJwg (ORCPT
+        id S1729095AbgHXJwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:52:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53594 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:52:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727838AbgHXIin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:38:43 -0400
+        id S1728535AbgHXIij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:38:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 007482177B;
-        Mon, 24 Aug 2020 08:38:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C19A2177B;
+        Mon, 24 Aug 2020 08:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258323;
-        bh=FHuqGYt9PkW0yhIUAUqjGzka7TWB2CLzxU6+I4s4Uao=;
+        s=default; t=1598258318;
+        bh=Uhj6dEJu6AGEjcDWmhyIdamP5e5R5Xf5Z/7H+u4JIm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eJlpLk/0ovcFkFji45on960UdUCwK/FBJ7RrUnPUyW3yzxKqiVMy9x5Loq8mQpkUo
-         y87Lvx/ldW4VDsHVRjz9ZbQddkJVMWJC8aLNY9yBqRtxzqqJskbdSARXcNVtzvZI9k
-         JzqpqQ4so+NuZj1CbsBdQmQqsUX1hojb1u8swQ3w=
+        b=DIuWo2TRmW1cvdEXyHxiGYw3qOYCnOuMtveD4qIjVOfXfd/LzfJp31k3FcCPYlFdK
+         msJrbOBZ9orv7ETqGBZDj2t6tN21RZVRjdZJb8Rvw1jhg5NXIYv3xuEZS0HBZpJRdr
+         VCJfVAQSKkQc8GGSY9zl00CduSwi1nXnotAyO4wc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 5.8 147/148] efi/libstub: Handle unterminated cmdline
-Date:   Mon, 24 Aug 2020 10:30:45 +0200
-Message-Id: <20200824082421.065889947@linuxfoundation.org>
+        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 115/148] scsi: ufs-pci: Add quirk for broken auto-hibernate for Intel EHL
+Date:   Mon, 24 Aug 2020 10:30:13 +0200
+Message-Id: <20200824082419.519204503@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -59,44 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 8a8a3237a78cbc0557f0eb16a89f16d616323e99 upstream.
+[ Upstream commit 8da76f71fef7d8a1a72af09d48899573feb60065 ]
 
-Make the command line parsing more robust, by handling the case it is
-not NUL-terminated.
+Intel EHL UFS host controller advertises auto-hibernate capability but it
+does not work correctly. Add a quirk for that.
 
-Use strnlen instead of strlen, and make sure that the temporary copy is
-NUL-terminated before parsing.
+[mkp: checkpatch fix]
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Link: https://lore.kernel.org/r/20200813185811.554051-4-nivedita@alum.mit.edu
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20200810141024.28859-1-adrian.hunter@intel.com
+Fixes: 8c09d7527697 ("scsi: ufshdc-pci: Add Intel PCI IDs for EHL")
+Acked-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/libstub/efi-stub-helper.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufshcd-pci.c | 16 ++++++++++++++--
+ drivers/scsi/ufs/ufshcd.h     |  9 ++++++++-
+ 2 files changed, 22 insertions(+), 3 deletions(-)
 
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -194,12 +194,14 @@ efi_status_t efi_parse_options(char cons
- 	if (!cmdline)
- 		return EFI_SUCCESS;
+diff --git a/drivers/scsi/ufs/ufshcd-pci.c b/drivers/scsi/ufs/ufshcd-pci.c
+index 8f78a81514991..b220666774ce8 100644
+--- a/drivers/scsi/ufs/ufshcd-pci.c
++++ b/drivers/scsi/ufs/ufshcd-pci.c
+@@ -67,11 +67,23 @@ static int ufs_intel_link_startup_notify(struct ufs_hba *hba,
+ 	return err;
+ }
  
--	len = strlen(cmdline) + 1;
-+	len = strnlen(cmdline, COMMAND_LINE_SIZE - 1) + 1;
- 	status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, len, (void **)&buf);
- 	if (status != EFI_SUCCESS)
- 		return status;
++static int ufs_intel_ehl_init(struct ufs_hba *hba)
++{
++	hba->quirks |= UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8;
++	return 0;
++}
++
+ static struct ufs_hba_variant_ops ufs_intel_cnl_hba_vops = {
+ 	.name                   = "intel-pci",
+ 	.link_startup_notify	= ufs_intel_link_startup_notify,
+ };
  
--	str = skip_spaces(memcpy(buf, cmdline, len));
-+	memcpy(buf, cmdline, len - 1);
-+	buf[len - 1] = '\0';
-+	str = skip_spaces(buf);
++static struct ufs_hba_variant_ops ufs_intel_ehl_hba_vops = {
++	.name                   = "intel-pci",
++	.init			= ufs_intel_ehl_init,
++	.link_startup_notify	= ufs_intel_link_startup_notify,
++};
++
+ #ifdef CONFIG_PM_SLEEP
+ /**
+  * ufshcd_pci_suspend - suspend power management function
+@@ -200,8 +212,8 @@ static const struct dev_pm_ops ufshcd_pci_pm_ops = {
+ static const struct pci_device_id ufshcd_pci_tbl[] = {
+ 	{ PCI_VENDOR_ID_SAMSUNG, 0xC00C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0 },
+ 	{ PCI_VDEVICE(INTEL, 0x9DFA), (kernel_ulong_t)&ufs_intel_cnl_hba_vops },
+-	{ PCI_VDEVICE(INTEL, 0x4B41), (kernel_ulong_t)&ufs_intel_cnl_hba_vops },
+-	{ PCI_VDEVICE(INTEL, 0x4B43), (kernel_ulong_t)&ufs_intel_cnl_hba_vops },
++	{ PCI_VDEVICE(INTEL, 0x4B41), (kernel_ulong_t)&ufs_intel_ehl_hba_vops },
++	{ PCI_VDEVICE(INTEL, 0x4B43), (kernel_ulong_t)&ufs_intel_ehl_hba_vops },
+ 	{ }	/* terminate list */
+ };
  
- 	while (*str) {
- 		char *param, *val;
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index e38e9e0af6b59..4bf98c2295372 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -549,6 +549,12 @@ enum ufshcd_quirks {
+ 	 * OCS FATAL ERROR with device error through sense data
+ 	 */
+ 	UFSHCD_QUIRK_BROKEN_OCS_FATAL_ERROR		= 1 << 10,
++
++	/*
++	 * This quirk needs to be enabled if the host controller has
++	 * auto-hibernate capability but it doesn't work.
++	 */
++	UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8		= 1 << 11,
+ };
+ 
+ enum ufshcd_caps {
+@@ -815,7 +821,8 @@ return true;
+ 
+ static inline bool ufshcd_is_auto_hibern8_supported(struct ufs_hba *hba)
+ {
+-	return (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT);
++	return (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT) &&
++		!(hba->quirks & UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8);
+ }
+ 
+ static inline bool ufshcd_is_auto_hibern8_enabled(struct ufs_hba *hba)
+-- 
+2.25.1
+
 
 
