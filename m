@@ -2,74 +2,115 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D2FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A976120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5183520738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598290032;
+	bh=D4wbElo+7hz1YSqoVSQSjLQRgc+PCehuAlFXAJencUk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mrULhJQx3eeHURl+J9a1Hp7x2kT+AVHwbLoaXkoBj9wRKngdlW8Fgtgy7DYmDEWaz
+	 mAQ7Wgk0gW/rJz3UYc14vzPRToOFSuLzXLgNYIU/ZsnDmzyHkHFRAjz7xCT4UFEz57
+	 QqzTK8g78qceY4KI48fW5PM78tKHClH3JfeAxubY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgHXR0T (ORCPT
+        id S1728140AbgHXR1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:26:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbgHXRZv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:25:51 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB95CC061573;
-        Mon, 24 Aug 2020 10:25:48 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 14DB3128885BD;
-        Mon, 24 Aug 2020 10:09:02 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 10:25:45 -0700 (PDT)
-Message-Id: <20200824.102545.1450838041398463071.davem@davemloft.net>
-To:     aranea@aixah.de
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] veth: Initialize dev->perm_addr
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200824143828.5964-1-aranea@aixah.de>
-References: <20200824143828.5964-1-aranea@aixah.de>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Aug 2020 10:09:02 -0700 (PDT)
+        Mon, 24 Aug 2020 13:27:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728250AbgHXQfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:35:37 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3605520578;
+        Mon, 24 Aug 2020 16:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598286937;
+        bh=D4wbElo+7hz1YSqoVSQSjLQRgc+PCehuAlFXAJencUk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XzKl6pFC/pHcQm8qWntUTElDsY3u8OWJoxGJtG4yNM4+ZnRxrgwt/J20ZcLhcM3eq
+         eWzSccRG2WMDJHAXuMXGiFIQK5RLDFABnmWft5wyq4PoKRlby7K4LRKQM+eq2r9gAO
+         2hP/eag/Zas73nT7fsU9rxND45pBNWx+XZHP75DI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 24/63] libbpf: Prevent overriding errno when logging errors
+Date:   Mon, 24 Aug 2020 12:34:24 -0400
+Message-Id: <20200824163504.605538-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
+References: <20200824163504.605538-1-sashal@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mira Ressel <aranea@aixah.de>
-Date: Mon, 24 Aug 2020 14:38:26 +0000
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-> Set the perm_addr of veth devices to whatever MAC has been assigned to
-> the device. Otherwise, it remains all zero, with the consequence that
-> ipv6_generate_stable_address() (which is used if the sysctl
-> net.ipv6.conf.DEV.addr_gen_mode is set to 2 or 3) assigns every veth
-> interface on a host the same link-local address.
-> 
-> The new behaviour matches that of several other virtual interface types
-> (such as gre), and as far as I can tell, perm_addr isn't used by any
-> other code sites that are relevant to veth.
-> 
-> Signed-off-by: Mira Ressel <aranea@aixah.de>
- ...
-> @@ -1342,6 +1342,8 @@ static int veth_newlink(struct net *src_net, struct net_device *dev,
->  	if (!ifmp || !tbp[IFLA_ADDRESS])
->  		eth_hw_addr_random(peer);
->  
-> +	memcpy(peer->perm_addr, peer->dev_addr, peer->addr_len);
+[ Upstream commit 23ab656be263813acc3c20623757d3cd1496d9e1 ]
 
-Semantically don't you want to copy over the peer->perm_addr?
+Turns out there were a few more instances where libbpf didn't save the
+errno before writing an error message, causing errno to be overridden by
+the printf() return and the error disappearing if logging is enabled.
 
-Otherwise this loses the entire point of the permanent address, and
-what the ipv6 address generation facility expects.
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200813142905.160381-1-toke@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/lib/bpf/libbpf.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 11e4725b8b1c0..e8e88c1ab69de 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -3319,10 +3319,11 @@ bpf_object__probe_global_data(struct bpf_object *obj)
+ 
+ 	map = bpf_create_map_xattr(&map_attr);
+ 	if (map < 0) {
+-		cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
++		ret = -errno;
++		cp = libbpf_strerror_r(ret, errmsg, sizeof(errmsg));
+ 		pr_warn("Error in %s():%s(%d). Couldn't create simple array map.\n",
+-			__func__, cp, errno);
+-		return -errno;
++			__func__, cp, -ret);
++		return ret;
+ 	}
+ 
+ 	insns[0].imm = map;
+@@ -5775,9 +5776,10 @@ int bpf_program__pin_instance(struct bpf_program *prog, const char *path,
+ 	}
+ 
+ 	if (bpf_obj_pin(prog->instances.fds[instance], path)) {
+-		cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
++		err = -errno;
++		cp = libbpf_strerror_r(err, errmsg, sizeof(errmsg));
+ 		pr_warn("failed to pin program: %s\n", cp);
+-		return -errno;
++		return err;
+ 	}
+ 	pr_debug("pinned program '%s'\n", path);
+ 
+-- 
+2.25.1
+
