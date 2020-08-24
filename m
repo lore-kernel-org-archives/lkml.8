@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DDCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 990CA2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26282074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:41:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JMBfFYqJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUmO5RNk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgHXSlu (ORCPT
+        id S1726719AbgHXSlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:41:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45034 "EHLO
+        Mon, 24 Aug 2020 14:41:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgHXSlp (ORCPT
+        with ESMTP id S1725998AbgHXSlx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:41:45 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0E1C061573;
-        Mon, 24 Aug 2020 11:41:45 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l191so2883240pgd.5;
-        Mon, 24 Aug 2020 11:41:45 -0700 (PDT)
+        Mon, 24 Aug 2020 14:41:53 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B82FC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:41:53 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 31so2739804pgy.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:41:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fFdgtfwZrc/kVc+fLHaAXwOBlYLh1Scshg8PrDPV2cA=;
-        b=JMBfFYqJssdNSpKeUnYwIYl16ci2D3KflwOOxfvM3CU9HPQiYllCH5sZjJPFSv7cRc
-         1fmivhMx1dEE/3e/XzIlSNWneWOqC/cCvVnVehH+9VJW3f5N31ucofST7kI3KW1XQgdB
-         XiVWya9r4ICUQOX0+77Xay6fR0AFrkVucVF5OuTzI33dNbktUe5Hebd1IK78Ddv7K0IA
-         r7LUfRXepbKvcNwNwlw/U1uBZVkJDUrROyPnBnj5pJvPHyQFrEl4PjqHT/hYiP/4sZTq
-         cb39WH8a6lTBuxtGkHAJ5OuHyeEqK5qDSMvNljF0qeTrTb0JeWGON4CMxhGVL+tnWK7m
-         EGsA==
+        bh=Vh+B4OHEn3CAh3E4JWZmp8fkzNNMb5LEBb6Hamyy8Tc=;
+        b=JUmO5RNkDzqb3ssc2377CipQcQnEwTUif8OMzJ8UJsCGRqUqiZ7bsPNRytHRETWgzA
+         z/BwDi92y+BLYtJV15XE9znsz21+H5xltJCyFgQKWKCx4S3InX2g+Wi83LXwUKyU/jec
+         OnhSg1FfXqBW5lwwN8VOFVoM6NSUQR5PvME5AuhuA7OftYymdJ2qlRkt7ptgbaR9Vf7v
+         xKexsuhO1vNxJmYrrQ5xvdU9IGII3U0WVydOLZHF/nyeMHmar5ZeQJ6RlhWPftLDUZcN
+         m8zTp6VhI/lR9lG4e669vVRaxVZEQa7cn6U1O41VGMi7sIA51s1uC7oC7PRUm5Xv82sy
+         5zQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fFdgtfwZrc/kVc+fLHaAXwOBlYLh1Scshg8PrDPV2cA=;
-        b=a79Fj1kvf0jCRWDzyZxn6m4qhxCU+UM/ZNldsMdW5dM2ARSwfjv93dOfa3mljtqBRZ
-         DIMxE22dvgUpR9mD9RccuiJBG1NgQeVW+5XCUZzfw9O6P4+aO9Pkcnssv+qJym7uzFl8
-         tIBe9XVLPopNvilGBLHtmlU+vG7v14/bLxmUXnMcbbMirK1299JbKcScmsnJbrz75K2J
-         O8ZqUzkpHtwpPWDCR2qYpU6TbIMgnjjMbFXFxKH1qcQnc5WkwOgtnFSJueBw7o+iAdhy
-         TJstUDbf2NWh0IXxXpVST4vl0ibCb4rDf1IZ46a/Ik46qp9yQybMEoTzz3Bou7gogpc3
-         XFMQ==
-X-Gm-Message-State: AOAM530XwdI952C/F00l+Hjb6tfFYJAnKgYGJoFUxJxgxnfGMMLCH44i
-        d3zFrZA2wiyZ7LfkjjI7SMk=
-X-Google-Smtp-Source: ABdhPJzrk/w8HSHD4F2CriYbzO3IkcbXkvduywKAs1ONUCGEOtsuxUrphk9jrVQS3ajL5jYLaF+wQw==
-X-Received: by 2002:a63:f44d:: with SMTP id p13mr4124438pgk.363.1598294504582;
-        Mon, 24 Aug 2020 11:41:44 -0700 (PDT)
+        bh=Vh+B4OHEn3CAh3E4JWZmp8fkzNNMb5LEBb6Hamyy8Tc=;
+        b=DGHeYJnTvY+ju216sTS7WS/lxEU4kGXE0ErPakxexHSnE7MILnrrYiOREcgqClWOfM
+         y/Q/V19ozyXNpKjhml/0pkVn2dkJUPeMw74fEby2KXrgA/L/YQNmc6o3LAb1+tuTDKAd
+         /xr6d6ZAI7wGGgz1rYgrw5QYIoUASTTQbRYiuQGqoxous7sH8Ec1gnR3EQkX9acS8j93
+         E4FwBBi3hLFMAWF4XnXDqXM8r7BQJjNjmcI5uMD+7f+9OG38NoLeitHzQVMhAk3POJBf
+         xwZjKkluO+kQlmBbHUK7ht71MIBapVGCyGzf4gjpIAJ6wYLFDASk19fRhbOUeUNiDRz9
+         MF2Q==
+X-Gm-Message-State: AOAM533XILps4QgBbPuDdfF2ZlKzotHCdp7vhP1v3jptW8hkizY4u74u
+        xs16z9/PmE7NKzlcdwrUCnI2Wdskyj4nuA==
+X-Google-Smtp-Source: ABdhPJw9/fDa2Sn4zgacdwxlaMCq/xKaWR5ndwkzMvOuKgpXpEP0Fd8T5IIeGdHrXE3OUHQFHgFobw==
+X-Received: by 2002:a63:1457:: with SMTP id 23mr4343869pgu.80.1598294513011;
+        Mon, 24 Aug 2020 11:41:53 -0700 (PDT)
 Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id b23sm11949461pfo.12.2020.08.24.11.41.43
+        by smtp.gmail.com with ESMTPSA id e127sm3923071pfe.152.2020.08.24.11.41.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 11:41:43 -0700 (PDT)
+        Mon, 24 Aug 2020 11:41:50 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org
 Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
@@ -79,14 +79,14 @@ Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         John Stultz <john.stultz@linaro.org>,
         Jonathan Marek <jonathan@marek.ca>,
         Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 01/20] drm/msm: remove dangling submitqueue references
-Date:   Mon, 24 Aug 2020 11:37:35 -0700
-Message-Id: <20200824183825.1778810-2-robdclark@gmail.com>
+Subject: [PATCH 02/20] iommu/arm-smmu: Pass io-pgtable config to implementation specific function
+Date:   Mon, 24 Aug 2020 11:37:36 -0700
+Message-Id: <20200824183825.1778810-3-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200824183825.1778810-1-robdclark@gmail.com>
 References: <20200824183825.1778810-1-robdclark@gmail.com>
@@ -97,34 +97,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Jordan Crouse <jcrouse@codeaurora.org>
 
-Currently it doesn't matter, since we free the ctx immediately.  But
-when we start refcnt'ing the ctx, we don't want old dangling list
-entries to hang around.
+Construct the io-pgtable config before calling the implementation specific
+init_context function and pass it so the implementation specific function
+can get a chance to change it before the io-pgtable is created.
 
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
- drivers/gpu/drm/msm/msm_submitqueue.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iommu/arm/arm-smmu/arm-smmu-impl.c |  3 ++-
+ drivers/iommu/arm/arm-smmu/arm-smmu.c      | 11 ++++++-----
+ drivers/iommu/arm/arm-smmu/arm-smmu.h      |  3 ++-
+ 3 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
-index a1d94be7883a..90c9d84e6155 100644
---- a/drivers/gpu/drm/msm/msm_submitqueue.c
-+++ b/drivers/gpu/drm/msm/msm_submitqueue.c
-@@ -49,8 +49,10 @@ void msm_submitqueue_close(struct msm_file_private *ctx)
- 	 * No lock needed in close and there won't
- 	 * be any more user ioctls coming our way
- 	 */
--	list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node)
-+	list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node) {
-+		list_del(&entry->node);
- 		msm_submitqueue_put(entry);
-+	}
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+index f4ff124a1967..a9861dcd0884 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+@@ -68,7 +68,8 @@ static int cavium_cfg_probe(struct arm_smmu_device *smmu)
+ 	return 0;
  }
  
- int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
+-static int cavium_init_context(struct arm_smmu_domain *smmu_domain)
++static int cavium_init_context(struct arm_smmu_domain *smmu_domain,
++		struct io_pgtable_cfg *pgtbl_cfg)
+ {
+ 	struct cavium_smmu *cs = container_of(smmu_domain->smmu,
+ 					      struct cavium_smmu, smmu);
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+index 09c42af9f31e..37d8d49299b4 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+@@ -795,11 +795,6 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 		cfg->asid = cfg->cbndx;
+ 
+ 	smmu_domain->smmu = smmu;
+-	if (smmu->impl && smmu->impl->init_context) {
+-		ret = smmu->impl->init_context(smmu_domain);
+-		if (ret)
+-			goto out_unlock;
+-	}
+ 
+ 	pgtbl_cfg = (struct io_pgtable_cfg) {
+ 		.pgsize_bitmap	= smmu->pgsize_bitmap,
+@@ -810,6 +805,12 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 		.iommu_dev	= smmu->dev,
+ 	};
+ 
++	if (smmu->impl && smmu->impl->init_context) {
++		ret = smmu->impl->init_context(smmu_domain, &pgtbl_cfg);
++		if (ret)
++			goto out_clear_smmu;
++	}
++
+ 	if (smmu_domain->non_strict)
+ 		pgtbl_cfg.quirks |= IO_PGTABLE_QUIRK_NON_STRICT;
+ 
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+index d890a4a968e8..83294516ac08 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+@@ -386,7 +386,8 @@ struct arm_smmu_impl {
+ 			    u64 val);
+ 	int (*cfg_probe)(struct arm_smmu_device *smmu);
+ 	int (*reset)(struct arm_smmu_device *smmu);
+-	int (*init_context)(struct arm_smmu_domain *smmu_domain);
++	int (*init_context)(struct arm_smmu_domain *smmu_domain,
++			struct io_pgtable_cfg *cfg);
+ 	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+ 			 int status);
+ 	int (*def_domain_type)(struct device *dev);
 -- 
 2.26.2
 
