@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5ACAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1ED920706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D1620706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgHXMuG (ORCPT
+        id S1726716AbgHXMxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:50:06 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46443 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbgHXMuC (ORCPT
+        Mon, 24 Aug 2020 08:53:46 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35914 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgHXMxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:50:02 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h19so9461902ljg.13;
-        Mon, 24 Aug 2020 05:50:00 -0700 (PDT)
+        Mon, 24 Aug 2020 08:53:45 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c15so4409211lfi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:53:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=gvOrwFdrNoIKZpBYrzMhMigaSOSnkliOa0D4FtRauyo=;
-        b=Fge5OPS2AMd/7JRaeCCe6sNg9HYeHGQKTxnPC8ARiuDdZvQ7TW73hXYvcre9p8R3UB
-         NdBMCjY2cAU9P3+osB0inn1HRbqBoc0jaVDNPat7yQJWYT9AFz8Z+iS4hXjKqjiiqU3a
-         +zJd+qZmxttoE4Io2QozJRG5XEAxJfh5CciZghoWS87ygNhY2bBHLklHjokga2+NrG69
-         hhoKZIQRDmLEPFYmhBdq42alCJi6Rt/94ZJtTYLlbqB4yLkdorn6nti1GLCUoSiao5I5
-         B13mdGG6eHVdVrJt8GltfpYn6LjOyBqSwN2r5VWaiIjZHV430RusIsEtz7p3CRWGzB2l
-         IePQ==
-X-Gm-Message-State: AOAM532VWIYkeZaoNVu+mTk6/ZCCC3HAPCpFUBeW2GVIV2wd1gbfrpqM
-        WMumpJ7yFhu5GFObjoFLn77/4ZtgVTw=
-X-Google-Smtp-Source: ABdhPJzbqz/ZHLB2zP4m4MdzXpDMkmvjL30Iy7yYnA3v7NASAZN5gbpzR+R/Qt/3Rq6kwpS0RVw2yw==
-X-Received: by 2002:a2e:a316:: with SMTP id l22mr2689012lje.301.1598273399100;
-        Mon, 24 Aug 2020 05:49:59 -0700 (PDT)
+        bh=opAVrXw3eQDvTpV0W53NwZIY6sgRFUHXCXzJHzr2ZKQ=;
+        b=W0QPIvDrxTyl6ruaNZiIorPQW+45YZ2IvtRXI8t//gVnDOxO9wTJzWO/1q0KyXKmI3
+         rlZ7NzuxAw3SGzKlMOJcVMuq/4gpc+792LPR3UzBi4FTf459/LpRMXyQoo45SJxPO38z
+         xS95PQQ8jm5ADGHksC0xw6hAjgtlq+aAAubJ/lwRwebbQl0FdCcgoo6LEfCyaBuPg6v2
+         V8/F+Weyp35GdpSN7LzZMIsujo27T1Q9vcFJ2aSfx8RpNZ/7DlTJZOZWB7XetqMmKW0L
+         y7BrDMZI4lmgbzvYw84P+YfcFk7ng+LxiexFyTCycwOFpEhJBhf/kNjiEPzxLBD6O5fD
+         PmcA==
+X-Gm-Message-State: AOAM533/eSLmFPRjt2jMDOhSU75cpx5/Nf9wMy0NrxBkVdz19QuaOBrp
+        2143/JjR/SrECD4aBQC1zdg=
+X-Google-Smtp-Source: ABdhPJz1IN1tvlfs5A3vsvZ3lm29lsMsfaBPUqE41cjyCqLHpLDARu4HY0bAvTp72VHAYEUV1lW61w==
+X-Received: by 2002:a19:4081:: with SMTP id n123mr2558294lfa.198.1598273623152;
+        Mon, 24 Aug 2020 05:53:43 -0700 (PDT)
 Received: from localhost.localdomain ([213.87.147.111])
-        by smtp.googlemail.com with ESMTPSA id h23sm2166181lji.139.2020.08.24.05.49.56
+        by smtp.googlemail.com with ESMTPSA id e15sm2183452ljn.49.2020.08.24.05.53.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 05:49:58 -0700 (PDT)
+        Mon, 24 Aug 2020 05:53:42 -0700 (PDT)
 From:   Denis Efremov <efremov@linux.com>
-Cc:     Denis Efremov <efremov@linux.com>, Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] security/commoncap: Use current_user_ns()
-Date:   Mon, 24 Aug 2020 15:49:39 +0300
-Message-Id: <20200824124939.486728-1-efremov@linux.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] virt: vbox: Use current_uid() in vbg_misc_device_requestor()
+Date:   Mon, 24 Aug 2020 15:53:30 +0300
+Message-Id: <20200824125330.487083-1-efremov@linux.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -59,35 +61,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify cap_inh_is_capped(), cap_task_prctl() to use current_user_ns().
+Modify vbg_misc_device_requestor() to use current_uid() wrapper.
 
 Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- security/commoncap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/virt/vboxguest/vboxguest_linux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/commoncap.c b/security/commoncap.c
-index 59bf3c1674c8..82a61f77c07c 100644
---- a/security/commoncap.c
-+++ b/security/commoncap.c
-@@ -220,7 +220,7 @@ static inline int cap_inh_is_capped(void)
- 	/* they are so limited unless the current task has the CAP_SETPCAP
- 	 * capability
- 	 */
--	if (cap_capable(current_cred(), current_cred()->user_ns,
-+	if (cap_capable(current_cred(), current_user_ns(),
- 			CAP_SETPCAP, CAP_OPT_NONE) == 0)
- 		return 0;
- 	return 1;
-@@ -1206,7 +1206,7 @@ int cap_task_prctl(int option, unsigned long arg2, unsigned long arg3,
- 		    || ((old->securebits & SECURE_ALL_LOCKS & ~arg2))	/*[2]*/
- 		    || (arg2 & ~(SECURE_ALL_LOCKS | SECURE_ALL_BITS))	/*[3]*/
- 		    || (cap_capable(current_cred(),
--				    current_cred()->user_ns,
-+				    current_user_ns(),
- 				    CAP_SETPCAP,
- 				    CAP_OPT_NONE) != 0)			/*[4]*/
- 			/*
+diff --git a/drivers/virt/vboxguest/vboxguest_linux.c b/drivers/virt/vboxguest/vboxguest_linux.c
+index 32c2c52f7e84..6215a688edaf 100644
+--- a/drivers/virt/vboxguest/vboxguest_linux.c
++++ b/drivers/virt/vboxguest/vboxguest_linux.c
+@@ -35,7 +35,7 @@ static u32 vbg_misc_device_requestor(struct inode *inode)
+ 			VMMDEV_REQUESTOR_CON_DONT_KNOW |
+ 			VMMDEV_REQUESTOR_TRUST_NOT_GIVEN;
+ 
+-	if (from_kuid(current_user_ns(), current->cred->uid) == 0)
++	if (from_kuid(current_user_ns(), current_uid()) == 0)
+ 		requestor |= VMMDEV_REQUESTOR_USR_ROOT;
+ 	else
+ 		requestor |= VMMDEV_REQUESTOR_USR_USER;
 -- 
 2.26.2
 
