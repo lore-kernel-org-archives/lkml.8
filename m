@@ -2,53 +2,52 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B563C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC4DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2749121775
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58222075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258639;
-	bh=4Htyo/JK+OITXDYfLI/o2rmNeTy/SVpcIjbMD3leOVg=;
+	s=default; t=1598258647;
+	bh=ngj6WiQUPERZ5q4EO+GD7YhTNCR/Src7jBSoABAThGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NaNP6Fj5DwVJrLJ06Z7s5Opi9yv9faCiVj7RjubL7vL0ftUelD06tLFT9fEwbitPp
-	 2uDLeXOjpA9eHhku6qvhjD3rNOe9lvisNvPLjVLhgvyT9k/kmcaObIMI3KhGSH5b5c
-	 ZiJbqqcU2KeDqAGAwfyJuaHjgRduYJBdD+k9GHvI=
+	b=w17vellfXlc3qUWd65ZmpaHAknNj2/d+bYStnigq/yruCIH+SFWm9pG8Gwk2/GqtH
+	 sVkm1SnPveAKGeWECfmQxCa8Fty3JGroMLFlEtHBRGSj8L4WJIbfGF4YHEnvybbK3o
+	 4ipFVVv2uAxBE9w2B+AoxwQoYWxZA0uym2nahUUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgHXIn6 (ORCPT
+        id S1729099AbgHXIoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:43:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38856 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:44:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729044AbgHXInx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:43:53 -0400
+        id S1729044AbgHXIn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:43:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5DEC2075B;
-        Mon, 24 Aug 2020 08:43:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F4BC20FC3;
+        Mon, 24 Aug 2020 08:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258633;
-        bh=4Htyo/JK+OITXDYfLI/o2rmNeTy/SVpcIjbMD3leOVg=;
+        s=default; t=1598258638;
+        bh=ngj6WiQUPERZ5q4EO+GD7YhTNCR/Src7jBSoABAThGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MVOmmuAyCwjez5/kczUxARQtdPJpfS+qlSUTCArxw16txbp+bK+k3JoJ3atCe8kix
-         NfrBZGCDoPixbc+F+sFg9oqzfpeTO7yFhG1DvTwaRjJleC1sR5P/v4OhBF17+qe1mo
-         nKBONTRXHLRmcuPynMY7MYQn5Yj9bbjyqyELTbiM=
+        b=oBUR2ilJzx0nBLWbsJXi6YtUwpa0PZTnW/mI4g+Zby7vZJvyf2mjEMFhSBJCxsBNx
+         kmPiOeW3P9rVnl1oImiihLIaB/rCrf8plSE48MQhAeTLcLIgBf5d3hUxK+kBKFclDP
+         vDOKV0OsC5P1kTb+JcR8ax3Ff2EBpt84TORifj4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 098/124] scsi: ufs-pci: Add quirk for broken auto-hibernate for Intel EHL
-Date:   Mon, 24 Aug 2020 10:30:32 +0200
-Message-Id: <20200824082414.239885527@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.7 117/124] powerpc/pseries: Do not initiate shutdown when system is running on UPS
+Date:   Mon, 24 Aug 2020 10:30:51 +0200
+Message-Id: <20200824082415.161754479@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -61,94 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
 
-[ Upstream commit 8da76f71fef7d8a1a72af09d48899573feb60065 ]
+commit 90a9b102eddf6a3f987d15f4454e26a2532c1c98 upstream.
 
-Intel EHL UFS host controller advertises auto-hibernate capability but it
-does not work correctly. Add a quirk for that.
+As per PAPR we have to look for both EPOW sensor value and event
+modifier to identify the type of event and take appropriate action.
 
-[mkp: checkpatch fix]
+In LoPAPR v1.1 section 10.2.2 includes table 136 "EPOW Action Codes":
 
-Link: https://lore.kernel.org/r/20200810141024.28859-1-adrian.hunter@intel.com
-Fixes: 8c09d7527697 ("scsi: ufshdc-pci: Add Intel PCI IDs for EHL")
-Acked-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  SYSTEM_SHUTDOWN 3
+
+  The system must be shut down. An EPOW-aware OS logs the EPOW error
+  log information, then schedules the system to be shut down to begin
+  after an OS defined delay internal (default is 10 minutes.)
+
+Then in section 10.3.2.2.8 there is table 146 "Platform Event Log
+Format, Version 6, EPOW Section", which includes the "EPOW Event
+Modifier":
+
+  For EPOW sensor value = 3
+  0x01 = Normal system shutdown with no additional delay
+  0x02 = Loss of utility power, system is running on UPS/Battery
+  0x03 = Loss of system critical functions, system should be shutdown
+  0x04 = Ambient temperature too high
+  All other values = reserved
+
+We have a user space tool (rtas_errd) on LPAR to monitor for
+EPOW_SHUTDOWN_ON_UPS. Once it gets an event it initiates shutdown
+after predefined time. It also starts monitoring for any new EPOW
+events. If it receives "Power restored" event before predefined time
+it will cancel the shutdown. Otherwise after predefined time it will
+shutdown the system.
+
+Commit 79872e35469b ("powerpc/pseries: All events of
+EPOW_SYSTEM_SHUTDOWN must initiate shutdown") changed our handling of
+the "on UPS/Battery" case, to immediately shutdown the system. This
+breaks existing setups that rely on the userspace tool to delay
+shutdown and let the system run on the UPS.
+
+Fixes: 79872e35469b ("powerpc/pseries: All events of EPOW_SYSTEM_SHUTDOWN must initiate shutdown")
+Cc: stable@vger.kernel.org # v4.0+
+Signed-off-by: Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
+[mpe: Massage change log and add PAPR references]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200820061844.306460-1-hegdevasant@linux.vnet.ibm.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/ufs/ufshcd-pci.c | 16 ++++++++++++++--
- drivers/scsi/ufs/ufshcd.h     |  9 ++++++++-
- 2 files changed, 22 insertions(+), 3 deletions(-)
+ arch/powerpc/platforms/pseries/ras.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd-pci.c b/drivers/scsi/ufs/ufshcd-pci.c
-index 8f78a81514991..b220666774ce8 100644
---- a/drivers/scsi/ufs/ufshcd-pci.c
-+++ b/drivers/scsi/ufs/ufshcd-pci.c
-@@ -67,11 +67,23 @@ static int ufs_intel_link_startup_notify(struct ufs_hba *hba,
- 	return err;
- }
+--- a/arch/powerpc/platforms/pseries/ras.c
++++ b/arch/powerpc/platforms/pseries/ras.c
+@@ -184,7 +184,6 @@ static void handle_system_shutdown(char
+ 	case EPOW_SHUTDOWN_ON_UPS:
+ 		pr_emerg("Loss of system power detected. System is running on"
+ 			 " UPS/battery. Check RTAS error log for details\n");
+-		orderly_poweroff(true);
+ 		break;
  
-+static int ufs_intel_ehl_init(struct ufs_hba *hba)
-+{
-+	hba->quirks |= UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8;
-+	return 0;
-+}
-+
- static struct ufs_hba_variant_ops ufs_intel_cnl_hba_vops = {
- 	.name                   = "intel-pci",
- 	.link_startup_notify	= ufs_intel_link_startup_notify,
- };
- 
-+static struct ufs_hba_variant_ops ufs_intel_ehl_hba_vops = {
-+	.name                   = "intel-pci",
-+	.init			= ufs_intel_ehl_init,
-+	.link_startup_notify	= ufs_intel_link_startup_notify,
-+};
-+
- #ifdef CONFIG_PM_SLEEP
- /**
-  * ufshcd_pci_suspend - suspend power management function
-@@ -200,8 +212,8 @@ static const struct dev_pm_ops ufshcd_pci_pm_ops = {
- static const struct pci_device_id ufshcd_pci_tbl[] = {
- 	{ PCI_VENDOR_ID_SAMSUNG, 0xC00C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0 },
- 	{ PCI_VDEVICE(INTEL, 0x9DFA), (kernel_ulong_t)&ufs_intel_cnl_hba_vops },
--	{ PCI_VDEVICE(INTEL, 0x4B41), (kernel_ulong_t)&ufs_intel_cnl_hba_vops },
--	{ PCI_VDEVICE(INTEL, 0x4B43), (kernel_ulong_t)&ufs_intel_cnl_hba_vops },
-+	{ PCI_VDEVICE(INTEL, 0x4B41), (kernel_ulong_t)&ufs_intel_ehl_hba_vops },
-+	{ PCI_VDEVICE(INTEL, 0x4B43), (kernel_ulong_t)&ufs_intel_ehl_hba_vops },
- 	{ }	/* terminate list */
- };
- 
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 59ca93b64bb08..ccbeae4f8325d 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -547,6 +547,12 @@ enum ufshcd_quirks {
- 	 * OCS FATAL ERROR with device error through sense data
- 	 */
- 	UFSHCD_QUIRK_BROKEN_OCS_FATAL_ERROR		= 1 << 10,
-+
-+	/*
-+	 * This quirk needs to be enabled if the host controller has
-+	 * auto-hibernate capability but it doesn't work.
-+	 */
-+	UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8		= 1 << 11,
- };
- 
- enum ufshcd_caps {
-@@ -796,7 +802,8 @@ return true;
- 
- static inline bool ufshcd_is_auto_hibern8_supported(struct ufs_hba *hba)
- {
--	return (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT);
-+	return (hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT) &&
-+		!(hba->quirks & UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8);
- }
- 
- static inline bool ufshcd_is_auto_hibern8_enabled(struct ufs_hba *hba)
--- 
-2.25.1
-
+ 	case EPOW_SHUTDOWN_LOSS_OF_CRITICAL_FUNCTIONS:
 
 
