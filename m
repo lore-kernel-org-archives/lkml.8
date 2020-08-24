@@ -2,88 +2,134 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08157C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C18C2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE17D2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aFxz1yah"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UHKFH64e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgHXIOj (ORCPT
+        id S1725999AbgHXIQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:14:39 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:23785 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725836AbgHXIOj (ORCPT
+        Mon, 24 Aug 2020 04:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725968AbgHXIQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:14:39 -0400
-X-UUID: 3df8a9808a0645cbb9ff4172bda44e44-20200824
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=fp5BvuMv6aQW1kwsMMF3iiFeaB50z+78RNwBXksdEww=;
-        b=aFxz1yahULKuViUbuEu5f6W4K69DN9zWkFlKCHiOPfFwHNtzrU4lem++Bsi/FuxYWF+R2ymNbztLY2EeVYxYOWCcOREgbjKiXhFNya48JSdYJ7jjiaEvUnmcpsd1ij/iXF6qqZM7cHYq7qoLrK1tSxdEmUKMOfLPxMXO5XfEfFQ=;
-X-UUID: 3df8a9808a0645cbb9ff4172bda44e44-20200824
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2082476556; Mon, 24 Aug 2020 16:14:36 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 24 Aug 2020 16:14:33 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 24 Aug 2020 16:14:33 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH v2 6/6] kasan: update documentation for generic kasan
-Date:   Mon, 24 Aug 2020 16:14:33 +0800
-Message-ID: <20200824081433.25198-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 24 Aug 2020 04:16:26 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F33CC061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 01:16:26 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id b17so6942171wru.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 01:16:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=WIZAf3x2BneXQTTKPWzLh7lCftlSclIRyCF/Mlb3EW4=;
+        b=UHKFH64eK+dJNPTMUEG2GKmEf2QnNltVe6HCRpFWZspvwFb52ZYmQiiZ4kCn7gaF2n
+         SXWHdJsGJdH3VASepqgugyFAniRVIf2/X+rV8wETDho6CtJwZxWFMEqRrP7qLqT0XnBu
+         YeX+uSKhRk43xBqG+pNd/UgX22Fejf0PMRAWhlTDfbe4xvd6zuPGst55lUXGpU5bGOSi
+         JJc8XAbBvVpdlaTys1EakKWsoJfhau+xKzZ49CNCDNf/Xm8fye7qn+8sIvjmFYZmYqDK
+         51Pg1dKN8+2RkirYUoo7Y6SGAHGMfsl7fyD6/Xi2nyGomPK46Dz9HxN0fIKyv90Y7jg8
+         ho2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=WIZAf3x2BneXQTTKPWzLh7lCftlSclIRyCF/Mlb3EW4=;
+        b=pkQeFymqYK9m8TwMBnQmWiy0SKYaawfQifVQssregNlPmKdV5gfjTIcK2izPlxynJj
+         funCRNJLCQPYWldg9oootMHnZM0OaAz+G6CpRXYWlLu87crDPlD/l4KOQAh6eiIC68et
+         bTvGB0mjr9zoMifgp4VF4+kd6OsZdL+2TWlmVSsdkvJRQW9i31kTY++5Lx+sr+/DNAoS
+         c9ysFpXMK3+oXCQ8aDtG5J827jRi5ausjCaOrA279jEnAX/p9mJlvWfzAUlhybVUp30A
+         RoDxH/huZwGzznenFd5mp36073dAKO210g+j8omOzYnH6HzcXoy0SswbSgWIdAyNW8mb
+         w2oQ==
+X-Gm-Message-State: AOAM533HbAnDYG9TYqberEqLinQdFKhQSJ9RY3+uE8j9vbrFup7MTLW4
+        DURBfolHZQO9s2VCrx3V07N5wg==
+X-Google-Smtp-Source: ABdhPJyQ1dfhud31uvmhWjcNOV9nz6EpZ3fFDfyZlE0Rpp4BVPYFIT8QORlNPZLa72KkbDqugJRCWA==
+X-Received: by 2002:a05:6000:1211:: with SMTP id e17mr4734550wrx.263.1598256984974;
+        Mon, 24 Aug 2020 01:16:24 -0700 (PDT)
+Received: from dell ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id w1sm22294675wmc.18.2020.08.24.01.16.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 01:16:24 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 09:16:22 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Christian Lamparter <chunkeey@gmail.com>
+Cc:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 00/32] Set 2: Rid W=1 warnings in Wireless
+Message-ID: <20200824081622.GI3248864@dell>
+References: <20200821071644.109970-1-lee.jones@linaro.org>
+ <a3915e15-0583-413f-1fcf-7cb9933ec0bf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a3915e15-0583-413f-1fcf-7cb9933ec0bf@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-R2VuZXJpYyBLQVNBTiBzdXBwb3J0IHRvIHJlY29yZCB0aGUgbGFzdCB0d28gdGltZXIgYW5kIHdv
-cmtxdWV1ZQ0Kc3RhY2tzIGFuZCBwcmludCB0aGVtIGluIEtBU0FOIHJlcG9ydC4gU28gdGhhdCBu
-ZWVkIHRvIHVwZGF0ZQ0KZG9jdW1lbnRhdGlvbi4NCg0KU2lnbmVkLW9mZi1ieTogV2FsdGVyIFd1
-IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29tPg0KQ2M6IEFuZHJleSBSeWFiaW5pbiA8YXJ5YWJp
-bmluQHZpcnR1b3p6by5jb20+DQpDYzogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29t
-Pg0KQ2M6IEFsZXhhbmRlciBQb3RhcGVua28gPGdsaWRlckBnb29nbGUuY29tPg0KQ2M6IEpvbmF0
-aGFuIENvcmJldCA8Y29yYmV0QGx3bi5uZXQ+DQotLS0NCiBEb2N1bWVudGF0aW9uL2Rldi10b29s
-cy9rYXNhbi5yc3QgfCA0ICsrLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAy
-IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXYtdG9vbHMva2Fz
-YW4ucnN0IGIvRG9jdW1lbnRhdGlvbi9kZXYtdG9vbHMva2FzYW4ucnN0DQppbmRleCBmZWRlNDJl
-NjUzNmIuLjVhNGM1ZGE4YmRhOCAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2LXRvb2xz
-L2thc2FuLnJzdA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXYtdG9vbHMva2FzYW4ucnN0DQpAQCAt
-MTkzLDggKzE5Myw4IEBAIGZ1bmN0aW9uIGNhbGxzIEdDQyBkaXJlY3RseSBpbnNlcnRzIHRoZSBj
-b2RlIHRvIGNoZWNrIHRoZSBzaGFkb3cgbWVtb3J5Lg0KIFRoaXMgb3B0aW9uIHNpZ25pZmljYW50
-bHkgZW5sYXJnZXMga2VybmVsIGJ1dCBpdCBnaXZlcyB4MS4xLXgyIHBlcmZvcm1hbmNlDQogYm9v
-c3Qgb3ZlciBvdXRsaW5lIGluc3RydW1lbnRlZCBrZXJuZWwuDQogDQotR2VuZXJpYyBLQVNBTiBw
-cmludHMgdXAgdG8gMiBjYWxsX3JjdSgpIGNhbGwgc3RhY2tzIGluIHJlcG9ydHMsIHRoZSBsYXN0
-IG9uZQ0KLWFuZCB0aGUgc2Vjb25kIHRvIGxhc3QuDQorR2VuZXJpYyBLQVNBTiBwcmludHMgdXAg
-dG8gMiBjYWxsX3JjdSgpIGNhbGwgc3RhY2tzLCB0aW1lciBxdWV1ZWluZyBzdGFja3MsDQorb3Ig
-d29ya3F1ZXVlIHF1ZXVlaW5nIHN0YWNrcyBpbiByZXBvcnRzLCB0aGUgbGFzdCBvbmUgYW5kIHRo
-ZSBzZWNvbmQgdG8gbGFzdC4NCiANCiBTb2Z0d2FyZSB0YWctYmFzZWQgS0FTQU4NCiB+fn5+fn5+
-fn5+fn5+fn5+fn5+fn5+fn4NCi0tIA0KMi4xOC4wDQo=
+On Sat, 22 Aug 2020, Christian Lamparter wrote:
 
+> On 2020-08-21 09:16, Lee Jones wrote:
+> > This set is part of a larger effort attempting to clean-up W=1
+> > kernel builds, which are currently overwhelmingly riddled with
+> > niggly little warnings.
+> > 
+> I see that after our discussion about the carl9170 change in this
+> thread following your patch: <https://lkml.org/lkml/2020/8/14/291>
+> 
+> you decided the best way to address our requirements, was to "drop"
+> your patch from the series, instead of just implementing the requested
+> changes. :(
+
+No, this is "set 2", not "v2".
+
+The patch you refer to is in the first set.
+
+Looks like I am waiting for your reply [0]:
+
+[0] https://lkml.org/lkml/2020/8/18/334
+
+> > There are quite a few W=1 warnings in the Wireless.  My plan
+> > is to work through all of them over the next few weeks.
+> > Hopefully it won't be too long before drivers/net/wireless
+> > builds clean with W=1 enabled.
+> 
+> Just a parting note for your consideration:
+> 
+> Since 5.7 [0], it has become rather easy to also compile the linux kernel
+> with clang and the LLVM Utilities.
+> <https://www.kernel.org/doc/html/latest/kbuild/llvm.html>
+> 
+> I hope this information can help you to see beyond that one-unamed
+> "compiler" bias there... I wish you the best of luck in your endeavors.
+
+Never used them.
+
+GCC has always worked well for me.  What are their benefits over GCC?
+
+I already build for 5 architectures locally and a great deal more
+(arch * defconfigs) using remote testing infrastructures.  Multiplying
+them without very good reason sounds like a *potential* waste of
+already limited computation resources.
+
+> Christian
+> 
+> [0] <https://www.phoronix.com/scan.php?page=news_item&px=Linux-5.7-Kbuild-Easier-LLVM>
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
