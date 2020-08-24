@@ -2,97 +2,255 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0832BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF62C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5D76206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:19:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598260782;
-	bh=LZDRt3WvxLw2evyQog7DfExtExB1LFq2ZpLvebeUAeE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k49u4I/Ka8WNmW0CdZUA+6TDSQp+yQF2LmvPur49b9MTgiVuIcqj67hl3cvGV4W0k
-	 U7RtpH5fiSMQOHbBQPoOSnmxCJXH7TTlA2puaMdVctwfpFjq5Jin0ByzTwFM2zWGGZ
-	 N+p4DCkxiHO59rPnKwI9ZNHVD22DH1cM4BFy3tio=
+	by mail.kernel.org (Postfix) with ESMTP id 27BF4206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgHXIzv (ORCPT
+        id S1730440AbgHXJUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:55:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37298 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:20:07 -0400
+Received: from 8bytes.org ([81.169.241.247]:36850 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729815AbgHXIzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730164AbgHXIzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:55:51 -0400
+Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49FBB204FD;
-        Mon, 24 Aug 2020 08:55:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259321;
-        bh=LZDRt3WvxLw2evyQog7DfExtExB1LFq2ZpLvebeUAeE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=is5Pjl6WiIVH/itBs8NpxOoGqeSeJUBpRtTF74JYLbdcyAlB/zaWr56f2Z+JFPRJ2
-         5+WeI2U674mFr2QBxxF+8OtSEuqqJaEyDRn/evhEu059HUL3/SKpxyCetL4AzoOnry
-         Rp2WxMPywhaQArGZ8o+fUmTIDBEfUyqrYkdvc+zI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>, stable@kernel.org,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.19 15/71] jbd2: add the missing unlock_buffer() in the error path of jbd2_write_superblock()
-Date:   Mon, 24 Aug 2020 10:31:06 +0200
-Message-Id: <20200824082356.659566903@linuxfoundation.org>
+        by theia.8bytes.org (Postfix) with ESMTPSA id 2A0AA2DA;
+        Mon, 24 Aug 2020 10:55:46 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v6 00/76] x86: SEV-ES Guest Support
+Date:   Mon, 24 Aug 2020 10:53:55 +0200
+Message-Id: <20200824085511.7553-1-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
-References: <20200824082355.848475917@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit ef3f5830b859604eda8723c26d90ab23edc027a4 upstream.
+Hi,
 
-jbd2_write_superblock() is under the buffer lock of journal superblock
-before ending that superblock write, so add a missing unlock_buffer() in
-in the error path before submitting buffer.
+here is the new version of the SEV-ES client enabling patch-set. It is
+based on the latest tip/master branch and contains the necessary
+changes. In particular those ar:
 
-Fixes: 742b06b5628f ("jbd2: check superblock mapped prior to committing")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Cc: stable@kernel.org
-Link: https://lore.kernel.org/r/20200620061948.2049579-1-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	- Enabling CR4.FSGSBASE early on supported processors so that
+	  early #VC exceptions on APs can be handled.
 
----
- fs/jbd2/journal.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+	- Add another patch (patch 1) to fix a KVM frame-size build
+	  warning on 32bit.
 
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1370,8 +1370,10 @@ static int jbd2_write_superblock(journal
- 	int ret;
- 
- 	/* Buffer got discarded which means block device got invalidated */
--	if (!buffer_mapped(bh))
-+	if (!buffer_mapped(bh)) {
-+		unlock_buffer(bh);
- 		return -EIO;
-+	}
- 
- 	trace_jbd2_write_superblock(journal, write_flags);
- 	if (!(journal->j_flags & JBD2_BARRIER))
+The previous versions can be found as a linked-list starting here:
 
+	https://lore.kernel.org/lkml/20200724160336.5435-1-joro@8bytes.org/
+
+There you also find more detailed information about SEV-ES in general
+and its implications.
+
+Please review.
+
+Thanks,
+
+	Joerg
+
+Borislav Petkov (1):
+  KVM: SVM: Use __packed shorthand
+
+Doug Covelli (1):
+  x86/vmware: Add VMware specific handling for VMMCALL under SEV-ES
+
+Joerg Roedel (54):
+  KVM: SVM: nested: Don't allocate VMCB structures on stack
+  KVM: SVM: Add GHCB Accessor functions
+  x86/traps: Move pf error codes to <asm/trap_pf.h>
+  x86/insn: Make inat-tables.c suitable for pre-decompression code
+  x86/umip: Factor out instruction fetch
+  x86/umip: Factor out instruction decoding
+  x86/insn: Add insn_get_modrm_reg_off()
+  x86/insn: Add insn_has_rep_prefix() helper
+  x86/boot/compressed/64: Disable red-zone usage
+  x86/boot/compressed/64: Add IDT Infrastructure
+  x86/boot/compressed/64: Rename kaslr_64.c to ident_map_64.c
+  x86/boot/compressed/64: Add page-fault handler
+  x86/boot/compressed/64: Always switch to own page-table
+  x86/boot/compressed/64: Don't pre-map memory in KASLR code
+  x86/boot/compressed/64: Change add_identity_map() to take start and
+    end
+  x86/boot/compressed/64: Add stage1 #VC handler
+  x86/boot/compressed/64: Call set_sev_encryption_mask earlier
+  x86/boot/compressed/64: Check return value of
+    kernel_ident_mapping_init()
+  x86/boot/compressed/64: Add set_page_en/decrypted() helpers
+  x86/boot/compressed/64: Setup GHCB Based VC Exception handler
+  x86/boot/compressed/64: Unmap GHCB page before booting the kernel
+  x86/fpu: Move xgetbv()/xsetbv() into separate header
+  x86/idt: Move IDT to data segment
+  x86/idt: Split idt_data setup out of set_intr_gate()
+  x86/head/64: Install startup GDT
+  x86/head/64: Setup MSR_GS_BASE before calling into C code
+  x86/head/64: Load GDT after switch to virtual addresses
+  x86/head/64: Load segment registers earlier
+  x86/head/64: Switch to initial stack earlier
+  x86/head/64: Make fixup_pointer() static inline
+  x86/head/64: Load IDT earlier
+  x86/head/64: Move early exception dispatch to C code
+  x86/head/64: Set CR4.FSGSBASE early
+  x86/sev-es: Add SEV-ES Feature Detection
+  x86/sev-es: Print SEV-ES info into kernel log
+  x86/sev-es: Compile early handler code into kernel image
+  x86/sev-es: Setup early #VC handler
+  x86/sev-es: Setup GHCB based boot #VC handler
+  x86/sev-es: Allocate and Map IST stack for #VC handler
+  x86/sev-es: Adjust #VC IST Stack on entering NMI handler
+  x86/dumpstack/64: Add noinstr version of get_stack_info()
+  x86/entry/64: Add entry code for #VC handler
+  x86/sev-es: Wire up existing #VC exit-code handlers
+  x86/sev-es: Handle instruction fetches from user-space
+  x86/sev-es: Handle MMIO String Instructions
+  x86/sev-es: Handle #AC Events
+  x86/sev-es: Handle #DB Events
+  x86/paravirt: Allow hypervisor specific VMMCALL handling under SEV-ES
+  x86/realmode: Add SEV-ES specific trampoline entry point
+  x86/smpboot: Setup TSS for starting AP
+  x86/head/64: Don't call verify_cpu() on starting APs
+  x86/head/64: Rename start_cpu0
+  x86/sev-es: Support CPU offline/online
+  x86/sev-es: Handle NMI State
+
+Martin Radev (1):
+  x86/sev-es: Check required CPU features for SEV-ES
+
+Tom Lendacky (19):
+  KVM: SVM: Add GHCB definitions
+  x86/cpufeatures: Add SEV-ES CPU feature
+  x86/sev-es: Add support for handling IOIO exceptions
+  x86/sev-es: Add CPUID handling to #VC handler
+  x86/sev-es: Setup per-cpu GHCBs for the runtime handler
+  x86/sev-es: Add Runtime #VC Exception Handler
+  x86/sev-es: Handle MMIO events
+  x86/sev-es: Handle MSR events
+  x86/sev-es: Handle DR7 read/write events
+  x86/sev-es: Handle WBINVD Events
+  x86/sev-es: Handle RDTSC(P) Events
+  x86/sev-es: Handle RDPMC Events
+  x86/sev-es: Handle INVD Events
+  x86/sev-es: Handle MONITOR/MONITORX Events
+  x86/sev-es: Handle MWAIT/MWAITX Events
+  x86/sev-es: Handle VMMCALL Events
+  x86/kvm: Add KVM specific VMMCALL handling under SEV-ES
+  x86/realmode: Setup AP jump table
+  x86/efi: Add GHCB mappings when SEV-ES is active
+
+ arch/x86/Kconfig                           |    1 +
+ arch/x86/boot/compressed/Makefile          |    9 +-
+ arch/x86/boot/compressed/cpuflags.c        |    4 -
+ arch/x86/boot/compressed/head_64.S         |   32 +-
+ arch/x86/boot/compressed/ident_map_64.c    |  349 +++++
+ arch/x86/boot/compressed/idt_64.c          |   54 +
+ arch/x86/boot/compressed/idt_handlers_64.S |   77 ++
+ arch/x86/boot/compressed/kaslr.c           |   36 +-
+ arch/x86/boot/compressed/kaslr_64.c        |  153 ---
+ arch/x86/boot/compressed/misc.c            |    7 +
+ arch/x86/boot/compressed/misc.h            |   50 +-
+ arch/x86/boot/compressed/sev-es.c          |  214 +++
+ arch/x86/entry/entry_64.S                  |   78 ++
+ arch/x86/include/asm/cpu.h                 |    2 +-
+ arch/x86/include/asm/cpu_entry_area.h      |   33 +-
+ arch/x86/include/asm/cpufeatures.h         |    1 +
+ arch/x86/include/asm/desc_defs.h           |    3 +
+ arch/x86/include/asm/fpu/internal.h        |   30 +-
+ arch/x86/include/asm/fpu/xcr.h             |   34 +
+ arch/x86/include/asm/idtentry.h            |   50 +
+ arch/x86/include/asm/insn-eval.h           |    6 +
+ arch/x86/include/asm/mem_encrypt.h         |    5 +
+ arch/x86/include/asm/msr-index.h           |    3 +
+ arch/x86/include/asm/page_64_types.h       |    1 +
+ arch/x86/include/asm/pgtable.h             |    2 +-
+ arch/x86/include/asm/processor.h           |    7 +
+ arch/x86/include/asm/proto.h               |    1 +
+ arch/x86/include/asm/realmode.h            |    4 +
+ arch/x86/include/asm/segment.h             |    2 +-
+ arch/x86/include/asm/setup.h               |   20 +-
+ arch/x86/include/asm/sev-es.h              |  113 ++
+ arch/x86/include/asm/stacktrace.h          |    2 +
+ arch/x86/include/asm/svm.h                 |  100 +-
+ arch/x86/include/asm/trap_pf.h             |   24 +
+ arch/x86/include/asm/trapnr.h              |    1 +
+ arch/x86/include/asm/traps.h               |   20 +-
+ arch/x86/include/asm/x86_init.h            |   16 +-
+ arch/x86/include/uapi/asm/svm.h            |   11 +
+ arch/x86/kernel/Makefile                   |    1 +
+ arch/x86/kernel/cpu/amd.c                  |    3 +-
+ arch/x86/kernel/cpu/common.c               |   37 +-
+ arch/x86/kernel/cpu/scattered.c            |    1 +
+ arch/x86/kernel/cpu/vmware.c               |   50 +-
+ arch/x86/kernel/dumpstack.c                |    7 +-
+ arch/x86/kernel/dumpstack_64.c             |   47 +-
+ arch/x86/kernel/head64.c                   |   85 +-
+ arch/x86/kernel/head_32.S                  |    4 +-
+ arch/x86/kernel/head_64.S                  |  159 ++-
+ arch/x86/kernel/idt.c                      |   94 +-
+ arch/x86/kernel/kvm.c                      |   35 +-
+ arch/x86/kernel/nmi.c                      |   12 +
+ arch/x86/kernel/sev-es-shared.c            |  507 +++++++
+ arch/x86/kernel/sev-es.c                   | 1404 ++++++++++++++++++++
+ arch/x86/kernel/smpboot.c                  |   10 +-
+ arch/x86/kernel/traps.c                    |   56 +
+ arch/x86/kernel/umip.c                     |   49 +-
+ arch/x86/kvm/svm/nested.c                  |   47 +-
+ arch/x86/kvm/svm/svm.c                     |    2 +
+ arch/x86/lib/insn-eval.c                   |  130 ++
+ arch/x86/mm/cpu_entry_area.c               |    3 +-
+ arch/x86/mm/extable.c                      |    1 +
+ arch/x86/mm/mem_encrypt.c                  |   38 +-
+ arch/x86/mm/mem_encrypt_identity.c         |    3 +
+ arch/x86/platform/efi/efi_64.c             |   10 +
+ arch/x86/realmode/init.c                   |   24 +-
+ arch/x86/realmode/rm/header.S              |    3 +
+ arch/x86/realmode/rm/trampoline_64.S       |   20 +
+ arch/x86/tools/gen-insn-attr-x86.awk       |   50 +-
+ tools/arch/x86/tools/gen-insn-attr-x86.awk |   50 +-
+ 69 files changed, 4041 insertions(+), 456 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/ident_map_64.c
+ create mode 100644 arch/x86/boot/compressed/idt_64.c
+ create mode 100644 arch/x86/boot/compressed/idt_handlers_64.S
+ delete mode 100644 arch/x86/boot/compressed/kaslr_64.c
+ create mode 100644 arch/x86/boot/compressed/sev-es.c
+ create mode 100644 arch/x86/include/asm/fpu/xcr.h
+ create mode 100644 arch/x86/include/asm/sev-es.h
+ create mode 100644 arch/x86/include/asm/trap_pf.h
+ create mode 100644 arch/x86/kernel/sev-es-shared.c
+ create mode 100644 arch/x86/kernel/sev-es.c
+
+-- 
+2.28.0
 
