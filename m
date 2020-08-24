@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C05A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9211C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2462067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727192067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289654;
-	bh=+T3dHC8Q9XGpr8N7sUoQsM4SM1kDVWJHzyuDrKyjutQ=;
+	s=default; t=1598289669;
+	bh=suhF0qwwSU0yECNHcaKgTLO11nlKyMh0NmEMGkWs6+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qzy+azEmmCqJqqt7U3Efu32dsznquFeehSH8XTi0SZWvQV5t/eo8UFi9aOI3Y2TcD
-	 HKHqx126ureJ56R94e8vFphiAIZf4Xk0m9IycWobW12iy1wBo+OqQK7nDZmJ78wkSs
-	 ZN5pTaSlKL6dnCoxgtWT5z1C5AU9xaASHk7YzOLg=
+	b=TCym3dmb8fgGrUc6ueCDw5YXAqvAfGO/S8hbEpxMTS8ubbj8+UZqZs8K9/iADH15T
+	 UkpUISXqJ/PVOo7HOcA/q2JKGHhSCWRulImd95YvXsa88FSXE1Fm21spAvFSJdQv3z
+	 zPYjUKqj6SiSjkEJ/EK3QhR1YqYHiP3Cvj9a4Vgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgHXRUo (ORCPT
+        id S1728481AbgHXRVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41064 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:21:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728310AbgHXQgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:36:39 -0400
+        id S1728282AbgHXQgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:36:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C49722D6D;
-        Mon, 24 Aug 2020 16:36:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F52722D06;
+        Mon, 24 Aug 2020 16:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286971;
-        bh=+T3dHC8Q9XGpr8N7sUoQsM4SM1kDVWJHzyuDrKyjutQ=;
+        s=default; t=1598286954;
+        bh=suhF0qwwSU0yECNHcaKgTLO11nlKyMh0NmEMGkWs6+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aT2HcYK3lFT44ebzPUMjZlL3o23pKDNY2j+tMqhiTfdLQ+o3zIyvE8lrBh8w26WLJ
-         jxWEZ5hhra/nDX2Swuvr46gMGRROlSLqboxt/LZa3gA3belDSXYMkVEkOblJBbby/f
-         fhKKJTmh16RuacLYkiapFKz1YYwLqRUF1M/+XFXA=
+        b=v+GzIR/vyRAN4wamwDrkUpyq/DPuh03dvq9F3WeJetrdNfhj1eUKrPqxPgd1dewb9
+         kfqYv/OcIJuR/JgP1g2NZ5gepcdfj9sxtXN/8qWbTDxKQzj7KvuSQa+QmScblIFoPF
+         ZbXs1PvsDKsElsMtPn7VeR0gmEyJ+GLUBOyK7T5Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Saurav Kashyap <skashyap@marvell.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 49/63] Revert "scsi: qla2xxx: Fix crash on qla2x00_mailbox_command"
-Date:   Mon, 24 Aug 2020 12:34:49 -0400
-Message-Id: <20200824163504.605538-49-sashal@kernel.org>
+Cc:     David Ahern <dsahern@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 37/63] selftests: disable rp_filter for icmp_redirect.sh
+Date:   Mon, 24 Aug 2020 12:34:37 -0400
+Message-Id: <20200824163504.605538-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
 References: <20200824163504.605538-1-sashal@kernel.org>
@@ -61,45 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saurav Kashyap <skashyap@marvell.com>
+From: David Ahern <dsahern@kernel.org>
 
-[ Upstream commit de7e6194301ad31c4ce95395eb678e51a1b907e5 ]
+[ Upstream commit bcf7ddb0186d366f761f86196b480ea6dd2dc18c ]
 
-FCoE adapter initialization failed for ISP8021 with the following patch
-applied. In addition, reproduction of the issue the patch originally tried
-to address has been unsuccessful.
+h1 is initially configured to reach h2 via r1 rather than the
+more direct path through r2. If rp_filter is set and inherited
+for r2, forwarding fails since the source address of h1 is
+reachable from eth0 vs the packet coming to it via r1 and eth1.
+Since rp_filter setting affects the test, explicitly reset it.
 
-This reverts commit 3cb182b3fa8b7a61f05c671525494697cba39c6a.
-
-Link: https://lore.kernel.org/r/20200806111014.28434-11-njavali@marvell.com
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: David Ahern <dsahern@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_mbx.c | 8 --------
- 1 file changed, 8 deletions(-)
+ tools/testing/selftests/net/icmp_redirect.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index df31ee0d59b20..fdb2ce7acb912 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -333,14 +333,6 @@ qla2x00_mailbox_command(scsi_qla_host_t *vha, mbx_cmd_t *mcp)
- 			if (time_after(jiffies, wait_time))
- 				break;
+diff --git a/tools/testing/selftests/net/icmp_redirect.sh b/tools/testing/selftests/net/icmp_redirect.sh
+index 18c5de53558af..bf361f30d6ef9 100755
+--- a/tools/testing/selftests/net/icmp_redirect.sh
++++ b/tools/testing/selftests/net/icmp_redirect.sh
+@@ -180,6 +180,8 @@ setup()
+ 			;;
+ 		r[12]) ip netns exec $ns sysctl -q -w net.ipv4.ip_forward=1
+ 		       ip netns exec $ns sysctl -q -w net.ipv4.conf.all.send_redirects=1
++		       ip netns exec $ns sysctl -q -w net.ipv4.conf.default.rp_filter=0
++		       ip netns exec $ns sysctl -q -w net.ipv4.conf.all.rp_filter=0
  
--			/*
--			 * Check if it's UNLOADING, cause we cannot poll in
--			 * this case, or else a NULL pointer dereference
--			 * is triggered.
--			 */
--			if (unlikely(test_bit(UNLOADING, &base_vha->dpc_flags)))
--				return QLA_FUNCTION_TIMEOUT;
--
- 			/* Check for pending interrupts. */
- 			qla2x00_poll(ha->rsp_q_map[0]);
- 
+ 		       ip netns exec $ns sysctl -q -w net.ipv6.conf.all.forwarding=1
+ 		       ip netns exec $ns sysctl -q -w net.ipv6.route.mtu_expires=10
 -- 
 2.25.1
 
