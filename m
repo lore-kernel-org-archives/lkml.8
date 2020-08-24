@@ -2,241 +2,139 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF6DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46426C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A051A206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209A520738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598260590;
+	bh=Nsx1/QnVpUDV33+SrioDmlhfg5tkM9R+Pa91bvw0w0Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DPi0vSr+fGgr+EAxgIC855ObEPoK3XPKWk6OEKA+2dMZvFvnzkY4CvePFFIYCG6kV
+	 WVjkeUfwmZ/f2Qg7IG02aapUNtpEoau073tZVzZPrEnYHGyA5NMc2y0COjYSM/0BWL
+	 +SftFtCLtTGcILcP6fTHXswB7TFfxePWRPGuZakM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbgHXJQG (ORCPT
+        id S1729977AbgHXJPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:16:06 -0400
-Received: from 8bytes.org ([81.169.241.247]:37444 "EHLO theia.8bytes.org"
+        Mon, 24 Aug 2020 05:15:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730442AbgHXI4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730444AbgHXI4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 04:56:00 -0400
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 0343FD13;
-        Mon, 24 Aug 2020 10:55:57 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 22/76] x86/boot/compressed/64: Add set_page_en/decrypted() helpers
-Date:   Mon, 24 Aug 2020 10:54:17 +0200
-Message-Id: <20200824085511.7553-23-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 865EA2072D;
+        Mon, 24 Aug 2020 08:55:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259360;
+        bh=Nsx1/QnVpUDV33+SrioDmlhfg5tkM9R+Pa91bvw0w0Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pZL9XanfOWUYS2qawffEXVrNil69tPIgTz6vJS5PkKOEGpCv9OZPix+5s2STDnpLo
+         O+hSS8cKduBmVj/rlIaqJWhud2/AXjHV0+p++2m4wGTSC6FWPHdmJwKgUq7xxkYBzR
+         3AvZ0tcL/EVTTti5Dnh+xw77jUYDCSiRVQXUy620=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Zhe Li <lizhe67@huawei.com>,
+        Hou Tao <houtao1@huawei.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 30/71] jffs2: fix UAF problem
+Date:   Mon, 24 Aug 2020 10:31:21 +0200
+Message-Id: <20200824082357.391119905@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Zhe Li <lizhe67@huawei.com>
 
-The functions are needed to map the GHCB for SEV-ES guests. The GHCB is
-used for communication with the hypervisor, so its content must not be
-encrypted. After the GHCB is not needed anymore it must be mapped
-encrypted again so that the running kernel image can safely re-use the
-memory.
+[ Upstream commit 798b7347e4f29553db4b996393caf12f5b233daf ]
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-22-joro@8bytes.org
+The log of UAF problem is listed below.
+BUG: KASAN: use-after-free in jffs2_rmdir+0xa4/0x1cc [jffs2] at addr c1f165fc
+Read of size 4 by task rm/8283
+=============================================================================
+BUG kmalloc-32 (Tainted: P    B      O   ): kasan: bad access detected
+-----------------------------------------------------------------------------
+
+INFO: Allocated in 0xbbbbbbbb age=3054364 cpu=0 pid=0
+        0xb0bba6ef
+        jffs2_write_dirent+0x11c/0x9c8 [jffs2]
+        __slab_alloc.isra.21.constprop.25+0x2c/0x44
+        __kmalloc+0x1dc/0x370
+        jffs2_write_dirent+0x11c/0x9c8 [jffs2]
+        jffs2_do_unlink+0x328/0x5fc [jffs2]
+        jffs2_rmdir+0x110/0x1cc [jffs2]
+        vfs_rmdir+0x180/0x268
+        do_rmdir+0x2cc/0x300
+        ret_from_syscall+0x0/0x3c
+INFO: Freed in 0x205b age=3054364 cpu=0 pid=0
+        0x2e9173
+        jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
+        jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
+        jffs2_garbage_collect_dirent.isra.3+0x21c/0x288 [jffs2]
+        jffs2_garbage_collect_live+0x16bc/0x1800 [jffs2]
+        jffs2_garbage_collect_pass+0x678/0x11d4 [jffs2]
+        jffs2_garbage_collect_thread+0x1e8/0x3b0 [jffs2]
+        kthread+0x1a8/0x1b0
+        ret_from_kernel_thread+0x5c/0x64
+Call Trace:
+[c17ddd20] [c02452d4] kasan_report.part.0+0x298/0x72c (unreliable)
+[c17ddda0] [d2509680] jffs2_rmdir+0xa4/0x1cc [jffs2]
+[c17dddd0] [c026da04] vfs_rmdir+0x180/0x268
+[c17dde00] [c026f4e4] do_rmdir+0x2cc/0x300
+[c17ddf40] [c001a658] ret_from_syscall+0x0/0x3c
+
+The root cause is that we don't get "jffs2_inode_info.sem" before
+we scan list "jffs2_inode_info.dents" in function jffs2_rmdir.
+This patch add codes to get "jffs2_inode_info.sem" before we scan
+"jffs2_inode_info.dents" to slove the UAF problem.
+
+Signed-off-by: Zhe Li <lizhe67@huawei.com>
+Reviewed-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 133 ++++++++++++++++++++++++
- arch/x86/boot/compressed/misc.h         |   2 +
- 2 files changed, 135 insertions(+)
+ fs/jffs2/dir.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index aa91bebc0fe9..05742f641a06 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -24,6 +24,7 @@
+diff --git a/fs/jffs2/dir.c b/fs/jffs2/dir.c
+index f20cff1194bb6..776493713153f 100644
+--- a/fs/jffs2/dir.c
++++ b/fs/jffs2/dir.c
+@@ -590,10 +590,14 @@ static int jffs2_rmdir (struct inode *dir_i, struct dentry *dentry)
+ 	int ret;
+ 	uint32_t now = JFFS2_NOW();
  
- /* These actually do the work of building the kernel identity maps. */
- #include <linux/pgtable.h>
-+#include <asm/cmpxchg.h>
- #include <asm/trap_pf.h>
- #include <asm/trapnr.h>
- #include <asm/init.h>
-@@ -165,6 +166,138 @@ void finalize_identity_maps(void)
- 	write_cr3(top_level_pgt);
- }
++	mutex_lock(&f->sem);
+ 	for (fd = f->dents ; fd; fd = fd->next) {
+-		if (fd->ino)
++		if (fd->ino) {
++			mutex_unlock(&f->sem);
+ 			return -ENOTEMPTY;
++		}
+ 	}
++	mutex_unlock(&f->sem);
  
-+static pte_t *split_large_pmd(struct x86_mapping_info *info,
-+			      pmd_t *pmdp, unsigned long __address)
-+{
-+	unsigned long page_flags;
-+	unsigned long address;
-+	pte_t *pte;
-+	pmd_t pmd;
-+	int i;
-+
-+	pte = (pte_t *)info->alloc_pgt_page(info->context);
-+	if (!pte)
-+		return NULL;
-+
-+	address     = __address & PMD_MASK;
-+	/* No large page - clear PSE flag */
-+	page_flags  = info->page_flag & ~_PAGE_PSE;
-+
-+	/* Populate the PTEs */
-+	for (i = 0; i < PTRS_PER_PMD; i++) {
-+		set_pte(&pte[i], __pte(address | page_flags));
-+		address += PAGE_SIZE;
-+	}
-+
-+	/*
-+	 * Ideally we need to clear the large PMD first and do a TLB
-+	 * flush before we write the new PMD. But the 2M range of the
-+	 * PMD might contain the code we execute and/or the stack
-+	 * we are on, so we can't do that. But that should be safe here
-+	 * because we are going from large to small mappings and we are
-+	 * also the only user of the page-table, so there is no chance
-+	 * of a TLB multihit.
-+	 */
-+	pmd = __pmd((unsigned long)pte | info->kernpg_flag);
-+	set_pmd(pmdp, pmd);
-+	/* Flush TLB to establish the new PMD */
-+	write_cr3(top_level_pgt);
-+
-+	return pte + pte_index(__address);
-+}
-+
-+static void clflush_page(unsigned long address)
-+{
-+	unsigned int flush_size;
-+	char *cl, *start, *end;
-+
-+	/*
-+	 * Hardcode cl-size to 64 - CPUID can't be used here because that might
-+	 * cause another #VC exception and the GHCB is not ready to use yet.
-+	 */
-+	flush_size = 64;
-+	start      = (char *)(address & PAGE_MASK);
-+	end        = start + PAGE_SIZE;
-+
-+	/*
-+	 * First make sure there are no pending writes on the cache-lines to
-+	 * flush.
-+	 */
-+	asm volatile("mfence" : : : "memory");
-+
-+	for (cl = start; cl != end; cl += flush_size)
-+		clflush(cl);
-+}
-+
-+static int set_clr_page_flags(struct x86_mapping_info *info,
-+			      unsigned long address,
-+			      pteval_t set, pteval_t clr)
-+{
-+	pgd_t *pgdp = (pgd_t *)top_level_pgt;
-+	p4d_t *p4dp;
-+	pud_t *pudp;
-+	pmd_t *pmdp;
-+	pte_t *ptep, pte;
-+
-+	/*
-+	 * First make sure there is a PMD mapping for 'address'.
-+	 * It should already exist, but keep things generic.
-+	 *
-+	 * To map the page just read from it and fault it in if there is no
-+	 * mapping yet. add_identity_map() can't be called here because that
-+	 * would unconditionally map the address on PMD level, destroying any
-+	 * PTE-level mappings that might already exist. Use assembly here so
-+	 * the access won't be optimized away.
-+	 */
-+	asm volatile("mov %[address], %%r9"
-+		     :: [address] "g" (*(unsigned long *)address)
-+		     : "r9", "memory");
-+
-+	/*
-+	 * The page is mapped at least with PMD size - so skip checks and walk
-+	 * directly to the PMD.
-+	 */
-+	p4dp = p4d_offset(pgdp, address);
-+	pudp = pud_offset(p4dp, address);
-+	pmdp = pmd_offset(pudp, address);
-+
-+	if (pmd_large(*pmdp))
-+		ptep = split_large_pmd(info, pmdp, address);
-+	else
-+		ptep = pte_offset_kernel(pmdp, address);
-+
-+	if (!ptep)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Changing encryption attributes of a page requires to flush it from
-+	 * the caches.
-+	 */
-+	if ((set | clr) & _PAGE_ENC)
-+		clflush_page(address);
-+
-+	/* Update PTE */
-+	pte = *ptep;
-+	pte = pte_set_flags(pte, set);
-+	pte = pte_clear_flags(pte, clr);
-+	set_pte(ptep, pte);
-+
-+	/* Flush TLB after changing encryption attribute */
-+	write_cr3(top_level_pgt);
-+
-+	return 0;
-+}
-+
-+int set_page_decrypted(unsigned long address)
-+{
-+	return set_clr_page_flags(&mapping_info, address, 0, _PAGE_ENC);
-+}
-+
-+int set_page_encrypted(unsigned long address)
-+{
-+	return set_clr_page_flags(&mapping_info, address, _PAGE_ENC, 0);
-+}
-+
- static void do_pf_error(const char *msg, unsigned long error_code,
- 			unsigned long address, unsigned long ip)
- {
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index eaa8b45ebccb..01c0fb3417ca 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -98,6 +98,8 @@ static inline void choose_random_location(unsigned long input,
- #endif
- 
- #ifdef CONFIG_X86_64
-+extern int set_page_decrypted(unsigned long address);
-+extern int set_page_encrypted(unsigned long address);
- extern unsigned char _pgtable[];
- #endif
- 
+ 	ret = jffs2_do_unlink(c, dir_f, dentry->d_name.name,
+ 			      dentry->d_name.len, f, now);
 -- 
-2.28.0
+2.25.1
+
+
 
