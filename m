@@ -7,55 +7,46 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5088C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 191F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3E902074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A952074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261275;
-	bh=W0iroQE4sgg+hF4wt0GaVuoyaIql3NeH0s7367c1cMA=;
+	s=default; t=1598261293;
+	bh=6aHggL1RkTAzBEHv4FvfQ9+Mk3/6PJyf2EJjPbmIUQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F0oTmAAyoQ2YQyyQOfPoo2+GTBn76E7Z3DiMkJ7DVHv72P+is+AGZU74BW5TBAAF8
-	 dWBpROYzzXtNoI7dVtjptGyV9OUTqw2FOYXQJD+W0xDgWBEYweBkiK2UyTKTO3fJyA
-	 1+2QZ7M452Epz0OEcR7tOJnZJb1oEX/4uGYjBD9I=
+	b=KtyAmFzTJ8BfmYr0b4qsOJVQo5PB7A7z2BWROj15VetuY+rULvA1rK4fibnGu9skF
+	 RdPfOWJbfHWglU/u9PJzYwe4+Ky+7v+vpqLwKmZG/jRok+sB4Ul8RbHaFmtXbvKYsD
+	 0uO2giJr2XYWekrCxXbPaP1vGDC04nhA2GBDxluk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730041AbgHXIwF (ORCPT
+        id S1730002AbgHXIvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:52:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57566 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:51:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730019AbgHXIwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:52:00 -0400
+        id S1729978AbgHXIvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62955207D3;
-        Mon, 24 Aug 2020 08:51:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BC9C2075B;
+        Mon, 24 Aug 2020 08:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259118;
-        bh=W0iroQE4sgg+hF4wt0GaVuoyaIql3NeH0s7367c1cMA=;
+        s=default; t=1598259105;
+        bh=6aHggL1RkTAzBEHv4FvfQ9+Mk3/6PJyf2EJjPbmIUQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hW4Ag+Z1cwECXJu/qmDVORit2wdpMpxmVGkZELyx295R9Q9pW28v22dG5/VATrLW1
-         GNkMwRSn69JsYvldBjyshNtzXxL3YGjxg71LY9n11OboYI/mh5P9VD64Fi7Qpcac6w
-         2mxI8RwDBrJPQ0jQTNlZ7V5MVVdf8XZmEpXfSwEo=
+        b=APzmcX5ibV+TXN/HuNjRlCNf5/AW7EtqnqkfXb2NxkueEUzGaFriOqF8igl2N4thu
+         pv7o7gzX2uBvqMaqEe+FAmstQux0bDNO3SNbDv6ubNbhcK1/+qNYw3svZ7SUfWhcYm
+         4zNZ40DuygdZ3jL6m5dVTf9eRf9OlkxXc7whryUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Shi <shy828301@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Greg Ungerer <gerg@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 08/39] khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
-Date:   Mon, 24 Aug 2020 10:31:07 +0200
-Message-Id: <20200824082348.899095881@linuxfoundation.org>
+Subject: [PATCH 4.9 22/39] m68knommu: fix overwriting of bits in ColdFire V3 cache control
+Date:   Mon, 24 Aug 2020 10:31:21 +0200
+Message-Id: <20200824082349.687014923@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
@@ -68,49 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Greg Ungerer <gerg@linux-m68k.org>
 
-[ Upstream commit f3f99d63a8156c7a4a6b20aac22b53c5579c7dc1 ]
+[ Upstream commit bdee0e793cea10c516ff48bf3ebb4ef1820a116b ]
 
-syzbot crashes on the VM_BUG_ON_MM(khugepaged_test_exit(mm), mm) in
-__khugepaged_enter(): yes, when one thread is about to dump core, has set
-core_state, and is waiting for others, another might do something calling
-__khugepaged_enter(), which now crashes because I lumped the core_state
-test (known as "mmget_still_valid") into khugepaged_test_exit().  I still
-think it's best to lump them together, so just in this exceptional case,
-check mm->mm_users directly instead of khugepaged_test_exit().
+The Cache Control Register (CACR) of the ColdFire V3 has bits that
+control high level caching functions, and also enable/disable the use
+of the alternate stack pointer register (the EUSP bit) to provide
+separate supervisor and user stack pointer registers. The code as
+it is today will blindly clear the EUSP bit on cache actions like
+invalidation. So it is broken for this case - and that will result
+in failed booting (interrupt entry and exit processing will be
+completely hosed).
 
-Fixes: bbe98f9cadff ("khugepaged: khugepaged_test_exit() check mmget_still_valid()")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Yang Shi <shy828301@gmail.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: <stable@vger.kernel.org>	[4.8+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008141503370.18085@eggly.anvils
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This only affects ColdFire V3 parts that support the alternate stack
+register (like the 5329 for example) - generally speaking new parts do,
+older parts don't. It has no impact on ColdFire V3 parts with the single
+stack pointer, like the 5307 for example.
+
+Fix the cache bit defines used, so they maintain the EUSP bit when
+carrying out cache actions through the CACR register.
+
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/khugepaged.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/m68k/include/asm/m53xxacr.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index f4ed056d9f863..1538e5e5c628a 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -404,7 +404,7 @@ int __khugepaged_enter(struct mm_struct *mm)
- 		return -ENOMEM;
+diff --git a/arch/m68k/include/asm/m53xxacr.h b/arch/m68k/include/asm/m53xxacr.h
+index 3177ce8331d69..baee0c77b9818 100644
+--- a/arch/m68k/include/asm/m53xxacr.h
++++ b/arch/m68k/include/asm/m53xxacr.h
+@@ -88,9 +88,9 @@
+  * coherency though in all cases. And for copyback caches we will need
+  * to push cached data as well.
+  */
+-#define CACHE_INIT	  CACR_CINVA
+-#define CACHE_INVALIDATE  CACR_CINVA
+-#define CACHE_INVALIDATED CACR_CINVA
++#define CACHE_INIT        (CACHE_MODE + CACR_CINVA - CACR_EC)
++#define CACHE_INVALIDATE  (CACHE_MODE + CACR_CINVA)
++#define CACHE_INVALIDATED (CACHE_MODE + CACR_CINVA)
  
- 	/* __khugepaged_exit() must not run from under us */
--	VM_BUG_ON_MM(khugepaged_test_exit(mm), mm);
-+	VM_BUG_ON_MM(atomic_read(&mm->mm_users) == 0, mm);
- 	if (unlikely(test_and_set_bit(MMF_VM_HUGEPAGE, &mm->flags))) {
- 		free_mm_slot(mm_slot);
- 		return 0;
+ #define ACR0_MODE	((CONFIG_RAMBASE & 0xff000000) + \
+ 			 (0x000f0000) + \
 -- 
 2.25.1
 
