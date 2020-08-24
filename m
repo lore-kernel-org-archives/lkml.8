@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8179C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C06C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96E9E2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1685B2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598257936;
-	bh=sTDj6tq+HN2wll79e4raXCRY8XbX4Md6sOVXV9rrXZk=;
+	s=default; t=1598257938;
+	bh=2FKLRsp/q4hCpwXTaY8+6NDt7k4ARIDqnPQJhxEo6BY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YDLImIb2s1yhLLJO4qJIoM4u/EuLfytLSAk4sVnykLEp7Cit+hrzkRzKoaW03Qw9v
-	 T0NqTudzVBrIcuf/V8+qA3NGovjgxiVNKjFEgikpuZdepPFjVsx0+dFBKU1rMU0t/g
-	 /2VNmFCxUdXfMkQDbh2fTtMpvXO3vbFv7ps4mviM=
+	b=JyFa8/xkr9jUI2erpxHlasjs7IsH5eeoticAeNSSkwQifJXcRvj0bBHrNebYbRzT7
+	 2vDM5xEYda8WH//5q9cJ7P2PBGt3Q4lFkOIc4/9vS/jwX0PhHLT0T22rbVocL+Ht/D
+	 +2V/cSgCWTwAD/IuUJybyv0xoPcql61lL7Z+ssTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgHXIcO (ORCPT
+        id S1726617AbgHXIcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:32:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38624 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:32:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgHXIcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:32:07 -0400
+        id S1726037AbgHXIcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:32:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8346207D3;
-        Mon, 24 Aug 2020 08:32:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48F592074D;
+        Mon, 24 Aug 2020 08:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257926;
-        bh=sTDj6tq+HN2wll79e4raXCRY8XbX4Md6sOVXV9rrXZk=;
+        s=default; t=1598257928;
+        bh=2FKLRsp/q4hCpwXTaY8+6NDt7k4ARIDqnPQJhxEo6BY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qfvOGSZwFCXC/SNJLrXvFrKCtkSRUBlTyp9D6u/Gt/7xQ/XF5+9nOti7MpmZPLgC2
-         6TG/huoJnU1X3lWlSH8wgbdNeJ1mdCkX8cFf92peL5B1PrE1ArFtUd2lxJs7HeNpOX
-         RD+RiqjmHOflZm8YrD+78TBKMwPHJqb73Q/4rLfc=
+        b=o1T7CkykaxA0ieOGgtps0HycJ9sVwcKeUAh1hc/q/RPG5jHTgrkyEnaSImBkjKwxJ
+         y/5WLOi7ENqGLqt5vxigla+7hnCiqTEoXPEix2PMRzl1f1o6uEx3dOof2N33h+I/IG
+         jySxa8IId3oLNijzxcxhsZq2KylHK7+oHP72zO9U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.8 011/148] spi: Prevent adding devices below an unregistering controller
-Date:   Mon, 24 Aug 2020 10:28:29 +0200
-Message-Id: <20200824082414.497192453@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 012/148] io_uring: find and cancel head link async work on files exit
+Date:   Mon, 24 Aug 2020 10:28:30 +0200
+Message-Id: <20200824082414.547922920@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -62,109 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit ddf75be47ca748f8b12d28ac64d624354fddf189 upstream.
+commit b711d4eaf0c408a811311ee3e94d6e9e5a230a9a upstream.
 
-CONFIG_OF_DYNAMIC and CONFIG_ACPI allow adding SPI devices at runtime
-using a DeviceTree overlay or DSDT patch.  CONFIG_SPI_SLAVE allows the
-same via sysfs.
+Commit f254ac04c874 ("io_uring: enable lookup of links holding inflight files")
+only handled 2 out of the three head link cases we have, we also need to
+lookup and cancel work that is blocked in io-wq if that work has a link
+that's holding a reference to the files structure.
 
-But there are no precautions to prevent adding a device below a
-controller that's being removed.  Such a device is unusable and may not
-even be able to unbind cleanly as it becomes inaccessible once the
-controller has been torn down.  E.g. it is then impossible to quiesce
-the device's interrupt.
+Put the "cancel head links that hold this request pending" logic into
+io_attempt_cancel(), which will to through the motions of finding and
+canceling head links that hold the current inflight files stable request
+pending.
 
-of_spi_notify() and acpi_spi_notify() do hold a ref on the controller,
-but otherwise run lockless against spi_unregister_controller().
-
-Fix by holding the spi_add_lock in spi_unregister_controller() and
-bailing out of spi_add_device() if the controller has been unregistered
-concurrently.
-
-Fixes: ce79d54ae447 ("spi/of: Add OF notifier handler")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v3.19+
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Link: https://lore.kernel.org/r/a8c3205088a969dc8410eec1eba9aface60f36af.1596451035.git.lukas@wunner.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
+Reported-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/Kconfig |    3 +++
- drivers/spi/spi.c   |   21 ++++++++++++++++++++-
- 2 files changed, 23 insertions(+), 1 deletion(-)
+ fs/io_uring.c |   33 +++++++++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 4 deletions(-)
 
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -999,4 +999,7 @@ config SPI_SLAVE_SYSTEM_CONTROL
- 
- endif # SPI_SLAVE
- 
-+config SPI_DYNAMIC
-+	def_bool ACPI || OF_DYNAMIC || SPI_SLAVE
-+
- endif # SPI
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -475,6 +475,12 @@ static LIST_HEAD(spi_controller_list);
-  */
- static DEFINE_MUTEX(board_lock);
- 
-+/*
-+ * Prevents addition of devices with same chip select and
-+ * addition of devices below an unregistering controller.
-+ */
-+static DEFINE_MUTEX(spi_add_lock);
-+
- /**
-  * spi_alloc_device - Allocate a new SPI device
-  * @ctlr: Controller to which device is connected
-@@ -554,7 +560,6 @@ static int spi_dev_check(struct device *
-  */
- int spi_add_device(struct spi_device *spi)
- {
--	static DEFINE_MUTEX(spi_add_lock);
- 	struct spi_controller *ctlr = spi->controller;
- 	struct device *dev = ctlr->dev.parent;
- 	int status;
-@@ -582,6 +587,13 @@ int spi_add_device(struct spi_device *sp
- 		goto done;
- 	}
- 
-+	/* Controller may unregister concurrently */
-+	if (IS_ENABLED(CONFIG_SPI_DYNAMIC) &&
-+	    !device_is_registered(&ctlr->dev)) {
-+		status = -ENODEV;
-+		goto done;
-+	}
-+
- 	/* Descriptors take precedence */
- 	if (ctlr->cs_gpiods)
- 		spi->cs_gpiod = ctlr->cs_gpiods[spi->chip_select];
-@@ -2764,6 +2776,10 @@ void spi_unregister_controller(struct sp
- 	struct spi_controller *found;
- 	int id = ctlr->bus_num;
- 
-+	/* Prevent addition of new devices, unregister existing ones */
-+	if (IS_ENABLED(CONFIG_SPI_DYNAMIC))
-+		mutex_lock(&spi_add_lock);
-+
- 	device_for_each_child(&ctlr->dev, NULL, __unregister);
- 
- 	/* First make sure that this controller was ever added */
-@@ -2784,6 +2800,9 @@ void spi_unregister_controller(struct sp
- 	if (found == ctlr)
- 		idr_remove(&spi_master_idr, id);
- 	mutex_unlock(&board_lock);
-+
-+	if (IS_ENABLED(CONFIG_SPI_DYNAMIC))
-+		mutex_unlock(&spi_add_lock);
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -7609,6 +7609,33 @@ static bool io_timeout_remove_link(struc
+ 	return found;
  }
- EXPORT_SYMBOL_GPL(spi_unregister_controller);
+ 
++static bool io_cancel_link_cb(struct io_wq_work *work, void *data)
++{
++	return io_match_link(container_of(work, struct io_kiocb, work), data);
++}
++
++static void io_attempt_cancel(struct io_ring_ctx *ctx, struct io_kiocb *req)
++{
++	enum io_wq_cancel cret;
++
++	/* cancel this particular work, if it's running */
++	cret = io_wq_cancel_work(ctx->io_wq, &req->work);
++	if (cret != IO_WQ_CANCEL_NOTFOUND)
++		return;
++
++	/* find links that hold this pending, cancel those */
++	cret = io_wq_cancel_cb(ctx->io_wq, io_cancel_link_cb, req, true);
++	if (cret != IO_WQ_CANCEL_NOTFOUND)
++		return;
++
++	/* if we have a poll link holding this pending, cancel that */
++	if (io_poll_remove_link(ctx, req))
++		return;
++
++	/* final option, timeout link is holding this req pending */
++	io_timeout_remove_link(ctx, req);
++}
++
+ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
+ 				  struct files_struct *files)
+ {
+@@ -7665,10 +7692,8 @@ static void io_uring_cancel_files(struct
+ 				continue;
+ 			}
+ 		} else {
+-			io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
+-			/* could be a link, check and remove if it is */
+-			if (!io_poll_remove_link(ctx, cancel_req))
+-				io_timeout_remove_link(ctx, cancel_req);
++			/* cancel this request, or head link requests */
++			io_attempt_cancel(ctx, cancel_req);
+ 			io_put_req(cancel_req);
+ 		}
  
 
 
