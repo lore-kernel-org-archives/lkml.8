@@ -2,79 +2,124 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 021ECC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968ACC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8BFF204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3C4204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259574;
-	bh=Vqjvv0EIOi2U2s6t+0Q1CQ/3Q2B1knKJsv8HWv4/b7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sgdoriz6eKLft6z1bPJNX+H+zjD6mR4IrVrnqLlZwsd6NiFdLiGt2S0TBJC3UAcg3
-	 fZodmbVWQ29utCundlRrlfoiacotx/LSURBXxStBSU6NwtVJQ4NWpws7TkVGMFc2fx
-	 MDLDunUGcNtT84QjUQ8oCNvJxkAiK0JvWJOLf4l0=
+	s=default; t=1598259588;
+	bh=zb+KGsttukQkJGMCIGufXytEYdL92m671OyjPkUYgkA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kVSQdgAEP7DqPW3mrutWHUS9C/NEA2N8by2XPK/xqAlKcyN8dRq9hk3SY/VkvdH6J
+	 3cacDe16syDqRJWkzxNRw1moBf/XTWvt6IxWDE59bvBHxN5Jq8rYbdo4JNBYtyRQw5
+	 QAdW0sQM6yrMHc+CtxMSYZAlrs3bq2Cj54e9Svo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730829AbgHXI7d (ORCPT
+        id S1730559AbgHXI7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:59:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48854 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:59:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730394AbgHXI7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:59:24 -0400
+        id S1730678AbgHXI5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C64A204FD;
-        Mon, 24 Aug 2020 08:59:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 302E42072D;
+        Mon, 24 Aug 2020 08:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259564;
-        bh=Vqjvv0EIOi2U2s6t+0Q1CQ/3Q2B1knKJsv8HWv4/b7s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gC9uclQcI+xfmyA0tytJMAz6h+WcavQVvf+IgdXjo7ei64BR9302c9yfFxXVqkKBl
-         ACD9DLqnKm9gK1okGw9Byuy1Ve6AXbld5fu4WruKcksBRQ5+JtQrS5M/AoGTCAzquK
-         OeFGLZnnbq1f4En3cwiFlIxk5e47K9N4PMDb9Et4=
-Date:   Mon, 24 Aug 2020 10:59:05 +0200
+        s=default; t=1598259453;
+        bh=zb+KGsttukQkJGMCIGufXytEYdL92m671OyjPkUYgkA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vKI+LAciUD54J+fWjEZpCzNiDA5j/JDBtXgrKoavareuW29W9V86Vjz7/wR14Z8Yg
+         8gXGBpar+zM4/KY1kyzAUugscTKU1972QP0dnFqBMwsLatkQ8oZMcem52VqdyGKfu5
+         LWYHff9D01fAzbTaipHyXXDBWekaPX8hcPQoFQ1g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.8 137/232] USB: serial: ftdi_sio: fix break and sysrq
- handling
-Message-ID: <20200824085905.GA405532@kroah.com>
-References: <20200820091612.692383444@linuxfoundation.org>
- <20200820091619.460392380@linuxfoundation.org>
- <CAMgPeKX54WqE0Wc56u6W3M2JwttV=E7sBKmM5eRa5_Mu7m+okg@mail.gmail.com>
- <20200820095652.GA1266907@kroah.com>
- <20200824085424.GB21288@localhost>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 65/71] powerpc/pseries: Do not initiate shutdown when system is running on UPS
+Date:   Mon, 24 Aug 2020 10:31:56 +0200
+Message-Id: <20200824082359.202438041@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824085424.GB21288@localhost>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:54:24AM +0200, Johan Hovold wrote:
-> On Thu, Aug 20, 2020 at 11:56:52AM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, Aug 20, 2020 at 11:51:56AM +0200, Johan Hovold wrote:
-> > > This was never intended for stable as it is not a critical fix and has
-> > > never worked properly in the first place. Please drop this one and the
-> > > preparatory clean ups from all stable trees.
-> > 
-> > Ok, but the "fix this thing" and the "Fixes:" tag really did imply this
-> > was actually fixing something :)
-> 
-> Sure and it is indeed a fix, just not for a regression or something
-> critical (oops, etc), and therefore the stable-cc tag was omitted.
-> 
-> > I'll drop it from everywhere, thanks.
-> 
-> Looks like you never dropped the preparatory clean ups. Should be ok.
+From: Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
 
-Ah, sorry about that, shouldn't be a problem :)
+commit 90a9b102eddf6a3f987d15f4454e26a2532c1c98 upstream.
+
+As per PAPR we have to look for both EPOW sensor value and event
+modifier to identify the type of event and take appropriate action.
+
+In LoPAPR v1.1 section 10.2.2 includes table 136 "EPOW Action Codes":
+
+  SYSTEM_SHUTDOWN 3
+
+  The system must be shut down. An EPOW-aware OS logs the EPOW error
+  log information, then schedules the system to be shut down to begin
+  after an OS defined delay internal (default is 10 minutes.)
+
+Then in section 10.3.2.2.8 there is table 146 "Platform Event Log
+Format, Version 6, EPOW Section", which includes the "EPOW Event
+Modifier":
+
+  For EPOW sensor value = 3
+  0x01 = Normal system shutdown with no additional delay
+  0x02 = Loss of utility power, system is running on UPS/Battery
+  0x03 = Loss of system critical functions, system should be shutdown
+  0x04 = Ambient temperature too high
+  All other values = reserved
+
+We have a user space tool (rtas_errd) on LPAR to monitor for
+EPOW_SHUTDOWN_ON_UPS. Once it gets an event it initiates shutdown
+after predefined time. It also starts monitoring for any new EPOW
+events. If it receives "Power restored" event before predefined time
+it will cancel the shutdown. Otherwise after predefined time it will
+shutdown the system.
+
+Commit 79872e35469b ("powerpc/pseries: All events of
+EPOW_SYSTEM_SHUTDOWN must initiate shutdown") changed our handling of
+the "on UPS/Battery" case, to immediately shutdown the system. This
+breaks existing setups that rely on the userspace tool to delay
+shutdown and let the system run on the UPS.
+
+Fixes: 79872e35469b ("powerpc/pseries: All events of EPOW_SYSTEM_SHUTDOWN must initiate shutdown")
+Cc: stable@vger.kernel.org # v4.0+
+Signed-off-by: Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
+[mpe: Massage change log and add PAPR references]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200820061844.306460-1-hegdevasant@linux.vnet.ibm.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/powerpc/platforms/pseries/ras.c |    1 -
+ 1 file changed, 1 deletion(-)
+
+--- a/arch/powerpc/platforms/pseries/ras.c
++++ b/arch/powerpc/platforms/pseries/ras.c
+@@ -118,7 +118,6 @@ static void handle_system_shutdown(char
+ 	case EPOW_SHUTDOWN_ON_UPS:
+ 		pr_emerg("Loss of system power detected. System is running on"
+ 			 " UPS/battery. Check RTAS error log for details\n");
+-		orderly_poweroff(true);
+ 		break;
+ 
+ 	case EPOW_SHUTDOWN_LOSS_OF_CRITICAL_FUNCTIONS:
+
+
