@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 990C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681ECC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A95206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49832206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289115;
-	bh=Y+dzBIhGF+kbEmw58dJ4IZaOWYovq8f4Yu+nhkSCnkU=;
+	s=default; t=1598289116;
+	bh=K0SFOAY/JWMe1HpZplOrQclXZfKJ0VZJtDyjKj1LbL4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xsEggam6YrUdRlixj3bqNIa84TNIaOogtfkwco4mgojgkhTJrv5TsYQXx+Sd2Gf2R
-	 uq4PzEsnnonjyo94DyDnZAqRAaAvo/m45J83c2eGwBUCPlToxq35oIHxvnwMtQ3Lyd
-	 pBx2fegXODeB2gEkzg2jYRvDN4jblC6/Yd7HLnrg=
+	b=ChRMDbr7+qShSgHm/b2WXjyVv5nn/uQ8oSMPAWxOm/Mm3vZb/GotbrGyWWS2lHOPJ
+	 3tnt4M1POl73xEauAOJUpswE/PjjIWthhMxgIPY6nHP7onNjYIDzPF2MUTKNpUvcpU
+	 AR1gbkPI3inR+4Mc13ESRYQV8DGzQ2PdSUEL8IZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgHXRLx (ORCPT
+        id S1728426AbgHXRLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:11:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:11:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728392AbgHXQhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728396AbgHXQhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:37:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 735F022D70;
-        Mon, 24 Aug 2020 16:37:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2793D22D37;
+        Mon, 24 Aug 2020 16:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287030;
-        bh=Y+dzBIhGF+kbEmw58dJ4IZaOWYovq8f4Yu+nhkSCnkU=;
+        s=default; t=1598287032;
+        bh=K0SFOAY/JWMe1HpZplOrQclXZfKJ0VZJtDyjKj1LbL4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ov6q7qK3VBYSw1I08FHAy5RhExDJDcFUz0SVjqJdKN46zKfS0bDZ3pr9iGXX2x/Uz
-         szUYn1aNRK1iVzS4WTsk97pIzopuNOqpUHMOR5Pdh2MjhailubQE+bwyop4CqqoApR
-         4S/JTsPkA9dH719zfKcFcBYrsvopDntHVuNtYL1s=
+        b=iBlUegtTIVEBUH5C5C8dbZ+9rSx81O6KZxx2RYVXuLv2IJ9kvqUvbwclLAPEBJqp4
+         5BtMcL3ic8cSawqMp/q0Jm731Tm71gqcULYNn8l+ms8vic/mTJGlLqBxWdK/gcLm3v
+         gkHPISl+uNWoKMJmzOKvMfoy/FDbzFHCgtbOR1o4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 26/54] can: j1939: transport: j1939_xtp_rx_dat_one(): compare own packets to detect corruptions
-Date:   Mon, 24 Aug 2020 12:36:05 -0400
-Message-Id: <20200824163634.606093-26-sashal@kernel.org>
+Cc:     Mike Pozulp <pozulp.kernel@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.7 28/54] ALSA: hda/realtek: Add model alc298-samsung-headphone
+Date:   Mon, 24 Aug 2020 12:36:07 -0400
+Message-Id: <20200824163634.606093-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
@@ -60,54 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Mike Pozulp <pozulp.kernel@gmail.com>
 
-[ Upstream commit e052d0540298bfe0f6cbbecdc7e2ea9b859575b2 ]
+[ Upstream commit 23dc958689449be85e39351a8c809c3d344b155b ]
 
-Since the stack relays on receiving own packets, it was overwriting own
-transmit buffer from received packets.
+The very quiet and distorted headphone output bug that afflicted my
+Samsung Notebook 9 is appearing in many other Samsung laptops. Expose
+the quirk which fixed my laptop as a model so other users can try it.
 
-At least theoretically, the received echo buffer can be corrupt or
-changed and the session partner can request to resend previous data. In
-this case we will re-send bad data.
-
-With this patch we will stop to overwrite own TX buffer and use it for
-sanity checking.
-
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Link: https://lore.kernel.org/r/20200807105200.26441-6-o.rempel@pengutronix.de
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207423
+Signed-off-by: Mike Pozulp <pozulp.kernel@gmail.com>
+Link: https://lore.kernel.org/r/20200817043219.458889-1-pozulp.kernel@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/j1939/transport.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index 9f99af5b0b11e..3e9c377b0dcce 100644
---- a/net/can/j1939/transport.c
-+++ b/net/can/j1939/transport.c
-@@ -1769,7 +1769,20 @@ static void j1939_xtp_rx_dat_one(struct j1939_session *session,
- 	}
- 
- 	tpdat = se_skb->data;
--	memcpy(&tpdat[offset], &dat[1], nbytes);
-+	if (!session->transmission) {
-+		memcpy(&tpdat[offset], &dat[1], nbytes);
-+	} else {
-+		int err;
-+
-+		err = memcmp(&tpdat[offset], &dat[1], nbytes);
-+		if (err)
-+			netdev_err_once(priv->ndev,
-+					"%s: 0x%p: Data of RX-looped back packet (%*ph) doesn't match TX data (%*ph)!\n",
-+					__func__, session,
-+					nbytes, &dat[1],
-+					nbytes, &tpdat[offset]);
-+	}
-+
- 	if (packet == session->pkt.rx)
- 		session->pkt.rx++;
- 
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 313eecfb91b44..e2bb0b6986182 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7926,6 +7926,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
+ 	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
+ 	{.id = ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE, .name = "alc256-medion-headset"},
++	{.id = ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET, .name = "alc298-samsung-headphone"},
+ 	{}
+ };
+ #define ALC225_STANDARD_PINS \
 -- 
 2.25.1
 
