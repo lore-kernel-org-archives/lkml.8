@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9730DC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 751E3207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DACD2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259050;
-	bh=WU9Cp9/8P3kOMFHd/RIax9t7lnpfab+jVUzqXoxeiAQ=;
+	s=default; t=1598259055;
+	bh=UCnJzkF6jvo0O/ktC5flsal+jXhEzxyjOp0Dxit5d6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VIBkYIszZ2JTzrYyRow4UP5W3qaQHZMMy+6rAWNnr344ijLBEsXO+LgssBx+s8+mJ
-	 0pihNwKmLdX9R00rF48CRyhDexlkXrPqCxqvCsxKMdFaWRnCk0XcmkXe1zwSXGrQn0
-	 DHKI/MarFB2k4XtbWfQf+ih1TOCz/WPPHBkM7wAE=
+	b=TJWz+5vFi5UzJhMKOV1V+19ACwMoKgZBC72jwuCii0Q5VZek+Zjy3XKHVS5EGb8vF
+	 laBc6LhiPWopwrk8GAjgcs6Tdwe9/H00sXkCN778+yK85ATq5RYAvgwHb1PCkxbbYc
+	 SlcG3clU5lLXKRiMhqSDOgzcnC7aNdh9qZXaPOWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbgHXIut (ORCPT
+        id S1729874AbgHXIuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:50:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54630 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:50:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729487AbgHXIuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:50:40 -0400
+        id S1729621AbgHXIup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:50:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B95F20FC3;
-        Mon, 24 Aug 2020 08:50:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ABAD2075B;
+        Mon, 24 Aug 2020 08:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259039;
-        bh=WU9Cp9/8P3kOMFHd/RIax9t7lnpfab+jVUzqXoxeiAQ=;
+        s=default; t=1598259044;
+        bh=UCnJzkF6jvo0O/ktC5flsal+jXhEzxyjOp0Dxit5d6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HIpnfNAkR6o3TO0mu54GXHbVoCK7uvxpZquLKo0WvxB7Kz85sj9FaEjHVo7e1sjxh
-         VOhwzRv9tcm3ect4kHfRbxaOWj7M5wijDfHJHTEZVs1a6jSMS3kIwMMQPaJCyfL1xS
-         HzwqGuH7ks7rudMYWLRBBjtrD4zB3FEoVzkMA3Pk=
+        b=D4kq8cJdeGnK3HXs1K8VbYXlCE64SP4KEH6IdSIa4/aUpLiXzciLftUkiHwVOw4/z
+         IBKcgWtIZbgVOiWO0OdW5jj5oKgd2dNh7tXmWNVFMbBnDpyi4c04HO4ACOLwZbMLVq
+         ZMOl+AhiohrNuXA+e7OtL9+F7gI9iH8wS/rWk3nw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 31/33] mm/hugetlb: fix calculation of adjust_range_if_pmd_sharing_possible
-Date:   Mon, 24 Aug 2020 10:31:27 +0200
-Message-Id: <20200824082348.096619666@linuxfoundation.org>
+        "tomi.valkeinen@ti.com, aford@beaconembedded.com, Adam Ford" 
+        <aford173@gmail.com>, tomi.valkeinen@ti.com,
+        Adam Ford <aford173@gmail.com>
+Subject: [PATCH 4.4 33/33] omapfb: dss: Fix max fclk divider for omap36xx
+Date:   Mon, 24 Aug 2020 10:31:29 +0200
+Message-Id: <20200824082348.191071695@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
 References: <20200824082346.498653578@linuxfoundation.org>
@@ -63,99 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Xu <peterx@redhat.com>
+From: Adam Ford <aford173@gmail.com>
 
-commit 75802ca66354a39ab8e35822747cd08b3384a99a upstream.
+There appears to be a timing issue where using a divider of 32 breaks
+the DSS for OMAP36xx despite the TRM stating 32 is a valid
+number.  Through experimentation, it appears that 31 works.
 
-This is found by code observation only.
+This same fix was issued for kernels 4.5+.  However, between
+kernels 4.4 and 4.5, the directory structure was changed when the
+dss directory was moved inside the omapfb directory. That broke the
+patch on kernels older than 4.5, because it didn't permit the patch
+to apply cleanly for 4.4 and older.
 
-Firstly, the worst case scenario should assume the whole range was covered
-by pmd sharing.  The old algorithm might not work as expected for ranges
-like (1g-2m, 1g+2m), where the adjusted range should be (0, 1g+2m) but the
-expected range should be (0, 2g).
+A similar patch was applied to the 3.16 kernel already, but not to 4.4.
+Commit 4b911101a5cd ("drm/omap: fix max fclk divider for omap36xx") is
+on the 3.16 stable branch with notes from Ben about the path change.
 
-Since at it, remove the loop since it should not be required.  With that,
-the new code should be faster too when the invalidating range is huge.
+Since this was applied for 3.16 already, this patch is for kernels
+3.17 through 4.4 only.
 
-Mike said:
-
-: With range (1g-2m, 1g+2m) within a vma (0, 2g) the existing code will only
-: adjust to (0, 1g+2m) which is incorrect.
-:
-: We should cc stable.  The original reason for adjusting the range was to
-: prevent data corruption (getting wrong page).  Since the range is not
-: always adjusted correctly, the potential for corruption still exists.
-:
-: However, I am fairly confident that adjust_range_if_pmd_sharing_possible
-: is only gong to be called in two cases:
-:
-: 1) for a single page
-: 2) for range == entire vma
-:
-: In those cases, the current code should produce the correct results.
-:
-: To be safe, let's just cc stable.
-
-Fixes: 017b1660df89 ("mm: migration: fix migration of huge PMD shared pages")
-Signed-off-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200730201636.74778-1-peterx@redhat.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Fixes: f7018c213502 ("video: move fbdev to drivers/video/fbdev")
+Cc: <stable@vger.kernel.org> #3.17 - 4.4
+CC: <tomi.valkeinen@ti.com>
+Signed-off-by: Adam Ford <aford173@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- mm/hugetlb.c |   25 +++++++++++--------------
- 1 file changed, 11 insertions(+), 14 deletions(-)
 
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4257,6 +4257,7 @@ static bool vma_shareable(struct vm_area
- 	return false;
- }
+---
+ drivers/video/fbdev/omap2/dss/dss.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/video/fbdev/omap2/dss/dss.c
++++ b/drivers/video/fbdev/omap2/dss/dss.c
+@@ -843,7 +843,7 @@ static const struct dss_features omap34x
+ };
  
-+#define ALIGN_DOWN(x, a)	__ALIGN_KERNEL((x) - ((a) - 1), (a))
- /*
-  * Determine if start,end range within vma could be mapped by shared pmd.
-  * If yes, adjust start and end to cover range associated with possible
-@@ -4265,25 +4266,21 @@ static bool vma_shareable(struct vm_area
- void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
- 				unsigned long *start, unsigned long *end)
- {
--	unsigned long check_addr = *start;
-+	unsigned long a_start, a_end;
- 
- 	if (!(vma->vm_flags & VM_MAYSHARE))
- 		return;
- 
--	for (check_addr = *start; check_addr < *end; check_addr += PUD_SIZE) {
--		unsigned long a_start = check_addr & PUD_MASK;
--		unsigned long a_end = a_start + PUD_SIZE;
-+	/* Extend the range to be PUD aligned for a worst case scenario */
-+	a_start = ALIGN_DOWN(*start, PUD_SIZE);
-+	a_end = ALIGN(*end, PUD_SIZE);
- 
--		/*
--		 * If sharing is possible, adjust start/end if necessary.
--		 */
--		if (range_in_vma(vma, a_start, a_end)) {
--			if (a_start < *start)
--				*start = a_start;
--			if (a_end > *end)
--				*end = a_end;
--		}
--	}
-+	/*
-+	 * Intersect the range with the vma range, since pmd sharing won't be
-+	 * across vma after all
-+	 */
-+	*start = max(vma->vm_start, a_start);
-+	*end = min(vma->vm_end, a_end);
- }
- 
- /*
+ static const struct dss_features omap3630_dss_feats = {
+-	.fck_div_max		=	32,
++	.fck_div_max		=	31,
+ 	.dss_fck_multiplier	=	1,
+ 	.parent_clk_name	=	"dpll4_ck",
+ 	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
 
 
