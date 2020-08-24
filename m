@@ -2,131 +2,95 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB65C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5642072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C7C2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598259623;
+	bh=X1Jc6HRrlX3sT+03uEUsKl4ouu4xw5betJQxvtle9D8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fupJInRwBUdV3UDXdk8t3JY37xA3jwsmDsUyLRHA5Ozq8b9xKxlyLYbDRmquNpcbj
+	 y8/74nq5YGIaHO8U9bapvCrqZHpXPeulASCB/lHGV4exfNu6rnEe4xAmf2Qj2O1gYV
+	 pWhVw53v23NhjVHIA1xkZ1KolIP5o+HLMaOejh14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbgHXI5Q (ORCPT
+        id S1730746AbgHXJAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:57:16 -0400
-Received: from 8bytes.org ([81.169.241.247]:38758 "EHLO theia.8bytes.org"
+        Mon, 24 Aug 2020 05:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729024AbgHXI4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:36 -0400
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1730113AbgHXI5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id C475112DF;
-        Mon, 24 Aug 2020 10:56:26 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 66/76] x86/kvm: Add KVM specific VMMCALL handling under SEV-ES
-Date:   Mon, 24 Aug 2020 10:55:01 +0200
-Message-Id: <20200824085511.7553-67-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 398E22087D;
+        Mon, 24 Aug 2020 08:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259434;
+        bh=X1Jc6HRrlX3sT+03uEUsKl4ouu4xw5betJQxvtle9D8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wXQ+yKOSqdsyVNNl5fuMd7+VW4Syytb1CSaxNv48UzO9dYdZ0CIQ2jqoKFajM7QxQ
+         yGjF64Nvf4m13wOrv432saX75YP7PdmlEfO8osPA1ICODLQXmO11IzqwMRyl8AzLOS
+         dszkDhbWHewgzPvC4gSF7qzIwC1vUJ93cFPKK9G0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Krunoslav Kovac <Krunoslav.Kovac@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.19 18/71] drm/amd/display: fix pow() crashing when given base 0
+Date:   Mon, 24 Aug 2020 10:31:09 +0200
+Message-Id: <20200824082356.805578788@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
 
-Implement the callbacks to copy the processor state required by KVM to
-the GHCB.
+commit d2e59d0ff4c44d1f6f8ed884a5bea7d1bb7fd98c upstream.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: - Split out of a larger patch
-                   - Adapt to different callback functions ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-66-joro@8bytes.org
+[Why&How]
+pow(a,x) is implemented as exp(x*log(a)). log(0) will crash.
+So return 0^x = 0, unless x=0, convention seems to be 0^0 = 1.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kernel/kvm.c | 35 +++++++++++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/display/include/fixed31_32.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 08320b0b2b27..0f9597275e9c 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -36,6 +36,8 @@
- #include <asm/hypervisor.h>
- #include <asm/tlb.h>
- #include <asm/cpuidle_haltpoll.h>
-+#include <asm/ptrace.h>
-+#include <asm/svm.h>
- 
- DEFINE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
- 
-@@ -746,13 +748,34 @@ static void __init kvm_init_platform(void)
- 	x86_platform.apic_post_init = kvm_apic_init;
- }
- 
-+#if defined(CONFIG_AMD_MEM_ENCRYPT)
-+static void kvm_sev_es_hcall_prepare(struct ghcb *ghcb, struct pt_regs *regs)
-+{
-+	/* RAX and CPL are already in the GHCB */
-+	ghcb_set_rbx(ghcb, regs->bx);
-+	ghcb_set_rcx(ghcb, regs->cx);
-+	ghcb_set_rdx(ghcb, regs->dx);
-+	ghcb_set_rsi(ghcb, regs->si);
-+}
+--- a/drivers/gpu/drm/amd/display/include/fixed31_32.h
++++ b/drivers/gpu/drm/amd/display/include/fixed31_32.h
+@@ -431,6 +431,9 @@ struct fixed31_32 dc_fixpt_log(struct fi
+  */
+ static inline struct fixed31_32 dc_fixpt_pow(struct fixed31_32 arg1, struct fixed31_32 arg2)
+ {
++	if (arg1.value == 0)
++		return arg2.value == 0 ? dc_fixpt_one : dc_fixpt_zero;
 +
-+static bool kvm_sev_es_hcall_finish(struct ghcb *ghcb, struct pt_regs *regs)
-+{
-+	/* No checking of the return state needed */
-+	return true;
-+}
-+#endif
-+
- const __initconst struct hypervisor_x86 x86_hyper_kvm = {
--	.name			= "KVM",
--	.detect			= kvm_detect,
--	.type			= X86_HYPER_KVM,
--	.init.guest_late_init	= kvm_guest_init,
--	.init.x2apic_available	= kvm_para_available,
--	.init.init_platform	= kvm_init_platform,
-+	.name				= "KVM",
-+	.detect				= kvm_detect,
-+	.type				= X86_HYPER_KVM,
-+	.init.guest_late_init		= kvm_guest_init,
-+	.init.x2apic_available		= kvm_para_available,
-+	.init.init_platform		= kvm_init_platform,
-+#if defined(CONFIG_AMD_MEM_ENCRYPT)
-+	.runtime.sev_es_hcall_prepare	= kvm_sev_es_hcall_prepare,
-+	.runtime.sev_es_hcall_finish	= kvm_sev_es_hcall_finish,
-+#endif
- };
- 
- static __init int activate_jump_labels(void)
--- 
-2.28.0
+ 	return dc_fixpt_exp(
+ 		dc_fixpt_mul(
+ 			dc_fixpt_log(arg1),
+
 
