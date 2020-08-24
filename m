@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95824C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6767C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA7F2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B9F20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262051;
-	bh=6KL0wHENh9VQqFXdxxVreqsY3rECpXE35fID5KZQ8kU=;
+	s=default; t=1598262055;
+	bh=gYZjOG+RhGYnfjsq3qWn7jd/mSGHDgkxsezz2+QisPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jn8IlDAv4S2E9hpBNlZ7mvUcn1SBti9gh2tLCqjeWis05Pmh8KmLFQ0VhS50/oZYU
-	 MbsKFbgzfZy6x86Kjx7vT2j9Ea+gencuiJGHO14aLr69fOM+yeNumMG3kFN0DxsxuR
-	 rGuUsNr/UqdofAbVHPlnxZbjAiBd5QqA8bGQbLsA=
+	b=PHxxGmcy4HBcZM2Zoke+brcnSpxVfRuyDIAyE90jbOZ38H7Jm7RCqJi7MKmVNFR4E
+	 j157CDQHCZ+fqMQPfS86VcK1EBzn/PLscVnHv4F6OTrOsDBziUZNuJzNM7jj+oMA+s
+	 T1DG0oNWcnkWpMgju5fxL7aFqN5RIBqrlzK8pS84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbgHXIpn (ORCPT
+        id S1726037AbgHXIpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:45:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42604 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:45:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729226AbgHXIpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:45:31 -0400
+        id S1729134AbgHXIp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:45:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20E0C204FD;
-        Mon, 24 Aug 2020 08:45:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 719102072D;
+        Mon, 24 Aug 2020 08:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258729;
-        bh=6KL0wHENh9VQqFXdxxVreqsY3rECpXE35fID5KZQ8kU=;
+        s=default; t=1598258727;
+        bh=gYZjOG+RhGYnfjsq3qWn7jd/mSGHDgkxsezz2+QisPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bg+IHYuA+3kMy2If/VcKt+SepKxw/YI7KwzPgKwStVUKv+gJm67tgXD0uMOFpnEAg
-         KfRITcwCugR66NxnQB1deq0h4cOy4Vchz11OyxGytanamtpLJO2acfn8RcWeIGVsuz
-         VUco70uU5c8Se+RM5sXN98tMcpCrr4E1dCMJv/pk=
+        b=GB/U1vaYUK0SRd19hC6b5V6Hqu5fOMGr6o9IRul2ECYpncQl2m6zjdqh+Ez4UqShG
+         GNErq4XKPR3U2jaxQosAbTfWAFBXAXzChdxm/esgO98jTY9L0GtULqqC5h7Df9Fukt
+         auoVZRCTbb+T9exRiUtUs/wDo6sNIQMy28CwKUQ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 025/107] spi: Prevent adding devices below an unregistering controller
-Date:   Mon, 24 Aug 2020 10:29:51 +0200
-Message-Id: <20200824082406.342848778@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+f03d384f3455d28833eb@syzkaller.appspotmail.com,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 5.4 024/107] can: j1939: socket: j1939_sk_bind(): make sure ml_priv is allocated
+Date:   Mon, 24 Aug 2020 10:29:50 +0200
+Message-Id: <20200824082406.286863477@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -62,109 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-commit ddf75be47ca748f8b12d28ac64d624354fddf189 upstream.
+commit af804b7826350d5af728dca4715e473338fbd7e5 upstream.
 
-CONFIG_OF_DYNAMIC and CONFIG_ACPI allow adding SPI devices at runtime
-using a DeviceTree overlay or DSDT patch.  CONFIG_SPI_SLAVE allows the
-same via sysfs.
+This patch adds check to ensure that the struct net_device::ml_priv is
+allocated, as it is used later by the j1939 stack.
 
-But there are no precautions to prevent adding a device below a
-controller that's being removed.  Such a device is unusable and may not
-even be able to unbind cleanly as it becomes inaccessible once the
-controller has been torn down.  E.g. it is then impossible to quiesce
-the device's interrupt.
+The allocation is done by all mainline CAN network drivers, but when using
+bond or team devices this is not the case.
 
-of_spi_notify() and acpi_spi_notify() do hold a ref on the controller,
-but otherwise run lockless against spi_unregister_controller().
+Bail out if no ml_priv is allocated.
 
-Fix by holding the spi_add_lock in spi_unregister_controller() and
-bailing out of spi_add_device() if the controller has been unregistered
-concurrently.
-
-Fixes: ce79d54ae447 ("spi/of: Add OF notifier handler")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v3.19+
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Link: https://lore.kernel.org/r/a8c3205088a969dc8410eec1eba9aface60f36af.1596451035.git.lukas@wunner.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: syzbot+f03d384f3455d28833eb@syzkaller.appspotmail.com
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Cc: linux-stable <stable@vger.kernel.org> # >= v5.4
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Link: https://lore.kernel.org/r/20200807105200.26441-4-o.rempel@pengutronix.de
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/Kconfig |    3 +++
- drivers/spi/spi.c   |   21 ++++++++++++++++++++-
- 2 files changed, 23 insertions(+), 1 deletion(-)
+ net/can/j1939/socket.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -944,4 +944,7 @@ config SPI_SLAVE_SYSTEM_CONTROL
+--- a/net/can/j1939/socket.c
++++ b/net/can/j1939/socket.c
+@@ -466,6 +466,14 @@ static int j1939_sk_bind(struct socket *
+ 			goto out_release_sock;
+ 		}
  
- endif # SPI_SLAVE
- 
-+config SPI_DYNAMIC
-+	def_bool ACPI || OF_DYNAMIC || SPI_SLAVE
++		if (!ndev->ml_priv) {
++			netdev_warn_once(ndev,
++					 "No CAN mid layer private allocated, please fix your driver and use alloc_candev()!\n");
++			dev_put(ndev);
++			ret = -ENODEV;
++			goto out_release_sock;
++		}
 +
- endif # SPI
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -475,6 +475,12 @@ static LIST_HEAD(spi_controller_list);
-  */
- static DEFINE_MUTEX(board_lock);
- 
-+/*
-+ * Prevents addition of devices with same chip select and
-+ * addition of devices below an unregistering controller.
-+ */
-+static DEFINE_MUTEX(spi_add_lock);
-+
- /**
-  * spi_alloc_device - Allocate a new SPI device
-  * @ctlr: Controller to which device is connected
-@@ -553,7 +559,6 @@ static int spi_dev_check(struct device *
-  */
- int spi_add_device(struct spi_device *spi)
- {
--	static DEFINE_MUTEX(spi_add_lock);
- 	struct spi_controller *ctlr = spi->controller;
- 	struct device *dev = ctlr->dev.parent;
- 	int status;
-@@ -581,6 +586,13 @@ int spi_add_device(struct spi_device *sp
- 		goto done;
- 	}
- 
-+	/* Controller may unregister concurrently */
-+	if (IS_ENABLED(CONFIG_SPI_DYNAMIC) &&
-+	    !device_is_registered(&ctlr->dev)) {
-+		status = -ENODEV;
-+		goto done;
-+	}
-+
- 	/* Descriptors take precedence */
- 	if (ctlr->cs_gpiods)
- 		spi->cs_gpiod = ctlr->cs_gpiods[spi->chip_select];
-@@ -2582,6 +2594,10 @@ void spi_unregister_controller(struct sp
- 	struct spi_controller *found;
- 	int id = ctlr->bus_num;
- 
-+	/* Prevent addition of new devices, unregister existing ones */
-+	if (IS_ENABLED(CONFIG_SPI_DYNAMIC))
-+		mutex_lock(&spi_add_lock);
-+
- 	device_for_each_child(&ctlr->dev, NULL, __unregister);
- 
- 	/* First make sure that this controller was ever added */
-@@ -2602,6 +2618,9 @@ void spi_unregister_controller(struct sp
- 	if (found == ctlr)
- 		idr_remove(&spi_master_idr, id);
- 	mutex_unlock(&board_lock);
-+
-+	if (IS_ENABLED(CONFIG_SPI_DYNAMIC))
-+		mutex_unlock(&spi_add_lock);
- }
- EXPORT_SYMBOL_GPL(spi_unregister_controller);
- 
+ 		priv = j1939_netdev_start(ndev);
+ 		dev_put(ndev);
+ 		if (IS_ERR(priv)) {
 
 
