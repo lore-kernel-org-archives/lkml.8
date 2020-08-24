@@ -2,102 +2,149 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A335C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC6B2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18AA2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598290110;
-	bh=+1zFK9wiAOz2+mMy64YaoSiwsBz+wXbvMMw/E5DPprs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0u3+Pro0VHeiIbtNxv1UlDleKbhpus+87As8nRcikOSzRv+Y0xxpvi7glSEP6l9IT
-	 19GxzekruJN8/8va/c5XmBMjbIegVmUPzSc7046AryW5525Ov27nouHuz923MkuQju
-	 dXtxfhNXY2PAL231zxUBmcnw1Yr35jPx/0eQr6gs=
+	s=default; t=1598290132;
+	bh=+fTUKEyrtLg4Uiu2RbCq3/3bQ+IX0Dc03GZZYbNK0kc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pqhu4qoKmNlPMyZKCY3JCV0DhqingFSmbU3qgDxdLy+jdKBye0+o5eIusDjGf6QU4
+	 CjkUAMV+6Dmlemmd0Y/LEBUiGm4opLkmLiK82NnNQCskLsRfz71QY/QAxi6zSaedf6
+	 Q5kdICZVsNXpek7vblCbCqtkTvdrIpsiTSQLSQhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgHXR23 (ORCPT
+        id S1727793AbgHXR2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:28:29 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44047 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728382AbgHXR2R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:28:17 -0400
-Received: by mail-il1-f193.google.com with SMTP id j9so7957408ilc.11;
-        Mon, 24 Aug 2020 10:28:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=x7C6eQok8Pl7UAFU0rsUV0+mcmV/0wTU7nSxBfhdONU=;
-        b=f64I7DgNzbLxLaQnXMunJZw4KYJ6lGCWrmUgDXGiwGXxh8er6TKzChrs++41rVg6ii
-         qD88bvDZWqXlrUZDRG2GjSbonyyB4j0D/BWzk361Vi7qY9wt3lFN5hRKJoddtnv9IOVO
-         kNvyU6zoXyyiV0tbwD9rXIkEDnEEVwW85gemPFyQr1Q1eX6JMNf5/656nYCHPMtIjcDN
-         1Vq9yGfZIiaWWZxGljFOI9vfJB8uqxdlZxPti3tU+2cW39ET4qDDOYpKaV/wc8smnEqK
-         eQEZtmvke6eTtAG6LIKox5zBBy5/iYknb0ORup9hvhCTmAaehLcc203pt2dIRh1SPPfu
-         ZgAw==
-X-Gm-Message-State: AOAM532nwip8f3v4qiorOW+YLDsko6vCNzCxMpiBDN2raVM6trBLyiKB
-        gDf2Av9ORnkk63yr7+Jb3A==
-X-Google-Smtp-Source: ABdhPJzkYfjUhbsSi6w7J4evk76kL04eVABwUGbo+mtIu1y8X5HK24uHDZUNBkjNVX1Iq4Z3YR///g==
-X-Received: by 2002:a92:c7d4:: with SMTP id g20mr5927212ilk.40.1598290096298;
-        Mon, 24 Aug 2020 10:28:16 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id y8sm6835601iom.26.2020.08.24.10.28.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 10:28:15 -0700 (PDT)
-Received: (nullmailer pid 2933345 invoked by uid 1000);
-        Mon, 24 Aug 2020 17:28:13 -0000
-Date:   Mon, 24 Aug 2020 11:28:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC PATCH v3 2/2] dt-bindings: cpufreq: Document Krait CPU
- Cache scaling
-Message-ID: <20200824172813.GA2932192@bogus>
-References: <20200821140026.19643-1-ansuelsmth@gmail.com>
- <20200821140026.19643-3-ansuelsmth@gmail.com>
+        Mon, 24 Aug 2020 13:28:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728198AbgHXQf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:35:28 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3537C22BED;
+        Mon, 24 Aug 2020 16:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598286927;
+        bh=+fTUKEyrtLg4Uiu2RbCq3/3bQ+IX0Dc03GZZYbNK0kc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=C3rgBByF+VEIpXqmh69Hoy2v10zgXyL9H1sA5weMYM3OfNIZCRjUdFi5WIsibLmey
+         AsjYDqmb8BAlEw3rzXmhi5//6Lb763PamQMwd6yYHzuQqVz3CpMZ+05qXMbqlMRzDw
+         qn4g/vWr6lxu3/+WJfPriQiO6Q2q3DYVx4euPlKs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.8 17/63] drm/amd/powerplay: correct Vega20 cached smu feature state
+Date:   Mon, 24 Aug 2020 12:34:17 -0400
+Message-Id: <20200824163504.605538-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
+References: <20200824163504.605538-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821140026.19643-3-ansuelsmth@gmail.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 16:00:21 +0200, Ansuel Smith wrote:
-> Document dedicated Krait CPU Cache Scaling driver.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  .../bindings/cpufreq/krait-cache-scale.yaml   | 79 +++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
-> 
+From: Evan Quan <evan.quan@amd.com>
 
+[ Upstream commit 266d81d9eed30f4994d76a2b237c63ece062eefe ]
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Correct the cached smu feature state on pp_features sysfs
+setting.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.example.dt.yaml: qcom-krait-cache: clocks:0:1: missing phandle tag in 4
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.example.dt.yaml: qcom-krait-cache: clocks:0: [4294967295, 4] is too long
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../drm/amd/powerplay/hwmgr/vega20_hwmgr.c    | 38 +++++++++----------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-
-See https://patchwork.ozlabs.org/patch/1349260
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
+index 9ff470f1b826c..b7f3f8b62c2ac 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
+@@ -979,10 +979,7 @@ static int vega20_disable_all_smu_features(struct pp_hwmgr *hwmgr)
+ {
+ 	struct vega20_hwmgr *data =
+ 			(struct vega20_hwmgr *)(hwmgr->backend);
+-	uint64_t features_enabled;
+-	int i;
+-	bool enabled;
+-	int ret = 0;
++	int i, ret = 0;
+ 
+ 	PP_ASSERT_WITH_CODE((ret = smum_send_msg_to_smc(hwmgr,
+ 			PPSMC_MSG_DisableAllSmuFeatures,
+@@ -990,17 +987,8 @@ static int vega20_disable_all_smu_features(struct pp_hwmgr *hwmgr)
+ 			"[DisableAllSMUFeatures] Failed to disable all smu features!",
+ 			return ret);
+ 
+-	ret = vega20_get_enabled_smc_features(hwmgr, &features_enabled);
+-	PP_ASSERT_WITH_CODE(!ret,
+-			"[DisableAllSMUFeatures] Failed to get enabled smc features!",
+-			return ret);
+-
+-	for (i = 0; i < GNLD_FEATURES_MAX; i++) {
+-		enabled = (features_enabled & data->smu_features[i].smu_feature_bitmap) ?
+-			true : false;
+-		data->smu_features[i].enabled = enabled;
+-		data->smu_features[i].supported = enabled;
+-	}
++	for (i = 0; i < GNLD_FEATURES_MAX; i++)
++		data->smu_features[i].enabled = 0;
+ 
+ 	return 0;
+ }
+@@ -3230,10 +3218,11 @@ static int vega20_get_ppfeature_status(struct pp_hwmgr *hwmgr, char *buf)
+ 
+ static int vega20_set_ppfeature_status(struct pp_hwmgr *hwmgr, uint64_t new_ppfeature_masks)
+ {
+-	uint64_t features_enabled;
+-	uint64_t features_to_enable;
+-	uint64_t features_to_disable;
+-	int ret = 0;
++	struct vega20_hwmgr *data =
++			(struct vega20_hwmgr *)(hwmgr->backend);
++	uint64_t features_enabled, features_to_enable, features_to_disable;
++	int i, ret = 0;
++	bool enabled;
+ 
+ 	if (new_ppfeature_masks >= (1ULL << GNLD_FEATURES_MAX))
+ 		return -EINVAL;
+@@ -3262,6 +3251,17 @@ static int vega20_set_ppfeature_status(struct pp_hwmgr *hwmgr, uint64_t new_ppfe
+ 			return ret;
+ 	}
+ 
++	/* Update the cached feature enablement state */
++	ret = vega20_get_enabled_smc_features(hwmgr, &features_enabled);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < GNLD_FEATURES_MAX; i++) {
++		enabled = (features_enabled & data->smu_features[i].smu_feature_bitmap) ?
++			true : false;
++		data->smu_features[i].enabled = enabled;
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
 
