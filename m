@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0327C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0980C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA8E208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54B1221E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258202;
-	bh=3nDsga2bpnQ7gibh7J1sl5vVziLsJsa7Ai2+ydM4siQ=;
+	s=default; t=1598258204;
+	bh=Tj68wpcq8gwgRKTspOtj86cQXqXyuM2JjWCZZk96Frc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wb/1W71qUYTVURqEpTxDll513lHrLFnOC0penfX2Tru7pnG4TGJaxYMgxXoO1E7oc
-	 ekTf35cB5vgVuckdvws+dnINOoM55loDkKS0p5zOE4IiAiPFuonOZl4439ZTZadd7q
-	 sxTgOag/t9N11rLU2LcNYbHW1ZUbYA/k6ia1WZh0=
+	b=w1Roz9K5ZdTeK0kJ3ne9i6XhoGNAr/QZO4LA5qBJRpiqL9Sl9EPDCV9/V0GotkyYk
+	 NLrJ45UpRnRqNw5g8xi0gJfI9xbeMhIJ3ZnNqDt4K6KFlBcuwRB202gsTOHqNmuJNF
+	 TI9SkCHU6f8dHLXjVS6oLBTNgfZCcAmQpnW1VuZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgHXIgk (ORCPT
+        id S1728268AbgHXIgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:36:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49306 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:36:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726806AbgHXIgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:36:36 -0400
+        id S1726730AbgHXIgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:36:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96B6C207DF;
-        Mon, 24 Aug 2020 08:36:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDFFF22B3F;
+        Mon, 24 Aug 2020 08:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258196;
-        bh=3nDsga2bpnQ7gibh7J1sl5vVziLsJsa7Ai2+ydM4siQ=;
+        s=default; t=1598258193;
+        bh=Tj68wpcq8gwgRKTspOtj86cQXqXyuM2JjWCZZk96Frc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PJjR3cbU36JRG/Y95BBa8wwyZ3XAThzFJ5LRRxZnkP/SHJaMI9/Tgqccw7H1F5Clr
-         JbQkwZHA/h4SEQgBjOixsAI6jBBLRC5h19MMOD7oaZ42yDQi8fBryQwERu82MKYit0
-         IEMFfz+fDfCmAOvtxRJlpoL9xuwOcKunR2xzCSj0=
+        b=tAb6bLQ1Ugx0Dx3Bvl4WY+snoCUlXvHvo7ko8DsfYMqlcifvX47TQSO99KLfkxapi
+         O3GXyExjhAUsuPD8yPYTEZglzj6H0H90IjAtOd9giJf8cMmhSKGT47MRtLiH0CTcAq
+         jDJGxzXiSMIsl5dvusD08GqQRLWmgJCFl44hO10s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 109/148] scsi: ufs: ti-j721e-ufs: Fix error return in ti_j721e_ufs_probe()
-Date:   Mon, 24 Aug 2020 10:30:07 +0200
-Message-Id: <20200824082419.239966938@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 108/148] of/address: check for invalid range.cpu_addr
+Date:   Mon, 24 Aug 2020 10:30:06 +0200
+Message-Id: <20200824082419.198945010@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -61,35 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jing Xiangfeng <jingxiangfeng@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 2138d1c918246e3d8193c3cb8b6d22d0bb888061 ]
+[ Upstream commit f49c7faf776f16607c948d852a03b04a88c3b583 ]
 
-Fix to return error code PTR_ERR() from the error handling case instead of
-0.
+Currently invalid CPU addresses are not being sanity checked resulting in
+SATA setup failure on a SynQuacer SC2A11 development machine. The original
+check was removed by and earlier commit, so add a sanity check back in
+to avoid this regression.
 
-Link: https://lore.kernel.org/r/20200806070135.67797-1-jingxiangfeng@huawei.com
-Fixes: 22617e216331 ("scsi: ufs: ti-j721e-ufs: Fix unwinding of pm_runtime changes")
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 7a8b64d17e35 ("of/address: use range parser for of_dma_get_range")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200817113208.523805-1-colin.king@canonical.com
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ti-j721e-ufs.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/of/address.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ti-j721e-ufs.c b/drivers/scsi/ufs/ti-j721e-ufs.c
-index 46bb905b4d6a9..eafe0db98d542 100644
---- a/drivers/scsi/ufs/ti-j721e-ufs.c
-+++ b/drivers/scsi/ufs/ti-j721e-ufs.c
-@@ -38,6 +38,7 @@ static int ti_j721e_ufs_probe(struct platform_device *pdev)
- 	/* Select MPHY refclk frequency */
- 	clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(clk)) {
-+		ret = PTR_ERR(clk);
- 		dev_err(dev, "Cannot claim MPHY clock.\n");
- 		goto clk_err;
- 	}
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 8eea3f6e29a44..340d3051b1ce2 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -980,6 +980,11 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 			/* Don't error out as we'd break some existing DTs */
+ 			continue;
+ 		}
++		if (range.cpu_addr == OF_BAD_ADDR) {
++			pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
++			       range.bus_addr, node);
++			continue;
++		}
+ 		dma_offset = range.cpu_addr - range.bus_addr;
+ 
+ 		/* Take lower and upper limits */
 -- 
 2.25.1
 
