@@ -2,68 +2,123 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2892CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3741C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9EA220738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87425206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:00:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQVbPJt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgHXK7W (ORCPT
+        id S1726953AbgHXLAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:59:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:59556 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgHXK7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:59:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88A551063;
-        Mon, 24 Aug 2020 03:59:13 -0700 (PDT)
-Received: from [10.37.12.65] (unknown [10.37.12.65])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D7F03F66B;
-        Mon, 24 Aug 2020 03:59:11 -0700 (PDT)
-Subject: Re: [PATCH 1/3] memory: samsung: exynos5422-dmc: rename timing
- register fields variables
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200822163218.21857-1-krzk@kernel.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <d8d7b2bb-d277-4e48-889c-16110f4d594d@arm.com>
-Date:   Mon, 24 Aug 2020 11:59:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 24 Aug 2020 07:00:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgHXLAB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 07:00:01 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF3B7C061573;
+        Mon, 24 Aug 2020 04:00:00 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id j25so2125030ejk.9;
+        Mon, 24 Aug 2020 04:00:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wURfUL1E5T5G5zAtpp5gFw8NGNP7EBRkkT26Hn99rX4=;
+        b=EQVbPJt2lR/3QwZovyxFsOzDX8o+E46tU9mik1qQ++52BWgAfjcjbjF9tQ3fzLBiF8
+         Wn8i+XI/Rx6tKExYWM7XK+3XmWqcQ4Gf191vbyFMDoxKDWXYkh50R6ZkO/K8vWbbV2ia
+         QElt81XQGHqyUVhTUO2vOBJGDHkl7cbtcaHVGL3F8cRSUjAA4IacPAb1MopfZ+Uhgx1O
+         8UgoSZgOFmhw4xEc0JLcI/kRGxRjxh+cz6QzYPrFCPY0n/I082ojwal4MVamqTQsh3TR
+         /bDhxLVQyqLLgri9IEbaDhQeY+ddEUZYB9DfOeBtx4BPj50Xd8mi735rb1zgsLQ7MrqW
+         SL0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wURfUL1E5T5G5zAtpp5gFw8NGNP7EBRkkT26Hn99rX4=;
+        b=BAmJNu+Q6nzslxD0I0ea+XEipK1qCNavfCcLpw3/Hu7ZVT7JNke06txBeXK2/KhNJQ
+         sifrcMB93xIC48meOfI29xKDZN6igrlZy+BHt16S63nNp4/+cuLndere/f35iUtraKsM
+         iKjLl16YWjIDPqtSiO0BR5UjfDcNEq4+Q+8LkJMcXVhLIcpS3yafdml3WRDemT9JrqC0
+         x3Z+bUkiBYRTBAnIVBiKz3tBo5dMlDXJqP0CW6m/ZgQ3C8D4VNdDyApalfC+a+w/AN0m
+         LeQNo8O7raap0lppzEYzq5azivwRW65tVZOpkj/5G5zaO0CNV0gQFYuRndIpBM5zzoZv
+         i8qw==
+X-Gm-Message-State: AOAM531WjxAbdEkbXPA8jvL62bEBRdlEwQx0l4+G9D23VemcPzybjjZl
+        UU8FFYVqCw6Ci8kjXlOHLCM=
+X-Google-Smtp-Source: ABdhPJwzRYW0prDIEUuFJxaVv29Jwxwx6HiYbSRC4xi8TfKhYZC2RVakGKAGITZuJS41xlZzsc0BlQ==
+X-Received: by 2002:a17:906:403:: with SMTP id d3mr4881944eja.522.1598266799343;
+        Mon, 24 Aug 2020 03:59:59 -0700 (PDT)
+Received: from skbuf ([86.126.22.216])
+        by smtp.gmail.com with ESMTPSA id l7sm8926447edn.45.2020.08.24.03.59.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 03:59:58 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 13:59:56 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     David Miller <davem@davemloft.net>, Jiafei.Pan@nxp.com,
+        kuba@kernel.org, netdev@vger.kernel.org, claudiu.manoil@nxp.com,
+        ioana.ciornei@nxp.com, yangbo.lu@nxp.com,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH net-next 2/2] enetc: use napi_schedule to be compatible
+ with PREEMPT_RT
+Message-ID: <20200824105956.7urh3wkzd45ror3r@skbuf>
+References: <20200803201009.613147-1-olteanv@gmail.com>
+ <20200803201009.613147-2-olteanv@gmail.com>
+ <20200803.182145.2300252460016431673.davem@davemloft.net>
+ <20200812135144.hpsfgxusojdrsewl@linutronix.de>
+ <20200812143430.xuzg2ddsl7ouhn5m@skbuf>
 MIME-Version: 1.0
-In-Reply-To: <20200822163218.21857-1-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200812143430.xuzg2ddsl7ouhn5m@skbuf>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sasha,
 
-
-On 8/22/20 5:32 PM, Krzysztof Kozlowski wrote:
-> The driver has file-scope arrays defining fields of timing registers
-> (e.g. struct timing_reg timing_row) and actual values for these
-> registers per each OPP in state container (struct
-> exynos5_dmc.timing_row).  The meanings of these are different so use
-> different names to avoid confusion.
-
-Good point
-
+On Wed, Aug 12, 2020 at 05:34:30PM +0300, Vladimir Oltean wrote:
+> On Wed, Aug 12, 2020 at 03:51:44PM +0200, Sebastian Andrzej Siewior wrote:
+> > On 2020-08-03 18:21:45 [-0700], David Miller wrote:
+> > > From: Vladimir Oltean <olteanv@gmail.com>
+> > > > The driver calls napi_schedule_irqoff() from a context where, in RT,
+> > > > hardirqs are not disabled, since the IRQ handler is force-threaded.
+> > …
+> > > > 
+> > > > Signed-off-by: Jiafei Pan <Jiafei.Pan@nxp.com>
+> > > > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> > > 
+> > > Applied.
+> > 
+> > Could these two patches be forwarded -stable, please? The changelog
+> > describes this as a problem on PREEMPT_RT but this also happens on !RT
+> > with the `threadirqs' commandline switch.
+> > 
+> > Sebastian
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
+> I expect the driver maintainers to have something to say about this. I
+> didn't test on stable kernels, and at least for dpaa2-eth, the change
+> would need to go pretty deep down the stable line.
+> 
+> Also, not really sure who is using the threadirqs option except for
+> testing purposes.
+> 
+> Thanks,
+> -Vladimir
 
-Acked-by: Lukasz Luba <lukasz.luba@arm.com>
+Do you think that this type of request is something that AUTOSEL can
+handle?
 
-Regards,
-Lukasz
+Thanks,
+-Vladimir
