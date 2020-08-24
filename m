@@ -2,54 +2,51 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D7BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F71CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 706E8207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CFCC207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258969;
-	bh=Szw6jA3d8Pxqmf1JA6WaAVW8AEfSzqqzAAso5Yu42xk=;
+	s=default; t=1598258977;
+	bh=fJ8NNjH3ZkCW8nghxtzb5HVti5kIN+YwOf4V+x2XJF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nxWSpcJGFLGLFou+mu5huXIgNirEf2FdemsAvjQQjrBavhF2eScMD1OztynGSb3b+
-	 CvhqVqXOo6cgjCOXERdY0aktdjh3WjaYAgG3RXcdXvuAX1OBLTfqZPR4HNTAEug1S4
-	 tL6A4eZjS+tiAGZgimTeH4J1UD/d1RWL9z3hnw9Q=
+	b=MkLljajRB/UGoHlTGDzUGJOsWvrwxNw1qwIKigkeuhVBm8txR07wbDEbaEau8qHJr
+	 beXneQXU9/7Ko/6Y1+EeLYPPMFUmDOx6P8uzlyF1V/ARnGKd6JWYeKaUcuPtXdNeJO
+	 9o0lTGgW96/D+fqse+w/blDqP3FnF/fVSdQS5jk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgHXIt2 (ORCPT
+        id S1728223AbgHXItf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:49:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51424 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:49:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729688AbgHXItQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:49:16 -0400
+        id S1729208AbgHXIt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:49:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EFFB204FD;
-        Mon, 24 Aug 2020 08:49:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E6AD2074D;
+        Mon, 24 Aug 2020 08:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258956;
-        bh=Szw6jA3d8Pxqmf1JA6WaAVW8AEfSzqqzAAso5Yu42xk=;
+        s=default; t=1598258966;
+        bh=fJ8NNjH3ZkCW8nghxtzb5HVti5kIN+YwOf4V+x2XJF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qM3CDyAjh3iQesSUS3idK/NugNSkf+lX/swF0Lb6sNhIB+WBuWIe9Cln+60GykTzv
-         44usMxnzYu84MC9aWYeTgJSzYf43reMdCUlWEC5hE/ALvE59WFreOCq+ICvmFWDoys
-         69t7CAWW93jwegV+jdhgCyIq5bU6WfP90dlpz0Wg=
+        b=nCpS4JM7IegswO2TLHHOpJzuWTGk0+2J7hf4E4vVlv7VPaWnj1ipktORiNEhnAiNE
+         2xoo0wCxCGcOj4tNcOqe7LNNqBJn8Gct2HvzkllI+ysvEB+HeotQqIXAWuS7kZ7c2R
+         B6fXr2teN3KuhLz/WZ9reADAlmjEKmtYGUvsx7Ak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Zhang Changzhong <zhangchangzhong@huawei.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 077/107] can: j1939: fix support for multipacket broadcast message
-Date:   Mon, 24 Aug 2020 10:30:43 +0200
-Message-Id: <20200824082408.931023464@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Li Heng <liheng40@huawei.com>, Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 5.4 103/107] efi: add missed destroy_workqueue when efisubsys_init fails
+Date:   Mon, 24 Aug 2020 10:31:09 +0200
+Message-Id: <20200824082410.193518492@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -62,81 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Changzhong <zhangchangzhong@huawei.com>
+From: Li Heng <liheng40@huawei.com>
 
-[ Upstream commit f4fd77fd87e9b214c26bb2ebd4f90055eaea5ade ]
+commit 98086df8b70c06234a8f4290c46064e44dafa0ed upstream.
 
-Currently j1939_tp_im_involved_anydir() in j1939_tp_recv() check the previously
-set flags J1939_ECU_LOCAL_DST and J1939_ECU_LOCAL_SRC of incoming skb, thus
-multipacket broadcast message was aborted by receive side because it may come
-from remote ECUs and have no exact dst address. Similarly, j1939_tp_cmd_recv()
-and j1939_xtp_rx_dat() didn't process broadcast message.
+destroy_workqueue() should be called to destroy efi_rts_wq
+when efisubsys_init() init resources fails.
 
-So fix it by checking and process broadcast message in j1939_tp_recv(),
-j1939_tp_cmd_recv() and j1939_xtp_rx_dat().
+Cc: <stable@vger.kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Li Heng <liheng40@huawei.com>
+Link: https://lore.kernel.org/r/1595229738-10087-1-git-send-email-liheng40@huawei.com
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
-Link: https://lore.kernel.org/r/1596599425-5534-2-git-send-email-zhangchangzhong@huawei.com
-Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/j1939/transport.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/firmware/efi/efi.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index 90a2baac8a4aa..67189b4c482c5 100644
---- a/net/can/j1939/transport.c
-+++ b/net/can/j1939/transport.c
-@@ -1673,8 +1673,12 @@ static void j1939_xtp_rx_rts(struct j1939_priv *priv, struct sk_buff *skb,
- 			return;
- 		}
- 		session = j1939_xtp_rx_rts_session_new(priv, skb);
--		if (!session)
-+		if (!session) {
-+			if (cmd == J1939_TP_CMD_BAM && j1939_sk_recv_match(priv, skcb))
-+				netdev_info(priv->ndev, "%s: failed to create TP BAM session\n",
-+					    __func__);
- 			return;
-+		}
- 	} else {
- 		if (j1939_xtp_rx_rts_session_active(session, skb)) {
- 			j1939_session_put(session);
-@@ -1852,6 +1856,13 @@ static void j1939_xtp_rx_dat(struct j1939_priv *priv, struct sk_buff *skb)
- 		else
- 			j1939_xtp_rx_dat_one(session, skb);
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -345,6 +345,7 @@ static int __init efisubsys_init(void)
+ 	efi_kobj = kobject_create_and_add("efi", firmware_kobj);
+ 	if (!efi_kobj) {
+ 		pr_err("efi: Firmware registration failed.\n");
++		destroy_workqueue(efi_rts_wq);
+ 		return -ENOMEM;
  	}
-+
-+	if (j1939_cb_is_broadcast(skcb)) {
-+		session = j1939_session_get_by_addr(priv, &skcb->addr, false,
-+						    false);
-+		if (session)
-+			j1939_xtp_rx_dat_one(session, skb);
-+	}
+ 
+@@ -381,6 +382,7 @@ err_unregister:
+ 	generic_ops_unregister();
+ err_put:
+ 	kobject_put(efi_kobj);
++	destroy_workqueue(efi_rts_wq);
+ 	return error;
  }
  
- /* j1939 main intf */
-@@ -1943,7 +1954,7 @@ static void j1939_tp_cmd_recv(struct j1939_priv *priv, struct sk_buff *skb)
- 		if (j1939_tp_im_transmitter(skcb))
- 			j1939_xtp_rx_rts(priv, skb, true);
- 
--		if (j1939_tp_im_receiver(skcb))
-+		if (j1939_tp_im_receiver(skcb) || j1939_cb_is_broadcast(skcb))
- 			j1939_xtp_rx_rts(priv, skb, false);
- 
- 		break;
-@@ -2007,7 +2018,7 @@ int j1939_tp_recv(struct j1939_priv *priv, struct sk_buff *skb)
- {
- 	struct j1939_sk_buff_cb *skcb = j1939_skb_to_cb(skb);
- 
--	if (!j1939_tp_im_involved_anydir(skcb))
-+	if (!j1939_tp_im_involved_anydir(skcb) && !j1939_cb_is_broadcast(skcb))
- 		return 0;
- 
- 	switch (skcb->addr.pgn) {
--- 
-2.25.1
-
 
 
