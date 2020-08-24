@@ -2,108 +2,106 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F197206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9082072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:14:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598260448;
+	bh=RlpcFNhQhQeGISJeB07hKfvLDYKsouJijQsNCkkp6Do=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UbRgpZ4SWFKqDogvwvXAkVi5ZmCZpP+Img8fDrQ6yQLCJzjWiiunvBPKM3UHFnNkn
+	 /h9actQBLqWhlzus1/c3gC1fAK5dSIUYa5i979hALxvlZhzkRU4rvkCqbe3okKGST5
+	 6JNlxr7ldpZZ2yuyJ/jsoVq5+7rXLAfu98Jmo+e0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgHXJNu (ORCPT
+        id S1728995AbgHXJOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:13:50 -0400
-Received: from 8bytes.org ([81.169.241.247]:37380 "EHLO theia.8bytes.org"
+        Mon, 24 Aug 2020 05:14:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730013AbgHXI4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:07 -0400
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1730457AbgHXI4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 939BDF24;
-        Mon, 24 Aug 2020 10:56:04 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 32/76] x86/head/64: Load GDT after switch to virtual addresses
-Date:   Mon, 24 Aug 2020 10:54:27 +0200
-Message-Id: <20200824085511.7553-33-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F98C2074D;
+        Mon, 24 Aug 2020 08:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259366;
+        bh=RlpcFNhQhQeGISJeB07hKfvLDYKsouJijQsNCkkp6Do=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sPspAhriKnoCRZWC1c/cYEVxLLB1pqHx1aw663sxXbOscjA9F2LK2+dEVr/NYfoWK
+         2GsNlzxppOlZS1DAMChW/9hQt+H5jm6Bz26j8r/wXvA+HKSUz4wCwdvJa6Ho8oixBs
+         nhflSxeNHSXknr3oW1cGYL5k9DbzYr05CQyvDKRI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 32/71] cpufreq: intel_pstate: Fix cpuinfo_max_freq when MSR_TURBO_RATIO_LIMIT is 0
+Date:   Mon, 24 Aug 2020 10:31:23 +0200
+Message-Id: <20200824082357.496305936@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Load the GDT right after switching to virtual addresses to make sure
-there is a defined GDT for exception handling.
+[ Upstream commit 4daca379c703ff55edc065e8e5173dcfeecf0148 ]
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20200724160336.5435-32-joro@8bytes.org
+The MSR_TURBO_RATIO_LIMIT can be 0. This is not an error. User can update
+this MSR via BIOS settings on some systems or can use msr tools to update.
+Also some systems boot with value = 0.
+
+This results in display of cpufreq/cpuinfo_max_freq wrong. This value
+will be equal to cpufreq/base_frequency, even though turbo is enabled.
+
+But platform will still function normally in HWP mode as we get max
+1-core frequency from the MSR_HWP_CAPABILITIES. This MSR is already used
+to calculate cpu->pstate.turbo_freq, which is used for to set
+policy->cpuinfo.max_freq. But some other places cpu->pstate.turbo_pstate
+is used. For example to set policy->max.
+
+To fix this, also update cpu->pstate.turbo_pstate when updating
+cpu->pstate.turbo_freq.
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/head_64.S | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/cpufreq/intel_pstate.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 800053219054..f958d4e4ee08 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -166,6 +166,14 @@ SYM_CODE_START(secondary_startup_64)
- 1:
- 	UNWIND_HINT_EMPTY
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index e7b3d4ed8eff4..99166000ffb77 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -1431,6 +1431,7 @@ static void intel_pstate_get_cpu_pstates(struct cpudata *cpu)
  
-+	/*
-+	 * We must switch to a new descriptor in kernel space for the GDT
-+	 * because soon the kernel won't have access anymore to the userspace
-+	 * addresses where we're currently running on. We have to do that here
-+	 * because in 32bit we couldn't load a 64bit linear address.
-+	 */
-+	lgdt	early_gdt_descr(%rip)
-+
- 	/* Check if nx is implemented */
- 	movl	$0x80000001, %eax
- 	cpuid
-@@ -193,14 +201,6 @@ SYM_CODE_START(secondary_startup_64)
- 	pushq $0
- 	popfq
- 
--	/*
--	 * We must switch to a new descriptor in kernel space for the GDT
--	 * because soon the kernel won't have access anymore to the userspace
--	 * addresses where we're currently running on. We have to do that here
--	 * because in 32bit we couldn't load a 64bit linear address.
--	 */
--	lgdt	early_gdt_descr(%rip)
--
- 	/* set up data segments */
- 	xorl %eax,%eax
- 	movl %eax,%ds
+ 		intel_pstate_get_hwp_max(cpu->cpu, &phy_max, &current_max);
+ 		cpu->pstate.turbo_freq = phy_max * cpu->pstate.scaling;
++		cpu->pstate.turbo_pstate = phy_max;
+ 	} else {
+ 		cpu->pstate.turbo_freq = cpu->pstate.turbo_pstate * cpu->pstate.scaling;
+ 	}
 -- 
-2.28.0
+2.25.1
+
+
 
