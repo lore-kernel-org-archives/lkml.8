@@ -2,100 +2,126 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECA0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C840AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3F72087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A78842072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259514;
-	bh=EDnv/XnL0MJacWiTODYRVvo+m/BqQm2xWEw0QsSVgk4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PSiDaZ0hbPt+KYlkkFBd9+m1D9KfC6Ie2SfNgp1uWWA49CJrlAGgAmzp/yAbz07jw
-	 TlDi0HM7vn+sbdMytF9jDOBI/03aZ0ynsjLFW6TMDlwjwDkLci/Qrz6YeBuzCaJtLa
-	 p2uUZQ0gmJWUHAsk7eqLYBBLBXsmOzskAv0TvClU=
+	s=default; t=1598259524;
+	bh=MlJ44rehLSPaJUGChKnzLkZMd/wcW1D2ek38r9QI/p8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MbOHals1c1OoRXx31+HZrMvUUMBIVGyPrCd1aPyeW78fsTmIgygWqgEc8dxz/m2gX
+	 nEJSNTXBYo/Ba2qIVegLpRApApBGX6nlUR4UHatCCyG5FpRuWCXuByfHrT6b49wURX
+	 AlP6CRMALHUqWTMZBDCN1zNnRzdpTHfZ5+OWavrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730776AbgHXI6Y (ORCPT
+        id S1729116AbgHXI6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:58:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46170 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:58:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730320AbgHXI6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:58:11 -0400
+        id S1730771AbgHXI6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:58:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72CE2208E4;
-        Mon, 24 Aug 2020 08:58:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29221204FD;
+        Mon, 24 Aug 2020 08:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259491;
-        bh=EDnv/XnL0MJacWiTODYRVvo+m/BqQm2xWEw0QsSVgk4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CgRJPzuvaM98Nag9sQhW6rEAxEBn1CzF2vw4G/Q/wfPi6lABV6guoB+SbinSjW2FR
-         LUIqPjTMQ9qsR02s7AYNGqvqhCBle79yaOnWzi+hIs5JZ3wXbb+q95qWmUfYQJGRay
-         9OHmd/oc8JDDL28zhGch4pZZoCSKlqdwChi0n7Ws=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Selvin Xavier <selvin.xavier@broadcom.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 58/71] RDMA/bnxt_re: Do not add user qps to flushlist
-Date:   Mon, 24 Aug 2020 10:31:49 +0200
-Message-Id: <20200824082358.815977982@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
-References: <20200824082355.848475917@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1598259500;
+        bh=MlJ44rehLSPaJUGChKnzLkZMd/wcW1D2ek38r9QI/p8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iQoFk1hEPIycH6uvZnb6VQY5N8y5Q4wF2KotBVBfTw4Ld3c4RRAawn3DrFWbwqdYn
+         e6RCVfW7DOX61v//zMbh+8Mvel8hvYb1AvKy3bM7s/pVnlxnbF1BjUAXBomGMNiDAz
+         f4DQsO2cphJ9wmNYH6WwxaGmlsz/IvbnyqXcZVoM=
+Date:   Mon, 24 Aug 2020 10:57:16 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Qiwu Huang <yanziily@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: Re: [PATCH v8 1/4] power: supply: core: add quick charge type
+ property
+Message-ID: <20200824085715.GB402243@kroah.com>
+References: <cover.1597376585.git.huangqiwu@xiaomi.com>
+ <ced256ea8ac2f3e54c33677facc4c2ef04dee643.1597376585.git.huangqiwu@xiaomi.com>
+ <20200814060909.GD1409566@kroah.com>
+ <CAPtXDt1e3fi7ymW0-FSknUAYCQ80aL=4btbeA2e4Xre7+e7OtA@mail.gmail.com>
+ <20200818060707.GB1742213@kroah.com>
+ <CAPtXDt26DdOi6JG7x3mTrR5YwArjkAeXY2TogRnK_xkSabhL2g@mail.gmail.com>
+ <20200824074357.GB4133866@kroah.com>
+ <CAPtXDt0yW7Kh6a9JGfXaha_wKVjae7U74m6K=631Ofh8_m4uvg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPtXDt0yW7Kh6a9JGfXaha_wKVjae7U74m6K=631Ofh8_m4uvg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Selvin Xavier <selvin.xavier@broadcom.com>
+On Mon, Aug 24, 2020 at 04:42:06PM +0800, Qiwu Huang wrote:
+> On Mon, Aug 24, 2020 at 3:43 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Mon, Aug 24, 2020 at 08:54:56AM +0800, Qiwu Huang wrote:
+> > > On Tue, Aug 18, 2020 at 2:07 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Tue, Aug 18, 2020 at 09:56:28AM +0800, Qiwu Huang wrote:
+> > > > > On Fri, Aug 14, 2020 at 2:09 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > > >
+> > > > > > On Fri, Aug 14, 2020 at 11:46:54AM +0800, Qiwu Huang wrote:
+> > > > > > > From: Qiwu Huang <huangqiwu@xiaomi.com>
+> > > > > > >
+> > > > > > > Reports the kind of quick charge type based on
+> > > > > > > different adapter power.
+> > > > > > >
+> > > > > > > Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+> > > > > > > ---
+> > > > > > >  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++
+> > > > > > >  drivers/power/supply/power_supply_sysfs.c   |  1 +
+> > > > > > >  drivers/power/supply/qcom_smbb.c            | 51 +++++++++++++++++++++
+> > > > > > >  include/linux/power_supply.h                | 14 ++++++
+> > > > > > >  4 files changed, 87 insertions(+)
+> > > > > >
+> > > > > > You should also submit your driver that uses these new attributes at the
+> > > > > > same time.  What happened to that request?  Otherwise no one really
+> > > > > > knows how these are being used, or if they even are used by anyone.
+> > > > > >
+> > > > >
+> > > > > I don't think I can submit the whole driver because our drivers are
+> > > > > divided into three parts, the first part is in ADSP, the second part
+> > > > > is in kernel and the third part is in Android Hal.This is the second
+> > > > > part.
+> > > >
+> > > > WHat is "ADSP"?
+> > >
+> > > ADSP: advanced digital signal processor
+> >
+> > Ok, then just send the kernel driver.
+> >
+> > > > Just submit your kernel driver code, that's all we care about here.
+> > > > Userspace code is not anything we can do anything with :)
+> > >
+> > > If we ported the full driver, we would break the existing driver
+> > > structure because we would introduce more Qualcomm code. I think
+> > > that's an unreasonable change.
+> >
+> > That doesn't make much sense.  You have a working driver for these apis,
+> > just submit it for inclusion, it should never break any existing
+> > drivers, otherwise your code wouldn't work either.
+> 
+> We're an Android device, we're working on a Qualcomm based code, and
+> from the current code tree, the current code tree is missing the QTI
+> Charger code
 
-[ Upstream commit a812f2d60a9fb7818f9c81f967180317b52545c0 ]
+I don't know what that means, sorry.  Just submit your driver, and any
+needed dependencies as well.  There's no other way to evaluate this api
+addition without that, right?
 
-Driver shall add only the kernel qps to the flush list for clean up.
-During async error events from the HW, driver is adding qps to this list
-without checking if the qp is kernel qp or not.
+thanks,
 
-Add a check to avoid user qp addition to the flush list.
-
-Fixes: 942c9b6ca8de ("RDMA/bnxt_re: Avoid Hard lockup during error CQE processing")
-Fixes: c50866e2853a ("bnxt_re: fix the regression due to changes in alloc_pbl")
-Link: https://lore.kernel.org/r/1596689148-4023-1-git-send-email-selvin.xavier@broadcom.com
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/hw/bnxt_re/main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
-index 589b0d4677d52..f1b666c80f368 100644
---- a/drivers/infiniband/hw/bnxt_re/main.c
-+++ b/drivers/infiniband/hw/bnxt_re/main.c
-@@ -753,7 +753,8 @@ static int bnxt_re_handle_qp_async_event(struct creq_qp_event *qp_event,
- 	struct ib_event event;
- 	unsigned int flags;
- 
--	if (qp->qplib_qp.state == CMDQ_MODIFY_QP_NEW_STATE_ERR) {
-+	if (qp->qplib_qp.state == CMDQ_MODIFY_QP_NEW_STATE_ERR &&
-+	    rdma_is_kernel_res(&qp->ib_qp.res)) {
- 		flags = bnxt_re_lock_cqs(qp);
- 		bnxt_qplib_add_flush_qp(&qp->qplib_qp);
- 		bnxt_re_unlock_cqs(qp, flags);
--- 
-2.25.1
-
-
-
+greg k-h
