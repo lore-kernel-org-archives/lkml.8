@@ -2,50 +2,53 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C4CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C2AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3B3B2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F8B20FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258663;
-	bh=z9X8XAf5pNu5xFYsewaUK9xluow/ICaWKL8M9zLZUyo=;
+	s=default; t=1598258667;
+	bh=y+cdlWwnxSVfXPsP98WjNJycz7BCmcmnk0m4iUv16Bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j9crLgIl/JXu9+DwntnPsoJ3/DOnKKPjje/JmOK51R7RbI2v5Hxp4+mAl2Ll0A1vU
-	 YE3tYvn3rHQX7zoaW9sEY0TPfLkl2fY18Lyi/5Lk+XDzGPW4BDh0zoyNnl2LhTvTK0
-	 +/oGCUYjGEVOaLilnwskLXnT2c84sXNDov4+Xrfo=
+	b=Fnx6rh1sTIe01CwKQvjbADpy5WqTcKMF6lwTXY4LTya0oUhyNz6KOY42tyIO08Mqr
+	 82JcWFoMtGNGaXXKJWXtKSvU8FwJCE2AXmhT0at5weJIwQpDfUZKjTACm+lHCROT/I
+	 5k6ckEYw8MFnEELcMX8B88sSvmLGzDyiPI/QtQZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgHXIoU (ORCPT
+        id S1728883AbgHXIo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:44:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39768 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:44:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729121AbgHXIoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:44:16 -0400
+        id S1729121AbgHXIoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:44:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 073292074D;
-        Mon, 24 Aug 2020 08:44:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFE302074D;
+        Mon, 24 Aug 2020 08:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258655;
-        bh=z9X8XAf5pNu5xFYsewaUK9xluow/ICaWKL8M9zLZUyo=;
+        s=default; t=1598258661;
+        bh=y+cdlWwnxSVfXPsP98WjNJycz7BCmcmnk0m4iUv16Bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uH7+wHZKGgk2+76z6yO/ApNzBBq9+die6sfZxl6isAdNMFiU3Cvi+lrGqlY/6Odq8
-         gwNWYjNAlkvVsikx9NhzIbWUwwLovB0dJ4cl/NK/HQnk/CY4mYzBa6Ma2HhC7/ZqJe
-         jxfzevcEAwXJwn70B1j0b41EcN9naAHRx+IMDJFQ=
+        b=vNXRJzHo/VKdAoV/t0sAZ2cIiEVtryDO5hpoLbV2o7HUL+TldR+62eTnFP7wxyWy0
+         B8YGSo3BaGmLATujMxypGAbRxWH7SWbuK6IITAAymm4H563vm1nHClCoGv017V1m7w
+         WCddLTZaJChiXneZJecKZ7euzdc2VukJ3ewt7ME4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5.7 123/124] do_epoll_ctl(): clean the failure exits up a bit
-Date:   Mon, 24 Aug 2020 10:30:57 +0200
-Message-Id: <20200824082415.455961148@linuxfoundation.org>
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 099/124] scsi: ufs: Fix interrupt error message for shared interrupts
+Date:   Mon, 24 Aug 2020 10:30:33 +0200
+Message-Id: <20200824082414.287581819@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -58,72 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 52c479697c9b73f628140dcdfcd39ea302d05482 upstream.
+[ Upstream commit 6337f58cec030b34ced435b3d9d7d29d63c96e36 ]
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The interrupt might be shared, in which case it is not an error for the
+interrupt handler to be called when the interrupt status is zero, so don't
+print the message unless there was enabled interrupt status.
 
+Link: https://lore.kernel.org/r/20200811133936.19171-1-adrian.hunter@intel.com
+Fixes: 9333d7757348 ("scsi: ufs: Fix irq return code")
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/eventpoll.c |   19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -2203,29 +2203,22 @@ int do_epoll_ctl(int epfd, int op, int f
- 			full_check = 1;
- 			if (is_file_epoll(tf.file)) {
- 				error = -ELOOP;
--				if (ep_loop_check(ep, tf.file) != 0) {
--					clear_tfile_check_list();
-+				if (ep_loop_check(ep, tf.file) != 0)
- 					goto error_tgt_fput;
--				}
- 			} else {
- 				get_file(tf.file);
- 				list_add(&tf.file->f_tfile_llink,
- 							&tfile_check_list);
- 			}
- 			error = epoll_mutex_lock(&ep->mtx, 0, nonblock);
--			if (error) {
--out_del:
--				list_del(&tf.file->f_tfile_llink);
--				if (!is_file_epoll(tf.file))
--					fput(tf.file);
-+			if (error)
- 				goto error_tgt_fput;
--			}
- 			if (is_file_epoll(tf.file)) {
- 				tep = tf.file->private_data;
- 				error = epoll_mutex_lock(&tep->mtx, 1, nonblock);
- 				if (error) {
- 					mutex_unlock(&ep->mtx);
--					goto out_del;
-+					goto error_tgt_fput;
- 				}
- 			}
- 		}
-@@ -2246,8 +2239,6 @@ out_del:
- 			error = ep_insert(ep, epds, tf.file, fd, full_check);
- 		} else
- 			error = -EEXIST;
--		if (full_check)
--			clear_tfile_check_list();
- 		break;
- 	case EPOLL_CTL_DEL:
- 		if (epi)
-@@ -2270,8 +2261,10 @@ out_del:
- 	mutex_unlock(&ep->mtx);
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 7298adbcdec85..3b80d692dd2e7 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5803,7 +5803,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 		intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+ 	} while (intr_status && --retries);
  
- error_tgt_fput:
--	if (full_check)
-+	if (full_check) {
-+		clear_tfile_check_list();
- 		mutex_unlock(&epmutex);
-+	}
- 
- 	fdput(tf);
- error_fput:
+-	if (retval == IRQ_NONE) {
++	if (enabled_intr_status && retval == IRQ_NONE) {
+ 		dev_err(hba->dev, "%s: Unhandled interrupt 0x%08x\n",
+ 					__func__, intr_status);
+ 		ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
+-- 
+2.25.1
+
 
 
