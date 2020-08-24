@@ -2,105 +2,110 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F225C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFBE1206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25CA120578
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:15:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yNkmQig7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbgHXHIM (ORCPT
+        id S1726158AbgHXHPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 03:08:12 -0400
-Received: from smtp.h3c.com ([60.191.123.56]:6899 "EHLO h3cspam01-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgHXHIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 03:08:11 -0400
-Received: from h3cspam01-ex.h3c.com (localhost [127.0.0.2] (may be forged))
-        by h3cspam01-ex.h3c.com with ESMTP id 07O6JUei008190
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 14:19:30 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX07-IDC.srv.huawei-3com.com ([10.8.0.70])
-        by h3cspam01-ex.h3c.com with ESMTPS id 07O6IVg6006414
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Aug 2020 14:18:31 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) by
- DAG2EX07-IDC.srv.huawei-3com.com (10.8.0.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 24 Aug 2020 14:18:33 +0800
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074])
- by DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074%7]) with
- mapi id 15.01.1713.004; Mon, 24 Aug 2020 14:18:33 +0800
-From:   Tianxianting <tian.xianting@h3c.com>
-To:     Jens Axboe <axboe@kernel.dk>, "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "kafai@fb.com" <kafai@fb.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "yhs@fb.com" <yhs@fb.com>, "andriin@fb.com" <andriin@fb.com>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] blk-mq: use BLK_MQ_NO_TAG for no tag
-Thread-Topic: [PATCH] blk-mq: use BLK_MQ_NO_TAG for no tag
-Thread-Index: AQHWeWVPz3S1M1hkw0a6Ze6ZxO8+NalFp1wAgADlO5A=
-Date:   Mon, 24 Aug 2020 06:18:33 +0000
-Message-ID: <19b0d8969dde4e20b1e6a076e48ba716@h3c.com>
-References: <20200823154459.40731-1-tian.xianting@h3c.com>
- <1b85d18e-b0ae-a925-bb84-0a1eb8942099@kernel.dk>
-In-Reply-To: <1b85d18e-b0ae-a925-bb84-0a1eb8942099@kernel.dk>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.99.141.128]
-x-sender-location: DAG2
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 24 Aug 2020 03:15:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbgHXHPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 03:15:12 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3022EC061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 00:15:12 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h15so813318wrt.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 00:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=v2AcXNM/RwmQxoIUWLpETnAZjFM9cKvvsGDBzZ8s8tU=;
+        b=yNkmQig7Z6xT5X9MFS2ygbAucqr3neSCdyX7P6DQ2az6ewTQQeQgeB/e5pC4hppIRe
+         WFQWE0H2wMj3xdaHXYypan0M4OV9qUTKJZhjhMkpa1+1mE7qcmUXn4vXYH3TFDjDqXGv
+         wDo2vjkXC1QsqX8xgGbUMsbPwJ0k52Vna4knmD5Fun5Hb7IFWWWHlMSThenpvwv1QbL4
+         7SUiymFvbNLzdeg3fq/wu4MaQf2YTpm0cyw2/XTxK3InWOTiPFNWPDnRnLTTyuNn46cb
+         xYnDzAD5LT+/eekOZlcyJTp1+qqCZp4Rnyfc1d5g6Po06pXMOy4OZpksYcJEukkohEPa
+         Y1yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=v2AcXNM/RwmQxoIUWLpETnAZjFM9cKvvsGDBzZ8s8tU=;
+        b=bjigQfK85ckpoH22kvBSnaauOoYgn0L22oChFnTpSj+oQGjah3nfw4vnsTyiQHDrSA
+         MK3pcIidLm7H/Hxoe6mDi0EJd4wvALsKzDHaOZrBev0338fgv5hBJTOm/WTaZXKo5GQy
+         elm6jxtKpM0I2c04SEGzQH47tlZuHUPMZwDK5Abu51qM18/ae6yrFMtECFmCiP8S1+0y
+         ZNdO4pFFA3enjAl8729TMqu1ZGJt18pJEpOwo/ticg45oaBBUWdEHQAhEm4W2ykj8dcv
+         qmknD1lhkYOFpM5UR5oJxm8sDQhDjGBLkoK5yiSkGX8JY1SIYPbPe25axwYLZYhNtEGI
+         DnHQ==
+X-Gm-Message-State: AOAM53353mfU7i/WLEF7nH9QZq8/RHmbz6ywB7n5R31NOVOsUAdx05PB
+        MHppqAvnGwrX/8iDkOfJH8mADg==
+X-Google-Smtp-Source: ABdhPJxd/szKSLNN6/XQR5TVLz2m2UUS4oEY9/vGslB5tLxWopsB1oAiE1Qk1WuEOYT2R/QxKR9KMQ==
+X-Received: by 2002:adf:ff8a:: with SMTP id j10mr4213992wrr.323.1598253310616;
+        Mon, 24 Aug 2020 00:15:10 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:cd42:2fa4:120f:76b0? ([2a01:e34:ed2f:f020:cd42:2fa4:120f:76b0])
+        by smtp.googlemail.com with ESMTPSA id l1sm23522540wrb.12.2020.08.24.00.15.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 00:15:09 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] thermal: qcom-spmi-temp-alarm: Don't suppress
+ negative temp
+To:     Guru Das Srinagesh <gurus@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Veera Vegivada <vvegivad@codeaurora.org>
+References: <944856eb819081268fab783236a916257de120e4.1596040416.git.gurus@codeaurora.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <de23e464-3789-02a2-b16e-eb1cd4e015d5@linaro.org>
+Date:   Mon, 24 Aug 2020 09:15:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-DNSRBL: 
-X-MAIL: h3cspam01-ex.h3c.com 07O6IVg6006414
+In-Reply-To: <944856eb819081268fab783236a916257de120e4.1596040416.git.gurus@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmVucw0KU29ycnkgdG8gdHJvdWJsZSB5b3UsIEkgYW0gdmVyeSBzb3JyeSBmb3IgdGFraW5n
-IGl0IGZvciBncmFudGVkIGZvciB0aGUgcGF0Y2ggY29tcGlsZS4NCg0KSSBjaGVja2VkLCBjb21w
-aWxlIGZvciB0aGUgdHdvIGNoYW5nZWQgZmlsZXMgYXJlIE9LOg0KYmxvY2svYmxrLWNvcmUuYw0K
-YmxvY2svYmxrLW1xLXNjaGVkLmMNCg0KQ29tcGlsZSBmYWlsZWQgZm9yIHRoZSBmdW5jdGlvbiBp
-biBiZWxvdyBoZWFkZXIgZmlsZToNCmluY2x1ZGUvbGludXgvYmxrLW1xLmg6IHJlcXVlc3RfdG9f
-cWNfdCgpDQotICAgICAgIGlmIChycS0+dGFnICE9IC0xKQ0KKyAgICAgICBpZiAocnEtPnRhZyAh
-PSBCTEtfTVFfTk9fVEFHKQ0KDQpCTEtfTVFfTk9fVEFHIGlzIGRlZmluZWQgaW4gJ2Jsb2NrL2Js
-ay1tcS10YWcuaCcsICBpZiBJIGluY2x1ZGUgdGhpcyBoZWFkZXIgZmlsZSBpbiAnaW5jbHVkZS9s
-aW51eC9ibGstbXEuaCcgdmlhICcjaW5jbHVkZSAiLi4vLi4vYmxvY2svYmxrLW1xLXRhZy5oIics
-IA0KTWFueSBvdGhlciBzaW1pbGFyIGNvbXBpbGUgZmFpbGVkIGhhcHBlbiwgZm9yIGV4YW1wbGU6
-DQpJbiBmaWxlIGluY2x1ZGVkIGZyb20gLi9pbmNsdWRlL2xpbnV4Ly4uLy4uL2Jsb2NrL2Jsay1t
-cS10YWcuaDo1OjAsDQogICAgICAgICAgICAgICAgIGZyb20gLi9pbmNsdWRlL2xpbnV4L2Jsay1t
-cS5oOjgsDQogICAgICAgICAgICAgICAgIGZyb20gYmxvY2svYmxrLmg6NiwNCiAgICAgICAgICAg
-ICAgICAgZnJvbSBibG9jay9iaW8uYzoyNDoNCi4vaW5jbHVkZS9saW51eC8uLi8uLi9ibG9jay9i
-bGstbXEuaDoyMToyOTogZXJyb3I6IOKAmEhDVFhfTUFYX1RZUEVT4oCZIHVuZGVjbGFyZWQgaGVy
-ZSAobm90IGluIGEgZnVuY3Rpb24pOyBkaWQgeW91IG1lYW4g4oCYS09CSl9OU19UWVBFU+KAmT8N
-CiAgIHN0cnVjdCBsaXN0X2hlYWQgcnFfbGlzdHNbSENUWF9NQVhfVFlQRVNdOw0KICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBefn5+fn5+fn5+fn5+fg0KSWYgSSBtb3ZlZCBiZWxvdyBCTEtf
-TVFfTk9fVEFHIGRlZmluaXRpb24gdG8gJ2luY2x1ZGUvbGludXgvYmxrLW1xLmgnLCBhbGwga2Vy
-bmVsIGNvbXBpbGVzIGFyZSBvayB3aXRoIHRoZSBwYXRjaC4NCmVudW0gew0KICAgICAgICBCTEtf
-TVFfTk9fVEFHICAgICAgICAgICA9IC0xVSwNCiAgICAgICAgQkxLX01RX1RBR19NSU4gICAgICAg
-ICAgPSAxLA0KICAgICAgICBCTEtfTVFfVEFHX01BWCAgICAgICAgICA9IEJMS19NUV9OT19UQUcg
-LSAxLA0KfTsNCldpbGwgeW91IGFjY2VwdCBhYm92ZSBtb3Zpbmcgb2YgQkxLX01RX05PX1RBRyB0
-byAnaW5jbHVkZS9saW51eC9ibGstbXEuaCc/ICAgDQpUaGFua3MNCg0KLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCkZyb206IEplbnMgQXhib2UgW21haWx0bzpheGJvZUBrZXJuZWwuZGtdIA0K
-U2VudDogTW9uZGF5LCBBdWd1c3QgMjQsIDIwMjAgNDo1OCBBTQ0KVG86IHRpYW54aWFudGluZyAo
-UkQpIDx0aWFuLnhpYW50aW5nQGgzYy5jb20+OyBhc3RAa2VybmVsLm9yZzsgZGFuaWVsQGlvZ2Vh
-cmJveC5uZXQ7IGthZmFpQGZiLmNvbTsgc29uZ2xpdWJyYXZpbmdAZmIuY29tOyB5aHNAZmIuY29t
-OyBhbmRyaWluQGZiLmNvbTsgam9obi5mYXN0YWJlbmRAZ21haWwuY29tOyBrcHNpbmdoQGNocm9t
-aXVtLm9yZw0KQ2M6IGxpbnV4LWJsb2NrQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSF0gYmxrLW1xOiB1c2UgQkxLX01RX05P
-X1RBRyBmb3Igbm8gdGFnDQoNCk9uIDgvMjMvMjAgOTo0NCBBTSwgWGlhbnRpbmcgVGlhbiB3cm90
-ZToNCj4gUmVwbGFjZSB2YXJpb3VzIG1hZ2ljIC0xIGNvbnN0YW50cyBmb3IgdGFncyB3aXRoIEJM
-S19NUV9OT19UQUcuDQoNCkRvZXNuJ3QgbG9vayBsaWtlIHRoaXMgcGF0Y2ggd2FzIGV2ZW4gY29t
-cGlsZWQuLi4NCg0KLS0gDQpKZW5zIEF4Ym9lDQoNCg==
+On 29/07/2020 18:52, Guru Das Srinagesh wrote:
+> From: Veera Vegivada <vvegivad@codeaurora.org>
+> 
+> Currently driver is suppressing the negative temperature
+> readings from the vadc. Consumers of the thermal zones need
+> to read the negative temperature too. Don't suppress the
+> readings.
+> 
+> Fixes: c610afaa21d3c6e ("thermal: Add QPNP PMIC temperature alarm driver")
+> Signed-off-by: Veera Vegivada <vvegivad@codeaurora.org>
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> ---
+
+Applied, thanks
+
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
