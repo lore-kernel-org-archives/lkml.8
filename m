@@ -2,86 +2,121 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1A32072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF5D12072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:03:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TKxXts+Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gbxz9yBD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbgHXIBj (ORCPT
+        id S1726332AbgHXIDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56638 "EHLO
+        Mon, 24 Aug 2020 04:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgHXIBh (ORCPT
+        with ESMTP id S1726027AbgHXIDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:01:37 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA2DC061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 01:01:37 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id b16so3627900vsl.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 01:01:37 -0700 (PDT)
+        Mon, 24 Aug 2020 04:03:33 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC34C061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 01:03:31 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g75so7252384wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 01:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B9rqT6PPn/roxYtGSUaIhpBUEFtU5jcHcVNdXLvHhck=;
-        b=TKxXts+YsXgkGvaRpPo3eAytrTi2BJAovHwZviLK3XYtYpn/VQzpjHyouT7hcSiK4q
-         NFHysoO9gAm3eYDMNsrMchjrhBa1ApQVuLvF8N8caEpi8Ulz8w5TqS8mS+fcHkZgFZOj
-         Q7vkIm3n1GmHqwaK8FuVg6znxqvMsYAe9FWwfuZObcU4YBUtbyBJtZOA3dgacWLAntf6
-         b6FhILJ/nPfkhf74OmAOFw2A7/TZwWaqnLxoyYS0kT0yaNyIZ6MxBcR9NB1Jz9Ph7Crj
-         zPCI8tAuesdKh2LGmnHS4jNXmvpgJwunj6/+4HzGrXAmlkO2TgjSlY3Sasjnw8IV1fFb
-         tIyw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wKJc5ULgCn42W6AwcfwI3Hdq2Fzfi0fveyMXzJJAKrY=;
+        b=gbxz9yBDQHOwuGzJ5Qk5ghgQOOxR0Ouhkgfb1VS6Uy7LYzP/FmADjdWs0Uiu61H7fo
+         VygFzNWJkzDiacnQLMZm22o/zImr1E+Bd2QOuFbGk3SzsE+TuFHVMFlfsPmShJ85VzRB
+         s4x1E0HGraM+JW8/E7nc22zQX1anC2On4RhlpHL2+3wiUQDq2GUE9kRxPTjMPSJ3wf/b
+         1O9H8OVlKt4ULaMWEjMmM9DhPXCucHeuzX0J7FyitQDaEy8FBXBzv5qtqZrdV3ZhI+L7
+         KtookbD7tlILe2RYjCSNm3oPlyFK0zHfJtxy/VgE0nR3dTGM3gra0CZP9SpJ4dR8SdfA
+         CapQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B9rqT6PPn/roxYtGSUaIhpBUEFtU5jcHcVNdXLvHhck=;
-        b=KMPy+dt2Ow1v+vsnVkb6TIKfLDpdnRo6QMh87mt+oHxEltcAOjNvtHdzOi9ewfQp+w
-         +B70nIn5lF0/f5w3N7o1ha8cl5v4yvn+U/OvWpUdIr6MU6WU4KnH2V64Ckvy457BMgUl
-         tkWnRdX3WjKZMbD45f9YA35VGEmOPg1BvVgbsZNgxYG80JbSK7925pc2e6kyyOI+wBHP
-         mdXiQP8jw2uGkATWiuz3VyGMvti8LErvY/ped/anPYAun8AtY77gaprItevPxm+//TyM
-         Z3AEg5wTh9ZKmGDBE3VUa0WiKzl1xY7Zf7gDF+uKNDBM3aovHU2sjrKIoEYjbwUpZbXP
-         hTUw==
-X-Gm-Message-State: AOAM531ZnQHe5ctYuqSX45HqpKFyskjudEn63RRbxuJ9CW53fzHypFON
-        ei+qEocvZvJm1MSxTL5dvD+osIMTE3f+VK5aD6cd1g==
-X-Google-Smtp-Source: ABdhPJzft37J4VICCSjVtBl9nKOxrITQP8ZGt7T5d33gdlPINv/njqOLUxnHNKgaxwqqBD9jIFsux7Fu6SCOFJ2J+hY=
-X-Received: by 2002:a67:d216:: with SMTP id y22mr1802258vsi.135.1598256096077;
- Mon, 24 Aug 2020 01:01:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wKJc5ULgCn42W6AwcfwI3Hdq2Fzfi0fveyMXzJJAKrY=;
+        b=oEhIbvdxaKZ7y+Sl2BkIjPyWQF3UovpNm3ggoHODXyyKX/KCaIuD7adXAHuEeUxQjl
+         GCnzB34xFOd9b7GFTTzR1Bu3xChZnKelF1NCtw7lJUIw38JFi1dtmzUIaVfbMJbP40LR
+         DbUlmn5GDJ3YE2qKd0+PmCMsJipk2I+K5h5Tgdg0pS1HK8nyBthlX1hFfDoNrPDZXMfg
+         5HECS32ix8iIy8kIZ/kKKPbIAFNo6g7u5CjBKMAvxmM+9Es3QbBLkCQAFcEflWnbCi82
+         l47aGfU9KztcLuQaEgd8zAktDiWkocI72xLq2PuwyW/zd/nvR2pAgT51L2Y9XpEH2uvi
+         RHsg==
+X-Gm-Message-State: AOAM5318fYMqVcyhved8h1j/2Tqa2S7y8N7gvbydHcRzOGAkMmT1zpCH
+        V47mU9QiDgohMjgK8xSXX0ffUQ==
+X-Google-Smtp-Source: ABdhPJxhP4O285cUjTPV8Pjdnaoq8z1UBcqsLgHoqRVsvaIjEIql35jIFj2R9mZ0+oVu8MNCrmEBYw==
+X-Received: by 2002:a7b:c448:: with SMTP id l8mr2868949wmi.132.1598256210420;
+        Mon, 24 Aug 2020 01:03:30 -0700 (PDT)
+Received: from dell ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id s2sm21533632wrr.55.2020.08.24.01.03.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 01:03:29 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 09:03:27 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Frank Lee <frank@allwinnertech.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
+        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "p.zabel" <p.zabel@pengutronix.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        clabbe@baylibre.com, bage@linutronix.de,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
+Message-ID: <20200824080327.GH3248864@dell>
+References: <cover.1595572867.git.frank@allwinnertech.com>
+ <CAEExFWsvScMgi_Dftfq06HZiF8CFAmym8Z_tgQoHHAfiGxWt0g@mail.gmail.com>
+ <CAEExFWuwjmqAh0c3kMLS3Gs6UC2A8TtY-9nJeWxFPRDugtR4pA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200821140836.3707282-1-tweek@google.com> <20200821140836.3707282-2-tweek@google.com>
- <CAHC9VhRiz1ezDj6J5Yuv17EU8nnrOBKfHScB-njVUKptSoxowg@mail.gmail.com>
-In-Reply-To: <CAHC9VhRiz1ezDj6J5Yuv17EU8nnrOBKfHScB-njVUKptSoxowg@mail.gmail.com>
-From:   =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
-Date:   Mon, 24 Aug 2020 10:01:19 +0200
-Message-ID: <CA+zpnLd2wth_5agN4rdchwKvvxiDxjt9++3gWi=7NLACDW2jeQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] selinux: add tracepoint on audited events
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Nick Kralevich <nnk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Peter Enderborg <peter.enderborg@sony.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEExFWuwjmqAh0c3kMLS3Gs6UC2A8TtY-9nJeWxFPRDugtR4pA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Merged into selinux/next, thanks!
+On Mon, 24 Aug 2020, Frank Lee wrote:
 
-Thanks everyone for the reviews and constructive feedback!
+> ping......
+
+"Please don't send content free pings and please allow a reasonable
+ time for review.  People get busy, go on holiday, attend conferences
+ and so on so unless there is some reason for urgency (like critical
+ bug fixes) please allow at least a couple of weeks for review.  If
+ there have been review comments then people may be waiting for those
+ to be addressed.  Sending content free pings just adds to the mail
+ volume (if they are seen at all) and if something has gone wrong
+ you'll have to resend the patches anyway so [RESEND]ing with any
+ comments addressed is generally a much better approach."
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
