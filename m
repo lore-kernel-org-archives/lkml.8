@@ -2,124 +2,82 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7DBC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9885CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64A032078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:25:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="daV5NP6K"
+	by mail.kernel.org (Postfix) with ESMTP id 70B1320738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgHXSZm (ORCPT
+        id S1726666AbgHXS0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:25:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgHXSZl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:25:41 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B520C061573;
-        Mon, 24 Aug 2020 11:25:41 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id y3so9843624wrl.4;
-        Mon, 24 Aug 2020 11:25:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bq5hRh6dg9CMA08TsyveabYMk5mqrcCNLEtAUVdySnw=;
-        b=daV5NP6KOQoVdPhRTGodqQ1JzkNkgZDMhtCfKtrZere0DfYHigFpCO3yp7egRNWQ0H
-         /MtuQ1mXghrxISQDgOLetOnRz7TuPJz+sCIcUlnTrR1dG21Tb8F5Sl1zqzguMFMTuF3u
-         7mG4P5obRsoI0OmXWg2XsMjrlxxbOSY8qSnP7vc+F7unlZa8DUJcQMZ+6AaOB/Ca1GTq
-         o8limkjqvpNJK0ga98DoiGCLFrsUsovgBPL2eiFyIqsmjZV+vGEHl3/c3giTnwJyivZc
-         1kUug3HpHJBLiAW4H3Omvg0DjWkXnQDeOGf5ImqqvF7vTgH27KqTlvit8K4ZgH5bRedm
-         jl8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bq5hRh6dg9CMA08TsyveabYMk5mqrcCNLEtAUVdySnw=;
-        b=BWpk6t4RKCKIl4Au2xuqg2SNafJ1muvJXBDlHHOY3OMKG+jqqmrMmPbK3vJzbUjO+O
-         FMIjCurs+ee/GTTIEqbeIobPUecEj0lxZ2Qho8/DjeNh+HK0iZADUd/7Mb7fMo3G+PK0
-         r3hQ72BKC7W5xKzFU9rCM14bMAQtk2g2s/YgPqtWatgb/Fei2ZTq14ok/7mhDGqJxcTN
-         DI/pKFRRhSLs/5/+EwiyY+BmQZKADbqEs4TpDMY8LBhh38ZXNoSjyru8/khhLnHZLULY
-         E2VClKBK6JvdFnodW28L1n6eclM99T7vOdtNYyPMOXhnJfhhyAespssC8ojn9wKt4hQz
-         m9QA==
-X-Gm-Message-State: AOAM531X+mZy3PDPR8ARxaaGWf4KPkzv36+9aR7jeyJ5YYy9UxoDR9Tx
-        PtjV7clDkTsNwMwe2pQfeshn7/mqzQvEhWBvKqs=
-X-Google-Smtp-Source: ABdhPJyfe2oCjJZx3F1PpVwy8oM7f8wrIEpDwj0rmv3wnnbE2x01swwhENf8HW/Y5/48gXRk7Fq6pyaNCGKpuT2dGTw=
-X-Received: by 2002:adf:edca:: with SMTP id v10mr3893592wro.124.1598293540053;
- Mon, 24 Aug 2020 11:25:40 -0700 (PDT)
+        Mon, 24 Aug 2020 14:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbgHXS0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 14:26:39 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BDC4206BE;
+        Mon, 24 Aug 2020 18:26:36 +0000 (UTC)
+Date:   Mon, 24 Aug 2020 14:26:34 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        'Nicolas Boichat' <drinkcat@chromium.org>,
+        "dianders@chromium.org" <dianders@chromium.org>,
+        "groeck@chromium.org" <groeck@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        Kars Mulder <kerneldev@karsmulder.nl>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Will Deacon <will@kernel.org>, Yue Hu <huyue2@yulong.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5] kernel/trace: Add DISALLOW_TRACE_PRINTK make option
+Message-ID: <20200824142634.235acc7d@oasis.local.home>
+In-Reply-To: <20200824134201.GM1891694@smile.fi.intel.com>
+References: <20200824105852.v5.1.I4feb11d34ce7a0dd5ee2c3327fb5a1a9a646be30@changeid>
+        <3f84781f12424cbfa552981af42dfaf2@AcuMS.aculab.com>
+        <20200824092828.4386bd25@oasis.local.home>
+        <20200824134201.GM1891694@smile.fi.intel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200824163751.606577-1-sashal@kernel.org> <20200824163751.606577-35-sashal@kernel.org>
-In-Reply-To: <20200824163751.606577-35-sashal@kernel.org>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 24 Aug 2020 14:25:29 -0400
-Message-ID: <CADnq5_OouGpkpOeW+6=vhLOba-jWDDw_TDuzcTzKtcJ1T0U=yw@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.4 35/38] Revert "drm/amdgpu: disable gfxoff for navy_flounder"
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "for 3.8" <stable@vger.kernel.org>, Tao Zhou <tao.zhou1@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Jiansong Chen <Jiansong.Chen@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Kenneth Feng <kenneth.feng@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 12:38 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Jiansong Chen <Jiansong.Chen@amd.com>
->
-> [ Upstream commit da2446b66b5e2c7f3ab63912c8d999810e35e8b3 ]
->
-> This reverts commit 9c9b17a7d19a8e21db2e378784fff1128b46c9d3.
-> Newly released sdma fw (51.52) provides a fix for the issue.
->
-> Signed-off-by: Jiansong Chen <Jiansong.Chen@amd.com>
-> Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
-> Reviewed-by: Tao Zhou <tao.zhou1@amd.com>
-> Acked-by: Alex Deucher <alexander.deucher@amd.com>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+On Mon, 24 Aug 2020 16:42:01 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-Support for this chip does not exist in 5.4 or any other older trees.
-Please drop this.
+> How making it make's option prevent some "smart" distros to achieve the same?
+> AFAIU any compile-time knob will allow to build a kernel w/o a feature and you
+> are against of such kernel builds in distros. Catch-22?
 
-Alex
+Because it will fail the build if it finds a trace_printk() in the
+compiled code, but doesn't touch the config that is shipped, nor does
+it affect modules being built against this kernel.
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-> index 3a5b4efa7a5e6..64d96eb0a2337 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-> @@ -617,9 +617,6 @@ static void gfx_v10_0_check_gfxoff_flag(struct amdgpu_device *adev)
->         case CHIP_NAVI10:
->                 adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
->                 break;
-> -       case CHIP_NAVY_FLOUNDER:
-> -               adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
-> -               break;
->         default:
->                 break;
->         }
-> --
-> 2.25.1
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+This patch series is for those that do not want a trace_printk()
+accidentally left behind in their own work and trigger that big warning
+and scare their users. But it still gives an option for developers to
+add a trace_printk.
+
+That is, the decision to have trace_printk in a particular output
+(vmlinux) is done at the compile time, and all it does is to make sure
+one isn't present at that moment. This series is not about keeping them
+out completely (test modules, etc), which a config option will.
+
+-- Steve
