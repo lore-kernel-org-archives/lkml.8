@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 712B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3773920FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444BF2177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258354;
-	bh=BUqh9hxrrhfBSUuYGJs7qbkTVzJ4kaDSPrSOfKiy10g=;
+	s=default; t=1598258357;
+	bh=rtC3OLtXYHuMs7YIrJ/3veZpLifW/r675BNRatgvRZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2FqNMJzb99lzCI7vwi1evrP50kZJw9naOQTiW/bt4rtB5OlWhA1yOUME/AXMdsiKx
-	 cUPGOlfH90eZ7c0B6PzWt2l9ONikaIrJZI/rU1J+Xsy7kL4nv+7bB1ZwSOFNSTt7Ws
-	 rhMF26acJeOla25glo/1iqpNFAYQ+K5py+Jc2rGA=
+	b=tkEUSF1GfxhVotNK/bDS55bZv5xV9+061vNMvRJdU/Z+xp/gjZuveN42vv9TOxqp8
+	 cpYUgsG3d71UtMCEFxbbsZX5GmO+YNGpcGbqC1SrMI0uKYqixs2MoG1uGNr4hPDNBK
+	 32WO7exx2qB4AEbOqOlRoSnWyiT8hUZWljdBwAFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbgHXIjM (ORCPT
+        id S1728004AbgHXIjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:39:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54500 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:39:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbgHXIjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:39:06 -0400
+        id S1726825AbgHXIjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:39:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 598252177B;
-        Mon, 24 Aug 2020 08:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA27E20FC3;
+        Mon, 24 Aug 2020 08:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258346;
-        bh=BUqh9hxrrhfBSUuYGJs7qbkTVzJ4kaDSPrSOfKiy10g=;
+        s=default; t=1598258352;
+        bh=rtC3OLtXYHuMs7YIrJ/3veZpLifW/r675BNRatgvRZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LIs69x84Hoj7aqfcIGHnI6k/7JX/zSntDf/9agUM1XFGQZ2B9CFacjM0J7rA/gx9m
-         Y9JS6+cd6/5EzfBx6Rx4Ah+85frh8fPU7t37Cm0JH8ZyMpofpIMSIE1/aYFagMwcMP
-         F+r6lklOF4Kgg5/TI6zhP8RRqQ1CJ5vShSQZ04H0=
+        b=t5uMMe09lq9Q9uwrLb/++L2NnI9fVvLTVStWuqs7LDJpyokrDfUlilFoZtbxvzxsS
+         w1IyqfgeocjDaE/hGe2w+j56t5s8KldwjtI9lmC279TPTdV7ub2imAIEJaOAmGql6K
+         +SkSRRtT8H0HLY8tJEolO14hOoNzMZS7fXINaUa0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH 5.7 016/124] RDMA/hfi1: Correct an interlock issue for TID RDMA WRITE request
-Date:   Mon, 24 Aug 2020 10:29:10 +0200
-Message-Id: <20200824082410.212338668@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.7 018/124] ext4: fix checking of directory entry validity for inline directories
+Date:   Mon, 24 Aug 2020 10:29:12 +0200
+Message-Id: <20200824082410.316371981@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -62,63 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Jan Kara <jack@suse.cz>
 
-commit b25e8e85e75a61af1ddc88c4798387dd3132dd43 upstream.
+commit 7303cb5bfe845f7d43cd9b2dbd37dbb266efda9b upstream.
 
-The following message occurs when running an AI application with TID RDMA
-enabled:
+ext4_search_dir() and ext4_generic_delete_entry() can be called both for
+standard director blocks and for inline directories stored inside inode
+or inline xattr space. For the second case we didn't call
+ext4_check_dir_entry() with proper constraints that could result in
+accepting corrupted directory entry as well as false positive filesystem
+errors like:
 
-hfi1 0000:7f:00.0: hfi1_0: [QP74] hfi1_tid_timeout 4084
-hfi1 0000:7f:00.0: hfi1_0: [QP70] hfi1_tid_timeout 4084
+EXT4-fs error (device dm-0): ext4_search_dir:1395: inode #28320400:
+block 113246792: comm dockerd: bad entry in directory: directory entry too
+close to block end - offset=0, inode=28320403, rec_len=32, name_len=8,
+size=4096
 
-The issue happens when TID RDMA WRITE request is followed by an
-IB_WR_RDMA_WRITE_WITH_IMM request, the latter could be completed first on
-the responder side. As a result, no ACK packet for the latter could be
-sent because the TID RDMA WRITE request is still being processed on the
-responder side.
+Fix the arguments passed to ext4_check_dir_entry().
 
-When the TID RDMA WRITE request is eventually completed, the requester
-will wait for the IB_WR_RDMA_WRITE_WITH_IMM request to be acknowledged.
-
-If the next request is another TID RDMA WRITE request, no TID RDMA WRITE
-DATA packet could be sent because the preceding IB_WR_RDMA_WRITE_WITH_IMM
-request is not completed yet.
-
-Consequently the IB_WR_RDMA_WRITE_WITH_IMM will be retried but it will be
-ignored on the responder side because the responder thinks it has already
-been completed. Eventually the retry will be exhausted and the qp will be
-put into error state on the requester side. On the responder side, the TID
-resource timer will eventually expire because no TID RDMA WRITE DATA
-packets will be received for the second TID RDMA WRITE request.  There is
-also risk of a write-after-write memory corruption due to the issue.
-
-Fix by adding a requester side interlock to prevent any potential data
-corruption and TID RDMA protocol error.
-
-Fixes: a0b34f75ec20 ("IB/hfi1: Add interlock between a TID RDMA request and other requests")
-Link: https://lore.kernel.org/r/20200811174931.191210.84093.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org> # 5.4.x+
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fixes: 109ba779d6cc ("ext4: check for directory entries too close to block end")
+CC: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200731162135.8080-1-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/tid_rdma.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/ext4/namei.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/tid_rdma.c
-+++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
-@@ -3215,6 +3215,7 @@ bool hfi1_tid_rdma_wqe_interlock(struct
- 	case IB_WR_ATOMIC_CMP_AND_SWP:
- 	case IB_WR_ATOMIC_FETCH_AND_ADD:
- 	case IB_WR_RDMA_WRITE:
-+	case IB_WR_RDMA_WRITE_WITH_IMM:
- 		switch (prev->wr.opcode) {
- 		case IB_WR_TID_RDMA_WRITE:
- 			req = wqe_to_tid_req(prev);
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1396,8 +1396,8 @@ int ext4_search_dir(struct buffer_head *
+ 		    ext4_match(dir, fname, de)) {
+ 			/* found a match - just to be sure, do
+ 			 * a full check */
+-			if (ext4_check_dir_entry(dir, NULL, de, bh, bh->b_data,
+-						 bh->b_size, offset))
++			if (ext4_check_dir_entry(dir, NULL, de, bh, search_buf,
++						 buf_size, offset))
+ 				return -1;
+ 			*res_dir = de;
+ 			return 1;
+@@ -2472,7 +2472,7 @@ int ext4_generic_delete_entry(handle_t *
+ 	de = (struct ext4_dir_entry_2 *)entry_buf;
+ 	while (i < buf_size - csum_size) {
+ 		if (ext4_check_dir_entry(dir, NULL, de, bh,
+-					 bh->b_data, bh->b_size, i))
++					 entry_buf, buf_size, i))
+ 			return -EFSCORRUPTED;
+ 		if (de == de_del)  {
+ 			if (pde)
 
 
