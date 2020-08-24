@@ -2,60 +2,57 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C86C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F17D2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9172074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261307;
-	bh=2Vp2/EnhxOLcTnR113vhbXSIrBboasw4V+gmAafYOc4=;
+	s=default; t=1598261310;
+	bh=4KseAYN34Oerdw2wOngkRfwMGt6nynk4gFwPTNo3+vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=07oMZPUZFHDtlH8fIH9T9hGfI6Otk0j4HrMVE+htY5h+yRJRiyUFKWcrmGdXLVH9p
-	 GWm07ei8jXigrheusvwpUnajJk/RLhNt/7hVtGTzXkpTOiIbBuvs2BWz7BdE0E3iS/
-	 /cGgI7f/HF+KtiqJvTWgpci9dkfAxSSePyOEcLX8=
+	b=IRkeWUNINom9HMRsaH7Fs/AuxaYywLddK6CFxVEjj8x0XzTQed1+bvq86TzRviiAn
+	 XbCWNrdl6KCqlNd1HvvUAyEah81iCAq9jKdetOFvx1JdSGrpwLmGUm1AFewLBgUC03
+	 j1aZe1v1TXOQ7ynl3WgRMlMmFv83J2pFAiIYEtfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgHXIvp (ORCPT
+        id S1728564AbgHXIvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:51:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56322 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:51:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727907AbgHXIvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:21 -0400
+        id S1728691AbgHXIvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 255B72072D;
-        Mon, 24 Aug 2020 08:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27E2C204FD;
+        Mon, 24 Aug 2020 08:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259080;
-        bh=2Vp2/EnhxOLcTnR113vhbXSIrBboasw4V+gmAafYOc4=;
+        s=default; t=1598259083;
+        bh=4KseAYN34Oerdw2wOngkRfwMGt6nynk4gFwPTNo3+vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ATrQsv9QX675+fnzvXjEPlEBxRGePY429EUViIPSMmJ5HInABzy3Sz4wGYtIv9Bgm
-         OzQhP8XNPETdlbeGDsqjO/F+MtOAQwICkrCFE2jJbTJ9T7OQG5qwb0nm7Cim//dya0
-         ZJZCV/vcWlkNVfg7h0t1pP842srWccaWQnMJuIFE=
+        b=eCEogbRnVUViC4wCzzsKTBQsPkvWDTnycJ9md+noj2sbsMS+GS3b20nhYBoLmzJSF
+         be1SrhdLAwQzpG98pv9HMRKF0OVRZUfe6LRCQVyAxv01eIl2Yi9z1XtcLS6oCZeuTb
+         RXqJjJ9NHrNaQxnVUf8ujYcIsfhJd9EA7zSKw/k0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Uros Bizjak <ubizjak@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.9 01/39] x86/asm: Remove unnecessary \n\t in front of CC_SET() from asm templates
-Date:   Mon, 24 Aug 2020 10:31:00 +0200
-Message-Id: <20200824082348.545064159@linuxfoundation.org>
+        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Kevin Hao <haokexin@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 06/39] tracing/hwlat: Honor the tracing_cpumask
+Date:   Mon, 24 Aug 2020 10:31:05 +0200
+Message-Id: <20200824082348.800713951@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,112 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uros Bizjak <ubizjak@gmail.com>
+From: Kevin Hao <haokexin@gmail.com>
 
-commit 3c52b5c64326d9dcfee4e10611c53ec1b1b20675 upstream.
+[ Upstream commit 96b4833b6827a62c295b149213c68b559514c929 ]
 
-There is no need for \n\t in front of CC_SET(), as the macro already includes these two.
+In calculation of the cpu mask for the hwlat kernel thread, the wrong
+cpu mask is used instead of the tracing_cpumask, this causes the
+tracing/tracing_cpumask useless for hwlat tracer. Fixes it.
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20170906151808.5634-1-ubizjak@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lkml.kernel.org/r/20200730082318.42584-2-haokexin@gmail.com
 
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 0330f7aa8ee6 ("tracing: Have hwlat trace migrate across tracing_cpumask CPUs")
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/archrandom.h |    8 ++++----
- arch/x86/include/asm/bitops.h     |    8 ++++----
- arch/x86/include/asm/percpu.h     |    2 +-
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ kernel/trace/trace_hwlat.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/arch/x86/include/asm/archrandom.h
-+++ b/arch/x86/include/asm/archrandom.h
-@@ -45,7 +45,7 @@ static inline bool rdrand_long(unsigned
- 	bool ok;
- 	unsigned int retry = RDRAND_RETRY_LOOPS;
- 	do {
--		asm volatile(RDRAND_LONG "\n\t"
-+		asm volatile(RDRAND_LONG
- 			     CC_SET(c)
- 			     : CC_OUT(c) (ok), "=a" (*v));
- 		if (ok)
-@@ -59,7 +59,7 @@ static inline bool rdrand_int(unsigned i
- 	bool ok;
- 	unsigned int retry = RDRAND_RETRY_LOOPS;
- 	do {
--		asm volatile(RDRAND_INT "\n\t"
-+		asm volatile(RDRAND_INT
- 			     CC_SET(c)
- 			     : CC_OUT(c) (ok), "=a" (*v));
- 		if (ok)
-@@ -71,7 +71,7 @@ static inline bool rdrand_int(unsigned i
- static inline bool rdseed_long(unsigned long *v)
+diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+index 158af5ddbc3aa..d1e007c729235 100644
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -271,6 +271,7 @@ static bool disable_migrate;
+ static void move_to_next_cpu(void)
  {
- 	bool ok;
--	asm volatile(RDSEED_LONG "\n\t"
-+	asm volatile(RDSEED_LONG
- 		     CC_SET(c)
- 		     : CC_OUT(c) (ok), "=a" (*v));
- 	return ok;
-@@ -80,7 +80,7 @@ static inline bool rdseed_long(unsigned
- static inline bool rdseed_int(unsigned int *v)
- {
- 	bool ok;
--	asm volatile(RDSEED_INT "\n\t"
-+	asm volatile(RDSEED_INT
- 		     CC_SET(c)
- 		     : CC_OUT(c) (ok), "=a" (*v));
- 	return ok;
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -232,7 +232,7 @@ static __always_inline bool __test_and_s
- {
- 	bool oldbit;
+ 	struct cpumask *current_mask = &save_cpumask;
++	struct trace_array *tr = hwlat_trace;
+ 	int next_cpu;
  
--	asm("bts %2,%1\n\t"
-+	asm("bts %2,%1"
- 	    CC_SET(c)
- 	    : CC_OUT(c) (oldbit), ADDR
- 	    : "Ir" (nr));
-@@ -272,7 +272,7 @@ static __always_inline bool __test_and_c
- {
- 	bool oldbit;
+ 	if (disable_migrate)
+@@ -284,7 +285,7 @@ static void move_to_next_cpu(void)
+ 		goto disable;
  
--	asm volatile("btr %2,%1\n\t"
-+	asm volatile("btr %2,%1"
- 		     CC_SET(c)
- 		     : CC_OUT(c) (oldbit), ADDR
- 		     : "Ir" (nr));
-@@ -284,7 +284,7 @@ static __always_inline bool __test_and_c
- {
- 	bool oldbit;
+ 	get_online_cpus();
+-	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
++	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
+ 	next_cpu = cpumask_next(smp_processor_id(), current_mask);
+ 	put_online_cpus();
  
--	asm volatile("btc %2,%1\n\t"
-+	asm volatile("btc %2,%1"
- 		     CC_SET(c)
- 		     : CC_OUT(c) (oldbit), ADDR
- 		     : "Ir" (nr) : "memory");
-@@ -315,7 +315,7 @@ static __always_inline bool variable_tes
- {
- 	bool oldbit;
+@@ -361,7 +362,7 @@ static int start_kthread(struct trace_array *tr)
+ 	/* Just pick the first CPU on first iteration */
+ 	current_mask = &save_cpumask;
+ 	get_online_cpus();
+-	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
++	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
+ 	put_online_cpus();
+ 	next_cpu = cpumask_first(current_mask);
  
--	asm volatile("bt %2,%1\n\t"
-+	asm volatile("bt %2,%1"
- 		     CC_SET(c)
- 		     : CC_OUT(c) (oldbit)
- 		     : "m" (*(unsigned long *)addr), "Ir" (nr));
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -536,7 +536,7 @@ static inline bool x86_this_cpu_variable
- {
- 	bool oldbit;
- 
--	asm volatile("bt "__percpu_arg(2)",%1\n\t"
-+	asm volatile("bt "__percpu_arg(2)",%1"
- 			CC_SET(c)
- 			: CC_OUT(c) (oldbit)
- 			: "m" (*(unsigned long __percpu *)addr), "Ir" (nr));
+-- 
+2.25.1
+
 
 
