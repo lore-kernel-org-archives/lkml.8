@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A71C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95824C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD87B2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA7F2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262041;
-	bh=Oh3umyAlURcds4JmNFmbVOeFnE76pIx3mR/Qxh/CU5E=;
+	s=default; t=1598262051;
+	bh=6KL0wHENh9VQqFXdxxVreqsY3rECpXE35fID5KZQ8kU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQZLEMNga5S37bzKNpB8CMMfuieQ6PFGjjFZNkSikNvfPaaLv4r/fUJplfFdmy4y4
-	 Dy1CDl0XgVv2n7AKuvJEYm9/ke5OWl+xvub8PFnyq90MvdKNf3+ZCHuGTUAFWwMDMg
-	 ZsgKprnL+NfPIEI9W6cKL9eWkpP/CZ0z+LYI0HL8=
+	b=jn8IlDAv4S2E9hpBNlZ7mvUcn1SBti9gh2tLCqjeWis05Pmh8KmLFQ0VhS50/oZYU
+	 MbsKFbgzfZy6x86Kjx7vT2j9Ea+gencuiJGHO14aLr69fOM+yeNumMG3kFN0DxsxuR
+	 rGuUsNr/UqdofAbVHPlnxZbjAiBd5QqA8bGQbLsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgHXJkk (ORCPT
+        id S1729056AbgHXIpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43158 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729252AbgHXIpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:45:46 -0400
+        id S1729226AbgHXIpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:45:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B22D2072D;
-        Mon, 24 Aug 2020 08:45:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20E0C204FD;
+        Mon, 24 Aug 2020 08:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258744;
-        bh=Oh3umyAlURcds4JmNFmbVOeFnE76pIx3mR/Qxh/CU5E=;
+        s=default; t=1598258729;
+        bh=6KL0wHENh9VQqFXdxxVreqsY3rECpXE35fID5KZQ8kU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h0MI49HxUbLLa8fwnR7zN3f4c3EYnWoZ65C7aitesudSLL5lXW5yl+AMWSQIPkdn/
-         SRNHsS9yzNtBaaGwLAqil9gQfIySbfyynlyXpbK9uWGsPBeKR4skqgCZ1Oo96fGQhj
-         bTn+PUPngTCILjk24+39jYqMHeT5DECAtDRMMH3g=
+        b=Bg+IHYuA+3kMy2If/VcKt+SepKxw/YI7KwzPgKwStVUKv+gJm67tgXD0uMOFpnEAg
+         KfRITcwCugR66NxnQB1deq0h4cOy4Vchz11OyxGytanamtpLJO2acfn8RcWeIGVsuz
+         VUco70uU5c8Se+RM5sXN98tMcpCrr4E1dCMJv/pk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Jason Baron <jbaron@akamai.com>,
-        David Rientjes <rientjes@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 029/107] mm: include CMA pages in lowmem_reserve at boot
-Date:   Mon, 24 Aug 2020 10:29:55 +0200
-Message-Id: <20200824082406.557063413@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 025/107] spi: Prevent adding devices below an unregistering controller
+Date:   Mon, 24 Aug 2020 10:29:51 +0200
+Message-Id: <20200824082406.342848778@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -64,85 +62,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit e08d3fdfe2dafa0331843f70ce1ff6c1c4900bf4 upstream.
+commit ddf75be47ca748f8b12d28ac64d624354fddf189 upstream.
 
-The lowmem_reserve arrays provide a means of applying pressure against
-allocations from lower zones that were targeted at higher zones.  Its
-values are a function of the number of pages managed by higher zones and
-are assigned by a call to the setup_per_zone_lowmem_reserve() function.
+CONFIG_OF_DYNAMIC and CONFIG_ACPI allow adding SPI devices at runtime
+using a DeviceTree overlay or DSDT patch.  CONFIG_SPI_SLAVE allows the
+same via sysfs.
 
-The function is initially called at boot time by the function
-init_per_zone_wmark_min() and may be called later by accesses of the
-/proc/sys/vm/lowmem_reserve_ratio sysctl file.
+But there are no precautions to prevent adding a device below a
+controller that's being removed.  Such a device is unusable and may not
+even be able to unbind cleanly as it becomes inaccessible once the
+controller has been torn down.  E.g. it is then impossible to quiesce
+the device's interrupt.
 
-The function init_per_zone_wmark_min() was moved up from a module_init to
-a core_initcall to resolve a sequencing issue with khugepaged.
-Unfortunately this created a sequencing issue with CMA page accounting.
+of_spi_notify() and acpi_spi_notify() do hold a ref on the controller,
+but otherwise run lockless against spi_unregister_controller().
 
-The CMA pages are added to the managed page count of a zone when
-cma_init_reserved_areas() is called at boot also as a core_initcall.  This
-makes it uncertain whether the CMA pages will be added to the managed page
-counts of their zones before or after the call to
-init_per_zone_wmark_min() as it becomes dependent on link order.  With the
-current link order the pages are added to the managed count after the
-lowmem_reserve arrays are initialized at boot.
+Fix by holding the spi_add_lock in spi_unregister_controller() and
+bailing out of spi_add_device() if the controller has been unregistered
+concurrently.
 
-This means the lowmem_reserve values at boot may be lower than the values
-used later if /proc/sys/vm/lowmem_reserve_ratio is accessed even if the
-ratio values are unchanged.
-
-In many cases the difference is not significant, but for example
-an ARM platform with 1GB of memory and the following memory layout
-
-  cma: Reserved 256 MiB at 0x0000000030000000
-  Zone ranges:
-    DMA      [mem 0x0000000000000000-0x000000002fffffff]
-    Normal   empty
-    HighMem  [mem 0x0000000030000000-0x000000003fffffff]
-
-would result in 0 lowmem_reserve for the DMA zone.  This would allow
-userspace to deplete the DMA zone easily.
-
-Funnily enough
-
-  $ cat /proc/sys/vm/lowmem_reserve_ratio
-
-would fix up the situation because as a side effect it forces
-setup_per_zone_lowmem_reserve.
-
-This commit breaks the link order dependency by invoking
-init_per_zone_wmark_min() as a postcore_initcall so that the CMA pages
-have the chance to be properly accounted in their zone(s) and allowing
-the lowmem_reserve arrays to receive consistent values.
-
-Fixes: bc22af74f271 ("mm: update min_free_kbytes from khugepaged after core initialization")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Jason Baron <jbaron@akamai.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/1597423766-27849-1-git-send-email-opendmb@gmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: ce79d54ae447 ("spi/of: Add OF notifier handler")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v3.19+
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Octavian Purdila <octavian.purdila@intel.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Link: https://lore.kernel.org/r/a8c3205088a969dc8410eec1eba9aface60f36af.1596451035.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_alloc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/Kconfig |    3 +++
+ drivers/spi/spi.c   |   21 ++++++++++++++++++++-
+ 2 files changed, 23 insertions(+), 1 deletion(-)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -7867,7 +7867,7 @@ int __meminit init_per_zone_wmark_min(vo
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -944,4 +944,7 @@ config SPI_SLAVE_SYSTEM_CONTROL
  
- 	return 0;
+ endif # SPI_SLAVE
+ 
++config SPI_DYNAMIC
++	def_bool ACPI || OF_DYNAMIC || SPI_SLAVE
++
+ endif # SPI
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -475,6 +475,12 @@ static LIST_HEAD(spi_controller_list);
+  */
+ static DEFINE_MUTEX(board_lock);
+ 
++/*
++ * Prevents addition of devices with same chip select and
++ * addition of devices below an unregistering controller.
++ */
++static DEFINE_MUTEX(spi_add_lock);
++
+ /**
+  * spi_alloc_device - Allocate a new SPI device
+  * @ctlr: Controller to which device is connected
+@@ -553,7 +559,6 @@ static int spi_dev_check(struct device *
+  */
+ int spi_add_device(struct spi_device *spi)
+ {
+-	static DEFINE_MUTEX(spi_add_lock);
+ 	struct spi_controller *ctlr = spi->controller;
+ 	struct device *dev = ctlr->dev.parent;
+ 	int status;
+@@ -581,6 +586,13 @@ int spi_add_device(struct spi_device *sp
+ 		goto done;
+ 	}
+ 
++	/* Controller may unregister concurrently */
++	if (IS_ENABLED(CONFIG_SPI_DYNAMIC) &&
++	    !device_is_registered(&ctlr->dev)) {
++		status = -ENODEV;
++		goto done;
++	}
++
+ 	/* Descriptors take precedence */
+ 	if (ctlr->cs_gpiods)
+ 		spi->cs_gpiod = ctlr->cs_gpiods[spi->chip_select];
+@@ -2582,6 +2594,10 @@ void spi_unregister_controller(struct sp
+ 	struct spi_controller *found;
+ 	int id = ctlr->bus_num;
+ 
++	/* Prevent addition of new devices, unregister existing ones */
++	if (IS_ENABLED(CONFIG_SPI_DYNAMIC))
++		mutex_lock(&spi_add_lock);
++
+ 	device_for_each_child(&ctlr->dev, NULL, __unregister);
+ 
+ 	/* First make sure that this controller was ever added */
+@@ -2602,6 +2618,9 @@ void spi_unregister_controller(struct sp
+ 	if (found == ctlr)
+ 		idr_remove(&spi_master_idr, id);
+ 	mutex_unlock(&board_lock);
++
++	if (IS_ENABLED(CONFIG_SPI_DYNAMIC))
++		mutex_unlock(&spi_add_lock);
  }
--core_initcall(init_per_zone_wmark_min)
-+postcore_initcall(init_per_zone_wmark_min)
+ EXPORT_SYMBOL_GPL(spi_unregister_controller);
  
- /*
-  * min_free_kbytes_sysctl_handler - just a wrapper around proc_dointvec() so
 
 
