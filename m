@@ -2,103 +2,81 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE394C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E10C2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A40A20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKbSv2ez"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UtFLoRdm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbgHXXo6 (ORCPT
+        id S1726698AbgHXXtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35826 "EHLO
+        Mon, 24 Aug 2020 19:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgHXXo5 (ORCPT
+        with ESMTP id S1725890AbgHXXtK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 19:44:57 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1559C061574;
-        Mon, 24 Aug 2020 16:44:56 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id u3so9371025qkd.9;
-        Mon, 24 Aug 2020 16:44:56 -0700 (PDT)
+        Mon, 24 Aug 2020 19:49:10 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BF44C061574;
+        Mon, 24 Aug 2020 16:49:10 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id p11so2673943pfn.11;
+        Mon, 24 Aug 2020 16:49:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Yn2Yu+Y39wzR1ajjDWLsKpLcyY/74xfHnDil+KAiO9E=;
-        b=EKbSv2ez5CY3L5KU4c9PhpmsHm2AXEHfvfujFPxvy/+PtPqJbmN01TuRq7+Y1yFe2K
-         39c/b3+BYHyKYspFKkV7suGHWsGt5q6we/vtEEqhZWBs9517pgCC+zQhaSgPlnexN8KR
-         43K/1zw8FpwOo+jD8435wS6ujUu9TEwQpa5mzb9mFXuS0UYYcDQbGuHdTSQnZsr023Vw
-         MDAyPNwN7QaBa4hYWIFRTMdgZCRAp89KoFRIK/JKFzaDvyT552WQrGAB4SK3/ZbjG0oW
-         x5ZRBlCTV2OHLKi07DeiUUgv+NTOQmRT1bfl+OBJABh0xortXy5fCGYk+YVLhHz0O+EX
-         fbZg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MRFtcPoCikAVvKJYCXbUBDj9joKfZP9gvPiffFziVs4=;
+        b=UtFLoRdmhkURy9IIpmgJFC0bgeJ1qVxQ0QHeMe2UlDPEPmZ6paDRATFFCezcM2Qxj2
+         ZF/iQHVjRDhyDlHIJ8DtJ4948A3fOqdsASI0586Ex3zP9rBxxE5A/1HtEt6LhJ8Awon3
+         R0rDvRFkpO4NK784e+/Yr5aR9BBbET8aF1P6dfUSC2MoYo8+PrYloZRK4n2v1R44P5pX
+         N21ZOA7CsN6CSqJELOakhDVX57F53/HLExqfk66OssaZgKc6tevxnTmUdEdIGiQIKu8t
+         9i/cHb8iapf7NtaC0cbFyN1XO/u6KV3ZRH08ebogDH6mcPSGxhze/2adaSa2eQP4zArZ
+         EtEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Yn2Yu+Y39wzR1ajjDWLsKpLcyY/74xfHnDil+KAiO9E=;
-        b=TeAZDWz8+O8VA43ayTUVOdpNLCcA92iFNGzQGjSRPrLwvRZKEUPToypE6iPTS1jZdJ
-         LTmL6JtWAnn4ynshg6krYMP70L2rsdoF+MRN8Cic338E20M3JOZpZyVkzyFGNrUR580B
-         WFSpB+Uf36KtCSsbhLV8Fqzn73GI5K6wkzujsAps20F+Dh6e+7L34EcJQAZYYgEtpgJE
-         7yTK+hVLpvkjzcVn8qpXiZhwmuH/5HK2tvmw2mAkE24U09pHa2HpFxYeLna+erYYYJ5V
-         YKupdS/EX7Yu2JpJKrB0fSvXcAjRII48nfq54upMZYahCQ5KQ+5usbbLcuNxgx88C2Lw
-         mFWg==
-X-Gm-Message-State: AOAM530Ao3JwdV9VtrwD8GljYG6Eg4i9Ls3L36ZGUPY1nzDQXCne6R/K
-        hVFrN7cuqhpbxjc23LDMmWU=
-X-Google-Smtp-Source: ABdhPJw1ZEHlQzxL4e/HKfjBf0rF7TcfUaa7MeVedcIG5cnZZTGf9cMpKpoGbUHndA2UBn8ya59yUw==
-X-Received: by 2002:a05:620a:1361:: with SMTP id d1mr6718838qkl.387.1598312696196;
-        Mon, 24 Aug 2020 16:44:56 -0700 (PDT)
-Received: from tong-desktop.local ([2601:5c0:c100:b9d:e9aa:e42d:21e4:5150])
-        by smtp.googlemail.com with ESMTPSA id y24sm12018127qtv.71.2020.08.24.16.44.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 16:44:55 -0700 (PDT)
-From:   Tong Zhang <ztong0001@gmail.com>
-To:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
-        dledford@redhat.com, jgg@ziepe.ca, kamalheib1@gmail.com,
-        leon@kernel.org, maxg@mellanox.com, monis@mellanox.com,
-        ztong0001@gmail.com, gustavoars@kernel.org, galpress@amazon.com,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bernard Metzler <bmt@zurich.ibm.com>
-Subject: [PATCH] RDMA: error code handling
-Date:   Mon, 24 Aug 2020 19:44:21 -0400
-Message-Id: <20200824234422.1261394-1-ztong0001@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MRFtcPoCikAVvKJYCXbUBDj9joKfZP9gvPiffFziVs4=;
+        b=jdlcuHnxBOBZzxCtYUsH7iDZwPItLTJ8l7m8/6u0iASfXZARKzRb2Mjp9iiHcHYH6Q
+         WRubVpFSJCr2Ro5RzFkkIsaloawaj5RQi/X57mW+hnzwC1FTd0ZDhgZdaVZCwYELOyWP
+         XR2+sCNe5op1G9Y/GXKkEaZfPDpV5lFsd7uarvaPcxlwiMAzhvanDklL9jxSb28LVCdT
+         3949yYAq4ka7e0K580oeTvZhd/yjmK+OSFJUqGDIXJMNVq8ij0Cv64XkVMBbJWxdV9vs
+         MeTM610VmpEAyRva1kbFkbKjlbWFiYikShpw/0oegXWMrncNsQixt2WQ6cLLztUUgdpW
+         YUJQ==
+X-Gm-Message-State: AOAM531piscxEW5KkUSltw4bIMkNgE2QxcMfx9WPK5ikfOtbhM2CsQWa
+        SnkWvvHpPtSNHFjcP4o8e8vw7eNBoQvhR93lx6M=
+X-Google-Smtp-Source: ABdhPJwDvbqoHpdGgbg6R3mtccIx7uaxGYn/pgnOamBZn5OBTmjxGEOYwWsq4yvvrwrRdZMup3IT4zcbH58wvaa8vms=
+X-Received: by 2002:a17:902:8543:: with SMTP id d3mr5418093plo.244.1598312949912;
+ Mon, 24 Aug 2020 16:49:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200821212659.14551-1-xie.he.0141@gmail.com> <20200824.160949.2284526241463900498.davem@davemloft.net>
+In-Reply-To: <20200824.160949.2284526241463900498.davem@davemloft.net>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Mon, 24 Aug 2020 16:48:58 -0700
+Message-ID: <CAJht_ENk-8ziaJ7FFPr9DVRinDOxaXaH2mJHoYcDw3CCHgx-Zg@mail.gmail.com>
+Subject: Re: [PATCH net v2] drivers/net/wan/lapbether: Added needed_tailroom
+To:     David Miller <davem@davemloft.net>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Martin Schiller <ms@dev.tdt.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ocrdma_qp_state_change() returns 1 when new and old state are the same,
-however caller is checking using <0
+On Mon, Aug 24, 2020 at 4:09 PM David Miller <davem@davemloft.net> wrote:
+>
+> Applied, thank you.
 
-Signed-off-by: Tong Zhang <ztong0001@gmail.com>
----
- drivers/infiniband/hw/ocrdma/ocrdma_verbs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c b/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
-index c1751c9a0f62..518687c5e2cb 100644
---- a/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
-+++ b/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
-@@ -1384,7 +1384,7 @@ int _ocrdma_modify_qp(struct ib_qp *ibqp, struct ib_qp_attr *attr,
- 	/* if new and previous states are same hw doesn't need to
- 	 * know about it.
- 	 */
--	if (status < 0)
-+	if (status == 1)
- 		return status;
- 	return ocrdma_mbx_modify_qp(dev, qp, attr, attr_mask);
- }
--- 
-2.25.1
-
+Thank you!
