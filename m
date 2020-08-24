@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6154AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DCBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF092071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A732071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262267;
-	bh=l+KKjuyv0K+3EtnedaDSTu3bi2Trkpi4G9PEyEiUh64=;
+	s=default; t=1598262279;
+	bh=Un0jkfdEzqoS7mtwb6Y8qjOb2BUnF5ehMVkAyDM176I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CCwgO6WrAe8s4TmdfgLULU2G6HEpZzHtaS1yZ4voXN187pIJY+AOcv5e0DPruNaVC
-	 99vxF8Gjn7A27gLs2gEgz/7f8qH83SfGkp2DxG8fx9YPTyREooZL35Ll8fQbBCCycD
-	 AqNiG8h5L1UJN/8tVAHkfuHg5xmZsTsb9aASZPyo=
+	b=tYJPLf3e4pTXG+YxvfMotEgO/Fp4GPr2vC0X7x7Oy/Z+EAyGDsQuUSg4Q6dwEvLLO
+	 fouWu6TKcSByyxHJ3M/5Oo9L8amu7TYsROjdKB2XpETvswtTTtrd5XasGWuWX/QiZF
+	 5jI1AbO2//t0esa9ZYFcrXn4WecuuYRdBHo5kZJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgHXJoV (ORCPT
+        id S1729032AbgHXInQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:44:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37920 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:43:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728510AbgHXIn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:43:28 -0400
+        id S1727932AbgHXInH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:43:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BCA02074D;
-        Mon, 24 Aug 2020 08:43:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 038EB2087D;
+        Mon, 24 Aug 2020 08:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258608;
-        bh=l+KKjuyv0K+3EtnedaDSTu3bi2Trkpi4G9PEyEiUh64=;
+        s=default; t=1598258586;
+        bh=Un0jkfdEzqoS7mtwb6Y8qjOb2BUnF5ehMVkAyDM176I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=plinFpnd/n2LPNJddUv+1k0ZYQAV2zVMvYB+2JS6p0CknPvW+Wv5KXXsINdpc/uPd
-         stiQ9SRXuCX+7xyf+uh/ifdBl/wafsf81/3E3hkAFNCZAwxpi+pcSd7n+Ci9hfSvQo
-         Ek4FOoXUA+uFTRev3DZ/M/yTl1BbzlbrjAAtNqiA=
+        b=O6SBXQiehh/5WvpAg1V/JgHgid6NABk85JdtLaGJwkoQt0dGfwhVNKYOwoqf/iuwf
+         rfB7XdCNN8F5j6zyDktJMNZZlHtSRnLz1aHKKUno3e96Mhbi5+E5rZwAvWYfoUNFN7
+         B0cSlVydXbx4ZHCA7g/m9Gzr83ZUrrO/ZvrAWCvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Martin KaFai Lau <kafai@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 107/124] ARM64: vdso32: Install vdso32 from vdso_install
-Date:   Mon, 24 Aug 2020 10:30:41 +0200
-Message-Id: <20200824082414.672823482@linuxfoundation.org>
+Subject: [PATCH 5.7 069/124] bpf: sock_ops sk access may stomp registers when dst_reg = src_reg
+Date:   Mon, 24 Aug 2020 10:30:03 +0200
+Message-Id: <20200824082412.805157874@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -62,51 +62,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit 8d75785a814241587802655cc33e384230744f0c ]
+[ Upstream commit 84f44df664e9f0e261157e16ee1acd77cc1bb78d ]
 
-Add the 32-bit vdso Makefile to the vdso_install rule so that 'make
-vdso_install' installs the 32-bit compat vdso when it is compiled.
+Similar to patch ("bpf: sock_ops ctx access may stomp registers") if the
+src_reg = dst_reg when reading the sk field of a sock_ops struct we
+generate xlated code,
 
-Fixes: a7f71a2c8903 ("arm64: compat: Add vDSO")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Acked-by: Will Deacon <will@kernel.org>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Link: https://lore.kernel.org/r/20200818014950.42492-1-swboyd@chromium.org
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+  53: (61) r9 = *(u32 *)(r9 +28)
+  54: (15) if r9 == 0x0 goto pc+3
+  56: (79) r9 = *(u64 *)(r9 +0)
+
+This stomps on the r9 reg to do the sk_fullsock check and then when
+reading the skops->sk field instead of the sk pointer we get the
+sk_fullsock. To fix use similar pattern noted in the previous fix
+and use the temp field to save/restore a register used to do
+sk_fullsock check.
+
+After the fix the generated xlated code reads,
+
+  52: (7b) *(u64 *)(r9 +32) = r8
+  53: (61) r8 = *(u32 *)(r9 +28)
+  54: (15) if r9 == 0x0 goto pc+3
+  55: (79) r8 = *(u64 *)(r9 +32)
+  56: (79) r9 = *(u64 *)(r9 +0)
+  57: (05) goto pc+1
+  58: (79) r8 = *(u64 *)(r9 +32)
+
+Here r9 register was in-use so r8 is chosen as the temporary register.
+In line 52 r8 is saved in temp variable and at line 54 restored in case
+fullsock != 0. Finally we handle fullsock == 0 case by restoring at
+line 58.
+
+This adds a new macro SOCK_OPS_GET_SK it is almost possible to merge
+this with SOCK_OPS_GET_FIELD, but I found the extra branch logic a
+bit more confusing than just adding a new macro despite a bit of
+duplicating code.
+
+Fixes: 1314ef561102e ("bpf: export bpf_sock for BPF_PROG_TYPE_SOCK_OPS prog type")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/159718349653.4728.6559437186853473612.stgit@john-Precision-5820-Tower
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Makefile               | 1 +
- arch/arm64/kernel/vdso32/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ net/core/filter.c | 49 ++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 38 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 85e4149cc5d5c..d3c7ffa72902d 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -156,6 +156,7 @@ zinstall install:
- PHONY += vdso_install
- vdso_install:
- 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso $@
-+	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso32 $@
+diff --git a/net/core/filter.c b/net/core/filter.c
+index dcc06e510ec5d..9c03702600128 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -8107,6 +8107,43 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
+ 		}							      \
+ 	} while (0)
  
- # We use MRPROPER_FILES and CLEAN_FILES now
- archclean:
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 0433bb58ce52c..601c075f1f476 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -201,7 +201,7 @@ quiet_cmd_vdsosym = VDSOSYM $@
-       cmd_vdsosym = $(NM) $< | $(gen-vdsosym) | LC_ALL=C sort > $@
++#define SOCK_OPS_GET_SK()							      \
++	do {								      \
++		int fullsock_reg = si->dst_reg, reg = BPF_REG_9, jmp = 1;     \
++		if (si->dst_reg == reg || si->src_reg == reg)		      \
++			reg--;						      \
++		if (si->dst_reg == reg || si->src_reg == reg)		      \
++			reg--;						      \
++		if (si->dst_reg == si->src_reg) {			      \
++			*insn++ = BPF_STX_MEM(BPF_DW, si->src_reg, reg,	      \
++					  offsetof(struct bpf_sock_ops_kern,  \
++					  temp));			      \
++			fullsock_reg = reg;				      \
++			jmp += 2;					      \
++		}							      \
++		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(			      \
++						struct bpf_sock_ops_kern,     \
++						is_fullsock),		      \
++				      fullsock_reg, si->src_reg,	      \
++				      offsetof(struct bpf_sock_ops_kern,      \
++					       is_fullsock));		      \
++		*insn++ = BPF_JMP_IMM(BPF_JEQ, fullsock_reg, 0, jmp);	      \
++		if (si->dst_reg == si->src_reg)				      \
++			*insn++ = BPF_LDX_MEM(BPF_DW, reg, si->src_reg,	      \
++				      offsetof(struct bpf_sock_ops_kern,      \
++				      temp));				      \
++		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(			      \
++						struct bpf_sock_ops_kern, sk),\
++				      si->dst_reg, si->src_reg,		      \
++				      offsetof(struct bpf_sock_ops_kern, sk));\
++		if (si->dst_reg == si->src_reg)	{			      \
++			*insn++ = BPF_JMP_A(1);				      \
++			*insn++ = BPF_LDX_MEM(BPF_DW, reg, si->src_reg,	      \
++				      offsetof(struct bpf_sock_ops_kern,      \
++				      temp));				      \
++		}							      \
++	} while (0)
++
+ #define SOCK_OPS_GET_TCP_SOCK_FIELD(FIELD) \
+ 		SOCK_OPS_GET_FIELD(FIELD, FIELD, struct tcp_sock)
  
- # Install commands for the unstripped file
--quiet_cmd_vdso_install = INSTALL $@
-+quiet_cmd_vdso_install = INSTALL32 $@
-       cmd_vdso_install = cp $(obj)/$@.dbg $(MODLIB)/vdso/vdso32.so
- 
- vdso.so: $(obj)/vdso.so.dbg
+@@ -8391,17 +8428,7 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
+ 		SOCK_OPS_GET_TCP_SOCK_FIELD(bytes_acked);
+ 		break;
+ 	case offsetof(struct bpf_sock_ops, sk):
+-		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
+-						struct bpf_sock_ops_kern,
+-						is_fullsock),
+-				      si->dst_reg, si->src_reg,
+-				      offsetof(struct bpf_sock_ops_kern,
+-					       is_fullsock));
+-		*insn++ = BPF_JMP_IMM(BPF_JEQ, si->dst_reg, 0, 1);
+-		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
+-						struct bpf_sock_ops_kern, sk),
+-				      si->dst_reg, si->src_reg,
+-				      offsetof(struct bpf_sock_ops_kern, sk));
++		SOCK_OPS_GET_SK();
+ 		break;
+ 	}
+ 	return insn - insn_buf;
 -- 
 2.25.1
 
