@@ -2,89 +2,125 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E83BC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647B6C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1C82067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:35:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598290502;
-	bh=mu/8EYgOWWMMFVzYggJY3VT5p7NWhR3sCJgvxOn1cR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=opfolR8lVxrerW1XohdnIhchM0qVJY3F4PV68SnURUsCxebMp2u17KZ3t9+8tfe4A
-	 M5VDcwUhsOX4qLy/OeKYrmUM9yY39Nh85fxEJb/9J9LL86KqtaUWKebMxRVyhHF2BY
-	 uszSDXSyYFHOAaThjkDyV83jpsl7JZq3eBp3kh7U=
+	by mail.kernel.org (Postfix) with ESMTP id 3D46D2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgHXRe7 (ORCPT
+        id S1728310AbgHXRfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:34:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728083AbgHXRep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:34:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11E062067C;
-        Mon, 24 Aug 2020 17:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598290484;
-        bh=mu/8EYgOWWMMFVzYggJY3VT5p7NWhR3sCJgvxOn1cR4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M9po9+1pECMI6iXfro2djH7yNO63Zf3WPyGTSHuQJvh58INJvJSMaD9kVAqGR/6mS
-         HATHe2IIR9z8hxM+5OkGCK26YmpZBSioCO+bD/UKz+K47SH/DI5F6aLkTem5p91EdX
-         HzkSnV1f1I2pZP+5+O9p1yrK6x7a0kUgqqSizc8E=
-Date:   Mon, 24 Aug 2020 19:35:02 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     will@kernel.org, ardb@kernel.org, arnd@arndb.de,
-        catalin.marinas@arm.com, mark.rutland@arm.com, maz@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-arch@vger.kernel.org, wei.liu@kernel.org,
-        vkuznets@redhat.com, kys@microsoft.com, sunilmut@microsoft.com,
-        boqun.feng@gmail.com
-Subject: Re: [PATCH v7 09/10] arm64: efi: Export screen_info
-Message-ID: <20200824173502.GA1161855@kroah.com>
-References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
- <1598287583-71762-10-git-send-email-mikelley@microsoft.com>
+        Mon, 24 Aug 2020 13:35:53 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:55850 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726630AbgHXRff (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 13:35:35 -0400
+Received: from 89-64-88-199.dynamic.chello.pl (89.64.88.199) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.459)
+ id c842b0c3f2076e9b; Mon, 24 Aug 2020 19:35:32 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: [PATCH v2] PM: sleep: core: Fix the handling of pending runtime resume requests
+Date:   Mon, 24 Aug 2020 19:35:31 +0200
+Message-ID: <1954100.8R8RjBe1nF@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1598287583-71762-10-git-send-email-mikelley@microsoft.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 09:46:22AM -0700, Michael Kelley wrote:
-> The Hyper-V frame buffer driver may be built as a module, and
-> it needs access to screen_info. So export screen_info.
-> 
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->  arch/arm64/kernel/efi.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
-> index d0cf596..8ff557a 100644
-> --- a/arch/arm64/kernel/efi.c
-> +++ b/arch/arm64/kernel/efi.c
-> @@ -55,6 +55,7 @@ static __init pteval_t create_mapping_protection(efi_memory_desc_t *md)
->  
->  /* we will fill this structure from the stub, so don't put it in .bss */
->  struct screen_info screen_info __section(.data);
-> +EXPORT_SYMBOL(screen_info);
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-EXPORT_SYMBOL_GPL()?
+It has been reported that system-wide suspend may be aborted in the
+absence of any wakeup events due to unforseen interactions of it with
+the runtume PM framework.
 
-I have to ask :)
+One failing scenario is when there are multiple devices sharing an
+ACPI power resource and runtime-resume needs to be carried out for
+one of them during system-wide suspend (for example, because it needs
+to be reconfigured before the whole system goes to sleep).  In that
+case, the runtime-resume of that device involves turning the ACPI
+power resource "on" which in turn causes runtime-resume requests
+to be queued up for all of the other devices sharing it.  Those
+requests go to the runtime PM workqueue which is frozen during
+system-wide suspend, so they are not actually taken care of until
+the resume of the whole system, but the pm_runtime_barrier()
+call in __device_suspend() sees them and triggers system wakeup
+events for them which then cause the system-wide suspend to be
+aborted if wakeup source objects are in active use.
 
-thanks,
+Of course, the logic that leads to triggering those wakeup events is
+questionable in the first place, because clearly there are cases in
+which a pending runtime resume request for a device is not connected
+to any real wakeup events in any way (like the one above).  Moreover,
+it is racy, because the device may be resuming already by the time
+the pm_runtime_barrier() runs and so if the driver doesn't take care
+of signaling the wakeup event as appropriate, it will be lost.
+However, if the driver does take care of that, the extra
+pm_wakeup_event() call in the core is redundant.
 
-greg k-h
+Accordingly, drop the conditional pm_wakeup_event() call fron
+__device_suspend() and make the latter call pm_runtime_barrier()
+alone.  Also modify the comment next to that call to reflect the new
+code and extend it to mention the need to avoid unwanted interactions
+between runtime PM and system-wide device suspend callbacks.
+
+Fixes: 1e2ef05bb8cf8 ("PM: Limit race conditions between runtime PM and system sleep (v2)")
+Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+-> v2:
+   * Do not call pm_runtime_resume() if pm_runtime_barrier() returns 1,
+     because the device have been resumed by it already.
+   * Extend the comment next to the pm_runtime_barrier() call.
+   * Update the changelog in accordance with the above.
+
+---
+ drivers/base/power/main.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+Index: linux-pm/drivers/base/power/main.c
+===================================================================
+--- linux-pm.orig/drivers/base/power/main.c
++++ linux-pm/drivers/base/power/main.c
+@@ -1606,13 +1606,17 @@ static int __device_suspend(struct devic
+ 	}
+ 
+ 	/*
+-	 * If a device configured to wake up the system from sleep states
+-	 * has been suspended at run time and there's a resume request pending
+-	 * for it, this is equivalent to the device signaling wakeup, so the
+-	 * system suspend operation should be aborted.
++	 * Wait for possible runtime PM transitions of the device in progress
++	 * to complete and if there's a runtime resume request pending for it,
++	 * resume it before proceeding with invoking the system-wide suspend
++	 * callbacks for it.
++	 *
++	 * If the system-wide suspend callbacks below change the configuration
++	 * of the device, they must disable runtime PM for it or otherwise
++	 * ensure that its runtime-resume callbacks will not be confused by that
++	 * change in case they are invoked going forward.
+ 	 */
+-	if (pm_runtime_barrier(dev) && device_may_wakeup(dev))
+-		pm_wakeup_event(dev, 0);
++	pm_runtime_barrier(dev);
+ 
+ 	if (pm_wakeup_pending()) {
+ 		dev->power.direct_complete = false;
+
+
+
