@@ -2,155 +2,104 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8547AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E770C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6C820639
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F68420639
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:34:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SxKljR35"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IfM7a9JV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgHXSed (ORCPT
+        id S1726779AbgHXSem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:34:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43890 "EHLO
+        Mon, 24 Aug 2020 14:34:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgHXSeb (ORCPT
+        with ESMTP id S1726336AbgHXSel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:34:31 -0400
+        Mon, 24 Aug 2020 14:34:41 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2E40C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:34:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70042C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:34:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=BP9cpqmF4IATPqCCJSLgnGP7perlJaubbvCMXtQsvlk=; b=SxKljR35b6XcdxA7GECjRRyjuD
-        li77K3qqe8bpxR8Nzg87Id7tZ1lC4bFC63wb+NKU/aP9HcI3OQt1p1Gmyn8qJy4rDFTgUUBv7bGd9
-        ao48UabTyI+9YU8iIfaI1DUn+rBN/jLumJ5yfN0isj6nydZvJzITOX530+z6H5PoltVAO4Ri+x4As
-        ctZvsK/EDqzHaPWLLvZG+0u07yuLHds5/kJtF8XTNK2eb94oRP3S3dRjLskAZZgXpN9SxQq9trcU8
-        0caZXfVAECGy6xpJdfdZ6Z1YcC76BiDT8cAxiXi5t9q339ABSDxiYZ94KVaTX6UJc95tQXN/Xs74U
-        D57p91DA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAHIZ-000172-K3; Mon, 24 Aug 2020 18:34:28 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] afs: Use a pagevec in afs_writepages()
-Date:   Mon, 24 Aug 2020 19:34:24 +0100
-Message-Id: <20200824183424.4222-1-willy@infradead.org>
-X-Mailer: git-send-email 2.21.3
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=y5s9jJbL8Rdnw0BzneLpjPMhR5Y8x3gmv/6FKWKQqbA=; b=IfM7a9JVU/JJCyFN+zP5G7WS8O
+        v3EwoMXZWsUSzwGrBMwfqMZ0tIY6iS+J/gCfWqjgdWhkOLlMNjD7CiKGrQeNYaFFBS4UQhEGs/aIT
+        6f/JYvHURS98AxH8ida6PLrU+rcmQuj4Q04WxtpyMg6S1EsjQPwkBBmYXszvZM15bbEoRtiGKw6i2
+        31etz6UIFDsU37Jie0ANCMou5VNPJzn55sElZcljfhftGzpCx3wj62cST8Qutrg+mD4/vPFsQaRKC
+        i7od+AVevkO3fO1EXHNWwLiniqwHmbq7NDuQr8S4TBHSxjW9UXrehWRltpA4r76ZpCIuhjf/r91Go
+        e7uNpriA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAHIg-00017M-7J; Mon, 24 Aug 2020 18:34:34 +0000
+Subject: Re: [PATCH v2 3/9] iommu/ioasid: Introduce ioasid_set APIs
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Jacob Pan <jacob.pan.linux@gmail.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>, Wu Hao <hao.wu@intel.com>
+References: <1598070918-21321-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1598070918-21321-4-git-send-email-jacob.jun.pan@linux.intel.com>
+ <20200824182848.GB3210689@myrica>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1be98989-fab3-f9e4-cbd6-cf72a67dc5f1@infradead.org>
+Date:   Mon, 24 Aug 2020 11:34:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200824182848.GB3210689@myrica>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This amortises the overhead of retrieving pages from the pagecache
-and the overhead of freeing pages if we happen to end up with the
-last references to the pages.
+On 8/24/20 11:28 AM, Jean-Philippe Brucker wrote:
+>> +/**
+>> + * struct ioasid_set - Meta data about ioasid_set
+>> + * @type:	Token types and other features
+> nit: doesn't follow struct order
+> 
+>> + * @token:	Unique to identify an IOASID set
+>> + * @xa:		XArray to store ioasid_set private IDs, can be used for
+>> + *		guest-host IOASID mapping, or just a private IOASID namespace.
+>> + * @quota:	Max number of IOASIDs can be allocated within the set
+>> + * @nr_ioasids	Number of IOASIDs currently allocated in the set
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/afs/write.c | 41 ++++++++++++++++++++++++-----------------
- 1 file changed, 24 insertions(+), 17 deletions(-)
+ * @nr_ioasids: Number of IOASIDs currently allocated in the set
 
-diff --git a/fs/afs/write.c b/fs/afs/write.c
-index a121c247d95a..2d20037c7ff0 100644
---- a/fs/afs/write.c
-+++ b/fs/afs/write.c
-@@ -673,16 +673,24 @@ static int afs_writepages_region(struct address_space *mapping,
- 				 struct writeback_control *wbc,
- 				 pgoff_t index, pgoff_t end, pgoff_t *_next)
- {
--	struct page *page;
--	int ret, n;
-+	struct pagevec pvec;
-+	int ret, i = 0;
- 
- 	_enter(",,%lx,%lx,", index, end);
- 
-+	pagevec_init(&pvec);
- 	do {
--		n = find_get_pages_range_tag(mapping, &index, end,
--					PAGECACHE_TAG_DIRTY, 1, &page);
--		if (!n)
--			break;
-+		struct page *page;
-+
-+		if (i == pagevec_count(&pvec)) {
-+			pagevec_release(&pvec);
-+			if (!pagevec_lookup_range_tag(&pvec, mapping,
-+					&index, end, PAGECACHE_TAG_DIRTY))
-+				break;
-+			i = 0;
-+		}
-+
-+		page = pvec.pages[i++];
- 
- 		_debug("wback %lx", page->index);
- 
-@@ -693,15 +701,11 @@ static int afs_writepages_region(struct address_space *mapping,
- 		 * back from swapper_space to tmpfs file mapping
- 		 */
- 		ret = lock_page_killable(page);
--		if (ret < 0) {
--			put_page(page);
--			_leave(" = %d", ret);
--			return ret;
--		}
-+		if (ret < 0)
-+			goto err;
- 
- 		if (page->mapping != mapping || !PageDirty(page)) {
- 			unlock_page(page);
--			put_page(page);
- 			continue;
- 		}
- 
-@@ -709,7 +713,6 @@ static int afs_writepages_region(struct address_space *mapping,
- 			unlock_page(page);
- 			if (wbc->sync_mode != WB_SYNC_NONE)
- 				wait_on_page_writeback(page);
--			put_page(page);
- 			continue;
- 		}
- 
-@@ -717,19 +720,23 @@ static int afs_writepages_region(struct address_space *mapping,
- 			BUG();
- 		ret = afs_write_back_from_locked_page(mapping, wbc, page, end);
- 		put_page(page);
--		if (ret < 0) {
--			_leave(" = %d", ret);
--			return ret;
--		}
-+		if (ret < 0)
-+			goto err;
- 
- 		wbc->nr_to_write -= ret;
- 
- 		cond_resched();
- 	} while (index < end && wbc->nr_to_write > 0);
- 
-+	pagevec_release(&pvec);
- 	*_next = index;
- 	_leave(" = 0 [%lx]", *_next);
- 	return 0;
-+
-+err:
-+	pagevec_release(&pvec);
-+	_leave(" = %d", ret);
-+	return ret;
- }
- 
- /*
+>> + * @sid:	ID of the set
+>> + * @ref:	Reference count of the users
+>> + */
+>>  struct ioasid_set {
+>> -	int dummy;
+>> +	void *token;
+>> +	struct xarray xa;
+>> +	int type;
+>> +	int quota;
+>> +	int nr_ioasids;
+>> +	int sid;
+>> +	refcount_t ref;
+>> +	struct rcu_head rcu;
+>>  };
+
+
 -- 
-2.28.0
+~Randy
 
