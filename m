@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2846C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F3CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB42A20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4FC02067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289349;
-	bh=ZJH5Jdy6BzmfCwb1n74fxx6Z8UbtkoYUI7FZ1uDR1Wo=;
+	s=default; t=1598289365;
+	bh=rpauGeZABoOovO9KdfgP02+QEUTjAZ89+rWMnfA0VKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sfo9aV6PQ08LgkMPruVjWnP1dzOCsS/y4ZhXqovAUropAzEZqzr4BVqnLujOdGTwo
-	 UaVETOLxNmD2GE4EDal3jVucsC/mlSgInzqtcdFiyrHd+uh3sNAKuzNGjlgWPIvgN+
-	 LCMcTYoEk+8yR8BPtUQyKfKaBXqY6UOtHg9En7Qc=
+	b=EkfV/S9Y9y1RliGV+VDliB6fQAjmUhhyrIbFJUrtxnzSBbp3ua6eEP5quSKdpWF83
+	 mfdLIokujPdzXHUWYbZBIvY9jkHe5fJoPBWjiwTeUYVH4sD3Q/qEATdEOhkFDkRES0
+	 E6PlGlYiaOmRXcy4SFG2UdC2+OE/oLrnkzE1fuPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbgHXRPs (ORCPT
+        id S1728423AbgHXRQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:15:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:16:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbgHXQg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:36:59 -0400
+        id S1728356AbgHXQg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:36:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE2DA22D03;
-        Mon, 24 Aug 2020 16:36:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CC2922D00;
+        Mon, 24 Aug 2020 16:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286998;
-        bh=ZJH5Jdy6BzmfCwb1n74fxx6Z8UbtkoYUI7FZ1uDR1Wo=;
+        s=default; t=1598286990;
+        bh=rpauGeZABoOovO9KdfgP02+QEUTjAZ89+rWMnfA0VKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mrXvKtHhxmgU+wfAT9qVIlv9JtKqnukeknBA+xXMRutru5UYSlyIkJcB0SLR1vYVE
-         Dpcgzm9mnCSlQeJrKmzOGUa5MEW+oeX+ZWbGe+14cUtM2fdTmyRcnmaiX7AjqqQjWf
-         0fFdeSSakm61KFq0l21H81O7n4hYrlXFRprClJRs=
+        b=Dix/HYaMCzNiuwxc3S0vIaVZ746c+uV+u71RhZeQkww9q9fRksHCuVAQtNdeqsvFJ
+         ycy2r58HiAhtErbUhGYGiwEZGOm2NvjUyxE16JrZ2tiR4XOeXkx92ihUenAB/tIt6b
+         rrkAPl77QeWWMMssgfM1JF29xrPamTz9/VPt2H0c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>, Lukas Czerner <lczerner@redhat.com>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 03/54] ext4: don't BUG on inconsistent journal feature
-Date:   Mon, 24 Aug 2020 12:35:42 -0400
-Message-Id: <20200824163634.606093-3-sashal@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 62/63] arm64: Move handling of erratum 1418040 into C code
+Date:   Mon, 24 Aug 2020 12:35:02 -0400
+Message-Id: <20200824163504.605538-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
-References: <20200824163634.606093-1-sashal@kernel.org>
+In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
+References: <20200824163504.605538-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,210 +63,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 11215630aada28307ba555a43138db6ac54fa825 ]
+[ Upstream commit d49f7d7376d0c0daf8680984a37bd07581ac7d38 ]
 
-A customer has reported a BUG_ON in ext4_clear_journal_err() hitting
-during an LTP testing. Either this has been caused by a test setup
-issue where the filesystem was being overwritten while LTP was mounting
-it or the journal replay has overwritten the superblock with invalid
-data. In either case it is preferable we don't take the machine down
-with a BUG_ON. So handle the situation of unexpectedly missing
-has_journal feature more gracefully. We issue warning and fail the mount
-in the cases where the race window is narrow and the failed check is
-most likely a programming error. In cases where fs corruption is more
-likely, we do full ext4_error() handling before failing mount / remount.
+Instead of dealing with erratum 1418040 on each entry and exit,
+let's move the handling to __switch_to() instead, which has
+several advantages:
 
-Reviewed-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200710140759.18031-1-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+- It can be applied when it matters (switching between 32 and 64
+  bit tasks).
+- It is written in C (yay!)
+- It can rely on static keys rather than alternatives
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Acked-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20200731173824.107480-2-maz@kernel.org
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 68 ++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 47 insertions(+), 21 deletions(-)
+ arch/arm64/kernel/entry.S   | 21 ---------------------
+ arch/arm64/kernel/process.c | 34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 21 deletions(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 7318ca71b69eb..f1b975ff210c4 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -66,10 +66,10 @@ static int ext4_load_journal(struct super_block *, struct ext4_super_block *,
- 			     unsigned long journal_devnum);
- static int ext4_show_options(struct seq_file *seq, struct dentry *root);
- static int ext4_commit_super(struct super_block *sb, int sync);
--static void ext4_mark_recovery_complete(struct super_block *sb,
-+static int ext4_mark_recovery_complete(struct super_block *sb,
- 					struct ext4_super_block *es);
--static void ext4_clear_journal_err(struct super_block *sb,
--				   struct ext4_super_block *es);
-+static int ext4_clear_journal_err(struct super_block *sb,
-+				  struct ext4_super_block *es);
- static int ext4_sync_fs(struct super_block *sb, int wait);
- static int ext4_remount(struct super_block *sb, int *flags, char *data);
- static int ext4_statfs(struct dentry *dentry, struct kstatfs *buf);
-@@ -4675,7 +4675,9 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 	EXT4_SB(sb)->s_mount_state &= ~EXT4_ORPHAN_FS;
- 	if (needs_recovery) {
- 		ext4_msg(sb, KERN_INFO, "recovery complete");
--		ext4_mark_recovery_complete(sb, es);
-+		err = ext4_mark_recovery_complete(sb, es);
-+		if (err)
-+			goto failed_mount8;
- 	}
- 	if (EXT4_SB(sb)->s_journal) {
- 		if (test_opt(sb, DATA_FLAGS) == EXT4_MOUNT_JOURNAL_DATA)
-@@ -4718,10 +4720,8 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 		ext4_msg(sb, KERN_ERR, "VFS: Can't find ext4 filesystem");
- 	goto failed_mount;
+diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+index 35de8ba60e3d5..44445d471442d 100644
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -169,19 +169,6 @@ alternative_cb_end
+ 	stp	x28, x29, [sp, #16 * 14]
  
--#ifdef CONFIG_QUOTA
- failed_mount8:
- 	ext4_unregister_sysfs(sb);
+ 	.if	\el == 0
+-	.if	\regsize == 32
+-	/*
+-	 * If we're returning from a 32-bit task on a system affected by
+-	 * 1418040 then re-enable userspace access to the virtual counter.
+-	 */
+-#ifdef CONFIG_ARM64_ERRATUM_1418040
+-alternative_if ARM64_WORKAROUND_1418040
+-	mrs	x0, cntkctl_el1
+-	orr	x0, x0, #2	// ARCH_TIMER_USR_VCT_ACCESS_EN
+-	msr	cntkctl_el1, x0
+-alternative_else_nop_endif
 -#endif
- failed_mount7:
- 	ext4_unregister_li_request(sb);
- failed_mount6:
-@@ -4860,7 +4860,8 @@ static journal_t *ext4_get_journal(struct super_block *sb,
- 	struct inode *journal_inode;
- 	journal_t *journal;
+-	.endif
+ 	clear_gp_regs
+ 	mrs	x21, sp_el0
+ 	ldr_this_cpu	tsk, __entry_task, x20
+@@ -337,14 +324,6 @@ alternative_else_nop_endif
+ 	tst	x22, #PSR_MODE32_BIT		// native task?
+ 	b.eq	3f
  
--	BUG_ON(!ext4_has_feature_journal(sb));
-+	if (WARN_ON_ONCE(!ext4_has_feature_journal(sb)))
-+		return NULL;
- 
- 	journal_inode = ext4_get_journal_inode(sb, journal_inum);
- 	if (!journal_inode)
-@@ -4890,7 +4891,8 @@ static journal_t *ext4_get_dev_journal(struct super_block *sb,
- 	struct ext4_super_block *es;
- 	struct block_device *bdev;
- 
--	BUG_ON(!ext4_has_feature_journal(sb));
-+	if (WARN_ON_ONCE(!ext4_has_feature_journal(sb)))
-+		return NULL;
- 
- 	bdev = ext4_blkdev_get(j_dev, sb);
- 	if (bdev == NULL)
-@@ -4982,7 +4984,8 @@ static int ext4_load_journal(struct super_block *sb,
- 	int err = 0;
- 	int really_read_only;
- 
--	BUG_ON(!ext4_has_feature_journal(sb));
-+	if (WARN_ON_ONCE(!ext4_has_feature_journal(sb)))
-+		return -EFSCORRUPTED;
- 
- 	if (journal_devnum &&
- 	    journal_devnum != le32_to_cpu(es->s_journal_dev)) {
-@@ -5052,7 +5055,12 @@ static int ext4_load_journal(struct super_block *sb,
- 	}
- 
- 	EXT4_SB(sb)->s_journal = journal;
--	ext4_clear_journal_err(sb, es);
-+	err = ext4_clear_journal_err(sb, es);
-+	if (err) {
-+		EXT4_SB(sb)->s_journal = NULL;
-+		jbd2_journal_destroy(journal);
-+		return err;
-+	}
- 
- 	if (!really_read_only && journal_devnum &&
- 	    journal_devnum != le32_to_cpu(es->s_journal_dev)) {
-@@ -5148,26 +5156,32 @@ static int ext4_commit_super(struct super_block *sb, int sync)
-  * remounting) the filesystem readonly, then we will end up with a
-  * consistent fs on disk.  Record that fact.
-  */
--static void ext4_mark_recovery_complete(struct super_block *sb,
--					struct ext4_super_block *es)
-+static int ext4_mark_recovery_complete(struct super_block *sb,
-+				       struct ext4_super_block *es)
- {
-+	int err;
- 	journal_t *journal = EXT4_SB(sb)->s_journal;
- 
- 	if (!ext4_has_feature_journal(sb)) {
--		BUG_ON(journal != NULL);
--		return;
-+		if (journal != NULL) {
-+			ext4_error(sb, "Journal got removed while the fs was "
-+				   "mounted!");
-+			return -EFSCORRUPTED;
-+		}
-+		return 0;
- 	}
- 	jbd2_journal_lock_updates(journal);
--	if (jbd2_journal_flush(journal) < 0)
-+	err = jbd2_journal_flush(journal);
-+	if (err < 0)
- 		goto out;
- 
- 	if (ext4_has_feature_journal_needs_recovery(sb) && sb_rdonly(sb)) {
- 		ext4_clear_feature_journal_needs_recovery(sb);
- 		ext4_commit_super(sb, 1);
- 	}
+-#ifdef CONFIG_ARM64_ERRATUM_1418040
+-alternative_if ARM64_WORKAROUND_1418040
+-	mrs	x0, cntkctl_el1
+-	bic	x0, x0, #2			// ARCH_TIMER_USR_VCT_ACCESS_EN
+-	msr	cntkctl_el1, x0
+-alternative_else_nop_endif
+-#endif
 -
- out:
- 	jbd2_journal_unlock_updates(journal);
-+	return err;
+ #ifdef CONFIG_ARM64_ERRATUM_845719
+ alternative_if ARM64_WORKAROUND_845719
+ #ifdef CONFIG_PID_IN_CONTEXTIDR
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index 6089638c7d43f..d8a10cf28f827 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -515,6 +515,39 @@ static void entry_task_switch(struct task_struct *next)
+ 	__this_cpu_write(__entry_task, next);
  }
  
++/*
++ * ARM erratum 1418040 handling, affecting the 32bit view of CNTVCT.
++ * Assuming the virtual counter is enabled at the beginning of times:
++ *
++ * - disable access when switching from a 64bit task to a 32bit task
++ * - enable access when switching from a 32bit task to a 64bit task
++ */
++static void erratum_1418040_thread_switch(struct task_struct *prev,
++					  struct task_struct *next)
++{
++	bool prev32, next32;
++	u64 val;
++
++	if (!(IS_ENABLED(CONFIG_ARM64_ERRATUM_1418040) &&
++	      cpus_have_const_cap(ARM64_WORKAROUND_1418040)))
++		return;
++
++	prev32 = is_compat_thread(task_thread_info(prev));
++	next32 = is_compat_thread(task_thread_info(next));
++
++	if (prev32 == next32)
++		return;
++
++	val = read_sysreg(cntkctl_el1);
++
++	if (!next32)
++		val |= ARCH_TIMER_USR_VCT_ACCESS_EN;
++	else
++		val &= ~ARCH_TIMER_USR_VCT_ACCESS_EN;
++
++	write_sysreg(val, cntkctl_el1);
++}
++
  /*
-@@ -5175,14 +5189,17 @@ static void ext4_mark_recovery_complete(struct super_block *sb,
-  * has recorded an error from a previous lifetime, move that error to the
-  * main filesystem now.
+  * Thread switching.
   */
--static void ext4_clear_journal_err(struct super_block *sb,
-+static int ext4_clear_journal_err(struct super_block *sb,
- 				   struct ext4_super_block *es)
- {
- 	journal_t *journal;
- 	int j_errno;
- 	const char *errstr;
+@@ -530,6 +563,7 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
+ 	entry_task_switch(next);
+ 	uao_thread_switch(next);
+ 	ssbs_thread_switch(next);
++	erratum_1418040_thread_switch(prev, next);
  
--	BUG_ON(!ext4_has_feature_journal(sb));
-+	if (!ext4_has_feature_journal(sb)) {
-+		ext4_error(sb, "Journal got removed while the fs was mounted!");
-+		return -EFSCORRUPTED;
-+	}
- 
- 	journal = EXT4_SB(sb)->s_journal;
- 
-@@ -5207,6 +5224,7 @@ static void ext4_clear_journal_err(struct super_block *sb,
- 		jbd2_journal_clear_err(journal);
- 		jbd2_journal_update_sb_errno(journal);
- 	}
-+	return 0;
- }
- 
- /*
-@@ -5477,8 +5495,13 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 			    (sbi->s_mount_state & EXT4_VALID_FS))
- 				es->s_state = cpu_to_le16(sbi->s_mount_state);
- 
--			if (sbi->s_journal)
-+			if (sbi->s_journal) {
-+				/*
-+				 * We let remount-ro finish even if marking fs
-+				 * as clean failed...
-+				 */
- 				ext4_mark_recovery_complete(sb, es);
-+			}
- 			if (sbi->s_mmp_tsk)
- 				kthread_stop(sbi->s_mmp_tsk);
- 		} else {
-@@ -5526,8 +5549,11 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 			 * been changed by e2fsck since we originally mounted
- 			 * the partition.)
- 			 */
--			if (sbi->s_journal)
--				ext4_clear_journal_err(sb, es);
-+			if (sbi->s_journal) {
-+				err = ext4_clear_journal_err(sb, es);
-+				if (err)
-+					goto restore_opts;
-+			}
- 			sbi->s_mount_state = le16_to_cpu(es->s_state);
- 
- 			err = ext4_setup_super(sb, es, 0);
+ 	/*
+ 	 * Complete any pending TLB or cache maintenance on this CPU in case
 -- 
 2.25.1
 
