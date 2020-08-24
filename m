@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6767C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF492C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86B9F20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B246D2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262055;
-	bh=gYZjOG+RhGYnfjsq3qWn7jd/mSGHDgkxsezz2+QisPo=;
+	s=default; t=1598262065;
+	bh=q2KANpMGXSeyzKEWZM9I8ni3OZPfwzMBznz7DQYRhiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PHxxGmcy4HBcZM2Zoke+brcnSpxVfRuyDIAyE90jbOZ38H7Jm7RCqJi7MKmVNFR4E
-	 j157CDQHCZ+fqMQPfS86VcK1EBzn/PLscVnHv4F6OTrOsDBziUZNuJzNM7jj+oMA+s
-	 T1DG0oNWcnkWpMgju5fxL7aFqN5RIBqrlzK8pS84=
+	b=c3bT4eESp8YuIgnblaqemgkfBtE5X5GByx3rUuq2Z/6vmJ136kqgwW9lgpdJdAr4G
+	 kWDHk/bepUZsFDuCAWQ2Vj0EQhegAKllMBKCGB4K7o+lnQ+4Ppnz5Sx8xBk7wtQbFe
+	 77frwWQ0fDFL7r6B5pOI/eQLmKwfjku+JrdNdsOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgHXIpl (ORCPT
+        id S1729317AbgHXJlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:45:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42506 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:41:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729134AbgHXIp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:45:27 -0400
+        id S1729241AbgHXIpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:45:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 719102072D;
-        Mon, 24 Aug 2020 08:45:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0140B204FD;
+        Mon, 24 Aug 2020 08:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258727;
-        bh=gYZjOG+RhGYnfjsq3qWn7jd/mSGHDgkxsezz2+QisPo=;
+        s=default; t=1598258735;
+        bh=q2KANpMGXSeyzKEWZM9I8ni3OZPfwzMBznz7DQYRhiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GB/U1vaYUK0SRd19hC6b5V6Hqu5fOMGr6o9IRul2ECYpncQl2m6zjdqh+Ez4UqShG
-         GNErq4XKPR3U2jaxQosAbTfWAFBXAXzChdxm/esgO98jTY9L0GtULqqC5h7Df9Fukt
-         auoVZRCTbb+T9exRiUtUs/wDo6sNIQMy28CwKUQ8=
+        b=pRN7qhDl+yC+4UyfyJtRDzb7WHFxsHrcdxMETx92RxCE8lGXAkO7pL1cX8alBFXsn
+         kCt4mVyI1y7W0+vkbOkrBBwDMLz6n3mQjAjAIcCkVQqewdWdnodbR7u7fCl8VkrL5e
+         FcHlgliogRHOSmY9+tSnN90ySV9KvACp6MdHuOC8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f03d384f3455d28833eb@syzkaller.appspotmail.com,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.4 024/107] can: j1939: socket: j1939_sk_bind(): make sure ml_priv is allocated
-Date:   Mon, 24 Aug 2020 10:29:50 +0200
-Message-Id: <20200824082406.286863477@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 026/107] romfs: fix uninitialized memory leak in romfs_dev_read()
+Date:   Mon, 24 Aug 2020 10:29:52 +0200
+Message-Id: <20200824082406.395752684@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -61,46 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Jann Horn <jannh@google.com>
 
-commit af804b7826350d5af728dca4715e473338fbd7e5 upstream.
+commit bcf85fcedfdd17911982a3e3564fcfec7b01eebd upstream.
 
-This patch adds check to ensure that the struct net_device::ml_priv is
-allocated, as it is used later by the j1939 stack.
+romfs has a superblock field that limits the size of the filesystem; data
+beyond that limit is never accessed.
 
-The allocation is done by all mainline CAN network drivers, but when using
-bond or team devices this is not the case.
+romfs_dev_read() fetches a caller-supplied number of bytes from the
+backing device.  It returns 0 on success or an error code on failure;
+therefore, its API can't represent short reads, it's all-or-nothing.
 
-Bail out if no ml_priv is allocated.
+However, when romfs_dev_read() detects that the requested operation would
+cross the filesystem size limit, it currently silently truncates the
+requested number of bytes.  This e.g.  means that when the content of a
+file with size 0x1000 starts one byte before the filesystem size limit,
+->readpage() will only fill a single byte of the supplied page while
+leaving the rest uninitialized, leaking that uninitialized memory to
+userspace.
 
-Reported-by: syzbot+f03d384f3455d28833eb@syzkaller.appspotmail.com
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-Cc: linux-stable <stable@vger.kernel.org> # >= v5.4
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Link: https://lore.kernel.org/r/20200807105200.26441-4-o.rempel@pengutronix.de
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fix it by returning an error code instead of truncating the read when the
+requested read operation would go beyond the end of the filesystem.
+
+Fixes: da4458bda237 ("NOMMU: Make it possible for RomFS to use MTD devices directly")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200818013202.2246365-1-jannh@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/can/j1939/socket.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/romfs/storage.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/net/can/j1939/socket.c
-+++ b/net/can/j1939/socket.c
-@@ -466,6 +466,14 @@ static int j1939_sk_bind(struct socket *
- 			goto out_release_sock;
- 		}
+--- a/fs/romfs/storage.c
++++ b/fs/romfs/storage.c
+@@ -217,10 +217,8 @@ int romfs_dev_read(struct super_block *s
+ 	size_t limit;
  
-+		if (!ndev->ml_priv) {
-+			netdev_warn_once(ndev,
-+					 "No CAN mid layer private allocated, please fix your driver and use alloc_candev()!\n");
-+			dev_put(ndev);
-+			ret = -ENODEV;
-+			goto out_release_sock;
-+		}
-+
- 		priv = j1939_netdev_start(ndev);
- 		dev_put(ndev);
- 		if (IS_ERR(priv)) {
+ 	limit = romfs_maxsize(sb);
+-	if (pos >= limit)
++	if (pos >= limit || buflen > limit - pos)
+ 		return -EIO;
+-	if (buflen > limit - pos)
+-		buflen = limit - pos;
+ 
+ #ifdef CONFIG_ROMFS_ON_MTD
+ 	if (sb->s_mtd)
 
 
