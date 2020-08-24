@@ -5,52 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A35CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C15FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0C91207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF612072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259092;
-	bh=29g9Wr5ormSMSU1CxWGIebP4jV1FGScQfXafSepgtas=;
+	s=default; t=1598259107;
+	bh=iHH4nZ5FG3boYaQ8vKMw6bTqrFWc4XVPyANRtbbiWDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rMdT7kLKzvAXA+dsCqjQTDn58t8yREOw+5Ya/sWMO9bQxM4PhWM2tW5agQHi5vOYE
-	 XzBtUwQCjaAe2uhCxFKdAKHnc9emqEvFuD159AQeoT0dLCYA6/0cmq4xiYno53OVNT
-	 EBSDxe0q7IgMP+8Dl5j/DSfPItCGBKglqlQyQl58=
+	b=XlD0TrqTfAWkUphKldixcZvQZwGNyVZMeJLDRbJs56hOh23pEsIfXYtM3fRMqg8XJ
+	 tFCCRYOyKrXW1eaKvOhl11CKgNBPJu+JbCV4/iqunCq8g7Pi019nxyuze0Z0If0HiS
+	 fWrpU2+vfLuWmXh2H6VM12GYbDO9XtrJb9qjcLQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbgHXIvY (ORCPT
+        id S1729979AbgHXIvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:51:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56192 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:51:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728968AbgHXIvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:18 -0400
+        id S1729941AbgHXIvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B799204FD;
-        Mon, 24 Aug 2020 08:51:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A306E2072D;
+        Mon, 24 Aug 2020 08:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259078;
-        bh=29g9Wr5ormSMSU1CxWGIebP4jV1FGScQfXafSepgtas=;
+        s=default; t=1598259092;
+        bh=iHH4nZ5FG3boYaQ8vKMw6bTqrFWc4XVPyANRtbbiWDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GjNSpcvNaID04avLTrAt8isfwDZjrTcTBewR1GEGdr+Yf/i2uTF308CB8I0qWw+Ic
-         uDDbUpMaJbrjXVtG9U2IbCrphVI+ZwRJUlHtm9TdsvW37jUquJ2k1X2jFidJWNetMu
-         M2+cCh0+ndOn8MvaUDwYGH7bAfMTtgyLWLhgQptY=
+        b=gUSzrZ8T/SKtB5rGbisYx+W9mNEojrr2QZrfCL90tewtaQOllblN1apTGdYBjerMi
+         6hVp39olgzaKXh2Wz4lczSL8Gpb7ssFFxZUjSLQ0BCOlmanTHYWX6oT1kXoeoOKiiq
+         y0tyu7mVAxEZ0bmgdmK8kNtlscdd4k/HKAN3NPks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 04/39] perf probe: Fix memory leakage when the probe point is not found
-Date:   Mon, 24 Aug 2020 10:31:03 +0200
-Message-Id: <20200824082348.697579083@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 17/39] ext4: fix checking of directory entry validity for inline directories
+Date:   Mon, 24 Aug 2020 10:31:16 +0200
+Message-Id: <20200824082349.386545159@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
@@ -63,50 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 12d572e785b15bc764e956caaa8a4c846fd15694 ]
+[ Upstream commit 7303cb5bfe845f7d43cd9b2dbd37dbb266efda9b ]
 
-Fix the memory leakage in debuginfo__find_trace_events() when the probe
-point is not found in the debuginfo. If there is no probe point found in
-the debuginfo, debuginfo__find_probes() will NOT return -ENOENT, but 0.
+ext4_search_dir() and ext4_generic_delete_entry() can be called both for
+standard director blocks and for inline directories stored inside inode
+or inline xattr space. For the second case we didn't call
+ext4_check_dir_entry() with proper constraints that could result in
+accepting corrupted directory entry as well as false positive filesystem
+errors like:
 
-Thus the caller of debuginfo__find_probes() must check the tf.ntevs and
-release the allocated memory for the array of struct probe_trace_event.
+EXT4-fs error (device dm-0): ext4_search_dir:1395: inode #28320400:
+block 113246792: comm dockerd: bad entry in directory: directory entry too
+close to block end - offset=0, inode=28320403, rec_len=32, name_len=8,
+size=4096
 
-The current code releases the memory only if the debuginfo__find_probes()
-hits an error but not checks tf.ntevs. In the result, the memory allocated
-on *tevs are not released if tf.ntevs == 0.
+Fix the arguments passed to ext4_check_dir_entry().
 
-This fixes the memory leakage by checking tf.ntevs == 0 in addition to
-ret < 0.
-
-Fixes: ff741783506c ("perf probe: Introduce debuginfo to encapsulate dwarf information")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/159438668346.62703.10887420400718492503.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 109ba779d6cc ("ext4: check for directory entries too close to block end")
+CC: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200731162135.8080-1-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/namei.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 7d0d44b4f3d5c..863f668a07355 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1351,7 +1351,7 @@ int debuginfo__find_trace_events(struct debuginfo *dbg,
- 	tf.ntevs = 0;
- 
- 	ret = debuginfo__find_probes(dbg, &tf.pf);
--	if (ret < 0) {
-+	if (ret < 0 || tf.ntevs == 0) {
- 		for (i = 0; i < tf.ntevs; i++)
- 			clear_probe_trace_event(&tf.tevs[i]);
- 		zfree(tevs);
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index dd42d533d2816..2d918b43b536e 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1304,8 +1304,8 @@ int ext4_search_dir(struct buffer_head *bh, char *search_buf, int buf_size,
+ 		    ext4_match(fname, de)) {
+ 			/* found a match - just to be sure, do
+ 			 * a full check */
+-			if (ext4_check_dir_entry(dir, NULL, de, bh, bh->b_data,
+-						 bh->b_size, offset))
++			if (ext4_check_dir_entry(dir, NULL, de, bh, search_buf,
++						 buf_size, offset))
+ 				return -1;
+ 			*res_dir = de;
+ 			return 1;
+@@ -2344,7 +2344,7 @@ int ext4_generic_delete_entry(handle_t *handle,
+ 	de = (struct ext4_dir_entry_2 *)entry_buf;
+ 	while (i < buf_size - csum_size) {
+ 		if (ext4_check_dir_entry(dir, NULL, de, bh,
+-					 bh->b_data, bh->b_size, i))
++					 entry_buf, buf_size, i))
+ 			return -EFSCORRUPTED;
+ 		if (de == de_del)  {
+ 			if (pde)
 -- 
 2.25.1
 
