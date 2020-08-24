@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C10C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E63C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22823206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA4C206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262853;
-	bh=mI8PfatD0ZZBAb5FsZokIJrZwsYttyYOdG8c0l1e0wk=;
+	s=default; t=1598262860;
+	bh=BtnyVmk8EG3RJP7QrC5NvOWIju1VwmHKfCJG0w1OciQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sbZXgY9CQ/GquDM3G0ORHCWP5tE50vmZzDg6HwsEekldGV5OY1Ejik6mJvUPNlszE
-	 991SOA8bnawaF77oy0VciokwefFFy35BgJViY6bFQF+GLVH3xpSLJabrtBBnD7NC3c
-	 pYBB/pSFNbP+m71QR5P2Nf1p90CUeYt8TEqR877E=
+	b=kOCkTeoaY1i/WPX0ZDgg+eGOmyIiLEFkI9da9QBWm0zV/fydU9LtKFQA99YaHyZqG
+	 3N1LIWdPq5JHeEAtjuEEAujd/BZkeqzyrX2nx/pU9WoRx7LnYhSH8deHN/ToGa3thd
+	 WP2Is0cB0I22yHyUXbXGdtKyXF06jyqeXtyxy8ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgHXJyL (ORCPT
+        id S1728391AbgHXJyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51672 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:54:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbgHXIhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:37:51 -0400
+        id S1727935AbgHXIhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:37:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF4012177B;
-        Mon, 24 Aug 2020 08:37:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF0B4221E2;
+        Mon, 24 Aug 2020 08:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258271;
-        bh=mI8PfatD0ZZBAb5FsZokIJrZwsYttyYOdG8c0l1e0wk=;
+        s=default; t=1598258257;
+        bh=BtnyVmk8EG3RJP7QrC5NvOWIju1VwmHKfCJG0w1OciQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iaAO/Fy5p0H/6/wjAeUdphMYf40ktmUR367VBb8F32yQV6pVcLEEMiUlp9qxt62JN
-         jLnlCnlRqXBbxbUTOebX+1TJzqt6eHja5RBfFcAGuICCnY8qRQ8+YqmiX2ejWsSYpW
-         eiRs1HDdVsE811lcivOzvtsEXhtOJW13YTBogGZk=
+        b=mfwjxw98+kxcXC/UrLbSn5B/Yx1P6Uyw3ALHT+oXiyolHFFJVtXBo5RddW95YsDR/
+         kcPoVmJ/MkBZ2UQPBiK4+FS7d+ca/BXixkqtLpdsWjVLBZOpRsIDHQbEFm1B7Gehdb
+         HxKifpH0uxDSUxrPuzWQ7I+04sVN45zqqBuG7Q/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
+        stable@vger.kernel.org, Shay Agroskin <shayagr@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 137/148] hv_netvsc: Fix the queue_mapping in netvsc_vf_xmit()
-Date:   Mon, 24 Aug 2020 10:30:35 +0200
-Message-Id: <20200824082420.580231930@linuxfoundation.org>
+Subject: [PATCH 5.8 133/148] net: ena: Prevent reset after device destruction
+Date:   Mon, 24 Aug 2020 10:30:31 +0200
+Message-Id: <20200824082420.388699703@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -60,40 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Shay Agroskin <shayagr@amazon.com>
 
-[ Upstream commit c3d897e01aef8ddc43149e4d661b86f823e3aae7 ]
+[ Upstream commit 63d4a4c145cca2e84dc6e62d2ef5cb990c9723c2 ]
 
-netvsc_vf_xmit() / dev_queue_xmit() will call VF NIC’s ndo_select_queue
-or netdev_pick_tx() again. They will use skb_get_rx_queue() to get the
-queue number, so the “skb->queue_mapping - 1” will be used. This may
-cause the last queue of VF not been used.
+The reset work is scheduled by the timer routine whenever it
+detects that a device reset is required (e.g. when a keep_alive signal
+is missing).
+When releasing device resources in ena_destroy_device() the driver
+cancels the scheduling of the timer routine without destroying the reset
+work explicitly.
 
-Use skb_record_rx_queue() here, so that the skb_get_rx_queue() called
-later will get the correct queue number, and VF will be able to use
-all queues.
+This creates the following bug:
+    The driver is suspended and the ena_suspend() function is called
+	-> This function calls ena_destroy_device() to free the net device
+	   resources
+	    -> The driver waits for the timer routine to finish
+	    its execution and then cancels it, thus preventing from it
+	    to be called again.
 
-Fixes: b3bf5666a510 ("hv_netvsc: defer queue selection to VF")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+    If, in its final execution, the timer routine schedules a reset,
+    the reset routine might be called afterwards,and a redundant call to
+    ena_restore_device() would be made.
+
+By changing the reset routine we allow it to read the device's state
+accurately.
+This is achieved by checking whether ENA_FLAG_TRIGGER_RESET flag is set
+before resetting the device and making both the destruction function and
+the flag check are under rtnl lock.
+The ENA_FLAG_TRIGGER_RESET is cleared at the end of the destruction
+routine. Also surround the flag check with 'likely' because
+we expect that the reset routine would be called only when
+ENA_FLAG_TRIGGER_RESET flag is set.
+
+The destruction of the timer and reset services in __ena_shutoff() have to
+stay, even though the timer routine is destroyed in ena_destroy_device().
+This is to avoid a case in which the reset routine is scheduled after
+free_netdev() in __ena_shutoff(), which would create an access to freed
+memory in adapter->flags.
+
+Fixes: 8c5c7abdeb2d ("net: ena: add power management ops to the ENA driver")
+Signed-off-by: Shay Agroskin <shayagr@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 0d779bba1b019..6b81c04ab5e29 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -502,7 +502,7 @@ static int netvsc_vf_xmit(struct net_device *net, struct net_device *vf_netdev,
- 	int rc;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index dda4b8fc9525e..1a2a464fb2f5f 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -3523,16 +3523,14 @@ static void ena_fw_reset_device(struct work_struct *work)
+ {
+ 	struct ena_adapter *adapter =
+ 		container_of(work, struct ena_adapter, reset_task);
+-	struct pci_dev *pdev = adapter->pdev;
  
- 	skb->dev = vf_netdev;
--	skb->queue_mapping = qdisc_skb_cb(skb)->slave_dev_queue_mapping;
-+	skb_record_rx_queue(skb, qdisc_skb_cb(skb)->slave_dev_queue_mapping);
+-	if (unlikely(!test_bit(ENA_FLAG_TRIGGER_RESET, &adapter->flags))) {
+-		dev_err(&pdev->dev,
+-			"device reset schedule while reset bit is off\n");
+-		return;
+-	}
+ 	rtnl_lock();
+-	ena_destroy_device(adapter, false);
+-	ena_restore_device(adapter);
++
++	if (likely(test_bit(ENA_FLAG_TRIGGER_RESET, &adapter->flags))) {
++		ena_destroy_device(adapter, false);
++		ena_restore_device(adapter);
++	}
++
+ 	rtnl_unlock();
+ }
  
- 	rc = dev_queue_xmit(skb);
- 	if (likely(rc == NET_XMIT_SUCCESS || rc == NET_XMIT_CN)) {
+@@ -4366,8 +4364,11 @@ static void __ena_shutoff(struct pci_dev *pdev, bool shutdown)
+ 		netdev->rx_cpu_rmap = NULL;
+ 	}
+ #endif /* CONFIG_RFS_ACCEL */
+-	del_timer_sync(&adapter->timer_service);
+ 
++	/* Make sure timer and reset routine won't be called after
++	 * freeing device resources.
++	 */
++	del_timer_sync(&adapter->timer_service);
+ 	cancel_work_sync(&adapter->reset_task);
+ 
+ 	rtnl_lock(); /* lock released inside the below if-else block */
 -- 
 2.25.1
 
