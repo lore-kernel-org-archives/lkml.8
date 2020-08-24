@@ -2,103 +2,122 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE11C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 05:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAA2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 05:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99CE82072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 05:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7194F20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 05:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgHXFpK (ORCPT
+        id S1728007AbgHXFqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 01:45:10 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:37716 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725836AbgHXFpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 01:45:09 -0400
-Received: from localhost.localdomain (unknown [210.32.144.184])
-        by mail-app2 (Coremail) with SMTP id by_KCgCHL2DNU0NfqbMiAg--.23431S4;
-        Mon, 24 Aug 2020 13:44:48 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Shannon Nelson <snelson@pensando.io>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Yonglong Liu <liuyonglong@huawei.com>,
-        Kejian Yan <yankejian@huawei.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: hns: Fix memleak in hns_nic_dev_probe
-Date:   Mon, 24 Aug 2020 13:44:42 +0800
-Message-Id: <20200824054444.24142-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgCHL2DNU0NfqbMiAg--.23431S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr4DWFyxZF4xZr13Jw45trb_yoW8GryDpF
-        Z5Aay7WrW8Wr4fGw4Iqw4FkFn8A3W29a9rGFy8Aw4Sv3s0yF4UXr97WF17JF48tFWkGFWY
-        ga4jkrsxuasxK3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9v1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
-        67AK6r4rMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
-        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
-        6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbDDG5UUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUCBlZdtPpD7wAFsv
+        Mon, 24 Aug 2020 01:46:12 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57451 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgHXFqL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 01:46:11 -0400
+Received: from [2001:67c:670:100:1d::c0] (helo=ptx.hi.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1kA5Iw-0004fN-D3; Mon, 24 Aug 2020 07:46:02 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1kA5Iv-0001Wd-F9; Mon, 24 Aug 2020 07:46:01 +0200
+Date:   Mon, 24 Aug 2020 07:46:01 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>
+Subject: Re: [PATCH 07/22] dt-bindings: serial: fsl-imx-uart: imx-pwm: Add
+ i.MX 8M compatibles
+Message-ID: <20200824054601.GF13023@pengutronix.de>
+References: <20200823161550.3981-1-krzk@kernel.org>
+ <20200823161550.3981-7-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200823161550.3981-7-krzk@kernel.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:44:43 up 186 days, 13:15, 151 users,  load average: 0.94, 0.53,
+ 0.26
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hns_nic_dev_probe allocates ndev, but not free it on
-two error handling paths, which may lead to memleak.
 
-Fixes: 63434888aaf1b ("net: hns: net: hns: enet adds support of acpi")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+The subject contains a "imx-pwm", presumably from the last patch.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index 23f278e46975..22522f8a5299 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -2282,8 +2282,10 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
- 			priv->enet_ver = AE_VERSION_1;
- 		else if (acpi_dev_found(hns_enet_acpi_match[1].id))
- 			priv->enet_ver = AE_VERSION_2;
--		else
--			return -ENXIO;
-+		else {
-+			ret = -ENXIO;
-+			goto out_read_prop_fail;
-+		}
- 
- 		/* try to find port-idx-in-ae first */
- 		ret = acpi_node_get_property_reference(dev->fwnode,
-@@ -2299,7 +2301,8 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
- 		priv->fwnode = args.fwnode;
- 	} else {
- 		dev_err(dev, "cannot read cfg data from OF or acpi\n");
--		return -ENXIO;
-+		ret = -ENXIO;
-+		goto out_read_prop_fail;
- 	}
- 
- 	ret = device_property_read_u32(dev, "port-idx-in-ae", &port_id);
+Sascha
+
+On Sun, Aug 23, 2020 at 06:15:35PM +0200, Krzysztof Kozlowski wrote:
+> DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
+> to fix dtbs_check warnings like:
+> 
+>   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
+>     compatible:0: 'fsl,imx8mm-pwm' is not one of ['fsl,imx1-pwm', 'fsl,imx27-pwm']
+>     From schema: Documentation/devicetree/bindings/pwm/imx-pwm.yaml
+> 
+>   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
+>     compatible: ['fsl,imx8mm-pwm', 'fsl,imx27-pwm'] is too long
+> 
+>   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
+>     compatible: Additional items are not allowed ('fsl,imx27-pwm' was unexpected)
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
+> index cba3f83ccd5f..3d896173b3b0 100644
+> --- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
+> +++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
+> @@ -36,6 +36,10 @@ properties:
+>              - fsl,imx6sx-uart
+>              - fsl,imx6ul-uart
+>              - fsl,imx7d-uart
+> +            - fsl,imx8mm-uart
+> +            - fsl,imx8mn-uart
+> +            - fsl,imx8mp-uart
+> +            - fsl,imx8mq-uart
+>            - const: fsl,imx6q-uart
+>  
+>    reg:
+> -- 
+> 2.17.1
+> 
+> 
+
 -- 
-2.17.1
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
