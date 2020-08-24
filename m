@@ -2,58 +2,52 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9CEB207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 098E3207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259142;
-	bh=Tt0oAXWRf5+Ttfk1X82OJ9XAYKwy9lkTMfu3XrypqKw=;
+	s=default; t=1598259152;
+	bh=IF5nfiHipkq+Pu0fcMTYDw8w2uTN6DtQ/0OPb5Wh6Sw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yVxwRG3ZAitotnx3BlHILuCX4p+fd+0iE53GKbo3DQpX4w+bP0u5oggzhFzJPP3eq
-	 zSTf5jNFpSC+LaH5/jhEBdrIhXYMz6iczcazCzbI5qN23stEHR4dr5iMnFc7cekE/G
-	 Zvimm963vLPk4bB4XaiplGqMjkdwRIz/1198K/as=
+	b=J4xmVMBqYCRrBhMg82ko/9Lmul/x7svsBdoDH9YYK+dCrqZFw3o2LYbW0ZVuLjYUh
+	 OixmRIXwlIQ52B96SShQbxDyYAmpOekScYnTaaj5oW0uiUWLsW8qpBpMpeL6bLF62u
+	 6WmDgjB0p2OtlG/hPF8KUpjgZKksm3RCKWQwk99Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730084AbgHXIwU (ORCPT
+        id S1730095AbgHXIwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:52:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58182 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728832AbgHXIwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:52:15 -0400
+        id S1730078AbgHXIwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:52:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C57D1207D3;
-        Mon, 24 Aug 2020 08:52:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 733582072D;
+        Mon, 24 Aug 2020 08:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259134;
-        bh=Tt0oAXWRf5+Ttfk1X82OJ9XAYKwy9lkTMfu3XrypqKw=;
+        s=default; t=1598259137;
+        bh=IF5nfiHipkq+Pu0fcMTYDw8w2uTN6DtQ/0OPb5Wh6Sw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jb+UC9k7PC5l0XLk9e5yU68qhvS+xRuUOOEeT2HSyNylQ31JE26X/hlor3y12JHIA
-         4TMPm+X7Iea1ltjCjgi5s2QQ8CPAmMG0sJ41ycBKBRs/vQ3ukspqaIE3C12R+zlnUS
-         CBZLJ5cWBUCvjzABnQufQvqUOc6XDWScUpyZ95g4=
+        b=viCVitd7x1BshNUotRfHfQYjEKbKGCTWkDuLoYNkHFKw4fNgDfki1kR6Z99Qpvbw1
+         HvhEdVKE6Wssuy13sMcbs4A545bW7l/UkRSG6cF5PLLh/8D3etk68xRvPgVnqgqnAR
+         H+XXkZL363XgMm4JZNTSpiPEn/ffjATCedJ7cjhg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Charan Teja Reddy <charante@codeaurora.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Vinayak Menon <vinmenon@codeaurora.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 14/39] mm, page_alloc: fix core hung in free_pcppages_bulk()
-Date:   Mon, 24 Aug 2020 10:31:13 +0200
-Message-Id: <20200824082349.214880399@linuxfoundation.org>
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 05/39] tracing: Clean up the hwlat binding code
+Date:   Mon, 24 Aug 2020 10:31:04 +0200
+Message-Id: <20200824082348.745810260@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
@@ -66,100 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charan Teja Reddy <charante@codeaurora.org>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 88e8ac11d2ea3acc003cf01bb5a38c8aa76c3cfd upstream.
+[ Upstream commit f447c196fe7a3a92c6396f7628020cb8d564be15 ]
 
-The following race is observed with the repeated online, offline and a
-delay between two successive online of memory blocks of movable zone.
+Instead of initializing the affinity of the hwlat kthread in the thread
+itself, simply set up the initial affinity at thread creation. This
+simplifies the code.
 
-P1						P2
-
-Online the first memory block in
-the movable zone. The pcp struct
-values are initialized to default
-values,i.e., pcp->high = 0 &
-pcp->batch = 1.
-
-					Allocate the pages from the
-					movable zone.
-
-Try to Online the second memory
-block in the movable zone thus it
-entered the online_pages() but yet
-to call zone_pcp_update().
-					This process is entered into
-					the exit path thus it tries
-					to release the order-0 pages
-					to pcp lists through
-					free_unref_page_commit().
-					As pcp->high = 0, pcp->count = 1
-					proceed to call the function
-					free_pcppages_bulk().
-Update the pcp values thus the
-new pcp values are like, say,
-pcp->high = 378, pcp->batch = 63.
-					Read the pcp's batch value using
-					READ_ONCE() and pass the same to
-					free_pcppages_bulk(), pcp values
-					passed here are, batch = 63,
-					count = 1.
-
-					Since num of pages in the pcp
-					lists are less than ->batch,
-					then it will stuck in
-					while(list_empty(list)) loop
-					with interrupts disabled thus
-					a core hung.
-
-Avoid this by ensuring free_pcppages_bulk() is called with proper count of
-pcp list pages.
-
-The mentioned race is some what easily reproducible without [1] because
-pcp's are not updated for the first memory block online and thus there is
-a enough race window for P2 between alloc+free and pcp struct values
-update through onlining of second memory block.
-
-With [1], the race still exists but it is very narrow as we update the pcp
-struct values for the first memory block online itself.
-
-This is not limited to the movable zone, it could also happen in cases
-with the normal zone (e.g., hotplug to a node that only has DMA memory, or
-no other memory yet).
-
-[1]: https://patchwork.kernel.org/patch/11696389/
-
-Fixes: 5f8dcc21211a ("page-allocator: split per-cpu list into one-list-per-migrate-type")
-Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: David Rientjes <rientjes@google.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Vinayak Menon <vinmenon@codeaurora.org>
-Cc: <stable@vger.kernel.org> [2.6+]
-Link: http://lkml.kernel.org/r/1597150703-19003-1-git-send-email-charante@codeaurora.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_alloc.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/trace/trace_hwlat.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1116,6 +1116,11 @@ static void free_pcppages_bulk(struct zo
- 	if (nr_scanned)
- 		__mod_node_page_state(zone->zone_pgdat, NR_PAGES_SCANNED, -nr_scanned);
+diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+index 5fe23f0ee7db6..158af5ddbc3aa 100644
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -268,24 +268,13 @@ out:
+ static struct cpumask save_cpumask;
+ static bool disable_migrate;
  
-+	/*
-+	 * Ensure proper count is passed which otherwise would stuck in the
-+	 * below while (list_empty(list)) loop.
-+	 */
-+	count = min(pcp->count, count);
- 	while (count) {
- 		struct page *page;
- 		struct list_head *list;
+-static void move_to_next_cpu(bool initmask)
++static void move_to_next_cpu(void)
+ {
+-	static struct cpumask *current_mask;
++	struct cpumask *current_mask = &save_cpumask;
+ 	int next_cpu;
+ 
+ 	if (disable_migrate)
+ 		return;
+-
+-	/* Just pick the first CPU on first iteration */
+-	if (initmask) {
+-		current_mask = &save_cpumask;
+-		get_online_cpus();
+-		cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
+-		put_online_cpus();
+-		next_cpu = cpumask_first(current_mask);
+-		goto set_affinity;
+-	}
+-
+ 	/*
+ 	 * If for some reason the user modifies the CPU affinity
+ 	 * of this thread, than stop migrating for the duration
+@@ -302,7 +291,6 @@ static void move_to_next_cpu(bool initmask)
+ 	if (next_cpu >= nr_cpu_ids)
+ 		next_cpu = cpumask_first(current_mask);
+ 
+- set_affinity:
+ 	if (next_cpu >= nr_cpu_ids) /* Shouldn't happen! */
+ 		goto disable;
+ 
+@@ -332,12 +320,10 @@ static void move_to_next_cpu(bool initmask)
+ static int kthread_fn(void *data)
+ {
+ 	u64 interval;
+-	bool initmask = true;
+ 
+ 	while (!kthread_should_stop()) {
+ 
+-		move_to_next_cpu(initmask);
+-		initmask = false;
++		move_to_next_cpu();
+ 
+ 		local_irq_disable();
+ 		get_sample();
+@@ -368,13 +354,27 @@ static int kthread_fn(void *data)
+  */
+ static int start_kthread(struct trace_array *tr)
+ {
++	struct cpumask *current_mask = &save_cpumask;
+ 	struct task_struct *kthread;
++	int next_cpu;
++
++	/* Just pick the first CPU on first iteration */
++	current_mask = &save_cpumask;
++	get_online_cpus();
++	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
++	put_online_cpus();
++	next_cpu = cpumask_first(current_mask);
+ 
+ 	kthread = kthread_create(kthread_fn, NULL, "hwlatd");
+ 	if (IS_ERR(kthread)) {
+ 		pr_err(BANNER "could not start sampling thread\n");
+ 		return -ENOMEM;
+ 	}
++
++	cpumask_clear(current_mask);
++	cpumask_set_cpu(next_cpu, current_mask);
++	sched_setaffinity(kthread->pid, current_mask);
++
+ 	hwlat_kthread = kthread;
+ 	wake_up_process(kthread);
+ 
+-- 
+2.25.1
+
 
 
