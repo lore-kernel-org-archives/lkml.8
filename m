@@ -2,53 +2,58 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D10CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0715EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8972074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73C72074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598260988;
-	bh=guEBnYs7vYaGJWWSLALjN97mlt8HGTIaUiWnp2CCR4I=;
+	s=default; t=1598260994;
+	bh=YTt8XDFjDpOBDwDUu9Z3lNGDKX7bk5qEbYYxEzD71g0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Wt+9ZBizB/Q5JjHXYeDzclJwr3mN8ohBoWZFylwSju9AW2PU0gjgYk0QC6TzVPmN
-	 JxF3n5EbKFp0SVeaBnfhnJG8xk5sXt7I6DsorO6AEtW/zW72ffrCaK/wQUY0KfqXgu
-	 C1osOUieQjpZoR2yfb1m+tM6/7jsYqlGAb+ebmwk=
+	b=WBGXDXanIMeMYVSJqanLt0xMkEqTdBM+GBnIHXkOmg/RB6Tn1IQR1J3hs1dkviXPx
+	 UcvjpmRe3mtA6dZ6+ZGKA7EdKbPjfRlDSWqabeIQvgDUTRdWW0uD+lSyizXwHznAJi
+	 oi1MLwxsYxmuMSIwwB8mdUrZYde7VALlWSUblHlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730105AbgHXJXG (ORCPT
+        id S1730134AbgHXJXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35378 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:23:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730343AbgHXIyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:54:36 -0400
+        id S1730291AbgHXIy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:54:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5BC7204FD;
-        Mon, 24 Aug 2020 08:54:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73ED62072D;
+        Mon, 24 Aug 2020 08:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259276;
-        bh=guEBnYs7vYaGJWWSLALjN97mlt8HGTIaUiWnp2CCR4I=;
+        s=default; t=1598259268;
+        bh=YTt8XDFjDpOBDwDUu9Z3lNGDKX7bk5qEbYYxEzD71g0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEnqC0FGjgcndl4dv2/NegHpQSJeHiVuFFQR7eKLhFPzqi/uQiaaX5+BKO7K1cdbm
-         o5oGW/piJIGvPUcHFxfkdP8n9WwzQLFcWsVvY6xEA9rT9dM5XHqTgUbUia+Lq/M8SV
-         USW6tucz3UHcjVcbTHCImnOTA08pt5w5spWUOprw=
+        b=ZSA300aRiGMct7UBo3oJI6tIf8mIpbHXq7unD16D49CLkcYCXIzlijhVgJKu7KZpb
+         hoMZb/K1oOp9/tho9pk0vAx6tEhuiFHksSj0RqmHZhoRqy1hEuf95XqIPYQhZgjAxX
+         6h1UCjsW9L/UyNs6w6Ij2qbtxsIKwa9m/6ripT6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Murphy <chris@colorremedies.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 08/50] btrfs: dont show full path of bind mounts in subvol=
-Date:   Mon, 24 Aug 2020 10:31:09 +0200
-Message-Id: <20200824082352.319650562@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Charan Teja Reddy <charante@codeaurora.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Vinayak Menon <vinmenon@codeaurora.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 15/50] mm, page_alloc: fix core hung in free_pcppages_bulk()
+Date:   Mon, 24 Aug 2020 10:31:16 +0200
+Message-Id: <20200824082352.747048151@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -61,67 +66,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Charan Teja Reddy <charante@codeaurora.org>
 
-[ Upstream commit 3ef3959b29c4a5bd65526ab310a1a18ae533172a ]
+commit 88e8ac11d2ea3acc003cf01bb5a38c8aa76c3cfd upstream.
 
-Chris Murphy reported a problem where rpm ostree will bind mount a bunch
-of things for whatever voodoo it's doing.  But when it does this
-/proc/mounts shows something like
+The following race is observed with the repeated online, offline and a
+delay between two successive online of memory blocks of movable zone.
 
-  /dev/sda /mnt/test btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
-  /dev/sda /mnt/test/baz btrfs rw,relatime,subvolid=256,subvol=/foo/bar 0 0
+P1						P2
 
-Despite subvolid=256 being subvol=/foo.  This is because we're just
-spitting out the dentry of the mount point, which in the case of bind
-mounts is the source path for the mountpoint.  Instead we should spit
-out the path to the actual subvol.  Fix this by looking up the name for
-the subvolid we have mounted.  With this fix the same test looks like
-this
+Online the first memory block in
+the movable zone. The pcp struct
+values are initialized to default
+values,i.e., pcp->high = 0 &
+pcp->batch = 1.
 
-  /dev/sda /mnt/test btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
-  /dev/sda /mnt/test/baz btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
+					Allocate the pages from the
+					movable zone.
 
-Reported-by: Chris Murphy <chris@colorremedies.com>
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Try to Online the second memory
+block in the movable zone thus it
+entered the online_pages() but yet
+to call zone_pcp_update().
+					This process is entered into
+					the exit path thus it tries
+					to release the order-0 pages
+					to pcp lists through
+					free_unref_page_commit().
+					As pcp->high = 0, pcp->count = 1
+					proceed to call the function
+					free_pcppages_bulk().
+Update the pcp values thus the
+new pcp values are like, say,
+pcp->high = 378, pcp->batch = 63.
+					Read the pcp's batch value using
+					READ_ONCE() and pass the same to
+					free_pcppages_bulk(), pcp values
+					passed here are, batch = 63,
+					count = 1.
+
+					Since num of pages in the pcp
+					lists are less than ->batch,
+					then it will stuck in
+					while(list_empty(list)) loop
+					with interrupts disabled thus
+					a core hung.
+
+Avoid this by ensuring free_pcppages_bulk() is called with proper count of
+pcp list pages.
+
+The mentioned race is some what easily reproducible without [1] because
+pcp's are not updated for the first memory block online and thus there is
+a enough race window for P2 between alloc+free and pcp struct values
+update through onlining of second memory block.
+
+With [1], the race still exists but it is very narrow as we update the pcp
+struct values for the first memory block online itself.
+
+This is not limited to the movable zone, it could also happen in cases
+with the normal zone (e.g., hotplug to a node that only has DMA memory, or
+no other memory yet).
+
+[1]: https://patchwork.kernel.org/patch/11696389/
+
+Fixes: 5f8dcc21211a ("page-allocator: split per-cpu list into one-list-per-migrate-type")
+Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: David Rientjes <rientjes@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Vinayak Menon <vinmenon@codeaurora.org>
+Cc: <stable@vger.kernel.org> [2.6+]
+Link: http://lkml.kernel.org/r/1597150703-19003-1-git-send-email-charante@codeaurora.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/btrfs/super.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ mm/page_alloc.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-index ca95e57b60ee1..eb64d4b159e07 100644
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -1221,6 +1221,7 @@ static int btrfs_show_options(struct seq_file *seq, struct dentry *dentry)
- {
- 	struct btrfs_fs_info *info = btrfs_sb(dentry->d_sb);
- 	char *compress_type;
-+	const char *subvol_name;
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1114,6 +1114,11 @@ static void free_pcppages_bulk(struct zo
+ 	spin_lock(&zone->lock);
+ 	isolated_pageblocks = has_isolate_pageblock(zone);
  
- 	if (btrfs_test_opt(info, DEGRADED))
- 		seq_puts(seq, ",degraded");
-@@ -1307,8 +1308,13 @@ static int btrfs_show_options(struct seq_file *seq, struct dentry *dentry)
- #endif
- 	seq_printf(seq, ",subvolid=%llu",
- 		  BTRFS_I(d_inode(dentry))->root->root_key.objectid);
--	seq_puts(seq, ",subvol=");
--	seq_dentry(seq, dentry, " \t\n\\");
-+	subvol_name = btrfs_get_subvol_name_from_objectid(info,
-+			BTRFS_I(d_inode(dentry))->root->root_key.objectid);
-+	if (!IS_ERR(subvol_name)) {
-+		seq_puts(seq, ",subvol=");
-+		seq_escape(seq, subvol_name, " \t\n\\");
-+		kfree(subvol_name);
-+	}
- 	return 0;
- }
- 
--- 
-2.25.1
-
++	/*
++	 * Ensure proper count is passed which otherwise would stuck in the
++	 * below while (list_empty(list)) loop.
++	 */
++	count = min(pcp->count, count);
+ 	while (count) {
+ 		struct page *page;
+ 		struct list_head *list;
 
 
