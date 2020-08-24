@@ -2,126 +2,104 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C840AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A78842072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77132072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259524;
-	bh=MlJ44rehLSPaJUGChKnzLkZMd/wcW1D2ek38r9QI/p8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MbOHals1c1OoRXx31+HZrMvUUMBIVGyPrCd1aPyeW78fsTmIgygWqgEc8dxz/m2gX
-	 nEJSNTXBYo/Ba2qIVegLpRApApBGX6nlUR4UHatCCyG5FpRuWCXuByfHrT6b49wURX
-	 AlP6CRMALHUqWTMZBDCN1zNnRzdpTHfZ5+OWavrk=
+	s=default; t=1598259530;
+	bh=39BZSNOZ3YCtH8xHE/nc+9Glh3GPa0Ojog1NJQhchpA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Lbj+bFNHo2BFtg1RLpvWKujy/Z4dnRLXRor5LNWE7GYAhatu60wQwlbMR0nbqKU1Y
+	 cx6k9UwP/QlDxoPnwFxo6l2t8LL/2bHuBPMq+RS1mMRmRhNzI+Ox10kFnMr9gtkf32
+	 lvbhUOC933P1JGlt0ft8DH4pcgHc8ljGPzrD8XW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgHXI6m (ORCPT
+        id S1730344AbgHXI6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:58:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46642 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:58:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730771AbgHXI6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:58:21 -0400
+        id S1730462AbgHXI6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:58:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29221204FD;
-        Mon, 24 Aug 2020 08:58:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D74C42074D;
+        Mon, 24 Aug 2020 08:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259500;
-        bh=MlJ44rehLSPaJUGChKnzLkZMd/wcW1D2ek38r9QI/p8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iQoFk1hEPIycH6uvZnb6VQY5N8y5Q4wF2KotBVBfTw4Ld3c4RRAawn3DrFWbwqdYn
-         e6RCVfW7DOX61v//zMbh+8Mvel8hvYb1AvKy3bM7s/pVnlxnbF1BjUAXBomGMNiDAz
-         f4DQsO2cphJ9wmNYH6WwxaGmlsz/IvbnyqXcZVoM=
-Date:   Mon, 24 Aug 2020 10:57:16 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Qiwu Huang <yanziily@gmail.com>
-Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: Re: [PATCH v8 1/4] power: supply: core: add quick charge type
- property
-Message-ID: <20200824085715.GB402243@kroah.com>
-References: <cover.1597376585.git.huangqiwu@xiaomi.com>
- <ced256ea8ac2f3e54c33677facc4c2ef04dee643.1597376585.git.huangqiwu@xiaomi.com>
- <20200814060909.GD1409566@kroah.com>
- <CAPtXDt1e3fi7ymW0-FSknUAYCQ80aL=4btbeA2e4Xre7+e7OtA@mail.gmail.com>
- <20200818060707.GB1742213@kroah.com>
- <CAPtXDt26DdOi6JG7x3mTrR5YwArjkAeXY2TogRnK_xkSabhL2g@mail.gmail.com>
- <20200824074357.GB4133866@kroah.com>
- <CAPtXDt0yW7Kh6a9JGfXaha_wKVjae7U74m6K=631Ofh8_m4uvg@mail.gmail.com>
+        s=default; t=1598259488;
+        bh=39BZSNOZ3YCtH8xHE/nc+9Glh3GPa0Ojog1NJQhchpA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2bJvJLnkU+RhmReazxHF08V6S1+y9xIIhBv9RUzIxhG8bEPmOg3gQlIdEOBHZ+quR
+         RvxLaVluwPso0FYAZo16kLRHt5zIyfhzmXQkwuJscO0+NUBIeaLZSTzHhdI6vKP8Io
+         2lqy0KGvw62Cz5zdG440pHvyFmX5ub0UM+1BPRig=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 57/71] Fix build error when CONFIG_ACPI is not set/enabled:
+Date:   Mon, 24 Aug 2020 10:31:48 +0200
+Message-Id: <20200824082358.762937348@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPtXDt0yW7Kh6a9JGfXaha_wKVjae7U74m6K=631Ofh8_m4uvg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 04:42:06PM +0800, Qiwu Huang wrote:
-> On Mon, Aug 24, 2020 at 3:43 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Aug 24, 2020 at 08:54:56AM +0800, Qiwu Huang wrote:
-> > > On Tue, Aug 18, 2020 at 2:07 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Tue, Aug 18, 2020 at 09:56:28AM +0800, Qiwu Huang wrote:
-> > > > > On Fri, Aug 14, 2020 at 2:09 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > > >
-> > > > > > On Fri, Aug 14, 2020 at 11:46:54AM +0800, Qiwu Huang wrote:
-> > > > > > > From: Qiwu Huang <huangqiwu@xiaomi.com>
-> > > > > > >
-> > > > > > > Reports the kind of quick charge type based on
-> > > > > > > different adapter power.
-> > > > > > >
-> > > > > > > Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
-> > > > > > > ---
-> > > > > > >  Documentation/ABI/testing/sysfs-class-power | 21 +++++++++
-> > > > > > >  drivers/power/supply/power_supply_sysfs.c   |  1 +
-> > > > > > >  drivers/power/supply/qcom_smbb.c            | 51 +++++++++++++++++++++
-> > > > > > >  include/linux/power_supply.h                | 14 ++++++
-> > > > > > >  4 files changed, 87 insertions(+)
-> > > > > >
-> > > > > > You should also submit your driver that uses these new attributes at the
-> > > > > > same time.  What happened to that request?  Otherwise no one really
-> > > > > > knows how these are being used, or if they even are used by anyone.
-> > > > > >
-> > > > >
-> > > > > I don't think I can submit the whole driver because our drivers are
-> > > > > divided into three parts, the first part is in ADSP, the second part
-> > > > > is in kernel and the third part is in Android Hal.This is the second
-> > > > > part.
-> > > >
-> > > > WHat is "ADSP"?
-> > >
-> > > ADSP: advanced digital signal processor
-> >
-> > Ok, then just send the kernel driver.
-> >
-> > > > Just submit your kernel driver code, that's all we care about here.
-> > > > Userspace code is not anything we can do anything with :)
-> > >
-> > > If we ported the full driver, we would break the existing driver
-> > > structure because we would introduce more Qualcomm code. I think
-> > > that's an unreasonable change.
-> >
-> > That doesn't make much sense.  You have a working driver for these apis,
-> > just submit it for inclusion, it should never break any existing
-> > drivers, otherwise your code wouldn't work either.
-> 
-> We're an Android device, we're working on a Qualcomm based code, and
-> from the current code tree, the current code tree is missing the QTI
-> Charger code
+From: Randy Dunlap <rdunlap@infradead.org>
 
-I don't know what that means, sorry.  Just submit your driver, and any
-needed dependencies as well.  There's no other way to evaluate this api
-addition without that, right?
+[ Upstream commit ee87e1557c42dc9c2da11c38e11b87c311569853 ]
 
-thanks,
+../arch/x86/pci/xen.c: In function ‘pci_xen_init’:
+../arch/x86/pci/xen.c:410:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
+  acpi_noirq_set();
 
-greg k-h
+Fixes: 88e9ca161c13 ("xen/pci: Use acpi_noirq_set() helper to avoid #ifdef")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: xen-devel@lists.xenproject.org
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/pci/xen.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
+index 9112d1cb397bb..22da9bfd8a458 100644
+--- a/arch/x86/pci/xen.c
++++ b/arch/x86/pci/xen.c
+@@ -25,6 +25,7 @@
+ #include <asm/xen/pci.h>
+ #include <asm/xen/cpuid.h>
+ #include <asm/apic.h>
++#include <asm/acpi.h>
+ #include <asm/i8259.h>
+ 
+ static int xen_pcifront_enable_irq(struct pci_dev *dev)
+-- 
+2.25.1
+
+
+
