@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBCAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F332CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29BB122B47
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2BA122B4E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258235;
-	bh=woyqq0iGieHRlS+G0TycRP69+XZ2LrEamldPHGlnPIk=;
+	s=default; t=1598258240;
+	bh=Szw6jA3d8Pxqmf1JA6WaAVW8AEfSzqqzAAso5Yu42xk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ApwNGUjpgN0ls5zovOgHNKVJ05D8YWmpUPjbu+4sKewXqDZs7BPsFve2PgH81TXwn
-	 0DLi12bofCFq6R/nJRYthqSfkdAxRM4q99wTWbjecqm1YJqRp5YDRkEAEgQ2VFHnUG
-	 ezYSE6jfuIW6LbHpd7w3Lr3/zfscT0r/+ZnjzUNI=
+	b=rqpXqaSE9E6+XLtI2j59DoESZWGJB8YdBnhfWdt0M2nhIcd7nq90M9Bw/P6WvYzzC
+	 vdcNltI9OrydpXjpMIdKxUviiZl9Rs/M8YraNfXn5rfvSzqV6WwWj44tYM5Sd7itpv
+	 vE9f1wqaLfiadJw9P+C/sXFzgwKP7TIIkABEtXas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgHXIhM (ORCPT
+        id S1728386AbgHXIhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:37:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50052 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:37:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbgHXIhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:37:00 -0400
+        id S1727917AbgHXIhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:37:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98A94207DF;
-        Mon, 24 Aug 2020 08:36:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9014A207DF;
+        Mon, 24 Aug 2020 08:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258220;
-        bh=woyqq0iGieHRlS+G0TycRP69+XZ2LrEamldPHGlnPIk=;
+        s=default; t=1598258228;
+        bh=Szw6jA3d8Pxqmf1JA6WaAVW8AEfSzqqzAAso5Yu42xk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EQuirNXFDqn4O9kr5KobEFre5Ac11shE+Y0jCA4wfgR+a8DzfCwM4HTlGy6HmucYA
-         uyuFT+DS3/nITv/f/Jib17Bl38vFeogv+hbmvGeNgIG3VJqeo2EXlGb3CxuMx7a0PS
-         uRGJctpCZETSUhd8kRgC6j+1gdFLB9UKAzCE3ZlE=
+        b=lNXWp9MmqoCFO4+S0pJqmyayntlFVIjNPVYLMPM3eakXEY62iMh2DRQeYm3SsOJiG
+         9gNvox+UKBduvYZW4/0EAU0/v8FJr+5LcYy3f2xuLH7Y3pzlXW2U13QlHX7BbBF1NA
+         h6sBVQU8q6V9Tu7xeMnd0bVBxhU1AHw0kcAuXOpg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Grzegorz Szczurek <grzegorzx.szczurek@intel.com>,
-        Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Zhang Changzhong <zhangchangzhong@huawei.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 089/148] i40e: Fix crash during removing i40e driver
-Date:   Mon, 24 Aug 2020 10:29:47 +0200
-Message-Id: <20200824082418.308843744@linuxfoundation.org>
+Subject: [PATCH 5.8 092/148] can: j1939: fix support for multipacket broadcast message
+Date:   Mon, 24 Aug 2020 10:29:50 +0200
+Message-Id: <20200824082418.452898742@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -63,78 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grzegorz Szczurek <grzegorzx.szczurek@intel.com>
+From: Zhang Changzhong <zhangchangzhong@huawei.com>
 
-[ Upstream commit 5b6d4a7f20b09c47ca598760f6dafd554af8b6d5 ]
+[ Upstream commit f4fd77fd87e9b214c26bb2ebd4f90055eaea5ade ]
 
-Fix the reason of crashing system by add waiting time to finish reset
-recovery process before starting remove driver procedure.
-Now VSI is releasing if VSI is not in reset recovery mode.
-Without this fix it was possible to start remove driver if other
-processing command need reset recovery procedure which resulted in
-null pointer dereference. VSI used by the ethtool process has been
-cleared by remove driver process.
+Currently j1939_tp_im_involved_anydir() in j1939_tp_recv() check the previously
+set flags J1939_ECU_LOCAL_DST and J1939_ECU_LOCAL_SRC of incoming skb, thus
+multipacket broadcast message was aborted by receive side because it may come
+from remote ECUs and have no exact dst address. Similarly, j1939_tp_cmd_recv()
+and j1939_xtp_rx_dat() didn't process broadcast message.
 
-[ 6731.508665] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[ 6731.508668] #PF: supervisor read access in kernel mode
-[ 6731.508670] #PF: error_code(0x0000) - not-present page
-[ 6731.508671] PGD 0 P4D 0
-[ 6731.508674] Oops: 0000 [#1] SMP PTI
-[ 6731.508679] Hardware name: Intel Corporation S2600WT2R/S2600WT2R, BIOS SE5C610.86B.01.01.0021.032120170601 03/21/2017
-[ 6731.508694] RIP: 0010:i40e_down+0x252/0x310 [i40e]
-[ 6731.508696] Code: c7 78 de fa c0 e8 61 02 3a c1 66 83 bb f6 0c 00 00 00 0f 84 bf 00 00 00 45 31 e4 45 31 ff eb 03 41 89 c7 48 8b 83 98 0c 00 00 <4a> 8b 3c 20 e8 a5 79 02 00 48 83 bb d0 0c 00 00 00 74 10 48 8b 83
-[ 6731.508698] RSP: 0018:ffffb75ac7b3faf0 EFLAGS: 00010246
-[ 6731.508700] RAX: 0000000000000000 RBX: ffff9c9874bd5000 RCX: 0000000000000007
-[ 6731.508701] RDX: 0000000000000000 RSI: 0000000000000096 RDI: ffff9c987f4d9780
-[ 6731.508703] RBP: ffffb75ac7b3fb30 R08: 0000000000005b60 R09: 0000000000000004
-[ 6731.508704] R10: ffffb75ac64fbd90 R11: 0000000000000001 R12: 0000000000000000
-[ 6731.508706] R13: ffff9c97a08e0000 R14: ffff9c97a08e0a68 R15: 0000000000000000
-[ 6731.508708] FS:  00007f2617cd2740(0000) GS:ffff9c987f4c0000(0000) knlGS:0000000000000000
-[ 6731.508710] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 6731.508711] CR2: 0000000000000000 CR3: 0000001e765c4006 CR4: 00000000003606e0
-[ 6731.508713] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 6731.508714] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 6731.508715] Call Trace:
-[ 6731.508734]  i40e_vsi_close+0x84/0x90 [i40e]
-[ 6731.508742]  i40e_quiesce_vsi.part.98+0x3c/0x40 [i40e]
-[ 6731.508749]  i40e_pf_quiesce_all_vsi+0x55/0x60 [i40e]
-[ 6731.508757]  i40e_prep_for_reset+0x59/0x130 [i40e]
-[ 6731.508765]  i40e_reconfig_rss_queues+0x5a/0x120 [i40e]
-[ 6731.508774]  i40e_set_channels+0xda/0x170 [i40e]
-[ 6731.508778]  ethtool_set_channels+0xe9/0x150
-[ 6731.508781]  dev_ethtool+0x1b94/0x2920
-[ 6731.508805]  dev_ioctl+0xc2/0x590
-[ 6731.508811]  sock_do_ioctl+0xae/0x150
-[ 6731.508813]  sock_ioctl+0x34f/0x3c0
-[ 6731.508821]  ksys_ioctl+0x98/0xb0
-[ 6731.508828]  __x64_sys_ioctl+0x1a/0x20
-[ 6731.508831]  do_syscall_64+0x57/0x1c0
-[ 6731.508835]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+So fix it by checking and process broadcast message in j1939_tp_recv(),
+j1939_tp_cmd_recv() and j1939_xtp_rx_dat().
 
-Fixes: 4b8164467b85 ("i40e: Add common function for finding VSI by type")
-Signed-off-by: Grzegorz Szczurek <grzegorzx.szczurek@intel.com>
-Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+Link: https://lore.kernel.org/r/1596599425-5534-2-git-send-email-zhangchangzhong@huawei.com
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/can/j1939/transport.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 56ecd6c3f2362..6af6367e7cac2 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -15352,6 +15352,9 @@ static void i40e_remove(struct pci_dev *pdev)
- 	i40e_write_rx_ctl(hw, I40E_PFQF_HENA(0), 0);
- 	i40e_write_rx_ctl(hw, I40E_PFQF_HENA(1), 0);
- 
-+	while (test_bit(__I40E_RESET_RECOVERY_PENDING, pf->state))
-+		usleep_range(1000, 2000);
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index 90a2baac8a4aa..67189b4c482c5 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -1673,8 +1673,12 @@ static void j1939_xtp_rx_rts(struct j1939_priv *priv, struct sk_buff *skb,
+ 			return;
+ 		}
+ 		session = j1939_xtp_rx_rts_session_new(priv, skb);
+-		if (!session)
++		if (!session) {
++			if (cmd == J1939_TP_CMD_BAM && j1939_sk_recv_match(priv, skcb))
++				netdev_info(priv->ndev, "%s: failed to create TP BAM session\n",
++					    __func__);
+ 			return;
++		}
+ 	} else {
+ 		if (j1939_xtp_rx_rts_session_active(session, skb)) {
+ 			j1939_session_put(session);
+@@ -1852,6 +1856,13 @@ static void j1939_xtp_rx_dat(struct j1939_priv *priv, struct sk_buff *skb)
+ 		else
+ 			j1939_xtp_rx_dat_one(session, skb);
+ 	}
 +
- 	/* no more scheduling of any task */
- 	set_bit(__I40E_SUSPENDED, pf->state);
- 	set_bit(__I40E_DOWN, pf->state);
++	if (j1939_cb_is_broadcast(skcb)) {
++		session = j1939_session_get_by_addr(priv, &skcb->addr, false,
++						    false);
++		if (session)
++			j1939_xtp_rx_dat_one(session, skb);
++	}
+ }
+ 
+ /* j1939 main intf */
+@@ -1943,7 +1954,7 @@ static void j1939_tp_cmd_recv(struct j1939_priv *priv, struct sk_buff *skb)
+ 		if (j1939_tp_im_transmitter(skcb))
+ 			j1939_xtp_rx_rts(priv, skb, true);
+ 
+-		if (j1939_tp_im_receiver(skcb))
++		if (j1939_tp_im_receiver(skcb) || j1939_cb_is_broadcast(skcb))
+ 			j1939_xtp_rx_rts(priv, skb, false);
+ 
+ 		break;
+@@ -2007,7 +2018,7 @@ int j1939_tp_recv(struct j1939_priv *priv, struct sk_buff *skb)
+ {
+ 	struct j1939_sk_buff_cb *skcb = j1939_skb_to_cb(skb);
+ 
+-	if (!j1939_tp_im_involved_anydir(skcb))
++	if (!j1939_tp_im_involved_anydir(skcb) && !j1939_cb_is_broadcast(skcb))
+ 		return 0;
+ 
+ 	switch (skcb->addr.pgn) {
 -- 
 2.25.1
 
