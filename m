@@ -2,521 +2,213 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6802071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262138;
-	bh=qS5QuyegbFPeFKe476tXwKGKPLg6gM2O9DYnkuxon3c=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=WlWM8KjWKzWrwvk2lS+kiat+ctPFmfrYaFnedF05oiUlhhGpQD338d6yOvrst9fok
-	 X/535jIKdKDnmD5Qc20xcjLBl3c0zzuTF63HZxia6pWyeb93GtGQLG/97Fb5ki+b6k
-	 xomFb6eyRHmzdUSCoSa52a1gPsApWrRcwLIgFvP8=
+	by mail.kernel.org (Postfix) with ESMTP id 882962071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zaCZ6k97"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbgHXJmI (ORCPT
+        id S1728138AbgHXJmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41422 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729201AbgHXIo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:44:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3C502074D;
-        Mon, 24 Aug 2020 08:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258697;
-        bh=qS5QuyegbFPeFKe476tXwKGKPLg6gM2O9DYnkuxon3c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oJ2auDIV59z83AnXGuokEVW9MnXZy+0ZgRKeUMibXerL2Amv70DCTxv0NqCAKLII+
-         qBmfsfmSITw5YIvtaXiU/VhFAXUWRcgTVGh5AqKtsjAmDtoEYHE2ORavuOdSGhnL+D
-         ZQEvLlKmQeH/cuq+pkNpyA18QNaJALcJxUMD3R+Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.4 000/107] 5.4.61-rc1 review
-Date:   Mon, 24 Aug 2020 10:29:26 +0200
-Message-Id: <20200824082405.020301642@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
+        Mon, 24 Aug 2020 05:42:21 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55816 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729201AbgHXJmL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:42:11 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07O9dCqS169057;
+        Mon, 24 Aug 2020 09:42:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=KfuuX0ksOpod8cUGK1VDYEIVywgUnLQvnvXblib2BjA=;
+ b=zaCZ6k97YzVizbQax7KPKxfj6DR8KhM0/XJaw779zd4tE7aU2o8vnj9UutB/zRYgOcAR
+ Nyrn1tJwb3y/vOfkJPO6XtjgP7+Np3RctTQS+LqCrC3SBQFaUnohszMYGjHNJ7zOn0al
+ IoVghnyoSSxohvPgWKnk1bDiLCT3Uz8NAfe7QUPT5/OjJt8Bd3mpfbD6lmvYVzl7q6BZ
+ Fq6/v+fjkklcDqNqSxWFYTRLOixFtQ/KRasCjWYWQKTnLdD7315G7XV/Jyk8r20i07R0
+ 2AmfK4FAKI3pOtCjswY6gIyR6bLCuEfDoVtJB0f1+f612AP7yCBtgFhVVy5M5TfKzl3t 0Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 333w6tj382-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Aug 2020 09:42:00 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07O9eirH040516;
+        Mon, 24 Aug 2020 09:41:59 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 333r9hcyv1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Aug 2020 09:41:59 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07O9fut1020170;
+        Mon, 24 Aug 2020 09:41:56 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Aug 2020 02:41:55 -0700
+Date:   Mon, 24 Aug 2020 12:41:48 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Coiby Xu <coiby.xu@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Alex Elder <elder@kernel.org>,
+        Vaibhav Agarwal <vaibhav.sr@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        "moderated list:GREYBUS SUBSYSTEM" <greybus-dev@lists.linaro.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: greybus: fix warnings detected by sparse
+Message-ID: <20200824094148.GY1793@kadam>
+References: <20200824025100.1068350-1-coiby.xu@gmail.com>
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.61-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.61-rc1
-X-KernelTest-Deadline: 2020-08-26T08:24+00:00
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824025100.1068350-1-coiby.xu@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
+ adultscore=0 spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008240075
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 clxscore=1011 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008240075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.4.61 release.
-There are 107 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Wed, 26 Aug 2020 08:23:34 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.61-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.4.61-rc1
-
-Juergen Gross <jgross@suse.com>
-    xen: don't reschedule in preemption off sections
-
-Peter Xu <peterx@redhat.com>
-    mm/hugetlb: fix calculation of adjust_range_if_pmd_sharing_possible
-
-Al Viro <viro@zeniv.linux.org.uk>
-    do_epoll_ctl(): clean the failure exits up a bit
-
-Marc Zyngier <maz@kernel.org>
-    epoll: Keep a reference on files added to the check list
-
-Li Heng <liheng40@huawei.com>
-    efi: add missed destroy_workqueue when efisubsys_init fails
-
-Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
-    powerpc/pseries: Do not initiate shutdown when system is running on UPS
-
-Tom Rix <trix@redhat.com>
-    net: dsa: b53: check for timeout
-
-Haiyang Zhang <haiyangz@microsoft.com>
-    hv_netvsc: Fix the queue_mapping in netvsc_vf_xmit()
-
-Wang Hai <wanghai38@huawei.com>
-    net: gemini: Fix missing free_netdev() in error path of gemini_ethernet_port_probe()
-
-Shay Agroskin <shayagr@amazon.com>
-    net: ena: Prevent reset after device destruction
-
-Jiri Wiesner <jwiesner@suse.com>
-    bonding: fix active-backup failover for current ARP slave
-
-Stephen Boyd <swboyd@chromium.org>
-    ARM64: vdso32: Install vdso32 from vdso_install
-
-David Howells <dhowells@redhat.com>
-    afs: Fix NULL deref in afs_dynroot_depopulate()
-
-Selvin Xavier <selvin.xavier@broadcom.com>
-    RDMA/bnxt_re: Do not add user qps to flushlist
-
-Randy Dunlap <rdunlap@infradead.org>
-    Fix build error when CONFIG_ACPI is not set/enabled:
-
-Juergen Gross <jgross@suse.com>
-    efi: avoid error message when booting under Xen
-
-Masahiro Yamada <masahiroy@kernel.org>
-    kconfig: qconf: fix signal connection to invalid slots
-
-Masahiro Yamada <masahiroy@kernel.org>
-    kconfig: qconf: do not limit the pop-up menu to the first row
-
-Quinn Tran <qutran@marvell.com>
-    Revert "scsi: qla2xxx: Disable T10-DIF feature with FC-NVMe during probe"
-
-Jim Mattson <jmattson@google.com>
-    kvm: x86: Toggling CR4.PKE does not load PDPTEs in PAE mode
-
-Jim Mattson <jmattson@google.com>
-    kvm: x86: Toggling CR4.SMAP does not load PDPTEs in PAE mode
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio/type1: Add proper error unwind for vfio_iommu_replay()
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    ASoC: intel: Fix memleak in sst_media_open
-
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-    ASoC: msm8916-wcd-analog: fix register Interrupt offset
-
-Heiko Carstens <hca@linux.ibm.com>
-    s390/ptrace: fix storage key handling
-
-Heiko Carstens <hca@linux.ibm.com>
-    s390/runtime_instrumentation: fix storage key handling
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    bonding: fix a potential double-unregister
-
-Zhang Changzhong <zhangchangzhong@huawei.com>
-    can: j1939: add rxtimer for multipacket broadcast session
-
-Zhang Changzhong <zhangchangzhong@huawei.com>
-    can: j1939: abort multipacket broadcast session when timeout occurs
-
-Zhang Changzhong <zhangchangzhong@huawei.com>
-    can: j1939: cancel rxtimer on multipacket broadcast session complete
-
-Zhang Changzhong <zhangchangzhong@huawei.com>
-    can: j1939: fix support for multipacket broadcast message
-
-Jarod Wilson <jarod@redhat.com>
-    bonding: show saner speed for broadcast mode
-
-Fugang Duan <fugang.duan@nxp.com>
-    net: fec: correct the error path for regulator disable in probe
-
-Grzegorz Szczurek <grzegorzx.szczurek@intel.com>
-    i40e: Fix crash during removing i40e driver
-
-Przemyslaw Patynowski <przemyslawx.patynowski@intel.com>
-    i40e: Set RX_ONLY mode for unicast promiscuous on VLAN
-
-Oleksij Rempel <linux@rempel-privat.de>
-    can: j1939: transport: add j1939_session_skb_find_by_offset() function
-
-Oleksij Rempel <linux@rempel-privat.de>
-    can: j1939: transport: j1939_simple_recv(): ignore local J1939 messages send not by J1939 stack
-
-Eric Dumazet <edumazet@google.com>
-    can: j1939: fix kernel-infoleak in j1939_sk_sock2sockaddr_can()
-
-John Fastabend <john.fastabend@gmail.com>
-    bpf: sock_ops sk access may stomp registers when dst_reg = src_reg
-
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-    ASoC: q6routing: add dummy register read/write function
-
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-    ASoC: q6afe-dai: mark all widgets registers as SND_SOC_NOPM
-
-Amelie Delaunay <amelie.delaunay@st.com>
-    spi: stm32: fixes suspend/resume management
-
-Stephen Suryaputra <ssuryaextr@gmail.com>
-    netfilter: nf_tables: nft_exthdr: the presence return value should be little-endian
-
-Jan Kara <jack@suse.cz>
-    ext4: don't allow overlapping system zones
-
-Eric Sandeen <sandeen@redhat.com>
-    ext4: fix potential negative array index in do_split()
-
-Helge Deller <deller@gmx.de>
-    fs/signalfd.c: fix inconsistent return codes for signalfd4
-
-Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-    alpha: fix annotation of io{read,write}{16,32}be()
-
-Eiichi Tsukata <devel@etsukata.com>
-    xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
-
-Gaurav Singh <gaurav1086@gmail.com>
-    tools/testing/selftests/cgroup/cgroup_util.c: cg_read_strcmp: fix null pointer dereference
-
-Evgeny Novikov <novikov@ispras.ru>
-    media: camss: fix memory leaks on error handling paths in probe
-
-Mao Wenan <wenan.mao@linux.alibaba.com>
-    virtio_ring: Avoid loop when vq is broken in virtqueue_poll
-
-Javed Hasan <jhasan@marvell.com>
-    scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
-
-Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-    cpufreq: intel_pstate: Fix cpuinfo_max_freq when MSR_TURBO_RATIO_LIMIT is 0
-
-Boris Ostrovsky <boris.ostrovsky@oracle.com>
-    swiotlb-xen: use vmalloc_to_page on vmalloc virt addresses
-
-Xiubo Li <xiubli@redhat.com>
-    ceph: fix use-after-free for fsc->mdsc
-
-Zhe Li <lizhe67@huawei.com>
-    jffs2: fix UAF problem
-
-Felix Kuehling <Felix.Kuehling@amd.com>
-    drm/ttm: fix offset in VMAs with a pg_offs in ttm_bo_vm_access
-
-Darrick J. Wong <darrick.wong@oracle.com>
-    xfs: fix inode quota reservation checks
-
-Chuck Lever <chuck.lever@oracle.com>
-    svcrdma: Fix another Receive buffer leak
-
-Greg Ungerer <gerg@linux-m68k.org>
-    m68knommu: fix overwriting of bits in ColdFire V3 cache control
-
-Jinyang He <hejinyang@loongson.cn>
-    MIPS: Fix unable to reserve memory for Crash kernel
-
-Xiongfeng Wang <wangxiongfeng2@huawei.com>
-    Input: psmouse - add a newline when printing 'proto' by sysfs
-
-Evgeny Novikov <novikov@ispras.ru>
-    media: vpss: clean up resources in init
-
-Huacai Chen <chenhc@lemote.com>
-    rtc: goldfish: Enable interrupt in set_alarm() when necessary
-
-Chuhong Yuan <hslester96@gmail.com>
-    media: budget-core: Improve exception handling in budget_register()
-
-Bodo Stroesser <bstroesser@ts.fujitsu.com>
-    scsi: target: tcmu: Fix crash in tcmu_flush_dcache_range on ARM
-
-Stanley Chu <stanley.chu@mediatek.com>
-    scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
-
-Rajendra Nayak <rnayak@codeaurora.org>
-    opp: Enable resources again if they were disabled earlier
-
-Liang Chen <cl@rock-chips.com>
-    kthread: Do not preempt current task if it is going to call schedule()
-
-Krunoslav Kovac <Krunoslav.Kovac@amd.com>
-    drm/amd/display: fix pow() crashing when given base 0
-
-Stylon Wang <stylon.wang@amd.com>
-    drm/amd/display: Fix EDID parsing after resume from suspend
-
-Daniel Kolesa <daniel@octaforge.org>
-    drm/amdgpu/display: use GFP_ATOMIC in dcn20_validate_bandwidth_internal
-
-Yang Shi <shy828301@gmail.com>
-    mm/memory.c: skip spurious TLB flush for retried page fault
-
-Steffen Maier <maier@linux.ibm.com>
-    scsi: zfcp: Fix use-after-free in request timeout handlers
-
-zhangyi (F) <yi.zhang@huawei.com>
-    jbd2: add the missing unlock_buffer() in the error path of jbd2_write_superblock()
-
-Jan Kara <jack@suse.cz>
-    ext4: fix checking of directory entry validity for inline directories
-
-Kaike Wan <kaike.wan@intel.com>
-    RDMA/hfi1: Correct an interlock issue for TID RDMA WRITE request
-
-Charan Teja Reddy <charante@codeaurora.org>
-    mm, page_alloc: fix core hung in free_pcppages_bulk()
-
-Doug Berger <opendmb@gmail.com>
-    mm: include CMA pages in lowmem_reserve at boot
-
-Hugh Dickins <hughd@google.com>
-    uprobes: __replace_page() avoid BUG in munlock_vma_page()
-
-Wei Yongjun <weiyongjun1@huawei.com>
-    kernel/relay.c: fix memleak on destroy relay channel
-
-Jann Horn <jannh@google.com>
-    romfs: fix uninitialized memory leak in romfs_dev_read()
-
-Lukas Wunner <lukas@wunner.de>
-    spi: Prevent adding devices below an unregistering controller
-
-Oleksij Rempel <linux@rempel-privat.de>
-    can: j1939: socket: j1939_sk_bind(): make sure ml_priv is allocated
-
-Oleksij Rempel <linux@rempel-privat.de>
-    can: j1939: transport: j1939_session_tx_dat(): fix use-after-free read in j1939_tp_txtimer()
-
-Mike Pozulp <pozulp.kernel@gmail.com>
-    ALSA: hda/realtek: Add quirk for Samsung Galaxy Book Ion
-
-Mike Pozulp <pozulp.kernel@gmail.com>
-    ALSA: hda/realtek: Add quirk for Samsung Galaxy Flex Book
-
-David Sterba <dsterba@suse.com>
-    btrfs: add wrapper for transaction abort predicate
-
-Josef Bacik <josef@toxicpanda.com>
-    btrfs: return EROFS for BTRFS_FS_STATE_ERROR cases
-
-Josef Bacik <josef@toxicpanda.com>
-    btrfs: don't show full path of bind mounts in subvol=
-
-Marcos Paulo de Souza <mpdesouza@suse.com>
-    btrfs: export helpers for subvolume name/id resolution
-
-Coly Li <colyli@suse.de>
-    bcache: avoid nr_stripes overflow in bcache_device_init()
-
-Hugh Dickins <hughd@google.com>
-    khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
-
-Hugh Dickins <hughd@google.com>
-    khugepaged: khugepaged_test_exit() check mmget_still_valid()
-
-Masami Hiramatsu <mhiramat@kernel.org>
-    perf probe: Fix memory leakage when the probe point is not found
-
-Bob Peterson <rpeterso@redhat.com>
-    gfs2: Never call gfs2_block_zero_range with an open transaction
-
-Andreas Gruenbacher <agruenba@redhat.com>
-    gfs2: Improve mmap write vs. punch_hole consistency
-
-Chris Wilson <chris@chris-wilson.co.uk>
-    drm/vgem: Replace opencoded version of drm_gem_dumb_map_offset()
-
-Masahiro Yamada <masahiroy@kernel.org>
-    kbuild: support LLVM=1 to switch the default tools to Clang/LLVM
-
-Masahiro Yamada <masahiroy@kernel.org>
-    kbuild: replace AS=clang with LLVM_IAS=1
-
-Masahiro Yamada <masahiroy@kernel.org>
-    kbuild: remove AS variable
-
-Masahiro Yamada <masahiroy@kernel.org>
-    kbuild: remove PYTHON2 variable
-
-Dmitry Golovin <dima@golovin.in>
-    x86/boot: kbuild: allow readelf executable to be specified
-
-Masahiro Yamada <masahiroy@kernel.org>
-    net: wan: wanxl: use $(M68KCC) instead of $(M68KAS) for rebuilding firmware
-
-Masahiro Yamada <masahiroy@kernel.org>
-    net: wan: wanxl: use allow to pass CROSS_COMPILE_M68k for rebuilding firmware
-
-Fangrui Song <maskray@google.com>
-    Documentation/llvm: fix the name of llvm-size
-
-Nick Desaulniers <ndesaulniers@google.com>
-    Documentation/llvm: add documentation on building w/ Clang/LLVM
-
-
--------------
-
-Diffstat:
-
- Documentation/kbuild/index.rst                     |   1 +
- Documentation/kbuild/kbuild.rst                    |   5 +
- Documentation/kbuild/llvm.rst                      |  87 +++++++++
- MAINTAINERS                                        |   1 +
- Makefile                                           |  42 +++--
- arch/alpha/include/asm/io.h                        |   8 +-
- arch/arm64/Makefile                                |   1 +
- arch/arm64/kernel/vdso32/Makefile                  |   2 +-
- arch/m68k/include/asm/m53xxacr.h                   |   6 +-
- arch/mips/kernel/setup.c                           |   2 +-
- arch/powerpc/platforms/pseries/ras.c               |   1 -
- arch/s390/kernel/ptrace.c                          |   7 +-
- arch/s390/kernel/runtime_instr.c                   |   2 +-
- arch/x86/boot/compressed/Makefile                  |   2 +-
- arch/x86/kvm/x86.c                                 |   2 +-
- arch/x86/pci/xen.c                                 |   1 +
- drivers/cpufreq/intel_pstate.c                     |   1 +
- drivers/firmware/efi/efi.c                         |   2 +
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |   1 +
- .../gpu/drm/amd/display/dc/dcn20/dcn20_resource.c  |   2 +-
- drivers/gpu/drm/amd/display/include/fixed31_32.h   |   3 +
- drivers/gpu/drm/ttm/ttm_bo_vm.c                    |   4 +-
- drivers/gpu/drm/vgem/vgem_drv.c                    |  27 ---
- drivers/infiniband/hw/bnxt_re/main.c               |   3 +-
- drivers/infiniband/hw/hfi1/tid_rdma.c              |   1 +
- drivers/input/mouse/psmouse-base.c                 |   2 +-
- drivers/md/bcache/super.c                          |  12 +-
- drivers/media/pci/ttpci/budget-core.c              |  11 +-
- drivers/media/platform/davinci/vpss.c              |  20 +-
- drivers/media/platform/qcom/camss/camss.c          |  30 ++-
- drivers/net/bonding/bond_main.c                    |  42 ++++-
- drivers/net/dsa/b53/b53_common.c                   |   2 +
- drivers/net/ethernet/amazon/ena/ena_netdev.c       |  19 +-
- drivers/net/ethernet/cortina/gemini.c              |   4 +-
- drivers/net/ethernet/freescale/fec_main.c          |   4 +-
- drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h  |   2 +-
- drivers/net/ethernet/intel/i40e/i40e_common.c      |  35 +++-
- drivers/net/ethernet/intel/i40e/i40e_main.c        |   3 +
- drivers/net/hyperv/netvsc_drv.c                    |   2 +-
- drivers/net/wan/Kconfig                            |   2 +-
- drivers/net/wan/Makefile                           |  12 +-
- drivers/opp/core.c                                 |  10 +-
- drivers/rtc/rtc-goldfish.c                         |   1 +
- drivers/s390/scsi/zfcp_fsf.c                       |   4 +-
- drivers/scsi/libfc/fc_disc.c                       |  12 +-
- drivers/scsi/qla2xxx/qla_os.c                      |   4 -
- drivers/scsi/ufs/ufs_quirks.h                      |   1 +
- drivers/scsi/ufs/ufshcd.c                          |   2 +
- drivers/spi/Kconfig                                |   3 +
- drivers/spi/spi-stm32.c                            |  27 ++-
- drivers/spi/spi.c                                  |  21 ++-
- drivers/target/target_core_user.c                  |   2 +-
- drivers/vfio/vfio_iommu_type1.c                    |  71 ++++++-
- drivers/video/fbdev/efifb.c                        |   2 +-
- drivers/virtio/virtio_ring.c                       |   3 +
- drivers/xen/preempt.c                              |   2 +-
- drivers/xen/swiotlb-xen.c                          |   8 +-
- fs/afs/dynroot.c                                   |  20 +-
- fs/btrfs/block-group.c                             |   2 +-
- fs/btrfs/ctree.h                                   |   2 +
- fs/btrfs/delayed-inode.c                           |   2 +-
- fs/btrfs/export.c                                  |   8 +-
- fs/btrfs/export.h                                  |   5 +
- fs/btrfs/extent-tree.c                             |  10 +-
- fs/btrfs/extent_io.c                               |   2 +-
- fs/btrfs/scrub.c                                   |   2 +-
- fs/btrfs/super.c                                   |  20 +-
- fs/btrfs/transaction.c                             |  30 +--
- fs/btrfs/transaction.h                             |  12 ++
- fs/ceph/mds_client.c                               |   3 +-
- fs/eventpoll.c                                     |  19 +-
- fs/ext4/block_validity.c                           |  36 ++--
- fs/ext4/namei.c                                    |  22 ++-
- fs/gfs2/bmap.c                                     |  68 ++++---
- fs/jbd2/journal.c                                  |   4 +-
- fs/jffs2/dir.c                                     |   6 +-
- fs/romfs/storage.c                                 |   4 +-
- fs/signalfd.c                                      |  10 +-
- fs/xfs/xfs_sysfs.h                                 |   6 +-
- fs/xfs/xfs_trans_dquot.c                           |   2 +-
- kernel/events/uprobes.c                            |   2 +-
- kernel/kthread.c                                   |  17 +-
- kernel/relay.c                                     |   1 +
- mm/hugetlb.c                                       |  24 +--
- mm/khugepaged.c                                    |   7 +-
- mm/memory.c                                        |   3 +
- mm/page_alloc.c                                    |   7 +-
- net/can/j1939/socket.c                             |  14 ++
- net/can/j1939/transport.c                          |  89 +++++++--
- net/core/filter.c                                  |  49 +++--
- net/netfilter/nft_exthdr.c                         |   4 +-
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c            |   2 +
- scripts/kconfig/qconf.cc                           |  70 +++----
- sound/pci/hda/patch_realtek.c                      |   2 +
- sound/soc/codecs/msm8916-wcd-analog.c              |   4 +-
- sound/soc/intel/atom/sst-mfld-platform-pcm.c       |   5 +-
- sound/soc/qcom/qdsp6/q6afe-dai.c                   | 210 ++++++++++-----------
- sound/soc/qcom/qdsp6/q6routing.c                   |  16 ++
- tools/objtool/Makefile                             |   6 +
- tools/perf/util/probe-finder.c                     |   2 +-
- tools/testing/selftests/cgroup/cgroup_util.c       |   2 +-
- 101 files changed, 956 insertions(+), 464 deletions(-)
-
+On Mon, Aug 24, 2020 at 10:50:59AM +0800, Coiby Xu wrote:
+> This patch fix the following warnings from sparse,
+> 
+> $ make C=2 drivers/staging/greybus/
+> drivers/staging/greybus/audio_codec.c:691:36: warning: incorrect type in initializer (different base types)
+> drivers/staging/greybus/audio_codec.c:691:36:    expected unsigned long long [usertype] formats
+> drivers/staging/greybus/audio_codec.c:691:36:    got restricted snd_pcm_format_t [usertype]
+> drivers/staging/greybus/audio_codec.c:701:36: warning: incorrect type in initializer (different base types)
+> drivers/staging/greybus/audio_codec.c:701:36:    expected unsigned long long [usertype] formats
+> drivers/staging/greybus/audio_codec.c:701:36:    got restricted snd_pcm_format_t [usertype]
+> drivers/staging/greybus/audio_module.c:222:25: warning: incorrect type in assignment (different base types)
+> drivers/staging/greybus/audio_module.c:222:25:    expected restricted __le16 [usertype] data_cport
+> drivers/staging/greybus/audio_module.c:222:25:    got unsigned short [usertype] intf_cport_id
+> drivers/staging/greybus/audio_topology.c:460:40: warning: restricted __le32 degrades to integer
+> drivers/staging/greybus/audio_topology.c:691:41: warning: incorrect type in assignment (different base types)
+> drivers/staging/greybus/audio_topology.c:691:41:    expected unsigned int access
+> drivers/staging/greybus/audio_topology.c:691:41:    got restricted __le32 [usertype] access
+> drivers/staging/greybus/audio_topology.c:746:44: warning: incorrect type in assignment (different base types)
+> drivers/staging/greybus/audio_topology.c:746:44:    expected unsigned int
+> drivers/staging/greybus/audio_topology.c:746:44:    got restricted __le32
+> drivers/staging/greybus/audio_topology.c:748:52: warning: incorrect type in assignment (different base types)
+> drivers/staging/greybus/audio_topology.c:748:52:    expected unsigned int
+> drivers/staging/greybus/audio_topology.c:748:52:    got restricted __le32
+> drivers/staging/greybus/audio_topology.c:802:42: warning: restricted __le32 degrades to integer
+> drivers/staging/greybus/audio_topology.c:805:50: warning: incorrect type in assignment (different base types)
+> drivers/staging/greybus/audio_topology.c:805:50:    expected restricted __le32
+> drivers/staging/greybus/audio_topology.c:805:50:    got unsigned int
+> drivers/staging/greybus/audio_topology.c:814:50: warning: restricted __le32 degrades to integer
+> drivers/staging/greybus/audio_topology.c:817:58: warning: incorrect type in assignment (different base types)
+> drivers/staging/greybus/audio_topology.c:817:58:    expected restricted __le32
+> drivers/staging/greybus/audio_topology.c:817:58:    got unsigned int
+> drivers/staging/greybus/audio_topology.c:889:25: warning: incorrect type in assignment (different base types)
+> drivers/staging/greybus/audio_topology.c:889:25:    expected unsigned int access
+> drivers/staging/greybus/audio_topology.c:889:25:    got restricted __le32 [usertype] access
+> 
+> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+> ---
+>  drivers/staging/greybus/audio_codec.c    |  4 ++--
+>  drivers/staging/greybus/audio_module.c   |  2 +-
+>  drivers/staging/greybus/audio_topology.c | 18 +++++++++---------
+>  3 files changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/staging/greybus/audio_codec.c b/drivers/staging/greybus/audio_codec.c
+> index 74538f8c5fa4..494aa823e998 100644
+> --- a/drivers/staging/greybus/audio_codec.c
+> +++ b/drivers/staging/greybus/audio_codec.c
+> @@ -688,7 +688,7 @@ static struct snd_soc_dai_driver gbaudio_dai[] = {
+>  		.playback = {
+>  			.stream_name = "I2S 0 Playback",
+>  			.rates = SNDRV_PCM_RATE_48000,
+> -			.formats = SNDRV_PCM_FORMAT_S16_LE,
+> +			.formats = SNDRV_PCM_FMTBIT_S16_LE,
+>  			.rate_max = 48000,
+>  			.rate_min = 48000,
+>  			.channels_min = 1,
+> @@ -698,7 +698,7 @@ static struct snd_soc_dai_driver gbaudio_dai[] = {
+>  		.capture = {
+>  			.stream_name = "I2S 0 Capture",
+>  			.rates = SNDRV_PCM_RATE_48000,
+> -			.formats = SNDRV_PCM_FORMAT_S16_LE,
+> +			.formats = SNDRV_PCM_FMTBIT_S16_LE,
+>  			.rate_max = 48000,
+>  			.rate_min = 48000,
+>  			.channels_min = 1,
+
+These changes need to be explained better.  We're changing formats from
+2 to 1 << 2.
+
+When you're writing commit messages, please imagine me as the target
+audience.  I have a fairly decent understanding of the kernel and C, but
+I don't know very much about the sound subsystem.
+
+This code used to work, right?  How was it that changing a 2 to a 4
+makes it better?  It needs to be explained in the commit message.  This
+change probably needs to be split into a separate commit because it
+seems different from the rest of the patch.
+
+(Presumably the rest of the patch doesn't affect runtime on little
+endian systems.  This is the part which affects runtime so it is
+different from the rest).
+
+> diff --git a/drivers/staging/greybus/audio_module.c b/drivers/staging/greybus/audio_module.c
+> index 16f60256adb2..00848b84b022 100644
+> --- a/drivers/staging/greybus/audio_module.c
+> +++ b/drivers/staging/greybus/audio_module.c
+> @@ -219,7 +219,7 @@ static int gb_audio_add_data_connection(struct gbaudio_module_info *gbmodule,
+>  
+>  	greybus_set_drvdata(bundle, gbmodule);
+>  	dai->id = 0;
+> -	dai->data_cport = connection->intf_cport_id;
+> +	dai->data_cport = cpu_to_le16(connection->intf_cport_id);
+>  	dai->connection = connection;
+>  	list_add(&dai->list, &gbmodule->data_list);
+>  
+
+This is correct, but I think you should change the two places which
+print the data_cport to print the CPU endian value.
+
+   327          list_for_each_entry(dai, &gbmodule->data_list, list) {
+   328                  ret = gb_connection_enable(dai->connection);
+   329                  if (ret) {
+   330                          dev_err(dev,
+   331                                  "%d:Error while enabling %d:data connection\n",
+   332                                  ret, dai->data_cport);
+   333                          goto disable_data_connection;
+   334                  }
+   335          }
+
+   449          list_for_each_entry(dai, &gbmodule->data_list, list) {
+   450                  ret = gb_connection_enable(dai->connection);
+   451                  if (ret) {
+   452                          dev_err(dev,
+   453                                  "%d:Error while enabling %d:data connection\n",
+   454                                  ret, dai->data_cport);
+   455                          return ret;
+   456                  }
+   457          }
+
+Otherwise it's slightly confusing to mix the values.
+
+The rest of the patch seems fine to me.
+
+regards,
+dan carpenter
 
