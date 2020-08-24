@@ -5,53 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE01C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E62A2087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C95762087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258532;
-	bh=FTsQCWCKjqi5L6rv6UcsErtk7TlTr3R1clk+kEzu22g=;
+	s=default; t=1598258544;
+	bh=NSM0kikoMYd4CitRmeGSudrfPq2pKTmsMTIAOfWWzhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MHH9DQWTbevqlz7XjMDIZVfxtQXSG30FURNeLydlhXVXwpAaJBx/1PgyFIlzu+d0L
-	 dECsjWxLIWdvZ5CWs2KqevQ/DUkEI3s+AgSvyILU97JCsMxVRg31UPAAEKJk+Rc3gz
-	 wHx8TL7yyVnZRa08MCodx8LS6jsLQCu2093Uhg40=
+	b=RFD9qnkYDzCy5B+U1KEBc8cWQA6ZEGDCgSMugXMHR1DkWZHlSe/oPwumjnd521Nlm
+	 b/F1J28hGW4+mrq+RPG9SM7XMeOgknphyvBKQ3qEbDMbcA1tUkcGkpqWKvHoRkrKgI
+	 M9uPPO8Pm3zvk0cFKRfthLUbZBYYJCIpQsm6Ha8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgHXImJ (ORCPT
+        id S1728938AbgHXImW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:42:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33474 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:42:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbgHXImG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:42:06 -0400
+        id S1728901AbgHXImL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:42:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7F622074D;
-        Mon, 24 Aug 2020 08:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 400012074D;
+        Mon, 24 Aug 2020 08:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258525;
-        bh=FTsQCWCKjqi5L6rv6UcsErtk7TlTr3R1clk+kEzu22g=;
+        s=default; t=1598258530;
+        bh=NSM0kikoMYd4CitRmeGSudrfPq2pKTmsMTIAOfWWzhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zZ3ML0IvQ/eVRGlE81jCvvJ8cKlEMhVHup3cMu76agEq6AwnCdRXoIS87wJBzxeuE
-         pKdzcoWSRfA8ehYmxdH/vKMT9Opq70HRmg95tP6CJ1Z+kvobPpufb7OTSNW6Z8xm66
-         VbxsJubITEiFNJS3HCis/0rVvWiLtC6ms7SEaNMI=
+        b=uaoM91sP7dlbwYqDenlP/fj1el0dg6DD59+Why2fA+RSfSMar6JhEt8z0LVBnM1mJ
+         iarwgbujLvOq4gLt+3ZCKIGIM06qsaHdawvFiw9bhGWA63X1ZBRhCViFHOAHDTkANR
+         kRMu0lKUFu4wJIpZ+4E9gTba4gSOG+Vs+ZrIxhWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Jarod Wilson <jarod@redhat.com>,
+        stable@vger.kernel.org,
+        Zhang Changzhong <zhangchangzhong@huawei.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 077/124] bonding: show saner speed for broadcast mode
-Date:   Mon, 24 Aug 2020 10:30:11 +0200
-Message-Id: <20200824082413.194524264@linuxfoundation.org>
+Subject: [PATCH 5.7 079/124] can: j1939: cancel rxtimer on multipacket broadcast session complete
+Date:   Mon, 24 Aug 2020 10:30:13 +0200
+Message-Id: <20200824082413.299417973@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -64,77 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarod Wilson <jarod@redhat.com>
+From: Zhang Changzhong <zhangchangzhong@huawei.com>
 
-[ Upstream commit 4ca0d9ac3fd8f9f90b72a15d8da2aca3ffb58418 ]
+[ Upstream commit e8b17653088f28a87c81845fa41a2d295a3b458c ]
 
-Broadcast mode bonds transmit a copy of all traffic simultaneously out of
-all interfaces, so the "speed" of the bond isn't really the aggregate of
-all interfaces, but rather, the speed of the slowest active interface.
+If j1939_xtp_rx_dat_one() receive last frame of multipacket broadcast message,
+j1939_session_timers_cancel() should be called to cancel rxtimer.
 
-Also, the type of the speed field is u32, not unsigned long, so adjust
-that accordingly, as required to make min() function here without
-complaining about mismatching types.
-
-Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+Link: https://lore.kernel.org/r/1596599425-5534-3-git-send-email-zhangchangzhong@huawei.com
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ net/can/j1939/transport.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 6b40b5ab143a7..7abb3e2cc9926 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -4336,13 +4336,23 @@ static netdev_tx_t bond_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	return ret;
- }
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index 67189b4c482c5..d1a9adde677b0 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -1811,6 +1811,7 @@ static void j1939_xtp_rx_dat_one(struct j1939_session *session,
+ 	}
  
-+static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
-+{
-+	if (speed == 0 || speed == SPEED_UNKNOWN)
-+		speed = slave->speed;
-+	else
-+		speed = min(speed, slave->speed);
-+
-+	return speed;
-+}
-+
- static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
- 					   struct ethtool_link_ksettings *cmd)
- {
- 	struct bonding *bond = netdev_priv(bond_dev);
--	unsigned long speed = 0;
- 	struct list_head *iter;
- 	struct slave *slave;
-+	u32 speed = 0;
- 
- 	cmd->base.duplex = DUPLEX_UNKNOWN;
- 	cmd->base.port = PORT_OTHER;
-@@ -4354,8 +4364,13 @@ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
- 	 */
- 	bond_for_each_slave(bond, slave, iter) {
- 		if (bond_slave_can_tx(slave)) {
--			if (slave->speed != SPEED_UNKNOWN)
--				speed += slave->speed;
-+			if (slave->speed != SPEED_UNKNOWN) {
-+				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
-+					speed = bond_mode_bcast_speed(slave,
-+								      speed);
-+				else
-+					speed += slave->speed;
-+			}
- 			if (cmd->base.duplex == DUPLEX_UNKNOWN &&
- 			    slave->duplex != DUPLEX_UNKNOWN)
- 				cmd->base.duplex = slave->duplex;
+ 	if (final) {
++		j1939_session_timers_cancel(session);
+ 		j1939_session_completed(session);
+ 	} else if (do_cts_eoma) {
+ 		j1939_tp_set_rxtimeout(session, 1250);
 -- 
 2.25.1
 
