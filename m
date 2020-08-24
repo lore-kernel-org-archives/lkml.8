@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFEFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E280C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D27662074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6677F2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261134;
-	bh=KsG7lhYjGtEOo5pRqW4HDh0Yda+6027PDm5WZMqw23Q=;
+	s=default; t=1598261150;
+	bh=/8YEzwcP0zWpKHuJBvzSVvL4szz0MFoDDS3Im5pvGWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OTRM1XbwT+87a26lFaBtQnwUVx0HXNP+vWYB3+7sjlH5KcHkanbnUdWDZSEIpMtM3
-	 qN+mtJYOeK/1cmFDUkAfpU1+vcXI6ZJmNt6zVgfscwADRgXJL9Vss3Vbvaf2yrdRMr
-	 SXgFXITEZLHF/++1MMYlsm4M9njwr+HNBmc/jCA8=
+	b=XqW8sfYC2MpmM9lqoec5USgsE14wAiI5R1U2Ql78Iyx0RiheUR0e96fPvhSAHd7Xv
+	 rz1TcG2SorZon1VlP7yOA1wc0ITXLUB9zxEtbRBZ6hHG71z4osygpi+PNBlwsGzDa2
+	 C2w05bqVXQsi3WlVmarrL3mhCjI4JJ0aVHUHq93o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbgHXJZb (ORCPT
+        id S1728670AbgHXJZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:25:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32814 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:25:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730193AbgHXIxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:53:31 -0400
+        id S1730168AbgHXIxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:53:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 631882087D;
-        Mon, 24 Aug 2020 08:53:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE4D92072D;
+        Mon, 24 Aug 2020 08:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259210;
-        bh=KsG7lhYjGtEOo5pRqW4HDh0Yda+6027PDm5WZMqw23Q=;
+        s=default; t=1598259201;
+        bh=/8YEzwcP0zWpKHuJBvzSVvL4szz0MFoDDS3Im5pvGWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OXnJfmtKD2v5A+9e8sJfBXEpwpOzCNh7EUKRPElLm5t/SuUZxnzcjIXC57HL8IpmI
-         XAt5Inh+gHR15TlXOLSBtWfXDDqJKJ7UH8ouoaDWZYWRwWI48jvHavXjYC+OCTlVGE
-         +YAHesfvTRajLJwJw+twGSemWgc6UBNpo6ze/HTs=
+        b=CVnWfodIwBRaA6cA6nV+at9cirjV2sthVnEJqZ4ofkpCA0nV/hxij92hDg53VAAcy
+         T9m/TvXAFZ65b/s2XiRewlb5qqKZe3vZqJiK7xI+qzKSHXnbq9vdiaRLUnquRvbNmz
+         yaH70FzZoxH9vAGabtPfGnCas5WisEWJFQMVd54E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Octavian Purdila <octavian.purdila@intel.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 23/50] media: vpss: clean up resources in init
-Date:   Mon, 24 Aug 2020 10:31:24 +0200
-Message-Id: <20200824082353.202123011@linuxfoundation.org>
+Subject: [PATCH 4.14 19/50] spi: Prevent adding devices below an unregistering controller
+Date:   Mon, 24 Aug 2020 10:31:20 +0200
+Message-Id: <20200824082352.970191528@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -61,64 +63,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 9c487b0b0ea7ff22127fe99a7f67657d8730ff94 ]
+[ Upstream commit ddf75be47ca748f8b12d28ac64d624354fddf189 ]
 
-If platform_driver_register() fails within vpss_init() resources are not
-cleaned up. The patch fixes this issue by introducing the corresponding
-error handling.
+CONFIG_OF_DYNAMIC and CONFIG_ACPI allow adding SPI devices at runtime
+using a DeviceTree overlay or DSDT patch.  CONFIG_SPI_SLAVE allows the
+same via sysfs.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+But there are no precautions to prevent adding a device below a
+controller that's being removed.  Such a device is unusable and may not
+even be able to unbind cleanly as it becomes inaccessible once the
+controller has been torn down.  E.g. it is then impossible to quiesce
+the device's interrupt.
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+of_spi_notify() and acpi_spi_notify() do hold a ref on the controller,
+but otherwise run lockless against spi_unregister_controller().
+
+Fix by holding the spi_add_lock in spi_unregister_controller() and
+bailing out of spi_add_device() if the controller has been unregistered
+concurrently.
+
+Fixes: ce79d54ae447 ("spi/of: Add OF notifier handler")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v3.19+
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Octavian Purdila <octavian.purdila@intel.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Link: https://lore.kernel.org/r/a8c3205088a969dc8410eec1eba9aface60f36af.1596451035.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/vpss.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ drivers/spi/Kconfig |  3 +++
+ drivers/spi/spi.c   | 21 ++++++++++++++++++++-
+ 2 files changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
-index 2ee4cd9e6d80f..d984f45c03149 100644
---- a/drivers/media/platform/davinci/vpss.c
-+++ b/drivers/media/platform/davinci/vpss.c
-@@ -514,19 +514,31 @@ static void vpss_exit(void)
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index a75f2a2cf7805..4b6a1629969f3 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -827,4 +827,7 @@ config SPI_SLAVE_SYSTEM_CONTROL
  
- static int __init vpss_init(void)
- {
-+	int ret;
+ endif # SPI_SLAVE
+ 
++config SPI_DYNAMIC
++	def_bool ACPI || OF_DYNAMIC || SPI_SLAVE
 +
- 	if (!request_mem_region(VPSS_CLK_CTRL, 4, "vpss_clock_control"))
- 		return -EBUSY;
+ endif # SPI
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 49eee894f51d4..ab6a4f85bcde7 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -428,6 +428,12 @@ static LIST_HEAD(spi_controller_list);
+  */
+ static DEFINE_MUTEX(board_lock);
  
- 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
- 	if (unlikely(!oper_cfg.vpss_regs_base2)) {
--		release_mem_region(VPSS_CLK_CTRL, 4);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto err_ioremap;
++/*
++ * Prevents addition of devices with same chip select and
++ * addition of devices below an unregistering controller.
++ */
++static DEFINE_MUTEX(spi_add_lock);
++
+ /**
+  * spi_alloc_device - Allocate a new SPI device
+  * @ctlr: Controller to which device is connected
+@@ -506,7 +512,6 @@ static int spi_dev_check(struct device *dev, void *data)
+  */
+ int spi_add_device(struct spi_device *spi)
+ {
+-	static DEFINE_MUTEX(spi_add_lock);
+ 	struct spi_controller *ctlr = spi->controller;
+ 	struct device *dev = ctlr->dev.parent;
+ 	int status;
+@@ -534,6 +539,13 @@ int spi_add_device(struct spi_device *spi)
+ 		goto done;
  	}
  
- 	writel(VPSS_CLK_CTRL_VENCCLKEN |
--		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
-+	       VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++	/* Controller may unregister concurrently */
++	if (IS_ENABLED(CONFIG_SPI_DYNAMIC) &&
++	    !device_is_registered(&ctlr->dev)) {
++		status = -ENODEV;
++		goto done;
++	}
 +
-+	ret = platform_driver_register(&vpss_driver);
-+	if (ret)
-+		goto err_pd_register;
-+
-+	return 0;
+ 	if (ctlr->cs_gpios)
+ 		spi->cs_gpio = ctlr->cs_gpios[spi->chip_select];
  
--	return platform_driver_register(&vpss_driver);
-+err_pd_register:
-+	iounmap(oper_cfg.vpss_regs_base2);
-+err_ioremap:
-+	release_mem_region(VPSS_CLK_CTRL, 4);
-+	return ret;
+@@ -2265,6 +2277,10 @@ void spi_unregister_controller(struct spi_controller *ctlr)
+ 	struct spi_controller *found;
+ 	int id = ctlr->bus_num;
+ 
++	/* Prevent addition of new devices, unregister existing ones */
++	if (IS_ENABLED(CONFIG_SPI_DYNAMIC))
++		mutex_lock(&spi_add_lock);
++
+ 	device_for_each_child(&ctlr->dev, NULL, __unregister);
+ 
+ 	/* First make sure that this controller was ever added */
+@@ -2285,6 +2301,9 @@ void spi_unregister_controller(struct spi_controller *ctlr)
+ 	if (found == ctlr)
+ 		idr_remove(&spi_master_idr, id);
+ 	mutex_unlock(&board_lock);
++
++	if (IS_ENABLED(CONFIG_SPI_DYNAMIC))
++		mutex_unlock(&spi_add_lock);
  }
- subsys_initcall(vpss_init);
- module_exit(vpss_exit);
+ EXPORT_SYMBOL_GPL(spi_unregister_controller);
+ 
 -- 
 2.25.1
 
