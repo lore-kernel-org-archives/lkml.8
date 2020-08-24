@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51468C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F121C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCA42074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 603EC2087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258634;
-	bh=LfPn74H+CyRS2+QnvXmGUlEgiylkGtrQyWaHSabZ+Zw=;
+	s=default; t=1598258637;
+	bh=+qJ9DRu0GxvMwF2BD+XIGfnfHZ/3jdNdQiqfxdn1Et8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nlp58kxIIZlvmQp9baRb0DzvzVwVxi/WUf5woyJUlOLKnyLciVNwBDVPkkAEt3psA
-	 WNEuN+BKZDBxAVnDeKeq53YaK0qqevORAPuEBJTfF6deyjxSOirvAaHJ8FpkjvqSLL
-	 OUAfd+crmiXs6LA2Yg8u5uCM+M7EulIot18CceSs=
+	b=xInI4dHchXxpdclJOAb7Xfca1BcYyIq9yMixeNpFxdCqglPkq4cwhKZ4zui6Dahxl
+	 aARWZApHZrnrVjrVLjS9X7aFp71eV6hFN1QqQf9iCK2x2ZDtZDsmPc37wEEwUDKP9t
+	 Yd2hqIiaEGBt4K7Ut45fpYKFCvKUzHlPK45E9iBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbgHXInw (ORCPT
+        id S1726753AbgHXInz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:43:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38314 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:43:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729044AbgHXInk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:43:40 -0400
+        id S1729052AbgHXInn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:43:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C6A02074D;
-        Mon, 24 Aug 2020 08:43:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDC752074D;
+        Mon, 24 Aug 2020 08:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258619;
-        bh=LfPn74H+CyRS2+QnvXmGUlEgiylkGtrQyWaHSabZ+Zw=;
+        s=default; t=1598258622;
+        bh=+qJ9DRu0GxvMwF2BD+XIGfnfHZ/3jdNdQiqfxdn1Et8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xjaPh+u55yguGosejHthBnQi4wZ0VN2Lj44cv9Ahp8b8w/lvOXlTspuz4QE14MK5Q
-         65VlMlilCzc2iH73807DXZsh2i1J14F6Tc+GpIzEL2bgurI7p3vtt/iuoLlNcv4m5U
-         e1rN0xPsIkNhEtdJFfDKJ57Bvo3BPWwtmTx985hc=
+        b=j4j2sNbTs9eO0Vi4VbZlvIh/tlFUVPD6mhcxrFINfMupA3N53WjSWEKtE+5I7+x6o
+         laB47JA1gSbHnaNCmy0bhoiGZDB5sFAKqnMKGGpQ2jEtCcbhuxkjDIvBkmh1RGIubX
+         8EAFpjS4fG8BBdLIoaekpe415fHKV+vSDMsTaHLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Shay Agroskin <shayagr@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 111/124] net: ena: Prevent reset after device destruction
-Date:   Mon, 24 Aug 2020 10:30:45 +0200
-Message-Id: <20200824082414.868880024@linuxfoundation.org>
+Subject: [PATCH 5.7 112/124] net: ena: Change WARN_ON expression in ena_del_napi_in_range()
+Date:   Mon, 24 Aug 2020 10:30:46 +0200
+Message-Id: <20200824082414.914299559@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -62,91 +62,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shay Agroskin <shayagr@amazon.com>
 
-[ Upstream commit 63d4a4c145cca2e84dc6e62d2ef5cb990c9723c2 ]
+[ Upstream commit 8b147f6f3e7de4e51113e3e9ec44aa2debc02c58 ]
 
-The reset work is scheduled by the timer routine whenever it
-detects that a device reset is required (e.g. when a keep_alive signal
-is missing).
-When releasing device resources in ena_destroy_device() the driver
-cancels the scheduling of the timer routine without destroying the reset
-work explicitly.
+The ena_del_napi_in_range() function unregisters the napi handler for
+rings in a given range.
+This function had the following WARN_ON macro:
 
-This creates the following bug:
-    The driver is suspended and the ena_suspend() function is called
-	-> This function calls ena_destroy_device() to free the net device
-	   resources
-	    -> The driver waits for the timer routine to finish
-	    its execution and then cancels it, thus preventing from it
-	    to be called again.
+    WARN_ON(ENA_IS_XDP_INDEX(adapter, i) &&
+	    adapter->ena_napi[i].xdp_ring);
 
-    If, in its final execution, the timer routine schedules a reset,
-    the reset routine might be called afterwards,and a redundant call to
-    ena_restore_device() would be made.
+This macro prints the call stack if the expression inside of it is
+true [1], but the expression inside of it is the wanted situation.
+The expression checks whether the ring has an XDP queue and its index
+corresponds to a XDP one.
 
-By changing the reset routine we allow it to read the device's state
-accurately.
-This is achieved by checking whether ENA_FLAG_TRIGGER_RESET flag is set
-before resetting the device and making both the destruction function and
-the flag check are under rtnl lock.
-The ENA_FLAG_TRIGGER_RESET is cleared at the end of the destruction
-routine. Also surround the flag check with 'likely' because
-we expect that the reset routine would be called only when
-ENA_FLAG_TRIGGER_RESET flag is set.
+This patch changes the expression to
+    !ENA_IS_XDP_INDEX(adapter, i) && adapter->ena_napi[i].xdp_ring
+which indicates an unwanted situation.
 
-The destruction of the timer and reset services in __ena_shutoff() have to
-stay, even though the timer routine is destroyed in ena_destroy_device().
-This is to avoid a case in which the reset routine is scheduled after
-free_netdev() in __ena_shutoff(), which would create an access to freed
-memory in adapter->flags.
+Also, change the structure of the function. The napi handler is
+unregistered for all rings, and so there's no need to check whether the
+index is an XDP index or not. By removing this check the code becomes
+much more readable.
 
-Fixes: 8c5c7abdeb2d ("net: ena: add power management ops to the ENA driver")
+Fixes: 548c4940b9f1 ("net: ena: Implement XDP_TX action")
 Signed-off-by: Shay Agroskin <shayagr@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 15ce93be05eac..dc3fda4599242 100644
+index dc3fda4599242..c501a4edc34d6 100644
 --- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
 +++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -3508,16 +3508,14 @@ static void ena_fw_reset_device(struct work_struct *work)
- {
- 	struct ena_adapter *adapter =
- 		container_of(work, struct ena_adapter, reset_task);
--	struct pci_dev *pdev = adapter->pdev;
+@@ -2166,13 +2166,10 @@ static void ena_del_napi_in_range(struct ena_adapter *adapter,
+ 	int i;
  
--	if (unlikely(!test_bit(ENA_FLAG_TRIGGER_RESET, &adapter->flags))) {
--		dev_err(&pdev->dev,
--			"device reset schedule while reset bit is off\n");
--		return;
--	}
- 	rtnl_lock();
--	ena_destroy_device(adapter, false);
--	ena_restore_device(adapter);
+ 	for (i = first_index; i < first_index + count; i++) {
+-		/* Check if napi was initialized before */
+-		if (!ENA_IS_XDP_INDEX(adapter, i) ||
+-		    adapter->ena_napi[i].xdp_ring)
+-			netif_napi_del(&adapter->ena_napi[i].napi);
+-		else
+-			WARN_ON(ENA_IS_XDP_INDEX(adapter, i) &&
+-				adapter->ena_napi[i].xdp_ring);
++		netif_napi_del(&adapter->ena_napi[i].napi);
 +
-+	if (likely(test_bit(ENA_FLAG_TRIGGER_RESET, &adapter->flags))) {
-+		ena_destroy_device(adapter, false);
-+		ena_restore_device(adapter);
-+	}
-+
- 	rtnl_unlock();
++		WARN_ON(!ENA_IS_XDP_INDEX(adapter, i) &&
++			adapter->ena_napi[i].xdp_ring);
+ 	}
  }
  
-@@ -4351,8 +4349,11 @@ static void __ena_shutoff(struct pci_dev *pdev, bool shutdown)
- 		netdev->rx_cpu_rmap = NULL;
- 	}
- #endif /* CONFIG_RFS_ACCEL */
--	del_timer_sync(&adapter->timer_service);
- 
-+	/* Make sure timer and reset routine won't be called after
-+	 * freeing device resources.
-+	 */
-+	del_timer_sync(&adapter->timer_service);
- 	cancel_work_sync(&adapter->reset_task);
- 
- 	rtnl_lock(); /* lock released inside the below if-else block */
 -- 
 2.25.1
 
