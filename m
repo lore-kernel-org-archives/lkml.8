@@ -2,245 +2,142 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9809EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92427C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE922075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E8C206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:50:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Pw4VKMbI"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="NEHn14Ws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgHXHr0 (ORCPT
+        id S1725947AbgHXHuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 03:47:26 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33410 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726051AbgHXHrZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 03:47:25 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07O7lHBC039361;
-        Mon, 24 Aug 2020 02:47:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598255237;
-        bh=NwkS61NRLNTl3NjJKwJEcndzjqaQ6WH5ctn9a+dSDFk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Pw4VKMbIYkH1uTMUTRUFgUovyYeWqgymBgKTkvMBhkE6CEMGXDtWQhTUvbL5cgE0y
-         b0R4XpChBHTlYnUDD00oFLOgwWng81HptTGGsCMSx7dYx+LwTRBfvD+zKxgVO13z5J
-         qmHeQ+U18s0lHPrfIQgWQTNH61zwpUHrhYe7RtLg=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07O7lH64117274
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Aug 2020 02:47:17 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 24
- Aug 2020 02:47:11 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 24 Aug 2020 02:47:11 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07O7l8R0004837;
-        Mon, 24 Aug 2020 02:47:09 -0500
-Subject: Re: [PATCH v4] dt-binding: phy: convert ti,omap-usb2 to YAML
-To:     <kishon@ti.com>, <vkoul@kernel.org>,
-        Tony Lindgren <tony@atomide.com>
-CC:     <robh+dt@kernel.org>, <nsekhar@ti.com>, <vigneshr@ti.com>,
-        <jan.kiszka@siemens.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200821081144.29288-1-rogerq@ti.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <a6a59fba-6a0c-c00f-29e7-e85c7dcc1319@ti.com>
-Date:   Mon, 24 Aug 2020 10:47:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 24 Aug 2020 03:50:50 -0400
+Received: from mail-dm6nam10on2071.outbound.protection.outlook.com ([40.107.93.71]:39553
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725998AbgHXHum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 03:50:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XNQQ51Fqd723fE3Uo1tKHO1CLgpflp6ASo3x8KjGPvW23iBN5vo/lgpZIgSJ2oTeP+64B74sfl6z2bfqGy6oGa295qbSzD1PGi7X0EVFlt1zvUJau/YeClK4nF1Hnl1WLTx0VS2sXDhvV0GQD6z7wBrucIfJOodGchKR+goKj4WCnjE1g0wwUM8RvxdwC0SrTwHJa9c25ypU981H4g+UPwCnfzlx93sMEcPHJS0LA9RTdkXZ6KOT0HBhLXyi86PSp8Mw76oYUXvQflF+X0Z+YjLstAMhE+yx49UnLsMMTOKtC50Jaq3KXxeuuLaHaHwmSrcLep6x+CurUNRREP8FUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+3CpX6qoX/+BpG6cw+O83u5KPHHW/uSvhBwG1JdDFZY=;
+ b=Yeth/5gKialhfOIpxVUAH+Z03aPjH2TA6gLtF+r+lDSmKmw7fFZfJbpsGXCQkumvv75FEMG7UAq3/h4y1ZKURSc5KmJJJEnLhxGVKLreRHn8sacLhqHguKi2sfWns0IoqARvRWuljxLilQJCRfV2bUPqgfx9K5wF+5FFXrwMm+QGAlFX3SsfehJofZVMfjUeVjY62RD2ddVSNiNb5vyBb5MvyqIRKF6tlxcCL6z2FL0hjDF5ayiZEtvwU2hha57tZNk6UJPHyS6DAFkSmgBW+a8YXO+jYwx6JK9aBhX8uOZHifCIxHhpS0jpjXPg3v895fTk+kRst6RghEYBvDeMkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=openfive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+3CpX6qoX/+BpG6cw+O83u5KPHHW/uSvhBwG1JdDFZY=;
+ b=NEHn14Ws/V/nmvLG33RLxILTESl8xzKLcAxjtP58mb2uRYPuz8R4e/I4CS0EKvIULQ8Lpjv1Q/hyTowbZIkBnjdhtYTPDmiZbELTJmftJY/AAhQopdPbk4KODWb5lTxOeaq+GfCaQac3aBwp/D2raxKyV8qVLRYyXI3TYwzwPlU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=sifive.com;
+Received: from DM6PR13MB3451.namprd13.prod.outlook.com (2603:10b6:5:1c3::10)
+ by DM6PR13MB4148.namprd13.prod.outlook.com (2603:10b6:5:2af::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.10; Mon, 24 Aug
+ 2020 07:50:39 +0000
+Received: from DM6PR13MB3451.namprd13.prod.outlook.com
+ ([fe80::f570:90c6:f6d5:c078]) by DM6PR13MB3451.namprd13.prod.outlook.com
+ ([fe80::f570:90c6:f6d5:c078%7]) with mapi id 15.20.3326.017; Mon, 24 Aug 2020
+ 07:50:39 +0000
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     robh+dt@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
+        aou@eecs.berkeley.edu, yash.shah@sifive.com,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Sagar Kadam <sagar.kadam@sifive.com>
+Subject: [PATCH 0/1] convert l2 cache dt bindings to YAML format
+Date:   Mon, 24 Aug 2020 13:20:20 +0530
+Message-Id: <1598255421-8274-1-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BMXPR01CA0018.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:d::28) To DM6PR13MB3451.namprd13.prod.outlook.com
+ (2603:10b6:5:1c3::10)
 MIME-Version: 1.0
-In-Reply-To: <20200821081144.29288-1-rogerq@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by BMXPR01CA0018.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:d::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3305.24 via Frontend Transport; Mon, 24 Aug 2020 07:50:36 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [159.117.144.156]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bc04d29b-0b54-43f1-5da9-08d848026500
+X-MS-TrafficTypeDiagnostic: DM6PR13MB4148:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR13MB4148A493F1B7C4F281BDBEA197560@DM6PR13MB4148.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:298;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lohN05zKWa6fC2+sgIxOKVvdM4xpN30uVZ9tL9U7VYeETiOutcoBz/J65MKqQcxnK9j3lHN/Ze0h9AcoK4KKjtnIOikU0Ii/gXgf3vy/VxFj/4ZiZkZv0dEHVlOIKqw11O6ZZi/PGNEtqL9grUK/0w27LCgRrC31V0mpN/isafb6oif7xlszBLPLVmTKhZXG272wM8DI4nnjNOJ6DSiu1eTYY41Isyl0niOmI2qBKPP5HOBQf0PDpj4RKBw8XkBLUhzFxny1NSt+w2NtVeGd7ONQkeDrpoEhwUFCE7gF5gt0shCMOk8TjZmg12Zgme8x
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR13MB3451.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(396003)(376002)(136003)(366004)(39840400004)(83170400001)(26005)(36756003)(8936002)(2616005)(16576012)(52116002)(6916009)(5660300002)(316002)(4326008)(42882007)(107886003)(83380400001)(186003)(6666004)(478600001)(6486002)(66476007)(66556008)(66946007)(8676002)(2906002)(44832011)(956004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 1jdAqAQDzhroLu+ZwixcIUFi0FCGBbcTQgXKsIkZdZ3cRfSvg6AZxq1yhP9kYSAhq5k3O7Cr1Y/3/zpZjFoLS+84z4LZwXuuOimccg4+ZPSdvcKwwLrUWdamR9/TQIaTgkE9N7FDRLW6O31cp4BIt0O7M6n1I03nRqUt6N8XnQv1R1xJCUOy1mTJnUFPZak+RjGn8pKhas8wUNT6ljHzZHk4UC7FJyK4RCg9Mx53bkJCckHE4meHDFDDpkiiUa3iaD61YdKU/vhHH5HuOzQG5tOH/V9Q/XeciHhsyXTTsWSz4H3mzPhZdVwTL22pupU8yCTJ4zZJAGQebKmYKm2uBcGyI+xOz0zjLCP20zYo02qbe6kdJ6O5Jm/USTPuPjqjtpI76VkNV1Q1gHLS3IaihKQGgPVBqdyLrhQOnpJASMU98ZvqCoJDKOto9viAN58Y/IG7PzEZl1enHq4Oa44zRjJFEmDar14DdOtWkkvkExlO/KDY82ueeYIyYkF/kAbOSVgMCtrtDNIAEba4xs2bX8WdlDdESrQGUGjv7TSskZ4/u3Huji2t3T1KcwsNi+VQy78mYCwvXU5r86k4hVFMARLd46Rc766f4T8Q9HZgNI3dGjQF1AHsPUC/g7BuhMGzLEqKqTYRMzyPEftF18CxDA==
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc04d29b-0b54-43f1-5da9-08d848026500
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR13MB3451.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2020 07:50:39.6241
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: d0eKjyCB6bEvubPT2N5PD0czVrwio0PxNjvLtBuu2jFRl5AiFSfZsl2ps1h69mimYGnpccS6ASaMPaIp5uWLdQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB4148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The patch is created on mainline linux v5.8.rc-7
+commit 92ed30191993 ("Linux 5.8-rc7")
 
-On 21/08/2020 11:11, Roger Quadros wrote:
-> Move ti,omap-usb2 to its own YAML schema.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> 
-> v4
-> - fix example to fix dt_binding_check warnings
-> - '#phy-cells' -> "#phy-cells"
-> - Add 'oneOf' to compatible logic to allow just "ti,omap-usb2" as valid
-> 
-> v3
-> - Removed quotes from compatibles
-> - changed property to "ti,disable-charger-det"
-> 
-> v2
-> - Address Rob's comments on YAML schema.
-> 
->   .../devicetree/bindings/phy/ti,omap-usb2.yaml | 72 +++++++++++++++++++
->   .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
->   2 files changed, 72 insertions(+), 37 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
-> new file mode 100644
-> index 000000000000..a05110351814
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/ti,omap-usb2.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: OMAP USB2 PHY
-> +
-> +maintainers:
-> + - Kishon Vijay Abraham I <kishon@ti.com>
-> + - Roger Quadros <rogerq@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +        - enum:
-> +          - ti,dra7x-usb2
-> +          - ti,dra7x-usb2-phy2
-> +          - ti,am654-usb2
+Following is the log for dt_binding_check and dtbs_check
 
-I missed these two.
-"ti,omap5-usb2"
-"ti,am437x-usb2"
+linux> make DT_SCHEMA_FLAGS="-u" DT_SCHEMA_FILES="Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml" dt_binding_check
+  HOSTCC  scripts/dtc/dtc.o
+  HOSTCC  scripts/dtc/flattree.o
+  HOSTCC  scripts/dtc/fstree.o
+  HOSTCC  scripts/dtc/data.o
+  HOSTCC  scripts/dtc/livetree.o
+  HOSTCC  scripts/dtc/treesource.o
+  HOSTCC  scripts/dtc/srcpos.o
+  HOSTCC  scripts/dtc/checks.o
+  HOSTCC  scripts/dtc/util.o
+  LEX     scripts/dtc/dtc-lexer.lex.c
+  YACC    scripts/dtc/dtc-parser.tab.[ch]
+  HOSTCC  scripts/dtc/dtc-lexer.lex.o
+  HOSTCC  scripts/dtc/dtc-parser.tab.o
+  HOSTCC  scripts/dtc/yamltree.o
+  HOSTLD  scripts/dtc/dtc
+  CHKDT   Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+  DTC     Documentation/devicetree/bindings/riscv/sifive-l2-cache.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/riscv/sifive-l2-cache.example.dt.yaml
+linux> make DT_SCHEMA_FLAGS="-u" DT_SCHEMA_FILES="Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml" dtbs_check
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+  UPD     include/config/kernel.release
+  DTC     arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dtb
+  DTC     arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dt.yaml
+  CHECK   arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dt.yaml
+linux>
 
-While "ti,am437x-usb2" is being used in the device tree files
-I don't see "ti,omap5-usb2" being used anywhere.
+Sagar Kadam (1):
+  dt-bindings: riscv: sifive-l2-cache: convert bindings to json-schema
 
-omap5-l4.dtsi uses "ti,omap-usb2"
-
-Should we get rid of "ti,omap5-usb2"?
-
-cheers,
--roger
-
-> +        - enum:
-> +          - ti,omap-usb2
-> +      - items:
-> +        - const: ti,omap-usb2
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  clocks:
-> +    minItems: 1
-> +    items:
-> +      - description: wakeup clock
-> +      - description: reference clock
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    items:
-> +      - const: wkupclk
-> +      - const: refclk
-> +
-> +  syscon-phy-power:
-> +    $ref: /schemas/types.yaml#definitions/phandle-array
-> +    description:
-> +      phandle/offset pair. Phandle to the system control module and
-> +      register offset to power on/off the PHY.
-> +
-> +  ctrl-module:
-> +    $ref: /schemas/types.yaml#definitions/phandle
-> +    description:
-> +      (deprecated) phandle of the control module used by PHY driver
-> +      to power on the PHY. Use syscon-phy-power instead.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#phy-cells"
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    usb0_phy: phy@4100000 {
-> +      compatible = "ti,am654-usb2", "ti,omap-usb2";
-> +      reg = <0x4100000 0x54>;
-> +      syscon-phy-power = <&scm_conf 0x4000>;
-> +      clocks = <&k3_clks 151 0>, <&k3_clks 151 1>;
-> +      clock-names = "wkupclk", "refclk";
-> +      #phy-cells = <0>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> index 8f93c3b694a7..60c9d0ac75e6 100644
-> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> @@ -27,43 +27,6 @@ omap_control_usb: omap-control-usb@4a002300 {
->           reg-names = "otghs_control";
->   };
->   
-> -OMAP USB2 PHY
-> -
-> -Required properties:
-> - - compatible: Should be "ti,omap-usb2"
-> -	       Should be "ti,dra7x-usb2" for the 1st instance of USB2 PHY on
-> -	       DRA7x
-> -	       Should be "ti,dra7x-usb2-phy2" for the 2nd instance of USB2 PHY
-> -	       in DRA7x
-> -	       Should be "ti,am654-usb2" for the USB2 PHYs on AM654.
-> - - reg : Address and length of the register set for the device.
-> - - #phy-cells: determine the number of cells that should be given in the
-> -   phandle while referencing this phy.
-> - - clocks: a list of phandles and clock-specifier pairs, one for each entry in
-> -   clock-names.
-> - - clock-names: should include:
-> -   * "wkupclk" - wakeup clock.
-> -   * "refclk" - reference clock (optional).
-> -
-> -Deprecated properties:
-> - - ctrl-module : phandle of the control module used by PHY driver to power on
-> -   the PHY.
-> -
-> -Recommended properies:
-> -- syscon-phy-power : phandle/offset pair. Phandle to the system control
-> -  module and the register offset to power on/off the PHY.
-> -
-> -This is usually a subnode of ocp2scp to which it is connected.
-> -
-> -usb2phy@4a0ad080 {
-> -	compatible = "ti,omap-usb2";
-> -	reg = <0x4a0ad080 0x58>;
-> -	ctrl-module = <&omap_control_usb>;
-> -	#phy-cells = <0>;
-> -	clocks = <&usb_phy_cm_clk32k>, <&usb_otg_ss_refclk960m>;
-> -	clock-names = "wkupclk", "refclk";
-> -};
-> -
->   TI PIPE3 PHY
->   
->   Required properties:
-> 
+ .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 51 ------------
+ .../devicetree/bindings/riscv/sifive-l2-cache.yaml | 93 ++++++++++++++++++++++
+ 2 files changed, 93 insertions(+), 51 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+ create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.7.4
+
