@@ -2,104 +2,162 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7441EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10D00206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262785;
-	bh=5rCPgPz6PKWeJJUZKAZcRahrkgbdtSYJ1zW8YvcIakw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lSlkpmwtRgIitrpqSXbi3/d/kn+RbUry28L4bhHNXHsE8iDVhbxRdSd25ku+eu8O6
-	 6H04yM9ylnwhk4MEAO7ptQmdDJMYD0MFyu6iGhQf4ymYxKObBjtcMbcWiiEtv3NFWX
-	 p7gQnp6HQG+XpFu6Xs9rPQH1C/7Db+QCs3v6kfng=
+	by mail.kernel.org (Postfix) with ESMTP id 47A6A2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:53:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MBYlbK+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgHXJxB (ORCPT
+        id S1729378AbgHXJxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbgHXIi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:38:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E5DC20FC3;
-        Mon, 24 Aug 2020 08:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258306;
-        bh=5rCPgPz6PKWeJJUZKAZcRahrkgbdtSYJ1zW8YvcIakw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GGAV53v83vnvehqrzz9nLYDibLITIQ5Yi+WSJBpS1fxJGUjQz2Tt8I82nWIq1is0V
-         zplvkrEYMJ29kSx3R76fwJInNbYdDkM7AxPAzU2vxhRprKN9kdOZwBj/CqY7HS/1Wh
-         DlbK6ipk7ApuIV1rFcMnVBI+D77qmsx3MvVTHngM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 121/148] Fix build error when CONFIG_ACPI is not set/enabled:
-Date:   Mon, 24 Aug 2020 10:30:19 +0200
-Message-Id: <20200824082419.808605775@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
-References: <20200824082413.900489417@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Aug 2020 05:53:12 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34620 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728271AbgHXJw7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:52:59 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07O9nAJn189449;
+        Mon, 24 Aug 2020 09:52:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=Ww/d3IUbFL+bGXtX95YfELstyo8GnB/9kJBk/e0Gx8s=;
+ b=MBYlbK+P8G+ZDmi1DzhBHkCHRCma9SZCEJ4P2kLej2CFXFsQpCGZ4M8CX7Ir+oxt0e+8
+ PBKRyrRS8kT34FxTEyN6kLqaJbYytJ57/vkEHRLzNKFlzNrLceQH6aFa22fh4fP9L5oc
+ k2aTMmGDZ2/Z4DjoDC/tKM+2Lh2sseXM7R6YyqlMomZs/BA1jJSyvIYGCeLWWu9dmN5a
+ z/+fRhMwIk0WU8ZdA+Gw8kqbTE9SHj+54oURR25DwCShw+JGZkgHVzyGww+vw/70ehHG
+ aInYhNPc9QjqiojYwt4uITJBwEiCdV1rQK4HaylF6XYiq8kFP6JbuqBqAN9cI4sqIDE0 wg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 333w6tj4hh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Aug 2020 09:52:52 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07O9jD2c118769;
+        Mon, 24 Aug 2020 09:50:51 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 333r9gy74n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Aug 2020 09:50:51 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07O9oo07023975;
+        Mon, 24 Aug 2020 09:50:50 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Aug 2020 02:50:49 -0700
+Date:   Mon, 24 Aug 2020 12:50:42 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
+Cc:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 01/12] staging: wfx: fix BA when device is AP and MFP is
+ enabled
+Message-ID: <20200824095042.GZ1793@kadam>
+References: <20200820155858.351292-1-Jerome.Pouiller@silabs.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200820155858.351292-1-Jerome.Pouiller@silabs.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008240076
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 clxscore=1011 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008240076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Thu, Aug 20, 2020 at 05:58:47PM +0200, Jerome Pouiller wrote:
+> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+> 
+> The protection of the management frames is mainly done by mac80211.
+> However, frames for the management of the BlockAck sessions are directly
+> sent by the device. These frames have to be protected if MFP is in use.
+> So the driver has to pass the MFP configuration to the device.
+> 
+> Until now, the BlockAck management frames were completely unprotected
+> whatever the status of the MFP negotiation. So, some devices dropped
+> these frames.
+> 
+> The device has two knobs to control the MFP. One global and one per
+> station. Normally, the driver should always enable global MFP. Then it
+> should enable MFP on every station with which MFP was successfully
+> negotiated. Unfortunately, the older firmwares only provide the
+> global control.
+> 
+> So, this patch enable global MFP as it is exposed in the beacon. Then it
+> marks every station with which the MFP is effective.
+> 
+> Thus, the support for the old firmwares is not so bad. It may only
+> encounter some difficulties to negotiate BA sessions when the local
+> device (the AP) is MFP capable (ieee80211w=1) but the station is not.
+> The only solution for this case is to upgrade the firmware.
+> 
+> Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+> ---
+>  drivers/staging/wfx/sta.c | 22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
+> index ad63332f690c..9c1c8223a49f 100644
+> --- a/drivers/staging/wfx/sta.c
+> +++ b/drivers/staging/wfx/sta.c
+> @@ -434,7 +434,7 @@ int wfx_sta_add(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+>  	wvif->link_id_map |= BIT(sta_priv->link_id);
+>  	WARN_ON(!sta_priv->link_id);
+>  	WARN_ON(sta_priv->link_id >= HIF_LINK_ID_MAX);
+> -	hif_map_link(wvif, sta->addr, 0, sta_priv->link_id);
+> +	hif_map_link(wvif, sta->addr, sta->mfp ? 2 : 0, sta_priv->link_id);
+>  
+>  	return 0;
+>  }
+> @@ -474,6 +474,25 @@ static int wfx_upload_ap_templates(struct wfx_vif *wvif)
+>  	return 0;
+>  }
+>  
+> +static void wfx_set_mfp_ap(struct wfx_vif *wvif)
+> +{
+> +	struct sk_buff *skb = ieee80211_beacon_get(wvif->wdev->hw, wvif->vif);
+> +	const int ieoffset = offsetof(struct ieee80211_mgmt, u.beacon.variable);
+> +	const u16 *ptr = (u16 *)cfg80211_find_ie(WLAN_EID_RSN,
+> +						 skb->data + ieoffset,
+> +						 skb->len - ieoffset);
+> +	const int pairwise_cipher_suite_count_offset = 8 / sizeof(u16);
+> +	const int pairwise_cipher_suite_size = 4 / sizeof(u16);
+> +	const int akm_suite_size = 4 / sizeof(u16);
+> +
+> +	if (ptr) {
+> +		ptr += pairwise_cipher_suite_count_offset;
+> +		ptr += 1 + pairwise_cipher_suite_size * *ptr;
 
-[ Upstream commit ee87e1557c42dc9c2da11c38e11b87c311569853 ]
+The value of "*ptr" comes from skb->data.  How do we know that it
+doesn't point to something beyond the end of the skb->data buffer?
 
-../arch/x86/pci/xen.c: In function â€˜pci_xen_initâ€™:
-../arch/x86/pci/xen.c:410:2: error: implicit declaration of function â€˜acpi_noirq_setâ€™; did you mean â€˜acpi_irq_getâ€™? [-Werror=implicit-function-declaration]
-  acpi_noirq_set();
+> +		ptr += 1 + akm_suite_size * *ptr;
+> +		hif_set_mfp(wvif, *ptr & BIT(7), *ptr & BIT(6));
+> +	}
+> +}
 
-Fixes: 88e9ca161c13 ("xen/pci: Use acpi_noirq_set() helper to avoid #ifdef")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: xen-devel@lists.xenproject.org
-Cc: linux-pci@vger.kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/pci/xen.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
-index e3f1ca3160684..db34fee931388 100644
---- a/arch/x86/pci/xen.c
-+++ b/arch/x86/pci/xen.c
-@@ -26,6 +26,7 @@
- #include <asm/xen/pci.h>
- #include <asm/xen/cpuid.h>
- #include <asm/apic.h>
-+#include <asm/acpi.h>
- #include <asm/i8259.h>
- 
- static int xen_pcifront_enable_irq(struct pci_dev *dev)
--- 
-2.25.1
-
-
+regards,
+dan carpenter
 
