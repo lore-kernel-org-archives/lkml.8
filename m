@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CC5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BB8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D390720738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B1F20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261862;
-	bh=d7IbofLkFJ0M00OwoHaWe5uXwyBPGMJBoTGBm7SmEMk=;
+	s=default; t=1598261868;
+	bh=YTJRcXK1ZnJiD5zCZMM5LGHCt49kjkUKNjoMZvKaxHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f9ypMr39LPWdcGx4LO3uUaHzeECQzYR3aBUrP42DFlgrmca2xp5lcfMN9zs2q0OBt
-	 r/GikTPjDNltqz1kwJWRTWxdXwkRTHpsWGpUqq9mPK/wy01e+Y24LG7BOTHjZAkLys
-	 2K3irnQmeV+3i4fLmChz7WE7bPo4M4GQATTCEmUI=
+	b=2dgRUzb6l0LpFIomQbSavAJWgMYUcF+fuB4vAnKEbhN649KwoQ5UyQoPqDlQPeXy6
+	 TKQ+ZrVYoDplcj7d+1hXXTLzOx5s6pMwYoxSn8BLUOCuBMB0DGmMYWs9ys6pXUSVN1
+	 Di08fotPfk870vW5PT+3nvx0473YfV3DJCP1OKXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgHXIrn (ORCPT
+        id S1728820AbgHXJhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:47:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47526 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:37:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729480AbgHXIrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:47:35 -0400
+        id S1729366AbgHXIrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:47:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9131204FD;
-        Mon, 24 Aug 2020 08:47:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0DE72075B;
+        Mon, 24 Aug 2020 08:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258854;
-        bh=d7IbofLkFJ0M00OwoHaWe5uXwyBPGMJBoTGBm7SmEMk=;
+        s=default; t=1598258860;
+        bh=YTJRcXK1ZnJiD5zCZMM5LGHCt49kjkUKNjoMZvKaxHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cTayScb0KM4atCqLNusxAJ3Umm3pD5X0OXOEqSDsmTaPlr3ajw4dLfcWldOAwIoNq
-         uD37uRpXRoMoPm2JnHJlCPSsdp4gmu9TqvpM3vA/MYXgjqhGK5vBdzbaTGNxdHfnFl
-         m/W3qt5v+EhSJRs+8uxBvjyryY6T/bcm+NmZ5ehE=
+        b=ZNh3ieQP0bab/JKxYW9lyvza99hhv54p6AQTsttxsBpxUvwYiEh641HarVKggmxKn
+         P3J2qZ2v0z1DWW4F5W9smfcAf10AorK8dgBe5auhZDLx9jp69fZX8ReiOgsCw47SnA
+         d+nRkRRfh6Z3iZsQa8jTynkC4f/x3twbZo5x2iss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Martin KaFai Lau <kafai@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 041/107] scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
-Date:   Mon, 24 Aug 2020 10:30:07 +0200
-Message-Id: <20200824082407.174877391@linuxfoundation.org>
+Subject: [PATCH 5.4 069/107] bpf: sock_ops sk access may stomp registers when dst_reg = src_reg
+Date:   Mon, 24 Aug 2020 10:30:35 +0200
+Message-Id: <20200824082408.541331644@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -62,50 +62,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit c0a18ee0ce78d7957ec1a53be35b1b3beba80668 ]
+[ Upstream commit 84f44df664e9f0e261157e16ee1acd77cc1bb78d ]
 
-It is confirmed that Micron device needs DELAY_BEFORE_LPM quirk to have a
-delay before VCC is powered off. Sdd Micron vendor ID and this quirk for
-Micron devices.
+Similar to patch ("bpf: sock_ops ctx access may stomp registers") if the
+src_reg = dst_reg when reading the sk field of a sock_ops struct we
+generate xlated code,
 
-Link: https://lore.kernel.org/r/20200612012625.6615-2-stanley.chu@mediatek.com
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+  53: (61) r9 = *(u32 *)(r9 +28)
+  54: (15) if r9 == 0x0 goto pc+3
+  56: (79) r9 = *(u64 *)(r9 +0)
+
+This stomps on the r9 reg to do the sk_fullsock check and then when
+reading the skops->sk field instead of the sk pointer we get the
+sk_fullsock. To fix use similar pattern noted in the previous fix
+and use the temp field to save/restore a register used to do
+sk_fullsock check.
+
+After the fix the generated xlated code reads,
+
+  52: (7b) *(u64 *)(r9 +32) = r8
+  53: (61) r8 = *(u32 *)(r9 +28)
+  54: (15) if r9 == 0x0 goto pc+3
+  55: (79) r8 = *(u64 *)(r9 +32)
+  56: (79) r9 = *(u64 *)(r9 +0)
+  57: (05) goto pc+1
+  58: (79) r8 = *(u64 *)(r9 +32)
+
+Here r9 register was in-use so r8 is chosen as the temporary register.
+In line 52 r8 is saved in temp variable and at line 54 restored in case
+fullsock != 0. Finally we handle fullsock == 0 case by restoring at
+line 58.
+
+This adds a new macro SOCK_OPS_GET_SK it is almost possible to merge
+this with SOCK_OPS_GET_FIELD, but I found the extra branch logic a
+bit more confusing than just adding a new macro despite a bit of
+duplicating code.
+
+Fixes: 1314ef561102e ("bpf: export bpf_sock for BPF_PROG_TYPE_SOCK_OPS prog type")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/159718349653.4728.6559437186853473612.stgit@john-Precision-5820-Tower
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufs_quirks.h | 1 +
- drivers/scsi/ufs/ufshcd.c     | 2 ++
- 2 files changed, 3 insertions(+)
+ net/core/filter.c | 49 ++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 38 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufs_quirks.h b/drivers/scsi/ufs/ufs_quirks.h
-index fe6cad9b2a0d2..03985919150b9 100644
---- a/drivers/scsi/ufs/ufs_quirks.h
-+++ b/drivers/scsi/ufs/ufs_quirks.h
-@@ -12,6 +12,7 @@
- #define UFS_ANY_VENDOR 0xFFFF
- #define UFS_ANY_MODEL  "ANY_MODEL"
+diff --git a/net/core/filter.c b/net/core/filter.c
+index bd1e46d61d8a1..5c490d473df1d 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -8010,6 +8010,43 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
+ 				      offsetof(OBJ, OBJ_FIELD));	      \
+ 	} while (0)
  
-+#define UFS_VENDOR_MICRON      0x12C
- #define UFS_VENDOR_TOSHIBA     0x198
- #define UFS_VENDOR_SAMSUNG     0x1CE
- #define UFS_VENDOR_SKHYNIX     0x1AD
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 2b6853c7375c9..b41b88bcab3d9 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -217,6 +217,8 @@ ufs_get_desired_pm_lvl_for_dev_link_state(enum ufs_dev_pwr_mode dev_state,
++#define SOCK_OPS_GET_SK()							      \
++	do {								      \
++		int fullsock_reg = si->dst_reg, reg = BPF_REG_9, jmp = 1;     \
++		if (si->dst_reg == reg || si->src_reg == reg)		      \
++			reg--;						      \
++		if (si->dst_reg == reg || si->src_reg == reg)		      \
++			reg--;						      \
++		if (si->dst_reg == si->src_reg) {			      \
++			*insn++ = BPF_STX_MEM(BPF_DW, si->src_reg, reg,	      \
++					  offsetof(struct bpf_sock_ops_kern,  \
++					  temp));			      \
++			fullsock_reg = reg;				      \
++			jmp += 2;					      \
++		}							      \
++		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(			      \
++						struct bpf_sock_ops_kern,     \
++						is_fullsock),		      \
++				      fullsock_reg, si->src_reg,	      \
++				      offsetof(struct bpf_sock_ops_kern,      \
++					       is_fullsock));		      \
++		*insn++ = BPF_JMP_IMM(BPF_JEQ, fullsock_reg, 0, jmp);	      \
++		if (si->dst_reg == si->src_reg)				      \
++			*insn++ = BPF_LDX_MEM(BPF_DW, reg, si->src_reg,	      \
++				      offsetof(struct bpf_sock_ops_kern,      \
++				      temp));				      \
++		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(			      \
++						struct bpf_sock_ops_kern, sk),\
++				      si->dst_reg, si->src_reg,		      \
++				      offsetof(struct bpf_sock_ops_kern, sk));\
++		if (si->dst_reg == si->src_reg)	{			      \
++			*insn++ = BPF_JMP_A(1);				      \
++			*insn++ = BPF_LDX_MEM(BPF_DW, reg, si->src_reg,	      \
++				      offsetof(struct bpf_sock_ops_kern,      \
++				      temp));				      \
++		}							      \
++	} while (0)
++
+ #define SOCK_OPS_GET_TCP_SOCK_FIELD(FIELD) \
+ 		SOCK_OPS_GET_FIELD(FIELD, FIELD, struct tcp_sock)
  
- static struct ufs_dev_fix ufs_fixups[] = {
- 	/* UFS cards deviations table */
-+	UFS_FIX(UFS_VENDOR_MICRON, UFS_ANY_MODEL,
-+		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
- 		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
+@@ -8294,17 +8331,7 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
+ 		SOCK_OPS_GET_TCP_SOCK_FIELD(bytes_acked);
+ 		break;
+ 	case offsetof(struct bpf_sock_ops, sk):
+-		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
+-						struct bpf_sock_ops_kern,
+-						is_fullsock),
+-				      si->dst_reg, si->src_reg,
+-				      offsetof(struct bpf_sock_ops_kern,
+-					       is_fullsock));
+-		*insn++ = BPF_JMP_IMM(BPF_JEQ, si->dst_reg, 0, 1);
+-		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
+-						struct bpf_sock_ops_kern, sk),
+-				      si->dst_reg, si->src_reg,
+-				      offsetof(struct bpf_sock_ops_kern, sk));
++		SOCK_OPS_GET_SK();
+ 		break;
+ 	}
+ 	return insn - insn_buf;
 -- 
 2.25.1
 
