@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D38C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26362C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E05520FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3832087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258563;
-	bh=riN4z/mrdo2qC42KeSPF/qU3Hm3H0TkNahjQu/VUgaU=;
+	s=default; t=1598258571;
+	bh=CiB2JlYzRRv4NoLy9qj+dbZcYvJL+2KWQ7TFKK68R+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UIYr3Q+k9JJVsb9/YgcLLp/vEU3/iMyLwpgzf67TsXZ/OzdxKzCWliVNPBILK1j2J
-	 86ej4O/HktUpJxKV6ZL6YiVezalVRNNa7LUe5kbdkSBHU5Gxkz4En4HdCbIOTsiXZH
-	 LpzI6nkoTSlYYANLJv12KyPOYc0YrL4fRXW/tLoY=
+	b=CSESTbKI69xiQOreR9otSxLCtKo7eaxlyW8KIAOYieIQZrkL/vog4dlCPNet41SNQ
+	 UGBeNl8enQ+czUjdt1CkL7vdDksra/h5VTCJc1STs0K/6XDvP1goZie+FZayHzJOZb
+	 Gq+a4A8MZkrXmMQgr6Dy5E/rWYjQsPWPKWBJ/TtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbgHXImm (ORCPT
+        id S1728356AbgHXIms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:42:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34690 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:42:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728956AbgHXIm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:42:28 -0400
+        id S1728974AbgHXIme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:42:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B99972074D;
-        Mon, 24 Aug 2020 08:42:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BDBE2074D;
+        Mon, 24 Aug 2020 08:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258548;
-        bh=riN4z/mrdo2qC42KeSPF/qU3Hm3H0TkNahjQu/VUgaU=;
+        s=default; t=1598258553;
+        bh=CiB2JlYzRRv4NoLy9qj+dbZcYvJL+2KWQ7TFKK68R+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o8yEJHGiGISk3xoKjAzm3iviehvuK88idDpG9JbWrl9wXvy/vIl1ZYvNn+YK8f1+K
-         wPKvfx1qtwLM1Jhl/4XnmziakUDDbKQsUzKyJBv89hOckiIJV3SWAfkRuJ8utywNM5
-         47DFgDIDMdkw6rEHZdCoFswbg7Wpw9628JC9Ez0o=
+        b=kF+ixayF+GuQIiEE75rLfBrBOyurkQx8A/p9g4SN236o08CGMvJxkvZf/jVf3dCkY
+         ru0gxs3iXGLi55UtDwR5Zo+ENWw4zeRl50EaldYqY/3aJfAdLDuZwnE00QAu/EwRu/
+         GuP7UxUb91J94h5OikCYNYZGPRYuUCdZoeREhyi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 084/124] s390/runtime_instrumentation: fix storage key handling
-Date:   Mon, 24 Aug 2020 10:30:18 +0200
-Message-Id: <20200824082413.545033794@linuxfoundation.org>
+Subject: [PATCH 5.7 086/124] ASoC: msm8916-wcd-analog: fix register Interrupt offset
+Date:   Mon, 24 Aug 2020 10:30:20 +0200
+Message-Id: <20200824082413.643295308@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -60,38 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Carstens <hca@linux.ibm.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 9eaba29c7985236e16468f4e6a49cc18cf01443e ]
+[ Upstream commit ff69c97ef84c9f7795adb49e9f07c9adcdd0c288 ]
 
-The key member of the runtime instrumentation control block contains
-only the access key, not the complete storage key. Therefore the value
-must be shifted by four bits.
-Note: this is only relevant for debugging purposes in case somebody
-compiles a kernel with a default storage access key set to a value not
-equal to zero.
+For some reason interrupt set and clear register offsets are
+not set correctly.
+This patch corrects them!
 
-Fixes: e4b8b3f33fca ("s390: add support for runtime instrumentation")
-Reported-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200811103452.20448-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/runtime_instr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/msm8916-wcd-analog.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/runtime_instr.c b/arch/s390/kernel/runtime_instr.c
-index 125c7f6e87150..1788a5454b6fc 100644
---- a/arch/s390/kernel/runtime_instr.c
-+++ b/arch/s390/kernel/runtime_instr.c
-@@ -57,7 +57,7 @@ static void init_runtime_instr_cb(struct runtime_instr_cb *cb)
- 	cb->k = 1;
- 	cb->ps = 1;
- 	cb->pc = 1;
--	cb->key = PAGE_DEFAULT_KEY;
-+	cb->key = PAGE_DEFAULT_KEY >> 4;
- 	cb->v = 1;
- }
+diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
+index 85bc7ae4d2671..26cf372ccda6f 100644
+--- a/sound/soc/codecs/msm8916-wcd-analog.c
++++ b/sound/soc/codecs/msm8916-wcd-analog.c
+@@ -19,8 +19,8 @@
  
+ #define CDC_D_REVISION1			(0xf000)
+ #define CDC_D_PERPH_SUBTYPE		(0xf005)
+-#define CDC_D_INT_EN_SET		(0x015)
+-#define CDC_D_INT_EN_CLR		(0x016)
++#define CDC_D_INT_EN_SET		(0xf015)
++#define CDC_D_INT_EN_CLR		(0xf016)
+ #define MBHC_SWITCH_INT			BIT(7)
+ #define MBHC_MIC_ELECTRICAL_INS_REM_DET	BIT(6)
+ #define MBHC_BUTTON_PRESS_DET		BIT(5)
 -- 
 2.25.1
 
