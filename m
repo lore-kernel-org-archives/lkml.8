@@ -2,222 +2,82 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 952AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C718CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D5012075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261321;
-	bh=nC8NZqLMbKGC1b1B62iictftXYj2AuovET5e6dcqmfk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQ2KVSYXwul7vF9pZwrhE0L9gfBlLjf2BkwSSq01Ye0S5oaxmw7Hm0tgbz4eTEDVQ
-	 G7D6KZ4JOApkGXCI6FRJpv2EBrAptcdmQhLURnL7nwu+ZZqSMdrix9zh8GzEMLJR47
-	 Ay5k8jGBYYaLMgRhF41mum5X4iTVLGSKRU2+y3XE=
+	by mail.kernel.org (Postfix) with ESMTP id ABC7C2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:28:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbgHXIvf (ORCPT
+        id S1729219AbgHXJ2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56560 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:28:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:57364 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729254AbgHXIva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D142A207D3;
-        Mon, 24 Aug 2020 08:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259089;
-        bh=nC8NZqLMbKGC1b1B62iictftXYj2AuovET5e6dcqmfk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x7paNuEmc6OXf5EgVkO5Bps0exayXnP5WhaaN4aTRVbLOsPS2+HxKbVSLgHo5IUYb
-         NsY920TOcgYP9DKgNKUFKfep312hAXnfpFbuRIawjDQSIIgxXuZPpK/i2+iFk9L36m
-         uQKDM/5sGtEG3gZxx8WoBq37VCRrUa06or+oQmz0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 16/39] ext4: clean up ext4_match() and callers
-Date:   Mon, 24 Aug 2020 10:31:15 +0200
-Message-Id: <20200824082349.319235024@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
-References: <20200824082348.445866152@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729716AbgHXJ2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:28:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CADD1063;
+        Mon, 24 Aug 2020 02:28:36 -0700 (PDT)
+Received: from [10.57.5.66] (unknown [10.57.5.66])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C34483F71F;
+        Mon, 24 Aug 2020 02:28:35 -0700 (PDT)
+To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, acme@redhat.com
+From:   Al Grant <al.grant@foss.arm.com>
+Subject: [PATCH] perf: correct SNOOPX field offset
+Message-ID: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+Date:   Mon, 24 Aug 2020 10:28:34 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+perf_event.h has macros that define the field offsets in the
+data_src bitmask in perf records. The SNOOPX and REMOTE offsets
+were both 37. These are distinct fields, and the bitfield layout
+in perf_mem_data_src confirms that SNOOPX should be at offset 38.
 
-[ Upstream commit d9b9f8d5a88cb7881d9f1c2b7e9de9a3fe1dc9e2 ]
+From: Al Grant <al.grant@arm.com>
 
-When ext4 encryption was originally merged, we were encrypting the
-user-specified filename in ext4_match(), introducing a lot of additional
-complexity into ext4_match() and its callers.  This has since been
-changed to encrypt the filename earlier, so we can remove the gunk
-that's no longer needed.  This more or less reverts ext4_search_dir()
-and ext4_find_dest_de() to the way they were in the v4.0 kernel.
+  include/uapi/linux/perf_event.h       | 2 +-
+  tools/include/uapi/linux/perf_event.h | 2 +-
+  2 files changed, 2 insertions(+), 2 deletions(-)
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/ext4/namei.c | 81 +++++++++++++++----------------------------------
- 1 file changed, 25 insertions(+), 56 deletions(-)
+diff --git a/include/uapi/linux/perf_event.h 
+b/include/uapi/linux/perf_event.h
+index 077e7ee69e3d..3e5dcdd48a49 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -1196,7 +1196,7 @@ union perf_mem_data_src {
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index 6225ce9f1884c..dd42d533d2816 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -1251,19 +1251,18 @@ static void dx_insert_block(struct dx_frame *frame, u32 hash, ext4_lblk_t block)
- }
- 
- /*
-- * NOTE! unlike strncmp, ext4_match returns 1 for success, 0 for failure.
-+ * Test whether a directory entry matches the filename being searched for.
-  *
-- * `len <= EXT4_NAME_LEN' is guaranteed by caller.
-- * `de != NULL' is guaranteed by caller.
-+ * Return: %true if the directory entry matches, otherwise %false.
-  */
--static inline int ext4_match(struct ext4_filename *fname,
--			     struct ext4_dir_entry_2 *de)
-+static inline bool ext4_match(const struct ext4_filename *fname,
-+			      const struct ext4_dir_entry_2 *de)
- {
- 	const void *name = fname_name(fname);
- 	u32 len = fname_len(fname);
- 
- 	if (!de->inode)
--		return 0;
-+		return false;
- 
- #ifdef CONFIG_EXT4_FS_ENCRYPTION
- 	if (unlikely(!name)) {
-@@ -1295,48 +1294,31 @@ int ext4_search_dir(struct buffer_head *bh, char *search_buf, int buf_size,
- 	struct ext4_dir_entry_2 * de;
- 	char * dlimit;
- 	int de_len;
--	int res;
- 
- 	de = (struct ext4_dir_entry_2 *)search_buf;
- 	dlimit = search_buf + buf_size;
- 	while ((char *) de < dlimit) {
- 		/* this code is executed quadratically often */
- 		/* do minimal checking `by hand' */
--		if ((char *) de + de->name_len <= dlimit) {
--			res = ext4_match(fname, de);
--			if (res < 0) {
--				res = -1;
--				goto return_result;
--			}
--			if (res > 0) {
--				/* found a match - just to be sure, do
--				 * a full check */
--				if (ext4_check_dir_entry(dir, NULL, de, bh,
--						bh->b_data,
--						 bh->b_size, offset)) {
--					res = -1;
--					goto return_result;
--				}
--				*res_dir = de;
--				res = 1;
--				goto return_result;
--			}
--
-+		if ((char *) de + de->name_len <= dlimit &&
-+		    ext4_match(fname, de)) {
-+			/* found a match - just to be sure, do
-+			 * a full check */
-+			if (ext4_check_dir_entry(dir, NULL, de, bh, bh->b_data,
-+						 bh->b_size, offset))
-+				return -1;
-+			*res_dir = de;
-+			return 1;
- 		}
- 		/* prevent looping on a bad block */
- 		de_len = ext4_rec_len_from_disk(de->rec_len,
- 						dir->i_sb->s_blocksize);
--		if (de_len <= 0) {
--			res = -1;
--			goto return_result;
--		}
-+		if (de_len <= 0)
-+			return -1;
- 		offset += de_len;
- 		de = (struct ext4_dir_entry_2 *) ((char *) de + de_len);
- 	}
--
--	res = 0;
--return_result:
--	return res;
-+	return 0;
- }
- 
- static int is_dx_internal_node(struct inode *dir, ext4_lblk_t block,
-@@ -1853,24 +1835,15 @@ int ext4_find_dest_de(struct inode *dir, struct inode *inode,
- 	int nlen, rlen;
- 	unsigned int offset = 0;
- 	char *top;
--	int res;
- 
- 	de = (struct ext4_dir_entry_2 *)buf;
- 	top = buf + buf_size - reclen;
- 	while ((char *) de <= top) {
- 		if (ext4_check_dir_entry(dir, NULL, de, bh,
--					 buf, buf_size, offset)) {
--			res = -EFSCORRUPTED;
--			goto return_result;
--		}
--		/* Provide crypto context and crypto buffer to ext4 match */
--		res = ext4_match(fname, de);
--		if (res < 0)
--			goto return_result;
--		if (res > 0) {
--			res = -EEXIST;
--			goto return_result;
--		}
-+					 buf, buf_size, offset))
-+			return -EFSCORRUPTED;
-+		if (ext4_match(fname, de))
-+			return -EEXIST;
- 		nlen = EXT4_DIR_REC_LEN(de->name_len);
- 		rlen = ext4_rec_len_from_disk(de->rec_len, buf_size);
- 		if ((de->inode ? rlen - nlen : rlen) >= reclen)
-@@ -1878,15 +1851,11 @@ int ext4_find_dest_de(struct inode *dir, struct inode *inode,
- 		de = (struct ext4_dir_entry_2 *)((char *)de + rlen);
- 		offset += rlen;
- 	}
--
- 	if ((char *) de > top)
--		res = -ENOSPC;
--	else {
--		*dest_de = de;
--		res = 0;
--	}
--return_result:
--	return res;
-+		return -ENOSPC;
-+
-+	*dest_de = de;
-+	return 0;
- }
- 
- int ext4_insert_dentry(struct inode *dir,
--- 
-2.25.1
+  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
+  /* 1 free */
+-#define PERF_MEM_SNOOPX_SHIFT  37
++#define PERF_MEM_SNOOPX_SHIFT  38
 
+  /* locked instruction */
+  #define PERF_MEM_LOCK_NA       0x01 /* not available */
+diff --git a/tools/include/uapi/linux/perf_event.h 
+b/tools/include/uapi/linux/perf_event.h
+index 077e7ee69e3d..3e5dcdd48a49 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -1196,7 +1196,7 @@ union perf_mem_data_src {
 
+  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
+  /* 1 free */
+-#define PERF_MEM_SNOOPX_SHIFT  37
++#define PERF_MEM_SNOOPX_SHIFT  38
 
+  /* locked instruction */
+  #define PERF_MEM_LOCK_NA       0x01 /* not available */
