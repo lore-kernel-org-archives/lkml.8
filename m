@@ -2,51 +2,52 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C52DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F40120FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0030F20FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258706;
-	bh=dNQJGTnxMsF584O7umDa+KSGGth+PvByq5CxuPybTnc=;
+	s=default; t=1598258718;
+	bh=M4z6on9r6wlNLY/GOUFNFqaR4s897OfOKj3P/Hay3bo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vlcFU3lWViKmzKqcotAFAlWJmvVobJcDq1KWRlueTs7Vr/28pXNMJxX8s7/O5992E
-	 z/aNoes5sn273sx4hSJGmtYgQfoBsT4QbX6KBL5qTLbrAlpUYSvaomrrlHuWpaJGKB
-	 0may0dHY0FEoneT5mbqOrh/a4UniCfCUYcTuYgAo=
+	b=VtispAx7cgrPoCn6A09V4YzQizxMHSc+uYs23vSKaqW8Y0lgMeXQVILO6V+bQgMfr
+	 WVva4+WyFN4RzrUep1IY7TOLjX5WrDCXyu8FGbazQ5WtECRDpcMv0eFi80IV4/kZPK
+	 x3jHAX2k784DkEmtCpP6ROkqoIBhtTco9clugkJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgHXIpF (ORCPT
+        id S1729221AbgHXIpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:45:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41242 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728328AbgHXIow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:44:52 -0400
+        id S1726956AbgHXIpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:45:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AF462074D;
-        Mon, 24 Aug 2020 08:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E1B321741;
+        Mon, 24 Aug 2020 08:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258691;
-        bh=dNQJGTnxMsF584O7umDa+KSGGth+PvByq5CxuPybTnc=;
+        s=default; t=1598258711;
+        bh=M4z6on9r6wlNLY/GOUFNFqaR4s897OfOKj3P/Hay3bo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WiOdxEmVCkKe9tbdw+Ge1ICI9zCrMl2CJWOeo9A+zvFgTSmXcewCIXcl996/ZRCU6
-         Eslr9AVljvEnGuai6Wut3mxQg6PgQadwc2CSkc8rRMKpRFhBmQ3xtIAIyzqVIybA2n
-         Jp9/flz8ydNTK4zOwZXjZiIFL5BuEqsru11eASP0=
+        b=ZlhZFwDKtETXx3owdv0XfuLbxhhsG1JFALJkdny9twp+xKQFRR3QmP8F76F6u7URz
+         pmKXMKP0WG/YLWbt7SYoJMkZOfeDBnptZegY4ETY1FHTOeJChRlRdsPqCFX3hpq7Ss
+         gKBZvefZ1WwPUOVy77uYnJ5iHpA9384vN0z3Jrxo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH 5.4 004/107] net: wan: wanxl: use $(M68KCC) instead of $(M68KAS) for rebuilding firmware
-Date:   Mon, 24 Aug 2020 10:29:30 +0200
-Message-Id: <20200824082405.247666021@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Sandeen <esandeen@redhat.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 019/107] btrfs: return EROFS for BTRFS_FS_STATE_ERROR cases
+Date:   Mon, 24 Aug 2020 10:29:45 +0200
+Message-Id: <20200824082406.038630748@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -59,46 +60,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 734f3719d3438f9cc181d674c33ca9762e9148a1 upstream.
+Eric reported seeing this message while running generic/475
 
-The firmware source, wanxlfw.S, is currently compiled by the combo of
-$(CPP) and $(M68KAS). This is not what we usually do for compiling *.S
-files. In fact, this Makefile is the only user of $(AS) in the kernel
-build.
+  BTRFS: error (device dm-3) in btrfs_sync_log:3084: errno=-117 Filesystem corrupted
 
-Instead of combining $(CPP) and (AS) from different tool sets, using
-$(M68KCC) as an assembler driver is simpler, and saner.
+Full stack trace:
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  BTRFS: error (device dm-0) in btrfs_commit_transaction:2323: errno=-5 IO failure (Error while writing out transaction)
+  BTRFS info (device dm-0): forced readonly
+  BTRFS warning (device dm-0): Skipping commit of aborted transaction.
+  ------------[ cut here ]------------
+  BTRFS: error (device dm-0) in cleanup_transaction:1894: errno=-5 IO failure
+  BTRFS: Transaction aborted (error -117)
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6480 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6488 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6490 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6498 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64a0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64a8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64b0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64b8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64c0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3572 rw 0,0 sector 0x1b85e8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3572 rw 0,0 sector 0x1b85f0 len 4096 err no 10
+  WARNING: CPU: 3 PID: 23985 at fs/btrfs/tree-log.c:3084 btrfs_sync_log+0xbc8/0xd60 [btrfs]
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4288 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4290 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4298 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42a0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42a8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42b0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42b8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42c0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42c8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42d0 len 4096 err no 10
+  CPU: 3 PID: 23985 Comm: fsstress Tainted: G        W    L    5.8.0-rc4-default+ #1181
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
+  RIP: 0010:btrfs_sync_log+0xbc8/0xd60 [btrfs]
+  RSP: 0018:ffff909a44d17bd0 EFLAGS: 00010286
+  RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000001
+  RDX: ffff8f3be41cb940 RSI: ffffffffb0108d2b RDI: ffffffffb0108ff7
+  RBP: ffff909a44d17e70 R08: 0000000000000000 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000037988 R12: ffff8f3bd20e4000
+  R13: ffff8f3bd20e4428 R14: 00000000ffffff8b R15: ffff909a44d17c70
+  FS:  00007f6a6ed3fb80(0000) GS:ffff8f3c3dc00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007f6a6ed3e000 CR3: 00000000525c0003 CR4: 0000000000160ee0
+  Call Trace:
+   ? finish_wait+0x90/0x90
+   ? __mutex_unlock_slowpath+0x45/0x2a0
+   ? lock_acquire+0xa3/0x440
+   ? lockref_put_or_lock+0x9/0x30
+   ? dput+0x20/0x4a0
+   ? dput+0x20/0x4a0
+   ? do_raw_spin_unlock+0x4b/0xc0
+   ? _raw_spin_unlock+0x1f/0x30
+   btrfs_sync_file+0x335/0x490 [btrfs]
+   do_fsync+0x38/0x70
+   __x64_sys_fsync+0x10/0x20
+   do_syscall_64+0x50/0xe0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f6a6ef1b6e3
+  Code: Bad RIP value.
+  RSP: 002b:00007ffd01e20038 EFLAGS: 00000246 ORIG_RAX: 000000000000004a
+  RAX: ffffffffffffffda RBX: 000000000007a120 RCX: 00007f6a6ef1b6e3
+  RDX: 00007ffd01e1ffa0 RSI: 00007ffd01e1ffa0 RDI: 0000000000000003
+  RBP: 0000000000000003 R08: 0000000000000001 R09: 00007ffd01e2004c
+  R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000009f
+  R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+  irq event stamp: 0
+  hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+  hardirqs last disabled at (0): [<ffffffffb007fe0b>] copy_process+0x67b/0x1b00
+  softirqs last  enabled at (0): [<ffffffffb007fe0b>] copy_process+0x67b/0x1b00
+  softirqs last disabled at (0): [<0000000000000000>] 0x0
+  ---[ end trace af146e0e38433456 ]---
+  BTRFS: error (device dm-0) in btrfs_sync_log:3084: errno=-117 Filesystem corrupted
+
+This ret came from btrfs_write_marked_extents().  If we get an aborted
+transaction via EIO before, we'll see it in btree_write_cache_pages()
+and return EUCLEAN, which gets printed as "Filesystem corrupted".
+
+Except we shouldn't be returning EUCLEAN here, we need to be returning
+EROFS because EUCLEAN is reserved for actual corruption, not IO errors.
+
+We are inconsistent about our handling of BTRFS_FS_STATE_ERROR
+elsewhere, but we want to use EROFS for this particular case.  The
+original transaction abort has the real error code for why we ended up
+with an aborted transaction, all subsequent actions just need to return
+EROFS because they may not have a trans handle and have no idea about
+the original cause of the abort.
+
+After patch "btrfs: don't WARN if we abort a transaction with EROFS" the
+stacktrace will not be dumped either.
+
+Reported-by: Eric Sandeen <esandeen@redhat.com>
+CC: stable@vger.kernel.org # 5.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add full test stacktrace ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 ---
- drivers/net/wan/Makefile |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/btrfs/extent_io.c   | 2 +-
+ fs/btrfs/scrub.c       | 2 +-
+ fs/btrfs/transaction.c | 5 ++++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/net/wan/Makefile
-+++ b/drivers/net/wan/Makefile
-@@ -40,16 +40,16 @@ $(obj)/wanxl.o:	$(obj)/wanxlfw.inc
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 035ea5bc692ad..5707bf0575d43 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4073,7 +4073,7 @@ retry:
+ 	if (!test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state)) {
+ 		ret = flush_write_bio(&epd);
+ 	} else {
+-		ret = -EUCLEAN;
++		ret = -EROFS;
+ 		end_write_bio(&epd, ret);
+ 	}
+ 	return ret;
+diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
+index a7b043fd7a572..498b824148187 100644
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -3717,7 +3717,7 @@ static noinline_for_stack int scrub_supers(struct scrub_ctx *sctx,
+ 	struct btrfs_fs_info *fs_info = sctx->fs_info;
  
- ifeq ($(CONFIG_WANXL_BUILD_FIRMWARE),y)
- ifeq ($(ARCH),m68k)
--  M68KAS = $(AS)
-+  M68KCC = $(CC)
-   M68KLD = $(LD)
- else
--  M68KAS = $(CROSS_COMPILE_M68K)as
-+  M68KCC = $(CROSS_COMPILE_M68K)gcc
-   M68KLD = $(CROSS_COMPILE_M68K)ld
- endif
+ 	if (test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state))
+-		return -EIO;
++		return -EROFS;
  
- quiet_cmd_build_wanxlfw = BLD FW  $@
-       cmd_build_wanxlfw = \
--	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(M68KAS) -m68360 -o $(obj)/wanxlfw.o; \
-+	$(M68KCC) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi -c -o $(obj)/wanxlfw.o $<; \
- 	$(M68KLD) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
- 	hexdump -ve '"\n" 16/1 "0x%02X,"' $(obj)/wanxlfw.bin | sed 's/0x  ,//g;1s/^/static const u8 firmware[]={/;$$s/,$$/\n};\n/' >$(obj)/wanxlfw.inc; \
- 	rm -f $(obj)/wanxlfw.bin $(obj)/wanxlfw.o
+ 	/* Seed devices of a new filesystem has their own generation. */
+ 	if (scrub_dev->fs_devices != fs_info->fs_devices)
+diff --git a/fs/btrfs/transaction.c b/fs/btrfs/transaction.c
+index 54589e940f9af..465ddb297c381 100644
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -873,7 +873,10 @@ static int __btrfs_end_transaction(struct btrfs_trans_handle *trans,
+ 	if (trans->aborted ||
+ 	    test_bit(BTRFS_FS_STATE_ERROR, &info->fs_state)) {
+ 		wake_up_process(info->transaction_kthread);
+-		err = -EIO;
++		if (TRANS_ABORTED(trans))
++			err = trans->aborted;
++		else
++			err = -EROFS;
+ 	}
+ 
+ 	kmem_cache_free(btrfs_trans_handle_cachep, trans);
+-- 
+2.25.1
+
 
 
