@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C15FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD2FC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF612072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4025E2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259107;
-	bh=iHH4nZ5FG3boYaQ8vKMw6bTqrFWc4XVPyANRtbbiWDc=;
+	s=default; t=1598259108;
+	bh=n1+9m2n7172uOMg3lvseFpnMd+Ks2CYysIdtH0BAK0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XlD0TrqTfAWkUphKldixcZvQZwGNyVZMeJLDRbJs56hOh23pEsIfXYtM3fRMqg8XJ
-	 tFCCRYOyKrXW1eaKvOhl11CKgNBPJu+JbCV4/iqunCq8g7Pi019nxyuze0Z0If0HiS
-	 fWrpU2+vfLuWmXh2H6VM12GYbDO9XtrJb9qjcLQg=
+	b=os5SJ7sd2C4PZK0d0WL3v6f15NP/5IcSut3x9qspEhyKFX3Y0ZKlLxOTvooPTx8lp
+	 mdZoOR+R2DpMOq7NhHk8jMMBFuiEbige2lHgvEOxGCfTM2MWiCA2TKiF2VxoseHcCI
+	 3EOSokC8mjbbU7anSTzv/0Q8dURKfar9JaLW0//U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbgHXIvq (ORCPT
+        id S1729988AbgHXIvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:51:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56664 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:51:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729941AbgHXIvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:32 -0400
+        id S1728863AbgHXIvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A306E2072D;
-        Mon, 24 Aug 2020 08:51:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D5192072D;
+        Mon, 24 Aug 2020 08:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259092;
-        bh=iHH4nZ5FG3boYaQ8vKMw6bTqrFWc4XVPyANRtbbiWDc=;
+        s=default; t=1598259097;
+        bh=n1+9m2n7172uOMg3lvseFpnMd+Ks2CYysIdtH0BAK0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gUSzrZ8T/SKtB5rGbisYx+W9mNEojrr2QZrfCL90tewtaQOllblN1apTGdYBjerMi
-         6hVp39olgzaKXh2Wz4lczSL8Gpb7ssFFxZUjSLQ0BCOlmanTHYWX6oT1kXoeoOKiiq
-         y0tyu7mVAxEZ0bmgdmK8kNtlscdd4k/HKAN3NPks=
+        b=YsVjxSUif+c6NwgkHMcn2fmr9oFLNaoWYQAO44JkV5EOnXJOIbK5WwEBiT5r1kV3C
+         BQlFBEm72K/yAbWENvScbDHLHUlYAhOnX/LXEKjE+YibZQ8bO8W0J1JWBpdj3W4Mgs
+         3bdrpXD2s1/FZGY/Rv0Uy63HIRgDPkygfn6FaEsM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 17/39] ext4: fix checking of directory entry validity for inline directories
-Date:   Mon, 24 Aug 2020 10:31:16 +0200
-Message-Id: <20200824082349.386545159@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 19/39] media: budget-core: Improve exception handling in budget_register()
+Date:   Mon, 24 Aug 2020 10:31:18 +0200
+Message-Id: <20200824082349.528490857@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
@@ -59,58 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 7303cb5bfe845f7d43cd9b2dbd37dbb266efda9b ]
+[ Upstream commit fc0456458df8b3421dba2a5508cd817fbc20ea71 ]
 
-ext4_search_dir() and ext4_generic_delete_entry() can be called both for
-standard director blocks and for inline directories stored inside inode
-or inline xattr space. For the second case we didn't call
-ext4_check_dir_entry() with proper constraints that could result in
-accepting corrupted directory entry as well as false positive filesystem
-errors like:
+budget_register() has no error handling after its failure.
+Add the missed undo functions for error handling to fix it.
 
-EXT4-fs error (device dm-0): ext4_search_dir:1395: inode #28320400:
-block 113246792: comm dockerd: bad entry in directory: directory entry too
-close to block end - offset=0, inode=28320403, rec_len=32, name_len=8,
-size=4096
-
-Fix the arguments passed to ext4_check_dir_entry().
-
-Fixes: 109ba779d6cc ("ext4: check for directory entries too close to block end")
-CC: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200731162135.8080-1-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/namei.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/pci/ttpci/budget-core.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index dd42d533d2816..2d918b43b536e 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -1304,8 +1304,8 @@ int ext4_search_dir(struct buffer_head *bh, char *search_buf, int buf_size,
- 		    ext4_match(fname, de)) {
- 			/* found a match - just to be sure, do
- 			 * a full check */
--			if (ext4_check_dir_entry(dir, NULL, de, bh, bh->b_data,
--						 bh->b_size, offset))
-+			if (ext4_check_dir_entry(dir, NULL, de, bh, search_buf,
-+						 buf_size, offset))
- 				return -1;
- 			*res_dir = de;
- 			return 1;
-@@ -2344,7 +2344,7 @@ int ext4_generic_delete_entry(handle_t *handle,
- 	de = (struct ext4_dir_entry_2 *)entry_buf;
- 	while (i < buf_size - csum_size) {
- 		if (ext4_check_dir_entry(dir, NULL, de, bh,
--					 bh->b_data, bh->b_size, i))
-+					 entry_buf, buf_size, i))
- 			return -EFSCORRUPTED;
- 		if (de == de_del)  {
- 			if (pde)
+diff --git a/drivers/media/pci/ttpci/budget-core.c b/drivers/media/pci/ttpci/budget-core.c
+index 6d42dcfd4825b..e7bdfc4e4aa83 100644
+--- a/drivers/media/pci/ttpci/budget-core.c
++++ b/drivers/media/pci/ttpci/budget-core.c
+@@ -386,20 +386,25 @@ static int budget_register(struct budget *budget)
+ 	ret = dvbdemux->dmx.add_frontend(&dvbdemux->dmx, &budget->hw_frontend);
+ 
+ 	if (ret < 0)
+-		return ret;
++		goto err_release_dmx;
+ 
+ 	budget->mem_frontend.source = DMX_MEMORY_FE;
+ 	ret = dvbdemux->dmx.add_frontend(&dvbdemux->dmx, &budget->mem_frontend);
+ 	if (ret < 0)
+-		return ret;
++		goto err_release_dmx;
+ 
+ 	ret = dvbdemux->dmx.connect_frontend(&dvbdemux->dmx, &budget->hw_frontend);
+ 	if (ret < 0)
+-		return ret;
++		goto err_release_dmx;
+ 
+ 	dvb_net_init(&budget->dvb_adapter, &budget->dvb_net, &dvbdemux->dmx);
+ 
+ 	return 0;
++
++err_release_dmx:
++	dvb_dmxdev_release(&budget->dmxdev);
++	dvb_dmx_release(&budget->demux);
++	return ret;
+ }
+ 
+ static void budget_unregister(struct budget *budget)
 -- 
 2.25.1
 
