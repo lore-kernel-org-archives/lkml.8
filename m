@@ -7,35 +7,39 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D534C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C470206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26878206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730169AbgHXJQI (ORCPT
+        id S1730234AbgHXJQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:16:08 -0400
-Received: from 8bytes.org ([81.169.241.247]:37398 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730435AbgHXI4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:16:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730443AbgHXI4A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 04:56:00 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D587DC061573;
+        Mon, 24 Aug 2020 01:55:59 -0700 (PDT)
 Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 50A31B70;
-        Mon, 24 Aug 2020 10:55:56 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 9F74997A;
+        Mon, 24 Aug 2020 10:55:54 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
@@ -45,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 19/76] x86/boot/compressed/64: Add stage1 #VC handler
-Date:   Mon, 24 Aug 2020 10:54:14 +0200
-Message-Id: <20200824085511.7553-20-joro@8bytes.org>
+Subject: [PATCH v6 16/76] x86/boot/compressed/64: Always switch to own page-table
+Date:   Mon, 24 Aug 2020 10:54:11 +0200
+Message-Id: <20200824085511.7553-17-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
 References: <20200824085511.7553-1-joro@8bytes.org>
@@ -60,270 +64,140 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add the first handler for #VC exceptions. At stage 1 there is no GHCB
-yet becaue the kernel might still be running on the EFI page table.
+When booted through startup_64 the kernel keeps running on the EFI
+page-table until the KASLR code sets up its own page-table. Without
+KASLR the pre-decompression boot code never switches off the EFI
+page-table. Change that by unconditionally switching to a kernel
+controlled page-table after relocation.
 
-The stage 1 handler is limited to the MSR based protocol to talk to
-the hypervisor and can only support CPUID exit-codes, but that is
-enough to get to stage 2.
+This makes sure we can make changes to the mapping when necessary, for
+example map pages unencrypted in SEV and SEV-ES guests.
+
+Also remove the debug_putstr() calls in initialize_identity_maps()
+because the function now runs before console_init() is called.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-19-joro@8bytes.org
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20200724160336.5435-16-joro@8bytes.org
 ---
- arch/x86/boot/compressed/Makefile          |  1 +
- arch/x86/boot/compressed/idt_64.c          |  4 ++
- arch/x86/boot/compressed/idt_handlers_64.S |  4 ++
- arch/x86/boot/compressed/misc.h            |  1 +
- arch/x86/boot/compressed/sev-es.c          | 45 +++++++++++++++
- arch/x86/include/asm/msr-index.h           |  1 +
- arch/x86/include/asm/sev-es.h              | 37 ++++++++++++
- arch/x86/include/asm/trapnr.h              |  1 +
- arch/x86/kernel/sev-es-shared.c            | 66 ++++++++++++++++++++++
- 9 files changed, 160 insertions(+)
- create mode 100644 arch/x86/boot/compressed/sev-es.c
- create mode 100644 arch/x86/include/asm/sev-es.h
- create mode 100644 arch/x86/kernel/sev-es-shared.c
+ arch/x86/boot/compressed/head_64.S      |  3 +-
+ arch/x86/boot/compressed/ident_map_64.c | 51 +++++++++++++++----------
+ arch/x86/boot/compressed/kaslr.c        |  3 --
+ 3 files changed, 32 insertions(+), 25 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 822e61a0d51b..a7b8c6e59e58 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -81,6 +81,7 @@ ifdef CONFIG_X86_64
- 	vmlinux-objs-y += $(obj)/idt_64.o $(obj)/idt_handlers_64.o
- 	vmlinux-objs-y += $(obj)/mem_encrypt.o
- 	vmlinux-objs-y += $(obj)/pgtable_64.o
-+	vmlinux-objs-$(CONFIG_AMD_MEM_ENCRYPT) += $(obj)/sev-es.o
- endif
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 260c7940f960..013b29921836 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -533,10 +533,11 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ 	rep	stosq
  
- vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
-diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
-index 5f083092a86d..f3ca7324be44 100644
---- a/arch/x86/boot/compressed/idt_64.c
-+++ b/arch/x86/boot/compressed/idt_64.c
-@@ -32,6 +32,10 @@ void load_stage1_idt(void)
+ /*
+- * Load stage2 IDT
++ * Load stage2 IDT and switch to our own page-table
+  */
+ 	pushq	%rsi
+ 	call	load_stage2_idt
++	call	initialize_identity_maps
+ 	popq	%rsi
+ 
+ /*
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index e3d980ae9c2b..ecf9353b064d 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -86,9 +86,31 @@ phys_addr_t physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
+  */
+ static struct x86_mapping_info mapping_info;
+ 
++/*
++ * Adds the specified range to what will become the new identity mappings.
++ * Once all ranges have been added, the new mapping is activated by calling
++ * finalize_identity_maps() below.
++ */
++void add_identity_map(unsigned long start, unsigned long size)
++{
++	unsigned long end = start + size;
++
++	/* Align boundary to 2M. */
++	start = round_down(start, PMD_SIZE);
++	end = round_up(end, PMD_SIZE);
++	if (start >= end)
++		return;
++
++	/* Build the mapping. */
++	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
++				  start, end);
++}
++
+ /* Locates and clears a region for a new top level page table. */
+ void initialize_identity_maps(void)
  {
- 	boot_idt_desc.address = (unsigned long)boot_idt;
++	unsigned long start, size;
++
+ 	/* If running as an SEV guest, the encryption mask is required. */
+ 	set_sev_encryption_mask();
  
-+
-+	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
-+		set_idt_entry(X86_TRAP_VC, boot_stage1_vc);
-+
- 	load_boot_idt(&boot_idt_desc);
+@@ -121,37 +143,24 @@ void initialize_identity_maps(void)
+ 	 */
+ 	top_level_pgt = read_cr3_pa();
+ 	if (p4d_offset((pgd_t *)top_level_pgt, 0) == (p4d_t *)_pgtable) {
+-		debug_putstr("booted via startup_32()\n");
+ 		pgt_data.pgt_buf = _pgtable + BOOT_INIT_PGT_SIZE;
+ 		pgt_data.pgt_buf_size = BOOT_PGT_SIZE - BOOT_INIT_PGT_SIZE;
+ 		memset(pgt_data.pgt_buf, 0, pgt_data.pgt_buf_size);
+ 	} else {
+-		debug_putstr("booted via startup_64()\n");
+ 		pgt_data.pgt_buf = _pgtable;
+ 		pgt_data.pgt_buf_size = BOOT_PGT_SIZE;
+ 		memset(pgt_data.pgt_buf, 0, pgt_data.pgt_buf_size);
+ 		top_level_pgt = (unsigned long)alloc_pgt_page(&pgt_data);
+ 	}
+-}
+ 
+-/*
+- * Adds the specified range to what will become the new identity mappings.
+- * Once all ranges have been added, the new mapping is activated by calling
+- * finalize_identity_maps() below.
+- */
+-void add_identity_map(unsigned long start, unsigned long size)
+-{
+-	unsigned long end = start + size;
+-
+-	/* Align boundary to 2M. */
+-	start = round_down(start, PMD_SIZE);
+-	end = round_up(end, PMD_SIZE);
+-	if (start >= end)
+-		return;
+-
+-	/* Build the mapping. */
+-	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
+-				  start, end);
++	/*
++	 * New page-table is set up - map the kernel image and load it
++	 * into cr3.
++	 */
++	start = (unsigned long)_head;
++	size  = _end - _head;
++	add_identity_map(start, size);
++	write_cr3(top_level_pgt);
  }
  
-diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
-index b20e57504a94..92eb4df478a1 100644
---- a/arch/x86/boot/compressed/idt_handlers_64.S
-+++ b/arch/x86/boot/compressed/idt_handlers_64.S
-@@ -70,3 +70,7 @@ SYM_FUNC_END(\name)
- 	.code64
+ /*
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 0b1551f19920..9016f2268aa7 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -861,9 +861,6 @@ void choose_random_location(unsigned long input,
  
- EXCEPTION_HANDLER	boot_page_fault do_boot_page_fault error_code=1
-+
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+EXCEPTION_HANDLER	boot_stage1_vc do_vc_no_ghcb error_code=1
-+#endif
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 9840c82a39f1..eaa8b45ebccb 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -141,5 +141,6 @@ extern struct desc_ptr boot_idt_desc;
+ 	boot_params->hdr.loadflags |= KASLR_FLAG;
  
- /* IDT Entry Points */
- void boot_page_fault(void);
-+void boot_stage1_vc(void);
- 
- #endif /* BOOT_COMPRESSED_MISC_H */
-diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-new file mode 100644
-index 000000000000..bb91cbb5920e
---- /dev/null
-+++ b/arch/x86/boot/compressed/sev-es.c
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * AMD Encrypted Register State Support
-+ *
-+ * Author: Joerg Roedel <jroedel@suse.de>
-+ */
-+
-+/*
-+ * misc.h needs to be first because it knows how to include the other kernel
-+ * headers in the pre-decompression code in a way that does not break
-+ * compilation.
-+ */
-+#include "misc.h"
-+
-+#include <asm/sev-es.h>
-+#include <asm/msr-index.h>
-+#include <asm/ptrace.h>
-+#include <asm/svm.h>
-+
-+static inline u64 sev_es_rd_ghcb_msr(void)
-+{
-+	unsigned long low, high;
-+
-+	asm volatile("rdmsr\n" : "=a" (low), "=d" (high) :
-+			"c" (MSR_AMD64_SEV_ES_GHCB));
-+
-+	return ((high << 32) | low);
-+}
-+
-+static inline void sev_es_wr_ghcb_msr(u64 val)
-+{
-+	u32 low, high;
-+
-+	low  = val & 0xffffffffUL;
-+	high = val >> 32;
-+
-+	asm volatile("wrmsr\n" : : "c" (MSR_AMD64_SEV_ES_GHCB),
-+			"a"(low), "d" (high) : "memory");
-+}
-+
-+#undef __init
-+#define __init
-+
-+/* Include code for early handlers */
-+#include "../../kernel/sev-es-shared.c"
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index dc131b84ac3a..cd6d651ff730 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -466,6 +466,7 @@
- #define MSR_AMD64_IBSBRTARGET		0xc001103b
- #define MSR_AMD64_IBSOPDATA4		0xc001103d
- #define MSR_AMD64_IBS_REG_COUNT_MAX	8 /* includes MSR_AMD64_IBSBRTARGET */
-+#define MSR_AMD64_SEV_ES_GHCB		0xc0010130
- #define MSR_AMD64_SEV			0xc0010131
- #define MSR_AMD64_SEV_ENABLED_BIT	0
- #define MSR_AMD64_SEV_ENABLED		BIT_ULL(MSR_AMD64_SEV_ENABLED_BIT)
-diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
-new file mode 100644
-index 000000000000..5d49a8a429d3
---- /dev/null
-+++ b/arch/x86/include/asm/sev-es.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * AMD Encrypted Register State Support
-+ *
-+ * Author: Joerg Roedel <jroedel@suse.de>
-+ */
-+
-+#ifndef __ASM_ENCRYPTED_STATE_H
-+#define __ASM_ENCRYPTED_STATE_H
-+
-+#include <linux/types.h>
-+
-+#define GHCB_SEV_CPUID_REQ	0x004UL
-+#define		GHCB_CPUID_REQ_EAX	0
-+#define		GHCB_CPUID_REQ_EBX	1
-+#define		GHCB_CPUID_REQ_ECX	2
-+#define		GHCB_CPUID_REQ_EDX	3
-+#define		GHCB_CPUID_REQ(fn, reg) (GHCB_SEV_CPUID_REQ | \
-+					(((unsigned long)reg & 3) << 30) | \
-+					(((unsigned long)fn) << 32))
-+
-+#define GHCB_SEV_CPUID_RESP	0x005UL
-+#define GHCB_SEV_TERMINATE	0x100UL
-+
-+#define	GHCB_SEV_GHCB_RESP_CODE(v)	((v) & 0xfff)
-+#define	VMGEXIT()			{ asm volatile("rep; vmmcall\n\r"); }
-+
-+void __init do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code);
-+
-+static inline u64 lower_bits(u64 val, unsigned int bits)
-+{
-+	u64 mask = (1ULL << bits) - 1;
-+
-+	return (val & mask);
-+}
-+
-+#endif
-diff --git a/arch/x86/include/asm/trapnr.h b/arch/x86/include/asm/trapnr.h
-index 082f45631fa9..f5d2325aa0b7 100644
---- a/arch/x86/include/asm/trapnr.h
-+++ b/arch/x86/include/asm/trapnr.h
-@@ -26,6 +26,7 @@
- #define X86_TRAP_XF		19	/* SIMD Floating-Point Exception */
- #define X86_TRAP_VE		20	/* Virtualization Exception */
- #define X86_TRAP_CP		21	/* Control Protection Exception */
-+#define X86_TRAP_VC		29	/* VMM Communication Exception */
- #define X86_TRAP_IRET		32	/* IRET Exception */
- 
- #endif
-diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-new file mode 100644
-index 000000000000..0bea32341afa
---- /dev/null
-+++ b/arch/x86/kernel/sev-es-shared.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * AMD Encrypted Register State Support
-+ *
-+ * Author: Joerg Roedel <jroedel@suse.de>
-+ *
-+ * This file is not compiled stand-alone. It contains code shared
-+ * between the pre-decompression boot code and the running Linux kernel
-+ * and is included directly into both code-bases.
-+ */
-+
-+/*
-+ * Boot VC Handler - This is the first VC handler during boot, there is no GHCB
-+ * page yet, so it only supports the MSR based communication with the
-+ * hypervisor and only the CPUID exit-code.
-+ */
-+void __init do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
-+{
-+	unsigned int fn = lower_bits(regs->ax, 32);
-+	unsigned long val;
-+
-+	/* Only CPUID is supported via MSR protocol */
-+	if (exit_code != SVM_EXIT_CPUID)
-+		goto fail;
-+
-+	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EAX));
-+	VMGEXIT();
-+	val = sev_es_rd_ghcb_msr();
-+	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
-+		goto fail;
-+	regs->ax = val >> 32;
-+
-+	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EBX));
-+	VMGEXIT();
-+	val = sev_es_rd_ghcb_msr();
-+	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
-+		goto fail;
-+	regs->bx = val >> 32;
-+
-+	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_ECX));
-+	VMGEXIT();
-+	val = sev_es_rd_ghcb_msr();
-+	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
-+		goto fail;
-+	regs->cx = val >> 32;
-+
-+	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EDX));
-+	VMGEXIT();
-+	val = sev_es_rd_ghcb_msr();
-+	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
-+		goto fail;
-+	regs->dx = val >> 32;
-+
-+	/* Skip over the CPUID two-byte opcode */
-+	regs->ip += 2;
-+
-+	return;
-+
-+fail:
-+	sev_es_wr_ghcb_msr(GHCB_SEV_TERMINATE);
-+	VMGEXIT();
-+
-+	/* Shouldn't get here - if we do halt the machine */
-+	while (true)
-+		asm volatile("hlt\n");
-+}
+-	/* Prepare to add new identity pagetables on demand. */
+-	initialize_identity_maps();
+-
+ 	if (IS_ENABLED(CONFIG_X86_32))
+ 		mem_limit = KERNEL_IMAGE_SIZE;
+ 	else
 -- 
 2.28.0
 
