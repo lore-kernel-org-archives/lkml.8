@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD2FC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F324C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4025E2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4315E207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259108;
-	bh=n1+9m2n7172uOMg3lvseFpnMd+Ks2CYysIdtH0BAK0c=;
+	s=default; t=1598259113;
+	bh=yGkGGqYHKx4qmbR+SG0JcEnjcPvm0sV/7vkVg/3qdF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=os5SJ7sd2C4PZK0d0WL3v6f15NP/5IcSut3x9qspEhyKFX3Y0ZKlLxOTvooPTx8lp
-	 mdZoOR+R2DpMOq7NhHk8jMMBFuiEbige2lHgvEOxGCfTM2MWiCA2TKiF2VxoseHcCI
-	 3EOSokC8mjbbU7anSTzv/0Q8dURKfar9JaLW0//U=
+	b=nruPPQ8KwQNR2CyWJC9ENr0qr+ijLwpxPUiqDYhlGdXOKCgnNPGB3wq/2vR8WMg8f
+	 L7pzPbqA2lp8A9pdQHUf+0opZnGDeqRO4XgF/3/io8qERt38NZ58V5sgxhjMxsmJzr
+	 9vl8A9UxRPgH12QkHJyV6ucosGFwZkjycTXBHv8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbgHXIvr (ORCPT
+        id S1730012AbgHXIvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:51:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56846 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:51:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728863AbgHXIvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:39 -0400
+        id S1729991AbgHXIvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D5192072D;
-        Mon, 24 Aug 2020 08:51:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF640207D3;
+        Mon, 24 Aug 2020 08:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259097;
-        bh=n1+9m2n7172uOMg3lvseFpnMd+Ks2CYysIdtH0BAK0c=;
+        s=default; t=1598259108;
+        bh=yGkGGqYHKx4qmbR+SG0JcEnjcPvm0sV/7vkVg/3qdF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YsVjxSUif+c6NwgkHMcn2fmr9oFLNaoWYQAO44JkV5EOnXJOIbK5WwEBiT5r1kV3C
-         BQlFBEm72K/yAbWENvScbDHLHUlYAhOnX/LXEKjE+YibZQ8bO8W0J1JWBpdj3W4Mgs
-         3bdrpXD2s1/FZGY/Rv0Uy63HIRgDPkygfn6FaEsM=
+        b=EJ7oZ1PK3hAPyyT+c/fsPX5sVqU7y7gS5xEP/fXYDljyPTinp9rUpVM7B7up3qOi+
+         /OmXIj2PYsCJNjB8LaQ9lGUXzCHhlih7hmkPdGIaKFc9N5W/Ai0DcKUqcuquptWGrr
+         i3vBEqRFfJHJ+yRzh3k3wg/5ZLMJIttm/I5hPXYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 19/39] media: budget-core: Improve exception handling in budget_register()
-Date:   Mon, 24 Aug 2020 10:31:18 +0200
-Message-Id: <20200824082349.528490857@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Chandan Babu R <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 23/39] xfs: fix inode quota reservation checks
+Date:   Mon, 24 Aug 2020 10:31:22 +0200
+Message-Id: <20200824082349.737366711@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
@@ -61,54 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit fc0456458df8b3421dba2a5508cd817fbc20ea71 ]
+[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
 
-budget_register() has no error handling after its failure.
-Add the missed undo functions for error handling to fix it.
+xfs_trans_dqresv is the function that we use to make reservations
+against resource quotas.  Each resource contains two counters: the
+q_core counter, which tracks resources allocated on disk; and the dquot
+reservation counter, which tracks how much of that resource has either
+been allocated or reserved by threads that are working on metadata
+updates.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+For disk blocks, we compare the proposed reservation counter against the
+hard and soft limits to decide if we're going to fail the operation.
+However, for inodes we inexplicably compare against the q_core counter,
+not the incore reservation count.
+
+Since the q_core counter is always lower than the reservation count and
+we unlock the dquot between reservation and transaction commit, this
+means that multiple threads can reserve the last inode count before we
+hit the hard limit, and when they commit, we'll be well over the hard
+limit.
+
+Fix this by checking against the incore inode reservation counter, since
+we would appear to maintain that correctly (and that's what we report in
+GETQUOTA).
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/ttpci/budget-core.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_trans_dquot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/ttpci/budget-core.c b/drivers/media/pci/ttpci/budget-core.c
-index 6d42dcfd4825b..e7bdfc4e4aa83 100644
---- a/drivers/media/pci/ttpci/budget-core.c
-+++ b/drivers/media/pci/ttpci/budget-core.c
-@@ -386,20 +386,25 @@ static int budget_register(struct budget *budget)
- 	ret = dvbdemux->dmx.add_frontend(&dvbdemux->dmx, &budget->hw_frontend);
- 
- 	if (ret < 0)
--		return ret;
-+		goto err_release_dmx;
- 
- 	budget->mem_frontend.source = DMX_MEMORY_FE;
- 	ret = dvbdemux->dmx.add_frontend(&dvbdemux->dmx, &budget->mem_frontend);
- 	if (ret < 0)
--		return ret;
-+		goto err_release_dmx;
- 
- 	ret = dvbdemux->dmx.connect_frontend(&dvbdemux->dmx, &budget->hw_frontend);
- 	if (ret < 0)
--		return ret;
-+		goto err_release_dmx;
- 
- 	dvb_net_init(&budget->dvb_adapter, &budget->dvb_net, &dvbdemux->dmx);
- 
- 	return 0;
-+
-+err_release_dmx:
-+	dvb_dmxdev_release(&budget->dmxdev);
-+	dvb_dmx_release(&budget->demux);
-+	return ret;
- }
- 
- static void budget_unregister(struct budget *budget)
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index c3d547211d160..9c42e50a5cb7e 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -669,7 +669,7 @@ xfs_trans_dqresv(
+ 			}
+ 		}
+ 		if (ninos > 0) {
+-			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
++			total_count = dqp->q_res_icount + ninos;
+ 			timer = be32_to_cpu(dqp->q_core.d_itimer);
+ 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
+ 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
 -- 
 2.25.1
 
