@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2175CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC331C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E36572075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA1CE2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262521;
-	bh=NePlWlJmYvZlb6se0k6yww0+lm5ofUjMpEEudg8Tvjk=;
+	s=default; t=1598262530;
+	bh=nzildonZ2Cp5d5EqEk9pDNpe/ArGo68DTb1T0ykhnEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JlkfzZRqt4QQsqijSfzOlQXWsoq8a/IVpCQRS5nV6xB2wSTpSbSu3jvlxWdKZrYsZ
-	 dk00a5zoUPdLg9nZrnoRwIWpxOEpyOUo/+yDRUL98ZfL333yU8sxdJdjhoMCJVgn76
-	 9/KzKWw9rYbY2ixyhyz9N7/Uu6qW+/Hg6Qw14KvI=
+	b=CGITivIxkcXl/DSMQhjt+4G4QIKP/DXIlndu8WBhHqb1ELF/r2I4oOC5v5q6vJbGh
+	 Co99c7L7OLM0KeGKDcX1by0SNFoEKgFFPM+Omyb7LodNmjxbn0behC4hTX8T8creJB
+	 TgDgqO/6BdXTV9exRlzUu1294j7DoE7/POYShyrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgHXJsg (ORCPT
+        id S1729674AbgHXJst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:48:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57906 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:48:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbgHXIkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:40:41 -0400
+        id S1726645AbgHXIkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:40:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED5AA2074D;
-        Mon, 24 Aug 2020 08:40:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E33CA20FC3;
+        Mon, 24 Aug 2020 08:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258441;
-        bh=NePlWlJmYvZlb6se0k6yww0+lm5ofUjMpEEudg8Tvjk=;
+        s=default; t=1598258435;
+        bh=nzildonZ2Cp5d5EqEk9pDNpe/ArGo68DTb1T0ykhnEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j0NjDRdDAo6K9CBt9sHb6uRe1umQ/ofZL0uuI4oYQ02fHLeiD//oNQ9izBlhstsr4
-         uqkxewLnx2JSYccmAdioYbpZ9fiuKq7Igttbx733Nr05kJZci3MqTgGaDJ/czimGc+
-         2CUGhqw5KLpSoBKOujbsF28p7ZXKWh/c14JWVJ80=
+        b=K10/7dWCD2gV4mwLXb9GbUgnytC2E2ILOl3JxOoNYq/Mx5nztlw1J4EnJQ/dLlKqt
+         2vSkqKq5iRGuDzVQ8qJUA1Y6sRRPzR195O3QCydc+m1DrRDaVRbcdgcnvfTFw9eWUu
+         Gy5FIaVDEc7yCRY8EKFsMpXf/zReSuJHnsIJP8MA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com,
-        Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 049/124] ceph: fix use-after-free for fsc->mdsc
-Date:   Mon, 24 Aug 2020 10:29:43 +0200
-Message-Id: <20200824082411.840340779@linuxfoundation.org>
+Subject: [PATCH 5.7 047/124] riscv: Fixup static_obj() fail
+Date:   Mon, 24 Aug 2020 10:29:41 +0200
+Message-Id: <20200824082411.740393222@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -62,42 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit a7caa88f8b72c136f9a401f498471b8a8e35370d ]
+[ Upstream commit 6184358da0004c8fd940afda6c0a0fa4027dc911 ]
 
-If the ceph_mdsc_init() fails, it will free the mdsc already.
+When enable LOCKDEP, static_obj() will cause error. Because some
+__initdata static variables is before _stext:
 
-Reported-by: syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+static int static_obj(const void *obj)
+{
+        unsigned long start = (unsigned long) &_stext,
+                      end   = (unsigned long) &_end,
+                      addr  = (unsigned long) obj;
+
+        /*
+         * static variable?
+         */
+        if ((addr >= start) && (addr < end))
+                return 1;
+
+[    0.067192] INFO: trying to register non-static key.
+[    0.067325] the code is fine but needs lockdep annotation.
+[    0.067449] turning off the locking correctness validator.
+[    0.067718] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7-dirty #44
+[    0.067945] Call Trace:
+[    0.068369] [<ffffffe00020323c>] walk_stackframe+0x0/0xa4
+[    0.068506] [<ffffffe000203422>] show_stack+0x2a/0x34
+[    0.068631] [<ffffffe000521e4e>] dump_stack+0x94/0xca
+[    0.068757] [<ffffffe000255a4e>] register_lock_class+0x5b8/0x5bc
+[    0.068969] [<ffffffe000255abe>] __lock_acquire+0x6c/0x1d5c
+[    0.069101] [<ffffffe0002550fe>] lock_acquire+0xae/0x312
+[    0.069228] [<ffffffe000989a8e>] _raw_spin_lock_irqsave+0x40/0x5a
+[    0.069357] [<ffffffe000247c64>] complete+0x1e/0x50
+[    0.069479] [<ffffffe000984c38>] rest_init+0x1b0/0x28a
+[    0.069660] [<ffffffe0000016a2>] 0xffffffe0000016a2
+[    0.069779] [<ffffffe000001b84>] 0xffffffe000001b84
+[    0.069953] [<ffffffe000001092>] 0xffffffe000001092
+
+static __initdata DECLARE_COMPLETION(kthreadd_done);
+
+noinline void __ref rest_init(void)
+{
+	...
+	complete(&kthreadd_done);
+
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/mds_client.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/riscv/kernel/vmlinux.lds.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 95272ae36b058..e32935b68d0a4 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -4337,7 +4337,6 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
- 		return -ENOMEM;
- 	}
+diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+index 0339b6bbe11ab..bf3f34dbe630b 100644
+--- a/arch/riscv/kernel/vmlinux.lds.S
++++ b/arch/riscv/kernel/vmlinux.lds.S
+@@ -22,6 +22,7 @@ SECTIONS
+ 	/* Beginning of code and text segment */
+ 	. = LOAD_OFFSET;
+ 	_start = .;
++	_stext = .;
+ 	HEAD_TEXT_SECTION
+ 	. = ALIGN(PAGE_SIZE);
  
--	fsc->mdsc = mdsc;
- 	init_completion(&mdsc->safe_umount_waiters);
- 	init_waitqueue_head(&mdsc->session_close_wq);
- 	INIT_LIST_HEAD(&mdsc->waiting_for_map);
-@@ -4390,6 +4389,8 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
- 
- 	strscpy(mdsc->nodename, utsname()->nodename,
- 		sizeof(mdsc->nodename));
-+
-+	fsc->mdsc = mdsc;
- 	return 0;
- }
- 
+@@ -49,7 +50,6 @@ SECTIONS
+ 	. = ALIGN(SECTION_ALIGN);
+ 	.text : {
+ 		_text = .;
+-		_stext = .;
+ 		TEXT_TEXT
+ 		SCHED_TEXT
+ 		CPUIDLE_TEXT
 -- 
 2.25.1
 
