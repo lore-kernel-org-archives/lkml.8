@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC91C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54463C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2F2120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CEE42075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261664;
-	bh=Jneed6ie/AYBGZ4JnR/nz3pF9fM3dYNvhGU5zeQzGlY=;
+	s=default; t=1598261679;
+	bh=NSM0kikoMYd4CitRmeGSudrfPq2pKTmsMTIAOfWWzhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RCmipPJeuqmM57s7W1aZoQdV5H8C5CPMkgkSnrT1JxZVmZyGQgQdUS9oKIs77j21q
-	 RM8kAoiWuPA6fvs8Z5geN+dxHNpY2R6OX8RzZomkJ9FvjS9uuP84d/n0Z+PoU0S0pG
-	 1ZpHn6TL16EqtK4zpPYBFD0ARTHPxxtmHOsxAg2M=
+	b=Uhp7ddBSnTvbbkEbDhq1CMvEbN6HikYLJhAI8FzO5q/MKGltqu6M91Slnn0KgZc3X
+	 rXuC9f5Snnn/jWhzytlwIRM79QsPItjxJrK+zm7Tbk0ztCpoBy0EkEp19EfmbqHOo3
+	 SjLECGHgM9WOY1+Zr+FRfCtpffi2V8xkBwvPdubs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbgHXItd (ORCPT
+        id S1729227AbgHXIta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:49:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51588 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:49:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729438AbgHXItV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:49:21 -0400
+        id S1729696AbgHXItT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:49:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 676F12072D;
-        Mon, 24 Aug 2020 08:49:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1718E206F0;
+        Mon, 24 Aug 2020 08:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258961;
-        bh=Jneed6ie/AYBGZ4JnR/nz3pF9fM3dYNvhGU5zeQzGlY=;
+        s=default; t=1598258958;
+        bh=NSM0kikoMYd4CitRmeGSudrfPq2pKTmsMTIAOfWWzhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dVu4AwZsRhlBl2pBgKEhIeZQKtEVUfUVZ+GvVvauKY3kQeGZD9cSKF+M5rNaEgIFe
-         +0GbGCisiwiXndYM081tksVtOmSPy6x+Z7CMHi6R500eJjIWdphKqrppcessp4EVJS
-         QTFQUByppTaYvcKMfZXPleWcnoFMAtcdU4nkxSSo=
+        b=hAVeuyauxz4ohbt7cLv4D3+oxfQHLdMlTlOvPgCD+eo8j6Tvexdy/Tv8O9TnoNVeF
+         KpMblvtCXFzQz/yScYPI961gs8j5cSBgWXADbwoxfOO+Sk8xcriPDqb8eXXljnWnow
+         PIUPPvrM6wDECdUbtk2JNsguXswAG7XhpwJhjnrk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Oleksij Rempel <o.rempel@pengutronix.de>,
         Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 079/107] can: j1939: abort multipacket broadcast session when timeout occurs
-Date:   Mon, 24 Aug 2020 10:30:45 +0200
-Message-Id: <20200824082409.030477715@linuxfoundation.org>
+Subject: [PATCH 5.4 078/107] can: j1939: cancel rxtimer on multipacket broadcast session complete
+Date:   Mon, 24 Aug 2020 10:30:44 +0200
+Message-Id: <20200824082408.981713342@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -64,47 +64,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zhang Changzhong <zhangchangzhong@huawei.com>
 
-[ Upstream commit 2b8b2e31555cf55ba3680fb28e2b382e168d7ea1 ]
+[ Upstream commit e8b17653088f28a87c81845fa41a2d295a3b458c ]
 
-If timeout occurs, j1939_tp_rxtimer() first calls hrtimer_start() to restart
-rxtimer, and then calls __j1939_session_cancel() to set session->state =
-J1939_SESSION_WAITING_ABORT. At next timeout expiration, because of the
-J1939_SESSION_WAITING_ABORT session state j1939_tp_rxtimer() will call
-j1939_session_deactivate_activate_next() to deactivate current session, and
-rxtimer won't be set.
-
-But for multipacket broadcast session, __j1939_session_cancel() don't set
-session->state = J1939_SESSION_WAITING_ABORT, thus current session won't be
-deactivate and hrtimer_start() is called to start new rxtimer again and again.
-
-So fix it by moving session->state = J1939_SESSION_WAITING_ABORT out of if
-(!j1939_cb_is_broadcast(&session->skcb)) statement.
+If j1939_xtp_rx_dat_one() receive last frame of multipacket broadcast message,
+j1939_session_timers_cancel() should be called to cancel rxtimer.
 
 Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
 Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
-Link: https://lore.kernel.org/r/1596599425-5534-4-git-send-email-zhangchangzhong@huawei.com
+Link: https://lore.kernel.org/r/1596599425-5534-3-git-send-email-zhangchangzhong@huawei.com
 Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/j1939/transport.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/can/j1939/transport.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index d1a9adde677b0..e3167619b196f 100644
+index 67189b4c482c5..d1a9adde677b0 100644
 --- a/net/can/j1939/transport.c
 +++ b/net/can/j1939/transport.c
-@@ -1074,9 +1074,9 @@ static void __j1939_session_cancel(struct j1939_session *session,
- 	lockdep_assert_held(&session->priv->active_session_list_lock);
+@@ -1811,6 +1811,7 @@ static void j1939_xtp_rx_dat_one(struct j1939_session *session,
+ 	}
  
- 	session->err = j1939_xtp_abort_to_errno(priv, err);
-+	session->state = J1939_SESSION_WAITING_ABORT;
- 	/* do not send aborts on incoming broadcasts */
- 	if (!j1939_cb_is_broadcast(&session->skcb)) {
--		session->state = J1939_SESSION_WAITING_ABORT;
- 		j1939_xtp_tx_abort(priv, &session->skcb,
- 				   !session->transmission,
- 				   err, session->skcb.addr.pgn);
+ 	if (final) {
++		j1939_session_timers_cancel(session);
+ 		j1939_session_completed(session);
+ 	} else if (do_cts_eoma) {
+ 		j1939_tp_set_rxtimeout(session, 1250);
 -- 
 2.25.1
 
