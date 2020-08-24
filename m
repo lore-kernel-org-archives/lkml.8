@@ -1,132 +1,186 @@
-Return-Path: <SRS0=TdnH=CB=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 23:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A08C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B28442078D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Aug 2020 23:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4F020720
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:01:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QotuNI+E"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eboFhLVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgHWX6c (ORCPT
+        id S1727125AbgHXABX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 19:58:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:36029 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726817AbgHWX6b (ORCPT
+        Sun, 23 Aug 2020 20:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgHXABW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 19:58:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598227110;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3ae7r/HXyjg622rAZ8QfwTlQQk+yC0y1DlfCIxiu/nc=;
-        b=QotuNI+EnyUYa908DHy4tAzEm4mNSHqUpzqTQKWxZ9NSA5TnyTXlfNXFySEIUlFl1Am05B
-        vKJsyMhmpDGMNrMkQgd+HAm5cXBnWSlQyxZ9aBkbA/pDjDdM1ZzneHNLFaFWBdh0k7vtas
-        48V74fxsFT+kl20mGGh0Dr3dSUIcimE=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-304-iNKuwR07O5qzlQMEuHDAMg-1; Sun, 23 Aug 2020 19:58:28 -0400
-X-MC-Unique: iNKuwR07O5qzlQMEuHDAMg-1
-Received: by mail-qt1-f197.google.com with SMTP id b18so5584699qte.18
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 16:58:28 -0700 (PDT)
+        Sun, 23 Aug 2020 20:01:22 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E07BFC061573
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 17:01:21 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h19so7612922ljg.13
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 17:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uz0KdTCCniS0o52VVCzrGMXm4hqB7aop4qmoNp1sJhQ=;
+        b=eboFhLVZvOjSay5QbGG5OMBGuElovYgu0MzGpwTxXyrrkKb2jIGcJ6ThE0D+wKzlwo
+         QXGqfHA1ecrKr2Rth+9zZR69ma2MaQhOLESBMYXCqxwpi7JNthndQdcbsRYgJsvjXjMT
+         Mdx1dm621TxyGfzyULLeYYZcAHgNXn8o65guxsO1UXqz9XPL0A3whmahLJRTXR2/J/cd
+         3GXpeWM/4cWoLW3VQG29PgFdMWktb9JYiborQyJQOXvkzq6sPv3BV8XF5nLh8mznnjIv
+         uBv4FeJXHFBYolvo91BXYJGOEok+2m/ui8yU/bj48a07997jfsS+wI4FxAS1NoMGoAej
+         ywsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3ae7r/HXyjg622rAZ8QfwTlQQk+yC0y1DlfCIxiu/nc=;
-        b=cm1Kbc6AZ4elcgY2QnEnSfQfN54V1pl/pvzThlYqgXbnRpa52YrAduPCrmw0+zbF9O
-         YksH4Zt6Gov1rtWMAf0o7oC78C30QES/NedJItopeEi3UpAOvI3TVGTmkKaBWDtFjOq1
-         hmBdMDJ6Vf7GTqkwfcawrkosotAKOHVhWv81Vn4yka4S83g7lzNMhamWHeaXGyWFEEt3
-         kXqiSfNQ2zyNHeo84joNJEo0qzpl+qLRF677wk0MSyBtWRSOL24zaVtC6AH4nczubc+w
-         AXkbNb60vM+3nA2pBOodaSaeBEjhoN52mxkMpcb1kT8r5aYT6DBQ4gVCfXbKiv3Af3cb
-         majg==
-X-Gm-Message-State: AOAM533TRBhlwU3maerLghuJD5rZgKEmcDjr1uTqKBw3B9lfxkNV8lLZ
-        B5+4XtiVPHlQmXMF2tARbwHWJGdmhCbNbgDNGcR0Ga0hyKV0gnni7oFSXRVh//iO2nYYCKaDXll
-        GXZM1b+7AY/VJyZdkaUf5V1bc
-X-Received: by 2002:a05:620a:11a6:: with SMTP id c6mr2555985qkk.209.1598227107712;
-        Sun, 23 Aug 2020 16:58:27 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw56gNsSLcW71PTv1UE4TN1PQs6Y3F6UAPGREEyJaQjLJOideQJYeYOzUdjGc3RVUm6T2EP7w==
-X-Received: by 2002:a05:620a:11a6:: with SMTP id c6mr2555961qkk.209.1598227107416;
-        Sun, 23 Aug 2020 16:58:27 -0700 (PDT)
-Received: from xz-x1 (bras-vprn-toroon474qw-lp130-11-70-53-122-15.dsl.bell.ca. [70.53.122.15])
-        by smtp.gmail.com with ESMTPSA id g4sm8116313qka.25.2020.08.23.16.58.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2020 16:58:26 -0700 (PDT)
-Date:   Sun, 23 Aug 2020 19:58:24 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Maya B . Gokhale" <gokhale2@llnl.gov>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Marty Mcfadden <mcfadden8@llnl.gov>,
-        Kirill Shutemov <kirill@shutemov.name>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Jan Kara <jack@suse.cz>, Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/4] mm: Simplfy cow handling
-Message-ID: <20200823235824.GA6231@xz-x1>
-References: <20200821234958.7896-1-peterx@redhat.com>
- <CAHk-=wgQ_bqiEXrwnAratT+2N+VGdhEsK7xShaj04Dgo2JNwtA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uz0KdTCCniS0o52VVCzrGMXm4hqB7aop4qmoNp1sJhQ=;
+        b=Rz9mSg03vBP0MmHWGh3ksMxdJlB9AfCmDwNiLeIG4x9jWdV/5bu5Rvi/UcRyzpvB78
+         M4BcewauU6jgfFIdVuGV91GrKuTZGSGpDpFXY9U/wzC08JW1GfDD18zm/K89VESBpWQ+
+         W0A1sCr9RngLAdCUXLdm/tCWesvICA4DcTlSggayEwC/q5kJWQ9Di1KlTS63VHdnf0cg
+         VBx+lbiUi6lqSOo3XgzVc/SQ4r3yxxR/vQ66YOyAMzbc0/rlH9y0zFq5Y1DjANkxNXP/
+         almyd3mvlPYSpMfGnGXHYkSw7sRwVKlBXDpxNGZTMMRKX7/b2CF5RBUXKn2XA7YNhxwi
+         31QA==
+X-Gm-Message-State: AOAM532hHYSl8QraYEexDa2n4Pfqft047MzgcgPVyQn2uqvgnx1SFEIB
+        oh5bU9wxmLAP5TX2uBFVylvtyEBMh7owcyC9rp5mDQ==
+X-Google-Smtp-Source: ABdhPJyY8ulx9DDSt4amXHtxe2lsCKj6n2Hz7qmxNAQ/GKOJnh5f1zcZ4+MPdSVtXAbjLvDzQKoJGXselq9jMnwDLxE=
+X-Received: by 2002:a2e:9d8e:: with SMTP id c14mr1495978ljj.332.1598227279885;
+ Sun, 23 Aug 2020 17:01:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgQ_bqiEXrwnAratT+2N+VGdhEsK7xShaj04Dgo2JNwtA@mail.gmail.com>
+References: <000000000000067ab705ac501e5f@google.com> <41cb418a-572e-80d7-214a-ad7131fdc0f2@infradead.org>
+In-Reply-To: <41cb418a-572e-80d7-214a-ad7131fdc0f2@infradead.org>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Sun, 23 Aug 2020 17:01:08 -0700
+Message-ID: <CALvZod77E-kGrPCb2syPFOpU4SF_FMHt-DzoTyG=u6YWHXzbuA@mail.gmail.com>
+Subject: Re: kernel BUG at kernel/fork.c:LINE!
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     syzbot <syzbot+3776ecd80aac504e6085@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Brauner <christian@brauner.io>, christian@kellner.me,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>, luto@amacapital.net,
+        Ingo Molnar <mingo@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>, wad@chromium.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 09:05:37AM -0700, Linus Torvalds wrote:
-> On Fri, Aug 21, 2020 at 4:50 PM Peter Xu <peterx@redhat.com> wrote:
+On Sun, Aug 23, 2020 at 10:34 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 8/7/20 2:16 PM, syzbot wrote:
+> > Hello,
 > >
-> >   - Run a busy loop dirty program [1] that uses 6G of memory, restrict to 1G
-> >     RAM + 5G swap (cgroup).  A few hours later, all things still look good.
-> >     Make sure to observe (still massive) correct page reuses using the new
-> >     counter using the last patch, probably when swapping in.
+> > syzbot found the following issue on:
 > >
-> >   - Run umapsort [2] to make sure uffd-wp will work again after applying this
-> >     series upon master 5.9-rc1 (5.9-rc1 is broken).
-> 
-> I obviously like the diffstat, am wondering if you saw any throughput
-> changes or similar for the busy-loop dirtying thing?
+> > HEAD commit:    fffe3ae0 Merge tag 'for-linus-hmm' of git://git.kernel.org..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1194d90a900000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=18bb86f2e4ebfda2
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3776ecd80aac504e6085
+> > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> >
+> > Unfortunately, I don't have any reproducer for this issue yet.
+> >
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+3776ecd80aac504e6085@syzkaller.appspotmail.com
+>
+> Is this fixed by
+>
+> commit 991e7673859ed41e7ba83c8c4e57afe8cfebe314
+> Author: Shakeel Butt <shakeelb@google.com>
+> Date:   Thu Aug 6 23:21:37 2020 -0700
+>
+>     mm: memcontrol: account kernel stack per node
+>
+>
+> since the BUG_ON() at line 390 is removed by this patch.
+>
 
-I didn't compare the two in my previous testing.
+It's not really removed. The BUG_ON() has been moved to line 402. So,
+this issue might still occur.
 
-Firstly, although my program did output some dirty rate information in per
-second basis, the dirty rate is kind of fluctuating during the runs due to
-frequent swap in/out pages, and I cannot observe a stable dirty rate at least
-with the patch applied.  I'm afraid I'll see similar thing even without
-applying the patch. Maybe it'll show some statistic pattern if I do it per
-10sec or longer, but not sure.
-
-More importantly, I'm not sure whether that's the major case to compare either
-if we want to have some rough understanding about patch 1 on the performance
-impact.  The thing is, my test program only dirtied some private allocated
-pages with itself as the only owner of the pages.  IIUC the page reuse logic
-will trigger on either the old or new code because both the mapcount or
-refcount will be one.  If we really want to compare the two, shouldn't we run
-some tests that will trigger the COW differently before/after the patch?  E.g.,
-when some pages are referenced by some GUP users and when COW happens with only
-one pte mapped to the page.  I haven't thought deeper than this on such a test
-yet.
-
-So my previous testing was majorly for making sure the general cow and the swap
-path will at least still behave as expected.
-
-Thanks,
-
--- 
-Peter Xu
-
+>
+> > ------------[ cut here ]------------
+> > kernel BUG at kernel/fork.c:390!
+> > invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+> > CPU: 0 PID: 5239 Comm: syz-executor.1 Not tainted 5.8.0-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > RIP: 0010:account_kernel_stack+0x297/0x320 kernel/fork.c:390
+> > Code: 89 e2 be 23 00 00 00 48 89 ef c1 e2 05 e8 81 9e 75 00 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f e9 ae c9 2f 00 e8 a9 c9 2f 00 <0f> 0b e8 f2 50 6f 00 e9 d2 fd ff ff e8 98 c9 2f 00 48 c7 c6 20 24
+> > RSP: 0018:ffffc90015e4f850 EFLAGS: 00010216
+> > RAX: 00000000000001f4 RBX: 0000000000000000 RCX: ffffc90017983000
+> > RDX: 0000000000040000 RSI: ffffffff81445327 RDI: 0000000000000005
+> > RBP: 0000000000000000 R08: 0000000000000001 R09: ffff8880a2ef9663
+> > R10: 0000000000000008 R11: 0000000000000000 R12: ffffffffffffffff
+> > R13: ffff8880001b2280 R14: ffff88809e4fa840 R15: 0000000000000000
+> > FS:  00007f7f035e5700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 0000001b2fd30000 CR3: 000000009b747000 CR4: 00000000001506f0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >  release_task_stack kernel/fork.c:447 [inline]
+> >  put_task_stack+0xc4/0x230 kernel/fork.c:459
+> >  finish_task_switch+0x52a/0x750 kernel/sched/core.c:3649
+> >  context_switch kernel/sched/core.c:3781 [inline]
+> >  __schedule+0x8ed/0x21e0 kernel/sched/core.c:4527
+> >  schedule+0xd0/0x2a0 kernel/sched/core.c:4602
+> >  freezable_schedule include/linux/freezer.h:172 [inline]
+> >  futex_wait_queue_me+0x2a7/0x570 kernel/futex.c:2588
+> >  futex_wait+0x1df/0x560 kernel/futex.c:2690
+> >  do_futex+0x15b/0x1a60 kernel/futex.c:3749
+> >  __do_sys_futex kernel/futex.c:3810 [inline]
+> >  __se_sys_futex kernel/futex.c:3778 [inline]
+> >  __x64_sys_futex+0x378/0x4e0 kernel/futex.c:3778
+> >  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > RIP: 0033:0x45ccd9
+> > Code: 2d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb b5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> > RSP: 002b:00007f7f035e4cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+> > RAX: ffffffffffffffda RBX: 000000000078bfa8 RCX: 000000000045ccd9
+> > RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000078bfa8
+> > RBP: 000000000078bfa0 R08: 0000000000000000 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bfac
+> > R13: 00007fff896cb67f R14: 00007f7f035e59c0 R15: 000000000078bfac
+> > Modules linked in:
+> > ---[ end trace ff14b6c5822b8142 ]---
+> > RIP: 0010:account_kernel_stack+0x297/0x320 kernel/fork.c:390
+> > Code: 89 e2 be 23 00 00 00 48 89 ef c1 e2 05 e8 81 9e 75 00 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f e9 ae c9 2f 00 e8 a9 c9 2f 00 <0f> 0b e8 f2 50 6f 00 e9 d2 fd ff ff e8 98 c9 2f 00 48 c7 c6 20 24
+> > RSP: 0018:ffffc90015e4f850 EFLAGS: 00010216
+> > RAX: 00000000000001f4 RBX: 0000000000000000 RCX: ffffc90017983000
+> > RDX: 0000000000040000 RSI: ffffffff81445327 RDI: 0000000000000005
+> > RBP: 0000000000000000 R08: 0000000000000001 R09: ffff8880a2ef9663
+> > R10: 0000000000000008 R11: 0000000000000000 R12: ffffffffffffffff
+> > R13: ffff8880001b2280 R14: ffff88809e4fa840 R15: 0000000000000000
+> > FS:  00007f7f035e5700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 0000001b2fd30000 CR3: 000000009b747000 CR4: 00000000001506f0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> >
+> >
+> > ---
+> > This report is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this issue. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> >
+>
+>
+> --
+> ~Randy
+>
