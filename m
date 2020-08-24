@@ -8,155 +8,105 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F369AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87130C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0D032072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D72E20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:21:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D0eJ4Bth"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJ7V62ZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgHXVUe (ORCPT
+        id S1727860AbgHXVVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:20:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41578 "EHLO
+        Mon, 24 Aug 2020 17:21:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727919AbgHXVUB (ORCPT
+        with ESMTP id S1726365AbgHXVVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 17:20:01 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA63C061755;
-        Mon, 24 Aug 2020 14:20:01 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id n3so239218pjq.1;
-        Mon, 24 Aug 2020 14:20:01 -0700 (PDT)
+        Mon, 24 Aug 2020 17:21:19 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A4AC061574;
+        Mon, 24 Aug 2020 14:21:18 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a15so10546069wrh.10;
+        Mon, 24 Aug 2020 14:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=g7VV/krJKjpl3fVXGlaNY9/0wsMNumXkPGYdDy0NLaw=;
-        b=D0eJ4BthOJUjXlvokWibZqWoBGnjmf0N34bXsEzLNsxiDNvnx22WiQpvgVHLvrVg2U
-         YtMPLVrC65sSNGnhPK8hhLrx2TmbixqTyYkl+hDWMJS03TR0g/F4wrt6vK77DrSFsbYS
-         PaJ5e97HLwPuuhgK1fkMjLLmsJwzRm0ciHF/9yVqKVaRBUzKR39gdq1TsmsIqcg8koiG
-         xqs+F9BBXUai+sDSwGOXIgRyxJneWpqfbckjXvKiWnU7z4h+6Jkw6U6pBbfFBnpFBkzN
-         2UWWXngLvD7gZ/arZEHqxolP9I9/LMmrfPDpbUK9uObH7kcXWCOsh0vMK7/6RpBrWfrc
-         BsIQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aEVH3KeEKImpzoTD8sOJ0HUqoecJmgA9xUt/L5UEv9Q=;
+        b=TJ7V62ZVq7GSWFy91CFPG7K6Qardtn7N0bIo9gS78kvC3AFAdgFN9k3zz09WVjfBwA
+         m6r+rwMdRJbnx2Cc5Jjw33IhpnhcVOLbb019l2IvUiI52dP4MZwbxnTsGf9O6jSZCH95
+         ao8eR1r9eXOf/uEsI+FjiOFGApD0DOBtSrvyviLhRYqdoxZT+CO7wark/zlqaqMOqoVG
+         3M7QA1cai3VKb36artZbp+GXnOHZJX0mObM0keyAcNcRsFMFpy7Xu901zQSPPgs2Y2qr
+         NMMhiSAunMG9ND1lhDX+XqV43wr71tvqcpNXZ/JQEzHUfa4Ix11Bc4006iuOTagl2/rj
+         Epng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=g7VV/krJKjpl3fVXGlaNY9/0wsMNumXkPGYdDy0NLaw=;
-        b=tUCIFQTf32Y+6CeNDXaIpIxi7kwyGfvLQcOVz7qacGBb8EWjoImW2xkOnVBsrGmMrh
-         I27XlYbA9dt5OFcWQT0OaFlwQYNBE4TC6UB6M+PjC9Gz1bu5UvJEVbcGDan+dVTlquSf
-         BM6XTQi+OxVCGt3moxcGD0wI6fUM4TCTbTf2BoRQdoyTJTmpj3P5SCjXHgkq9ZtbYglY
-         yDDXarHCaD5gHVzq93cxF00RpO7sgUHZ66NUiLSUVzDa7/ze7lUwmx04Co77C29jYUqk
-         JBPjLjQnx2J1xLxKWAxAvT18YJMXvvT8SyC58DPdYCWOoRz4DxnhcUyBXWl35qs72PEO
-         qs/g==
-X-Gm-Message-State: AOAM530lrmi33zp3ZRZ2Mq6PPc3b2n/VK3oc31+I12bvwvsldO59E6u1
-        Q3gHe8Zi5MwwHIYSlBSXEk8=
-X-Google-Smtp-Source: ABdhPJyugdNrli9G6rRXQAqw0VEFn+pFbiLqtwFesKfsieewyGLJXfjSPVXdmt7qTmHtDJGOqkDPfg==
-X-Received: by 2002:a17:90a:cb92:: with SMTP id a18mr883425pju.80.1598304000683;
-        Mon, 24 Aug 2020 14:20:00 -0700 (PDT)
-Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
-        by smtp.gmail.com with ESMTPSA id t10sm97788pfq.77.2020.08.24.14.19.59
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aEVH3KeEKImpzoTD8sOJ0HUqoecJmgA9xUt/L5UEv9Q=;
+        b=gSOsKqRyOXa2mE8ZgYUaavv5e0iCeav5vUqq8X3lC3rBjbwt6M/PK8v29sDv2Fmpjo
+         OqQ2/PSu/JYfNT+tH4xncQsBRqhXjvi3ebyktK2TVgZXWIlKDptcxsyGiW6OiYG4A0PP
+         hI+eALcR/wkavpBOlEk94DuWZg+N6aNaCFHBCw3l+0xbAQTO4skl7KoWcA4yY5aUAPs2
+         E/zucZmeXuEAo4wSiRn6IhxYh3wi7uwNu78RGihXsp7tGry85MUCChE8rholdPMXlnqO
+         GhE9joIyz7A0GJHgMXTH52kUrOc9wWHOCmrO4rzTWuQP8+emV0Z9diBeIH75qUhEO5tS
+         Lv6Q==
+X-Gm-Message-State: AOAM533yHjSMHqWDL7P35RkYM9Lr4RG5JbamudTcCsDkGpFUk6e54/sH
+        eBRF4CKSrXkLtnh1da5w6KCkJpir0odQ3ZU3
+X-Google-Smtp-Source: ABdhPJwucY1j3myAwja5npvITAje1Z6NxRhzDiiW8NUuHhAtd5JRGj7sqdyXBpWsann3oSjfzMGafw==
+X-Received: by 2002:adf:e986:: with SMTP id h6mr7600816wrm.106.1598304077509;
+        Mon, 24 Aug 2020 14:21:17 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id k204sm1726281wma.21.2020.08.24.14.21.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 14:20:00 -0700 (PDT)
-From:   rentao.bupt@gmail.com
-To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, taoren@fb.com
-Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH 4/5] ARM: dts: aspeed: minipack: Update 64MB FMC flash layout
-Date:   Mon, 24 Aug 2020 14:19:47 -0700
-Message-Id: <20200824211948.12852-5-rentao.bupt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200824211948.12852-1-rentao.bupt@gmail.com>
-References: <20200824211948.12852-1-rentao.bupt@gmail.com>
+        Mon, 24 Aug 2020 14:21:16 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Alex Dewar <alex.dewar90@gmail.com>
+Subject: [PATCH] ima: use kmemdup() rather than kmalloc+memcpy
+Date:   Mon, 24 Aug 2020 22:21:02 +0100
+Message-Id: <20200824212102.602559-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tao Ren <rentao.bupt@gmail.com>
+Issue identified with Coccinelle.
 
-Set 64Mb FMC flash layout in Minipack device tree explicitly because the
-flash layout was removed from "ast2500-facebook-netbmc-common.dtsi".
-
-Please note "data0" partition' size is updated to 4MB to be consistent
-with other Facebook OpenBMC platforms.
-
-Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
 ---
- .../boot/dts/aspeed-bmc-facebook-minipack.dts | 47 ++++++++++++++++++-
- 1 file changed, 45 insertions(+), 2 deletions(-)
+ security/integrity/ima/ima_policy.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
-index 88ce4ff9f47e..c34741dbd268 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
-@@ -88,17 +88,60 @@
-  */
- &fmc_flash0 {
- 	partitions {
--		data0@1c00000 {
--			reg = <0x1c00000 0x2400000>;
-+		compatible = "fixed-partitions";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		/*
-+		 * u-boot partition: 384KB.
-+		 */
-+		u-boot@0 {
-+			reg = <0x0 0x60000>;
-+			label = "u-boot";
- 		};
-+
-+		/*
-+		 * u-boot environment variables: 128KB.
-+		 */
-+		u-boot-env@60000 {
-+			reg = <0x60000 0x20000>;
-+			label = "env";
-+		};
-+
-+		/*
-+		 * FIT image: 59.5 MB.
-+		 */
-+		fit@80000 {
-+			reg = <0x80000 0x3b80000>;
-+			label = "fit";
-+		};
-+
-+		/*
-+		 * "data0" partition (4MB) is reserved for persistent
-+		 * data store.
-+		 */
-+		data0@3800000 {
-+			reg = <0x3c00000 0x400000>;
-+			label = "data0";
-+		};
-+
-+		/*
-+		 * "flash0" partition (covering the entire flash) is
-+		 * explicitly created to avoid breaking legacy applications.
-+		 */
- 		flash0@0 {
- 			reg = <0x0 0x4000000>;
-+			label = "flash0";
- 		};
- 	};
- };
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index b4de33074b37..ea917a787d9d 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -284,7 +284,7 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+ 	struct ima_rule_entry *nentry;
+ 	int i;
  
- &fmc_flash1 {
- 	partitions {
-+		compatible = "fixed-partitions";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
- 		flash1@0 {
- 			reg = <0x0 0x4000000>;
- 		};
+-	nentry = kmalloc(sizeof(*nentry), GFP_KERNEL);
++	nentry = kmemdup(entry, sizeof(*nentry), GFP_KERNEL);
+ 	if (!nentry)
+ 		return NULL;
+ 
+@@ -292,7 +292,6 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+ 	 * Immutable elements are copied over as pointers and data; only
+ 	 * lsm rules can change
+ 	 */
+-	memcpy(nentry, entry, sizeof(*nentry));
+ 	memset(nentry->lsm, 0, sizeof_field(struct ima_rule_entry, lsm));
+ 
+ 	for (i = 0; i < MAX_LSM_RULES; i++) {
 -- 
-2.17.1
+2.28.0
 
