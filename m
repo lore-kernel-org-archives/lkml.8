@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46142C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70691C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 240CA2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 519AE2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289620;
-	bh=MfEec4LKwZbSGmVBjxEXLp20zqULv2HlhoxMSBkqu10=;
+	s=default; t=1598289624;
+	bh=17+7dKdrlvtY6f+cbt6QtQNq/t3bTyN0CVvDmAMpWcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E2wEvnT6C/fTaWXJEYQR2DWlOBa5gxC7O7Na0bEoVsxxwMEzybfiB1Tkz/549gRJv
-	 as9ilO7dWxNnLlD6vg1N7ygbLWBKtse3PsZgerFDBph146eDWIOpRwmNBEjiLMb7AK
-	 kcc+H2InzYeS0L8MVKdSUJLr5ALKCw4YX+j9TsLY=
+	b=KZ4wBz8oa+2uPC8i6WPwYGaOFiOT7n2of3JMpx9UCvB6eh0NQ6uS4vibTCKFgKj7Z
+	 L9lsKEYEeuo+WrgLXDRTry+1Sl9Rzeex2aFlK3By5t3QJF47IuUbkDsTw/jd9obLo4
+	 kMIFb3dq3WoMBzQcgjiNWBFGe8J6jmltkr9OtW2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbgHXRUS (ORCPT
+        id S1728519AbgHXRUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:20:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40652 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:20:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728174AbgHXQgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728312AbgHXQgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:36:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 549F922C9F;
-        Mon, 24 Aug 2020 16:36:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D24D22BED;
+        Mon, 24 Aug 2020 16:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286984;
-        bh=MfEec4LKwZbSGmVBjxEXLp20zqULv2HlhoxMSBkqu10=;
+        s=default; t=1598286968;
+        bh=17+7dKdrlvtY6f+cbt6QtQNq/t3bTyN0CVvDmAMpWcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zxwj/o1fYyUj1liI+cCRn4kwLzkhHCMiNQ7bhGIvyAjRt3Mz35YuO2lD3zA1SQEVV
-         /Rfa3F5wsBxueX/J0O5u5AmyYlVocKTnlogdumrYEcH6TtMa66uC5QDkIPimA5W5Ea
-         N4RSMfm59Hnoo4e67bm0W5MP0i5CXYophD9+VRgE=
+        b=wbhmZmu96sGkuO0exsaAegM8HN2m2qgGtmMYjx/lA3R2zAriWGuZm69nGYkLCcf53
+         chyy/V1dj6v7+Ks0MRyv+L7liQre4tTA6BBUtOc7y58wpZBr4TTWn/2Kzj8ZYWk6Hw
+         U/yCboOE7n8OKKnS2G+fq2XAt7lflGlBOWhwwkq4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiansong Chen <Jiansong.Chen@amd.com>,
-        Kenneth Feng <kenneth.feng@amd.com>,
-        Tao Zhou <tao.zhou1@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 58/63] Revert "drm/amdgpu: disable gfxoff for navy_flounder"
-Date:   Mon, 24 Aug 2020 12:34:58 -0400
-Message-Id: <20200824163504.605538-58-sashal@kernel.org>
+Cc:     Saurav Kashyap <skashyap@marvell.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 47/63] scsi: qla2xxx: Check if FW supports MQ before enabling
+Date:   Mon, 24 Aug 2020 12:34:47 -0400
+Message-Id: <20200824163504.605538-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
 References: <20200824163504.605538-1-sashal@kernel.org>
@@ -62,37 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiansong Chen <Jiansong.Chen@amd.com>
+From: Saurav Kashyap <skashyap@marvell.com>
 
-[ Upstream commit da2446b66b5e2c7f3ab63912c8d999810e35e8b3 ]
+[ Upstream commit dffa11453313a115157b19021cc2e27ea98e624c ]
 
-This reverts commit 9c9b17a7d19a8e21db2e378784fff1128b46c9d3.
-Newly released sdma fw (51.52) provides a fix for the issue.
+OS boot during Boot from SAN was stuck at dracut emergency shell after
+enabling NVMe driver parameter. For non-MQ support the driver was enabling
+MQ. Add a check to confirm if FW supports MQ.
 
-Signed-off-by: Jiansong Chen <Jiansong.Chen@amd.com>
-Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
-Reviewed-by: Tao Zhou <tao.zhou1@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://lore.kernel.org/r/20200806111014.28434-9-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-index 2c870ff7f8a45..fac77a86c04b2 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-@@ -3427,9 +3427,6 @@ static void gfx_v10_0_check_gfxoff_flag(struct amdgpu_device *adev)
- 		if (!gfx_v10_0_navi10_gfxoff_should_enable(adev))
- 			adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
- 		break;
--	case CHIP_NAVY_FLOUNDER:
--		adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
--		break;
- 	default:
- 		break;
- 	}
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index e92fad99338cd..00c854b9b4179 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -2017,6 +2017,11 @@ qla2x00_iospace_config(struct qla_hw_data *ha)
+ 	/* Determine queue resources */
+ 	ha->max_req_queues = ha->max_rsp_queues = 1;
+ 	ha->msix_count = QLA_BASE_VECTORS;
++
++	/* Check if FW supports MQ or not */
++	if (!(ha->fw_attributes & BIT_6))
++		goto mqiobase_exit;
++
+ 	if (!ql2xmqsupport || !ql2xnvmeenable ||
+ 	    (!IS_QLA25XX(ha) && !IS_QLA81XX(ha)))
+ 		goto mqiobase_exit;
 -- 
 2.25.1
 
