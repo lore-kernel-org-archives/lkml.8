@@ -2,165 +2,150 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63434C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F3FC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 356272074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B97C20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:45:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBruHGtB"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="G+dwn4YV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgHXSng (ORCPT
+        id S1726664AbgHXSpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:43:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgHXSms (ORCPT
+        Mon, 24 Aug 2020 14:45:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47458 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725963AbgHXSpO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:42:48 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C92D0C061573;
-        Mon, 24 Aug 2020 11:42:47 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y206so5298215pfb.10;
-        Mon, 24 Aug 2020 11:42:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VoyPgLas/EUNbQEYprU6PB/6pOwjqGOdvclKJYENFWw=;
-        b=BBruHGtBthrICeIDAmBcG2uUZDAga6fYElXBdLKCXiubo2pm+Clq4l0xYdQxllzHlZ
-         O1dEvgqwKFj7yXNvhVdTJp1iJfACtvlG1hG2CEjJrJx/MgOGaivSD1rwB/BOtNbV6G8t
-         X7qXpLY4S4rHcndJPpVGd1ykSGB7CGr2NWYYQ8Hw7GQhOF2yUadBWzOAIAKmGlU+HvRb
-         kWSoEsmXq0rXLnZ+0S+GGzejpk/rWa7nTAWNg7pzaeWW8S7EXNugQRuQ5JLQWdQS7GU7
-         KyLEhP5mQ2RRWky6HsetCY+36iGNWemPQ0SaCV0PIOgJf4SIiW3r4gXoxYQZzGumoRkY
-         V0zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VoyPgLas/EUNbQEYprU6PB/6pOwjqGOdvclKJYENFWw=;
-        b=XSTG4kcEK6m9DgSpcoN+H+S+VG0TO8VonVdBfMe5D4jq3QhbqKLw0cV5/BJtWJvwNJ
-         0iFhRMN0TFeE+HcjOc8cy0fZGMO87q3+3LoJAgW+iGMr37Ler0hQ5G31KZoNkaGPS96V
-         HDHEOzmcL7BNXjgBsg/+ANPsULKFlDmLW0Rq03oUFrkhy34R8CFkYZzGXAyZba3SztO/
-         EyGAfEkU1A+m/K5ygeJQA+3KbML4r4dBA81wTZJ/n3MMNusVfCUvIN3kJhIMe17zYjJU
-         e7ZtGIZJn3t4H7YN0q+Bcnc0cPsupEJqIJbL6swQBqN0jbn/g3GNt1PoC/XClAp2MBdZ
-         D7mg==
-X-Gm-Message-State: AOAM530M7u+wWQYkkA2I7/6P+/F1baTCJOqgD6umcJ/WCOMGlesk3HAG
-        YL01tIlbSwP9zu0j4Jda/CU=
-X-Google-Smtp-Source: ABdhPJxJ4hmtCta+hX6LVQdC4pLmXOKC1elcyxC0dRNkBQOWIoyBQV4I+BUW2VaWyulJogf1gbaeSg==
-X-Received: by 2002:a63:9041:: with SMTP id a62mr3624236pge.273.1598294567247;
-        Mon, 24 Aug 2020 11:42:47 -0700 (PDT)
-Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id y65sm12063114pfb.155.2020.08.24.11.42.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 11:42:46 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Brian Masney <masneyb@onstation.org>,
-        Eric Anholt <eric@anholt.net>, Joerg Roedel <jroedel@suse.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 13/20] drm/msm: Set the global virtual address range from the IOMMU domain
-Date:   Mon, 24 Aug 2020 11:37:47 -0700
-Message-Id: <20200824183825.1778810-14-robdclark@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200824183825.1778810-1-robdclark@gmail.com>
-References: <20200824183825.1778810-1-robdclark@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 24 Aug 2020 14:45:14 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OIXRTr103537;
+        Mon, 24 Aug 2020 14:45:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=jat0l1ha5CWfyGYW+fPRuRE7JGRu/aQnypEyLMpRrHM=;
+ b=G+dwn4YVDJuPBeADjjZSqEueVEU7ge0cf0q/2X7lzooPP5JaSJuwlPXUbzj52LBxZRYz
+ 8pxSNasvgEBKcZyWeWm5sHYTnp8V5UVIDDnVKFe4kmP12ZITt+pCErXS0H31KGwd66MH
+ /BGoHnh1J3k9m0ZCl2XrjlraLJnHSGIXwC+JlWqlGlsCwgwo4vL+RG6doC+qHyB1SPJD
+ XGY+fW5qL5ihngviGElNQeofdebT+6mqg8L0dEiL8fY9Sp/YoxIHhUDLRWoyTdwEMoHs
+ BNN+mf/QRVTK0woiPhGZOGcW53mzQJTGcphkWSG3GlXyRb1fZKGoZSnIhF7MHa0OGzbC aw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 334j2asv36-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 14:45:04 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07OIXRQh103520;
+        Mon, 24 Aug 2020 14:45:03 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 334j2asv27-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 14:45:03 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07OIRfEg001870;
+        Mon, 24 Aug 2020 18:45:01 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 332ujktn4b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 18:45:01 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07OIiw5e16646654
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Aug 2020 18:44:58 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CE01C11C04C;
+        Mon, 24 Aug 2020 18:44:58 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4539E11C052;
+        Mon, 24 Aug 2020 18:44:56 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.122.56])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Aug 2020 18:44:56 +0000 (GMT)
+Message-ID: <839d2b185ba482d664edd3fda7c03965543553fa.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 0/2] ima: Fix keyrings race condition and other key
+ related bugs
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Mon, 24 Aug 2020 14:44:55 -0400
+In-Reply-To: <20200811192621.281675-1-tyhicks@linux.microsoft.com>
+References: <20200811192621.281675-1-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxscore=0 impostorscore=0 priorityscore=1501 bulkscore=0 suspectscore=0
+ mlxlogscore=999 lowpriorityscore=0 spamscore=0 clxscore=1015 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008240150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jordan Crouse <jcrouse@codeaurora.org>
+Hi Tyler,
 
-Use the aperture settings from the IOMMU domain to set up the virtual
-address range for the GPU. This allows us to transparently deal with
-IOMMU side features (like split pagetables).
+On Tue, 2020-08-11 at 14:26 -0500, Tyler Hicks wrote:
+> v2:
+>  - Always return an ERR_PTR from ima_alloc_rule_opt_list() (Nayna)
+>  - Add Lakshmi's Reviewed-by to both patches
+>  - Rebased on commit 3db0d0c276a7 ("integrity: remove redundant
+>    initialization of variable ret") of next-integrity
+> v1: https://lore.kernel.org/lkml/20200727140831.64251-1-tyhicks@linux.microsoft.com/
+> 
+> Nayna pointed out that the "keyrings=" option in an IMA policy rule
+> should only be accepted when CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is
+> enabled:
+> 
+>  https://lore.kernel.org/linux-integrity/336cc947-1f70-0286-6506-6df3d1d23a1d@linux.vnet.ibm.com/
+> 
+> While fixing this, the compiler warned me about the potential for the
+> ima_keyrings pointer to be NULL despite it being used, without a check
+> for NULL, as the destination address for the strcpy() in
+> ima_match_keyring().
+> 
+> It also became apparent that there was not adequate locking around the
+> use of the pre-allocated buffer that ima_keyrings points to. The kernel
+> keyring has a lock (.sem member of struct key) that ensures only one key
+> can be added to a given keyring at a time but there's no protection
+> against adding multiple keys to different keyrings at the same time.
+> 
+> The first patch in this series fixes both ima_keyrings related issues by
+> parsing the list of keyrings in a KEY_CHECK rule at policy load time
+> rather than deferring the parsing to policy check time. Once that fix is
+> in place, the second patch can enforce that
+> CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS must be enabled in order to use
+> "func=KEY_CHECK" or "keyrings=" options in IMA policy.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 13 +++++++++++--
- drivers/gpu/drm/msm/msm_iommu.c         |  7 +++++++
- 2 files changed, 18 insertions(+), 2 deletions(-)
+Thank you for fixing and cleaning up the existing keyring policy
+support. 
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index 533a34b4cce2..34e6242c1767 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -192,9 +192,18 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
- 	struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
- 	struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
- 	struct msm_gem_address_space *aspace;
-+	u64 start, size;
- 
--	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
--		0xffffffff - SZ_16M);
-+	/*
-+	 * Use the aperture start or SZ_16M, whichever is greater. This will
-+	 * ensure that we align with the allocated pagetable range while still
-+	 * allowing room in the lower 32 bits for GMEM and whatnot
-+	 */
-+	start = max_t(u64, SZ_16M, iommu->geometry.aperture_start);
-+	size = iommu->geometry.aperture_end - start + 1;
-+
-+	aspace = msm_gem_address_space_create(mmu, "gpu",
-+		start & GENMASK(48, 0), size);
- 
- 	if (IS_ERR(aspace) && !IS_ERR(mmu))
- 		mmu->funcs->destroy(mmu);
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 3a381a9674c9..1b6635504069 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -36,6 +36,10 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 	size_t ret;
- 
-+	/* The arm-smmu driver expects the addresses to be sign extended */
-+	if (iova & BIT_ULL(48))
-+		iova |= GENMASK_ULL(63, 49);
-+
- 	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
- 	WARN_ON(!ret);
- 
-@@ -46,6 +50,9 @@ static int msm_iommu_unmap(struct msm_mmu *mmu, uint64_t iova, size_t len)
- {
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 
-+	if (iova & BIT_ULL(48))
-+		iova |= GENMASK_ULL(63, 49);
-+
- 	iommu_unmap(iommu->domain, iova, len);
- 
- 	return 0;
--- 
-2.26.2
+> 
+> The new "keyrings=" value handling is done in a generic manner that can
+> be reused by other options in the future. This seems to make sense as
+> "appraise_type=" has similar style (though it doesn't need to be fully
+> parsed at this time) and using "|" as an alternation delimiter is
+> becoming the norm in IMA policy.
+
+Yes, thank you.  Better extending existing key value pairs than
+defining new boot command line options.
+
+This patch set is now queued in next-integrity-testing.
+
+Mimi
 
