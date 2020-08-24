@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33D1C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A766C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A12B52177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90FE2177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258385;
-	bh=axrNnX8tt3YCR1/f6ugFOlCWrbE2ylmJgM32F8pJ0so=;
+	s=default; t=1598258391;
+	bh=X1Jc6HRrlX3sT+03uEUsKl4ouu4xw5betJQxvtle9D8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QgNJueycDZcO4vRSrRdzvb0H0gbKF4MvBPw3RAKxEff2fQdValXSP5yAMS7e0o+dy
-	 DM/HGbMVc6mzc9Po/eVx+I1uJqpeEStyP+plaeyueDAD2W5sUmrjUJ8R+xDcmUS0wl
-	 XWwoxAyEiWSPPunwET8DnxMESvBdbysFgw06S7Gw=
+	b=LLETvfPAmNnSVlnO8BUVa44XXDK87Suzx/B+OomFdmJUSTOI+ac+Vk/1IFCoO4MiF
+	 52qTzpJypLRojKMxCic6eadpHrkijPM9Mtar4tXMsmDEmwSyimh5CMSpM8aLY2S+mO
+	 bf4QHv0GTsRC5jKLRcV9QNesya+zMsHxiJmbFrGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbgHXIjn (ORCPT
+        id S1726993AbgHXIjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:39:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55672 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:39:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbgHXIjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:39:39 -0400
+        id S1728670AbgHXIjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:39:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D946A22B49;
-        Mon, 24 Aug 2020 08:39:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 336F82177B;
+        Mon, 24 Aug 2020 08:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258378;
-        bh=axrNnX8tt3YCR1/f6ugFOlCWrbE2ylmJgM32F8pJ0so=;
+        s=default; t=1598258381;
+        bh=X1Jc6HRrlX3sT+03uEUsKl4ouu4xw5betJQxvtle9D8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nZAy1sheceBcStlEEkIT5Jd8wp0NbLs6H8lbglFxzbWzvjY82+zkeuJAFezR7sYva
-         FiH/Yo0tgdHy+C3DRF3mq7uORpNuzmkH30TsOvEZaWS2uzliJL3cZD/0GkpsAWzIC0
-         g766AZ8Blxc4BJhPcqilShad1LQjnZwGouw4AMxo=
+        b=kkoLwT/zbNTDZDu1l7fIMLaJll9e8fCbHtRSwieePHADc9Xutfg6Jwq1vbp489/em
+         ekC7ulkbyEdJZJsUlwAmFGVLC9rMh7ZqtKETBuuElyi5mz6Meb/g2u18ri4KInGMVF
+         ekMvHjhXDQHdh4oU/bCCJKGA8mN+utM2BLUozSeY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Hsieh <paul.hsieh@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>,
+        stable@vger.kernel.org, Krunoslav Kovac <Krunoslav.Kovac@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
         Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.7 026/124] drm/amd/display: Fix DFPstate hang due to view port changed
-Date:   Mon, 24 Aug 2020 10:29:20 +0200
-Message-Id: <20200824082410.708270050@linuxfoundation.org>
+Subject: [PATCH 5.7 027/124] drm/amd/display: fix pow() crashing when given base 0
+Date:   Mon, 24 Aug 2020 10:29:21 +0200
+Message-Id: <20200824082410.747521526@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -61,40 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Hsieh <paul.hsieh@amd.com>
+From: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
 
-commit 8e80d482608a4e6a97c75272ef8b4bcfc5d0c490 upstream.
+commit d2e59d0ff4c44d1f6f8ed884a5bea7d1bb7fd98c upstream.
 
-[Why]
-Place the cursor in the center of screen between two pipes then
-adjusting the viewport but cursour doesn't update cause DFPstate hang.
-
-[How]
-If viewport changed, update cursor as well.
+[Why&How]
+pow(a,x) is implemented as exp(x*log(a)). log(0) will crash.
+So return 0^x = 0, unless x=0, convention seems to be 0^0 = 1.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Paul Hsieh <paul.hsieh@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Signed-off-by: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
 Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/include/fixed31_32.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-@@ -1386,8 +1386,8 @@ static void dcn20_update_dchubp_dpp(
- 
- 	/* Any updates are handled in dc interface, just need to apply existing for plane enable */
- 	if ((pipe_ctx->update_flags.bits.enable || pipe_ctx->update_flags.bits.opp_changed ||
--			pipe_ctx->update_flags.bits.scaler || pipe_ctx->update_flags.bits.viewport)
--			&& pipe_ctx->stream->cursor_attributes.address.quad_part != 0) {
-+			pipe_ctx->update_flags.bits.scaler || viewport_changed == true) &&
-+			pipe_ctx->stream->cursor_attributes.address.quad_part != 0) {
- 		dc->hwss.set_cursor_position(pipe_ctx);
- 		dc->hwss.set_cursor_attribute(pipe_ctx);
- 
+--- a/drivers/gpu/drm/amd/display/include/fixed31_32.h
++++ b/drivers/gpu/drm/amd/display/include/fixed31_32.h
+@@ -431,6 +431,9 @@ struct fixed31_32 dc_fixpt_log(struct fi
+  */
+ static inline struct fixed31_32 dc_fixpt_pow(struct fixed31_32 arg1, struct fixed31_32 arg2)
+ {
++	if (arg1.value == 0)
++		return arg2.value == 0 ? dc_fixpt_one : dc_fixpt_zero;
++
+ 	return dc_fixpt_exp(
+ 		dc_fixpt_mul(
+ 			dc_fixpt_log(arg1),
 
 
