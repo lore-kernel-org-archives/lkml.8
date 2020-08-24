@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE929C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDCCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 865DD20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406BB20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289797;
-	bh=AAuVh8NhIbqqWMMFxEOADh7bUSWjy+xTniY3cUJ+4Rk=;
+	s=default; t=1598289827;
+	bh=Y+dzBIhGF+kbEmw58dJ4IZaOWYovq8f4Yu+nhkSCnkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hfDl5TjdXBnemFCFuR55dMXx68aREE8XTmTRpJHTcWzzgPLnz8EhGXPyBm1npquNw
-	 VfDAbaW7Fzf5ELWGLUgYfZUfbpidp8gddMkwtCcwRIxBdmhf/MlU4dt16mJl7GxHVo
-	 wgu+icgGjhoMuOCS5MmA1e5zDIMjLUu8L462ZDL0=
+	b=OL5/Dv+ZncMiW2iMdNV6+BCoPJpaBDYSD9B7Wtjm53PLybLYGkcaurqZFANW6Kggr
+	 0jlneSlspmcnF6xlmENJP//lA1Dw/PYlxafZ+VFcxxSXw9UHXdciP2NVJyzWHoex5J
+	 Dt+K3dw6I2sgzFZ+TCX5h4xHkxtUG9EnZ6LTXHFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbgHXRW7 (ORCPT
+        id S1728290AbgHXRXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39694 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:23:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727012AbgHXQfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:35:47 -0400
+        id S1728273AbgHXQfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:35:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4C6122CE3;
-        Mon, 24 Aug 2020 16:35:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ED6B22CF7;
+        Mon, 24 Aug 2020 16:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286946;
-        bh=AAuVh8NhIbqqWMMFxEOADh7bUSWjy+xTniY3cUJ+4Rk=;
+        s=default; t=1598286944;
+        bh=Y+dzBIhGF+kbEmw58dJ4IZaOWYovq8f4Yu+nhkSCnkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hUX/h6i6Z8NVau9o42bk/tZuzv6KImsp0kio171vBFIguduccNkDeyAjmTARHUWNG
-         o5si4zhqYnm924jQHrXCqHYdZQfDip8KqbrXRBOjpv2yDchajkC1RsCD7gX79zDgEv
-         kVNRjk4G5l+Ph5St0Bso3gvYV271w68QOyMdl3HU=
+        b=jek+oqzy3XtLnluiCYHhJbsfBHcpqpC0WGOyvPWreqZpC/R6RDylwL9ypCXcdoNXB
+         8QaF9NtXpLB0qOTIRuina3nE1Xns9REgrkk7sSZP3GX+sxTEvaBK7BnJMcV7Y2LGVo
+         PMgPrBBl3o+eQlHSfsvpRcM/2Agc1/dFNSVJVsfk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.8 31/63] dma-pool: Only allocate from CMA when in same memory zone
-Date:   Mon, 24 Aug 2020 12:34:31 -0400
-Message-Id: <20200824163504.605538-31-sashal@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 29/63] can: j1939: transport: j1939_xtp_rx_dat_one(): compare own packets to detect corruptions
+Date:   Mon, 24 Aug 2020 12:34:29 -0400
+Message-Id: <20200824163504.605538-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
 References: <20200824163504.605538-1-sashal@kernel.org>
@@ -60,79 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit d7e673ec2c8e0ea39c4c70fc490d67d7fbda869d ]
+[ Upstream commit e052d0540298bfe0f6cbbecdc7e2ea9b859575b2 ]
 
-There is no guarantee to CMA's placement, so allocating a zone specific
-atomic pool from CMA might return memory from a completely different
-memory zone. To get around this double check CMA's placement before
-allocating from it.
+Since the stack relays on receiving own packets, it was overwriting own
+transmit buffer from received packets.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+At least theoretically, the received echo buffer can be corrupt or
+changed and the session partner can request to resend previous data. In
+this case we will re-send bad data.
+
+With this patch we will stop to overwrite own TX buffer and use it for
+sanity checking.
+
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Link: https://lore.kernel.org/r/20200807105200.26441-6-o.rempel@pengutronix.de
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/dma/pool.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ net/can/j1939/transport.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-index 5d071d4a3cbaa..06582b488e317 100644
---- a/kernel/dma/pool.c
-+++ b/kernel/dma/pool.c
-@@ -3,7 +3,9 @@
-  * Copyright (C) 2012 ARM Ltd.
-  * Copyright (C) 2020 Google LLC
-  */
-+#include <linux/cma.h>
- #include <linux/debugfs.h>
-+#include <linux/dma-contiguous.h>
- #include <linux/dma-direct.h>
- #include <linux/dma-noncoherent.h>
- #include <linux/init.h>
-@@ -55,6 +57,29 @@ static void dma_atomic_pool_size_add(gfp_t gfp, size_t size)
- 		pool_size_kernel += size;
- }
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index 9f99af5b0b11e..3e9c377b0dcce 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -1769,7 +1769,20 @@ static void j1939_xtp_rx_dat_one(struct j1939_session *session,
+ 	}
  
-+static bool cma_in_zone(gfp_t gfp)
-+{
-+	unsigned long size;
-+	phys_addr_t end;
-+	struct cma *cma;
+ 	tpdat = se_skb->data;
+-	memcpy(&tpdat[offset], &dat[1], nbytes);
++	if (!session->transmission) {
++		memcpy(&tpdat[offset], &dat[1], nbytes);
++	} else {
++		int err;
 +
-+	cma = dev_get_cma_area(NULL);
-+	if (!cma)
-+		return false;
++		err = memcmp(&tpdat[offset], &dat[1], nbytes);
++		if (err)
++			netdev_err_once(priv->ndev,
++					"%s: 0x%p: Data of RX-looped back packet (%*ph) doesn't match TX data (%*ph)!\n",
++					__func__, session,
++					nbytes, &dat[1],
++					nbytes, &tpdat[offset]);
++	}
 +
-+	size = cma_get_size(cma);
-+	if (!size)
-+		return false;
-+
-+	/* CMA can't cross zone boundaries, see cma_activate_area() */
-+	end = cma_get_base(cma) + size - 1;
-+	if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA))
-+		return end <= DMA_BIT_MASK(zone_dma_bits);
-+	if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32))
-+		return end <= DMA_BIT_MASK(32);
-+	return true;
-+}
-+
- static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
- 			      gfp_t gfp)
- {
-@@ -68,7 +93,11 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+ 	if (packet == session->pkt.rx)
+ 		session->pkt.rx++;
  
- 	do {
- 		pool_size = 1 << (PAGE_SHIFT + order);
--		page = alloc_pages(gfp, order);
-+		if (cma_in_zone(gfp))
-+			page = dma_alloc_from_contiguous(NULL, 1 << order,
-+							 order, false);
-+		if (!page)
-+			page = alloc_pages(gfp, order);
- 	} while (!page && order-- > 0);
- 	if (!page)
- 		goto out;
 -- 
 2.25.1
 
