@@ -7,103 +7,187 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBB12067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9432067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:11:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AQbRVPQ5"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DMCiLDcu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgHXVKm (ORCPT
+        id S1727979AbgHXVL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:10:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21690 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726138AbgHXVKh (ORCPT
+        Mon, 24 Aug 2020 17:11:29 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12810 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbgHXVL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 17:10:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598303435;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=98P4pw0MSJfjYTwg7Jr3bMvh36DJTSmp1NgoIinTZVY=;
-        b=AQbRVPQ5OkMoXBg3kUhGbeMt1LVzqxvnBmZQxhhrv0PiPXUu3Gkw4qpL9wwhAiy4TeoPMw
-        5S7RwLZaFxEUlYYR+KN2vqYABXQYrFuqgOpVY0i+Xdtj0HGcqkPds5Fv1z1Xtv+zSPY0f8
-        33U3gPbURsWupNIT6RtZAZIW9vvi61A=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-3KxpaBvbNsiOc6l5ve7Cvw-1; Mon, 24 Aug 2020 17:10:34 -0400
-X-MC-Unique: 3KxpaBvbNsiOc6l5ve7Cvw-1
-Received: by mail-qv1-f69.google.com with SMTP id k17so7296043qvj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 14:10:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=98P4pw0MSJfjYTwg7Jr3bMvh36DJTSmp1NgoIinTZVY=;
-        b=kK0Ynx1dfR+qtgFkb3lyyvP3BT0u+ATsiGD9sKQKY4zjcefmOHBAGEzNQKK7dRi57q
-         3vNmuM25804Ad1v5y0uLjrKUPIHqp6QztMLyshSHMo4tO/TyQrDRd2R6ofz/UEBnRRqK
-         bzmtUMYXQdYHeAJ4b1MN2wzmGEEhI88yWBsj/M+bqwvE61N18tZ/g79s3RLRZBUC2lE6
-         2ayQhcD4YrwOBR9WNq2mGK/urB948d+SvjDCnUPPIRtP953tZz26fsLC4SNAWOqHSjHg
-         S+s+nA29ie0ENBDFvJPNxc+c079682JFUtP8Ae+iqvoumZJFm+0JMzEMocxk74d5v7tG
-         i0HQ==
-X-Gm-Message-State: AOAM532r7LaoEgGAkiIP04a4PiYGbZoMix6CXBf6ks4INPIuWmyD51xE
-        bJMpHYCZLcjHBSQo4V+S1Yw1kaHmg36sdmYbEDzLfrxTfH4KEqq0yII5hX2jOsXjXE052OVNyjb
-        Uc0xPEc0osUIOWmHyzfVQo/O4
-X-Received: by 2002:ac8:3894:: with SMTP id f20mr6679734qtc.243.1598303433825;
-        Mon, 24 Aug 2020 14:10:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwS7pZM6tz74vKWqZ0073bXmrovICgMLihNHEaqZgQPStkNvmVP3ub77pZRv8l2/JBnLnEvCw==
-X-Received: by 2002:ac8:3894:: with SMTP id f20mr6679720qtc.243.1598303433555;
-        Mon, 24 Aug 2020 14:10:33 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id 198sm4681833qkh.19.2020.08.24.14.10.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 14:10:32 -0700 (PDT)
-From:   trix@redhat.com
-To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
-Subject: [PATCH v2] usb: storage: initialize variable
-Date:   Mon, 24 Aug 2020 14:10:27 -0700
-Message-Id: <20200824211027.11543-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Mon, 24 Aug 2020 17:11:28 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f442cc20001>; Mon, 24 Aug 2020 14:10:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 24 Aug 2020 14:11:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 24 Aug 2020 14:11:27 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Aug
+ 2020 21:11:27 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 24 Aug 2020 21:11:27 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.58.8]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f442cff0000>; Mon, 24 Aug 2020 14:11:27 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     <jens.wiklander@linaro.org>
+List-Id: <soc.lore.kernel.org>
+CC:     <arm@kernel.org>, <jhubbard@nvidia.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <olof@lixom.net>, <soc@kernel.org>,
+        <tee-dev@lists.linaro.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>
+Subject: [PATCH v3] tee: convert convert get_user_pages() --> pin_user_pages()
+Date:   Mon, 24 Aug 2020 14:11:25 -0700
+Message-ID: <20200824211125.1867329-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <CAHUa44FrxidzSUOM_JchOTa5pF6P+j8uZJA5DpKfGLWaS6tCcw@mail.gmail.com>
+References: <CAHUa44FrxidzSUOM_JchOTa5pF6P+j8uZJA5DpKfGLWaS6tCcw@mail.gmail.com>
+MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598303426; bh=sPKT2vVWDEL5uCOVvAzzh/qnGwDPnupB1+gNHfgo2wA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=DMCiLDcu/bbZ0HfTovzGNWhZ32KGT2RI2dt39vFl1huAYVropJDqFzm95VE0bDl17
+         2iKl7y4XYSQN7sP9FAZMlRVcoc/USP4iaa04eQ7aXDmCVYNO767uZnlAmtC6qoBwSL
+         fPhaLcdA2bU0nPQSEaYElAz9fEBZOrQj2TOCj8kKL5eZ7LC2xqisYmnZ6lgpBZP2GL
+         sc1CODEDr1LwWbDI2cyEsedGFLX8WmgiHSiUuLZ80FM/PcQqRoj1db3hi3k8oT0RVD
+         QHtHVMRDNGMP/tpWp7jgNH8DS27MP6YoKI7d8OAKpTnFrTMezxD/WDZj4q1zJ0GVZZ
+         8N4VPH4CgRURg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+This code was using get_user_pages*(), in a "Case 2" scenario
+(DMA/RDMA), using the categorization from [1]. That means that it's
+time to convert the get_user_pages*() + put_page() calls to
+pin_user_pages*() + unpin_user_pages() calls.
 
-clang static analysis reports this representative problem
+Factor out a new, small release_registered_pages() function, in
+order to consolidate the logic for discerning between
+TEE_SHM_USER_MAPPED and TEE_SHM_KERNEL_MAPPED pages. This also
+absorbs the kfree() call that is also required there.
 
-transport.c:495:15: warning: Assigned value is garbage or
-  undefined
-        length_left -= partial;
-                   ^  ~~~~~~~
-partial is set only when usb_stor_bulk_transfer_sglist()
-is successful.
+There is some helpful background in [2]: basically, this is a small
+part of fixing a long-standing disconnect between pinning pages, and
+file systems' use of those pages.
 
-So set partial on entry to 0.
+[1] Documentation/core-api/pin_user_pages.rst
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Tom Rix <trix@redhat.com>
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
+
+Cc: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: tee-dev@lists.linaro.org
+Cc: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linaro-mm-sig@lists.linaro.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- drivers/usb/storage/transport.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/usb/storage/transport.c b/drivers/usb/storage/transport.c
-index 238a8088e17f..044429717dcc 100644
---- a/drivers/usb/storage/transport.c
-+++ b/drivers/usb/storage/transport.c
-@@ -414,6 +414,9 @@ static int usb_stor_bulk_transfer_sglist(struct us_data *us, unsigned int pipe,
- {
- 	int result;
- 
-+	if (act_len)
-+		*act_len = 0;
+OK, one more try, this time actually handling the _USER_MAPPED vs.
+_KERNEL_MAPPED pages!
+
+thanks,
+John Hubbard
+NVIDIA
+
+ drivers/tee/tee_shm.c | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
+index 827ac3d0fea9..00472f5ce22e 100644
+--- a/drivers/tee/tee_shm.c
++++ b/drivers/tee/tee_shm.c
+@@ -12,6 +12,22 @@
+ #include <linux/uio.h>
+ #include "tee_private.h"
+=20
++static void release_registered_pages(struct tee_shm *shm)
++{
++	if (shm->pages) {
++		if (shm->flags & TEE_SHM_USER_MAPPED) {
++			unpin_user_pages(shm->pages, shm->num_pages);
++		} else {
++			size_t n;
 +
- 	/* don't submit s-g requests during abort processing */
- 	if (test_bit(US_FLIDX_ABORTING, &us->dflags))
- 		return USB_STOR_XFER_ERROR;
--- 
-2.18.1
++			for (n =3D 0; n < shm->num_pages; n++)
++				put_page(shm->pages[n]);
++		}
++
++		kfree(shm->pages);
++	}
++}
++
+ static void tee_shm_release(struct tee_shm *shm)
+ {
+ 	struct tee_device *teedev =3D shm->ctx->teedev;
+@@ -32,17 +48,13 @@ static void tee_shm_release(struct tee_shm *shm)
+=20
+ 		poolm->ops->free(poolm, shm);
+ 	} else if (shm->flags & TEE_SHM_REGISTER) {
+-		size_t n;
+ 		int rc =3D teedev->desc->ops->shm_unregister(shm->ctx, shm);
+=20
+ 		if (rc)
+ 			dev_err(teedev->dev.parent,
+ 				"unregister shm %p failed: %d", shm, rc);
+=20
+-		for (n =3D 0; n < shm->num_pages; n++)
+-			put_page(shm->pages[n]);
+-
+-		kfree(shm->pages);
++		release_registered_pages(shm);
+ 	}
+=20
+ 	teedev_ctx_put(shm->ctx);
+@@ -228,7 +240,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ct=
+x, unsigned long addr,
+ 	}
+=20
+ 	if (flags & TEE_SHM_USER_MAPPED) {
+-		rc =3D get_user_pages_fast(start, num_pages, FOLL_WRITE,
++		rc =3D pin_user_pages_fast(start, num_pages, FOLL_WRITE,
+ 					 shm->pages);
+ 	} else {
+ 		struct kvec *kiov;
+@@ -292,18 +304,12 @@ struct tee_shm *tee_shm_register(struct tee_context *=
+ctx, unsigned long addr,
+ 	return shm;
+ err:
+ 	if (shm) {
+-		size_t n;
+-
+ 		if (shm->id >=3D 0) {
+ 			mutex_lock(&teedev->mutex);
+ 			idr_remove(&teedev->idr, shm->id);
+ 			mutex_unlock(&teedev->mutex);
+ 		}
+-		if (shm->pages) {
+-			for (n =3D 0; n < shm->num_pages; n++)
+-				put_page(shm->pages[n]);
+-			kfree(shm->pages);
+-		}
++		release_registered_pages(shm);
+ 	}
+ 	kfree(shm);
+ 	teedev_ctx_put(ctx);
+--=20
+2.28.0
 
