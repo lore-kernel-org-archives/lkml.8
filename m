@@ -2,602 +2,368 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,
+	RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF55C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E424C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16A82207CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598288026;
-	bh=nkylpYmrh0TXu25+jhlj4qgj6PC3LxQKPwi8PzxtONo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HdKQ5+df7oYZS43zvmWaip0oukSuWP5soVlKb0CPcQJaEVf113pjbW8C8nQH7WlVt
-	 XQ6N5TzBgJzdHyForRdbFWVlNFTJiBfmcP0I+DC6gh8JqNqAyqAaFx8m6iZ5xHNh24
-	 XtlldPoZoASp5X2rhFu5qtDAd0EyqOLnnCK6oouQ=
+	by mail.kernel.org (Postfix) with ESMTP id F06F720578
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:54:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Ltt4zHfU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgHXQxo (ORCPT
+        id S1728909AbgHXQyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:53:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727955AbgHXQsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:48:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3C0D2067C;
-        Mon, 24 Aug 2020 16:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287696;
-        bh=nkylpYmrh0TXu25+jhlj4qgj6PC3LxQKPwi8PzxtONo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NQFtmmK3cfCeprQA/dzZfcmV8bCPRCuT8Q0euJFxFw8V7J+injgUgndMvMj/Ad+rY
-         pnqpsDbQV5Z7jpFF2aE671a7eY1wWrPcxUIU0e7sR5/5DC97rM9Nj70JB4Rw12kgoR
-         vo1U9o6OIbWK9GBwxSneWTFP6isn66klZvEpQU74=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.7 000/127] 5.7.18-rc2 review
-Date:   Mon, 24 Aug 2020 18:48:33 +0200
-Message-Id: <20200824164741.748994020@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
+        Mon, 24 Aug 2020 12:54:10 -0400
+Received: from mail-dm6nam12on2120.outbound.protection.outlook.com ([40.107.243.120]:2560
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728693AbgHXQsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:48:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SY1g8XQiB/oy2ZmGf4fV67VPcYuUH2kBnxkKJTn4FbyGHWYrqLra2zg5kyMzGSG+XGXSqWzUgcm1EBxYCdWzzPDH6ROQIC2zBheyZ6U3VFmjMkHiKrWu5EzDZMWaLoub6YGL09/iowWD4pJ/eqAVSvnEHnr/D4VqFUZ0vIwK8xBLuBq7DFM0p62N7JRxw8EHbawZIkDl0wxNeQxSJZ7e3FlIjDujcot7qe2p/lbl1SRAZ5nhT7zGYmK9VowP+W+lLd/y2V4k7EleZU3FM5JbnIiaTmXgTZ6f6jzBSRPX/AOsMvtvprSXZFPkUnb6sPtNd7NSUyGWwjQ52TgakGuZAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VPEJ0LhBMi11K0Ceh46uoxwvptx+cBGqVsPdtnOFmDs=;
+ b=Qo0Rvh1VACgjPuDRvNrGtqLOamEEzFRMISslMpz38z4nwz4NGD0h9VIrnqx7Hs1h4oHkpRmjFn/qBwFrrgUhfNKZw/WtEhq4aEIVMyXKw7nKyUpNWANL8PqrZwtvgyUM+wxj8XyoFlcxtXGJ6gNn2/Km2/BucJrG+2d38usqi8RzqkLz3l7Sx9iL3u5E0QkEAiKl5BRhki8HDjL6of53z5afebMb0FqtoJgUR2Jws6vLad3YdLtMtZGx1c0elcNSl8mnNb75LTpXSJ8P0wlCTD3SJE+sYH5gp0YbM37I1Yb5MtI23iY1uch1LjJNoIO1aWh2U/1F02Hkqtdn3uN/Vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VPEJ0LhBMi11K0Ceh46uoxwvptx+cBGqVsPdtnOFmDs=;
+ b=Ltt4zHfUQjH5WsGVRj1yxuy4je+4/z+1z4hseDgPq6KycR0hfJoOJo3V+mLLrRwalHuE/espKmPqBeqJET82brTLoVCyXePxuXTyNxLyV2SLST/D+XgDoTdfpHf6PfN+tNE8lWkKMlJ1wo5l8iaPo0e/KfygIK2Y9ywBvsAJP+I=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
+Received: from BN8PR21MB1281.namprd21.prod.outlook.com (2603:10b6:408:a2::19)
+ by BN6PR21MB0753.namprd21.prod.outlook.com (2603:10b6:404:9c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.4; Mon, 24 Aug
+ 2020 16:47:47 +0000
+Received: from BN8PR21MB1281.namprd21.prod.outlook.com
+ ([fe80::e0c9:2634:6fb1:5615]) by BN8PR21MB1281.namprd21.prod.outlook.com
+ ([fe80::e0c9:2634:6fb1:5615%3]) with mapi id 15.20.3326.012; Mon, 24 Aug 2020
+ 16:47:47 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     will@kernel.org, ardb@kernel.org, arnd@arndb.de,
+        catalin.marinas@arm.com, mark.rutland@arm.com, maz@kernel.org,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arch@vger.kernel.org,
+        wei.liu@kernel.org, vkuznets@redhat.com, kys@microsoft.com
+Cc:     mikelley@microsoft.com, sunilmut@microsoft.com,
+        boqun.feng@gmail.com
+Subject: [PATCH v7 03/10] arm64: hyperv: Add hypercall and register access functions
+Date:   Mon, 24 Aug 2020 09:46:16 -0700
+Message-Id: <1598287583-71762-4-git-send-email-mikelley@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
+References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
+Content-Type: text/plain
+X-ClientProxiedBy: CO2PR04CA0145.namprd04.prod.outlook.com (2603:10b6:104::23)
+ To BN8PR21MB1281.namprd21.prod.outlook.com (2603:10b6:408:a2::19)
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.7.18-rc2.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.18-rc2
-X-KernelTest-Deadline: 2020-08-26T16:47+00:00
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by CO2PR04CA0145.namprd04.prod.outlook.com (2603:10b6:104::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Mon, 24 Aug 2020 16:47:45 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [131.107.159.16]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7a6c7132-c485-482a-7f73-08d8484d6dfb
+X-MS-TrafficTypeDiagnostic: BN6PR21MB0753:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <BN6PR21MB07533D716FC9234FA8AD5C21D7560@BN6PR21MB0753.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NKLnWbe3nG96eEVc/lwsVnRi494T20LfGTLTZO26q2NnISbO+DZFK+vTJgMhQos9C+0YkKHUbCqi5yMAg3CzIApwTOfH9A6IeAlx9uBcz7wc/AxwyC5XQEpz5uPbc+o/8Oa6YL2qTxUa826fXDEjP4Gp1vqGC+lg7Bv3XXT6hferMcpfubG18VvtBoMOxIgBCEWLSjboSRtBvhRDUHxtJzBPkQJsJTfWOYbLg2jhccBihhAuuuoaAJChHTiykArkY2pA/RCPhce5TPz4NvI8BZ6byxDNQskeMJ4z3pynuXAo/BBi3lMXN2fcwPFvQQb7qahGqCG53G6XCO4s4vkjaA+4GhRFG5njyElBjVbQbmhqLKau/DJME0mnaM4BdKYd
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1281.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39860400002)(366004)(376002)(396003)(346002)(8676002)(86362001)(2616005)(956004)(2906002)(6486002)(8936002)(52116002)(10290500003)(5660300002)(66946007)(16576012)(66556008)(4326008)(6636002)(316002)(36756003)(186003)(82950400001)(478600001)(26005)(6666004)(66476007)(82960400001)(83380400001)(7416002)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: oDZda5zL9jVjdJihUxd60n/KWejz+XQDuq6G60DtfamhU8kPUARDNywpYLYoLtwoIO7Dg4HtpQBFDRH4u9iDCVEVLajp+AZ9Nr7SqKW4l3G3WhaPhLGZdqaVGy51uupA3cAbt0hk56Zuj1c/wIEmDhV1eTP5gMtANLkCp01jLWAhfDmVwCa4PyT0yn5Gzj5jyUY3q4BJYDXqkHRVIc0Czcywxo4gVfOfRbOjwwxIoC7g5T4/EDml2/9B7zByzmqXCAHDRM6LbusWRqhlO+ajWvHZmIC62IIuZUueb+0+nrU7X6aVHlotEdfCqakACzpsW1/iqHDB//0GEyds+1Zatt1A7mBQfcGOkwEOF9f46V4/A+X/lLCou47evSRHgGqp/8eYGiailUIt/Nek/VdmPxL8O6mSfle5XZKeW5lcyvQBPaLjbUvz3KgbnO8QYps1y0uMk7V2zB52iar9f6WeQQBvkaDMZ6n/cElKumVgPYCGj1OCpJ9u+7FZhE6+7cavNTxQ9AZZChnTYykm4g5UUxN+EH2snsZrXtbGQNN0v1R8oA1tfOTV5N28v+t8A8f39Uujj+gCAkWQj6hMpU/3aSioD5CWvxXyKw3b7+6MzwGr77FYofz76Tgb5ZSw5Uu3eA+KAj9RkoWoESJNYwnnyQ==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a6c7132-c485-482a-7f73-08d8484d6dfb
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR21MB1281.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2020 16:47:46.9044
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zd5xBIA/OY6yc0m10dkWU++ye8n43jFacXJBpAScP9kcmb3oVog2eEWZC93K19I2jomNYZInZA5xqvUwIIiymA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0753
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.7.18 release.
-There are 127 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Wed, 26 Aug 2020 16:47:07 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.18-rc2.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.7.18-rc2
-
-Alex Deucher <alexdeucher@gmail.com>
-    Revert "drm/amd/display: Improve DisplayPort monitor interop"
-
-Will Deacon <will@kernel.org>
-    KVM: arm64: Only reschedule if MMU_NOTIFIER_RANGE_BLOCKABLE is not set
-
-Will Deacon <will@kernel.org>
-    KVM: Pass MMU notifier range flags to kvm_unmap_hva_range()
-
-Juergen Gross <jgross@suse.com>
-    xen: don't reschedule in preemption off sections
-
-Al Viro <viro@zeniv.linux.org.uk>
-    do_epoll_ctl(): clean the failure exits up a bit
-
-Arvind Sankar <nivedita@alum.mit.edu>
-    efi/libstub: Handle NULL cmdline
-
-Arvind Sankar <nivedita@alum.mit.edu>
-    efi/libstub: Stop parsing arguments at "--"
-
-Li Heng <liheng40@huawei.com>
-    efi: add missed destroy_workqueue when efisubsys_init fails
-
-Arvind Sankar <nivedita@alum.mit.edu>
-    efi/x86: Mark kernel rodata non-executable for mixed mode
-
-Tony Luck <tony.luck@intel.com>
-    EDAC/{i7core,sb,pnd2,skx}: Fix error event severity
-
-Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
-    powerpc/pseries: Do not initiate shutdown when system is running on UPS
-
-Marc Zyngier <maz@kernel.org>
-    epoll: Keep a reference on files added to the check list
-
-Tom Rix <trix@redhat.com>
-    net: dsa: b53: check for timeout
-
-Haiyang Zhang <haiyangz@microsoft.com>
-    hv_netvsc: Fix the queue_mapping in netvsc_vf_xmit()
-
-Wang Hai <wanghai38@huawei.com>
-    net: gemini: Fix missing free_netdev() in error path of gemini_ethernet_port_probe()
-
-Shay Agroskin <shayagr@amazon.com>
-    net: ena: Change WARN_ON expression in ena_del_napi_in_range()
-
-Shay Agroskin <shayagr@amazon.com>
-    net: ena: Prevent reset after device destruction
-
-Jiri Wiesner <jwiesner@suse.com>
-    bonding: fix active-backup failover for current ARP slave
-
-Michael Roth <mdroth@linux.vnet.ibm.com>
-    powerpc/pseries/hotplug-cpu: wait indefinitely for vCPU death
-
-Christophe Leroy <christophe.leroy@csgroup.eu>
-    powerpc/fixmap: Fix the size of the early debug area
-
-Stephen Boyd <swboyd@chromium.org>
-    ARM64: vdso32: Install vdso32 from vdso_install
-
-David Howells <dhowells@redhat.com>
-    afs: Fix NULL deref in afs_dynroot_depopulate()
-
-Selvin Xavier <selvin.xavier@broadcom.com>
-    RDMA/bnxt_re: Do not add user qps to flushlist
-
-Randy Dunlap <rdunlap@infradead.org>
-    Fix build error when CONFIG_ACPI is not set/enabled:
-
-Juergen Gross <jgross@suse.com>
-    efi: avoid error message when booting under Xen
-
-Masahiro Yamada <masahiroy@kernel.org>
-    kconfig: qconf: fix signal connection to invalid slots
-
-Masahiro Yamada <masahiroy@kernel.org>
-    kconfig: qconf: do not limit the pop-up menu to the first row
-
-Quinn Tran <qutran@marvell.com>
-    Revert "scsi: qla2xxx: Disable T10-DIF feature with FC-NVMe during probe"
-
-Adrian Hunter <adrian.hunter@intel.com>
-    scsi: ufs: Fix interrupt error message for shared interrupts
-
-Adrian Hunter <adrian.hunter@intel.com>
-    scsi: ufs-pci: Add quirk for broken auto-hibernate for Intel EHL
-
-Kiwoong Kim <kwmad.kim@samsung.com>
-    scsi: ufs: Add quirk to fix abnormal ocs fatal error
-
-Alim Akhtar <alim.akhtar@samsung.com>
-    scsi: ufs: Introduce UFSHCD_QUIRK_PRDT_BYTE_GRAN quirk
-
-Alim Akhtar <alim.akhtar@samsung.com>
-    scsi: ufs: Add quirk to enable host controller without hce
-
-Alim Akhtar <alim.akhtar@samsung.com>
-    scsi: ufs: Add quirk to disallow reset of interrupt aggregation
-
-Alim Akhtar <alim.akhtar@samsung.com>
-    scsi: ufs: Add quirk to fix mishandling utrlclr/utmrlclr
-
-Jing Xiangfeng <jingxiangfeng@huawei.com>
-    scsi: ufs: ti-j721e-ufs: Fix error return in ti_j721e_ufs_probe()
-
-Colin Ian King <colin.king@canonical.com>
-    of/address: check for invalid range.cpu_addr
-
-Jim Mattson <jmattson@google.com>
-    kvm: x86: Toggling CR4.PKE does not load PDPTEs in PAE mode
-
-Jim Mattson <jmattson@google.com>
-    kvm: x86: Toggling CR4.SMAP does not load PDPTEs in PAE mode
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio/type1: Add proper error unwind for vfio_iommu_replay()
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    ASoC: intel: Fix memleak in sst_media_open
-
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-    ASoC: msm8916-wcd-analog: fix register Interrupt offset
-
-Heiko Carstens <hca@linux.ibm.com>
-    s390/ptrace: fix storage key handling
-
-Heiko Carstens <hca@linux.ibm.com>
-    s390/runtime_instrumentation: fix storage key handling
-
-Mahesh Bandewar <maheshb@google.com>
-    ipvlan: fix device features
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    bonding: fix a potential double-unregister
-
-Zhang Changzhong <zhangchangzhong@huawei.com>
-    can: j1939: add rxtimer for multipacket broadcast session
-
-Zhang Changzhong <zhangchangzhong@huawei.com>
-    can: j1939: abort multipacket broadcast session when timeout occurs
-
-Zhang Changzhong <zhangchangzhong@huawei.com>
-    can: j1939: cancel rxtimer on multipacket broadcast session complete
-
-Zhang Changzhong <zhangchangzhong@huawei.com>
-    can: j1939: fix support for multipacket broadcast message
-
-Jarod Wilson <jarod@redhat.com>
-    bonding: show saner speed for broadcast mode
-
-Fugang Duan <fugang.duan@nxp.com>
-    net: fec: correct the error path for regulator disable in probe
-
-Grzegorz Szczurek <grzegorzx.szczurek@intel.com>
-    i40e: Fix crash during removing i40e driver
-
-Przemyslaw Patynowski <przemyslawx.patynowski@intel.com>
-    i40e: Set RX_ONLY mode for unicast promiscuous on VLAN
-
-Vinicius Costa Gomes <vinicius.gomes@intel.com>
-    igc: Fix PTP initialization
-
-Oleksij Rempel <linux@rempel-privat.de>
-    can: j1939: transport: add j1939_session_skb_find_by_offset() function
-
-Oleksij Rempel <linux@rempel-privat.de>
-    can: j1939: transport: j1939_simple_recv(): ignore local J1939 messages send not by J1939 stack
-
-Eric Dumazet <edumazet@google.com>
-    can: j1939: fix kernel-infoleak in j1939_sk_sock2sockaddr_can()
-
-John Fastabend <john.fastabend@gmail.com>
-    bpf: sock_ops sk access may stomp registers when dst_reg = src_reg
-
-John Fastabend <john.fastabend@gmail.com>
-    bpf: sock_ops ctx access may stomp registers in corner case
-
-Andrii Nakryiko <andriin@fb.com>
-    tools/bpftool: Make skeleton code C++17-friendly by dropping typeof()
-
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-    ASoC: q6routing: add dummy register read/write function
-
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-    ASoC: q6afe-dai: mark all widgets registers as SND_SOC_NOPM
-
-Amelie Delaunay <amelie.delaunay@st.com>
-    spi: stm32: fixes suspend/resume management
-
-Stephen Suryaputra <ssuryaextr@gmail.com>
-    netfilter: nf_tables: nft_exthdr: the presence return value should be little-endian
-
-Jan Kara <jack@suse.cz>
-    ext4: check journal inode extents more carefully
-
-Jan Kara <jack@suse.cz>
-    ext4: don't allow overlapping system zones
-
-Qi Liu <liuqi.16@bytedance.com>
-    drm/virtio: fix missing dma_fence_put() in virtio_gpu_execbuffer_ioctl()
-
-Eric Sandeen <sandeen@redhat.com>
-    ext4: fix potential negative array index in do_split()
-
-Helge Deller <deller@gmx.de>
-    fs/signalfd.c: fix inconsistent return codes for signalfd4
-
-Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-    alpha: fix annotation of io{read,write}{16,32}be()
-
-Eiichi Tsukata <devel@etsukata.com>
-    xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
-
-Gaurav Singh <gaurav1086@gmail.com>
-    tools/testing/selftests/cgroup/cgroup_util.c: cg_read_strcmp: fix null pointer dereference
-
-Evgeny Novikov <novikov@ispras.ru>
-    media: camss: fix memory leaks on error handling paths in probe
-
-Mao Wenan <wenan.mao@linux.alibaba.com>
-    virtio_ring: Avoid loop when vq is broken in virtqueue_poll
-
-Javed Hasan <jhasan@marvell.com>
-    scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
-
-Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-    cpufreq: intel_pstate: Fix cpuinfo_max_freq when MSR_TURBO_RATIO_LIMIT is 0
-
-Boris Ostrovsky <boris.ostrovsky@oracle.com>
-    swiotlb-xen: use vmalloc_to_page on vmalloc virt addresses
-
-Xiubo Li <xiubli@redhat.com>
-    ceph: fix use-after-free for fsc->mdsc
-
-Zhe Li <lizhe67@huawei.com>
-    jffs2: fix UAF problem
-
-Guo Ren <guoren@linux.alibaba.com>
-    riscv: Fixup static_obj() fail
-
-Felix Kuehling <Felix.Kuehling@amd.com>
-    drm/ttm: fix offset in VMAs with a pg_offs in ttm_bo_vm_access
-
-Darrick J. Wong <darrick.wong@oracle.com>
-    xfs: fix inode quota reservation checks
-
-Chuck Lever <chuck.lever@oracle.com>
-    svcrdma: Fix another Receive buffer leak
-
-Greg Ungerer <gerg@linux-m68k.org>
-    m68knommu: fix overwriting of bits in ColdFire V3 cache control
-
-Jinyang He <hejinyang@loongson.cn>
-    MIPS: Fix unable to reserve memory for Crash kernel
-
-Xiongfeng Wang <wangxiongfeng2@huawei.com>
-    Input: psmouse - add a newline when printing 'proto' by sysfs
-
-Evgeny Novikov <novikov@ispras.ru>
-    media: vpss: clean up resources in init
-
-Huacai Chen <chenhc@lemote.com>
-    rtc: goldfish: Enable interrupt in set_alarm() when necessary
-
-Chao Yu <chao@kernel.org>
-    f2fs: fix to check page dirty status before writeback
-
-Chuhong Yuan <hslester96@gmail.com>
-    media: budget-core: Improve exception handling in budget_register()
-
-Bodo Stroesser <bstroesser@ts.fujitsu.com>
-    scsi: target: tcmu: Fix crash in tcmu_flush_dcache_range on ARM
-
-Stanley Chu <stanley.chu@mediatek.com>
-    scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
-
-Stephen Boyd <swboyd@chromium.org>
-    opp: Put opp table in dev_pm_opp_set_rate() for empty tables
-
-Viresh Kumar <viresh.kumar@linaro.org>
-    opp: Reorder the code for !target_freq case
-
-Rajendra Nayak <rnayak@codeaurora.org>
-    opp: Enable resources again if they were disabled earlier
-
-Jens Axboe <axboe@kernel.dk>
-    io_uring: find and cancel head link async work on files exit
-
-Pavel Begunkov <asml.silence@gmail.com>
-    io_uring: cancel all task's requests on exit
-
-Pavel Begunkov <asml.silence@gmail.com>
-    io-wq: add an option to cancel all matched reqs
-
-Pavel Begunkov <asml.silence@gmail.com>
-    io-wq: reorder cancellation pending -> running
-
-Krunoslav Kovac <Krunoslav.Kovac@amd.com>
-    drm/amd/display: fix pow() crashing when given base 0
-
-Paul Hsieh <paul.hsieh@amd.com>
-    drm/amd/display: Fix DFPstate hang due to view port changed
-
-Jaehyun Chung <jaehyun.chung@amd.com>
-    drm/amd/display: Blank stream before destroying HDCP session
-
-Stylon Wang <stylon.wang@amd.com>
-    drm/amd/display: Fix EDID parsing after resume from suspend
-
-Daniel Kolesa <daniel@octaforge.org>
-    drm/amdgpu/display: use GFP_ATOMIC in dcn20_validate_bandwidth_internal
-
-Yang Shi <shy828301@gmail.com>
-    mm/memory.c: skip spurious TLB flush for retried page fault
-
-Yang Weijiang <weijiang.yang@intel.com>
-    selftests: kvm: Use a shorter encoding to clear RAX
-
-Steffen Maier <maier@linux.ibm.com>
-    scsi: zfcp: Fix use-after-free in request timeout handlers
-
-zhangyi (F) <yi.zhang@huawei.com>
-    jbd2: add the missing unlock_buffer() in the error path of jbd2_write_superblock()
-
-Jan Kara <jack@suse.cz>
-    ext4: fix checking of directory entry validity for inline directories
-
-Jan Kara <jack@suse.cz>
-    ext4: do not block RWF_NOWAIT dio write on unallocated space
-
-Kaike Wan <kaike.wan@intel.com>
-    RDMA/hfi1: Correct an interlock issue for TID RDMA WRITE request
-
-Charan Teja Reddy <charante@codeaurora.org>
-    mm, page_alloc: fix core hung in free_pcppages_bulk()
-
-Doug Berger <opendmb@gmail.com>
-    mm: include CMA pages in lowmem_reserve at boot
-
-Hugh Dickins <hughd@google.com>
-    uprobes: __replace_page() avoid BUG in munlock_vma_page()
-
-Wei Yongjun <weiyongjun1@huawei.com>
-    kernel/relay.c: fix memleak on destroy relay channel
-
-Jann Horn <jannh@google.com>
-    romfs: fix uninitialized memory leak in romfs_dev_read()
-
-Lukas Wunner <lukas@wunner.de>
-    spi: Prevent adding devices below an unregistering controller
-
-Oleksij Rempel <linux@rempel-privat.de>
-    can: j1939: socket: j1939_sk_bind(): make sure ml_priv is allocated
-
-Oleksij Rempel <linux@rempel-privat.de>
-    can: j1939: transport: j1939_session_tx_dat(): fix use-after-free read in j1939_tp_txtimer()
-
-Mike Pozulp <pozulp.kernel@gmail.com>
-    ALSA: hda/realtek: Add quirk for Samsung Galaxy Book Ion
-
-Mike Pozulp <pozulp.kernel@gmail.com>
-    ALSA: hda/realtek: Add quirk for Samsung Galaxy Flex Book
-
-Coly Li <colyli@suse.de>
-    bcache: avoid nr_stripes overflow in bcache_device_init()
-
-Hugh Dickins <hughd@google.com>
-    khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
-
-Hugh Dickins <hughd@google.com>
-    khugepaged: khugepaged_test_exit() check mmget_still_valid()
-
-Paul Cercueil <paul@crapouillou.net>
-    drm/panel-simple: Fix inverted V/H SYNC for Frida FRD350H54004 panel
-
-Chris Wilson <chris@chris-wilson.co.uk>
-    drm/vgem: Replace opencoded version of drm_gem_dumb_map_offset()
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/alpha/include/asm/io.h                        |   8 +-
- arch/arm64/Makefile                                |   1 +
- arch/arm64/include/asm/kvm_host.h                  |   2 +-
- arch/arm64/kernel/vdso32/Makefile                  |   2 +-
- arch/m68k/include/asm/m53xxacr.h                   |   6 +-
- arch/mips/include/asm/kvm_host.h                   |   2 +-
- arch/mips/kernel/setup.c                           |   2 +-
- arch/mips/kvm/mmu.c                                |   3 +-
- arch/powerpc/include/asm/fixmap.h                  |   2 +-
- arch/powerpc/include/asm/kvm_host.h                |   3 +-
- arch/powerpc/kvm/book3s.c                          |   3 +-
- arch/powerpc/kvm/e500_mmu_host.c                   |   3 +-
- arch/powerpc/platforms/pseries/hotplug-cpu.c       |  18 +-
- arch/powerpc/platforms/pseries/ras.c               |   1 -
- arch/riscv/kernel/vmlinux.lds.S                    |   2 +-
- arch/s390/kernel/ptrace.c                          |   7 +-
- arch/s390/kernel/runtime_instr.c                   |   2 +-
- arch/x86/include/asm/kvm_host.h                    |   3 +-
- arch/x86/kvm/mmu/mmu.c                             |   3 +-
- arch/x86/kvm/x86.c                                 |   2 +-
- arch/x86/pci/xen.c                                 |   1 +
- arch/x86/platform/efi/efi_64.c                     |   2 +
- drivers/cpufreq/intel_pstate.c                     |   1 +
- drivers/edac/i7core_edac.c                         |   4 +-
- drivers/edac/pnd2_edac.c                           |   2 +-
- drivers/edac/sb_edac.c                             |   4 +-
- drivers/edac/skx_common.c                          |   4 +-
- drivers/firmware/efi/efi.c                         |   2 +
- drivers/firmware/efi/libstub/efi-stub-helper.c     |   8 +-
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |   1 +
- drivers/gpu/drm/amd/display/dc/core/dc_link.c      |   7 +-
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c   |  16 +-
- .../amd/display/dc/dce110/dce110_hw_sequencer.c    |  11 +-
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c |   4 +-
- .../gpu/drm/amd/display/dc/dcn20/dcn20_resource.c  |   2 +-
- drivers/gpu/drm/amd/display/include/fixed31_32.h   |   3 +
- drivers/gpu/drm/panel/panel-simple.c               |   2 +-
- drivers/gpu/drm/ttm/ttm_bo_vm.c                    |   4 +-
- drivers/gpu/drm/vgem/vgem_drv.c                    |  27 ---
- drivers/gpu/drm/virtio/virtgpu_ioctl.c             |   1 +
- drivers/infiniband/hw/bnxt_re/main.c               |   3 +-
- drivers/infiniband/hw/hfi1/tid_rdma.c              |   1 +
- drivers/input/mouse/psmouse-base.c                 |   2 +-
- drivers/md/bcache/super.c                          |  12 +-
- drivers/media/pci/ttpci/budget-core.c              |  11 +-
- drivers/media/platform/davinci/vpss.c              |  20 +-
- drivers/media/platform/qcom/camss/camss.c          |  30 ++-
- drivers/net/bonding/bond_main.c                    |  42 ++++-
- drivers/net/dsa/b53/b53_common.c                   |   2 +
- drivers/net/ethernet/amazon/ena/ena_netdev.c       |  30 ++-
- drivers/net/ethernet/cortina/gemini.c              |   4 +-
- drivers/net/ethernet/freescale/fec_main.c          |   4 +-
- drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h  |   2 +-
- drivers/net/ethernet/intel/i40e/i40e_common.c      |  35 +++-
- drivers/net/ethernet/intel/i40e/i40e_main.c        |   3 +
- drivers/net/ethernet/intel/igc/igc_main.c          |   5 +-
- drivers/net/ethernet/intel/igc/igc_ptp.c           |   2 -
- drivers/net/hyperv/netvsc_drv.c                    |   2 +-
- drivers/net/ipvlan/ipvlan_main.c                   |  27 ++-
- drivers/of/address.c                               |   5 +
- drivers/opp/core.c                                 |  28 ++-
- drivers/rtc/rtc-goldfish.c                         |   1 +
- drivers/s390/scsi/zfcp_fsf.c                       |   4 +-
- drivers/scsi/libfc/fc_disc.c                       |  12 +-
- drivers/scsi/qla2xxx/qla_os.c                      |   4 -
- drivers/scsi/ufs/ti-j721e-ufs.c                    |   1 +
- drivers/scsi/ufs/ufs_quirks.h                      |   1 +
- drivers/scsi/ufs/ufshcd-pci.c                      |  16 +-
- drivers/scsi/ufs/ufshcd.c                          | 130 +++++++++++--
- drivers/scsi/ufs/ufshcd.h                          |  38 +++-
- drivers/spi/Kconfig                                |   3 +
- drivers/spi/spi-stm32.c                            |  27 ++-
- drivers/spi/spi.c                                  |  21 ++-
- drivers/target/target_core_user.c                  |   2 +-
- drivers/vfio/vfio_iommu_type1.c                    |  71 ++++++-
- drivers/video/fbdev/efifb.c                        |   2 +-
- drivers/virtio/virtio_ring.c                       |   3 +
- drivers/xen/preempt.c                              |   2 +-
- drivers/xen/swiotlb-xen.c                          |   8 +-
- fs/afs/dynroot.c                                   |  20 +-
- fs/ceph/mds_client.c                               |   3 +-
- fs/eventpoll.c                                     |  26 +--
- fs/ext4/block_validity.c                           |  87 ++++-----
- fs/ext4/ext4.h                                     |   6 +-
- fs/ext4/extents.c                                  |  16 +-
- fs/ext4/file.c                                     |   4 +
- fs/ext4/indirect.c                                 |   6 +-
- fs/ext4/inode.c                                    |   5 +-
- fs/ext4/mballoc.c                                  |   4 +-
- fs/ext4/namei.c                                    |  22 ++-
- fs/f2fs/compress.c                                 |   6 +
- fs/io-wq.c                                         | 108 ++++++-----
- fs/io-wq.h                                         |   3 +-
- fs/io_uring.c                                      |  49 ++++-
- fs/jbd2/journal.c                                  |   4 +-
- fs/jffs2/dir.c                                     |   6 +-
- fs/romfs/storage.c                                 |   4 +-
- fs/signalfd.c                                      |  10 +-
- fs/xfs/xfs_sysfs.h                                 |   6 +-
- fs/xfs/xfs_trans_dquot.c                           |   2 +-
- kernel/events/uprobes.c                            |   2 +-
- kernel/relay.c                                     |   1 +
- mm/khugepaged.c                                    |   7 +-
- mm/memory.c                                        |   3 +
- mm/page_alloc.c                                    |   7 +-
- net/can/j1939/socket.c                             |  14 ++
- net/can/j1939/transport.c                          |  89 +++++++--
- net/core/filter.c                                  |  75 ++++++--
- net/netfilter/nft_exthdr.c                         |   4 +-
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c            |   2 +
- scripts/kconfig/qconf.cc                           |  70 +++----
- sound/pci/hda/patch_realtek.c                      |   2 +
- sound/soc/codecs/msm8916-wcd-analog.c              |   4 +-
- sound/soc/intel/atom/sst-mfld-platform-pcm.c       |   5 +-
- sound/soc/qcom/qdsp6/q6afe-dai.c                   | 210 ++++++++++-----------
- sound/soc/qcom/qdsp6/q6routing.c                   |  16 ++
- tools/bpf/bpftool/gen.c                            |   8 +-
- tools/testing/selftests/cgroup/cgroup_util.c       |   2 +-
- tools/testing/selftests/kvm/x86_64/debug_regs.c    |   4 +-
- virt/kvm/arm/mmu.c                                 |  19 +-
- virt/kvm/kvm_main.c                                |   3 +-
- 122 files changed, 1159 insertions(+), 586 deletions(-)
-
+Add ARM64-specific code to make Hyper-V hypercalls and to
+access virtual processor synthetic registers via hypercalls.
+Hypercalls follow the SMC Calling Convention spec v1.1.
+
+This code is architecture dependent and is mostly driven by
+architecture independent code in the VMbus driver and the
+Hyper-V timer clocksource driver.
+
+This code is built only when CONFIG_HYPERV is enabled.
+
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+---
+ MAINTAINERS                       |   1 +
+ arch/arm64/Kbuild                 |   1 +
+ arch/arm64/hyperv/Makefile        |   2 +
+ arch/arm64/hyperv/hv_core.c       | 170 ++++++++++++++++++++++++++++++++++++++
+ arch/arm64/include/asm/mshyperv.h |  17 ++++
+ 5 files changed, 191 insertions(+)
+ create mode 100644 arch/arm64/hyperv/Makefile
+ create mode 100644 arch/arm64/hyperv/hv_core.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 803bade..f67d208 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8054,6 +8054,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+ F:	Documentation/ABI/stable/sysfs-bus-vmbus
+ F:	Documentation/ABI/testing/debugfs-hyperv
+ F:	Documentation/networking/device_drivers/ethernet/microsoft/netvsc.rst
++F:	arch/arm64/hyperv
+ F:	arch/arm64/include/asm/hyperv-tlfs.h
+ F:	arch/arm64/include/asm/mshyperv.h
+ F:	arch/x86/hyperv
+diff --git a/arch/arm64/Kbuild b/arch/arm64/Kbuild
+index d646582..7a37608 100644
+--- a/arch/arm64/Kbuild
++++ b/arch/arm64/Kbuild
+@@ -3,4 +3,5 @@ obj-y			+= kernel/ mm/
+ obj-$(CONFIG_NET)	+= net/
+ obj-$(CONFIG_KVM)	+= kvm/
+ obj-$(CONFIG_XEN)	+= xen/
++obj-$(subst m,y,$(CONFIG_HYPERV))	+= hyperv/
+ obj-$(CONFIG_CRYPTO)	+= crypto/
+diff --git a/arch/arm64/hyperv/Makefile b/arch/arm64/hyperv/Makefile
+new file mode 100644
+index 0000000..1697d30
+--- /dev/null
++++ b/arch/arm64/hyperv/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-y		:= hv_core.o
+diff --git a/arch/arm64/hyperv/hv_core.c b/arch/arm64/hyperv/hv_core.c
+new file mode 100644
+index 0000000..9b35011
+--- /dev/null
++++ b/arch/arm64/hyperv/hv_core.c
+@@ -0,0 +1,170 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Initialization of the interface with Microsoft's Hyper-V hypervisor,
++ * and various low level utility routines for interacting with Hyper-V.
++ *
++ * Copyright (C) 2019, Microsoft, Inc.
++ *
++ * Author : Michael Kelley <mikelley@microsoft.com>
++ */
++
++
++#include <linux/types.h>
++#include <linux/log2.h>
++#include <linux/version.h>
++#include <linux/export.h>
++#include <linux/mm.h>
++#include <linux/slab.h>
++#include <linux/hyperv.h>
++#include <linux/arm-smccc.h>
++#include <asm-generic/bug.h>
++#include <asm/hyperv-tlfs.h>
++#include <asm/mshyperv.h>
++
++
++/*
++ * hv_do_hypercall- Invoke the specified hypercall
++ */
++u64 hv_do_hypercall(u64 control, void *input, void *output)
++{
++	u64 input_address;
++	u64 output_address;
++	struct arm_smccc_res res;
++
++	input_address = input ? virt_to_phys(input) : 0;
++	output_address = output ? virt_to_phys(output) : 0;
++
++	arm_smccc_1_1_hvc(HV_FUNC_ID, control,
++			  input_address, output_address, &res);
++	return res.a0;
++}
++EXPORT_SYMBOL_GPL(hv_do_hypercall);
++
++/*
++ * hv_do_fast_hypercall8 -- Invoke the specified hypercall
++ * with arguments in registers instead of physical memory.
++ * Avoids the overhead of virt_to_phys for simple hypercalls.
++ */
++
++u64 hv_do_fast_hypercall8(u16 code, u64 input)
++{
++	u64 control;
++	struct arm_smccc_res res;
++
++	control = (u64)code | HV_HYPERCALL_FAST_BIT;
++
++	arm_smccc_1_1_hvc(HV_FUNC_ID, control, input, &res);
++	return res.a0;
++}
++EXPORT_SYMBOL_GPL(hv_do_fast_hypercall8);
++
++
++/*
++ * Set a single VP register to a 64-bit value.
++ */
++void hv_set_vpreg(u32 msr, u64 value)
++{
++	struct arm_smccc_res res;
++
++	arm_smccc_1_1_hvc(
++		HV_FUNC_ID,
++		HVCALL_SET_VP_REGISTERS | HV_HYPERCALL_FAST_BIT |
++			HV_HYPERCALL_REP_COMP_1,
++		HV_PARTITION_ID_SELF,
++		HV_VP_INDEX_SELF,
++		msr,
++		0,
++		value,
++		0,
++		&res);
++
++	/*
++	 * Something is fundamentally broken in the hypervisor if
++	 * setting a VP register fails. There's really no way to
++	 * continue as a guest VM, so panic.
++	 */
++	BUG_ON((res.a0 & HV_HYPERCALL_RESULT_MASK) != HV_STATUS_SUCCESS);
++}
++EXPORT_SYMBOL_GPL(hv_set_vpreg);
++
++/*
++ * Get the value of a single VP register.  One version
++ * returns just 64 bits and another returns the full 128 bits.
++ * The two versions are separate to avoid complicating the
++ * calling sequence for the more frequently used 64 bit version.
++ */
++
++static void __hv_get_vpreg_128(u32 msr, struct hv_get_vp_registers_output *res)
++{
++	struct hv_get_vp_registers_input	*input;
++	u64					status;
++
++	/*
++	 * Allocate a power of 2 size so alignment to that size is
++	 * guaranteed, since the hypercall input area must not cross
++	 * a page boundary.
++	 */
++
++	input = kzalloc(roundup_pow_of_two(sizeof(input->header) +
++				sizeof(input->element[0])), GFP_ATOMIC);
++
++	input->header.partitionid = HV_PARTITION_ID_SELF;
++	input->header.vpindex = HV_VP_INDEX_SELF;
++	input->header.inputvtl = 0;
++	input->element[0].name0 = msr;
++	input->element[0].name1 = 0;
++
++
++	status = hv_do_hypercall(
++		HVCALL_GET_VP_REGISTERS | HV_HYPERCALL_REP_COMP_1,
++		input, res);
++
++	/*
++	 * Something is fundamentally broken in the hypervisor if
++	 * getting a VP register fails. There's really no way to
++	 * continue as a guest VM, so panic.
++	 */
++	BUG_ON((status & HV_HYPERCALL_RESULT_MASK) != HV_STATUS_SUCCESS);
++
++	kfree(input);
++}
++
++u64 hv_get_vpreg(u32 msr)
++{
++	struct hv_get_vp_registers_output	*output;
++	u64					result;
++
++	/*
++	 * Allocate a power of 2 size so alignment to that size is
++	 * guaranteed, since the hypercall output area must not cross
++	 * a page boundary.
++	 */
++	output = kmalloc(roundup_pow_of_two(sizeof(*output)), GFP_ATOMIC);
++
++	__hv_get_vpreg_128(msr, output);
++
++	result = output->as64.low;
++	kfree(output);
++	return result;
++}
++EXPORT_SYMBOL_GPL(hv_get_vpreg);
++
++void hv_get_vpreg_128(u32 msr, struct hv_get_vp_registers_output *res)
++{
++	struct hv_get_vp_registers_output	*output;
++
++	/*
++	 * Allocate a power of 2 size so alignment to that size is
++	 * guaranteed, since the hypercall output area must not cross
++	 * a page boundary.
++	 */
++	output = kmalloc(roundup_pow_of_two(sizeof(*output)), GFP_ATOMIC);
++
++	__hv_get_vpreg_128(msr, output);
++
++	res->as64.low = output->as64.low;
++	res->as64.high = output->as64.high;
++	kfree(output);
++}
++EXPORT_SYMBOL_GPL(hv_get_vpreg_128);
+diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
+index 6b1f26c..b17d4a1 100644
+--- a/arch/arm64/include/asm/mshyperv.h
++++ b/arch/arm64/include/asm/mshyperv.h
+@@ -26,6 +26,14 @@
+ #include <linux/arm-smccc.h>
+ #include <asm/hyperv-tlfs.h>
+ 
++/*
++ * Declare calls to get and set Hyper-V VP register values on ARM64, which
++ * requires a hypercall.
++ */
++extern void hv_set_vpreg(u32 reg, u64 value);
++extern u64 hv_get_vpreg(u32 reg);
++extern void hv_get_vpreg_128(u32 reg, struct hv_get_vp_registers_output *result);
++
+ /* Access various Hyper-V synthetic registers */
+ static inline void hv_set_simp(u64 val)
+ {
+@@ -71,6 +79,15 @@ static inline void hv_set_synint_state(u32 sint_num, u64 val)
+ #define hv_get_synint_state(sint_num, val) \
+ 		(val = hv_get_vpreg(HV_REGISTER_SINT0 + sint_num))
+ 
++
++/* SMCCC hypercall parameters */
++#define HV_SMCCC_FUNC_NUMBER	1
++#define HV_FUNC_ID	ARM_SMCCC_CALL_VAL(			\
++				ARM_SMCCC_STD_CALL,		\
++				ARM_SMCCC_SMC_64,		\
++				ARM_SMCCC_OWNER_VENDOR_HYP,	\
++				HV_SMCCC_FUNC_NUMBER)
++
+ #include <asm-generic/mshyperv.h>
+ 
+ #endif
+-- 
+1.8.3.1
 
