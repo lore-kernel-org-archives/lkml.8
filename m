@@ -2,54 +2,53 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DCBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16671C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51A732071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E44582071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262279;
-	bh=Un0jkfdEzqoS7mtwb6Y8qjOb2BUnF5ehMVkAyDM176I=;
+	s=default; t=1598262289;
+	bh=I2rc69Oc47pz8Ily187amhLgZCDrNoxj7kJnj5evJDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tYJPLf3e4pTXG+YxvfMotEgO/Fp4GPr2vC0X7x7Oy/Z+EAyGDsQuUSg4Q6dwEvLLO
-	 fouWu6TKcSByyxHJ3M/5Oo9L8amu7TYsROjdKB2XpETvswtTTtrd5XasGWuWX/QiZF
-	 5jI1AbO2//t0esa9ZYFcrXn4WecuuYRdBHo5kZJo=
+	b=PNEx8xaTUXwUrNFqCaY20Jnf6BnKd//7zzl2Ct13VSIKaUO2y3M1e2yvSq4cTAWSx
+	 LjzbQz7FKKbz/D9Drcg6SpWhoGhjFQorQob/WVNo0ZDfjbNOqmIZ0vR8el0aDIsUkG
+	 NBmVohiLWPz9HfH3n8FZO7P29jdhLeyCjaqnLB0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgHXInQ (ORCPT
+        id S1729086AbgHXJor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:43:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36752 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:44:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727932AbgHXInH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:43:07 -0400
+        id S1728748AbgHXInO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:43:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 038EB2087D;
-        Mon, 24 Aug 2020 08:43:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D24702075B;
+        Mon, 24 Aug 2020 08:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258586;
-        bh=Un0jkfdEzqoS7mtwb6Y8qjOb2BUnF5ehMVkAyDM176I=;
+        s=default; t=1598258594;
+        bh=I2rc69Oc47pz8Ily187amhLgZCDrNoxj7kJnj5evJDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O6SBXQiehh/5WvpAg1V/JgHgid6NABk85JdtLaGJwkoQt0dGfwhVNKYOwoqf/iuwf
-         rfB7XdCNN8F5j6zyDktJMNZZlHtSRnLz1aHKKUno3e96Mhbi5+E5rZwAvWYfoUNFN7
-         B0cSlVydXbx4ZHCA7g/m9Gzr83ZUrrO/ZvrAWCvg=
+        b=yCVk4FzQmZt4yhRK78gXWQ4kyuBH5g8WpadEN3FpTAXCojRlcepRitco7reBp4phK
+         CX5Uo9tvBoO1jogZ7TFB3d4K2QGK67T7J67q6yKK1MqgoW85prWZ/IdDRILtZ44ghT
+         P06ayo9nLLJZIrDlq/kWGCylePdfyD0fYkdLbLVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Martin KaFai Lau <kafai@fb.com>,
+        stable@vger.kernel.org, Henrique Figueira <henrislip@gmail.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 069/124] bpf: sock_ops sk access may stomp registers when dst_reg = src_reg
-Date:   Mon, 24 Aug 2020 10:30:03 +0200
-Message-Id: <20200824082412.805157874@linuxfoundation.org>
+Subject: [PATCH 5.7 072/124] can: j1939: transport: add j1939_session_skb_find_by_offset() function
+Date:   Mon, 24 Aug 2020 10:30:06 +0200
+Message-Id: <20200824082412.956507491@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -62,122 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit 84f44df664e9f0e261157e16ee1acd77cc1bb78d ]
+[ Upstream commit 840835c9281215341d84966a8855f267a971e6a3 ]
 
-Similar to patch ("bpf: sock_ops ctx access may stomp registers") if the
-src_reg = dst_reg when reading the sk field of a sock_ops struct we
-generate xlated code,
+Sometimes it makes no sense to search the skb by pkt.dpo, since we need
+next the skb within the transaction block. This may happen if we have an
+ETP session with CTS set to less than 255 packets.
 
-  53: (61) r9 = *(u32 *)(r9 +28)
-  54: (15) if r9 == 0x0 goto pc+3
-  56: (79) r9 = *(u64 *)(r9 +0)
+After this patch, we will be able to work with ETP sessions where the
+block size (ETP.CM_CTS byte 2) is less than 255 packets.
 
-This stomps on the r9 reg to do the sk_fullsock check and then when
-reading the skops->sk field instead of the sk pointer we get the
-sk_fullsock. To fix use similar pattern noted in the previous fix
-and use the temp field to save/restore a register used to do
-sk_fullsock check.
-
-After the fix the generated xlated code reads,
-
-  52: (7b) *(u64 *)(r9 +32) = r8
-  53: (61) r8 = *(u32 *)(r9 +28)
-  54: (15) if r9 == 0x0 goto pc+3
-  55: (79) r8 = *(u64 *)(r9 +32)
-  56: (79) r9 = *(u64 *)(r9 +0)
-  57: (05) goto pc+1
-  58: (79) r8 = *(u64 *)(r9 +32)
-
-Here r9 register was in-use so r8 is chosen as the temporary register.
-In line 52 r8 is saved in temp variable and at line 54 restored in case
-fullsock != 0. Finally we handle fullsock == 0 case by restoring at
-line 58.
-
-This adds a new macro SOCK_OPS_GET_SK it is almost possible to merge
-this with SOCK_OPS_GET_FIELD, but I found the extra branch logic a
-bit more confusing than just adding a new macro despite a bit of
-duplicating code.
-
-Fixes: 1314ef561102e ("bpf: export bpf_sock for BPF_PROG_TYPE_SOCK_OPS prog type")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Song Liu <songliubraving@fb.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Link: https://lore.kernel.org/bpf/159718349653.4728.6559437186853473612.stgit@john-Precision-5820-Tower
+Reported-by: Henrique Figueira <henrislip@gmail.com>
+Reported-by: https://github.com/linux-can/can-utils/issues/228
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Link: https://lore.kernel.org/r/20200807105200.26441-5-o.rempel@pengutronix.de
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/filter.c | 49 ++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 38 insertions(+), 11 deletions(-)
+ net/can/j1939/transport.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index dcc06e510ec5d..9c03702600128 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -8107,6 +8107,43 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
- 		}							      \
- 	} while (0)
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index 30957c9a8eb7a..90a2baac8a4aa 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -352,17 +352,16 @@ void j1939_session_skb_queue(struct j1939_session *session,
+ 	skb_queue_tail(&session->skb_queue, skb);
+ }
  
-+#define SOCK_OPS_GET_SK()							      \
-+	do {								      \
-+		int fullsock_reg = si->dst_reg, reg = BPF_REG_9, jmp = 1;     \
-+		if (si->dst_reg == reg || si->src_reg == reg)		      \
-+			reg--;						      \
-+		if (si->dst_reg == reg || si->src_reg == reg)		      \
-+			reg--;						      \
-+		if (si->dst_reg == si->src_reg) {			      \
-+			*insn++ = BPF_STX_MEM(BPF_DW, si->src_reg, reg,	      \
-+					  offsetof(struct bpf_sock_ops_kern,  \
-+					  temp));			      \
-+			fullsock_reg = reg;				      \
-+			jmp += 2;					      \
-+		}							      \
-+		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(			      \
-+						struct bpf_sock_ops_kern,     \
-+						is_fullsock),		      \
-+				      fullsock_reg, si->src_reg,	      \
-+				      offsetof(struct bpf_sock_ops_kern,      \
-+					       is_fullsock));		      \
-+		*insn++ = BPF_JMP_IMM(BPF_JEQ, fullsock_reg, 0, jmp);	      \
-+		if (si->dst_reg == si->src_reg)				      \
-+			*insn++ = BPF_LDX_MEM(BPF_DW, reg, si->src_reg,	      \
-+				      offsetof(struct bpf_sock_ops_kern,      \
-+				      temp));				      \
-+		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(			      \
-+						struct bpf_sock_ops_kern, sk),\
-+				      si->dst_reg, si->src_reg,		      \
-+				      offsetof(struct bpf_sock_ops_kern, sk));\
-+		if (si->dst_reg == si->src_reg)	{			      \
-+			*insn++ = BPF_JMP_A(1);				      \
-+			*insn++ = BPF_LDX_MEM(BPF_DW, reg, si->src_reg,	      \
-+				      offsetof(struct bpf_sock_ops_kern,      \
-+				      temp));				      \
-+		}							      \
-+	} while (0)
+-static struct sk_buff *j1939_session_skb_find(struct j1939_session *session)
++static struct
++sk_buff *j1939_session_skb_find_by_offset(struct j1939_session *session,
++					  unsigned int offset_start)
+ {
+ 	struct j1939_priv *priv = session->priv;
++	struct j1939_sk_buff_cb *do_skcb;
+ 	struct sk_buff *skb = NULL;
+ 	struct sk_buff *do_skb;
+-	struct j1939_sk_buff_cb *do_skcb;
+-	unsigned int offset_start;
+ 	unsigned long flags;
+ 
+-	offset_start = session->pkt.dpo * 7;
+-
+ 	spin_lock_irqsave(&session->skb_queue.lock, flags);
+ 	skb_queue_walk(&session->skb_queue, do_skb) {
+ 		do_skcb = j1939_skb_to_cb(do_skb);
+@@ -382,6 +381,14 @@ static struct sk_buff *j1939_session_skb_find(struct j1939_session *session)
+ 	return skb;
+ }
+ 
++static struct sk_buff *j1939_session_skb_find(struct j1939_session *session)
++{
++	unsigned int offset_start;
 +
- #define SOCK_OPS_GET_TCP_SOCK_FIELD(FIELD) \
- 		SOCK_OPS_GET_FIELD(FIELD, FIELD, struct tcp_sock)
++	offset_start = session->pkt.dpo * 7;
++	return j1939_session_skb_find_by_offset(session, offset_start);
++}
++
+ /* see if we are receiver
+  * returns 0 for broadcasts, although we will receive them
+  */
+@@ -766,7 +773,7 @@ static int j1939_session_tx_dat(struct j1939_session *session)
+ 	int ret = 0;
+ 	u8 dat[8];
  
-@@ -8391,17 +8428,7 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
- 		SOCK_OPS_GET_TCP_SOCK_FIELD(bytes_acked);
- 		break;
- 	case offsetof(struct bpf_sock_ops, sk):
--		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
--						struct bpf_sock_ops_kern,
--						is_fullsock),
--				      si->dst_reg, si->src_reg,
--				      offsetof(struct bpf_sock_ops_kern,
--					       is_fullsock));
--		*insn++ = BPF_JMP_IMM(BPF_JEQ, si->dst_reg, 0, 1);
--		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
--						struct bpf_sock_ops_kern, sk),
--				      si->dst_reg, si->src_reg,
--				      offsetof(struct bpf_sock_ops_kern, sk));
-+		SOCK_OPS_GET_SK();
- 		break;
+-	se_skb = j1939_session_skb_find(session);
++	se_skb = j1939_session_skb_find_by_offset(session, session->pkt.tx * 7);
+ 	if (!se_skb)
+ 		return -ENOBUFS;
+ 
+@@ -1765,7 +1772,8 @@ static void j1939_xtp_rx_dat_one(struct j1939_session *session,
+ 			    __func__, session);
+ 		goto out_session_cancel;
  	}
- 	return insn - insn_buf;
+-	se_skb = j1939_session_skb_find(session);
++
++	se_skb = j1939_session_skb_find_by_offset(session, packet * 7);
+ 	if (!se_skb) {
+ 		netdev_warn(priv->ndev, "%s: 0x%p: no skb found\n", __func__,
+ 			    session);
 -- 
 2.25.1
 
