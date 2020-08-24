@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DBBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 512662074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EEC21775
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258581;
-	bh=NdiqrzUUfY8s+HeHXe5kTD4K2TE4zqdO5P3wREK2qy4=;
+	s=default; t=1598258586;
+	bh=wjpowUP7dx0cGLzUNx9C8EZ8qkL6/g1Hxp1R20UAaC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vlE0wENkiL4FaTQR9nQpRd8sHptLJ2bkBNPf7CcwQGfiiqzFjKCZW36vO9eSwwThE
-	 cMzUC5wKpvz+MlTd8j9EmBx1tT0vElaT/3gaRZFNKXJSlmDLfEe6Im2BjRAMfoDhGM
-	 fvGHu/RbzDGPR/cyFKm50tCeyRHwHBshF6LAa7VE=
+	b=RE01rHjXuAy8OEf6sfCeBwyWOMiLH112bi9OtlHFkWZjzJ4mHG327A3Zw2E6c2og7
+	 z2R3Hupp2XeLPePM07D1/tLHxX716y3kdE4hpAjKJk19V8kb3AfiExTH1j7fVzpuqm
+	 Eig/ub3kQUOnjNJHv9FGKRc6xkah6tBP1cUmXSOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgHXIm5 (ORCPT
+        id S1729007AbgHXInE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:42:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35872 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:43:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728989AbgHXImw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:42:52 -0400
+        id S1728561AbgHXImz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:42:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99E2E2087D;
-        Mon, 24 Aug 2020 08:42:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FEAB2074D;
+        Mon, 24 Aug 2020 08:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258572;
-        bh=NdiqrzUUfY8s+HeHXe5kTD4K2TE4zqdO5P3wREK2qy4=;
+        s=default; t=1598258574;
+        bh=wjpowUP7dx0cGLzUNx9C8EZ8qkL6/g1Hxp1R20UAaC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nv6W+xgBzNVDqhIgCY+Cy82WDDgmwvn5/JhjAjVZcfOWDMnoMjNjJ6srfGHmrUcgH
-         PTgwqlpfkLfvAHSZtveVH+JqX004AtQ9sbLh5I+VTBgRZrd++gduGwK8NcbLN/CbfL
-         AYI5bRhHzlo4faQjY0LNoSOCWXWWM2ly+vSBW9RQ=
+        b=nZfnhWYv3uDnG9sRiwnFK0CN74KAlBJzzpl5MWR7FxukbxW464Kj3X6+w4gcRgFhZ
+         VaCFV2LowxtPGrcJpSWaXRT8bD/nq3+xRGVotjkj+cXkvAKl1dGnNWMs0xikhZcg5T
+         qUhoem37xnWK5l1SYzDag7Z0NfD4WjLfR11NJds4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Can Guo <cang@codeaurora.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Seungwon Jeon <essuuj@gmail.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 093/124] scsi: ufs: Add quirk to fix mishandling utrlclr/utmrlclr
-Date:   Mon, 24 Aug 2020 10:30:27 +0200
-Message-Id: <20200824082413.988843167@linuxfoundation.org>
+Subject: [PATCH 5.7 067/124] tools/bpftool: Make skeleton code C++17-friendly by dropping typeof()
+Date:   Mon, 24 Aug 2020 10:30:01 +0200
+Message-Id: <20200824082412.715248898@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -63,71 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alim Akhtar <alim.akhtar@samsung.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 871838412adf533ffda0b4a0ede0c2984e3511e7 ]
+[ Upstream commit 8faf7fc597d59b142af41ddd4a2d59485f75f88a ]
 
-With the correct behavior, setting the bit to '0' indicates clear and '1'
-indicates no change. If host controller handles this the other way around,
-UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR can be used.
+Seems like C++17 standard mode doesn't recognize typeof() anymore. This can
+be tested by compiling test_cpp test with -std=c++17 or -std=c++1z options.
+The use of typeof in skeleton generated code is unnecessary, all types are
+well-known at the time of code generation, so remove all typeof()'s to make
+skeleton code more future-proof when interacting with C++ compilers.
 
-Link: https://lore.kernel.org/r/20200528011658.71590-2-alim.akhtar@samsung.com
-Reviewed-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 985ead416df3 ("bpftool: Add skeleton codegen command")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/20200812025907.1371956-1-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 11 +++++++++--
- drivers/scsi/ufs/ufshcd.h |  5 +++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ tools/bpf/bpftool/gen.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 2c02967f159ea..9e31f9569bf78 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -647,7 +647,11 @@ static inline int ufshcd_get_tr_ocs(struct ufshcd_lrb *lrbp)
-  */
- static inline void ufshcd_utrl_clear(struct ufs_hba *hba, u32 pos)
- {
--	ufshcd_writel(hba, ~(1 << pos), REG_UTP_TRANSFER_REQ_LIST_CLEAR);
-+	if (hba->quirks & UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR)
-+		ufshcd_writel(hba, (1 << pos), REG_UTP_TRANSFER_REQ_LIST_CLEAR);
-+	else
-+		ufshcd_writel(hba, ~(1 << pos),
-+				REG_UTP_TRANSFER_REQ_LIST_CLEAR);
- }
- 
- /**
-@@ -657,7 +661,10 @@ static inline void ufshcd_utrl_clear(struct ufs_hba *hba, u32 pos)
-  */
- static inline void ufshcd_utmrl_clear(struct ufs_hba *hba, u32 pos)
- {
--	ufshcd_writel(hba, ~(1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
-+	if (hba->quirks & UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR)
-+		ufshcd_writel(hba, (1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
-+	else
-+		ufshcd_writel(hba, ~(1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
- }
- 
- /**
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 2315ecc209272..ceadbd548e06d 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -518,6 +518,11 @@ enum ufshcd_quirks {
- 	 * ops (get_ufs_hci_version) to get the correct version.
- 	 */
- 	UFSHCD_QUIRK_BROKEN_UFS_HCI_VERSION		= 1 << 5,
-+
-+	/*
-+	 * Clear handling for transfer/task request list is just opposite.
-+	 */
-+	UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR		= 1 << 6,
- };
- 
- enum ufshcd_caps {
+diff --git a/tools/bpf/bpftool/gen.c b/tools/bpf/bpftool/gen.c
+index 5ff951e08c740..52ebe400e9ca4 100644
+--- a/tools/bpf/bpftool/gen.c
++++ b/tools/bpf/bpftool/gen.c
+@@ -402,7 +402,7 @@ static int do_skeleton(int argc, char **argv)
+ 		{							    \n\
+ 			struct %1$s *obj;				    \n\
+ 									    \n\
+-			obj = (typeof(obj))calloc(1, sizeof(*obj));	    \n\
++			obj = (struct %1$s *)calloc(1, sizeof(*obj));	    \n\
+ 			if (!obj)					    \n\
+ 				return NULL;				    \n\
+ 			if (%1$s__create_skeleton(obj))			    \n\
+@@ -466,7 +466,7 @@ static int do_skeleton(int argc, char **argv)
+ 		{							    \n\
+ 			struct bpf_object_skeleton *s;			    \n\
+ 									    \n\
+-			s = (typeof(s))calloc(1, sizeof(*s));		    \n\
++			s = (struct bpf_object_skeleton *)calloc(1, sizeof(*s));\n\
+ 			if (!s)						    \n\
+ 				return -1;				    \n\
+ 			obj->skeleton = s;				    \n\
+@@ -484,7 +484,7 @@ static int do_skeleton(int argc, char **argv)
+ 				/* maps */				    \n\
+ 				s->map_cnt = %zu;			    \n\
+ 				s->map_skel_sz = sizeof(*s->maps);	    \n\
+-				s->maps = (typeof(s->maps))calloc(s->map_cnt, s->map_skel_sz);\n\
++				s->maps = (struct bpf_map_skeleton *)calloc(s->map_cnt, s->map_skel_sz);\n\
+ 				if (!s->maps)				    \n\
+ 					goto err;			    \n\
+ 			",
+@@ -520,7 +520,7 @@ static int do_skeleton(int argc, char **argv)
+ 				/* programs */				    \n\
+ 				s->prog_cnt = %zu;			    \n\
+ 				s->prog_skel_sz = sizeof(*s->progs);	    \n\
+-				s->progs = (typeof(s->progs))calloc(s->prog_cnt, s->prog_skel_sz);\n\
++				s->progs = (struct bpf_prog_skeleton *)calloc(s->prog_cnt, s->prog_skel_sz);\n\
+ 				if (!s->progs)				    \n\
+ 					goto err;			    \n\
+ 			",
 -- 
 2.25.1
 
