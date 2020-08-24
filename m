@@ -7,53 +7,59 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE980C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D49C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB4582075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877A220FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259193;
-	bh=jS/dQV/ilNJK+tuvcgZeyudyMHb/8B+VAbKKMJjz04M=;
+	s=default; t=1598259203;
+	bh=VyrxVLT2B6bAeYKclJpDgYcMOjJOkTXF9Q4q0rVyOAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zeHGfphpklRv9qsVlV+IJkFlydgLRUQhwDr1GBJMyjy/FJv85m9Ti2bGS2Q5TEGFT
-	 1F6c2Me5KtsIpbARNCsbxTSFDbgHwHSePyyosBk9cUfF8qLQ/9FQ0j9HCqAsQ5SLk1
-	 oMZwnoEf8dJ3lYXpYkoF7XrzygB/adOzCA5uSByg=
+	b=wXcRjlDsHEeKffCnu1YypwMg4KfcaARzJoiaZah03iPainA0Zri7Tbu5I8YxgXguQ
+	 li7NbhghIGTkc0Yp46LvQhpaHnqr9JNAYAQV2LEoeHVHjKUMyJf/nxzq+ujHuGrQhg
+	 JzRrGfxbTQKMDG3ktTjFKogpe27X8PNM1URKXZQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbgHXIxM (ORCPT
+        id S1730181AbgHXIxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:53:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59718 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:53:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730118AbgHXIwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:52:55 -0400
+        id S1729855AbgHXIxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:53:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2E04207D3;
-        Mon, 24 Aug 2020 08:52:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3532E204FD;
+        Mon, 24 Aug 2020 08:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259175;
-        bh=jS/dQV/ilNJK+tuvcgZeyudyMHb/8B+VAbKKMJjz04M=;
+        s=default; t=1598259183;
+        bh=VyrxVLT2B6bAeYKclJpDgYcMOjJOkTXF9Q4q0rVyOAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SsSUFU3IYOHEJhx9z5x2dkE4MAmwclOoueoOpzT9oWYqpuL1AcCw0W9BAtGQ16X3q
-         AYHO5dDk/1GKIgO4ervwdUtqbM7wBnh2bDA/njGBiXWOVVxwJ3I9QWZmbIjD68phAY
-         Ls8ybFXlj22RmskZpbjU4F9nBZygBtxcl2m8DVW0=
+        b=yX8kjW86cFZM46qRn8pYhRHM/KFp/L28eeqpIaSIOLAPxN5z3K6rbLr7ammMTI4gs
+         II9kqGBV5faP+BPKbriKdjktCeVjIhNNuecAFs2mtcv6IWoFi0MUTmbMsImfOyvnEI
+         /lep17Z8jAh/uy5AYLq0z2shUnaGPdbBXvDGFvRk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <shy828301@gmail.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 01/50] drm/vgem: Replace opencoded version of drm_gem_dumb_map_offset()
-Date:   Mon, 24 Aug 2020 10:31:02 +0200
-Message-Id: <20200824082351.919627780@linuxfoundation.org>
+Subject: [PATCH 4.14 04/50] khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
+Date:   Mon, 24 Aug 2020 10:31:05 +0200
+Message-Id: <20200824082352.096703729@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,81 +68,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Hugh Dickins <hughd@google.com>
 
-[ Upstream commit 119c53d2d4044c59c450c4f5a568d80b9d861856 ]
+[ Upstream commit f3f99d63a8156c7a4a6b20aac22b53c5579c7dc1 ]
 
-drm_gem_dumb_map_offset() now exists and does everything
-vgem_gem_dump_map does and *ought* to do.
+syzbot crashes on the VM_BUG_ON_MM(khugepaged_test_exit(mm), mm) in
+__khugepaged_enter(): yes, when one thread is about to dump core, has set
+core_state, and is waiting for others, another might do something calling
+__khugepaged_enter(), which now crashes because I lumped the core_state
+test (known as "mmget_still_valid") into khugepaged_test_exit().  I still
+think it's best to lump them together, so just in this exceptional case,
+check mm->mm_users directly instead of khugepaged_test_exit().
 
-In particular, vgem_gem_dumb_map() was trying to reject mmapping an
-imported dmabuf by checking the existence of obj->filp. Unfortunately,
-we always allocated an obj->filp, even if unused for an imported dmabuf.
-Instead, the drm_gem_dumb_map_offset(), since commit 90378e589192
-("drm/gem: drm_gem_dumb_map_offset(): reject dma-buf"), uses the
-obj->import_attach to reject such invalid mmaps.
-
-This prevents vgem from allowing userspace mmapping the dumb handle and
-attempting to incorrectly fault in remote pages belonging to another
-device, where there may not even be a struct page.
-
-v2: Use the default drm_gem_dumb_map_offset() callback
-
-Fixes: af33a9190d02 ("drm/vgem: Enable dmabuf import interfaces")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: <stable@vger.kernel.org> # v4.13+
-Link: https://patchwork.freedesktop.org/patch/msgid/20200708154911.21236-1-chris@chris-wilson.co.uk
+Fixes: bbe98f9cadff ("khugepaged: khugepaged_test_exit() check mmget_still_valid()")
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Yang Shi <shy828301@gmail.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: <stable@vger.kernel.org>	[4.8+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008141503370.18085@eggly.anvils
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vgem/vgem_drv.c | 27 ---------------------------
- 1 file changed, 27 deletions(-)
+ mm/khugepaged.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
-index aa592277d5108..67037eb9a80ee 100644
---- a/drivers/gpu/drm/vgem/vgem_drv.c
-+++ b/drivers/gpu/drm/vgem/vgem_drv.c
-@@ -220,32 +220,6 @@ static int vgem_gem_dumb_create(struct drm_file *file, struct drm_device *dev,
- 	return 0;
- }
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index a1b7475c05d04..9dfe364d4c0d1 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -407,7 +407,7 @@ int __khugepaged_enter(struct mm_struct *mm)
+ 		return -ENOMEM;
  
--static int vgem_gem_dumb_map(struct drm_file *file, struct drm_device *dev,
--			     uint32_t handle, uint64_t *offset)
--{
--	struct drm_gem_object *obj;
--	int ret;
--
--	obj = drm_gem_object_lookup(file, handle);
--	if (!obj)
--		return -ENOENT;
--
--	if (!obj->filp) {
--		ret = -EINVAL;
--		goto unref;
--	}
--
--	ret = drm_gem_create_mmap_offset(obj);
--	if (ret)
--		goto unref;
--
--	*offset = drm_vma_node_offset_addr(&obj->vma_node);
--unref:
--	drm_gem_object_put_unlocked(obj);
--
--	return ret;
--}
--
- static struct drm_ioctl_desc vgem_ioctls[] = {
- 	DRM_IOCTL_DEF_DRV(VGEM_FENCE_ATTACH, vgem_fence_attach_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
- 	DRM_IOCTL_DEF_DRV(VGEM_FENCE_SIGNAL, vgem_fence_signal_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-@@ -439,7 +413,6 @@ static struct drm_driver vgem_driver = {
- 	.fops				= &vgem_driver_fops,
- 
- 	.dumb_create			= vgem_gem_dumb_create,
--	.dumb_map_offset		= vgem_gem_dumb_map,
- 
- 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
- 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+ 	/* __khugepaged_exit() must not run from under us */
+-	VM_BUG_ON_MM(khugepaged_test_exit(mm), mm);
++	VM_BUG_ON_MM(atomic_read(&mm->mm_users) == 0, mm);
+ 	if (unlikely(test_and_set_bit(MMF_VM_HUGEPAGE, &mm->flags))) {
+ 		free_mm_slot(mm_slot);
+ 		return 0;
 -- 
 2.25.1
 
