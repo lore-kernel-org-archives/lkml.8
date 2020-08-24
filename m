@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73ED4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18671C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53C8420639
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1FEA20639
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262950;
-	bh=Mloi1uNo/05P0OXZvrdUoc2gOOK/bhXTK6JpgkvZEE0=;
+	s=default; t=1598262954;
+	bh=bgTmsYHvGs3ntpuCwcRjLQ5BevUI8JP4aY4CVC7BZwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KxB28pMmh5KSPXBDub4jl2cpaCWjPFHjsaL2s5ZiTAmeJRwTao1kyPRSNg3wDL4Th
-	 i6TwlAhN5gfxDLaMwEfhku03djJ8tBai1EZKiGRM1xNEGjT6fx5Fs8VEvbfy6G+4zb
-	 JtvvYdQX7N8vvlA9vb6kiYeXozmoIJOHICjmZsjI=
+	b=O73JVDhHccEqm7qpdswCFRHCsJ9GD/Vc3wYsVJJSSXpmZZ3WYG/GDVzcXS5pOQT5V
+	 BHWVZHcmdUwhwle61cNhL0a7Fk0s6lRk4hbT+1C0gspIGwjT2Zd95Z8r5R29wazzAN
+	 aE0QTFaOPH6hDELufWK/+jKPptOccPaqBQLKo5S8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgHXJzs (ORCPT
+        id S1729472AbgHXJzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:55:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48962 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:55:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726374AbgHXIg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:36:26 -0400
+        id S1728258AbgHXIgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:36:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A16A82177B;
-        Mon, 24 Aug 2020 08:36:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 262F4206F0;
+        Mon, 24 Aug 2020 08:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258185;
-        bh=Mloi1uNo/05P0OXZvrdUoc2gOOK/bhXTK6JpgkvZEE0=;
+        s=default; t=1598258182;
+        bh=bgTmsYHvGs3ntpuCwcRjLQ5BevUI8JP4aY4CVC7BZwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RLntW7DHeErIUfPuoOXGd9tj4BGX+7IlAWWFaY0tZEaGOTHmz9YUAsfNYqNYZqmJz
-         Lkpi1XIAGyFGs1Ox3JzEQLwCal6V0HtEEqjZ5+Y7ho6ttsNvq5NYqA3vrWI3CkM5RO
-         d95S2QzW3ZYCXPPufTuleVCaUDolXesci73/zb6c=
+        b=ShK50+x47lw7TnXU8KOjC0HjTx5GoaAXVjPafBZQdORUsX5Akw+sCs2KyyP1jKd3Z
+         L5xsQDIG0tlGPae+9lf5sbqParWH5CVf17P4Fq4mWmM6w6WryP5zBhA9D+y9yEW3Ds
+         aHCTNFo9XOAzJwhBzec8nGXkTotQhfsiE0b9Y1yE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Jessica Clarke <jrtc27@jrtc27.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
+        stable@vger.kernel.org, Zhiyi Guo <zhguo@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 105/148] arch/ia64: Restore arch-specific pgd_offset_k implementation
-Date:   Mon, 24 Aug 2020 10:30:03 +0200
-Message-Id: <20200824082419.055928601@linuxfoundation.org>
+Subject: [PATCH 5.8 104/148] vfio/type1: Add proper error unwind for vfio_iommu_replay()
+Date:   Mon, 24 Aug 2020 10:30:02 +0200
+Message-Id: <20200824082419.007370794@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -63,69 +61,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jessica Clarke <jrtc27@jrtc27.com>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-[ Upstream commit bd05220c7be3356046861c317d9c287ca50445ba ]
+[ Upstream commit aae7a75a821a793ed6b8ad502a5890fb8e8f172d ]
 
-IA-64 is special and treats pgd_offset_k() differently to pgd_offset(),
-using different formulae to calculate the indices into the kernel and user
-PGDs.  The index into the user PGDs takes into account the region number,
-but the index into the kernel (init_mm) PGD always assumes a predefined
-kernel region number. Commit 974b9b2c68f3 ("mm: consolidate pte_index() and
-pte_offset_*() definitions") made IA-64 use a generic pgd_offset_k() which
-incorrectly used pgd_index() for kernel page tables.  As a result, the
-index into the kernel PGD was going out of bounds and the kernel hung
-during early boot.
+The vfio_iommu_replay() function does not currently unwind on error,
+yet it does pin pages, perform IOMMU mapping, and modify the vfio_dma
+structure to indicate IOMMU mapping.  The IOMMU mappings are torn down
+when the domain is destroyed, but the other actions go on to cause
+trouble later.  For example, the iommu->domain_list can be empty if we
+only have a non-IOMMU backed mdev attached.  We don't currently check
+if the list is empty before getting the first entry in the list, which
+leads to a bogus domain pointer.  If a vfio_dma entry is erroneously
+marked as iommu_mapped, we'll attempt to use that bogus pointer to
+retrieve the existing physical page addresses.
 
-Allow overrides of pgd_offset_k() and override it on IA-64 with the old
-implementation that will correctly index the kernel PGD.
+This is the scenario that uncovered this issue, attempting to hot-add
+a vfio-pci device to a container with an existing mdev device and DMA
+mappings, one of which could not be pinned, causing a failure adding
+the new group to the existing container and setting the conditions
+for a subsequent attempt to explode.
 
-Fixes: 974b9b2c68f3 ("mm: consolidate pte_index() and pte_offset_*() definitions")
-Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Signed-off-by: Jessica Clarke <jrtc27@jrtc27.com>
-Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Acked-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+To resolve this, we can first check if the domain_list is empty so
+that we can reject replay of a bogus domain, should we ever encounter
+this inconsistent state again in the future.  The real fix though is
+to add the necessary unwind support, which means cleaning up the
+current pinning if an IOMMU mapping fails, then walking back through
+the r-b tree of DMA entries, reading from the IOMMU which ranges are
+mapped, and unmapping and unpinning those ranges.  To be able to do
+this, we also defer marking the DMA entry as IOMMU mapped until all
+entries are processed, in order to allow the unwind to know the
+disposition of each entry.
+
+Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
+Reported-by: Zhiyi Guo <zhguo@redhat.com>
+Tested-by: Zhiyi Guo <zhguo@redhat.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/ia64/include/asm/pgtable.h | 9 +++++++++
- include/linux/pgtable.h         | 2 ++
- 2 files changed, 11 insertions(+)
+ drivers/vfio/vfio_iommu_type1.c | 71 ++++++++++++++++++++++++++++++---
+ 1 file changed, 66 insertions(+), 5 deletions(-)
 
-diff --git a/arch/ia64/include/asm/pgtable.h b/arch/ia64/include/asm/pgtable.h
-index 10850897a91c4..779b6972aa84b 100644
---- a/arch/ia64/include/asm/pgtable.h
-+++ b/arch/ia64/include/asm/pgtable.h
-@@ -366,6 +366,15 @@ pgd_index (unsigned long address)
- }
- #define pgd_index pgd_index
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 5e556ac9102a5..f48f0db908a46 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -1422,13 +1422,16 @@ static int vfio_bus_type(struct device *dev, void *data)
+ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 			     struct vfio_domain *domain)
+ {
+-	struct vfio_domain *d;
++	struct vfio_domain *d = NULL;
+ 	struct rb_node *n;
+ 	unsigned long limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+ 	int ret;
  
-+/*
-+ * In the kernel's mapped region we know everything is in region number 5, so
-+ * as an optimisation its PGD already points to the area for that region.
-+ * However, this also means that we cannot use pgd_index() and we must
-+ * never add the region here.
-+ */
-+#define pgd_offset_k(addr) \
-+	(init_mm.pgd + (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1)))
+ 	/* Arbitrarily pick the first domain in the list for lookups */
+-	d = list_first_entry(&iommu->domain_list, struct vfio_domain, next);
++	if (!list_empty(&iommu->domain_list))
++		d = list_first_entry(&iommu->domain_list,
++				     struct vfio_domain, next);
 +
- /* Look up a pgd entry in the gate area.  On IA-64, the gate-area
-    resides in the kernel-mapped segment, hence we use pgd_offset_k()
-    here.  */
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 56c1e8eb7bb0a..8075f6ae185a1 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -117,7 +117,9 @@ static inline pgd_t *pgd_offset_pgd(pgd_t *pgd, unsigned long address)
-  * a shortcut which implies the use of the kernel's pgd, instead
-  * of a process's
-  */
-+#ifndef pgd_offset_k
- #define pgd_offset_k(address)		pgd_offset(&init_mm, (address))
-+#endif
+ 	n = rb_first(&iommu->dma_list);
+ 
+ 	for (; n; n = rb_next(n)) {
+@@ -1446,6 +1449,11 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 				phys_addr_t p;
+ 				dma_addr_t i;
+ 
++				if (WARN_ON(!d)) { /* mapped w/o a domain?! */
++					ret = -EINVAL;
++					goto unwind;
++				}
++
+ 				phys = iommu_iova_to_phys(d->domain, iova);
+ 
+ 				if (WARN_ON(!phys)) {
+@@ -1475,7 +1483,7 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 				if (npage <= 0) {
+ 					WARN_ON(!npage);
+ 					ret = (int)npage;
+-					return ret;
++					goto unwind;
+ 				}
+ 
+ 				phys = pfn << PAGE_SHIFT;
+@@ -1484,14 +1492,67 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 
+ 			ret = iommu_map(domain->domain, iova, phys,
+ 					size, dma->prot | domain->prot);
+-			if (ret)
+-				return ret;
++			if (ret) {
++				if (!dma->iommu_mapped)
++					vfio_unpin_pages_remote(dma, iova,
++							phys >> PAGE_SHIFT,
++							size >> PAGE_SHIFT,
++							true);
++				goto unwind;
++			}
+ 
+ 			iova += size;
+ 		}
++	}
++
++	/* All dmas are now mapped, defer to second tree walk for unwind */
++	for (n = rb_first(&iommu->dma_list); n; n = rb_next(n)) {
++		struct vfio_dma *dma = rb_entry(n, struct vfio_dma, node);
++
+ 		dma->iommu_mapped = true;
+ 	}
++
+ 	return 0;
++
++unwind:
++	for (; n; n = rb_prev(n)) {
++		struct vfio_dma *dma = rb_entry(n, struct vfio_dma, node);
++		dma_addr_t iova;
++
++		if (dma->iommu_mapped) {
++			iommu_unmap(domain->domain, dma->iova, dma->size);
++			continue;
++		}
++
++		iova = dma->iova;
++		while (iova < dma->iova + dma->size) {
++			phys_addr_t phys, p;
++			size_t size;
++			dma_addr_t i;
++
++			phys = iommu_iova_to_phys(domain->domain, iova);
++			if (!phys) {
++				iova += PAGE_SIZE;
++				continue;
++			}
++
++			size = PAGE_SIZE;
++			p = phys + size;
++			i = iova + size;
++			while (i < dma->iova + dma->size &&
++			       p == iommu_iova_to_phys(domain->domain, i)) {
++				size += PAGE_SIZE;
++				p += PAGE_SIZE;
++				i += PAGE_SIZE;
++			}
++
++			iommu_unmap(domain->domain, iova, size);
++			vfio_unpin_pages_remote(dma, iova, phys >> PAGE_SHIFT,
++						size >> PAGE_SHIFT, true);
++		}
++	}
++
++	return ret;
+ }
  
  /*
-  * In many cases it is known that a virtual address is mapped at PMD or PTE
 -- 
 2.25.1
 
