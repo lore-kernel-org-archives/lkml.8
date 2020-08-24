@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EA1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90932C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15062207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685F7207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262361;
-	bh=R1B5YlnuzoIxPenPcQddKaeKp1L2RjlrEpwuGhilwK4=;
+	s=default; t=1598262366;
+	bh=Szw6jA3d8Pxqmf1JA6WaAVW8AEfSzqqzAAso5Yu42xk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ew06BAerTCP1JtJVeAr5FRCQTIY4zLK78Vx+lnK0EqNhI1J2IkQR6clmjBsb5SuSz
-	 HgOjfGiZlz7t3iUoKz+1TnuLNmepdC4LP9kOAhlR7U/0gWEf30MqTZjLrCws2eyw8n
-	 n9mcndd6t1uE0QenGbSC8aNnnvi6PhLvaEnXRUXk=
+	b=Q0qGFjpfJ6Z9gHzPa58XpWHemiBBirrcsi5tEZnrX9fPhrR/z81SbEAsiATsDYpRr
+	 pa9GkHRJ3bMx+4Bu436v6KIg7v4/Ebepx8Exjv9eXtkXQCSYRvmyApay9vMm/kxrLj
+	 AU9dD8dNVGx3SapKyu3rMtw11nR/WjYZRlK0TCm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgHXJqA (ORCPT
+        id S1728948AbgHXIm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:46:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34790 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:42:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728623AbgHXImb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:42:31 -0400
+        id S1728914AbgHXImI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:42:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42BBD2074D;
-        Mon, 24 Aug 2020 08:42:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3983F2075B;
+        Mon, 24 Aug 2020 08:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258550;
-        bh=R1B5YlnuzoIxPenPcQddKaeKp1L2RjlrEpwuGhilwK4=;
+        s=default; t=1598258527;
+        bh=Szw6jA3d8Pxqmf1JA6WaAVW8AEfSzqqzAAso5Yu42xk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UmT3e0Y4sfSINf3H6JMwQShFutIPScSqLTDvVMmog8TmsJyrrHQUhRsS0t1Rl4noO
-         1OCFDO+I3uL6qNpiRVLZJPdFdkgS49m6jIJSFy9gSeVmjOa8waEHNH6JtnevhU00LD
-         5HZ/WL5590qw1c36tWpwUEwl6TS4a2vwpNEM01CA=
+        b=f1k0pKAwTmBVhyKzAfI54FKQUbhwoDnDSuj2db0fedpjuu7zccOCJzoFybDEufzl3
+         XKBMvegUTLnHUetBuZ1Go3mSgZZpapVak/Umi6OpX2NELMJqZyO/EZrU7nZdJFKojo
+         Cwe3MLjAz6CPmLr9A2yhlmOhISxrQ2C19fQQg0FE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Zhang Changzhong <zhangchangzhong@huawei.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 085/124] s390/ptrace: fix storage key handling
-Date:   Mon, 24 Aug 2020 10:30:19 +0200
-Message-Id: <20200824082413.594160646@linuxfoundation.org>
+Subject: [PATCH 5.7 078/124] can: j1939: fix support for multipacket broadcast message
+Date:   Mon, 24 Aug 2020 10:30:12 +0200
+Message-Id: <20200824082413.247087210@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -60,52 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Carstens <hca@linux.ibm.com>
+From: Zhang Changzhong <zhangchangzhong@huawei.com>
 
-[ Upstream commit fd78c59446b8d050ecf3e0897c5a486c7de7c595 ]
+[ Upstream commit f4fd77fd87e9b214c26bb2ebd4f90055eaea5ade ]
 
-The key member of the runtime instrumentation control block contains
-only the access key, not the complete storage key. Therefore the value
-must be shifted by four bits. Since existing user space does not
-necessarily query and set the access key correctly, just ignore the
-user space provided key and use the correct one.
-Note: this is only relevant for debugging purposes in case somebody
-compiles a kernel with a default storage access key set to a value not
-equal to zero.
+Currently j1939_tp_im_involved_anydir() in j1939_tp_recv() check the previously
+set flags J1939_ECU_LOCAL_DST and J1939_ECU_LOCAL_SRC of incoming skb, thus
+multipacket broadcast message was aborted by receive side because it may come
+from remote ECUs and have no exact dst address. Similarly, j1939_tp_cmd_recv()
+and j1939_xtp_rx_dat() didn't process broadcast message.
 
-Fixes: 262832bc5acd ("s390/ptrace: add runtime instrumention register get/set")
-Reported-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+So fix it by checking and process broadcast message in j1939_tp_recv(),
+j1939_tp_cmd_recv() and j1939_xtp_rx_dat().
+
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+Link: https://lore.kernel.org/r/1596599425-5534-2-git-send-email-zhangchangzhong@huawei.com
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/ptrace.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/can/j1939/transport.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index e007224b65bb2..a266ffed04df5 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -1311,7 +1311,6 @@ static bool is_ri_cb_valid(struct runtime_instr_cb *cb)
- 		cb->pc == 1 &&
- 		cb->qc == 0 &&
- 		cb->reserved2 == 0 &&
--		cb->key == PAGE_DEFAULT_KEY &&
- 		cb->reserved3 == 0 &&
- 		cb->reserved4 == 0 &&
- 		cb->reserved5 == 0 &&
-@@ -1375,7 +1374,11 @@ static int s390_runtime_instr_set(struct task_struct *target,
- 		kfree(data);
- 		return -EINVAL;
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index 90a2baac8a4aa..67189b4c482c5 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -1673,8 +1673,12 @@ static void j1939_xtp_rx_rts(struct j1939_priv *priv, struct sk_buff *skb,
+ 			return;
+ 		}
+ 		session = j1939_xtp_rx_rts_session_new(priv, skb);
+-		if (!session)
++		if (!session) {
++			if (cmd == J1939_TP_CMD_BAM && j1939_sk_recv_match(priv, skcb))
++				netdev_info(priv->ndev, "%s: failed to create TP BAM session\n",
++					    __func__);
+ 			return;
++		}
+ 	} else {
+ 		if (j1939_xtp_rx_rts_session_active(session, skb)) {
+ 			j1939_session_put(session);
+@@ -1852,6 +1856,13 @@ static void j1939_xtp_rx_dat(struct j1939_priv *priv, struct sk_buff *skb)
+ 		else
+ 			j1939_xtp_rx_dat_one(session, skb);
  	}
--
-+	/*
-+	 * Override access key in any case, since user space should
-+	 * not be able to set it, nor should it care about it.
-+	 */
-+	ri_cb.key = PAGE_DEFAULT_KEY >> 4;
- 	preempt_disable();
- 	if (!target->thread.ri_cb)
- 		target->thread.ri_cb = data;
++
++	if (j1939_cb_is_broadcast(skcb)) {
++		session = j1939_session_get_by_addr(priv, &skcb->addr, false,
++						    false);
++		if (session)
++			j1939_xtp_rx_dat_one(session, skb);
++	}
+ }
+ 
+ /* j1939 main intf */
+@@ -1943,7 +1954,7 @@ static void j1939_tp_cmd_recv(struct j1939_priv *priv, struct sk_buff *skb)
+ 		if (j1939_tp_im_transmitter(skcb))
+ 			j1939_xtp_rx_rts(priv, skb, true);
+ 
+-		if (j1939_tp_im_receiver(skcb))
++		if (j1939_tp_im_receiver(skcb) || j1939_cb_is_broadcast(skcb))
+ 			j1939_xtp_rx_rts(priv, skb, false);
+ 
+ 		break;
+@@ -2007,7 +2018,7 @@ int j1939_tp_recv(struct j1939_priv *priv, struct sk_buff *skb)
+ {
+ 	struct j1939_sk_buff_cb *skcb = j1939_skb_to_cb(skb);
+ 
+-	if (!j1939_tp_im_involved_anydir(skcb))
++	if (!j1939_tp_im_involved_anydir(skcb) && !j1939_cb_is_broadcast(skcb))
+ 		return 0;
+ 
+ 	switch (skcb->addr.pgn) {
 -- 
 2.25.1
 
