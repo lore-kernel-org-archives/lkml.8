@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA17E2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A9C2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258942;
-	bh=NEWTEZlSCSzOxgnVhzVtHV0GC7GOne6TuPez85qmcsA=;
+	s=default; t=1598258946;
+	bh=VW/CwsuVrwl6ReYbARigPDF/SbJ5qUjDCXEj9WHndn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ah16bqDMzs16H5Vr5rTFvkYXEDg9V+VN5/VwrsJYq+F0jvje2tLhuZNPsHsIcPhER
-	 j6OMqSYETM2+2Q1BGvCOMXYGrVZGPkeR4EIMmtNPEd1b72KCKSt9rkiCLpiR5GSjda
-	 SyhnMEJfTwIJ8zUJZR3N4af8XVH5mtX6X2ClhuVI=
+	b=amOSJ/OPLJnJt+iNpMwNNZaLCdkhChfI3qjCKw1dlQs1fYYnM+PI8+oN6K+U65irj
+	 Och1kqZiJEcn6bYDpKskEpL8EQj1Rs0Hgb6maczWKHlm4m2JNCmrcYgwB91IKJrjz8
+	 M1FIq7cjUWoMRjvebeWHGkywmdBt/i7cxsYgboyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbgHXItA (ORCPT
+        id S1729659AbgHXItF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:49:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50048 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:49:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729581AbgHXIsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:48:40 -0400
+        id S1729599AbgHXIsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:48:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B786206F0;
-        Mon, 24 Aug 2020 08:48:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE531204FD;
+        Mon, 24 Aug 2020 08:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258919;
-        bh=NEWTEZlSCSzOxgnVhzVtHV0GC7GOne6TuPez85qmcsA=;
+        s=default; t=1598258925;
+        bh=VW/CwsuVrwl6ReYbARigPDF/SbJ5qUjDCXEj9WHndn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=edcV6AaqQLgOwSDDgY53YBrF6roE9zciCLi3z4O2t72Cv+6A7+kc2W3MJQ0ruzHVx
-         wzsVgKHZ6e7DzBUWWCG/S4bvXeSyrAxqHMM+cR82irMCEIHF5zKzjJ0o92mZ5SyB/3
-         D9/gucfUhCkl7z+kmu+uqAXa/UpZLStfoHww+laU=
+        b=Hp4dCIONELk9xKjq6DKhfbvoPt7C6vy0UMrp0UgBUuwMy9RPdZ2tZvJARq1yCSkxI
+         ztqaNTuranVh0wLZQkhkE6VarWpPLTV8zBtaxlfdwtaObq8rdIXnXm5WKt/sanNkmX
+         1AkPGRIc8XEKDp1Tg0VPRWHjksbjW2IWAUo0pQSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Selvin Xavier <selvin.xavier@broadcom.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 092/107] efi: avoid error message when booting under Xen
-Date:   Mon, 24 Aug 2020 10:30:58 +0200
-Message-Id: <20200824082409.657257803@linuxfoundation.org>
+Subject: [PATCH 5.4 094/107] RDMA/bnxt_re: Do not add user qps to flushlist
+Date:   Mon, 24 Aug 2020 10:31:00 +0200
+Message-Id: <20200824082409.750402349@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -61,37 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Selvin Xavier <selvin.xavier@broadcom.com>
 
-[ Upstream commit 6163a985e50cb19d5bdf73f98e45b8af91a77658 ]
+[ Upstream commit a812f2d60a9fb7818f9c81f967180317b52545c0 ]
 
-efifb_probe() will issue an error message in case the kernel is booted
-as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoid
-that message by calling efi_mem_desc_lookup() only if EFI_MEMMAP is set.
+Driver shall add only the kernel qps to the flush list for clean up.
+During async error events from the HW, driver is adding qps to this list
+without checking if the qp is kernel qp or not.
 
-Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Add a check to avoid user qp addition to the flush list.
+
+Fixes: 942c9b6ca8de ("RDMA/bnxt_re: Avoid Hard lockup during error CQE processing")
+Fixes: c50866e2853a ("bnxt_re: fix the regression due to changes in alloc_pbl")
+Link: https://lore.kernel.org/r/1596689148-4023-1-git-send-email-selvin.xavier@broadcom.com
+Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/efifb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/bnxt_re/main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
-index 51d97ec4f58f9..e0cbf5b3d2174 100644
---- a/drivers/video/fbdev/efifb.c
-+++ b/drivers/video/fbdev/efifb.c
-@@ -453,7 +453,7 @@ static int efifb_probe(struct platform_device *dev)
- 	info->apertures->ranges[0].base = efifb_fix.smem_start;
- 	info->apertures->ranges[0].size = size_remap;
+diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
+index 27e2df44d043d..cfe5f47d9890e 100644
+--- a/drivers/infiniband/hw/bnxt_re/main.c
++++ b/drivers/infiniband/hw/bnxt_re/main.c
+@@ -789,7 +789,8 @@ static int bnxt_re_handle_qp_async_event(struct creq_qp_event *qp_event,
+ 	struct ib_event event;
+ 	unsigned int flags;
  
--	if (efi_enabled(EFI_BOOT) &&
-+	if (efi_enabled(EFI_MEMMAP) &&
- 	    !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
- 		if ((efifb_fix.smem_start + efifb_fix.smem_len) >
- 		    (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
+-	if (qp->qplib_qp.state == CMDQ_MODIFY_QP_NEW_STATE_ERR) {
++	if (qp->qplib_qp.state == CMDQ_MODIFY_QP_NEW_STATE_ERR &&
++	    rdma_is_kernel_res(&qp->ib_qp.res)) {
+ 		flags = bnxt_re_lock_cqs(qp);
+ 		bnxt_qplib_add_flush_qp(&qp->qplib_qp);
+ 		bnxt_re_unlock_cqs(qp, flags);
 -- 
 2.25.1
 
