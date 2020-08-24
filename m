@@ -2,99 +2,174 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18544C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9191C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2AE5206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4E3207CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:07:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lB8woOsv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgHXPGU (ORCPT
+        id S1726986AbgHXPHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:06:20 -0400
-Received: from mailoutvs12.siol.net ([185.57.226.203]:58264 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726691AbgHXPEy (ORCPT
+        Mon, 24 Aug 2020 11:07:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgHXPFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:04:54 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id A36A452576B;
-        Mon, 24 Aug 2020 17:04:52 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id u8vV1oXnJ427; Mon, 24 Aug 2020 17:04:52 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 643B8525768;
-        Mon, 24 Aug 2020 17:04:52 +0200 (CEST)
-Received: from localhost.localdomain (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 21B4E52576E;
-        Mon, 24 Aug 2020 17:04:50 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, heiko@sntech.de,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com
-Subject: [PATCH 2/2] ARM: dts: sun8i: r40: Add Mali node
-Date:   Mon, 24 Aug 2020 17:04:34 +0200
-Message-Id: <20200824150434.951693-3-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824150434.951693-1-jernej.skrabec@siol.net>
-References: <20200824150434.951693-1-jernej.skrabec@siol.net>
+        Mon, 24 Aug 2020 11:05:31 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78682C0617A9
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 08:05:11 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id 83so8661634wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 08:05:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4Z9CfRsQ0JPDJK+OdpY56vYSFlw0MvtWCYo+D9zzr0o=;
+        b=lB8woOsvvYhCqqAhBrrOI4RyghVGWXTQFIz7QP/geKRTgxJ5Ydbnf0ULekEb2fnx6E
+         LIx5ZXOroEf5QkkzXGFUuatWpWzKU8BXTOBLol8vcK0GyEzvqLzwcxlZnouQiPxO3vQ9
+         YGWWtTbmSO/FTFZTk4MxFuHaMnbSLcTjsA1ixnxCiRwMl/N9Pfkdkvi4wlAN5mU6s9lB
+         gfGU+rWbIdYtgAAD952agaykme1dVHqFB5Gh+HyTuc0ShwRZSGX5SVSVxfFojiNsdqwW
+         dbYPzTJBm3+Wps1nFdfCfuJTK4Z1wFTBwlBSW4yF/FROXrF4h55RK2I5C2uAGtuCIbGW
+         1k+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4Z9CfRsQ0JPDJK+OdpY56vYSFlw0MvtWCYo+D9zzr0o=;
+        b=Y5Z2XUBiIy6BDMw7VJ03CRmWmKkYiQw4M1/A2ldPEt7ogyjSsNjU9DmeE3vRSKNMxe
+         m/1eIJ+sN57lA9xJ9y8Bn4BDHP9QRZf27s5sJB/lJgswPXI/lZudW8NC9YN7e1gXz3q9
+         UFx8otVpmN+crIVXqRoDlvF4KDJ+z9eivaLn3WREjaNiiYMNbw7LPS07NTPGjYYTHXP+
+         KOa5FhQexo0Tpz4ng+uoTVmcroNPXqU13XGVVxsQOPCDHJqsyL75sNghheioUMDNvEfI
+         +PKYVEDv5tAlQ4jihQSg3A6FAvtSw6ehte7inyPRrER71+4Zv+LMbHb6xT6gPG1WRp8c
+         JBLA==
+X-Gm-Message-State: AOAM532yo6frPGV8wHyVNBFzu2IUddxjtwbCGpiZoiXfZGNZMfA/5ePH
+        pvHXoM/TztzwSieGhaSJe9BtAA==
+X-Google-Smtp-Source: ABdhPJz3KjGHHQA/f94TebnygpE4VIUsNqkOfejclgeosK32BVVg2F+4exTc1VOTgF6WyK7QdPxObw==
+X-Received: by 2002:a7b:cd88:: with SMTP id y8mr5875966wmj.14.1598281509685;
+        Mon, 24 Aug 2020 08:05:09 -0700 (PDT)
+Received: from google.com ([2a00:79e0:42:204:1ea0:b8ff:fe80:839])
+        by smtp.gmail.com with ESMTPSA id y13sm14526834wrn.48.2020.08.24.08.05.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 08:05:08 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 17:05:04 +0200
+From:   Brendan Jackman <jackmanb@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>, pjt@google.com,
+        Jann Horn <jannh@google.com>, rafael.j.wysocki@intel.com,
+        thgarnie@chromium.org, KP Singh <kpsingh@google.com>,
+        paul.renauld.epfl@gmail.com
+Subject: Re: [RFC] security: replace indirect calls with static calls
+Message-ID: <20200824150504.GA575149@google.com>
+References: <20200820164753.3256899-1-jackmanb@chromium.org>
+ <202008201435.97CF8296@keescook>
+ <CA+i-1C0XEuWWRm5nMPWCzEPUao7rp5346Eotpt1A_S3Za3Wysw@mail.gmail.com>
+ <20200824143344.GB3982@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824143344.GB3982@worktop.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-R40 has Mali400 GP2 GPU. Add a node for it.
+On Mon, Aug 24, 2020 at 04:33:44PM +0200, Peter Zijlstra wrote:
+> On Mon, Aug 24, 2020 at 04:09:09PM +0200, Brendan Jackman wrote:
+> 
+> > > > Why this trick with a switch statement? The table of static call is defined
+> > > > at compile time. The number of hook callbacks that will be defined is
+> > > > unknown at that time, and the table cannot be resized at runtime.  Static
+> > > > calls do not define a conditional execution for a non-void function, so the
+> > > > executed slots must be non-empty.  With this use of the table and the
+> > > > switch, it is possible to jump directly to the first used slot and execute
+> > > > all of the slots after. This essentially makes the entry point of the table
+> > > > dynamic. Instead, it would also be possible to start from 0 and break after
+> > > > the final populated slot, but that would require an additional conditional
+> > > > after each slot.
+> > >
+> > > Instead of just "NOP", having the static branches perform a jump would
+> > > solve this pretty cleanly, yes? Something like:
+> > >
+> > >         ret = DEFAULT_RET;
+> > >
+> > >         ret = A(args); <--- direct call, no retpoline
+> > >         if ret != 0:
+> > >                 goto out;
+> > >
+> > >         ret = B(args); <--- direct call, no retpoline
+> > >         if ret != 0:
+> > >                 goto out;
+> > >
+> > >         goto out;
+> > >         if ret != 0:
+> > >                 goto out;
+> > >
+> > > out:
+> > >         return ret;
+> > 
+> > Hmm yeah that's a cool idea. This would either need to be implemented
+> > with custom code-modification logic for the LSM hooks, or we'd need to
+> > think of a way to express it in a sensible addition to the static_call
+> > API. I do wonder if the latter could take the form of a generic system
+> > for arrays of static calls.
+> 
+> So you basically want something like:
+> 
+> 	if (A[0] && (ret = static_call(A[0])(...)))
+> 		return ret;
+> 
+> 	if (A[1] && (ret = static_call(A[1])(...)))
+> 		return ret;
+> 
+> 	....
+> 
+> 	return ret;
+> 
+> Right? The problem with static_call_cond() is that we don't know what to
+> do with the return value when !func, which is why it's limited to void
+> return type.
+> 
+> You can however construct something like the above with a combination of
+> static_branch() and static_call() though. It'll not be pretty, but it
+> ought to work:
+> 
+> 	if (static_branch_likely(A[0].key)) {
+> 		ret = static_call(A[0].call)(...);
+> 		if (ret)
+> 			return ret;
+> 	}
+> 
+> 	...
+> 
+> 	return ret;
+> 
+Right. That's actually exactly what Paul's first implementation
+looked like for call_int_hook. But we thought the switch thing was
+easier to understand.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- arch/arm/boot/dts/sun8i-r40.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r=
-40.dtsi
-index b782041e0e04..b82031b19893 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -743,6 +743,28 @@ i2c4: i2c@1c2c000 {
- 			#size-cells =3D <0>;
- 		};
-=20
-+		mali: gpu@1c40000 {
-+			compatible =3D "allwinner,sun8i-r40-mali", "arm,mali-400";
-+			reg =3D <0x01c40000 0x10000>;
-+			interrupts =3D <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names =3D "gp",
-+					  "gpmmu",
-+					  "pp0",
-+					  "ppmmu0",
-+					  "pp1",
-+					  "ppmmu1",
-+					  "pmu";
-+			clocks =3D <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
-+			clock-names =3D "bus", "core";
-+			resets =3D <&ccu RST_BUS_GPU>;
-+		};
-+
- 		gmac: ethernet@1c50000 {
- 			compatible =3D "allwinner,sun8i-r40-gmac";
- 			syscon =3D <&ccu>;
---=20
-2.28.0
-
+> 
+> > It would also need to handle the fact that IIUC at the moment the last
+> > static_call may be a tail call, so we'd be patching an existing jump
+> > into a jump to a different target, I don't know if we can do that
+> > atomically.
+> 
+> Of course we can, the static_call() series supports tail-calls just
+> fine. In fact, patching jumps is far easier, it was patching call that
+> was the real problem because it mucks about with the stack.
+> 
+OK great. I had a vague apprehension that we could only patch to or from
+a NOP.
