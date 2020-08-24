@@ -5,54 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69606C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4640E2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF382075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259121;
-	bh=mHmuW0qSq3QNXYvoj8xDvzfdQv6OG64aQ1Yffv75DPo=;
+	s=default; t=1598259123;
+	bh=5nk3NJXNopBSzjnj7Lpg8MhVeJiX9H+Pd26H61xczsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Upi9/kIqQmD8gB5lVAYI3cN1iyGqesMRgjmN4qkSd8izwR/iFX85wLbsNworqT34e
-	 SiZN/hi+hCbHCzAfCeyWjJi/+8IjHxftp7AYX/G9Xh0y3z2wurEz5Gz2coCq5fBuYP
-	 o8G7XwKpAFWhW6JjPm79o+NIm7sD2tlw+pICZPtI=
+	b=rDjP7r3/BIj5Kh8t0qYpJ+wg2W3sqpbc+kTHyu12BOgAbE/T0mYE4UC22R2OW7FTz
+	 YKj+OSoWeFTtZwFVQmfcdEEYiVaadf+QQC43JkEW5UUEyXUqkG/0GT2GKqoDxRkxcf
+	 313XzwsDpqTYLro/QwoaEaXMsbVlUSYV3UOMPGPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbgHXIv6 (ORCPT
+        id S1730033AbgHXIwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:51:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57346 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:52:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729755AbgHXIvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:54 -0400
+        id S1730018AbgHXIv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:51:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D00FE2075B;
-        Mon, 24 Aug 2020 08:51:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C7E22072D;
+        Mon, 24 Aug 2020 08:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259113;
-        bh=mHmuW0qSq3QNXYvoj8xDvzfdQv6OG64aQ1Yffv75DPo=;
+        s=default; t=1598259116;
+        bh=5nk3NJXNopBSzjnj7Lpg8MhVeJiX9H+Pd26H61xczsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WeCFN8S8P6VmMgnIpr2Yb8OEzgSPU0cpiLHwyy4fPglMdTYNSDHJtzCIZpEFKqM4y
-         lZI5YgT9UR2SJ1I9PESDqEJDmNnGL6yBh7Adi4xIdS86LGpKOIxstElq5+s7BXd4v3
-         SeyaqYvtdgRaJg2chU1ybgx9dVegHNFfZFFJzrC4=
+        b=f6QjgZ6MsLrvuI14TG3qh/hL2qiOpOp9FETNgsy6ZkEV9Mm2WsJbmrIqMFfwZuDuL
+         UOJtzGxKhPnydpE9u/B66sU57GNX9x/3aCLfiOdglj6Wq3KXLRD69HCfxu9lVamPPP
+         pQBxH6vJVTDBGuaj+MZpeAI4WRwN5TuKfSOaYj5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Girish Basrur <gbasrur@marvell.com>,
+        Santosh Vernekar <svernekar@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        Shyam Sundar <ssundar@marvell.com>,
+        Javed Hasan <jhasan@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 07/39] khugepaged: khugepaged_test_exit() check mmget_still_valid()
-Date:   Mon, 24 Aug 2020 10:31:06 +0200
-Message-Id: <20200824082348.845274231@linuxfoundation.org>
+Subject: [PATCH 4.9 25/39] scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
+Date:   Mon, 24 Aug 2020 10:31:24 +0200
+Message-Id: <20200824082349.828559262@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
@@ -65,58 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Javed Hasan <jhasan@marvell.com>
 
-[ Upstream commit bbe98f9cadff58cdd6a4acaeba0efa8565dabe65 ]
+[ Upstream commit ec007ef40abb6a164d148b0dc19789a7a2de2cc8 ]
 
-Move collapse_huge_page()'s mmget_still_valid() check into
-khugepaged_test_exit() itself.  collapse_huge_page() is used for anon THP
-only, and earned its mmget_still_valid() check because it inserts a huge
-pmd entry in place of the page table's pmd entry; whereas
-collapse_file()'s retract_page_tables() or collapse_pte_mapped_thp()
-merely clears the page table's pmd entry.  But core dumping without mmap
-lock must have been as open to mistaking a racily cleared pmd entry for a
-page table at physical page 0, as exit_mmap() was.  And we certainly have
-no interest in mapping as a THP once dumping core.
+In fc_disc_gpn_id_resp(), skb is supposed to get freed in all cases except
+for PTR_ERR. However, in some cases it didn't.
 
-Fixes: 59ea6d06cfa9 ("coredump: fix race condition between collapse_huge_page() and core dumping")
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: <stable@vger.kernel.org>	[4.8+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021217020.27773@eggly.anvils
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This fix is to call fc_frame_free(fp) before function returns.
+
+Link: https://lore.kernel.org/r/20200729081824.30996-2-jhasan@marvell.com
+Reviewed-by: Girish Basrur <gbasrur@marvell.com>
+Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
+Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
+Reviewed-by: Shyam Sundar <ssundar@marvell.com>
+Signed-off-by: Javed Hasan <jhasan@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/khugepaged.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/scsi/libfc/fc_disc.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 3080c6415493c..f4ed056d9f863 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -391,7 +391,7 @@ static void insert_to_mm_slots_hash(struct mm_struct *mm,
- 
- static inline int khugepaged_test_exit(struct mm_struct *mm)
- {
--	return atomic_read(&mm->mm_users) == 0;
-+	return atomic_read(&mm->mm_users) == 0 || !mmget_still_valid(mm);
- }
- 
- int __khugepaged_enter(struct mm_struct *mm)
-@@ -1004,9 +1004,6 @@ static void collapse_huge_page(struct mm_struct *mm,
- 	 * handled by the anon_vma lock + PG_lock.
- 	 */
- 	down_write(&mm->mmap_sem);
--	result = SCAN_ANY_PROCESS;
--	if (!mmget_still_valid(mm))
--		goto out;
- 	result = hugepage_vma_revalidate(mm, address, &vma);
- 	if (result)
+diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
+index 880a9068ca126..ef06af4e3611d 100644
+--- a/drivers/scsi/libfc/fc_disc.c
++++ b/drivers/scsi/libfc/fc_disc.c
+@@ -595,8 +595,12 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 	mutex_lock(&disc->disc_mutex);
+ 	if (PTR_ERR(fp) == -FC_EX_CLOSED)
  		goto out;
+-	if (IS_ERR(fp))
+-		goto redisc;
++	if (IS_ERR(fp)) {
++		mutex_lock(&disc->disc_mutex);
++		fc_disc_restart(disc);
++		mutex_unlock(&disc->disc_mutex);
++		goto out;
++	}
+ 
+ 	cp = fc_frame_payload_get(fp, sizeof(*cp));
+ 	if (!cp)
+@@ -621,7 +625,7 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 				new_rdata->disc_id = disc->disc_id;
+ 				lport->tt.rport_login(new_rdata);
+ 			}
+-			goto out;
++			goto free_fp;
+ 		}
+ 		rdata->disc_id = disc->disc_id;
+ 		lport->tt.rport_login(rdata);
+@@ -635,6 +639,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ redisc:
+ 		fc_disc_restart(disc);
+ 	}
++free_fp:
++	fc_frame_free(fp);
+ out:
+ 	mutex_unlock(&disc->disc_mutex);
+ 	kref_put(&rdata->kref, lport->tt.rport_destroy);
 -- 
 2.25.1
 
