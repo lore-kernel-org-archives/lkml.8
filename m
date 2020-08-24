@@ -2,325 +2,164 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0ABC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF565C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5C4B20706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F6620706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JvcSuahj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NedFESVh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgHXWq6 (ORCPT
+        id S1728101AbgHXWrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:46:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6202 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726531AbgHXWq5 (ORCPT
+        Mon, 24 Aug 2020 18:47:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgHXWrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 18:46:57 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OMVpKk040142;
-        Mon, 24 Aug 2020 18:46:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=8tTDOoPs33Nyna5Is9frTMZ2BO8eMhLytpXXTM+m5Xs=;
- b=JvcSuahj0oDP8xgIiVZwryyALkwDY5bCkMPq1/5NM6VkVOs0MUTEQifkn/ZSSEtbMHYZ
- rH20d1Loh8JQqOSu2rDi4ffVV/f6jpwuOG6vjMkfts01lPuINhlBGOu8cbRUYleTx410
- 3xxOjh2Qt57nTCCHqo+K3YFM/6bhPPRc+PMHt6Guh5bs8hcmLx8yquaBegObYUD4OjLF
- 7cT36syxpeOUUFngTzWLXrhzsxf/tulKxEqmrZR1VbvOHQcDduoG1xBohrm4ie3fg4nM
- sPeOHSEB52WozskoCdHzDKx7gS2T4DSR/S7zIyRvtMFJL1cqbDkLShaPaQo5/WaT62ra Rw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 334m6jvagu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 18:46:49 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07OMVsRl040449;
-        Mon, 24 Aug 2020 18:46:49 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 334m6jvag0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 18:46:49 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07OMcavW013663;
-        Mon, 24 Aug 2020 22:46:47 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06ams.nl.ibm.com with ESMTP id 332uk6asy4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 22:46:47 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07OMkjJ431261062
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Aug 2020 22:46:45 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F409FA405B;
-        Mon, 24 Aug 2020 22:46:44 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F5EBA4054;
-        Mon, 24 Aug 2020 22:46:42 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.38.197])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Aug 2020 22:46:41 +0000 (GMT)
-Message-ID: <d82c5cdab170d3dcc513b38632801c3aa14ca389.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 2/3] IMA: add policy to support measuring critical
- data from kernel components
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
-        agk@redhat.com, snitzer@redhat.com, gmazyland@gmail.com
-Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
-        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com
-Date:   Mon, 24 Aug 2020 18:46:41 -0400
-In-Reply-To: <20200821182107.5328-3-tusharsu@linux.microsoft.com>
-References: <20200821182107.5328-1-tusharsu@linux.microsoft.com>
-         <20200821182107.5328-3-tusharsu@linux.microsoft.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- bulkscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 impostorscore=0
- mlxscore=0 priorityscore=1501 clxscore=1015 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240174
+        Mon, 24 Aug 2020 18:47:31 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B4E5C061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 15:47:31 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 17so5751334pfw.9
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 15:47:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tgCgrj/7RNoEUABuzTp3guQYTwt5yuubONILEbtUHdE=;
+        b=NedFESVhjB8Y65MLB01kXcJ3NxiJVrtyBCzQ3AaSaYU7HFRe324lwhjy/rtXDqndkM
+         9y6sSETHpexp/EbMGctE8dWHcJQillYrNgIBjst8MZkgUfi9ufBAVybTg4IrFfcj5s4Q
+         1tWBslrl4dVhVP6XfxB3Yo6LrMTPWU6tcSH1M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tgCgrj/7RNoEUABuzTp3guQYTwt5yuubONILEbtUHdE=;
+        b=bD+jTcv4xEbpgSsnbX9Y78R2NVyB/mhnUsr6EFlflbqGaiYtv7cbd/Lm94afJqHFXh
+         MacnzINvkrWFQRj6QJ1CRmqK10nuoQoFxVZ5hS7YnLv41tA86CCau8OeclVkoCcIGz5e
+         Q24JxSC89ncdYdbZQcNhpsqC7Zbl9DPf5tRadPK6P5JNh9DI6nF4BYq+a+kfannGdZRR
+         jCSW8AjhAp/MMbr9r6JWhcmDDzNMx56ryCbxq8EpQ8mdB4H4OiObA2YEpUclSgiiA2ct
+         ybXnDixfzH+/9hkXPrcGCM2k6P934HD2jQpf5l5qLx1okWeCFb16btaeCECx/IV+Z8ED
+         wNYQ==
+X-Gm-Message-State: AOAM533CVZaZFzyUsrmiqHANq5O4UeoiLYIrgVb2zeAkH3Ld+xemd6ls
+        rdkNf+WJNXqdJ+Op3amV5SVVaQ==
+X-Google-Smtp-Source: ABdhPJzstXCt11oOnd0nn5W2icKYNmJ722Uy6n9Pw7DOVdijRVCMEkUwq7XkTS5YqaQ8CRlGx+aAEw==
+X-Received: by 2002:a17:902:b082:: with SMTP id p2mr5320220plr.266.1598309248702;
+        Mon, 24 Aug 2020 15:47:28 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:a28c:fdff:fef0:49dd])
+        by smtp.gmail.com with ESMTPSA id np4sm538459pjb.4.2020.08.24.15.47.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 15:47:28 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 15:47:26 -0700
+From:   Prashant Malani <pmalani@chromium.org>
+To:     "Mani, Rajmohan" <rajmohan.mani@intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        "Joseph, Jithu" <jithu.joseph@intel.com>,
+        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "bleung@chromium.org" <bleung@chromium.org>
+Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
+ (IOM) driver
+Message-ID: <20200824224726.GA48297@google.com>
+References: <20200822040508.23510-1-rajmohan.mani@intel.com>
+ <20200822040508.23510-2-rajmohan.mani@intel.com>
+ <20200822095631.GB2553024@google.com>
+ <DM6PR11MB3963121C820F570F845BBAEEF6560@DM6PR11MB3963.namprd11.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR11MB3963121C820F570F845BBAEEF6560@DM6PR11MB3963.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-08-21 at 11:21 -0700, Tushar Sugandhi wrote:
-> There would be several candidate kernel components suitable for IMA
-> measurement. Not all of them would have support for IMA measurement.
-> Also, system administrators may not want to measure data for all of
-> them, even when they support IMA measurement. An IMA policy specific
-> to various kernel components is needed to measure their respective
-> critical data.
+Hi Rajmohan,
+
+On Mon, Aug 24, 2020 at 10:19:27PM +0000, Mani, Rajmohan wrote:
+> Hi Prashant,
 > 
-> Add a new IMA policy CRITICAL_DATA+data_sources to support measuring
-> various critical kernel components. This policy would enable the
-> system administrators to limit the measurement to the components,
-> if the components support IMA measurement.
+> Thanks for the quick review.
 > 
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> ---
->  Documentation/ABI/testing/ima_policy |  6 ++-
->  security/integrity/ima/ima.h         |  1 +
->  security/integrity/ima/ima_api.c     |  2 +-
->  security/integrity/ima/ima_policy.c  | 62 +++++++++++++++++++++++++---
->  4 files changed, 63 insertions(+), 8 deletions(-)
+> > > +
+> > > +	if (!iom || !iom->dev || !iom->regbar)
+> > 
+> > Do we need to check for !iom->dev and !iom->regbar?
 > 
-> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
-> index cd572912c593..a0dd0f108555 100644
-> --- a/Documentation/ABI/testing/ima_policy
-> +++ b/Documentation/ABI/testing/ima_policy
-> @@ -29,7 +29,7 @@ Description:
->  		base: 	func:= [BPRM_CHECK][MMAP_CHECK][CREDS_CHECK][FILE_CHECK][MODULE_CHECK]
->  				[FIRMWARE_CHECK]
->  				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
-> -				[KEXEC_CMDLINE] [KEY_CHECK]
-> +				[KEXEC_CMDLINE] [KEY_CHECK] [CRITICAL_DATA]
->  			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
->  			       [[^]MAY_EXEC]
->  			fsmagic:= hex value
-> @@ -125,3 +125,7 @@ Description:
->  		keys added to .builtin_trusted_keys or .ima keyring:
->  
->  			measure func=KEY_CHECK keyrings=.builtin_trusted_keys|.ima
-> +
-> +		Example of measure rule using CRITICAL_DATA to measure critical data
-> +
-> +			measure func=CRITICAL_DATA data_sources=selinux|apparmor|dm-crypt
+> It's a good practice to have sanity checks on pointer members dereferenced.
+> 
+> So I can lose the check on iom->dev, but prefer to keep the check on regbar.
+> Let me know if you feel strongly about losing the check for regbar as well.
 
-This example uses "data_sources" without first defining it in the
-"option:" section.  Defining two new options is an indication that this
-patch should be split up.  One which defines the "CRITICAL_DATA" and
-another one which defines the new key value pair.  The term
-"data_sources" is pretty generic.  Perhaps constrain it a bit by re-
-naming it "critical_data=".  Or was such using a generic name
-intentional?
+Sounds good.
+> 
+> > Is there a valid situation
+> > where iom != NULL but iom->dev and/or iom->regbar == NULL?
+> > Sounds like it shouldn't, but I may be missing something.
+> > 
+> 
+> I think I am being conservative here.
+> 
+> > > +		return -ENODEV;
+> > > +
+> > > +	if (!status || (port > IOM_MAX_PORTS - 1))
+> > 
+> > I think parentheses around "port > IOM_MAX_PORT - 1" aren't required.
+> 
+> Ack
+> 
+> > > +		return -EINVAL;
+> > > +
+> > > +	reg = iom->regbar + IOM_PORT_STATUS_OFFSET + IOM_REG_LEN *
+> > port;
+> > > +
+> > > +	*status = ioread32(reg);
+> > 
+> > Perhaps just inline reg within the parentheses?
+> 
+> Kept this way to increase readability. Let me know if you feel strongly towards
+> inline reg.
 
-Normally "CRITICAL_DATA" would be defined with the critical data hook,
-but that seems to be defined in patch 3/3 "IMA: define IMA hook to
-measure critical data from kernel components".
+I'd rather this be inlined, you save a couple lines from the variable
+declaration, and IMO we're not gaining much in terms of readability by
+declaring this separately.
 
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index 8875085db689..0f4209a92bfb 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -200,6 +200,7 @@ static inline unsigned int ima_hash_key(u8 *digest)
->  	hook(POLICY_CHECK, policy)			\
->  	hook(KEXEC_CMDLINE, kexec_cmdline)		\
->  	hook(KEY_CHECK, key)				\
-> +	hook(CRITICAL_DATA, critical_data)		\
->  	hook(MAX_CHECK, none)
->  
->  #define __ima_hook_enumify(ENUM, str)	ENUM,
-> diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-> index af218babd198..9917e1730cb6 100644
-> --- a/security/integrity/ima/ima_api.c
-> +++ b/security/integrity/ima/ima_api.c
-> @@ -176,7 +176,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
->   *		subj=, obj=, type=, func=, mask=, fsmagic=
->   *	subj,obj, and type: are LSM specific.
->   *	func: FILE_CHECK | BPRM_CHECK | CREDS_CHECK | MMAP_CHECK | MODULE_CHECK
-> - *	| KEXEC_CMDLINE | KEY_CHECK
-> + *	| KEXEC_CMDLINE | KEY_CHECK | CRITICAL_DATA
->   *	mask: contains the permission mask
->   *	fsmagic: hex value
->   *
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index 8866e84d0062..7b649095ac7a 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -33,6 +33,7 @@
->  #define IMA_PCR		0x0100
->  #define IMA_FSNAME	0x0200
->  #define IMA_KEYRINGS	0x0400
-> +#define IMA_DATA_SOURCES	0x0800
->  
->  #define UNKNOWN		0
->  #define MEASURE		0x0001	/* same as IMA_MEASURE */
-> @@ -84,6 +85,7 @@ struct ima_rule_entry {
->  	} lsm[MAX_LSM_RULES];
->  	char *fsname;
->  	struct ima_rule_opt_list *keyrings; /* Measure keys added to these keyrings */
-> +	struct ima_rule_opt_list *data_sources; /* Measure data from these sources */
->  	struct ima_template_desc *template;
->  };
->  
-> @@ -508,14 +510,23 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
->  {
->  	int i;
->  
-> -	if (func == KEY_CHECK) {
-> -		return (rule->flags & IMA_FUNC) && (rule->func == func) &&
-> -		       ima_match_rule_data(rule, rule->keyrings, func_data,
-> -					   true, cred);
-> -	}
->  	if ((rule->flags & IMA_FUNC) &&
->  	    (rule->func != func && func != POST_SETATTR))
->  		return false;
-> +
-> +	switch (func) {
-> +	case KEY_CHECK:
-> +		return ((rule->func == func) &&
-> +			ima_match_rule_data(rule, rule->keyrings,
-> +					    func_data, true, cred));
-> +	case CRITICAL_DATA:
-> +		return ((rule->func == func) &&
-> +			ima_match_rule_data(rule, rule->data_sources,
-> +					    func_data, false, cred));
-> +	default:
-> +		break;
-> +	}
-> +
->  	if ((rule->flags & IMA_MASK) &&
->  	    (rule->mask != mask && func != POST_SETATTR))
->  		return false;
-> @@ -911,7 +922,7 @@ enum {
->  	Opt_uid_lt, Opt_euid_lt, Opt_fowner_lt,
->  	Opt_appraise_type, Opt_appraise_flag,
->  	Opt_permit_directio, Opt_pcr, Opt_template, Opt_keyrings,
-> -	Opt_err
-> +	Opt_data_sources, Opt_err
->  };
->  
->  static const match_table_t policy_tokens = {
-> @@ -948,6 +959,7 @@ static const match_table_t policy_tokens = {
->  	{Opt_pcr, "pcr=%s"},
->  	{Opt_template, "template=%s"},
->  	{Opt_keyrings, "keyrings=%s"},
-> +	{Opt_data_sources, "data_sources=%s"},
->  	{Opt_err, NULL}
->  };
->  
-> @@ -1110,6 +1122,19 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
->  		if (ima_rule_contains_lsm_cond(entry))
->  			return false;
->  
-> +		break;
-> +	case CRITICAL_DATA:
-> +		if (entry->action & ~(MEASURE | DONT_MEASURE))
-> +			return false;
-> +
-> +		if (!(entry->flags & IMA_DATA_SOURCES) ||
-> +		    (entry->flags & ~(IMA_FUNC | IMA_UID | IMA_PCR |
-> +		    IMA_DATA_SOURCES)))
-> +			return false;
+> 
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(intel_iom_port_status);
+> > > +
+> > > +static int intel_iom_probe(struct platform_device *pdev) {
+> > > +	void __iomem *addr;
+> > > +
+> > > +	/* only one IOM device is supported */
+> > 
+> > Minor nit: s/only/Only
+> 
+> And then I may need to end the comment with a period.
+> Let me know if you feel strongly.
+Yes, let's capitalize and add the period. Let's try to use the right
+punctuation where possible.
 
-Requiring IMA_FUNC and IMA_DATA_SOURCES makes sense, but why are
-IMA_UID and IMA_PCR required?
+Best regards,
 
-> +
-> +		if (ima_rule_contains_lsm_cond(entry))
-> +			return false;
-> +
->  		break;
->  	default:
->  		return false;
-> @@ -1242,6 +1267,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
->  			else if (IS_ENABLED(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) &&
->  				 strcmp(args[0].from, "KEY_CHECK") == 0)
->  				entry->func = KEY_CHECK;
-> +			else if (strcmp(args[0].from, "CRITICAL_DATA") == 0)
-> +				entry->func = CRITICAL_DATA;
->  			else
->  				result = -EINVAL;
->  			if (!result)
-> @@ -1312,6 +1339,23 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
->  
->  			entry->flags |= IMA_KEYRINGS;
->  			break;
-> +		case Opt_data_sources:
-> +			ima_log_string(ab, "data_sources", args[0].from);
-> +
-> +			if (entry->data_sources) {
-> +				result = -EINVAL;
-> +				break;
-> +			}
-> +
-> +			entry->data_sources = ima_alloc_rule_opt_list(args);
-> +			if (IS_ERR(entry->data_sources)) {
-> +				result = PTR_ERR(entry->data_sources);
-> +				entry->data_sources = NULL;
-> +				break;
-> +			}
-> +
-
-"keyrings=" isn't bounded because keyrings can be created by userspace.
-Perhaps keyring names has a minimum/maximum length.  IMA isn't
-measuring userspace construsts.  Shouldn't the list of critical data
-being measured be bounded and verified?
-
-Mimi
-
-> +			entry->flags |= IMA_DATA_SOURCES;
-> +			break;
->  		case Opt_fsuuid:
->  			ima_log_string(ab, "fsuuid", args[0].from);
->  
-> @@ -1692,6 +1736,12 @@ int ima_policy_show(struct seq_file *m, void *v)
->  		seq_puts(m, " ");
->  	}
->  
-> +	if (entry->flags & IMA_DATA_SOURCES) {
-> +		seq_puts(m, "data_sources=");
-> +		ima_show_rule_opt_list(m, entry->data_sources);
-> +		seq_puts(m, " ");
-> +	}
-> +
->  	if (entry->flags & IMA_PCR) {
->  		snprintf(tbuf, sizeof(tbuf), "%d", entry->pcr);
->  		seq_printf(m, pt(Opt_pcr), tbuf);
-
-
+-Prashant
