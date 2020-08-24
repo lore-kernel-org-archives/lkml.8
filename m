@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B53C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F25032071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D01820738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261737;
-	bh=Wh6sT37MzZ5crsokFE5tf1ZxGjZm1aGj9OgnT/9kwyw=;
+	s=default; t=1598261745;
+	bh=jRgIWyY0b4yL1+iU+rEN7X0YTkrV7SA7WEWwegKb4Wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dkZTK2FJLyO9vG2NUQr3YOfcsFw8jwH4Fr8f0V2RgI2/TOLa75+xqMIxISLml7aPe
-	 ZCOH9rdsSMhymaDuI2WTu3XOogKSGA/e63zwU7qjcfBfBgHGveC0i1pbb9wlPn6YHE
-	 R8fcgaOZrDxQMMTdJMVVtKFwbrd+8oAvWy5CLFbE=
+	b=ExwRZBkeqydXXHboLv176xKapmZ38W1/b+UVAiz7fxXbmLe5oeDm0XvczFKAQ583v
+	 DoPT8ixua2eYNFhp8mW8KLz/MfooB83giLkkIdMj+n+qgpfCMJRvD2FTL+Yg3cikdl
+	 r/egCK5uuw8fHZ9q1802DQUfntocQd1dZ9EkSxSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgHXJfg (ORCPT
+        id S1728596AbgHXItE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:35:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729649AbgHXItE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 04:49:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729589AbgHXIsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:48:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9945F204FD;
-        Mon, 24 Aug 2020 08:49:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CEB721741;
+        Mon, 24 Aug 2020 08:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258943;
-        bh=Wh6sT37MzZ5crsokFE5tf1ZxGjZm1aGj9OgnT/9kwyw=;
+        s=default; t=1598258922;
+        bh=jRgIWyY0b4yL1+iU+rEN7X0YTkrV7SA7WEWwegKb4Wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hxvLzLp/oE+guqOazVHIo4M6p1AWFgDinxIgD6BAFRGYgCWduXHTN6otLbbJ8sFL4
-         ArXwQJJS0jv91nKu/Pu3GLkzg6YqPHIUEKFDHb2I1oT67DBBsyoOLYB5gixq3pabRC
-         UWO/Qv3yfEegej1K+hlRcW4aJ3IDW1NATxV6mcZ4=
+        b=C2CVBvgK8EgKPjWqphrXn5t1r25wMAM4aX4wG+87SkIZmwFRFP1zlWIk2Z2hbIcGH
+         r/29mpG0vAVTE3AD8wewpRjXkykWqV8gJAJqGpotsw7+U1aNThuZZnJhUm9MYH5XDa
+         HczkWczVH/pAE++bYJXZZnfGzOzYkwBqN/4Pwqns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 100/107] hv_netvsc: Fix the queue_mapping in netvsc_vf_xmit()
-Date:   Mon, 24 Aug 2020 10:31:06 +0200
-Message-Id: <20200824082410.035303327@linuxfoundation.org>
+Subject: [PATCH 5.4 093/107] Fix build error when CONFIG_ACPI is not set/enabled:
+Date:   Mon, 24 Aug 2020 10:30:59 +0200
+Message-Id: <20200824082409.704889057@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -60,40 +64,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit c3d897e01aef8ddc43149e4d661b86f823e3aae7 ]
+[ Upstream commit ee87e1557c42dc9c2da11c38e11b87c311569853 ]
 
-netvsc_vf_xmit() / dev_queue_xmit() will call VF NIC’s ndo_select_queue
-or netdev_pick_tx() again. They will use skb_get_rx_queue() to get the
-queue number, so the “skb->queue_mapping - 1” will be used. This may
-cause the last queue of VF not been used.
+../arch/x86/pci/xen.c: In function ‘pci_xen_init’:
+../arch/x86/pci/xen.c:410:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
+  acpi_noirq_set();
 
-Use skb_record_rx_queue() here, so that the skb_get_rx_queue() called
-later will get the correct queue number, and VF will be able to use
-all queues.
-
-Fixes: b3bf5666a510 ("hv_netvsc: defer queue selection to VF")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 88e9ca161c13 ("xen/pci: Use acpi_noirq_set() helper to avoid #ifdef")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: xen-devel@lists.xenproject.org
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/pci/xen.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 24bb721a12bc0..42eb7a7ecd96b 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -501,7 +501,7 @@ static int netvsc_vf_xmit(struct net_device *net, struct net_device *vf_netdev,
- 	int rc;
+diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
+index 91220cc258547..5c11ae66b5d8e 100644
+--- a/arch/x86/pci/xen.c
++++ b/arch/x86/pci/xen.c
+@@ -26,6 +26,7 @@
+ #include <asm/xen/pci.h>
+ #include <asm/xen/cpuid.h>
+ #include <asm/apic.h>
++#include <asm/acpi.h>
+ #include <asm/i8259.h>
  
- 	skb->dev = vf_netdev;
--	skb->queue_mapping = qdisc_skb_cb(skb)->slave_dev_queue_mapping;
-+	skb_record_rx_queue(skb, qdisc_skb_cb(skb)->slave_dev_queue_mapping);
- 
- 	rc = dev_queue_xmit(skb);
- 	if (likely(rc == NET_XMIT_SUCCESS || rc == NET_XMIT_CN)) {
+ static int xen_pcifront_enable_irq(struct pci_dev *dev)
 -- 
 2.25.1
 
