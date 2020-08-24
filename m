@@ -2,103 +2,100 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5138EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D76B2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2535C206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598282201;
+	bh=yO9W1Kc0RdGpWZmeTxsnbWWXCS+9065Inn/90nZH8S4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=trD2r17KmrJsh30KdSNKhOyqtWRJQ/9KdUXO/PjfoDmae9G3MpIGx1RunEfGv8zsu
+	 XYnoHpsLoz5SbxTnYCM1nsvfEPdBzEBijhzgrOAC6F28urS6iMBhFeSlkUAk+zQeRJ
+	 pdJUyUnDUw3ZHIHxxawoQK/EqR0uaA85xsk2rmYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgHXPPj (ORCPT
+        id S1727792AbgHXPQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:15:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42298 "EHLO mx2.suse.de"
+        Mon, 24 Aug 2020 11:16:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbgHXPOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:14:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id AA00AABCC;
-        Mon, 24 Aug 2020 15:14:53 +0000 (UTC)
-Date:   Mon, 24 Aug 2020 17:14:25 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Mel Gorman <mgorman@suse.com>
-Subject: Re: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
- -14.1% regression
-Message-ID: <20200824151425.GF4794@zn.tnic>
-References: <20200425114414.GU26573@shao2-debian>
- <20200425130136.GA28245@zn.tnic>
- <20200818082943.GA65567@shbuild999.sh.intel.com>
- <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
- <20200819020437.GA2605@shbuild999.sh.intel.com>
- <20200821020259.GA90000@shbuild999.sh.intel.com>
+        id S1727068AbgHXPN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 11:13:28 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B441206B5;
+        Mon, 24 Aug 2020 15:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598281975;
+        bh=yO9W1Kc0RdGpWZmeTxsnbWWXCS+9065Inn/90nZH8S4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=P1OE/CS8PxQYqFGUCpqEisH8/zh3qJNGTtpsU6Euxa2780rFG9iiDIZTS4AEfRC3K
+         YGgqyg0WSsIs23QtW1LkKT8x5UwfFYQL8Jj5v1E2yxogukGObENk0h/D7bpKUjbIFN
+         djdqwoEw4kxSS40Z2aXyYUvOrxzcq0URhp+ObUhg=
+Message-ID: <9b6b670245ae0ca8eab16263c01f6a6d1bd94e4b.camel@kernel.org>
+Subject: Re: [PATCH] ceph: add column 'mds' to show caps in more user
+ friendly
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Yanhu Cao <gmayyyha@gmail.com>
+Cc:     idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 24 Aug 2020 11:12:54 -0400
+In-Reply-To: <20200824030058.37786-1-gmayyyha@gmail.com>
+References: <20200824030058.37786-1-gmayyyha@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200821020259.GA90000@shbuild999.sh.intel.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:02:59AM +0800, Feng Tang wrote:
->   1de08dccd383 x86/mce: Add a struct mce.kflags field
->   9554bfe403bd x86/mce: Convert the CEC to use the MCE notifier
+On Mon, 2020-08-24 at 11:00 +0800, Yanhu Cao wrote:
+> In multi-mds, the 'caps' debugfs file will have duplicate ino,
+> add the 'mds' column to indicate which mds session the cap belongs to.
 > 
-> And strange thing is after using gcc9 and debian10 rootfs, with same commits
-> the regression turns to a improvement,
-
-How so?
-
-> though the trend keeps, that if we
-> changes the kflags from __u64 to __u32, the performance will be no change.
+> Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+> ---
+>  fs/ceph/debugfs.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> Following is the comparing of regression, I also attached the perf-profile
-> for old and new commit (let me know if you need more data)
-> 
-> 
-> 9554bfe403bdfc08 1de08dccd383482a3e88845d355 
-> ---------------- --------------------------- 
->          %stddev     %change         %stddev
->              \          |                \  
->     192362           -15.1%     163343        will-it-scale.287.processes
->       0.91            +0.2%       0.92        will-it-scale.287.processes_idle
->     669.67           -15.1%     568.50        will-it-scale.per_process_ops
+> diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
+> index 97539b497e4c..47f8971a9c52 100644
+> --- a/fs/ceph/debugfs.c
+> +++ b/fs/ceph/debugfs.c
+> @@ -202,7 +202,8 @@ static int caps_show_cb(struct inode *inode, struct ceph_cap *cap, void *p)
+>  {
+>  	struct seq_file *s = p;
+>  
+> -	seq_printf(s, "0x%-17lx%-17s%-17s\n", inode->i_ino,
+> +	seq_printf(s, "0x%-17lx%-3d%-17s%-17s\n", inode->i_ino,
+> +		   cap->session->s_mds,
+>  		   ceph_cap_string(cap->issued),
+>  		   ceph_cap_string(cap->implemented));
+>  	return 0;
+> @@ -222,8 +223,8 @@ static int caps_show(struct seq_file *s, void *p)
+>  		   "reserved\t%d\n"
+>  		   "min\t\t%d\n\n",
+>  		   total, avail, used, reserved, min);
+> -	seq_printf(s, "ino                issued           implemented\n");
+> -	seq_printf(s, "-----------------------------------------------\n");
+> +	seq_printf(s, "ino              mds  issued           implemented\n");
+> +	seq_printf(s, "--------------------------------------------------\n");
+>  
+>  	mutex_lock(&mdsc->mutex);
+>  	for (i = 0; i < mdsc->max_sessions; i++) {
 
-This is the data from your previous measurement:
+Looks good. Merged.
 
-9554bfe403bdfc08 1de08dccd383482a3e88845d355
----------------- ---------------------------
-         %stddev     %change         %stddev
-             \          |                \
-    668.00           -14.1%     573.75        will-it-scale.per_process_ops
-
-If I'm reading it correctly, commit
-
-1de08dccd383 ("x86/mce: Add a struct mce.kflags field")
-
-is still the slower one vs
-
-9554bfe403bd ("x86/mce: Convert the CEC to use the MCE notifier")
-
-Or am I misreading it?
-
-In any case, this really looks like what Tony said: this enlargement of
-struct mce pushes some variable into a cacheline-misaligned placement,
-causing it to bounce.
-
-The $ 10^6 question is, which variable is that...
-
+Thanks!
 -- 
-Regards/Gruss,
-    Boris.
+Jeff Layton <jlayton@kernel.org>
 
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
