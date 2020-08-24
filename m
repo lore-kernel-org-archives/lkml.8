@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DA5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 426862074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D3F2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261228;
-	bh=gEjT2/xRAoGmMOBGGt1w/ksGCRHgmey8ffvZL5rKwag=;
+	s=default; t=1598261234;
+	bh=YUEmkkPw1tVD4ci3Fl8gL2AxajOkTwiImYf2WDABfDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G8Hw7vqL16bm0X7w3Wvf13rmu3q3iaTnHxE0FCbRkX5sTwoCSdRJyw7jZj90DnLeA
-	 S+B5G+Vez0uoQVaJHDprZ0MDs0DlKz8BqFVT2shpSuzZpTR67KPL/GYbP5pRDZwGD+
-	 QUHPLLxv1JPITU7y0UDCF6KDReJkaem7ZdrF9vCc=
+	b=LC9lj7fzvWAAywA2FIvogTVCCBI8I5Rc1bYQCYCYXlPxRuj7VKux4fc5rbvPM10GJ
+	 4GL+VFZFsmEve+kNBXn3YFb9b9J6MUHjvEk5BIYdf9NHh1paHgEzgkj1KwSG7FGjEH
+	 I90Dd4NsbrdIt3Hjn/X017AipFWM2C5nkuY0zL+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbgHXJ1G (ORCPT
+        id S1728730AbgHXJ1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:27:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59070 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:27:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730104AbgHXIwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730103AbgHXIwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 04:52:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EA46204FD;
-        Mon, 24 Aug 2020 08:52:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A02942075B;
+        Mon, 24 Aug 2020 08:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259157;
-        bh=gEjT2/xRAoGmMOBGGt1w/ksGCRHgmey8ffvZL5rKwag=;
+        s=default; t=1598259155;
+        bh=YUEmkkPw1tVD4ci3Fl8gL2AxajOkTwiImYf2WDABfDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NFqSS3RUv8ErXZpDFERYOyri9Nhpo4Hw2NMg+NRzj6+i8lIDKRI7tvTTnMYZPmeQC
-         Dn7fhfNNTf6docaovjo9ksWjBVJE3tE2lZeRYRbV/S3s4DhGQxI1WMSiZHbAoS8R43
-         MeThVp2f8/XjwxuURCAcEb8lk3Gof62GeKbmtEB8=
+        b=wvbYseJ8+T3y7fPc5uHoPWYuItW8/dD5cK9Gzf1ij+pkIUZZIV2xytuOCgkUxyeRj
+         qG0PmwaZFgokFDwO/do0nhSND44WUQdJKWYwyPJxAgmFNGstYmx9G7cBfBT5AGMgER
+         RdVvucM4SuQGuBfMZKjU0FLVwfWhKXvFrlTicqok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Przemyslaw Patynowski <przemyslawx.patynowski@intel.com>,
-        Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-        Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 30/39] i40e: Set RX_ONLY mode for unicast promiscuous on VLAN
-Date:   Mon, 24 Aug 2020 10:31:29 +0200
-Message-Id: <20200824082350.072482970@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 29/39] ext4: fix potential negative array index in do_split()
+Date:   Mon, 24 Aug 2020 10:31:28 +0200
+Message-Id: <20200824082350.027967420@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
@@ -64,112 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Przemyslaw Patynowski <przemyslawx.patynowski@intel.com>
+From: Eric Sandeen <sandeen@redhat.com>
 
-[ Upstream commit 4bd5e02a2ed1575c2f65bd3c557a077dd399f0e8 ]
+[ Upstream commit 5872331b3d91820e14716632ebb56b1399b34fe1 ]
 
-Trusted VF with unicast promiscuous mode set, could listen to TX
-traffic of other VFs.
-Set unicast promiscuous mode to RX traffic, if VSI has port VLAN
-configured. Rename misleading I40E_AQC_SET_VSI_PROMISC_TX bit to
-I40E_AQC_SET_VSI_PROMISC_RX_ONLY. Aligned unicast promiscuous with
-VLAN to the one without VLAN.
+If for any reason a directory passed to do_split() does not have enough
+active entries to exceed half the size of the block, we can end up
+iterating over all "count" entries without finding a split point.
 
-Fixes: 6c41a7606967 ("i40e: Add promiscuous on VLAN support")
-Fixes: 3b1200891b7f ("i40e: When in promisc mode apply promisc mode to Tx Traffic as well")
-Signed-off-by: Przemyslaw Patynowski <przemyslawx.patynowski@intel.com>
-Signed-off-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
-Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+In this case, count == move, and split will be zero, and we will
+attempt a negative index into map[].
+
+Guard against this by detecting this case, and falling back to
+split-to-half-of-count instead; in this case we will still have
+plenty of space (> half blocksize) in each split block.
+
+Fixes: ef2b02d3e617 ("ext34: ensure do_split leaves enough free space in both blocks")
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/f53e246b-647c-64bb-16ec-135383c70ad7@redhat.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/intel/i40e/i40e_adminq_cmd.h |  2 +-
- drivers/net/ethernet/intel/i40e/i40e_common.c | 35 ++++++++++++++-----
- 2 files changed, 28 insertions(+), 9 deletions(-)
+ fs/ext4/namei.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h b/drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h
-index 67e396b2b3472..0e75c3a34fe7c 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h
-+++ b/drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h
-@@ -1107,7 +1107,7 @@ struct i40e_aqc_set_vsi_promiscuous_modes {
- #define I40E_AQC_SET_VSI_PROMISC_BROADCAST	0x04
- #define I40E_AQC_SET_VSI_DEFAULT		0x08
- #define I40E_AQC_SET_VSI_PROMISC_VLAN		0x10
--#define I40E_AQC_SET_VSI_PROMISC_TX		0x8000
-+#define I40E_AQC_SET_VSI_PROMISC_RX_ONLY	0x8000
- 	__le16	seid;
- #define I40E_AQC_VSI_PROM_CMD_SEID_MASK		0x3FF
- 	__le16	vlan_tag;
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_common.c b/drivers/net/ethernet/intel/i40e/i40e_common.c
-index 2154a34c1dd80..09b47088dcc2b 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_common.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_common.c
-@@ -1922,6 +1922,21 @@ i40e_status i40e_aq_set_phy_debug(struct i40e_hw *hw, u8 cmd_flags,
- 	return status;
- }
- 
-+/**
-+ * i40e_is_aq_api_ver_ge
-+ * @aq: pointer to AdminQ info containing HW API version to compare
-+ * @maj: API major value
-+ * @min: API minor value
-+ *
-+ * Assert whether current HW API version is greater/equal than provided.
-+ **/
-+static bool i40e_is_aq_api_ver_ge(struct i40e_adminq_info *aq, u16 maj,
-+				  u16 min)
-+{
-+	return (aq->api_maj_ver > maj ||
-+		(aq->api_maj_ver == maj && aq->api_min_ver >= min));
-+}
-+
- /**
-  * i40e_aq_add_vsi
-  * @hw: pointer to the hw struct
-@@ -2047,18 +2062,16 @@ i40e_status i40e_aq_set_vsi_unicast_promiscuous(struct i40e_hw *hw,
- 
- 	if (set) {
- 		flags |= I40E_AQC_SET_VSI_PROMISC_UNICAST;
--		if (rx_only_promisc &&
--		    (((hw->aq.api_maj_ver == 1) && (hw->aq.api_min_ver >= 5)) ||
--		     (hw->aq.api_maj_ver > 1)))
--			flags |= I40E_AQC_SET_VSI_PROMISC_TX;
-+		if (rx_only_promisc && i40e_is_aq_api_ver_ge(&hw->aq, 1, 5))
-+			flags |= I40E_AQC_SET_VSI_PROMISC_RX_ONLY;
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index 2d918b43b536e..157dbbe235f90 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1759,7 +1759,7 @@ static struct ext4_dir_entry_2 *do_split(handle_t *handle, struct inode *dir,
+ 			     blocksize, hinfo, map);
+ 	map -= count;
+ 	dx_sort_map(map, count);
+-	/* Split the existing block in the middle, size-wise */
++	/* Ensure that neither split block is over half full */
+ 	size = 0;
+ 	move = 0;
+ 	for (i = count-1; i >= 0; i--) {
+@@ -1769,8 +1769,18 @@ static struct ext4_dir_entry_2 *do_split(handle_t *handle, struct inode *dir,
+ 		size += map[i].size;
+ 		move++;
  	}
- 
- 	cmd->promiscuous_flags = cpu_to_le16(flags);
- 
- 	cmd->valid_flags = cpu_to_le16(I40E_AQC_SET_VSI_PROMISC_UNICAST);
--	if (((hw->aq.api_maj_ver >= 1) && (hw->aq.api_min_ver >= 5)) ||
--	    (hw->aq.api_maj_ver > 1))
--		cmd->valid_flags |= cpu_to_le16(I40E_AQC_SET_VSI_PROMISC_TX);
-+	if (i40e_is_aq_api_ver_ge(&hw->aq, 1, 5))
-+		cmd->valid_flags |=
-+			cpu_to_le16(I40E_AQC_SET_VSI_PROMISC_RX_ONLY);
- 
- 	cmd->seid = cpu_to_le16(seid);
- 	status = i40e_asq_send_command(hw, &desc, NULL, 0, cmd_details);
-@@ -2155,11 +2168,17 @@ enum i40e_status_code i40e_aq_set_vsi_uc_promisc_on_vlan(struct i40e_hw *hw,
- 	i40e_fill_default_direct_cmd_desc(&desc,
- 					  i40e_aqc_opc_set_vsi_promiscuous_modes);
- 
--	if (enable)
-+	if (enable) {
- 		flags |= I40E_AQC_SET_VSI_PROMISC_UNICAST;
-+		if (i40e_is_aq_api_ver_ge(&hw->aq, 1, 5))
-+			flags |= I40E_AQC_SET_VSI_PROMISC_RX_ONLY;
-+	}
- 
- 	cmd->promiscuous_flags = cpu_to_le16(flags);
- 	cmd->valid_flags = cpu_to_le16(I40E_AQC_SET_VSI_PROMISC_UNICAST);
-+	if (i40e_is_aq_api_ver_ge(&hw->aq, 1, 5))
-+		cmd->valid_flags |=
-+			cpu_to_le16(I40E_AQC_SET_VSI_PROMISC_RX_ONLY);
- 	cmd->seid = cpu_to_le16(seid);
- 	cmd->vlan_tag = cpu_to_le16(vid | I40E_AQC_SET_VSI_VLAN_VALID);
- 
+-	/* map index at which we will split */
+-	split = count - move;
++	/*
++	 * map index at which we will split
++	 *
++	 * If the sum of active entries didn't exceed half the block size, just
++	 * split it in half by count; each resulting block will have at least
++	 * half the space free.
++	 */
++	if (i > 0)
++		split = count - move;
++	else
++		split = count/2;
++
+ 	hash2 = map[split].hash;
+ 	continued = hash2 == map[split - 1].hash;
+ 	dxtrace(printk(KERN_INFO "Split block %lu at %x, %i/%i\n",
 -- 
 2.25.1
 
