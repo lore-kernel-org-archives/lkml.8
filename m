@@ -2,167 +2,113 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556EDC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACBEC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 340442067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:39:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="clz/C0FZ"
+	by mail.kernel.org (Postfix) with ESMTP id 546332067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:40:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598290819;
+	bh=oXolKDkrqEteaOxR9Z85JmSKQysQ3vFhv+zsNP4FTXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XkxZj9G68mzd56A1AaXzYw100AEKnX/S7A12SaYonxKF4Wypp1b3C/YgN4W7UB2/X
+	 9H37/FwRL1g+griTeuBhrFEMDfVX2FTD2UmZbCNDwiakqL+GKpLSYCkM9hpK1Q8OtH
+	 DvEc4/MdjYb1n/ep87MLlJk8qbJmjH0sNL1Dcc8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgHXRjR (ORCPT
+        id S1727105AbgHXRkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:39:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbgHXRjI (ORCPT
+        Mon, 24 Aug 2020 13:40:17 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42202 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgHXRkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:39:08 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71FAAC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:39:08 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id s20so4254241wmj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QPQnmI/58kOYJX5JO2+CM6DvjdssZDc2jVBjt8SVn9Y=;
-        b=clz/C0FZ1UbxXtnPwybhuWgiHNBL5Brwo6D97RcHtz/jpSGZzUyPdyThZfVpsuUPhy
-         BLLt2igu/mDIt1K0CqFa2yQD9w2oVsQK/9Iqi7QetOpl9d/mWUlr8Mn3/cu3Vf9m/QWa
-         mOtxZs3N/KmsPcr/EpW5ESCgbWZkeB6WRu4AKdJ1gZtRX/JdmE/Q30YbfWKEIb7mLWKZ
-         2R00AVRzPMCqeANspr2UiyCqGTLKTmTfU2iRv0AXULWhbniUFAtjwt6XAQI8wBfuf+MA
-         opHnb1m8Um2FEht+6vz1mkxnLQA4+m9qen3QuxTtiWVoJ7SSP1XU8QfKb1FULd7s0z/L
-         juGQ==
+        Mon, 24 Aug 2020 13:40:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id g13so9550772ioo.9;
+        Mon, 24 Aug 2020 10:40:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QPQnmI/58kOYJX5JO2+CM6DvjdssZDc2jVBjt8SVn9Y=;
-        b=SQUPevjjF9qXpelAE/l2V375jSw9fL5WEhugpcy+Q6xRfcnl8WJRmnxZmGNRp0mbZc
-         IT74UMpjCGa2Ti+ljpFPh7Zoec/FkfaKyEyXFonIzkz2NYqhJl4SLwkM1g+VUSg6V92M
-         XsSQu3lyn1Koc3SfPdJSsaZ8KJjkjWfNvlnKYbQVAadqy7cOffd91savcnujB4L70cRQ
-         LOYopDnKgp3cC2cuMlj+2inRwIONCI1CTS5gtcfj8hTqzfkXnG5KG/or0SDvOmMkWR3L
-         sqEf9ka6F8MYZQ5KUylKZ617rkqJWBDDAkljl/WDBU0Ho6O0G6FZToU8Kek51nu3Jwos
-         wfnQ==
-X-Gm-Message-State: AOAM533CWeHSEWxvMoRNi55YXUZFPRIZSbefPGZnll83HNXI87o6/BKq
-        KDjqwu9cEeO1nuPbMuhWdCQaMA==
-X-Google-Smtp-Source: ABdhPJyON3K1mqtMD/inQXwsjxZaY9mFHqzEoTnd6F5b28j0NPRKH/zMGFn1ARwYjsrjlG6pFSUHow==
-X-Received: by 2002:a05:600c:c4:: with SMTP id u4mr390305wmm.100.1598290747126;
-        Mon, 24 Aug 2020 10:39:07 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id y24sm471977wmi.17.2020.08.24.10.39.05
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UVtrljt/EWWhhPr0mdtIWZRHw/y3jFOkqpDqOIKXMy8=;
+        b=rootcDx+L8DT1N+2GVRb6rnnhi4pdvbLDRDMPLE7b64UAMIljpre62+DMmnryf0nnc
+         JRiI4NBGH6KG6Sn9BBBL7ei2x6PyrTkcwL6e4k0EtSQvNWx0RzYFc1JBS3OoXS9Og0Wo
+         EjRGYZYg849Sli3qeGd+gqGnH7SalnemNVcVjqmLNYnYcs3XU7gEoL1QYdRHkjDoye7z
+         LPPEJjjVy8IrlralaUufDy+8VctXQDAOHo/WEaHqoT9u2uIOGSI5fJELjSyVc+CSNC7C
+         cQdi9K2ghD6gjGl6+puj3nZyvcDSFsiqWIdiRKKotA4zctQWpcvdEMZatOK83Y6dYn97
+         vGDA==
+X-Gm-Message-State: AOAM532Ql5EeQeEl2RK6ONQHey/u5QW6FoGAK6Xq9FXqG2Mc6lcpr4ji
+        7YwAd6ArXl8uglVWN7ARLQ==
+X-Google-Smtp-Source: ABdhPJyjYzUkBxJsb/wKRoH4c89oJ3tsNy0bXy++WXqLOyjfTb7kelHoON54dkX40b2Pf0HM6/psTg==
+X-Received: by 2002:a5d:995a:: with SMTP id v26mr5699626ios.176.1598290814026;
+        Mon, 24 Aug 2020 10:40:14 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id h13sm6714876iob.33.2020.08.24.10.40.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 10:39:06 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v9 3/3] iio: adc: xilinx-xadc: use devm_krealloc()
-Date:   Mon, 24 Aug 2020 19:38:59 +0200
-Message-Id: <20200824173859.4910-4-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200824173859.4910-1-brgl@bgdev.pl>
-References: <20200824173859.4910-1-brgl@bgdev.pl>
+        Mon, 24 Aug 2020 10:40:13 -0700 (PDT)
+Received: (nullmailer pid 2950296 invoked by uid 1000);
+        Mon, 24 Aug 2020 17:40:09 -0000
+Date:   Mon, 24 Aug 2020 11:40:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
+Message-ID: <20200824174009.GA2948650@bogus>
+References: <20200824084712.2526079-1-vkoul@kernel.org>
+ <20200824084712.2526079-2-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824084712.2526079-2-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
+> Add devicetree binding documentation for GPI DMA controller
+> implemented on Qualcomm SoCs
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.yaml
+> 
 
-Use the managed variant of krealloc() and shrink the code a bit.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/iio/adc/xilinx-xadc-core.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
-index d0b7ef296afb..f93c34fe5873 100644
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -1092,6 +1092,7 @@ MODULE_DEVICE_TABLE(of, xadc_of_match_table);
- static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
- 	unsigned int *conf)
- {
-+	struct device *dev = indio_dev->dev.parent;
- 	struct xadc *xadc = iio_priv(indio_dev);
- 	struct iio_chan_spec *channels, *chan;
- 	struct device_node *chan_node, *child;
-@@ -1136,7 +1137,8 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
- 		*conf |= XADC_CONF0_MUX | XADC_CONF0_CHAN(ext_mux_chan);
- 	}
- 
--	channels = kmemdup(xadc_channels, sizeof(xadc_channels), GFP_KERNEL);
-+	channels = devm_kmemdup(dev, xadc_channels,
-+				sizeof(xadc_channels), GFP_KERNEL);
- 	if (!channels)
- 		return -ENOMEM;
- 
-@@ -1172,8 +1174,9 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
- 	of_node_put(chan_node);
- 
- 	indio_dev->num_channels = num_channels;
--	indio_dev->channels = krealloc(channels, sizeof(*channels) *
--					num_channels, GFP_KERNEL);
-+	indio_dev->channels = devm_krealloc(dev, channels,
-+					    sizeof(*channels) * num_channels,
-+					    GFP_KERNEL);
- 	/* If we can't resize the channels array, just use the original */
- 	if (!indio_dev->channels)
- 		indio_dev->channels = channels;
-@@ -1225,14 +1228,14 @@ static int xadc_probe(struct platform_device *pdev)
- 
- 	ret = xadc_parse_dt(indio_dev, pdev->dev.of_node, &conf0);
- 	if (ret)
--		goto err_device_free;
-+		return ret;
- 
- 	if (xadc->ops->flags & XADC_FLAGS_BUFFERED) {
- 		ret = iio_triggered_buffer_setup(indio_dev,
- 			&iio_pollfunc_store_time, &xadc_trigger_handler,
- 			&xadc_buffer_ops);
- 		if (ret)
--			goto err_device_free;
-+			return ret;
- 
- 		xadc->convst_trigger = xadc_alloc_trigger(indio_dev, "convst");
- 		if (IS_ERR(xadc->convst_trigger)) {
-@@ -1350,8 +1353,6 @@ static int xadc_probe(struct platform_device *pdev)
- err_triggered_buffer_cleanup:
- 	if (xadc->ops->flags & XADC_FLAGS_BUFFERED)
- 		iio_triggered_buffer_cleanup(indio_dev);
--err_device_free:
--	kfree(indio_dev->channels);
- 
- 	return ret;
- }
-@@ -1371,7 +1372,6 @@ static int xadc_remove(struct platform_device *pdev)
- 	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
- 	clk_disable_unprepare(xadc->clk);
- 	kfree(xadc->data);
--	kfree(indio_dev->channels);
- 
- 	return 0;
- }
--- 
-2.26.1
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ring transfer size compare to channel transfer ring. Event ring length = ev-factor * transfer ring size', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required property
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,gpii-mask: {'description': 'Bitmap of supported GPII instances for OS', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,gpii-mask: 'not' is a required property
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,max-num-gpii: {'description': 'Maximum number of GPII instances available', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,max-num-gpii: 'not' is a required property
+
+./Documentation/devicetree/bindings/dma/qcom-gpi.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/dma/qcom-gpi.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: ignoring, error in schema: properties: qcom,max-num-gpii
+warning: no schema found in file: ./Documentation/devicetree/bindings/dma/qcom-gpi.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.example.dt.yaml: example-0: dma@800000:reg:0: [0, 8388608, 0, 393216] is too long
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+
+
+See https://patchwork.ozlabs.org/patch/1350170
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
