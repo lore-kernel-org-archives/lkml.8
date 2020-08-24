@@ -2,172 +2,121 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E09C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D1CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 516C0206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:29:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKgf5ZTD"
+	by mail.kernel.org (Postfix) with ESMTP id 149B52063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgHXN3G (ORCPT
+        id S1726947AbgHXNai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgHXN3C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:29:02 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ABB4C061573;
-        Mon, 24 Aug 2020 06:29:02 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id v16so4239395plo.1;
-        Mon, 24 Aug 2020 06:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hEnRIpFiLehmtAlZxH3jRvSO84NH8KzXJDVQTp6vxi8=;
-        b=kKgf5ZTDJKjwOXM1i8vDvjDrl8G2nbdB0h+cDxf+AvvTGdBYqX3hP7NWhEjp5BEH3/
-         o2QYiRj3FP8x4KjgUoh1e5fetQwNiNidM/f1vFDWHPdJcIG0tY0n35PYTaNt3kahfJmP
-         6STTXFHhkpLfPi5JM5YCf+bvKgLmOjuHePya5yy66RhDxKX0DTj0jRyLmG72arTcqbL/
-         wagDepaDVpkRdYaUH1R6Ji+7nmJpmOj4Ia0Rk8L+8G5MN8yIvyYOpvY0nnXeIdwcYYIK
-         V60v1jaRO5afJT09SNt/+cka+5wA2tdRmhJtwhW7P865nKioH+g3tBJEwHjVzJRWKpEX
-         hqAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=hEnRIpFiLehmtAlZxH3jRvSO84NH8KzXJDVQTp6vxi8=;
-        b=jJ9+0w7U58HP2KzVtdH4HahyoUE+2Y11xLu+lUHtmjghi3fW8D1TX3VcNApFI9b9Bl
-         QveHjwTgDTM+sZyea9zx/SRQN9YKEH1Ryecq7OlqxIIQIcFXy//5gOOrW5PboiEpGq0q
-         45vdEc+syJfU/12+ZNIhRpX4QAFucCjam0UgodUHyFKGLjcPeqxbuOgVyMbewKIgJmlY
-         O7nEXG0aFHbHb2MhbeEWt6bpkBkNTbgQaLfGJ/NDkoy/uvOvdTAH0iCUnZj2HCR0J/7/
-         O2P9H+fZb5ttfAZv7xJ3QgfHNqR3IehAAQZ0IbJE7d2Nqgfz1ntAJxF5bZug7UJ36Zni
-         +0bg==
-X-Gm-Message-State: AOAM532EppEt2nEGma4FnLKsuJda7ZqT4tip3+v1JRm9Vm+ZIJXxbQ7W
-        SjLFvZbJE0qRD/Ygc86MdRYzDn8yGGk=
-X-Google-Smtp-Source: ABdhPJzzW9M+tAlcbQ5RodOPkUTg1f0UuTNIISj06WmmXC3qdDs5fmTylFJSJ/tFaO/61dANiwbpGw==
-X-Received: by 2002:a17:90a:8687:: with SMTP id p7mr4845167pjn.50.1598275741476;
-        Mon, 24 Aug 2020 06:29:01 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o38sm9557867pgb.38.2020.08.24.06.29.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 06:29:00 -0700 (PDT)
-Subject: Re: [PATCH] watchdog: sbsa_gwdt: add shutdown hook to driver
-To:     Qiang Zhao <qiang.zhao@nxp.com>, wim@linux-watchdog.org
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200824081804.23206-1-qiang.zhao@nxp.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <cdfd0c4d-3433-f952-0e49-ebc0f7474e1a@roeck-us.net>
-Date:   Mon, 24 Aug 2020 06:28:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 24 Aug 2020 09:30:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbgHXNaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 09:30:23 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACAAB206B5;
+        Mon, 24 Aug 2020 13:30:21 +0000 (UTC)
+Date:   Mon, 24 Aug 2020 09:30:20 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     dianders@chromium.org, groeck@chromium.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        Kars Mulder <kerneldev@karsmulder.nl>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Will Deacon <will@kernel.org>, Yue Hu <huyue2@yulong.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] kernel/trace: Add DISALLOW_TRACE_PRINTK make option
+Message-ID: <20200824093020.073ae8d8@oasis.local.home>
+In-Reply-To: <20200824105852.v5.1.I4feb11d34ce7a0dd5ee2c3327fb5a1a9a646be30@changeid>
+References: <20200824105852.v5.1.I4feb11d34ce7a0dd5ee2c3327fb5a1a9a646be30@changeid>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200824081804.23206-1-qiang.zhao@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/24/20 1:18 AM, Qiang Zhao wrote:
-> From: Zhao Qiang <qiang.zhao@nxp.com>
-> 
-> Kexec maybe need more time than timeout of wdt(sbsa)
-> which will reset the system.
-> So it is necessary to add shutdown hook to disable the
-> wdt when run kexec.
-> 
+On Mon, 24 Aug 2020 10:59:13 +0800
+Nicolas Boichat <drinkcat@chromium.org> wrote:
 
-Please explain why watchdog_stop_on_reboot() does not work.
-
-Thanks,
-Guenter
-
-> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
 > ---
->  drivers/watchdog/sbsa_gwdt.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
 > 
-> diff --git a/drivers/watchdog/sbsa_gwdt.c b/drivers/watchdog/sbsa_gwdt.c
-> index f0f1e3b..bbcd04d 100644
-> --- a/drivers/watchdog/sbsa_gwdt.c
-> +++ b/drivers/watchdog/sbsa_gwdt.c
-> @@ -313,6 +313,14 @@ static int sbsa_gwdt_probe(struct platform_device *pdev)
->  	return 0;
->  }
+> Changes since v4:
+>  - Turns this into a make option, instead of a config
+>    option, as suggested by Steven Rostedt <rostedt@goodmis.org>.
+> 
+> Changes since v2/v3:
+>  - Rebase only, v3 didn't exist as I just split out the other
+>    necessary patches.
+>  - Added patch 3/3 to fix atomisp_compat_css20.c
+> 
+> Changes since v1:
+>  - Use static_assert instead of __static_assert (Jason Gunthorpe)
+>  - Fix issues that can be detected by this patch (running some
+>    randconfig in a loop, kernel test robot, or manual inspection),
+>    by:
+>    - Making some debug config options that use trace_printk depend
+>      on the new config option.
+>    - Adding 3 patches before this one.
+> 
+>  Makefile               | 14 ++++++++++++++
+>  include/linux/kernel.h | 17 ++++++++++++++++-
+>  2 files changed, 30 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index c4470a4e131f2ce..fb8b0d7fb4b2df7 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -100,6 +100,16 @@ endif
 >  
-> +static void sbsa_gwdt_shutdown(struct platform_device *pdev)
-> +{
-> +	struct sbsa_gwdt *gwdt;
+>  export quiet Q KBUILD_VERBOSE
+>  
+> +# Disallow use of trace_printk. Can be used by production kernels.
+> +ifeq ("$(origin DISALLOW_TRACE_PRINTK)", "command line")
+> +  KBUILD_DISALLOW_TRACE_PRINTK = $(DISALLOW_TRACE_PRINTK)
+> +endif
+> +ifndef KBUILD_DISALLOW_TRACE_PRINTK
+> +  KBUILD_DISALLOW_TRACE_PRINTK = 0
+> +endif
 > +
-> +	gwdt = platform_get_drvdata(pdev);
-> +	sbsa_gwdt_stop(&gwdt->wdd);
-> +}
+> +export KBUILD_DISALLOW_TRACE_PRINTK
 > +
->  /* Disable watchdog if it is active during suspend */
->  static int __maybe_unused sbsa_gwdt_suspend(struct device *dev)
->  {
-> @@ -357,6 +365,7 @@ static struct platform_driver sbsa_gwdt_driver = {
->  		.pm = &sbsa_gwdt_pm_ops,
->  		.of_match_table = sbsa_gwdt_of_match,
->  	},
-> +	.shutdown = sbsa_gwdt_shutdown,
->  	.probe = sbsa_gwdt_probe,
->  	.id_table = sbsa_gwdt_pdev_match,
->  };
-> 
+>  # Kbuild will save output files in the current working directory.
+>  # This does not need to match to the root of the kernel source tree.
+>  #
+> @@ -838,6 +848,10 @@ KBUILD_AFLAGS	+= -gz=zlib
+>  KBUILD_LDFLAGS	+= --compress-debug-sections=zlib
+>  endif
+>  
+> +ifeq ($(KBUILD_DISALLOW_TRACE_PRINTK),1)
+> +KBUILD_CFLAGS += -DDISALLOW_TRACE_PRINTK
+> +endif
+> +
+>  KBUILD_CFLAGS += $(DEBUG_CFLAGS)
+>  export DEBUG_CFLAGS
+>  
 
+
+There's one more thing we need to do, is if you build without this option
+then build with it, you should trigger a full kernel rebuild.
+Otherwise, if you build without the option, then build with it, and it
+doesn't rebuild the tree, it wont catch anything.
+
+-- Steve
